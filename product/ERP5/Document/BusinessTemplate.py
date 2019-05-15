@@ -1357,7 +1357,12 @@ class ObjectTemplateItem(BaseTemplateItem):
         saved_uid_dict = {}
         subobjects_dict = {}
         portal_type_dict = {}
-        old_obj = container._getOb(object_id, None)
+        try:
+          old_obj = container._getOb(id=object_id, default=None, no_traversal=True)
+        except TypeError:
+          # if TypeError raised, it means we are using _getOb from Zope
+          # components without **kw arg. Retry without invalid arg then.
+          old_obj = container._getOb(id=object_id, default=None)
         object_existed = old_obj is not None
         if object_existed:
           if context.isKeepObject(path) and force:
