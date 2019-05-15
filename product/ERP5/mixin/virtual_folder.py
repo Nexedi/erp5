@@ -79,10 +79,18 @@ class VirtualFolderMixin:
     """
       XXX
     """
-    tv = getTransactionalVariable()
-    document_url = tv.get((id,), None)
-    if document_url is not None:
-      return self.getPortalObject().unrestrictedTraverse(document_url)
+    if 'no_traversal' in kw:
+      no_traversal = kw['no_traversal']
+      # remove from kw for later call to _getOb
+      del kw['no_traversal']
+    else:
+      no_traversal = False
+
+    if not no_traversal:
+      tv = getTransactionalVariable()
+      document_url = tv.get((id,), None)
+      if document_url is not None:
+        return self.getPortalObject().unrestrictedTraverse(document_url)
 
     try:
       return Folder._getOb(self, id, default=default, **kw)
