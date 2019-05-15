@@ -164,6 +164,12 @@ class Updater(object):
           logger.exception("")
         if not(correct_url):
           self.deleteRepository()
+        # Update submodule
+        # Not support nested submodule for now
+        # No harm to the repo which doesn't contains submodule
+        parameter_list = ['submodule', 'update', '--init']
+        self._git(*parameter_list)
+
       if not os.path.exists(self.repository_path):
         parameter_list = ['clone', self.url]
         if self.branch is not None:
