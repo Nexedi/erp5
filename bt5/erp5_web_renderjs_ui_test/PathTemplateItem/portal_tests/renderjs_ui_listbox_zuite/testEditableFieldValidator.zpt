@@ -1,0 +1,98 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1&amp;create_line:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/0?editable=true</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+
+<tr>
+  <td>type</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[2]//input</td>
+  <td>0123456789 0123456789 0123456789 0123456789 0123456789</td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
+
+<tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                           'text': 'Input data has errors.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<tr>
+  <td>assertValue</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[2]//input</td>
+  <td>0123456789 0123456789 0123456789 0123456789 0123456789</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[2]//span</td>
+  <td>Too much input was given.</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[2]//input</td>
+  <td>0123456789</td>
+</tr>
+
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[2]//span</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+</tbody></table>
+</body>
+</html>

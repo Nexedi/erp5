@@ -317,7 +317,8 @@
         cell_gadget_list: [],
         // ERP5 needs listbox_uid:list with UIDs of editable sub-documents
         // so it can search for them in REQUEST.form under <field.id>_<sub-document.uid>
-        listbox_uid_dict: {}
+        listbox_uid_dict: {},
+        listbox_query_param_json: undefined
       };
     })
 
@@ -484,6 +485,7 @@
             // Force line calculation in any case
             render_timestamp: new Date().getTime(),
             allDocs_result: undefined,
+            default_value: field_json.default,
 
             // No error message
             has_error: false,
@@ -917,6 +919,7 @@
                   key: undefined,
                   value: []
                 };
+                gadget.props.listbox_query_param_json = allDocs_result.listbox_query_param_json;
                 // clear list of previous sub-gadgets
                 gadget.props.cell_gadget_list = [];
 
@@ -1179,6 +1182,7 @@
       return gadget.jio_allDocs({
         // XXX Not jIO compatible, but until a better api is found...
         "list_method_template": this.state.list_method_template,
+        "default_value": this.state.default_value,
         "query": gadget.state.query_string,
         "limit": limit_options,
         "select_list": select_list,
@@ -1232,6 +1236,11 @@
       return queue
         .push(function () {
           data[form_gadget.props.listbox_uid_dict.key] = form_gadget.props.listbox_uid_dict.value;
+          if (form_gadget.props.listbox_query_param_json !== undefined) {
+            // JSON query parameters are only sent when rendering an ERP5 Form
+            data[form_gadget.props.listbox_query_param_json.key] =
+              form_gadget.props.listbox_query_param_json.value;
+          }
           return data;
         });
     }, {mutex: 'changestate'})

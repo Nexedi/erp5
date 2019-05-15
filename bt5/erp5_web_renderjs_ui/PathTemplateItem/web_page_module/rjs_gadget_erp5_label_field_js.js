@@ -169,7 +169,18 @@
             );
             //}
             new_div = document.createElement('div');
-            gadget.props.container_element.appendChild(new_div);
+            span = gadget.props.container_element.lastElementChild;
+            if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
+              span = null;
+            }
+            if (span === null) {
+              gadget.props.container_element.appendChild(new_div);
+            } else {
+              gadget.props.container_element.insertBefore(
+                new_div,
+                span
+              );
+            }
             queue = gadget.declareGadget(gadget.state.field_url, {
               scope: SCOPE,
               element: new_div
