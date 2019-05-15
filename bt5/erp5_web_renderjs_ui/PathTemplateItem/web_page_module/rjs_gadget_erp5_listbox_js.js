@@ -417,7 +417,6 @@
             column_id,
             column_title,
             not_concatenated_list = [field_json.column_list, (field_json.all_column_list || [])];
-
           // Calculate the list of all displayable columns
           for (i = 0; i < not_concatenated_list.length; i += 1) {
             for (j = 0; j < not_concatenated_list[i].length; j += 1) {
@@ -921,8 +920,6 @@
                   value: []
                 };
                 gadget.props.listbox_query_param_json = allDocs_result.listbox_query_param_json;
-                // gadget.props.listbox_uid_dict.key = allDocs_result.data.rows[i].value['listbox_uid:list'].key;
-                // gadget.props.listbox_uid_dict.value.push(allDocs_result.data.rows[i].value['listbox_uid:list'].value);
                 // clear list of previous sub-gadgets
                 gadget.props.cell_gadget_list = [];
 
