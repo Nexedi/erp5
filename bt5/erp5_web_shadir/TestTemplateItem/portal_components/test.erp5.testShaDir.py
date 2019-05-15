@@ -245,3 +245,15 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
 
     result, document3 = self.getInformation()
     self.assertEqual(1, len(json.loads(document3)))
+
+
+  def test_VirtualFolder_key(self):
+    module = self.portal.newContent(portal_type='Folder', id='test_virtual_folder_%s' % random.random())
+    # WebSite is a VirtualFolder
+    vf1 = module.newContent(portal_type='Web Site')
+    vf2 = module.newContent(portal_type='Web Site')
+    obj_id = "test_obj_%s" % random.random()
+    obj = vf1.newContent(portal_type='Web Section', id=obj_id)
+    self.assertEqual(obj, vf1._getOb(obj_id))
+    self.assertIsNone(vf2._getOb(obj_id, default=None))
+
