@@ -65,7 +65,7 @@ class VirtualFolderMixin:
       XXX
     """
     tv = getTransactionalVariable()
-    key = (id, )
+    key = 'VirtualFolderMixin', self.getPhysicalPath(), id
     tv[key] = ob.__of__(self).getRelativeUrl()
 
     method = getattr(self, 'Base_setObject', None)
@@ -80,7 +80,8 @@ class VirtualFolderMixin:
       XXX
     """
     tv = getTransactionalVariable()
-    document_url = tv.get((id,), None)
+    key = 'VirtualFolderMixin', self.getPhysicalPath(), id
+    document_url = tv.get(key, None)
     if document_url is not None:
       return self.getPortalObject().unrestrictedTraverse(document_url)
 
