@@ -747,8 +747,9 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     if (list_method_custom is not None):
       result["list_method_template"] = list_method_custom
 
-    # XXX COUSCOUS
-    # In the context of a POST, the lines must be synchronously calculated to keep track of the request values
+    # In the context of a form validation,
+    # the lines must be synchronously calculated to keep track of the request values
+    # Reuse the same parameters which were used during the first rendering
     query_param_json = REQUEST.get("%s_query_param_json" % field.id, None)
     if (query_param_json is not None) and (response.getStatus() == 400):
       result["default"] = json.loads(
@@ -756,9 +757,6 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
           **ensureDeserialized(byteify(json.loads(urlsafe_b64decode(query_param_json))))
           )
       )
-    
-    
-
 
     return result
 
@@ -1566,6 +1564,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       response.setStatus(405)
       return ""
 
+    # Those parameter will be send back during the listbox submission
+    # to ensure fetching the same lines
     listbox_query_param_json = urlsafe_b64encode(json.dumps(ensureSerializable({
       'form_relative_url': form_relative_url,
       'list_method': list_method,
@@ -1871,9 +1871,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             listbox_form,
             value=default_field_value,
             key='field_%s_%s' % (editable_field.id, brain_uid))
-          # raise NotImplementedError(str(field_errors))
+          # Include cell error text in case of form validation
           if field_errors.has_key('%s_%s' % (editable_field.id, brain_uid)):
-            contents_item[select]['field_gadget_param']["error_text"] = field_errors['%s_%s' % (editable_field.id, brain_uid)].error_text
+            contents_item[select]['field_gadget_param']["error_text"] = \
+              field_errors['%s_%s' % (editable_field.id, brain_uid)].error_text
 
 
         # Do not generate link for empty value, as it will not be clickable in UI
@@ -2026,7 +2027,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       if len(contents_stat_list) > 0:
         result_dict['_embedded']['sum'] = ensureSerializable(contents_stat_list)
 
-      # XXX COUSCOUS
+      # Those parameter will be send back during the listbox submission
+      # to ensure fetching the same lines
       result_dict['_embedded']['listbox_query_param_json'] = {
         'key': "%s_query_param_json" % listbox_field_id,
         'value': listbox_query_param_json
