@@ -1,0 +1,99 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+--><!-- outbound:
+  slapos-HowTo.Add.Software.Release.To.Slapos.Master
+  slapos-Tutorial.Install.Slapos.Node.Comp.0
+  slapos-Tutorial.Extend.Software.Release
+-->
+<section class="master">
+<h1>How To Instantiate Webrunner</h1>
+
+<details open="open">
+<p>This document explains how to instantiate a <a href="https://webrunner.nexedi.com/">Webrunner</a> IDE. It can be used to run a single encapsulated instance of a software, work on SlapOS Softwar Releases or simply to host static web pages.</p>
+
+<p>This document will explain the different instantiation parameters. Please refer to other documents on <a href="slapos-HowTo.Add.Software.Release.To.Slapos.Master">add a software to the SlapOS Master catalog</a> or <a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">supplying/installing a software</a></p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Webrunner Configuration</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Webrunner Configuration</h1>
+
+<details open="open">
+<p>The process of installing (supplying) a software and providing it as a service (instantiation) are the same for all software. However during instantiation each instance can be configured differently.</p>
+
+<p>This section will cover the specific configuration parameters used for a <b>Webrunner</b> used for example during <a href="slapos-Tutorial.Extend.Software.Release">tutorials on extending software releases</a>.</p>
+</details>
+</section>
+
+<section>
+<h1>Webrunner Configuration Parameters</h1>
+<img alt="SlapOS Interface - Webrunner Configuration Parameters" src="https://www.erp5.com/slapos-Interface.Webrunner.Instantiation.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>After selecting <i>Services</i>, <i>Add</i>ing a new service, selecting <i>Webrunner</i> and the latest release, you should reach the Webrunner configuration menu.</p>
+
+<p>There are two software types available. <code>Default</code> will install a single Webrunner on a available node partition, whereas <code>Resilient</code> will create three instances on machines in physcially different locations. Give your Webrunner a recognizable name, select <i>Resilient</i>, then click <i>Proceed</i> to continue and request instantiation.</p>
+</details>
+</section>
+
+<section>
+<h1>Webrunner Instantiation</h1>
+<img alt="SlapOS Interface - Webrunner Instantiation" src="https://www.erp5.com/slapos-Interface.Webrunner.Software.Service.List?display=&amp;format=png" />
+<details open="open">
+<p>You will be forwarded back to the list of deployed services. <b>Note</b> that you might have to refresh the page for your new instance to appear. Once you can see it, click on entry to open the connection parameters.</p>
+
+<p>You can follow the compilation by looking at the <code>slapos-node-software.log</code> using:</p>
+
+<pre>
+<code># tail opt/slapos/log/slapos-node-software.log -f</code></pre>
+
+<p>&nbsp;</p>
+</details>
+</section>
+
+<section>
+<h1>Webrunner Connection Parameters</h1>
+<img alt="SlapOS Interface - Webrunner Connection Parameters" src="https://www.erp5.com/slapos-Interface.Webrunner.Software.Deployment.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p><b>Note</b>, it might take a few minutes for the instance to become available. Refresh the page from time to time until the connection parameter table displays parameteres. Once the <i>URL</i> entry shows a URL, the Webrunner is up and working. Note down the <i>init-user</i> and <i>init-password</i></p>
+</details>
+</section>
+
+<section>
+<h1>Webrunner Running</h1>
+<img alt="SlapOS Interface - Webrunner Running" src="https://www.erp5.com/slapos-Interface.Webrunner.Instantiation.Webrunner.Landing.Page?display=&amp;format=png" />
+<details open="open">
+<p>If you go to the URL and provide user name and password you should be able to access your webrunner.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

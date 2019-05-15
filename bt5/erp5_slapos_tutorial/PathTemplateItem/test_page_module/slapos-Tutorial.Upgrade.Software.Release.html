@@ -1,0 +1,226 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+  slapos-Howto.Release.Software.Release
+--><!-- outbound links:
+  slapos-DesignDocument.Understanding.Slapos.Architecture
+  slapos-DesignDocument.Understanding.Slapos.Buildout
+  slapos-DesignDocument.Understanding.Slapos.Promises
+-->
+<section class="master">
+<h1>How To Upgrade Software Release</h1>
+
+<details open="open">
+<p>This document explains the process to release new Software Release or new version of existing Software Release. Developers should follow it strictly and make sure all steps are well understood to not loose time when working with software releases.</p>
+
+<p>Before starting, make sure to understand the <a href="slapos-DesignDocument.Understanding.Slapos.Architecture">SlapOS architecture</a> and make yourself familiar with both <a href="slapos-DesignDocument.Understanding.Slapos.Buildout">Buildout</a> and <a href="slapos-DesignDocument.Understanding.Slapos.Promises">Promises</a>.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Upgrading a Software Release</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Upgrading a Software Release</h1>
+
+<details open="open">
+<p>The following section contains some a rough walkthrough of the steps to follow when creating a new Software Releaes or upgrading an existing one.</p>
+</details>
+</section>
+
+<section>
+<h1>Freeze a Release</h1>
+
+<ul>
+	<li>Eggs must be pinned</li>
+	<li>Repositories have to specify tags</li>
+	<li>Provide MD5-Sums</li>
+	<li>Precache Resources in Shacache</li>
+</ul>
+
+<details open="open">
+<p>A release cannot evolve. It is <b>frozen</b> and time and not allowed to change. SlapGRID will not touch a Release after installing it on a node. However it is also strictly forbidden to evolve a Release, because it will result in conflicting versions potentially being installed on different nodes. Because of this the following rules must be followed:</p>
+
+<p><b>Eggs must be pinned</b></p>
+
+<p>When developing, the LATEST version of an egg should be used to ensure software is developed against it. However, once publishing the Software Release, all eggs need to be pinned.</p>
+
+<p>Good Example</p>
+
+<pre>
+<code>[versions]
+Flask-Auth = 0.85
+apache-libcloud = 1.2.1
+cns.recipe.symlink = 0.2.3</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>[versions]</code></pre>
+</details>
+
+<details open="open">
+<p><b>Repositories have to specify tags</b></p>
+
+<p>If you deploy a Software Release to a production system it&#39;s completely forbidden to use untagged one like git&#39;s HEAD. The reason is that in this case your software release will likely change in time and any software build can have unexpected results.</p>
+
+<p>Good Example</p>
+
+<pre>
+<code>https://lab.nexedi.cn/nexedi/slapos/blob/1.0.13/software/erp5/software.cfg</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>https://lab.nexedi.cn/nexedi/slapos/raw/master/software/erp5/software.cfg</code></pre>
+</details>
+
+<details open="open">
+<p><b>Provide MD5 Sums</b></p>
+
+<p>Any <code>buildout.cfg</code> files downloaded by Buildout must have a corresponding MD5 sum.</p>
+
+<p>Good Example</p>
+
+<pre>
+<code>[template-runner]
+filename = instance-runner.cfg
+md5sum = 04e31ac503753f89510dd412b4680c56</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>[template-runner]
+filename = instance-runner.cfg</code></pre>
+
+<p><b>Precache resources in Shacache</b></p>
+
+<p>If you want to release a software release to the public, it&#39;s mandatory to pre-compile it and sign it in <a href="https://shacache.nexedi.com/">shacache.org</a> for a minimum set of operating system that you plan to support. Without shacache everything will be compiled from scratch, which may take several hours for a big ERP5 release and can sometimes depend on environmental variables in OS which have a great chance to break the compilation process</p>
+</details>
+</section>
+
+<section>
+<h1>Rationale</h1>
+
+<ul>
+	<li>Start from <code>slapos.git</code></li>
+	<li>Work on Branches</li>
+</ul>
+
+<details open="open">
+<p>A Software Release is developed using a dedicated branch created from master on <code>slapos.git</code>. Create separate branches for specific, atomic, features and name the branch based on these (don&#39;t use your name!). Once the Software Release is finished and reviewed, it can be merged into master where a new tag is created.</p>
+</details>
+</section>
+
+<section>
+<h1>Setup</h1>
+
+<pre>
+<code>$ git clone https://lab.nexedi.com/nexedi/slapos.git
+...
+$ cd slapos
+$ git checkout -b [Software Release]</code></pre>
+
+<details open="open">
+<p>Start by cloning <code>slapos.git</code>:</p>
+
+<pre>
+<code>https://lab.nexedi.com/nexedi/slapos.git</code></pre>
+
+<p>and create a new branch based from Master. Each Software Release has its own branch. Development of the Software Release is done on this branch. Make sure to merge master regularly into your branch to make sure it stays up-to-date with latest development.</p>
+
+<p>Ensure, <code>software.cfg</code> does not contain anything in the <code>[versions]</code> section except <i>zc.buildout</i> (and maybe some versions of eggs explictly required. It is possible to use</p>
+
+<pre>
+<code>extensions = buildout-versions</code></pre>
+
+<p>to generate a list of versions of eggs when running Buildout (it is part of <code>stack/slapos.cfg</code>).</p>
+
+<p><code>[parts]</code> should only be done when the Software Release is considered finished or ready to be released (working on your branch after merging latest master).</p>
+</details>
+</section>
+
+<section>
+<h1>Releasing Recipes</h1>
+
+<ul>
+	<li>Merge and Request update of <code>slapos.cookbook</code></li>
+</ul>
+
+<details open="open">
+<p>(Unless when working with a PINNED git revision as for ERP5,) if a Software Release includes new of modified recipes from the <code>slapos.cookbook</code>, it is required to provide separate tests for these recipes. Ones tests are passing, ask for a review before merging into master and then release/request a release of a new <code>slapos.cookbook</code> version.</p>
+</details>
+</section>
+
+<section>
+<h1>Testing</h1>
+
+<ul>
+	<li>Use Published Eggs</li>
+	<li>Test Software Release Installation</li>
+	<li>Test Instance</li>
+	<li>Add Versions</li>
+	<li>Add ShaCache Certificate</li>
+</ul>
+
+<details open="open">
+<p>Remove any <code>develop=</code> related part, which will force using published eggs. Then test the Software Release installation (ideally using the <i>branch</i> version on ViFiB). Once the installation finished, the buildout-versions will produce output of versions. Afterwards, test instantation.</p>
+
+<p>Once installation and instantiation work as expected, add versions produced by buildout-versions (see <a href="https://lab.nexedi.com/nexedi/slapos/commit/9915f8582b4d09839838c78a6e7b9ba4670e7665">example</a>) and afterwards add your ShaCache certificate (<a href="https://lab.nexedi.com/nexedi/slapos/commit/ee3012ffe67322e1087320d54773ac01387a450f">example</a>).</p>
+</details>
+</section>
+
+<section>
+<h1>Release Profile</h1>
+
+<ul>
+	<li>Code Review</li>
+	<li>Merge to Master</li>
+	<li>Unpin development branch</li>
+	<li>Create new tag for Master</li>
+</ul>
+
+<details open="open">
+<p>At this point, code needs to be reviewed by the SlapOS team before merging into the Master branch. Once merged, the development branch can be unpinned again, so that the Software Release on the branch can use latest available eggs (goes back into development). After merging, create a new SlapOS tag on Master (<i>slapos-[revision-numner]</i>) and the Software Release is published or updated.</p>
+</details>
+</section>
+
+<section>
+<h1>Add Software Release to Automated Tests</h1>
+
+<ul>
+	<li>Add Software Release to SlapOS Software Release list if not there</li>
+	<li>Add Software Release to SlapOS Test Agent list to automate testing</li>
+</ul>
+
+<details open="open">
+<p>After the Release has been published it should also be included in the official SlapOS catalog and automated testing. When adding it to both lists, one manual install may be required by the developer to fill ShaCache with all required files and ensure everything worked correctly.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

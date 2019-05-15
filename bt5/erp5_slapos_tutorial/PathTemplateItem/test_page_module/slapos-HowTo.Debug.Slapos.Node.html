@@ -1,0 +1,270 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces
+   In case installation fails and you want to start over, you need to request a new 
+    token as mentioned above and, depending on whether already created, remove any 
+    existing configuration in <code>/etc/opt/slapos/slapos.cfg</code> before restarting.
+--><!-- outbound links:
+  slapos-DesignDocument.Understanding.Slapos.Basics
+  slapos-DesignDocument.Understanding.Slapos.Architecture
+  slapos-HowTo.Enable.Ssh.Access.On.Remote.Server
+  slapos.DesignDocument.Understanding.Slapos.Buildout
+-->
+<section class="master">
+<h1>Debug SlapOS Node</h1>
+
+<details open="open">
+<p>This document is a collection of tips and tricks for trying to understand issues when working with SlapOS and software deployed on it. Make sure you have read the <a href="slapos-DesignDocument.Understanding.Slapos.Basics">SlapOS Basics</a> and <a href="slapos-DesignDocument.Understanding.Slapos.Architecture">SlapOS Architecture</a> design documents to get a basic understanding of how SlapOS is built and what the different components are doing.</p>
+
+<p>It is expected you have <a href="slapos-HowTo.Enable.Ssh.Access.On.Remote.Server">command line access</a> to the node or server you want to debug. The <a href="https://pythonhosted.org/slapos.core/slapos.usage.html">SlapOS core command line</a> documentation (partially outdated) may also prove helpful.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>General Debugging</li>
+	<li>Specific Software Issues</li>
+	<li>Webrunner Debugging</li>
+</ul>
+
+<details open="open">&nbsp;</details>
+</section>
+
+<section class="chapter">
+<h1>General Debugging</h1>
+
+<details open="open">
+<p>This chapter contains information and basic commands to run when analysing a SlapOS node.</p>
+</details>
+</section>
+
+<section>
+<h1>Installation Issues</h1>
+
+<pre>
+<code>$ sudo su
+# tar czf slapos-log.tar.gz /opt/slapos/log/slapos-node-*
+
+# (different terminal)
+$ scp debian@xx.xx.xx.xxx:/home/debian/slapos-log.tar.gz</code></pre>
+
+<details>
+<p>It is not a given that installation of a software finishes correctly. Should you run into problems during installation and the error is not evident from the output you receive, you can create a log like so:</p>
+
+<pre>
+<code>$ sudo su
+# tar czf slapos-log.tar.gz /opt/slapos/log/slapos-node-*</code></pre>
+
+<p>and from another terminal, call:</p>
+
+<pre>
+<code>scp debian@xx.xx.xx.xxx:/home/debian/slapos-log.tar.gz ./</code></pre>
+
+<p>to download the log file to your local machine. The log will contain more information on what may have caused errors. If you cannot resolve the issue, get in touch on the <a href="https://www.vifib.org/forum">Vifib Forum</a> and ask for help.</p>
+</details>
+</section>
+
+<section>
+<h1>Where are Logs?</h1>
+
+<pre>
+<code>$ sudo su
+# ls /opt/slapos/log/
+slapos-node-collect.log   slapos-node-software.log   slapos-node-report.log   slapos-node-instance.log
+slapos-node-format.log</code></pre>
+
+<details open="open">
+<p>There are different logs which you can find in the <i>log</i> directory.</p>
+
+<pre>
+<code>$ sudo su
+# ls /opt/slapos/log/
+slapos-node-collect.log   slapos-node-software.log   slapos-node-report.log   slapos-node-instance.log
+slapos-node-format.log</code></pre>
+
+<p>The <i>slapos-node-instance.log</i> is the most important giving information on all partitions and processes run on an instance, while the <i>slapos-node-software.log</i> containes info on the status of the software(s) being compiled and running on the instance.</p>
+
+<p>To see what is written into all of the logs you can check:</p>
+
+<pre>
+<code># cat /etc/cron.d/slapos-node</code></pre>
+
+<p>To see the log itself</p>
+
+<pre>
+<code># tail opt/slapos/log/slapos-node-software.log</code></pre>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Node Status</h1>
+
+<pre>
+<code>$ sudo su
+# slapos node</code></pre>
+
+<details open="open">
+<p>To see the status of running processes call <code>slapos node status</code> or just <code>slapos node</code> (<a href="https://pythonhosted.org/slapos.core/slapos.usage.html">full list of commands</a>).</p>
+
+<pre>
+<code># slapos node status
+slappart8:bootstrap-monitor                EXITED    Mar 20 02:28 PM
+slappart8:certificate_authority-on-watch   RUNNING   pid 12137, uptime 0:33:54
+slappart8:crond-on-watch                   RUNNING   pid 12125, uptime 0:33:54
+slappart8:frontend-apache-safe-graceful    EXITED    Mar 20 02:28 PM
+slappart8:frontend-nginx-safe-graceful     EXITED    Mar 20 02:28 PM
+slappart8:frontend_apache-on-watch         EXITED    Mar 20 02:28 PM
+slappart8:frontend_nginx-on-watch          RUNNING   pid 12136, uptime 0:33:54
+slappart8:monitor-httpd-graceful           EXITED    Mar 20 02:28 PM
+slappart8:monitor-httpd-on-watch           RUNNING   pid 12128, uptime 0:33:54
+slappart8:trafficserver-on-watch           RUNNING   pid 12134, uptime 0:33:54
+slappart8:trafficserver-reload             EXITED    Mar 20 02:28 PM
+slappart9:bootstrap-monitor                EXITED    Mar 20 02:29 PM
+slappart9:certificate_authority-on-watch   RUNNING   pid 11866, uptime 0:36:16
+slappart9:crond                            RUNNING   pid 11867, uptime 0:36:16
+slappart9:monitor-httpd-graceful           EXITED    Mar 20 02:29 PM
+slappart9:monitor-httpd-on-watch           RUNNING   pid 11865, uptime 0:36:16
+watchdog                                   RUNNING   pid 24426, uptime 7 days, 21:46:29</code></pre>
+
+<p>In the above example you can see the <i>frontend_apache-on-watch</i> process has exited. <b>on-watch</b> processes are the running processes while <b>safe-graceful</b> are only triggered when updating the configuration of a service (for example via the XML parameter form of the service in the SlapOS Dashboard). This process is used to minimize downtime of the actual service.</p>
+</details>
+
+<details open="open">
+<p>To investigate the status of this or any other process on the list, you can use <code># slapos node tail slappart8:frontend_apache-on-watch</code>.</p>
+
+<p>To restart a service you can use <code>slapos node restart slappart8:frontend_apache-on-watch</code>.</p>
+
+<p>To grep processes you can use</p>
+
+<pre>
+<code># slapos node | grep apache
+slappart8:frontend-apache-safe-graceful    EXITED    Mar 20 02:38 PM
+slappart8:frontend_apache-on-watch         RUNNING   pid 19230, uptime 0:07:10</code></pre>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Instance/Software</h1>
+
+<pre>
+<code>$ sudo su
+# slapos node [instance/software]</code></pre>
+
+<details open="open">
+<p>Using <code>slapos node instance</code> or <code>slapos node software</code> will give you information on their respective current status:</p>
+
+<pre>
+<code>$sudo su
+# slapos node instance
+2018-06-26 09:11:33 slapos[17326] INFO New slapos process started, but another 
+  slapos process is aleady running with pid 15852, exiting.
+# slapos node software
+2018-06-26 09:11:50 slapos[17493] INFO Processing software releases...
+2018-06-26 09:11:50 slapos[17493] INFO Finished software releases.</code></pre>
+
+<p>When the software is idle as in the example above, there isn&#39;t much to see but during installation, the output is equivalent to the progress log entries seen inside a webrunner when installing/instantiating.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Specific Software Issues</h1>
+
+<details open="open">
+<p>This section will cover common issues encountered when working with software available through SlapOS.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Master</h1>
+
+<details open="open">
+<p>The following tips and tricks might be useful:</p>
+
+<ul>
+	<li>If SlapProxy does not start automatically, <code>slapos proxy start &gt;&amp; /dev/null &amp;</code> can manually start it.</li>
+	<li>Use <code># erp5-show -s</code> to see if compilation of SlapOS ERP5 has finished.</li>
+</ul>
+</details>
+</section>
+
+<section>
+<h1>Software: Apache Frontend</h1>
+
+<details open="open">
+<p>When working with a Apache Frontend instance, any of the following are good points to start debugging:</p>
+
+<ul>
+	<li>What is the DNS status? See for example <a href="http://dnscheck.pingdom.com/">pingdom</a> for info.</li>
+	<li>SSL certificate validity? See <a href="https://www.sslshopper.com/ssl-checker.html">ssl-checker</a>.</li>
+	<li>Socat Binding still working? Use <code># ps aux | grep &quot;socat&quot;</code>, should give something like:
+	<pre>
+<code>root      3234  0.0  0.0  12728  2180 pts/0    S+   09:02   0:00 grep socat</code></pre>
+	</li>
+	<li>Frontend still running? Check <code># slapos node status</code> and restart using <code>slapos node restart slappart[x]:frontend_apache-on-watch</code></li>
+</ul>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Webrunner Debugging</h1>
+
+<details open="open">
+<p>The <a href="https://webrunner.nexedi.com/">Webrunner</a> is both development IDE for software (with editor, ssh access, service dashboard and logs) as well mini SlapOS Master hosting a single software instance. It is useful for deploying production systems because it provides resiliency, allows to run isolated patched instances of a software and gives ssh access to the underlying file system as is often required.</p>
+
+<p>When working with Webrunner building software using <a href="slapos.DesignDocument.Understanding.Slapos.Buildout">Buildout</a> you can run into a number of issues for which this section will provide debugging tips and tricks.</p>
+</details>
+</section>
+
+<section>
+<h1>Software and Instance Logs</h1>
+<img alt="Debug SlapOS Node - Webrunner Interface - Webrunner Instance Logs" src="https://www.erp5.com/webrunner-Interface.Debug.Slapos.Node.Webrunner.Logs?display=&amp;format=png" />
+<details open="open">
+<p>When building software the left hand window displays the software and instances logs. Each is accessible separately via the <i>Logs</i> menu or through the <i>Editor</i> and clicking on <i>&quot;This project&quot;</i> in the subheader to switch to <i>&quot;Working Dir&quot;</i>.</p>
+
+<p><b>Note</b>, the software log reports on progress of Buildout running the <code>software.cfg</code> profile to build the software release. Errors during the build should therefore be found in the software profile. After the software has been built, the Webrunner tries to instantiate using <code>instance.cfg.in</code>. Errors during instantiation are thus normally found in the instance profile.</p>
+
+<p><b>Note</b>, that every section in both the <code>software.cfg</code> and <code>instance.cfg.in</code> profiles should show up on the Webrunner&#39;s log. In case a section is missing, you might have forgotten to add it to the <code>parts</code>.</p>
+</details>
+</section>
+
+<section>
+<h1>Templates</h1>
+<img alt="Debug SlapOS Node - Webrunner Interface - Software Profile Templates" src="https://www.erp5.com/webrunner-Interface.Debug.Slapos.Node.Software.Profile.Template?display=&amp;format=png" />
+<details open="open">
+<p>Templates in SlapOS can be <b>rendered by Buildout or <a href="http://jinja.pocoo.org/">Jinja2</a></b>. Jinja templates use double curly braces eg <code>{{ dict[&#39;parameter&#39;] }}</code> (<a href="http://git.erp5.org/gitweb/slapos.recipe.template.git/blob/HEAD:/slapos/recipe/template/README.jinja2.txt?js=1">details</a>), while Buildout uses &quot;$&quot; and single curly braces, eg <code>${buildout:directory}</code> (<a href="http://docs.buildout.org/en/latest/getting-started.html">details</a>). You will encounter <code>$${:parameter}</code> only when <code>instances.cfg.in</code> is rendered by <code>software.cfg</code> using Buildout, and only for variables of the instance itself.</p>
+</details>
+</section>
+
+<section>
+<h1>Hidden .instance.cfg blocking Rebuilds</h1>
+<img alt="Debug SlapOS Node - Webrunner Interface - Hidden .instance.cfg" src="https://www.erp5.com/webrunner-Interface.Debug.Slapos.Node.Hidden.Instance.cfg?display=&amp;format=png" />
+<details open="open">
+<p>Once a build and instantiation finished, you should find a completed <i>.instance.cfg</i> in the <code>instance/slappart0/</code> directory. You can use the <i>Terminal</i> to access the file (or use shellinbox by going to <code>https://[your_instance_url]/shellinabox/</code>). Open the file and verify no variables are left unreplaced (like when using <i>$$</i> in the wrong place). This can for example return <i>$</i> instead of the variable value).</p>
+
+<p>If you fixed your issues and the build keeps failing with the same message, remove the hidden <code>.instance.cfg.in</code> by hand and rebuild. Be careful, you should know what you are doing!</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

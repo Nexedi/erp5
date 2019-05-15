@@ -1,0 +1,336 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+--><!-- outbound links:
+  slapos-DesignDocument.Slapos.Introduction
+  slapos-Tutorial.Install.Slapos.Master.Comp.Root
+  vifib-HowTo.Register.And.Create.User.Account
+  slapos-Tutorial.Install.Slapos.Node.Comp.0
+  vifib-HowTo.Request.Freefib.Re6st.Token
+-->
+<section class="master">
+<h1>Installing a SlapOS Node</h1>
+
+<details open="">
+<p>This tutorial will guide you through the process of installing a SlapOS node on a computer. A regular node (referred to as <b>COMP-1,2,3</b>) is used by the SlapOS Master to install software on the node and then provide instances of this software within computer partitions. For details please refer to the <a href="slapos-DesignDocument.Slapos.Introduction">SlapOS introduction</a>.</p>
+
+<p>For this tutorial you will require a SlapOS Master and (first) user account, which can either be <a href="slapos-Tutorial.Install.Slapos.Master.Comp.Root">your own installed SlapOS Master</a> or <a href="vifib-HowTo.Register.And.Create.User.Account">a commercial service like Vifib</a> to register your node and another computer on which to install the SlapOS node. The tutorial will use an arbitrary GNU/Linux server from a cloud provider (Debian8, available for example from <a href="https://www.ovh.com/fr/">OVH</a> or <a href="https://www.online.net/fr">Online.net</a>) with <i>wget</i> installed.</p>
+
+<p><b>Note</b>, that there is one node referred to as <b>COMP-0</b> throughout the documentation, which provides services to SlapOS Master (<b>COMP-ROOT</b>) besides regular nodes like the one we are going to install here (called <b>COMP-1,2,3...</b>).</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>SlapOS Node Installation</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>SlapOS Node Installation</h1>
+
+<details open="open">
+<p>The following steps will guide you through the installation of a SlapOS on a server. This includes handling both IPv6 connectivity to be able to access computer partitions and the eventually instantiated software as well as installing the SlapOS node (including partitions) along with the SlapOS client.</p>
+
+<p>If you are planning to use <b>ViFiB</b> (<a href="https://slapos.vifib.com/">commercial services</a>), the corresponding/differing steps for how to install a node with ViFiB are pointed out as well.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Master Dashboard</h1>
+<img alt="SlapOS Interface - Dashboard" src="https://www.erp5.com/slapos-Interface.Lte.Box.Installation.Dashboard?display=&amp;format=png" />
+<details open="open">
+<p>Start by logging into your SlapOS Master&#39;s Dashboard with your administrative user credentials at (preferred url):</p>
+
+<pre>
+<code>https://master.YOUR_DOMAIN/</code></pre>
+
+<p>or:</p>
+
+<pre>
+<code>https://[instance-IPv4]/erp5/web_site_module/hostingjs/</code></pre>
+
+<p>For using <b>ViFiB</b> start by <a href="vifib-HowTo.Register.And.Create.User.Account">creating a user account</a> and then <a href="vifib-HowTo.Request.Freefib.Re6st.Token">request a FreeFib token</a> instead of the re6st&nbsp;token shown here (be careful, a Freefib token is a re6st token, not a SlapOS master token).</p>
+
+<p>If you are using a Freefib token, you can jump directly to &quot;<a href="#install_re6st">Install Re6st</a>&quot; section once you have the token, otherwise follow the steps below to get your re6st token.</p>
+</details>
+</section>
+
+<section>
+<h1>List of Instantiated Services</h1>
+<img alt="SlapOS Dashboard - Add Service" src="https://www.erp5.com/slapos-Interface.Add.Service.Re6st.Token?display=&amp;format=png" />
+<details open="open">
+<p>Head to the list of services by clicking on the <i>Services</i> button on the side menu. The list will show all services currently <b>instantiated</b> (not the software currently installed!). To create an instance of an installed software, click the <i>Add</i> button in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Create New Res6st Token Instance</h1>
+<img alt="SlapOS Dashboard - Select Service" src="https://www.erp5.com/slapos-Interface.Select.Service.Re6st.Token?display=&amp;format=png" />
+<details open="open">
+<p>Select Re6st as this is the service we want to create an instance from.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Re6st Service Version</h1>
+<img alt="SlapOS Dashboard - Select Service Version" src="https://www.erp5.com/slapos-Interface.Select.Service.Re6st.Token.Version?display=&amp;format=png" />
+<details open="open">
+<p>Please choose the latest version.</p>
+</details>
+</section>
+
+<section>
+<h1>Re6st Registry Configuration</h1>
+<img alt="SlapOS Dashboard - Re6st Token Service Configuration Parameters" src="https://www.erp5.com/slapos-Interface.Service.Re6st.Token.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>Select <i>Software Type</i> <code>Re6st Token</code> which will load a form with instance-specific parameters.</p>
+
+<p>Every new node that should be added to the network will require a re6st token, so give this token a recognizable name (<code>Re6st-TOKEN-[my_computer_name]</code> for example).</p>
+
+<p>Select the <i>Computer</i> on which the Re6st Registry of your SlapOS Master was installed at the bottom of the page, then click <i>Proceed</i> to instantiate the service. You will be forwarded to the list of current services. Refresh the page, it may take a few minute for the node to be instantiated and the token to appear. It is a single use token to connect <b>one</b> other node to the network, meaning that if the installation later fails for some reason, you need to destroy the instance token being created and create a new one.</p>
+</details>
+</section>
+
+<section>
+<h1>Instantiate Re6st Token</h1>
+<img alt="SlapOS Dashboard - Service Re6st Token Instantiation" src="https://www.erp5.com/slapos-Interface.Instantiate.Service.Re6st.Token?display=&amp;format=png" />
+<details open="open">
+<p>Refresh the list of instantiated services to make the token appear. Click on it to access the connection parameters.</p>
+</details>
+</section>
+
+<section>
+<h1>Token Connection Parameters</h1>
+<img alt="SlapOS Interface - Re6st Token Connection Parameters" src="https://www.erp5.com/slapos-Interface.Service.Re6st.Token.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>Locate the token in the Connection Parameters. It might require a few minutes to show up. Refresh the page to see whether the token has been instantiated.</p>
+
+<p>With the token you can now install Re6st on your new machine.</p>
+</details>
+</section>
+
+<section>
+<h1 id="install_re6st">Installing Re6st</h1>
+
+<pre>
+<code>sudo su
+# yum install wget
+
+(...)
+
+# # default Re6st:
+# wget https://deploy.erp5.net/re6st &amp;&amp; bash re6st
+
+# # ViFiB commercial service:
+# wget https://deploy.erp5.net/gnet/re6st &amp;&amp; bash re6st</code></pre>
+
+<details open="open">
+<p>ssh into the terminal of your server, switch to root and verfiy <i>wget</i> is available. Then install re6st as shown above. If you are installing the default Re6st, the script will ask you:</p>
+
+<pre>
+<code>What is the Url of the Re6st registry: [your-master-url]
+Please insert your re6stnet token: [your-token]</code></pre>
+
+<p>Provide the <i>master-url</i> you noted when setting the port forwarding for the Re6st Registry in <a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">installing SlapOS node (Comp-0)</a> - it should be <code>http://[your_IPv4_address]:9201</code>) along with the <i>token</i> and continue.</p>
+
+<p><b>If you are installing Re6st to access ViFiB (with a FreeFib token)</b>, make sure you use the second installer listed above (from the <i>gnet</i> folder).</p>
+
+<p>The setup should finish without errors:</p>
+
+<pre>
+<code>...
+PLAY RECAP *********************************************************************
+127.0.0.1                  : ok=24   changed=7   unreachable=0   failed=0</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Verify Files Created</h1>
+
+<pre>
+<code>sudo su
+# ls /etc/re6stnet/
+ca.crt     cert.cert     cert.key     re6stnet.conf     README</code></pre>
+
+<details open="open">
+<p>Verify that the configuration files were created. You can also call:</p>
+
+<pre>
+<code>echo &quot;default&quot; &gt;&gt; /etc/re6stnet/re6stnet.conf</code></pre>
+
+<p>and make sure the service is started by calling:</p>
+
+<pre>
+<code>/etc/init.d/re6stnet restart</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Verify Re6st is Running</h1>
+
+<pre>
+<code>sudo su
+# service re6stnet status</code></pre>
+
+<details open="open">
+<p>You can use the above command to see whether Re6st is working. The output should be similar to:</p>
+
+<pre>
+<code>● re6stnet.service - (null)
+   Loaded: loaded (/etc/init.d/re6stnet)
+   Active: active (running) since Fri 2018-03-09 16:43:23 UTC; 6min ago
+   Process: 26395 ExecStop=/etc/init.d/re6stnet stop (code=exited, status=0/SUCC
+  ESS)
+   Process: 26423 ExecStart=/etc/init.d/re6stnet start (code=exited, status=0/SU
+  CCESS)
+   CGroup: /system.slice/re6stnet.service
+           ├─26431 /opt/re6st/parts/python2.7/bin/python2.7 /usr/sbin/re6stnet@r
+  e6stnet.conf
+           ├─26437 openvpn --dev-type tap --dev re6stnet-tcp --persist-tun --per
+  sist-key --script-security 2 --up /opt/re6st/eggs/re6stnet-0.485-py2.7.egg/re6
+  st/ovpn-client --tls-server --mode server --clien...
+           ├─26444 babeld -h 15 -H 15 -L /var/log/re6stnet/babeld.log -S /var/li
+  b/re6stnet/babeld.state -I /var/run/re6stnet/babeld.pid -s -C ipv6-subtrees tr
+  ue -C default max-rtt-penalty 5000 rtt-max 500 rt...
+           ├─26537 openvpn --dev-type tap --dev re6stnet1 --persist-tun --persis
+  t-key --script-security 2 --up /opt/re6st/eggs/re6stnet-0.485-py2.7.egg/re6st/
+  ovpn-client --nobind --client --remote 163.172.45...
+           └─26862 openvpn --dev-type tap --dev re6stnet2 --persist-tun --persis
+  t-key --script-security 2 --up /opt/re6st/eggs/re6stnet-0.485-py2.7.egg/re6st/
+  ovpn-client --nobind --client --remote 52.36.124....
+
+  Mar 09 16:43:23 slapostest2 systemd[1]: Started (null).</code></pre>
+
+<p>After this step Re6st is installed and the machine is accessible over IPv6.</p>
+</details>
+</section>
+
+<section>
+<h1>Get SlapOS Master Token</h1>
+<img alt="SlapOS Node Installation - Request Association Token" src="https://www.erp5.com/slapos-Interface.Server.List.Empty?display=&amp;format=png" />
+<details open="open">
+<p>Head back to the SlapOS Dashboard at:</p>
+
+<pre>
+<code>https://master.YOUR_DOMAIN/</code> (preferred)</pre>
+
+<p>or:</p>
+
+<pre>
+<code>https://[instance-IPv4]/erp5/web_site_module/hostingjs/</code></pre>
+
+<p>and log in as a administrative user. Click on the <i>Servers</i> link in the side to go to your list of servers.</p>
+
+<p>When using the single line installer, you have to provide a X509 security token to identify your node with a SlapOS Master and enable it to manage the node within a network. To get such a token, in the subheader, click <i>Token</i>.</p>
+</details>
+</section>
+
+<section>
+<h1>Association Token</h1>
+<img alt="SlapOS Node Installation - Association Token" src="https://www.erp5.com/vifib-Interface.Server.Token?display=&amp;format=png" />
+<details open="open">
+<p>Click <i>Token</i> to request a token. Once it&#39;s generated, copy the token for later. <b>Note</b>, that the token can only be used once. If the installation of SlapOS fails for whatever reason and you need to retry, you need to request a new token before. Head back to the terminal.</p>
+</details>
+</section>
+
+<section>
+<h1>Single Line Installer</h1>
+
+<pre>
+<code>sudo su
+# wget https://deploy.erp5.net/slapos &amp;&amp; bash slapos
+
+...
+
+What is the url to the SlapOS Master API? [https://slap.vifib.com/]: 
+What is the url to the SlapOS Master Website? [https://slapos.vifib.com/]: 
+What is this computer name? [noname]:
+If you have slapos token if you have? [notoken]:
+</code></pre>
+
+<details open="open">
+<p>Continue and use the single line installer. You will be asked a set of questions during the installation. As you are connecting to your own master, on the first question, please point to port 5443 of your master&#39;s IPv4 address, so enter <code>https://[your_IPv4_address]:5443</code> and on the second question, please add your SlapOS Master dashboard url. Same as you are using to get the token:</p>
+
+<pre>
+<code>https://master.YOUR_DOMAIN</code></pre>
+
+<p>Choose a name for your computer (like <i>SOFTWARE-BOX-1</i> to identity it in your network and finally enter the association token you have received earlier from your SlapOS Master.</p>
+
+<p>Once the installation has finished without errors, you should see:</p>
+
+<pre>
+<code>...
+PLAY RECAP *********************************************************************
+127.0.0.1                  : ok=12   changed=4   unreachable=0   failed=0</code></pre>
+
+<p>In case installation fails and you want to start over, you need to <b>request a new token</b> as mentioned above and, depending on whether already created, remove any existing configuration in <code>/etc/opt/slapos/slapos.cfg</code> before restarting.</p>
+</details>
+
+<details open="open">
+<p>You can verify that SlapOS was installed by trying:</p>
+
+<pre>
+<code># slapos node
+watchdog                   RUNNING   pid 13270, uptime 0:00:03</code></pre>
+
+<p>And (re)formatting the SlapOS node:</p>
+
+<pre>
+<code># slapos node format --now
+2018-04-21 13:07:29 slapos[13279] INFO Updating Computer
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart0
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart1
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart2
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart3
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart4
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart5
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart6
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart7
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart8
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart9
+2018-04-21 13:07:30 slapos[13279] INFO Posting information to &#39;https://54.37.31.108:5443/&#39;
+2018-04-21 13:07:30 slapos[13279] INFO slapos successfully prepared the computer.</code></pre>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Dashboard - Registered Servers</h1>
+<img alt="SlapOS - Server List" src="https://www.erp5.com/slapos-Interface.Server.List?display=&amp;format=png" />
+<details open="open">
+<p>Head back to your SlapOS Dashboard and verify the list of servers now includes your SlapOS Node which was associated to your network using the token you had created. You may have to refresh the page for the server to show up.</p>
+
+<p><b>Note</b>, the entry has three clickable areas:</p>
+
+<ul>
+	<li>The line itself (click <i>server name</i> for example) points to the server configuration</li>
+	<li>Clicking the <i>Computer</i> button will open the monitor - the green color indicates the server is active and contacting the Master (yellow points at connection issues with the computer or one of its partitions, red means the computer has lost connection)</li>
+	<li>The <i>Partitions</i> button will only be visible after the first instance of an installed software as been provided.</li>
+</ul>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

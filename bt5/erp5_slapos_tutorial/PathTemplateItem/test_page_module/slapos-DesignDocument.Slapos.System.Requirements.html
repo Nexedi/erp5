@@ -1,0 +1,188 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+--><!-- outbound links:
+  slapos-DesignDocument.Understanding.Slapos.Architecture
+  slapos-HowTo.Format.Slapos.Node
+  slapos-Tutorial.Install.Slapos.Node.Comp.123
+  slapos-Tutorial.Install.Slapos.Node.Comp.0
+  slapos-Tutorial.Install.Slapos.Master.Comp.Root
+  slapos-HowTo.Request.And.Setup.A.Wildcard.Ssl.Certificate
+  slapos-HowTo.Add.Re6st.On.A.Slapos.Node
+  slapos-Tutorial.Monitor.Slapos.Network
+-->
+<section class="master">
+<h1>SlapOS System Requirements</h1>
+
+<details open="open">
+<p>This design document describes the minimum setup and architecture for creating a SlapOS network. It will distinguish between administrative and user layer and their respective hardware&nbsp;and software requirements. <b>It requires at least two computers and at most 1 day to install and setup</b></p>
+
+<p>For a more detailed overview of SlapOS itself, its concept and system design, please refer to the <a href="slapos-DesignDocument.Understanding.Slapos.Architecture">SlapOS architecture</a> design document.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Minimal Network Layout</li>
+	<li>Administrative Layer</li>
+	<li>User Layer</li>
+</ul>
+
+<details open="open">&nbsp;</details>
+</section>
+
+<section class="chapter">
+<h1>Minimal Network Layout</h1>
+
+<details open="open">
+<p>This section describes the minimal setup required for a SlapOS network.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Network</h1>
+<img alt="SlapOS Requirements - Network Layout" src="https://www.erp5.com/slapos-Graphic.Requirements.Network.Layout?display=&amp;format=png" />
+<details open="open">
+<p>A SlapOS network can be divided into two conceptual layers:</p>
+
+<p>The <i>administrative layer</i> consists of two nodes - <a href="slapos-Tutorial.Install.Slapos.Master.Comp.Root">the SlapOS Master</a> (<b>COMP-ROOT</b>) and the <a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">first network node</a> (<b>COMP-0</b>) which provides connectivity between nodes via a Re6st Registry and Frontend (Apache).</p>
+
+<p>All other nodes in a network belong to the <i>user layer</i>. They are simple nodes <a href="slapos-Tutorial.Install.Slapos.Node.Comp.123">with Re6st and SlapOS installed</a>. They wait for the SlapOS Master to instruct them which software to install and instantiate for users.</p>
+
+<p><b>Note</b>, that during installation, the SlapOS Master node starts out as a regular (<a href="slapos-HowTo.Format.Slapos.Node">formatted</a>) node with just the SlapOS Kernel. It is only through <i>SlapProxy</i> (a minimal SlapOS Master), which is run during installation of a SlapOS Master, and which installs and instantiates the actual SlapOS Master/ERP5 Cloud Engine along with a Frontend (Apache) for accessing it, that the <b>COMP-ROOT</b> node is created. This means, that SlapOS is used to deploy SlapOS recursively and that there are in fact two networks - the one during installation with SlapProxy acting as Master and the first node being <b>COMP-ROOT</b> and the second actual network of <b>COMP-ROOT</b> and <b>COMP-0,1,2,3...</b>.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Administrative Layer</h1>
+
+<details open="open">
+<p>The following section introduces the administrative layer.</p>
+</details>
+</section>
+
+<section>
+<h1>Administrative Layer Overview</h1>
+<img alt="SlapOS Requirements - Administrative Layer" src="https://www.erp5.com/slapos-Graphic.Requirements.Administrative.Layer?display=&amp;format=png" />
+<details open="open">
+<p>The <i>administrative layer</i> is used to describe the essential services required to deploy and manage any type of SlapOS cloud (edge/home/distributed/datacenter cloud, network management et al).</p>
+
+<p>It consists of a Master node (<b>COMP-ROOT</b>) and a first node (<b>COMP-0</b>) managing and communicating between nodes on the network. At the very minimum a <i>Frontend (Apache)</i> and a <i>Re6st Registry</i> are required. The Registry connects nodes within the network and handles communication between all nodes using IPv6 while the Frontend provides &quot;user-friendly&quot; IPv4 adresses for accessing the network.</p>
+</details>
+</section>
+
+<section>
+<h1>Admin Layer - COMP-ROOT Hardware</h1>
+<img alt="SlapOS Requirements - COMP-ROOT Hardware" src="https://www.erp5.com/slapos-Graphic.Requirements.Master.Hardware?display=&amp;format=png" />
+<details open="open">
+<p>The COMP-ROOT should at a minimum have:</p>
+
+<ul>
+	<li>4-8 CPU cores (8 vCores) - preferrably i7, XEON, AMD</li>
+	<li>8-16 GB RAM</li>
+	<li>200GB SSD harddisk (480GB preferred)</li>
+</ul>
+
+<p>The <a hrefr="slapos-Tutorial.Install.Slapos.Master.Comp.Root">installation</a> is generic, fully automated, and will take ~20 min if installable from cache plus another 20-40 min for running the configurator. It will install SlapOS Proxy and provides 3 access points on ports 80, 443 and 5443.</p>
+
+<p>Note, that this machine <b>must have public IPv4 or private IPv4 reachable from COMP-0 (and users)</b>. The above server should be <b>sufficient to run a network of 80-160 actual computers</b>, which then provide instances of software releases called &quot;hosting subscriptions&quot; inside computer partitions to users. Each hosting subscription (for example erp5) is in turn run through several URL-based services. &quot;Several&quot; because complex services tend to require multiple softwares and additional services to provide a final service. For running erp5 for example, a&nbsp;Frontend Apache Process (for HTTP connections), a relational database (Mariadb), an&nbsp;object database (NEO or ZEO), Memcache and Cloudooo are required. Other software solutions might require even more.</p>
+</details>
+</section>
+
+<section>
+<h1>Admin Layer - COMP-ROOT Software</h1>
+<img alt="SlapOS Requirements - COMP-ROOT Software" src="https://www.erp5.com/slapos-Graphic.Requirements.Master.Software?display=&amp;format=png" />
+<details open="open">
+<p>As mentioned before initially there are two different types of Masters being used: SlapProxy (minimalist) and the eventual SlapOS Master (ERP5-based). This is done in order to manage the deployment of a SlapOS Master in the same way as managing any other kind of instance, a recursive approach by which a minimalist Master (SlapProxy) can deploy another ERP5-based Master. For smaller use cases, like running only a single node, SlapProxy alone can be sufficient (the Nexedi <a href="https://webrunner.nexedi.com/">Webrunner</a> is an example of a SlapProxy being used to deploy a software instance on a single machine for a single user). However, in case of a larger network of nodes and using SlapOS for cloud orchestration and computing, SlapProxy is used at startup only and retired once the actual SlapOS Master is running.</p>
+
+<p>Two softwares will eventually be run on the SlapOS Master - <i><a href="https://erp5.nexedi.com/">ERP5 Cloud Engine</a></i> itself for user management, deployment of services, usage accounting and capacity management&nbsp;and a&nbsp;<i>Frontend (Apache)</i> for accessing the Dashboard.</p>
+</details>
+</section>
+
+<section>
+<h1>Admin Layer - COMP-0 Hardware</h1>
+<img alt="SlapOS Requirements - COMP-0 Hardware" src="https://www.erp5.com/slapos-Graphic.Requirements.First.Node.Hardware?display=&amp;format=png" />
+<details open="open">
+<p>If a <a href="slapos-HowTo.Request.And.Setup.A.Wildcard.Ssl.Certificate">valid SSL wildcard (!) certificate</a> and <a href="slapos-HowTo.Add.Re6st.On.A.Slapos.Node">IPv6</a> are available, deployment will require about an hour. The Frontend (Apache) will communicate over ports 80 and 443 and the registry on port 19201. The minimum requirements for this machine are:</p>
+
+<ul>
+	<li>2-4 Cores</li>
+	<li>4-8 GB RAM</li>
+	<li>60-100 GB SSD harddisk (mostly needed for logs)</li>
+	<li>Debian 8 or 9 required (tested daily)</li>
+</ul>
+
+<p>COMP-0 contacts the COMP-ROOT over port 5443 and also requires <b>public IPv4 or private IPv4 reachable by the SlapOS Master and users</b>.</p>
+
+<p>With the above specifications about 8 computers which equates to about 800 partitions (instanciated software services) can be provided through URLs (services in SlapOS are all provided over https).</p>
+</details>
+</section>
+
+<section>
+<h1>Admin Layer - COMP-0 Software</h1>
+<img alt="SlapOS Requirements - COMP-0 Software" src="https://www.erp5.com/slapos-Graphic.Requirements.First.Node.Hardware?display=&amp;format=png" />
+<details open="open">
+<p>A standard SlapOS network installation requires to install two softwares on COMP-0.</p>
+
+<p>The <a href="https://re6st.nexedi.com/">Re6st</a> Registry is, a service maintaining a register of nodes on a network that also issues new network access tokens. It also provides IPv6 throughout the network as all internal data exchange and partition access is done over IPv6.</p>
+
+<p>The <i>Frontend (Apache)</i> provides access to &quot;outside&quot; users and services like the <a href="slapos-Tutorial.Monitor.Slapos.Network">monitor</a>. As all connections need to be secured and a network of n nodes will result in issuance of at least n domains and corresponding urls, a wildcard SSL certificate is necessary for the Frontend (Apache) to operate. The Frontend also enables HTTP access to network services running on remote network node partitions accessible via IPv6 besides handling browser limitations when accessing distributed services (eg access HTTPS with valid certificates, access via IPv4, CORS etc).</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>User Layer</h1>
+
+<details open="open">
+<p>The <i>user layer</i> is described in the following section. While it is not required for a minimal setup to have any nodes beyond the COMP-0 node, SlapOS is a solution for orchestration of large networks so in a typical SlapOS network, there will always be a user layer providing software instances to users.</p>
+</details>
+</section>
+
+<section>
+<h1>User Layer Overview</h1>
+<img alt="SlapOS Requirements - User Layer" src="https://www.erp5.com/slapos-Graphic.Requirements.User.Layer?display=&amp;format=png" />
+<details open="open">
+<p>All nodes in the user layer <a href="slapos-Tutorial.Install.Slapos.Node.Comp.123">are setup in the same way</a>. After installing IPv6, SlapOS is installed during which the node will also be associated with a SlapOS Master. After installation and formatting of a node, the Master can request installation of specific software releases and then provide instances of these releases to users.</p>
+</details>
+</section>
+
+<section>
+<h1>User Layer - COMP-123 Hardware</h1>
+<img alt="SlapOS Requirement - User Layer Hardware" src="https://www.erp5.com/slapos-Graphic.Requirements.User.Layer?display=&amp;format=png" />
+<details open="open">
+<p>Hardware requirements typically depend on the software instances being run on the nodes. For simple services, a machine similar to the one used for COMP-0 will be sufficient whereas more complex softwares running multiple services (such as ERP5) should look more towards the COMP-ROOT requirements as indicator of what will be necessary.</p>
+</details>
+</section>
+
+<section>
+<h1>User Layer - COMP-1,2,3 Software</h1>
+<img alt="SlapOS Requirement - User Layer Software" src="https://www.erp5.com/slapos-Graphic.Requirements.User.Layer?display=&amp;format=png" />
+<details open="open">
+<p>During the installation, a node can (and should) be registered on a network (using the token obtained from the Re6st Registry). Afterwards it is up to the SlapOS Master to decide which software will be installed and to whom it will be provided. For example a network may consist of nodes separated on different continents with a node on each continent providing the same software. The Master could then decide to provide instances of ERP5 using the node closest to the respective user.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

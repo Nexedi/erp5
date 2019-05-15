@@ -1,0 +1,875 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+  developer-SlapOS.Conventions.Guidelines
+  slapos-Howto.Release.Software.Release
+  slapos-How.To.Write.JSON.Schemas
+  developer-Howto.Write.SlapOS.Instance.Profile
+--><!-- outbound links:
+  slapos-HowTo.Instantiate.Webrunner
+  slapos-DesignDocument.Understanding.Slapos.Architecture
+  slapos-DesignDocument.Understanding.Slapos.Buildout
+  slapos-DesignDocument.Understanding.Slapos.Promises
+-->
+<section class="master">
+<h1>How To Create Software Release</h1>
+
+<details open="open">
+<p>This document will guide through the steps of creating a new software release - a set of files which allow to build and instantiate a software on SlapOS. It will introduce the two key components of a software release:</p>
+
+<ul>
+	<li>the software profile (<code>software.cfg</code>)used to build and install the software</li>
+	<li>the instance profile (<code>instance.cfg.in</code>) used for instantiation.</li>
+</ul>
+
+<p>Both installations and instantiations are done using a software called <a href="http://docs.buildout.org/en/latest/">Buildout</a>, which utilizes the templating language <a href="http://jinja.pocoo.org/">Jinja2</a>. Before starting, make sure to understand the <a href="slapos-DesignDocument.Understanding.Slapos.Architecture">SlapOS architecture</a> and make yourself familiar with both <a href="slapos-DesignDocument.Understanding.Slapos.Buildout">Buildout</a> and <a href="slapos-DesignDocument.Understanding.Slapos.Promises">Promises</a>.</p>
+
+<p><b>Note</b> that development of a software release should be done on a <a href="slapos-HowTo.Instantiate.Webrunner">SlapOS Webrunner</a>.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Software Release and Instance Profile</li>
+	<li>Guidelines and Naming Conventions</li>
+	<li>Writing a Software Release</li>
+	<li>Creating an Instance Profile</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Software Release and Instance Profile</h1>
+
+<details open="open">
+<p>This section will introduce the two main components of a software on SlapOS: the <b>Software Release</b> and the <b>Software Instance</b>.</p>
+</details>
+</section>
+
+<section>
+<h1>Understanding SlapOS Software</h1>
+
+<details open="open">
+<p>Software on SlapOS is divided into two parts. First is the <b>Software Release</b>. It represents the entire installation of a software - without configuration files. Because configuration is missing, a software is not usable from just a Software Release, eg Wordpress is installed but no disk image or specific configuration exits.</p>
+
+<p>This is created using the <b>Software Instance</b>. It will reuse the installed Software Release by creating wrappers, configuration files and anything specific to an instance, eg the missing disk image and config for Wordpress. During instantiation SlapOS only creates what is needed on a machine. As the Software is already installed on the machine, SlapOS can create instances using the Software Release and adding only what is missing. This way the installation can be shared across all instances saving space and not requiring to reinstall the complete software every time. The number of instances available to be instantiated on a machine depends on the number of available computer partitions.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Guidelines and Naming Conventions</h1>
+
+<details open="open">
+<p>In order to deploy software through an automated and standardized system like SlapOS it has to meet certain standards and conventions. This section will introduce an overview over the most important guidelines to follow when developing software for SlapOS.</p>
+</details>
+</section>
+
+<section>
+<h1>Basic Terms and Names</h1>
+
+<ul>
+	<li>SlapOS Nodes vs computer</li>
+	<li>Software Release vs software</li>
+	<li>Software Instance vs service</li>
+	<li>Computer Partition vs Software Instance</li>
+</ul>
+
+<details open="open">
+<p>Machines in a SlapOS system are called <b>Nodes</b>. Not servers. Not computers. A <b>Software Release</b> is a link to a git repository and defines a software through the <b>software profile</b> (can also be called buildout profile). It is used to install (supply) a software on a node while the <b>instance profile</b> used for instantiation.</p>
+
+<p>SlapOS provides <b>Software Instances</b> of an installed software. It uses <b>Service(s)</b> which are not considered instances of a software as many services can be used to run a software. A software instance is deployed inside a <b>Computer Partition</b> (or Node partition). Partitions are containers in which a software instance resides.</p>
+</details>
+</section>
+
+<section>
+<h1>Naming Conventions</h1>
+
+<ul>
+	<li>A software release goes in <code>slapos/software/[name] directory</code></li>
+	<li>Atomic, factorable components go into <code>/component/</code>(eg mariadb)</li>
+	<li>High-level factorable sections go into <code>/stack/</code> directory (eg LAMP)</li>
+	<li>The Software Release Buildout profile is named <b>software.cfg</b></li>
+	<li>Instance Buildout Profile(s) are named <b>instance[*].cfg</b></li>
+	<li>Other Buildout Profiles are named <b>buildout.cfg</b></li>
+	<li>Use Branches named according to its topic</li>
+</ul>
+
+<details open="open">
+<p><b>Use Branches</b></p>
+
+<p>When working on a software release, create your own branch! Create separate branches for a specific, atomic, feature and name the branch based on that (don&#39;t use your name!). When associated tests are passing, ask for review and merge to master. The development profile should be located at <code>software/[name]/development.cfg</code> (optional).</p>
+
+<p>Good Example</p>
+
+<pre>
+<code>wordpress, wordpress-upgrade-3.5, erp5-multihomed, resiliency-cleanup</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>Cedric</code></pre>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Generic Conventions</h1>
+
+<ul>
+	<li>Never copy/paste more than 30 lines of code</li>
+	<li>Pin eggs/product versions</li>
+	<li>Tag Software Release for production</li>
+	<li>Only release precompiled Software Relase for production</li>
+</ul>
+
+<details open="open">
+<p><b>Never copy / paste more than 30 lines of code</b></p>
+
+<p>&nbsp;</p>
+
+<p>This increases the cost of maintaining code in multiple locations, discourages code reuse and efforts of making generic software components that can be used in different recipes.</p>
+
+<p><b>Always PIN versions of eggs/products</b></p>
+
+<p>SlapOS / Buildout will try to install the most recent versions of eggs available by default. If versions aren&#39;t pinned, there&#39;s no guarantee that you will get the expected version as you might get the newest one which might break the system.</p>
+
+<p>Good Example</p>
+
+<pre>
+<code>[versions]
+Flask-Auth = 0.85
+apache-libcloud = 1.2.1
+cns.recipe.symlink = 0.2.3</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>[versions]</code></pre>
+</details>
+
+<details open="open">
+<p><b>Tag Software Release for Production</b></p>
+
+<p>&nbsp;</p>
+
+<p>If you deploy a Software Release to a production system it&#39;s completely forbidden to use untagged one like git&#39;s HEAD. The reason is that in this case your software release will likely change in time and any software build can have unexpected results.</p>
+
+<p>Good Example</p>
+
+<pre>
+<code>https://lab.nexedi.cn/nexedi/slapos/blob/1.0.13/software/erp5/software.cfg</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>https://lab.nexedi.cn/nexedi/slapos/raw/master/software/erp5/software.cfg</code></pre>
+
+<p><b>Only release a (tagged), precompiled &quot;frozen&quot; Software Release for production</b></p>
+
+<p>&nbsp;</p>
+
+<p>If you want to release a software release to the public, it&#39;s mandatory to pre-compile it and sign it in <a href="https://shacache.nexedi.com/">shacache.org</a> for a minimum set of operating system that you plan to support. Without shacache everything will be compiled from scratch, which may take several hours for a big ERP5 release and can sometimes depend on environmental variables in OS which have a great chance to break the compilation process. With shacache the time to install is almost equal to time to download the already pre-compiled package which is much more user friendly.</p>
+</details>
+</section>
+
+<section>
+<h1>Software Release Conventions</h1>
+
+<ul>
+	<li>Freeze stable Software Releases with a git tag</li>
+	<li>Instance Profiles/Recipes should be Promise-based</li>
+</ul>
+
+<details open="open">
+<p><b>Note</b>, that Software Releases are frozen once correctly installed. They won&#39;t be processed anymore, because SlapGrid will ignore them. However all software instances are supposed to be processed (i.e. Buildout is run) at least once per day. There should be no exception.</p>
+
+<p>In consequence, here are a few conventions while writing profiles and recipes:</p>
+
+<p><b>Stable (in production) Software Release profiles should be frozen in a git tag.</b></p>
+
+<p>Good Example</p>
+
+<pre>
+<code>https://lab.nexedi.com/nexedi/slapos/blob/slapos-0.137/software/kvm/software.cfg</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>https://lab.nexedi.com/nexedi/slapos/raw/master/software/kvm/software.cfg</code></pre>
+</details>
+
+<details open="open">
+<p><b>Instance Profiles/Recipes should be Promise-based and not break/alter existing data</b></p>
+
+<p>You should always check for existing content before injecting/altering content.</p>
+
+<p>Bad Example</p>
+
+<pre>
+<code># Recipe code that blindly sets application password without checking if it has been changed
+def install(self):
+   set_password()</code></pre>
+
+<p>Good Example</p>
+
+<pre>
+<code>def install(self):
+  if not password_already_set:
+    set_password()</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Software Instance Conventions</h1>
+
+<ul>
+	<li>One Promise per Instance is mandatory</li>
+	<li>Instances must use different, non-reserved ports</li>
+</ul>
+
+<details open="open">
+<p><b>Every Instance requires at least one Promise script testing Connectivity</b></p>
+
+<p>Good Example</p>
+
+<pre>
+<code>Promise testing &quot;Does port YYY answer HTTP 200&quot;</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>No Promise</code></pre>
+
+<p><b>Use different ports for all instances composing a service</b></p>
+<!--p>
+    The "instance tree" must use different ports, so development can be done 
+    inside a Webrunner (containing only one IPv6 and IPv4 for itself and all 
+    instances inside of it).
+    </p-->
+
+<p>Good Example</p>
+
+<pre>
+<code># Wordpress Service composed from Apache and MariaDB instance
+# Apache: httpd process listing on port W (IPv4) and stunnel on port X (IPv6)
+# MariaDB: mysqld process listening on port X (IPv4) and stunnel on port Z (IPv6)
+=&gt; W,X and X,Z should be different</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>1) Port collusion
+2) Service using reserved Webrunner IPv6 ports (30000, 50000, 2222)</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Buildout Profile Conventions</h1>
+
+<ul>
+	<li>Section/Parameters use &quot;-&quot; not &quot;_&quot;</li>
+	<li>Use representative section names</li>
+	<li>Falsy Parameters should be non-existent</li>
+</ul>
+
+<details open="open">
+<p>Builout&#39;s <a href="http://docs.buildout.org/en/latest/">contribution guidelines</a> apply for SlapOS Buildout Profiles, too, especially:</p>
+
+<p><b>[Section] and parameter names use dash not underscore</b></p>
+
+<p>Good Example</p>
+
+<pre>
+<code>[install-foo-bar]
+# unless section is based on file name foo_bar.conf =&gt; [install-foo_bar.conf]</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>[test_foo_bar]</code></pre>
+
+<p><b>Section name must be representative of what it does</b></p>
+
+<p>Good Example</p>
+
+<pre>
+<code># part deploying kvm =&gt; &quot;kvm&quot;
+# part creating directories =&gt; &quot;directory&quot;</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code># part deploying kvm =&gt; &quot;virtual-machine-deployment&quot;</code></pre>
+</details>
+
+<details open="open">
+<p><b>Falsy Parameters (empty string, None, []) should be equivalent to non-existence of parameter</b></p>
+
+<p>To ease integration with Buildout</p>
+
+<p>Good Example</p>
+
+<pre>
+<code># does not exist :)</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>parameter_foo = []
+property = ${section:value_set_to_none_for_any_reason}</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Instance Parameter Conventions</h1>
+
+<ul>
+	<li>Instance Parameters must be atomic</li>
+	<li>Maintain the Parameter names in use</li>
+</ul>
+
+<details open="open">
+<p><b>Parameters must be Atomic</b></p>
+
+<p>For maintenance and security reasons, it should NOT be possible to pass a configuration file as instance parameter. Only atomic parameters are allowed.</p>
+
+<p>Good Example</p>
+
+<pre>
+<code>host = ...
+ip = ...
+port = 123
+url = ...
+password = Foo</code></pre>
+
+<p>Bad Example:</p>
+
+<pre>
+<code>dict = {&quot;host&quot;: ..., &quot;ip&quot;: ... }</code></pre>
+</details>
+
+<details open="open">
+<p><b>Maintain common parameter names</b></p>
+
+<p>Good Example</p>
+
+<pre>
+<code>Reuse host, ip, port, url, ...</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>Use hostname, ip-address, port-number, access-url instead</code></pre>
+
+<p>Defining all required/possible parameters in a Software Release can be tricky, resulting in a non-flexible Software Release. For practical reasons, giving a configuration file in such a case is accepted for the first versions of the Software Release. This should then disappear as new atomic possible parameters are added.</p>
+</details>
+</section>
+
+<section>
+<h1>Component Conventions</h1>
+
+<ul>
+	<li>Component name matches file name</li>
+	<li>Component main section is named like component</li>
+	<li>Component main section extends to latest version</li>
+	<li>Component [buildout] section has no parts</li>
+	<li>Patches are kept in separate files</li>
+	<li>Minor dependencies can be kept in the Component</li>
+</ul>
+
+<details open="open">
+<p><b>Component name matches file name</b></p>
+
+<p>&nbsp;</p>
+
+<p>Good Example</p>
+
+<pre>
+<code>Component &quot;foo v1.2.3&quot; =&gt; component/foo/buildout.cfg</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>Component &quot;foo v1.2.3&quot; =&gt; component/foo.cfg</code></pre>
+
+<p><b>The main section is named like the Component</b></p>
+
+<p>&nbsp;</p>
+
+<p>Good Example</p>
+
+<pre>
+<code>Component &quot;foo v1.2.3&quot; =&gt; [foo]</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>Component &quot;foo v1.2.3&quot; =&gt; [main]</code></pre>
+</details>
+
+<details open="open">
+<p><b>Main section extends to latest component version</b></p>
+
+<p>Several incompatible versions (&quot;foo v1.2&quot;, &quot;foo v1.3&quot;) can live in the same Buildout profile (component/foo/buildout.cfg). A main section ([foo]) must extend the latest one. The different versions should be in different sections (&quot;[foo v1.2.3]&quot;, &quot;[foo v1.2.4]&quot;).</p>
+
+<p>Good Example</p>
+
+<pre>
+<code>[foo]
+&lt;= foo-1.2
+
+[foo-1.2]
+recipe = slapos.recipe.cmmi
+url = http://www.foo.com/foo-1.2.6.tar.gz
+md5sum = abcdef012345679
+
+[foo-1.3]
+recipe = slapos.recipe.cmmi
+url = http://www.foo.com/foo-1.3.2.tar.gz
+md5sum = 987654321fedcba</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+
+&nbsp;</pre>
+</details>
+
+<details open="open">
+<p><b>Patches are kept in separate files</b></p>
+
+<p>Good Example</p>
+
+<pre>
+<code># patch is in: component/foo/my-patch.patch
+[my-patch.patch]
+recipe = hexagonit.recipe.download
+filename = ${:_buildout_section_name_}
+url = ${:_profile_base_location_}/${:filename}
+md5sum = ac06cbaa298ac686d0b0c04bc03e6ad8
+    download-only = true</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+
+&nbsp;</pre>
+</details>
+
+<details open="open">
+<p><b>No &quot;parts&quot; should be defined in [buildout] section</b></p>
+
+<p>Good Example</p>
+
+<pre>
+
+&nbsp;</pre>
+
+<p>Bad Example</p>
+
+<pre>
+
+&nbsp;</pre>
+
+<p><b>Minor dependencies can be kept in the component buildout profile</b></p>
+
+<p>Good Example</p>
+
+<pre>
+
+&nbsp;</pre>
+
+<p>Bad Example</p>
+
+<pre>
+
+&nbsp;</pre>
+</details>
+</section>
+
+<section>
+<h1>Recipe Conventions</h1>
+
+<ul>
+	<li>Reuse exiting recipes</li>
+	<li>Fail early and smart</li>
+	<li>Name Recipe as such and extend from GenericBaseRecipe</li>
+	<li>Get SLAP parameters from Instance Profile</li>
+	<li>Publish SLAP parameters using Publish recipe</li>
+</ul>
+
+<details open="open">
+<p><b>Reuse existing &quot;generic&quot; recipes</b></p>
+
+<p>&nbsp;</p>
+
+<p>The golden rule: reuse recipes like &quot;create directory&quot; (<a href="https://lab.nexedi.com/nexedi/slapos/blob/master/slapos/recipe/mkdirectory.py">slapos.cookbook: makedirectory</a>) or &quot;create a wrapper&quot; (<a href="https://lab.nexedi.com/nexedi/slapos/blob/master/slapos/recipe/wrapper.py">slapos.cookbook:wrapper</a>). Only highly customized Software Releases should write custom recipes. Obvious duplicates should be avoided. Example: ERP5 Software Release and Wordpress Software Release should use the same recipe to deploy MySQL.</p>
+
+<p>Good Example</p>
+
+<pre>
+<code># use slapos.cookbook:makedirectory</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code># roll your own</code></pre>
+</details>
+
+<details open="open">
+<p><b>Fail early and with understandable Messages</b></p>
+
+<p>Errors should be obvious and their origin easy to understand. This means &quot;fail early&quot; and not silently continue until another recipe raises with a different error message. Expected errors (like raising because of a not-yet ready child instance) should be easy to understand, and should not be mistaken with an unexpected error.</p>
+
+<p>Good Example</p>
+
+<pre>
+<code>raise AttributeError(&quot;attribute %s is not defined&quot; % (key))</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>pass</code></pre>
+</details>
+
+<details open="open">
+<p><b>Recipes should be named as such and extend from GenericBaseRecipe (slapos.recipe.librecipe.GenericBaseRecipe)</b></p>
+
+<p>Good Example</p>
+
+<pre>
+<code>class Recipe(GenericBaseRecipe):</code></pre>
+
+<p>Bad Example</p>
+
+<pre>
+<code>class MakeDirectory(SomeOtherRecipe):</code></pre>
+
+<p><b>Get SLAP parameters from Buildout Instance Profile</b></p>
+
+<p>Recipes should take their SLAP instance parameters from the Buildout Instance Profile, as parameters. They should NOT (except in case of special need) retrieve parameters by calling the slap library. If they need to get/set SLAP parameters for cases not covered (example: slave handling), they must extend slapos.recipe.librecipe.GenericSlapRecipe.</p>
+
+<p>Good Example</p>
+
+<pre>
+
+&nbsp;</pre>
+
+<p>Bad Example</p>
+
+<pre>
+
+&nbsp;</pre>
+</details>
+
+<details open="open">
+<p><b>Publish SLAP connection parameters using Pubish recipe</b></p>
+
+<p>Publishing SLAP connection parameters should be done using <a href="https://lab.nexedi.com/nexedi/slapos/blob/master/slapos/recipe/publish.py">slapos.cookbook:publish</a> in the Buildout Instance Profile, not directly from the code in a recipe.</p>
+
+<p>Good Example</p>
+
+<pre>
+
+&nbsp;</pre>
+
+<p>Bad Example:</p>
+
+<pre>
+
+&nbsp;</pre>
+</details>
+</section>
+
+<section>
+<h1>SlapOS ERP5 Conventions</h1>
+
+<ul>
+	<li>Merge Master into erp5-component. Use temporary branch to verify tests pass</li>
+	<li>Merge erp5-component into erp5 when stable. Use temporary branch to verify tests pass</li>
+	<li>Merge erp5 into master when stable. Use temporary branch to verify tests pass</li>
+</ul>
+
+<details open="open">
+<p>ERP5 is a special case in slapos.git. In order to prevent ERP5 related branches to not diverge too much from other branches based on master, the following workflow is mandatory:</p>
+
+<ul>
+	<li>Merge Master into erp5-component. Use temporary branch to verify tests pass</li>
+	<li>Merge erp5-component into erp5 when stable. Use temporary branch to verify tests pass</li>
+	<li>Merge erp5 into master when stable. Use temporary branch to verify tests pass</li>
+</ul>
+
+<p>In principle this approach should be applied for all branches.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Writing a Software Release</h1>
+
+<details open="">
+<p>This section will show how to write a software release. It will demonstrate how to define software types and instantiation parameters using JSON Schemas.</p>
+</details>
+</section>
+
+<section>
+<h1>Defining Instance Parameters Using JSON Schemas</h1>
+
+<ul>
+	<li>Software Release defines Instance Parameters</li>
+	<li>Instance Descriptors can be used to generate input forms</li>
+</ul>
+
+<details open="open">
+<p>Instances generated from a Software Release take parameters (typically to customise instantiation and instance behaviour) and publish results (typically allowing access to requester). The structure of these values is constrained by how the Software Release was implemented, and must be documented so it can be used. Instance descriptors are intended to provide such documentation in a form allowing automated generation of a user interface to consult and provide parameters, and to consult published results (see also <a href="https://lab.nexedi.com/nexedi/slapos/blob/master/README.software.rst">Instance descriptors</a>).</p>
+
+<p>One way of creating forms for users to define instance parameters is by defining JSON schemas.</p>
+</details>
+</section>
+
+<section>
+<h1>Defining JSON entry point</h1>
+
+<pre>
+<code>{
+    &quot;name&quot;: &quot;NAME OF Software&quot;,
+    &quot;description&quot;: &quot;The description&quot;,
+    &quot;serialisation&quot;: &quot;xml&quot;,
+    &quot;software-type&quot;: {
+        &quot;default&quot;: {
+            &quot;title&quot;: &quot;Default&quot;,
+            &quot;software-type&quot;: &quot;default&quot;,
+            &quot;description&quot;: &quot;description of default&quot;,
+            &quot;request&quot;: &quot;instance-NAME-input-schema.json&quot;,
+            &quot;response&quot;: &quot;instance-NAME-output-schema.json&quot;,
+            &quot;index&quot;: 0
+        },
+        &quot;default-slave&quot;: {
+            &quot;title&quot;: &quot;Slave&quot;,
+            &quot;description&quot;: &quot;Description for the slave&quot;,
+            &quot;software-type&quot;: &quot;default&quot;,
+            &quot;request&quot;: &quot;instance-NAME-slave-input-schema.json&quot;,
+            &quot;response&quot;: &quot;instance-NAME-output-schema.json&quot;,
+            &quot;shared&quot;: true,
+            &quot;index&quot;: 1
+        }
+    }
+}</code></pre>
+
+<details>
+<p>The JSON entry point is used to list the available software types and forms the user can choose from, for example whether to instantiate a normal or resilient Webrunner (2 software types) or choosing between a slave and token (also 2 different software types.</p>
+
+<p>By convention the JSON file is named by appending <code>.json</code> to the <code>software.cfg</code>, so:</p>
+
+<ul>
+	<li>Software Release: <code>https://lab.nexedi.com/nexedi/slapos/raw/master/software/re6stnet/software.cfg</code></li>
+	<li>JSON Entry Point: <code>https://lab.nexedi.com/nexedi/slapos/raw/master/software/re6stnet/software.cfg.json</code></li>
+</ul>
+
+<p>There can be multiple forms for the same Software Type having different definitions (if it&#39;s a slave or token). Important entries are:</p>
+
+<ul>
+	<li>&quot;title&quot; is what is displayed to the user on the form</li>
+	<li>&quot;software-type&quot;and &quot;shared&quot; are what will be sent when the instance is requested. <code>software type</code> defines <b>type</b> and <code>shared</code> defines if it is <b>slave or not</b>.</li>
+	<li>&quot;request&quot; is the link (relative link) to the file containing a json schema. This JSON Schema will be used to render the form to the user.</li>
+</ul>
+</details>
+
+<details open="open">
+<p>An online editor can be found <a href="https://jsonschemalint.com/#/version/draft-04/markup/json">here</a> and the <a href="https://lab.nexedi.com/nexedi/slapos/raw/master/slapos/test/schema.json">sample schema</a> is a good place to start as is the example below:</p>
+
+<pre>
+<code>{
+    &quot;name&quot;: &quot;NAME GOES HERE&quot;,
+    &quot;description&quot;: &quot;DESCRIPTION GOES HERE&quot;,
+    &quot;serialisation&quot;: &quot;xml&quot;,
+    &quot;software-type&quot;: {
+        &quot;default&quot;: {
+            &quot;title&quot;: &quot;DEFAULT&quot;,
+            &quot;description&quot;: &quot;DESCRIPTION&quot;,
+            &quot;software-type&quot;: &quot;default&quot;,
+            &quot;request&quot;: &quot;instance-NAME-input-schema.json&quot;,
+            &quot;response&quot;: &quot;instance-NAME-output-schema.json&quot;,
+            &quot;index&quot;: 0
+        }
+    }
+}</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Software Type JSON Schemas</h1>
+
+<pre>
+<code>{
+  &quot;$schema&quot;: &quot;http://json-schema.org/draft-04/schema#&quot;,
+  &quot;properties&quot;: {
+    &quot;somevalue&quot;: {
+      &quot;title&quot;: &quot;Input a String&quot;,
+      &quot;description&quot;: &quot;This is an example of string parameter&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;sonumber&quot;: {
+      &quot;title&quot;: &quot;Input a Number&quot;,
+      &quot;description&quot;: &quot;This is an example of number parameter&quot;,
+      &quot;type&quot;: &quot;number&quot;
+    }
+  }
+}</code></pre>
+
+<details open="open">
+<p>With the entry point set you can start writing the schemas for the different software types. It is advised to use a simple flat approach (1 level deep). Also keep in mind:</p>
+
+<ul>
+	<li>Keep it short, the more parameters, the longer and complex is the form to the user.</li>
+	<li>Don&#39;t include entries which can be automaticaly generated or determinated by a convention (port numbers) as well as default values that don&#39;t requires changes.</li>
+	<li>Don&#39;t include values which depend on other instances if these values can be taken automatically.</li>
+	<li>When using two different software on the same Hosting Subscription (eg Apache and MariaDB), use prefixes on the variable names to keep track.</li>
+	<li>Title and Description have to be meaningful, as this is what the user will see on the form.</li>
+</ul>
+
+<p>Once the JSON schemas are published, the form will be rendered automatically by SlapOS Master. <b>Note</b>, that schemas are not stored, the get pulled in by URL if available.</p>
+
+<p>Examples of software.cfg.json</p>
+
+<ul>
+	<li><a href="https://lab.nexedi.com/nexedi/slapos/raw/master/software/erp5/software.cfg.json">https://lab.nexedi.com/nexedi/slapos/raw/master/software/erp5/software.cfg.json</a></li>
+	<li><a href="https://lab.nexedi.com/nexedi/slapos/raw/master/software/slaprunner/software.cfg.json">https://lab.nexedi.com/nexedi/slapos/raw/master/software/slaprunner/software.cfg.json</a></li>
+	<li><a href="https://lab.nexedi.com/nexedi/slapos/raw/master/software/kvm/software.cfg.json">https://lab.nexedi.com/nexedi/slapos/raw/master/software/kvm/software.cfg.json</a></li>
+	<li><a href="https://lab.nexedi.com/nexedi/slapos/raw/master/software/apache-frontend/software.cfg.json">https://lab.nexedi.com/nexedi/slapos/raw/master/software/apache-frontend/software.cfg.json</a></li>
+</ul>
+
+<p>Examples of schemas:</p>
+
+<ul>
+	<li><a href="https://lab.nexedi.com/nexedi/slapos/raw/master/software/re6stnet/instance-re6stnet-input-schema.json">https://lab.nexedi.com/nexedi/slapos/raw/master/software/re6stnet/instance-re6stnet-input-schema.json</a></li>
+	<li><a href="https://lab.nexedi.com/nexedi/slapos/raw/master/software/re6stnet/instance-re6stnet-slave-input-schema.json">https://lab.nexedi.com/nexedi/slapos/raw/master/software/re6stnet/instance-re6stnet-slave-input-schema.json</a></li>
+	<li><a href="https://lab.nexedi.com/nexedi/slapos/raw/master/software/apache-frontend/instance-slave-apache-input-schema.json">https://lab.nexedi.com/nexedi/slapos/raw/master/software/apache-frontend/instance-slave-apache-input-schema.json</a></li>
+	<li><a href="https://lab.nexedi.com/nexedi/slapos/raw/master/software/apache-frontend/instance-apache-input-schema.json">https://lab.nexedi.com/nexedi/slapos/raw/master/software/apache-frontend/instance-apache-input-schema.json</a></li>
+	<li><a href="https://lab.nexedi.com/nexedi/slapos/blob/master/software/caucase/instance-caucase-input-schema.json">https://lab.nexedi.com/nexedi/slapos/blob/master/software/caucase/instance-caucase-input-schema.json</a></li>
+</ul>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Creating Instance Profile</h1>
+
+<details open="open">
+<p>This section will cover topics related to writing a software instance profile.</p>
+</details>
+</section>
+
+<section>
+<h1>Instance Profile Definition</h1>
+
+<ul>
+	<li>Create a directory</li>
+	<li>Generate MySQL configuration</li>
+	<li>Create a wrapper from the mysqld binary installed with the Software Release</li>
+	<li>...</li>
+</ul>
+
+<details open="open">
+<p>As mentioned earlier, the instance profile <code>instance.cfg</code> is run by Buildout when SlapGrid asks for deployment of an instance. This is a simple Buildout profile showing how to deploy the instance:</p>
+
+<ul>
+	<li>Create a directory</li>
+	<li>Generate MySQL configuration</li>
+	<li>Create a wrapper from the mysqld binary installed with the Software Release</li>
+	<li>...</li>
+</ul>
+</details>
+</section>
+
+<section>
+<h1>Think &quot;Promise-based&quot;</h1>
+
+<ul>
+	<li>Instance.cfg is run once per day</li>
+</ul>
+
+<details open="open">
+<p>The SlapOS node processes (by running Buildout) each contained instance at least once per day. This means that instance profiles and recipes have to be &quot;Promise-based&quot;, shoudn&#39;t blindly initialize the instance and take into account that they will be run regularly. One practical implication of this is to check for existing data before overwriting anything that can probably break an instance. (Pseudocode) Example:</p>
+
+<pre>
+<code>def install(self):
+if not password_already_set:
+  set_password()</code></pre>
+
+<p>Here, it is safe to run often buildout for the instance because it won&#39;t overwrite your password.</p>
+</details>
+</section>
+
+<section>
+<h1>Define Process List</h1>
+
+<ul>
+	<li>Executables in <code>${buildout:directory}/etc/services</code></li>
+	<li>Executables in <code>${buildout:directory}/etc/run</code></li>
+</ul>
+
+<details open="open">
+<p>A software instance (or service) is composed of one or more exectuables (eg Apache, Mariadb, Varnish, ...) that are run by the operating system. SlapOS allows to define such exectuables that will be run when starting the instance and terminated when stopping the instance. There are two types of executables:</p>
+
+<ul>
+	<li><b>${buildout:directory}/etc/services</b>: All executables that are needed for the service (mysqld, apache, ...) should go to <code>${buildout:directory}/etc/services</code>. If one of them exits, it will trigger the sending of an alert (<b>bang</b>) to the SlapOS Master and cause buildout to run for this instance.</li>
+	<li><b>${buildout:directory}/etc/run</b>: All executable scripts designed to run for a short time and exit when done without disturbing the service should go to <code>${buildout:directory}/etc/run</code>. Scripts are usually required to bootstrap the service but are not necessary for the service itself. Examples include generation of SSL keys, helper tools needed to inject commands to the executable acting as service, etc.</li>
+</ul>
+
+<p>Executables can be anything, for example shell scripts, Python scripts or symbolic links to executable located in the Software Release directory (<code>/opt/slapgrid/0123456789abcdef</code>). Usually it&#39;s a simple shell script that runs (exec) an executable located in the Software Release directory providing all the needed arguments like location of a configuration file or the option to stay in foreground</p>
+</details>
+
+<details open="open">
+<p>After the SlapOS node has run buildout for a Software Instance it will add all executables present in the above two directories to the Supervisor (process manager) configuration who will then request the exectuables to start or stop. Supervisor is also responsible for reporting any suspect process exit to the SlapOS node.</p>
+</details>
+</section>
+
+<section>
+<h1>Set Default Instance Parameters</h1>
+
+<ul>
+	<li>Always provide fallbacks to always run an instance</li>
+	<li>Prevent Buildout from exiting with &quot;Parameter not found&quot;</li>
+</ul>
+
+<details open="open">
+<p>Users are usually required to specifiy a number of parameters for their instance. Parameters can be arbitrary, for example the instantiation of a KVM allows to define amount of RAM, CPU, disk etc. For making sure an instance works at all times, default parameters have to be provided. These serve two purposes:</p>
+
+<ul>
+	<li>Fallback in case user doesn&#39;t provide a parameter</li>
+	<li>Prevent Buildout from exiting with <code>Parameter not found</code> with an empty value</li>
+</ul>
+
+<p>The general rule is that an empty parameter is equivalent to not providing a parameter at all. For example, in the KVM instance profile, it is possible to add a <code>[slap-parameter]</code> section representing all parameters given by the user:</p>
+
+<pre>
+<code>[slap-parameter]
+# Default value if no second disk is specified. Will be ignored by the kvm recipe
+second-disk-location =
+# Default value for RAM amount, in MB
+ram-size = 1024</code></pre>
+
+<p>This way, if the user defines ram-size the given value will just be overwritten.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

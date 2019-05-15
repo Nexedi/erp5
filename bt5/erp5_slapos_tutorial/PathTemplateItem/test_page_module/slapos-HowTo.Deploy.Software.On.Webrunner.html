@@ -1,0 +1,126 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+--><!-- outbound links:
+
+-->
+<section class="master">
+<h1>How To Deploy Software on a Webrunner</h1>
+
+<details open="open">
+<p>This document will show how to deploy a software release on a SlapOS Webrunner. The process can be used for any software available on the <a href="https://lab.nexedi.com/nexedi/slapos/tree/master/software">SlapOS repository</a>. <b>Note</b>, that the Webrunner is behaves like a SlapProxy (see <a href="/P-OSTV-DesignDocument.Understanding.Slapos.Architecture-002-en.html">SlapOS architecture</a>) in that it contains a &quot;mini SlapOS Master&quot; that can provide a single software. Instantiating a Webrunner thus means, creating a smaller encapsulated system for then deploying another software inside. This is a useful approach for developing or hosting simple software releases.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Deploy Software</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Deploy Software</h1>
+
+<details open="open">
+<p>This section will show how to access a webrunner and deploy a software. The screenshots show deployment of the <a href="https://lab.nexedi.com/nexedi/slapos/tree/master/software/helloworld">helloworld software release</a>, also used to explain how to <a href="/P-OSTV-Tutorial.Extend.Software.Release-002-en.html">extend a software release</a>.</p>
+</details>
+</section>
+
+<section>
+<h1>Access Webrunner</h1>
+<img alt="SlapOS Interface - Webrunner Connection Parameters" src="https://www.erp5.com/slapos-Interface.Webrunner.Software.Deployment.Connection.Parameters?display=&amp;format=" />
+<details open="open">
+<p>Locate the connection parameter on your webrunner service. You can access the webrunner using the <i>url</i> and logging in with <i>init-user</i> and <i>init-password</i>.</p>
+</details>
+</section>
+
+<section>
+<h1>Webrunner Landing Page</h1>
+<img alt="Webrunner Interface - Landing Page" src="https://www.erp5.com/slapos-Interface.Webrunner.Software.Deployment.Webrunner.Landing.Page?display=&amp;format=png" />
+<details open="open">
+<p>On the Webrunner landing page, select <i>Open Software Release</i></p>
+</details>
+</section>
+
+<section>
+<h1>Locate Software Directory</h1>
+<img alt="Webrunner Interface - Locate Software Directory" src="https://www.erp5.com/slapos-Interface.Webrunner.Software.Deployment.Webrunner.Locate.Software?display=&amp;format=png" />
+<details open="open">
+<p>Locate the <i>Software</i> directory which contains a list of all software releases available on the webrunner. The list is based on the official SlapOS software <a href="https://lab.nexedi.com/nexedi/slapos/tree/master/software">repository</a>.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Helloworld Software</h1>
+<img alt="Webrunner Interface - Select Software" src="https://www.erp5.com/slapos-Interface.Webrunner.Software.Deployment.Webrunner.Select.Software?display=&amp;format=png" />
+<details open="open">
+<p>Select the <i>Helloworld</i> Software Release, then click <i>Open Software</i>.</p>
+</details>
+</section>
+
+<section>
+<h1>Confirm Helloworld Software</h1>
+<img alt="Webrunner Interface - Confirm Software" src="https://www.erp5.com/slapos-Interface.Webrunner.Software.Deployment.Webrunner.Confirm.Software?display=&amp;format=png" />
+<details open="open">
+<p>Click <i>Save</i> unless modification of the software release is required before deploying the default version. Then click the green arrow to start build and instantiation.</p>
+</details>
+</section>
+
+<section>
+<h1>Build Status</h1>
+<img alt="Webrunner Interface - Deployment Status" src="https://www.erp5.com/slapos-Interface.Webrunner.Software.Deployment.Webrunner.Deployment.Status?display=&amp;format=png" />
+<details open="open">
+<p>Once saved the deployment of the software will begin. Deployment can take anywhere from a few minutes (simple software, already compiled) to several hours. The log panel will inform of any errors or warnings encountered during deployment.</p>
+</details>
+</section>
+
+<section>
+<h1>Build Finished</h1>
+<img alt="Webrunner Interface - Deployment Finished" src="https://www.erp5.com/slapos-Interface.Webrunner.Software.Deployment.Webrunner.Deployment.Finished?display=&amp;format=png" />
+<details open="open">
+<p>The top indicator <i>Building State</i> will show the result of (re-)building the software release. If it fails, errors are likley in <code>software.cfg</code>. The bottom indicator shows the <i>Running State</i> which indicates whether an instance could successfully be deployed from the software release. Errors in this part are likley to be found in <code>instance.cfg.in</code>.</p>
+
+<p>Once both indicators switch to green, the software is deployed and ready to use.</p>
+</details>
+</section>
+
+<section>
+<h1>Inspect Services</h1>
+<img alt="Webrunner Interface - Inspect Services" src="https://www.erp5.com/slapos-Interface.Webrunner.Software.Deployment.Webrunner.Inspect.Services?display=&amp;format=png" />
+<details open="open">
+<p>Click on <i>Services</i> in the subheader to open the list of running services. The services defined in the <code>software.cfg</code> file should be running.</p>
+</details>
+</section>
+
+<section>
+<h1>Inspect Connection Parameters</h1>
+<img alt="Webrunner Interface - Inspect Connection Parameters" src="https://www.erp5.com/slapos-Interface.Webrunner.Software.Deployment.Webrunner.Inspect.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>The connection parameters tab displays the parameters defined in the <code>software.cfg</code>.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

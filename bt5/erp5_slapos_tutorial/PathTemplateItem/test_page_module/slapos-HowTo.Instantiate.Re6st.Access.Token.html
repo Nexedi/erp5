@@ -1,0 +1,93 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+--><!-- outbound links:
+  slapos-HowTo.Add.Software.Release.To.Slapos.Master
+  slapos-Tutorial.Install.Slapos.Node.Comp.0
+  slapos-Tutorial.Install.Slapos.Node.Comp.123
+-->
+<section class="master">
+<h1>How To Instantiate Re6st Access Token</h1>
+
+<details open="open">
+<p>This document explains how to instantiate Re6st Access Tokens which are used to connect new nodes to network maintained by the Re6st Registry of a SlapOS Master.</p>
+
+<p>It will explain the different instantiation parameters. Please refer to other documents on <a href="slapos-HowTo.Add.Software.Release.To.Slapos.Master">add a software to the SlapOS Master catalog</a> or <a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">supplying/installing a software</a></p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Re6st Token Parameters</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Configuring Re6st Access Token</h1>
+
+<details open="open">
+<p>The process of installing (supplying) a software and providing it as a service (instantiation) are the same for all software. However during instantiation each instance can be configured differently.</p>
+
+<p>This section will cover the specific configuration parameters used for a <b>Re6st Access Token</b>, which has to be provided during <a href="slapos-Tutorial.Install.Slapos.Node.Comp.123">installation of Re6st on a node</a>.</p>
+</details>
+</section>
+
+<section>
+<h1>Token Configuration</h1>
+<img alt="SlapOS Interface - Re6st Token Configuration" src="https://www.erp5.com/slapos-Interface.Service.Re6st.Token.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>After adding a new serivce, selecting Re6st and the latest version, you will reach the configuration screen. Set <i>Software Type</i> to <b>Re6st Token</b>. As mentioned, the token is actually a slave instance of the Registry (and in case of <b>COMP-0</b> a first gateway node).</p>
+
+<p>Select the <i>Computer</i> on which the Registry of your SlapOS Master was installed at the bottom of the page, then click <i>Proceed</i> to instantiate the service and be forwarded to the list of current services. Refresh the page, it may take a few minute for the node to be instantiated and the token to appear. It is a single use token to connect <b>one</b> other node to the network.</p>
+
+<p>You can follow the compilation by looking at the <code>slapos-node-software.log</code> using:</p>
+
+<pre>
+<code># tail opt/slapos/log/slapos-node-software.log -f</code></pre>
+
+<p>&nbsp;</p>
+</details>
+</section>
+
+<section>
+<h1>Token Instantiation</h1>
+<img alt="SlapOS Interface - Re6st Token Instantiation" src="https://www.erp5.com/slapos-Interface.Re6st.Token.Instantiation?display=&amp;format=png" />
+<details open="open">
+<p>Once the token is instantiantiated, click on it to open it&#39;s configuration and connection parameters.</p>
+</details>
+</section>
+
+<section>
+<h1>Token Connection Parameters</h1>
+<img alt="SlapOS Interface - Re6st Token Connection Parameters" src="https://www.erp5.com/slapos-Interface.Service.Re6st.Token.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>Locate the token in the Connection Parameters. It might require a few minutes to show up.</p>
+
+<p>With the Registry token, you can now install Re6st on a fresh node.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

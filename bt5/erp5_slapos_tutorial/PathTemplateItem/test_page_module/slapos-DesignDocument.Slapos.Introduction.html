@@ -1,0 +1,353 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+  VIFIB-SlapOS.Introduction
+--><!-- outbound links:
+  slapos-DesignDocument.Unterstanding.Slapos.Architecture
+  slapos-Tutorial.Install.Slapos.Master.Comp.Root
+  slapos-Tutorial.Install.Slapos.Master.Comp.123
+  slapos-Tutorial.Install.Slapos.Master.Comp.0
+-->
+<section class="master">
+<h1>SlapOS Introduction</h1>
+
+<details open="open">
+<p>This document has been created to introduce SlapOS to developers and users. It will explain what SlapOS, show a brief demo and outline the architecture of a SlapOS system before pointing to the different ways to get started to use SlapOS.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>What is SlapOS?</li>
+	<li>SlapOS Demo</li>
+	<li>SlapOS Architecture</li>
+	<li>Using SlapOS</li>
+</ul>
+
+<details open="open">&nbsp;</details>
+</section>
+
+<section class="chapter">
+<h1>What is SlapOS?</h1>
+
+<details open="open">
+<p>This section introduces the SlapOS basics, the philosophy behind SlapOS and situations in which SlapOS can be a useful solution to implement.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS</h1>
+<img alt="SlapOS Node - Running State" src="https://www.erp5.com/slapos-Graphic.Introduction.Node.Running.State?display=&amp;format=png" />
+<details open="open">
+<p>SlapOS stands for <b>S</b>imple <b>L</b>anguage for <b>A</b>ccounting and <b>P</b>rovisioning <b>O</b>perating <b>S</b>ystem. It is a general purpose operating system usable on distributed POSIX infrastructures (Linux, xBSD) to provide and manage software services without the need for virtualization. SlapOS is published as Free Software under <a href="https://www.nexedi.com/licensing">fairly permissive licensing</a>.</p>
+
+<p>SlapOS is useful for anyone requiring to run more than 20 instances of the same application or who needs to operate more than 10 servers. SlapOS is a possible solution for a variety of scenarios such as:</p>
+
+<ul>
+	<li>public or private cloud computing infrastructure (IaaS, PaaS, SaaS, DraaS)</li>
+	<li>hyperconverged infrastructure (virtualization of compute, storage and network)</li>
+	<li>edge computing infrastructure (CDN, IoT gateway, AI offloading, cache, buffering)</li>
+	<li>4G/5G network management system (eNodeB, locale core network)</li>
+	<li>resilient low latency network as a service (IPv4, IPv6, RINA)</li>
+	<li>tactical cloud bubble</li>
+</ul>
+</details>
+</section>
+
+<section>
+<h1>Service and Process Oriented System</h1>
+<img alt="SlapOS Network Snapshot" src="https://www.erp5.com/slapos-Graphic.Slapos.Network.Snapshot?format=png&amp;display=" />
+<details open="open">
+<p>On a simplified level, SlapOS operates a network of machines. A Master (<b>COMP-ROOT</b>) contains a catalog of software releases which are installed and instantiated on network nodes (<b>COMP-0,1,2,3</b>). The master tracks service consumption and provides means for managing and invoicing the usage of specific services.</p>
+
+<p>Unlike Unix in which &quot;everything is a file&quot;, SlapOS can be described as a cloud operating system in which &quot;everything is a process&quot;. If one has to manage thousands of servers with thousands of processes, hundreds of different applications in multiple releases or versions, SlapOS is useful by making the whole management process well specified, automated and controllable.</p>
+
+<p>By writing a simple recipe using a software called <a href="http://docs.buildout.org/en/latest/">Buildout</a>, SlapOS can help turn any software application (open source or proprietary) into a solid SaaS or PaaS platform. Besides instance provisioning and monitoring, SlapOS also provides a Dashboard to handle user registration, support requests, invoicing and payments.</p>
+</details>
+</section>
+
+<section>
+<h1>Philosophy</h1>
+<img alt="SlapOS Graphic - Philosophy" src="https://www.erp5.com/slapos-Graphic.Introduction.Philosophy?display=&amp;format=png" />
+<details open="open">
+<p>The philosophy of SlapOS was created by <a href="http://www.vifib.com">ViFiB</a>, one of the first providers of &quot;Distributed Cloud Computing&quot;.</p>
+
+<p>The first idea of SlapOS is to consider that &quot;everything is a process&quot; and that a system is made up of processes exchanging information through network services based on various protocols (HTTP, memcached, etc).</p>
+
+<p>The second idea of SlapOS is that the best way to create a reliable and efficient cloud computing system is to follow the original principles of the Internet: distribution and simplicity. Rather than trying to build reliable data centers with redundant network, power supply, staff, etc. in order to reach 99.999% availability, SlapOS aggregates unreliable hosting, such as home cloud or low cost dedicated servers and, by combining them, reaches a reliability of 99.999%. SlapOS is in reality much more reliable than traditional approaches to cloud operation because, by selecting independent sources, SlapOS can mitigate the risk of major system outages due to electricity failures, political decisions, etc. Of course, SlapOS is and can also be used to operate traditional data centers more efficiently.</p>
+
+<p>The third idea behind SlapOS is that to ensure redundancy, data replication or energy savings, any intelligent process should be implemented by the application itself rather than by the infrastructure. This is in line with the original ideas behind the Internet: a &quot;stupid&quot; network running clever applications. By taking into account usage or data specificities, optimal policies for redundancy and energy savings can be implemented.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>SlapOS Demo</h1>
+
+<details open="open">
+<p>This section contains screenshots of how to request a software service from <a href="https://www.vifib.com">ViFiB</a>, creator of the SLAP protocol. ViFiB leads the SlapOS project which is based on scientific ideas from Prof. Christophe C&eacute;rin of Paris University (XIII).</p>
+
+<p>Besides developing custom implementations for clients, ViFiB also provides a reference implementation of SlapOS which is used to host Software as a Service (SaaS), Virtual Machines and a federated Infrastructure as a Service (IaaS) to <a href="https://www.nexedi.com/">Nexedi</a>, the mother company of ViFiB. This SlapOS implementation is used to provide various software services to developers in the Nexedi offices around the world.</p>
+</details>
+</section>
+
+<section>
+<h1>Vifib Dashboard</h1>
+<img alt="Vifib Interface - Dashboard" src="https://www.erp5.com/vifib-Interface.Slapos.Introduction.Dashboard?display=&amp;format=png" />
+<details open="open">
+<p>After logging into the SlapOS Dashboard, a user can request new software services using the <i>Services</i> menu in the left hand panel.</p>
+</details>
+</section>
+
+<section>
+<h1>Vifib Instantiated Services</h1>
+<img alt="Vifib Interface - Instantiated Services" src="https://www.erp5.com/vifib-Interface.Slapos.Introduction.Instantiated.Services?display=&amp;format=png" />
+<details open="open">
+<p>The services section displays the list of instantiated services. These can be complete business applications (eg ERP5, Drupal, XWiki), well defined network services (eg. memcached, cloudooo, Frontend) which may be part of a Service Orientated Architecture (SOA), a virtual machine (eg KVM) or an instance of another IAAS provider (eg. Amazon EC2).</p>
+
+<p>To instantiate a new service, click <i>Add</i> in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Vifib Available Services</h1>
+<img alt="Vifib Interface - Available Services" src="https://www.erp5.com/vifib-Interface.Slapos.Introduction.Available.Services?display=&amp;format=png" />
+<details open="open">
+<p>This will load the list of available services products on the software catalog of Vifib. Select the service to be instantiated.</p>
+</details>
+</section>
+
+<section>
+<h1>Vifib Available Service Versions</h1>
+<img alt="Vifib Interface - Available Service Versions" src="https://www.erp5.com/vifib-Interface.Slapos.Introduction.Available.Service.Versions?display=&amp;format=png" />
+<details open="open">
+<p>Once a service is selected, a software release (version) must also be selected. SlapOS is capable of providing multiple instances of the same application in multiple versions or releases (eg. users may wish to use MySQL 5.0 or MySQL 5.1, MariaDB or SkySQL).</p>
+
+<p>There is no limitation in SlapOS in terms of number of versions of releases available for each application. This is very important for production systems which often require patching files or changing compilation options of the underlying base software. Here, SlapOS departs from traditional GNU/Linux distributions in the sense that it does not try to define what is a &quot;standard MySQL&quot; or &quot;standard Java&quot; or even a &quot;standard Apache&quot;. Experience showed that minor, yet essential changes to any software are eventually required to build a scalable system on the Cloud. GNU/Linux distributions cannot be trusted beyond Linux kernel and core libraries for that purpose.</p>
+
+<p>It was found for example that some GNU/Linux distributions add bugs to packaged software in the process of making it compliant with distribution guidelines. Bugs can sometimes lead to unit tests not passing anymore. Messages in the distribution bug tracker sometime state that there are no plans to fix this bug since there is no way to solve it in a way consistent with the distribution guidelines. This can make sense from the GNU/Linux distribution point of view but may be unacceptable to build a production system.</p>
+</details>
+</section>
+
+<section>
+<h1>Configure Instance</h1>
+<img alt="Vifib Interface - Service Configuration" src="https://www.erp5.com/vifib-Interface.Slapos.Introduction.Service.Configuration?display=&amp;format=png" />
+<details open="open">
+<p>Before the service is requested and instantiated, a number of software specific configuration parameters can be provided. Manual selection of a network node will override the automatic allocation of the service by the SlapOS Master.</p>
+
+<p>The request is triggered by clicking <i>Proceed</i>. Once the software has been installed in a computer partition of the chosen node and is ready to be used, its connection parameters will be published on a new entry in the <i>Server List</i> previously seen.</p>
+
+<p><b>Note</b>, that while the Vifib implementation of SlapOS does not use invoicing for software instances or consumption as they are only used internally, these features are trivial to integrate if required.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>SlapOS Architecture</h1>
+
+<details open="open">
+<p>The following section briefly describes the architecture underlying SlapOS. A more detailed overview is available at <a href="slapos-DesignDocument.Unterstanding.Slapos.Architecture">understanding the SlapOS architecture</a>.</p>
+</details>
+</section>
+
+<section>
+<h1>Master and Nodes</h1>
+<img alt="SlapOS Network Snapshot" src="https://www.erp5.com/slapos-Graphic.Slapos.Network.Snapshot?format=png&amp;display=" />
+<details open="open">
+<p>The SlapOS architecture uses two types of servers: SlapOS Master (<b>COMP-ROOT</b>) and SlapOS nodes (<b>COMP-0,1,2,3</b>) with the <b>COMP-0</b> node having a special status as it is providing services to both the master node and other nodes on the network.</p>
+
+<p>The SlapOS Master informs each node which software it should install and which instances of which software should be run. Each node tells the SlapOS Master how much resources were consumed by each instance of each software.</p>
+
+<p>Based on the start dates and stop dates which represent the time series of execution frames of each application, and based on the resource usage of each application, the SlapOS Master can produce invoices for every user of SlapOS based on his personal usage.</p>
+
+<p>The current architecture of SlapOS based on a single redundant Master node is designed to manage thousands of servers. Future versions of SlapOS may however rely on a distributed implementation of the SlapOS Master, too.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Node Initial State</h1>
+<img alt="SlapOS Node in Initial State" src="https://www.erp5.com/slapos-Graphic.Introduction.Node.Initial.State?display=&amp;format=png" />
+<details open="open">
+<p>SlapOS nodes run a small kernel called the &quot;SlapOS Kernel&quot;. This kernel consists of a minimal GNU/Linux distribution, the SlapGrid daemon, a Buildout environment for bootstrapping applications and supervisord to control running processes.</p>
+
+<p>This current implementation of &quot;SlapOS Kernel&quot; was created using OpenSuSE and the SuSE Studio service and is small enough to fit on an USB key.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Master Node</h1>
+<img alt="SlapOS Master Node" src="https://www.erp5.com/slapos-Graphic.Introduction.Node.Master?display=&amp;format=png" />
+<details open="open">
+<p>The SlapOS Master is also just a standard SlapOS node with <a href="https://erp5.nexedi.com/">ERP5</a> installed.</p>
+
+<p>This ERP5 <i>&quot;Cloud Engine&quot;</i> is an extension of ERP5 open source ERP which provides, in addition to invoicing and financials, all the standard business processes required to operate an IaaS, SaaS or PaaS company. ERP5 Cloud Engine can be used standalone or in combination with other business applications.</p>
+
+<p>The core scope of ERP5 Cloud Engine is to keep track of all available SlapOS nodes, to list all software products and releases which can be requested and define how they can be installed, to define which release of which application may be installed on which SlapOS node, to specify how a given application can be instantiated and to keep track of which instance is being run on which SlapOS node. The core scope of ERP5 Cloud Engine is also sometimes called &quot;SlapGRID Cloud Engine&quot;.</p>
+
+<p>The ERP5 Cloud Engine also implements the subscription process for users to register to SaaS, PaaS or IaaS, an e-commerce portal for users to order and access instances through the Web, a CRM interface to handle support requests as well as a complete financial system.</p>
+
+<p>The ERP5 Cloud Engine can be interfaced to existing systems using standard interfaces based on standard protocols such as SyncML, REST, SOAP, XML-RPC, LDAP or MySQL. ERP5 Cloud Engine supports most SSO implementations, too.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Node Installed</h1>
+<img alt="SlapOS Node in Installed State" src="https://www.erp5.com/slapos-Graphic.Introduction.Node.Installed.State?display=&amp;format=png" />
+<details open="open">
+<p>After a SlapOS node is initially installed, a user may request an instance of a given (and available) software to be instantiated. This is done using so-called &quot;recipes&quot; and &quot;Software Releases&quot;.</p>
+
+<p>SlapOS already provides default recipes for many common softwares (MySQL, Apache, memcached, et al.). However, it is recommended for users to always create their own recipes with their own compilation options and specific build configuration. As an example, a recipe can be created for specific version of MediaWiki and another one for OS Commerce. Each recipe may embed its own version of Apache, MySQL, etc. with its own custom compilation options. This way, a recipe is self-contained and under the control of the recipe author.</p>
+
+<p>A Software Release is defined as the url and revision number of a git repository which contains a collection of recipes required to build a complete software application. This repository is called <i>buildout directory</i>. Software Releases also define a signature in order to make sure that buildout directories which are downloaded contain the same files as those which are expected.</p>
+</details>
+
+<details open="open">
+<p>The process of installing the Software Release relies on two components of the SlapOS Kernel: SlapGRID and Buildout. SlapGRID requests the list of software which should be installed on a SlapOS node from the SlapOS Master, who returns the respective Software Releases to install. SLAPgrid downloads the buildout directory of the Software Release and runs the <i>buildout</i> command. The buildout command downloads all source code and dependencies required to compile the software application defined in the recipes, compiles all source code (using cache to accelerate compilation) and installs software application binaries, files and libraries in a subdirectory of <code>/opt</code>.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Node Running</h1>
+<img alt="SlapOS Node in Running State" src="https://www.erp5.com/slapos-Graphic.Introduction.Node.Running.State?display=&amp;format=png" />
+<details open="open">
+<p>Once the requested applications are installed on a SlapOS node, it is possible to create so-called &quot;Software Instances&quot;.</p>
+
+<p>The concept of &quot;Software Instance&quot; refers to the idea that modern servers can easily run multiple independent processes of the same software. With IPv6, it is also quite trivial to associate hundreds of independent IP adresses to every server, for example one for each instance of each application. And because all applications share the same shared libraries, memory footprint overhead to run yet another instance of the same software is minimal, unlike what happens with virtual machines.</p>
+
+<p>It is thus possible to run on a single SlapOS node more than 200 instances of the same software. In the case of the TioLive service (discontinued), 200 ERP5 open source ERP instances were run on a standard dual CPU server.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Using SlapOS</h1>
+
+<details open="open">
+<p>This section describes how to use SlapOS from installation to creating recipes and points to the relevant documentation.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Slap Installation</h1>
+
+<pre>
+<code>$ sudo su
+# wget https://deploy.erp5.net/slapos &amp;&amp; bash slapos</code></pre>
+
+<details open="open">
+<p>The easiest way to install SlapOS is the single line installer. The steps for setting up a SlapOS Master are described in <a href="slapos-Tutorial.Install.Slapos.Master.Comp.Root">installing the COMP-ROOT</a>.</p>
+
+<p>The first required network node COMP-0 can be setup using <a href="slapos-Tutorial.Install.Slapos.Master.Comp.0">installing the COMP-0</a>, with <a href="slapos-Tutorial.Install.Slapos.Master.Comp.123">installing COMP-123</a> outlining the steps for &quot;regular&quot; network nodes which are not required for the minimum setup.</p>
+</details>
+</section>
+
+<section>
+<h1>Simple Slap Recipes</h1>
+
+<pre>
+<code>class Recipe(BaseSlapRecipe):
+  def_createConfigurationString(self):
+    instance_parameterdict = self.computer_partition\
+      getInstanceParameterDictu()
+    ip = isntance_parameter_dict[&#39;ip_list&#39;][0][1]
+    tcp_port = 51000
+    self.computer_partition.setConnectionDict(
+      dict(ip=ip,tcp_port=tcp_port
+    )
+    return &#39;-|%s -p %s -U 0&#39; (ip, tcp_port)
+  def_install(self):
+    self.wrapper_template_location = pkg_resources.resource_filename(
+      __name__, os.path.join(&#39;template&#39;,&#39;wrapper.in&#39;)
+    )
+    self._createRunningWrapper(dict(
+      real_binary = self.options[&#39;server_binary&#39;],
+      configuration_string = self.createConfigurationString()
+    ))
+    return [] # nothing to return to buildout</code></pre>
+
+<details open="open">
+<p>Creating recipes for SlapOS is also quite straightforward. In the above example, a memcached server is instantiated. In order to start this service, it is simpy required to generate a startup script, which uses the connection informations returned by the SlapOS Master.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Requesting</h1>
+
+<pre>
+<code>&gt; python
+from slapos.slap import slap
+import memcache
+
+s = slap()
+s.initializeConnection(
+  &quot;https://nexedivifib1.dyn.majimoto.net:40443/erp5/portal_salp&quot;
+)
+cp = s.registerComputerPartition(&quot;nexedivifib8&quot;, &quot;slappart197&quot;)
+ncp = cp.request(
+  &quot;https://nexedivifib1.dyn.majimoto.net:40443/erp5/web_site_module/erpypi/
+  memcached_software_profile-0.0.3.cfg&quot;, &quot;memcached&quot;, &quot;memcached_server 1&quot;)
+[...]
+connection = ncp.getConnectionDict()
+mc = memcache.Client([&#39;%s:%s&#39; % (
+  connection[&#39;ip&#39;], connection[&#39;tcp_port&#39;])])
+mc.set(&quot;some_key&quot;, &quot;Some Value&quot;)
+value = mc.get(&quot;some_key&quot;)</code></pre>
+
+<details open="open">
+<p>The SLAP protocol itself if very easy to invoke using the SLAP library. In the above example, a new connection to the SlapOS Master is initialized and an existing computer partition object is instantiated. Then, a memcached server instance is requested and, once instantiated, can be accessed and used.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapConsole</h1>
+
+<pre>
+<code>computer_id = &#39;COMP-X&#39;
+frontend_software_release_url = &#39;https://lab.nexedi.com/nexedi/slapos/raw/master
+  /software/apache-frontend/software.cfg&#39;
+supply(frontend_software_release_url, computer_id)
+
+request(
+    software_release=frontend_software_release_url,
+    shared=True,
+    partition_parameter_kw={
+        &#39;url&#39;: &quot;https://[IPV6]:2199/&quot;,
+        &#39;https-only&#39;: &#39;true&#39;
+    }
+  )</code></pre>
+
+<details open="open">
+<p>SlapOS also provides <i>Slap console</i>, an iPython notebook shell which allows to supply software and request instances through the terminal. In the above example an instance of a Frontend (Apache) Slave is requested.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Compatabiilty</h1>
+<img alt="SlapOS LAMP Stack Implementation" src="https://www.erp5.com/slapos-Graphic.Introduction.Compatability?display=&amp;format=png" />
+<details open="open">
+<p>SlapOS has been designed for maximum compatibility. The SlapOS default distribution already contains recipes for many NoSQL technologies, databases, runtimes and application servers. Recipes that do not exist are easy to derive from the thousands of existing community created buildout recipes.</p>
+
+<p>Making your own contribution simply means copying ideas from others and adapting them to your needs. For example, creating a high performance LAMP recipe for SlapOS consists of reusing a couple of existing recipes for Apache, MySQL, Varnish, ha-proxy and combining them so that the PHP application can be distributed across multiple servers sharing two MySQL databases configured in redundant mode. Then increasing from 1 to 2 to 3 and then to 100 the number of Apache nodes which are instanciated on the SlapOS cloud is just a matter of changing a parameter of the recipe. SlapOS takes care of the rest.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

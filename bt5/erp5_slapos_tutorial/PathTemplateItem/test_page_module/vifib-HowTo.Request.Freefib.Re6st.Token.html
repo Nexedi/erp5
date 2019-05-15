@@ -1,0 +1,84 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+---><!-- outbound links:
+  vifib-HowTo.Register.And.Create.User.Account
+  slapos-Tutorial.Install.Slapos.Node.Comp.123
+-->
+<section class="master">
+<h1>HowTo Request Freefib (Re6st) Token</h1>
+
+<details open="open">
+<p>This document shows how to request a Freefib (Re6st) token on the Vifib master. The token can be used <b>once</b> to connect a node to the Vifib network. In order to follow&nbsp;the steps in this HowTo, a <a href="vifib-HowTo.Register.And.Create.User.Account">Vifib user account</a> (including account activation) is required.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Requesting a Freefib Token</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Request Freefib Token on Vifib</h1>
+
+<details open="open">
+<p>To register a machine in a network a (Re6st) token is required. Currently there are different sources for obtaining a token:</p>
+
+<ul>
+	<li><b>FreeFib</b> tokens are issued from <a href="http://www.grandenet.cn/">Grandenet</a>&nbsp;(trial version). These tokens are for average users, laptops, personal machines or temporary developer machines. (IPv6 starts with 2401:...). This HowTo shows how to obtain such a FreeFib token on <a href="https://slapos.vifib.com">ViFiB</a>.</li>
+	<li><b>Private networks tokens</b> for users running their own SlapOS Master. Steps outlined in <a href="slapos-Tutorial.Install.Slapos.Node.Comp.123">installing SlapOS Node (Comp 123)</a>.</li>
+</ul>
+</details>
+</section>
+
+<section>
+<h1>Request Token</h1>
+<img alt="Vifib Interface - Dashboard" src="https://www.erp5.com/vifib-Interface.Dashboard?display=&amp;format=png" />
+<details open="open">
+<p>Log in to <a href="https://slapos.vifib.com">Vifib</a> and find the <i>Get Freefib Token</i> on the side menu of your Vifib Dashboard. Freefib tokens are a custom extension in Vifib to directly use the <a href="https://re6st.nexedi.com">Re6st</a> based IPv6 network gateway provided by Vifib. Click the <i>Get Freefib Token</i> button and <b>wait(!)</b> until you are forwarded to the Freefib hosting subscription page.</p>
+</details>
+</section>
+
+<section>
+<h1>Vifib - Token Resource Allocation</h1>
+<img alt="Vifib Interface - Token Resource Allocation" src="https://www.erp5.com/vifib-Interface.Freefib.Token?display=&amp;format=png" />
+<details open="">
+<p>Allocating the resources associated with a FreeFib token will require 10+ minutes. Refresh the page after a while and wait for the actual token to be displayed in the <i>Configuration Parameters</i> (&quot;xxxxxxxxx&quot; in the screenshot). You can add a short title to this hosting subscription to better identify it in case you are using multiple Vifib services. Copy the token. Before going back to the terminal, click on <i>Services</i> in the side menu.</p>
+
+<p><b>Note</b>, that if you are using this FreeFib token, you must use the the Freefib registry (http://re6stnet.gnet.erp5.cn/). So if you want to use the&nbsp;single line Re6st installer, make sure to use the installer in the <b>gnet/</b> folder (meaning: <code>https://deploy.erp5.net/gnet/re6st</code>) when later installing Re6st on a machine with this token (it will have the correct registry URL).</p>
+</details>
+</section>
+
+<section>
+<h1>Vifib - List of Services</h1>
+<img alt="Vifib Interface - Services List Freefib Token" src="https://www.erp5.com/vifib-Interface.Service.List.Freefib.Token?display=&amp;format=png" />
+<details open="open">
+<p>The token you have requested is actually an allocated computer partition on one of the servers of Vifib with specific re6st software installed. If you look at the information provided with your token, you can see that a Freefib token is enabling access to another SlapOS node providing the type of services you are using - in this case, the IPv6 gateway to communicate with other Freefib nodes.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

@@ -1,0 +1,382 @@
+<p><strong>SlapOS</strong> is a general purpose&nbsp;overlay operating system&nbsp;for distributed&nbsp;POSIX infrastructures (Linux, xBSD, etc.) with a strong&nbsp;focus on <strong>service management</strong>. It is a published as&nbsp;<a href="https://en.wikipedia.org/wiki/Free_software">Free Software</a>&nbsp;under <a href="https://www.nexedi.com/licensing">fairly permissive&nbsp;licensing</a>.</p>
+
+<p>SlapOS can be used to build:</p>
+
+<ul>
+	<li>public or private cloud computing infrastructure (IaaS, PaaS, SaaS, DraaS)&nbsp;;</li>
+	<li><a href="https://en.wikipedia.org/wiki/Hyper-converged_infrastructure">hyperconverged</a> infrastructure (virtualisation of compute, storage and network) ;</li>
+	<li><a href="https://en.wikipedia.org/wiki/Edge_computing">edge computing</a> infrastructure (CDN, IoT gateway, AI offloading, cache, buffering) ;</li>
+	<li>4G/5G network management system (eNodeB, locale core network) ;</li>
+	<li>resilient low latency network as a service (IPv4, IPv6, RINA) ;</li>
+	<li>tactical cloud bubble.</li>
+</ul>
+
+<p>SlapOS provides a <strong>compact</strong> and&nbsp;<strong>unified</strong>&nbsp;solution to automate&nbsp;provisioning, orchestration, monitoring, accounting, disaster recovery,&nbsp;invoicing, issue tracking and&nbsp;preventive maintenance of software services&nbsp;that can be deployed in&nbsp;data centers, edge nodes, user terminals or&nbsp;embedded systems, either on <strong>bare metal</strong>, <strong>container</strong> or <strong>virtual machine.</strong></p>
+
+<p>SlapOS was inspired by&nbsp;the ideas of convergence by&nbsp;<a href="https://en.wikipedia.org/wiki/Mark_Burgess_(computer_scientist)">Prof. Mark Burgess</a>&nbsp;and of&nbsp;grid coordination by&nbsp;<a href="https://lipn.univ-paris13.fr/~cerin/">Prof. Christophe C&eacute;rin</a>. Its&nbsp;<strong>simple&nbsp;recursive architecture</strong> consists of only two components:</p>
+
+<ul>
+	<li><strong>SlapOS Master</strong> which is installed on at least one node of the infrastructure and defines the common state shared by all nodes.</li>
+	<li><strong>SlapOS Node</strong> which is installed on each&nbsp;node of the infrastructure and ensures that&nbsp;node&#39;s&nbsp;state autonomously converges towards&nbsp;shared state defined in SlapOS Master.</li>
+</ul>
+
+<p>SlapOS is part of Nexedi&#39;s <a href="https://stack.nexedi.com">software stack</a>.</p>
+
+<h1>Latest News</h1>
+
+<ul>
+	<li>2019-02-13 -&nbsp;<a href="https://www.industr.com/de/edge-und-cloud-im-clinch-2358423?searchTerm=Fraunhofer%20FOKUS">Edge und cloud im clinch</a> (Automation &amp; Digitalisierung)</li>
+	<li>2018-02-25 -&nbsp;<a href="https://www.nexedi.com/NXD-Document.Press.Release.NMS.Preview.MWC.2018">Nexedi Demonstrates Open Source Network Management System based on SlapOS at MWC 2018</a></li>
+	<li>2016-06-03 -&nbsp;<a href="https://www.nexedi.com/success/slapos-IMT-Documents.Teralab.Success.Case?foo=2">SlapOS powers &quot;TeraLab&quot;, Institut Mines T&eacute;l&eacute;com&#39;s Big Data Platform</a></li>
+	<li>2016-05-12 -&nbsp;<a href="https://www.nexedi.com/news/P-IMT-Press.Success.Case.Anouncement">SlapOS hyperconvergent OS powers &quot;TeraLab&quot;, Institut Mines T&eacute;l&eacute;com&#39;s Big Data Platform</a></li>
+	<li>2015-06-11 - <a href="https://www.nexedi.com/news-SlapOS.Government.Select">Government Selects SlapOS Decentralized Cloud to Serve 30.000 users</a></li>
+	<li>2013-01-22 - <a href="https://www.nexedi.com/news-SlapOS.For.France">Nexedi propose &agrave; Cloudwatt de d&eacute;ployer avec SlapOS son Cloud souverain sous 8 jours</a></li>
+	<li>2011-07-05 -&nbsp;<a href="https://www.nexedi.com/blog/news-slapos-success/">SlapOS Success in Aerospace, Banking, Transportation, IT and Education</a></li>
+	<li>2010-06-14 -&nbsp;<a href="https://www.cio.com/article/2417512/servers/vifib-wants-you-to-host-cloud-computing-at-home.html">ViFiB Wants You to Host Cloud Computing At Home</a></li>
+</ul>
+
+<h1>Getting Started</h1>
+
+<p>Before you try to learn SlapOS, we advice you first to read some documents that introduce the key concepts of SlapOS. <!--</p>
+
+<ul>
+	<li><a href="http://community.slapos.org/wiki/slapos-Wiki.Home/VIFIB-SlapOS.Introduction">SlapOS Introduction</a>&nbsp;provides a good overview of SlapOS goals, philosophy and architecture</li>
+	<li><a href="http://community.slapos.org/wiki/slapos-Wiki.Home/slapos-Economic.Rationale">SlapOS Economic Rationale</a>&nbsp;introduces the economic rationale which drives SlapOS research and development.</li>
+</ul>
+
+<p>Next, we advice you to get an account on a SlapOS service provider such as:</p>
+
+<ul>
+	<li><a href="http://www.vifib.com">VIFIB</a>&nbsp;- reference provider of SlapOS, part of <a href="http://www.nexedi.com">Nexedi</a> group</li>
+	<li><a href="https://www.teralab-datascience.fr/fr/">Teralab</a> - provider of SlapOS services for big data research in France</li>
+</ul>
+
+<p>--> This will help you a lot to learn how to use SlapOS before creating your own SlapOS service provider based on SlapOS master or slapproxy.</p>
+
+<h1>Learning Track</h1>
+
+<p>There are several tutorials showing you how to get started and achieving specific objectives with SlapOS. All tutorials are already part of a <a href="http://community.slapos.org/wiki/osoe-Lecture.SlapOS.Extended">SlapOS lecture that is given every year at Telecom Paris</a> school of engineering. More than 200 students have already been trained with this lecture, the <a href="http://community.slapos.org/wiki/slapos-Wiki.Home/developer-Lecture.Web.Runner.Extended">follow-up lecture based on Web Runner</a> and the <a href="http://community.slapos.org/slapos-Lecture.Telecom.autumn.2017">cloud and after cloud</a> lecture.</p>
+
+<p>This learning track (also available <a href="slapos-Tutorial.Slapos.Learning.Track">here</a>) contains a sequence of lectures teaching how to setup and use of a SlapOS based system. It covers the perspectives of a system administrator, user and software developer. After finishing this learning track, you should have a ready-to-use SlapOS system and be familiar with providing both existing and custom software to users, monitoring network health as well as software service consumption.</p>
+
+<h1>Lecture 1: SlapOS Introduction</h1>
+
+<p>This lecture will introduce SlapOS and underlying concepts. It provides both a quick overview of a SlapOS system as well as in-depth look at the architecture and minimal system requirements.</p>
+
+<p>&nbsp;</p>
+
+<h2>Introduction: Theory</h2>
+
+<ul>
+	<li><a href="slapos-DesignDocument.Slapos.Introduction">SlapOS General Introduction</a> <span style="font-size:.6em">(<a href="slapos-DesignDocument.Slapos.Introduction?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-DesignDocument.Understanding.Slapos.Architecture">SlapOS Technical Architecture</a> <span style="font-size:.6em">(<a href="slapos-DesignDocument.Understanding.Slapos.Architecture?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-DesignDocument.Slapos.System.Requirements">SlapOS System Requirements</a> <span style="font-size:.6em">(<a href="slapos-DesignDocument.Slapos.System.Requirements?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+</ul>
+
+<p>The <i>SlapOS Introduction</i> will give an technical overview over a SlapOS system explaining the philosophy and principles behind SlapOS. It also demonstrates the SlapOS Dashboard, command line utilities and the Buildout Software Profiles responsible for supplying and instantiating software on SlapOS.</p>
+
+<p>The <i>SlapOS Architecture</i> DesignDocument will introduce the Master (COMP-Root/COMP-0) and slave (COMP-123) design along with the SlapProtocol. It will explain why software instances are created inside computer partitions and describe the means of communication between system components as well as users.</p>
+
+<p>The <i>SlapOS System Requirements</i> includes profiles and information of required hard- and software for each type of node for setting up a minimal SlapOS network.</p>
+
+<h2>Introduction Additional Readings</h2>
+
+<ul>
+	<li><a href="slapos-DesignDocument.Slapos.Rationale">SlapOS Economic Rationale</a> <span style="font-size:.6em">(<a href="slapos-DesignDocument.Slapos.Rationale?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+</ul>
+
+<p>The <i>SlapOS Rationale</i> includes an analysis of on-premise and cloud-based providers of both open-source and proprietary software solutions. This is used to derive an economic baseline and operating principles for creating a cloud provider of free and open-source software. Such as <a href="https://www.vifib.com">ViFiB</a>, Nexedi&#39;s cloud provider working on a SlapOS based system.</p>
+
+<h1>Lecture 2: SlapOS Admin</h1>
+
+<p>This lecture covers setting up and configuring a minimal SlapOS network consisting of a SlapOS Master (COMP-Root) and the first network node (COMP-0). It is meant for network administrators interested in learning how to create their own SlapOS-based system for managing servers and software deployments.</p>
+<!--h2>SlapOS Admin: Theory</h2>
+  <ul>
+    <li><span href="">SlapOS Basics</span> (WIP)</li>
+  </ul>
+  <p>
+  The <i>SlapOS Basics</i> gives a summary of key concepts, software tools 
+  and tips and tricks when working with SlapOS, most of them covered in more 
+  details in the Developer lecture. It should provide a technical overview 
+  so administrators know what is happening and how certain components function 
+  without requiring the in-depth access of a developer.
+  </p-->
+
+<h2>SlapOS Admin: Tutorials</h2>
+
+<ul>
+	<li><a href="slapos-Tutorial.Install.Slapos.Master.Comp.Root">Installing SlapOS Master (COMP-Root)</a> <span style="font-size:.6em">(<a href="slapos-Tutorial.Install.Slapos.Master.Comp.Root?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">Installing SlapOS Node (COMP-0)</a> <span style="font-size:.6em">(<a href="slapos-Tutorial.Install.Slapos.Node.Comp.0?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+</ul>
+
+<p>The <i>Install SlapOS Master</i> tutorial will guide through the steps of setting up the main component of a SlapOS system: The Master (COMP-Root), which is a SlapOS node itself configured by SlapProxy and running an instance of ERP5 Cloud Engine (providing the Dashboard among other things) as well as a Frontend (Apache).</p>
+
+<p>The <i>Install SlapOS Node</i> tutorial continues the system setup by installing the first network node (COMP-0) with the Re6st Registry handling IPv6 and routing network traffic as well as another Frontend (Apache) enabling network access for users.</p>
+
+<p>Completing both tutorials means setting up a minimal SlapOS system.</p>
+
+<h2>SlapOS Admin: Additional Readings</h2>
+
+<ul>
+	<li><a href="slapos-HowTo.Add.Software.Release.To.Slapos.Master">HowTo Add Software Release to SlapOS</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Add.Software.Release.To.Slapos.Master?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-HowTo.Request.And.Setup.A.Wildcard.Ssl.Certificate">HowTo Request SSL Wildcard Certificate</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Request.And.Setup.A.Wildcard.Ssl.Certificate?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-HowTo.Enable.Ssh.Access.On.Remote.Server">HowTo Access SlapOS Node over SSH</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Enable.Ssh.Access.On.Remote.Server?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+</ul>
+
+<p>The additional readings cover <i>adding software to the SlapOS Master catalog</i>. It shows how to add a software product and release in the ERP5 Cloud Engine and make it available on SlapOS.</p>
+
+<p>The HowTos on <i>requesting a wildcard certificate</i> and <i>accessing a node via SSH</i> are somewhat trivial but are included for completeness of the lecture.</p>
+
+<h1>Lecture 3: SlapOS User</h1>
+
+<p>This lecture teaches how to use SlapOS including installation of new nodes on an existing system, manage servers, supply software and monitor system performance.</p>
+
+<h2>SlapOS User :Tutorials</h2>
+
+<ul>
+	<li><a href="slapos-Tutorial.Install.Slapos.Node.Comp.123">Installing SlapOS Node (COMP-123)</a> <span style="font-size:.6em">(<a href="slapos-Tutorial.Install.Slapos.Node.Comp.123?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-Tutorial.Manage.Slapos.Network">Manage a SlapOS System</a> <span style="font-size:.6em">(<a href="slapos-Tutorial.Manage.Slapos.Network?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-Tutorial.Monitor.Slapos.Network">Monitoring a SlapOS Node</a> <span style="font-size:.6em">(<a href="slapos-Tutorial.Monitor.Slapos.Network?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><span href="">Invoice SlapOS Network Usage</span> (Planned)</li>
+</ul>
+
+<p>The tutorial on <i>installing a SlapOS Node (COMP-123)</i> will guide through installing SlapOS on a regular network node from setting up IPv6 and Re6st to registering the server with a SlapOS Master. This is the standard tutorial for adding a new machine to a network.</p>
+
+<p><i>Managing a SlapOS system</i> shows how the Dashboard can be used to handle support requests and tickets which are generated automatically (or by users) whenever an instance or machine runs into issues causing a Promise to fail.</p>
+
+<p><i>Monitoring a SlapOS node</i> follows the previous tutorial and shows how to use the Monitoring app which provides a micro view into what is happening on a node partitions. It will show how to analyse a node&#39;s status, search for failing Promises and show the location of all relevant logs so issues can be adressed.</p>
+
+<p>&nbsp;</p>
+
+<h2>SlapOS User: Additonal Reading</h2>
+
+<ul>
+	<li><a href="slapos-HowTo.Register.And.Create.User.Account">HowTo Register on SlapOS</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Register.And.Create.User.Account?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="vifib-HowTo.Register.And.Create.User.Account">HowTo Register on ViFiB</a> <span style="font-size:.6em">(<a href="vifib-HowTo.Register.And.Create.User.Account?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="vifib-HowTo.Request.Freefib.Re6st.Token">HowTo Request ViFiB Freefib Token</a> <span style="font-size:.6em">(<a href="vifib-HowTo.Request.Freefib.Re6st.Token?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-HowTo.Classify.Node.In.A.Network">Classify Nodes on a Network</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Classify.Node.In.A.Network?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-HowTo.Use.Slapos.Client">HowTo Use SlapOS Client</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Use.Slapos.Client?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-HowTo.Format.Slapos.Node">HowTo Format SlapOS Node</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Format.Slapos.Node?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-HowTo.Debug.Slapos.Node">HowTo Debug SlapOS Node</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Debug.Slapos.Node?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+</ul>
+
+<p>Additional readings cover topics related to setting up a node, such as <i>registering on SlapOS</i> (or ViFiB&#39;s commerical service), <i>requesting a Re6st (ViFiB: FreeFib) token</i> required during node installation and <i>classifying nodes</i> on a system.</p>
+
+<p>Once the node is setup, <i>HowTo use the SlapOS Client</i> shows alternative ways of accessing and working with a node via the terminal, which is also the place to manually <i>format a SlapOS</i> node, for example when adding additional SSD storage. Finally, the <i>HowTo debug a SlapOS node</i> gives tips and tricks on where to look for logs and common issues when a node is not behaving as expected.</p>
+
+<h2>SlapOS User: Software Instantiation</h2>
+
+<ul>
+	<li><a href="slapos-HowTo.Instantiate.Re6st.Access.Token">HowTo Instantiate Re6st Token</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Instantiate.Re6st.Access.Token?portal_skin=CI_slideshow">Presentation</a></span></li>
+	<li><a href="slapos-HowTo.Instantiate.Re6st.Registry">HowTo Instantiate Re6st Registry</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Instantiate.Re6st.Registry?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-HowTo.Instantiate.Frontend.Apache">HowTo Instantiate Frontend (Apache)</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Instantiate.Frontend.Apache?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-HowTo.Instantiate.Frontend.Slave">HowTo Instantiate Frontend Slave</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Instantiate.Frontend.Slave?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-HowTo.Instantiate.Kvm">HowTo Instantiate KVM</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Instantiate.Kvm?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-HowTo.Instantiate.Erp5">HowTo Instantiate ERP5</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Instantiate.Erp5?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-HowTo.Instantiate.Webrunner">HowTo Instantiate Webrunner</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Instantiate.Webrunner?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+</ul>
+
+<p>The instantiation section list the relevant configuration parameters of the software releases available on SlapOS by default and is more of a lookup reference to ensure, parameters are set correctly when requiring an instance and that follow-up steps are also being made aware.</p>
+
+<h1>Lecture 4: SlapOS Developer</h1>
+
+<p>This lecture teaches how to work on software releases itself creating the software to be distributed over a SlapOS network.</p>
+
+<h2>SlapOS Developer: Theory</h2>
+
+<ul>
+	<li><a href="slapos-DesignDocument.Understanding.Slapos.Buildout">Understanding SlapOS Buildout</a> <span style="font-size:.6em">(<a href="slapos-DesignDocument.Understanding.Slapos.Buildout?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-DesignDocument.Understanding.Slapos.Promises">Understanding SlapOS Promises</a> <span style="font-size:.6em">(<a href="slapos-DesignDocument.Understanding.Slapos.Promises?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+</ul>
+
+<p>Developing software for SlapOS requires being familiar with Buildout and the concept of Promises. Buildout will be introduced in detail in the DesignDocument <i>Understanding SlapOS Buildout</i> showing how it is used to install and instantiate software from software and instance profiles. <i>Understanding SlapOS Promises</i> will introduce Promises, show how they are used to continuously monitor the status of a software and integrate them into a software&#39;s instance profile.</p>
+
+<h2>SlapOS Developer: Tutorials</h2>
+
+<ul>
+	<li><a href="slapos-Tutorial.Extend.Software.Release">Extending a SlapOS Software Release</a> <span style="font-size:.6em">(<a href="slapos-Tutorial.Extend.Software.Release?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><a href="slapos-Tutorial.Create.Software.Release">Creating a SlapOS Software Release</a> <span style="font-size:.6em">(<a href="slapos-Tutorial.Create.Software.Release?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+	<li><span href="">Porting a Software to SlapOS</span> (Planned)</li>
+	<li><a href="slapos-Tutorial.Upgrade.Software.Release">Upgrading a Software Release on SlapOS</a> <span style="font-size:.6em">(<a href="slapos-Tutorial.Upgrade.Software.Release?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+</ul>
+
+<p>The developer tutorials cover several angles of working with software on SlapOS starting with showing how to <i>extend an existing release</i> by adding parameters, components and proimses using a Webrunner.</p>
+
+<p><i>Creating a software release</i> and <i>porting</i> an existing software to SlapOS outline the required steps to create the software and instance profile required by SlapOS to deploy a software.</p>
+
+<p>Lastly, <i>Upgrading a Software Release</i> covers the steps of adding a new release to the SlapOS catalog and triggering the propagation through the SlapOS system.</p>
+
+<h2>SlapOS Developer: Additonal Readings</h2>
+
+<ul>
+	<li><a href="slapos-HowTo.Deploy.Software.On.Webrunner">Deploy Software on SlapOS Webrunner</a> <span style="font-size:.6em">(<a href="slapos-HowTo.Deploy.Software.On.Webrunner?portal_skin=CI_slideshow">Presentation</a>)</span></li>
+</ul>
+
+<p>Additonal readings cover basic aspects related to software development for SlapOS, such as <i>HowTo deploy a software release on a Webrunner</i>.</p>
+<!--
+<p>Your first objective should be to install a SlapOS node:</p>
+
+<ul>
+	<li><a href="http://community.slapos.org/wiki/osoe-Lecture.SlapOS.Extended/developer-Installing.SlapOS.Package">Installing SlapOS Slave Node and registering it with a SlapOS Master</a>&nbsp;(outdated)</li>
+</ul>
+
+<p>Your second objective should be to deploy services on a SlapOS node:</p>
+
+<ul>
+	<li><a href="http://community.slapos.org/wiki/osoe-Lecture.SlapOS.Extended/developer-Allocate.New.SlapOS.Instance.From.Web.UI">Deploying a Service on a cloud infrastructure</a>&nbsp;(outdated)</li>
+	<li><a href="">Monitoring a Service Usage from SlapOS Master</a>&nbsp;(coming soon)</li>
+</ul>
+
+<p>Your next objective could be to install your own SlapOS master if you do not want to depend on <a href="http://www.vifib.com">VIFIB</a> for example:</p>
+
+<ul>
+	<li><a href="http://community.slapos.org/wiki/osoe-Lecture.SlapOS.Extended/developer-Allocate.SlapOS.Master.Instance">Installing SlapOS Master</a></li>
+</ul>
+
+<p>Your may also want&nbsp;&nbsp;to learn how to define a new services for SlapOS using the builout language and SlapOS&#39;s Web based IDE &quot;Web Runner:&quot;</p>
+
+<ul>
+	<li><a href="http://community.slapos.org/wiki/slapos-Wiki.Home/developer-Lecture.Web.Runner.Extended/developer-Howto.order.access.webrunner.on.vifib">How to order and access a webrunner with VIFIB</a></li>
+	<li><a href="http://community.slapos.org/wiki/slapos-Wiki.Home/developer-Lecture.Web.Runner.Extended/developer-Howto.start.empty.html5.project">How to set up an empty HTML5 project in the webrunner</a></li>
+	<li><a href="http://community.slapos.org/wiki/slapos-Wiki.Home/developer-Lecture.Web.Runner.Extended/developer-Web.Runner.how.to.access.to.your.work">How to access your work remotely</a></li>
+</ul>
+
+<p>Once you have accomplished all of the above tutorials, you should be familiar enough with SlapOS to use it to create your own cloud infrastrucre and provide services to users.</p>
+-->
+
+<h1>Documentation</h1>
+
+<p>Aside from the above tutorials, a number of additional documentation provides insights into certain topics.</p>
+
+<ul>
+	<li><a href="http://community.slapos.org/forum">Forum</a> - is where you can ask questions.</li>
+	<li><a href="http://community.slapos.org/wiki">Design Documents</a> - explaining concepts behind SlapOS</li>
+	<li><a href="http://community.slapos.org/wiki/slapos-Wiki.Home/developer-SlapOS.Conventions.Guidelines">Guidelines</a> - rules for developing with and contributing to SlapOS</li>
+	<li><a href="">Tutorials</a> - lectures explaining how to use SlapOS (coming soon)</li>
+	<li><a href="">HowTos</a> - step by step explanation of certain topics (coming soon)</li>
+	<li><a href="">Technical Notes</a> - important informaton on certain aspects (coming soon)</li>
+	<li><a href="http://community.slapos.org/wiki/slapos-Wiki.Home/slapos-FAQ">Faq</a> - common questions about SlapOS</li>
+</ul>
+
+<p>You may also refer to documention of certain components which SlapOS depends on:</p>
+
+<ul>
+	<li><a href="http://community.slapos.org/wiki/slapos.Why.Buildout">buildout</a>&nbsp;is the community-driven, open source build technology which is used by SlapOS to specifiy software stacks which are then deployed on the Cloud. More informations at the&nbsp;<a href="http://community.slapos.org/wiki/slapos.Why.Buildout">Why Buildout</a>&nbsp;page.</li>
+	<li><a href="http://supervisord.org/">supervisord</a>&nbsp;is the community-drive,&nbsp;open source process control technology which slapgrid relies on.</li>
+	<li><a href="http://www.erp5.com/">ERP5</a>&nbsp;is the open source&nbsp;<a href="http://www.zope.org/">Zope</a>-based ERP&nbsp;which powers SlapOS Master to provide accounting, provisionning and billing.</li>
+	<li><a href="http://www.neoppod.org/">NEO</a>&nbsp;is a distributed transactional NoSQL object database which provides scalability to SlapOS master.</li>
+	<li>IPv6, while not a &quot;open source&quot; technology, is in the core of SlapOS.&nbsp;<a href="http://julien.vaubourg.com/files/lothaire-yarding_ipv6.pdf">[french] Here</a>&nbsp;(<a href="http://community.slapos.org/wiki/slapos-Wiki.Home/lothaire-yarding_ipv6">mirror link</a>) is a state of the art of IPv6</li>
+	<li><a href="http://re6st.nexedi.com">re6st</a> is the IPv6 overlay network used by SlapOS to ensure that the graph of SlapOS nodes is alway connected.</li>
+</ul>
+
+<h1>Source Code</h1>
+
+<p>SlapOS source code is split into multiple repositories:</p>
+
+<ul>
+	<li><a href="https://lab.nexedi.com/nexedi/slapos.core/tree/master">slapos.core</a>&nbsp;written in python language provides all libraries, <a href="http://www.buildout.org">buildout</a> recipes&nbsp;and tools (slapgrid, slapproxy) to run a <strong>SlapOS&nbsp;Node</strong> as well as additional buildout recipes:
+
+	<ul>
+		<li><a href="https://lab.nexedi.com/nexedi/slapos.recipe.template">slapos.recipe.template&nbsp;</a>which provides jinja2 templating</li>
+		<li><a href="https://lab.nexedi.com/nexedi/slapos.libnetworkcache">slapos.libnetworkcache</a>&nbsp;which provides source code and binary code caching</li>
+		<li><a href="https://lab.nexedi.com/nexedi/slapos.rebootstrap">slapos.reboostrap</a> which provides reflexive build in buildout</li>
+		<li><a href="https://lab.nexedi.com/nexedi/slapos.buildout">slapos.buidout</a> which extends the default buildout language</li>
+	</ul>
+	</li>
+	<li><a href="https://lab.nexedi.com/nexedi/slapos.toolbox/tree/master">slapos.toolbox</a> written in python language provides additional services to SlapOS Node (monitoring, web runner, etc.) that are not required in the core</li>
+	<li><a href="https://lab.nexedi.com/nexedi/slapos/tree/master">software profiles</a>&nbsp;written in <a href="http://www.buildout.org">buildout</a> language&nbsp;describes how to build and run vairous services (qemu, mariadb, ERP5, apache, etc.) on a SlapOS Node</li>
+	<li><a href="https://lab.nexedi.com/nexedi/slapos.package/tree/master">slapos.package</a> written in shell script, python and various languages that defines how to build automatically SlapOS packages for various GNU/Linux distributions</li>
+	<li><a href="https://lab.nexedi.com/nexedi/slapos.core/tree/master/master/bt5">slapos.core/bt5</a> contains all additional python code and XML configuration files to create a SlapOS Master based on <a href="https://lab.nexedi.com/nexedi/erp5">ERP5 source code</a></li>
+</ul>
+
+<h1>Requirements</h1>
+
+<p>SlapOS&nbsp;should only only require&nbsp;a POSIX compatible operating system (Linux, xBSD)&nbsp;with a recent&nbsp;C/C++ compiler and python 2.7 interpreter.</p>
+
+<p>Currently, SlapOS&nbsp;has been deployed and tested on the following operating systems:</p>
+
+<table align="center" border="1" cellpadding="1" cellspacing="1" style="width:500px;">
+	<thead>
+		<tr>
+			<th scope="col">Production</th>
+			<th scope="col">Experimental</th>
+			<th scope="col">Not tested</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+			<p>Debian<br />
+			Ubuntu<br />
+			CentOS<br />
+			Red Hat<br />
+			SuSE</p>
+			</td>
+			<td>Android (Termux)<br />
+			Windows (Cygwin)<br />
+			ArchLinux<br />
+			Gentoo<br />
+			ChromiumOS<br />
+			NayuOS</td>
+			<td>
+			<p>OpenBSD<br />
+			FreeBSD<br />
+			NetBSD<br />
+			AIX<br />
+			Solaris</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>The&nbsp;Windows with Cygwin port will not be pursued because of inherent instabilities in how&nbsp;Cygwin maps shared libraries to DLL.</p>
+
+<p>The&nbsp;Android port will&nbsp;be pursued.</p>
+
+<p>Other ports will be considered based on market needs.</p>
+
+<h1>Tests</h1>
+
+<p>All SlapOS tests are published on <a href="http://community.slapos.org/unit_test">SlapOS Project Tests</a> page.&nbsp;</p>
+
+<h1>FAQ</h1>
+
+<ul>
+	<li><a href="http://community.slapos.org/wiki/slapos-Wiki.Home/slapos-FAQ">SlapOS Frequently Asked Questions</a></li>
+	<li><a href="http://community.slapos.org/wiki/slapos-Wiki.Home/slapos-buildout-FAQ">Buildout Frequently Asked Questions</a></li>
+	<li><a href="http://community.slapos.org/wiki/slapos-Wiki.Home/slapos-howto-upgrade">How to Upgrade SlapOS</a></li>
+	<li><a href="http://community.slapos.org/wiki/slapos-Wiki.Home/slapos-Contribute.Buildout">How to contribute to Buildout</a></li>
+	<li><a href="http://community.slapos.org/wiki/slapos-Howto.Release.Software.Release">How to release new Software Release</a></li>
+	<li><a href="erp5-HowTo.Bootstrap.Erp5.With.Webrunner%0A">Nexedi&#39;s recommendation for bootstrap an ERP5 Project on Webrunner</a></li>
+</ul>
+
+<h1>History</h1>
+
+<p>We provide here a list of legacy documents that may no longer apply yet are useful to understand the history of SlapOS.</p>
+
+<p>Research papers:</p>
+
+<ul>
+	<li><a href="http://community.slapos.org/wiki/slapos-Wiki.Home/slapos-Smets.Cerin.Courteaud.IEEECloudPerf2011">SlapOS: a Multi-purpose Distributed Cloud Operating System Based on an ERP Billing Model</a>&nbsp;- Jean-Paul Smets-Solanes, Christophe Cerin and Romain Courteaud - preprint submitted to IEEE 2011 International Workshop on Performance Aspects of Cloud and Service Virtualization</li>
+	<li><a href="http://hal.archives-ouvertes.fr/hal-00757626">[French] Integration des intergiciels de grilles de PC dans le nuage SlapOS : le cas de BOINC</a></li>
+</ul>
+
+<p>Videos:</p>
+
+<ul>
+	<li><a href="http://www.ustream.tv/recorded/16898809">SlapOS, A Python Powered Open Source Cloud Computing System</a>&nbsp;by Yusei Tahara at PyCon Japan 2011.</li>
+	<li><a href="http://www.dailymotion.com/video/xuif1y_osdc-fr-2012-slapos-reduce-your-sysadmin-work-by-80-and-fly-across-36-clouds_tech">SlapOS - Reduce your sysadmin work by 80% and fly across 36 clouds</a>&nbsp;by C&eacute;dric de Saint Martin at Open World Forum for Open Source Developer Conference (OSDC), France 2012.</li>
+	<li><a href="http://www.dailymotion.com/video/xuif3m_osdc-fr-2012-mioga-on-slapos-a-collaborative-extranet-rises-into-the-clouds_tech">Mioga on SlapOS - A collaborative Extranet rises into the Clouds</a>&nbsp;by Viktor Horvath at Open World Forum for Open Source Developer Conference (OSDC), France 2012.</li>
+	<li><a href="https://archive.fosdem.org/2013/schedule/event/slapos/">SlapOS, an efficient all-in-one cloud</a> presented at FOSDEM 2013</li>
+</ul>
+
+<p>Presentations:</p>
+
+<ul>
+	<li><a href="http://community.slapos.org/wiki/slapos-Wiki.Home/developer-SlapOS.Presentation.Sep.2011">SlapOS, Distributed Cloud Computing</a>&nbsp;by Rafael Monnerat at Python Brasil 2011. (<a href="http://community.slapos.org/wiki/slapos-Wiki.Home/developer-SlapOS.Presentation.Sep.2011?portal_skin=SlideShow">Presentation Mode</a>)</li>
+	<li><a href="http://community.slapos.org/wiki/slapos-Wiki.Home/developer-SlapOS.Presentation.SBAC.Nov.2011">Get started with SlapOS, the Distributed Cloud System</a>&nbsp;by Rafael Monnerat and Christophe Cerin at&nbsp;<a href="http://sbac-pad-2011.lsc.ic.unicamp.br/tutorials.php#tutorial2">SBAC-PAD&#39;2011&nbsp;</a>. (<a href="http://community.slapos.org/wiki/slapos-Wiki.Home/developer-SlapOS.Presentation.SBAC.Nov.2011?portal_skin=SlideShow">Presentation Mode</a>)</li>
+</ul>
+
+<h1>Licence</h1>
+
+<p>SlapOS is <a href="http://www.fsf.org/">Free Software</a>, licensed under <a href="https://www.gnu.org/licenses/gpl-2.0.html">GNU GPL v3</a> (or later). For details, please refer to the <a href="https://www.nexedi.com/licensing">Nexedi licensing</a>.</p>

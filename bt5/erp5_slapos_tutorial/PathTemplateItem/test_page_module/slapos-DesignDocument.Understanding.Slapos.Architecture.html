@@ -1,0 +1,271 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces
+  developer-Introducing.SlapOS.Architecture
+--><!--
+  slapos-DesignDocument.Understanding.Slapos.Buildout
+  slapos-DesignDocument.Understanding.Slapos.Promises
+-->
+<section class="master">
+<h1>Understanding SlapOS Architecture</h1>
+
+<details open="open">
+<p><a href="https://slapos.nexedi.com/">SlapOS</a> is a general purpose operating system usable on distributed POSIX infrastructures (Linux, xBSD) to provide and manage software services focussing on cloud orchestration and edge computing. It allows to automate devops including deployment, monitoring and billing of software usage on arbitrary clould infrastructures.</p>
+
+<p>SlapOS can be used to act as cloud provider selling software as a service (SaaS), to offer platform as a service (PaaS) solutions or also basic infrastructure as a service (IaaS). SlapOS can be run on private hardware and data centers or any public/cloud infrastructure.</p>
+
+<p>This design document explains the concepts underlying the SlapOS architecture.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Master and Slave</li>
+	<li>Computer Partitions</li>
+	<li>Networking</li>
+</ul>
+
+<details open="open">&nbsp;</details>
+</section>
+
+<section class="chapter">
+<h1>Master and Nodes</h1>
+
+<details open="open">
+<p>SlapOS uses a Master (referred to as <b>COMP-ROOT</b>) and Slave (<b>COMP-0,1,2,3...</b>) design. This section explains the role of the Master and other nodes in a network as well as the software components on which they depend to operate in a distributed cloud.</p>
+</details>
+</section>
+
+<section>
+<h1>Overview</h1>
+<img alt="SlapOS - Master and Slave relation" src="https://www.erp5.com/slapos-Graphic.Architecture.Master.Slave.Relation?display=&amp;format=png" />
+<details open="open">
+<p>The Master contains a catalog of available Software Releases. Slave nodes request from the Master which software to install and to supply to users. Users then request services (called <i>hosting subscriptions</i>), which are instances of the supplied software. These are instantiated inside computer partitions available on a node. The node reports back the usage of all running instances over time to the Master who keeps track of node capacity and available software.</p>
+
+<p>The Master also acts as web portal providing web services in order for users or other software to request new software instances which are instantiated and run on nodes. It does so using services provided by COMP-0 which therefore has somewhat of a special status, as it&#39;s not a standard node similar to COMP-1,2,3 providing services to users.</p>
+</details>
+
+<details open="open">
+<p>Master nodes are stateful. Slave nodes are stateless. More precisely, all information required to rebuild a Slave node is stored in the Master. This may for example include the url of a backup service which maintains an online copy of data so that in case of a node failure, a replacement node can be rebuilt with the same data.</p>
+
+<p>It is thus very important to ensure that state data present on the Master is well secured. This can be achieved by hosting the Master node on a trusted 3rd party IAAS infrastructure with redundant resources or better by hosting multiple Master nodes on many Slave nodes located in different regions of the world based on an appropriate data redundancy heuristic.</p>
+
+<p>This describes the <i>first reflexive nature of SlapOS</i>: A SlapOS Master is usually a running instance of a SlapOS Master software (!) instantiated on a collection of Slave nodes, which together form a trusted hosting infrastructure. In other words, SlapOS is used to host SlapOS or SlapOS is self-hosted.</p>
+</details>
+</section>
+
+<section>
+<h1>Master Node - Functional Role</h1>
+<img alt="SlapOS Master - Functional overview" src="https://www.erp5.com/slapos-Graphic.Architecture.Master.Role?display=&amp;format=png" />
+<details open="open">
+<p>The Master node keeps track of the identity of all parties involved in (a) requesting cloud resources as well as (b) their monitoring and (c) usage billing. It therefore also includes end users and organisations which can be suppliers and/or consumers of cloud resources.</p>
+
+<p>The Master manages computer partitions on all nodes. These &quot;containers&quot; are used to run a single software instance each which can be requested fully autonomous or through user interaction.</p>
+
+<p>SlapOS generates X509 certificates for each type of identity: for users who login, for each server that contributes to the resources of SlapOS and for each running software instance that has to request/notify the Master. A SlapOS Master with a single Slave node, one user and ten computer partitions will thus generate up to 12 X509 certificates: 1 for the slave, 1 for the user and 10 for the computer partitions provided on the node.</p>
+</details>
+
+<details open="open">
+<p>Any user, software or Slave node with a valid X509 certificate may request resources from the SlapOS Master which acts like a back office or marketplace. Requests are recorded as if they were a resource trading contract in which a resource consumer is requesting a given resource under certain conditions. A resource could be a NoSQL storage, a KVM virtual machine, an ERP system or similar. The conditions include price, region (eg. China) or a specific hardware setup (eg. 64bit CPU). Conditions are sometimes called Service Level Agreements (SLA) in other architectures but in SlapOS they are considered more as trading specifications than hard guarantees.</p>
+
+<p>By default, SlapOS Master acts as automatic marketplace. Requests are processed by trying to find a node which meets all specified conditions. The SlapOS Master thus needs to know which resources are available at a given time, at what price and with what specifications, including which software can be installed on a node and under what conditions. However, it is also possible to manually define a specific node rather than relying on the automatic marketplace logic of SlapOS Master to determine the computer to use when allocating resources.</p>
+</details>
+</section>
+
+<section>
+<h1>Slave Node - Functional Role</h1>
+<img alt="SlapOS Node - Functional overview" src="https://www.erp5.com/slapos-Graphic.Architecture.Slave.Role?display=&amp;format=png" />
+<details open="open">
+<p>SlapOS Slave nodes are more simple compared to the Master node. They only need to run software requested by the Master. It is thus on the Slave nodes that software is installed. To save disk space, Slave nodes install only the software which they actually need.</p>
+
+<p>Slave nodes are divided into a certain number of so-called <i>computer partitions</i> (Slappart[0-x]). A computer partition can be seen as a lightweight, secure container, but based on Unix users and directories rather than on virtualization. A typical barebone PC can easily provide 100 computer partitions and can thus run 100 Wordpress blogs or 100 e-commerce sites, each of them with its own independent database. A larger server can contain 200-500 computer partitions.</p>
+
+<p>The concept of computer partitions in SlapOS was designed to reduce costs drastically compared to other approaches relying on a disk image and virtualization while at the same time also allowing to run virtualization software - but inside a computer partition. This makes SlapOS at the same time cost efficient and compatible with legacy software.</p>
+</details>
+</section>
+
+<section>
+<h1>Master Node - Software</h1>
+<img alt="SlapOS Master - Software and Instantiated Services" src="https://www.erp5.com/slapos-Graphic.Architecture.Master.Software?display=&amp;format=png" />
+<details open="open">
+<p>At its core, the SlapOS Master is a regular node with the SlapOS &quot;Kernel&quot; installed. During initial installation of the SlapOS Master, a SlapProxy (&quot;mini&quot;-Master) is used to setup the future SlapOS Master. In relation to the SlapProxy, the SlapOS Master is a normal node on which two softwares are installed and instantiated: ERP5 &quot;Cloud Engine&quot; and a Frontend (Apache) for accessing ERP5. This describes the <i>second reflexive nature of SlapOS</i>: SlapOS is used to deploy SlapOS.</p>
+
+<p>This implementation of SlapOS Master originates from an <a href="https://erp5.nexedi.com/">ERP5</a> implementation for a Central Bank across eight african countries. The underlying idea was that currency clearing and cloud resource clearing are similar and should therefore be implemented with the same software. Besides that, ERP5 had also demonstrated its scalability for large CRM applications as well as its trustability for accounting. Thanks to <a href="https://neo.nexedi.com/">NEO</a>, the distributed NoSQL database ERP5 is using, the transactional nature and scalability which is required for a stateful marketplace could be implemented in ERP5.</p>
+</details>
+
+<details open="open">
+<p>Developing SlapOS Master on top of ERP5 also was a direct application of ERP5&#39;s Universal Business Model (UBM), a model which unifies all sciences of management and which has been acknowledged by numerous IEEE publications as a major shift in enterprise application design. In the UBM, each computer is represented by an <i>Item</i> while allocation requests, resource deliveries and resource accounting are represented by a <i>Movement</i>. The movement resource can be software hosting, CPU usage, disk usage, network usage, RAM usage, login usage, etc. Software hosting movements start whenever the running software starts in the computer partition and stop whenever the running software stops. Resource usage movements start and stop for accounting during each period of time, independently of the running software&#39;s state. The software release which is run on a computer partition is an <i>Item</i> in UBM, just like the subscription contract identifier. The parties (client, supplier) are represented as <i>Node</i>. More surprisingly, each Network is also considered a <i>Node</i> in the same way a storage cell is represented as <i>Node</i> in logistics.</p>
+</details>
+</section>
+
+<section>
+<h1>Slave Node - Software</h1>
+<img alt="Software used inside a SlapOS Slave Node" src="https://www.erp5.com/slapos-Graphic.Architecture.Slave.Software?display=&amp;format=png" />
+<details open="open">
+<p>SlapOS Slave software consists of a <a href="https://en.wikipedia.org/wiki/POSIX">POSIX</a> operating system, SlapGRID, <a href="http://supervisord.org/index.html">Supervisord</a> and <a href="http://www.buildout.org/">Buildout</a> and is designed to run on any OS that supports GNU&#39;s GlibC and Supervisord (eg. GNU/Linux, FreeBSD, MacOS/X, Solaris, AIX et al.) At the time of writing Microsoft Windows was partially supported (node only) through a GlibC implementation on Windows and a port of Supervisord to Windows.</p>
+
+<h2>SlapGRID</h2>
+
+<p><a href="https://lab.nexedi.com/nexedi/slapos.core">SlapGRID</a> acts as the &quot;glue&quot; between the SlapOS Master and both Buildout and Supervisord. SlapGRID requests to SlapOS Master which software should be installed and executed. It uses Buildout to install software and Supervisord to start and stop software processes. SlapGRID also collects the usage data produced by each running software and transmits it to the SlapOS Master.</p>
+</details>
+
+<details open="open">&nbsp;
+<h2>Supervisord</h2>
+
+<p><a href="http://supervisord.org/">Supervisord</a> is a process control daemon. It can be used to programmatically start and stop processes with different users, handle their output, log files, errors, etc. It is sort of an improved <i>init.d</i> which can be remotely controlled. Supervisord is lightweight and old enough to be really mature (i.e. no memory leaks).</p>
+&nbsp;
+
+<h2>Buildout</h2>
+
+<p><a href="http://www.buildout.org/en">Buildout</a> is a Python-based system for creating, assembling and deploying applications from multiple parts, some of which may be non Python-based. It allows to create Buildout configurations from which the same software can (later) be reproduced. Buildout originated from the Zope/Plone community to automate deployment of customized instances of their own software and has become a stable and mature software over the years. Please refer to <a href="slapos-DesignDocument.Understanding.Slapos.Buildout">understanding Buildout</a> for a more detailed analysis of Buildout and why it is critical to the architecture of SlapOS.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Protocol</h1>
+<img alt="SlapOS Protocol" src="https://www.erp5.com/slapos-Graphic.Architecture.Protocol?display=&amp;format=png" />
+<details open="open">
+<p>SlapOS is based on the SLAP protocol, a polling protocol every SlapOS slave node uses to contact the Master over http(s) for four different purposes:</p>
+
+<ul>
+	<li>to define capacity</li>
+	<li>to collect the list of software to install</li>
+	<li>to collect the list of computer partitions to configure</li>
+	<li>to post accounting/usage information</li>
+</ul>
+
+<p>At boot time a node contacts the Master specified during installation and notifies it of the boot process having completed. It also provides a list of available computer partitions, their identifiers and IPv6 addresses. This <i>set capacity request</i> is retriggered every 24 hours to take (unlikely) network configuration changes into account.</p>
+</details>
+
+<details open="open">
+<p>Every 5 minutes, a node requests the list of software which should be installed. As SlapOS nodes and the SLAP protocol are supposed to be stateless, the values which are exchanged are Promises to reach, not actions to take (see <a href="slapos-DesignDocument.Understanding.Slapos.Promises">understanding SlapOS Promises</a>). The SlapOS Master thus returns the complete list of softwares which are expected to be installed on the node without taking into account whether such software was installed or not. Reversely, if an installed software is no longer in the list, it implies that it should be removed.</p>
+
+<p>Every 5 minutes, the SlapOS Slave node also requests the list of computer partitions to configure. It is handled by a different process, because installing software could take between a couple of minutes (precompiled and cached) to a couple of hours (recompile for architecture), while configuration should take only a couple of seconds or less. Each request of the list of computer partitions will eventually lead to a reconfiguration of all partitions. If a larger server contained 300 partitions and the configuration of a partition took one second, it will already take five minutes to reconfigure all partitions. Obviously, SlapGRID tries to optimize partition configuration and will only update those partitions which have changed since the last run. Still, in case of an incident of a scale that requires the undesirable configuration of all partitions on a server the configuration is run on a single thread and process to ensure the system does not collapse and most cores of the server are available for running what they are supposed to instead of configuration software.</p>
+</details>
+
+<details open="open">
+<p>Once per day, accounting/usage information is collected from every computer partition. It is the role of the software instance running in the computer partition to produce a file which contains usage and incident reports in <i>TioXML</i> format. All files are aggregated and posted to SlapOS Master which then processes them to generate accounting and billing information. The accounting information being exchanged can be very abstract covering both physical usage (CPU, RAM, disk et al), virtual usage (number of users, number of transactions and incidents (failure to access data for x seconds). TioXML format is easy to extend in order to cover any possible billing requirement.</p>
+
+<p>At time of writing, an extension of get-cp-list request using HTTP long-polling or Web Sockets is being considered to make the system more reactive and poll the SlapOS Master less frequently. Still, the goal of the Slap Protocol will likely never consist of providing instant cloud resources. This should rather be done in a predictive pre-allocation approach based on previsions or safety rather than on demand. Along these lines the slowing down of provisioning of a resource may be useful to mitigate the risk of speculation on availability of a cloud resource and thus an efficient way to increase overall cloud resilience. Besides this it needs to be seen whether more scalability can be reached through a HTTP-based push protocol and whether such a protocol can resist frequent network interruptions over intercontinental internet transit routes.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Computer Partitions</h1>
+
+<details open="open">
+<p>The concept of a computer partition is detrimental to understand the overall structure of a SlapOS Slave node. A computer partition can be seen as a lightweight container or ... jail. It provides a reasonable level of isolation based on the host operating system user and group management. While it does not provide the level of isolation that exists between virtual machines, computer partitions are used in SlapOS to run virtualization software inside. The idea of computer partitions originated in 2004 after trying chrooted filesystems, linux-vserver jails and running multiple virtual machines on the same server hardware. All resulted in requiring to maintain a complete file system per instance of an application, creating significant additional effort over maintaining just a single filesystem. Virtual machines with individual file systems also did not scale because of the overhead of each file system and virtual machine.</p>
+
+<p>Instead Buildout offered a solution. It was discovered that splitting Buildout into two independent profiles was possible: a profile to build software in a self-contained way and a profile to create an instance of this software pointing to configuration files in a directory with links to a shared software directory. The concept of computer partitions was created and allowed SlapOS to offer low cost hosting for standard open source applications at less than 1 EUR/month per hosted application. This made competing with large cloud providers possible for independent software vendors.</p>
+</details>
+</section>
+
+<section>
+<h1>Computer Partition Profile</h1>
+<img alt="SlapOS Node - Computer Partition Profile" src="https://www.erp5.com/slapos-Graphic.Architecture.Computer.Partition.Profile?display=&amp;format=png" />
+<details open="open">
+<p>Every computer partition consists of a dedicated <i>IPv6 address</i>, a dedicated local (internal) <i>IPv4 address</i>, a dedicated tap interface (<i>slaptapN</i>), a dedicated user (<code>slapuserN</code>) and a dedicated directory (<code>/srv/slapgrid/slappartN</code>). Optionally, a dedicated block device and routable IPv4 addresses can be defined.</p>
+
+<p>SlapOS is normally configured to use IPv6 addresses. Although it is not a requirement, IPv6 greatly simplifies the deployment of SlapOS for both public and private cloud applications. In private setups, IPv6 helps interconnecting SlapOS slave nodes without having to setup tunnels of complex port redirections. In the public case, IPv6 replaces existing corporate tunnels with a more resilient protocol and a wider, flat address space. IPv6 addressing can help allocating hundreds of IPv6 addresses on a single machine. Each running service can thus be attached to a different IPv6 address without having to change its default port settings also simplifying accounting for network traffic per computer partition.</p>
+
+<p>All this would be possible with IPv4 or through VPNs but it would be more complex and less resilient aside from IPv4 address exhaustion preventing allocation of so many public IPv4 addresses on a single computer.</p>
+</details>
+
+<details open="open">
+<p>Even though IPv6 is used to interconnect processes globally on a SlapOS public or private cloud, it was discovered that most existing software is incompatible with IPv6 at the time of writing. Reasons vary from IP addresses being stored in a structure of 3 integers to IPv6 URLs not being recognized due to not relying on a dot separator. For these reasons each computer partition has a dedicated local, non routable IPv4 address.</p>
+
+<p>Legacy software will listen on this IPv4 adress with a proxy mechanism being used to create a bridge between IPv6 and IPv4. In case of an HTTP(s) application, this role is usually played by a Frontend (Apache) which also serves as applicative firewall (mod_security) and security setter (TLS). For other protocols, <a href="http://www.stunnel.org/">Stunnel</a> is used for the same purpose (see following sections for details).</p>
+
+<p>For yet another type of applications, IP is not the appropriate ISO level. In these cases, a tap interface is provided emulating a physcial Ethernet interface. This interface is usually bridged with one of the servers&#39; physical Ethernet interfaces. Tap is often used by virtualization software such as KVM to provide access to the outer world network (as it is the case with KVMs provided by SlapOS). But tap can also be used for other applications such as virutal private networks or virtual switches which require direct Ethernet access. On a computer with 100 partitions, tap interfaces are usually named <code>slaptap0, slaptap1,...slaptap99</code>.</p>
+
+<p>...</p>
+</details>
+
+<details open="open">
+<p>Every computer partition is linked to a user and a directory. In a computer with 100 partitions, users are named <code>slapuser0, slapuser1, ...slapuser99</code> and directories <code>/srv/slapgrid/slappart0, /srv/slapgrid/slappart1,.../srv/slapgrid/slappart99</code>.</p>
+
+<p>Directory <code>/srv/slapgrid/slappart0</code> is then owned by user (or group) <code>slapuser0</code> and so on. <code>slapuser0</code> is able to access files in <code>/srv/slapgrid/slappart0</code> whereas <code>slapuser1</code> is not able to access the same files, as he only has access to files stored in <code>/srv/slapgrid/slappart1</code>. Moreover, tap interface <code>slaptap0</code> is owned by <code>slapUser0</code>, tap interface <code>slaptap1</code> by <code>slapuser1</code> and so on.</p>
+
+<p>For some applications, it might be necessary to attach certain partitions to a raw block device to maximize disk I/0 performance under certain KVM configurations and to access a physical partition of an SSH disk directly. This possibility has been included in the design of SlapOS although at the time of writing it has not been fully implemented.</p>
+</details>
+
+<details open="open">
+<p>Computer partitions are thus configured to not have access to any information on another computer partition. Access rights in SlapOS have three different levels: <i>global</i> access, <i>computer partition</i> only access and <i>superuser</i> only access. SlapOS slave nodes are normally configured in such a way that global hardware status has global access rights and therefore installing monitoring software is possible without further customization.</p>
+
+<p>Every software running on a computer partition has access to all files of the computer partition, owned by the same user. Software running in a computer partition has no possibility to access or modify files owned by the superuser. As a general design rule, SlapOS refuses to grant any superuser privilege to applications or computer partitions. Only SlapGRID and Supervisord are executed with superuser privilege.</p>
+</details>
+</section>
+
+<section>
+<h1>Computer Partition Processes</h1>
+<img alt="SlapOS Node - Computer Partition Processes" src="https://www.erp5.com/slapos-Graphic.Architecture.Computer.Partition.Processes?display=&amp;format=png" />
+<details open="open">
+<p>A single computer partition is supposed to host a single application such as a database, an application server or a test runner. Yet, multiple UNIX processes maybe required for this purpose. In case of a Zope Web Application server, at least two processes are needed: a Frontend (Apache) for security (firewall, mod_security, mod_ssl) and a process for the Zope server itself. In case of a database, one process is the database itself and another is a Stunnel application which maps IPv6 ports to local IPv4 ports.</p>
+
+<p>But the number of processes can be higher. Running ERP5 requires at least 12 processes: backend_apache, certificate_authority, conversion_server, crond, erp5_update, kumo_gateway, kumo_manager, kumo_server, memcached, mysql_update, mysqld, zope_1. In this case, the computer partition acts as a &quot;one place fits all&quot; container for ERP5 and its dependencies. A similar approach would be followed for any shrinked wrapped application including Apache/PHP/MySQL apps. This is acceptable because the concept of &quot;elementary&quot; still relates to the idea that only one instance of the application is launched and that most of the time is not used. Multiple computer partitions can thus be allocated on a single computer ignoring the need for scaling up the application.</p>
+
+<p>Some users use&nbsp;a single partition to run multiple instances of the same application server. In this case a computer partition is no longer elementary and acts as a mini-cluster consuming all resources of a computer preventing both the scalability and the possibility to optimize resources usage across SlapOS through fine-grained resource allocation.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>SlapOS Networking</h1>
+
+<details open="open">
+<p>It was a design choice of SlapOS to consider that the only thing in common between nodes of a distributed cloud was the IP and that there was no possibility to rely on network management systems such as <a href="https://en.wikipedia.org/wiki/Border_Gateway_Protocol">BGP</a> for value-added networking. SlapOS networking is thus based on the flat IP address mode only - without any notion of virtual network (VLAN) at the core of SlapOS. It is the role of the application to implement such concepts by allocating appropriate resources and encapsulating them during insecure and unpredictable IP transit.</p>
+</details>
+</section>
+
+<section>
+<h1>IPv6 in SlapOS</h1>
+<img alt="SlapOS Network - Use of IPv6" src="https://www.erp5.com/slapos-Graphic.Architecture.Network?display=&amp;format=png" />
+<details open="open">
+<p>IPv6 is recommended for creating a global, distributed, peer-to-peer, unencrypted network of intercommunicating processes with a single, flat addressing space. In an ideal SlapOS implementation, all software instances allocated on computer partitions of Slave nodes can communicate with each other through IPv6 connections. In addition, some users (represented by laptops) access SlapOS processes using IPv6 directly (eg developers not going through a front end). However, most users will access SlapOS application processes through IPv4 and application Frontends and because of that Frontends are allocated on special computer partitions with dual IPv4 and IPv6 addressing.</p>
+
+<p>For end users, IPv4 Frontends provide access to the IPv6 backend making the use of IPv6 transparent. On the other hand, developers can setup IPv6 tunnels using <a href="https://www.remlab.net/miredo/">Miredo</a> or tunnel brokers such as <a href="https://tunnelbroker.net/">Hurricane Electric</a>. Until now, SlapOS IPv6 could be implemented on any condition incurred. In the worst case, a connection through IPv4 and HTTP to a remote virtual machine hosted on SlapOS and accessible through a Frontend can act as replacement for a local machine.</p>
+
+<p>In case&nbsp;IPv4 is mandatory, IPv6 can be replaced as long as a VPN is deployed to provide a global, flat addressing space with enough available addresses. It should be possible to allocate 100 IPv4 addresses on each SlapOS Slave node. Distributed VPN technologies such as <a href="https://tinc-vpn.org/">Tinc</a> could eventually be integrated at the core of SlapOS to implement a IPv4 flat addressing space without sacrificing the key concept of resource distribution which lies at the core of SlapOS.</p>
+</details>
+</section>
+
+<section>
+<h1>Stunnel - Security and Legacy</h1>
+<img alt="SlapOS Stunnel - secruity and legacy" src="https://www.erp5.com/slapos-Graphic.Architecture.Stunnel?display=&amp;format=png" />
+<details open="open">
+<p>Even today, the main issue with IPv6 is still its poor support and to some degree <a href="https://en.wikipedia.org/wiki/IPsec">IPsec</a>. Although IPv6 is a beautiful technology, it is not easy to deploy it in a way that provides encryption and authentication on a per UNIX user base. It is also difficult to deploy in a completely decentralized way.</p>
+
+<p><a href="https://www.stunnel.org/">Stunnel</a> provides a solution to both issues. Whenever secure communication is required between two applications, a Stunnel process is created at both ends. Stunnel maps local IPv4 addresses to global IPv6 addresses and encrypts all communication. Stunnel is also used to restrict access to specific X509 certificates only.</p>
+
+<p>In SlapOS, Stunnel is for example used to connect to MySQL database servers hosted on public IPv6 servers. The MySQL client itself only partially supports IPv6 and does not encrypt connections. With Stunnel, it is possible to access MySQL over IPv6 with encryption and possibly strong authentication. The same approach is used to access Memcached servers. Memcached was originally designed for trustable Local Area Network (LAN). By encapsulating the Memcached protocol into Stunnel, it is possible to support IPv6, encryption and authentication with Memcached.</p>
+</details>
+
+<details open="open">
+<p>When developing SlapOS, most software components used by large web infrastructure applications such as social networks, SaaS providers or search engines were designed for trustable environments and private clusters. Porting those applications to distributed cloud and untrustable networks requires significant additional effort to make the connection secure. Rather than using a centralized VPN approach, SlapOS opted to use Stunnel as efficient, peer-to-peer VPN which allowed at the same time to solve the IPv6 migration issue.</p>
+
+<p>Stunnel itself provides enough performance compared to available IP network transit bandwidth. According to the Stunnnel authors, <a href="http://www.Stunnel.org/?page=perf">Stunnel performance</a> can reach up to 5.5Gbit/s the time of writing.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="https://www.nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

@@ -1,0 +1,145 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+--><!-- outbound links:
+  slapos-HowTo.Add.Software.Release.To.Slapos.Master
+  slapos-Tutorial.Install.Slapos.Node.Comp.0
+  slapos-DesignDocument.Slapos.System.Requirements
+-->
+<section class="master">
+<h1>How To Instantiate Re6st Registry</h1>
+
+<details open="open">
+<p>This document explains how to instantiate a <a href="https://re6st.nexedi.com">Re6st</a> Registry, a register which manages Re6st nodes in a network and issues tokens for new nodes to join the network.</p>
+
+<p>It will explain the different instantiation parameters. Please refer to other documents on <a href="slapos-HowTo.Add.Software.Release.To.Slapos.Master">add a software to the SlapOS Master catalog</a> or <a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">supplying/installing a software</a></p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Re6st Registry Configuration</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Configuring Re6st Registry</h1>
+
+<details open="open">
+<p>The process of installing (supplying) a software and providing it as a service (instantiation) are the same for all software. However during instantiation each instance can be configured differently.</p>
+
+<p>This section will cover the specific configuration parameters used for a <b>Re6st</b> Registry including the steps required to get Re6st to work.</p>
+</details>
+</section>
+
+<section>
+<h1>Registry Configuration</h1>
+<img alt="SlapOS Interface - Re6st Registry Instance Configuration" src="https://www.erp5.com/slapos-Interface.Service.Re6st.Registry.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>After selecting <i>Services</i>, adding a new service <i>Re6st</i> and selecting the latest version, you should be on the configuration screen of the Registry.</p>
+
+<p>Select <i>Software Type</i> <code>Default</code> which will load a form with software-specific parameters.</p>
+
+<p>Set the following parameters:</p>
+
+<pre>
+<code>IPv6 prefix: fc01::/7
+Default length of allocated prefix: 16</code></pre>
+
+<p>Don&#39;t forget to select your computer at the end of the form to prevent the SlapOS Master allocating the Registry on a computer of its choice.</p>
+
+<p>Click <i>Proceed</i> to start instantitation. This will forward you to the list of current services.</p>
+</details>
+</section>
+
+<section>
+<h1>Registry Instantiation and Port Forwarding</h1>
+<img alt="SlapOS Interface - Re6st Service Instantiation" src="https://www.erp5.com/slapos-Interface.Verify.Software.Re6st.Registry.Installation?display=&amp;format=png" />
+<details open="open">
+<p>Refresh the page to show your instance and installation status.</p>
+
+<p>You can follow the compilation by looking at the <code>slapos-node-software.log</code> using:</p>
+
+<pre>
+<code># tail opt/slapos/log/slapos-node-software.log -f</code></pre>
+
+<p>&nbsp;</p>
+
+<p>Since the Registry is listening on port <i>19201</i> (see <a href="slapos-DesignDocument.Slapos.System.Requirements">system requirements</a>) and user permissions in Linux systems prevent accessing ports above 1024, traffic must be forwarded (also describe in <a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">installing SlapOS node COMP-0</a>).</p>
+
+<p>This can be done using a Firewall with NAT traversal or using <b>Socat</b>. <a href="http://www.dest-unreach.org/socat/">Socat</a> is a relay for bidirectional data transfer between two independent data channels. Data channels can be files, pipes, devices (terminal or modem, etc.), or sockets (Unix, IP4, IP6 - raw, UDP, TCP), etc. For more information, please refer to the <a href="https://directory.fsf.org/wiki/Socat">Free Software Directory</a>).</p>
+
+<p>To install socat in case required, use</p>
+
+<pre>
+<code>$ sudo su
+# sudo apt-get install socat</code></pre>
+</details>
+
+<details open="open">
+<p>Then start by finding the IP adress to bind to:</p>
+
+<pre>
+<code># netstat -natp | grep 9201
+tcp         0       0 10.0.27.44:9201       0.0.0.0:*          LISTEN       26027/python2.7
+tcp         0       0 10.0.27.44:40706      10.0.27.44:9201    TIME_WAIT    -
+tcp         0       0 10.0.27.44:40699      10.0.27.44:9201    TIME_WAIT    -
+tcp         0       0 10.0.27.44.9201       10.0.27.44.:40655  TIME_WAIT    -
+tcp         0       0 :::9201               :::*               LISTEN       26027/python2.7</code></pre>
+
+<p>Continue with:</p>
+
+<pre>
+<code># ifconifg eth0 | grep inet\
+  inet addr:167.114.246.26  Bcast:167.114.246.26  Mask:255.255.255.255</code></pre>
+
+<p>Then call Socat:</p>
+
+<pre>
+<code># socat TCP4-LISTEN:9201,fork,bind=167.114.246.26 TCP4:10.0.27.44:9201 &amp; [3] 13443</code></pre>
+
+<p><b>Note</b>, that your Registry master-url in the example is <i>167.114.246.26:9201</i>. <b>SAVE THIS URL</b>. You will need to provide it whenever you want to connect a new node to the network.</p>
+</details>
+
+<details open="open">
+<p>To verify whether port forwarding works, you can:</p>
+
+<pre>
+<code># ps aux | grep socat
+root      3234  0.0  0.0  12728  2180 pts/0    S+   09:02   0:00 grep socat
+    </code></pre>
+</details>
+</section>
+
+<section>
+<h1>Verify Re6st Is Accessible</h1>
+<img alt="SlapOS Re6st Registry Service Accessability" src="https://www.erp5.com/slapos-Interface.Verify.Service.Re6st.Registry.Accessability?display=&amp;format=png" />
+<details open="open">
+<p>Once port forwarding is setup, try accessing the registry over the url <code>167.114.246.26:9201</code>.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

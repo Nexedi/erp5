@@ -1,0 +1,299 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+--><!-- outbound links:
+  slapos-Tutorial.Create.Software.Release
+  slapos-Tutorial.Install.Slapos.Master.Comp.Root
+  slapos-Tutorial.Port.Software.To.Slapos
+  slapos-Tutorial.Install.Slapos.Node.Comp.0
+-->
+<section class="master">
+<h1>How To Add Webrunner Software Release To SlapOS Master</h1>
+
+<details open="open">
+<p>This document explains how to add the Webrunner Software Product and Software Release to a SlapOS Master in order for it to be installed and instantiated on nodes of a network. The process is the same for any software that should be provided over a SlapOS network. The Webrunner is only used as example. For software not included on the <a href="https://lab.nexedi.com/nexedi/slapos/software/">standard catalog</a> it is required to create a new software release, described in <a href="slapos-Tutorial.Create.Software.Release">creating a software release</a> or to port a software to SlapOS described in <a href="slapos-Tutorial.Port.Software.To.Slapos">porting software to SlapOS</a>.</p>
+
+<p>This howTo requires having administrator (superuser) access to a SlapOS Master (done in <a href="slapos-Tutorial.Install.Slapos.Master.Comp.Root">install a SlapOS Master</a>) and another network node on which to install the Software Release.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Granting Admin Rights to a User</li>
+	<li>Adding Software Product</li>
+	<li>Adding Software Release</li>
+	<li>Supply Webrunner on Node</li>
+</ul>
+
+<details open="open">&nbsp;</details>
+</section>
+
+<section class="chapter">
+<h1>Granting Admin Rights to a User</h1>
+
+<details open="open">
+<p>For adding new software products and releases to the catalog on a SlapOS Master and to view accounting and consumption information, a user must have administrative rights. These can be assigned by a <i>superuser</i> like the initial zope user given after installing the SlapOS Master. This section requires to have superuser privileges (for more information on the type of users in ERP5, please refer to <a href="erp5-HowTo.Differentiate.Erp5.Zope.Developer.User">differentiating users</a> from the ERP5 documentation).</p>
+</details>
+</section>
+
+<section>
+<h1>Login to ERP5 Interface</h1>
+<img alt="ERP5 Interface - Login Screen" src="https://www.erp5.com/erp5-Interface.Login.Page?display=&amp;format=png" />
+<details open="open">
+<p>Go to the ERP5 Cloud Engine interface &quot;behind&quot; the SlapOS Dashboard. If your master has a user-friendly url provided via a Frontend Slave (<a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">created while installing COMP-0</a>) like <code>https://master.slaptest.erp5.net/</code> for example, you can find the backend url in the Frontend Slave connection parameters (in the Dashboard access <i>Services</i> menu, locate your Frontend Slave). Remove the <code>web_site_module/hostingjs/</code> part of the URL and <b>don&#39;t forget to logout of the SlapOS Dashboard</b> so you can login on the underlying ERP5 interface with superuser privileges.</p>
+
+<p>Once you are on the login page, login using <i>zope</i> and the password retrieved during configuration of the SlapOS Master (when calling <code>erp5 show -s</code> in the terminal).</p>
+</details>
+</section>
+
+<section>
+<h1>Access Person Module</h1>
+<img alt="ERP5 Interface - Homescreen" src="https://www.erp5.com/erp5-Interface.Slapos.Master.ERP5.Homescreen?display=&amp;format=" />
+<details open="open">
+<p>Click on <i>Persons</i> or select <i>Person Module</i> from the <i>Modules</i> select field.</p>
+</details>
+</section>
+
+<section>
+<h1>Find Specific User</h1>
+<img alt="ERP5 Interface - Person Module" src="https://www.erp5.com/erp5-Interface.Person.Module?display=&amp;format=" />
+<details open="open">
+<p>Locate the person you want to give administrator rights to</p>
+</details>
+</section>
+
+<section>
+<h1>Find Assignments of this User</h1>
+<img alt="ERP5 Interface - Assignments Tab" src="https://www.erp5.com/erp5-Interface.Person.Assignments?display=&amp;format=png" />
+<details open="open">
+<p>Once on the person, click on the <i>Assignments</i> tab.</p>
+</details>
+</section>
+
+<section>
+<h1>Find Member Assignment</h1>
+<img alt="ERP5 Interface - Member Assignment" src="https://www.erp5.com/erp5-Interface.Person.Member.Assignment?display=&amp;format=png" />
+<details open="open">
+<p>Find the <i>Member Assignment</i> and open it.</p>
+</details>
+</section>
+
+<section>
+<h1>Associate Group with User</h1>
+<img alt="ERP5 Interface - Assign Group" src="https://www.erp5.com/erp5-Interface.Person.Assign Group?format=png&amp;dispay=" />
+<details open="open">
+<p>In the right hand menu, update the <i>Group</i> field to <code>SlapOs Company</code>. This will give administrative rights to this user. Click the <i>Save</i> (disk) icon to update the assignment configuration.</p>
+
+<p>Once saved, this user will be able to add new software products and releases besides being able to view accounting and consumption related data.</p>
+</details>
+</section>
+
+<section>
+<h1>Logout Superuser</h1>
+<img alt="ERP5 Interface - Logout" src="https://www.erp5.com/erp5-Interface.Person.Assign.Group.Logout?format=png&amp;display=" />
+<details open="open">
+<p>Logout of the superuser account.</p>
+</details>
+</section>
+
+<section chapter="chapter">
+<h1>Add Webrunner to Software Catalogue</h1>
+
+<details open="open">
+<p>The <a href="https://webrunner.nexedi.com/">Webrunner</a> is a development IDE for SlapOS and part of the SlapOS toolbox. It is a platform-as-a-service (PAAS), browser-based development IDE providing a sandbox for a SlapOS application, that can be used to develop this application itself. The Webrunner is useful, as it can be run in resilient mode replicated on 3 different locations. It is actually a mini SlapOS Master that can deploy a single instance of a software release inside. Besides resiliency, the Webrunner allows to encapsulate a (possibly) patched version of a software while also providing ssh access to the software&#39;s underlying file system in case required.</p>
+</details>
+</section>
+
+<section>
+<h1>Administrator Login to ERP5 Interface</h1>
+<img alt="ERP5 Interface - Login with Administrator Account" src="https://www.erp5.com/erp5-Interface.Administrator.Login?display=&amp;format=png" />
+<details open="open">
+<p>Login with the user who just received administrator privileges.</p>
+</details>
+</section>
+
+<section>
+<h1>Access Software Product Module</h1>
+<img alt="ERP5 Interface - Administrator Homescreen" src="https://www.erp5.com/erp5-Interface.Administrator.Homescreen?display=&amp;format=" />
+<details open="open">
+<p>Once logged in click on <i>Software Products</i> or select <i>Software Product Module</i> from the <i>Modules</i> select field.</p>
+</details>
+</section>
+
+<section>
+<h1>Add Software Product</h1>
+<img alt="ERP5 Interface - Administrator Add Software Product Webrunner" src="https://www.erp5.com/erp5-Interface.Add.Software.Product.Webrunner?display=&amp;format=png" />
+<details open="open">
+<p>On the software product page, select <i>Action</i> and <i>Add Software Product</i>.</p>
+</details>
+</section>
+
+<section>
+<h1>Define Software Product</h1>
+<img alt="ERP5 Interface - Administrator Define Software Product Webrunner" src="https://www.erp5.com/erp5-Interface.Define.Software.Product.Webrunner?display=&amp;format=png" />
+<details open="open">
+<p>Set <code>Title</code> and <code>Reference</code> to <i>Webrunner</i> and <i>webrunner</i>, then save by clicking the disk icon.</p>
+</details>
+</section>
+
+<section>
+<h1>Publish Software Product</h1>
+<img alt="ERP5 Interface - Administrator Publish Software Product Webrunner" src="https://www.erp5.com/erp5-Interface.Publish.Software.Product.Webrunner?display=&amp;format=png" />
+<details open="open">
+<p>The final step is to publish the Software Product. Select <i>Action</i> and <i>Publish</i> to change the workflow change.</p>
+</details>
+</section>
+
+<section>
+<h1>Published Software Product</h1>
+<img alt="ERP5 Interface - Administrator Verify Published Software Product Webrunner" src="https://www.erp5.com/erp5-Interface.Verify.Published.Software.Product.Webrunner?display=&amp;format=png" />
+<details open="open">
+<p>Confirm and once you are back on the Software Product page and the state is changed to <i>Published</i>, click on the <i>ERP5</i> breadcrumb to get back to the main homescreen.</p>
+</details>
+</section>
+
+<section>
+<h1>Access Software Release Module</h1>
+<img alt="ERP5 Interface - Administrator Homescreen" src="https://www.erp5.com/erp5-Interface.Administrator.Homescreen?display=&amp;format=" />
+<details open="open">
+<p>Next click on <i>Software Releases</i> or select <i>Software Release Module</i> from the <i>Modules</i> select field.</p>
+</details>
+</section>
+
+<section>
+<h1>Add Software Release</h1>
+<img alt="ERP5 Interface - Administrator Add Software Release Webrunner" src="https://www.erp5.com/erp5-Interface.Add.Software.Release.Webrunner?display=&amp;format=png" />
+<details open="open">
+<p>Repeat the steps, so once on the software release page, select <i>Action</i> and <i>Add Software Release</i>.</p>
+
+<p><b>Note</b>, that whenever you want to upgrade a software release, you have to create a new software release entry with the difference being the version and <code>software.cfg</code> being pointed to, which can both be set in the next steps.</p>
+</details>
+</section>
+
+<section>
+<h1>Locate Software.Cfg Url</h1>
+<img alt="Gitlab - Webrunner Software Release Software.cfg profile" src="https://www.erp5.com/gitlab-interface.Locate.Software.Release.Profile.Webrunner?display=&amp;format=png" />
+<details open="open">
+<p>Head over to the repository you are using to host software releases and locate the <code>software.cfg</code> file which contains the instructions for building your software. Find the URL of this software release. <b>Note</b>, that you can use different releases, for example:</p>
+
+<ul>
+	<li>latest development:
+	<pre>
+<code>https://lab.nexedi.com/nexedi/slapos/raw/master/software/slaprunner/software.cfg</code></pre>
+	</li>
+	<li>latest tagged version:
+	<pre>
+<code>https://lab.nexedi.com/nexedi/slapos/raw/[TAG]/software/slaprunner/software.cfg</code></pre>
+	</li>
+</ul>
+
+<p><code>[TAG]</code> can be any value listed on the published releases, found on <a href="https://lab.node.vifib.com/nexedi/slapos/tags">https://lab.node.vifib.com/nexedi/slapos/tags</a>. Continue using the latest tagged version which is <i>1.0.64</i>. Note down the following url:</p>
+
+<pre>
+<code>https://lab.nexedi.com/nexedi/slapos/raw/v1.0.64/software/slaprunner/software.cfg</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Define Software Release</h1>
+<img alt="ERP5 Interface - Administrator Define Software Release Webrunner" src="https://www.erp5.com/erp5-Interface.Define.Software.Release.Webrunner?display=&amp;format=png" />
+<details open="open">
+<p>Fill the form as shown in the screenshot. Make sure to add the <code>Software Product</code> pointing to the Webrunner product you just created (add the title of the software product). Title and reference can be the same as on the software product. Make sure define a version and select <i>HTTP</i>, then provide the url to your <code>software.cfg</code>. Once all fields have been filled out, click the disk icon to save.</p>
+</details>
+</section>
+
+<section>
+<h1>Publish Software Release Alive</h1>
+<img alt="ERP5 Interface - Administrator Publish Software Release Alive Webrunner" src="https://www.erp5.com/erp5-Interface.Publish.Software.Release.Webrunner?display=&amp;format=png" />
+<details open="open">
+<p>The final step is to publish the Software Release <b>Alive</b> (publishing alive, will allow to edit the provided data in case necessary). Select <i>Action</i> and <i>Publish Alive</i> to change the workflow change.</p>
+</details>
+</section>
+
+<section>
+<h1>Published Software Release</h1>
+<img alt="ERP5 Interface - Administrator Published Software Release Webrunner" src="https://www.erp5.com/erp5-Interface.Verify.Published.Software.Release.Webrunner?display=&amp;format=png" />
+<details open="open">
+<p>Confirm and once you are back on the Software Release page and the state is changed to <i>Published Alive</i>, click on the <i>ERP5</i> breadcrumb to get back to the main homescreen.</p>
+</details>
+</section>
+
+<section>
+<h1>Software Available in SlapOS Dashboard</h1>
+<img alt="SlapOS Interface - Published Software Release Available" src="https://www.erp5.com/slapos-Interface.Verify.Published.Software.Release.Webrunner?display=&amp;format=png" />
+<details open="open">
+<p>Head over to the SlapOS Dashboard. If you pick a computer and click <i>Supply</i>, the newly defined software will now be on the list. We can continue and install the Webrunner on this machine.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Webrunner Software Release</h1>
+<img alt="SlapOS Dashboard - Select Software Release to supply" src="https://www.erp5.com/slapos-Interface.Select.Software.Webrunner?format=png&amp;display=" />
+<details open="open">
+<p>Select the <i>Webrunner</i> software release.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Webrunner Software Release Version</h1>
+<img alt="SlapOS Dashboard - Select Software Release Version" src="https://www.erp5.com/slapos-Interface.Select.Software.Webrunner.Version?display=&amp;format=png" />
+<details open="open">
+<p>Select the latest version.</p>
+</details>
+</section>
+
+<section>
+<h1>Launch Webrunner Software Release Installation</h1>
+<img alt="SlapOS Dashboard - Launch Software Release Installation" src="https://www.erp5.com/slapos-Interface.Launch.Software.Webrunner.Installation?display=&amp;format=png" />
+<details open="open">
+<p>Click <i>Proceed</i> in the header to start installation.</p>
+</details>
+</section>
+
+<section>
+<h1>Wait for Webrunner Installation</h1>
+<img alt="SlapOS Dashboard - Access Computer" src="https://www.erp5.com/slapos-Interface.Wait.Software.Webrunner.Installation?display=&amp;format=png" />
+<details open="open">
+<p>After clicking <i>Proceed</i> you will be forwarded to the installation status page.</p>
+
+<p>Installation will take some time depending on the software you are installing, so either refresh the current page or check installation status directly by either going to your <i>Servers</i> list and selecting the machine you chose during installation or clicking directly on <i>Computer Reference</i>.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify Webrunner Installation</h1>
+<img alt="SlapOS Dashboard - Verify Installation Success" src="https://www.erp5.com/slapos-Interface.Verify.Software.Webrunner.Installation?display=&amp;format=png" />
+<details open="open">
+<p>You can see the installed service is now available in the bottom list. The indicator will stay red until the software has finished compiling and installing. Once the installation status bar changes to green on a refresh of the page, the installation has finished.</p>
+
+<p>You can follow the compilation by looking at the <code>slapos-node-software.log</code> using:</p>
+
+<pre>
+<code># tail /opt/slapos/log/slapos-node-software.log -f</code></pre>
+in your terminal.</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

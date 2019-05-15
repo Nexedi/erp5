@@ -1,0 +1,274 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+  http://community.slapos.org/wiki/slapos-Wiki.Home/slapos-Economic.Rationale
+--><!-- outbound links:
+
+-->
+<section class="master">
+<h1>SlapOS Rationale</h1>
+
+<details open="open">
+<p>The goal of this document is to outline the economic rationale which drives <a href="https://slapos.nexedi.com/">SlapOS</a> research and development.</p>
+
+<p>Starting in 2007 many companies whose business is to sell open source software integration services have migrated their <a href="https://en.wikipedia.org/wiki/Collaborative_software">groupware</a> from open source platforms to proprietary cloud platforms. Industrial companies that had been using proprietary groupware for many years have also opted for a similar strategy towards the cloud. Costs seem to be the driving motivation for change.</p>
+
+<p>This presentation will analyse the cost of different approaches (on premise vs. cloud) and later introduce a list of economic requirements for an open source/Free Software cloud solution provider to meet in order to provide a competitive advantage over proprietary cloud providers.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Cost Comparison</li>
+	<li>Implications</li>
+	<li>SlapOS Goals</li>
+</ul>
+
+<details open="open">&nbsp;</details>
+</section>
+
+<section class="chapter">
+<h1>Cost Comparison</h1>
+
+<details open="open">
+<p>This section introduces scenarios of groupware implementation in a company using open source and proprietary software. It will also review the different commercial offers which are proposed to companies to implement similar solutions in the cloud.</p>
+</details>
+</section>
+
+<section>
+<h1>Open Source Software on Premise</h1>
+
+<ul>
+	<li><b>Open Source Software</b>: 0&euro;</li>
+	<li><b>Server</b>: 2 * 1000 / 100 / 24 = 0.8&euro;</li>
+	<li><b>System Administrator</b>:&nbsp;800 / 100 = 8&euro;</li>
+	<li><b>Total: 8.8&euro; / user / month</b></li>
+</ul>
+
+<details open="">
+<p>Until recently (at the time of writing), one of the most cost efficient ways to implement groupware in a company was to select an open source groupware suite such as <a href="http://www.horde.org/">Horde</a>, <a href="http://pro.obm.org/">OBM</a>, <a href="http://www.group-office.com/">Group Office</a>, <a href="http://www.fengoffice.com/web/opensource/">Feng Office</a>, et al., purchase two servers (so that one could replace the other in case of a hardware failure) and ask a system administrator to come one day per month to make sure everything is working well on both servers. This approach is quite typical of small companies.</p>
+
+<p>A typical server for 100 users costs about 1000&euro; and is used in production for 2 years or 24 months. This represents a cost of 0.8&euro; per user and month. A system adminstrator costs 800 &euro; per day and operates on the server once a month on average to create accounts, make sure there is enough disk space, install system security upgrades, etc. System administration represents a cost of 8&euro; per month and user. Overall, the total cost is <b>8.8&euro;</b> per user and per month</p>
+
+<p>By hosting more users on the server (ex. 1000) and using lower cost labour (ex. 200 &euro; per day), the total cost per user can be reduced to less than 0.2&euro; per month. Therefore, what would cost 8&euro; in a small company in a country with high labour costs, could cost 0.2&euro; in a country with lower labour costs and in medium sized businesses.</p>
+</details>
+</section>
+
+<section>
+<h1>Proprietary software on Premise</h1>
+
+<ul>
+	<li><b>Proprietary Software</b>: 20&euro;</li>
+	<li><b>Server</b>: 2 * 1000 / 100.0 / 24 = 0.8&euro;</li>
+	<li><b>System Administration</b>: 800 / 100 = 8&euro;</li>
+	<li><b>Total: 28.8&euro; / user / month</b></li>
+</ul>
+
+<details open="open">
+<p>Large organizations used to rely on proprietary groupware such as <a href="http://en.wikipedia.org/wiki/IBM_Lotus_Notes">Lotus Notes</a>. Some of these such as <a href="http://www.zdnet.fr/blogs/entreprise-2-0/google-apps-dans-les-grandes-entreprises-valeo-sort-du-placard-39602388.htm">Valeo</a> later migrated to cloud. The cost of traditional groupware implementation based on proprietary software is similar to the cost of open source with the additional cost for licensing the software. This can include not only the groupware application itself but also a complex system environment made of LDAP directories, proprietary operating systems, proprietary monitoring tools, proprietary office suite and proprietary asset management.</p>
+
+<p>Typically, annual cost for the groupware environment licenses should be at least 240&euro; per user, resulting in 20&euro; monthly cost.</p>
+
+<p>The total cost per user per month of the groupware environment is thus close to 30&euro;. Increasing the number of users or reducing labour cost has little impact on the total cost since most costs are licenses.</p>
+</details>
+</section>
+
+<section>
+<h1>Open Source Software - Cloud Based (XMail)</h1>
+
+<ul>
+	<li><b>Advertising</b>: 0.5&euro;</li>
+	<li><b>Hard Disk</b>: 100 * 7 / 1000.0 / 24 = 0.03&euro;</li>
+	<li><b>System Administration</b>: 100 * 10000 / 10000000 = 0.1&euro;</li>
+	<li><b>R&amp;D</b>: 20 * 10000 / 10000000 = 0.02&euro;</li>
+	<li><b>Total: 0.15&euro; / user / month</b></li>
+</ul>
+
+<details open="open">
+<p>Many corporations have opted for free groupware once it became available on the cloud. It is however quite difficult to estimate the actual borne cost for such solutions since they are free. However, as solutions are commonly sponsored through advertising, a measure of the cost can be estimated through the number of clicks on advertising links made by each user every month. Another measure can be estimated based on the use of resources required to provide the cloud service.</p>
+
+<p>Assuming a typical user tends to click a commercial link once per month and that commercial links are priced between 0.1&euro; and 1&euro; with a typical price of 0.5&euro; a low estimate of the &quot;price&quot; of free cloud groupware can be obtained.</p>
+
+<p>Another estimation is based on the usage of physical and human sources required to produce the cloud service. The hardware cost of a service depends mostly on the cost of storage rather than on the cost of CPU. With a typical cost of 100&euro; for 1 terabyte of storage on a hard disk and an average of 7GB allocated per user, one can reach a hardware cost of 0.03&euro; per month. This calculation takes into account that storage is duplicated (ie. 14GB are needed to provided 7GB of redundant storage). It also takes into account that some users use all the 7GB storage while others mostly nothing, with an average usage of 3.5GB. The cost of CPU or RAM is considered to be close to zero as most users are only connected during small part of the day. Memory is thus shared efficiently by using a kind of multi-tenant architecture.</p>
+</details>
+
+<details open="open">
+<p>Intangible costs per user depend on the number of real users, since only those users are likely to provide advertising turnover through commercial links and can be considered as equivalent to users of a traditional approach.</p>
+
+<p>Free cloud services usually have many subscribers and much less actual users, especially simultaneous users. The number of real users is a figure which is difficult to determine but should be considerably lower than figures published by marketing departments. One approximation could be the number of registered users on facebook (2012: 1 billion) and a 1% ratio for deriving actively engaged users to be 10,000,000. This 1% ratio is quite typical of Web 2.0 services as users subscribe to them more often than they actually use them. Still, the 1% ratio is probably overestimated as many free services actually show a 1:1000 ratio between real users and subscribed users.</p>
+
+<p>If system administration is handled by a team of 100 engineers, the cost of system administration for 10,000,000 users is equal to 0.1&euro; per user per month. If the R&amp;D staff consists of a small team of typically 20 people, R&amp;D costs are equal to 0.02&euro; per user per month. The cost of free cloud groupware is thus equal to about 0.15&euro; per user per month.</p>
+</details>
+
+<details open="open">
+<p>Through various approximations, a monthly cost per user of 0.1&euro; to 0.5&euro; is taken into the calculation. This cost does not directly translate into a price, because a free cloud is financed by advertising. However, it provides an estimate target value which any open source cloud solution should match to be competitive in the long run, or which any open source cloud solution should match to be compatible with a business model based on advertising.</p>
+</details>
+</section>
+
+<section>
+<h1>Proprietary Software - Cloud Based (XMail)</h1>
+
+<ul>
+	<li><b>Google Apps </b>Premier: 5&euro;</li>
+	<li><b>OVH</b> MS Exchange: 3.3&euro;</li>
+	<li><b>Group Office</b>: 3&euro;</li>
+	<li><b>Total: 3-5&euro; / user / month</b></li>
+</ul>
+
+<details open="open">
+<p>Commercial cloud groupware offers also exist and are much easier to analyse as their prices are usually public.</p>
+
+<p>Google provides a <a href="http://www.google.com/apps/intl/en/business/index.html">&quot;Premier&quot; version of Google Apps</a> at a cost of 5&euro; per user and month. <a href="http://www.ovh.com/fr/emails/hosted_exchange/index.xml">OVH provides hosted Microsoft Exchange</a> at a cost of 3.3&euro; per user and month. <a href="http://www.group-office.com/">Group Office</a> is a hosted version of the open source Group Office groupware. It is interesting to note that the price levels of commercial cloud offers are 30 times higher that their costs as we calculated them previously. There is thus still a lot of room for competition.</p>
+</details>
+</section>
+
+<section>
+<h1>Price Comparison</h1>
+
+<ul>
+	<li><b>Open Source - on premise</b>: 0.2-8.8&euro;</li>
+	<li><b>Proprietary - on premise</b>: 28.8&euro;</li>
+	<li><b>Open Source - cloud (Google Apps)</b>: 0.1-0.5&euro;</li>
+	<li><b>Open Source - cloud (Premiere)</b>: 5&euro;</li>
+	<li><b>Open Source - cloud (OVH MS Exchange)</b>: 3.3&euro;</li>
+	<li><b>Proprietary - cloud (Group Office)</b>: 3&euro;</li>
+</ul>
+
+<details open="open">
+<p>By comparing different approaches to implement groupware in a 100 people company in a developped country, it was found that cloud-based solutions offer price levels which are 60 times lower than traditional open source solutions (0.1&euro; to 0.5&euro; vs. 8.8&euro;). Paid cloud solutions lower prices by a magnitude of 10 compared to traditional proprietary solutions. This explains why many companies (<a href="http://iwgcr.wordpress.com/2012/01/12/jaguar-land-rover-moves-to-google-apps/">Jaguar</a>, <a href="http://iwgcr.wordpress.com/2012/01/12/jaguar-land-rover-moves-to-google-apps/">Rover</a>, <a href="http://iwgcr.wordpress.com/2012/01/12/bbva-spanish-banking-group-is-switching-its-110-000-staff-to-googleapps/">BBVA</a>) abandon traditional implementation of groupware and migrate to the cloud, especially in countries with high labour.</p>
+
+<p>However, the level of profits generated by current paid cloud offerings is extremely high. Lower cost cloud offers are likely to reach the market very soon.</p>
+
+<p>Traditional open source approaches may also remain a competitive option in countries with low labour costs and in companies with more than 1000 users. Economies of scale and mature open source software packages can reduce the cost of open source groupware to 0.2&euro; per month and per user in some cases.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Implications</h1>
+
+<details open="open">
+<p>In this section, the impact of cloud solutions for IT jobs are analysed as well as the hidden costs of (both traditional) and cloud IT which are often not taken into consideration.</p>
+</details>
+</section>
+
+<section>
+<h1>Job Impact</h1>
+
+<ul>
+	<li><b>Cloud</b>: 10000000 / 100 = 100000</li>
+	<li><b>On Premise</b>: 20 * 100 = 2000</li>
+	<li><b>Productivity increase: 50x</b></li>
+</ul>
+
+<details open="open">
+<p>Per 2012, the cloud will have a major impact on the IT job market by reducing the number of open positions for system administrators and consultants.</p>
+
+<p>A team of 100 system administrators can manage 10 million groupware accounts, whereas in a traditional approach, a single consultant can serve 100 users by spending one day per month, which means for a month of 20 working days, 2000 users. This figure of 2000 users compares to 100,000 users per system administrator for cloud-based approaches.</p>
+
+<p>Thus cloud-based services can improve IT productivity by a magnitude of 50. In other words, what used to require 100 system administrators in traditional IT, only requires 2 in a cloud system, leaving 98 system adminstrators to an unpredicatble destiny.</p>
+
+<p>The cloud plays the same role here as ERP systems did for accounting, or robots are doing for industry or mechanisation for agriculture: it automates the work of certain groups, who then become less competitive than machines. This economic process has been depicted in the essay &quot;<a href="http://en.wikipedia.org/wiki/The_End_of_Work">The End of Work</a>&quot; by Jeremy Rifkin. With the cloud, it is probably the first time that a category of workers (IT engineers) produce tools which will create massive unemployment for the same category of workers (IT engineers).</p>
+</details>
+
+<details open="open">
+<p>Understanding the impact of the cloud on the IT job market is also a better way to define what &quot;cloud computing&quot; is: the automation through software of IT processes which used to be managed by humans. Currently, cloud computing focuses mostly on the automation of system administration. However, research in cloud computing shows that <a href="http://www.igi-global.com/chapter/tailoring-fos-erp-packages/60822">the process of tailoring ERPs for small companies can be automated</a>, too and that the configuration of applications could also be done by software rather than by consultants.</p>
+</details>
+</section>
+
+<section>
+<h1>Risk of Data Loss</h1>
+
+<ul>
+	<li>Cloud: <a href="http://iwgcr.wordpress.com">iwgcr.wordpress.com</a></li>
+	<li>On Premise: ???</li>
+</ul>
+
+<details open="true">
+<p>An interesting aspect of cost comparison which is seldomly taken into account is the risk of data loss. Corporate data can be very valuable. Losing accounting data or customer data can lead a stable and profitable company to bankrupcy in a matter of months.</p>
+
+<p>There are already a few examples of data loss on the cloud either for technical reasons (eg. &quot;<a href="http://iwgcr.wordpress.com/2011/12/01/microsoft-sidekick-data-disaster/">Sidekick story</a>&quot;) or for social reasons (eg. &quot;<a href="http://keithp.com/blogs/calypso/">story of erased google account</a>&quot;). There are also numerous stories of companies that use Storage Area Network (SAN) device and backup solutions from reputable makers but still lost their data because they did not monitor the alarms of either system well enough. The SAN filesystems got currupted and the backup solution had no longer been running for several months.</p>
+</details>
+
+<details open="open">
+<p>Is the cloud safer or not than traditional IT from this point of view?</p>
+
+<p>It is hard to tell without numbers. Some companies with perfect backup plans could bear less risk than the cloud. Many companies implement a poor backup plan and could reduce their risk by migrating to cloud.</p>
+
+<p>One thing is certain however: current cloud centralized architectures are based on large data centers and are operated by the same company all over the world. Centralized architectures are quite weak in case of strike, critical bugs, virus or terrorist attack. It is not only a matter of lack of technical redundancy but also of lack of management redundancy.</p>
+
+<p>Also, the perceived risk of data loss in cloud is becoming higher and higher. Just like with air transportation, which is the safest transportation system, fears of accidents can lead some users to reject the cloud. A Cloud disaster, which is already <a href="http://www.fastcompany.com/1802338/10-bold-business-technology-predictions-for-2012?partner=leadership_newsletter">predicted to happen in 2012</a> could generate a lot of distrust for the cloud.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>SlapOS Goals</h1>
+
+<details open="open">
+<p>This section defines SlapOS requirements by combining an architecture which reduces the risk of data loss and at the same time matches or surpasses the best cloud offers in terms of costs.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Goals</h1>
+
+<ul>
+	<li><b>Share</b> application R&amp;D</li>
+	<li><b>Share</b> automation software</li>
+	<li><b>Share</b> hardware capacity</li>
+	<li><b>Share</b> data loss risk</li>
+	<li><b>Share</b> management</li>
+	<li><b>Goal: &lt;0.15&euro; / user / month</b> including mitigating the risk of data loss.</li>
+</ul>
+
+<details open="open">
+<p>The goal of SlapOS is to provide a competitive cloud solution which does better in reducing risks of data loss than any other solution.</p>
+
+<p>A simple word summarizes the requirements to build such a solution: <b>share</b>.</p>
+
+<p>Application R&amp;D is shared by using open source applications such as <a href="http://www.horde.org/">Horde</a> or <a href="http://fr.wordpress.org/">Wordpress</a> which are widely spread and maintained by communities. The cost of R&amp;D is thus close to zero for end users and competes with the costs of R&amp;D of companies with million users.</p>
+
+<p>Automation software, the core of SlapOS, is based on existing open source tools maintained by communities such as <a href="http://docs.buildout.org/en/latest/">Buildout</a> or <a href="http://supervisord.org/">supervisord</a>. This reduces the cost of development of automation tools by a magnitude of 10 or more. Other automation components are shared among all applications, through a concept of a stack which is itself open source. All LAMP (Linux, Apache, MariaDB, PHP) could for example share the same stack and benefit from improvements made to the stack, which provide enough freedom for each application to implement fine tuning.</p>
+
+<p>There are already more than 100 LAMP applications in SlapOS. Adding one more application with complete automation of deployment, backup, resilience and front-end acceleration taks less than four hours.</p>
+</details>
+
+<details open="open">
+<p>Hardware capacity should be shared (and waste eliminated) by efficient system design and capacity sharing among providers.</p>
+
+<p>A single 1000&euro; server should be able to host at least 1000 to 10,000 instances. Some form a multi-tenancy must thus be provided by default in SlapOS, since most open source applications are not multi-tenant. This form of multi-tenancy is called POSIX in SlapOS: it is an operating system which allows multiple processes with different users to share the system RAM, CPU and also the same application code through shared libraries. By using POSIX processes (rather than virtual machines), it is possible to implement <a href="http://www.computer.org/portal/web/csdl/doi/10.1109/CloudCom.2011.91">dynamic allocation policies</a> which can be split from a single server into 100 containers, each of which with a groupware instance of <a href="http://www.horde.org/">Horde</a> and 10 users. By starting and stopping POSIX processes automatically, the number of containers can be increased to 200 or more. The cost of a complete groupware suite for a single company can be as low as <a href="https://network.xwiki.com/xwiki/bin/view/Cloud/Signup">1&euro;/month</a>. This figure should be compared to <a href="https://network.xwiki.com/xwiki/bin/view/Cloud/Signup">approaches based on Amazon EC2</a> which price is 10 times higher if not 100 times. And since a <a href="http://www.linux-kvm.org/page/Main_Page">kvm</a> virtual machine can be a POSIX process, using POSIX processes as the common model for cloud services can cover more possibilities than cloud models based on virtual machines.</p>
+</details>
+
+<details open="open">
+<p>Another form of hardware capacity sharing consists of one cloud provider supplying available unused capacity to another cloud provider. This approach reduces the cost of hardware resources for every cloud provider since it optimizes their usage.</p>
+
+<p>Risk of data loss should be reduced by sharing risk accross continents. Every SlapOS hosted application should be replicated in 2 or 3 regions in the world. In case of a failure of SlapOS cloud resources in one region (electricity, connectivity, natural disaster, etc.), another replica of the application can provide continued service.</p>
+
+<p>SlapOS should be designed to resist management mistakes. Taking a wrong management decision on a single SlapOS node should not destroy the entire system. Management should thus be distributed and shared accross multiple organizations in the world, each running its own SlapOS cloud.</p>
+
+<p>By meeting all requirements, SlapOS can compete in price with the lowest cost proprietary cloud yet provide higher resilience and data protection than any other solution.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

@@ -1,0 +1,120 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+--><!-- outbound:
+  slapos-HowTo.Add.Software.Release.To.Slapos.Master
+  slapos-Tutorial.Install.Slapos.Node.Comp.0
+-->
+<section class="master">
+<h1>How To Instantiate Frontend Slave</h1>
+
+<details open="open">
+<p>This document explains how to instantiate a Frontend Slave which can provide a user-friendly URL for another service running on a SlapOS network.</p>
+
+<p>It will explain the different instantiation parameters. Please refer to other documents on <a href="slapos-HowTo.Add.Software.Release.To.Slapos.Master">add a software to the SlapOS Master catalog</a> or <a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">supplying/installing a software</a></p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Frontend Slave Instance Configuration</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Frontend (Caddy) Slave Configuration</h1>
+
+<details open="open">
+<p>The process of installing (supplying) a software and providing it as a service (instantiation) are the same for all software. However during instantiation each instance can be configured differently.</p>
+
+<p>This section will cover the specific configuration parameters used for a <b>Frontend Slave</b> used for example during <a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">installation of COMP-0</a> as it will provide a frontend-url such as</p>
+
+<pre>
+<code>master.slaptest.erp5.net</code></pre>
+
+<p>for the Dashboard on</p>
+
+<pre>
+<code>https://54.37.31.10/erp5/web_site_module/hostingjs/</code></pre>
+
+<p><b>Note</b> that a Frontend slave is an instance of a previously instantiated Frontend!</p>
+</details>
+</section>
+
+<section>
+<h1>Frontend Slave Configuration Parameters</h1>
+<img alt="SlapOS Interface - Frontend Slave Configuration Parameters" src="https://nexedi.com/slapos-Interface.Service.Frontend.Slave.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>After selecting <i>Services</i>, <i>Add</i>ing a new service, selecting <i>Frontend</i> and the latest release, you should reach the Frontend configuration menu.</p>
+
+<p>Select <b>Custom Personal (Slave)</b> and give your Frontend a recognizable name. Then add the <i>Backend Url</i> you want this Frontend to connect to. In the screenshot pictured, it is the url to a SlapOS Master Dashboard. The backend url</p>
+
+<pre>
+<code>https://54.37.31.10/erp5/web_site_module/hostingjs/</code></pre>
+
+<p>points to this Dashboard. Set <i>Custom Domain</i> and <i>Server Alias</i> to the domain you want to use</p>
+
+<pre>
+<code>master.slaptest.erp5.net</code></pre>
+
+<p>then scroll down to the bottom of the page and (don&#39;t forget) to select the computer to provide the Frontend slave.</p>
+
+<p>Click <i>Proceed</i> to continue and request instantiation.</p>
+</details>
+</section>
+
+<section>
+<h1>Frontend Slave Instantiation</h1>
+<img alt="SlapOS Interface - Frontend Slave Instantiation" src="https://nexedi.com/slapos-Interface.Frontend.Slave.Instantiation.Service.List?display=&amp;format=png" />
+<details open="open">
+<p>You will be forwarded back to the list of deployed services. <b>Note</b> that you might have to refresh the page for your new instance to appear. Once you can see it, click on entry to open the connection parameters.</p>
+
+<p>You can follow the compilation by looking at the <code>slapos-node-software.log</code> using:</p>
+
+<pre>
+<code># tail opt/slapos/log/slapos-node-software.log -f</code></pre>
+
+<p>&nbsp;</p>
+</details>
+</section>
+
+<section>
+<h1>Frontend Slave Connection Parameters</h1>
+<img alt="SlapOS Interface - Frontend Slave Connection Parameters" src="https://nexedi.com/slapos-Interface.Service.Frontend.Slave.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p><b>Note</b>, it might take a few minutes for the instance to become available. Refresh the page from time to time until the connection parameter table displays parameteres. Once the <i>Secure Access</i> entry shows the requested URL, the Frontend Slave is setup and working.</p>
+</details>
+</section>
+
+<section>
+<h1>Frontend Slave Running</h1>
+<img alt="SlapOS Interface - Frontend Slave Running" src="https://nexedi.com/slapos-Interface.Verify.Service.Frontend.Slave.Accessability?display=&amp;format=png" />
+<details open="open">
+<p>If you go to your requested URL (<code>master.slaptest.erp5.net</code>) you can see that it points to the selected backend URL.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://nexedi.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

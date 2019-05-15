@@ -1,0 +1,345 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+  slapos-TechnicalNote.Mount.Additional.Storage.And.Add.To.Slapos.Partitions
+  developer-Running.SlapOS.on.your.computer
+  developer-Howto.Allow.Use.Of.Virtual.Machines
+--><!-- outbound links:
+  slapos-Howto.Install.Slapos.Node.Experimental
+  slapos-Tutorial.Install.Slapos.Node.Comp.123
+  slapos-HowTo.Enable.Ssh.Access.On.Remote.Server
+  slapos-DesignDocument.Understanding.Slapos.Architecture
+-->
+<section class="master">
+<h1>Format SlapOS Node</h1>
+
+<details open="open">
+<p>This document will cover formatting a SlapOS node. Formatting may be necessary on a <a href="slapos-Howto.Install.Slapos.Node.Experimental">newly installed SlapOS node</a> in case the <a href="slapos-Tutorial.Install.Slapos.Node.Comp.123"><b>recommended single line installer</b></a> (includes formatting) was not used.</p>
+
+<p>Formatting may also be necessary when a node needs to be repurposed for example to increase the number of computer partitions or adding more storage capacity.</p>
+
+<p>For this how-to <a href="slapos-HowTo.Enable.Ssh.Access.On.Remote.Server">command line access</a> to the node is required. Please refer to the <a href="https://pythonhosted.org/slapos.core/slapos.usage.html">SlapOS core documentation</a> for more information on the command line commmands available.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Initial Formatting</li>
+	<li>Repurpose Existing Node</li>
+	<li>Reconfiguring Node for Virtual Machines</li>
+	<li>Reformat after adding SSD Storage</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Intial Formatting</h1>
+
+<details open="open">
+<p>Initial formatting of a node is only required when installing a node <a href="slapos-Howto.Install.Slapos.Node.Experimental">from source or packages</a>. The recommended single line installer already handles default formatting during the installation process.</p>
+
+<p>Formatting always includes registering a node with a master. This is not mandatory but recommend as a node is supposed to be run from a master. In order to register, a token (key and X509 certificate) are required. Follow the steps outlined in <a href="slapos-Tutorial.Install.Slapos.Node.Comp.123">installing a Slave node</a> to request a token before formatting a node.</p>
+</details>
+</section>
+
+<section>
+<h1>Register SlapOS node</h1>
+
+<pre>
+<code>$ sudo su
+# slapos node register --interface-name lo --partition-number 20 [COMPUTER_NAME]</code></pre>
+
+<details open="open">
+<p>To create the configuration files required to format a SlapOS node, choose a recognizeable computer name to identify the node in a network and run:</p>
+
+<pre>
+<code>sudo su
+# slapos node register --interface-name lo --partition-number 20 [COMPUTER_NAME]</code></pre>
+
+<p>This will generate several files:</p>
+
+<ul>
+	<li><code>/etc/opt/slapos/slapos.cfg</code>: The configuration of your SlapOS Node</li>
+	<li><code>/etc/opt/slapos/ssl/certificate</code>: Your server SSL Cetificate</li>
+	<li><code>/etc/opt/slapos/ssl/key</code>: Your server SSL Private Key</li>
+</ul>
+
+<p>Next the default <code>slapos.cfg</code> has to be configured for IPv6.</p>
+</details>
+</section>
+
+<section>
+<h1>IPv6 Support</h1>
+
+<pre>
+
+&nbsp;</pre>
+
+<details open="open">
+<p>A node must have IPv6 installed. As described in the <a href="slapos-DesignDocument.Understanding.Slapos.Architecture">SlapOS architecture</a>, IPv4 and VPN work in theory - provided availability of a large enough address space to add 100+ IPv4 adresses on every node.</p>
+
+<p>When using the single line installer, adding IPv6 is outlined in <a href="slapos-Tutorial.Install.Slapos.Node.Comp.123">how to add IPv6 to a SlapOS node</a>. The process for an unconfigured node is the same but some presets have to be made before adding IPv6. In the configuration file <code>/etc/opt/slapos/slapos.cfg</code> (consider <code>eth0</code> to be the internet interface):</p>
+
+<pre>
+<code># if using re6st add:
+interface_name = eth0
+ipv6_interface = lo
+
+# if eth0 already has IPv6, only add:
+interface_name = eth0
+
+# for tapVPN add:
+ipv6_interface = tapVPN
+interface_name = eth0</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Slapformat</h1>
+
+<pre>
+<code>$ sudo su
+# slapos node format --now</code></pre>
+
+<details open="open">
+<p>To format or reformat a SlapOS node the <code>slapformat</code> command is used (see all <a href="https://pythonhosted.org/slapos.core/slapos.usage.html">command line options</a>). This will configure a node based on the configuration in <code>/etc/opt/slapos/slapos.cfg</code>. Running <code>slapformat</code> without creating or changing the configuration will only &quot;ping&quot; the slapos master</p>
+
+<pre>
+<code>$ sudo su
+# slapos node format --now
+2018-03-28 15:32:58 slapos[18922] INFO Updating computer
+2018-03-28 15:33:30 slapos[18922] INFO Posting information to &#39;https://slap.vifib.com/&#39;
+2018-03-28 15:33:31 slapos[18922] INFO slapos successfully prepared the computer.</code></pre>
+
+<p>If a node has not been registered or formatted before, <code>slapformat</code> will create 20 computer partitions along with users, their directories, tap interfaces and IPv6 addresses for every service of each computer partition (see <a href="slapos-DesignDocument.Understanding.Slapos.Architecture">SlapOS architecture</a> for more info on what a node contains).</p>
+
+<p><b>Note</b>, for initial formatting <b>after registering a node</b>, the <code>alter_user</code> option has to be set:</p>
+
+<pre>
+<code>$ sudo su
+# slapos node format --alter_user=True --now</code></pre>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Repurpose Existing Node</h1>
+
+<pre>
+<code>$ sudo su
+# slapos node format --now</code></pre>
+
+<details open="open">
+<p><code>slapformat</code> will look for the <code>slapos.cfg</code> file and update a node according to the configuration file. In case a node needs to be repurposed, the <code>slapos.cfg</code> has to be updated before <code>slapformat</code> is called. Then simply call <code>slapos node format --now</code> again.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Reconfiguring Node for Virtual Machines</h1>
+
+<pre>
+<code>example missing</code></pre>
+
+<details open="open">
+<p>Hosting virtual machines and serving VM instances requires modifying the configuration of a SlapOS node - unless the node was installed from a dedicated disk image like used by <a href="https://vifib.com">Vifib master</a>.</p>
+</details>
+</section>
+
+<section>
+<h1>Network Configuration</h1>
+
+<pre>
+<code>example missing</code></pre>
+
+<details open="open">
+<p>To host virtual machines, a bridge needs to be configured to support multiple tap interfaces used in virtual machines like a KVM before calling <i>slapformat</i> to acknowledge and modify the configuration. As using bridges on a computer/server can be tricky they are not enabled by default on SlapOS (unless using the <a href="https://vifib.com">Vifib master</a> disk image).</p>
+
+<p><b>Note:</b> KVM instances will have <b>no internet access</b> without a bridge being configured (no problem if only used for planning/testing). And <b>note</b>, that setting network configuration will not work over wifi.</p>
+</details>
+</section>
+
+<section>
+<h1>Debian Bridge</h1>
+
+<pre>
+<code># /etc/network/interfaces
+iface eth0 inet manual
+auto br0
+iface br0 inet dhcp
+bridge_ports eth0
+
+# /etc/rc.local
+/opt/slapos/bin/slapformat -c /etc/opt/slapos/slapos.cfg
+/opt/slapos/bin/bang /etc/opt/slapos/slapos.cfg</code></pre>
+
+<details open="open">
+<p>On a Debian distribution (Debian, Ubuntu, Mint, et al.), setting up a bridge is done by changing the file <code>/etc/network/interfaces</code> and restarting the network. Make sure you add relevant physical interfaces to the bridge. Also ensure that if you add a bridge to a remote server, you still have a way to contact the server in case of failure of the configuration (this happens frequently).</p>
+</details>
+</section>
+
+<section>
+<h1>Generic Bridge</h1>
+
+<pre>
+<code># /etc/rc.local
+brctl addbr br0
+brctl addif br0 eth0
+ip l s dev br0 up</code></pre>
+
+<details open="open">
+<p>On a generic GNU/Linux distribution, a bridge setup can be setup entirely from <code>/etc/rc.local</code>, together with slapformat. This is not the most beautiful way to achieve the expected result but it works. <b>Note</b>, that any interface added to a bridge should no longer be configured by the system, meaning the configuration file for that interface should be removed.</p>
+</details>
+</section>
+
+<section>
+<h1>Update SlapOS Configuration</h1>
+
+<pre>
+<code>nano /etc/opt/slapos/slapos.cfg
+
+# under [slapformat] change parameters to:
+interface_name = br0
+create_tap = true
+
+# then call
+slapos node format --now</code></pre>
+
+<details open="open">
+<p>Start by updating <code>slapos.cfg</code> to use the newly created <i>br0</i> bridge as interface. Then call <i>slapformat</i> (which also creates partitions and allocates IPs) to also create the &quot;TAP&quot; virtual interfaces for each partition and connect them to the bridge. <b>Note</b> to make sure and use the lastest SlapOS version as the <i>create_tap</i> options was not available on older releases.</p>
+</details>
+</section>
+
+<section>
+<h1>KVM Configuration</h1>
+
+<pre>
+<code># modprobe kvm
+# modprobe kvm_intel
+# modprobe kvm_amd
+# chmod 777 /dev/kvm</code></pre>
+
+<details open="open">
+<p>Load the required kernel modules and change the rights of <code>/dev/kvm to 777</code>.</p>
+
+<p>and under <code>[slapformat]</code> change the parameters to:</p>
+
+<pre>
+<code>interface_name = br0
+use_tap = true</code></pre>
+
+<p><b>Note</b>, for this to work, virtualization must be activated in the BIOS of your computer.</p>
+
+<p>You should be set.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Reformat after adding SSD Storage</h1>
+
+<details open="open">
+<p>This section will explain how to directly use newly mounted SSD storage disks from running services in SlapOS computer partitions.</p>
+
+<p>Additinal SSD may be required because of growing backup/log files or to attach a multi-storage, for example for reducing the I/O load on <a href="https://fr.wikipedia.org/wiki/Cloudera">Cloudera </a>data nodes with multiple virtual disks (one system disk, many data disks) by adding storage to eventually have a phyiscal disk per virtual disk.</p>
+</details>
+</section>
+
+<section>
+<h1>Mount and Configure Disks</h1>
+
+<pre>
+<code>$ mkdir /data
+$ mkdir /data/data1 /data/data2
+$ mount -t ext2 /dev/sdb1 /data/data1
+$ mount -t ext2 /dev/sbc1 /data/data2
+
+# vim /etc/fstab
+# Retrieve STORAGE_SDB1_UUID and STORAGE_SDC1_UUID</code></pre>
+
+<details open="open">
+<p>After plugging in the new disk(s) they need to be mounted. Assume you have two disks, <code>/dev/sdb1</code> and <code>/dev/sdc1</code> which should be used to extend partitions. The disks will be formatted like a normal SlapOS partition to allow deployed instances to access the disks directly from their partition folder.</p>
+
+<p>Start by creating a base storage folder <code>/data</code> where disks will be mounted and add <code>data[x]</code> folder for each storage to mount into our storage. Then mount the disks.</p>
+
+<p>In case of server reboot, we want to auto remount storage.</p>
+
+<pre>
+<code># vim /etc/fstab
+UUID=STORAGE_SDB1_UUID              /data/data1                ext2    default    0 2
+UUID=STORAGE_SDC1_UUID              /data/data2                ext2    default    0 2</code></pre>
+
+<p>where <i>STORAGE_SDB1_UUID</i> and <i>STORAGE_SDC1_UUID</i> can be retrieved using the command <b>blkid</b>.</p>
+</details>
+</section>
+
+<section>
+<h1>Enable Support for Attached Storage</h1>
+
+<pre>
+<code># vim /etc/opt/slapos/slapos.cfg
+[slapos]
+...
+instance_storage_home = /data
+
+# then
+slapos node format --now -v</code></pre>
+
+<details open="open">
+<p>After mounting SlapOS needs to be informed where to find the attached storage disk. This is done by editing the configuration in the <i>SlapOS config file</i> at <code>/etc/opt/slapos/slapos.cfg</code> and then setting the <i>instance_storage_home</i> parameter to the base storage folder created earlier.</p>
+
+<p>Finish by running <i>slapos format</i> to reconfigre the attached storage. When formatting finishes, the storage <code>/data/data[x]</code> will contain new folders created and managed by SlapOS to be used by slap partitions when new instances will be deployed.</p>
+
+<pre>
+<code># ls /data/data2/
+total 120
+drwxr-x--- 2 slapuser0  slapuser0  4096 Mar 23  2015 slappart0
+drwxr-x--- 2 slapuser1  slapuser1  4096 Mar 23  2015 slappart1
+drwxr-x--- 2 slapuser10 slapuser10 4096 Nov  7 02:29 slappart10
+drwxr-x--- 2 slapuser11 slapuser11 4096 Nov  7 02:29 slappart11
+...</code></pre>
+
+<p>Each partition on the other hand will have one additional new folder called <i>DATA</i> which contains all mounted disks (data1 and data2). Instance can use them as part of their partition file system.</p>
+</details>
+
+<details open="open">
+<pre>
+<code># ls -l /srv/slapgrid/slappart19/
+total 96
+drwxr-x--- 2 slapuser19 slapuser19  4096 Jun 15 14:10 bin
+-rw-r----- 1 root       slapuser19  9376 Nov  8 12:24 buildout.cfg
+-rw-r----- 1 slapuser19 slapuser19  8282 Nov  8 12:24 buildout-switch-softwaretype.cfg
+drwx------ 2 slapuser19 slapuser19  4096 Jun 15 14:10 DATA</code></pre>
+
+<p>The folder <i>DATA</i> also contains all mounted data folders:</p>
+
+<pre>
+<code># ls -l /srv/slapgrid/slappart19/DATA/*/
+/srv/slapgrid/slappart19/DATA/data1/:
+total 0
+/srv/slapgrid/slappart19/DATA/data2/:
+total 0</code></pre>
+
+<p><b>Note</b>, that if the instance is destroyed, all attached storage content will be removed when SlapOS will clean up the partition.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

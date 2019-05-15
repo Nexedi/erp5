@@ -1,0 +1,381 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+  developer-Installing.SlapOS.Client
+  developer-Allocate.New.SlapOS.Instance.From.API
+  http://git.erp5.org/gitweb/slapos.core.git/blob/HEAD:/slapos/README.console.txt
+--><!-- outbound links:
+  slapos-HowTo.Enable.Ssh.Access.On.Remote.Server
+  slapos-HowTo.Format.Slapos.Node
+  slapos-Howto.Install.Slapos.Node.Experimental
+-->
+<section class="master">
+<h1>Use SlapOS Client</h1>
+
+<details open="open">
+<p>This document describes how to setup and use the SlapOS client (called <b>Slapconsole</b>), a utility software to manage SlapOS nodes, instances and the SlapOS Master account on the command line. It is a bare Python console with several global variables defined and initialized so it can interact with a SlapOS Master through the SLAP Library.</p>
+
+<p>To use the SlapOS Client you need a <a href="slapos-HowTo.Format.Slapos.Node">SlapOS-formatted</a> GNU/Linux Server with <a href="slapos-HowTo.Enable.Ssh.Access.On.Remote.Server">ssh access</a> and a <a href="slapos-Howto.Install.Slapos.Node.Experimental">SlapOS Node installed from packages</a>. It is not necessary to configure the node, the package itself with the respective binaries is all that is required. You will also need a X509 security token from a SlapOS Master (you can use <a href="https://slapos.vifib.com">Vifib.com</a> or <a href="slapos-Tutorial.Install.Slapos.Master">create your own SlapOS Master</a>).</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>SlapOS Client</li>
+	<li>Available Commands</li>
+	<li>Instance Allocation via SlapOS Client</li>
+</ul>
+
+<details open="open">&nbsp;</details>
+</section>
+
+<section class="chapter">
+<h1>SlapOS Client</h1>
+
+<details open="open">
+<p>Slapconsole allows to automatically connect to a SlapOS Master using URL and SSL certificate from a given <code>slapos.cfg</code> configuration file. This section will outline the steps on how to setup the SlapOS client and console.</p>
+</details>
+</section>
+
+<section>
+<h1>Setup</h1>
+
+<pre>
+<code>$ sudo su
+# slapos configure client</code></pre>
+
+<details open="open">
+<p>SlapOS will use the SSL certificate from a given <code>slapos.cfg</code> configuration file, namely:</p>
+
+<ul>
+	<li><i>master_url</i>: read from [slapos], the SlapOS Master to connect to.</li>
+	<li><i>cert_file</i>: read from [slapconsole], the SSL certificate.</li>
+	<li><i>key_file</i>: read from [slapconsole], the SSL key.</li>
+</ul>
+
+<p>With Slapconsole you can request and manage your instances and install Software Releases on network nodes as if they were managed through the SlapOS Master Dashboard. To associate your node with the master, start by requesting a X509 security token.</p>
+</details>
+</section>
+
+<section>
+<h1>Get SlapOS Master Token</h1>
+<img alt="SlapOS Client - Request Association Token" src="https://www.erp5.com/slapos-Interface.Server.List.Empty?display=&amp;format=png" />
+<details open="open">
+<p>In your SlapOS Master Dashboard, start by clicking <i>Servers</i> in the side menu and <i>Token</i> in the subheader to request a new security token.</p>
+</details>
+</section>
+
+<section>
+<h1>Association Token</h1>
+<img alt="SlapOS Client - Association Token" src="https://www.erp5.com/vifib-Interface.Server.Token?display=&amp;format=png" />
+<details open="open">
+<p><i>Proceed</i> to request a token. Once it&#39;s generated, save the token.</p>
+</details>
+</section>
+
+<section>
+<h1>Initialization and Configuration</h1>
+
+<pre>
+<code>$ sudo su
+# slapos configure client</code></pre>
+
+<details open="open">
+<p>In your terminal run <code>slapos configure client</code> which will create a number of configuration files. During the process you will be asked to input the token previously created. You should find the following files after configuration:</p>
+
+<pre>
+<code>$HOME/.slapos/slapos-client.cfg
+$HOME/.slapos/certificate : Your user SSL Cetificate
+$HOME/.slapos/key: Your user SSL Private Key</code></pre>
+
+<p>You can now edit the <code>$HOME/.slapos/slapos-client.cfg</code> by including aliases:</p>
+
+<pre>
+<code>alias =
+webrunner https://lab.nexedi.com/nexedi/slapos/raw/1.0.49/software/slaprunner/software.cfg</code></pre>
+
+<p>Verify the certificates are ok:</p>
+
+<pre>
+<code># verify certificate
+$ /opt/slapos/parts/openssl/bin/openssl x509 -noout -in $HOME/.slapos/client.crt
+
+# verify key
+$ /opt/slapos/parts/openssl/bin/openssl rsa -noout -in $HOME/.slapos/client.key -check</code></pre>
+
+<p>No output or positive command states mean everything is ok.</p>
+</details>
+</section>
+
+<section>
+<h1>API: Activiate Console</h1>
+
+<pre>
+<code>slapos console --cfg ~/.slapos/slapos-client.cfg</code></pre>
+
+<details open="open">
+<p>Once everything is setup, the console is available at:</p>
+
+<pre>
+<code>slapos console --cfg ~/.slapos/slapos-client.cfg</code></pre>
+</details>
+</section>
+
+<section>
+<h1>API: Global Functions and Variables</h1>
+
+<ul>
+	<li>product</li>
+	<li>slap</li>
+	<li>software_list</li>
+	<li>[software release]</li>
+</ul>
+
+<details open="open">
+<p>The following variables are available in the SlapOS Client:</p>
+
+<ul>
+	<li><b>product</b>, an instance of <code>slap.SoftwareProductCollection</code>, used to retrieve the most suited release URL of a given software, which is passed as attribute. It allows simplifying calls like
+
+	<pre>
+<code>request(&quot;http://www.url.com/path/to/current/best/known/kvm/software.cfg&quot;, &quot;mykvm&quot;)</code></pre>
+	to
+
+	<pre>
+<code>request(product.kvm, &quot;mykvm&quot;)</code></pre>
+	</li>
+	<li><b>slap</b> is an instance of the SLAP library (for advanced usages):
+	<pre>
+<code>slap = slapos.slap.slap()
+slap.initializeConnection(
+  config.master_url,
+  key_file=config.key_file,
+  cert_file=config.cert_file
+)</code></pre>
+	</li>
+	<li><b>software_list</b> is the dictionnary of all officially supported software releases on a SlapOS Master</li>
+	<li><b>[software release]</b> each supported software is also available as global variables, for example <code>kvm</code>, <code>mysql-5.1</code>, <code>joomla</code>, etc., so you can use <b>product.joomla</b> or <b>joomla</b></li>
+</ul>
+</details>
+</section>
+
+<section>
+<h1>API: Methods</h1>
+
+<ul>
+	<li>supply</li>
+	<li>request</li>
+	<li>remove</li>
+</ul>
+
+<details open="open">
+<p>The following methods are available on a SlapOS Client (<a href="https://pypi.python.org/pypi/slapos.core/">full api</a>):</p>
+
+<ul>
+	<li><b>supply()</b> is shorthand for <code>slap.registerSupply().supply()</code> and allows to request installation of a software on a node.</li>
+	<li><b>request()</b> is shorthand for <code>slap.registerOpenOrder().request()</code> and allows to request instances of a software installation on a node.</li>
+	<li><b>remove()</b> uninstalls a software from a node</li>
+</ul>
+</details>
+</section>
+
+<section>
+<h1>Example Usage</h1>
+
+<pre>
+<code># supply software installation on a node
+supply(product.kvm, &quot;mycomputer&quot;)
+
+# request instance on arbitrary node
+request(product.kvm, &quot;myuniquekvm&quot;)
+
+# request instance on specific node
+request(product.kvm, &quot;myotheruniquekvm&quot;, filter_kw = {
+  &quot;computer_guid&quot;: &quot;COMP-12345&quot;
+})
+
+# request instance, specifying parameters
+request(product.kvm, &quot;mythirduniquekvm&quot;, partition_parameter_kw = {
+  &quot;nbd_ip&quot;:&quot;2a01:e35:2e27:460:e2cb:4eff:fed9:48dc&quot;, &quot;nbd_port&quot;:&quot;1024&quot;
+})</code></pre>
+
+<details open="open">
+<p>After installing a software on a node, instances can be requested:</p>
+
+<pre>
+<code># supply software installation on a node
+supply(product.kvm, &quot;mycomputer&quot;)
+
+# request instance on arbitrary node
+request(product.kvm, &quot;myuniquekvm&quot;)
+
+# request instance on specific node
+request(product.kvm, &quot;myotheruniquekvm&quot;,filter_kw = {
+  &quot;computer_guid&quot;: &quot;COMP-12345&quot;
+})
+
+# request instance, specifying parameters
+request(product.kvm, &quot;mythirduniquekvm&quot;, partition_parameter_kw = {
+  &quot;nbd_ip&quot;:&quot;2a01:e35:2e27:460:e2cb:4eff:fed9:48dc&quot;, &quot;nbd_port&quot;:&quot;1024&quot;
+})</code></pre>
+
+<p>To fetch an instance status, you can use:</p>
+
+<pre>
+<code># fetch existing instance status
+request(product.kvm, &quot;myuniquekvm&quot;).getState()
+
+# fetch instance information from launched instance
+request(product.kvm, &quot;myuniquekvm&quot;).getConnectionParameter(&quot;url&quot;)
+</code></pre>
+<!--
+  Request installation of a software on a node:
+  slapos supply webrunner COMP-XXXX
+
+  Remove a software from a node:
+  slapos remove webrunner COMP-XXXX
+
+  Note: Replace COMP-XXXX by the computer number of where you wanna gonna to supply the software.
+
+  Request a new or existing instance of wordpress named "mywordpress":
+  slapos request mywebrunner webrunner
+--></details>
+</section>
+
+<section class="chapter">
+<h1>Instance Allocation using SlapOS Client</h1>
+
+<details open="open">
+<p>This section includes additional more detailed examples demostrating the use of SlapOS console.</p>
+</details>
+</section>
+
+<section>
+<h1>Request Instance from Cloud</h1>
+
+<pre>
+<code>slapos console --cfg ~/.slapos/slapos-client.cfg</code></pre>
+
+<details open="open">
+<p>Run the console in a terminal:</p>
+
+<pre>
+<code>$ sudo su
+# slapos console --cfg ~/.slapos/slapos-client.cfg
+
+instance_a = request(wordpress, &quot;Wordpress A from console&quot;)
+
+instance_a.getState()
+  Traceback (most recent call last):
+  File &quot;&quot;, line 1, in
+  File &quot;/Library/Python/2.6/site-packages/.../slapos/console.py&quot;, line 108, in
+  slap.registerOpenOrder().request(software_release, reference)
+  File &quot;/Library/Python/2.6/site-packages/slapos/slap/slap.py&quot;, line 162, in request
+  self._connection_helper.POST(&#39;/requestComputerPartition&#39;, request_dict)
+  File &quot;/Library/Python/2.6/site-packages/slapos/slap/slap.py&quot;, line 469, in POST
+  raise ResourceNotReady(&quot;%s - %s&quot; % (path, parameter_dict))
+ResourceNotReady: /requestComputerPartition</code></pre>
+
+<p><b>Note</b>, you will receive an exception in case the instance is not ready (most likley not compiled). Retry after a few minutes:</p>
+
+<pre>
+<code>#re-request with existing name to refetch/update parameters
+instance_a = request(wordpress, &quot;Wordpress A from console&quot;)
+
+instance_a.getState()
+# Started
+instance_a.getConnectionParameter(&#39;url&#39;)</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Request Instance from Specific Node</h1>
+
+<pre>
+<code>$ slapos console --cfg ~/.slapos/slapos-client.cfg</code></pre>
+
+<details open="open">
+<p>Run the following commands to instantiate a software on a specific node:</p>
+
+<pre>
+<code>$ sudo su
+# slapos console --cfg ~/.slapos/slapos-client.cfg
+
+instance_b = request(wordpress, &quot;Wordpress B from console&quot;, 
+  filter_kw={ &quot;computer_guid&quot;: &quot;COMP-12345&quot; }
+)
+
+instance_b.getState()
+Traceback (most recent call last):
+  File &quot;&quot;, line 1, in
+  File &quot;/Library/Python/2.6/site-packages/.../slapos/console.py&quot;, line 108, in
+  slap.registerOpenOrder().request(software_release, reference)
+  File &quot;/Library/Python/2.6/site-packages/slapos/slap/slap.py&quot;, line 162, in request
+  self._connection_helper.POST(&#39;/requestComputerPartition&#39;, request_dict)
+  File &quot;/Library/Python/2.6/site-packages/slapos/slap/slap.py&quot;, line 469, in POST
+  raise ResourceNotReady(&quot;%s - %s&quot; % (path, parameter_dict))
+ResourceNotReady: /requestComputerPartition</code></pre>
+
+<p>Wait for a few minutes, then retry:</p>
+
+<pre>
+<code>instance_b = request(wordpress, &quot;Wordpress B from console&quot;,
+  filter_kw={ &quot;computer_guid&quot;: &quot;COMP-12345&quot; }
+)
+
+instance_b.getState()
+# Started
+instance_b.getConnectionParameter(&#39;url&#39;)</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Request Instance with Parameters</h1>
+
+<pre>
+<code>$ slapos console --cfg ~/.slapos/slapos-client.cfg</code></pre>
+
+<details open="open">
+<p>Modifying parameters in existing instances works the same way as defining them in new parameters:</p>
+
+<pre>
+<code>$ sudo su
+# slapos console --cfg ~/.slapos/slapos-client.cfg
+
+# modify our first instance:
+instance_a = request(wordpress, &quot;Wordpress A from console&quot;, 
+  partition_parameter_kw={&quot;domain&quot;:&quot;mydomain.com&quot;}
+)
+
+# wait for a few minutes for the change to be effective:
+instance_a = request(wordpress, &quot;Wordpress A from console&quot;, 
+  partition_parameter_kw={&quot;domain&quot;:&quot;mydomain.com&quot;}
+)
+
+instance_a.getConnectionParameter(&#39;url&#39;)</code></pre>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

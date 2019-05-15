@@ -1,0 +1,296 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+  slapos-Tutorial.Install.Slapos.Master.Comp.Root
+  slapos-Tutorial.Install.Slapos.Node.Comp.0
+
+-->
+<section class="master">
+<h1>How To Classify Servers In A Network</h1>
+
+<details open="open">
+<p>This document explains how to categorize computers in your network.</p>
+
+<p>To follow the steps outlined below, you need to have access to a SlapOS Master (<a href="slapos-Tutorial.Install.Slapos.Master.Comp.Root">setting up a SlapOS Master</a>) and at least a first network node to categorize (<a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">installing a SlapOS node</a>).</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Set Computer Allocation Scope</li>
+	<li>Adding Sites</li>
+	<li>Adding Projects</li>
+	<li>Adding Networks</li>
+	<li>Associating A Computer</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Set Computer Allocation Scope</h1>
+
+<details open="open">
+<p><i>Allocation Scope</i> can be set on a computer in the SlapOS Dashboard. It is a base category in ERP5 (you can check with superuser privileges on the ERP5 interface at <code>[IPv4]/erp5/portal_categories/allocation_scope</code>). In the SlapOS Dashboard, allocation scope is a parameter settable on a computer denoting its accessability.</p>
+</details>
+</section>
+
+<section>
+<h1>Login to SlapOS Dashboard</h1>
+<img alt="SlapOS Dashboard - Login" src="https://www.erp5.com/slapos-Interface.Login.Screen?display=&amp;format=png" />
+<details open="open">
+<p>Log into the SlapOS Dashboard.</p>
+</details>
+</section>
+
+<section>
+<h1>Servers Menu</h1>
+<img alt="SlapOS Dashboard - Server List" src="https://www.erp5.com/slapos-Interface.Server.List?display=&amp;format=png" />
+<details open="open">
+<p>Locate the <i>Servers</i> entry on the side menu to access the list of servers. Click on one of the available servers to access its configuration parameters.</p>
+</details>
+</section>
+
+<section>
+<h1>Server Configuration</h1>
+<img alt="SlapOS Dashboard - Server Configuration" src="https://www.erp5.com/slapos-Interface.Frontend.Installation.Server.With.Services?format=png&amp;display=" />
+<details open="open">
+<p>On the configuration parameters, note the <i>Allocation Scope</i> parameter on the right hand side. It determines to whome the server can provide software instantiation services. The following options are possible:</p>
+
+<ul>
+	<li><b>Open/Public</b>: anyone can request an a service</li>
+	<li><b>Open/Personal</b>: accessible only by the owner of the computer</li>
+	<li><b>Open/Friend</b>: accessible to a limited group of users defined by email</li>
+	<li><b>Closed/Forever</b>: computer is gone and will not be used again</li>
+	<li><b>Closed/Maintenance</b>: unavailable due to scheduled maintenance</li>
+	<li><b>Closed/Termination</b>: service allocation stopped due to future termination</li>
+	<li><b>Closed/Outdated</b>: computer has not contacted SlapOS Master for too long</li>
+</ul>
+
+<p>To change the scope, select one of the available options and click <i>Save</i></p>
+
+<p><b>Note</b>, that extending the number of allocation scopes is possible. However, for setting user permissions, it is better to use projects and/or organisations.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Adding Sites</h1>
+
+<details open="open">
+<p>Sites correspond to an organisation in the underlying ERP5 Interface a site, because organisations can have geocoordinates. Sites are used to locate computers on a map.</p>
+</details>
+</section>
+
+<section>
+<h1>Sites Menu</h1>
+<img alt="SlapOS Dashboard - Sites" src="https://www.erp5.com/slapos-Interface.Dashboard.Sites?display=&amp;format=png" />
+<details open="open">
+<p>Locate the <i>Sites</i> entry on the side panel which will take you to the list of declared sites.</p>
+</details>
+</section>
+
+<section>
+<h1>Add New Site</h1>
+<img alt="SlapOS Dashboard - Add A Site" src="https://www.erp5.com/slapos-Interface.Add.Site?format=png&amp;display=" />
+<details open="open">
+<p>To add a new site, locate the <i>Add</i> button in the subheader. Click to add a new site.</p>
+</details>
+</section>
+
+<section>
+<h1>Add Organisation</h1>
+<img alt="SlapOS Dashboard - Name the Site" src="https://www.erp5.com/slapos-Interface.Name.Site?format=png&amp;display=" />
+<details open="open">
+<p>Give a name to your site (organisation), then click <i>Proceed</i></p>
+</details>
+</section>
+
+<section>
+<h1>Site Created</h1>
+<img alt="SlapOS Dashboard - Create Site" src="https://www.erp5.com/slapos-Interface.Create.Site?format=png&amp;display=" />
+<details open="open">
+<p>You will be forwarded to the new site you created. Notice it does not have any geocoordinates yet and the status fields for computers and partitions on this site are also grey (indicating no info available or no items).</p>
+</details>
+</section>
+
+<section>
+<h1>Add Site Geocoordinates</h1>
+<img alt="SlapOS Dashboard - Add Site Geocoordinates" src="https://www.erp5.com/slapos-Interface.Add.Site.Geocoordinates?format=png&amp;display=" />
+<details open="open">
+<p>Next, find the site&#39;s geocoordinates (for example using <a href="https://www.gps-coordinates.net/">gps-coordinates.net</a>), add them to the site and click <i>Save</i>. You will have to refresh the page for the map to update.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Adding Projects</h1>
+
+<details open="open">
+<p>Projects in the SlapOS Dashboard correspond to Projects in the underlying ERP5 interface. Projects are required to be able to clearly distinguish computers in a network.</p>
+</details>
+</section>
+
+<section>
+<h1>Project List</h1>
+<img alt="SlapOS Dashboard - Add Project" src="https://www.erp5.com/slapos-Interface.Add.Project?format=png&amp;display=" />
+<details open="open">
+<p>To continue, click on <i>Projects</i> in the side menu. Then click <i>Add</i> as before when adding a site.</p>
+</details>
+</section>
+
+<section>
+<h1>Name Project</h1>
+<img alt="SlapOS Dashboard - Name Project" src="https://www.erp5.com/slapos-Interface.Name.Project?format=png&amp;display=" />
+<details open="open">
+<p>Give the project a name and an optional description. Click <i>Proceed</i> to continue.</p>
+</details>
+</section>
+
+<section>
+<h1>Project Created</h1>
+<img alt="SlapOS Dashboard - Create Project" src="https://www.erp5.com/slapos-Interface.Create.Project?display=&amp;format=png" />
+<details open="open">
+<p>Once the project is created you can see that also no computers or partitions are associated to the project directly after creation.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Adding Networks</h1>
+
+<details open="open">
+<p>Networks correspond to Computer Networks in the underlying ERP5 interface and are also required to clearly distinguish computers being used.</p>
+</details>
+</section>
+
+<section>
+<h1>Network List</h1>
+<img alt="SlapOS Dashboard - Add Network" src="https://www.erp5.com/slapos-Interface.Add.Network?display=&amp;format=png" />
+<details open="open">
+<p>To continue, click on the <i>Networks</i> entry on the side menu. Once on the list of networks, click <i>Add</i> to add a network.</p>
+</details>
+</section>
+
+<section>
+<h1>Name Network</h1>
+<img alt="SlapOS Dashboard - Name Network" src="https://www.erp5.com/slapos-Interface.Name.Network?display=&amp;format=png" />
+<details open="open">
+<p>Give the network a name and <i>Save</i> to continue.</p>
+</details>
+</section>
+
+<section>
+<h1>Create Network</h1>
+<img alt="SlapOS Dashboard - Create Network" src="https://www.erp5.com/slapos-Interface.Create.Network?display=&amp;format=png" />
+<details open="open">
+<p>Once the network is created you will see it also has no computers or partitions associated right after creation.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Associating A Computer</h1>
+
+<details open="open">
+<p>After creating sites, networks and projects you can now start associating the computers in your network.</p>
+</details>
+</section>
+
+<section>
+<h1>Server List</h1>
+<img alt="SlapOS Dashboard - Server List" src="https://www.erp5.com/slapos-Interface.Server.List.With.Partitions?display=&amp;format=png" />
+<details open="open">
+<p>Head to the list of servers using the <i>Servers</i> entry in the side menu. As mentioned in the beginning you should have at least one server available so it can be associated. Click on this server to continue.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Network</h1>
+<img alt="SlapOS Dashboard - Server Network Selection" src="https://www.erp5.com/slapos-Interface.Server.Network.Selection?display=&amp;format=png" />
+<details open="open">
+<p>On the server configuration page it should now be possible to select the network previously created. Select it and click <i>Save</i> to continue.</p>
+</details>
+</section>
+
+<section>
+<h1>Transfer to Add Site and Project</h1>
+<img alt="SlapOS Dashboard - Server Transfer" src="https://www.erp5.com/slapos-Interface.Server.Transfer?display=&amp;format=png" />
+<details open="open">
+<p>To associate a server with a site and project, click the <i>Transfer</i> button in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Future Site and Project</h1>
+<img alt="SlapOS Dashboard - Server Transfer Destination" src="https://www.erp5.com/slapos-Interface.Server.Transfer.Configuration?display=&amp;format=png" />
+<details open="open">
+<p>In the dialog you can see the current site and location (if they have been set). Select the site and location you want to transfer this server to, then click <i>Proceed</i>. <b>Note</b>, you can also only set a single parameter, but while is not necessary to have both site and project declared on a server, they should have both be defined to have a clear association.</p>
+</details>
+</section>
+
+<section>
+<h1>Associated Server</h1>
+<img alt="SlapOS Dashboard - Server associated to Site and Project" src="https://www.erp5.com/slapos-Interface.Server.Associated?format=&amp;display=png" />
+<details open="open">
+<p>Back on your server menu you can now see that the server has been transferred to the site and project chosen. Head to the Dashboard landing page by clicking on <i>Home</i> on the side menu.</p>
+</details>
+</section>
+
+<section>
+<h1>Dashboard with Site List</h1>
+<img alt="SlapOS Dashboard - Map view with associated servers" src="https://www.erp5.com/slapos-Interface.Dashboard.With.Map?display=&amp;format=png" />
+<details open="open">
+<p><b>Note</b>, that the map now shows your server which as moved to the specified site. The right hand table will show a list with all sites. The two icons for computers and partitions show the aggregated status over all computers associated to this site. As mentioned:</p>
+
+<ul>
+	<li>a green status denotes all computers and partitions are accessible and ok</li>
+	<li>a yellow status indicated there are issues with some computers/partitions</li>
+	<li>a red status means all computers or partitions have problems</li>
+</ul>
+
+<p>You can now access the list of computers and partitions through the site, project and network menues.</p>
+</details>
+</section>
+
+<section>
+<h1>Site Status</h1>
+<img alt="SlapOS Dashbaord - Site Status" src="https://www.erp5.com/slapos-Interface.Site.Status?format=png&amp;display=png" />
+<details open="open">
+<p>To open a site either click on <i>Sites</i> in the side menu or on the Dashboard widget next to the map. Locate a site to open the site of computers and installed partitions.</p>
+</details>
+</section>
+
+<section>
+<h1>Project Status</h1>
+<img alt="SlapOS Dashbaord - Project Status" src="https://www.erp5.com/slapos-Interface.Project.Status?format=png&amp;display=png" />
+<details open="open">
+<p>Click on <i>Projects</i> on the side menu to see the list of projects and aggregate status for computers and partitions associated to a project.</p>
+</details>
+</section>
+
+<section>
+<h1>Network Status</h1>
+<img alt="SlapOS Dashboard - Network Status" src="https://www.erp5.com/slapos-Interface.Network.Status?format=png&amp;display=" />
+<details open="open">
+<p>Click on <i>Networks</i> on the side menu to see the list of networks and aggreate status for computers and partitions associated with a network.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

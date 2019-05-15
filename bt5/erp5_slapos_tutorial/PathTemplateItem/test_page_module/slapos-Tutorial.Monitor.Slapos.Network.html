@@ -1,0 +1,281 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+--><!-- outbound links:
+  slapos-Tutorial.Install.Slapos.Node.Comp.0
+  slapos-Tutorial.Install.Slapos.Master.Comp.Root
+  slapos-DesignDocument.Understanding.Slapos.Promises
+  slapos-HowTo.Classify.Node.In.A.Network
+-->
+<section class="master">
+<h1>Monitor SlapOS Network</h1>
+
+<details open="open">
+<p>This tutorial will guide through the process of setting up and using the SlapOS Monitor, a tool to observe the health of a SlapOS network.</p>
+
+<p>Think of SlapOS providing a <b>macro view</b> on a network and the Monitor giving the corresponding <b>micro view</b> into underlying process, logs and Promises.</p>
+
+<p>This tutorial requires to have a computer with <a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">a SlapOS node</a> installed and as well as access to an account on a SlapOS Master (<a href="slapos-Tutorial.Install.Slapos.Master.Comp.Root">install SlapOS Master</a>). It is also mandatory to have a Frontend Slave to access the SlapOS Master (the steps are included in the setup of the <a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">SlapOS node</a> (COMP-0).</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Monitor Access</li>
+	<li>Monitor Usage</li>
+</ul>
+
+<details open="open">&nbsp;</details>
+</section>
+
+<section class="chapter">
+<h1>Monitor Access</h1>
+
+<details open="open">
+<p>The <a href="https://monitor.app.officejs.com/">SlapOS Monitor</a> is a stand-alone application hosted on Nexedi&#39;s <a href="https://www.officejs.com/">OfficeJS</a> appstore (more information on <a href="https://officejs.nexedi.com/">OfficeJS</a>).</p>
+
+<p>The Monitor can connect to and observe any SlapOS deployment. It covers network and individual computers status as well as partition processes running. Once connected with a SlapOS deployment, the Monitor is tightly integrated into the SlapOS Master Dashboard and can be accessed in multiple ways which are alos shown in this section.</p>
+</details>
+</section>
+
+<section>
+<h1>Accessing the Monitor</h1>
+<img alt="SlapOS Interface - Monitor Menu Access" src="https://www.erp5.com/slapos-Interface.Monitor.Menu.Access?display=&amp;format=png" />
+<details open="open">
+<p>The easiest way to access the monitor is via the Access button on the side menu of the SlapOS Dashboard. Click <i>Access Monitor</i> in the left menu.</p>
+</details>
+</section>
+
+<section>
+<h1>Import SlapOS Configuration</h1>
+<img alt="SlapOS Interface - Import Configuration" src="https://www.erp5.com/slapos-Interface.Monitor.Import.Configuration?display=&amp;format=png" />
+<details open="open">
+<p>The Monitor has a different side panel than the SlapOS Dashboard:</p>
+
+<ul>
+	<li><b>Promises</b>: all promises of all services on all computers (see next slides).</li>
+	<li><b>Software Instances</b>: all instances (hosting subscriptions) of all services on all computers.</li>
+	<li><b>Hosting Subscriptions</b>: all services from all computers (similar to SlapOS Dashboard).</li>
+	<li><b>Monitor Configurations</b>: all data sources (instances), loaded from master (see below).</li>
+	<li><b>Syncronisation</b>: update the monitor data by querying all services and crawling data.</li>
+	<li><b>OPML Import / Export</b>: used to import and export the current configuration.</li>
+</ul>
+
+<p>By default, the Monitor is not connected to any application. It is necessary to load a deployment configuration (called data sources) to &quot;feed&quot; the Monitor with the network parameters to observe. This configuration can be provided directly (using <code>Settings Content</code>) or via a remote storage.</p>
+
+<p>To continue select <i>SlapOS Master ERP5</i> and click <i>Proceed</i></p>
+</details>
+</section>
+
+<section>
+<h1>Launch Synchronisation</h1>
+<img alt="SlapOS Interface - Provide Master Url" src="https://www.erp5.com/slapos-Interface.Monitor.Provide.Master.Url?display=&amp;format=png" />
+<details open="open">
+<p>The monitor requires the configuration of your instance to sync. To provide it, paste the the Frontend url of your SlapOS Master and append <code>/hateoas/</code>. In the example, this is <code>https://master.slaptest.erp5.net/hateoas/</code>.</p>
+
+<p>The Frontend url can be found in the connection parameters of the Frontend Slave being used to access the SlapOS Master. <b>Note</b>, it is not possible to use the monitor with the default IPv4 address.</p>
+
+<p>Click <i>Proceed</i> to launch synchronisation of SlapOS Master and the monitor.</p>
+</details>
+</section>
+
+<section>
+<h1>Promise List</h1>
+<img alt="SlapOS Interface - Monitor Promise List" src="https://www.erp5.com/slapos-Interface.Monitor.Promise.List?display=&amp;format=png" />
+<details open="open">
+<p>Once synchronisation finishes the Monitor will load and display the list of Promises for the SlapOS Master.</p>
+
+<p><i>Promises</i> in SlapOS are executables doing arbitrary tasks and exiting with exit code 0 (&quot;it works&quot;) or greater (&quot;it doesn&#39;t work&quot;). Everything in SlapOS is based on such Promises in order to automate the management of a SlapOS network. In case a Promise fails (eg a computer not responding), a ticket will be created on the SlapOS Master in order for a user to follow up with this failing promise (more info in <a href="slapos-DesignDocument.Understanding.Slapos.Promises">Understanding SlapOS Promises</a>).</p>
+
+<p><b>Note</b>, that the Monitor reports detailed instance status but does not provide any management functions such as handling of tickets. This has to be done in the SlapOS Master Dashboard which in turn only displays the global status of an instance (green, orange, red). Also <b>note</b> that the Monitor works autonomously from the SlapOS Master, so even if the Master is down, the Monitor will continue working.</p>
+
+<p>Finally, as the Monitor was not accessed for a specific computer or instance, it will show the global network status. Clicking on one of the red/yellow/green computer or instance buttons will load the monitor with a scope set on the respective computer/instance.</p>
+</details>
+</section>
+
+<section>
+<h1>Filter Promise List</h1>
+<img alt="Monitor Interface - Promise List Filter" src="https://www.erp5.com/slapos-Interface.Monitor.Promise.List.Filter?display=&amp;format=png" />
+<details open="open">
+<p>You can use the <i>Filter</i> button in the subheader and the search field to filter the list of promises.</p>
+</details>
+</section>
+
+<section>
+<h1>Filter Failing Promises</h1>
+<img alt="Monitor Interface - Filter Failing Promises" src="https://www.erp5.com/slapos-Interface.Monitor.Filter.Failing.Promises?display=&amp;format=png" />
+<details open="open">
+<p>One common use case for the filter is to display only erroring promises by filtering for the <i>status</i> field with exact match <code>ERROR</code>. This helps to keeping track of what to fix only.</p>
+
+<p>Head back to the SlapOS Dashboard to see the different ways to accessing the monitor.</p>
+</details>
+</section>
+
+<section>
+<h1>Access Monitor for a Site</h1>
+<img alt="SlapOS Interface - Access Monitor for a Site" src="https://www.erp5.com/slapos-Interface.Monitor.Access.Via.Site?display=&amp;format=png" />
+<details open="open">
+<p>On the map displaying your sites (<a href="slapos-HowTo.Classify.Node.In.A.Network">how to classify computers in a network</a>), click on the small screen icon next to the site name (next to <i>FIRST-SITE</i> on the map!).</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Software Instances for a Site</h1>
+<img alt="Monitor Interface - Software Instance Promises for a Site" src="https://www.erp5.com/slapos-Interface.Monitor.Instances.On.Site?display=&amp;format=png" />
+<details open="open">
+<p>This will list all promises for software instances deployed on this computer. In the example, the computer is the <b>COMP-0</b> machine which runs an instance of the Re6st Registry for connecting nodes in a network, the Frontend (Apache) for managing access between nodes and the monitor as well as the Frontend Slave (providing the url we used to connect to the monitor). The status of all instances can be monitored here.</p>
+
+<p>Head back to the SlapOS Master Dashboard</p>
+</details>
+</section>
+
+<section>
+<h1>Access Monitor for an Instance</h1>
+<img alt="SlapOS Interface - Access Monitor for a Service" src="https://www.erp5.com/slapos-Interface.Monitor.Access.Via.Service?display=&amp;format=png" />
+<details open="open">
+<p>In the side menu, click on <i>Services</i> to access all services on your SlapOS Network. Click on one of the <i>Instances</i> buttons on a service.</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Hosting Subscriptions of a Service</h1>
+<img alt="Monitor Interface - Subscription Promises for a Service" src="https://www.erp5.com/slapos-Interface.Monitor.Subscriptions.Of.Service?display=&amp;format=png" />
+<details open="open">
+<p>This will show the list of <i>Hosting Subscriptions</i> of this service (a <i>Hosting Subscription</i> is the instantiation of an installed software on a computer partition of a SlapOS node) along with their status.</p>
+
+<p>Head back to the SlapOS Master Dashboard.</p>
+</details>
+</section>
+
+<section>
+<h1>Access Monitor for a Computer</h1>
+<img alt="SlapOS Interface - Access Monitor for a Server" src="https://www.erp5.com/slapos-Interface.Monitor.Access.Via.Server?display=&amp;format=png" />
+<details open="open">
+<p>In the side menu, click on <i>Servers</i> to access all services on your SlapOS network. Click on one the Computers <b>without</b> any partitions (instances).</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Instances of a Computer</h1>
+<img alt="Monitor Interface - Instance Promises of an empty server" src="https://www.erp5.com/slapos-Interface.Monitor.Instances.Of.Empty.Server?display=&amp;format=png" />
+<details open="open">
+<p>If the server is still &quot;empty&quot; (no instances of software have been installed yet), the monitor will not report anything.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Monitor Usage</h1>
+
+<details open="open">
+<p>This section will show how the monitor can be used to analyse data collected from a SlapOS network.</p>
+</details>
+</section>
+
+<section>
+<h1>Access Software Instance on Monitor</h1>
+<img alt="Monitor Interface - Software Instance List" src="https://www.erp5.com/slapos-Interface.Monitor.Software.Instance.List?display=&amp;format=png" />
+<details open="open">
+<p>Stay in the Monitor and click <i>Software Instances</i> to access the list of all instances in the network. A software instance is one instantiated and configured instance of a software available on the SlapOS Master and installed on a computer).</p>
+
+<p>Click on any of the available software instances (the table at the bottom).</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Software Instance Details</h1>
+<img alt="Monitor Interface - Software Instance Details" src="https://www.erp5.com/slapos-Interface.Monitor.Software.Instance.Details?display=&amp;formt=png" />
+<details open="open">
+<p>The detailed view of an instance will provide configuration and promise status information for this instance. All promises are listed in the bottom table, the global promise status is shown on top.</p>
+
+<p>Click on of the promises in the bottom table.</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Software Instance Promise History</h1>
+<img alt="Monitor Interface - Software Instance Promise History" src="https://www.erp5.com/slapos-Interface.Monitor.Software.Instance.Promise.History?display=&amp;format=png" />
+<details open="open">
+<p>This is the overview of the history of promise failures (similar to the graph displayed on the previous menu).</p>
+
+<p>Go back to the software instance (clicking on the header). Then click on <i>Processes</i> in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Software Instance Promise Details</h1>
+<img alt="Monitor Interface - Software Instance Promise Details" src="https://www.erp5.com/slapos-Interface.Monitor.Software.Instance.Promise.Details?display=&amp;format=png" />
+<details open="open">
+<p>This will show details on this specific Promise and the processes it contains.</p>
+
+<p>Click on &quot;Resources&quot; in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Software Instance Resource Details</h1>
+<img alt="Monitor Interface - Software Instance Resource Details" src="https://www.erp5.com/slapos-Interface.Monitor.Software.Instance.Resource.Details?display=&amp;format=png" />
+<details open="open">
+<p>This will show details on the resource consumption.</p>
+
+<p>You can switch back to the processes by clicking <i>Processes</i> in the subheader, then click in the top navigation to access the main instance view again.</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Software Instance Private Files</h1>
+<img alt="Monitor Interface - Software Instance Access Private Files" src="https://www.erp5.com/slapos-Interface.Monitor.Software.Instance.Access.Private.Files?display=&amp;format=png" />
+<details open="open">
+<p>Click on <i>Access Private Files</i>.</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Software Instance Log Files</h1>
+<img alt="Monitoring Interface - Software Instance Private Files " src="https://www.erp5.com/slapos-Interface.Monitor.Software.Instance.Private.Files?display=&amp;format=png" />
+<details open="open">
+<p>This allows to access the private files of this computer partition.</p>
+
+<p>Click on <i>log</i> to continue</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Software Instance Log Files</h1>
+<img alt="Monitoring Interface - Software Instance Log Files " src="https://www.erp5.com/slapos-Interface.Monitor.Software.Instance.Log.Files?display=&amp;format=png" />
+<details open="open">
+<p>This will open the folder of log files. Open one of the files.</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Software Instance Log File</h1>
+<img alt="Monitoring Interface - Software Instance Log File" src="https://www.erp5.com/slapos-Interface.Monitor.Software.Instance.Log.File?display=&amp;format=png" />
+<details open="open">
+<p>Accessing instances like this allows to easily monitor and dig down into log files of a specific service in case of a failing Promise for example.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

@@ -1,0 +1,496 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+   slapos-TechnicalNote.General.SlapOS.Monitoring.Specifications
+   developer-Howto.Add.Promises.To.Software.Release
+   erp5-TechnicalNote.SlapOs.Process.Watchdog.Architecture
+-->
+<section class="master">
+<h1>Understanding SlapOS Promises</h1>
+
+<details open="open">
+<p>SlapOS (<a href="slapos-DesignDocument.Slapos.Introduction">introduction</a>) is a general purpose overlay operating system for distributed POSIX infrastructures. It is based on a <a href="slapos-DesignDocument.Understanding.Slapos.Architecture">Master and Slave design</a> where the Master assigns services to Slave nodes. Slave nodes in turn process the list of services using <a href="slapos-DesignDocument.Unterstanding.Buildout">buildout</a> and send connection and consumption information as well as their monitoring status back to the Master. This monitoring status of each services is based on Promises, which will be explained in detail in this document.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>What is a Promise?</li>
+	<li>Adding a Promise to a Software Release</li>
+	<li>Monitoring Promises</li>
+	<li>Watchdog</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>What is a Promise?</h1>
+
+<details open="open">
+<p>This section will briefly introduce Promises and how they are used in SlapOS to monitor whether an instance is accessible or not.</p>
+</details>
+</section>
+
+<section>
+<h1>Example Promise</h1>
+
+<pre>
+<code>from zope import interface as zope_interface
+from slapos.grid.promise import interface
+from slapos.grid.promise.generic import GenericPromise
+import socket
+import sys
+class RunPromise(GenericPromise):
+&nbsp; zope_interface.implements(interface.IPromise)
+&nbsp; def __init__(self, config):
+&nbsp; &nbsp; GenericPromise.__init__(self, config)
+
+&nbsp; def sense(self):
+&nbsp; &nbsp; &quot;&quot;&quot;
+&nbsp; &nbsp; &nbsp; Simply test if we can connect to specified host:port.
+&nbsp; &nbsp; &quot;&quot;&quot;
+&nbsp; &nbsp; hostname = self.getConfig(&#39;hostname&#39;)
+&nbsp; &nbsp; port = int(self.getConfig(&#39;port&#39;))
+&nbsp; &nbsp; addr = (hostname , port)
+&nbsp; &nbsp; try:
+&nbsp; &nbsp; &nbsp; socket.create_connection(addr).close()
+&nbsp; &nbsp; except (socket.herror, socket.gaierror), e:
+&nbsp; &nbsp; &nbsp; self.logger.error(&quot;ERROR hostname/port ({}) is not correct: {}&quot;.format(addr, e))
+&nbsp; &nbsp; except (socket.error, socket.timeout), e:
+&nbsp; &nbsp; &nbsp; self.logger.error(&quot;ERROR while connecting to {}: {}&quot;.format(addr, e))
+&nbsp; &nbsp; else:
+&nbsp; &nbsp; &nbsp; self.logger.info(&quot;port connection OK ({})&quot;.format(addr))
+&nbsp; 
+&nbsp; def anomaly(self):
+&nbsp; &nbsp; &quot;&quot;&quot;
+&nbsp; &nbsp; &nbsp; There is an anomaly if last 3 senses were bad.
+&nbsp; &nbsp; &quot;&quot;&quot;
+&nbsp; &nbsp; return self._anomaly(result_count=3, failure_amount=3)</code>
+</pre>
+
+<p>Port Listening Promise</p>
+
+<details open="open">
+<p>A Promise is a python&nbsp;script doing some arbitrary work and then return a promise result saying if the promise succeeded or if it has failed. A promise script can define configurations which will be used to check the state. Promises are generated during instantiation in <code><strong>$ instance_home/etc/plugin</strong>&nbsp;</code>and then Slapgrid will run each&nbsp;depending on theirs configuration&nbsp;to know if an instance is working or not.</p>
+
+<p>The most simple example of promise is <a href="https://lab.nexedi.com/nexedi/slapos.toolbox/blob/master/slapos/promise/plugin/check_port_listening.py">&quot;check_if_port_listening&quot;</a> which is trying to open a socket to an ip/port. If it works and another promise is not failing, the instance will be green. If the socket can&#39;t be created, slapgrid will raise PromiseError then&nbsp;reports it to the SlapOS Master and the instance will become red.</p>
+
+<p>The promise system should be used on all SlapOS softwares and stacks to define as precisely as possible whether an instance is working or not.</p>
+</details>
+</section>
+
+<section>
+<h1>Promise Parts</h1>
+
+<ul>
+	<li>Promise sensor</li>
+	<li>Promise test</li>
+	<li>Promise anomaly detector</li>
+</ul>
+
+<details open="open">
+<p>We want to promote a simple, easy and standardised way of writing promise scripts that will verify the state of the system. These scripts can be launched by slapgrid and are configurable for each Software Release. Every promise has three parts:</p>
+
+<p>The <b>promise sensor</b> collects the value of some monitoring aspects such as &quot;if server is supposed to be started, get the response of an http request, else return &#39;server stopped&#39; and in case of timeout return empty string&quot;.</p>
+
+<p>The <b>promise test</b> is Green if the result of the promise sensor of the previous example is not empty, else Red. This ensures that a server that is started actually responds to http requests. There is no margin of tolerance for promise tests.</p>
+
+<p>The <b>promise anomaly detector</b> is Green if one of the three last promise sensor values was not empty, else it is red. This ensures that we call bang only if the server is really stopped, not if an Internet glitch happened.</p>
+</details>
+
+<details open="open">
+<p><b>Note:</b> Promises are what Buildout launches at the end. They return True or False. True means that one aspect of the partition is OK.&nbsp;</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Adding A Promise to a Software Release</h1>
+
+<details open="open">
+<p>The following section will show how to add a Promise to a software release. This can either be an existing Promise from the <a href="https://lab.nexedi.com/nexedi/slapos/tree/master/slapos/recipe">SlapOS repository recipe</a> folder or a new Promise written from scratch.</p>
+</details>
+</section>
+
+<section>
+<h1>Adding Existing Promises to a Software Release</h1>
+
+<pre>
+<code>[promise-check-site]
+recipe = slapos.cookbook:promise.plugin
+eggs =
+  slapos.toolbox
+output = ${directory:plugins}/promise-check-mysite-status.py
+module = check_site_state
+config-site-url = ${publish:site-url}
+config-connection-timeout = 20
+config-foo = bar</code></pre>
+
+<details open="open">
+<p>A recipe <i>slapos.cookbook:promise.plugin</i> can be used to generate promise scripts.</p>
+
+<p>To use any of the existing promises requires to add a new section to the software release profile (and don&#39;t forget to add it in the <code>parts</code> list, too). For example:</p>
+
+<pre>
+<code>[promise-check-site]
+recipe = slapos.cookbook:promise.plugin
+eggs =
+  slapos.toolbox
+output = ${directory:plugins}/promise-check-mysite-status.py
+# module is the promise file name (without .py) in slapos.toolbox
+module = check_site_state
+config-site-url = ${publish:site-url}
+config-connection-timeout = 20
+config-foo = bar</code></pre>
+
+<p>This will generate an script which will check will test whether the <code>${publish:site-url}</code> is available and timeout after 20 seconds which will cause the promise to fail. Passing <code>config-foo=bar</code> gives an example of how parameters are passed to the promise.</p>
+</details>
+</section>
+
+<section>
+<h1>Add New Promise to a Software Release</h1>
+
+<pre>
+<code>from zope import interface as zope_interface
+from slapos.grid.promise import interface
+from slapos.grid.promise.generic import GenericPromise, TestResult, AnomalyResult
+
+class RunPromise(GenericPromise):
+
+  zope_interface.implements(interface.IPromise)
+
+  def __init__(self, config):
+    GenericPromise.__init__(self, config)
+    # run the promise everty 2 minutes
+    self.setPeriodicity(minute=2)
+
+  def anomaly(self):
+    &quot;&quot;&quot;
+      Called to detect if there is an anomaly.
+      Return AnomalyResult or TestResult object
+      # When AnomalyResult has failure bang is called if another promise didn&#39;t bang
+    &quot;&quot;&quot;
+
+    # Example
+    promise_result_list = self.getLastPromiseResultList(result_count=3, only_failure=True)
+    if len(promise_result_list) &gt; 2:
+      return AnomalyResult(problem=True, message=promise_result_list[0][0][&#39;mesage&#39;])
+    return AnomalyResult(problem=False, message=&quot;&quot;)
+
+    # It&#39;s possible to use Generic helper methods
+    # return self._anomaly(result_count=3, failure_amount=3)
+
+  def sense(self):
+    &quot;&quot;&quot;
+      Run the promise code and store the result in promise log file
+        raise error, log error message, ... for failure
+    &quot;&quot;&quot;
+
+    # DO SOMETHING...
+    failed = True
+    raised = False
+    if failed:
+      self.logger.error(&quot;ERROR while checking instance http server&quot;)
+    else:
+      self.logger.info(&quot;http server is OK&quot;)
+    if raised:
+      raise ValueError(&quot;Server URL is not correct&quot;)
+
+  def test(self):
+    &quot;&quot;&quot;
+      Test promise and say if problem is detected or not
+      Return TestResult object
+    &quot;&quot;&quot;
+
+   # Example
+   promise_result_list = self.getLastPromiseResultList(result_count=1)[0]
+   problem = False
+   message = &quot;&quot;
+   for result in promise_result_list:
+     if result[&#39;status&#39;] == &#39;ERROR&#39; and not problem:
+       problem = True
+     message += &quot;\n%s&quot; % result[&#39;message&#39;]
+
+   return TestResult(problem=problem, messsage=message)
+
+   # It&#39;s possible to use Generic helper methods
+   # return self._test(result_count=1, failure_amount=1)</code></pre>
+
+<details open="open">
+<p>This script is an example of a Promise in python. Writing a Promise consists of defining a class called <b>RunPromise</b>:</p>
+
+<pre>
+<code>class RunPromise(GenericPromise):</code></pre>
+
+<p>which inherits from the <code>GenericPromise</code> class inside this class defining the methods <b>anomaly()</b>, <b>sense()</b> and <b>test()</b>.</p>
+
+<p>Python promises should be placed into the folder <code>etc/plugin</code> of the computer partition.</p>
+</details>
+
+<details open="open">
+<p><b>sense()</b> runs the promise code with the given parameters, collects data for the promise whenever is makes sense and appends to a log file.</p>
+
+<p><b>test()</b>&nbsp;read promise log and return&nbsp;<em>TestResult</em> object describing the actual promise state. The&nbsp;<strong>test</strong> method is called when Buildout processes a partition, a partition is marked as <i>correctly processed</i> if there is no Buildout failures and all promises test() pass.</p>
+
+<p><b>anomaly()</b> returns&nbsp;<i>AnomalyResult</i> object which describes the promise state. The <strong><code>anomaly</code></strong>&nbsp;method is called by SlapGrid when the partition is correctly processed to check if the partition has no anomaly. If <code>AnomalyResult.hasFailed()</code> is True, bang is called if another promise of the same instance didn&#39;t call bang.</p>
+</details>
+</section>
+
+<section>
+<h1>GenericPromise</h1>
+
+<pre>
+<code>...
+  @abstractmethod
+  def sense(self):
+    &quot;&quot;&quot;Run the promise code and log the result&quot;&quot;&quot;
+
+  def anomaly(self):
+    &quot;&quot;&quot;Called to detect if there is an anomaly which require to bang.&quot;&quot;&quot;
+    return self._anomaly()
+
+  def test(self):
+    &quot;&quot;&quot;Test promise and say if problem is detected or not&quot;&quot;&quot;
+    return self._test()
+
+  def run(self, check_anomaly=False, can_bang=True):
+    &quot;&quot;&quot;
+      Method called to run the Promise
+      @param check_anomaly: Say if anomaly method should be called
+      @param can_bang: Set to True if bang can be called, this parameter should
+        be set to False if bang is already called by another promise.
+    &quot;&quot;&quot;
+    ...</code></pre>
+
+<details open="open">
+<p>The <a href="https://lab.nexedi.com/nexedi/slapos.core/blob/master/slapos/grid/promise/generic.py">GenericPromise</a> class contain base implementation of Promise and provides a method <b>run()</b> which reads the option &#39;<i>check_anomaly</i>&#39; to enforce call of anomaly() instead of test(). By default, run a promise script will call sense() to produce result and test() to check results. Option check_anomaly is used used by buildout for periodic promise check, when the partition is already well deployed.</p>
+
+<p>In future, GenericPromise will be improved to provide more methods that can be used in sense() to store promise graph data. This graph data will be used on monitor interface to plot a chart of promise result progression.</p>
+</details>
+</section>
+
+<section>
+<h1>Methods Available in Promise Class</h1>
+
+<pre>
+<code>...
+self.getConfig(key, default=None)
+self.getLastPromiseResultList(latest_minute=0, result_count=COUNT, only_failure=False)
+self._test(result_count=COUNT, failure_amount=XX, latest_minute=0)
+self._anomaly(result_count=COUNT, failure_amount=XX, latest_minute=0)
+...
+</code></pre>
+
+<details open="open">
+<p>Promises inherit the following methods from GenericPromise:</p>
+
+<ul>
+	<li><code>self.getTitle()</code> - returns Promise title, eg. <i>my_promise</i></li>
+	<li><code>self.getName()</code> - returns Promise (file) name, eg. <i>my_promise.py</i></li>
+	<li><code>self.getPromiseFile()</code> - returns Promise file path</li>
+	<li><code>self.getPeriodicity()</code> - returns current Promise periodicity</li>
+	<li><code>self.getLogFile()</code> - return path log to file</li>
+	<li><code>self.getLogFolder()</code> - return path to monitoring logs folder</li>
+	<li><code>self.getPartitionFolder()</code> - return base partition folder</li>
+	<li><code>self.getConfig(key, default=None)</code> - return configuration sent to Promise class<br />
+	Default configuration keys availble are: <i>partition-id</i>, <i>computer-id</i>, <i>partition-key</i>, <i>partition-cert</i> and <i>master-url, slapgrid-version</i>.</li>
+	<li>self.setConfig(key, value) - register a new configuration</li>
+	<li><code>self.getLastPromiseResultList(latest_minute=0, result_count=COUNT, only_failure=False)</code> - read the promise log result group from the latest promise execution specified by <i>COUNT</i>. Set <i>latest_minute</i> to specify the maximum promise execution time to search. If <i>only_failure</i> is True, will only get failure messages.</li>
+	<li><code>self._test(result_count=COUNT, failure_amount=XX, latest_minute=0)</code> - return TestResult from latest Promise result</li>
+	<li><code>self._anomaly(result_count=COUNT, failure_amount=XX, latest_minute=0)</code> - return AnomalyResult from latest Promise result</li>
+</ul>
+
+<p>These&nbsp;inherited methods should&nbsp;be called promise in __init__() after the line <em>&quot;GenericPromise.__init__(self, config)&quot;</em>:</p>
+
+<ul>
+	<li>self.setPeriodicity(<code>minute=XX</code>) - change the default &nbsp;periodicity to check promise anomaly</li>
+	<li>self.setTestLess() - disable promise test call, this promise will be called only to check anomaly</li>
+	<li>self.setAnomalyLess() - disabled promise anomaly call, this promise will be called only to check test (when buildout is deploying the partition).</li>
+</ul>
+
+<p>Note: if Anomaly and Test are disabled, promise will raise because promise cannot check&nbsp;nothing.</p>
+</details>
+
+<details open="open">
+<p>In your promise code, you will be able to call <code>self.getConfig(&quot;site-url&quot;)</code>, <code>self.getConfig(&quot;connection-timeout&quot;)</code> and <code>self.getConfig(&quot;foo&quot;)</code>. The returned value of <code>self.getConfig(KEY)</code> is <i>None</i> if the config parameter KEY is not set.</p>
+</details>
+</section>
+
+<section>
+<h1>Developing Python Promises</h1>
+
+<pre>
+<code>from slapos.promise.plugin.check_site_state import RunPromise</code></pre>
+
+<details open="open">
+<p>Promise code must be committed to the <a href="https://lab.nexedi.com/nexedi/slapos.toolbox.git">slapos.toolbox</a> repository. Please put your promise into the folder <i>slapos/promise/plugin</i>, so you can import them in a file in <i>etc/plugin</i> folder of your instance.</p>
+
+<p>For debugging, the <a href="https://lab.nexedi.com/nexedi/slapos.toolbox/blob/master/slapos/monitor/runpromise.py">monitor promise script</a> added by monitor can be used to test promises execution without using slapgrid. The script will be exposed in the <code>bin/</code> directory of the software release.</p>
+
+<p>You can run a promise, using:</p>
+
+<pre>
+<code>SR_DIRECTORY/bin/monitor.runpromise --config etc/monitor.conf --console --dry-run [ARG, ...]</code></pre>
+
+<p><b>Note</b>, that legacy promises are promises placed in <code>PARTITION_DIRECTORY/etc/promise</code>, they can be bash or others executable scripts. The promise launcher will use a <a href="https://lab.nexedi.com/nexedi/slapos.core/blob/master/slapos/grid/promise/wrapper.py">special wrapper</a> to call them as a subprocess, the success or failure state will be based on the process return code (0 = sucess, &gt; 1 = failure).</p>
+
+<p>To set the frequency of buildout runs, the software release should write a file <b>periodicity</b> into software release folder which contains the time period in seconds, eg. to process the partition every 12 hours, the file <i>/opt/slapgrid/SR_MD5SUM/periodicity</i> should contain <b>43200</b>= 12h</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Monitoring Promises</h1>
+
+<details open="open">
+<p>This section covers monitoring of partitions along with goals of running Promises correctly as well as things to avoid.</p>
+</details>
+</section>
+
+<section>
+<h1>Controlling Partition Status</h1>
+
+<ul>
+	<li>Periodic Instantiation</li>
+	<li>Periodic Promise sensors</li>
+	<li>Bang</li>
+</ul>
+
+<details open="open">
+<p>In normal conditions:</p>
+
+<ul>
+	<li>Instantiation runs periodically (at least once in an interval of computer configurable frequency which is usually 24 hours), running promises and posting to master, hence showing signs of life.</li>
+	<li>Slapgrid runs periodically a set of promise sensors, and upon anomaly detection on the promise sensor value, <b>bang</b> is called on the partition.</li>
+	<li>Upon call of bang, a run of partition instantiation is scheduled by SlapOS Master on <b>all partitions</b> that belong to the same software instance tree.</li>
+</ul>
+
+<p>Running buildout on all partitions after a bang is supposed to converge to a stable state with all promises passing.</p>
+
+<p>Slapgrid is configured to run promises at some interval of time which can be configured differently for each promise sensor (see before). SlapOS knows nothing about the results of running promise sensors. The only thing the Master knows is that a <b>bang</b> was issued due to anomaly detection.</p>
+</details>
+</section>
+
+<section>
+<h1>Monitoring Goals</h1>
+
+<ul>
+	<li>Servers are alive</li>
+	<li>Partitions are fulfilling all promises</li>
+</ul>
+
+<details open="open">
+<p>The goal of monitoring is to provide good quality of services by knowing problems before customer tells us. This is done by ensuring that servers are alive and partitions are fulfilling all promises.</p>
+
+<h2>Alive servers</h2>
+
+<p>Servers should contact master periodically to notify that they are alive. The master will show the state of each server according to a colour. A server is <b>Green</b> if it contacted the master within the last 5 minutes. If it contacted the master within the last hour 1 hour, the server is <b>Orange</b> else it&#39;s <b>Red</b>. From a monitoring point of view, the server conctacts the master whenever Slapgrid connects to slapOS master, no matter what for.</p>
+&nbsp;
+
+<h2>Fulfilled promises</h2>
+
+<p>The master shows the state of each requested partition according to a colour. A partition is <b>Green</b> if the latest result sent by Slapgrid for that partition is OK (meaning that all promises succeeded and there were no other failures) and if that message was sent less than one day ago and less than the buildout run frequency defined by the software release and if no bang was trigered after that. Else the partition is <b>Red</b>.</p>
+</details>
+
+<details open="open">
+<p><b>Note 1:</b> Buildout on a partition in SlapOS will be executed at least once per computer configurable frequency (usually one day) and at least once per software release configurable frequency (seldom configured).</p>
+
+<p><b>Note 2:</b> the computer configurable frequency of Buildout run must be stored on the Computer in SlapOS master at registration time and updated, else it is impossible to check promise fulfillment.</p>
+</details>
+</section>
+
+<section>
+<h1>Monitoring Crimes</h1>
+
+<ul>
+	<li>Buildout runs all the time without ever going to sleep</li>
+	<li>Run all promises every minute</li>
+	<li>Always falling promises</li>
+	<li>Buildout taking too long to process a computer partition</li>
+</ul>
+
+<details open="open">
+<p>There are four monitoring crimes that every developer should keep in mind:</p>
+
+<ul>
+	<li><b>Buildout runs all the time without ever going to sleep</b><br />
+	If Buildout runs all then time too much resources are consumed which can overload the server. One should care to so that all promises of the Software Release can be solved.</li>
+	<li><b>Run all promises every minutes</b><br />
+	It&#39;s not required to run all promises in monitor every minute, instead they should be configurable, the frequency should be set for each promise.</li>
+	<li><b>Always falling promises</b><br />
+	If a promise never reaches the stage that it passes, it means that the SR is badly implemented and should be reviewed.</li>
+	<li><b>Buildout taking too long to process a computer partition</b><br />
+	Buildout should process a computer partition in a short time, else it prevents ensuring reponsive provisionning of other paritions. The time to process a computer partition should be less that one minute.</li>
+</ul>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Watchdog</h1>
+
+<details open="open">
+<p>This section introduces the &quot;Watchdog&quot;, a process that is monitoring other processes and can call &quot;bang&quot; to the Master.</p>
+</details>
+</section>
+
+<section>
+<h1>Watchdog Explained</h1>
+
+<details open="open">
+<p>Watchdog is a simple SlapOS Node feature allowing to watch any process managed by supervisord. All processes scripts into PARTITION_DIRECTORY/etc/service directory are watched. They are automatically configured in supervisord with an added on-watch suffix on their <em>process_name</em>. Whenever one of them exits, watchdog will trigger an alert (bang) that is sent to the Master. <i>Bang</i> will force SlapGrid to reprocess all instances of the service. This also forces recheck of all promises and post the result to master, letting the master decide whether the partition state is Green or Red.</p>
+</details>
+</section>
+
+<section>
+<h1>Bang</h1>
+
+<ul>
+	<li>Called explicitly (eg. by a Promise or a Service)</li>
+	<li>Called implicitly when a process watched by Watchgod changes to an unsupposed state</li>
+</ul>
+
+<details open="open">
+<p>Bang should be called as much as needed in a day by a partition. There should not be a limitation in number of calls else it&#39;s not possible to adapt dynamically. A Master protection against recurring bang calls should be considered using a kind of quota per day, that might depend on price or defined into the software release. if the bang quota of the day is reached, the master will reject all future calls until the next day.</p>
+
+<p>As a bang will trigger a run of Buildout, Buildout, in theory, is run all the time repeatedly. This is why it is supposed to have 0 execution time (theoretical model). But since that would take 100% of CPU, we have to call it less often. So, we find ways to call it less often:</p>
+
+<ul>
+	<li>every X (this can be configured at the profile level)</li>
+	<li>if promises are not all satisfied</li>
+	<li>if requested services are not available</li>
+	<li>as the result of bang</li>
+</ul>
+</details>
+
+<details open="open">
+<p>Buildout is actually called by SlapGrid. SlapGrid itself is called every Y (in theory, Y = 0, but in reality 1 minute). So, SlapGrid is called:</p>
+
+<ul>
+	<li>at least every minute</li>
+	<li>right after a SlapGrid call if something happened in the previous call (eg. request of new service, failing Promise) with an increasing delay to reduce CPU load</li>
+</ul>
+
+<p>Currently bang has to go through the master. It is possible in future to consider a short cut that does not go through the master. But it is probably simpler and cleaner to run SlapProxy locally if one needs full autonomy.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

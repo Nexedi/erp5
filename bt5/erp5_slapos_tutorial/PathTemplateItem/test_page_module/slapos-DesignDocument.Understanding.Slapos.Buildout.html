@@ -1,0 +1,411 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+  developer-what.is.buildout
+  slapos-buildout-FAQ (XXX still relevant?)
+  slapos-Contribute.Buildout
+  P-SLAP-Buildout.Tutorial-002-en.pdf
+--><!-- outbound links:
+  slapos-DesignDocument.Understanding.Slapos.Architecture
+-->
+<section class="master">
+<h1>Understanding Buildout In SlapOS</h1>
+
+<details open="">
+<p><a href="http://www.buildout.org/">Buildout</a> is a Python-based system for creating,&nbsp;assembling and deploying applications from multiple parts, which may or not be Python-based. It allows to create Buildout configuration files from which the exact same software can (later) be reproduced.</p>
+
+<p>Buildout originated from the Zope/Plone community to automate the deployment of customized instances of their own software. Lead by Jim Fulton (CTO of Zope Corporation), Buildout has become a stable and mature software over the years (<a href="https://github.com/buildout/buildout">source code</a>).</p>
+
+<p>Buildout is an integral part of SlapOS. The following design document explains what Buildout is and how Buildout files are used in SlapOS before discussing advantages and alleged shortcomings of Buildout. For more information on the way Buildout is integrated in the SlapOS ecosystem, refer to the <a href="slapos-DesignDocument.Understanding.Slapos.Architecture">SlapOS architecture</a> introduction.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Introducing Buildout</li>
+	<li>Simple Buildout Example</li>
+	<li>Buildout.cfg Walkthrough</li>
+	<li>Advantages of Buildout</li>
+</ul>
+
+<details open="open">&nbsp;</details>
+</section>
+
+<section class="chapter">
+<h1>Introducing Buildout</h1>
+
+<details open="open">
+<p>Buildout is a tool</p>
+
+<ul>
+	<li>for automating software assembly including running build tools</li>
+	<li>to build software</li>
+	<li>and applying software and templates to generate configuration files and scripts</li>
+</ul>
+
+<p>Buildout is applicable to all phases of software development and in production deployment. It is based on three core principles: <i>Repeatability</i>, <i>Componentization</i> and <i>Automation</i>.</p>
+
+<p><code>slapos.buildout</code> (<a href="https://lab.nexedi.com/nexedi/slapos.buildout">Gitlab repository</a>) is a fork of <a href="http://buildout.org">zc.buildout</a> maintained by SlapOS which includes various fixes that may or may not have been merged back into Buildout upstream (see <a href="https://github.com/buildout/buildout/blob/master/DEVELOPERS.txt">Buildout developer guidelines</a> for how to contribute to Buildout).</p>
+</details>
+</section>
+
+<section>
+<h1>Why Buildout?</h1>
+<img alt="SlapOS Buildout" src="https://www.erp5.com/slapos-Graphic.Buildout.In.Slapos?display=&amp;format=png" />
+<details open="open">
+<p>Buildout is used in SlapOS to define what software to install and instantiate on a node and is therefore key to the architecture of SlapOS. Buildout is one answer to the fact that there will never be a possible software standard in the cloud: every system gets patched. From large scale production systems operating in the cloud or privately to single components like relational databases. Patching is required to meet performance requirements of given applications as soon as data volume grows. If a cloud operating system does not provide the possibility to patch any of its software components, it is simply unusable for large scale production environments. SlapOS is usable because its definition of what it considers a <i>software</i> is based on the possibility of patching any dependent software component - which is done using Buildout.</p>
+</details>
+</section>
+
+<section>
+<h1>Version + Patches = Buildout</h1>
+<img alt="SlapOS Buildout - software version and applied patches" src="https://www.erp5.com/slapos-Graphic.Buildout.Software.Version.And.Patches?display=&amp;format=png" />
+<details open="open">
+<p>It is often assumed giving a name to a software (like &quot;KVM&quot; or &quot;MySQL&quot;) is sufficient. While it actually is for many cases (and SlapOS provides aliases &quot;KVM&quot; and &quot;MySQL&quot; which link to explicit Buildout configurations), the reality is not as straightforward.</p>
+
+<p>For example, some releases of KVM support <a href="https://en.wikipedia.org/wiki/Network_block_device">NBD protocol</a> over IPv6 while some don&#39;t. Some support <a href="https://sheepdog.github.io/sheepdog/">Sheepdog</a> distributed block storage while others don&#39;t. Some support <a href="https://ceph.com/">CEPH</a> distributed block storage and so on. Most users using KVM do not care about IPv6, Sheepdog or CEPH, but users of SlapOS need IPv6 support to access NBD which at the time of writing is only available as a patch. A resilient storage based on Sheepdog was only made available from version 0.13 and CEPH support requires another patch.</p>
+
+<p>For MySQL, the above possibilities multiply with multiple sources from the official one (<a href="https://www.mysql.com/">MySQL</a>), <a href="https://mariadb.org/">MariaDB</a>, <a href="https://www.percona.com/">Percona InnoDB</a> or <a href="https://www.cubrid.org/">Cubrid</a>, which is not MySQL but claims to be 90% compatible. Each source has different versions and default compilation options. Maintainers of large scale applications know very well that the performance of applications can be seriously impacted by subtle changes to the SQL optimizer so the possibility to choose which source of MySQL to use and which patches to apply are crucial when running enterprise applications.</p>
+</details>
+
+<details open="open">
+<p>As the number of possibilities to patch and the specific user requirements can be close to infinite, the easiest way to know which software is actually being installed on a SlapOS node is simply to list where the original source code was obtained from and which patches were applied. This is exactly what Buildout does with a few lines of configuration. It also eliminates the process of distributing binary packages on a wide range of hardware architectures thanks to a trusted, distributed caching mechanism which does not even use a centralized signature.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Simple Buildout Example</h1>
+
+<details open="open">
+<p>A Buildout configuration is based on a .cfg file called the buildout <b>profile</b>. This profile may contain multiple sections, called <i>parts</i>, starting with the <i>[part name]</i> syntax. The first part is always called <code>[buildout]</code> and allows to define the list of other parts to execute.</p>
+
+<p>Each other part is executed by a python script called a <b>recipe</b>. If the recipe is not available in the system, it will automatically be downloaded by Buildout.</p>
+</details>
+</section>
+
+<section>
+<h1>Bootstrapping Buildout</h1>
+
+<pre>
+<code>&gt; mkdir buildoutenv &amp;&amp; cd buildoutenv
+&gt; vi buildout.cfg
+&gt; curl -s htp://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstra
+  p.py | python -S -
+Generated script &#39;bin/buildout&#39;.
+&gt; ./bin/buildout
+&gt; ls eggs
+ipython-0.10.1-py2.6.egg
+zc.recipe.egg-1.3.2-py2.6.egg</code></pre>
+
+<details open="">
+<p>Buildout has to be bootstrapped in order to allow it to initialize the deployment environment. Once done, a <code>bin/buildout</code> binary becomes available and has to be run to execute the respective profile.</p>
+
+<p>The executable should be available to run this program in the bin directory (bin/ipython).</p>
+</details>
+</section>
+
+<section>
+<h1>Buildout.cfg</h1>
+
+<pre>
+<code>// buildout.cfg
+[buildout]
+parts = demo
+
+[demo]
+recipe = zc.recipe.egg
+eggs = ipython
+  </code></pre>
+
+<details open="open">
+<p>In this example, the recipe <i>zc.recipe.egg</i> is used to install python packages (called <b>eggs</b>). When executed, this recipe will download the egg called &#39;ipython&#39; (along with its dependencies) and install it.</p>
+</details>
+</section>
+
+<section>
+<h1>Compiling Binaries</h1>
+
+<pre>
+<code>// buildout.cfg
+[buildout]
+parts = demo
+
+[demo]
+recipe = hexagonit.recipe.cmmi
+url = htp://gondor.apana.org.au/~herbert/dash/fles/dash-0.5.6.1.tar.gz</code></pre>
+
+<details open="open">
+<p>Buildout can be used to compile C/C++ code using gcc. To do this the recipe <i>hexagonit.recipe.cmmi</i> can be used. It takes the URL of the source package as parameter. When executed, the source package will be automatically downloaded, extracted, configured, compiled and installed in the parts directory.</p>
+
+<pre>
+<code>[...]
+&gt; ./bin/buildout
+&gt; ls parts/demo/bin
+dash</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Running Multiple Parts</h1>
+
+<pre>
+<code>// buildout.cfg
+[buildout]
+parts =
+  ipython
+  dash
+
+[dash]
+recipe = hexagonit.recipe.cmmi
+url = htp://gondor.apana.org.au/~herbert/dash/fles/dash-0.5.6.1.tar.gz
+
+[ipython]
+recipe = zc.recipe.egg
+eggs = ipython</code></pre>
+
+<details open="open">
+<p>Of course multiple parts can configured in the profile. Their execution order follows the parts parameter (ipython is executed before dash).</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Buildout.cfg Walkthrough</h1>
+
+<details open="open">
+<p>The following section will walk through a more complex Buildout.cfg file explaining how the different sections will be used to build a specific software release. For more information on Buildout, please refer to the <a href="http://www.buildout.org/en/latest/getting-started.html">Buildout getting started</a> page.</p>
+
+<p>You can find additional examples of SlapOS component Buildout configuration files in the <a href="https://lab.nexedi.com/nexedi/slapos/tree/master/component">SlapOS repository component folder</a>. These components are used to build more complex software (Buildout files can use other Buildout files). <b>Note</b>, that while the following file may be outdated, it still explains many concepts and thus serves as a good example of describing how SlapOS uses Buildout.</p>
+
+<p>The file being used is an old buildout.cfg file for SlapOS&nbsp;(<a href="http://git.erp5.org/gitweb/slapos.git/blob_plain/refs/tags/slapos-0.69:/component/slapos/buildout.cfg">version 0.69</a>). Once you have read through this section, you could compare this file to the latest version (<a href="https://lab.nexedi.com/nexedi/slapos/blob/1.0.63/component/slapos/buildout.cfg">version 1.0.63</a>) to see whether you can apply the principles to a different but related file.</p>
+</details>
+</section>
+
+<section class="code">
+<h1>What is Buildout (1)</h1>
+
+<pre>
+<code>[buildout]
+extends =
+  ../../stack/shacache-client.cfg
+  ../lxml-python/buildout.cfg
+  ../python-2.7/buildout.cfg
+
+parts = slapos
+find-links = http://www.nexedi.org/static/packages/source/slapos.buildout/
+versions = versions</code></pre>
+
+<details open="open">
+<p>The first section of a Buildout is named <code>[buildout]</code>. It defines which software is going to be built and how. In the case of SlapOS Buildout we can first see that SlapOS Buildout extends existing Buildout definitions, namely <i>shacache-client</i>, <i>lxml-python</i> and <i>python2.7</i> itself.</p>
+
+<p>It then defines the <code>parts</code> variable which lists the sections which are going to be required as part of the build process. A section in a Buildout file is defined by a name inside square brackets. <code>[buildout]</code>, <code>[lxml-python]</code>, <code>[slapos]</code> and <code>[versions]</code> are the four sections of this Buildout file.</p>
+
+<p>The <code>find-links</code> variable defines a repository of eggs. Eggs is a standard distribution mechanism for python packages. Buildout itself is written in python and can be extended using python language and eggs. Since not all eggs are published in Python Packing Index (PyPI), it is sometimes necessary to provide additional repositories of eggs. One should note here that the find-links variable is a generic variable used by python setuptools, the python module in charge of managing python distributions.</p>
+</details>
+
+<details open="open">
+<p>In our case we use this <i>find-links</i> variable to override the default Buildout distribution with SlapOS&#39;s own Buildout. SlapOS extends Buildout solving minor issues (support of distributed network caching and small bug fixes), which are not yet integrated in the default Buildout. However, since Buildout profiles are self contained, it is possible to specify which version of Buildout to use (in the <code>[versions]</code> section discussed below) and where to find that version through <i>find-links</i>, as long as this version of Buildout made by SlapOS is published somewhere.</p>
+
+<p>The <i>versions</i> variable specifies which Buildout section is used to define specific versions of python distributions (eggs). Being able to specify the version of each egg is required in order to make sure that the exact same software is installed on every node of a distributed cloud and that no uncontrolled upgrade will happen.</p>
+
+<p>The <i>allow-hosts</i> variable is used to specify explicitly which sources of python distributions (eggs) are accepted. It is a useful variable to make sure that the Buildout process does not get interrupted by lost connectivity to unreliable sites containing python distributions. By specifying explicitly which sites are considered to be reliable, we can quickly circumvent temporary failures of python distribution sites.</p>
+</details>
+</section>
+
+<section class="code">
+<h1>What is Buildout (2)</h1>
+
+<pre>
+<code>allow-hosts =
+*.googlecode.com
+*.nexedi.org
+*.python.org
+code.google.com
+github.com
+
+# separate from system python
+include-site-packages = false
+exec-sitecustomize = false
+allowed-eggs-from-site-packages =</code></pre>
+
+<details open="">
+<p>SlapOS approach to software building is to make sure that <b>no dependency remains to anything but glibc</b>, a design decision based on years of experience with different GNU/Linux distributions and open source projects. It was found that besides glibc, few open source projects really care about upward compatibility. Libraries provided by GNU/Linux distributions often contain so many patches that it is impossible to guarantee any result or portability.</p>
+
+<p>We thus need to ensure that python system libraries are not used during the build process. The statement <i>include-site-packages = false</i> makes sure that packages which are already installed with the system python used to run Buildout will <b>not</b> be used and that Buildout will use its own packages instead.</p>
+
+<p>The statement <i>exec-sitecustomize = false</i> ensures that <i>sitecustomize.py</i> is not invoked and that python default behaviour will not be affected by any changes defined in <i>sitecustomize.py</i>.</p>
+
+<p>The statement <i>allowed-eggs-from-site-packages =</i> defines an empty list of packages (eggs) to reuse from system python. It thus makes sure that not a single egg already present in the system is going to be used by Buildout and that Buildout will use its own. It seems redundant but prevents, through the extension mechanism of Buildout to acquire any non empty list.</p>
+</details>
+
+<details open="open">
+<p>A tentative SlapOS package was once created for Debian GNU/Linux. However, because it was using Debian&#39;s default python instead of its own python, some SlapOS software Buildout profiles did not compile. For the time being, it is recommend to packagers of SlapOS not to use system python, because results are unpredictable. If the distribution packaging policy prevents providing a specific python version, then deactivate software building in the official distribution package and put a link to SlapOS official package which includes its own python and is capable of running Buildout for SlapOS software.</p>
+</details>
+</section>
+
+<section class="code">
+<h1>What is Buildout (3)</h1>
+
+<pre>
+<code>[lxml-python]
+python = python2.7
+
+[slapos]
+recipe = z3c.recipe.scripts
+python = python2.7
+eggs =
+  slapos.libnetworkcache
+  zc.buildout
+  ${lxml-python:egg}
+  slapos.core</code></pre>
+
+<details open="open">
+<p>This <code>[slapos]</code> section is what Buildout is supposed to build according to the <i>parts</i> definition in <code>[buildout]</code> section. In order to build slapos, a recipe named <i>z3c.recipe.scripts</i> is invoked. This recipe can assemble a set of eggs and generate executable scripts and interpreters which are based on those eggs. This is exactly what we want to do since we want to combine slapos.core egg, slapos.libnetworkcache (a library which provides distributed caching of downloaded files) and Buildout to generate scripts such as slapconsole, slapgrid, etc. We also specify that the python release which we want to provide together with SlapOS scripts is python2.7, as it is defined in one of the extends of the <code>[buildout]</code> section.</p>
+
+<p>Now comes the tricky part: the <code>${lxml-python:egg}</code> defines a macro expansion in buildout system. It will try to evaluate the <code>[lxml-python]</code> section and then access the variable named <i>egg</i> in that section. It happens that the value of this variable is already known and its value is and will be <i>lxml</i>.</p>
+</details>
+
+<details open="open">
+<p>So, why are we doing so? In reality, to circumvent a known issue in the compilation of lxml python library. Without this trick, lxml python library would link against the system libraries of libxslt and libxml. But we want to be sure that lxml python library compiles and links against the releases of libxslt and libxml provided by our Buildout. We thus make sure through that dependency and the extends definition of the <code>[buildout]</code> section (<i>../lxml-python/buildout.cfg</i>) that lxml will be compiled without system dependencies. We also override the default value of <code>[lxml-python]</code> section so that lxml is compiled with and for python2.7. This approach of building and providing an egg as part of the Buildout process is called <b>develop egg</b>.</p>
+
+<p>In the end, <code>[slapos]</code> will simply include the <i>lxml</i> egg but this egg is going to be generated dynamically through the [lxml-python] section rather than through the default setup.py mechanism of normal egg installation (which also involves compilation).</p>
+</details>
+</section>
+
+<section class="code">
+<h1>What is Buildout (4)</h1>
+
+<pre>
+<code>[versions]
+    zc.buildout = 1.5.3-dev-SlapOS-005
+    Jinja2 = 2.5.5
+    Werkzeug = 0.6.2
+    hexagonit.recipe.cmmi = 1.5.0
+    lxml = 2.3
+    meld3 = 0.6.7
+    netaddr = 0.7.5
+    setuptools = 0.6c12dev-r88846
+    slapos.core = 0.9
+    slapos.libnetworkcache = 0.2
+    xml-marshaller = 0.9.7
+    z3c.recipe.scripts = 1.0.1
+    zc.recipe.egg = 1.3.2
+    ...
+    # Required by: # slapos.core==0.9
+    zope.interface = 3.6.4</code></pre>
+
+<details open="open">
+<p>The <code>[versions]</code> section is simple to understand. It specifies for every python distribution which version should be used. This enforces that no regression&nbsp;happens as a result of some upgrade of a software component. It is sometimes referred to as &quot;freezing&quot; releases.</p>
+
+<p>However, versions defined in <code>[versions]</code> section only define versions of python distributions and not of other components. There are different ways to make a version fixed for other components. Sometimes, the URL defines implicitly a fixed revision of a component. This is the case for bison for example</p>
+
+<pre>
+<code>https://lab.nexedi.com/nexedi/slapos/blob/master/component/bison/buildout.cfg</code></pre>
+
+<p>And sometimes the revision is set explicitely as in the case of ERP5 profile:</p>
+
+<pre>
+<code>http://git.erp5.org/gitweb/slapos.git/blob/HEAD:/stack/erp5.cfg#l219</code></pre>
+
+<p>Revision in the case of ERP5 is a git hash (<code>336a8d63bdcabd92bfe3d9466685e5cd47fad716</code>).</p>
+
+<p>A good practice for complex software is to introduce revision variables in software components as well as default revisions, then let the extend machinery override those variables.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Advantages of Buildout</h1>
+
+<details open="open">
+<p>The use of Buildout by SlapOS is disruptive compared to traditional approaches of software distribution. It has enabled faster industrial success but at a slower rate of adoption by certain communities. This chapter will discuss some of the criticism towards SlapOS and the use of Buildout to demonstrate that most criticism are easy to alleviate to the point that it can even be considered advantageous.</p>
+</details>
+</section>
+
+<section>
+<h1>What about Disk Images?</h1>
+
+<details open="open">
+<p>It is sometimes argued, Buildout was irrelevant because the cloud should be based on disk images and virtual machines. However, SlapOS can run about any disk image format and Buildout is then used to automate the the production of disk images - probably much better than other tools and fully open source.</p>
+</details>
+</section>
+
+<section>
+<h1>What about distributions&#39; packaging systems?</h1>
+
+<details open="open">
+<p>Buildout may be considered irrelevant as it&#39;s possible to achieve the same with the packaging system of GNU/Linux distributions. However, Buildout cannot only rely on GNU/Linux distribution packages (at the expense of portability) but also be used to automate the production of packages for multiple GNU/Linux distributions with little effort.</p>
+
+<p>Besides that, the Buildout format is much more concise when it comes to patching or adding dependencies to existing software thanks to its <i>extends</i> mechanism.</p>
+
+<p>Finally, Buildout provides a kind of packaging format which can reuse language-based packaging formats (eggs , gems, CPAN, et al) in a way which is neither specific to a given GNU/Linux distribution nor to GNU/Linux itself. In a sense, Buildout integrates much better with native language distribution systems than GNU/Linux packaging systems do. And native language distribution systems are becoming the de facto standard for developers.</p>
+</details>
+</section>
+
+<section>
+<h1>Separation of Software and Instance?</h1>
+
+<details open="open">
+<p>Buildout is sometimes claimed to preventing sharing the same executable among multiple instances of the same application. This is a common misconception which is also wrong. SlapOS is a typical example of how to deploy once a single software made of shared libraries and executable binaries and create hundreds of instances of it without any binary code duplication and without wasting resident RAM.</p>
+</details>
+</section>
+
+<section>
+<h1>Need for a Language Agnostic System?</h1>
+
+<details open="open">
+<p>Some critics argue, Buildout is designed for Python only. However, Buildout is already used to build software based on C, C++, Java, Perl, Ruby, et al. It would not be an issue to extend SlapOS and support any Buildout equivalent, however at the time of writing, we are not aware of any system builder such as Buildout that supports as many different architectures and languages in such a flexible way.</p>
+</details>
+</section>
+
+<section>
+<h1>Windows Support?</h1>
+
+<details open="open">
+<p>Buildout is sometimes criticized for not being made for Windows and not supporting proprietary software in binary form (without source code) which is another common misconception. Buildout is simply a tool for automation. Whenever source code is not available, Buildout can take a binary file as input. This is for example often done to build Java applications based on .war distribution archives or to deploy OpenOffice binaries which otherwise would take 24h to compile.</p>
+
+<p>Buildout is also compatible with Windows. Automating the installation or replication of Windows based software with Buildout is possible and Buildout would even be an excellent candidate to automate the conversion of Windows disk images from one host to another.</p>
+</details>
+</section>
+
+<section>
+<h1>Buildout destroys work by GNU/Linux Distributions!</h1>
+
+<details open="open">
+<p>The underlying criticism in Buildout is that it shows a different route for software distribution, especially for open source software distribution. Instead of focusing - as GNU/Linux distros do - on providing a consistent set of about any possible open source application with perfectly resolved dependencies and maximized sharing of libraries, Buildout concentrates on building a single application and its dependencies only. This is done in a way which maximizes portability between different GNU/Linux distributions and POSIX compliant operating systems.</p>
+
+<p>Application developers thus only need to care about their own application and stabilize its distribution. Unlike what happens with most GNU/Linux distributions, developers can disregard the consequences of changing one shared library on other applications hosted on the same operating system. Buildout is after all an approach to software distribution in which the most complex software has about 100 dependencies to resolve compared to 10.000+ interdependent packages in a traditional GNU/Linux distribution. Buildout puts the burden of maintenance on each application packager and removes the burden of managing global dependencies thus allowing parallel and faster release cycles for every application with a concise approach.</p>
+</details>
+</section>
+
+<section>
+<h1>Case in Point</h1>
+<img alt="SlapOS Buildout Summary" src="https://www.erp5.com/slapos-Graphic.Buildout.Erp5?display=&amp;format=png" />
+<details open="open">
+<p>Should you still consider Buildout an inefficient solution to specify a software executable and deploy it on the cloud, please consider the following scenario to solve: automate the packaging of <a href="https://erp5.nexedi.com/">ERP5</a> and all its dependencies (OpenOffice, patched Zope, patched MariaDB, et al.) on all major GNU/Linux distributions in such a way that it is possible to provide the same behavior on every GNU/Linux distro and to run 100 instances of ERP5 on the same server, each of which can have its own MariaDB daemon and Zope daemon.</p>
+
+<p>Obviously, if you know a better solution, please let us know.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

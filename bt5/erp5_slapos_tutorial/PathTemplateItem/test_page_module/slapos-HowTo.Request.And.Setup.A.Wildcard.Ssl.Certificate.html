@@ -1,0 +1,310 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+--><!-- outbound links:
+
+-->
+<section class="master">
+<h1>HowTo Request and Setup a Wildcard SSL Certificate</h1>
+
+<details open="open">
+<p>This document explains how to add a wildcard SSL certificate to a server to enable SSL communication. It will be shown how to use <a href="https://letsencrypt.org/">Letsencrypt</a> to create the certificate.</p>
+
+<p><b>Note</b> that the setup process will require access to a DNS server.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>DNS Update</li>
+	<li>Requesting Wildcard SSL Certificate</li>
+	<li>Requesting SSL Certificate</li>
+</ul>
+
+<details open="open">&nbsp;</details>
+</section>
+
+<section class="chapter">
+<h1>DNS Update</h1>
+
+<details open="open">
+<p>Setting/Updating DNS depends on the respective hosting domain/provider and is therefore not covered in detail in this tutorial.</p>
+
+<p>&nbsp;</p>
+</details>
+</section>
+
+<section>
+<h1>Creating an A Record</h1>
+
+<pre>
+<code># Add an A record to provider DNS settings:
+
+*.[your_wildcard_domain] IN A [your_ip]</code></pre>
+
+<details open="open">
+<p>In order to get a SSL certificate, a domain pointing to the server that required the certificate is needed.</p>
+
+<p>For this example, the domain <i>*.slaptext.erp5.net</i> will be used. It points to a sample server at <i>167.114.246.26</i>. DNS Updates have to be made with the domain/hosting provider. In the present case, we need to add the following A record&nbsp;to the DNS settings on the provider&#39;s web dashboard:</p>
+
+<pre>
+<code>*.slaptest.erp5.net CNAME IN A 167.114.246.26</code></pre>
+
+<p>DNS changes usually take up to 48h to propagate. To verify availability, it is possible ping the domain using the terminal:</p>
+
+<pre>
+<code>$ ping a.slaptest.erp5.net
+PING a.slaptest.erp5.net (167.114.246.26) 56(84) bytes of data.
+64 bytes from ip-167-114-246.eu (167.114.246.26): icmp_seq=1 ttl=52 time=21.1 ms
+64 bytes from ip-167-114-246.eu (167.114.246.26): icmp_seq=2 ttl=52 time=17.1 ms
+64 bytes from ip-167-114-246.eu (167.114.246.26): icmp_seq=3 ttl=52 time=17.2 ms
+^C
+--- a.slaptest.erp5.net ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2001ms
+rtt min/avg/max/mdev = 17.103/18.528/21.186/1.881 ms</code></pre>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Requesting SSL Certificate</h1>
+
+<details open="open">
+<p><a href="https://letsencrypt.org/">Letsencrypt</a> will be used for creating a <b>wildcard</b> SSL certificate (<a href="https://letsencrypt.org/how-it-works/">introduction to using Letsencrypt</a>). There are different <a href="https://letsencrypt.org/docs/client-options/">clients</a> available. Both <a href="https://certbot.eff.org/">Certbot</a> and <a href="https://github.com/lukas2511/dehydrated">Dehydrated</a> support wildcard SSL certificate issuance at the time of writing. The following steps will be performed using Certbot as described in this <a href="https://blogs.msdn.microsoft.com/mihansen/2018/03/15/creating-wildcard-ssl-certificates-with-lets-encrypt/">blog post</a>.</p>
+</details>
+</section>
+
+<section>
+<h1>Install Certbot</h1>
+
+<pre>
+<code>$ sudo su
+# wget https://dl.eff.org/certbot-auto
+(...)
+# chmod a+x ./certbot-auto
+# sudo ./certbot-auto</code></pre>
+
+<details open="open">
+<p>Start by installing Certbot using wget. Certbot will likely report an error at the end that it was not able to find the executable <i>apache2ctl</i> in <i>PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</i> and that it doesn&#39;t know how to automatically configure the web server on this system. As we will be using just the <i>certonly</i> command in the next step, it is ok to continue.</p>
+</details>
+</section>
+
+<section>
+<h1>Run Certbot</h1>
+
+<pre>
+<code># sudo ./certbot-auto certonly \
+--server https://acme-v02.api.letsencrypt.org/directory \
+--manual --preferred-challenges dns \
+-d *.slaptest.erp5.net</code></pre>
+
+<details open="open">
+<p>After installation has finished, try running certbot as shown above.</p>
+
+<p>&nbsp;</p>
+
+<p><b>Note</b>, that this command uses the <code>https://acme-v02.api.letsencrypt.org/directory</code> production API endpoint. If you want to experiment and not run into the Letsencrypt production quotas while testing certificate generation, you could also use one of the staging access points described <a href="https://github.com/lukas2511/dehydrated/blob/master/docs/staging.md">here</a>.</p>
+
+<p>Also <b>note</b>, there are two types of challenges for verifying that you have access to a domain - <b>http-01</b> which will require setting up a webserver and providing a challenge file for every domain and <b>dns-01</b> which is used here and requires a file to be set directly on the DNS server. For more information on how letsencrypt and dehydrated use hooks for DNS challenges, you can have a look at <a href="https://dan.enigmabridge.com/powering-simplicity-of-certbot-and-letsencrypt-domain-verification/">letsencrypt domain verification</a>.</p>
+
+<p>Provide an email address (optional) and fill out the questions until you receive a challenge.</p>
+</details>
+</section>
+
+<section>
+<h1>DNS TXT Challenge Record</h1>
+
+<pre>
+<code>-------------------------------------------------------------------------------
+Please deploy a DNS TXT record under the name
+_acme-challenge.slaptest.erp5.net with the following value:
+ 
+5GFgEqWd7AQrvHteRtfT5V-XXXXXXXXXXXXXX
+ 
+Before continuing, verify the record is deployed.
+-------------------------------------------------------------------------------
+Press Enter to Continue</code></pre>
+
+<details open="open">
+<p>During the certificate generation you will eventually be presented with the above message. Head over to your DNS server and add the record in the zone file used by your domain (<i>erp5.net</i> in our case):</p>
+
+<pre>
+<code>_acme-challenge.slaptest 10800 IN TXT &quot;5GFgEqWd7AQrvHteRtfT5V-XXXXXXXXXXXXXX&quot;</code></pre>
+
+<p>Make sure to only continue <b>after the file has been created and is accessible</b>.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify DNS Challenge</h1>
+
+<pre>
+<code># try to request a token using dnsutils in another terminal
+# sudo apt-get install dnsutils
+(...)
+# nslookup -type=TXT _acme-challenge.slaptest.erp5.net
+Server:         xxx.xxx.xx.xx
+Address:        xxx.xxx.xx.xx#xx
+
+Non-authoritative answer:
+*** Can&#39;t find _acme-challenge.slaptest.erp5.net: No answer</code></pre>
+
+<details open="open">
+<p>DNS changes need up to 48h to propagate. You can check whether you can request the token by installing <i>dnsutils</i> and calling <i>nslookup</i>. Once you receive a <i>Non-authoritative answer:</i> with the saved token, you can continue the certificate issuance.</p>
+</details>
+</section>
+
+<section>
+<h1>Certificate Issued</h1>
+
+<pre>
+<code>IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at:
+   /etc/letsencrypt/live/slaptest.erp5.net/fullchain.pem
+   Your key file has been saved at:
+   /etc/letsencrypt/live/slaptest.erp5.net/privkey.pem
+   Your cert will expire on 2018-06-18. To obtain a new or tweaked
+   version of this certificate in the future, simply run certbot-auto
+   again. To non-interactively renew *all* of your certificates, run
+   &quot;certbot-auto renew&quot;
+ - If you like Certbot, please consider supporting our work by:
+
+   Donating to ISRG / Let&#39;s Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le</code></pre>
+
+<details open="open">
+<p>Once the process has completed you will receive the above message informing you that your certificate is available.</p>
+
+<p>The files required to continue can be found in the directory mentioned.</p>
+
+<pre>
+<code># ls /etc/letsencrypt/live/slaptest.erp5.net/
+cert.pem  chain.pem  fullchain.pem  privkey.pem  README</code></pre>
+
+<p>Check the <a href="https://certbot.eff.org/docs/using.html#where-are-my-certificates">Certbot documentation</a> for more information on the location of certificate files and SO for info on the <a href="https://serverfault.com/questions/9708/what-is-a-pem-file-and-how-does-it-differ-from-other-openssl-generated-key-file#9717">different formats</a>.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Requesting SSL Certificate</h1>
+
+<details open="open">
+<p>For some use cases a <b>regular SSL certificate</b> may be required. This is an easier case as there is no need to access the DNS settings when using <a href="https://github.com/lukas2511/dehydrated">Dehydrated</a> which is outlined in this section.</p>
+</details>
+</section>
+
+<section>
+<h1>Setup Letsencrpyt and Dehydrated</h1>
+
+<pre>
+<code>$ mkdir letsencrypt
+$ cd letsencrypt
+/letsencrypt $ git clone https://github.com/lukas2511/dehydrated.git
+/letsencrypt $ git clone https://lab.nexedi.com/nexedi/dehydrated-zope-hook.git</code></pre>
+
+<details open="open">
+<p>Start by creating a folder for letsencrpyt and inside, clone both the dehydrated and dehydrated-zope-hook repositories.</p>
+</details>
+</section>
+
+<section>
+<h1>Zope Hook</h1>
+
+<pre>
+<code># ~/.netrc
+machine www.example.com
+login zope_username
+password zope_password
+
+machine example.com
+login zope_username
+password zope_password
+
+machine another.example.com
+login zope_username
+password zope_password</code></pre>
+
+<details open="open">
+<p>Afterwards you can follow the steps outlined in the <a href="https://lab.nexedi.com/nexedi/dehydrated-zope-hook">zope-hook readme</a>. Be sure to prepare the target Zope folder before so that <code>http://example.com/.well-known/acme-challenge/xxx</code> works. For example you can create the target folder <code>portal_skins/custom/.well-known/acme-challenge</code> and then provide zope username and password&nbsp;in <code>~/.netrc</code>. For example:</p>
+
+<pre>
+<code>~/.netrc
+machine www.example.com
+login zope_username
+password zope_password
+
+machine example.com
+login zope_username
+password zope_password
+
+machine another.example.com
+login zope_username
+password zope_password</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Prepare Dehydrated Config</h1>
+
+<pre>
+<code># We can use any local directory for storing challenge string temporarily.
+WELLKNOWN=&quot;${BASEDIR}&quot;
+# We use a special hook script for zope.
+HOOK=&quot;${BASEDIR}/zope-hook.sh&quot;
+You also need &quot;domains.txt&quot; like :
+www.example.com example.com
+another.example.com</code></pre>
+
+<details open="open">
+<p>Next prepare the configuration file as described in the <a href="https://github.com/lukas2511/dehydrated/blob/master/docs/examples/config">dehydrated config</a>.</p>
+
+<pre>
+<code># See https://github.com/lukas2511/dehydrated/blob/master/docs/examples/config for other parameters.
+#
+# We can use any local directory for storing challenge string temporarily.
+WELLKNOWN=&quot;${BASEDIR}&quot;
+# We use a special hook script for zope.
+HOOK=&quot;${BASEDIR}/zope-hook.sh&quot;
+You also need &quot;domains.txt&quot; like :
+www.example.com example.com
+another.example.com</code></pre>
+
+<p>Then invoke the script</p>
+
+<pre>
+<code>../dehydrated/dehydrated -c</code></pre>
+
+<p>(not like currently written in the readme)</p>
+
+<p><b>Note</b>, you may need to run</p>
+
+<pre>
+<code>../dehydrated/dehydrated --register --accept-terms</code></pre>
+
+<p>if this is the first time running letencrypt</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

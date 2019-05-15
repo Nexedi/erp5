@@ -1,0 +1,112 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+--><!-- outbound:
+  slapos-HowTo.Add.Software.Release.To.Slapos.Master
+  slapos-Tutorial.Install.Slapos.Node.Comp.0
+  slapos-Tutorial.Extend.Software.Release
+-->
+<section class="master">
+<h1>How To Instantiate ERP5</h1>
+
+<details open="open">
+<p>This document explains how to instantiate a <a href="https://erp5.nexedi.com/">ERP5</a>, a generic and customizable enterprise ERP system consisting of a core and various business templates (bt5s) that provide specific business features (accounting, CRM, et al) or industry templates (government, banking et al). ERP5 is based on five abstract concepts with the idea of being able to model the system to any industry and business scenario.</p>
+
+<p>This document will explain the different instantiation parameters. Please refer to other documents on <a href="slapos-HowTo.Add.Software.Release.To.Slapos.Master">add a software to the SlapOS Master catalog</a> or <a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">supplying/installing a software</a></p>
+
+<p><b>Note</b>, that the recommended way of installing ERP5 for production environments is <a href="https://www.erp5.com/documentation/developer/howto/erp5-HowTo.Request.Erp5.Instance.On.Slap.Os.Webrunner#getting-a-webrunner-and-deploying-erp5-(production)">to first get a Webrunner and then install ERP5 manually</a>. It is also possible to <a href="https://www.erp5.com/documentation/developer/howto/erp5-HowTo.Request.Erp5.Instance.On.Slap.Os.Webrunner#getting-a-webrunner-with-erp5-preinstalled">preinstall ERP5 in a Webrunner</a> which is shown here. Besides these approaches, the <a href="https://www.erp5.com/deploy/">single line installer</a> would allow to install ERP5 directly on a machine without accessing SlapOS.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>ERP5 Configuration</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>ERP5 Configuration</h1>
+
+<details open="open">
+<p>The process of installing (supplying) a software and providing it as a service (instantiation) are the same for all software. However during instantiation each instance can be configured differently.</p>
+
+<p>This section will cover the specific configuration parameters used for a <b>ERP5</b>.</p>
+</details>
+</section>
+
+<section>
+<h1>ERP5 Configuration Parameters</h1>
+<img alt="SlapOS Interface - ERP5 Configuration Parameters" src="https://www.erp5.com/slapos-Interface.Erp5.Instantiation.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>After selecting <i>Services</i>, <i>Add</i>ing a new service, selecting <i>ERP5</i> and the latest release, you should reach the KVM configuration menu.</p>
+
+<p><b>Note</b>, that at the time of writing, the configuration for ERP5 has to be provided in the XML textarea on the form displayed. Enter the following:</p>
+
+<pre>
+<code>Partition Amount: 15
+Pre-selected Software Release: software/erp5
+Automatically Deploy Software: true
+Automatically Deploy Instances: true
+Automatically Run Sofware/Instance: true
+Custom Frontend Backend URL: &lt;Leave empty, fill after instance creation, see below&gt;
+Custom Frontend Backend Type: zope</code></pre>
+
+<p>and then click <i>Proceed</i> to begin compilation.</p>
+</details>
+</section>
+
+<section>
+<h1>ERP5 Instantiation</h1>
+<img alt="SlapOS Interface - ERP5 Instantiation" src="https://www.erp5.com/slapos-Interface.Erp5.Software.Service.List?display=&amp;format=png" />
+<details open="open">
+<p>You will be forwarded back to the list of deployed services. <b>Note</b> that you might have to refresh the page for your new instance to appear. Once you can see it, click on entry to open the connection parameters.</p>
+
+<p>You can follow the compilation by looking at the <code>slapos-node-software.log</code> using:</p>
+
+<pre>
+<code># tail opt/slapos/log/slapos-node-software.log -f</code></pre>
+
+<p>&nbsp;</p>
+</details>
+</section>
+
+<section>
+<h1>ERP5 Connection Parameters</h1>
+<img alt="SlapOS Interface - ERP5 Connection Parameters" src="https://www.erp5.com/slapos-Interface.Erp5.Software.Deployment.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p><b>Note</b>, it might take a several hours for ERP5 to compile and install. Once the installation is finished, it is necessary to request a <i>custom-frontend-backend-url</i> using the <i>family-default-v6</i> IPv6 adress for the ERP5 instance. The steps are described in <a href="https://www.erp5.com/documentation/developer/howto/erp5-HowTo.Request.Erp5.Instance.On.Slap.Os.Webrunner#getting-a-webrunner-with-erp5-preinstalled">the installation guide mentioned above</a> and not repeated here.</p>
+</details>
+</section>
+
+<section>
+<h1>Access ERP5</h1>
+<img alt="SlapOS Interface - ERP5 Running" src="https://www.erp5.com/slapos-Interface.Erp5.Instantiation.Landing.Page?display=&amp;format=png" />
+<details open="open">
+<p>Once the <i>custom-frontend-backend-url</i> is issued, the ERP5 instance can be accessed. To go to the ERP5 interface, simply append <code>/erp5/</code> to the Url.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

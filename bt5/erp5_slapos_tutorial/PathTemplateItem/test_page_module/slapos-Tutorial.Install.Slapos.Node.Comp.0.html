@@ -1,0 +1,942 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+--><!-- outbound links:
+  slapos-Tutorial.Install.Slapos.Master.Comp.Root
+  slapos-HowTo.Request.And.Setup.A.Wildcard.Ssl.Certificate
+  slapos-Tutorial.Install.Slapos.Node.Comp.123
+  slapos-HowTo.Add.Software.Release.To.Slapos.Master
+-->
+<section class="master">
+<h1>Installing a SlapOS Node</h1>
+
+<details open="open">
+<p>This tutorial will guide you through the process of installing a SlapOS node on a computer. This node is supposed to be the first node (<b>COMP-0</b>) to be created after installing the SlapOS Master (<b>COMP-ROOT</b>). The node is necessary to provide the following services to the Master and other nodes in the network (<b>COMP-123</b>):</p>
+
+<ul>
+	<li>Re6st Registry - a register to manage a network of nodes, provide IPv6 and issue access tokens</li>
+	<li>Frontend (Apache) - a gateway for user requests allowing to access network internal services via browser</li>
+</ul>
+
+<p>For this tutorial you will require a SlapOS Master and (first) user account, which can either be <a href="slapos-Tutorial.Install.Slapos.Master.Comp.Root">your own installed SlapOS Master</a> or <a href="vifib-HowTo.Register.And.Create.User.Account">a commercial service like Vifib</a> to register your node and another computer on which to install the SlapOS node. The tutorial will use an arbitrary GNU/Linux server from a cloud provider (Debian8, available for example from <a href="https://www.ovh.com/fr/">OVH</a> or <a href="https://www.online.net/fr">Online.net</a>) with <i>wget</i> installed.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Install SlapOS Node</li>
+	<li>Provide Frontend (Apache)</li>
+	<li>Provide Re6st Registry</li>
+	<li>Install Re6st on SlapOS node</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Install SlapOS Node</h1>
+
+<details open="open">
+<p>This section will guide through the steps of installing the software for the SlapOS <b>COMP-0</b> node. Most of the steps are similar to installing other nodes - however due to required services not existing at the point of installation, the order of steps differs.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Dashboard - Login</h1>
+<img alt="SlapOS Interface - SlapOS Dashboard" src="https://www.erp5.com/slapos-Interface.Slapos.Dashboard?display=&amp;format=png" />
+<details open="open">
+<p>Log into the SlapOS Master&nbsp;Dashboard at:</p>
+
+<pre>
+<code>[master-instance-IPv4]/erp5/web_site_module/hostingjs/</code></pre>
+and log in with first user credentials. Click on the <i>Servers</i> link in the side to go to your list of servers.
+
+<p>&nbsp;</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Server List - Request Token</h1>
+<img alt="SlapOS Node Installation - Request Association Token" src="https://www.erp5.com/slapos-Interface.Server.List.Empty?display=&amp;format=png" />
+<details open="open">
+<p>Adding new nodes to a network requires access tokens. These are X509 security tokens, that identify your new node with a SlapOS Master and enable it to manage it within a network. To get such a token, in the subheader, click <i>Token</i>.</p>
+
+<p><b>Note</b>, these are single use tokens. Should the installation of SlapOS fail due to some reasons, you need to request a new token.</p>
+</details>
+</section>
+
+<section>
+<h1>Save SlapOS Association Token</h1>
+<img alt="SlapOS Node Installation - Association Token" src="https://www.erp5.com/vifib-Interface.Server.Token?display=&amp;format=png" />
+<details open="open">
+<p>Click <i>Proceed</i> to request a token. Once it&#39;s generated, copy the token for later.</p>
+</details>
+</section>
+
+<section>
+<h1>Add Temporary IPv6 Address</h1>
+
+<pre>
+<code>sudo su
+
+# include temporary IPv6 on lo
+ip -6 addr add fc01::1/32 dev lo</code></pre>
+
+<details open="open">
+<p>Head to the terminal and access your server. As <b>COMP-0</b> will later provide Re6st and IPv6 to the SlapOS network, there likely is no IPv6 available at this point. You need to add a temporary IPv6 address range as shown in the code above.</p>
+
+<p>Rationale: SlapOS requires IPv6 internally and uses <a href="https://re6st.nexedi.com">Re6st</a>, which will be installed later to enable IPv6 in heterogeneous environments (distributed machines, different types).</p>
+
+<p>You will later deploy and instantiate a Re6st registry on COMP-0 to provide IPv6 and Re6st access tokens. However, in order to deploy it, SlapOS needs to be installed and to install SlapOS, IPv6 is required. Thus, we use a temporary IPv6 address range until the Registry is available, at which point it will be removed again before correctly installing Re6st with IPv6 automatically being added.</p>
+</details>
+</section>
+
+<section>
+<h1>Single Line Installer</h1>
+
+<pre>
+<code>sudo su
+# wget deploy.erp5.net/slapos &amp;&amp; bash slapos
+
+...
+
+What is the url to the SlapOS Master API? [https://slap.vifib.com/]: 
+What is the url to the SlapOS Master Website? [https://slapos.vifib.com/]: 
+What is this computer name? [noname]:
+If you have slapos token if you have? [notoken]:
+</code></pre>
+
+<details open="open">
+<p>Continue and use the single line installer. You will be asked several questions during the installation. You are connecting to your own master, so on the first question, please point to port <i>5443</i> of your master&#39;s IPv4 adress (<i>https://[IPv4]:5443</i>) and on the second question, please add your SlapOS Master dashboard url <i>https://[IPv4]:443/erp5/web_site_module/hostingjs/</i></p>
+
+<p>Choose a name for your computer to identify it in your network and finally enter the association token you have received earlier. The installation can be repeated in case something goes wrong or you would like to change some of the entered parameters.</p>
+
+<p>Once the installation has finishes without errors, you should see:</p>
+
+<pre>
+<code>...
+PLAY RECAP *********************************************************************
+127.0.0.1                  : ok=12   changed=4   unreachable=0   failed=0</code></pre>
+
+<p>In case installation fails and you want to start over, you need to request a new token as mentioned above and, depending on whether already created, remove any existing configuration in <code>/etc/opt/slapos/slapos.cfg</code> before restarting.</p>
+</details>
+
+<details open="open">
+<p>You can verify that SlapOS was installed by trying:</p>
+
+<pre>
+<code># slapos node
+watchdog                   RUNNING   pid 13270, uptime 0:00:03</code></pre>
+
+<p>And (re)formatting the SlapOS node:</p>
+
+<pre>
+<code># slapos node format --now
+2018-04-21 13:07:29 slapos[13279] INFO Updating Computer
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart0
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart1
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart2
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart3
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart4
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart5
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart6
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart7
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart8
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart9
+2018-04-21 13:07:30 slapos[13279] INFO Posting information to &#39;https://54.37.31.108:
+  5443/&#39;
+2018-04-21 13:07:30 slapos[13279] INFO slapos successfully prepared the computer.</code></pre>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Dashboard - Registered Servers</h1>
+<img alt="SlapOS - Server List" src="https://www.erp5.com/slapos-Interface.Server.List?display=&amp;format=png" />
+<details open="open">
+<p>Head back to your SlapOS Dashboard&#39;s server list and it now includes your new node which was associated to the network using the token you created. You may have to refresh the page for the server to show up.</p>
+
+<p><b>Note</b>, the server entry has three clickable areas:</p>
+
+<ul>
+	<li>The line itself (click <i>server name</i> for example). It points to the server configuration</li>
+	<li>The computer button. It will open the monitor - the green color indicates the server is active and contacting the Master.</li>
+	<li>The partition button. As there are no partitions used yet, the button is still inactive.</li>
+</ul>
+
+<p>Regarding the colored indicators:</p>
+
+<ul>
+	<li><i>Green</i> - server/partitions is contacting the SlapOS Master regularly</li>
+	<li><i>Yellow</i> - one of the server/partition processes is experiencing problems</li>
+	<li><i>Red</i> - server no longer connects to the SlapOS Master</li>
+</ul>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Provide Frontend (Apache)</h1>
+
+<details open="open">
+<p>The first software to be installed on the COMP-0 node is a Frontend (Apache). To instantiate the Frontend, a wildcard SSL certificate is required. If you do not have a certificate, follow the steps in <a href="slapos-HowTo.Request.And.Setup.A.Wildcard.Ssl.Certificate">how to request a wildcard SSL certificate (letsencrypt)</a> before continuing.</p>
+
+<p>Frontends are available in SlapOS because they:</p>
+
+<ul>
+	<li>prevent end users from having to use IPv6</li>
+	<li>provide secure https connections with valid certificate</li>
+	<li>route access through a central, auditable entry point</li>
+	<li>give meaningful urls internally instead of displaying IPv6 addresses</li>
+</ul>
+</details>
+</section>
+
+<section>
+<h1>Supply Service Frontend</h1>
+<img alt="Slapos Dashboard - Supply Service Frontend Apache on COMP-0" src="https://www.erp5.com/slapos-Interface.Supply.Software.Frontend.Apache?display=&amp;format=png" />
+<details open="open">
+<p>Pick any of the available Slave nodes and click on the server (not the green &#39;computer&#39; or &#39;partitions&#39; buttons). In our example we currently only have a single node registered without any active partitions, so select this node to open it&#39;s configuration. You can see in the bottom table <i>Supplied Software</i> that this node does currently not have any software installed.</p>
+
+<p>To continue, click the <i>Supply</i> button in the subheader to open the list of available software (releases) that can be installed on this node.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Frontend Software Release</h1>
+<img alt="SlapOS Dashboard - Select Software Release to supply" src="https://www.erp5.com/slapos-Interface.Select.Software.Frontend.Apache?format=png&amp;display=" />
+<details open="open">
+<p>Select the <i>Frontend (Apache)</i> software release, which is preinstalled on SlapOS (see <a href="slapos-HowTo.Add.Software.Release.To.Slapos.Master">how to add a software to SlapOS Master</a> for more info).</p>
+</details>
+</section>
+
+<section>
+<h1>Select Frontend Software Release Version</h1>
+<img alt="SlapOS Dashboard - Select Software Release Version" src="https://www.erp5.com/slapos-Interface.Select.Software.Frontend.Apache.Version?display=&amp;format=png" />
+<details open="open">
+<p>Select the latest version.</p>
+</details>
+</section>
+
+<section>
+<h1>Launch Frontend Software Release Installation</h1>
+<img alt="SlapOS Dashboard - Launch Software Release Installation" src="https://www.erp5.com/slapos-Interface.Launch.Software.Frontend.Apache.Installation?display=&amp;format=png" />
+<details open="open">
+<p>The following dialog summarizes the software release to be installed including the computer it will be installed on. Click <i>Proceed</i> to continue.</p>
+</details>
+</section>
+
+<section>
+<h1>Wait for Frontend Installation</h1>
+<img alt="SlapOS Dashboard - Access Computer" src="https://www.erp5.com/slapos-Interface.Wait.Software.Frontend.Apache.Installation?display=&amp;format=png" />
+<details open="open">
+<p>You will be forwarded to the installation status page. Installation will take some time depending on the software you are installing, so either refresh the current page or check the installation status directly by either going to your <i>Servers</i> list and selecting the machine you chose during installation or clicking directly on <i>Computer Reference</i>.</p>
+
+<p>You can follow the compilation and installing by looking at the <i>slapos-node-software.log</i> using:</p>
+
+<pre>
+<code># tail /opt/slapos/log/slapos-node-software.log -f</code></pre>
+in your terminal or using <code># slapos node software</code> directly.</details>
+</section>
+
+<section>
+<h1>Verify Frontend Installation</h1>
+<img alt="SlapOS Dashboard - Verify Installation Success" src="https://www.erp5.com/slapos-Interface.Verify.Software.Frontend.Apache.Installation?display=&amp;format=png" />
+<details open="open">
+<p>You can see the installed service is now available in the bottom list. The indicator will stay red until the software has finished compiling and installing. Once the installation status bar changes to green on a refresh of the page, the installation has finished. This node can now provide Frontend (Apache) instances.</p>
+</details>
+</section>
+
+<section>
+<h1>List of Instantiated Services</h1>
+<img alt="SlapOS Dashboard - Add Service" src="https://www.erp5.com/slapos-Interface.Add.Service.Frontend.Apache?display=&amp;format=png" />
+<details open="open">
+<p>Head to the list of services by clicking on the <i>Services</i> button on the side menu. The list will show all services currently <b>instantiated</b> (not the softwares currently installed!). To create an instance of an installed software, click the <i>Add</i> button in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Frontend Service</h1>
+<img alt="SlapOS Dashboard - Select Service" src="https://www.erp5.com/slapos-Interface.Select.Service.Frontend.Apache?display=&amp;format=png" />
+<details open="open">
+<p>The list of available services is the same as the list of installable software releases used earlier when installing the service. Select Frontend (Apache) as this is the service we want to provide.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Frontent Service Version</h1>
+<img alt="SlapOS Dashboard - Select Service Version" src="https://www.erp5.com/slapos-Interface.Select.Service.Frontend.Apache.Version?display=&amp;format=png" />
+<details open="open">
+<p>As during installation, please choose the latest version.</p>
+</details>
+</section>
+
+<section>
+<h1>Frontend Service Configuration</h1>
+<img alt="SlapOS Dashboard - Frontend Instance Configuration" src="https://www.erp5.com/slapos-Interface.Service.Frontend.Apache.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>You will reach the Frontend configuration menu. It contains a form of software-specific parameters as well as a generic XML configuration field (hidden by default - click the &quot;Show Parameter XML&quot; button to display).</p>
+
+<p>Select <code>Software-Type</code> <i>custom personal</i>, then fill the form. Don&#39;t forget&nbsp;to give the Frontend a title and make sure you select the computer you created at the end of the form. Otherwise the SlapOS Master will look by itself on which node the instance should be created (not relevant in this case as there is only one computer).</p>
+</details>
+
+<details open="open">
+<p>Fill the form like this :</p>
+
+<ul>
+	<li>Title: FRONTEND</li>
+	<li>Software type: Custom Personal</li>
+	<li>Public IPv4: [IP_OF_YOUR_SERVER]</li>
+	<li>IPReadLimit: 40</li>
+	<li>Test Verification URL: <code>https://www.erp5.com/getId</code></li>
+	<li>Apache Key:[AAA]</li>
+	<li>Apache Certificate: [BBB]</li>
+	<li>Apache CA Certificate: [CCC]</li>
+	<li>Domain: [domain]</li>
+	<li>Computer: [COMP-XXXX]</li>
+</ul>
+
+<p>Alternatively, you can choose to click on the &quot;Show parameter XML&quot; button and fill&nbsp;the following XML configuration parameters:</p>
+
+<pre>
+<code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;instance&gt;
+    &lt;parameter id=&quot;public-ipv4&quot;&gt;[IP_OF_YOUR_SERVER]&lt;/parameter&gt;
+    &lt;parameter id=&quot;ip-read-limit&quot;&gt;40&lt;/parameter&gt;
+    &lt;parameter id=&quot;re6st-verification-url&quot;&gt;https://www.erp5.com/getId&lt;/parameter&gt;
+    &lt;parameter id=&quot;apache-key&quot;&gt;[AAA]&lt;/parameter&gt;
+    &lt;parameter id=&quot;apache-certificate&quot;&gt;[BBB]&lt;/parameter&gt;
+    &lt;parameter id=&quot;apache-ca-certificate&quot;&gt;[CCC]&lt;/parameter&gt;
+    &lt;parameter id=&quot;domain&quot;&gt;[domain]&lt;/parameter&gt;
+    &lt;parameter id=&quot;-frontend-quantity&quot;&gt;1&lt;/parameter&gt;
+    &lt;parameter id=&quot;-frontend-type&quot;&gt;custom-personal&lt;/parameter&gt;
+    &lt;parameter id=&quot;-sla-1-computer_guid&quot;&gt;[COMP-XXXX]&lt;/parameter&gt;
+&lt;/instance&gt;</code></pre>
+
+<p>using:</p>
+
+<ul>
+	<li><code>[IP_OF_YOUR_SERVER]</code>: IPv4 address of your slave server (debian@xxx.this.one.xxx)</li>
+	<li><code>[AAA]</code>: ssl key (privkey.pem)</li>
+	<li><code>[BBB]</code>: ssl certificate (cert.pem)</li>
+	<li><code>[CCC]</code>: ssl ca certificate (chain.pem)</li>
+	<li><code>[domain]</code>: the domain you are using (here: <i>slaptest.erp5.net</i>)</li>
+	<li><code>[COMP-XXXX]</code>: computer where the partition for this Frontend will be created.</li>
+</ul>
+
+<p>Click <i>Proceed</i> to start instantiation.</p>
+</details>
+</section>
+
+<section>
+<h1>Instantiation and Port Forwarding</h1>
+<img alt="SlapOS Dashboard - Socat Port Forwarding" src="https://www.erp5.com/slapos-Interface.Instantiate.Service.Frontend.Apache?display=&amp;format=png" />
+<details open="open">
+<p>Refresh the list of current services to show the new service and status.</p>
+
+<p>You can follow the compilation progress by looking at the <code>slapos-node-instance.log</code> using:</p>
+
+<pre>
+<code># tail /opt/slapos/log/slapos-node-instance.log -f</code></pre>
+or calling <code># slapos node instance</code> in the terminal directly.
+
+<p>The Frontend will be installed inside a computer partition and will listen on ports <i>8080</i> and <i>4443</i>. Since permissions in Linux systems prevent users from accessing ports smaller than 1024, incoming traffic on public ports <i>80</i> and <i>443</i> has to be forwarded to the correct ports the Frontend is listening on.</p>
+
+<p>This can be done using a Firewall with NAT traversal or using <b>Socat</b>. We will use <a href="http://www.dest-unreach.org/socat/">Socat</a>, a relay for bidirectional data transfer between two independent data channels. Data channels can be files, pipes, devices (terminal or modem, etc.), or sockets (Unix, IP4, IP6 - raw, UDP, TCP), etc. For more information, please refer to the <a href="https://directory.fsf.org/wiki/Socat">Free Software Directory</a>).</p>
+
+<p>To install socat, head to your terminal and:</p>
+
+<pre>
+<code>sudo su
+# sudo apt-get install socat</code></pre>
+</details>
+
+<details open="">
+<p>Find the IPv6 addresses used by the Frontend in its configuration folder:</p>
+
+<pre>
+<code>root@slapostest2:/# cat /srv/slapgrid/slappart*/etc/apache_frontend.conf | grep &quot;Listen&quot;
+Listen 10.0.176.4:8080
+Listen 10.0.176.4:4443
+Listen [fc01::xxxx]:8080
+Listen [fc01::xxxx]:4443
+
+</code>
+Use the IPv6 adresses for ports 8080 and 4443.</pre>
+
+<pre>
+<code>Listen [fc01::e5d4]:8080
+Listen [fc01::e5d4]:4443</code></pre>
+
+<p>Then call socat:</p>
+
+<pre>
+<code>root@slapostest2:/# socat  TCP4-LISTEN:80,fork TCP6:[fc01::xxxx]:8080 &amp;
+socat TCP4-LISTEN:443,fork TCP6:[fc01::xxxx]:4443 &amp;</code></pre>
+</details>
+
+<details open="open">
+<p>To see whether your bindings are active, you can</p>
+
+<pre>
+<code>root@slapostest2:/# ps aux | grep socat
+debian    4299  0.0  0.0  12728  2208 pts/0    S+   11:04   0:00 grep socat
+root     24449  0.0  0.0  19644  2696 ?        S    Mar20   0:00 socat 
+  TCP4-LISTEN:80,fork TCP6:[fc01::xxxx]:8080
+root     24674  0.0  0.0  19644  2604 ?        S    Mar20   0:00 socat 
+  TCP4-LISTEN:443,fork TCP6:[fc01::xxxx]:4443</code></pre>
+
+<p>You can also verify that the port forwarding is working by accessing your Frontend url (in our case) <code>foobar.slaptest.erp5.net</code> in a browser. If successful, the listener should forward to the IPv6 address the Frontend is listening on and you should see the following:</p>
+
+<blockquote>
+<h1>This instance has not been found.</h1>
+
+<p>If this error persists, please check your instance URL and status on SlapOS Master.</p>
+</blockquote>
+
+<p>&nbsp;</p>
+</details>
+
+<details open="open">
+<p>In case the Frontend is not or no&nbsp;longer accessible, you can check on your node by:</p>
+
+<p>&nbsp;</p>
+
+<pre>
+<code>sudo su
+# slapos node
+slappart8:bootstrap-monitor                EXITED    May 22 04:16 PM
+slappart8:certificate_authority-on-watch   RUNNING   pid 891, uptime 16:51:03
+slappart8:crond-on-watch                   RUNNING   pid 883, uptime 16:51:03
+slappart8:frontend-apache-safe-graceful    EXITED    May 22 04:16 PM
+slappart8:frontend-nginx-safe-graceful     EXITED    May 22 04:16 PM
+slappart8:frontend_apache-on-watch         RUNNING   pid 887, uptime 16:51:03
+slappart8:frontend_nginx-on-watch          RUNNING   pid 889, uptime 16:51:03
+slappart8:monitor-httpd-graceful           EXITED    May 22 04:16 PM
+slappart8:monitor-httpd-on-watch           RUNNING   pid 885, uptime 16:51:03
+slappart8:trafficserver-on-watch           RUNNING   pid 888, uptime 16:51:03
+slappart8:trafficserver-reload             EXITED    May 22 04:16 PM
+slappart9:bootstrap-monitor                EXITED    May 22 04:15 PM
+slappart9:certificate_authority-on-watch   RUNNING   pid 681, uptime 16:52:02
+slappart9:crond                            RUNNING   pid 684, uptime 16:52:02
+slappart9:monitor-httpd-graceful           EXITED    May 22 04:15 PM
+slappart9:monitor-httpd-on-watch           RUNNING   pid 680, uptime 16:52:02
+watchdog                                   RUNNING   pid 26276, uptime 17:53:03</code></pre>
+
+<p>If the Frontend is running check if socat is working:</p>
+
+<pre>
+<code># ps aux | grep &quot;socat&quot;
+root      3234  0.0  0.0  12728  2180 pts/0    S+   09:02   0:00 grep socat</code></pre>
+
+<p>If socat is not running anymore, redo the socat binding to reach the Frontend again.</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Url Connection Parameter</h1>
+<img alt="SlapOS Dashboard - Service Frontend Apache Connection Parameters" src="https://www.erp5.com/slapos-Interface.Connection.Parameters.Service.Frontend.Apache?display=&amp;format=png" />
+<details open="open">
+<p>After setting up port forwarding on your Dashboard, click on the <i>Services</i> menu and select the Frontend entry to re-open its configuration page.</p>
+
+<p>If port forwarding was set correctly, your instance should now have a green status.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify Service Frontend Is Accessible</h1>
+<img alt="Monitor Interface - Add OPML" src="https://www.erp5.com/monitor-Interface.Add.OPML?display=&amp;format=png" />
+<details open="open">
+<p>Once the status turns green and instantiation finished successfully, there should be a number of connection parameters available when you scroll down beyond the configuration form. Click on the <i>monitor-setup-url</i> and then <em>Save</em><i>.</i></p>
+</details>
+</section>
+
+<section><img alt="Monitor Interface - Hosting Subscriptions List" src="https://www.erp5.com/monitor-interface.Hosting.Subscriptions.List?display=&amp;format=png" />
+<details open="open">
+<p>Click on <i>Hosting Subscriptions</i> to see the list of all instances that you are monitoring. Click on <i>Synchronize</i> to refresh the list and the status of all your monitored instances.</p>
+</details>
+</section>
+
+<section><img alt="Monitor Interface - Hosting Subscription Detail" src="https://www.erp5.com/monitor-Interface.Hosting.Subscription.Detail?display=&amp;format=png" />
+<details open="open">
+<p>If you click on your instance, you will land on this instance detail. Please note that a &quot;SlapOS instance&quot; (that you see on &quot;Hosting Subscriptions&quot; list) is an instance of a SlapOS service and can be made of several smaller instances that we can call &quot;software instances&quot;.</p>
+</details>
+</section>
+
+<section><img alt="Monitor Interface - Instance View" src="https://www.erp5.com/monitor-Interface.Instance.View?display=&amp;format=png" />
+<details open="open">
+<p>If you click on a software instance, you will see all the available information for this instance. You need to click on &quot;Synchronize&quot; in order to have the latest status. When you click on &quot;Synchronize&quot;, the monitor will fetch the latest information for all the subscribed instances. When you have many subscribed instances, that can take a long time.</p>
+</details>
+</section>
+
+<section>
+<h1>List of Instantiated Services</h1>
+<img alt="SlapOS Dashboard - Add Service" src="https://www.erp5.com/slapos-Interface.Add.Service.Frontend.Slave?display=&amp;format=png" />
+<details open="open">
+<p>Next, we will create a second instance of the Frontend to create an easier to use url to access the SlapOS Dashboard. Head back to the <i>Services</i> menu and click <i>Add</i> another time.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Frontend Service Instance</h1>
+<img alt="SlapOS Dashboard - Select Service" src="https://www.erp5.com/slapos-Interface.Select.Service.Frontend.Slave?display=&amp;format=png" />
+<details open="open">
+<p>Select <i>Frontend</i> again.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Frontent Service Version</h1>
+<img alt="SlapOS Dashboard - Select Service Version" src="https://www.erp5.com/slapos-Interface.Select.Service.Frontend.Slave.Version?display=&amp;format=png" />
+<details open="open">
+<p>Please choose the latest version.</p>
+</details>
+</section>
+
+<section>
+<h1>Frontend Slave Configuration Parameters</h1>
+<img alt="SlapOS Interface - Service Frontend Slave Configuration Parameters" src="https://www.erp5.com/slapos-Interface.Service.Frontend.Slave.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>Select <i>Software-Type</i> <b>Custom Personal (Slave)</b> and give your Frontend slave a recognizable name. Add the <i>Backend Url</i> you want this Frontend to connect to. In the screenshot pictured, this is the url to a SlapOS Master Dashboard. The backend url</p>
+
+<pre>
+<code>https://54.37.31.10/erp5/web_site_module/hostingjs/</code></pre>
+
+<p>points to this Dashboard. Set <i>Custom Domain</i> AND <i>Server Alias</i> to the wildcard domain you want to use</p>
+
+<pre>
+<code>master.slaptest.erp5.net</code></pre>
+
+<p>then scroll down to the bottom of the page and (don&#39;t forget) to select the computer to provide the Frontend slave.</p>
+
+<p>Click <i>Proceed</i> to continue and request instantiation.</p>
+</details>
+</section>
+
+<section>
+<h1>Frontend Slave Instantiation</h1>
+<img alt="SlapOS Interface - Instantiate Service Frontend Slave" src="https://www.erp5.com/slapos-Interface.Instantiate.Service.Frontend.Slave?display=&amp;format=png" />
+<details open="open">
+<p>You will be forwarded back to the list of deployed services. You might have to refresh the page for your new instance to appear. Once you can see it, click on entry to open the connection parameters.</p>
+</details>
+</section>
+
+<section>
+<h1>Frontend Slave Connection Parameters</h1>
+<img alt="SlapOS Interface - Service Frontend Slave Connection Parameters" src="https://www.erp5.com/slapos-Interface.Service.Frontend.Slave.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>It might take a few minutes for the instance to become available. Refresh the page from time to time until the connection parameter table shows parameters. Once the <i>Secure Access</i> entry shows the url, you are waiting for, the Frontend Slave is setup and working.</p>
+</details>
+</section>
+
+<section>
+<h1>Frontend Slave Running</h1>
+<img alt="SlapOS Interface - Verify Frontend Slave Accessability" src="https://www.erp5.com/slapos-Interface.Verify.Service.Frontend.Slave.Accessability?display=&amp;format=png" />
+<details open="open">
+<p>If you go to your requested URL (<code>master.slaptest.erp5.net</code>) you can see that it points to the selected backend URL.</p>
+
+<p>Should you have problems in loading the page, try restarting the Frontend by ssh-ing into your node, locating the <i>frontend_apache-on-watch</i> process and restarting it.</p>
+
+<pre>
+<code>sudo su
+# slapos node 
+slappart8:bootstrap-monitor                EXITED    Mar 20 02:28 PM
+slappart8:certificate_authority-on-watch   RUNNING   pid 12137, uptime 0:33:54
+slappart8:crond-on-watch                   RUNNING   pid 12125, uptime 0:33:54
+slappart8:frontend-apache-safe-graceful    EXITED    Mar 20 02:28 PM
+slappart8:frontend-nginx-safe-graceful     EXITED    Mar 20 02:28 PM
+slappart8:frontend_apache-on-watch         EXITED    Mar 20 02:28 PM
+slappart8:frontend_nginx-on-watch          RUNNING   pid 12136, uptime 0:33:54
+slappart8:monitor-httpd-graceful           EXITED    Mar 20 02:28 PM
+slappart8:monitor-httpd-on-watch           RUNNING   pid 12128, uptime 0:33:54
+slappart8:trafficserver-on-watch           RUNNING   pid 12134, uptime 0:33:54
+slappart8:trafficserver-reload             EXITED    Mar 20 02:28 PM
+slappart9:bootstrap-monitor                EXITED    Mar 20 02:29 PM
+slappart9:certificate_authority-on-watch   RUNNING   pid 11866, uptime 0:36:16
+slappart9:crond                            RUNNING   pid 11867, uptime 0:36:16
+slappart9:monitor-httpd-graceful           EXITED    Mar 20 02:29 PM
+slappart9:monitor-httpd-on-watch           RUNNING   pid 11865, uptime 0:36:16
+watchdog                                   RUNNING   pid 24426, uptime 7 days,...</code></pre>
+
+<p>To restart a service you can use <code>slapos node restart slappart8:frontend_apache-on-watch</code>.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Provide Re6st Registry</h1>
+
+<details open="open">
+<p>This section will cover the steps required to supply and instantiate a <b>Re6st</b> Registry.</p>
+
+<p><a href="https://re6st.nexedi.com/">Re6st</a> is used in SlapOS to create a mesh network and route traffic through available nodes. To setup Re6st while configuring <b>COMP-0</b>, it is first required to instantiate a Re6st Registry - a register which manages Re6st all nodes in a network and issues tokens for new nodes to join (<b>Note</b>, that Re6st tokens are not SlapOS X509 tokens).</p>
+</details>
+</section>
+
+<section>
+<h1>Install Re6st Software Release on Node</h1>
+<img alt="Slapos Dashboard - Supply Service Re6st Registry on COMP-0" src="https://www.erp5.com/slapos-Interface.Supply.Software.Re6st.Registry?display=&amp;format=png" />
+<details open="open">
+<p>Pick any of the available Slave nodes. You can see in the bottom table <i>Supplied Software</i> that this node now has the Frontend (Apache) software release installed. We will add Re6st in the same way.</p>
+
+<p>Click the <i>Supply</i> button.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Re6st Software Release</h1>
+<img alt="SlapOS Dashboard - Select Software Release to supply" src="https://www.erp5.com/slapos-Interface.Select.Software.Re6st.Registry?format=png&amp;display=" />
+<details open="open">
+<p>Select the <i>Re6st</i> software release.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Re6st Software Release Version</h1>
+<img alt="SlapOS Dashboard - Select Software Release Version" src="https://www.erp5.com/slapos-Interface.Select.Software.Re6st.Registry.Version?display=&amp;format=png" />
+<details open="open">
+<p>Select the latest version.</p>
+</details>
+</section>
+
+<section>
+<h1>Launch Re6st Software Release Installation</h1>
+<img alt="SlapOS Dashboard - Launch Software Release Installation" src="https://www.erp5.com/slapos-Interface.Launch.Software.Re6st.Registry.Installation?display=&amp;format=png" />
+<details open="open">
+<p>The following dialog summarizes the software release to be installed as well as the computer it will be installed on. Click <i>Proceed</i> to launch instantiation.</p>
+</details>
+</section>
+
+<section>
+<h1>Wait for Re6st Installation</h1>
+<img alt="SlapOS Dashboard - Access Computer" src="https://www.erp5.com/slapos-Interface.Wait.Software.Re6st.Registry.Installation?display=&amp;format=png" />
+<details open="open">
+<p>Installation will take some time depending on the software you are installing, so either refresh the current page or check installation status directly by either going to your <i>Servers</i> list and selecting the machine you chose during installation or clicking directly on <i>Computer Reference</i>.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify Re6st Installation</h1>
+<img alt="SlapOS Dashboard - Verify Installation Success" src="https://www.erp5.com/slapos-Interface.Verify.Software.Re6st.Registry.Installation?display=&amp;format=png" />
+<details open="open">
+<p>You can see the installed service now includes Re6st. The indicator will stay red until the software has finished compiling and installing. Once the installation status bar changes to green on a refresh of the page, the installation has finished.</p>
+
+<p>You can follow the compilation by looking at the <code>slapos-node-software.log</code> using:</p>
+
+<pre>
+<code># tail /opt/slapos/log/slapos-node-software.log -f</code></pre>
+
+<p>in your terminal or calling <code>slapos node software</code> directly.</p>
+</details>
+</section>
+
+<section>
+<h1>List of Instantiated Services</h1>
+<img alt="SlapOS Dashboard - Add Service" src="https://www.erp5.com/slapos-Interface.Add.Service.Re6st.Registry?display=&amp;format=png" />
+<details open="open">
+<p>Once installed, head to the list of services by clicking on <i>Services</i> in the side menu. Then click <i>add</i>.</p>
+</details>
+</section>
+
+<section>
+<h1>Create New Res6st Registry Instance</h1>
+<img alt="SlapOS Dashboard - Select Service" src="https://www.erp5.com/slapos-Interface.Select.Service.Re6st.Registry?display=&amp;format=png" />
+<details open="open">
+<p>The list of available services is the same as the list of installable software releases used earlier when installing the service. Select Re6st as this is the service we want to provide.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Re6st Service Version</h1>
+<img alt="SlapOS Dashboard - Select Service Version" src="https://www.erp5.com/slapos-Interface.Select.Service.Re6st.Registry.Version?display=&amp;format=png" />
+<details open="open">
+<p>As during installation, please choose the latest version.</p>
+</details>
+</section>
+
+<section>
+<h1>Re6st Registry Configuration</h1>
+<img alt="SlapOS Dashboard - Re6st Registry Service Configuration Parameters" src="https://www.erp5.com/slapos-Interface.Service.Re6st.Registry.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>After adding a recognizable name, select the software-type <i>Default</i>, then provide the following parameters:</p>
+
+<pre>
+<code>IPv6 prefix: fc01::/7
+Default length of allocated prefix: 16</code></pre>
+
+<p>Don&#39;t forget to select your computer at the end of the form to prevent the SlapOS Master allocating the Registry on a computer of its choice.</p>
+
+<p>Click <i>Proceed</i> to start instantiation. This will forward you to the list of current services.</p>
+</details>
+</section>
+
+<section>
+<h1>Socat Port Forwarding</h1>
+<img alt="SlapOS Interface - Re6st Service Instantiation" src="https://www.erp5.com/slapos-Interface.Instantiate.Service.Re6st.Registry?display=&amp;format=png" />
+<details open="open">
+<p>Refresh the page to show your instance and installation status.</p>
+
+<p>You can follow the compilation by looking at the <code>slapos-node-instance.log</code> using:</p>
+
+<pre>
+<code># tail /opt/slapos/log/slapos-node-instance.log -f</code></pre>
+or using <code>slapos node instance</code> directly.
+
+<p>&nbsp;</p>
+
+<p>As the Registry is listening on port <i>19201</i> and permissions in Linux systems prevent users from accessing ports below 1024, traffic must be forwarded.</p>
+
+<p>This can be done using a Firewall with NAT traversal or using <b>Socat</b>. We will use <a href="http://www.dest-unreach.org/socat/">Socat</a>, a relay for bidirectional data transfer between two independent data channels. Data channels can be files, pipes, devices (terminal or modem, etc.), or sockets (Unix, IP4, IP6 - raw, UDP, TCP), etc. For more information, please refer to the <a href="https://directory.fsf.org/wiki/Socat">Free Software Directory</a>).</p>
+
+<p>To install socat in case required, head to your terminal and:</p>
+
+<pre>
+<code>sudo su
+# apt-get install socat</code></pre>
+</details>
+
+<details open="open">
+<p>Still in your terminal, start to see whether the Registry has finished installing (use <code># slapos node instance</code> to follow installation):</p>
+
+<pre>
+<code># netstat -natp | grep 9201
+tcp   0  0 10.0.27.44:9201       0.0.0.0:*          LISTEN       26027/python2.7
+tcp   0  0 10.0.27.44:40706      10.0.27.44:9201    TIME_WAIT    -
+tcp   0  0 10.0.27.44:40699      10.0.27.44:9201    TIME_WAIT    -
+tcp   0  0 10.0.27.44.9201       10.0.27.44.:40655  TIME_WAIT    -
+tcp   0  0 :::9201               :::*               LISTEN       26027/python2.7</code></pre>
+
+<p>Find the IP using:</p>
+
+<pre>
+<code># ifconfig eth0 | grep inet
+            inet addr:167.114.246.26  Bcast:167.114.246.26  Mask:255.255.255.255</code></pre>
+
+<p>Then call Socat with the listening <i>tcp</i> entry and the <i>inet addr</i>:</p>
+
+<pre>
+<code># socat TCP4-LISTEN:9201,fork,bind=167.114.246.26 TCP4:10.0.27.44:9201 &amp;</code></pre>
+
+<p><b>Note</b>, that your Registry master-url in the example is <i>167.114.246.26:9201</i>. <b>SAVE # THIS URL</b>. You will need to provide it whenever you want to connect a new node to the network.</p>
+</details>
+
+<details open="open">
+<p>To verify whether port forwarding works, you can:</p>
+
+<pre>
+<code># ps aux | grep socat
+
+root 1954  0.0  0.0  19648  1748 pts/1 S  12:46 0:00 socat TCP4-LISTEN
+  :9201,fork,bind=167.114.246.26 TCP4:10.0.232.26:9201
+root 1963  0.0  0.0  12728  2224 pts/1 S+ 12:46 0:00 grep socat
+root 3309  0.0  0.0  19648  2688 pts/0 S  09:03 0:00 socat TCP4-LISTEN
+  :80,fork TCP6:[fc01::b566]:8080
+root 3310  0.0  0.0  19648  2740 pts/0 S  09:03 0:00 socat TCP4-LISTEN
+  :443,fork TCP6:[fc01::b566]:4443</code></pre>
+
+<p>Before finishing <b>make sure that any temporary IPv6 address&nbsp;space added</b> during installation of the SlapOS node itself is removed. On your terminal, run:</p>
+
+<pre>
+<code>sudo su
+# ip -6 addr del fc01::1/32 dev lo</code></pre>
+
+<p>IPv6 will be reset when the first (gateway) node is being created.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify Re6st Is Accessible</h1>
+<img alt="SlapOS Re6st Registry Service Accessability" src="https://www.erp5.com/slapos-Interface.Verify.Service.Re6st.Registry.Accessability?display=&amp;format=png" />
+<details open="open">
+<p>Once port forwarding is setup, try accessing the registry over the Registry master-url <code>167.114.246.26:9201</code>. Note down this URL, it needs to be provided every time Re6st is installed on a new server to be added to the network.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Install Re6st on SlapOS Node</h1>
+
+<details open="open">
+<p>After instantiating the Registry on the node, it is now time, to install Re6st on the node itself which is covered in this section. This includes getting a Re6st access token and running the single line installer.</p>
+</details>
+</section>
+
+<section>
+<h1>List of Instantiated Services</h1>
+<img alt="SlapOS Dashboard - Add Service" src="https://www.erp5.com/slapos-Interface.Add.Service.Re6st.Token?display=&amp;format=png" />
+<details open="open">
+<p>Head to the list of services by clicking on the <i>Services</i> button on the side menu, then click the <i>Add</i> button in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Create New Res6st Token Instance</h1>
+<img alt="SlapOS Dashboard - Select Service" src="https://www.erp5.com/slapos-Interface.Select.Service.Re6st.Token?display=&amp;format=png" />
+<details open="open">
+<p>Select Re6st as this is the service we want to provide. The differentiation between Registry and Token will be made via the configuration parameter <b>Software-Type</b>.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Re6st Service Version</h1>
+<img alt="SlapOS Dashboard - Select Service Version" src="https://www.erp5.com/slapos-Interface.Select.Service.Re6st.Token.Version?display=&amp;format=png" />
+<details open="open">
+<p>As during installation, please choose the latest version.</p>
+</details>
+</section>
+
+<section>
+<h1>Re6st Registry Configuration</h1>
+<img alt="SlapOS Dashboard - Re6st Token Service Configuration Parameters" src="https://www.erp5.com/slapos-Interface.Service.Re6st.Token.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>Select <i>Software Type</i> <code>Re6st Token</code> which will load a form with instance-specific parameters. As mentioned, the token is actually a slave instance of the Registry (and in case of <b>COMP-0</b> a first gateway node).</p>
+
+<p>Every new node will require a token, so give this token a recognizable name (<code>Re6st-COMP-0</code>&nbsp;for example).</p>
+
+<p>Select the <i>Computer</i> on which the Registry of your SlapOS Master is to be installed on at the bottom of the page, then click <i>Proceed</i> to instantiate the service and be forwarded to the list of current services. Refresh the page, it may take a few minute for the node to be instantiated and the token to appear. It is a single use token to connect <b>one</b> other node to the network.</p>
+</details>
+</section>
+
+<section>
+<h1>Instantiate Re6st Token</h1>
+<img alt="SlapOS Dashboard - Service Re6st Token Instantiation" src="https://www.erp5.com/slapos-Interface.Instantiate.Service.Re6st.Token?display=&amp;format=png" />
+<details open="open">
+<p>Click <i>Proceed</i> to instantiate a new token. Refresh the list of instantiated services to make the token appear. Click on it to access the connection parameters.</p>
+</details>
+</section>
+
+<section>
+<h1>Token Connection Parameters</h1>
+<img alt="SlapOS Interface - Re6st Token Connection Parameters" src="https://www.erp5.com/slapos-Interface.Service.Re6st.Token.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>Locate the token in the Connection Parameters. It might require a few minutes to show up. Refresh the page to see whether the token has been instantiated.</p>
+
+<p>You can now install Re6st on this machine. It will add back actual IPv6 after the temporary IPv6 has been removed again.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Installing Re6st</h1>
+
+<pre>
+<code>sudo su
+# wget https://deploy.erp5.net/re6st &amp;&amp; bash re6st</code></pre>
+
+<details open="open">
+<p>ssh back into the terminal of COMP-0 and install Re6st using <i>wget</i> as shown above. At some point the script will ask you to:</p>
+
+<pre>
+<code>What is the Url of the Re6st registry [https://re6stnet.nexedi.com]:
+Please insert your re6stnet token [notoken]:</code></pre>
+
+<p>Provide the <i>master_url</i> noted earlier (<code>http://[your_IPv4]:9201</code>) along with the <i>token</i> created in the previous steps and continue. The setup should finish without errors:</p>
+
+<pre>
+<code>...
+PLAY RECAP *********************************************************************
+127.0.0.1                  : ok=24   changed=7   unreachable=0   failed=0</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Verify Files Created</h1>
+
+<pre>
+<code>sudo su
+# ls /etc/re6stnet/
+ca.crt     cert.cert     cert.key     re6stnet.conf     README</code></pre>
+
+<details open="open">
+<p>Verify that the configuration files were created.</p>
+</details>
+</section>
+
+<section>
+<h1>Update Re6st Configuration File</h1>
+
+<pre>
+<code>sudo su
+# nano /etc/re6stnet/re6stnet.conf
+registry http://167.114.246.26:9201/
+ca ca.crt
+cert cert.crt
+key cert.key
+# increase re6stnet verbosity:
+#verbose 3
+# enable OpenVPN logging:
+#ovpnlog
+# increase OpenVPN verbosity:
+#O--verb
+#O3
+O--socket-flags
+O&quot;TCP_NODELAY&quot;
+...</code></pre>
+
+<details open="open">
+<p>You need to add the <i>master_url</i> IPv4 adress to the Re6st configuraiton file as it is the first gateway node. In this example, add:</p>
+
+<pre>
+<code># added the following to the end of the file first node
+ip 167.114.246.26
+gateway</code></pre>
+
+<p>Then restart Re6st afterwards using <code>service re6stnet restart</code>.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify Re6st is Running</h1>
+
+<pre>
+<code>sudo su
+# service re6stnet status</code></pre>
+
+<details open="open">
+<p>You can use the above command to see whether Re6st is working. The output should be similar to:</p>
+
+<pre>
+<code>● re6stnet.service - (null)
+   Loaded: loaded (/etc/init.d/re6stnet)
+   Active: active (running) since Fri 2018-03-09 16:43:23 UTC; 6min ago
+   Process: 26395 ExecStop=/etc/init.d/re6stnet stop (code=exited, status=0/SUCCESS)
+   Process: 26423 ExecStart=/etc/init.d/re6stnet start (code=exited, status=0/SUCCESS)
+   CGroup: /system.slice/re6stnet.service
+           ├─26431 /opt/re6st/parts/python2.7/bin/python2.7 /usr/sbin/re6stnet 
+@re6stnet.conf
+           ├─26437 openvpn --dev-type tap --dev re6stnet-tcp --persist-tun --per
+sist-key --script-security 2 --up /opt/re6st/eggs/re6stnet-0.485-py2.7.egg/re6st
+/ovpn-client --tls-server --mode server --clien...
+           ├─26444 babeld -h 15 -H 15 -L /var/log/re6stnet/babeld.log -S /var/li
+b/re6stnet/babeld.state -I /var/run/re6stnet/babeld.pid -s -C ipv6-subtrees true
+-C default max-rtt-penalty 5000 rtt-max 500 rt...
+           ├─26537 openvpn --dev-type tap --dev re6stnet1 --persist-tun --persis
+t-key --script-security 2 --up /opt/re6st/eggs/re6stnet-0.485-py2.7.egg/re6st/ov
+pn-client --nobind --client --remote 163.172.45...
+           └─26862 openvpn --dev-type tap --dev re6stnet2 --persist-tun --persis
+t-key --script-security 2 --up /opt/re6st/eggs/re6stnet-0.485-py2.7.egg/re6st/ov
+pn-client --nobind --client --remote 52.36.124....
+
+  Mar 09 16:43:23 slapostest2 systemd[1]: Started (null).</code></pre>
+
+<p>At this point the COMP-0 node is completely setup and working. You can now continue to add <a href="slapos-Tutorial.Install.Slapos.Node.Comp.123">additional nodes to the network</a>.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

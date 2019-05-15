@@ -1,0 +1,152 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- outbound links:
+  slapos-DesignDocument.Understanding.Slapos.Architecture
+-->
+<section class="master">
+<h1>HowTo Enable SSH Access on Remote Server</h1>
+
+<details open="open">
+<p>This document explains how to connect to a remote server via ssh. It covers the basic creation of an ssh key, how to add an ssh key on a SlapOS instance in both the configuration parameters and the webrunner directly as well as on a remote server.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Generating SSH Key</li>
+	<li>Using SSH Key</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Generating SSH Key</h1>
+
+<details open="open">
+<p>The following section will show the steps required to generate an SSH key.</p>
+</details>
+</section>
+
+<section>
+<h1 id="keygen">Keygen</h1>
+
+<pre>
+<code>ls -al ~/.ssh
+ssh-keygen -t rsa -b 4096 -C &quot;your_email@example.com&quot;</code></pre>
+
+<details open="open">
+<p>Before starting verify there are no existing key you can use. If the below outputs a number of files/folders including <i>id_rsa.pub</i> (your existing public key), you can use this key and go continue to the next step.</p>
+
+<pre>
+<code># list existing keys
+$ ls -al ~/.ssh
+
+# show existing public key
+$ cat id_rsa.pub
+
+# create new ssh key
+$ ssh-keygen -t rsa -b 4096 -C &quot;your_email@example.com&quot;</code></pre>
+
+<p>When creating a new key you will be prompted to <i>&quot;Enter a file in which to save the key&quot;</i>. Press enter to store it in the default location. Enter the passphrase you want to use and confirm it. You will be asked for this passphrase whenever making a SSH connection. The passphrase must be 20 characters long to be really secure. Once done, you should have a new <i>id_rsa.pub</i>. You can copy the key and continue.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Using the SSH key</h1>
+
+<details open="open">
+<p>This section will demonstrate how to use the SSH key on a SlapOS server, a hosting subscription and on the <a href="https://webrunner.nexedi.com/">Webrunner IDE</a>.</p>
+</details>
+</section>
+
+<section>
+<h1>Add SSH key on a (SlapOS node) server</h1>
+
+<pre>
+<code>$ ssh debian@xx.xx.xx.xxx
+Enter passphrase for key &#39;/home/chronos/user/.ssh/id_rsa&#39;:
+(...)
+
+debian@slapostest:~$ pwd
+/home/debian
+debian@slapostest:~$ cd ~/.ssh
+debian@slapostest:~/.ssh$ ls
+authorized_keys
+debian@slapostest:~/.ssh$</code></pre>
+
+<details open="open">
+<p>To add or change the ssh key on a server, access your server and find the .ssh folder. To access the server without the SSH key means you need to have a different way of accessing it before being able to use SSH.</p>
+
+<pre>
+<code>ssh debian@xx.xx.xx.xxx
+    Enter passphrase for key &#39;/home/chronos/user/.ssh/id_rsa&#39;:
+    (...)
+    debian@slapostest:~$ pwd
+    /home/debian
+    debian@slapostest:~$ cd ~/.ssh
+    debian@slapostest:~/.ssh$ ls
+    authorized_keys
+    debian@slapostest:~/.ssh$</code></pre>
+
+<p>Add the public key you can find on your machine at the same location (~/.ssh) inside the <i>id_rsa.pub</i> file. Next time you log in, you should be prompted for the passphrase you chose for your public key.</p>
+</details>
+</section>
+
+<section>
+<h1>Add SSH key on SlapOS hosting subscription</h1>
+<img alt="SlapOS - Addding ssh access to hosting subscription" src="https://www.erp5.com/slapos-Interface.Hosting.Subscription.Configuration.Parameter?display=&amp;format=png" />
+<details open="open">
+<p>When instantiating a new service on SlapOS (for example here: webrunner) you can add your ssh private key in the <i>Configuration Parameters</i> directly:</p>
+
+<pre>
+<code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+    &lt;instance/&gt;
+    &lt;parameter id=&quot;user-authorized-key&quot;&gt;ssh-rsa xxxxxxxxxxxxxxxxx...
+    &lt;/parameter&gt;
+    &lt;instance/&gt;
+    </code></pre>
+
+<p>Click &quot;Save&quot;. To then access the webrunner via ssh, use the <i>ssh-command</i> parameter in connection parameter table below. It will look something like this:</p>
+
+<pre>
+<code>ssh-command ssh slapuserXXX@xxxx:xxx:xxxx:x:xx::xxxx -p xxxxx</code></pre>
+
+<p>Use the command in the terminal. Provide the passphrase associated with your ssh key and make sure you are on a IPv6 network as you are using an IPv6 address in your ssh command. More info on use of IPv6 in SlapOS can be found in the <a href="slapos-DesignDocument.Understanding.Slapos.Architecture">SlapOS architecture</a> Design Document.</p>
+
+<p>Refer to gitlab for the full list of available configuration parameters for a <a href="https://lab.nexedi.com/nexedi/slapos/blob/master/software/slaprunner/instance-runner-input-schema.json">Webrunner</a> and <a href="https://lab.nexedi.com/nexedi/slapos/blob/master/software/slaprunner/instance-runner-resilient-input-schema.json">resilient Webrunner</a>.</p>
+</details>
+</section>
+
+<section>
+<h1>Add SSH key inside Webrunner</h1>
+<img alt="Webrunner - Adding ssh access to inside a Webrunner" src="https://www.erp5.com/webrunner-Interface.Hosting.Subscription.Configuration.Parameter?display=large&amp;format=png" />
+<details open="open">
+<p>When using a Webrunner you can enable ssh access by adding your ssh key in Runner&#39;s Services <i>Parameter</i> tab. Click <i>new</i>, add parameter name/value and finish by clicking <i>Update Values</i> and then pressing the green button. Once done, you should be able to access your Webrunner using the <i>ssh-command</i> parameter in SlapOS interface connection parameter table. It will look something like this:</p>
+
+<pre>
+<code>ssh-command ssh slapuserXXX@xxxx:xxx:xxxx:x:xx::xxxx -p xxxxx</code></pre>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

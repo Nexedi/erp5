@@ -1,0 +1,519 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+  developer-Howto.Begin.Developing.SlapOS
+  developer-SlapOS.developer.learning.track
+--><!-- outbound links:
+  slapos-DesignDocument.Understanding.Slapos.Architecture
+  slapos-Tutorial.Install.Slapos.Master.Comp.Root
+--><!-- merge this with old SlapOS Learning track:
+Modify configuration file
+- Add simple element (update md5)
+- Add Element using configuration provided by buildout (do not know how to formulate this, idea is to use smt like a ipv6 or a folder provided in profile in conf file)
+- Use element provided in buildout profile in template (how to pass parameters to template)
+- Use instance parameter in profile (pass element from one section to another)
+Add script
+- graceful (etc/run)
+- service (etc/service)
+- promise
+Request Instance
+- Request frontend
+- Publish frontend URL
+Add elements (smart copy)
+- logrotate
+- SSL
+- ...
+Basic Software type
+- Use of switch software type
+Advance templating
+- jinja2 use in configuration template
+- Dynamic buildout profile
+Advance software type use
+- Request instance
+- Play with various instance of different software type 
+-->
+<section class="master">
+<h1>Extend Software Release Using Webrunner</h1>
+
+<details open="open">
+<p>This document will walk through the steps of extending an existing software release available on SlapOS. It will demonstrate how to add parameters, components and features.</p>
+
+<p>To follow the steps in this document, you should have read <a href="slapos-DesignDocument.Understanding.Slapos.Architecture">understanding SlapOS architecture</a> and be familiar with <a href="http://www.buildout.org/en/latest/">Buildout</a>. It is also required to have the Webrunner Software added to the <a href="slapos-Tutorial.Install.Slapos.Master.Comp.Root">SlapOS Master</a> software catalouge and have an instance of the Webrunner with the included helloworld software release deployed inside.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Add Parameter to all Software Instances</li>
+	<li>Add Feature</li>
+	<li>Add Component</li>
+	<li>Add Promise</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Add Parameter to all Software Instances</h1>
+
+<details open="open">
+<p>This section will modify the <a href="https://lab.nexedi.com/nexedi/slapos/tree/master/software/helloworld">&quot;helloworld&quot;</a> Software Release, a software that creates a simple web server and publishes the text <i>hello &lt;configuration.name&gt;</i>.</p>
+
+<p>This will be done using a <a href="https://webrunner.nexedi.com/">Webrunner</a> a development IDE, that contains a &quot;mini SlapOS Master&quot; for deploying a single software (helloworld). In more complex SlapOS networks, a master manages a catalog of softwares which are supplied and instantiated on a network of nodes, some of which may again be Webrunners containing a single software release. Webrunners are useful, because they provide resiliency for this single software by hosting multiple &quot;internal&quot; instances. The deployed software may also be patched and can be accessed via SSH which for some softwares may be required to access the underlying file system.</p>
+
+<p>The software release of &quot;Helloworld&quot; is relatively simple and composed of two files:</p>
+
+<ul>
+	<li><code>software.cfg</code> - the Buildout profile which installs the software release on a computer</li>
+	<li><code>instance.cfg.in</code> - the instance profile filled by <code>software.cfg</code> on instantiation</li>
+</ul>
+
+<p><code>instance.cfg.in</code> will be used to deploy (configure and run) one (on the Webrunner) or multiple (on a SlapOS network) instances of a software. <b>Note</b>, that after Buildout has filled the <code>instance.cfg.in</code> file, there should be a hidden file called <code>.installed.cfg</code>. In case of instantiation failing this is a good place to look for what went wrong.</p>
+</details>
+</section>
+
+<section>
+<h1>Check Connection Parameters</h1>
+<img alt="Webrunner Interface - Extending Software Release - Verify Connection Information" src="https://www.erp5.com/slapos-Interface.Extend.Software.Release.Verify.Connection.Information?display=&amp;format=png" />
+<details open="open">
+<p>Log in to the webrunner and open the <i>Services</i> tab. Check the <i>Connection Information</i> Slap Response to see which parameters the helloworld software release is currently outputting. The connection urls of the webservers in Go, Ruby and Python are also outputted. Opening either one will show the default page with the <i>name</i> parameter.</p>
+</details>
+</section>
+
+<section>
+<h1>Locate Helloworld Software.cfg</h1>
+<img alt="Extending Software Release - Webrunner Interface" src="https://www.erp5.com/webrunner-Interface.Slapos.Basics.Webrunner.Editor?display=&amp;format=png" />
+<details open="open">
+<p>Head over to the <i>Editor</i>. Click the fullscreen icon in the toolbar, then locate the <i>Helloworld</i> folder in the <i>Software</i> directory.</p>
+</details>
+</section>
+
+<section>
+<h1>Software.cfg</h1>
+<img alt="Extending Software Release - Webrunner Interface - Helloworld Software Config" src="https://www.erp5.com/slapos-Interface.Extending.Software.Release.Helloworld.Software.Config?display=&amp;format=png" />
+<details open="open">
+<p>All <code>software.cfg</code> profiles extend the default slapos.cfg (which contains basic slapos deployment tools). In this example it is extended by <code>../../component/helloweb/buildout.cfg</code> - the profile to create some programs that say &quot;hello&quot; in three different languages (python, ruby, golang). It also describes how to parse the instance profile <code>instance.cfg.in</code> into the rendered file later used for supplying instances of our helloworld software.</p>
+
+<p><b>Note</b> the comment regarding the MD5 checksum and then either comment out your checksum or replace it with the hash of <code>[your_instance.cfg.in]</code>. Otherwise the build will fail when checking the integrity of the file.</p>
+
+<p>One way to customize a software instance is through providing instance parameters when requesting an instance from a SlapOS Master using the instance XML configuration. Let&#39;s add a new parameter called <i>title</i> to display the title of a web page alongside the <i>name</i>. Open the <code>instance.cfg.in</code> in the same directory.</p>
+</details>
+</section>
+
+<section>
+<h1>Instance.cfg.in</h1>
+<img alt="Extending Software Release - Webrunner Interface - Helloworld Instance Config Template" src="https://www.erp5.com/slapos-Interface.Extending.Software.Release.Helloworld.Instance.Config?display=&amp;format=png" />
+<details open="open">
+<p>In the <code>instance.cfg.in</code> <code>[instance-parameter]</code> section, add a new parameter like so:</p>
+
+<pre>
+<code># XXX This is the declaration of the default value for the parameter &quot;title&quot; 
+# (None here). If commented, the recipe will crash. The &quot;configuration.&quot; part 
+# of the parameter name means that the value will be the one given (if present) 
+# in instance parameters
+configuration.title =</code></pre>
+
+<p>And in the <code>[publish-connection-parameter]</code> section, output the new parameter as well:</p>
+
+<pre>
+<code># XXX the published parameter &quot;title&quot;. By default, its value is the value 
+# declared in the section [instance-parameter] above.
+title = Title ${instance-parameter:configuration.title}!</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Rebuild Software Release</h1>
+<img alt="Extending Software Release - Webrunner Interface - Software Rebuild" src="https://www.erp5.com/slapos-Interface.Extending.Software.Release.Rebuild?display=&amp;format=png" />
+<details open="open">
+<p>Save the modified file in the Webrunner, don&#39;t forget to uncomment the MD5 checksum in the <code>software.cfg</code>, then hit the green play button in the top right toolbar to rebuild your Webrunner (you may have to get out of fullscreen mode to show the green button again). Rebuilding should take a few minutes and will not complete in case you have made an error when updating the files.</p>
+</details>
+</section>
+
+<section>
+<h1>Successful Rebuild</h1>
+<img alt="Extending Software Release - Webrunner Interface - Software Rebuild Completed" src="https://www.erp5.com/slapos-Interface.Extend.Software.Release.Webrunner.Rebuild.Software?display=&amp;format=png" />
+<details open="open">
+<p>Once both indicators switch to completed and green status the helloworld software has been rebuilt with the modified configuration files. Head back to <i>Services</i> to check the <i>Connection Information</i>.</p>
+</details>
+</section>
+
+<section>
+<h1>Updated Software Connection Information</h1>
+<img alt="Extending Software Release - Webrunner Interface - Software Rebuild Completed" src="https://www.erp5.com/slapos-Interface.Extend.Software.Release.Software.Connection.Information.Updated?display=&amp;format=png" />
+<details open="open">
+<p>The <code>title</code> parameter is now displayed as well. As we did not provide a parameter akin to <i>John Doe</i> for the <code>name</code>, nothing is displayed.</p>
+
+<p>While this update was done in a Webrunner and therefore only on a single instance, it can just as well be done on a SlapOS network. In this case, the Software Release points to a repository with the <code>software.cfg</code> and <code>instance.cfg.in</code>. Updating these profiles and then adding a new version entry to the SlapOS Master software catalogue will trigger a pending upgrade of all instances of this software.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Add Feature</h1>
+
+<details open="open">
+<p>After working with existing sections, the following section will show how to add new sections using different recipes. We will be adding a template file and render it during instantiation.</p>
+</details>
+</section>
+
+<section>
+<h1>Add Template Folder and Template</h1>
+<img alt="Extending Software Release - Webrunner Interface - Add Template Folder and Template" src="https://www.erp5.com/slapos-Interface.Extend.Software.Release.Create.Template.File?display=&amp;format=png" />
+<details open="open">
+<p>Head back to the <i>Editor</i> and create a new folder named <code>/template</code>. Create a new file named <code>rendered.in</code> and open it.</p>
+
+<p>SlapOS software configuration templates are using <a href="http://jinja.pocoo.org/">Jinja2</a> (more info on the <a href="http://git.erp5.org/gitweb/slapos.recipe.template.git/blob/HEAD:/slapos/recipe/template/README.jinja2.txt?js=1">jinja2 structure and syntax</a>). Add the following content to the file and save:</p>
+
+<pre>
+<code>{% if title %}
+{{ title }}
+-
+{% endif %}
+Title: {{ name }}!</code></pre>
+
+<p>In order to import this template into the software release, the software profile needs to be modified.</p>
+</details>
+</section>
+
+<section>
+<h1>Add Template to Software Profile</h1>
+<img alt="Extending Software Release - Webrunner Interface - Add Template to Software Profile" src="https://www.erp5.com/slapos-Interface.Extend.Software.Release.Add.Template.To.Profile?display=&amp;format=png" />
+<details open="open">
+<p><b>Note</b> that there are now different templating formats being used:</p>
+
+<ul>
+	<li>Buildout templates using <code>object[&#39;parameter&#39;]</code> and <code>${:variable name}</code></li>
+	<li>Jinja templates using the syntax: <code>{{ }}</code></li>
+</ul>
+
+<p>First, in <code>software.cfg</code> add a new entry to the <code>parts</code> section called <i>template-get</i> (<b>Note</b>, that <i>get</i> is an arbitrarly chosen name given to our template). Then update the <code>[instance-profile]</code> <i>context</i> (see <a href="http://git.erp5.org/gitweb/slapos.recipe.template.git/blob/HEAD:/slapos/recipe/template/README.jinja2.txt?js=1#l77">jinja specifications on context</a>) to include a second section to be available in <code>instance.cfg.in</code>:</p>
+
+<pre>
+<code>context =
+  section buildout buildout
+  section template_get template-get</code></pre>
+
+<p><b>Note</b> for exposing context parameters, there must always be three parts (type, name and expression) separated by whitespace, that multiple entries go on separate lines and that the name cannot contain &quot;-&quot;, because this will be the caller in later requests.</p>
+
+<p>&nbsp;</p>
+</details>
+
+<details open="open">
+<p>Finally add the corresponding section to the end of the file:</p>
+
+<pre>
+<code># Retrieve Jinja2 template to render via url. Location is only used 
+# to share information through buildout (corresponds to a default location)
+[template-get]
+recipe = hexagonit.recipe.download
+url = ${:_profile_base_location_}/template/${:filename}
+location = ${buildout:parts-directory}/${:_buildout_section_name_}
+filename = rendered.in
+download-only = true
+extensions = jinja2.ext.do
+context =
+  section buildout buildout</code></pre>
+
+<p>Note that this defines the location and filename variables we will require in the next step. Head over to <code>instance.cfg.in</code></p>
+</details>
+</section>
+
+<section>
+<h1>Update Instance.cfg.in</h1>
+<img alt="Extending Software Release - Webrunner Interface - Add Template to Instance Profile" src="https://www.erp5.com/slapos-Interface.Extend.Software.Release.Add.Template.To.Instance?display=&amp;format=png" />
+<details open="open">
+<p>As in the software profile, start by adding a new entry called <i>template-creation</i> to the <code>[buildout] parts</code> section along with a new folder after the <i>var</i> and <i>etc</i> folders using:</p>
+
+<pre>
+<code># Create folder which will contain the jinja template
+data = ${:home}/srv/data</code></pre>
+
+<p>Then add a new section:</p>
+
+<pre>
+<code># XXX Jinja action!
+[template-creation]
+recipe = slapos.recipe.template:jinja2
+
+# The template value will be replaced via the info given in software.cfg
+template = {{ template_get[&#39;location&#39;] }}/{{ template_get[&#39;filename&#39;] }}
+
+# Declare where we want to get the new file rendered by Jinja
+rendered = ${directory:data}/data1.txt
+mode = 700
+
+# Using context we can define specific values wich will be substituted in the 
+# template. &quot;key&quot; means that the value is defined by buildout.
+context = 
+  key name instance-parameter:configuration.name
+  key title instance-parameter:configuration.title </code></pre>
+</details>
+
+<details open="open">
+<p><b>Note</b>, the use of <i>template_get</i> which we defined earlier in the <code>software.cfg</code> context of the <code>[instance-profile]</code></p>
+
+<p>Also, it is possible define the template inline.</p>
+
+<pre>
+<code># template = inline:
+#  ----------------------------------
+#  Title : {{title}}
+#  ----------------------------------
+#  Hello {{name}}</code></pre>
+
+<p>Save the file and rebuild by pressing the green play button again.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify Template is Available</h1>
+<img alt="Extending Software Release - Webrunner Interface - Verify Template is Available" src="https://www.erp5.com/slapos-Interface.Extend.Software.Release.Verify.Template.Is.Created?display=&amp;format=png" />
+<details open="open">
+<p>If everything was done correctly you should find the rendered template at <code>${template-creation:rendered}</code>, which should compute to the the <code>srv/data/data1.txt</code> on your instance.</p>
+
+<p>There are plenty of pre-existing recipes available online (see the buildout documentation) as well as in the Slapos <a href="lab.nexedi.com/nexedi/slapos">Git repository</a>.</p>
+
+<p>Should you run into issues, make sure to check the software and instance logs in the <i>Logs</i> section and make sure that sections you have defined (like <i>template-get</i> and <i>template-creation</i>) show up in the logs and can be processed without errors.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Add Component</h1>
+
+<details open="open">
+<p>It is common having to add a new component to a software release in order to add certain features. There is a number of <a href="https://lab.nexedi.com/nexedi/slapos/tree/master/component">components</a> available to use from the SlapOS repository.</p>
+
+<p>This section will implement a log rotation feature using logrotate, cron and gzip.</p>
+</details>
+</section>
+
+<section>
+<h1>Add Logrotate To Software.cfg</h1>
+<img alt="Extending Software Release - Webrunner Interface - Add Logrotate to Software Profile" src="https://www.erp5.com/slapos-Interface.Extend.Software.Release.Add.Logrotate.To.Profile?display=&amp;format=png" />
+<details open="open">
+<p>Start by adding the required components to the <code>extends</code> section:</p>
+
+<pre>
+<code># Add needed components
+  ../../component/dcron/buildout.cfg
+  ../../component/logrotate/buildout.cfg
+  ../../component/gzip/buildout.cfg</code></pre>
+
+<p>and in the <code>parts</code> section, add the deployment entries:</p>
+
+<pre>
+<code># Deployment of new components.
+  dcron
+  logrotate</code></pre>
+
+<p>Logrotate allows rotation of log files and cron will execute them regularly. Gzip is just added to have a more concrete example. Next update the <code>instance.cfg.in</code>.</p>
+</details>
+</section>
+
+<section>
+<h1>Configure Components in instance.cfg.in</h1>
+<img alt="Extending Software Release - Webrunner Interface - Add Logrotate to Instance Profile" src="https://www.erp5.com/slapos-Interface.Extend.Software.Release.Add.Logrotate.To.Instance?display=&amp;format=png" />
+<details open="open">
+<p>Start by creating directories for configs and logs. Comment out the current <i>data</i> folder created for the jinja template earlier, then add the following folders to your <code>[directory]</code> recipe:</p>
+
+<pre>
+<code>bin = ${:home}/bin
+srv = ${:home}/srv
+data = ${:srv}/data
+# path of the log directory used by our service (see [hello-world])
+log = ${:var}/log
+
+# cron directories
+cronentries = ${:etc}/cron.d
+crontabs = ${:etc}/crontabs
+cronstamps = ${:etc}/cronstamps
+
+# logrotate directories
+backup = $${:srv}/backup
+logrotate-backup = $${:backup}/logrotate
+logrotate-entries = $${:etc}/logrotate.d</code></pre>
+
+<p>Next we&#39;ll install and deploy <i>cron</i></p>
+</details>
+
+<details open="open">
+<p>Add a new section for <i>cron</i>:</p>
+
+<pre>
+<code># Deploy cron service
+[cron]
+recipe = slapos.cookbook:cron
+dcrond-binary = ${dcron:location}/sbin/crond
+cronentries = ${directory:cronentries}
+crontabs = ${directory:crontabs}
+cronstamps = ${directory:cronstamps}
+catcher = ${cron-simplelogger:wrapper}
+binary = ${directory:service}/crond
+
+# Add logger to cron
+[cron-simplelogger]
+recipe = slapos.cookbook:simplelogger
+wrapper = ${directory:bin}/cron_simplelogger
+log = ${directory:log}/cron.log
+
+# Add a cron entry
+[cron-entry-logrotate]
+&lt;= cron
+recipe = slapos.cookbook:cron.d
+name = logrotate
+frequency = 0 * * * *
+# Now that the cron is set up, we can define
+# the command to launch at the defined frequency
+command = $${logrotate:wrapper}</code></pre>
+
+<p>First, we deploy cron using cron&#39;s recipe. In this recipe we use as a catcher for logs with a wrapper defined in the <i>cron-simplelogger</i> section. These buildout sections where copied from the <a href="https://lab.nexedi.com/nexedi/slapos/blob/master/software/apache-frontend/instance-apache-frontend.cfg#L331">apache-frontend software profile</a>. It means that it easy to reuse sections from other profiles if they provide features matching your needs.</p>
+</details>
+
+<details open="open">
+<p>Now that the cron is set up, we only need to add the command to launch logrotate at the defined frequency:</p>
+
+<pre>
+<code>command = $${logrotate:wrapper}</code></pre>
+The last step is adding the <code>logrotate</code> itself:
+
+<pre>
+<code># Deploy Logrotate (see ../../slapos/recipe/logrogate.py)
+[logrotate]
+recipe = slapos.cookbook:logrotate
+
+# Binaries
+logrotate-binary = ${logrotate:location}/usr/sbin/logrotate
+gzip-binary = ${gzip:location}/bin/gzip
+gunzip-binary = ${gzip:location}/bin/gunzip
+
+# Directories
+wrapper = $${directory:bin}/logrotate
+conf = $${directory:etc}/logrotate.conf
+
+# in this folder will be defined tho files to save, and how to save them
+logrotate-entries = $${directory:logrotate-entries}
+
+# in this folder the logs will be compressed then saved
+backup = $${directory:logrotate-backup}
+state-file = $${directory:srv}/logrotate.status
+
+[logrotate-entry]
+&lt;= logrotate
+recipe = slapos.cookbook:logrotate.d
+name = helloworld-logrotate
+log = $${directory:log}/log.log
+frequency = daily
+rotatep-num = 30
+sharedscripts = true
+notifempty = true
+create = true</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Rebuild Software</h1>
+<img alt="Extending Software Release - Webrunner Interface - Rebuild Software with Logrotate" src="https://www.erp5.com/slapos-Interface.Extend.Software.Release.Rebuild.Software.With.Logrotate?display=&amp;format=png" />
+<details open="open">
+<p>Once all changes have been made, save the files and rebuild the software clicking the green button. It should finish without problems.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify Logs Are Running</h1>
+<img alt="Extending Software Release - Webrunner Interface - Verifiy Logs are Avaiable" src="https://www.erp5.com/slapos-Interface.Extend.Software.Release.Verify.Logs.Are.Running?display=&amp;format=png" />
+<details open="open">
+<p>Once the rebuild finished, head to <i>Editor</i> and check whether the instance includes the required log files.</p>
+</details>
+</section>
+
+<section>
+<h1>Update MD5 Sum</h1>
+<img alt="Extending Software Release - Webrunner Interface - Update MD5 Sum" src="https://www.erp5.com/webrunner-Interface.Debug.Slapos.Node.Update.Md5.Sum?display=&amp;format=png" />
+<details open="open">
+<p>Once you finished all modifications, don&#39;t forget to uncomment and update the MD5 Sum. On your active file, click the <i>Menu</i> button in the subheader and select <i>Get or Update MD5 sum</i>. The MD5 sum will be displayed on the bottom of the screen. Paste it into your <code>software.cfg</code> profile and rebuild again.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Add Promise</h1>
+
+<details open="open">
+<p>Promise is an executable doing some arbitrary work, then exiting with exit code 0 (&quot;it works&quot;) or greater (&quot;it doesn&#39;t work&quot;). They are run by slapgrid to know whether an instance is working or not.</p>
+
+<p>This section will add a simple promise to the helloworld software profile.</p>
+</details>
+</section>
+
+<section>
+<h1>Promise components</h1>
+
+<ul>
+	<li>Anonmaly</li>
+	<li>Sense</li>
+	<li>Test</li>
+</ul>
+
+<details open="open">
+<p>Writing a promise consists of defining a class called RunPromise which inherits from the GenericPromise class and defines three methods:</p>
+
+<ul>
+	<li><b>anomaly()</b><br />
+	- returns AnomalyResult object describing the promise state. The anomaly method is called by slapgrid when the partition is correctly processed to check if the partition has no anomaly. If AnomalyResult.hasFailed() is True, bang is called if another promise of the same instance didn&#39;t call bang.</li>
+	<li><b>sense()</b><br />
+	- runs the promise with the given frequency, collects data for the promise whenever is makes sense and appends to a log file.</li>
+	<li><b>test()</b><br />
+	- checks TestResult object describing the actual promise state. Test method is called when buildout process a partition, a partition is marked as correctly processed if there is no buildout failures and all promises test() pass.</li>
+</ul>
+</details>
+</section>
+
+<section>
+<h1>Check Port Listening Promise</h1>
+<img alt="Gitlab Interface - SlapOS Recipe Port Listening Promise" src="https://www.erp5.com/gitlab-Interface.Slapos.Recipe.Port.Listening.Promise?display=&amp;format=png" />
+<details open="open">
+<p>The most simple example of promise is &quot;check_if_port_listening&quot; (<a href="https://lab.nexedi.com/nexedi/slapos/blob/master/slapos/recipe/check_port_listening.py">https://lab.nexedi.com/nexedi/slapos/blob/master/slapos/recipe/check_port_listening.py</a>) trying to open a socket to an ip/port. If it works, the promise exits with exit code 0, and slapgrid knows that the instance is working. If the socket can&#39;t be created, it exits with a different exit code, and slapgrid reports it to the SlapOS Master.</p>
+</details>
+</section>
+
+<section>
+<h1>Add Existing Promise to Software Release</h1>
+<img alt="Webrunner Interface - Add Helloworld Frontend Promise" src="https://www.erp5.com/webrunner-Interface.Add.Helloworld.Frontend.Promise?display=&amp;format=png" />
+<details open="open">
+<p>In your instance profile, add the following code:</p>
+
+<pre>
+<code># port listening promise
+[frontend-promise]
+recipe = slapos.cookbook:check_url_available
+path = ${directory:promise}/frontend_promise
+url = ${instance-parameter:url}
+dash_path = ${dash:location}/bin/dash
+curl_path = ${curl:location}/bin/curl</code></pre>
+
+<p>Don&#39;t forget to add <i>frontend-promise</i> to the <code>parts</code> section.</p>
+
+<p>This will call the promise <code>check_url_available</code> previously shown and generate an executable in <code>$${directory:promises}/frontend_promise</code> that when run, will try to connect to the url provided. We also need to specify the path for dash and curl executables. Save the file, update the MD5 sum and rebuild.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

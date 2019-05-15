@@ -1,0 +1,317 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+--><!-- outbound links:
+  slapos-DesignDocument.Understanding.Slapos.Architecture
+  slapos-DesignDocument.Slapos.Introduction
+  slapos-DesignDocument.Slapos.System.Requirements
+  slapos-Howto.Install.Slapos.Master.Experimental
+-->
+<section class="master">
+<h1>Install SlapOS Master (COMP-ROOT)</h1>
+
+<details open="open">
+<p>This tutorial will guide you&nbsp;through the steps of installing and configuring a SlapOS Master to manage a network of computers. It will use the single line installer (for other ways, see <a href="slapos-Howto.Install.Slapos.Master.Experimental">experimental ways to install SlapOS Master</a>). Once completed you will have a <b>COMP-ROOT</b> node similar to that of <a href="https://slapos.vifib.com">slapos.vifib.com</a>, Nexedi&#39;s cloud hosting provider, which can then be used as starting point for creating a network of nodes to provide software instances.</p>
+
+<p>Before starting this tutorial, make sure you have read the <a href="slapos-DesignDocument.Understanding.Slapos.Architecture">SlapOS architecture</a> and <a href="slapos-DesignDocument.Slapos.System.Requirements">SlapOS system requirements</a> in order to make yourself familiar with the terminology and overall concepts.</p>
+
+<p>For completing this tutorial, it is required to have a fresh server (Debian 8 or 9) with command line access and <i>wget</i> installed. The tutorial will use an arbitrary server from a cloud provider such as <a href="https://www.ovh.com/fr/">OVH</a> or <a href="https://www.online.net/fr">Online.net</a>).</p>
+
+<p><b>Note</b>, that Debian 8 and 9 are tested daily and can be installed from binary cache, meaning installation will take between 15-30 mins depending on the machine. Other Linux distributions are also supported by the single line installer, but source code may have to be compiled from scratch meaning installation will take around 6-7 hours.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Installing SlapOS Master</li>
+	<li>Configure SlapOS Master</li>
+	<li>Create First User</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Installing SlapOS Master</h1>
+
+<details open="open">
+<p>The currently recommended way of installing a SlapOS Master is using the <b>single line installer</b>.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify Debian Version</h1>
+
+<pre>
+<code>debian@slapostest:~$ lsb_release -a
+No LSB modules are available.
+Distributor ID: Debian
+Description:    Debian GNU/Linux 8.9 (jessie)
+Release:        8.9
+Codename:       jessie</code></pre>
+
+<details open="open">
+<p>Start by ssh-ing into your server and verifying the Debian version using:</p>
+
+<pre>
+<code>lsb_release -a</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Call Single Line Installer</h1>
+
+<pre>
+<code>sudo su
+# wget https://deploy.erp5.net/slapos-master-standalone
+# bash slapos-master-standalone</code></pre>
+
+<details open="open">
+<p>Change to root user and call the single line installer.</p>
+
+<p>This will download, build and install the required packages (ansible, slapos-node, slapos-proxy), configure the computer as a SlapOS standalone node, and deploy SlapOS Master (ERP5) and a Frontend (Apache) service inside. <b>Note</b>, that, as mentioned, in case the required files are not available from binary cache, compilation may take several hours.</p>
+</details>
+</section>
+
+<section>
+<h1>Check Compilation Status</h1>
+
+<pre>
+<code>TASK [standalone-shared : Check ERP5 state] ************************************
+fatal: [127.0.0.1]: FAILED! =&gt; {
+  &quot;changed&quot;: true,
+  &quot;cmd&quot;: &quot;/usr/local/bin/erp5-show -s&quot;,
+  &quot;delta&quot;: &quot;0:00:00.059622&quot;,
+  &quot;end&quot;: &quot;2018-03-02 10:08:44.316161&quot;,
+  &quot;failed&quot;: true,
+  &quot;rc&quot;: 2,
+  &quot;start&quot;: &quot;2018-03-02 10:08:44.256539&quot;,
+  &quot;stderr&quot;: &quot;&quot;,
+  &quot;stdout&quot;: &quot;Your software is still building, be patient it can take a while&quot;,
+  &quot;stdout_lines&quot;: [&quot;Your software is still building, be patient it can take a while&quot;],
+  &quot;warnings&quot;: []
+}</code></pre>
+
+<details open="open">
+<p>Once the loader finishes its first run it can fail with the above message.</p>
+
+<p><b>This is expected while the software is compiling!</b>. You can rerun the script above or check the status of the installation directly by calling:</p>
+
+<pre>
+<code>erp5-show -s</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Verify Successful Installation</h1>
+
+<pre>
+<code># erp5-show -s
+Build successful, connect to:
+https://[IPv4.adress.xxx]
+with
+username: zope &nbsp;password: [xxx-password-xxx]</code></pre>
+
+<details open="open">
+<p>Once installation has successfully completed, the status message will be similar to the one displayed above. It means the SlapOS Master is ready to be configured.</p>
+
+<p>Run the bash script one&nbsp;final time to check there were no errors,</p>
+
+<pre>
+<code>root@localhost:/home/debian# bash slapos-master-standalone
+...
+PLAY RECAP *********************************************************************
+127.0.0.1                  : ok=56   changed=15   unreachable=0   failed=0</code></pre>
+
+<p>Note down the url provided along with the username and password.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Configure SlapOS Master</h1>
+
+<details open="open">
+<p>The installed SlapOS Master is actually an <a href="https://erp5.nexedi.com/">ERP5 instance</a> with specific business templates providing the functionality to manage users, software releases, hosting subscriptions, usage consumption etc. It is referred to as the <i>ERP5 Cloud Engine</i>. For more details please refer to the <a href="slapos-DesignDocument.Understanding.Slapos.Architecture">slapos architecture</a> design document and <a href="slapos-DesignDocument.Slapos.Introduction">general introduction to SlapOS</a>.</p>
+
+<p>The following steps include accessing the ERP5 cloud engine interface &quot;underlying&quot; SlapOS to launch the ERP5 configurator plus activating email settings and portal alarms so that the SlapOS Dashboard can work as expected.</p>
+</details>
+</section>
+
+<section>
+<h1>Access SlapOS Master ERP5 Interface</h1>
+<img alt="ERP5 Interface - Login Screen" src="https://www.erp5.com/erp5-Interface.Login.Page?format=png&amp;display=" />
+<details open="open">
+<p>Start by going to the URL (<code>https://[IPv4]</code>) provided and <b>append &quot;/erp5/&quot;</b> to the URL which will take you to directly to the ERP5 interface. Login with the username and password you have received when the installation of the Master finished (run <code>erp5-show -s</code> in the terminal).</p>
+</details>
+</section>
+
+<section>
+<h1>Configure Mailhost</h1>
+<img alt="Zope Interface - Configure Mailhost" src="https://www.erp5.com/zope-Interface.Configure.Mailhost?format=png&amp;display=" />
+<details open="open">
+<p>In order for regular users to use the SlapOS Dashboard, registration is necessary and requires providing an <i>email address</i> (for verification and account activation). This in turn mandates configuration of mailhost and site information in the ERP5 cloud engine so that emails are correctly forwarded.</p>
+
+<p>Open <code>https://[IPv4]/erp5/MailHost/manage_main</code> to access the mail host configuration in the Zope interface (ERP5 is built on top of Zope). Add a SMTP mailhost and login/password for the alias under which an email should be forwarded/sent. Make sure the Port is also correctly set to your email provider&#39;s correct SMTP port. Click <i>Save changes</i> when done to continue.</p>
+</details>
+</section>
+
+<section>
+<h1>Update Email Sender</h1>
+<img alt="Zope Interface - Configure Mail Sender" src="https://www.erp5.com/zope-Interface.Configure.Mail.Sender?format=png&amp;display=" />
+<details open="open">
+<p>Open <code>https://[IPv4]/erp5/manage_propertiesForm</code> and add the fields <i>email_from_name</i> and <i>email_from_address</i> to send emails from a valid sender and reduce the chance of emails being labelled as spam. Click <i>Save changes</i> to continue.</p>
+</details>
+</section>
+
+<section>
+<h1>Activate Portal Alarms</h1>
+<img alt="Zope Interface - Configure Portal Alarms" src="https://www.erp5.com/zope-Interface.Configure.Portal.Alarms?display=&amp;format=png" />
+<details open="open">
+<p>Open <code>https://[IPv4]/erp5/portal_alarms/manageAlarmNode</code> select an Alarm Node (<i>admin-0</i>), click <i>Change</i> and then click <i>Subscribe</i>.</p>
+</details>
+</section>
+
+<section>
+<h1>Launch Configurator</h1>
+<img alt="ERP5 Interface - Configure Site" src="https://www.erp5.com/erp5-Interface.Configure.Site?format=png&amp;display=" />
+<details open="open">
+<p>Back in the erp5 interface (<code>https://[IPv4]/erp5/</code>) you can see that the initial ERP5 instance is almost &quot;empty&quot; - it only contains basic features and modules. ERP5 uses so-called business templates (bt5s) to add specific features (such as CRM, project management, etc.). Templates can be added one-by-one or in bundles for which there are various configurators. A configurator for adding the <b>SlapOS Master business templates</b> and upgrade this ERP5 to an ERP5 Cloud Engine has already been provided during installation. To run it, click on <i>My Favorites</i> and select <i>Configure your&nbsp;site</i> which will take you to the available configurators.</p>
+</details>
+</section>
+
+<section>
+<h1>Launch Configurator</h1>
+<img alt="ERP5 Interface - Configurator Menu" src="https://www.erp5.com/erp5-Interface.Configurator.Menu?format=png&amp;display=" />
+<details open="open">
+<p>Only one configurator should be available. Select it by clicking <i>Configure</i> and confirm the installation on the subsequent screen (not pictured) by clicking &quot;install&quot; again.</p>
+</details>
+</section>
+
+<section>
+<h1>Configuration Progress</h1>
+<img alt="ERP5 Interface - Configuration Progress" src="https://www.erp5.com/erp5-Interface.Configuration.Progress?format=png&amp;display=" />
+<details open="open">
+<p>There is a progress indicator (which does not show actual progress!) visible for the duration of the configuration. Configuring SlapOS Master may take between 15-60 minutes depending on the server being used.</p>
+</details>
+</section>
+
+<section>
+<h1>Configuration Progress</h1>
+<img alt="ERP5 Interface - Configuration Finish" src="https://www.erp5.com/erp5-Interface.Configuration.Finish?format=png&amp;display=" />
+<details open="open">
+<p>The page will update once the configuration has finished. Click on <i>Start Using your new ERP5 System</i>. If the link takes you to the login form, there is no need to login again. Just go the homescreen&nbsp;of the ERP5 instance at <code>[IPv4]/erp5/</code>.</p>
+</details>
+</section>
+
+<section>
+<h1>Manager Certificate Authority Tools</h1>
+<img alt="Zope Interface - Set SSL Directory" src="https://www.erp5.com/zope-Interface.Set.Ssl.Directory?display=&amp;format=png" />
+<details open="open">
+<p>As a last step the SSL Certificate Authority tools have to be linked. Head back to the Zope interface to:</p>
+
+<pre>
+<code>https://[IPV4]/erp5/portal_certificate_authority/manage_editCertificateAuthorityToolForm</code></pre>
+
+<p>and set <code>/etc/slapos-ssl/</code> as absolute path. (Note: When setting up SlapOS Master on webrunner, you should set the path to <code>/srv/slapgrid/[your partition]/srv/ssl/</code>)</p>
+
+<p>Click save, then don&#39;t forget to head back to your terminal and restart the SlapOS Master node using:</p>
+
+<pre>
+<code>slapos node restart all</code></pre>
+
+<p>It is required to flush internal caches. Wait a few seconds so ERP5 can restart before heading back to the ERP5 interface.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Master ERP5 Homescreen</h1>
+<img alt="ERP5 Interface - Slapos Master ERP5 Homescreen" src="https://www.erp5.com/erp5-Interface.Slapos.Master.ERP5.Homescreen.Logout?format=png&amp;display=" />
+<details open="open">
+<p>Back on the homescreen you can see the updated number of modules available after configuration. It is beyond the scope of the SlapOS documentation to introduce the ERP5 interface. However you will be able to find many elements in the list of modules which will be used through the SlapOS Dashboard (such as <i>Computers</i> or <i>Hosting Subscriptions</i> for example). The SlapOS Dashboard is also part of ERP5 and can be found in the <i>Web Sites</i> module (called <i>hostingjs</i>).</p>
+
+<p><b>Note</b>, that the zope username/password you are currently using is only meant for developing ERP5 itself. It is not an actual user account which would have an entry in the <i>person_module</i>. To continue, you have to create a first actual user of your SlapOS network by registering through the SlapOS Dashboard.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Create First User</h1>
+
+<details open="open">
+<p>To use services provides on a SlapOS network, users are required to register. The SlapOS Dashboard provides a registration form (described here) as well as several social media logins (should not be used) to register and create an account in the <i>person_module</i> of a SlapOS Master.</p>
+
+<p><b>Note</b>, that some Masters such as <a href="https://slapos.vifib.com/">Vifib</a> will charge for usage of their network and only activate accounts manually after settlement of an initial invoice. By default activation is done automatically once the user verifies his email address.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Master - Login</h1>
+<img alt="SlapOS Interface - Dashboard Login" src="https://www.erp5.com/slapos-Interface.Login.Screen?display=large&amp;format=png" />
+<details open="open">
+<p>Go to your SlapOS Master Dashboard (<code>[IPv4]/erp5/web_site_module/hostingjs/</code> - make sure to not forget the trailing slash). <b>Note</b>, that to register a new user through the SlapOS Dashboard, you need to be logged out of the underlying ERP5 interface. To start the login, click <i>Create New Account</i>.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Master - Register New User</h1>
+<img alt="SlapOS Interface - User Registration" src="https://www.erp5.com/slapos-Interface.User.Registration?display=large&amp;format=png" />
+<details open="open">
+<p>Fill out all the required fields and click <i>Register New User</i>. You will receive a confirmation email to activate your account. Click on the activation link in this message to confirm your email address.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS User - Activation Pending</h1>
+<img alt="SlapOS Interface - Login Screen Pending Activation" src="https://www.erp5.com/slapos-Interface.Login.Screen.Pending.Activation?display=&amp;format=png" />
+<details open="open">
+<p><b>Note</b>, make sure to check your spam folder for the activation email message as it is sometimes ending up there. In the email you received, click the activation link which will send you back to the login screen. You will receive a <b>second email (!)</b> telling you that your account has been activated and is accessible.</p>
+
+<p><b>Note</b>, that the redirect url is still malformed at the time of writing! <b>Please login at <code>[IPv4]/erp5/web_site_module/hostingjs/</code></b> to not get a rendering error. In case you have inadvertently tried to login, please logout again and login at the correct url!</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS User - Dashboard</h1>
+<img alt="SlapOS Interface - Dashboard User" src="https://www.erp5.com/slapos-Interface.Dashboard.User?display=&amp;format=png" />
+<details open="open">
+<p>Once your account is activated you can access the SlapOS Dashboard with the credentials you selected. Also <b>note</b> that this is an empty user account without any servers or services.</p>
+</details>
+</section>
+
+<section>
+<h1>Validate SlapOS User Contract</h1>
+<img alt="SlapOS Interface - Cloud Contract Module" src="https://www.erp5.com/zope-Interface.Cloud.Contract.Module?display=&amp;format=png" /> <img alt="SlapOS Interface - Validate Cloud Contract" src="https://www.erp5.com/zope-Interface.Cloud.Contract.Module.Validate.Object?display=&amp;format=png" />
+<details open="open">
+<p>The SlapOS user you just created isn&#39;t allowed to instantiate any service until its contract is validated (for a commercial use of SlapOS, you wouldn&#39;t want anyone to be able to instantiate something before checking he will be able to pay).</p>
+
+<p>In order to validate the contract, you must first logout from your user account and log back to SlapOS ERP5 master at https://[IPv4]/erp5/login_form with &quot;zope&quot; user (= super user).&nbsp;Then go to&nbsp;https://[IPv4]/erp5/cloud_contract_module and type &quot;%&quot; in the Title search bar and type Enter. You should see one contract for the user you just registered.</p>
+
+<p>Click on the contract, then Action - Validate as seen on the screenshot. Your user is now authorized to instantiate services.&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>The setup of SlapOS Master is complete. You can now start to request services available on your network.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.erp5.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>
