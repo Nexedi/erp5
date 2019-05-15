@@ -11,7 +11,8 @@ for i in range(start, start + num):
   if set_dates:
     foo.setStartDate(DateTime(i, i, i))
   if create_line:
-    foo.newContent()
+    for i in range(0, int(create_line)):
+      foo.newContent()
   if big_category_related:
     big_category = big_category_list[i %len(category_list)]
     foo.setFooBigCategory(big_category)
