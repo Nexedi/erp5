@@ -120,8 +120,7 @@
     })
 
     .declareMethod('allDocs', function (options) {
-      var context = this,
-        queue;
+      var context = this;
       // throw new Error('do not use all docs');
 
       if (options.list_method_template === undefined) {
@@ -232,18 +231,7 @@
         );
       }
 
-      function usePrecalculatedResult() {
-        return options.default_value;
-      }
-
-      if (options.default_value === undefined) {
-        queue = triggerAllDocs();
-      } else {
-        queue = new RSVP.Queue()
-          .push(usePrecalculatedResult);
-      }
-
-      return queue
+      return triggerAllDocs()
         .push(function (catalog_json) {
           var data = catalog_json._embedded.contents || [],
             summary = catalog_json._embedded.sum || [],
