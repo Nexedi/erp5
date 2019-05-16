@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Express Access Tab</title>
 </head>
-<body tal:define="link_url string:http://www.erp5.org">
+<body tal:define="link_url string:https://www.erp5.com">
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>
@@ -38,7 +38,7 @@
 </tr>
 <tr>
   <td>verifyTextPresent</td>
-  <td>Community</td>
+  <td>Internationalization</td>
   <td></td>
 </tr>
 <tr>
