@@ -3187,7 +3187,7 @@ class TestTransactions(AccountingTestCase):
     # clear all existing ids in portal ids
     portal_ids = self.portal.portal_ids
     # ...except uid generator
-    new_uid = portal_ids.generateNewIdList(
+    new_uid, = portal_ids.generateNewIdList(
       id_generator='uid',
       id_group='catalog_uid',
       id_count=1,
