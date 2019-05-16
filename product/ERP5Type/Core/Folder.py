@@ -588,7 +588,7 @@ _HANDLER_LIST = (
 # Bad value, accidentally put everywhere long ago
 _BROKEN_BTREE_HANDLER = 'CMFBTreeFolderHandler'
 
-class Folder(CopyContainer, OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
+class Folder(OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
   """
   A Folder is a subclass of Base but not of XMLObject.
   Folders are not considered as documents and are therefore
@@ -1035,9 +1035,6 @@ class Folder(CopyContainer, OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, F
     if self._getOb(id, None) is None :
       return id
     return self.generateNewId()
-
-  #security.declareProtected( Permissions.DeletePortalContent, 'manage_delObjects' )
-  #manage_delObjects = CopyContainer.manage_delObjects
 
   # Implementation
   hasContent = hasObject
@@ -1643,3 +1640,17 @@ for source_klass, destination_klass in \
       # Zope 2.7 required to have methodId__roles__ defined
       # to know the security ot the method
       setattr(destination_klass, method_id+'__roles__', None)
+
+# Some of Folder base inherits indirectly from a different CopyContainer which
+# lacks our customisations.
+# Resolve all inheritence conflicts between CopyContainer (which Folder
+# inherits from via Base) and those bases in favour of the property
+# from Base (so it may override CopyContainer).
+for CopyContainer_property_id in CopyContainer.__dict__:
+  if CopyContainer_property_id in Folder.__dict__:
+    continue
+  try:
+    Base_property = getattr(Base, CopyContainer_property_id)
+  except AttributeError:
+    continue
+  setattr(Folder, CopyContainer_property_id, Base_property)
