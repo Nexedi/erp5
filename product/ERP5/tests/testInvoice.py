@@ -2471,6 +2471,61 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     self.assertEqual([], packing_list.getDivergenceList())
     self.assertEqual('solved', packing_list.getCausalityState())
+  
+  def test_merge_accounting_invoice(
+                self, quiet=quiet):
+    sequence_list = SequenceList()
+    sequence = sequence_list.addSequenceString(self.PACKING_LIST_DEFAULT_SEQUENCE)
+    sequence_list.play(self, quiet=quiet)
+
+    packing_list = sequence.get('packing_list')
+    packing_list_line = packing_list.getMovementList()[0]
+    quantity = packing_list_line.getQuantity()
+    resource = packing_list_line.getResource()
+    price = packing_list_line.getPrice()
+    packing_list.setReady()
+    packing_list.start()
+    packing_list.stop()
+    self.tic()
+    self.default_quantity = self.default_quantity + 10
+    self.default_price = self.default_price + 10
+    self.tic()
+    sequence_list.play(self, quiet=quiet)
+    packing_list_2 = sequence.get('packing_list')
+    packing_list_line = packing_list_2.getMovementList()[0]
+    quantity_2 = packing_list_line.getQuantity()
+    resource_2 = packing_list_line.getResource()
+    price_2 = packing_list_line.getPrice()
+    packing_list_2.setReady()
+    packing_list_2.start()
+    packing_list_2.stop()
+    self.tic()
+    self.stepInvoiceBuilderAlarm()
+    self.tic()
+    self.default_quantity = self.default_quantity - 10
+    self.default_price = self.default_price - 10
+
+    invoice = packing_list.getCausalityRelatedValue(
+                                  portal_type=self.invoice_portal_type)
+    invoice_2 = packing_list_2.getCausalityRelatedValue(
+                                  portal_type=self.invoice_portal_type)
+    self.assertNotEquals(invoice, None)
+    self.assertNotEquals(invoice_2, None)
+    self.tic()
+    error_list = self.portal.portal_simulation.mergeDeliveryList([invoice, invoice_2])
+    self.tic()
+    self.assertEqual(0, len(error_list))
+    self.assertEqual(invoice.getSimulationState(), 'confirmed')
+    self.assertEqual(invoice.getCausalityState(), 'diverged')
+    self.assertEqual(invoice_2.getSimulationState(), 'cancelled')
+    self.assertEqual(len(invoice.getMovementList()), 2)
+    expected_set = set([
+        (resource,quantity,price),
+        (resource_2, quantity_2,price_2)])
+    result_set = set(sorted(
+      [(x.getResource(), x.getQuantity(), x.getPrice()) for x in invoice.getMovementList()],
+      key=lambda x: x[1]))
+    self.assertEqual(expected_set, result_set)
 
   def test_subcontent_reindexing(self):
     """Tests, that modification on Order are propagated to lines and cells
