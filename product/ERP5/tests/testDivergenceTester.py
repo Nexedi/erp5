@@ -31,6 +31,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import Sequence
 from Products.ERP5.tests.testPackingList import TestPackingListMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5.Document.FloatEquivalenceTester import DEFAULT_PRECISION
 
 class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
   """
@@ -294,6 +295,18 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     sequence = Sequence(self)
     sequence(sequence_string, quiet=self.quiet)
 
+  def stepAddPriceDivergenceTester(self, sequence):
+    """
+     Test the default behavior of Float Divergence Tester.
+
+    """
+    self._addDivergenceTester(
+      sequence,
+      tester_name='price',
+      tester_type='Float Divergence Tester',
+    )
+
+
   def test_QuantityDivergenceTesterCompareMethod(self):
     # XXX-Leo this test is actually just testing
     # FloatEquivalenceTester, and is incomplete. It should test also
@@ -338,6 +351,96 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     divergence_tester.setDecimalRoundingOption('ROUND_HALF_UP')
     divergence_tester.setDecimalExponent('0.01')
     self.assertTrue(divergence_tester_compare(3.0, 3.001))
+
+  def stepCheckFloatEquivalenceTesterWithTheDefaultRange(self, sequence):
+    """
+     Check Float equivalence tester behavior, especially around the
+     default range = epsilon = abs(prevision_value * DEFAULT_PRECISION)
+    """
+    divergence_tester = sequence['price_divergence_tester']
+
+    decision = sequence['order_line']
+    prevision = decision.getDeliveryRelatedValue(
+      portal_type=self.simulation_movement_portal_type)
+    def divergence_tester_compare(prevision_value, decision_value):
+      prevision.setPrice(prevision_value)
+      decision.setPrice(decision_value)
+      return divergence_tester.compare(prevision, decision)
+
+    prevision_value = 3.0
+    # Def. epsilon
+    # The is the epsilon defined by
+    # FloatEquivalenceTester._comparePrevisionDecisionValue()
+    epsilon = abs(prevision_value * DEFAULT_PRECISION)
+
+    self.assertFalse(divergence_tester.isDecimalAlignmentEnabled())
+
+    a_value_slightly_bigger_than_the_range = 3.0 + epsilon + DEFAULT_PRECISION
+    # Since
+    # delta = abs(decision - prevision)
+    # delta = (3.0 + epsilon + DEFAULT_PRECISION) - 3.0
+    #       = epsilon + DEFAULT_PRECISION
+    # epsilon + DEFAULT_PRECISION < -epsilon is False
+    # epsilon + DEFAULT_PRECISION > epsilon is True
+    # --> Diverged <=> compare() returns False
+    self.assertFalse(
+      divergence_tester_compare(3.0, a_value_slightly_bigger_than_the_range))
+
+    a_value_slightly_smaller_than_the_range = 3.0 + epsilon - DEFAULT_PRECISION
+    # Since,
+    # delta = abs(decision - prevision)
+    # delta = (3.0 + epsilon - DEFAULT_PRECISION) - 3.0
+    #       = epsilon - DEFAULT_PRECISION
+    # epsilon - DEFAULT_PRECISION < -epsilon is False
+    # epsilon - DEFAULT_PRECISION > epsilon is False
+    #   --> Not diverged <=> compare() returns True
+    self.assertTrue(
+      divergence_tester_compare(3.0, a_value_slightly_smaller_than_the_range))
+
+    the_value_equal_to_the_range = 3.0 + epsilon
+    # Since,
+    #  delta = abs(decision - prevision)
+    #  delta = (3.0 + epsilon) - 3.0
+    #        = epsilon
+    #  epsilon < -epsilon is False
+    #  epsilon > epsilon is False
+    #  -- Not diverged <=> compare() returns True
+    self.assertTrue(
+      divergence_tester_compare(3.0, the_value_equal_to_the_range))
+
+    # The behavior for absolute_range is the same when we set
+    # 0.0 for the range.
+    # That is why the default bihavior is safe since most of sample
+    # test data has 0.0 for its range.
+    self.assertFalse(divergence_tester_compare(3.0, 3.001))
+    self.assertTrue(divergence_tester_compare(3.0, 3.0))
+
+
+  def testFloatEquivalenceTesterWithTheDefaultRange(self,
+                                                quiet=quiet, run=run_all_test):
+    """
+     All the ranges of Float Equivalence Tester:
+      - quantity_range_max,
+      - quantity_rang_min,
+      - tolerance_range_max,
+      - tolerance_range_min
+      are None by default. 0.0 is NOT the default value.
+
+      This is partly because FloatEquivalenceTester use None range as a flag
+      whether we use absolute_range or tolerance_range.
+      The logic uses the fact that 0.0 is not None, but bool(0.0) is False.
+
+      So here checking how it work when the ranges are None.
+    """
+    if not run: return
+    sequence_string = self.confirmed_order_without_packing_list + """
+          ResetDeliveringRule
+          AddPriceDivergenceTester
+          Tic
+          CheckFloatEquivalenceTesterWithTheDefaultRange
+    """
+    sequence = Sequence(self)
+    sequence(sequence_string, quiet=self.quiet)
 
 
 def test_suite():
