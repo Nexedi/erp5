@@ -419,7 +419,9 @@ def getFieldRawProperties(field, meta_type=None, key=None, key_prefix=None):
       result["values"]["column_list"] = result["values"]["columns"]
       result["values"]["sort_column_list"] = result["values"]["sort_columns"]
       result["values"]["search_column_list"] = result["values"]["search_columns"]
-      portal_type = result["values"]["portal_type"][0][0] if result["values"]["portal_type"] else False
+      portal_type = result["values"]["portal_types"][0][0] if "portal_types" in result["values"] else False
+      if not portal_type:
+        portal_type = result["values"]["portal_type"][0][0] if "portal_type" in result["values"] else False
       query = "portal_type%3A%22" + portal_type + "%22" if portal_type else ""
       full_query = "urn:jio:allDocs?query=" + query
       result["values"]["query"] = full_query
@@ -2203,6 +2205,9 @@ try:
   if "_embedded" in hateoas.keys() and "_view" in hateoas["_embedded"].keys() and "my_action" in hateoas["_embedded"]["_view"].keys():
     if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/HTMLPost_viewAsJio' or hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/HTMLPost_view':
       hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_officejs_jio_connector/HTMLPost_viewAsJio'
+
+    if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/WebPage_viewAsJio' or hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/WebPage_view':
+      hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_officejs_jio_connector/WebPage_viewAsJio'
 except:
   pass
 if hateoas == "":
