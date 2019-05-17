@@ -2745,7 +2745,8 @@ class SimulationTool(BaseTool):
               @UnrestrictedMethod
               def setMainDeliveryModifiable(delivery):
                 # set causality state in such way we can modify delivery
-                delivery.diverge()
+                if portal.portal_workflow.isTransitionPossible(delivery, 'diverge'):
+                  delivery.diverge()
               setMainDeliveryModifiable(main_delivery)
               delivery_type_list = portal.getPortalDeliveryTypeList()
               for delivery_line in to_copy_delivery_line_list:
