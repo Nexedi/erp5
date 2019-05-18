@@ -373,7 +373,7 @@
         </item>
         <item>
             <key> <string>configuration_frontpage_gadget_url</string> </key>
-            <value> <string>ojs_document_list</string> </value>
+            <value> <string>ojs_controller</string> </value>
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
@@ -680,7 +680,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.20242.23513.55227</string> </value>
+                <value> <string>975.50798.33418.15411</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -698,7 +698,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1548752015.22</float>
+                        <float>1558110397.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
