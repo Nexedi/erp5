@@ -248,7 +248,7 @@ gadget_field_new_text_document_action_js_script.js\n
 #needed for appcachestorage sync\n
 /\n
 app/\n
-gadget_officejs_text_editor.configuration\n
+gadget_officejs_discussion_tool.configuration\n
 gadget_officejs_text_editor.json\n
 gadget_officejs_bootloader.js\n
 gadget_officejs_bootloader_presentation.html\n
@@ -750,7 +750,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>975.50927.14797.60689</string> </value>
+                <value> <string>975.55176.23879.58743</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -768,7 +768,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1558122727.72</float>
+                        <float>1558366626.6</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
