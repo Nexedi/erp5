@@ -1,0 +1,382 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Illustration" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/staff</string>
+                <string>group/nexedi</string>
+                <string>contributor/person_module/20121115-586BC0F</string>
+                <string>publication_section/design/graphic</string>
+                <string>publication_section/documentation/temp_slapos</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/svg+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>slapos-Graphic.Introduction.Philosophy</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>USED</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>slapos-Graphic.Introduction.Philosophy.001.en</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Illustration</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>SlapOS Introduction Philosophy</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<svg width="820" height="550" xmlns="http://www.w3.org/2000/svg">\n
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->\n
+\n
+ <g>\n
+  <title>background</title>\n
+  <rect x="-1" y="-1" width="822" height="552" id="canvas_background" fill="none"/>\n
+  <g id="canvasGrid" display="none">\n
+   <rect id="svg_1" width="100%" height="100%" x="0" y="0" stroke-width="0" fill="url(#gridpattern)"/>\n
+  </g>\n
+ </g>\n
+ <g>\n
+  <title>Layer 1</title>\n
+  <rect transform="matrix(0.9924600332840147,0,0,0.9924600332840147,-1177.367189341849,-512.5071619340351) " stroke="#19535f" rx="20" id="svg_38" height="385.85363" width="647.54157" y="589.88342" x="1270.23618" stroke-width="4" fill="none"/>\n
+  <text stroke="#19535f" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="18" id="svg_53" y="228.58673" x="376.45908" stroke-width="0" fill="#ffffff">COMP-2</text>\n
+  <g id="svg_10">\n
+   <g stroke="null" id="svg_2">\n
+    <path stroke="null" d="m633.73564,267.13963l0,5.40909c0,2.01855 -1.29045,3.73497 -3.09091,4.37151l0,1.8103c0,2.56063 -2.07574,4.63637 -4.63636,4.63637l-15.45455,0c-2.56062,0 -4.63636,-2.07574 -4.63636,-4.63637l0,-1.8103c-1.80046,-0.63654 -3.09091,-2.35296 -3.09091,-4.37151l0,-5.40909c0,-1.28022 1.03797,-2.31819 2.31818,-2.31819l26.27273,0c1.28022,0 2.31818,1.03797 2.31818,2.31819zm-27.64567,-8.5c-1.91385,0 -3.63684,-1.17416 -4.32263,-2.9609c-7.49932,-19.53687 -17.48624,-17.56834 -17.48624,-37.22092c0,-18.7767 15.22369,-34 34,-34s34,15.22331 34,34c0,19.65258 -9.98692,17.68405 -17.48605,37.22092c-0.68579,1.78674 -2.40898,2.9609 -4.32263,2.9609l-24.38245,0zm-3.26342,-40.18182c0,-8.52164 6.93291,-15.45455 15.45455,-15.45455c1.70715,0 3.09091,-1.38395 3.09091,-3.09091s-1.38376,-3.0909 -3.09091,-3.0909c-11.93033,0 -21.63637,9.70603 -21.63637,21.63636c0,1.70695 1.38396,3.09091 3.09091,3.09091s3.09091,-1.38396 3.09091,-3.09091z" fill="#19535f" id="svg_3"/>\n
+   </g>\n
+   <text font-weight="bold" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="18" id="svg_6" y="282.51014" x="531.43986" stroke-width="0" fill="#19535f">Smart Apps</text>\n
+   <text font-weight="bold" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="18" id="svg_7" y="309.28834" x="517.60756" stroke-width="0" fill="#19535f">Dumb Network</text>\n
+  </g>\n
+  <g id="svg_17">\n
+   <g stroke="null" id="svg_14">\n
+    <g stroke="null" transform="matrix(0.7420996007120241,-0.8843998652112832,0.8843998652112832,0.7420996007120241,-169.3252808607209,276.75423382747294) " id="svg_5">\n
+     <path stroke="null" d="m250.19326,247.46437l3.84764,2.22096c0.43943,0.25361 0.64338,0.77809 0.49288,1.26266c-0.99947,3.21799 -2.70589,6.12521 -4.93768,8.53983a1.08488,1.08488 0 0 1 -1.33913,0.20351l-3.84475,-2.2206a17.29681,17.29681 0 0 1 -5.48572,3.17176l0,4.44047a1.08434,1.08434 0 0 1 -0.84661,1.05798c-3.15606,0.70875 -6.54568,0.7454 -9.861,0.00063c-0.49567,-0.11132 -0.84896,-0.55039 -0.84896,-1.05843l0,-4.44065a17.29482,17.29482 0 0 1 -5.48572,-3.17176l-3.84475,2.2206a1.08488,1.08488 0 0 1 -1.33913,-0.20351c-2.2317,-2.41462 -3.93821,-5.32184 -4.93768,-8.53983c-0.15051,-0.48448 0.05345,-1.00895 0.49288,-1.26266l3.84773,-2.22095a17.46862,17.46862 0 0 1 0,-6.33802l-3.84764,-2.22096c-0.43943,-0.25361 -0.64339,-0.77809 -0.49288,-1.26265c0.99947,-3.21799 2.70589,-6.12522 4.93768,-8.53984a1.08488,1.08488 0 0 1 1.33913,-0.2035l3.84475,2.22059a17.29681,17.29681 0 0 1 5.48572,-3.17176l0,-4.44056a1.08434,1.08434 0 0 1 0.84661,-1.05797c3.15606,-0.70875 6.54568,-0.74541 9.861,-0.00064c0.49567,0.11133 0.84896,0.55039 0.84896,1.05843l0,4.44065a17.29482,17.29482 0 0 1 5.48572,3.17176l3.84475,-2.22059a1.08488,1.08488 0 0 1 1.33913,0.2035c2.2317,2.41462 3.93821,5.32185 4.93768,8.53984c0.15051,0.48447 -0.05345,1.00895 -0.49288,1.26265l-3.84773,2.22096a17.46907,17.46907 0 0 1 0,6.33811l0,0l0,0l0,-0.00001zm-9.82208,-3.16905c0,-3.98272 -3.2402,-7.22291 -7.22292,-7.22291s-7.22292,3.24019 -7.22292,7.22291s3.2402,7.22292 7.22292,7.22292s7.22292,-3.2402 7.22292,-7.22292z" fill="#19535f" id="svg_4"/>\n
+    </g>\n
+    <g stroke="null" id="svg_9">\n
+     <path stroke="null" d="m185.84824,263.3039l6.8131,3.93268c0.7781,0.44908 1.13925,1.37778 0.87274,2.23581c-1.76978,5.69815 -4.79136,10.84602 -8.74323,15.12162a1.92102,1.92102 0 0 1 -2.37121,0.36035l-6.80798,-3.93204a30.62775,30.62775 0 0 1 -9.71365,5.61629l0,7.86281a1.92006,1.92006 0 0 1 -1.49911,1.87338c-5.58848,1.25499 -11.59054,1.3199 -17.46103,0.00112c-0.8777,-0.19712 -1.50328,-0.97458 -1.50328,-1.87418l0,-7.86313a30.62423,30.62423 0 0 1 -9.71364,-5.61629l-6.80798,3.93205a1.92102,1.92102 0 0 1 -2.37122,-0.36036c-3.95171,-4.2756 -6.97344,-9.42347 -8.74322,-15.12162c-0.26651,-0.85787 0.09464,-1.78657 0.87274,-2.23581l6.81325,-3.93268a30.93198,30.93198 0 0 1 0,-11.22284l-6.8131,-3.93268c-0.77809,-0.44908 -1.13924,-1.37778 -0.87274,-2.23581c1.76978,-5.69815 4.79136,-10.84602 8.74323,-15.12163a1.92102,1.92102 0 0 1 2.37122,-0.36035l6.80797,3.93205a30.62775,30.62775 0 0 1 9.71365,-5.61629l0,-7.86298a1.92006,1.92006 0 0 1 1.49912,-1.87337c5.58847,-1.255 11.59054,-1.3199 17.46103,-0.00112c0.87769,0.19712 1.50327,0.97458 1.50327,1.87417l0,7.86313a30.62423,30.62423 0 0 1 9.71365,5.6163l6.80797,-3.93205a1.92102,1.92102 0 0 1 2.37122,0.36035c3.95171,4.27561 6.97345,9.42348 8.74323,15.12163c0.2665,0.85787 -0.09465,1.78657 -0.87274,2.23581l-6.81326,3.93268a30.93278,30.93278 0 0 1 0,11.223l0,0l0,0zm-17.39212,-5.6115c0,-7.05226 -5.73748,-12.78974 -12.78974,-12.78974s-12.78974,5.73748 -12.78974,12.78974s5.73748,12.78974 12.78974,12.78974s12.78974,-5.73748 12.78974,-12.78974z" fill="#19535f" id="svg_8"/>\n
+    </g>\n
+    <g stroke="null" transform="matrix(1.0979966794029845,0.3567607475363576,-0.3567607475363576,1.0979966794029845,70.59136615618623,-85.8667485883027) " id="svg_13">\n
+     <path stroke="null" d="m185.80749,206.60975l3.57978,2.06633c0.40883,0.23596 0.59859,0.72392 0.45856,1.17475c-0.92989,2.99395 -2.5175,5.69878 -4.59392,7.94529a1.00935,1.00935 0 0 1 -1.2459,0.18934l-3.57709,-2.066a16.09261,16.09261 0 0 1 -5.1038,2.95095l0,4.13133a1.00885,1.00885 0 0 1 -0.78767,0.98432c-2.93633,0.6594 -6.08997,0.69351 -9.17448,0.00058c-0.46117,-0.10357 -0.78986,-0.51206 -0.78986,-0.98474l0,-4.13149a16.09076,16.09076 0 0 1 -5.1038,-2.95095l-3.57709,2.066a1.00935,1.00935 0 0 1 -1.2459,-0.18934c-2.07633,-2.24651 -3.66403,-4.95134 -4.59392,-7.94529c-0.14003,-0.45075 0.04973,-0.93871 0.45856,-1.17475l3.57986,-2.06634a16.25247,16.25247 0 0 1 0,-5.89676l-3.57977,-2.06634c-0.40883,-0.23596 -0.59859,-0.72392 -0.45856,-1.17475c0.92989,-2.99395 2.5175,-5.69878 4.59391,-7.94529a1.00935,1.00935 0 0 1 1.2459,-0.18934l3.57709,2.066a16.09261,16.09261 0 0 1 5.1038,-2.95095l0,-4.13141a1.00885,1.00885 0 0 1 0.78768,-0.98432c2.93633,-0.65941 6.08997,-0.69351 9.17448,-0.00059c0.46116,0.10358 0.78986,0.51207 0.78986,0.98474l0,4.1315a16.09076,16.09076 0 0 1 5.1038,2.95094l3.57709,-2.066a1.00935,1.00935 0 0 1 1.24589,0.18934c2.07634,2.24652 3.66403,4.95134 4.59392,7.9453c0.14003,0.45075 -0.04973,0.93871 -0.45856,1.17475l-3.57986,2.06633a16.25288,16.25288 0 0 1 0,5.89685l0,0.00001zm-9.13827,-2.94843c0,-3.70544 -3.01462,-6.72006 -6.72006,-6.72006s-6.72006,3.01462 -6.72006,6.72006s3.01462,6.72006 6.72006,6.72006s6.72006,-3.01462 6.72006,-6.72006z" fill="#19535f" id="svg_12"/>\n
+    </g>\n
+   </g>\n
+   <text font-weight="bold" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="18" id="svg_16" y="297.07125" x="131.40425" stroke-width="0" fill="#19535f">Everything is a</text>\n
+   <text font-weight="bold" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="18" id="svg_11" y="323.84945" x="160.41988" stroke-width="0" fill="#19535f">Process</text>\n
+  </g>\n
+  <g id="svg_21">\n
+   <path stroke="null" d="m461.8359,239.95588l-8.55,0l0,-8.55c0,-3.92873 -3.19628,-7.125 -7.125,-7.125l-32.775,0l0,-7.125l8.55,0c2.36104,0 4.275,-1.91396 4.275,-4.275l0,-25.65c0,-2.36105 -1.91396,-4.275 -4.275,-4.275l-25.65,0c-2.36105,0 -4.275,1.91395 -4.275,4.275l0,25.65c0,2.36104 1.91395,4.275 4.275,4.275l8.55,0l0,7.125l-32.775,0c-3.92872,0 -7.125,3.19627 -7.125,7.125l0,8.55l-8.55,0c-2.36105,0 -4.275,1.91395 -4.275,4.275l0,25.65c0,2.36104 1.91395,4.275 4.275,4.275l25.65,0c2.36105,0 4.275,-1.91396 4.275,-4.275l0,-25.65c0,-2.36105 -1.91395,-4.275 -4.275,-4.275l-8.55,0l0,-7.125l31.35,0l0,7.125l-8.55,0c-2.36105,0 -4.275,1.91395 -4.275,4.275l0,25.65c0,2.36104 1.91395,4.275 4.275,4.275l25.65,0c2.36104,0 4.275,-1.91396 4.275,-4.275l0,-25.65c0,-2.36105 -1.91396,-4.275 -4.275,-4.275l-8.55,0l0,-7.125l31.35,0l0,7.125l-8.55,0c-2.36105,0 -4.275,1.91395 -4.275,4.275l0,25.65c0,2.36104 1.91395,4.275 4.275,4.275l25.64999,0c2.36105,0 4.275,-1.91396 4.275,-4.275l0,-25.65c0,-2.36105 -1.91395,-4.275 -4.275,-4.275l0.00001,0z" fill="#19535f" id="svg_18"/>\n
+   <text font-weight="bold" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="18" id="svg_19" y="283.84733" x="326.43982" stroke-width="0" fill="#19535f">Distribution and</text>\n
+   <text font-weight="bold" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="18" id="svg_20" y="310.62553" x="353.22108" stroke-width="0" fill="#19535f">Simplicity</text>\n
+  </g>\n
+ </g>\n
+</svg>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Graphic SlapOS Introduction Philosophy</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1524752269.34</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>967.49212.6262.37482</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1528379499.89</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1524752231.85</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

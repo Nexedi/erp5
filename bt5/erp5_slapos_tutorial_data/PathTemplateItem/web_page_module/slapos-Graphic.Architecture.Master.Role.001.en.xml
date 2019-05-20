@@ -1,0 +1,379 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Illustration" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/staff</string>
+                <string>group/nexedi</string>
+                <string>contributor/person_module/20121115-586BC0F</string>
+                <string>publication_section/design/graphic</string>
+                <string>publication_section/documentation/temp_slapos</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/svg+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>slapos-Graphic.Architecture.Master.Role</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>slapos-Graphic.Architecture.Master.Role.001.en</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Illustration</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>SlapOS Architecture Master Role</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<svg width="820" height="550" xmlns="http://www.w3.org/2000/svg">\n
+ <g>\n
+  <title>background</title>\n
+  <rect x="-1" y="-1" width="822" height="552" id="canvas_background" fill="none"/>\n
+ </g>\n
+\n
+ <g>\n
+  <title>Layer 1</title>\n
+  <rect fill="none" stroke-width="4" x="78.50001" y="82.50001" width="647.54157" height="385.85363" id="svg_38" rx="20" stroke="#19535f"/>\n
+  <g stroke="null" id="svg_4">\n
+   <g stroke="null" id="svg_5">\n
+    <path stroke="null" d="m238.74557,279.09494l-105.6337,0c-4.16712,0 -7.54527,-3.37815 -7.54527,-7.54527l0,-15.0905c0,-4.16712 3.37815,-7.54527 7.54527,-7.54527l105.6337,0c4.16712,0 7.54527,3.37815 7.54527,7.54527l0,15.0905c0,4.16712 -3.37815,7.54527 -7.54527,7.54527zm-11.3179,-20.74947c-3.12538,0 -5.65893,2.53355 -5.65893,5.65897s2.53355,5.65893 5.65893,5.65893s5.65893,-2.53355 5.65893,-5.65893s-2.53355,-5.65897 -5.65893,-5.65897zm-15.09054,0c-3.12538,0 -5.65893,2.53355 -5.65893,5.65897s2.53355,5.65893 5.65893,5.65893s5.65897,-2.53355 5.65897,-5.65893s-2.53355,-5.65897 -5.65897,-5.65897zm26.40844,58.47582l-105.6337,0c-4.16712,0 -7.54527,-3.37815 -7.54527,-7.54527l0,-15.09054c0,-4.16712 3.37815,-7.54527 7.54527,-7.54527l105.6337,0c4.16712,0 7.54527,3.37815 7.54527,7.54527l0,15.09054c0,4.16712 -3.37815,7.54527 -7.54527,7.54527zm-11.3179,-20.74947c-3.12538,0 -5.65893,2.53355 -5.65893,5.65893s2.53355,5.65893 5.65893,5.65893s5.65897,-2.53355 5.65897,-5.65893s-2.53359,-5.65893 -5.65897,-5.65893zm-15.09054,0c-3.12538,0 -5.65893,2.53355 -5.65893,5.65893s2.53355,5.65893 5.65893,5.65893s5.65897,-2.53355 5.65897,-5.65893s-2.53355,-5.65893 -5.65897,-5.65893zm26.40844,58.47578l-105.6337,0c-4.16712,0 -7.54527,-3.37815 -7.54527,-7.54527l0,-15.09054c0,-4.16708 3.37815,-7.54523 7.54527,-7.54523l105.6337,0c4.16712,0 7.54527,3.37815 7.54527,7.54523l0,15.09054c0,4.16712 -3.37815,7.54527 -7.54527,7.54527zm-11.3179,-20.74947c-3.12538,0 -5.65893,2.53355 -5.65893,5.65893s2.53355,5.65897 5.65893,5.65897s5.65897,-2.53355 5.65897,-5.65897s-2.53359,-5.65893 -5.65897,-5.65893zm-15.0905,0c-3.12542,0 -5.65897,2.53355 -5.65897,5.65893s2.53355,5.65897 5.65897,5.65897s5.65893,-2.53355 5.65893,-5.65897s-2.53355,-5.65893 -5.65893,-5.65893z" id="svg_3" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_12">\n
+    <path stroke="null" d="m234.39466,240.94838a16.35403,16.35403 0 0 1 6.32663,1.26728l-19.8424,-29.76368a9.86767,9.86767 0 0 0 -8.20997,-4.39374l-55.21887,0a9.86705,9.86705 0 0 0 -8.20977,4.39374l-19.84264,29.76368a16.35403,16.35403 0 0 1 6.32667,-1.26728l98.67035,0z" id="svg_6" fill="#19535f"/>\n
+   </g>\n
+  </g>\n
+  <path id="svg_46" fill-opacity="null" stroke-opacity="null" stroke-width="null" stroke="#000000" fill="#ebf2fa"/>\n
+  <g stroke="null" id="svg_205"/>\n
+  <text stroke="#000000" xml:space="preserve" text-anchor="start" font-family="\'Open Sans\', sans-serif" font-size="20" id="svg_10" y="163.49148" x="121.46239" stroke-width="0" fill="#19535f" font-weight="bold">Master Node</text>\n
+  <g id="svg_6">\n
+   <path stroke="null" fill="#19535f" id="svg_17" d="m358.57023,107.7142c10.97159,0 19.86572,8.89415 19.86572,19.86575s-8.89413,19.86572 -19.86572,19.86572s-19.86575,-8.89413 -19.86575,-19.86572s8.89416,-19.86575 19.86575,-19.86575zm22.75656,41.44749l-8.85428,-2.21353c-9.30251,6.69104 -20.57816,5.19787 -27.80459,0l-8.85427,2.21353c-5.30613,1.32654 -9.02861,6.09408 -9.02861,11.56361l0,4.59954c0,3.29151 2.66823,5.95972 5.95972,5.95972l51.65091,0c3.2915,0 5.95972,-2.66821 5.95972,-5.95972l0,-4.59954c0,-5.46953 -3.72247,-10.23707 -9.0286,-11.56361z"/>\n
+   <text font-weight="bold" fill="#19535f" stroke-width="0" x="427.64199" y="146.50586" id="svg_1" font-size="20" font-family="\'Open Sans\', sans-serif" text-anchor="start" xml:space="preserve" stroke="#000000">Client and Suppliers</text>\n
+  </g>\n
+  <g id="svg_7">\n
+   <path d="m361.66133,213.74378l0,-13.13718l-19.3194,0c-1.28474,0 -2.31832,1.03358 -2.31832,2.31832l0,44.82099c0,1.28475 1.03358,2.31834 2.31832,2.31834l32.45659,0c1.28474,0 2.31832,-1.03359 2.31832,-2.31834l0,-31.6838l-13.13718,0c-1.27508,0 -2.31833,-1.04324 -2.31833,-2.31833l0,0l0,0zm6.18221,22.79689c0,0.63754 -0.52163,1.15916 -1.15916,1.15916l-16.22829,0c-0.63755,0 -1.15918,-0.52163 -1.15918,-1.15916l0,-0.77278c0,-0.63755 0.52164,-1.15916 1.15918,-1.15916l16.22829,0c0.63753,0 1.15916,0.52161 1.15916,1.15916l0,0.77278zm0,-6.18221c0,0.63755 -0.52163,1.15916 -1.15916,1.15916l-16.22829,0c-0.63755,0 -1.15918,-0.52161 -1.15918,-1.15916l0,-0.77278c0,-0.63754 0.52164,-1.15916 1.15918,-1.15916l16.22829,0c0.63753,0 1.15916,0.52162 1.15916,1.15916l0,0.77278zm0,-6.95499l0,0.77279c0,0.63754 -0.52163,1.15916 -1.15916,1.15916l-16.22829,0c-0.63755,0 -1.15918,-0.52162 -1.15918,-1.15916l0,-0.77279c0,-0.63754 0.52164,-1.15916 1.15918,-1.15916l16.22829,0c0.63753,0 1.15916,0.52164 1.15916,1.15916zm9.2733,-11.02171l0,0.58924l-12.36441,0l0,-12.3644l0.58925,0c0.61821,0 1.20745,0.24148 1.64213,0.67616l9.45684,9.46651c0.43471,0.43469 0.67618,1.02393 0.67618,1.63249l0.00001,0l0,0z" id="svg_33" fill="#19535f" stroke="null"/>\n
+   <text stroke="#000000" xml:space="preserve" text-anchor="start" font-family="\'Open Sans\', sans-serif" font-size="20" id="svg_8" y="232.344" x="427.65338" stroke-width="0" fill="#19535f" font-weight="bold">Allocation Requests</text>\n
+  </g>\n
+  <g id="svg_9">\n
+   <path d="m391.50232,309.90527l0,10.97738c0,3.03135 -2.45734,5.48867 -5.48869,5.48867l-54.88682,0c-3.03137,0 -5.48869,-2.45732 -5.48869,-5.48867l0,-10.97738c0,-3.03135 2.45732,-5.48867 5.48869,-5.48867l54.88682,0c3.03135,0 5.48869,2.45732 5.48869,5.48867zm-5.48869,-9.1478a9.09716,9.09716 0 0 1 3.51926,0.70495l-11.03762,-16.55649a5.48903,5.48903 0 0 0 -4.56693,-2.44407l-30.71626,0a5.48869,5.48869 0 0 0 -4.5668,2.44407l-11.03775,16.55649a9.09716,9.09716 0 0 1 3.51929,-0.70495l54.88682,0l-0.00001,0zm-5.48869,10.97736c-2.02086,0 -3.65911,1.63827 -3.65911,3.65913s1.63825,3.65913 3.65911,3.65913s3.65913,-1.63827 3.65913,-3.65913s-1.63825,-3.65913 -3.65913,-3.65913zm-10.97736,0c-2.02086,0 -3.65913,1.63827 -3.65913,3.65913s1.63827,3.65913 3.65913,3.65913s3.65913,-1.63827 3.65913,-3.65913s-1.63827,-3.65913 -3.65913,-3.65913z" id="svg_1" fill="#19535f" stroke="null"/>\n
+   <text font-weight="bold" fill="#19535f" stroke-width="0" x="427.64217" y="311.42306" id="svg_14" font-size="20" font-family="\'Open Sans\', sans-serif" text-anchor="start" xml:space="preserve" stroke="#000000">Available Capacity and Price</text>\n
+  </g>\n
+  <g id="svg_10">\n
+   <path d="m382.11034,368.49862l0,4.80408c0,4.23364 -10.54397,7.68658 -23.54011,7.68658s-23.54012,-3.45294 -23.54012,-7.68658l0,-4.80408c0,-4.23365 10.54397,-7.68659 23.54012,-7.68659s23.54011,3.45295 23.54011,7.68659zm0,10.80922l0,10.80921c0,4.23366 -10.54397,7.68659 -23.54011,7.68659s-23.54012,-3.45293 -23.54012,-7.68659l0,-10.80921c5.05745,3.48299 14.31407,5.10442 23.54012,5.10442s18.48256,-1.62143 23.54011,-5.10442zm0,16.81436l0,10.80922c0,4.23364 -10.54397,7.68657 -23.54011,7.68657s-23.54012,-3.45293 -23.54012,-7.68657l0,-10.80922c5.05745,3.48299 14.31407,5.10442 23.54012,5.10442s18.48256,-1.62144 23.54011,-5.10442z" id="svg_26" fill="#19535f" stroke="null"/>\n
+   <text font-weight="bold" fill="#19535f" stroke-width="0" x="427.64695" y="394.72149" id="svg_8" font-size="20" font-family="\'Open Sans\', sans-serif" text-anchor="start" xml:space="preserve" stroke="#000000">Software Catalog</text>\n
+  </g>\n
+ </g>\n
+</svg>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Graphic SlapOS Architecture Master Role</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1522056548.11</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>967.8110.65291.63423</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1524776697.43</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1522054716.82</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

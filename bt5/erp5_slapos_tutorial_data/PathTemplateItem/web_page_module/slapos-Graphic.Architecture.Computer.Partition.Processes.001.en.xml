@@ -1,0 +1,368 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Illustration" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/staff</string>
+                <string>group/nexedi</string>
+                <string>contributor/person_module/20121115-586BC0F</string>
+                <string>publication_section/design/graphic</string>
+                <string>publication_section/documentation/temp_slapos</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/svg+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>slapos-Graphic.Architecture.Computer.Partition.Processes</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>slapos-Graphic.Architecture.Computer.Partition.Processes.001.en</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Illustration</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>SlapOS Architecture Computer Partition Processes</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<svg width="820" height="550" xmlns="http://www.w3.org/2000/svg">\n
+ <g>\n
+  <title>background</title>\n
+  <rect x="-1" y="-1" width="822" height="552" id="canvas_background" fill="none"/>\n
+ </g>\n
+\n
+ <g>\n
+  <title>Layer 1</title>\n
+  <rect stroke="#19535f" rx="20" id="svg_38" height="385.85363" width="647.54157" y="69.5" x="80.50001" stroke-width="4" fill="none"/>\n
+  <g id="svg_9" stroke="null">\n
+   <path fill="#19535f" id="svg_7" d="m290.17629,199.1127l0,16.8921c0,4.66469 -3.78137,8.44606 -8.44606,8.44606l-84.46051,0c-4.66469,0 -8.44606,-3.78137 -8.44606,-8.44606l0,-16.8921c0,-4.66467 3.78137,-8.44604 8.44606,-8.44604l84.46051,0c4.66469,0 8.44606,3.78137 8.44606,8.44604zm-8.44606,-14.07675a13.9988,13.9988 0 0 1 5.4155,1.08479l-16.98483,-25.47733a8.44658,8.44658 0 0 0 -7.02764,-3.76095l-47.26658,0a8.44606,8.44606 0 0 0 -7.02747,3.76095l-16.985,25.47733a13.9988,13.9988 0 0 1 5.4155,-1.08479l84.46051,0l0.00001,0zm-8.44604,16.8921c-3.10973,0 -5.63071,2.52098 -5.63071,5.63071s2.52098,5.6307 5.63071,5.6307s5.6307,-2.52096 5.6307,-5.6307s-2.52098,-5.63071 -5.6307,-5.63071zm-16.8921,0c-3.10973,0 -5.63071,2.52098 -5.63071,5.63071s2.52098,5.6307 5.63071,5.6307s5.6307,-2.52096 5.6307,-5.6307s-2.52098,-5.63071 -5.6307,-5.63071z" stroke="null"/>\n
+  </g>\n
+  <path id="svg_46" fill-opacity="null" stroke-opacity="null" stroke-width="null" stroke="#000000" fill="#ebf2fa"/>\n
+  <text stroke="#000000" xml:space="preserve" text-anchor="start" font-family="\'Open Sans\', sans-serif" font-size="20" id="svg_10" y="124.96021" x="191.00044" stroke-width="0" fill="#19535f" font-weight="bold">Slave Node</text>\n
+  <text stroke="#000000" xml:space="preserve" text-anchor="start" font-family="\'Open Sans\', sans-serif" font-size="20" id="svg_1" y="205.95431" x="406.6416" stroke-width="0" fill="#19535f" font-weight="bold">Computer Partition Processes</text>\n
+  <g stroke="null" id="svg_4">\n
+   <path stroke="null" fill="#19535f" id="svg_3" d="m354.01426,353.45172l-18.48883,0l0,-18.48879c0,-8.49563 -6.91173,-15.40735 -15.40731,-15.40735l-70.87373,0l0,-15.40731l18.48879,0c5.10559,0 9.2444,-4.1388 9.2444,-9.24444l0,-55.46638c0,-5.10563 -4.1388,-9.2444 -9.2444,-9.2444l-55.46642,0c-5.10559,0 -9.2444,4.13876 -9.2444,9.2444l0,55.46638c0,5.10563 4.1388,9.24444 9.2444,9.24444l18.48879,0l0,15.40731l-70.87373,0c-8.49559,0 -15.40731,6.91173 -15.40731,15.40735l0,18.48879l-18.48883,0c-5.10559,0 -9.2444,4.1388 -9.2444,9.2444l0,55.46642c0,5.10559 4.1388,9.2444 9.2444,9.2444l55.46642,0c5.10559,0 9.2444,-4.1388 9.2444,-9.2444l0,-55.46642c0,-5.10559 -4.1388,-9.2444 -9.2444,-9.2444l-18.48879,0l0,-15.40735l67.79225,0l0,15.40735l-18.48879,0c-5.10559,0 -9.2444,4.1388 -9.2444,9.2444l0,55.46642c0,5.10559 4.1388,9.2444 9.2444,9.2444l55.46642,0c5.10559,0 9.2444,-4.1388 9.2444,-9.2444l0,-55.46642c0,-5.10559 -4.1388,-9.2444 -9.2444,-9.2444l-18.48879,0l0,-15.40735l67.79225,0l0,15.40735l-18.48879,0c-5.10559,0 -9.2444,4.1388 -9.2444,9.2444l0,55.46642c0,5.10559 4.1388,9.2444 9.2444,9.2444l55.46642,0c5.10559,0 9.2444,-4.1388 9.2444,-9.2444l0,-55.46642c0,-5.10559 -4.1388,-9.2444 -9.2444,-9.2444l0,0l-0.00002,0z"/>\n
+  </g>\n
+  <path d="m327.12247,388.07777l3.1028,1.79101c0.35436,0.20452 0.51883,0.62746 0.39746,1.01823c-0.80599,2.59504 -2.18207,4.93947 -3.98182,6.88666a0.87487,0.87487 0 0 1 -1.07989,0.16411l-3.10047,-1.79072a13.94841,13.94841 0 0 1 -4.42377,2.55776l0,3.58086a0.87443,0.87443 0 0 1 -0.68272,0.85317c-2.54509,0.57155 -5.27854,0.60111 -7.95206,0.00051c-0.39972,-0.08977 -0.68462,-0.44384 -0.68462,-0.85353l0,-3.58101a13.94681,13.94681 0 0 1 -4.42377,-2.55776l-3.10047,1.79072a0.87487,0.87487 0 0 1 -1.07989,-0.16411c-1.79968,-1.94719 -3.17583,-4.29162 -3.98182,-6.88666c-0.12137,-0.39069 0.0431,-0.81363 0.39746,-1.01823l3.10288,-1.79101a14.08697,14.08697 0 0 1 0,-5.11108l-3.1028,-1.79101c-0.35436,-0.20452 -0.51883,-0.62746 -0.39746,-1.01823c0.80599,-2.59504 2.18207,-4.93947 3.98182,-6.88666a0.87487,0.87487 0 0 1 1.07989,-0.16411l3.10047,1.79072a13.94841,13.94841 0 0 1 4.42377,-2.55776l0,-3.58094a0.87443,0.87443 0 0 1 0.68272,-0.85317c2.54509,-0.57155 5.27854,-0.60111 7.95206,-0.00051c0.39972,0.08977 0.68462,0.44384 0.68462,0.85353l0,3.58101a13.94681,13.94681 0 0 1 4.42377,2.55776l3.10047,-1.79072a0.87487,0.87487 0 0 1 1.07989,0.16411c1.79968,1.94719 3.17583,4.29162 3.98182,6.88666c0.12137,0.39069 -0.0431,0.81363 -0.39746,1.01823l-3.10288,1.79101a14.08733,14.08733 0 0 1 0,5.11115l0,0.00001zm-7.92068,-2.55557c0,-3.21172 -2.61295,-5.82467 -5.82467,-5.82467s-5.82467,2.61295 -5.82467,5.82467s2.61295,5.82467 5.82467,5.82467s5.82467,-2.61295 5.82467,-5.82467z" id="svg_14" fill="#ebf2fa" stroke="null"/>\n
+  <text xml:space="preserve" text-anchor="start" font-family="\'Open Sans\', sans-serif" font-size="20" id="svg_5" y="255.95431" x="426.64208" stroke-width="0" fill="#19535f" font-weight="normal" stroke="#000000">*  Process (N, 0)</text>\n
+  <text stroke="#000000" xml:space="preserve" text-anchor="start" font-family="\'Open Sans\', sans-serif" font-size="20" id="svg_6" y="285.95431" x="426.64208" stroke-width="0" fill="#19535f" font-weight="normal">*  Process (N, 1)</text>\n
+  <text xml:space="preserve" text-anchor="start" font-family="\'Open Sans\', sans-serif" font-size="20" id="svg_8" y="315.95431" x="426.64208" stroke-width="0" fill="#19535f" font-weight="normal" stroke="#000000">*  ...</text>\n
+  <text xml:space="preserve" text-anchor="start" font-family="\'Open Sans\', sans-serif" font-size="20" id="svg_11" y="345.95431" x="426.64208" stroke-width="0" fill="#19535f" font-weight="normal" stroke="#000000">*  Process (N, q)</text>\n
+  <path d="m354.21486,374.18694l1.91419,1.10491c0.21861,0.12617 0.32008,0.3871 0.2452,0.62817c-0.49723,1.60093 -1.34616,3.04727 -2.45647,4.24853a0.53973,0.53973 0 0 1 -0.66621,0.10124l-1.91275,-1.10474a8.60509,8.60509 0 0 1 -2.72912,1.57794l0,2.20911a0.53946,0.53946 0 0 1 -0.42119,0.52634c-1.57012,0.3526 -3.25645,0.37084 -4.9058,0.00031c-0.2466,-0.05538 -0.42236,-0.27381 -0.42236,-0.52656l0,-2.20921a8.6041,8.6041 0 0 1 -2.72912,-1.57794l-1.91275,1.10474a0.53973,0.53973 0 0 1 -0.66621,-0.10124c-1.11026,-1.20126 -1.95924,-2.6476 -2.45647,-4.24853c-0.07488,-0.24103 0.02659,-0.50195 0.2452,-0.62817l1.91424,-1.10491a8.69057,8.69057 0 0 1 0,-3.15314l-1.91419,-1.10491c-0.21861,-0.12617 -0.32008,-0.38709 -0.2452,-0.62817c0.49723,-1.60093 1.34617,-3.04726 2.45647,-4.24853a0.53973,0.53973 0 0 1 0.66621,-0.10124l1.91276,1.10474a8.60509,8.60509 0 0 1 2.72912,-1.57794l0,-2.20916a0.53946,0.53946 0 0 1 0.42119,-0.52634c1.57012,-0.3526 3.25644,-0.37084 4.9058,-0.00031c0.2466,0.05538 0.42235,0.27381 0.42235,0.52656l0,2.20921a8.6041,8.6041 0 0 1 2.72912,1.57794l1.91275,-1.10474a0.53973,0.53973 0 0 1 0.66621,0.10124c1.11026,1.20127 1.95924,2.6476 2.45647,4.24853c0.07488,0.24103 -0.0266,0.50195 -0.2452,0.62817l-1.91424,1.10491a8.69079,8.69079 0 0 1 0,3.15318l0,0.00001zm-4.88644,-1.57659c0,-1.98138 -1.61199,-3.59337 -3.59337,-3.59337s-3.59337,1.61199 -3.59337,3.59337s1.61198,3.59338 3.59337,3.59338s3.59337,-1.61199 3.59337,-3.59338z" id="svg_15" fill="#ebf2fa" stroke="null"/>\n
+  <path d="m354.92744,405.31487l2.38515,1.37676c0.2724,0.15721 0.39883,0.48234 0.30553,0.78272c-0.61957,1.99482 -1.67737,3.79701 -3.06085,5.29383a0.67252,0.67252 0 0 1 -0.83012,0.12615l-2.38336,-1.37653a10.72226,10.72226 0 0 1 -3.40058,1.96617l0,2.75263a0.67219,0.67219 0 0 1 -0.52482,0.65584c-1.95643,0.43935 -4.05766,0.46208 -6.11281,0.00039c-0.30727,-0.06901 -0.52628,-0.34118 -0.52628,-0.65611l0,-2.75274a10.72103,10.72103 0 0 1 -3.40058,-1.96617l-2.38336,1.37653a0.67252,0.67252 0 0 1 -0.83012,-0.12615c-1.38342,-1.49681 -2.44129,-3.29901 -3.06085,-5.29383c-0.0933,-0.30032 0.03313,-0.62545 0.30553,-0.78272l2.38521,-1.37676a10.82877,10.82877 0 0 1 0,-3.92893l-2.38516,-1.37677c-0.2724,-0.15721 -0.39882,-0.48233 -0.30553,-0.78272c0.61957,-1.99482 1.67738,-3.797 3.06086,-5.29381a0.67252,0.67252 0 0 1 0.83011,-0.12616l2.38337,1.37655a10.72226,10.72226 0 0 1 3.40058,-1.96617l0,-2.75269a0.67219,0.67219 0 0 1 0.52482,-0.65584c1.95643,-0.43935 4.05764,-0.46207 6.11281,-0.00039c0.30727,0.06901 0.52626,0.34118 0.52626,0.65611l0,2.75276a10.72103,10.72103 0 0 1 3.4006,1.96617l2.38334,-1.37656a0.67252,0.67252 0 0 1 0.83013,0.12616c1.38342,1.49681 2.44129,3.29899 3.06085,5.29383c0.0933,0.30033 -0.03313,0.62545 -0.30553,0.78272l-2.38521,1.37676a10.82904,10.82904 0 0 1 0,3.92899l0.00001,-0.00002zm-6.08868,-1.9645c0,-2.46887 -2.0086,-4.47747 -4.47747,-4.47747s-4.47747,2.0086 -4.47747,4.47747s2.00859,4.47748 4.47747,4.47748s4.47747,-2.0086 4.47747,-4.47748z" id="svg_16" fill="#ebf2fa" stroke="null"/>\n
+ </g>\n
+</svg>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Graphic SlapOS Architecture Computer Partition Processes</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1522074315.29</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>967.8166.61701.21131</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1524780066.87</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1522073808.43</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

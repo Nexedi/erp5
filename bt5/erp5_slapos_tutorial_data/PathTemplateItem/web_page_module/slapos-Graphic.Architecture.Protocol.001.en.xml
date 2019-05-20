@@ -1,0 +1,482 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Illustration" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/staff</string>
+                <string>group/nexedi</string>
+                <string>contributor/person_module/20121115-586BC0F</string>
+                <string>publication_section/design/graphic</string>
+                <string>publication_section/documentation/temp_slapos</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/svg+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>slapos-Graphic.Architecture.Protocol</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>slapos-Graphic.Architecture.Protocol.001.en</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Illustration</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>SlapOS Architecture Protocol</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>\074svg width="820" height="550" xmlns="http://www.w3.org/2000/svg"\076\n
+ \074g\076\n
+  \074title\076background\074/title\076\n
+  \074rect fill="none" id="canvas_background" height="552" width="822" y="-1" x="-1"/\076\n
+ \074/g\076\n
+ \074g\076\n
+  \074title\076Layer 1\074/title\076\n
+  \074rect stroke="#19535f" rx="20" id="svg_38" height="385.85363" width="647.54157" y="69.5" x="80.50001" stroke-width="4" fill="none"/\076\n
+  \074path fill="#ebf2fa" stroke="#000000" stroke-width="null" stroke-opacity="null" fill-opacity="null" id="svg_46"/\076\n
+  \074defs\076\n
+   \074linearGradient id="svg_85" y2="-0.12192" x2="-0.38571" y1="0.83275" x1="0.76264"\076\n
+    \074stop offset="0" stop-color="#F69923"/\076\n
+    \074stop offset="0.3123" stop-color="#F79A23"/\076\n
+    \074stop offset="0.8383" stop-color="#E97826"/\076\n
+   \074/linearGradient\076\n
+   \074linearGradient id="svg_84" y2="0.82017" x2="0.1308" y1="-1.70194" x1="4.24145"\076\n
+    \074stop offset="0.3233" stop-color="#9E2064"/\076\n
+    \074stop offset="0.6302" stop-color="#C92037"/\076\n
+    \074stop offset="0.7514" stop-color="#CD2335"/\076\n
+    \074stop offset="1" stop-color="#E97826"/\076\n
+   \074/linearGradient\076\n
+   \074linearGradient id="svg_77" y2="1.09132" x2="-0.94406" y1="-0.09428" x1="1.73271"\076\n
+    \074stop offset="0" stop-color="#282662"/\076\n
+    \074stop offset="0.09548" stop-color="#662E8D"/\076\n
+    \074stop offset="0.7882" stop-color="#9F2064"/\076\n
+    \074stop offset="0.9487" stop-color="#CD2032"/\076\n
+   \074/linearGradient\076\n
+   \074linearGradient id="svg_83" y2="1.07746" x2="-0.55105" y1="-0.16929" x1="1.86182"\076\n
+    \074stop offset="0.3233" stop-color="#9E2064"/\076\n
+    \074stop offset="0.6302" stop-color="#C92037"/\076\n
+    \074stop offset="0.7514" stop-color="#CD2335"/\076\n
+    \074stop offset="1" stop-color="#E97826"/\076\n
+   \074/linearGradient\076\n
+   \074linearGradient id="svg_86" y2="0.93091" x2="-0.54341" y1="0.3921" x1="0.83946"\076\n
+    \074stop offset="0" stop-color="#282662"/\076\n
+    \074stop offset="0.09548" stop-color="#662E8D"/\076\n
+    \074stop offset="0.7882" stop-color="#9F2064"/\076\n
+    \074stop offset="0.9487" stop-color="#CD2032"/\076\n
+   \074/linearGradient\076\n
+   \074linearGradient id="svg_82" y2="0.95315" x2="-0.36487" y1="-0.25193" x1="1.68562"\076\n
+    \074stop offset="0.3233" stop-color="#9E2064"/\076\n
+    \074stop offset="0.6302" stop-color="#C92037"/\076\n
+    \074stop offset="0.7514" stop-color="#CD2335"/\076\n
+    \074stop offset="1" stop-color="#E97826"/\076\n
+   \074/linearGradient\076\n
+   \074linearGradient id="svg_81" y2="0.62315" x2="0.24407" y1="-1.12855" x1="3.61539"\076\n
+    \074stop offset="0.3233" stop-color="#9E2064"/\076\n
+    \074stop offset="0.6302" stop-color="#C92037"/\076\n
+    \074stop offset="0.7514" stop-color="#CD2335"/\076\n
+    \074stop offset="1" stop-color="#E97826"/\076\n
+   \074/linearGradient\076\n
+   \074linearGradient id="svg_80" y2="19.23698" x2="-89.7538" y1="-30.19774" x1="148.34344"\076\n
+    \074stop offset="0.3233" stop-color="#9E2064"/\076\n
+    \074stop offset="0.6302" stop-color="#C92037"/\076\n
+    \074stop offset="0.7514" stop-color="#CD2335"/\076\n
+    \074stop offset="1" stop-color="#E97826"/\076\n
+   \074/linearGradient\076\n
+   \074linearGradient id="svg_79" y2="51.72103" x2="-251.93834" y1="-104.80707" x1="519.33485"\076\n
+    \074stop offset="0.3233" stop-color="#9E2064"/\076\n
+    \074stop offset="0.6302" stop-color="#C92037"/\076\n
+    \074stop offset="0.7514" stop-color="#CD2335"/\076\n
+    \074stop offset="1" stop-color="#E97826"/\076\n
+   \074/linearGradient\076\n
+   \074linearGradient id="svg_78" y2="1456.19299" x2="-3291.24536" y1="-1454.94223" x1="3290.12573"\076\n
+    \074stop offset="0.3233" stop-color="#9E2064"/\076\n
+    \074stop offset="0.6302" stop-color="#C92037"/\076\n
+    \074stop offset="0.7514" stop-color="#CD2335"/\076\n
+    \074stop offset="1" stop-color="#E97826"/\076\n
+   \074/linearGradient\076\n
+  \074/defs\076\n
+  \074g id="svg_205" stroke="null"\076\n
+   \074g id="svg_204" stroke="null"\076\n
+    \074path d="m6735.27568,-1184.60548c20.267,-9.5939 39.714,-20.144 58.137,-31.855c0.64586,-0.42398 1.3003,-0.79943 1.9461,-1.2234c-7.5146,19.097 -3.8382,52.585 -3.7537,52.44c11.85,-34.711 26.515,-65.255 48.744,-84.672c8.4826,7.5928 14.923,21.83 20.214,39.882c2.6186,-24.849 -1.858,-38.732 -4.0514,-43.799c10.917,12.948 30.734,20.176 52.045,26.46c-23.946,-14.536 -39.792,-28.878 -46.004,-42.955c68.312,-21.018 142.29,-46.157 219.96,-74.026c-6.0925,-4.5911 -12.639,-5.1694 -19.442,-3.1706c-14.023,5.1017 -106.22,38.312 -231.64,76.244c-3.5629,1.0778 -7.1567,2.1511 -10.768,3.2375c-1.0067,0.30738 -2.0264,0.59708 -3.0153,0.89135c-13.174,3.9515 -26.666,7.9189 -40.462,11.92c-3.1433,0.90384 -6.2865,1.8077 -9.4475,2.7247c-0.0663,0.02188 -0.13246,0.04334 -0.18106,0.052l-34.514,68.935c0.7115,-0.33546 1.4939,-0.72358 2.2408,-1.0853l-0.00794,-0.00025z" fill="url(#svg_86)" id="svg_179" stroke="null"/\076\n
+    \074path d="m6101.71368,-1110.69758c19.071,7.1961 39.608,9.0845 59.733,11.274c11.854,1.1234 23.738,1.9142 35.63,2.4926c8.1692,-17.104 16.338,-34.207 24.508,-51.311c-31.491,0.85648 -63.087,0.17618 -94.393,-3.5401c30.943,3.103 62.137,1.8494 93.129,0.17007c-22.37,-26.669 -46.909,-51.428 -71.93,-75.588c-23.519,11.839 -46.291,28.35 -58.634,52.244c-6.3001,14.546 -9.9508,31.534 -4.821,46.981c2.7562,7.894 9.065,14.16 16.773,17.277l0.005,0.00043z" fill="url(#svg_85)" id="svg_180" stroke="null"/\076\n
+    \074path d="m6358.80568,-1245.20358c-0.15352,-0.13308 -0.28936,-0.27929 -0.4429,-0.41235l2.6202,2.831c0.23288,0.12909 0.43954,0.22281 0.65472,0.36504c-0.94684,-0.94406 -1.8983,-1.8573 -2.832,-2.7836l-0.00002,-0.00009z" fill="none" id="svg_181" stroke="null"/\076\n
+    \074path d="m6447.28568,-1276.97958c1.6889,1.4638 3.3155,3.0287 4.9198,4.6376c-1.6043,-1.6088 -3.2487,-3.1606 -4.9198,-4.6376z" fill="none" id="svg_182" stroke="null"/\076\n
+    \074path d="m6719.45568,-1248.86858c-0.77256,0.21613 -1.5451,0.43223 -2.3045,0.66606c-15.919,4.505 -31.444,8.8006 -46.643,12.908c-17.052,4.6045 -33.627,8.9648 -49.773,13.089c-17.016,4.3579 -33.536,8.4584 -49.579,12.315c-16.829,4.0548 -33.127,7.826 -48.887,11.362c-12.825,2.8692 -25.296,5.586 -37.426,8.1328c-4.0333,0.85047 -8.0489,1.6878 -12.029,2.4989c-7.881,1.6182 -15.643,3.1754 -23.223,4.6806c-7.0114,1.385 -13.886,2.6958 -20.659,3.9587c-2.2547,0.43715 -4.4872,0.83034 -6.7242,1.2544c-0.3574,0.07295 -0.72796,0.12822 -1.0854,0.20118l2.2258,2.4101l-2.5583,5.1341c0.55154,-0.10716 1.0985,-0.18347 1.6632,-0.27291c10.236,-1.7727 20.516,-3.6333 30.84,-5.5819c5.9654,-1.1307 11.949,-2.2746 17.936,-3.4492c16.6,-3.2538 33.24,-6.675 49.89,-10.268c16.826,-3.614 33.632,-7.4045 50.376,-11.314c16.449,-3.8277 32.823,-7.7924 49.096,-11.819c16.242,-4.0316 32.358,-8.1608 48.306,-12.331c16.654,-4.3643 33.08,-8.7783 49.245,-13.247c3.6463,-1.0025 7.2925,-2.0049 10.926,-3.0251c13.032,-3.6261 25.843,-7.2535 38.464,-10.878l4.0558,-8.1098l-2.4975,-2.7025c-0.37966,0.11693 -0.7594,0.23382 -1.1214,0.3376c-16.542,4.885 -32.709,9.5737 -48.514,14.048l0.0005,0.00197z" fill="none" id="svg_183" stroke="null"/\076\n
+    \074path d="m6453.42568,-1271.13658c-0.012,-0.01769 -0.0309,-0.0044 -0.0441,-0.02219c0,0 0.012,0.01769 0.0441,0.02219z" fill="none" id="svg_184" stroke="null"/\076\n
+    \074path d="m6493.92568,-1290.18458c2.517,2.3588 5.0819,4.8192 7.717,7.3373c0.012,0.0177 0.0441,0.0222 0.057,0.04c-1.2887,-1.2942 -2.5643,-2.5706 -3.8622,-3.8031s-2.5872,-2.4165 -3.9119,-3.5742l0.0001,0z" fill="#be202e" id="svg_185" stroke="null"/\076\n
+    \074path d="m6493.92568,-1290.18458c2.517,2.3588 5.0819,4.8192 7.717,7.3373c0.012,0.0177 0.0441,0.0222 0.057,0.04c-1.2887,-1.2942 -2.5643,-2.5706 -3.8622,-3.8031s-2.5872,-2.4165 -3.9119,-3.5742l0.0001,0z" fill="#be202e" opacity="0.35" id="svg_186" stroke="null"/\076\n
+    \074path d="m232.21677,-456.42911s0.00135,0.00199 0.00347,0.00052c0.00135,0.00199 0.00347,0.00049 0.00496,0.00249c-0.04432,-0.04731 -0.09115,-0.08967 -0.134,-0.13499c-0.18178,-0.18281 -0.36658,-0.35719 -0.55291,-0.5212c0.22123,0.21522 0.44938,0.43146 0.6785,0.65316l-0.00002,0.00001l0,0.00001z" fill="#be202e" id="svg_187" stroke="null"/\076\n
+    \074path d="m6453.33568,-1271.18058s0.012,0.01768 0.0309,0.0046c0.012,0.01769 0.0309,0.0044 0.0441,0.02219c-0.39436,-0.42092 -0.81102,-0.79786 -1.1923,-1.2011c-1.6175,-1.6266 -3.2618,-3.1783 -4.9198,-4.6376c1.9685,1.915 3.9986,3.8391 6.0373,5.8118l-0.0002,0.00011z" fill="#be202e" opacity="0.35" id="svg_188" stroke="null"/\076\n
+    \074path d="m6372.61568,-1162.52258c-16.961,2.5069 -33.723,4.7285 -50.218,6.643c-17.122,1.9948 -33.955,3.6385 -50.416,4.8964c-0.9569,0.07847 -1.9446,0.15235 -2.9192,0.24395c-16.218,1.2152 -32.064,2.0446 -47.489,2.4796l-24.508,51.311c3.1595,0.15406 6.3543,0.2819 9.6108,0.41887c12.251,0.46429 25.27,0.74328 38.902,0.81409c15.365,0.07595 31.56,-0.1344 48.36,-0.60148c15.522,-0.45209 31.601,-1.1524 48.051,-2.1282c14.003,-0.83512 28.316,-1.8448 42.838,-3.0914c0.5424,-0.0455 1.068,-0.07818 1.6104,-0.12365c13.32,-22.17 22.89,-45.722 34.335,-68.583c-16.183,2.7801 -32.241,5.3583 -48.157,7.7211l0,-0.00028z" fill="url(#svg_84)" id="svg_189" stroke="null"/\076\n
+    \074path d="m6718.12568,-1238.52658c-16.179,4.4506 -32.604,8.8647 -49.245,13.247c-15.935,4.1875 -32.046,8.2859 -48.306,12.331c-16.26,4.0447 -32.63,7.9786 -49.096,11.819c-16.744,3.9098 -33.563,7.6825 -50.376,11.314c-16.632,3.5798 -33.29,7.0141 -49.89,10.268c-5.9877,1.1747 -11.971,2.3185 -17.936,3.4492c-10.325,1.9485 -20.605,3.8091 -30.84,5.5819c-0.55156,0.10715 -1.0985,0.18346 -1.6632,0.2729l-34.33,68.583c1.0848,-0.091 2.1565,-0.19968 3.2413,-0.29065c15.39,-1.3696 31.015,-2.9407 46.779,-4.8063c15.922,-1.8736 31.965,-4.0286 48.062,-6.4433c13.582,-2.0319 27.162,-4.2534 40.724,-6.6821c2.7532,-0.50491 5.4578,-1.0013 8.1802,-1.5108c16.983,-3.1812 33.094,-6.6493 48.365,-10.29c17.296,-4.1271 33.51,-8.4938 48.609,-12.995c9.938,-2.9512 19.414,-5.9711 28.431,-8.9803c7.6399,-2.6465 15.232,-5.3947 22.71,-8.2228c17.654,-6.6419 34.84,-13.842 51.5,-21.64c11.64,-22.613 23.669,-45.588 34.514,-68.935c-12.622,3.624 -25.468,7.2775 -38.5,10.904c-3.6155,1.007 -7.2794,2.0226 -10.926,3.0251l-0.0073,0.00115z" fill="url(#svg_83)" id="svg_190" stroke="null"/\076\n
+    \074path d="m6422.22568,-1178.01554c2.2193,-0.41089 4.4564,-0.83491 6.7242,-1.2543c6.7596,-1.2806 13.634,-2.5914 20.659,-3.9587c7.5938,-1.4876 15.325,-3.0493 23.223,-4.6806c3.9802,-0.81109 7.965,-1.653 12.029,-2.4989c12.131,-2.5468 24.602,-5.2637 37.426,-8.1328c15.759,-3.5362 32.058,-7.3074 48.887,-11.362c16.043,-3.8564 32.564,-7.9569 49.579,-12.315c16.146,-4.1247 32.739,-8.4981 49.773,-13.089c15.198,-4.1078 30.724,-8.4034 46.643,-12.908c0.77254,-0.21613 1.5451,-0.43223 2.3045,-0.66606c15.804,-4.4748 31.971,-9.1635 48.483,-14.053c0.3797,-0.1169 0.7594,-0.23382 1.1214,-0.33761l-19.143,-20.676c0.2395,0.5082 0.5278,1.0079 0.7674,1.5161c-23.296,-24.428 -69.92,-45.278 -111.88,-49.997c-19.338,-2.1783 -39.994,-1.8427 -62.413,0.92504c-16.69,2.0589 -34.353,5.4699 -53.191,10.219c-16.464,4.1405 -33.814,9.2679 -52.184,15.425c7.8381,3.7633 15.478,9.0727 22.931,15.646c1.2939,1.1531 2.614,2.3417 3.9119,3.5742s2.5912,2.4958 3.8622,3.8031c-0.012,-0.0177 -0.0441,-0.0222 -0.0569,-0.04c-28.247,-17.932 -58.622,-19.938 -89.973,-14.526c9.3924,3.2694 23.242,9.6268 35.603,20.379c1.6889,1.4639 3.3155,3.0287 4.9198,4.6376c0.41208,0.40779 0.81102,0.79786 1.1923,1.2011c-0.012,-0.01769 -0.0309,-0.0045 -0.0441,-0.02217c0,0 -0.012,-0.01769 -0.0309,-0.0045c-10.105,-6.0061 -19.623,-10.334 -29.164,-13.137c-2.0374,-0.60186 -4.084,-1.1421 -6.1444,-1.5898c-3.1256,-0.70044 -6.2609,-1.229 -9.4323,-1.6212c-2.0262,-0.25361 -4.0614,-0.44555 -6.1236,-0.56271c-4.8248,-0.29107 -9.7616,-0.2522 -14.877,0.1383c-1.5609,0.1148 -3.1265,0.26044 -4.7274,0.43231c-2.2279,0.36236 -4.3941,0.73388 -6.5295,1.11c-9.6447,1.7187 -18.003,3.5811 -25.18,5.4456c-3.5886,0.93227 -6.8597,1.8486 -9.8489,2.7754c-1.1876,0.35928 -2.3445,0.72314 -3.4528,1.0785c-3.3117,1.0836 -6.2044,2.1035 -8.6957,3.0727c-3.7281,1.4472 -6.5694,2.7582 -8.5675,3.8006c1.3027,0.35098 2.6974,0.8259 4.1661,1.4378c10.15,4.2169 23.891,14.166 33.591,23.215l-17.583,-18.98l17.583,18.98c0.15354,0.13308 0.28938,0.2793 0.44292,0.41237c0.95142,0.91323 1.8983,1.8573 2.8628,2.7882c-0.23288,-0.1291 -0.43954,-0.17283 -0.65472,-0.31504l60.164,64.89c0.33972,-0.05983 0.67944,-0.11965 1.05,-0.17492l-0.0028,-0.00061z" fill="url(#svg_82)" id="svg_191" stroke="null"/\076\n
+    \074path d="m6220.32568,-1151.64358c14.308,-0.86871 30.359,-2.1245 48.242,-3.9432c0.92606,-0.08306 1.8876,-0.19234 2.8313,-0.2885c15.471,-1.594 32.288,-3.5552 50.488,-6.02c15.721,-2.1083 32.439,-4.5725 50.245,-7.4582c15.511,-2.5017 31.888,-5.3162 49.043,-8.4876l-59.49,-64.569c-24.736,-13.567 -40.821,-16.794 -59.841,-16.547c-5.1755,0.16099 -10.523,0.42238 -15.982,0.79335c-16.711,1.142 -34.469,3.2787 -51.604,6.1064c-16.54,2.7429 -32.435,6.1328 -46.23,9.9134c-8.7714,2.4155 -16.684,4.99 -23.332,7.642c-5.8619,2.3434 -11.266,4.7863 -16.287,7.3018c25.101,24.05 54.589,54.423 71.931,75.557l-0.0143,-0.00045z" fill="url(#svg_81)" id="svg_192" stroke="null"/\076\n
+    \074path d="m6497.83568,-1286.61458c1.2979,1.2325 2.5912,2.4958 3.8622,3.8031c-1.271,-1.3073 -2.5643,-2.5706 -3.8622,-3.8031z" fill="#be202e" id="svg_193" stroke="null"/\076\n
+    \074path d="m6497.83568,-1286.61458c1.2979,1.2325 2.5912,2.4958 3.8622,3.8031c-1.271,-1.3073 -2.5643,-2.5706 -3.8622,-3.8031z" fill="#be202e" opacity="0.35" id="svg_194" stroke="null"/\076\n
+    \074path d="m6497.83568,-1286.61458c1.2979,1.2325 2.5912,2.4958 3.8622,3.8031c-1.271,-1.3073 -2.5643,-2.5706 -3.8622,-3.8031z" fill="url(#svg_80)" id="svg_195" stroke="null"/\076\n
+    \074path d="m6453.42568,-1271.13658c-0.39438,-0.42091 -0.81102,-0.79787 -1.1923,-1.2011c0.38126,0.4032 0.7802,0.79328 1.1923,1.2011z" fill="#be202e" id="svg_196" stroke="null"/\076\n
+    \074path d="m6453.42568,-1271.13658c-0.39438,-0.42091 -0.81102,-0.79787 -1.1923,-1.2011c0.38126,0.4032 0.7802,0.79328 1.1923,1.2011z" fill="#be202e" opacity="0.35" id="svg_197" stroke="null"/\076\n
+    \074path d="m6453.42568,-1271.13658c-0.39438,-0.42091 -0.81102,-0.79787 -1.1923,-1.2011c0.38126,0.4032 0.7802,0.79328 1.1923,1.2011z" fill="url(#svg_79)" id="svg_198" stroke="null"/\076\n
+    \074path d="m6453.37568,-1271.17658s-0.012,-0.01769 -0.0309,-0.0045c0,0 0.012,0.01769 0.0309,0.0045z" fill="#be202e" id="svg_199" stroke="null"/\076\n
+    \074path d="m6453.37568,-1271.17658s-0.012,-0.01769 -0.0309,-0.0045c0,0 0.012,0.01769 0.0309,0.0045z" fill="#be202e" opacity="0.35" id="svg_200" stroke="null"/\076\n
+    \074path d="m6453.37568,-1271.17658s-0.012,-0.01769 -0.0309,-0.0045c0,0 0.012,0.01769 0.0309,0.0045z" fill="url(#svg_78)" id="svg_201" stroke="null"/\076\n
+    \074path d="m7042.32568,-1117.37558l0.001,2.5785l6.0385,-0.0033l0.009,17.057l2.7988,-0.0014l-0.009,-17.057l6.0825,-0.003l-0.002,-2.5785l-14.92,0.0078l0.0012,-0.0001zm34.886,-0.01798l-6.7365,13.711l-6.7948,-13.704l-3.3718,0.0016l0.009,19.636l2.5784,-0.0013l-0.009,-15.581l6.6845,13.506l1.7851,-0.00092l6.6706,-13.513l0.01,15.581l2.5784,-0.0013l-0.01,-19.636l-3.3938,0.0019l-0.0001,0.00002z" fill="#6d6e71" id="svg_202" stroke="null"/\076\n
+    \074path d="m6776.30568,-1265.39658c12.856,-3.8255 25.903,-7.7645 39.192,-11.856c0.1987,-0.06501 0.3797,-0.1169 0.5784,-0.18193c1.8809,-0.57144 3.7485,-1.1606 5.6293,-1.732c8.9497,-2.7671 16.955,-5.3279 35.178,-11.129c-2.3417,-10.966 2.6186,-24.849 9.1692,-39.363c-11.075,9.2259 -18.387,22.082 -20.063,37.399c-28.142,-41.768 -64.174,-69.017 -107.07,-65.115c-3.8322,0.34468 -7.6833,0.92288 -11.624,1.7871c16.438,0.48738 28.367,7.3631 41.449,27.265c0.0441,0.0223 0.101,0.0623 0.1451,0.0846c-0.0441,-0.0223 -0.101,-0.0623 -0.1451,-0.0846c-33.43,-18.78 -55.964,-23.938 -85.227,-21.557c-6.9364,0.56118 -14.25,1.539 -22.182,2.866c43.476,5.8729 71.791,29.037 88.586,63.086l0.7758,1.4939l18.367,19.182c2.4192,-0.69629 4.8254,-1.4103 7.2492,-2.1374l-0.0079,-0.00767z" fill="url(#svg_77)" id="svg_203" stroke="null"/\076\n
+   \074/g\076\n
+  \074/g\076\n
+  \074style type="text/css"\076\n
+   \074![CDATA[\n
+\t.st0{fill:#C9E8FB;}\n
+\t.st1{fill:#FFFFFF;}\n
+\t.st2{fill:#009FE3;}\n
+]]\076\n
+  \074/style\076\n
+  \074g stroke="null" id="svg_5"\076\n
+   \074path stroke="null" fill="#19535f" d="m459.875,144.46108l-99.75001,0c-3.935,0 -7.125,-3.19 -7.125,-7.125l0,-14.25c0,-3.93501 3.19,-7.125 7.125,-7.125l99.75001,0c3.935,0 7.125,3.18999 7.125,7.125l0,14.25c0,3.935 -3.19,7.125 -7.125,7.125zm-10.6875,-19.59375c-2.95131,0 -5.34375,2.39244 -5.34375,5.34375s2.39244,5.34375 5.34375,5.34375s5.34375,-2.39244 5.34375,-5.34375s-2.39244,-5.34375 -5.34375,-5.34375zm-14.25,0c-2.95131,0 -5.34375,2.39244 -5.34375,5.34375s2.39244,5.34375 5.34375,5.34375s5.34375,-2.39244 5.34375,-5.34375s-2.39244,-5.34375 -5.34375,-5.34375zm24.9375,55.21875l-99.75001,0c-3.935,0 -7.125,-3.19 -7.125,-7.125l0,-14.25c0,-3.93501 3.19,-7.125 7.125,-7.125l99.75001,0c3.935,0 7.125,3.18999 7.125,7.125l0,14.25c0,3.935 -3.19,7.125 -7.125,7.125zm-10.6875,-19.59375c-2.95131,0 -5.34375,2.39244 -5.34375,5.34375s2.39244,5.34375 5.34375,5.34375s5.34375,-2.39244 5.34375,-5.34375s-2.39244,-5.34375 -5.34375,-5.34375zm-14.25,0c-2.95131,0 -5.34375,2.39244 -5.34375,5.34375s2.39244,5.34375 5.34375,5.34375s5.34375,-2.39244 5.34375,-5.34375s-2.39244,-5.34375 -5.34375,-5.34375zm24.9375,55.21875l-99.75001,0c-3.935,0 -7.125,-3.19 -7.125,-7.125l0,-14.25c0,-3.93501 3.19,-7.125 7.125,-7.125l99.75001,0c3.935,0 7.125,3.18999 7.125,7.125l0,14.25c0,3.935 -3.19,7.125 -7.125,7.125zm-10.6875,-19.59375c-2.95131,0 -5.34375,2.39244 -5.34375,5.34375s2.39244,5.34375 5.34375,5.34375s5.34375,-2.39244 5.34375,-5.34375s-2.39244,-5.34375 -5.34375,-5.34375zm-14.25,0c-2.95131,0 -5.34375,2.39244 -5.34375,5.34375s2.39244,5.34375 5.34375,5.34375s5.34375,-2.39244 5.34375,-5.34375s-2.39244,-5.34375 -5.34375,-5.34375z" id="svg_173"/\076\n
+   \074path stroke="null" fill="#19535f" d="m457.71773,108.81419a15.81789,15.81789 0 0 1 6.11923,1.22575l-19.19194,-28.788a9.54417,9.54417 0 0 0 -7.94086,-4.24967l-53.40865,0a9.54358,9.54358 0 0 0 -7.94065,4.24967l-19.19214,28.788a15.81789,15.81789 0 0 1 6.11922,-1.22575l95.43578,0l0.00001,0z" id="svg_174"/\076\n
+  \074/g\076\n
+  \074text font-weight="bold" fill="#19535f" stroke-width="0" x="148.6364" y="282.48404" id="svg_3" font-size="20" font-family="\'Open Sans\', sans-serif" text-anchor="start" xml:space="preserve" stroke="#000000"\076Slave Node\074/text\076\n
+  \074text font-weight="bold" fill="#19535f" stroke-width="0" x="528.6364" y="132.43836" id="svg_14" font-size="20" font-family="\'Open Sans\', sans-serif" text-anchor="start" xml:space="preserve" stroke="#000000"\076Master Node\074/text\076\n
+  \074g id="svg_1"\076\n
+   \074path stroke="null" fill="#19535f" d="m478.50001,407.08333l0,22.83334c0,6.30533 -5.11134,11.41666 -11.41667,11.41666l-114.16667,0c-6.30533,0 -11.41667,-5.11133 -11.41667,-11.41666l0,-22.83334c0,-6.30532 5.11134,-11.41666 11.41667,-11.41666l114.16667,0c6.30533,0 11.41667,5.11134 11.41667,11.41666zm-11.41667,-19.02778a18.92241,18.92241 0 0 1 7.32022,1.46633l-22.95868,-34.43814a11.41738,11.41738 0 0 0 -9.49938,-5.08374l-63.891,0a11.41667,11.41667 0 0 0 -9.49914,5.08374l-22.95892,34.43814a18.92241,18.92241 0 0 1 7.32023,-1.46633l114.16666,0l0.00001,0zm-11.41667,22.83334c-4.20348,0 -7.61111,3.40764 -7.61111,7.61111s3.40763,7.61111 7.61111,7.61111s7.61111,-3.40763 7.61111,-7.61111s-3.40763,-7.61111 -7.61111,-7.61111zm-22.83334,0c-4.20347,0 -7.6111,3.40764 -7.6111,7.61111s3.40763,7.61111 7.6111,7.61111s7.61112,-3.40763 7.61112,-7.61111s-3.40764,-7.61111 -7.61112,-7.61111z" id="svg_178"/\076\n
+   \074text fill="#ffffff" stroke-width="0" x="350.99674" y="425.47127" id="svg_10" font-size="16" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" stroke="#000000"\076COMP-1\074/text\076\n
+  \074/g\076\n
+  \074text fill="#19535f" stroke-width="0" x="488.634" y="179.48432" id="svg_34" font-size="20" font-family="\'Open Sans\', sans-serif" text-anchor="start" xml:space="preserve" stroke="#000000"\076Websocket "Ping" (1sec)\074/text\076\n
+  \074text fill="#19535f" stroke-width="0" x="98.62874" y="319.4857" id="svg_35" font-size="20" font-family="\'Open Sans\', sans-serif" text-anchor="start" xml:space="preserve" stroke="#000000"\076http: set-capacity (once)\074/text\076\n
+  \074text fill="#19535f" stroke-width="0" x="98.62874" y="349.48612" id="svg_36" font-size="20" font-family="\'Open Sans\', sans-serif" text-anchor="start" xml:space="preserve" stroke="#000000"\076http: post-accounting (day)\074/text\076\n
+  \074text fill="#19535f" stroke-width="0" x="98.62874" y="379.48653" id="svg_37" font-size="20" font-family="\'Open Sans\', sans-serif" text-anchor="start" xml:space="preserve" stroke="#000000"\076http: get-cp-list (5min)\074/text\076\n
+  \074text fill="#19535f" stroke-width="0" x="98.62874" y="409.48695" id="svg_38" font-size="20" font-family="\'Open Sans\', sans-serif" text-anchor="start" xml:space="preserve" stroke="#000000"\076http: get-sr-list (5min)\074/text\076\n
+  \074g stroke="null" id="svg_2"\076\n
+   \074g stroke="null" id="svg_26"\076\n
+    \074path stroke="#19535f" fill="#19535f" stroke-width="2" fill-opacity="null" d="m404.36292,237.96894l7.71172,-10.56326l7.71172,10.56326l-15.42344,0z" id="svg_22"/\076\n
+    \074line stroke="#19535f" fill="none" stroke-width="2" stroke-opacity="null" fill-opacity="null" x1="412.07464" y1="232.40166" x2="412.07464" y2="341.68681" id="svg_23" stroke-linejoin="null" stroke-linecap="null"/\076\n
+   \074/g\076\n
+   \074g stroke="null" id="svg_27"\076\n
+    \074path stroke="#19535f" fill="#19535f" stroke-width="2" fill-opacity="null" d="m428.46189,237.96894l7.71172,-10.56326l7.71172,10.56326l-15.42344,0z" id="svg_24"/\076\n
+    \074line stroke="#19535f" fill="none" stroke-width="2" stroke-opacity="null" fill-opacity="null" x1="436.17361" y1="232.40166" x2="436.17361" y2="341.68681" id="svg_25" stroke-linejoin="null" stroke-linecap="null"/\076\n
+   \074/g\076\n
+   \074g stroke="null" id="svg_28"\076\n
+    \074path stroke="#19535f" fill="#19535f" stroke-width="2" fill-opacity="null" d="m356.165,237.96894l7.71172,-10.56326l7.71172,10.56326l-15.42344,0z" id="svg_8"/\076\n
+    \074line stroke="#19535f" fill="none" stroke-width="2" stroke-opacity="null" fill-opacity="null" x1="363.87672" y1="232.40166" x2="363.87672" y2="341.68681" id="svg_15" stroke-linejoin="null" stroke-linecap="null"/\076\n
+   \074/g\076\n
+   \074g stroke="null" id="svg_29"\076\n
+    \074path stroke="#19535f" fill="#19535f" stroke-width="2" fill-opacity="null" d="m380.26397,237.96894l7.71172,-10.56326l7.71172,10.56326l-15.42344,0z" id="svg_18"/\076\n
+    \074line stroke="#19535f" fill="none" stroke-width="2" stroke-opacity="null" fill-opacity="null" x1="387.97569" y1="232.40166" x2="387.97569" y2="341.68681" id="svg_19" stroke-linejoin="null" stroke-linecap="null"/\076\n
+   \074/g\076\n
+   \074g stroke="null" id="svg_33"\076\n
+    \074path stroke="#19535f" fill="#19535f" stroke-width="2" fill-opacity="null" d="m463.16418,330.57292l-7.71172,10.56326l-7.71172,-10.56326l15.42344,0z" id="svg_30"/\076\n
+    \074line stroke="#19535f" fill="none" stroke-width="2" stroke-opacity="null" fill-opacity="null" x1="455.45278" y1="232.40166" x2="455.45278" y2="341.68681" id="svg_31" stroke-linejoin="null" stroke-linecap="null"/\076\n
+   \074/g\076\n
+  \074/g\076\n
+ \074/g\076\n
+\074/svg\076</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Graphic SlapOS Architecture Protocol</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1522070940.95</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>967.8156.21470.4062</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1524779658.83</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1522069320.93</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

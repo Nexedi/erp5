@@ -1,0 +1,571 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Illustration" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/staff</string>
+                <string>group/nexedi</string>
+                <string>contributor/person_module/20121115-586BC0F</string>
+                <string>publication_section/design/graphic</string>
+                <string>publication_section/documentation/temp_slapos</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/svg+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>slapos-Graphic.Slapos.Network.Snapshot</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>USED</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>slapos-Graphic.Slapos.Network.Snapshot.001.en</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Illustration</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>SlapOS Network Snapshot</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<svg width="820" height="550" xmlns="http://www.w3.org/2000/svg">\n
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->\n
+\n
+ <g>\n
+  <title>background</title>\n
+  <rect fill="none" id="canvas_background" height="552" width="822" y="-1" x="-1"/>\n
+  <g display="none" id="canvasGrid">\n
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%" id="svg_1"/>\n
+  </g>\n
+ </g>\n
+ <g>\n
+  <title>Layer 1</title>\n
+  <rect fill="none" stroke-width="4" x="1276.54744" y="589.62928" width="647.54157" height="385.85363" id="svg_38" rx="20" stroke="#19535f" transform="matrix(0.9924600332840147,0,0,0.9924600332840147,-1177.367189341849,-512.5071619340351) "/>\n
+  <rect rx="16" id="svg_27" height="67.21885" width="199.41592" y="759.66647" x="1378.81876" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null" transform="matrix(0.3817263477474741,0,0,0.3145822959448762,-420.7973846361373,-125.97268177015212) "/>\n
+  <rect rx="16" id="svg_26" height="67.21885" width="199.41592" y="835.93611" x="1378.81876" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null" transform="matrix(0.3817263477474741,0,0,0.3145822959448762,-420.7973846361373,-125.97268177015212) "/>\n
+  <rect rx="16" id="svg_25" height="67.21885" width="199.41592" y="1315.00503" x="1378.81876" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null" transform="matrix(0.3817263477474741,0,0,0.3145822959448762,-420.7973846361373,-125.97268177015212) "/>\n
+  <g id="svg_9" stroke="null">\n
+   <path fill="#19535f" d="m302.79883,178.02341l0,33.23599c0,9.17798 -7.44001,16.61798 -16.618,16.61798l-166.17992,0c-9.17797,0 -16.61799,-7.44 -16.61799,-16.61798l0,-33.23599c0,-9.17798 7.44002,-16.61799 16.61799,-16.61799l166.17992,0c9.17799,0 16.618,7.44001 16.618,16.61799zm-33.23599,5.53933c-6.11854,0 -11.07866,4.96013 -11.07866,11.07867s4.96012,11.07865 11.07866,11.07865s11.07867,-4.96013 11.07867,-11.07865s-4.96013,-11.07867 -11.07867,-11.07867zm-33.23599,0c-6.11853,0 -11.07865,4.96013 -11.07865,11.07867s4.96012,11.07865 11.07865,11.07865s11.07867,-4.96013 11.07867,-11.07865s-4.96013,-11.07867 -11.07867,-11.07867z" id="svg_8" stroke="null"/>\n
+  </g>\n
+  <g id="svg_11" stroke="null">\n
+   <path fill="#19535f" d="m302.29887,351.82658l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_10" stroke="null"/>\n
+  </g>\n
+  <text fill="#19535f" stroke-width="0" x="139.54331" y="431.03697" id="svg_39" font-size="20" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" font-weight="bold" stroke="null">SlapOS Master</text>\n
+  <text fill="#19535f" stroke-width="0" x="454.54023" y="391.03544" id="svg_41" font-size="20" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" font-weight="bold" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) ">SlapOS Nodes</text>\n
+  <text fill="#ffffff" stroke-width="0" x="135.42544" y="188.51605" id="svg_44" font-size="18" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " stroke="#19535f">COMP-0</text>\n
+  <rect fill="#19535f" stroke-width="4" x="222.76316" y="348.47548" width="28.99796" height="36.9974" id="svg_57"/>\n
+  <text fill="#ffffff" stroke-width="0" x="134.97917" y="342.71058" id="svg_45" font-size="18" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " stroke="#19535f">COMP-ROOT</text>\n
+  <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->\n
+  <text transform="matrix(0.35243099244750603,0,0,0.35243099244750603,-338.3666901304364,-128.2246792120586) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="26" id="svg_4" y="789.38299" x="1317.55261" stroke-width="0" fill="#ffffff" stroke="#19535f">Frontend</text>\n
+  <text transform="matrix(0.35243099244750603,0,0,0.35243099244750603,-338.3666901304364,-128.2246792120586) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="26" id="svg_5" y="722.83847" x="1285.06992" stroke-width="0" fill="#ffffff" stroke="#19535f">Re6st Registry</text>\n
+  <rect rx="16" id="svg_21" height="67.21885" width="199.41592" y="1388.89219" x="1378.81876" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null" transform="matrix(0.3817263477474741,0,0,0.3145822959448762,-420.7973846361373,-125.97268177015212) "/>\n
+  <text transform="matrix(0.35243099244750603,0,0,0.3671174517025913,-338.3666901304364,-146.71433714865066) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="22" id="svg_22" y="1283.08496" x="1269.92988" stroke-width="0" fill="#ffffff" stroke="#19535f">ERP5 Cloud Engine</text>\n
+  <text transform="matrix(0.35243099244750603,0,0,0.3671174517025913,-338.3666901304364,-146.71433714865066) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="22" id="svg_24" y="1219.77025" x="1295.31471" stroke-width="0" fill="#ffffff" stroke="#19535f">SlapOS Kernel</text>\n
+  <g id="svg_28">\n
+   <g id="svg_7" stroke="null">\n
+    <path fill="#19535f" d="m582.36519,109.22248l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53933c-6.11854,0 -11.07867,4.96013 -11.07867,11.07867s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867zm-33.23599,0c-6.11853,0 -11.07866,4.96013 -11.07866,11.07867s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867z" id="svg_6" stroke="null"/>\n
+   </g>\n
+   <text fill="#ffffff" stroke-width="0" x="384.96827" y="124.38264" id="svg_43" font-size="18" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " stroke="#19535f">COMP-1</text>\n
+  </g>\n
+  <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->\n
+  <g id="svg_130">\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_125">\n
+    <title>background</title>\n
+    <rect fill="none" id="svg_123" height="552" width="822" y="395.49587" x="2840.11227"/>\n
+    <g display="none" id="svg_121">\n
+     <rect fill="url(#gridpattern)" stroke-width="0" y="396.49587" x="2841.11227" height="550" width="820" id="svg_122"/>\n
+    </g>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_119" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,733.19078l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07867,4.96012 -11.07867,11.07866s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07866,4.96012 -11.07866,11.07866s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_120" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_117" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,657.00941l0,33.236c0,9.17798 -7.44002,16.61798 -16.618,16.61798l-166.17993,0c-9.17797,0 -16.61798,-7.44 -16.61798,-16.61798l0,-33.236c0,-9.17797 7.44001,-16.61798 16.61798,-16.61798l166.17993,0c9.17798,0 16.618,7.44001 16.618,16.61798zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96013 -11.07866,11.07867s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96013 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867zm-33.23599,0c-6.11853,0 -11.07865,4.96013 -11.07865,11.07867s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96013 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867z" id="svg_118" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_115" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,579.52103l0,33.23599c0,9.17799 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44001 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_116" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_113" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,503.33967l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44001 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_114" stroke="null"/>\n
+   </g>\n
+   <rect transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3146.79542" y="715.82592" width="199.41592" height="67.21885" id="svg_112" rx="18" stroke="null"/>\n
+   <rect transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3146.79542" y="639.64456" width="199.41592" height="67.21885" id="svg_111" rx="18" stroke="null"/>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_107" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="717.37792" width="60.49696" height="65.27629" id="svg_110" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="717.37792" width="60.49696" height="65.27629" id="svg_109" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="717.37792" width="60.49696" height="65.27629" id="svg_108" rx="18" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_103" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="641.19655" width="60.49696" height="65.27629" id="svg_106" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="641.19655" width="60.49696" height="65.27629" id="svg_105" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="641.19655" width="60.49696" height="65.27629" id="svg_104" rx="18" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_99" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="717.37792" width="60.49696" height="65.27629" id="svg_102" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="717.37792" width="60.49696" height="65.27629" id="svg_101" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="717.37792" width="60.49696" height="65.27629" id="svg_100" rx="18" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_95" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="565.01519" width="60.49696" height="65.27629" id="svg_98" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="565.01519" width="60.49696" height="65.27629" id="svg_97" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="565.01519" width="60.49696" height="65.27629" id="svg_96" rx="18" stroke="null"/>\n
+   </g>\n
+  </g>\n
+  <g id="svg_134">\n
+   <g id="svg_132" stroke="null">\n
+    <path fill="#19535f" d="m582.36519,189.77289l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53933c-6.11854,0 -11.07867,4.96013 -11.07867,11.07867s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867zm-33.23599,0c-6.11853,0 -11.07866,4.96013 -11.07866,11.07867s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867z" id="svg_131" stroke="null"/>\n
+   </g>\n
+   <text fill="#ffffff" stroke-width="0" x="384.96827" y="196.28248" id="svg_133" font-size="18" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " stroke="#19535f">COMP-2</text>\n
+  </g>\n
+  <g id="svg_166">\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_139">\n
+    <title>background</title>\n
+    <rect fill="none" id="svg_136" height="552" width="822" y="798.38086" x="2840.11227"/>\n
+    <g display="none" id="svg_138">\n
+     <rect fill="url(#gridpattern)" stroke-width="0" y="799.38086" x="2841.11227" height="550" width="820" id="svg_137"/>\n
+    </g>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_141" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,1136.07577l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07867,4.96012 -11.07867,11.07866s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07866,4.96012 -11.07866,11.07866s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_140" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_143" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,1059.89441l0,33.23599c0,9.17798 -7.44002,16.61798 -16.618,16.61798l-166.17993,0c-9.17797,0 -16.61798,-7.44 -16.61798,-16.61798l0,-33.23599c0,-9.17798 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44001 16.618,16.61799zm-33.23599,5.53933c-6.11854,0 -11.07866,4.96013 -11.07866,11.07867s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96013 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867zm-33.23599,0c-6.11853,0 -11.07865,4.96013 -11.07865,11.07867s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96013 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867z" id="svg_142" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_145" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,982.40602l0,33.23599c0,9.17799 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07866 11.07866,11.07866s11.07866,-4.96013 11.07866,-11.07866s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07866 11.07865,11.07866s11.07866,-4.96013 11.07866,-11.07866s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_144" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_147" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,906.22466l0,33.23599c0,9.17799 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44001 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_146" stroke="null"/>\n
+   </g>\n
+   <rect transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3146.79542" y="1118.71091" width="199.41592" height="67.21885" id="svg_148" rx="18" stroke="null"/>\n
+   <rect transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3146.79542" y="1042.52955" width="199.41592" height="67.21885" id="svg_149" rx="18" stroke="null"/>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_153" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="1120.26291" width="60.49696" height="65.27629" id="svg_150" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="1120.26291" width="60.49696" height="65.27629" id="svg_151" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="1120.26291" width="60.49696" height="65.27629" id="svg_152" rx="18" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_157" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="1044.08155" width="60.49696" height="65.27629" id="svg_154" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="1044.08155" width="60.49696" height="65.27629" id="svg_155" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="1044.08155" width="60.49696" height="65.27629" id="svg_156" rx="18" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_161" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="1120.26291" width="60.49696" height="65.27629" id="svg_158" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="1120.26291" width="60.49696" height="65.27629" id="svg_159" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="1120.26291" width="60.49696" height="65.27629" id="svg_160" rx="18" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_165" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="967.90019" width="60.49696" height="65.27629" id="svg_162" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="967.90019" width="60.49696" height="65.27629" id="svg_163" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="967.90019" width="60.49696" height="65.27629" id="svg_164" rx="18" stroke="null"/>\n
+   </g>\n
+  </g>\n
+  <g id="svg_170">\n
+   <g id="svg_168" stroke="null">\n
+    <path fill="#19535f" d="m582.36519,269.82299l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53933c-6.11854,0 -11.07867,4.96013 -11.07867,11.07867s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867zm-33.23599,0c-6.11853,0 -11.07866,4.96013 -11.07866,11.07867s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867z" id="svg_167" stroke="null"/>\n
+   </g>\n
+   <text fill="#ffffff" stroke-width="0" x="384.96827" y="267.73574" id="svg_169" font-size="18" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " stroke="#19535f">COMP-3</text>\n
+  </g>\n
+  <g id="svg_202">\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_175">\n
+    <title>background</title>\n
+    <rect fill="none" id="svg_172" height="552" width="822" y="1198.76346" x="2840.11227"/>\n
+    <g display="none" id="svg_174">\n
+     <rect fill="url(#gridpattern)" stroke-width="0" y="1199.76346" x="2841.11227" height="550" width="820" id="svg_173"/>\n
+    </g>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_177" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,1536.45837l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07867,4.96012 -11.07867,11.07866s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07866,4.96012 -11.07866,11.07866s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_176" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_179" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,1460.277l0,33.23599c0,9.17799 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61798 16.61798,-16.61798l166.17993,0c9.17798,0 16.618,7.44001 16.618,16.61798zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96013 -11.07866,11.07866s4.96012,11.07866 11.07866,11.07866s11.07866,-4.96013 11.07866,-11.07866s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96013 -11.07865,11.07866s4.96012,11.07866 11.07865,11.07866s11.07866,-4.96013 11.07866,-11.07866s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_178" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_181" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,1382.78862l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44001 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_180" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_183" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,1306.60726l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44001 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_182" stroke="null"/>\n
+   </g>\n
+   <rect transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3146.79542" y="1519.09351" width="199.41592" height="67.21885" id="svg_184" rx="18" stroke="null"/>\n
+   <rect transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3146.79542" y="1442.91215" width="199.41592" height="67.21885" id="svg_185" rx="18" stroke="null"/>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_189" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="1520.64551" width="60.49696" height="65.27629" id="svg_186" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="1520.64551" width="60.49696" height="65.27629" id="svg_187" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="1520.64551" width="60.49696" height="65.27629" id="svg_188" rx="18" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_193" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="1444.46415" width="60.49696" height="65.27629" id="svg_190" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="1444.46415" width="60.49696" height="65.27629" id="svg_191" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="1444.46415" width="60.49696" height="65.27629" id="svg_192" rx="18" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_197" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="1520.64551" width="60.49696" height="65.27629" id="svg_194" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="1520.64551" width="60.49696" height="65.27629" id="svg_195" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="1520.64551" width="60.49696" height="65.27629" id="svg_196" rx="18" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_201" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="1368.28279" width="60.49696" height="65.27629" id="svg_198" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="1368.28279" width="60.49696" height="65.27629" id="svg_199" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="1368.28279" width="60.49696" height="65.27629" id="svg_200" rx="18" stroke="null"/>\n
+   </g>\n
+  </g>\n
+  <g id="svg_206">\n
+   <g id="svg_204" stroke="null">\n
+    <path fill="#19535f" d="m582.36519,349.87308l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53933c-6.11854,0 -11.07867,4.96013 -11.07867,11.07867s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867zm-33.23599,0c-6.11853,0 -11.07866,4.96013 -11.07866,11.07867s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867z" id="svg_203" stroke="null"/>\n
+   </g>\n
+   <text fill="#ffffff" stroke-width="0" x="384.96827" y="339.189" id="svg_205" font-size="18" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " stroke="#19535f">COMP-...</text>\n
+  </g>\n
+  <g id="svg_238">\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_211">\n
+    <title>background</title>\n
+    <rect fill="none" id="svg_208" height="552" width="822" y="1599.14606" x="2840.11227"/>\n
+    <g display="none" id="svg_210">\n
+     <rect fill="url(#gridpattern)" stroke-width="0" y="1600.14606" x="2841.11227" height="550" width="820" id="svg_209"/>\n
+    </g>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_213" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,1936.84097l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07867,4.96012 -11.07867,11.07866s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07866,4.96012 -11.07866,11.07866s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_212" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_215" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,1860.6596l0,33.23599c0,9.17799 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07866 11.07866,11.07866s11.07866,-4.96013 11.07866,-11.07866s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07866 11.07865,11.07866s11.07866,-4.96013 11.07866,-11.07866s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_214" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_217" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,1783.17122l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44001 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_216" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_219" stroke="null">\n
+    <path fill="#19535f" d="m3133.91181,1706.98986l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44001 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" id="svg_218" stroke="null"/>\n
+   </g>\n
+   <rect transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3146.79542" y="1919.47611" width="199.41592" height="67.21885" id="svg_220" rx="18" stroke="null"/>\n
+   <rect transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3146.79542" y="1843.29475" width="199.41592" height="67.21885" id="svg_221" rx="18" stroke="null"/>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_225" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="1921.02811" width="60.49696" height="65.27629" id="svg_222" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="1921.02811" width="60.49696" height="65.27629" id="svg_223" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="1921.02811" width="60.49696" height="65.27629" id="svg_224" rx="18" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_229" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="1844.84674" width="60.49696" height="65.27629" id="svg_226" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="1844.84674" width="60.49696" height="65.27629" id="svg_227" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="1844.84674" width="60.49696" height="65.27629" id="svg_228" rx="18" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_233" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="1921.02811" width="60.49696" height="65.27629" id="svg_230" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="1921.02811" width="60.49696" height="65.27629" id="svg_231" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="1921.02811" width="60.49696" height="65.27629" id="svg_232" rx="18" stroke="null"/>\n
+   </g>\n
+   <g transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " id="svg_237" stroke="null">\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3358.53479" y="1768.66538" width="60.49696" height="65.27629" id="svg_234" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3426.87396" y="1768.66538" width="60.49696" height="65.27629" id="svg_235" rx="18" stroke="null"/>\n
+    <rect fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="3494.0928" y="1768.66538" width="60.49696" height="65.27629" id="svg_236" rx="18" stroke="null"/>\n
+   </g>\n
+  </g>\n
+ </g>\n
+</svg>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>SlapOS Graphic SlapOS Network Snapshot</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1524750882.06</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>967.49145.38014.12352</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1528379481.99</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1524750826.46</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>

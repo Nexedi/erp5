@@ -1,0 +1,587 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Illustration" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/staff</string>
+                <string>group/nexedi</string>
+                <string>publication_section/design/graphic/flowchart</string>
+                <string>publication_section/documentation/temp_slapos</string>
+                <string>contributor/person_module/20121115-586BC0F</string>
+                <string>contributor/person_module/jps</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/svg+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>slapos-Graphic.Requirements.Network.Layout</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Cloud Computing Provider System Overview</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>slapos-Graphic.Requirements.Network.Layout.002.en</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Illustration</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>SlapOS Requirements Network Layout</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<svg width="820" height="550" xmlns="http://www.w3.org/2000/svg">\n
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->\n
+\n
+ <g>\n
+  <title>background</title>\n
+  <rect x="-1" y="-1" width="822" height="552" id="canvas_background" fill="none"/>\n
+  <g id="canvasGrid" display="none">\n
+   <rect id="svg_1" width="100%" height="100%" x="0" y="0" stroke-width="0" fill="url(#gridpattern)"/>\n
+  </g>\n
+ </g>\n
+ <g>\n
+  <title>Layer 1</title>\n
+  <rect transform="matrix(0.506279226171232,0,0,0.40066957837106615,-587.2225361000346,-281.4533222236772) " stroke="#19535f" rx="20" id="svg_14" height="385.85363" width="647.54157" y="1340.9661" x="1210.96212" stroke-width="4" fill="none"/>\n
+  <rect transform="matrix(0.9924600332840147,0,0,0.9924600332840147,-1177.367189341849,-512.5071619340351) " stroke="#19535f" rx="20" id="svg_38" height="385.85363" width="647.54157" y="587.86701" x="1318.54868" stroke-width="4" fill="none"/>\n
+  <rect transform="matrix(0.3817263477474741,0,0,0.3145822959448762,-420.7973846361373,-125.97268177015212) " stroke="null" fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="1487.3648" y="759.66647" width="199.41592" height="67.21885" id="svg_27" rx="16"/>\n
+  <rect transform="matrix(0.3817263477474741,0,0,0.3145822959448762,-420.7973846361373,-125.97268177015212) " stroke="null" fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="1487.3648" y="835.93611" width="199.41592" height="67.21885" id="svg_26" rx="16"/>\n
+  <rect transform="matrix(0.3817263477474741,0,0,0.3145822959448762,-420.7973846361373,-125.97268177015212) " stroke="null" fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="1487.3648" y="1313.41669" width="199.41592" height="67.21885" id="svg_25" rx="16"/>\n
+  <g stroke="null" id="svg_9">\n
+   <path stroke="null" id="svg_8" d="m344.23371,178.02341l0,33.23599c0,9.17798 -7.44001,16.61798 -16.618,16.61798l-166.17992,0c-9.17797,0 -16.61799,-7.44 -16.61799,-16.61798l0,-33.23599c0,-9.17798 7.44002,-16.61799 16.61799,-16.61799l166.17992,0c9.17799,0 16.618,7.44001 16.618,16.61799zm-33.23599,5.53933c-6.11854,0 -11.07866,4.96013 -11.07866,11.07867s4.96012,11.07865 11.07866,11.07865s11.07867,-4.96013 11.07867,-11.07865s-4.96013,-11.07867 -11.07867,-11.07867zm-33.23599,0c-6.11853,0 -11.07865,4.96013 -11.07865,11.07867s4.96012,11.07865 11.07865,11.07865s11.07867,-4.96013 11.07867,-11.07865s-4.96013,-11.07867 -11.07867,-11.07867z" fill="#19535f"/>\n
+  </g>\n
+  <g stroke="null" id="svg_11">\n
+   <path stroke="null" id="svg_10" d="m343.73375,351.82658l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f"/>\n
+  </g>\n
+  <text font-weight="bold" xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="20" id="svg_39" y="437.2522" x="148.97819" stroke-width="0" fill="#19535f" stroke="null">Administrative Layer</text>\n
+  <text transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " font-weight="bold" xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="20" id="svg_41" y="395.79689" x="491.52529" stroke-width="0" fill="#19535f">User Layer</text>\n
+  <text stroke="#19535f" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="18" id="svg_44" y="188.51605" x="172.4105" stroke-width="0" fill="#ffffff">COMP-0</text>\n
+  <rect id="svg_57" height="36.9974" width="28.99796" y="348.47548" x="264.19804" stroke-width="4" fill="#19535f"/>\n
+  <text stroke="#19535f" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="18" id="svg_45" y="342.71058" x="171.96423" stroke-width="0" fill="#ffffff">COMP-ROOT</text>\n
+  <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->\n
+  <text stroke="#19535f" fill="#ffffff" stroke-width="0" x="1391.17065" y="792.21852" id="svg_4" font-size="26" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(0.35243099244750603,0,0,0.35243099244750603,-338.3666901304364,-128.2246792120586) ">Frontend Apache</text>\n
+  <text stroke="#19535f" fill="#ffffff" stroke-width="0" x="1402.6387" y="722.83847" id="svg_5" font-size="26" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(0.35243099244750603,0,0,0.35243099244750603,-338.3666901304364,-128.2246792120586) ">Re6st Registry</text>\n
+  <rect transform="matrix(0.3817263477474741,0,0,0.3145822959448762,-420.7973846361373,-125.97268177015212) " stroke="null" fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="1487.3648" y="1388.89219" width="199.41592" height="67.21885" id="svg_21" rx="16"/>\n
+  <text stroke="#19535f" fill="#ffffff" stroke-width="0" x="1387.49866" y="1283.08496" id="svg_22" font-size="22" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(0.35243099244750603,0,0,0.3671174517025913,-338.3666901304364,-146.71433714865066) ">ERP5 Cloud Engine</text>\n
+  <text stroke="#19535f" fill="#ffffff" stroke-width="0" x="1402.95913" y="1219.77025" id="svg_24" font-size="22" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(0.35243099244750603,0,0,0.3671174517025913,-338.3666901304364,-146.71433714865066) ">Frontend Apache</text>\n
+  <g id="svg_28">\n
+   <g stroke="null" id="svg_7">\n
+    <path stroke="null" id="svg_6" d="m623.80007,109.22248l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53933c-6.11854,0 -11.07867,4.96013 -11.07867,11.07867s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867zm-33.23599,0c-6.11853,0 -11.07866,4.96013 -11.07866,11.07867s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867z" fill="#19535f"/>\n
+   </g>\n
+   <text stroke="#19535f" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="18" id="svg_43" y="124.38264" x="421.95333" stroke-width="0" fill="#ffffff">COMP-1</text>\n
+  </g>\n
+  <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->\n
+  <g id="svg_130">\n
+   <g id="svg_125" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <title>background</title>\n
+    <rect x="3047.35507" y="395.49587" width="822" height="552" id="svg_123" fill="none"/>\n
+    <g id="svg_121" display="none">\n
+     <rect id="svg_122" width="820" height="550" x="3048.35507" y="396.49587" stroke-width="0" fill="url(#gridpattern)"/>\n
+    </g>\n
+   </g>\n
+   <g stroke="null" id="svg_119" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <path stroke="null" id="svg_120" d="m3341.15461,733.19078l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07867,4.96012 -11.07867,11.07866s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07866,4.96012 -11.07866,11.07866s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_117" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <path stroke="null" id="svg_118" d="m3341.15461,657.00941l0,33.236c0,9.17798 -7.44002,16.61798 -16.618,16.61798l-166.17993,0c-9.17797,0 -16.61798,-7.44 -16.61798,-16.61798l0,-33.236c0,-9.17797 7.44001,-16.61798 16.61798,-16.61798l166.17993,0c9.17798,0 16.618,7.44001 16.618,16.61798zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96013 -11.07866,11.07867s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96013 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867zm-33.23599,0c-6.11853,0 -11.07865,4.96013 -11.07865,11.07867s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96013 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867z" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_115" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <path stroke="null" id="svg_116" d="m3341.15461,579.52103l0,33.23599c0,9.17799 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44001 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_113" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <path stroke="null" id="svg_114" d="m3341.15461,503.33967l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44001 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f"/>\n
+   </g>\n
+   <rect stroke="null" rx="18" id="svg_112" height="67.21885" width="199.41592" y="715.82592" x="3354.03823" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) "/>\n
+   <rect stroke="null" rx="18" id="svg_111" height="67.21885" width="199.41592" y="639.64456" x="3354.03823" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) "/>\n
+   <g stroke="null" id="svg_107" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <rect stroke="null" rx="18" id="svg_110" height="65.27629" width="60.49696" y="717.37792" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_109" height="65.27629" width="60.49696" y="717.37792" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_108" height="65.27629" width="60.49696" y="717.37792" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_103" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <rect stroke="null" rx="18" id="svg_106" height="65.27629" width="60.49696" y="641.19655" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_105" height="65.27629" width="60.49696" y="641.19655" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_104" height="65.27629" width="60.49696" y="641.19655" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_99" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <rect stroke="null" rx="18" id="svg_102" height="65.27629" width="60.49696" y="717.37792" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_101" height="65.27629" width="60.49696" y="717.37792" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_100" height="65.27629" width="60.49696" y="717.37792" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_95" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <rect stroke="null" rx="18" id="svg_98" height="65.27629" width="60.49696" y="565.01519" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_97" height="65.27629" width="60.49696" y="565.01519" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_96" height="65.27629" width="60.49696" y="565.01519" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+   </g>\n
+  </g>\n
+  <g id="svg_134">\n
+   <g stroke="null" id="svg_132">\n
+    <path stroke="null" id="svg_131" d="m623.80007,189.77289l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53933c-6.11854,0 -11.07867,4.96013 -11.07867,11.07867s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867zm-33.23599,0c-6.11853,0 -11.07866,4.96013 -11.07866,11.07867s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867z" fill="#19535f"/>\n
+   </g>\n
+   <text stroke="#19535f" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="18" id="svg_133" y="196.28248" x="421.95333" stroke-width="0" fill="#ffffff">COMP-2</text>\n
+  </g>\n
+  <g id="svg_166">\n
+   <g id="svg_139" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <title>background</title>\n
+    <rect x="3047.35507" y="798.38086" width="822" height="552" id="svg_136" fill="none"/>\n
+    <g id="svg_138" display="none">\n
+     <rect id="svg_137" width="820" height="550" x="3048.35507" y="799.38086" stroke-width="0" fill="url(#gridpattern)"/>\n
+    </g>\n
+   </g>\n
+   <g stroke="null" id="svg_141" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <path stroke="null" id="svg_140" d="m3341.15461,1136.07577l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07867,4.96012 -11.07867,11.07866s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07866,4.96012 -11.07866,11.07866s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_143" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <path stroke="null" id="svg_142" d="m3341.15461,1059.89441l0,33.23599c0,9.17798 -7.44002,16.61798 -16.618,16.61798l-166.17993,0c-9.17797,0 -16.61798,-7.44 -16.61798,-16.61798l0,-33.23599c0,-9.17798 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44001 16.618,16.61799zm-33.23599,5.53933c-6.11854,0 -11.07866,4.96013 -11.07866,11.07867s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96013 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867zm-33.23599,0c-6.11853,0 -11.07865,4.96013 -11.07865,11.07867s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96013 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867z" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_145" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <path stroke="null" id="svg_144" d="m3341.15461,982.40602l0,33.23599c0,9.17799 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07866 11.07866,11.07866s11.07866,-4.96013 11.07866,-11.07866s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07866 11.07865,11.07866s11.07866,-4.96013 11.07866,-11.07866s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_147" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <path stroke="null" id="svg_146" d="m3341.15461,906.22466l0,33.23599c0,9.17799 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44001 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f"/>\n
+   </g>\n
+   <rect stroke="null" rx="18" id="svg_148" height="67.21885" width="199.41592" y="1118.71091" x="3354.03823" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) "/>\n
+   <rect stroke="null" rx="18" id="svg_149" height="67.21885" width="199.41592" y="1042.52955" x="3354.03823" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) "/>\n
+   <g stroke="null" id="svg_153" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <rect stroke="null" rx="18" id="svg_150" height="65.27629" width="60.49696" y="1120.26291" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_151" height="65.27629" width="60.49696" y="1120.26291" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_152" height="65.27629" width="60.49696" y="1120.26291" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_157" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <rect stroke="null" rx="18" id="svg_154" height="65.27629" width="60.49696" y="1044.08155" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_155" height="65.27629" width="60.49696" y="1044.08155" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_156" height="65.27629" width="60.49696" y="1044.08155" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_161" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <rect stroke="null" rx="18" id="svg_158" height="65.27629" width="60.49696" y="1120.26291" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_159" height="65.27629" width="60.49696" y="1120.26291" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_160" height="65.27629" width="60.49696" y="1120.26291" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_165" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <rect stroke="null" rx="18" id="svg_162" height="65.27629" width="60.49696" y="967.90019" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_163" height="65.27629" width="60.49696" y="967.90019" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_164" height="65.27629" width="60.49696" y="967.90019" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+   </g>\n
+  </g>\n
+  <g id="svg_170">\n
+   <g stroke="null" id="svg_168">\n
+    <path stroke="null" id="svg_167" d="m623.80007,269.82299l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53933c-6.11854,0 -11.07867,4.96013 -11.07867,11.07867s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867zm-33.23599,0c-6.11853,0 -11.07866,4.96013 -11.07866,11.07867s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867z" fill="#19535f"/>\n
+   </g>\n
+   <text stroke="#19535f" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="18" id="svg_169" y="267.73574" x="421.95333" stroke-width="0" fill="#ffffff">COMP-3</text>\n
+  </g>\n
+  <g id="svg_202">\n
+   <g id="svg_175" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <title>background</title>\n
+    <rect x="3047.35507" y="1198.76346" width="822" height="552" id="svg_172" fill="none"/>\n
+    <g id="svg_174" display="none">\n
+     <rect id="svg_173" width="820" height="550" x="3048.35507" y="1199.76346" stroke-width="0" fill="url(#gridpattern)"/>\n
+    </g>\n
+   </g>\n
+   <g stroke="null" id="svg_177" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <path stroke="null" id="svg_176" d="m3341.15461,1536.45837l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07867,4.96012 -11.07867,11.07866s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07866,4.96012 -11.07866,11.07866s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_179" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <path stroke="null" id="svg_178" d="m3341.15461,1460.277l0,33.23599c0,9.17799 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61798 16.61798,-16.61798l166.17993,0c9.17798,0 16.618,7.44001 16.618,16.61798zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96013 -11.07866,11.07866s4.96012,11.07866 11.07866,11.07866s11.07866,-4.96013 11.07866,-11.07866s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96013 -11.07865,11.07866s4.96012,11.07866 11.07865,11.07866s11.07866,-4.96013 11.07866,-11.07866s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_181" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <path stroke="null" id="svg_180" d="m3341.15461,1382.78862l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44001 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_183" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <path stroke="null" id="svg_182" d="m3341.15461,1306.60726l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44001 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f"/>\n
+   </g>\n
+   <rect stroke="null" rx="18" id="svg_184" height="67.21885" width="199.41592" y="1519.09351" x="3354.03823" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) "/>\n
+   <rect stroke="null" rx="18" id="svg_185" height="67.21885" width="199.41592" y="1442.91215" x="3354.03823" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) "/>\n
+   <g stroke="null" id="svg_189" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <rect stroke="null" rx="18" id="svg_186" height="65.27629" width="60.49696" y="1520.64551" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_187" height="65.27629" width="60.49696" y="1520.64551" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_188" height="65.27629" width="60.49696" y="1520.64551" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_193" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <rect stroke="null" rx="18" id="svg_190" height="65.27629" width="60.49696" y="1444.46415" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_191" height="65.27629" width="60.49696" y="1444.46415" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_192" height="65.27629" width="60.49696" y="1444.46415" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_197" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <rect stroke="null" rx="18" id="svg_194" height="65.27629" width="60.49696" y="1520.64551" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_195" height="65.27629" width="60.49696" y="1520.64551" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_196" height="65.27629" width="60.49696" y="1520.64551" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+   </g>\n
+   <g stroke="null" id="svg_201" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) ">\n
+    <rect stroke="null" rx="18" id="svg_198" height="65.27629" width="60.49696" y="1368.28279" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_199" height="65.27629" width="60.49696" y="1368.28279" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+    <rect stroke="null" rx="18" id="svg_200" height="65.27629" width="60.49696" y="1368.28279" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f"/>\n
+   </g>\n
+  </g>\n
+  <g id="svg_206">\n
+   <g stroke="null" id="svg_204">\n
+    <path stroke="null" id="svg_203" d="m623.80007,349.87308l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53933c-6.11854,0 -11.07867,4.96013 -11.07867,11.07867s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867zm-33.23599,0c-6.11853,0 -11.07866,4.96013 -11.07866,11.07867s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07867 -11.07866,-11.07867z" fill="#19535f"/>\n
+   </g>\n
+   <text stroke="#19535f" transform="matrix(1.12031413398185,0,0,1.12031413398185,-32.09156276932276,-7.15869097192008) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="18" id="svg_205" y="339.189" x="421.95333" stroke-width="0" fill="#ffffff">COMP-...</text>\n
+  </g>\n
+  <g id="svg_238" stroke="null">\n
+   <g id="svg_211" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " stroke="null">\n
+    <title>background</title>\n
+    <rect x="3047.35507" y="1599.14606" width="822" height="552" id="svg_208" fill="none" stroke="null"/>\n
+    <g id="svg_210" display="none" stroke="null">\n
+     <rect id="svg_209" width="820" height="550" x="3048.35507" y="1600.14606" stroke-width="0" fill="url(#gridpattern)" stroke="null"/>\n
+    </g>\n
+   </g>\n
+   <g id="svg_213" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " stroke="null">\n
+    <path id="svg_212" d="m3341.15461,1936.84097l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61799,-7.44001 -16.61799,-16.61799l0,-33.23599c0,-9.17797 7.44002,-16.61799 16.61799,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07867,4.96012 -11.07867,11.07866s4.96013,11.07865 11.07867,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07866,4.96012 -11.07866,11.07866s4.96013,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f" stroke="null"/>\n
+   </g>\n
+   <g id="svg_215" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " stroke="null">\n
+    <path id="svg_214" d="m3341.15461,1860.6596l0,33.23599c0,9.17799 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07866 11.07866,11.07866s11.07866,-4.96013 11.07866,-11.07866s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07866 11.07865,11.07866s11.07866,-4.96013 11.07866,-11.07866s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f" stroke="null"/>\n
+   </g>\n
+   <g id="svg_217" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " stroke="null">\n
+    <path id="svg_216" d="m3341.15461,1783.17122l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44001 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f" stroke="null"/>\n
+   </g>\n
+   <g id="svg_219" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " stroke="null">\n
+    <path id="svg_218" d="m3341.15461,1706.98986l0,33.23599c0,9.17798 -7.44002,16.61799 -16.618,16.61799l-166.17993,0c-9.17797,0 -16.61798,-7.44001 -16.61798,-16.61799l0,-33.23599c0,-9.17797 7.44001,-16.61799 16.61798,-16.61799l166.17993,0c9.17798,0 16.618,7.44002 16.618,16.61799zm-33.23599,5.53934c-6.11854,0 -11.07866,4.96012 -11.07866,11.07866s4.96012,11.07865 11.07866,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866zm-33.23599,0c-6.11853,0 -11.07865,4.96012 -11.07865,11.07866s4.96012,11.07865 11.07865,11.07865s11.07866,-4.96012 11.07866,-11.07865s-4.96012,-11.07866 -11.07866,-11.07866z" fill="#19535f" stroke="null"/>\n
+   </g>\n
+   <rect rx="18" id="svg_220" height="67.21885" width="199.41592" y="1919.47611" x="3354.03823" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " stroke="null"/>\n
+   <rect rx="18" id="svg_221" height="67.21885" width="199.41592" y="1843.29475" x="3354.03823" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " stroke="null"/>\n
+   <g id="svg_225" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " stroke="null">\n
+    <rect rx="18" id="svg_222" height="65.27629" width="60.49696" y="1921.02811" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null"/>\n
+    <rect rx="18" id="svg_223" height="65.27629" width="60.49696" y="1921.02811" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null"/>\n
+    <rect rx="18" id="svg_224" height="65.27629" width="60.49696" y="1921.02811" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null"/>\n
+   </g>\n
+   <g id="svg_229" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " stroke="null">\n
+    <rect rx="18" id="svg_226" height="65.27629" width="60.49696" y="1844.84674" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null"/>\n
+    <rect rx="18" id="svg_227" height="65.27629" width="60.49696" y="1844.84674" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null"/>\n
+    <rect rx="18" id="svg_228" height="65.27629" width="60.49696" y="1844.84674" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null"/>\n
+   </g>\n
+   <g id="svg_233" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " stroke="null">\n
+    <rect rx="18" id="svg_230" height="65.27629" width="60.49696" y="1921.02811" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null"/>\n
+    <rect rx="18" id="svg_231" height="65.27629" width="60.49696" y="1921.02811" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null"/>\n
+    <rect rx="18" id="svg_232" height="65.27629" width="60.49696" y="1921.02811" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null"/>\n
+   </g>\n
+   <g id="svg_237" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) " stroke="null">\n
+    <rect rx="18" id="svg_234" height="65.27629" width="60.49696" y="1768.66538" x="3565.77759" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null"/>\n
+    <rect rx="18" id="svg_235" height="65.27629" width="60.49696" y="1768.66538" x="3634.11676" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null"/>\n
+    <rect rx="18" id="svg_236" height="65.27629" width="60.49696" y="1768.66538" x="3701.3356" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null"/>\n
+   </g>\n
+  </g>\n
+  <rect transform="matrix(0.3817263477474741,0,0,0.3145822959448762,-420.7973846361373,-125.97268177015212) " stroke="null" fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="1211.53109" y="1427.07505" width="199.41592" height="67.21885" id="svg_2" rx="16"/>\n
+  <text stroke="#19535f" fill="#ffffff" stroke-width="0" x="1132.12978" y="1315.75012" id="svg_3" font-size="22" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(0.35243099244750603,0,0,0.3671174517025913,-338.3666901304364,-146.71433714865066) ">SlapProxy</text>\n
+  <rect rx="18" id="svg_16" height="65.27629" width="60.49696" y="708.94133" x="1134.1066" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) "/>\n
+  <rect rx="18" id="svg_20" height="65.27629" width="60.49696" y="593.98053" x="1136.60575" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) "/>\n
+  <rect rx="18" id="svg_23" height="65.27629" width="60.49696" y="1591.14055" x="1131.60745" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) "/>\n
+  <g id="svg_32">\n
+   <rect transform="matrix(0.3817263477474741,0,0,0.3145822959448762,-420.7973846361373,-125.97268177015212) " stroke="null" fill="#19535f" stroke-width="null" stroke-opacity="null" fill-opacity="null" x="1486.05584" y="1236.41125" width="199.41592" height="67.21885" id="svg_29" rx="16"/>\n
+   <text stroke="#19535f" fill="#ffffff" stroke-width="0" x="1407.34739" y="1152.42431" id="svg_30" font-size="22" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(0.35243099244750603,0,0,0.3671174517025913,-338.3666901304364,-146.71433714865066) ">SlapOS Kernel</text>\n
+  </g>\n
+  <rect rx="18" id="svg_33" height="65.27629" width="60.49696" y="1478.67889" x="1131.60745" fill-opacity="null" stroke-opacity="null" stroke-width="null" fill="#19535f" stroke="null" transform="matrix(0.19993400038174866,0,0,0.19993400038174866,0,0) "/>\n
+  <text stroke="#19535f" fill="#19535f" stroke-width="0" x="1649.78535" y="1231.36512" id="svg_34" font-size="22" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(0.35243099244750603,0,0,0.3671174517025913,-338.3666901304364,-146.71433714865066) ">Ports 80/443</text>\n
+  <text stroke="#19535f" fill="#19535f" stroke-width="0" x="1649.78535" y="1292.6123" id="svg_35" font-size="22" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(0.35243099244750603,0,0,0.3671174517025913,-338.3666901304364,-146.71433714865066) ">Port 5443</text>\n
+  <text stroke="#19535f" fill="#19535f" stroke-width="0" x="1648.36759" y="812.16219" id="svg_36" font-size="22" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(0.35243099244750603,0,0,0.3671174517025913,-338.3666901304364,-146.71433714865066) ">Ports 80/443</text>\n
+  <text font-weight="normal" fill="#19535f" stroke-width="4" x="1648.36759" y="749.55397" id="svg_37" font-size="22" font-family="Helvetica, Arial, sans-serif" text-anchor="start" xml:space="preserve" transform="matrix(0.35243099244750603,0,0,0.3671174517025913,-338.3666901304364,-146.71433714865066) ">Ports 19201</text>\n
+ </g>\n
+</svg>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Graphic SlapOS Requirements Network Layout</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>002</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jp</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1522672924.4</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>sven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>967.8882.55642.965</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1524822938.81</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>jp</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1522672769.85</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
