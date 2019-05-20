@@ -2,31 +2,18 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="StringField" module="Products.Formulator.StandardFields"/>
+      <global name="AudioField" module="Products.ERP5Form.AudioField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_title</string> </value>
+            <value> <string>player</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
-                </item>
-                <item>
-                    <key> <string>required_not_found</string> </key>
-                    <value> <string>Input is required but no input given.</string> </value>
-                </item>
-                <item>
-                    <key> <string>too_long</string> </key>
-                    <value> <string>Too much input was given.</string> </value>
-                </item>
-              </dictionary>
+              <dictionary/>
             </value>
         </item>
         <item>
@@ -35,6 +22,30 @@
               <dictionary>
                 <item>
                     <key> <string>alternate_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>audio_autoplay</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>audio_controls</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>audio_error_message</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>audio_loop</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>audio_player</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>audio_preload</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -66,10 +77,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -82,27 +89,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
+                    <key> <string>js_enabled</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -117,12 +108,38 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>audio_autoplay</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>audio_controls</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>audio_error_message</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>audio_loop</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>audio_player</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>audio_preload</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -138,14 +155,12 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -161,27 +176,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
+                    <key> <string>js_enabled</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -194,6 +193,30 @@
                 <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>audio_autoplay</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>audio_controls</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>audio_error_message</string> </key>
+                    <value> <string>Your browser does not support audio tag.</string> </value>
+                </item>
+                <item>
+                    <key> <string>audio_loop</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>audio_player</string> </key>
+                    <value> <string>html5_audio</string> </value>
+                </item>
+                <item>
+                    <key> <string>audio_preload</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -224,10 +247,6 @@
                     <value> <int>1</int> </value>
                 </item>
                 <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -240,31 +259,41 @@
                     <value> <string>text</string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>js_enabled</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Title couscous</string> </value>
-                </item>
-                <item>
-                    <key> <string>truncate</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>Player_</string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.absolute_url()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:here.aq_parent.aq_parent.getPortalType() == \'Web Section\'</string> </value>
         </item>
       </dictionary>
     </pickle>
