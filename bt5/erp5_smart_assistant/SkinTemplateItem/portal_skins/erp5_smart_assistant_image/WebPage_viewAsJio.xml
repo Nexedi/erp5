@@ -72,8 +72,17 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_description</string>
+                        <string>my_text_content</string>
                         <string>my_title</string>
-                        <string>image</string>
+                        <string>my_reference</string>
+                        <string>my_revision</string>
+                        <string>my_language</string>
+                        <string>my_version</string>
+                        <string>my_portal_type</string>
+                        <string>your_modification_date</string>
+                        <string>my_content_type</string>
+                        <string>my_url_string</string>
                       </list>
                     </value>
                 </item>
@@ -88,7 +97,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SmartAssistantImage_view</string> </value>
+            <value> <string>WebPage_viewAsJio</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -96,7 +105,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SmartAssistantImage_view</string> </value>
+            <value> <string>WebTable_viewAsJio</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -112,7 +121,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Smart Assistant Image</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
