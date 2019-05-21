@@ -24,7 +24,7 @@
           line_list = s.toString().split("\n");
           for (i = 0; i < line_list.length; i += 1) {
             div = sideEffectDiv("side-effect-print", reportSideEffect);
-            div.innerText = line_list[i];
+            div.textContent = line_list[i];
           }
         },
         element: function (nodeType, reportSideEffect) {
@@ -409,14 +409,17 @@
   function loadPyodide(info, receiveInstance) {
     var queue = new RSVP.Queue();
     queue.push(function () {
-      return WebAssembly.compileStreaming(fetch("pyodide.asm.wasm"));
+      return ajax({url: "pyodide.asm.wasm", dataType: "arraybuffer"})
     })
-      .push(function (module) {
-        return WebAssembly.instantiate(module, info);
+      .push(function (evt) {
+        return WebAssembly.instantiate(evt.target.response, info);
       })
-      .push(function (instance) {
-        return receiveInstance(instance);
-      });
+      .push(function (results) {
+        return receiveInstance(results.instance);
+      })
+      .push(undefined, function(error) {
+        console.log(error);
+      })
     return queue;
   }
 
@@ -473,14 +476,19 @@
         return pyodideSetting();
       })
       .push(function () {
-        return fetch('packages.json');
+        return ajax({url: 'packages.json'});
       })
-      .push(function (response) {
-        return response.json();
+      .push(function (evt) {
+        return JSON.parse(evt.target.response);
       })
       .push(function (json) {
-        window.pyodide.packages = json;
+        window.pyodide._module = Module;
+        window.pyodide.loadedPackages = [];
+        window.pyodide._module.packages = json;
         return;
+      })
+      .push(undefined, function(error) {
+        console.log(error);
       });
     return queue;
   }
