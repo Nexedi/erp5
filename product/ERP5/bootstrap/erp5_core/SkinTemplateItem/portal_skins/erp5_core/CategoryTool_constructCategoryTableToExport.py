@@ -1,5 +1,12 @@
-editable_property_id_list = ('id', 'title', 'short_title', 'reference',
-                             'codification', 'int_index', 'description')
+editable_property_id_list = (
+    'id',
+    'int_index',
+    'reference',
+    'codification',
+    'title',
+    'short_title',
+    'description',
+    'validation_state')
 
 def getHeaderTitle(property_id):
   return ' '.join([s.capitalize() for s in property_id.split('_')])
@@ -9,13 +16,10 @@ for base_cat_id in context.REQUEST['category_list']:
   base_cat = context.portal_categories[base_cat_id]
   d = {'base_cat': base_cat}
   d['cat_list'] = cat_list = []
-  d['max_cat_depth'] = max_cat_depth = 0
+  d['max_cat_depth'] = max_cat_depth = 9
   cat_info_list.append(d)
   temporary_category_list = []
-  for cat in context.portal_catalog(portal_type='Category',
-                                    sort_on=(('path', 'ascending'),),# This sorting is not enough.
-                                    limit=None,
-                                    relative_url="%s/%%" % base_cat.getRelativeUrl()):
+  for cat in sorted(base_cat.getCategoryChildValueList(), key=lambda x:x.getPath()):
     cat_relative_url_path_list = cat.getRelativeUrl().split('/')
     cat_depth = len(cat_relative_url_path_list)
     temporary_category_list.append((cat_relative_url_path_list, cat))
