@@ -1,0 +1,159 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+-->
+<section class="master">
+<h1>NMS Learning Track</h1>
+
+<details open="open">
+<p>This learning track contains a sequence of tutorials that will introduce SlapOS and teach the setup and use of a <b>Network Management System</b> (NMS) based on SlapOS <b>for ADMINS</b>. After finishing this learning track, you should have a ready-to-use network and be familiar with providing and extending existing software to users as well as monitoring network status.</p>
+
+<p>The course is split into lectures introducing a certain component and showing how they are setup and fit into the overall architecture. All documents that are part of this learning track are also included in PDF and hmtl format.</p>
+
+<p>If applicable, each lecture also provides links to additional generic SlapOS documentation such as HowTos explaining certain aspects in more detail or outlining how certain prerequisities of a component can be met.</p>
+
+<p><b>Note</b>, that the lectures are meant to be read in the order listed. Reading material and actual tutorials to setup the will be pointed out.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Lecture 0: NMS Introduction</li>
+	<li>Lecture 1: SlapOS Introduction and Architecture</li>
+	<li>Lecture 2: Install and Configure NMS SlapOS Master</li>
+	<li>Lecture 3: Bootstrap Frontend, IPv6 Network and SimcardDB</li>
+	<li>Lecture 4: Deploy eNodeB/EPC Server</li>
+	<li>Lecture 5: Managing a NMS Deployment</li>
+	<li>Lecture 6: Extending LTE Software Release</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Lecture 0: NMS Introduction</h1>
+
+<details open="open">
+<p>This section is a global introduction to NMS and only contains reading materials. It will introduce the NMS and underlying SlapOS sytems and provide answers to key questions. The following documents should be read:</p>
+
+<ul>
+	<li><a href="https://www.nexedi.com/P-OSTV-DesignDocument.OSTV.NMS">OSTV Design Document - OSVT NMS Introduction</a> (<a href="https://www.nexedi.com/P-OSTV-DesignDocument.OSTV.NMS?portal_skin=Slide">presentation</a>)</li>
+</ul>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Lecture 1: Introduction and Architecture</h1>
+
+<details open="open">
+<p>This lecture introduces SlapOS and its architecture and from this derives the requirements for an NMS Network Management System. This lecture also contains reading materials. The following documents are required to be read:</p>
+
+<ul>
+	<li><a href="https://www.nexedi.com/slapos-DesignDocument.Slapos.Introduction">SlapOS Introduction</a> (<a href="https://www.nexedi.com/slapos-DesignDocument.Slapos.Introduction?portal_skin=Slide">presentation</a>)- generic introduction to SlapOS</li>
+	<li><a href="https://www.nexedi.com/slapos-DesignDocument.Understanding.Slapos.Architecture">SlapOS Architecture</a> - Overview of the SlapOS architecture and components (<a href="https://www.nexedi.com/slapos-DesignDocument.Understanding.Slapos.Architecture?portal_skin=Slide">presentation</a>)</li>
+	<li><a href="https://www.nexedi.com/slapos-DesignDocument.Slapos.System.Requirements">SlapOS System Requirements</a> - Minimal Requirements to setup a NMS network (<a href="https://www.nexedi.com/slapos-DesignDocument.Slapos.System.Requirements?portal_skin=Slide">presentation</a>)</li>
+</ul>
+
+<p>Once you understand the differences between Master and nodes, can distinguish COMP-ROOT, 0 and 123 in a network, know where software releases are added and what supplying a software on a node and instantiating it on a partition means, you can start with the next lecture of setting up the NMS.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Lecture 2: Install and Configure NMS SlapOS Master</h1>
+
+<details open="open">
+<p>This lecture will covers installing and configuring the SlapOS Master (COMP-ROOT). It is the main component of a NMS network but relatively straightforward to setup. Please do the following tutorial to get a SlapOS Master up and running:</p>
+
+<ul>
+	<li><a href="https://www.nexedi.com/slapos-Tutorial.Install.Slapos.Master.Comp.Root">Install SlapOS Master (COMP-ROOT) (</a><a href="https://www.nexedi.com/slapos-Tutorial.Install.Slapos.Master.Comp.Root?portal_skin=Slide">presentation</a>)</li>
+</ul>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Lecture 3: Bootstrap Frontend, IPv6 Network and SimcardDB</h1>
+
+<details open="open">
+<p>This lecture will cover setting up the COMP-0 machine required to provide core services to the COMP-ROOT and other nodes in the network. They include IPv6, a Frontend to streamline browser-based access and the SimcardDB</p>
+
+<p>Setting up COMP-0 is the complicated part as it requires some improvisation for simulating services to properly connect nodes before they are provided by COMP-0. Please do the following tutorials to setup COMP-0:</p>
+
+<ul>
+	<li><a href="https://www.nexedi.com/slapos-Tutorial.Install.Slapos.Node.Comp.0">Install SlapOS Node (COMP-0) (</a><a href="https://www.nexedi.com/slapos-Tutorial.Install.Slapos.Node.Comp.0?portal_skin=Slide">presentation</a>)</li>
+</ul>
+
+<p>In case of a missing wildcard SSL certificate you can follow <a href="https://www.nexedi.com/slapos-HowTo.Request.And.Setup.A.Wildcard.Ssl.Certificate">how to request a wildcard SSL certificate</a> (<a href="https://www.nexedi.com/slapos-HowTo.Request.And.Setup.A.Wildcard.Ssl.Certificate?portal_skin=Slide">presentation</a>). After you have finished this tutorial, you will know how to add software to the network and how to deploy instances. The procedure is the same for any software provided over SlapOS.</p>
+</details>
+</section>
+
+<section>
+<h1>Lecture 4: Deploy eNodeB/EPC Service</h1>
+
+<details open="open">
+<p>This lecture will cover installing and deploying a eNodeB/EPC server. It will include setting up a new generic node (COMP-123), using the SlapOS Master to install EPC/eNB on this node and providing instances using several configurations available. Technically this lecture does the same as in the previous steps, only in a different order and with a different software. Please do the following to learn how to setup regular network nodes:</p>
+
+<ul>
+	<li><a href="https://www.nexedi.com/P-OSTV-Tutorial.Install.Slapos.Node.Comp.123">Install SlapOS Node (COMP-123)</a> - LTE Box Setup (<a href="https://www.nexedi.com/P-OSTV-Tutorial.Install.Slapos.Node.Comp.123?portal_skin=Slide">presentation</a>)</li>
+</ul>
+</details>
+</section>
+
+<section>
+<h1>Lecture 5: Managing a NMS Deployment</h1>
+
+<details open="open">
+<p>This lecture includes material to show demonstrating how to manage the NMS system once it has been setup, including classifying network nodes, monitoring network performance and handling tickets created from anomalies or failures of deployed instances or computers. The following tutorials should be done to complete this lecture:</p>
+
+<ul>
+	<li><a href="https://www.nexedi.com/slapos-Tutorial.Manage.Slapos.Network">Handling Tickets in a NMS network</a> (<a href="https://www.nexedi.com/slapos-Tutorial.Manage.Slapos.Network?portal_skin=Slide">presentation</a>)</li>
+	<li><a href="https://www.nexedi.com/slapos-HowTo.Classify.Node.In.A.Network">Classify Node in a NMS network</a> (<a href="https://www.nexedi.com/slapos-HowTo.Classify.Node.In.A.Network?portal_skin=Slide">presentation</a>)</li>
+	<li><a href="https://www.nexedi.com/slapos-Tutorial.Monitor.Slapos.Network">Monitor NMS Network</a> (<a href="https://www.nexedi.com/slapos-Tutorial.Monitor.Slapos.Network?portal_skin=Slide">presentation</a>)</li>
+</ul>
+</details>
+</section>
+
+<section>
+<h1>Lecture 6: Extending LTE Software Release</h1>
+
+<details open="open">
+<p>The only thing necessary to be configured on a running NMS network are instantiation parameters. This lecture will teach working with the software profile underlying the software installed in the catalogue. It will introduce Buildout in more detail and show how a software release can be modified using a Webrunner. This lecture is more technical and covers the basics of creating a software release like the one used to create the NMS.</p>
+
+<p>Read the following documents to familiarize yourself with developing in SlapOS:</p>
+
+<ul>
+	<li><a href="https://www.nexedi.com/slapos-DesignDocument.Understanding.Slapos.Buildout">Understanding SlapOS Buildout</a> (<a href="https://www.nexedi.com/slapos-DesignDocument.Understanding.Slapos.Buildout?portal_skin=Slide">presentation</a>)</li>
+	<li><a href="https://www.nexedi.com/P-OSTV-DesignDocument.Understanding.Nms.Software.Release">Understanding the Amarisoft Software Release</a> (<a href="https://www.nexedi.com/P-OSTV-DesignDocument.Understanding.Nms.Software.Release?portal_skin=Slide">presentation</a>)</li>
+</ul>
+
+<p>Then add the Webrunner to your network, deploy an instance and inside install the helloworld software release. This will then be used as example showing how to modify a software release to add parameters, promises and components.</p>
+
+<ul>
+	<li><a href="https://www.nexedi.com/slapos-HowTo.Add.Software.Release.To.Slapos.Master">Add Webrunner to SlapOS Master software catalogue</a> (<a href="www.nexedi.com/slapos-HowTo.Add.Software.Release.To.Slapos.Master?portal_skin=Slide">presentation</a>)</li>
+	<li><a href="https://www.nexedi.com/slapos-HowTo.Deploy.Software.On.Webrunner">Deploying the Helloworld Software Release</a> - inside the Webrunner (<a href="https://www.nexedi.com/slapos-HowTo.Deploy.Software.On.Webrunner?portal_skin=Slide">presentation</a>)</li>
+	<li><a href="https://www.nexedi.com/slapos-Tutorial.Extend.Software.Release">Extending the Software Release</a> - using the Webrunner (<a href="ttps://www.nexedi.com/slapos-Tutorial.Extend.Software.Release?portal_skin=Slide">presentation</a>)</li>
+</ul>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://slapos.nexedi.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

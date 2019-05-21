@@ -1,0 +1,440 @@
+<h1>Introduction</h1>
+${WebPage_insertTableOfReferences}
+
+<h2>Goal&nbsp;and scope</h2>
+
+<p>The goal of this document is to introduce the architecture of OSTV NMS so that an engineer can understand its purpose, the different &nbsp;components and the reference&nbsp;documents that explain its installation and operation. OSTV NMS is designed to operate 4G/5G networks based on Amarisoft stack. It derives from SlapOS [<a href="https://slapos.nexedi.com" title="SlapOS">RD</a>], a general purpose framework designed as an overlay for POSIX systems that automates the management of any times of services (VRAN, CDN, etc.) on a distributed infrastructure. This document is not a manual.</p>
+
+<h1>Executive Summary</h1>
+
+<p>The purpose of a Network Management System (NMS) is to automate all aspects of the management of a telecommunication network, from the initial deployment of base stations with eNodeB VRAN software till&nbsp;the management of user subscriptions. A&nbsp;Network Management System (NMS) should thus automate&nbsp;deployment of telecommunication software,&nbsp;&nbsp;provisioning of telecommunication services, provisioning of user accounts, monitoring of telecommunication services, accounting, billing, etc. A&nbsp;Network Management System should be able to detect and - ideally - predict that a&nbsp;telecommunication service is failing or that a user is complaining of service quality.&nbsp;</p>
+
+<p>A Network Management System (NMS) is a fairly large and complex application software.</p>
+
+<p>It is the central tool for a telecommunication operator to automate&nbsp;the enforcement&nbsp;of common service level&nbsp;policies&nbsp;to all services of the telecommunication network. It is the central tool to manage the quality of service provided to users by knowing what happens, where and when before even being told by users.</p>
+
+<h2>OSTV NMS</h2>
+
+<p>The pictures bellow demonstrate&nbsp;OSTV NMS in action.</p>
+
+<p style="text-align: center;"><img alt="Base Station Geographic Heat Map" src="https://slapos.nexedi.com/P-OSTV-NMS.Front.Page.ScreenShot?format=" /></p>
+
+<p>The main screen displays a geographical map which shows&nbsp;in green base stations that are running fine, in red those that are down and in orange those that might become down. It differentiates two cases: the base station hardware ("Computer") and the base station services ("Partitions", ex. Amarisoft enb) running on the base station hardware. Whenever a base station is down, the left side of the rectangle become red. Whenever a service running on the base station encounters an exception, the right side of the rectangle becomes red. In both cases, a ticket is generated to notify administrators of the network of the existence of an issue that they should solve.</p>
+
+<p style="text-align: center;"><img alt="List of Base Stations running eNodeB service" src="https://slapos.nexedi.com/P-OSTV-NMS-eNodeB.List?format=" /></p>
+
+<p>The main screen can also be displayed as a list of servers, each of them running various services (emb, CDN, etc) that can be filtered or sorted. Each base stations provides display of its monitoring health using the same color conventions as the heat map and&nbsp;direct access to monitoring tool.</p>
+
+<p style="text-align: center;"><img alt="VRAN Service Monitoring" src="https://slapos.nexedi.com/P-OSTV-NMS.Monitor.Chart.List?format=" /></p>
+
+<p style="text-align: center;"><img alt="List of Running Process for a VRAN service" src="https://slapos.nexedi.com/P-OSTV-NMS.Monitor.Process.List?format=" /></p>
+
+<p>In order to fix an issue, administrators of the network can access logs on the base station through a graphical user interface. This interface displays the usage of resources (memory, CPU, etc.) as well as the state&nbsp;of so-called &quot;promises&quot; that are configured to enforce the network service quality policy. A simple promise defines for example that &quot;LTE network should be available&quot;. A more complex promise should be that &quot;LTE network should provide at least 5 Mbps to each SIM card more than 95% of the time&quot;.&nbsp;The notion of &quot;promise&quot; is essential to manage service quality and must be configured or adapted for each telecommunication company.</p>
+
+<p>By configuring promises step by step in response to the resolution of incidents managed by issue tracking tickets, a telecommunication company can fulfill the goal of providing the level of service that its users are expecting and to be informed of incidents before anyone tells them.</p>
+
+<h2>NMS = CCMS</h2>
+
+<p>The purpose of a Network Management System (NMS) is&nbsp;very similar to the purpose of Cloud Computing&nbsp;Management&nbsp;System (CCMS). The equivalence table bellow compares the two:</p>
+
+<table align="center" border="1" cellpadding="1" cellspacing="1">
+	<caption>Network vs. Cloud Computing Management</caption>
+	<thead>
+		<tr>
+			<th scope="row">&nbsp;</th>
+			<th scope="col">Network Management System</th>
+			<th scope="col">Cloud Management System</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">Geography</th>
+			<td>Which base station is located where?</td>
+			<td>Which server is located where ?</td>
+		</tr>
+		<tr>
+			<th scope="row">Ownership</th>
+			<td>Which base station belongs to who?</td>
+			<td>Which server belongs to who?</td>
+		</tr>
+		<tr>
+			<th scope="row">Hardware profile</th>
+			<td>Which RRH and device driver is available on which base station?</td>
+			<td>Which disk storage and device driver is available on which server?</td>
+		</tr>
+		<tr>
+			<th scope="row">Software deployment</th>
+			<td>Which&nbsp;version of which&nbsp;software (enb, epc) is available on which base station?</td>
+			<td>Which version of which software (qemu, mariadb, apache) is available on which server?</td>
+		</tr>
+		<tr>
+			<th scope="row">Service provisioning</th>
+			<td>How many enb services are running on each base station and what is their configuration?</td>
+			<td>How many VMs are running on each server and what is their configuration?</td>
+		</tr>
+		<tr>
+			<th scope="row">Token provisioning</th>
+			<td>Which SIM cards can access enb service on which base station?</td>
+			<td>Which X509 certificates are authorized by apache service on which servers?&nbsp;</td>
+		</tr>
+		<tr>
+			<th scope="row">User management</th>
+			<td>Who can request and configure a new enb service on which base station?</td>
+			<td>Who can request&nbsp;and configure a new VM on which server?</td>
+		</tr>
+		<tr>
+			<th scope="row">Project management</th>
+			<td>Which project&nbsp;can request and configure a new enb service on which base station?</td>
+			<td>Which project can request&nbsp;and configure a new VM on which server?</td>
+		</tr>
+		<tr>
+			<th scope="row">Organisation management</th>
+			<td>Which company can request and configure a new enb service on which base station?</td>
+			<td>Which company&nbsp;can request&nbsp;and configure a new VM on which server?</td>
+		</tr>
+		<tr>
+			<th scope="row">Monitoring</th>
+			<td>Which enb service or base station is down?</td>
+			<td>Which VM or base station is down?</td>
+		</tr>
+		<tr>
+			<th scope="row">Accounting</th>
+			<td>How much data has been consumed by which user or token on which enb during one month?</td>
+			<td>How much CPU has been consumed by which user or token on which VM during one month?</td>
+		</tr>
+		<tr>
+			<th scope="row">Billing</th>
+			<td>How much should which user or token owe to which organisation?</td>
+			<td>How much should which user or token owe to which organisation?</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>This table demonstrates how it is possible to rely on an existing CCMS to build an NMS by replacing typical cloud computing&nbsp;software (qemu, mariadb, apache) with telecommunication software (Amarisoft), and by replacing the notion of server&nbsp;with the notion of&nbsp;base station. This equivalence makes completely sense for the deployment of VRAN on standard PC, as it is the case with Amarisoft stack. It can also make sense with traditional telecommunication hardware as long as a proxy service that can run on a standard PC provides access and remote control of&nbsp;traditional telecommunication equipment.</p>
+
+<p>Moreover, relying on standard PC is also the best approach to deploy the kind of&nbsp;Edge Computing architecture that is increasingly adopted by telecommunication industry. It is becoming more and more frequent to deploy next to each eNodeB various types of network acceleration services: HTTPS CDN, IoT buffering gateway, media conversion service, etc. The reality of a modern telecommunication networks and decentralized cloud computing such as Edge Computing actually requires a solution that can unify both Network Management and Cloud Computing Management.</p>
+
+<p>This is the approach we have chosen with OSTV NMS.</p>
+
+<h2>SlapOS</h2>
+
+<p>OSTV NMS is based on an existing Open Source / Free Software framework: SlapOS. Although the name &quot;SlapOS&quot; sounds like an operating system, it is not an operating system in the same meaning as Linux, Windows, BSD, etc. are operating systems.&nbsp;SlapOS is a general purpose overlay for distributed infrastructures based on&nbsp;POSIX operating system for&nbsp;(Linux, xBSD, etc.) with a strong focus on service management.&nbsp;</p>
+
+<p>In other words, SlapOS provides the kind of&nbsp;service management features that are missing in Unix (but that used to exist in old mainframe operating systems or in Plan9). Those service management features can be leveraged to create a Network Management System that meets all requirements.</p>
+
+<p>SlapOS has been deployed successfully since 2009 in many companies (Airbus, SANEF, Mitsubishi, etc.) and&nbsp;to operate two public clouds: VIFIB and Teralab.&nbsp;VIFIB is one of&nbsp;the inventors of Edge Computing [<a href="https://www.pcworld.idg.com.au/article/349884/vifib_wants_host_cloud_computing_home/" title="ViFiB wants you to host cloud computing at home">RD</a>].&nbsp;Teralab has been awarded a &quot;Silver Label&quot; [<a href="https://www.teralab-datascience.fr/fr/home/The+project/About+us/niveau-europeen-" title="TeraLab reconnue au niveau européen">RD</a>]&nbsp;by Europe&#39;s Big Data Value Association (BDVA). It is interesting to notice that Teralab has chosen SlapOS over other solutions (OpenStack, Proxmox, etc.) because it provided at much lower cost more management features, more control on hardware, more resiliency while&nbsp;consuming less resources.</p>
+
+<p>Those characteristics (management, cost, resiliency, control of hardware, low footprint) are even more important in the case of telecommunication networks.</p>
+
+<h1>SlapOS Architecture for VRAN</h1>
+
+<p>SlapOS architecture is very simple. It is based on only two software components that can be installed on any GNU/Linux operating system: SlapOS Master and SlapOS Node.&nbsp;SlapOS Master is used to register each base station and define their target configuration.&nbsp;SlapOS Node is installed on each base station and ensures that its configuration matches the one defined in SlapOS Master. All other network management features derive from this simple architecture.&nbsp;</p>
+
+<h2>SlapOS Master: Registry</h2>
+
+<p>SlapOS Master acts as a registry of the network management system. It keeps track of the:</p>
+
+<ul>
+	<li>list of base stations with metadata (geographical location, customer, project, network, etc.);</li>
+	<li>list of software&nbsp;and versions installed on each base station;</li>
+	<li>list of services running on each base station with&nbsp;configuration parameters;</li>
+	<li>list of issues open for each service or base station;</li>
+	<li>list of invoices for each&nbsp;customer;</li>
+	<li>list of users of SlapOS Master itself.</li>
+</ul>
+
+<p>In a traditional NMS setup, SlapOS Master users are the&nbsp;system administrators of the network, with very simple access control rules.</p>
+
+<p>In a less traditional setup, SlapOS Master is used both by both system administrators and customers of the network. Access control rules are defined to limit access of users to services that they requested.</p>
+
+<h2>SlapOS Node: Base Station Conductor</h2>
+
+<p>SlapOS Node acts as the autonomous&nbsp;conductor of the base station which orchestrates the different services running inside&nbsp;the base station based on a&nbsp;target configuration defined in SlapOS Master.</p>
+
+<p>SlapOS Node will&nbsp;thus make sure that:</p>
+
+<ul>
+	<li>software and versions installed on the base station are the same as those defined on SlapOS Master for the base station;</li>
+	<li>services running in&nbsp;the base station&nbsp;and their configuration parameters are the same as those defined on SlapOS Master for the base station.</li>
+</ul>
+
+<p>SlapOS Node will also inform SlapOS Master of:</p>
+
+<ul>
+	<li>connection parameters required to connect to&nbsp;services running on the base station;</li>
+	<li>health or status of running services.</li>
+</ul>
+
+<h2>Everything is a service</h2>
+
+<p>The key motto of SlapOS is that &quot;<strong>everything is a service</strong>&quot;. Everything in SlapOS is thus achieved by defining and instantiating services. In the case of Network Management System (NMS), essential services are based on the Amarisoft LTE stack and&nbsp;implement Virtual Radio Access Network (VRAN). But other services may also be required: SIM card management service, HTTPS&nbsp;acceleration service, etc.</p>
+
+<p>Here are a few&nbsp;examples of services that are usually deployed on a SlapOS Node to implement a complete VRAN architecture:</p>
+
+<ul>
+	<li>LTE which includes nme and ims;</li>
+	<li>standalone LTE nme;</li>
+	<li>standalone LTE ims,</li>
+	<li>SIM database;</li>
+	<li>HTTPS CDN.</li>
+</ul>
+
+<p>Services in SlapOS are defined using the buildout [<a href="http://www.buildout.org" title="Buildout">RD</a>] build&nbsp;language and the Jinja2 [<a href="http://jinja.pocoo.org/">RD</a>] templating language. By using buildout and Jinja2, services in SlapOS are defined in a way that is <strong>independent of any GNU/Linux distribution</strong>. It is thus possible to deploy SlapOS Node services on virtually any version of Debian, Ubuntu, CentOS, Fedora, Red Hat, SuSE, Arch, Yocto, Gentoo, etc. without any change to the service definition in buildout. It&nbsp;does not matter if the GNU/Linux distribution is based on initd or systemd. It also does not matter whether the distribution is based on RPM, DEB, portage or pacman&nbsp;packages.</p>
+
+<p>Services in SlapOS consists in reality of two different aspects:</p>
+
+<ul>
+	<li>a buildout file,&nbsp;also called <strong>Software Release</strong>, which defines how to build the software required to run a service;</li>
+	<li>a service record in SlapOS Master registry, also known as <strong>Software Instance</strong>, which defines all parameters needed to run an instance of a service.</li>
+</ul>
+
+<p>An example of Software Release of Amarisoft LTE stack can be found here:&nbsp;https://lab.nexedi.com/nexedi/amarisoft/blob/master/slapos/software/lte/software.cfg [<a href="https://lab.nexedi.com/nexedi/amarisoft/blob/master/slapos/software/lte/software.cfg" title="Amarisoft Software Release">RD</a>].</p>
+
+<p>An example of Software Release for an HTTPS accelerator can be found here:&nbsp;https://lab.nexedi.com/nexedi/slapos/blob/master/software/apache-frontend/software.cfg [<a href="https://lab.nexedi.com/nexedi/slapos/blob/master/software/apache-frontend/software.cfg" title="CDN Me">RD</a>].</p>
+
+<p>If we compare the two aspects of a service to an object programming&nbsp;language,&nbsp;Software Release plays the role of a class and&nbsp;Software Instance plays the role of an object instance. Just like with object languages a single class of service (Software Release) can be used to create multiple service instances (Software Instance). A single base station can&nbsp;thus run multiple nme service instances with different parameters. It is even possible to run&nbsp;multiple nme service instances of multiple versions of the Amarisoft NME software on the same base station.</p>
+
+<p>A base station can thus be shared between different projects, different customers or different networks with different service goals. Yet, it is&nbsp;managed in a simple and consistent way by SlapOS Master registry which keeps a&nbsp;shared state of the network.</p>
+
+<h2>SLAP: Polling&nbsp;from Node to Master</h2>
+
+<p>The Simple Language for Accounting and Provisioning (SLAP) communication protocol between SlapOS Node and SlapOS Master is a polling protocol with adaptive polling frequency. It is SlapOS Node which queries SlapOS master to collect its target state. It is SlapOS Node which notifies SlapOS Master to inform about its current state.</p>
+
+<p>All communication is carried over HTTPS with X509 certificates allocated by SlapOS Master.&nbsp;One&nbsp;X509 certificate is allocated for each base station and for each service. Communication between SlapOS Node and SlapOS Master are thus encrypted and authenticated with a high level of detail. Also, by using HTTPS rather than a specific protocol, it is easy to deploy SlapOS Node in corporate networks which restrict most ports and protocols other than HTTP and HTTPS.</p>
+
+<p>An interesting consequence&nbsp;of polling is that SlapOS Node can be deployed behind&nbsp;a NAT or a firewall. This means that an LTE base station could be deployed behind a standard xDSL Internet access with NAT, yet could be completely controlled remotely. It is also possible to deploy an&nbsp;LTE base station on a secure network with virtually no access from outside world, as long as it is allowed for this base station to query SlapOS Master IP address through HTTPS.</p>
+
+<p>SlapOS polling architecture&nbsp; is thus very convenient for all kinds of applications (edge, defense, industrial, etc.) where base stations are used in a private context.</p>
+
+<h2>Base Station Autonomous Operation</h2>
+
+<p>SlapOS Node runs in an autonomous way. It contains all&nbsp;software and algorithms to ensure that its state converges autonomously towards the state defined in SlapOS Master. This autonomous approach goes in the opposite direction of centralized configuration systems such as Puppet,&nbsp;Chef or even Ansible that use a central server to run&nbsp;all algorithms that automate infrastructure. SlapOS Master only defines the desired target state. SlapOS Node runs algorithms that make its current state converge towards the&nbsp;desired state.</p>
+
+<p>As a consequence, SlapOS Master / SlapOS Node architecture is much more scalable than centralized&nbsp;configuration systems. It also means that a SlapOS Node can still operate and benefit from Network Management algorithms&nbsp;whenever network access to SlapOS Master has been&nbsp;cut. It can thus provide the kind of resiliency that is expected in applications such as&nbsp;edge computing, defense, industrial IoT, etc.</p>
+
+<h2>Zero Knowledge</h2>
+
+<p>SlapOS Master only defines the configuration of SlapOS Nodes. It does need to not store:</p>
+
+<ul>
+	<li>passwords to access SlapOS nodes;</li>
+	<li>passwords to access services running on SlapOS nodes;</li>
+	<li>logs of services running to&nbsp;SlapOS nodes.</li>
+</ul>
+
+<p>Thanks to polling, SlapOS nodes do not need to run ssh or any remote control software.</p>
+
+<p>It is thus possible with SlapOS architecture to create a &quot;Zero Knowledge&quot; system. Even by attacking&nbsp;SlapOS Master, it is impossible to retrieve information that would help an intrusion into SlapOS nodes.</p>
+
+<h2>Log analysis</h2>
+
+<p>Another principle of SlapOS architecture is that &quot;<strong>everything that can be decentralized should be&nbsp;decentralized</strong>&quot;.</p>
+
+<p>Logs of services running on SlapOS Node are thus&nbsp;by default stored on the node rather than uploaded somewhere. This saves&nbsp;network bandwidth and&nbsp;improves&nbsp;scalability&nbsp;.</p>
+
+<p>A utility called &quot;SlapOS Monitor&quot; is provided to access logs and visualize node state. Network administrators can thus get a nice real-time overview of a collection of SlapOS Nodes: memory, CPU, health, etc. just like in a centralized system. It is even possible to visualize logs offline thanks to modern HTML5 offline technology used by&nbsp;SlapOS Monitor.</p>
+
+<h2>IPv6</h2>
+
+<p>SlapOS Node to SlapOS Master communication is based on IPv4 or IPv6. SlapOS Node to SlapOS Node communication is based on <u>IPv6 only</u>.&nbsp;</p>
+
+<p>This choice was made so that it is possible to allocate a different IPv6 address to each service running on a SlapOS Node and to benefit from various improvements that IPv6 provides to TCP/IP networks. We also made this choice because it simplifies the orchestration of services on Edge networks, by removing all the problems posed by NAT in IPv4.&nbsp; It is also much easier and cheaper to purchase an IPv6 AS range than an IPv4 AS range nowadays in most regions of the world. Last, we observe that any major network operator (NTT, Google) have already migrated their administration network to IPv6.</p>
+
+<p>In terms of IPv6 implementation we strongly recommend to deploy re6st [<a href="https://re6st.nexedi.com/" title="re6st">RD</a>] resilient network on each SlapOS Node and on SlapOS Master. Although this is not a requirement, it is the only way we are aware of today to implement a low latency resilient network based on babel routing protocol (a protocol that is being standardized by IETF as an improved alternative to OSPF).</p>
+
+<p>For a simple trial or proof of concept, using a private IPv6 address range can be enough.</p>
+
+<h1>Requirement Coverage</h1>
+
+<p>We introduce in this chapter some common requirements for a Network Management System and explain how they are covered by OSTV NMS. Each requirement is defined as a paragraph title, followed by an explanation.</p>
+
+<h2>Hardware</h2>
+
+<h3>NMS&nbsp;software should run on any x86 PC</h3>
+
+<p>NMS Node software can run an any x86 PC. The number of cores that is required depend on how many VRAN services are going to be deployed on a base station. A strict minimum of 2 cores is required. The performance of each core depends mainly&nbsp;. <font color="red"> The detailed information  at the "NMS SYSTEM REQUIREMENTS" chapter of the learning track. </font></p>
+
+<h3>NMS Node software should not consume more than one CPU core</h3>
+
+<p>NMS Node software can be configured not to use more than a single process at a time so that it does not consume more than one CPU core. <font color="red">This are archived by enabling plugins to manage cgroups.</font> </p>
+
+<h2>Architecture</h2>
+
+<h3>Architecture should be simple enough to setup a complete system in less than one day</h3>
+
+<p>A complete OSTV NMS system based on SlapOS can be installed in less than one day. This is possible because the architecture is based on only two components: SlapOS Master and SlapOS Node. In addition, thanks to the concept of &quot;everything is service&quot;, all actions on the system are done in the same way, which simplifies a lot the documentation and accelerates the learning curve. <font color="red">The NMS Learning Track contains all detailed informations to setup the complete system.</font></p>
+
+<h3>Architecture should cover both base station&nbsp;operating system and server side management system</h3>
+
+<p>OSTV NMS consists of SlapOS Node software that is deployed on base stations and SlapOS Master software that is deployed on a central server to manage all base stations. <font="red">More informations on Lecture 1, and as well Lecture 4 and Lecture 5.</font></p>
+
+<h2>Functions</h2>
+
+<h3>NMS should provide a geographic view of base stations with their current state (heat map)</h3>
+
+<p>The first page of OSTV NMS displays a geaographic map of base stations with various colors that represent their current operation state and health. <font="red">More informations Lecture 5: Managing a NMS Deployment</font> </p>
+
+<h3>NMS should provide a list of open issues with base stations or users</h3>
+
+<p>The first page of OSTV NMS displays a list of open issues. <font="red">More informations Lecture 5: Managing a NMS Deployment</font></p>
+
+<h3>NMS should provide a history of&nbsp; issues with base stations or users</h3>
+
+<p>All present and past issues can be accessed in the &quot;Ticket&quot; module of OSTV NMS. <font="red">More informations Lecture 5: Managing a NMS Deployment</font></p>
+
+<h3>NMS should provide a view to add a new base station</h3>
+
+<p>A base station can be registered by adding a &quot;Server&quot; in the &quot;Server&quot; module of OSTV NMS. <font="red">This is explained on Lecture 4.</font></p>
+
+<h3>NMS should provide a view to deploy VRAN software on a specified&nbsp;base station</h3>
+
+<p>A VRAN service (ex. enb) can be created by adding an &quot;Amarisoft LTE&quot; instance&nbsp;in the &quot;Service&quot; module of OSTV NMS.<font="red">This is explained on Lecture 4.</font></p>
+
+<h3>NMS should provide a view to change VRAN configuration on&nbsp;specified&nbsp;base station</h3>
+
+<p>The &quot;Service&quot; module of OSTV NMS provides a list of all running services. By clicking on one service, it is possible to change its configuration, stop it or destroy it. <font="red">This is explained on Lecture 4.</font></p>
+
+<h3>NMS should provide a view to add a new SIM card</h3>
+
+<p>A SIM card database can created by adding a &quot;SIM Card&quot; instance in the &quot;Service&quot; module of OSTV NMS.&nbsp;</p>
+
+<p>A SIM card can be created by adding a &quot;SIM Card&quot; so-called &quot;slave&quot; instance in the &quot;Service&quot; module of OSTV NMS.&nbsp;</p>
+
+<font="red">This is explained at the end of Lecture 4.</font>
+
+<h3>NMS should provide a detailed view of processes&nbsp;and resources used by specified VRAN service on&nbsp;specified base station</h3>
+
+<p>OSTV NMS Monitoring tool provides a visual representation of all logs and health information that can be gather from the base station. <font="red">This is explained on Lecture 5.</font></p>
+
+<h3>NMS should provide a detailed view of load and availability&nbsp;of&nbsp;specified VRAN service on&nbsp;specified base station</h3>
+
+<p>OSTV NMS Monitoring tool provides a visual representation of all per process load&nbsp;information that can be gather from the base station.</p>
+
+<p>OSTV NMS Monitoring tool provides a visual representation of all per service availability and history&nbsp;that can be gather from the base station.</p>
+
+<font="red">This is explained on Lecture 5 on how to manage the NMS.</font>
+
+<h3>NMS should provide a list of projects</h3>
+
+<p>The &quot;Project&quot; module provides the list of projects to which a base station can be attached. <font="red">This is explained on Lecture 5, on the classification of Computers.</font></p>
+
+<h3>NMS should provide a list of sites</h3>
+
+<p>The &quot;Site&quot; module provides the list of sites to which a base station can be attached.<font="red">This is explained on Lecture 5, on the classification of Computers.</font></p>
+
+<h3>NMS should provide a list of customers</h3>
+
+<p>The &quot;Organisation&quot; module provides the list of customers or organisations to which a base station can be attached. <font="red">This is explained on Lecture 2 and Lecture 3.</font></p>
+
+<h3>NMS should provide a list of users</h3>
+
+<p>The list of users can be seen by the Administrator user on the underlying ERP5 UI, accessing "Person Module". <font="red">This is explained on Lecture 4.</font></p>
+
+<h3>NMS should provide a view to add a new user</h3>
+
+<p>A subscription system is added on Login Form. Registered users credentials can be approved automatically or require administrator approval. <font="red">This is explained on Lecture 2.</font></p>
+
+<h3>NMS should provide a report of base station availability</h3>
+
+<p>Availability can be measured using the list of "Tickets" on a Computer or using a the Monitoring Tool <font="red">This is explained on Lecture 4</font>, however reports can be extendend to become multiple critereas.</p>
+
+<h3>NMS should provide text input of VRAN service configuration parameters</h3>
+
+<p>The &quot;Service&quot; module of OSTV NMS provides a list of all running services. By clicking on one service, it is possible to input the configuration in text format (XML or JSON). <font="red">This is explained on Lecture 4.</font></p>
+
+<h3>NMS should provide output&nbsp;input of VRAN service configuration parameters</h3>
+
+<p>The &quot;Service&quot; module of OSTV NMS provides a list of all running services. By clicking on one service, it is possible to&nbsp;copy the configuration in text format (XML or JSON).<font="red">This is explained on Lecture 4.</font></p>
+
+<h3>NMS should provide a command&nbsp;line interface and API to automate operations</h3>
+
+<p>All actions in OSTV NMS user interface can also be achieved using the &quot;<strong>slapos</strong>&quot;&nbsp;command line. All actions can be triggered using the HATEAOS REST API of SlapOS Master. <font="red">This is explained on Lecture 1, by using python, REST or "slapos console"</font>.</p>
+
+<h3>NMS should provide a notification system for all or selected issues</h3>
+
+<p>All issues on the home page of OSTV NMS can be accessed from RSS feed which can serve for notification. <font="red">This is explained on Lecture 5.</font></p>
+
+<h3>NMS should provide a way to define pro-active maintenance actions&nbsp;</h3>
+
+<p>All issues on the monitoring tool&nbsp;of OSTV NMS can be accessed from RSS feed which can serve for notification. <font="red">This is explained on Lecture 5.</font></p>
+
+<h2>Distribution</h2>
+
+<h3>All dependencies of NMS software should be specified</h3>
+
+<p>All OSTV NMS software is defined using a buildout file which provides explicit dependencies for all libraries&nbsp;until the&nbsp;glibc. <font="red">This is explained on Lecture 1, 2 and 3.</font></p>
+
+<h3>NMS should run on any GNU/Linux distribution</h3>
+
+<p>OSTV NMS software can be installed on any GNU/Linux distribution. <font="red">This is explained on Lecture 1, 2 and 3.</font></p>
+
+<h3>NMS should run a embedded GNU/Linux, read-only system image with secure boot</h3>
+
+<p>A Debian based read-only system image with secure boot&nbsp;is being developed using ELBE technology. SlapOS software and services will be isolated in a dedicated read-write mount point.</p>
+
+<h2>System</h2>
+
+<h3>NMS should provide a procedure for backup</h3>
+
+<p>All data of OSTV NMS is stored in a single file than can be copies by rsync or ssh.</p>
+
+<font color='red'>
+  <p>The SlapOS Master can be backuped by saving the folder /srv/slapgrid/*/srv/backup, /opt/slapos/proxy.db, /etc/opt/slapos/slapos.cfg</p>
+</font>
+
+<h3>NMS should&nbsp;be resilient to disaster and provide automated recovery&nbsp;</h3>
+
+<p>NMS can be deployed using &quot;resilient WebRunner&quot; which provides automated disaster recovery and daily&nbsp;disaster recovery testing.</p>
+
+<font color='red'><p>On the Lecture 6, you learn how to deploy Webrunner IDE, you can use the webrunner to have a resilient deployment for NMS Master.</p></font>
+
+<h3>NMS should be provide fault tolerance</h3>
+
+<p>As an option, NMS can be deployed using MariaDB Galera and NEO database so that it provides complete real time fault-tolerance for all components (except the load-balancer).</p>
+
+<h1>System Requirements</h1>
+<p>A SlapOS system requires at least two computers. One computer will host the SlapOS Master (COMP-ROOT). The other computer will run the first node (COMP-0). Additional nodes (COMP-1,2,3...) 
+will be required to build up the network and create software instances accessible to users.</p>
+
+<h2>Requirements COMP-ROOT</h2>
+<p>The COMP-ROOT computer must have public IPv4 or private IPv4 reachable from COMP-0 (and users). For running a network of 80-160 actual computers, it should at least have:</p>
+<ul>
+  <li>4-8 CPU cores (8 vCores) - preferrably i7, XEON, AMD</li>
+  <li>8-16 GB RAM</li>
+  <li>200GB SSD harddisk (480GB preferred)</li>
+</ul>
+
+<p>The recommended configuation for this computer is Linux Distribution are Debian 8 or Debian 9 as these are distributions tested continuously on a daily basis.</p>
+
+<h2>Requirements COMP-0</h2>
+<p>The COMP-0 computer requires a valid SSL wildcard certificate as well as IPv6. At a minimum it should have:</p>
+<ul>
+  <li>2-4 Cores</li>
+  <li>4-8 GB RAM</li>
+  <li>60-100 GB SSD harddisk (mostly needed for logs)</li>
+</ul>
+
+<p>The recommended configuation for this computer is Linux Distribution are Debian 8 or Debian 9 as these are distributions tested continuously on a daily basis.</p>
+
+<h2>Dependencies</h2>
+<p>
+SlapOS is self-contained. Dependencies for Debian [<a href="https://lab.nexedi.com/nexedi/slapos.package/blob/master/obs/slapos/debian/control" title="SlapOS Dependencies - Debian">RD</a>] and RPM [<a href="https://lab.nexedi.com/nexedi/slapos.package/blob/master/obs/slapos/templates/slapos.spec.in#L62" title="SlapOS Dependencies - RPM">RD</a>] can 
+be found on Gitlab (SlapOS requires bridge-utils, python, gcc-c++, make, patch, wget and python-xml). When using the single line installer, 
+Ansible is another dependency but only of the installer itself. In general, SlapOS installer/package/buildout handle dependencies automatically.
+</p>
+<p>
+For a SlapOS node itself, the list of software includes can be found in the slapos buildout config file [<a href="https://lab.nexedi.com/nexedi/slapos/blob/master/component/slapos/buildout.cfg#L4" title="SlapOS Buildout.cfg - list of software">RD</a>].
+</p>
+
+<font color="red"><p> The detailed informations on this topic present on "SlapOS System Requirements - Minimal Requirements to setup a SlapOS network" at Lecture 1.</p></font>
+
+
+<h1>Further Readings</h1>
+
+<p>We provide in this chapter a commented list of documents that will provide further understand of OSTV NMS design and operation.</p>
+
+<ul>
+  <li><strong>SlapOS Architecture</strong> [<a href="https://www.nexedi.com/P-OSTV-DesignDocument.Understanding.Slapos.Architecture">RD</a>] contains a brief introduction of SlapOS and key concepts;</li>
+	<li><strong>SlapOS Production Deployment Overview</strong> [<a href="https://www.nexedi.com/P-OSTV-DesignDocument.Nms.System.Requirements" title="NMS System Requirements">RD</a>] provides a complete overview of deploying a production-grade SlapOS system such as the one that needs to be deployed for OSTV NMS;</li>
+  <li><strong>SlapOS Learning Track</strong> [<a href="https://www.nexedi.com/P-OSTV-Tutorial.Nms.Learning.Track" title="NMS Learning Track">RD</a>] contains a sequence of tutorials and howtos describing the necessary steps for setting up a SlapOS-based system;</li>
+</ul>

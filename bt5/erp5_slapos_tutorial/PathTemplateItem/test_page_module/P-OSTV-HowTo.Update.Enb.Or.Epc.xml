@@ -67,9 +67,10 @@
               <tuple>
                 <string>classification/collaborative/team</string>
                 <string>publication_section/documentation/temp_slapos</string>
-                <string>contributor/person_module/20110829-FF7377</string>
                 <string>group/nexedi</string>
                 <string>follow_up/product_module/156</string>
+                <string>contributor/person_module/20121115-586BC0F</string>
+                <string>contributor/person_module/20110829-FF7377</string>
               </tuple>
             </value>
         </item>
@@ -85,15 +86,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>P-SLAPOS-Home.Page</string> </value>
+            <value> <string>P-OSTV-HowTo.Update.Enb.Or.Epc</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>SlapOS is a general purpose overlay operating system for distributed POSIX infrastructures.</string> </value>
+            <value> <string>TRACK - Lectures explaining how to use an NMS system.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>P-SLAPOS-Home.Page</string> </value>
+            <value> <string>P-OSTV-HowTo.Update.Enb.Or.Epc</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -105,15 +106,15 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value> <string>SlapOS</string> </value>
+            <value> <string>Update eNB or EPC</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>SlapOS Home</string> </value>
+            <value> <string>OSTV HowTo Update eNB or EPC</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>005</string> </value>
+            <value> <string>002</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -173,7 +174,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>alain parfait</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -195,7 +196,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1557759446.39</float>
+                        <float>1558103925.82</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -240,7 +241,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>975.56316.5423.23504</string> </value>
+                <value> <string>0.0.0.0</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -258,7 +259,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1558438926.36</float>
+                        <float>1558103925.81</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -281,13 +282,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>detect_converted_file</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>alain parfait</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -299,7 +298,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>empty</string> </value>
+                <value> <string>converted</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -317,7 +316,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1557758229.8</float>
+                        <float>1558103925.8</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
