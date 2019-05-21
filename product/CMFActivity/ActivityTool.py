@@ -1024,7 +1024,7 @@ class ActivityTool (BaseTool):
         self._family_list += (name, )
 
     security.declareProtected(CMFCorePermissions.ManagePortal, 'manage_createFamily')
-    def manage_createFamily(self, new_family_name, family_new_node_list=None, REQUEST):
+    def manage_createFamily(self, new_family_name, REQUEST, family_new_node_list=None):
       """Create a family"""
       redirect_url = REQUEST.URL1 + '/manageLoadBalancing?manage_tabs_message='
       if family_new_node_list is None:
