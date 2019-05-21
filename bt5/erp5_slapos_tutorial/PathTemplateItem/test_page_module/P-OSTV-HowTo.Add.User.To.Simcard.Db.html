@@ -1,0 +1,150 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags -->
+
+<!-- replaces:
+
+-->
+<section class="master">
+  <h1>How To Add User to SimcardDB</h1>
+  <details open="open">
+    <p>
+    This document will guide through the steps of adding a new user to the SimcardDB which will be queried by eNBs in regular intervals for new IDs.
+    For following this howto, it is required to have:
+    </p>
+    <ul>
+      <li>A NMS network set up with a <a href="https://www.nexedi.com/P-OSTV-Tutorial.Install.Slapos.Master.Comp.Root">SlapOS Master</a> (<b>COMP-ROOT</b>) and <a href="https://www.nexedi.com/P-OSTV-Tutorial.Install.Slapos.Node.Comp.0">first node</a> (<b>COMP-0</b>) and ready to use.</li>
+      <li>A SimcardDB software release <a href="https://www.nexedi.com/P-OSTV-Tutorial.Install.Slapos.Node.Comp.0">installed on the COMP-0 or any other machine</a> (<b>COMP-123</b>)</li>
+      <li>A user account on the NMS system</li>
+    </ul>
+  </details>
+</section>
+
+<section class="master">
+  <h1>Table of Content</h1>
+  <ul>
+    <li>Add User to SimcardDB</li>
+  </ul>
+</section>
+
+<section class="chapter">
+  <h1>Add Simcard to SimcardDB</h1>
+  <details open="open">
+    <p>
+    The eNB will query the SimcardDB in regular intervals for new simcard ids. 
+    In this section we will add a simcard to the SimcardDB. You could then 
+    investigate when the simcard id becomes available on the eNB and whether it 
+    can be used (both steps are not part of the howto).
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>NMS Login</h1>
+  <img src="slapos-Interface.Add.Service.Simcard.Id.Login?display=&amp;format=png" alt="SlapOS Interface - Login" />
+  <details open="open">
+    <p>
+    Start by logging into your NMS Dashboard.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>NMS Dashboard</h1>
+  <img src="slapos-Interface.Add.Service.Simcard.Id.Dashboard?display=&amp;format=png" alt="SlapOS Interface - Dashboard" />
+  <details open="open">
+    <p>
+    Click on the <i>Services</i> button on the to see currently instantiated services.
+    </p>
+  </details>
+</section>
+
+
+<section>
+  <h1>List of Instantiated Services</h1>
+  <img src="slapos-Interface.Add.Service.Simcard.Id.Service.List?display=&amp;format=png" alt="SlapOS Dashboard - Service List" />
+  <details open="open">
+    <p>
+    Click <i>Add</i> in the subheader to add a new service.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>Create New SimcardId Instance</h1>
+  <img src="slapos-Interface.Add.Service.Simcard.Id.Select.Service?display=&amp;format=png" alt="SlapOS Dashboard - Select Service" />
+  <details open="open">
+    <p>
+    Select SimcardDB as this is the service we want to provide. 
+    The differentiation between instantiating a new SimcardDB and adding a Simcard 
+    will be made using the configuration parameter <i>Software-Type</i> in the next steps.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>Select SimcardId Service Version</h1>
+  <img src="slapos-Interface.Add.Service.Simcard.Id.Select.Version?display=&amp;format=png" alt="SlapOS Dashboard - Select Service Version" />
+  <details open="open">
+    <p>Please choose the latest version.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>SimcardId Configuration</h1>
+  <img src="slapos-Interface.Add.Service.Simcard.Id.Configuration.Parameter.List?display=&amp;format=png" alt="SlapOS Dashboard - Service Configuration Parameters" />
+  <details open="open">
+    <p>
+    Select <code>Software Type</code> <i>SimCard</i>, choose the computer which supplied the SimcardDB and fill out the 
+    configuration parameters as shown.
+    </p>
+    <p>
+    Click <i>Proceed</i> to continue. 
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>SimcardId Instantiation</h1>
+  <img src="slapos-Interface.Add.Service.Simcard.Id.Instantiation?display=&amp;format=png" alt="SlapOS Dashboard - Service Instantiation" />
+  <details open="open">
+    <p>
+    Refresh the page to see the new instance. Click on it once appears.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>SimcardId Connection Parameters</h1>
+  <img src="slapos-Interface.Add.Service.Simcard.Id.Connection.Parameter.List?display=&amp;format=png" alt="SlapOS Dashboard - Connection Parameters" />
+  <details open="open">
+    <p>
+    Wait and refresh the page from time to time until the status changes from <i>Start Requested</i>. Once your instance has been deployed the SimcardId 
+    should be propagated to the eNB/EPC associated with the underlying SimcardDB.
+    </p>
+  </details>
+</section>
+
+<section class="master">
+  <h1>Thank You</h1>
+  <div style="float:left;margin-top:9%;width:48%;">
+    <img alt="Image Nexedi Office" 
+         title="Image Nexedi Office" 
+         src="NXD-Media.Image.Office.Munich?display=large&amp;format=png" 
+         type="image/png" />
+  </div>
+  <div>
+    <ul style="list-style:none;display:block;">
+      <li>Nexedi SA</li>
+      <li>147 Rue du Ballon</li>
+      <li>59110 La Madeleine</li>
+      <li>France</li>
+    </ul>
+    <ul style="list-style:none;display:block;">
+      <li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+    </ul>
+  </div>
+  <details open="open"></details>
+</section>

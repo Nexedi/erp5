@@ -1,0 +1,343 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags -->
+<!-- replaces
+
+-->
+
+<section class="master">
+  <h1>Understanding NMS Software Release</h1>
+  <details open="open">
+    <p>
+    This document aims to explain how the Amarisoft LTE software release is 
+    implemented, and the components related to it.
+    </p>
+    <p>The entire source source of the Amarisoft LTE Software release contains:</p>
+    <ul>
+      <li>Software profile with the list of dependencies to deploy the stack</li>
+      <li>Binaries of Amarisoft LTE stack (source code is not available - to use Amarisoft LTE software, please purchase the respective license from Amarisoft)</li>
+      <li>Instance profiles to define types of instantiation you want to deploy</li>
+      <li>JSON schemas parameter form rendering</li>
+      <li>Templates of configuration files for amarisoft stack</li>
+    </ul>
+    <p>
+    The entire software release profile is present on:</p><pre><code>$MASTER_URL/raw/master/</code></pre>
+  </details>
+</section>
+
+<section class="master">
+  <h1>Table of Content</h1>
+  <ul>
+    <li>NMS Software Release</li>
+  </ul>
+</section>
+
+<section class="chapter">
+  <h1>NMS Software Release</h1>
+  <details open="open">
+    <p>
+    This section will introduce the Amarifsoft stack profile, templates and 
+    software profiles as well as input parameters.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>Amarisoft Stack Profile</h1>
+  <img src="gitlab-Interface.Amarisoft.Buildout.Profile?display=&amp;format=png" alt="Gitlab interface - Amarisoft Buildout Profile" />
+  <details open="open">
+    <p>
+    The buildout profile can be found at:</p><pre><code>$MASTER_URL/blob/master/slapos/stack/amarisoft/buildout.cfg</code></pre>
+    <p>
+    and contains the entire definition of dependencies, downloads of the 
+    configuration files and as well downloads of the basic templates to be used
+    on the Amarisoft stack.
+    </p>
+    <p>
+    The dependencies for the Software Release are:</p><pre><code>extends =
+  buildout.hash.cfg
+  https://lab.nexedi.com/nexedi/slapos/raw/07021e01b6ba9b3aee1eb7e1b4c1b68f44272
+193/stack/slapos.cfg
+  https://lab.nexedi.com/nexedi/slapos/raw/07021e01b6ba9b3aee1eb7e1b4c1b68f44272
+193/stack/monitor/buildout.cfg
+  https://lab.nexedi.com/nexedi/slapos/raw/07021e01b6ba9b3aee1eb7e1b4c1b68f44272
+193/component/logrotate/buildout.cfg
+  https://lab.nexedi.com/nexedi/slapos/raw/07021e01b6ba9b3aee1eb7e1b4c1b68f44272
+193/component/gzip/buildout.cfg
+  https://lab.nexedi.com/nexedi/slapos/raw/07021e01b6ba9b3aee1eb7e1b4c1b68f44272
+193/component/lxml-python/buildout.cfg
+  https://lab.nexedi.com/nexedi/slapos/raw/07021e01b6ba9b3aee1eb7e1b4c1b68f44272
+193/component/msgpack-python/buildout.cfg
+  https://lab.nexedi.com/nexedi/slapos/raw/07021e01b6ba9b3aee1eb7e1b4c1b68f44272
+193/component/cython-zstd/buildout.cfg
+  https://lab.nexedi.com/nexedi/slapos/raw/07021e01b6ba9b3aee1eb7e1b4c1b68f44272
+193/component/python-mysqlclient/buildout.cfg
+  https://lab.nexedi.com/nexedi/slapos/raw/07021e01b6ba9b3aee1eb7e1b4c1b68f44272
+193/component/python-mysqlclient/buildout.cfg</code></pre>
+  </details>
+  <details open="open">
+    <p>Here is the definition version of the Amarisoft Stack to use:</p><pre><code>[unpack-to-instance]
+recipe = slapos.recipe.build:download-unpacked
+lte-version = 2017-10-13
+url = ${:_profile_base_location_}/${:lte-version}/ \
+lte${:_buildout_section_name_}-linux-${:lte-version}.tar.gz
+destination = ${buildout:directory}/${:_buildout_section_name_}
+strip-top-level-dir = true
+ignore-existing = true
+on-update = true</code></pre>
+    <p>
+    Here is an example of additional action taken by the buildout to 
+    configure the software environment, which means copying the <i>trx_sdr.so</i>
+    into <i>enb</i> folder:</p><pre><code>[sdr-driver]
+# move trx_sdr.so next to lteenb binary
+recipe  = slapos.recipe.build:download
+url = ${sdr:destination}/trx_sdr.so
+destination = ${enb:destination}/trx_sdr.so</code></pre>
+  </details>
+</section>
+
+<section>
+  <h1>Configuration Templates</h1>
+  <img src="gitlab-Interface.Amarisoft.Configuration.Template.List?display=&amp;format=png" alt="Gitlab Interface - Amarisoft Configuration Templates" />
+  <details open="open">
+    <p>
+    The following folder contains the configuration files that will be used by
+    Buildout to render the final configuration files:</p><pre><code>$MASTER_URL/tree/master/slapos/stack/amarisoft/config</code></pre>
+    <p>
+    For example <code>enb.jinja.cfg</code> which uses <a href="http://jinja.pocoo.org/">Jinja2</a> 
+    templating to render the final configuration file includes:</p><pre><code>
+{% set cell_default = slapparameter_dict.get("cell_default", {}) %}
+
+[..]
+
+  cell_default: {
+    n_antenna_dl: {{ cell_default.get("n_antenna_dl", 2) }},
+    /* antennas for downlink */
+    n_antenna_ul: {{ cell_default.get("n_antenna_ul", 1) }},
+    /* antennas for uplink */</code></pre>
+    <p>
+    which allows to use the <a href="http://git.erp5.org/gitweb/slapos.recipe.template.git/blob/HEAD:/slapos/recipe/template/README.jinja2.txt?js=1">Jinja2</a> templating language to define variables and load values from user input parameters.
+    In the example, the number of antennas for download and uploade are defined 
+    by the user, or if not provided, a default value is set.
+    </p>
+  </details>
+  <details open="open">
+    <p>
+    In this next example, you can notice that among other values the 
+    <code>cell_list</code> parameter can also be defined by the user:</p><pre><code>/* list of cells */
+  cell_list: [
+{% for cell in cell_list %}
+  {
+    /* Broadcasted PLMN identities */
+    plmn_list: [
+      "00101", 
+    ],
+
+    dl_earfcn: {{ cell.get("dl_earfcn") }},
+    n_id_cell: {{ cell.get("n_id_cell") }},
+    cell_id: {{ "0x%02x" % cell.get("n_id_cell") }},
+    tac: {{ "0x%04x" % cell.get("n_id_cell") }},
+    root_sequence_index: 204, /* PRACH root sequence index */
+  },
+{% endfor %}</code></pre>
+    <p>
+    Every configuration file that will end up on <i>leteenb</i>, <i>lteemme</i>, 
+    etc can have predefined default values or values provided by the user.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>Software Profile</h1>
+  <img src="gitlab-Interface.Amarisoft.Software.Profile?display=&amp;format=png" alt="Gitlab Interface - Amarisoft Software Profile" />
+  <details open="open">
+    <p>
+    The software profile can be found at:</p><pre><code>$MASTER_URL/blob/master/slapos/software/lte/software.cfg</code></pre>
+    <p>
+    This file extends the stack and defines all the templates uses by 
+    SlapOS to run the instances. Additional configurations can be included 
+    here to differentiate eventual variations on how the stack will be used. </p><pre><code>[buildout]
+extends =
+  buildout.hash.cfg
+  ../../stack/amarisoft/buildout.cfg
+
+parts +=
+  template
+
+# recipe to install SDR driver into ENB's libs
+  sdr-driver
+
+[..]</code></pre>
+  </details>
+</section>
+
+<section>
+  <h1>Software Types</h1>
+  <img src="slapos-Interface.Service.Lte.Enb.Configuration.Parameters?display=&amp;format=png" alt="SlapOS Interface - Service LTE eNB Configuration Parameters" />
+  <details open="open">
+    <p>
+    In the software profile (<code>software.cfg</code>), everything is 
+    unified and enb, mme, ims, mbms binaries are deployed on the machine. You 
+    can only decide during the instantiation (<code>instance.cfg</code> which 
+    type of instance you want (corresponding to the <i>software-type</i> shown 
+    on the screenshot). This way you can decide to only run mme with 
+    appropriate configuration, for example.
+    </p>
+    <p>
+    The list of software types are defined in two main locations:</p><ul>
+    <li>
+      <code>software.cfg.json</code> - <a href="$MASTER_URL/blob/master/slapos/software/lte/software.cfg.json">https://lab.nexedi.com/nexedi/amarisoft/blob/master/slapos/software/lte/software.cfg.json</a></li>
+    <li>
+      <code>instance.cfg</code> - <a href="$MASTER_URL//blob/master/slapos/software/lte/instance.cfg">https://lab.nexedi.com/nexedi/amarisoft/blob/master/slapos/software/lte/instance.cfg</a>
+    </li>
+  </ul>
+  </details>
+  <details open="open">
+    <p>
+    In softwate.cfg.json, you describe as json the list of Software types that 
+    will be displayed on the request form:</p><pre><code>{
+    "name": "LTE",
+    "description": "LTE",
+    "serialisation": "json-in-xml",
+    "software-type": {
+        "enb": {
+             "title": "eNB",
+             "software-type": "enb",
+             "description": "eNodeB Configuration",
+             "request": "instance-enb-input-schema.json",
+             "response": "instance-enb-schema.json",
+             "index": 0
+         },
+[..]</code></pre>
+    <p>
+    Each entry defines a form to render to the user (as shown in the screenshot)
+    </p>
+  </details>
+  <details open="open">
+    <p>
+    On instance.cfg you can have find the list of types here:</p><pre><code>[switch-softwaretype]
+recipe = slapos.cookbook:softwaretype
+default = $${dynamic-template-lte-default:rendered}
+license = $${dynamic-template-lte-license:rendered}
+enb = $${dynamic-template-lte-enb:rendered}
+epc = $${dynamic-template-lte-mme:rendered}
+ims = $${dynamic-template-lte-ims:rendered}
+mbms = $${dynamic-template-lte-mbms:rendered}</code></pre>
+    <p>
+    Each entry defines a buildout profile, that will be used to instantiate the 
+    services.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>Parameter Form Input</h1>
+  <img src="gitlab-Interface.Amarisoft.Form.Parameter.Input?display=&amp;format=png" alt="Gitlab Interface - Amarisoft Form Parameter Input" />
+  <details open="open">
+    <p>
+    The developer can define one or more json schemas for each software type. 
+    Each json schema will be rendered as a form in order for users to enter their preferences
+    and configuration. Later, this input can be translated in a 
+    multitude of values. 
+    </p><p>
+    The following example illustrates the rendering:</p><pre><code>[..]
+		"mme_addr": {
+			"title": "MME address",
+			"description": "address of MME for S1AP connection",
+			"type": "string",
+			"default": "127.0.1.100"
+		},
+[..]</code></pre>
+    <p>
+    This defines that a string input will be rendered for <i>mme_addr</i> resulting
+    in:
+    <img src="slapos-Interface.Amarisoft.Form.Parameter.Input?display=&format=png" alt="SlapOS Interface - MMR address rendered field" />
+    <p>
+    You can program a combination of values to deploy a desirable configuration 
+    giving high flexibility to the model to generate thousand of 
+    configurations with minimal amount of inputs. 
+    </p>
+  </details>
+</section>
+<section>
+  <h1>Instantiation Templates and Service Deployment</h1>
+  <img src="gitlab-Interface.Amarisoft.Instantiation.Template?display=&format=png" alt="Gitlab Interface - Amarisoft Instantiation Template" />
+  <details open="open">
+    <p>
+    When requesting to deploy an eNB, the following template will be used:</p><pre><code>$MASTER_URL//blob/master/slapos/
+  software/lte/instance-enb.jinja2.cfg</code></pre>
+    <p>
+    This template defines which actions to take to run the service, such as 
+    create directories, wrapper scripts with proper values to render the final templates.</p>
+    <h2>Creating Directories</h2>
+    <p>The following section creates the required directories:</p><pre><code>[directory]
+recipe = slapos.cookbook:mkdirectory
+home = ${buildout:directory}
+etc = ${:home}/etc
+var = ${:home}/var
+etc = ${:home}/etc
+bin = ${:home}/bin
+run = ${:var}/run
+script = ${:etc}/run
+service = ${:etc}/service
+promise = ${:etc}/promise
+log = ${:var}/log</code></pre>
+  </details>
+  <details open="open">
+    <h2>Script to Run eNB</h2>
+    <p>This section defines the script to run eNB:</p><pre><code>[lte-enb-service]
+recipe = slapos.cookbook:wrapper
+init = ${ltelogs:rendered} ${directory:log}/enb.log; sleep 2
+command-line = {{ enb }}/lteenb ${directory:etc}/enb.cfg
+wrapper-path = ${directory:service}/lte-enb
+mode = 0775
+reserve-cpu = True
+pidfile = ${directory:run}/enb.pid
+{% if slapparameter_dict.get("license_key_path", None) %}
+environment = AMARISOFT_PATH={{ slapparameter_dict.get("license_key_path", None) }}
+{% endif %}</code></pre>
+  </details>
+  <details open="open">
+    <h2>Rendering of enb.cfg</h2>
+    <p>
+    The rendering of <code>enb.cfg</code> is done in this section:</p><pre><code>[config-base]
+recipe = slapos.recipe.template:jinja2
+mode = 0664
+extensions = jinja2.ext.do
+context =
+  section directory directory
+  section instance instance
+  key slapparameter_dict instance:configuration
+  import  netaddr netaddr
+
+[lte-enb-config]
+&lt;= config-base
+template = {{ enb_template }}
+rendered = ${directory:etc}/enb.cfg</code></pre>
+  </details>
+</section>
+
+
+<section class="master">
+  <h1>Thank You</h1>
+  <div style="float:left;margin-top:9%;width:48%;">
+    <img alt="Image Nexedi Office" 
+         title="Image Nexedi Office" 
+         src="NXD-Media.Image.Office.Munich?display=large&amp;format=png" 
+         type="image/png" />
+  </div>
+  <div>
+    <ul style="list-style:none;display:block;">
+      <li>Nexedi SA</li>
+      <li>147 Rue du Ballon</li>
+      <li>59110 La Madeleine</li>
+      <li>France</li>
+    </ul>
+    <ul style="list-style:none;display:block;">
+      <li><a href="https://www.nexedi.com/contact">nexedi.com/contact</a></li>
+    </ul>
+  </div>
+  <details open="open"></details>
+</section>
+

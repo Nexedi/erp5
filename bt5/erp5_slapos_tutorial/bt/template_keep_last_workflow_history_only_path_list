@@ -30,3 +30,11 @@ test_page_module/slapos-Tutorial.Monitor.Slapos.Network
 test_page_module/slapos-Tutorial.Upgrade.Software.Release
 test_page_module/vifib-HowTo.Register.And.Create.User.Account
 test_page_module/vifib-HowTo.Request.Freefib.Re6st.Token
+test_page_module/P-OSTV-DesignDocument.OSTV.NMS
+test_page_module/P-OSTV-DesignDocument.Understanding.Nms.Software.Release
+test_page_module/P-OSTV-HowTo.Add.Lte.Service
+test_page_module/P-OSTV-HowTo.Add.User.To.Simcard.Db
+test_page_module/P-OSTV-HowTo.Create.Software.Release
+test_page_module/P-OSTV-HowTo.Update.Enb.Or.Epc
+test_page_module/P-OSTV-Tutorial.Install.Slapos.Node.Comp.123
+test_page_module/P-OSTV-Tutorial.Nms.Learning.Track

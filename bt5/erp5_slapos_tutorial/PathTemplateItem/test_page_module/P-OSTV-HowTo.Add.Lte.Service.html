@@ -1,0 +1,296 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+-->
+<section class="master">
+<h1>How To Add LTE Service</h1>
+
+<details open="open">
+<p>This document will show how to add LTE Services to an existing server. It is required to have:</p>
+
+<ul>
+	<li>A NMS network setup with a <a href="https://www.nexedi.com/slapos-Tutorial.Install.Slapos.Master.Comp.Root">SlapOS Master</a> (<b>COMP-ROOT</b>) and <a href="https://www.nexedi.com/slapos-Tutorial.Install.Slapos.Node.Comp.0">first node</a> (<b>COMP-0</b>)</li>
+	<li>A Amarisoft LTE (or equivalent) software release <a href="https://www.nexedi.com/P-OSTV-Tutorial.Install.Slapos.Node.Comp.123">installed on the COMP-123</a> (<b>COMP-123</b>)</li>
+	<li>A user account on the NMS system</li>
+</ul>
+
+<p>Two ways to setup an eNodeB/ePC server using Amarisoft LTE will be shown (<b>note</b>, that using Amarisoft LTE and being able to follow this howto requires to purchase the respective license from Amarisoft):</p>
+
+<h2>Lab Version</h2>
+
+<p>The <code>software-type</code> <i>Default</i> will provide a &quot;Lab&quot; version (for experimenting) in which the following four services are deployed on the same computer in a cluster:</p>
+
+<ul>
+	<li>1 instance of LTE eNB</li>
+	<li>1 instance of LTE ePC (MME)</li>
+	<li>1 instance of LTE IMS</li>
+	<li>1 instance of LTE MBMS</li>
+</ul>
+
+<h2>Production Version</h2>
+
+<p>For production services can be deployed individually which allows to create boxes with multiple LTE eNB instances. This howto only covers instantation of:</p>
+
+<ul>
+	<li>1 instance of LTE ePC (MME)</li>
+	<li>1 instance of LTE eNB</li>
+</ul>
+
+<p>IMS and MBMS are complimentary services, so their deployment is not shown in this document. They can however be deployed similar to a LTE EPC.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Instantiating LTE - Default</li>
+	<li>Instantiating LTE - EPC/eNB</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Instantiating LTE - Default</h1>
+
+<details open="open">
+<p>The following steps cover setting up the &quot;Lab&quot; Version on the LTE Box with all relevant services instantiated on one instance.</p>
+</details>
+</section>
+
+<section>
+<h1>NMS Login</h1>
+<img alt="SlapOS Interface - Login" src="slapos-Interface.Add.Service.Simcard.Id.Login?display=&amp;format=png" />
+<details open="open">
+<p>Start by logging into your SlapOS Master Dashboard.</p>
+</details>
+</section>
+
+<section>
+<h1>NMS Dashboard</h1>
+<img alt="SlapOS Interface - Dashboard" src="slapos-Interface.Add.Service.Simcard.Id.Dashboard?display=&amp;format=png" />
+<details open="open">
+<p>Click on the <i>Services</i> button on the to see currently instantiated services.</p>
+</details>
+</section>
+
+<section>
+<h1>List of Instantiated Services</h1>
+<img alt="SlapOS Dashboard - Add Service" src="slapos-Interface.Add.Service.Lte.Lab?display=&amp;format=png" />
+<details open="open">
+<p>Head to the list of services by clicking on the <i>Services</i> button on the side menu. The list will show all services currently <b>instantiated</b> (not the software currently installed!). To create an instance of an installed software, click the <i>Add</i> button in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Select LTE Service</h1>
+<img alt="SlapOS Dashboard - Select Service" src="slapos-Interface.Select.Service.Lte.Lab?display=&amp;format=png" />
+<details open="open">
+<p>Select LTE as this is the service we want to instantiate. The differentiation for the specific service will be made in the instantiation parameters.</p>
+</details>
+</section>
+
+<section>
+<h1>Select LTE Service Version</h1>
+<img alt="SlapOS Dashboard - Select Service Version" src="slapos-Interface.Select.Service.Lte.Lab.Version?display=&amp;format=png" />
+<details open="open">
+<p>As during installation, please choose the latest version.</p>
+</details>
+</section>
+
+<section>
+<h1>LTE Lab Service Configuration</h1>
+<img alt="SlapOS Dashboard - Instance Configuration" src="slapos-Interface.Service.Lte.Lab.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>You will reach the service configuration menu. Give your service a recognizable name (<i>LTE_ALL_IN_ONE</i> in the example), select <code>Software-Type</code> <i>Default</i> (denoting LTE Lab), pick the Computer/Box to install the LTE Lab at the end of the form and then fill out the form parameters. If required, you can expand the form to add additional parameters. At time of writing, parameters include:</p>
+
+<ul>
+	<li><b>Log Options</b>: Log options settings for enb.cfg, mme.cfg, ims.cfg and mbms.cfg (please refer to Amarisoft documentation for details)</li>
+	<li><b>GTP bind address</b>: IP address of the network interface connected to the core network</li>
+	<li><b>MME address</b>: Address of MME for S1AP connection</li>
+	<li><b>UE configuration path (optional)</b>: A path containing the ue_db configuration on the machine. Usefull for simple Tests</li>
+	<li><b>RF Parameters / Tx_gain</b>: Tx gain (in dB)</li>
+	<li><b>RF Parameters / Rx gain</b>: Rx gain (in dB)</li>
+	<li><b>License Key Path</b>: Path to the Amarisoft license files on the filesytem</li>
+	<li><b>Cell List</b>: Contains one or more cells configuration to be set on enb.cfg configuration</li>
+	<li><b>Cell List / DL EARFCN</b>: Downlink EARFCN of the cell</li>
+	<li><b>Cell List / Physical cell ID</b>: Physical cell ID</li>
+</ul>
+
+<p>Click <i>Proceed</i> to begin instantiation.</p>
+</details>
+</section>
+
+<section>
+<h1>LTE Lab Service Instantiation</h1>
+<img alt="SlapOS Dashboard - Instantiate Service" src="slapos-Interface.Instantiate.Service.Lte.Lab?display=&amp;format=png" />
+<details open="open">
+<p>Refresh the list of current services to show the new service and status.</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Service Connection Parameter</h1>
+<img alt="SlapOS Dashboard - Service LTE Lab Connection Parameters" src="slapos-Interface.Service.Lte.Lab.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>If you click on the instantiated service, you can see the connection parameters. By default they are not expanded.</p>
+</details>
+</section>
+
+<section>
+<h1>Expand Service Connection Parameters</h1>
+<img alt="SlapOS Dashboard - Service LTE Lab Connection Parameters Expanded" src="slapos-Interface.Service.Lte.Lab.Connection.Parameters.Expanded?display=&amp;format=png" />
+<details open="open">
+<p>By clicking on the <i>Parameter Entry</i> buttons, you can expand the drawers to show all subsequent parameters.</p>
+</details>
+</section>
+
+<section>
+<h1>Service LTE Lab Process List</h1>
+<img alt="SlapOS Dashboard - Service LTE Lab Process List" src="slapos-Interface.Service.Lte.Lab.Process.List?display=&amp;format=png" />
+<details open="open">
+<p>Scroll down on the connection parameter page. Once the service has been fully instantiated you can see all running processes at the bottom of the page in the table <i>Instances</i>.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Instantiating LTE - EPC/ENB</h1>
+
+<details open="open">
+<p>The following steps cover setting the EPC/MME and eNB separately.</p>
+</details>
+</section>
+
+<section>
+<h1>List of Instantiated Services</h1>
+<img alt="SlapOS Dashboard - Add Service" src="slapos-Interface.Add.Service.Lte.Epc?display=&amp;format=png" />
+<details open="open">
+<p>Head to the list of services by clicking on the <i>Services</i> button on the side menu. The list will show all services currently <b>instantiated</b> (not the software currently installed!). To create an instance of an installed software, click the <i>Add</i> button in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Select LTE Service</h1>
+<img alt="SlapOS Dashboard - Select Service" src="slapos-Interface.Select.Service.Lte.Epc?display=&amp;format=png" />
+<details open="open">
+<p>The list of available services is the same as the list of installable software releases used earlier when installing the service. Select LTE as this is the service we want to provide (the differentiation will only be made during configuration).</p>
+</details>
+</section>
+
+<section>
+<h1>Select LTE Service Version</h1>
+<img alt="SlapOS Dashboard - Select Service Version" src="slapos-Interface.Select.Service.Lte.Epc.Version?display=&amp;format=png" />
+<details open="open">
+<p>As during installation, please choose the latest version.</p>
+
+<p><b>Note</b>, that this is an easy case, as there is only a single version installed on one node. More complex networks will likely have multiple versions of a software installed on different nodes.</p>
+</details>
+</section>
+
+<section>
+<h1>LTE EPC Service Configuration</h1>
+<img alt="SlapOS Dashboard - Instance Configuration" src="slapos-Interface.Service.Lte.Epc.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>You will reach the service configuration menu. Give your service a recognizable name (<i>EPC-STANDALONE</i> in the example), select <code>Software-Type</code> <i>EPC</i> pick the Computer/Box to install the LTE EPC at the end of the form and then fill out the form parameters.</p>
+
+<p>Click <i>Proceed</i> to begin instantiation.</p>
+</details>
+</section>
+
+<section>
+<h1>LTE EPC Service Instantiation</h1>
+<img alt="SlapOS Dashboard - Instantiate Service" src="slapos-Interface.Instantiate.Service.Lte.Epc?display=&amp;format=png" />
+<details open="open">
+<p>Refresh the list of current services to show the new service and status.</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Service Connection Parameter</h1>
+<img alt="SlapOS Dashboard - Service LTE EPC Connection Parameters" src="slapos-Interface.Service.Lte.Epc.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>If you click on the instantiated service, you can see the connection parameters.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify Service Instantiated</h1>
+<img alt="SlapOS Dashboard - Service LTE EPC Accessability" src="slapos-Interface.Validate.Service.Lte.Epc.Instantiation?display=&amp;format=png" />
+<details open="open">
+<p>Once the monitoring status turns green on a page refresh, the EPC has been instantiated successfully. Then we can add the ENB. Click the <i>Add</i> button in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Select LTE Service</h1>
+<img alt="SlapOS Dashboard - Select Service" src="slapos-Interface.Select.Service.Lte.Enb?display=&amp;format=png" />
+<details open="open">
+<p>The list of available services is the same as the list of installable software releases used earlier when installing the service. Select LTE as this is the service we want to provide (the differentiation will only be made during configuration).</p>
+</details>
+</section>
+
+<section>
+<h1>Select LTE Service Version</h1>
+<img alt="SlapOS Dashboard - Select Service Version" src="slapos-Interface.Select.Service.Lte.Enb.Version?display=&amp;format=png" />
+<details open="open">
+<p>As during installation, please choose the latest version.</p>
+
+<p><b>Note</b>, that this is an easy case, as there is only a single version installed on one node. More complex networks will likely have multiple versions of a software installed on different nodes.</p>
+</details>
+</section>
+
+<section>
+<h1>LTE ENB Service Configuration</h1>
+<img alt="SlapOS Dashboard - Instance Configuration" src="slapos-Interface.Service.Lte.Enb.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>You will reach the service configuration menu. Give your service a recognizable name (<i>eNB-STANDALONE</i> in the example), select <code>Software-Type</code> <i>eNB</i> pick the Computer/Box to install the LTE eNB at the end of the form and then fill out the form parameters. <b>Note</b>, that if you have multiple boxes on your network, you can (supply and) instantiate eNB on any of the available boxes.</p>
+
+<p>Click <i>Proceed</i> to begin instantiation.</p>
+</details>
+</section>
+
+<section>
+<h1>LTE EPC Service Instantiation</h1>
+<img alt="SlapOS Dashboard - Instantiate Service" src="slapos-Interface.Instantiate.Service.Lte.Enb?display=&amp;format=png" />
+<details open="open">
+<p>Refresh the list of current services to show the new service and status.</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Service Connection Parameter</h1>
+<img alt="SlapOS Dashboard - Service LTE eNB Connection Parameters" src="slapos-Interface.Service.Lte.Epc.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>If you click on the instantiated service, you can see the connection parameters.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify Service Instantiated</h1>
+<img alt="SlapOS Dashboard - Service LTE eNB Accessability" src="slapos-Interface.Verify.Service.Lte.Enb.Accessability?display=&amp;format=png" />
+<details open="open">
+<p>Once the monitoring status turns green on a page refresh, the eNB has been instantiated successfully.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>
