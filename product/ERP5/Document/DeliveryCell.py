@@ -69,6 +69,12 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
     # Declarative interfaces
     zope.interface.implements(interfaces.IDivergenceController,)
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'isPredicate')
+    def isPredicate(self):
+      """Movements are not predicates.
+      """
+      return False
+
     # MatrixBox methods
     security.declareProtected( Permissions.AccessContentsInformation,
                                'hasCellContent' )
