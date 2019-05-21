@@ -1,0 +1,907 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+-->
+<section class="master">
+<h1>Install SlapOS Node (COMP-123) LTE-Box</h1>
+
+<details open="open">
+<p>This document explains how to use the NMS Network Management System to install and configure the Amarisoft Stack on a Standard PC (or Server) containing a SDR Radio board in order to provide 4G/5G networks services. This tutorial can be applied to any deployment of Amarisoft stack running on a Linux Distrubution.</p>
+
+<p>For the purpose the tutorial, this standard computer is called <b>LTE-Box</b>(<b>COMP-123</b>), and it is considered in SlapOS network, as a normal computer/server .</p>
+
+<p>To follow the steps outlined in this section, you need to have:</p>
+
+<ul>
+	<li>access to a SlapOS Master (COMP-ROOT) - <a href="slapos-Tutorial.Install.Slapos.Master.Comp.Root">installing and accessing a SlapOS Master</a></li>
+	<li>a slave node (COMP-0) providing necessary software services - see <a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">installing a SlapOS node (COMP-0)</a></li>
+	<li>a new Debian server to register as LTE-Box</li>
+</ul>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>LTE Box Introduction</li>
+	<li>LTE Box Installation</li>
+	<li>Add Amarisoft LTE to Software Catalogue</li>
+	<li>Supply LTE Software on LTE Box</li>
+	<li>Scenario 1: Instantiating LTE - Default</li>
+	<li>Scenario 2: Instantiating LTE - EPC/ENB</li>
+	<li>Add Simcard to SimcardDB</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>LTE Box Introduction</h1>
+
+<details open="open">
+<p>This section will introduce the LTE Box and how to request a default eNodeB deployment. It will show the different types of deployment covered in this tutorial as well as rationale for doing so.</p>
+</details>
+</section>
+
+<section>
+<h1>Requesting Default eNodeB Deployment</h1>
+
+<ul>
+	<li>Lab Version</li>
+	<li>Production Version</li>
+</ul>
+
+<details open="open">
+<p>This tutorial will teach how to setup an eNodeB/ePC server with the Amarisoft stack in two different ways.</p>
+
+<h2>Lab Version</h2>
+
+<p>The <code>software-type</code> <i>Default</i> will provide a &quot;Lab&quot; version in which the following four services of the Amarisoft stack are deployed on the same computer in a cluster mode (<b>Scenario 1</b>):</p>
+
+<ul>
+	<li>1 instance of LTE eNB</li>
+	<li>1 instance of LTE ePC (MME)</li>
+	<li>1 instance of LTE IMS</li>
+	<li>1 instance of LTE MBMS</li>
+</ul>
+
+<h2>Production Version</h2>
+
+<p>For production we recommend to deploy using individual instances, which will allow to create boxes with multiple LTE eNB instances. This tutorial shows how to deploy the following as separate instances (<b>Scenario 2</b>):</p>
+
+<ul>
+	<li>1 instance of LTE ePC (MME)</li>
+	<li>1 instance of LTE eNB</li>
+</ul>
+</details>
+
+<details open="open">
+<p>This tutorial doesn&#39;t cover the deploment of standalone IMS and MBMS as they are complementary services. However, the user can deploy them in a similar way as LTE EPC.</p>
+</details>
+</section>
+
+<section>
+<h1>Amarisoft LTE Software Release</h1>
+<img alt="Gitlab - Software Release Software.cfg file" src="https://www.nexedi.com/gitlab-interface.Locate.Software.Release.Profile.Lte?display=&amp;format=png" />
+<details open="open">
+<p>The Amarisoft LTE Software Release automates the deployment of Amarisoft Binaries in an orchestrated way. The Software Release contains all components (lteenb, ltemme, lteims and ltembms) provided by amarisoft stack:</p>
+
+<ul>
+	<li><i>lteenb</i> - eNodeB software is the server accepting connection from UI (user interfaces)</li>
+	<li><i>ltemme</i> - Mobile Management Entity - the core network which handles orchestration of eNodeBs in case UI switches from one to another</li>
+	<li><i>lteims</i> - IP Multimedia System is another protocol such as LTE but designed for services over IP. Please read <a href="http://www.differencebetween.com/difference-between-lte-and-vs-ims-2/">http://www.differencebetween.com/difference-between-lte-and-vs-ims-2/</a></li>
+	<li><i>ltembmsgw</i> - Multimedia Broadcast Multicast Services (Gateway) is technology which broadcast the same multimedia content into multiple IP addresses at once to save bandwidth.</li>
+</ul>
+</details>
+
+<details open="open">
+<p>Those binaries are started in the foreground, originally on screen. However, it is undesireable to have binaries inside one screen because then it is not easy to control and monitor their resource usage. Thus NMS is using four on-watch services (which will take action if one process is down.)</p>
+
+<p>The configuration file of the Amarisoft Stack is present here:</p>
+
+<pre>
+<code>$MASTER_URL/raw/master/slapos/software/lte/software.cfg</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Glossary</h1>
+
+<ul>
+	<li>MME</li>
+	<li>IMS</li>
+	<li>MBMSGW</li>
+</ul>
+
+<details open="open">
+<p>Terms necessary to understand:</p>
+
+<ul>
+	<li><i>MME</i> (ePC)<br />
+	Is the core network. This binary keep track of UEs and to which eNodeB they are currently connected. It reroutes traffic when UE switches between eNodeBs. MME also serves as a service bus thus all services must register within MME.</li>
+	<li><i>IMS</i><br />
+	Service connected into MME bus. IMS handles circuit-ish services over IP whereas LTE would have failed because it is intended as data-over-IP service. I think that VoLTE is actually using IMS.</li>
+	<li><i>MBMSGW</i><br />
+	MBMS Gateway is a standalone component connected to BMSC (Broadcast Multicast Service Centre), server supporting streaming content from providers, which is another component inside our core network not provided by Amarisoft. MBMS Gateway is connected to MME which then manages MBMS sessions. I think that MBMS itself handles data delivery by posting the data onto MME bus.</li>
+</ul>
+</details>
+</section>
+
+<section>
+<h1>License</h1>
+
+<pre>
+<code>sudo su
+# mkdir /etc/amarisoft
+
+# # Check if you have the licenses
+# ls ~/.amarisoft/lte*
+
+# # Copy Licenses into /etc/amarisoft
+# cp ~/.amarisoft/* /etc/amarisoft
+
+
+# chmod ugo+rx /etc/amarisoft
+# chmod -R ugo+r /etc/amarisoft</code></pre>
+
+<details open="open">
+<p>The Amarisoft Stack requires licenses to work. <b>YOU HAVE TO ENSURE YOU HAVE THE APPROPRIATE LICENSE TO RUN THE AMARISOFT STACK ON YOUR SERVER.</b> In case of doubt, please contact Amarisoft directly for the licenses.</p>
+
+<p>Once you have the license, please place them on the following folder for the purpose of the tutorial:</p>
+
+<pre>
+<code>/etc/amarisoft/</code></pre>
+.
+
+<p>Also ensure, users can access it:</p>
+
+<pre>
+<code># chmod ugo+rx /etc/amarisoft
+# chmod -R ugo+r /etc/amarisoft</code></pre>
+
+<p>After this you can proceed with the installation of your Node.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>LTE Box Installation</h1>
+
+<details open="open">
+<p>The following steps are partially covered in a generic way in <a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">installing SlapOS node (COMP-0)</a>. The main difference is for all LTE-Box servers, the services provided by COMP-0 (Frontend, IPv6, Registry, SimcardDB) are already available - so setup is somewhat easier.</p>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Master Dashboard</h1>
+<img alt="SlapOS Interface - Dashboard" src="https://www.nexedi.com/slapos-Interface.Lte.Box.Installation.Dashboard?display=&amp;format=png" />
+<details open="open">
+<p>Start by logging into your SlapOS Master Dashboard with a user with administrative privileges to request a new server token. Click the <i>Services</i> menu on the side menu to open the list of existing services.</p>
+</details>
+</section>
+
+<section>
+<h1>List of Instantiated Services</h1>
+<img alt="SlapOS Dashboard - Add Service" src="https://www.nexedi.com/slapos-Interface.Add.Service.Re6st.Token?display=&amp;format=png" />
+<details open="open">
+<p>Head to the list of services by clicking on the <i>Services</i> button on the side menu. The list will show all services currently <b>instantiated</b> (not the software currently installed!). To create an instance of an installed software, click the <i>Add</i> button in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Create New Res6st Token Instance</h1>
+<img alt="SlapOS Dashboard - Select Service" src="https://www.nexedi.com/slapos-Interface.Select.Service.Re6st.Token?display=&amp;format=png" />
+<details open="open">
+<p>The list of available services is the same as the list of installable software releases used earlier when installing the service. Select Re6st as this is the service we want to provide. The differentiation between Registry and Token will be made via the configuration parameter <b>Software-Type</b>.</p>
+</details>
+</section>
+
+<section>
+<h1>Select Re6st Service Version</h1>
+<img alt="SlapOS Dashboard - Select Service Version" src="https://www.nexedi.com/slapos-Interface.Select.Service.Re6st.Token.Version?display=&amp;format=png" />
+<details open="open">
+<p>As during installation, please choose the latest version.</p>
+</details>
+</section>
+
+<section>
+<h1>Re6st Registry Configuration</h1>
+<img alt="SlapOS Dashboard - Re6st Token Service Configuration Parameters" src="https://www.nexedi.com/slapos-Interface.Service.Re6st.Token.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>Select <i>Software Type</i> <code>Re6st Token</code> which will load a form with instance-specific parameters. As mentioned, the token is actually a slave instance of the Registry (and in case of <b>COMP-0</b> a first gateway node).</p>
+
+<p>Every new node will require a token, so give this token a recognizable name (<code>Re6st-LTE-Box-123</code> for example).</p>
+
+<p>Select the <i>Computer</i> on which the Registry of your SlapOS Master was installed at the bottom of the page, then click <i>Proceed</i> to instantiate the service and be forwarded to the list of current services. Refresh the page, it may take a few minute for the node to be instantiated and the token to appear. It is a single use token to connect <b>one</b> other node to the network.</p>
+</details>
+</section>
+
+<section>
+<h1>Instantiate Re6st Token</h1>
+<img alt="SlapOS Dashboard - Service Re6st Token Instantiation" src="https://www.nexedi.com/slapos-Interface.Instantiate.Service.Re6st.Token?display=&amp;format=png" />
+<details open="open">
+<p>Click <i>Proceed</i> to instantiate a new token. Refresh the list of instantiated services to make the token appear. Click on it to access the connection parameters.</p>
+</details>
+</section>
+
+<section>
+<h1>Token Connection Parameters</h1>
+<img alt="SlapOS Interface - Re6st Token Connection Parameters" src="https://www.nexedi.com/slapos-Interface.Service.Re6st.Token.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>Locate the token in the Connection Parameters. It might require a few minutes to show up. Refresh the page to see whether the token has been instantiated.</p>
+
+<p>You can now install Re6st on this machine.</p>
+</details>
+</section>
+
+<section>
+<h1>Installing Re6st</h1>
+
+<pre>
+<code>sudo su
+# yum install wget
+
+(...)
+
+# wget https://deploy.erp5.net/re6st &amp;&amp; bash re6st</code></pre>
+
+<details open="open">
+<p>ssh into the terminal of your server, switch to root and verfiy <i>wget</i> is available. Then install re6st as shown above. At some point the script will ask you:</p>
+
+<pre>
+<code>What is the Url of the Re6st registry [https://re6stnet.nexedi.com]:
+Please insert your re6stnet token [notoken]:</code></pre>
+
+<p>Provide the <i>master-url</i> you noted when setting the port forwarding for the Re6st Registry in <a href="/slapos-Tutorial.Install.Slapos.Master.Comp.Root">installing the SlapOS Master</a> (it should be <code>http://[your_IPv4_address]:9201</code>) along with the <i>token</i> created in the previous steps and continue. The setup should finish without errors:</p>
+
+<pre>
+<code>...
+PLAY RECAP *********************************************************************
+127.0.0.1                  : ok=24   changed=7   unreachable=0   failed=0</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Verify Files Created</h1>
+
+<pre>
+<code>sudo su
+# ls /etc/re6stnet/
+ca.crt     cert.cert     cert.key     re6stnet.conf     README</code></pre>
+
+<details open="open">
+<p>Verify that the configuration files were created.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify Re6st is Running</h1>
+
+<pre>
+<code>sudo su
+# service re6stnet status</code></pre>
+
+<details open="open">
+<p>You can use the above command to see whether Re6st is working. The output should be similar to:</p>
+
+<pre>
+<code>● re6stnet.service - (null)
+   Loaded: loaded (/etc/init.d/re6stnet)
+   Active: active (running) since Fri 2018-03-09 16:43:23 UTC; 6min ago
+   Process: 26395 ExecStop=/etc/init.d/re6stnet stop (code=exited, status=0/SUCCESS)
+   Process: 26423 ExecStart=/etc/init.d/re6stnet start (code=exited, status=0/SUCCESS)
+   CGroup: /system.slice/re6stnet.service
+           ├─26431 /opt/re6st/parts/python2.7/bin/python2.7 /usr/sbin/re6stnet 
+@re6stnet.conf
+           ├─26437 openvpn --dev-type tap --dev re6stnet-tcp --persist-tun --p
+ersist-key --script-security 2 --up /opt/re6st/eggs/re6stnet-0.485-py2.7.egg/r
+e6st/ovpn-client --tls-server --mode server --clien...
+           ├─26444 babeld -h 15 -H 15 -L /var/log/re6stnet/babeld.log -S /var
+/lib/re6stnet/babeld.state -I /var/run/re6stnet/babeld.pid -s -C ipv6-subtree
+s true -C default max-rtt-penalty 5000 rtt-max 500 rt...
+           ├─26537 openvpn --dev-type tap --dev re6stnet1 --persist-tun --per
+sist-key --script-security 2 --up /opt/re6st/eggs/re6stnet-0.485-py2.7.egg/re
+6st/ovpn-client --nobind --client --remote 163.172.45...
+           └─26862 openvpn --dev-type tap --dev re6stnet2 --persist-tun --per
+sist-key --script-security 2 --up /opt/re6st/eggs/re6stnet-0.485-py2.7.egg/re
+6st/ovpn-client --nobind --client --remote 52.36.124....
+
+  Mar 09 16:43:23 slapostest2 systemd[1]: Started (null).</code></pre>
+
+<p>After this step Re6st is installed and the machine is accessable over IPv6.</p>
+</details>
+</section>
+
+<section>
+<h1>Get SlapOS Master Token</h1>
+<img alt="SlapOS Node Installation - Request Association Token" src="https://www.nexedi.com/slapos-Interface.Server.List.Empty?display=&amp;format=png" />
+<details open="open">
+<p>Head to the SlapOS Dashboard at:</p>
+
+<pre>
+<code>https://master.YOUR_DOMAIN/</code> (preferred the url)</pre>
+
+<p>Otherwise:</p>
+
+<pre>
+<code>https://[instance-IPv4]/erp5/web_site_module/hostingjs/</code></pre>
+
+<p>and log in as a regular user (the zope username/password will not work, you should have created a user account on the SlapOS Dashboard while setting up the SlapOS Master). Click on the <i>Servers</i> link in the side to go to your list of servers.</p>
+
+<p>When using the single line installer, you have to provide a X509 security token to identifiy your node with a SlapOS Master and enable it to manage the node within a network. To get such a token, in the subheader, click <i>Token</i>.</p>
+</details>
+</section>
+
+<section>
+<h1>Association Token</h1>
+<img alt="SlapOS Node Installation - Association Token" src="https://www.nexedi.com/vifib-Interface.Server.Token?display=&amp;format=png" />
+<details open="open">
+<p>Click <i>Proceed</i> to request a token. Once it&#39;s generated, copy the token for later. <b>Note</b>, that the token can only be used once. If the installation of SlapOS fails for whatever reason and you need to retry, you need to request a new token before. Head back to the terminal.</p>
+</details>
+</section>
+
+<section>
+<h1>Single Line Installer</h1>
+
+<pre>
+<code>sudo su
+# wget deploy.erp5.net/slapos &amp;&amp; bash slapos
+
+...
+
+What is the url to the SlapOS Master API? [https://slap.vifib.com/]: 
+What is the url to the SlapOS Master Website? [https://slapos.vifib.com/]: 
+What is this computer name? [noname]:
+If you have slapos token if you have? [notoken]:
+</code></pre>
+
+<details open="open">
+<p>Continue and use the single line installer. You will be asked a set of questions during the installation. As you are connecting to your own master, on the first question, please point to port 5443 of your master&#39;s IPv4 adress, so enter <code>https://[your_IPv4_address]:5443</code> and on the second question, please add your SlapOS Master dashboard url. Same as you are using to get the token:</p>
+
+<pre>
+<code>https://master.YOUR_DOMAIN
+OR
+https://[your_IPv4_address]:443/erp5/web_site_module/hostingjs/</code> (If you used this one)</pre>
+
+<p>Choose a name for your computer (like <i>LTE-BOX-1</i> to identity it in your network and finally enter the association token you have received earlier from your SlapOS Master. The installation can be repeated in case something goes wrong or you would like to change some of the entered parameters.</p>
+
+<p>Once the installation has finished without errors, you should see:</p>
+
+<pre>
+<code>...
+PLAY RECAP *********************************************************************
+127.0.0.1                  : ok=12   changed=4   unreachable=0   failed=0</code></pre>
+
+<p>In case installation fails and you want to start over, you need to <b>request a new token</b> as mentioned above and, depending on whether already created, remove any existing configuration in <code>/etc/opt/slapos/slapos.cfg</code> before restarting.</p>
+</details>
+
+<details open="open">
+<p>You can verify that SlapOS was installed by trying:</p>
+
+<pre>
+<code># slapos node
+watchdog                   RUNNING   pid 13270, uptime 0:00:03</code></pre>
+
+<p>And (re)formatting the SlapOS node:</p>
+
+<pre>
+<code># slapos node format --now
+2018-04-21 13:07:29 slapos[13279] INFO Updating Computer
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart0
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart1
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart2
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart3
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart4
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart5
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart6
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart7
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart8
+2018-04-21 13:07:30 slapos.format[13279] INFO Partition resources saved to slappart9
+2018-04-21 13:07:30 slapos[13279] INFO Posting information to &#39;https://54.37.31.108:5443/&#39;
+2018-04-21 13:07:30 slapos[13279] INFO slapos successfully prepared the computer.</code></pre>
+</details>
+</section>
+
+<section>
+<h1>SlapOS Dashboard - Registered Servers</h1>
+<img alt="SlapOS - Server List" src="https://www.nexedi.com/slapos-Interface.Server.List?display=&amp;format=png" />
+<details open="open">
+<p>Head back to your SlapOS Dashboard and verify the list of servers now includes your SlapOS Node which was associated to your network using the token you had created. You may have to refresh the page for the server to show up.</p>
+
+<p><b>Note</b>, the entry has three clickable areas:</p>
+
+<ul>
+	<li>The line itself (click <i>server name</i> for example) points to the server configuration</li>
+	<li>Clicking the <i>Computer</i> button will open the monitor - the green color indicates the server is active and contacting the Master.</li>
+	<li>As this server does not have any computer partitions installed yet, the second button next to <i>Computer</i> is still missing.</li>
+</ul>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Add Amarisoft LTE to Software Catalogue</h1>
+
+<details open="open">
+<p>As Amarisoft LTE is NOT a standard software included in SlapOS, the software release has to be manually added to the software catalog before being able to supply and instantiate it. <b>Note, this has to be done only once</b>. However the steps are the same for <b>adding and also updating(!)</b> all software releases on SlapOS.</p>
+
+<p>The following steps require a user with administator privileges which should have been created during installation of the SlapOS Master for adding SimcardDB to the catalog.</p>
+</details>
+</section>
+
+<section>
+<h1>Administrator Login to ERP5 Interface</h1>
+<img alt="ERP5 Interface - Login with Administrator Account" src="https://www.nexedi.com/erp5-Interface.Administrator.Login?display=&amp;format=png" />
+<details open="open">
+<p>Login to the ERP5 interface underlying the SlapOS Dashboard with the user with administrator privileges. The ERP5 interface can be accessed at <code>[your_IPv4_address]/erp5/</code>.</p>
+
+<p>Warning: Don&#39;t login as &quot;zope&quot; user !</p>
+</details>
+</section>
+
+<section>
+<h1>Access Software Product Module</h1>
+<img alt="ERP5 Interface - Administrator Homescreen" src="https://www.nexedi.com/erp5-Interface.Administrator.Homescreen?display=&amp;format=" />
+<details open="open">
+<p>Once logged in click on <i>Software Products</i> or select <i>Software Product Module</i> from the <i>Modules</i> select field.</p>
+</details>
+</section>
+
+<section>
+<h1>Add Software Product</h1>
+<img alt="ERP5 Interface - Administrator Add Software Product LTE" src="https://www.nexedi.com/erp5-Interface.Add.Software.Product.Lte?display=&amp;format=png" />
+<details open="open">
+<p>On the software product page, select <i>Action</i> and <i>Add Software Product</i>.</p>
+</details>
+</section>
+
+<section>
+<h1>Define Software Product</h1>
+<img alt="ERP5 Interface - Administrator Define Software Product LTE" src="https://www.nexedi.com/erp5-Interface.Define.Software.Product.Lte?display=&amp;format=png" />
+<details open="open">
+<p>Set <i>Title</i> and <i>Reference</i>, then save by clicking the disk icon.</p>
+</details>
+</section>
+
+<section>
+<h1>Publish Software Product</h1>
+<img alt="ERP5 Interface - Administrator Publish Software Product LTE" src="https://www.nexedi.com/erp5-Interface.Publish.Software.Product.Lte?display=&amp;format=png" />
+<details open="open">
+<p>The final step is to publish the Software Product. Select <i>Action</i> and <i>Publish</i> to change the workflow change.</p>
+</details>
+</section>
+
+<section>
+<h1>Published Software Product</h1>
+<img alt="ERP5 Interface - Administrator Verify Published Software Product LTE" src="https://www.nexedi.com/erp5-Interface.Verify.Published.Software.Product.Lte?display=&amp;format=png" />
+<details open="open">
+<p>Confirm and once you are back on the Software Product page and the state is changed to <i>Published</i>, click on the <i>ERP5</i> breadcrumb to get back to the main homescreen.</p>
+</details>
+</section>
+
+<section>
+<h1>Access Software Release Module</h1>
+<img alt="ERP5 Interface - Administrator Homescreen" src="https://www.nexedi.com/erp5-Interface.Administrator.Homescreen?display=&amp;format=" />
+<details open="open">
+<p>Next click on <i>Software Releases</i> or select <i>Software Release Module</i> from the <i>Modules</i> select field.</p>
+</details>
+</section>
+
+<section>
+<h1>Add Software Release</h1>
+<img alt="ERP5 Interface - Administrator Add Software Release LTE" src="https://www.nexedi.com/erp5-Interface.Add.Software.Release.Lte?display=&amp;format=png" />
+<details open="open">
+<p>Repeat the steps, so once on the software release page, select <i>Action</i> and <i>Add Software Release</i>.</p>
+
+<p><b>Note</b>, that whenever you want to upgrade a software release, you have to create a new software release entry with the difference being the version and <code>software.cfg</code> being pointed to, which can both be set in the next steps.</p>
+</details>
+</section>
+
+<section>
+<h1>Locate Software.Cfg Url</h1>
+<img alt="Gitlab - Software Release Software.cfg file" src="https://www.nexedi.com/gitlab-interface.Locate.Software.Release.Profile.Lte?display=&amp;format=png" />
+<details open="open">
+<p>Head over to the repository you are using to host software releases and locate the <code>software.cfg</code> file which contains the instructions for building your your software. Find the URL of this software release. <b>Note</b>, that you can use different releases, for example:</p>
+
+<ul>
+	<li>latest development:
+	<pre>
+<code>https://lab.node.vifib.com/nexedi/amarisoft/raw/master/slapos/software/lte/software.cfg</code></pre>
+	</li>
+	<li>latest tagged version:
+	<pre>
+<code>https://lab.node.vifib.com/nexedi/amarisoft/raw/[TAG]/slapos/software/lte/software.cfg</code></pre>
+	</li>
+</ul>
+
+<p><code>[TAG]</code> can be any value listed on the published releases, found on <a href="https://lab.node.vifib.com/nexedi/amarisoft/tags">https://lab.node.vifib.com/nexedi/amarisoft/tags</a>. Continue using the latest tagged version which is <i>v0.2</i>. Note down the following url:</p>
+
+<pre>
+<code>https://lab.node.vifib.com/nexedi/amarisoft/raw/v0.2/slapos/software/lte/software.cfg</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Define Software Release</h1>
+<img alt="ERP5 Interface - Administrator Define Software Release LTE" src="https://www.nexedi.com/erp5-Interface.Define.Software.Release.Lte?display=&amp;format=png" />
+<details open="open">
+<p>Fill the form as shown in the screenshot. Make sure you select <i>HTTP</i> and provide the url to your <code>software.cfg</code>. Also select the software product for which this release is made, define a version and once all fields have been filled out, click the disk icon to save.</p>
+</details>
+</section>
+
+<section>
+<h1>Publish Software Release Alive</h1>
+<img alt="ERP5 Interface - Administrator Publish Software Release Alive LTE" src="https://www.nexedi.com/erp5-Interface.Publish.Software.Release.Lte?display=&amp;format=png" />
+<details open="open">
+<p>The final step is to publish the Software Release <b>Alive</b> (publishing alive, will allow to edit the provided data in case necessary). Select <i>Action</i> and <i>Publish Alive</i> to change the workflow change.</p>
+</details>
+</section>
+
+<section>
+<h1>Published Software Release</h1>
+<img alt="ERP5 Interface - Administrator Published Software Release LTE" src="https://www.nexedi.com/erp5-Interface.Verify.Published.Software.Release.Lte?display=&amp;format=png" />
+<details open="open">
+<p>Confirm and once you are back on the Software Release page and the state is changed to <i>Published Alive</i>, click on the <i>ERP5</i> breadcrumb to get back to the main homescreen.</p>
+</details>
+</section>
+
+<section>
+<h1>Software Available in SlapOS Dashboard</h1>
+<img alt="SlapOS Interface - Published Software Release LTE Available" src="https://www.nexedi.com/slapos-Interface.Verify.Published.Software.Release.Lte?display=&amp;format=png" />
+<details open="open">
+<p>Head over to the SlapOS Dashboard. If you pick a computer and click Supply, the newly defined software will now be on the list. We can continue and install LTE on this machine.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Supply LTE Software on LTE Box</h1>
+
+<details open="open">
+<p>This section will cover the steps for installing LTE on the newly formatted server using the SlapOS Dashboard.</p>
+</details>
+</section>
+
+<section>
+<h1>Supply LTE Software on Box</h1>
+<img alt="SlapOS Dashboard - Supply Software Release LTE" src="https://www.nexedi.com/slapos-Interface.Supply.Software.Lte?format=png&amp;display=" />
+<details open="open">
+<p>Back in the SlapOS Dashboard go to <i>Servers</i> and select the LTE Box you have created. There is no software currently installed. Click <i>Supply</i> in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Select LTE Software Release</h1>
+<img alt="SlapOS Dashboard - Select Software Release LTE" src="https://www.nexedi.com/slapos-Interface.Select.Software.Lte?format=png&amp;display=" />
+<details open="open">
+<p>Select the <i>LTE</i> software release.</p>
+</details>
+</section>
+
+<section>
+<h1>Select LTE Software Release Version</h1>
+<img alt="SlapOS Dashboard - Select Software Release LTE Version" src="https://www.nexedi.com/slapos-Interface.Select.Software.Lte.Version?display=&amp;format=png" />
+<details open="open">
+<p>Select the latest version.</p>
+</details>
+</section>
+
+<section>
+<h1>Launch LTE Software Release Installation</h1>
+<img alt="SlapOS Dashboard - Launch Software Release LTE Installation" src="https://www.nexedi.com/slapos-Interface.Launch.Software.Lte.Installation?display=&amp;format=png" />
+<details open="open">
+<p>Click <i>Proceed</i> in the header to start installation.</p>
+</details>
+</section>
+
+<section>
+<h1>Wait for LTE Installation</h1>
+<img alt="SlapOS Dashboard - Access Computer" src="https://www.nexedi.com/slapos-Interface.Wait.Software.Lte.Installation?display=&amp;format=png" />
+<details open="open">
+<p>After clicking <i>Proceed</i> you will be forwarded to the installation status page.</p>
+
+<p>Installation will take some time depending on the software you are installing, so either refresh the current page or check installation status directly by either going to your <i>Servers</i> list and selecting the machine you chose during installation or clicking directly on <i>Computer Reference</i>.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify LTE Installation</h1>
+<img alt="SlapOS Dashboard - Verify LTE Installation Success" src="https://www.nexedi.com/slapos-Interface.Verify.Software.Lte.Installation?display=&amp;format=png" />
+<details open="open">
+<p>You can see the installed service is now available in the bottom list. The indicator will stay red until the software has finished compiling and installing. Once the installation status bar changes to green on a refresh of the page, the installation has finished.</p>
+
+<p>You can follow the compilation by looking at the <code>slapos-node-software.log</code> using:</p>
+
+<pre>
+<code># tail opt/slapos/log/slapos-node-software.log -f</code></pre>
+in your terminal.</details>
+</section>
+
+<section class="chapter">
+<h1>Scenario 1: Instantiating LTE - Default</h1>
+
+<details open="open">
+<p>The following steps cover setting up the &quot;Lab&quot; Version on the LTE Box with all relevant services instantiated together.</p>
+</details>
+</section>
+
+<section>
+<h1>List of Instantiated Services</h1>
+<img alt="SlapOS Dashboard - Add Service" src="https://www.nexedi.com/slapos-Interface.Add.Service.Lte.Lab?display=&amp;format=png" />
+<details open="open">
+<p>Head to the list of services by clicking on the <i>Services</i> button on the side menu. The list will show all services currently <b>instantiated</b> (not the software currently installed!). To create an instance of an installed software, click the <i>Add</i> button in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Select LTE Service</h1>
+<img alt="SlapOS Dashboard - Select Service" src="https://www.nexedi.com/slapos-Interface.Select.Service.Lte.Lab?display=&amp;format=png" />
+<details open="open">
+<p>The list of available services is the same as the list of installable software releases used earlier when installing the service. Select LTE as this is the service we want to provide.</p>
+</details>
+</section>
+
+<section>
+<h1>Select LTE Service Version</h1>
+<img alt="SlapOS Dashboard - Select Service Version" src="https://www.nexedi.com/slapos-Interface.Select.Service.Lte.Lab.Version?display=&amp;format=png" />
+<details open="open">
+<p>As during installation, please choose the latest version.</p>
+
+<p><b>Note</b>, that this is an easy case, as there is only a single version installed on one node. More complex networks will likely have multiple versions of a software installed on different nodes.</p>
+</details>
+</section>
+
+<section>
+<h1>LTE Lab Service Configuration</h1>
+<img alt="SlapOS Dashboard - Instance Configuration" src="https://www.nexedi.com/slapos-Interface.Service.Lte.Lab.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>You will reach the service configuration menu. Give your service a recognizable name (<i>LTE_ALL_IN_ONE</i> in the example), select <code>Software-Type</code> <i>Default</i> (denoting LTE Lab), pick the Computer/Box to install the LTE Lab at the end of the form and then fill out the form parameters. If required, you can expand the form to add additional parameters. Parameters include:</p>
+
+<ul>
+	<li><b>Log Options</b>: Log options settings for enb.cfg, mme.cfg, ims.cfg and mbms.cfg (See Amarisoft official documentation for understand the format)</li>
+	<li><b>GTP bind address</b>: IP address of the network interface connected to the core network</li>
+	<li><b>MME address</b>: Address of MME for S1AP connection</li>
+	<li><b>UE configuration path (optional)</b>: A path containing the ue_db configuration on the machine. Usefull for simple Tests</li>
+	<li><b>RF Parameters / Tx_gain</b>: Tx gain (in dB)</li>
+	<li><b>RF Parameters / Rx gain</b>: Rx gain (in dB)</li>
+	<li><b>License Key Path</b>: Path to where the license *.key files are on the filesytem (to be used instead ~/.license or ~/.amarisoft folder</li>
+	<li><b>Cell List</b>: Contains one or more cells configuration to be set on enb.cfg configuration</li>
+	<li><b>Cell List / DL EARFCN</b>: Downlink EARFCN of the cell</li>
+	<li><b>Cell List / Physical cell ID</b>: Physical cell ID</li>
+</ul>
+
+<p>Click <i>Proceed</i> to begin instantiation.</p>
+
+<p>This list of parameters are only a subset of the full amarisoft parameters, you can learn how to extend this list on the &quot;Lecture 6&quot;.</p>
+</details>
+</section>
+
+<section>
+<h1>LTE Lab Service Instantiation</h1>
+<img alt="SlapOS Dashboard - Instantiate Service" src="https://www.nexedi.com/slapos-Interface.Instantiate.Service.Lte.Lab?display=&amp;format=png" />
+<details open="open">
+<p>Refresh the list of current services to show the new service and status.</p>
+
+<p>You can follow the compilation progress by looking at the <code>slapos-node-software.log</code> using:</p>
+
+<pre>
+<code># tail opt/slapos/log/slapos-node-software.log -f</code></pre>
+
+<p>The LTE Lab will be installed inside a computer partition (see <a href="./slapos-DesignDocument.Slapos.System.Requirements">SlapOS system requirements</a>)</p>
+</details>
+</section>
+
+<section>
+<h1>Monitor Service Connection Parameter</h1>
+<img alt="SlapOS Dashboard - Service LTE Lab Connection Parameters" src="https://www.nexedi.com/slapos-Interface.Service.Lte.Lab.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>If you click on the instantiated service, you can see the connection parameters. By default they are not expanded.</p>
+</details>
+</section>
+
+<section>
+<h1>Expand Service Connection Parameters</h1>
+<img alt="SlapOS Dashboard - Service LTE Lab Connection Parameters Expanded" src="https://www.nexedi.com/slapos-Interface.Service.Lte.Lab.Connection.Parameters.Expanded?display=&amp;format=png" />
+<details open="open">
+<p>By clicking on the <i>Parameter Entry</i> buttons, you can expand the drawers to show all subsequent parameters.</p>
+</details>
+</section>
+
+<section>
+<h1>Service LTE Lab Process List</h1>
+<img alt="SlapOS Dashboard - Service LTE Lab Process List" src="https://www.nexedi.com/slapos-Interface.Service.Lte.Lab.Process.List?display=&amp;format=png" />
+<details open="open">
+<p>Scroll down on the connection parameter page. Once the service has been fully instantiated you can see all running processes at the bottom of the page in the table <i>Instances</i>.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Scenario 2: Instantiating LTE - EPC/ENB</h1>
+
+<details open="open">
+<p>The following steps cover setting the EPC/MME and ENB separately.</p>
+</details>
+</section>
+
+<section>
+<h1>List of Instantiated Services</h1>
+<img alt="SlapOS Dashboard - Add Service" src="https://www.nexedi.com/slapos-Interface.Add.Service.Lte.Epc?display=&amp;format=png" />
+<details open="open">
+<p>Head to the list of services by clicking on the <i>Services</i> button on the side menu. The list will show all services currently <b>instantiated</b> (not the software currently installed!). To create an instance of an installed software, click the <i>Add</i> button in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Select LTE Service</h1>
+<img alt="SlapOS Dashboard - Select Service" src="https://www.nexedi.com/slapos-Interface.Select.Service.Lte.Epc?display=&amp;format=png" />
+<details open="open">
+<p>The list of available services is the same as the list of installable software releases used earlier when installing the service. Select LTE as this is the service we want to provide (the differentiation will only be made during configuration).</p>
+</details>
+</section>
+
+<section>
+<h1>Select LTE Service Version</h1>
+<img alt="SlapOS Dashboard - Select Service Version" src="https://www.nexedi.com/slapos-Interface.Select.Service.Lte.Epc.Version?display=&amp;format=png" />
+<details open="open">
+<p>As during installation, please choose the latest version.</p>
+
+<p><b>Note</b>, that this is an easy case, as there is only a single version installed on one node. More complex networks will likely have multiple versions of a software installed on different nodes.</p>
+</details>
+</section>
+
+<section>
+<h1>LTE EPC Service Configuration</h1>
+<img alt="SlapOS Dashboard - Instance Configuration" src="https://www.nexedi.com/slapos-Interface.Service.Lte.Epc.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>You will reach the service configuration menu. Give your service a recognizable name (<i>EPC-STANDALONE</i> in the example), select <code>Software-Type</code> <i>EPC</i> pick the Computer/Box to install the LTE EPC at the end of the form and then fill out the form parameters.</p>
+
+<p>Click <i>Proceed</i> to begin instantiation.</p>
+</details>
+</section>
+
+<section>
+<h1>LTE EPC Service Instantiation</h1>
+<img alt="SlapOS Dashboard - Instantiate Service" src="https://www.nexedi.com/slapos-Interface.Instantiate.Service.Lte.Epc?display=&amp;format=png" />
+<details open="open">
+<p>Refresh the list of current services to show the new service and status.</p>
+
+<p>You can follow the compilation progress by looking at the <code>slapos-node-software.log</code> using:</p>
+
+<pre>
+<code># tail opt/slapos/log/slapos-node-software.log -f</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Monitor Service Connection Parameter</h1>
+<img alt="SlapOS Dashboard - Service LTE EPC Connection Parameters" src="https://www.nexedi.com/slapos-Interface.Service.Lte.Epc.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>If you click on the instantiated service, you can see the connection parameters.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify Service Instantiated</h1>
+<img alt="SlapOS Dashboard - Service LTE EPC Accessability" src="https://www.nexedi.com/slapos-Interface.Validate.Service.Lte.Epc.Instantiation?display=&amp;format=png" />
+<details open="open">
+<p>Once the monitoring status turns green on a page refresh, the EPC has been instantiated successfully. Then we can add the ENB. Click the <i>Add</i> button in the subheader.</p>
+</details>
+</section>
+
+<section>
+<h1>Select LTE Service</h1>
+<img alt="SlapOS Dashboard - Select Service" src="https://www.nexedi.com/slapos-Interface.Select.Service.Lte.Enb?display=&amp;format=png" />
+<details open="open">
+<p>The list of available services is the same as the list of installable software releases used earlier when installing the service. Select LTE as this is the service we want to provide (the differentiation will only be made during configuration).</p>
+</details>
+</section>
+
+<section>
+<h1>Select LTE Service Version</h1>
+<img alt="SlapOS Dashboard - Select Service Version" src="https://www.nexedi.com/slapos-Interface.Select.Service.Lte.Enb.Version?display=&amp;format=png" />
+<details open="open">
+<p>As during installation, please choose the latest version.</p>
+
+<p><b>Note</b>, that this is an easy case, as there is only a single version installed on one node. More complex networks will likely have multiple versions of a software installed on different nodes.</p>
+</details>
+</section>
+
+<section>
+<h1>LTE ENB Service Configuration</h1>
+<img alt="SlapOS Dashboard - Instance Configuration" src="https://www.nexedi.com/slapos-Interface.Service.Lte.Enb.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>You will reach the service configuration menu. Give your service a recognizable name (<i>eNB-STANDALONE</i> in the example), select <code>Software-Type</code> <i>eNB</i> pick the Computer/Box to install the LTE eNB at the end of the form and then fill out the form parameters. <b>Note</b>, that if you have multiple boxes on your network, you can (supply and) instantiate eNB on any of the available boxes.</p>
+
+<p>Click <i>Proceed</i> to begin instantiation.</p>
+</details>
+</section>
+
+<section>
+<h1>LTE EPC Service Instantiation</h1>
+<img alt="SlapOS Dashboard - Instantiate Service" src="https://www.nexedi.com/slapos-Interface.Instantiate.Service.Lte.Enb?display=&amp;format=png" />
+<details open="open">
+<p>Refresh the list of current services to show the new service and status.</p>
+
+<p>You can follow the compilation progress by looking at the <code>slapos-node-software.log</code> using:</p>
+
+<pre>
+<code># tail opt/slapos/log/slapos-node-software.log -f</code></pre>
+</details>
+</section>
+
+<section>
+<h1>Monitor Service Connection Parameter</h1>
+<img alt="SlapOS Dashboard - Service LTE eNB Connection Parameters" src="https://www.nexedi.com/slapos-Interface.Service.Lte.Epc.Connection.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>If you click on the instantiated service, you can see the connection parameters.</p>
+</details>
+</section>
+
+<section>
+<h1>Verify Service Instantiated</h1>
+<img alt="SlapOS Dashboard - Service LTE eNB Accessability" src="https://www.nexedi.com/slapos-Interface.Verify.Service.Lte.Enb.Accessability?display=&amp;format=png" />
+<details open="open">
+<p>Once the monitoring status turns green on a page refresh, the eNB has been instantiated successfully.</p>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Add Simcard to SimcardDB</h1>
+
+<details open="open">
+<p>Once the EPC and eNB have been setup, the system should be ready to operate. The eNB will query the SimcardDB in regular intervals for new simcard ids. In this section we will add a simcard to the SimcardDB. You could then investigate when the simcard id becomes available on the eNB and whether it can be used (both steps are not part of the tutorial).</p>
+</details>
+</section>
+
+<section>
+<h1>List of Instantiated Services</h1>
+<img alt="SlapOS Dashboard - Add Service" src="https://www.nexedi.com/slapos-Interface.Add.Service.Simcard.Id?display=&amp;format=png" />
+<details open="open">
+<p>Head to the list of services by clicking on the <i>Services</i> button on the side menu.</p>
+</details>
+</section>
+
+<section>
+<h1>Create New SimcardDB Instance</h1>
+<img alt="SlapOS Dashboard - Select Service" src="https://www.nexedi.com/slapos-Interface.Select.Service.Simcard.Id?display=&amp;format=png" />
+<details open="open">
+<p>Select SimcardDB as this is the service we want to provide. The differentiation between SimcardDB and Simcard will be made on the configuration parameter <i>Software-Type</i></p>
+</details>
+</section>
+
+<section>
+<h1>Select SimcardDB Service Version</h1>
+<img alt="SlapOS Dashboard - Select Service Version" src="https://www.nexedi.com/slapos-Interface.Select.Service.Simcard.Id.Version?display=&amp;format=png" />
+<details open="open">
+<p>As during installation, please choose the latest version.</p>
+</details>
+</section>
+
+<section>
+<h1>SimcardDB Configuration</h1>
+<img alt="SlapOS Dashboard - Service Configuration Parameters" src="https://www.nexedi.com/slapos-Interface.Service.Simcard.Id.Configuration.Parameters?display=&amp;format=png" />
+<details open="open">
+<p>Select <code>Software Type</code> <i>SimCard</i>, choose the computer which supplied the SimcardDB and fill out the configuration parameters as shown.</p>
+
+<p>Click proceed to instantiate the new SimCard. This is the end of the tutorial for setting up an LTE Box.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://www.nexedi.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>

@@ -1,0 +1,149 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags -->
+
+<!-- replaces:
+
+-->
+<section class="master">
+  <h1>How To Update eNB or EPC</h1>
+  <details open="open">
+    <p>
+    This document will show how to modify the parameters on an instantiated 
+    eNB or EPC service. It is required to have:</p>
+    <ul>
+      <li>A NMS network setup with a <a href="P-OSTV-Tutorial.Install.Slapos.Master.Comp.Root">SlapOS Master</a> (<b>COMP-ROOT</b>) and <a href="P-OSTV-Tutorial.Install.Slapos.Node.Comp.0">first node</a> (<b>COMP-0</b>)</li>
+      <li>An Amarisoft LTE or equiavalent software release <a href="P-OSTV-Tutorial.Install.Slapos.Node.Comp.0">installed on a LTE Box</a> (<b>COMP-123</b>)</li>
+      <li>An existing instance of eNB or EPC</li>
+      <li>A user account to the NMS system</li>
+    </ul>
+  </details>
+</section>
+
+<section class="master">
+  <h1>Table of Content</h1>
+  <ul>
+    <li>Updating Instance Parameters</li>
+  </ul>
+</section>
+
+<section class="chapter">
+  <h1>Updating Instance Parameters</h1>
+  <details open="open">
+    <p>
+    Each software usually provides a number of configuration parameters which can 
+    be set before instantiating a service (creating an instance). After the service 
+    has been instantiated, all parameters are accessible and editable on the service 
+    page of the NMS Dashboard.
+    </p>
+    <p>
+    <b>Note</b>, that updating an instance (for example by <b>changing a parameter</b>), 
+    will only update this specific instance. All other instances of the same service 
+    remain unchanged. In order to update all instances of a service (for example <b>adding 
+    a new parameter</b>), it is required to create a new software release and trigger the
+    update of all instances to change to this new release.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>NMS Login</h1>
+  <img src="https://www.nexedi.com/slapos-Interface.Edit.Service.Enb.Login?display=&amp;format=png" alt="SlapOS Interface - Login" />
+  <details open="open">
+    <p>
+    Start by logging into your NMS Master Dashboard.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>NMS Dashboard</h1>
+  <img src="https://www.nexedi.com/slapos-Interface.Edit.Service.Enb.Dashboard?display=&amp;format=png" alt="SlapOS Interface - Dashboard" />
+  <details open="open">
+    <p>
+    Click on the <i>Services</i> button on the to see currently instantiated services.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>Select Service ENB-EDIT</h1>
+  <img src="https://www.nexedi.com/slapos-Interface.Edit.Service.Enb.Service.List?display=&amp;format=png" alt="SlapOS Interface - Service List" />
+  <details open="open">
+    <p>Select the ENB-EDIT service. As Amarisoft ENBs require a license to run, this info needs to be provided in the <code>License Key Path</code> field for proper instantiation.</p>
+  </details>
+</section>
+
+<section>
+  <h1>Edit Service ENB-EDIT</h1>
+  <img src="https://www.nexedi.com/slapos-Interface.Edit.Service.Enb.Edit.Service?display=&amp;format=png" alt="SlapOS Interface - Edit Service" />
+  <details open="open">
+    <p>
+    Add the <code>License Key Path</code> which in this case points to <i>/etc/amarisoft/</i>.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>Save Service ENB-EDIT</h1>
+  <img src="https://www.nexedi.com/slapos-Interface.Edit.Service.Enb.Save.Service?display=&amp;format=png" alt="SlapOS Interface - Save Service" />
+  <details open="open">
+    <p>
+    Click <i>Save</i> in the subheader to update the ENB configuration parameters and trigger a rebuild of the instance.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>Save Service ENB-EDIT</h1>
+  <img src="https://www.nexedi.com/slapos-Interface.Edit.Service.Enb.Saved.Service?display=&amp;format=png" alt="SlapOS Interface - Saved Service" />
+  <details open="open">
+    <p>
+    Once saved, wait for the instance to be updated. Refresh the page from time to time, it should take a few minutes.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>Updated Service ENB-EDIT</h1>
+  <img src="https://www.nexedi.com/slapos-Interface.Edit.Service.Enb.Updated.Service?display=&amp;format=png" alt="SlapOS Interface - Updated Service" />
+  <details open="open">
+    <p>
+    After the update, the service could correctly be instantiated (green indicator). 
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>Updated Service ENB-EDIT</h1>
+  <img src="https://www.nexedi.com/slapos-Interface.Edit.Service.Enb.Updated.Service.List?display=&amp;format=png" alt="SlapOS Interface - Update Service List" />
+  <details open="open">
+    <p>
+    Changing other parameters works in the same way. Edit the form, save changes and 
+    wait for the instance to be rebuild.
+    </p>
+  </details>
+</section>
+
+<section class="master">
+  <h1>Thank You</h1>
+  <div style="float:left;margin-top:9%;width:48%;">
+    <img alt="Image Nexedi Office" 
+         title="Image Nexedi Office" 
+         src="NXD-Media.Image.Office.Munich?display=large&amp;format=png" 
+         type="image/png" />
+  </div>
+  <div>
+    <ul style="list-style:none;display:block;">
+      <li>Nexedi SA</li>
+      <li>147 Rue du Ballon</li>
+      <li>59110 La Madeleine</li>
+      <li>France</li>
+    </ul>
+    <ul style="list-style:none;display:block;">
+      <li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+    </ul>
+  </div>
+  <details open="open"></details>
+</section>

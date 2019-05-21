@@ -1,0 +1,253 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags -->
+
+<!-- replaces:
+
+-->
+<section class="master">
+  <h1>How To Create Software Release</h1>
+  <details open="open">
+    <p>
+    This document will guide through the steps of creating a new software release -
+    a set of files which allow to build and instantiate a software on SlapOS. The 
+    key components of a software release are the software profile (<code>software.cfg</code>)
+    used to build and install the software and the instance profile (<code>instance.cfg.in</code>)
+    used for instantiation.
+    </p>
+    <p>
+    Both installations and instantiations are done using a software called 
+    <a href="http://docs.buildout.org/en/latest/">Buildout</a>,
+    which utilizes the templating language <a href="http://jinja.pocoo.org/">Jinja2</a>.
+    This howto expects familiarity with both. It will introduce the different 
+    sections of a profile and show how they are put together using the Amarisoft 
+    LTE software release (<a href="https://lab.nexedi.com/nexedi/amarisoft/tree/master/slapos/software/lte">gitlab repository</a> - see <code>$your_repo_location/tree/master/slapos/software/lte</code>
+    for the corresponding file).
+    </p>
+    <p>
+    Please <b>note</b> that this howto does not cover adding a software release to 
+    the catalogue of the NMS master or upgrading an existing software release. It 
+    also does not cover installing a software on a node.
+    </p>
+  </details>
+</section>
+
+<section class="master">
+  <h1>Table of Content</h1>
+  <ul>
+    <li>Amarisoft LTE Software Release</li>
+  </ul>
+</section>
+
+<section class="chapter">
+  <h1>Amarisoft LTE Software Release</h1>
+  <details open="open">
+    <p>
+    While there are many simple software releases consisting only of a software and 
+    instance profile, there are just as many more complex ones with a multitude of 
+    different templates and configuration files. This section will explain the Amarisoft 
+    LTE Software Release and the files it consists of to give an idea of how to write 
+    a new release or extend this existing release.
+    </p>
+    <p>
+    The SlapOS repository is usually contains the following three directories (among others):</p>
+    <ul>
+      <li><b>/component</b> - pieces to include in a software profile (eg dcron, bycrpt)</li>
+      <li><b>/slapos/software</b> - software profiles utilizing components (eg LTE or SimcardDB)</li>
+      <li><b>/stack</b> - software build from multiple softwares &amp; components (eg Amarisoft, LAMP)</li>
+    </ul>
+  </details>
+</section>
+
+<section>
+  <h1>LTE Release</h1>
+  <img src="https://www.nexedi.com/gitlab-Interface.Lte.Software.Release.Overview?display=&amp;format=png" alt="Gitlab Interface - Amarisoft LTE Software Release Overview" />
+  <details open="open">
+    <p>The <code>/slapos/software/lte/</code> repository consists of the following files:</p>
+    <ul>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/buildout.hash.cfg"><b>build.hash.cfg</b></a> - list of MD5 sums for templates included in the software profile</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/instance-default.jinja2.cfg"><b>instance-default.jinja2.cfg</b></a> - template for instantiating "lab" (default) version</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/instance-enb-input-schema.json"><b>instance-enb-input-schema.json</b></a> - parameter definition for instantiation of "enb"</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/instance-enb.jinja2.cfg"><b>instance-enb.jinja2.cfg</b></a> - template for instantiating "enb" software instance</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/instance-epc-input-schema.json"><b>instance-eps-input-schema.json</b></a> - parameter definiton for instantiation of "epc"</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/instance-ims-input-schema.json"><b>instance-ims-input-schema.json</b></a> - parameter definition for instantiation of "ims"</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/instance-ims.jinja2.cfg"><b>instance-ims.jinja2.cfg</b></a> - template for instantiating "ims" software instance</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/instance-license-input-schema.json"><b>instance-license-input-schema.json</b></a> - parameter definition for instantiation of "licence"</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/instance-license.jinja2.cfg"><b>instance-license.jinja2.cfg</b></a> - template for instantiating "licencse"</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/instance-lte-input-schema.json"><b>instance-lte-input-schmema.json</b></a> - parameter definition for instantiation of "lte"</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/instance-mbms-input-schema.json"><b>instance-mbms-input-schema.json</b></a> - parameter definition of "mbms" installation</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/instance-mbms.jinja2.cfg"><b>instance-mbms.jinja2.cfg</b></a> - template for instantiating "mbms" software instance</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/instance-mme.jinja2.cfg"><b>instance-mme.jinja2.cfg</b></a> - template for instantiating "mme" software instance</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/instance.cfg"><b>instance.cfg</b></a> - instance profile (instantiation)</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/software.cfg"><b>software.cfg</b></a> - software profile (installation)</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/software.cfg.json"><b>software.cfg.json</b></a> - definition of available software types of this software</li>
+      <li><a href="$MASTER_URL/blob/master/slapos/software/lte/ue_db.py.in"><b>ue_db.py.in</b></a> - Simcard DB configuration and access</li>
+    </ul>
+  </details>
+</section>
+
+<section>
+  <h1>Software Profile</h1>
+  <img src="https://www.nexedi.com/gitlab-interface.Locate.Software.Profile.Lte?display=&format=png" alt="Gitlab Interface - LTE Software Profile" />
+  <details open="open">
+    <p>
+    The <code>software.cfg</code> file is used for installation of the LTE software on a node. You 
+    can see that it mostly defines required versions of included software in the <code>[versions]</code>
+    section.
+    </p>
+    <p>
+    Besides this, the templates are listed that will later provide the different <i>software-types</i> during
+    instantiation. Each section:</p><pre><code>[template-lte-ims]
+recipe = slapos.recipe.build:download
+url = ${:_profile_base_location_}/instance-ims.jinja2.cfg
+filename = instance-ims.cfg
+mode = 0644</code></pre>
+    <p>
+    defines the recipe to use (in this case the <i>download</i> recipe), the location of the template file to 
+    use for instantiation as well as the name of the instantiation output file and its permissions.
+    </p>
+    <p>
+    If a section defines a <i>context</i>, like <code>[ue_db.py.in]</code>, it exposes parameters to the instance 
+    profile (<code>instance.cfg</code>) so that they can be used there. The <code>[parts]</code> section denotes the
+    recipes to be excuted when Buildout runs the sofware profile, in this case the <i>template</i> and <i>sdr-driver</i> 
+    sections/recipes whereas the <code>[buildout]</code> section extends the default buildout configuration by the 
+    file containing the MD5 sums as well as Amarisoft's stack.
+    </p>
+  </details>
+</section>
+
+<section>
+  <h1>Software Profile (json)</h1>
+  <img src="https://www.nexedi.com/gitlab-interface.Locate.Software.Profile.Lte.Json?display=&format=png" alt="Gitlab Interface - LTE Software Profile (JSON)"/>
+  <details open="open">
+    <p>
+    The JSON software profile is used to create forms for a software release. By
+    convention the entry point file is found by including <code>.json</code> to the url 
+    of the software release, so <code>software.cfg.json</code>. The file is used 
+    to list the available software-types and forms (Schemas) that 
+    a user can choose during instantiation. A template for a form looks similar
+    to this:</p>
+    <pre><code>{
+    "name": "NAME OF Software",
+    "description": "The description",
+    "serialisation": "xml",
+    "software-type": {
+        "default": {
+            "title": "Default",
+            "software-type": "default", 
+            "description": "description of default",
+            "request": "instance-NAME-input-schema.json",
+            "response": "instance-NAME-output-schema.json",
+            "index": 0
+        },
+        "default-slave": {
+            "title": "Slave",
+            "description": "Description for the slave",
+            "software-type": "default",
+            "request": "instance-NAME-slave-input-schema.json",
+            "response": "instance-NAME-output-schema.json",
+            "shared": true,
+            "index": 1
+        },
+        ...
+    }
+}</code></pre>
+    </details>
+    <details open="open">
+      <p>
+      The most important fields are:</p>
+      <ul>
+        <li><b>"title"</b> - name of the software-type displayed to the user</li>
+        <li><b>"software-type"</b> - defines the type of software</li>
+        <li><b>"shared"</b> - defines whether the instance is a slave of another instance (eg (slave-)tokens issued by a registry)</li>
+        <li><b>"request"</b> - the (relative) link to the file containing the json schema used to render the form</li>
+      </ul>
+  </details>
+</section>
+
+<section>
+  <h1>Form Input Schema</h1>
+  <img src="https://www.nexedi.com/gitlab-interface.Form.Input.Schema.Json?display=&amp;format=png" alt="Gitlab Interface - Form Input Schema JSON" />
+  <details open="open">
+    <p>
+    The JSON input schema allows to define form fields of a software-type to 
+    display to the user. They will be rendered live by fetching the respective 
+    urls. For example:</p><pre><code>{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "properties": {
+    "somevalue": {
+      "title": "Input a String",
+      "description": "This is an example of string parameter",
+      "type": "string"
+    },
+    "sonumber": {
+      "title": "Input a Number",
+      "description": "This is an example of number parameter",
+      "type": "number"
+    }
+  }
+}</code></pre>
+    <p>
+    It is adviced to use a <b>flat approach</b> (one level, don't create unneccessary depth/complexity) and a simple structure. Keep in mind:</p>
+    <ul>
+      <li>keep it short, the larger the amount of parameters, the longer and complex is the form.</li>
+      <li>omit entries which are set automatically or by convention (port number, etc).</li>
+      <li>omit values that depend on other instances if value can be taken automatically.</li>
+      <li>use prefixes for different software on same hosting subscription.</li>
+      <li>use meaningful title and description.</li>
+    </ul>
+  </details>
+</section>
+
+<section>
+  <h1>Instance Profile</h1>
+  <img src="https://www.nexedi.com/gitlab-interface.Instance.Profile?display=&format=png" alt="Gitlab Interface - Instance Profile" />
+  <details open="open">
+    <p>
+    The instance profile will be used to instantiate whichever software-type the 
+    user selected using the parameters the user provided filling out the template-form.
+    </p>
+    <p>
+    In the LTE profile you can see that <code>[parts]</code> being run are <i>dynamic-template-lte-default</i> and
+    <i>switch-softwaretype</i> aside from the mandatory <code>[instance]</code> and <code>[jinja2-template-base]</code> sections.
+    The <i>dynamic-template-lte-default</i> provides instantiation instructions for the default "lab" version of LTE, which is also
+    one of the available software-types the user can choose from. All software types are then listed in the <i>switch-softwaretype</i> section.
+    </p>
+    <p>
+    Each software-type section defines <i>extra content</i>, listing the parameters and values to be exposed to the Jinja2 template:</p><pre><code>[dynamic-template-lte-ims]
+&lt; = jinja2-template-base
+template = ${template-lte-ims:target}
+filename = instance-lte-ims.cfg
+extensions = jinja2.ext.do
+extra-context =
+    raw monitor_template ${monitor2-template:rendered}
+    ...</code></pre>
+    <p>
+    With the above information it should possible to re-create the LTE software release,
+    extend or rewrite it altogether.
+    </p>
+  </details>
+</section>
+
+<section class="master">
+  <h1>Thank You</h1>
+  <div style="float:left;margin-top:9%;width:48%;">
+    <img alt="Image Nexedi Office" 
+         title="Image Nexedi Office" 
+         src="https://www.nexedi.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" 
+         type="image/png" />
+  </div>
+  <div>
+    <ul style="list-style:none;display:block;">
+      <li>Nexedi SA</li>
+      <li>147 Rue du Ballon</li>
+      <li>59110 La Madeleine</li>
+      <li>France</li>
+    </ul>
+    <ul style="list-style:none;display:block;">
+      <li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+    </ul>
+  </div>
+  <details open="open"></details>
+</section>

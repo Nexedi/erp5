@@ -1,0 +1,110 @@
+<!-- this should be built as a book from separate files. The book should
+contain the description for the entry slide, all other slides are file whose
+header is used as slide header, image as image and text wrapped in 1+ details
+tags --><!-- replaces:
+
+-->
+<section class="master">
+<h1>NMS User Learning Track</h1>
+
+<details open="open">
+<p>This learning track is meant for <b>USERS</b> of a <b>Network Management System</b> (NMS) based on SlapOS. After finishing this learning track, you should have a good enough understanding of how to use the NMS to manage a network.</p>
+
+<p>The track is split into lectures introducing a certain component and showing how they are setup and fit into the overall architecture.</p>
+</details>
+</section>
+
+<section class="master">
+<h1>Table of Content</h1>
+
+<ul>
+	<li>Lecture 0: Introduction</li>
+	<li>Lecture 1: How to add LTE Service</li>
+	<li>Lecture 2: How to create a new Software Release</li>
+	<li>Lecture 3: How to update configuration of eNB or EPC</li>
+	<li>Lecture 4: How to add User to SimcardDB</li>
+</ul>
+</section>
+
+<section class="chapter">
+<h1>Lecture 0: NMS Introduction</h1>
+
+<details open="open">
+<p>This section is a global introduction to NMS and only contains reading materials. It will introduce the NMS and underlying SlapOS sytems and provide answers to key questions. The following documents should be read:</p>
+
+<ul>
+	<li><a href="P-OSTV-DesignDocument.OSTV.NMS">OSTV Design Document - OSVT NMS Introduction (</a><a href="P-OSTV-DesignDocument.OSTV.NMS?portal_skin=Slide">presentation</a>)</li>
+</ul>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Lecture 1: How to add LTE Service</h1>
+
+<details open="open">
+<p>This section will show how to instantiate a new LTE service (eNB or EPC) on a machine. It does NOT cover setting up a machine itself or adding the Amarisoft LTE software release to the software catalog of the SlapOS Master so it can be installed on this machine. These steps are part of the admin learning track and can be found in <a href="P-OSTV-Tutorial.Install.Slapos.Node.Comp.123">installing COMP-123 LTE Box</a> (<a href="P-OSTV-Tutorial.Install.Slapos.Node.Comp.123?portal_skin=Slide">presentation</a>). The following document should be read:</p>
+
+<ul>
+	<li><a href="P-OSTV-HowTo.Add.Lte.Service">OSTV HowTo - Add LTE Service</a> (<a href="P-OSTV-HowTo.Add.Lte.Service?portal_skin=Slide">presentation</a>)</li>
+</ul>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Lecture 2: How to create a new Software Release</h1>
+
+<details open="open">
+<p>This section will show how to create a basic software release and explain how the different parts interact. The result of this howto will be a software profile (<code>software.cfg</code>) file. If put on a repository with accessible url, this profile can be used in a NMS network.</p>
+
+<p>This howto does NOT cover how to add a new software product and this release to the NMS software catalogue or how to install this software on a network node. These steps can be found in&nbsp;<a href="slapos-Tutorial.Install.Slapos.Node.Comp.0">Install SlapOS Node (COMP-0) (</a><a href="slapos-Tutorial.Install.Slapos.Node.Comp.0?portal_skin=Slide">presentation</a>) and <a href="P-OSTV-Tutorial.Install.Slapos.Node.Comp.123">installing a network node (COMP-123)</a> (<a href="P-OSTV-Tutorial.Install.Slapos.Node.Comp.123?portal_skin=Slide">presentation</a>). The following document should be read for this lecture:</p>
+
+<ul>
+	<li><a href="P-OSTV-HowTo.Create.Software.Release">OSTV HowTo - Create Software Release</a> (<a href="P-OSTV-HowTo.Create.Software.Release?portal_skin=Slide">presentation</a>)</li>
+</ul>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Lecture 3: How to update configuration of eNB or EPC</h1>
+
+<details open="open">
+<p>This section will show how to update the configuration of an eNB or EPC instance through the NMS Dashboard. It does NOT cover adding new parameters to eNB or EPC themself, which is shown in the lecture on&nbsp;<a href="slapos-Tutorial.Extend.Software.Release">extending the software release</a>&nbsp;(<a href="slapos-Tutorial.Extend.Software.Release?portal_skin=Slide">presentation</a>). The following document should be read for this lecture:</p>
+
+<ul>
+	<li><a href="P-OSTV-HowTo.Update.Enb.Or.Epc">OSTV HowTo - Update eNB or EPC</a> (<a href="P-OSTV-HowTo.Update.Enb.Or.Epc?portal_skin=Slide">presentation</a>)</li>
+</ul>
+</details>
+</section>
+
+<section class="chapter">
+<h1>Lecture 4: How to add User to SimcardDB</h1>
+
+<details open="open">
+<p>This section will show how to instantiate a new user (SimcardID) on the SimcardDB. The following document should be read:</p>
+
+<ul>
+	<li><a href="P-OSTV-HowTo.Add.User.To.Simcard.Db">OSTV HowTo - Add User to SimcardDB</a> (<a href="P-OSTV-HowTo.Add.User.To.Simcard.Db?portal_skin=Slide">presentation</a>)</li>
+</ul>
+</details>
+</section>
+
+<section class="master">
+<h1>Thank You</h1>
+
+<div style="float:left;margin-top:9%;width:48%;"><img alt="Image Nexedi Office" src="https://slapos.nexedi.com/NXD-Media.Image.Office.Munich?display=large&amp;format=png" title="Image Nexedi Office" type="image/png" /></div>
+
+<div>
+<ul style="list-style:none;display:block;">
+	<li>Nexedi SA</li>
+	<li>147 Rue du Ballon</li>
+	<li>59110 La Madeleine</li>
+	<li>France</li>
+</ul>
+
+<ul style="list-style:none;display:block;">
+	<li><a href="http://nexedi.com/contact">nexedi.com/contact</a></li>
+</ul>
+</div>
+
+<details open="open">&nbsp;</details>
+</section>
