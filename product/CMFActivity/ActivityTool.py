@@ -1300,14 +1300,12 @@ class ActivityTool (BaseTool):
 
       # return if the number of threads is too high
       # else, increase the number of active_threads and continue
-      tic_lock.acquire()
-      too_many_threads = (active_threads >= max_active_threads)
-      if not too_many_threads or force:
-        active_threads += 1
-      else:
-        tic_lock.release()
-        raise RuntimeError, 'Too many threads'
-      tic_lock.release()
+      with tic_lock:
+        too_many_threads = (active_threads >= max_active_threads)
+        if not too_many_threads or force:
+          active_threads += 1
+        else:
+          raise RuntimeError, 'Too many threads'
 
       inner_self = aq_inner(self)
 
@@ -1338,9 +1336,8 @@ class ActivityTool (BaseTool):
             is_running_lock.release()
       finally:
         # decrease the number of active_threads
-        tic_lock.acquire()
-        active_threads -= 1
-        tic_lock.release()
+        with tic_lock:
+          active_threads -= 1
 
     def hasActivity(self, *args, **kw):
       # Check in each queue if the object has deferred tasks
