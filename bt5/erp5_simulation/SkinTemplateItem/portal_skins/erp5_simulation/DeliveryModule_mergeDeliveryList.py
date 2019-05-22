@@ -5,15 +5,15 @@ delivery_list = []
 for o in object_list:
   delivery_list.append(o)
 
+Base_translateString = context.Base_translateString
+
 if len(delivery_list) < 2:
-  ret_url = context.absolute_url() + '/' + form_id
-  qs = '?portal_status_message=Please+select+more+than+one+items.'
+  message =  Base_translateString('Please select more than one items.')
 else:
-  ret_url = context.absolute_url() + '/' + form_id
   error_list = context.portal_simulation.mergeDeliveryList(delivery_list)
   if not error_list:
-    qs = '?portal_status_message=Merged.'
+    message = Base_translateString('Merged.')
   else:
-    qs = '?portal_status_message=%s' % (' '.join(error_list))
+    message = ' '.join([str(x) for x in error_list])
 
-return REQUEST.RESPONSE.redirect( ret_url + qs )
+return context.Base_redirect('view',keep_items={'portal_status_message': message})
