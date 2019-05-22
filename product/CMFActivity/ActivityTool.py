@@ -1322,9 +1322,9 @@ class ActivityTool (BaseTool):
           return activity.getPriority(self, processing_node,
             node_family_id_set)
         while is_running_lock.acquire(0):
-          # May have changed since previous iteration.
-          node_family_id_set = self.getCurrentNodeFamilyIdSet()
           try:
+            # May have changed since previous iteration.
+            node_family_id_set = self.getCurrentNodeFamilyIdSet()
             activity_list.sort(key=sort_key) # stable sort
             for i, activity in enumerate(activity_list):
               # Transaction processing is the responsability of the activity
