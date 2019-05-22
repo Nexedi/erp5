@@ -1588,7 +1588,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       # Inform test that we arrived at rendez-vous.
       rendez_vous_event.set()
       # When this event is available, it means test has called process_shutdown.
-      activity_event.wait()
+      assert activity_event.wait(10)
     original_dequeue = SQLDict.dequeueMessage
     queue_tic_test_dict = {}
     def dequeueMessage(self, activity_tool, processing_node, node_family_id_set):
@@ -1633,14 +1633,16 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
       activity_thread.start()
       # Wait at rendez-vous for activity to arrive.
-      rendez_vous_event.wait()
+      assert rendez_vous_event.wait(10)
       # Initiate shutdown
       process_shutdown_thread.start()
       try:
         # Let waiting activity finish and wait for thread exit
         activity_event.set()
-        activity_thread.join()
-        process_shutdown_thread.join()
+        activity_thread.join(10)
+        assert not activity_thread.is_alive()
+        process_shutdown_thread.join(10)
+        assert not process_shutdown_thread.is_alive()
         # Check that there is still one activity pending
         message_list = activity_tool.getMessageList()
         self.assertEqual(len(message_list), 1)
