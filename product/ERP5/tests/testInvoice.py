@@ -2516,6 +2516,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.tic()
     self.assertEqual(0, len(error_list))
     self.assertEqual(invoice.getSimulationState(), 'confirmed')
+    # MergeDeliveryList change the first delivery to diverged
+    # Make sure it works as expected
     self.assertEqual(invoice.getCausalityState(), 'diverged')
     self.assertEqual(invoice_2.getSimulationState(), 'cancelled')
     self.assertEqual(len(invoice.getMovementList()), 2)
