@@ -1591,10 +1591,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       activity_event.wait()
     original_dequeue = SQLDict.dequeueMessage
     queue_tic_test_dict = {}
-    def dequeueMessage(self, activity_tool, processing_node):
+    def dequeueMessage(self, activity_tool, processing_node, node_family_id_set):
       # This is a one-shot method, revert after execution
       SQLDict.dequeueMessage = original_dequeue
-      result = self.dequeueMessage(activity_tool, processing_node)
+      result = self.dequeueMessage(activity_tool, processing_node, node_family_id_set)
       queue_tic_test_dict['isAlive'] = process_shutdown_thread.isAlive()
       return result
     SQLDict.dequeueMessage = dequeueMessage
@@ -1865,11 +1865,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.commit()
 
     activity = ActivityTool.activity_dict['SQLDict']
-    activity.getProcessableMessageList(activity_tool, 1)
+    activity.getProcessableMessageList(activity_tool, 1, ())
     self.commit()
-    activity.getProcessableMessageList(activity_tool, 2)
+    activity.getProcessableMessageList(activity_tool, 2, ())
     self.commit()
-    activity.getProcessableMessageList(activity_tool, 3)
+    activity.getProcessableMessageList(activity_tool, 3, ())
     self.commit()
 
     result = activity._getMessageList(activity_tool.getSQLConnection())
