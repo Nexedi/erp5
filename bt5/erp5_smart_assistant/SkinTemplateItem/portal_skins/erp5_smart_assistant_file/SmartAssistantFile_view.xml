@@ -73,11 +73,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>audio</string>
-                        <string>editField</string>
-                        <string>email</string>
-                        <string>file</string>
-                        <string>video</string>
                       </list>
                     </value>
                 </item>
