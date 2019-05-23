@@ -280,4 +280,12 @@ class CertificateAuthorityTool(BaseTool):
     serial = self._getValidSerial(common_name)
     self.revokeCertificate(serial)
 
+  # XXX: This class lacks a corresponding portal type, so its instances are not
+  # actual documents. A portal type should be created from it, and backward
+  # compatibility added to keep existing instances working.
+  # Until then, hardcode some methods expected to exist on all document
+  # classes so that they can be removed from Base.
+  def _getAcquireLocalRoles(self):
+    return True
+
 InitializeClass(CertificateAuthorityTool)

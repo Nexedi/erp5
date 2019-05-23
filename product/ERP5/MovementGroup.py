@@ -41,13 +41,15 @@ class MovementGroupNode:
   # a separate method requests separating movements.
   def __init__(self, movement_group_list=None, movement_list=None,
                last_line_movement_group=None,
-               separate_method_name_list=[], movement_group=None):
+               separate_method_name_list=[], movement_group=None,
+               merge_delivery=None):
     self._movement_list = []
     self._group_list = []
     self._movement_group = movement_group
     self._movement_group_list = movement_group_list
     self._last_line_movement_group = last_line_movement_group
     self._separate_method_name_list = separate_method_name_list
+    self._merge_delivery = merge_delivery
     if movement_list is not None :
       self.append(movement_list)
 
@@ -56,22 +58,24 @@ class MovementGroupNode:
       movement_group=self._movement_group_list[0],
       movement_group_list=self._movement_group_list[1:],
       last_line_movement_group=self._last_line_movement_group,
-      separate_method_name_list=self._separate_method_name_list)
+      separate_method_name_list=self._separate_method_name_list,
+      merge_delivery=self._merge_delivery)
     nested_instance.setGroupEdit(**property_dict)
     split_movement_list = nested_instance.append(movement_list)
     self._group_list.append(nested_instance)
     return split_movement_list
 
-  def append(self, movement_list):
+  def append(self, movement_list, **kw):
     all_split_movement_list = []
     if len(self._movement_group_list):
       for separate_movement_list, property_dict in \
-          self._movement_group_list[0].separate(movement_list):
+          self._movement_group_list[0].separate(movement_list,
+                                                merge_delivery=self._merge_delivery):
         split_movement_list = self._appendGroup(separate_movement_list,
                                                 property_dict)
         if len(split_movement_list):
           if self._movement_group == self._last_line_movement_group:
-            self.append(split_movement_list)
+            self.append(split_movement_list, **kw)
           else:
             all_split_movement_list.extend(split_movement_list)
     else:

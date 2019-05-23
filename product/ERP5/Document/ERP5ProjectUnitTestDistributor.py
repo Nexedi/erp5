@@ -43,15 +43,15 @@ TEST_SUITE_MAX = 4
 # more or less cores
 PRIORITY_MAPPING =  {
   # int_index: (min cores, max cores)
-   1: ( 3,  3),
-   2: ( 3,  3),
-   3: ( 3,  6),
-   4: ( 3,  6),
-   5: ( 3,  6),
-   6: ( 6,  9),
-   7: ( 6,  9),
-   8: ( 6,  9),
-   9: ( 9, 15),
+   1: (  3,  3),
+   2: (  3,  6),
+   3: (  6,  9),
+   4: (  6, 12),
+   5: (  9, 15),
+   6: (  9, 18),
+   7: ( 12, 24),
+   8: ( 15, 30),
+   9: ( 18, 45),
   }
 
 class ERP5ProjectUnitTestDistributor(XMLObject):
@@ -303,6 +303,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     # sql server
     now = DateTime()
     from_date = now - 30
+    max_test_core_per_suite = max([x[1] for x in PRIORITY_MAPPING.values()])
     def getTestSuiteSortKey(test_suite):
       test_result_list = portal.portal_catalog(portal_type="Test Result",
                                           title=SimpleQuery(title=test_suite.getTitle()),
@@ -314,16 +315,27 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
                                           limit=1)
       if len(test_result_list):
         test_result = test_result_list[0].getObject()
-        key = test_result.getModificationDate().timeTime()
+        modification_date = test_result.getModificationDate().timeTime()
+        key = (1, modification_date)
         # if a test result has all it's tests already ongoing, it is not a
         # priority at all to process it, therefore push it at the end of the list
         if test_result.getSimulationState() == "started":
           result_line_list = test_result.objectValues(portal_type="Test Result Line")
+          check_priority = True
           if len(result_line_list):
             if len([x for x in result_line_list if x.getSimulationState() == "draft"]) == 0:
-              key = now.timeTime()
+              key = (1000, now.timeTime())
+              check_priority = False
+          if check_priority:
+            # calculate key[0] in such a way that more the test suite has high
+            # priority and the more test result lack test node, the lower is key[0]
+            # This allows to affect more test nodes to test suites with higher priority
+            wanted_test_core_quantity = PRIORITY_MAPPING[test_suite.getIntIndex()][1]
+            factor = float(max_test_core_per_suite) / wanted_test_core_quantity
+            missing_quantity = wanted_test_core_quantity/3 - len(test_result.objectValues(portal_type="Test Result Node"))
+            key = (max_test_core_per_suite - missing_quantity * 3 * factor, modification_date)
       else:
-        key = random.random()
+        key = (0, random.random())
       return key
     test_suite_list.sort(key=getTestSuiteSortKey)
     return test_suite_list
@@ -436,22 +448,24 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     return test_suite
 
   security.declarePublic("startUnitTest")
-  def startUnitTest(self,test_result_path,exclude_list=()):
+  def startUnitTest(self, test_result_path, exclude_list=(), node_title=None):
     """
     Here this is only a proxy to the task distribution tool
     """
     LOG('ERP5ProjectUnitTestDistributor.startUnitTest', 0, test_result_path)
     portal = self.getPortalObject()
-    return portal.portal_task_distribution.startUnitTest(test_result_path,exclude_list)
+    return portal.portal_task_distribution.startUnitTest(test_result_path,exclude_list,
+                  node_title=node_title)
 
   security.declarePublic("stopUnitTest")
-  def stopUnitTest(self,test_path,status_dict):
+  def stopUnitTest(self,test_path,status_dict, node_title=None):
     """
     Here this is only a proxy to the task distribution tool
     """
     LOG('ERP5ProjectUnitTestDistributor.stop_unit_test', 0, test_path)
     portal = self.getPortalObject()
-    return portal.portal_task_distribution.stopUnitTest(test_path, status_dict)
+    return portal.portal_task_distribution.stopUnitTest(test_path, status_dict,
+                  node_title=node_title)
 
   security.declarePublic("generateConfiguration")
   def generateConfiguration(self, test_suite_title, batch_mode=0):

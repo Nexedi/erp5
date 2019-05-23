@@ -120,113 +120,130 @@
     })
 
     .declareMethod('allDocs', function (options) {
+      var context = this,
+        queue;
       // throw new Error('do not use all docs');
 
       if (options.list_method_template === undefined) {
         return wrapJioCall(this, 'allDocs', arguments);
       }
 
-      var query = options.query,
-        i,
-        key,
-        parsed_query,
-        sub_query,
-        result_list,
-        local_roles,
-        local_role_found = false,
-        selection_domain,
-        sort_list = [];
-      if (options.query) {
-        parsed_query = jIO.QueryFactory.create(options.query);
-        result_list = isSingleLocalRoles(parsed_query);
-        if (result_list) {
-          query = undefined;
-          local_roles = result_list;
-        } else {
-          result_list = isSingleDomain(parsed_query);
+      function triggerAllDocs() {
+        var query = options.query,
+          i,
+          key,
+          parsed_query,
+          sub_query,
+          result_list,
+          local_roles,
+          local_role_found = false,
+          selection_domain,
+          sort_list = [];
+        if (options.query) {
+          parsed_query = jIO.QueryFactory.create(options.query);
+          result_list = isSingleLocalRoles(parsed_query);
           if (result_list) {
             query = undefined;
-            selection_domain = result_list;
+            local_roles = result_list;
           } else {
-
-            result_list = isMultipleLocalRoles(parsed_query);
+            result_list = isSingleDomain(parsed_query);
             if (result_list) {
               query = undefined;
-              local_roles = result_list;
-            } else if ((parsed_query instanceof ComplexQuery) &&
-                       (parsed_query.operator === 'AND')) {
+              selection_domain = result_list;
+            } else {
 
-              // portal_type:"Person" AND local_roles:"Assignee"
-              // AND selection_domain_region:"europe/france"
-              for (i = 0; i < parsed_query.query_list.length; i += 1) {
-                sub_query = parsed_query.query_list[i];
+              result_list = isMultipleLocalRoles(parsed_query);
+              if (result_list) {
+                query = undefined;
+                local_roles = result_list;
+              } else if ((parsed_query instanceof ComplexQuery) &&
+                         (parsed_query.operator === 'AND')) {
 
-                if (!local_role_found) {
-                  result_list = isSingleLocalRoles(sub_query);
-                  if (result_list) {
-                    local_roles = result_list;
-                    parsed_query.query_list.splice(i, 1);
-                    query = jIO.Query.objectToSearchText(parsed_query);
-                    local_role_found = true;
-                  } else {
-                    result_list = isMultipleLocalRoles(sub_query);
+                // portal_type:"Person" AND local_roles:"Assignee"
+                // AND selection_domain_region:"europe/france"
+                for (i = 0; i < parsed_query.query_list.length; i += 1) {
+                  sub_query = parsed_query.query_list[i];
+
+                  if (!local_role_found) {
+                    result_list = isSingleLocalRoles(sub_query);
                     if (result_list) {
                       local_roles = result_list;
                       parsed_query.query_list.splice(i, 1);
                       query = jIO.Query.objectToSearchText(parsed_query);
                       local_role_found = true;
-                    }
-                  }
-                }
-
-                result_list = isSingleDomain(sub_query);
-                if (result_list) {
-                  parsed_query.query_list.splice(i, 1);
-                  query = jIO.Query.objectToSearchText(parsed_query);
-                  if (selection_domain) {
-                    for (key in result_list) {
-                      if (result_list.hasOwnProperty(key)) {
-                        selection_domain[key] = result_list[key];
+                    } else {
+                      result_list = isMultipleLocalRoles(sub_query);
+                      if (result_list) {
+                        local_roles = result_list;
+                        parsed_query.query_list.splice(i, 1);
+                        query = jIO.Query.objectToSearchText(parsed_query);
+                        local_role_found = true;
                       }
                     }
-                  } else {
-                    selection_domain = result_list;
                   }
-                  i -= 1;
-                }
 
+                  result_list = isSingleDomain(sub_query);
+                  if (result_list) {
+                    parsed_query.query_list.splice(i, 1);
+                    query = jIO.Query.objectToSearchText(parsed_query);
+                    if (selection_domain) {
+                      for (key in result_list) {
+                        if (result_list.hasOwnProperty(key)) {
+                          selection_domain[key] = result_list[key];
+                        }
+                      }
+                    } else {
+                      selection_domain = result_list;
+                    }
+                    i -= 1;
+                  }
+
+                }
               }
             }
           }
         }
-      }
 
-      if (options.sort_on) {
-        for (i = 0; i < options.sort_on.length; i += 1) {
-          sort_list.push(JSON.stringify(options.sort_on[i]));
+        if (options.sort_on) {
+          for (i = 0; i < options.sort_on.length; i += 1) {
+            sort_list.push(JSON.stringify(options.sort_on[i]));
+          }
         }
+
+        if (selection_domain) {
+          selection_domain = JSON.stringify(selection_domain);
+        }
+
+        options.query = query;
+        options.sort_on = sort_list;
+        options.local_roles = local_roles;
+        options.selection_domain = selection_domain;
+
+        return wrapJioCall(
+          context,
+          'getAttachment',
+          [
+            // XXX Ugly hardcoded meaningless id...
+            "erp5",
+            new UriTemplate.parse(options.list_method_template)
+                           .expand(options),
+            {format: "json"}
+          ]
+        );
       }
 
-      if (selection_domain) {
-        selection_domain = JSON.stringify(selection_domain);
+      function usePrecalculatedResult() {
+        return options.default_value;
       }
 
-      options.query = query;
-      options.sort_on = sort_list;
-      options.local_roles = local_roles;
-      options.selection_domain = selection_domain;
+      if (options.default_value === undefined) {
+        queue = triggerAllDocs();
+      } else {
+        queue = new RSVP.Queue()
+          .push(usePrecalculatedResult);
+      }
 
-      return wrapJioCall(
-        this,
-        'getAttachment',
-        [
-          // XXX Ugly hardcoded meaningless id...
-          "erp5",
-          new UriTemplate.parse(options.list_method_template)
-                         .expand(options),
-          {format: "json"}
-        ]
-      )
+      return queue
         .push(function (catalog_json) {
           var data = catalog_json._embedded.contents || [],
             summary = catalog_json._embedded.sum || [],
@@ -254,7 +271,8 @@
               }),
               "total_rows": summary.length
             },
-            "count": count
+            "count": count,
+            "listbox_query_param_json": catalog_json._embedded.listbox_query_param_json
           };
         });
     })

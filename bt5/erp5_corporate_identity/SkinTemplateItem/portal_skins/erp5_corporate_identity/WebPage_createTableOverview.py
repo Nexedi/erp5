@@ -45,7 +45,7 @@ def digestCaption(my_caption, my_caption_title, my_count, my_shift):
   return my_count
 
 # XXX single quotes?
-caption_abbreviation = "TBL"
+caption_abbreviation = "Table"
 caption_filler = ['<caption>', '</caption>', '<div class="ci-book-caption">','</div>']
 caption_list = []
 caption_count = 1

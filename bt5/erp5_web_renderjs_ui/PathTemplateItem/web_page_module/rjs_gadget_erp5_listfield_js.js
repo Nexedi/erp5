@@ -12,7 +12,7 @@
       var field_json = options.field_json || {},
         item_list = ensureArray(field_json.items).map(function (item) {
           if (Array.isArray(item)) {return item; }
-          else {return [item, item]; }
+          return [item, item];
         }),
         state_dict = {
           value: getFirstNonEmpty(field_json.value, field_json['default'], ""),
@@ -28,7 +28,9 @@
           render_timestamp: new Date().getTime()
         };
       // first_item means to select the first item by default on empty value
-      if (isEmpty(state_dict.value) && (state_dict.first_item) && (!isEmpty(field_json.items))) {
+      if (isEmpty(state_dict.value) &&
+          state_dict.first_item &&
+          !isEmpty(field_json.items)) {
         state_dict.value = field_json.items[0][1];
       }
       return this.changeState(state_dict);
@@ -50,24 +52,25 @@
       }
       state.item_list = JSON.parse(this.state.item_list);
 
-      if (modification_dict.hasOwnProperty('editable')) {
-        if (this.state.editable) {
-          url = 'gadget_html5_select.html';
-        } else {
-          url = 'gadget_html5_element.html';
+      if (this.state.editable) {
+        url = 'gadget_html5_select.html';
+      } else {
+        url = 'gadget_html5_element.html';
 
-          item_list = state.item_list;
-          for (i = 0; i < item_list.length; i += 1) {
-            if (item_list[i][1] === this.state.value) {
-              text_content = item_list[i][0];
-            }
+        item_list = state.item_list;
+        for (i = 0; i < item_list.length; i += 1) {
+          if (item_list[i][1] === this.state.value) {
+            text_content = item_list[i][0];
           }
-          if (text_content === undefined) {
-            text_content = '??? (' + this.state.value + ')';
-          }
-          state.text_content = text_content;
-
         }
+        if (text_content === undefined) {
+          text_content = '??? (' + this.state.value + ')';
+        }
+        state.text_content = text_content;
+
+      }
+
+      if (modification_dict.hasOwnProperty('editable')) {
         result = this.declareGadget(url, {scope: 'sub'})
           .push(function (input) {
             // Clear first to DOM, append after to reduce flickering/manip
@@ -93,8 +96,10 @@
             return gadget.getContent();
           })
           .push(function (result) {
+            /*jslint maxlen: 180 */
             // Automatically add default_%s:int:0
             //   https://lab.nexedi.com/nexedi/erp5/blob/8ae0706177/product/Formulator/Widget.py#L1147
+            /*jslint maxlen: 80 */
             var key_list = Object.keys(result), i;
             for (i = 0; i < key_list.length; i += 1) {
               result["default_" + key_list[i] + ":int"] = 0;

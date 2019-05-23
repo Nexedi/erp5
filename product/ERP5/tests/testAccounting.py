@@ -3185,7 +3185,20 @@ class TestTransactions(AccountingTestCase):
 
   def _resetIdGenerator(self):
     # clear all existing ids in portal ids
-      self.portal.portal_ids.clearGenerator(all=True)
+    portal_ids = self.portal.portal_ids
+    # ...except uid generator
+    new_uid, = portal_ids.generateNewIdList(
+      id_generator='uid',
+      id_group='catalog_uid',
+      id_count=1,
+    )
+    portal_ids.clearGenerator(all=True)
+    portal_ids.generateNewIdList(
+      id_generator='uid',
+      id_group='catalog_uid',
+      id_count=1,
+      default=new_uid,
+    )
 
   def test_SourceDestinationReference(self):
     # Check that source reference and destination reference are filled

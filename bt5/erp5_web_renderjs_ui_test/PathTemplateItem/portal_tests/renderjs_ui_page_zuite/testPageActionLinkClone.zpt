@@ -1,0 +1,65 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Page Front</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Page Tab Link List</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?page=action</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_action.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Title 1</td>
+  <td></td>
+</tr>
+
+<!-- Generate links to parents -->
+<tr>
+  <td>assertTextPresent</td>
+  <td>Actions</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Clone Document' and contains(@href, '#!display_with_history_and_cancel') and contains(@href, 'clone_document')]</td>
+  <td></td>
+</tr>
+
+<!-- Follow one link -->
+<tal:block tal:define="click_configuration python: {'text': 'Clone Document'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_dialog.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Clone Document</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/verify_is_editable_mode" />
+
+</tbody></table>
+</body>
+</html>

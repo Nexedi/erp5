@@ -4,9 +4,8 @@
   "use strict";
 
   function appendCheckboxField(gadget, item) {
-    var input_gadget,
-      label_gadget;
-    return gadget.declareGadget('gadget_html5_input.html', {scope: item[1]})
+    var input_gadget;
+    return gadget.declareGadget('gadget_html5_input.html', {scope: item[1], element: 'span'})
       .push(function (result) {
         input_gadget = result;
         var state_dict = {
@@ -22,22 +21,10 @@
         return result.render(state_dict);
       })
       .push(function () {
-        return gadget.declareGadget('gadget_html5_element.html');
-      })
-      .push(function (result) {
-        label_gadget = result;
-        var state_dict = {
-          tag: 'label',
-          text_content: item[0]
-        };
-        return result.render(state_dict);
-      })
-      .push(function () {
-        var div = document.createElement("div");
-        div.setAttribute("class", "ui-field-contain");
-        div.appendChild(label_gadget.element);
-        div.appendChild(input_gadget.element);
-        gadget.element.appendChild(div);
+        var label = document.createElement("label");
+        label.textContent = item[0];
+        label.insertBefore(input_gadget.element, label.firstChild);
+        gadget.element.appendChild(label);
       });
   }
 

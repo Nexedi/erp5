@@ -1302,6 +1302,14 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
       return str((self.pt, self.name, self.action, self.update_action,
                   self.encoding, self.stored_encoding, self.enctype))
 
+    # XXX: This class is a mix between a document class and a regular class.
+    # Ideally, it should be made an alias to "erp5.portal_type.ERP5 Form",
+    # which is the corresponding fully-functional document class.
+    # Until then, hardcode some methods expected to exist on all document
+    # classes so that they can be removed from Base.
+    def _getAcquireLocalRoles(self):
+      return True
+
 # utility function
 def get_field_meta_type_and_proxy_flag(field):
     if field.meta_type=='ProxyField':

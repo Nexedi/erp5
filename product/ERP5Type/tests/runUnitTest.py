@@ -488,6 +488,9 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   instance_home =  os.environ['INSTANCE_HOME']
   os.environ.setdefault('EVENT_LOG_FILE', os.path.join(tests_home, 'zLOG.log'))
   os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
+  # For numpy parallel-primitives such as numpy.dot() that is used in
+  # testReceiptRecognition for example.
+  os.environ.setdefault('OMP_NUM_THREADS', '3')
 
   _print("Loading Zope ... \n")
   _start = time.time()

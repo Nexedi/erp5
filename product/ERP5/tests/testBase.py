@@ -1274,7 +1274,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     module = self.portal.person_module
     person = module.newContent(portal_type='Person')
     self.assertEqual(person.getValidationState(), 'draft')
-    self.assertFalse(self.portal.portal_workflow.isTransitionPossible(person,
+    self.assertTrue(self.portal.portal_workflow.isTransitionPossible(person,
                                                                  'invalidate'))
     # test low-level implementation
     self.portal.portal_workflow.validation_workflow._executeMetaTransition(

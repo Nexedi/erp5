@@ -1,9 +1,9 @@
 def getSourceReference(line):
   category_list = line.getAcquiredCategoryList()
-  portal_type_list = ('Purchase Packing List Line',
-                      'Purchase Packing List Cell',
-                      'Sale Packing List Line',
-                      'Sale Packing List Cell',)
+  portal_type_list = ('Purchase Supply Line',
+                      'Purchase Supply Cell',
+                      'Sale Supply Line',
+                      'Sale Supply Cell',)
   tmp_context = line.asContext(context=line, categories=category_list)
   predicate_list = context.portal_domains.searchPredicateList(tmp_context, portal_type=portal_type_list)
   for predicate in predicate_list:

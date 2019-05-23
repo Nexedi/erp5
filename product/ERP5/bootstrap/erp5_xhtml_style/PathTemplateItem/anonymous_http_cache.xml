@@ -23,6 +23,10 @@
                     <value> <int>3600</int> </value>
                 </item>
                 <item>
+                    <key> <string>must_revalidate</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>notify_urls</string> </key>
                     <value>
                       <tuple/>

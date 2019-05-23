@@ -35,6 +35,7 @@ Internal Packing List Line | quantity_view
 Internal Packing List Line | view
 Internal Packing List Line | view_price
 Internal Packing List Module | delivery_line_report
+Internal Packing List Module | merge_delivery_list
 Internal Packing List Module | view
 Internal Packing List Module | workflow_report
 Internal Packing List | details
@@ -105,6 +106,7 @@ Purchase Packing List Line | quantity_view
 Purchase Packing List Line | view
 Purchase Packing List Line | view_price
 Purchase Packing List Module | delivery_line_report
+Purchase Packing List Module | merge_delivery_list
 Purchase Packing List Module | packing_list_export
 Purchase Packing List Module | packing_list_report
 Purchase Packing List Module | view
@@ -231,6 +233,7 @@ Sale Packing List Line | profile_view
 Sale Packing List Line | quantity_view
 Sale Packing List Line | view
 Sale Packing List Module | delivery_line_report
+Sale Packing List Module | merge_delivery_list
 Sale Packing List Module | packing_list_export
 Sale Packing List Module | packing_list_report
 Sale Packing List Module | shipment_report

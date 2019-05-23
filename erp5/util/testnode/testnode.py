@@ -167,7 +167,12 @@ shared = true
            url=vcs_repository["url"])
         updater.checkout()
         revision_list.append((repository_id, updater.getRevision()))
-    except SubprocessError:
+    except SubprocessError as error:
+      # only limit to particular error, if we run that code for all errors,
+      # then if server having most repositories is down for some time, we would
+      # erase all repositories and facing later hours of downloads
+      if getattr(error, 'stderr', '').find('index') >= 0:
+        rmtree(repository_path)
       logger.warning("Error while getting repository, ignoring this test suite",
                      exc_info=1)
       return False
@@ -247,6 +252,7 @@ shared = true
     logger.debug('Testnode.cleanUp')
     self.process_manager.killPreviousRun()
     self.process_manager.killall(self.working_directory)
+    self.process_manager.killall(self.config['slapos_directory'])
     self._cleanupLog()
     self._cleanupTemporaryFiles()
 
@@ -303,8 +309,8 @@ shared = true
           runner = runner_class(self)
           logger.info("Type of current test is %s", my_test_type)
           # master testnode gets test_suites, slaves get nothing
-          testnode_software_status_dict = runner.prepareSlapOSForTestNode(test_node_slapos)
           if not(testnode_software_successfully_built):
+            testnode_software_status_dict = runner.prepareSlapOSForTestNode(test_node_slapos)
             if testnode_software_status_dict['status_code'] == 0:
               testnode_software_successfully_built = True
               logger.info("Will now skip build of testnode software")

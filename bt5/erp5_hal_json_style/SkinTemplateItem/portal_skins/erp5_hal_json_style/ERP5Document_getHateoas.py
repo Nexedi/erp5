@@ -70,7 +70,10 @@ COUNT_LIMIT = 1000
 appcache = True if context.REQUEST.get('appcache', None) is not None else False
 
 if REQUEST is None:
+  recursive_call = True
   REQUEST = context.REQUEST
+else:
+  recursive_call = False
 
 if response is None:
   response = REQUEST.RESPONSE
@@ -375,16 +378,15 @@ def getFormRelativeUrl(form):
   )[0].relative_url
 
 
-def getFieldDefault(form, field, key, value=None):
+def getFieldDefault(form, field, key, value=MARKER):
   """Get available value for `field` preferably in python-object from REQUEST or from field's default.
 
   Previously we used Formulator.Field._get_default which is (for no reason) private.
   """
-  if value is None:
-    value = REQUEST.form.get(field.id, REQUEST.form.get(key, MARKER))
+  value = REQUEST.form.get(field.id, REQUEST.form.get(key, value))
+  if value is MARKER:
     # use marker because default value can be intentionally empty string
-    if value is MARKER:
-      value = field.get_value('default', request=REQUEST, REQUEST=REQUEST)
+    value = field.get_value('default', request=REQUEST, REQUEST=REQUEST)
     if field.has_value("unicode") and field.get_value("unicode") and isinstance(value, unicode):
       value = unicode(value, form.get_form_encoding())
   if getattr(value, 'translate', None) is not None:
@@ -467,11 +469,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
   if "Field" in meta_type:
     # fields have default value and can be required (unlike boxes)
     result["required"] = field.get_value("required") if field.has_value("required") else None
-    if value is MARKER:
-      result["default"] = getFieldDefault(form, field, key)
-    else:
-      # No need to calculate the field value if provided (used in Listbox)
-      result["default"] = value
+    result["default"] = getFieldDefault(form, field, key, value=value)
 
   # start the actual "switch" on field's meta_type here
   if meta_type in ("ListField", "RadioField", "ParallelListField", "MultiListField"):
@@ -651,14 +649,14 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
 
     # try to get specified searchable columns and fail back to all searchable columns
     search_column_list = [(name, _translate(title))
-                          for name, title in field.get_value("search_columns")
-                          if sql_catalog.isValidColumn(name)] or catalog_column_list
+                          for name, title in (field.get_value("search_columns") or catalog_column_list)
+                          if sql_catalog.isValidColumn(name)]
 
     # try to get specified sortable columns and fail back to searchable fields
     sort_column_list = [(name, _translate(title))
                         for name, title in (selection_params.get('selection_sort_order', [])
-                                            or field.get_value("sort_columns"))
-                        if sql_catalog.isValidColumn(name)] or search_column_list
+                                            or field.get_value("sort_columns") or search_column_list)
+                        if sql_catalog.isValidColumn(name)]
     # portal_type list can be overriden by selection too
     # since it can be intentionally empty we don't override with non-empty field value
     portal_type_list = selection_params.get("portal_type", field.get_value('portal_types'))
@@ -790,6 +788,18 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
 
     if (list_method_custom is not None):
       result["list_method_template"] = list_method_custom
+
+    # In the context of a form validation,
+    # the lines must be synchronously calculated to keep track of the request values
+    # Reuse the same parameters which were used during the first rendering
+    query_param_json = REQUEST.get("%s_query_param_json" % field.id, None)
+    if (query_param_json is not None) and (response.getStatus() == 400):
+      result["default"] = json.loads(
+        context.ERP5Document_getHateoas(mode='search',
+          **ensureDeserialized(byteify(json.loads(urlsafe_b64decode(query_param_json))))
+          )
+      )
+
     return result
 
   if meta_type == "FormBox":
@@ -1173,14 +1183,42 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                      query=None, select_list=None, limit=None, form=None,
                      relative_url=None, restricted=None, list_method=None,
                      default_param_json=None, form_relative_url=None, extra_param_json=None):
+
+  if (not appcache) and (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
+    login_relative_url = site_root.getLayoutProperty("configuration_login", default="")
+    if (login_relative_url):
+      response.setHeader(
+        'WWW-Authenticate',
+        'X-Delegate uri="%s"' % (url_template_dict["login_template"] % {
+          "root_url": site_root.absolute_url(),
+          "login": login_relative_url
+        })
+      )
+    response.setStatus(401)
+    return ""
+
+  if (view is not None):
+    view = str(view)
+
   if relative_url:
-    try:
-      traversed_document = site_root.restrictedTraverse(str(relative_url))
-      if (view is not None):
-        view = str(view)
-      is_site_root = False
-    except:
-      raise NotImplementedError(relative_url)
+    is_site_root = False
+    if traversed_document is None:
+      traversed_document = site_root.restrictedTraverse(relative_url, None)
+      if (traversed_document is None):
+        response.setStatus(404)
+        return ""
+  elif traversed_document is None:
+    traversed_document = context
+
+  # Check if traversed_document is the site_root
+  if is_site_root is None:
+    is_site_root = (traversed_document.getPath() == site_root.getPath())
+  if is_portal is None:
+    is_portal = (traversed_document.getPath() == portal.getPath())
+
+  if mime_type != traversed_document.Base_handleAcceptHeader([mime_type]):
+    response.setStatus(406)
+    return ""
 
   # extra_param_json holds parameters for search interpreted by getHateoas itself
   # not by the list_method neither url_columns - only getHateoas
@@ -1228,24 +1266,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       'status': statusLevelToString(portal_status_level)
     }
 
-  if (not appcache) and (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
-    login_relative_url = site_root.getLayoutProperty("configuration_login", default="")
-    if (login_relative_url):
-      response.setHeader(
-        'WWW-Authenticate',
-        'X-Delegate uri="%s"' % (url_template_dict["login_template"] % {
-          "root_url": site_root.absolute_url(),
-          "login": login_relative_url
-        })
-      )
-    response.setStatus(401)
-    return ""
-
-  elif mime_type != traversed_document.Base_handleAcceptHeader([mime_type]):
-    response.setStatus(406)
-    return ""
-
-  elif (mode == 'root') or (mode == 'traverse'):
+  if (mode == 'root') or (mode == 'traverse'):
     ##
     # Render ERP Document with a `view` specified
     # `view` contains view's name and we extract view's URL (we suppose form ${object_url}/Form_view)
@@ -1601,9 +1622,26 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     #  > We simply do not use them. All Document selection is handled via passing
     #  > "query" parameter to Base_callDialogMethod or introspecting list_methods.
     #################################################
-    if REQUEST.other['method'] != "GET":
+    if (not recursive_call) and (REQUEST.other['method'] != "GET"):
       response.setStatus(405)
       return ""
+
+    # Those parameter will be send back during the listbox submission
+    # to ensure fetching the same lines
+    listbox_query_param_json = urlsafe_b64encode(json.dumps(ensureSerializable({
+      'form_relative_url': form_relative_url,
+      'list_method': list_method,
+      'default_param_json': default_param_json,
+      'query': query,
+      'select_list': select_list,
+      'limit': limit,
+      'local_roles': local_roles,
+      'selection_domain': selection_domain,
+      'extra_param_json': extra_param_json,
+      'relative_url': relative_url,
+      'group_by': group_by,
+      'sort_on': sort_on
+    })))
 
     # set 'here' for field rendering which contain TALES expressions
     REQUEST.set('here', traversed_document)
@@ -1754,24 +1792,30 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       if 'selection' not in catalog_kw:
         catalog_kw['selection'] = context.getPortalObject().portal_selections.getSelectionFor(selection_name, REQUEST)
 
-      for select in select_list:
-        # See Listbox.py getValueList --> getEditableField & getColumnAliasList method
-        # In short: there are Form Field definitions which names start with
-        # matching ListBox name - those are template fields to be rendered in
-        # cells with actual values defined by row and column
-        field_name = "{}_{}".format(listbox_field_id, select.replace(".", "_"))
-        if listbox_form.has_field(field_name, include_disabled=1):
-          editable_field_dict[select] = listbox_form.get_field(field_name, include_disabled=1)
+      # fill the proxy_field_stack
+      proxy_field_stack = [source_field]  # last of the stack should not be a proxy field
+      loop_protection_dict = {None: True, source_field: True}
+      field_stack_iteration = source_field
+      while field_stack_iteration.meta_type == "ProxyField":
+        next_iteration = field_stack_iteration.getTemplateField()
+        if next_iteration in loop_protection_dict:
+          break
+        loop_protection_dict[next_iteration] = True
+        field_stack_iteration = next_iteration
+        proxy_field_stack.append(field_stack_iteration)
 
-      # check if proxify
-      if source_field.meta_type == "ProxyField":
-        proxy_listbox_field_id = source_field.getRecursiveTemplateField().id
-        proxy_form = getattr(traversed_document, source_field.getRecursiveTemplateField().Base_aqInner().aq_parent.id)
-        for select in select_list:
-          # need also get editable field from proxy form
-          proxy_field_name = "{}_{}".format(proxy_listbox_field_id, select.replace(".", "_"))
+      # fill editable_field_dict
+      # See Products.ERP5Form.Listbox ListBoxRenderer.getEditableField method.
+      # This method can not be used directly as `source_field` is a ProxyField instance (not a ListBoxRenderer instance).
+      # It is unauthorized to import ListBoxRenderer.
+      for select in select_list:
+        for proxy_field in proxy_field_stack:
+          proxy_field_id = proxy_field.id
+          proxy_field_name = "{}_{}".format(proxy_field_id, select.replace(".", "_"))
+          proxy_form = getattr(traversed_document, proxy_field.Base_aqInner().aq_parent.id)
           if proxy_form.has_field(proxy_field_name, include_disabled=1):
             editable_field_dict[select] = proxy_form.get_field(proxy_field_name, include_disabled=1)
+            break
 
     # handle the case when list-scripts are ignoring `limit` - paginate for them
     if limit is not None:
@@ -1800,6 +1844,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     })
 
     Listbox_getBrainValue = traversed_document.Listbox_getBrainValue
+    field_errors = REQUEST.get('field_errors', {})
+
     # Compatibility with Listbox.py ListMethodWrapper
     can_check_local_property = list_method not in ('objectValues', 'contentValues')
     # now fill in `contents_list` with actual information
@@ -1890,6 +1936,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             listbox_form,
             value=default_field_value,
             key='field_%s_%s' % (editable_field.id, brain_uid))
+          # Include cell error text in case of form validation
+          if field_errors.has_key('%s_%s' % (editable_field.id, brain_uid)):
+            contents_item[select]['field_gadget_param']["error_text"] = \
+              field_errors['%s_%s' % (editable_field.id, brain_uid)].error_text
 
 
         # Do not generate link for empty value, as it will not be clickable in UI
@@ -2042,6 +2092,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       if len(contents_stat_list) > 0:
         result_dict['_embedded']['sum'] = ensureSerializable(contents_stat_list)
 
+      # Those parameter will be send back during the listbox submission
+      # to ensure fetching the same lines
+      result_dict['_embedded']['listbox_query_param_json'] = {
+        'key': "%s_query_param_json" % listbox_field_id,
+        'value': listbox_query_param_json
+      }
+
     # We should cleanup the selection if it exists in catalog params BUT
     # we cannot because it requires escalated Permission.'modifyPortal' so
     # the correct solution would be to ReportSection.popReport but unfortunately
@@ -2174,24 +2231,8 @@ else:
 
 context.Base_prepareCorsResponse(RESPONSE=response)
 
-
-# Check if traversed_document is the site_root
-if relative_url:
-  temp_traversed_document = site_root.restrictedTraverse(relative_url, None)
-  if (temp_traversed_document is None):
-    response.setStatus(404)
-    return ""
-else:
-  temp_traversed_document = context
-
-temp_is_site_root = (temp_traversed_document.getPath() == site_root.getPath())
-temp_is_portal = (temp_traversed_document.getPath() == portal.getPath())
-
 response.setHeader('Content-Type', mime_type)
-
-hateoas = calculateHateoas(is_portal=temp_is_portal, is_site_root=temp_is_site_root,
-                           traversed_document=temp_traversed_document,
-                           relative_url=relative_url,
+hateoas = calculateHateoas(relative_url=relative_url,
                            REQUEST=REQUEST, response=response, view=view, mode=mode,
                            query=query, select_list=select_list, limit=limit, form=form,
                            restricted=restricted, list_method=list_method,

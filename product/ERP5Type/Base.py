@@ -33,6 +33,7 @@ import warnings
 import types
 import thread, threading
 
+from BTrees.OOBTree import OOBTree
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permission import pname, Permission
@@ -44,6 +45,7 @@ from DateTime import DateTime
 import OFS.History
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
+from persistent import Persistent
 from persistent.TimeStamp import TimeStamp
 from zExceptions import NotFound, Unauthorized
 
@@ -105,6 +107,24 @@ from ZODB.POSException import ConflictError
 from zLOG import LOG, INFO, ERROR, WARNING
 
 _MARKER = []
+
+class PersistentContainer(Persistent):
+    """
+    Hold a value, making it persistent independently from its container, and
+    allowing in-place modification (useful for immutable).
+    Does not do any magic, so code using this is well aware of what is the
+    container and what is its content, and does not risk leaking one when
+    intending to provide the other.
+    """
+    __slots__ = ('value', )
+    def __init__(self, value):
+        self.value = value
+
+    def __getstate__(self):
+        return self.value
+
+    def __setstate__(self, state):
+        self.value = state
 
 global registered_workflow_method_set
 wildcard_interaction_method_id_match = re.compile(r'[[.?*+{(\\]').search
@@ -735,6 +755,8 @@ class Base( CopyContainer,
   aq_method_generating = []
   aq_portal_type = {}
   aq_related_generated = 0
+  # Only generateIdList may look at this property. Anything else is unsafe.
+  _id_generator_state = None
 
   # Declarative security - in ERP5 we use AccessContentsInformation to
   # define the right of accessing content properties as opposed
@@ -3034,22 +3056,6 @@ class Base( CopyContainer,
           return object.__of__(portal).__of__(self)
     raise AttributeError(id)
 
-  def _getAcquireLocalRoles(self):
-    """This method returns the value of acquire_local_roles of the object's
-    portal_type.
-      - True means local roles are acquired, which is the standard behavior of
-      Zope objects.
-      - False means that the role acquisition chain is cut.
-
-    The code to support this is on the user class, see
-    ERP5Type.patches.User and ERP5Type.patches.PropertiedUser .
-
-    This specific implementation of this method should only be reached when
-    processing an object with a missing portal type, otherwise portal type
-    class should hold such accessor.
-    """
-    return True
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'get_local_permissions')
   def get_local_permissions(self):
@@ -3479,6 +3485,84 @@ class Base( CopyContainer,
     self.getParentValue()._delObject(self.getId())
 
     return new_document
+
+  def _postCopy(self, container, op=0):
+    super(Base, self)._postCopy(container, op=op)
+    if op == 0: # copy (not cut)
+      # We are the copy of another document (either cloned or copy/pasted),
+      # forget id generator state.
+      try:
+        del self._id_generator_state
+      except AttributeError:
+        pass
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'generateIdList')
+  def generateIdList(self, group, count=1, default=1, onMissing=None, poison=False):
+    """
+    Manages multiple independent sequences of unique numbers.
+    Each sequence guarantees the unicity of each produced value within that
+    sequence and for <self> instance, and is monotonously increasing by 1 for
+    each generated id.
+
+    group (string):
+      Identifies the sequence to use.
+    count (int):
+      How many identifiers to generate.
+    default (int):
+      If the sequence for given <group> did not already exist, initialise it at
+      this for the first generated value.
+    onMissing (callable):
+      If provided, called when requested sequence is missing, "default" is
+      ignored and the value returned by this function is used instead.
+      Allows seamless migration from another id generator *if* that id
+      generator is able to "poison the land" (see next option).
+    poison (bool):
+      If True, return the next id in requested sequence, and permanently break
+      that sequence's state, so that no new id may be successfuly generated
+      from it. Useful to ensure seamless migration away from this generator,
+      without risking a (few) late generation from happening after migration
+      code already moved sequence's state elsewhere.
+      Once a sequence has been poisoned, attempting to generate a new value
+      from it will raise an exception (exception type may vary).
+      "count" must be 1, otherwise a ValueError is raised.
+
+    Conflicts & guarantees:
+    - If multiple transactions modify the same sequence, ALL BUT ONE get a
+      ConflictError. This is by design, to achieve per-sequence unicity.
+    - If multiple transactions modify different sequences, NONE will get a
+      ConflictError (each sequence state is a separate persistent object).
+    - If multiple transactions create new sequences, SOME may get a
+      ConflictError. This is a limitation of the chosen data structure.
+      It is expected that group creation is a rare event, very unlikely to
+      happen concurrently in multiple transactions on the same object.
+    """
+    if not isinstance(group, basestring):
+      raise TypeError('group must be a string')
+    if not isinstance(default, (int, long)):
+      raise TypeError('default must be an integer')
+    if not isinstance(count, (int, long)):
+      raise TypeError('count must be an integer')
+    if count < 0:
+      raise ValueError('count cannot be negative')
+    if poison and count != 1:
+      raise ValueError('sequence generator poisoning requires count=1')
+    if count == 0:
+      return []
+    id_generator_state = self._id_generator_state
+    if id_generator_state is None:
+      id_generator_state = self._id_generator_state = OOBTree()
+    try:
+      next_id = id_generator_state[group].value
+    except KeyError:
+      if onMissing is not None:
+        default = onMissing()
+        if not isinstance(default, (int, long)):
+          raise TypeError('onMissing must return an integer')
+      id_generator_state[group] = PersistentContainer(default)
+      next_id = default
+    new_next_id = None if poison else next_id + count
+    id_generator_state[group].value = new_next_id
+    return range(next_id, new_next_id)
 
 InitializeClass(Base)
 

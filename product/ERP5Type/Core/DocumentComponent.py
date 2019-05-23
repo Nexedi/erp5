@@ -34,6 +34,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 
 import zope.interface
+import re
 from Products.ERP5Type.interfaces.component import IComponent
 
 class DocumentComponent(ComponentMixin, TextContentHistoryMixin):
@@ -75,19 +76,8 @@ class DocumentComponent(ComponentMixin, TextContentHistoryMixin):
     error_list = super(DocumentComponent, self).checkConsistency(*args ,**kw)
     reference = self.getReference()
     text_content = self.getTextContent()
-    # Already checked in the parent class
-    if reference and text_content:
-      class_definition_str = 'class %s' % reference
-      try:
-        sep = text_content[text_content.index(class_definition_str) +
-                           len(class_definition_str)]
-      except (ValueError, IndexError):
-        pass
-      else:
-        if (sep == ':' or # old-style class
-            sep == '('):  # new-style class
-          return error_list
-
+    if (reference and text_content and # Already checked in the parent class
+        re.search('[^\s]*class\s+%s\s*[(:]' % reference, text_content) is None):
       error_list.append(ConsistencyMessage(
         self,
         self.getRelativeUrl(),

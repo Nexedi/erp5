@@ -108,7 +108,7 @@ class IdTool(BaseTool):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'generateNewId')
   def generateNewId(self, id_group=None, default=None, method=_marker,
-                    id_generator=None):
+                    id_generator=None, poison=False):
     """
       Generate the next id in the sequence of ids of a particular group
     """
@@ -127,8 +127,11 @@ class IdTool(BaseTool):
       #use _getLatestGeneratorValue here for that the technical level
       #must not call the method
       last_generator = self._getLatestGeneratorValue(id_generator)
-      new_id = last_generator.generateNewId(id_group=id_group, \
-                                            default=default)
+      new_id = last_generator.generateNewId(
+        id_group=id_group,
+        default=default,
+        poison=poison,
+      )
     except KeyError:
       # XXX backward compatiblity
       if self.getTypeInfo():
@@ -165,7 +168,7 @@ class IdTool(BaseTool):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'generateNewIdList')
   def generateNewIdList(self, id_group=None, id_count=1, default=None,
-                        store=_marker, id_generator=None):
+                        store=_marker, id_generator=None, poison=False):
     """
       Generate a list of next ids in the sequence of ids of a particular group
     """
@@ -186,7 +189,7 @@ class IdTool(BaseTool):
       #must not call the method
       last_generator = self._getLatestGeneratorValue(id_generator)
       new_id_list = last_generator.generateNewIdList(id_group=id_group,
-                         id_count=id_count, default=default)
+                         id_count=id_count, default=default, poison=poison)
     except (KeyError, ValueError):
       # XXX backward compatiblity
       if self.getTypeInfo():

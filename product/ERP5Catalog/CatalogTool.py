@@ -868,6 +868,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       group_and_user_id_set = set()
       wrapper_list = []
       for object_value in object_value_list:
+        __traceback_info__ = object_value
         document_object = aq_inner(object_value)
         w = IndexableObjectWrapper(document_object, user_set, catalog_role_set)
         w.predicate_property_dict = getPredicatePropertyDict(object_value) or {}

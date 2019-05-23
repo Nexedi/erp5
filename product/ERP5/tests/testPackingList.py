@@ -1010,6 +1010,48 @@ class TestPackingListMixin(TestOrderMixin):
         after_tag=after_tag,
         ).build(explanation_uid=packing_list.getCausalityValue().getUid())
 
+  def stepMergeSplittedPackingList(self, sequence=None):
+    """
+    Invoke the merge of the two sales packing list and check the merged packing list
+
+    Then also try to create a packing list not coming from order, and then
+    tro to merge it with the merged packing list
+    """
+    # Merge the two existing packing list
+    packing_list1 = sequence.get('packing_list')
+    packing_list2 = sequence.get('new_packing_list')
+    self.portal.portal_simulation.mergeDeliveryList([packing_list1, packing_list2])
+    self.tic()
+    self.assertEqual('confirmed', packing_list1.getSimulationState())
+    self.assertEqual('cancelled', packing_list2.getSimulationState())
+    line, = packing_list1.objectValues(
+          portal_type= self.packing_list_line_portal_type)
+    self.assertEqual(self.default_quantity,line.getQuantity())
+    self.assertTrue(packing_list1.getStartDate() is not None)
+    self.assertTrue(packing_list1.getStopDate() is not None)
+    # Now clone the merged packing list, so that we will have :
+    # - one packing list coming from order (merged_packing_list)
+    # - one not coming from order (the cloned one)
+    cloned_packing_list = packing_list1.Base_createCloneDocument(batch_mode=True)
+    cloned_packing_list.setStartDate(cloned_packing_list.getStartDate() + 1)
+    cloned_packing_list.setStopDate(cloned_packing_list.getStopDate() + 1)
+    cloned_line, = cloned_packing_list.objectValues()
+    cloned_line.setQuantity(self.default_quantity+1)
+    self.portal.portal_workflow.doActionFor(cloned_packing_list, "confirm_action")
+    self.tic()
+    self.portal.portal_simulation.mergeDeliveryList([packing_list1, cloned_packing_list])
+    self.tic()
+    self.assertEqual('confirmed', packing_list1.getSimulationState())
+    self.assertEqual('cancelled', cloned_packing_list.getSimulationState())
+    resource = sequence.get('resource').getRelativeUrl()
+    def checkLineSet(delivery, expected_set):
+      line_list = delivery.getMovementList()
+      self.assertEqual(len(line_list), len(expected_set))
+      found_set = set([(x.getResource(), x.getQuantity(), x.getPrice()) for x in line_list])
+    expected_set = set([(resource, self.default_quantity, 555),
+                        (resource, self.default_quantity+1, 555)])
+    checkLineSet(packing_list1, expected_set)
+
 class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
   run_all_test = 1
@@ -1020,6 +1062,8 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
       Change the quantity on an delivery line, then
       see if the packing list is divergent and then
       split and defer the packing list
+
+      Finally, check we can merge if needed
     """
     if not run: return
     sequence_list = SequenceList()
@@ -1033,6 +1077,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
         Tic
         CheckPackingListIsSolved
         CheckPackingListSplitted
+        MergeSplittedPackingList
         """
     sequence_list.addSequenceString(sequence_string)
 

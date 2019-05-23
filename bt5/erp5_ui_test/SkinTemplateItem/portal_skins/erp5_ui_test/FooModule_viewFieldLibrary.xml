@@ -35,17 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Delivery_mergeDeliveryList</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>edit_order</string> </key>
-            <value>
-              <list/>
-            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -74,9 +64,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -94,7 +82,10 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_list_mode_foo_title_listbox</string>
+                        <string>my_list_mode_foo_title_listbox_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -108,7 +99,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_viewMergedDeliveryList</string> </value>
+            <value> <string>FooModule_viewFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -116,11 +107,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Delivery_viewMergedDeliveryList</string> </value>
-        </item>
-        <item>
-            <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>Foo_viewFieldLibrary</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -132,15 +119,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Merge Deliveries</string> </value>
+            <value> <string>Foo Field Library</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

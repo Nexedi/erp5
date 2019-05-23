@@ -616,9 +616,6 @@ class Catalog(Folder,
   # These are ZODB variables, so shared by multiple Zope instances.
   # This is set to the last logical time when clearReserved is called.
   _last_clear_reserved_time = 0
-  # This is to record the maximum value of uids. Because this uses the class Length
-  # in BTrees.Length, this does not generate conflict errors.
-  _max_uid = None
 
   # This is an instance id which specifies who owns which reserved uids.
   _instance_id = getattr(getConfiguration(), 'instance_id', None)
@@ -1072,34 +1069,6 @@ class Catalog(Folder,
     return uid_buffer_dict[thread_key]
 
   # the cataloging API
-  security.declarePrivate('produceUid')
-  def produceUid(self):
-    """
-      Produces reserved uids in advance
-    """
-    global global_clear_reserved_time
-    assert global_reserved_uid_lock.locked()
-    # This checks if the list of local reserved uids was cleared after clearReserved
-    # had been called.
-    force_new_buffer = (global_clear_reserved_time != self._last_clear_reserved_time)
-    uid_buffer = self.getUIDBuffer(force_new_buffer=force_new_buffer)
-    global_clear_reserved_time = self._last_clear_reserved_time
-    if len(uid_buffer) == 0:
-      if self._max_uid is None:
-        self._max_uid = Length(1)
-      # TODO: if this method is kept and former uid allocation code is
-      # discarded, self._max_uid duplicates work done by portal_ids: it
-      # already keeps track of the highest allocated number for all id
-      # generator groups.
-      uid_buffer.extend(
-        self.getPortalObject().portal_ids.generateNewIdList(
-          id_generator='uid',
-          id_group='catalog_uid',
-          id_count=UID_BUFFER_SIZE,
-          default=self._max_uid(),
-        ),
-      )
-
   security.declarePrivate('isIndexable')
   def isIndexable(self):
     """
@@ -1157,21 +1126,31 @@ class Catalog(Folder,
       Similar problems may happen with relations and acquisition of uid values (ex. order_uid)
       with the risk of graph loops
     """
+    global global_clear_reserved_time
+
     if not self.getPortalObject().isIndexable():
       return None
 
     with global_reserved_uid_lock:
-      self.produceUid()
-      uid_buffer = self.getUIDBuffer()
-      if len(uid_buffer) > 0:
-        uid = uid_buffer.pop()
-        if self._max_uid is None:
-          self._max_uid = Length(1)
-        if uid > self._max_uid():
-          self._max_uid.set(uid)
-        return long(uid)
-      else:
-        raise CatalogError("Could not retrieve new uid")
+      uid_buffer = self.getUIDBuffer(
+        force_new_buffer=global_clear_reserved_time != self._last_clear_reserved_time,
+      )
+      global_clear_reserved_time = self._last_clear_reserved_time
+      try:
+        return long(uid_buffer.pop())
+      except IndexError:
+        uid_buffer.extend(
+          self.getPortalObject().portal_ids.generateNewIdList(
+            id_generator='uid',
+            id_group='catalog_uid',
+            id_count=UID_BUFFER_SIZE,
+            default=getattr(self, '_max_uid', lambda: 1)(),
+          ),
+        )
+        try:
+          return long(uid_buffer.pop())
+        except IndexError:
+          raise CatalogError("Could not retrieve new uid")
 
   security.declareProtected(manage_zcatalog_entries, 'manage_catalogObject')
   def manage_catalogObject(self, REQUEST, RESPONSE, URL1, urls=None):

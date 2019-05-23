@@ -71,11 +71,12 @@
     */
     .declareMethod("render", function (options) {
       return this.changeState({
-        jio_key: options.jio_key
+        jio_key: options.jio_key,
+        editable: options.editable
       });
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function () {
       var gadget = this,
         view_list = [],
         tab_list = [],
@@ -86,7 +87,7 @@
         tab_icon = "eye",
         jump_list;
 
-      return gadget.jio_getAttachment(modification_dict.jio_key, "links")
+      return gadget.jio_getAttachment(gadget.state.jio_key, "links")
         .push(function (result) {
           var i,
             promise_list = [];

@@ -62,6 +62,17 @@
   <tr>
     <td align="left" valign="top">
     <div class="form-label">
+    Must-Revalidate?
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="checkbox" name="must_revalidate" value="1"<dtml-if 
+     must_revalidate> checked="checked"</dtml-if> />
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
     Cache anonymous <br />connections only?
     </div>
     </td>

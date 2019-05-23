@@ -72,14 +72,15 @@
                                                            'text': 'Created Clone Foo.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td colspan="3"><b>Ensure backlink redirect to module</b></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
+  <td>assertValue</td>
+  <td>//input[@name="field_my_id"]</td>
   <td>2</td>
-  <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>

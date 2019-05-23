@@ -1,8 +1,8 @@
 /*globals window, document, RSVP, rJS,
-          URI, location, XMLHttpRequest, console, navigator, ProgressEvent*/
+          URI, location, XMLHttpRequest, console, navigator, Event*/
 /*jslint indent: 2, maxlen: 80*/
 (function (window, document, RSVP, rJS,
-           XMLHttpRequest, location, console, navigator, ProgressEvent) {
+           XMLHttpRequest, location, console, navigator, Event) {
   "use strict";
 
   var MAIN_SCOPE = "m",
@@ -100,30 +100,70 @@
     return route(gadget, 'jio_gadget', method, param_list);
   }
 
-  function displayErrorContent(gadget, error) {
+  function displayErrorContent(gadget, original_error) {
+    var error_list = [original_error],
+      i,
+      error,
+      error_text = "";
+
+
     // Do not break the application in case of errors.
     // Display it to the user for now,
     // and allow user to go back to the frontpage
-    var error_text = "";
-    if (error instanceof ProgressEvent) {
-      error = error.target.error;
+
+    // Add error handling stack
+    error_list.push(new Error('stopping ERP5JS'));
+
+    for (i = 0; i < error_list.length; i += 1) {
+      error = error_list[i];
+      if (error instanceof Event) {
+        error = {
+          string: error.toString(),
+          message: error.message,
+          type: error.type,
+          target: error.target
+        };
+        if (error.target !== undefined) {
+          error_list.splice(i + 1, 0, error.target);
+        }
+      }
+      if (error instanceof XMLHttpRequest) {
+        error = {
+          message: error.toString(),
+          readyState: error.readyState,
+          status: error.status,
+          statusText: error.statusText,
+          response: error.response,
+          responseUrl: error.responseUrl,
+          response_headers: error.getAllResponseHeaders()
+        };
+      }
+      if (error.constructor === Array ||
+          error.constructor === String ||
+          error.constructor === Object) {
+        try {
+          error = JSON.stringify(error);
+        } catch (ignore) {
+        }
+      }
+
+      error_text += error.message || error;
+      error_text += '\n';
+
+      if (error.fileName !== undefined) {
+        error_text += 'File: ' +
+          error.fileName +
+          ': ' + error.lineNumber + '\n';
+      }
+      if (error.stack !== undefined) {
+        error_text += 'Stack: ' + error.stack + '\n';
+      }
+      error_text += '---\n';
     }
 
-    if ((error !== undefined) && (error.target instanceof XMLHttpRequest)) {
-      error_text = error.target.toString() + " " +
-        error.target.status + " " +
-        error.target.statusText + "\n" +
-        error.target.responseURL + "\n\n" +
-        error.target.getAllResponseHeaders();
-    } else if (error instanceof Error) {
-      error_text = error.toString();
-    } else {
-      error_text = JSON.stringify(error);
-    }
-
-    console.error(error);
-    if (error instanceof Error) {
-      console.error(error.stack);
+    console.error(original_error);
+    if (original_error instanceof Error) {
+      console.error(original_error.stack);
     }
     if (gadget.props === undefined) {
       // Gadget has not yet been correctly initialized
@@ -600,14 +640,59 @@
             return;
           })
           .push(function () {
-            // XXX Improve error rendering
-            gadget.props.content_element.innerHTML =
-              "<br/><br/><br/><pre></pre>";
-            gadget.props.content_element.querySelector('pre').textContent =
-              "Error: " + gadget.state.error_text;
+            var element = gadget.props.content_element,
+              container = document.createElement("section"),
+              paragraph,
+              link;
+
+            paragraph = document.createElement("p");
+            paragraph.textContent =
+              'Please report this unhandled error to the support team, ' +
+              'and go back to the ';
+            link = document.createElement("a");
+            link.href = '#';
+            link.textContent = 'homepage';
+            paragraph.appendChild(link);
+            container.appendChild(paragraph);
+
+            container.appendChild(document.createElement("br"));
+
+            paragraph = document.createElement("p");
+            paragraph.textContent = 'Location: ';
+            link = document.createElement("a");
+            link.href = link.textContent = window.location.toString();
+            paragraph.appendChild(link);
+            container.appendChild(paragraph);
+
+            paragraph = document.createElement("p");
+            paragraph.textContent = 'User-agent: ' + navigator.userAgent;
+            container.appendChild(paragraph);
+
+            paragraph = document.createElement("p");
+            paragraph.textContent =
+              'Date: ' + new Date(Date.now()).toISOString();
+            container.appendChild(paragraph);
+
+            paragraph = document.createElement("p");
+            paragraph.textContent = 'Online: ' + navigator.onLine;
+            container.appendChild(paragraph);
+
+            container.appendChild(document.createElement("br"));
+
+            link = document.createElement("code");
+            link.textContent = gadget.state.error_text;
+            paragraph = document.createElement("pre");
+            paragraph.appendChild(link);
+            container.appendChild(paragraph);
+
+            // Remove the content
+            while (element.firstChild) {
+              element.removeChild(element.firstChild);
+            }
+            element.appendChild(container);
+
             // reset gadget state
             gadget.state = JSON.parse(default_state_json_string);
-            // XXX Notify error
           });
       }
 
@@ -741,4 +826,4 @@
     });
 
 }(window, document, RSVP, rJS,
-  XMLHttpRequest, location, console, navigator, ProgressEvent));
+  XMLHttpRequest, location, console, navigator, Event));

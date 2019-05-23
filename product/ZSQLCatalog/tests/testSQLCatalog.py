@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from functools import partial
 import unittest
 from Products.ZSQLCatalog.SQLCatalog import Catalog as SQLCatalog
 from Products.ZSQLCatalog.SQLCatalog import Query
@@ -786,6 +787,15 @@ class TestSQLCatalog(ERP5TypeTestCase):
       sort_on=[['default', 'DESC', 'INT']]
     )
     self.assertEqual(order_by_list, [['default', 'DESC', 'INT']])
+
+  def test_selectSyntaxConstraint(self):
+    buildSQLQuery = self._catalog.buildSQLQuery
+    # Verify SQLCatalog accepts "count(*)" in select_list, which results in
+    # {'count(*)': None} . While not exactly a feature, there should be no
+    # reason to break this.
+    buildSQLQuery(select_list=['count(*)'])
+    buildSQLQuery(select_dict={'count(*)': None})
+    buildSQLQuery(select_dict={'count(*)': 'count(*)'})
 
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})

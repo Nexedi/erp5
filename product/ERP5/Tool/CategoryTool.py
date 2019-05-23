@@ -44,7 +44,7 @@ from Products.ERP5Type.dynamic import portal_type_class
 
 from zLOG import LOG
 
-class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
+class CategoryTool(CMFCategoryTool, BaseTool):
     """
       The CategoryTool object is the placeholder for all methods
       and algorithms related to categories and relations in ERP5.
@@ -151,5 +151,19 @@ class CategoryTool(CopyContainer, CMFCategoryTool, BaseTool):
               previous_category_url)
           self.updateRelatedContent(o, previous_o_category_url,
                                     new_o_category_url)
+
+# CMFCategoryTool inherits indirectly from a different CopyContainer which
+# lacks our customisations.
+# Resolve all inheritence conflicts between CopyContainer (which CategoryTool
+# inherits from via BaseTool) and CMFCategoryTool in favour of the property
+# from BaseTool (so it may override CopyContainer).
+for CopyContainer_property_id in CopyContainer.__dict__:
+  if CopyContainer_property_id in CategoryTool.__dict__:
+    continue
+  try:
+    BaseTool_property = getattr(BaseTool, CopyContainer_property_id)
+  except AttributeError:
+    continue
+  setattr(CategoryTool, CopyContainer_property_id, BaseTool_property)
 
 InitializeClass( CategoryTool )

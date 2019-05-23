@@ -42,6 +42,8 @@ def ZCache_set(self, ob, data, view_name, keywords, mtime_func):
                                        %(self.stale_while_revalidate_interval))
     if getattr(self, 'public', 0):
         cache_control_parameter.append('public')
+    if getattr(self, 'must_revalidate', 0):
+        cache_control_parameter.append('must-revalidate')
     RESPONSE.setHeader('Last-Modified', rfc1123_date(time.time()))
     RESPONSE.setHeader('Cache-Control', ", ".join(cache_control_parameter))
     RESPONSE.setHeader('Expires', expires)
@@ -59,6 +61,7 @@ def __init__(self, ob_id):
                       'stale_if_error_interval' : 300,
                       'stale_while_revalidate' : 10,
                       'public': 1,
+                      'must_revalidate': 0,
                       'notify_urls': ()}
     self._resetCacheId()
 
@@ -73,6 +76,7 @@ def manage_editProps(self, title, settings=None, REQUEST=None):
         'stale_if_error_interval' : int(settings['stale_if_error_interval']),
         'stale_while_revalidate_interval' : int(settings['stale_while_revalidate_interval']),
         'public': settings.get('public') and 1 or 0,
+        'must_revalidate': settings.get('must_revalidate') and 1 or 0,
         'notify_urls': tuple(settings['notify_urls'])}
     cache = self.ZCacheManager_getCache()
     cache.initSettings(self._settings)
@@ -90,6 +94,8 @@ def getSettings(self):
         self._settings.update({'stale_while_revalidate_interval' : 0})
     if 'public' not in self._settings:
         self._settings.update({'public' : 0})
+    if 'must_revalidate' not in self._settings:
+        self._settings.update({'must_revalidate' : 0})
     return self._settings.copy()  # Don't let UI modify it.
 
 

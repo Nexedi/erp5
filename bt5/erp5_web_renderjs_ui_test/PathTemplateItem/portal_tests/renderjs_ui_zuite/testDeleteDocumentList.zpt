@@ -27,7 +27,7 @@
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 <tr><td>open</td>
-    <td>${base_url}/foo_module/FooModule_createObjects?start:int=4&amp;num:int=2&amp;create_line:bool=True</td><td></td></tr>
+    <td>${base_url}/foo_module/FooModule_createObjects?start:int=4&amp;num:int=2&amp;create_line:int=1</td><td></td></tr>
 <tr><td>assertTextPresent</td>
     <td>Created Successfully.</td><td></td></tr>
 <tr><td>open</td>
