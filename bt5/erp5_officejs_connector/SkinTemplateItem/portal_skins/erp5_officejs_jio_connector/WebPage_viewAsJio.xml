@@ -53,13 +53,17 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_text_content</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -72,24 +76,19 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_description</string>
-                        <string>my_text_content</string>
                         <string>my_title</string>
                         <string>my_reference</string>
-                        <string>my_revision</string>
-                        <string>my_language</string>
-                        <string>my_version</string>
-                        <string>my_portal_type</string>
                         <string>your_modification_date</string>
-                        <string>my_content_type</string>
-                        <string>my_url_string</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_language</string>
+                        <string>my_version</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
