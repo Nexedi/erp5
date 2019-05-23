@@ -728,8 +728,9 @@ class ZCatalog(Folder, Persistent, Implicit):
       default_catalog = self.getSQLCatalog()
 
     # Construct list of object to catalogged
+    object_set = set(object_list)
     current_catalog_object_list = []
-    for obj in object_list:
+    for obj in object_set:
       if hot_reindexing:
         try:
           url = obj.getPhysicalPath
@@ -817,10 +818,10 @@ class ZCatalog(Folder, Persistent, Implicit):
         if destination_catalog.id != catalog.id:
           if self.hot_reindexing_state == HOT_REINDEXING_RECORDING_STATE:
             destination_catalog.recordObjectList(url_list, 1)
-          elif object_list:
+          elif object_set:
             destination_catalog.catalogObjectList(
               self.wrapObjectList(
-                object_value_list=object_list,
+                object_value_list=object_set,
                 catalog_value=destination_catalog,
               ),
               **kw
