@@ -63,7 +63,7 @@
   function processHateoasDict(raw_dict) {
     var raw_fields, type, parent, field_key, field_id, return_dict = {};
     return_dict.raw_dict = raw_dict;
-    try {
+    if ("_embedded" in raw_dict && "_view" in raw_dict._embedded) {
       /*jslint nomen: true*/
       raw_fields = raw_dict._embedded._view;
       type = raw_dict._links.type.name;
@@ -86,7 +86,7 @@
           }
         }
       }
-    } catch (e) {
+    } else {
       // raw_dict is a blob
       return raw_dict;
     }
