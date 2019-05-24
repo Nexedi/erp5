@@ -1763,9 +1763,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         start, num_items = 0, limit
       else:
         start, num_items = 0, int(limit)
-      if len(search_result_iterable) <= num_items:
-        # the limit was most likely taken into account thus we don't need to slice
+      if not (is_rendering_listbox and not has_listbox_a_count_method):
         start, num_items = 0, len(search_result_iterable)
+      # if len(search_result_iterable) <= num_items:
+        # the limit was most likely taken into account thus we don't need to slice
+        # start, num_items = 0, len(search_result_iterable)
     else:
       start, num_items = 0, len(search_result_iterable)
 
