@@ -155,13 +155,13 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
@@ -244,7 +244,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
@@ -293,7 +293,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.aq_parent.aq_parent.getPortalType() == \'Web Section\'</string> </value>
+            <value> <string>python:here.aq_parent.aq_parent.getPortalType() != \'Web Section\'</string> </value>
         </item>
       </dictionary>
     </pickle>
