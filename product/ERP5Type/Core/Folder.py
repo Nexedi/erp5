@@ -1720,10 +1720,12 @@ for source_klass, destination_klass in \
 # inherits from via Base) and those bases in favour of the property
 # from Base (so it may override CopyContainer).
 for CopyContainer_property_id in CopyContainer.__dict__:
-  if CopyContainer_property_id in Folder.__dict__:
+  if CopyContainer_property_id.startswith('__') or CopyContainer_property_id in Folder.__dict__:
     continue
   try:
     Base_property = getattr(Base, CopyContainer_property_id)
   except AttributeError:
+    continue
+  if isinstance(Base_property, ClassSecurityInfo):
     continue
   setattr(Folder, CopyContainer_property_id, Base_property)
