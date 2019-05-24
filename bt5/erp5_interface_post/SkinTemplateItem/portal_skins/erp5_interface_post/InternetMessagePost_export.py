@@ -5,4 +5,4 @@ context.activate(
   activity='SQLQueue',
   conflict_retry=False,
   max_retry=0,
-).ERP5Site_sendMailHostMessage(context.getData())
+).InternetMessagePost_sendMailHostMessage()

@@ -6,4 +6,4 @@
 #     conflict_retry=False,
 #     max_retry=0,
 
-context.getPortalObject().MailHost.send(data)
+context.getPortalObject().MailHost.send(context.getData())
