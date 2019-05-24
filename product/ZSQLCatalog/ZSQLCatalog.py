@@ -689,7 +689,6 @@ class ZCatalog(Folder, Persistent, Implicit):
                      (catalog is not None) and \
                      (self.source_sql_catalog_id == catalog.id)
     archiving = self.archive_path is not None
-    failed_object_list = []
     url_list = []
     archive_list = []
     portal_archives = getattr(self, 'portal_archives', None)
@@ -755,10 +754,10 @@ class ZCatalog(Folder, Persistent, Implicit):
               goto_current_catalog = 1
               continue
             priority = archive.getPriority()
-            if catalog_dict.has_key(catalog_id):
-              catalog_dict[catalog_id]['obj'].append(obj)
+            if catalog_id in catalog_dict:
+              catalog_dict[catalog_id][1].append(obj)
             else:
-              catalog_dict[catalog_id] = {'priority' : priority, 'obj' : [obj,]}
+              catalog_dict[catalog_id] = (priority, [obj])
         if catalog_id is None and not archiving:
           # at least put object in current catalog if no archive match
           # and not doing archive
@@ -770,39 +769,43 @@ class ZCatalog(Folder, Persistent, Implicit):
         current_catalog_object_list.append(obj)
 
     # run activity or execute for each archive depending on priority
-    if catalog_dict:
-      for catalog_id in catalog_dict.keys():
-        if goto_current_catalog and catalog_id == default_catalog.id:
-          # if we reindex in current catalog, do not relaunch an activity for this
-          continue
-        d = catalog_dict[catalog_id]
-        # hot_reindexing is True when creating an object during a hot reindex, in this case, we don't want
-        # to reindex it in destination catalog, it will be recorded an play only once
-        if not hot_reindexing and self.hot_reindexing_state != HOT_REINDEXING_DOUBLE_INDEXING_STATE and \
-               self.destination_sql_catalog_id == catalog_id:
-          destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
-          # reindex objects in destination catalog
-          destination_catalog.catalogObjectList(
-            self.wrapObjectList(
-              object_value_list=d['obj'],
-              catalog_value=destination_catalog,
-            ),
+    for catalog_id, (priority, document_list) in catalog_dict.iteritems():
+      if goto_current_catalog and catalog_id == default_catalog.id:
+        # if we reindex in current catalog, do not relaunch an activity for this
+        continue
+      # hot_reindexing is True when creating an object during a hot reindex, in this case, we don't want
+      # to reindex it in destination catalog, it will be recorded an play only once
+      if (
+        not hot_reindexing and
+        self.hot_reindexing_state != HOT_REINDEXING_DOUBLE_INDEXING_STATE and
+        self.destination_sql_catalog_id == catalog_id
+      ):
+        destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
+        # reindex objects in destination catalog
+        destination_catalog.catalogObjectList(
+          self.wrapObjectList(
+            object_value_list=document_list,
+            catalog_value=destination_catalog,
+          ),
+          **kw
+        )
+      elif immediate_reindex_archive:
+        archive_catalog = self.getSQLCatalog(catalog_id)
+        archive_catalog.catalogObjectList(
+          self.wrapObjectList(
+            object_value_list=document_list,
+            catalog_value=archive_catalog,
+          ),
+          **kw
+        )
+      else:
+        for obj in document_list:
+          obj._reindexObject(
+            sql_catalog_id=catalog_id,
+            activate_kw={'priority': priority},
+            disable_archive=1,
             **kw
           )
-        else:
-          archive_catalog = self.getSQLCatalog(catalog_id)
-          if immediate_reindex_archive:
-            archive_catalog.catalogObjectList(
-              self.wrapObjectList(
-                object_value_list=d['obj'],
-                catalog_value=archive_catalog,
-              ),
-              **kw
-            )
-          else:
-            for obj in d['obj']:
-              obj._reindexObject(sql_catalog_id=catalog_id, activate_kw = \
-                                 {'priority': d['priority']}, disable_archive=1, **kw)
 
     if catalog is not None:
       if current_catalog_object_list:
@@ -827,7 +830,7 @@ class ZCatalog(Folder, Persistent, Implicit):
               **kw
             )
 
-    object_list[:] = failed_object_list
+    del object_list[:]
 
   security.declareProtected(manage_zcatalog_entries, 'uncatalog_object')
   def uncatalog_object(self, uid=None,path=None, sql_catalog_id=None):
