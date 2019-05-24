@@ -63,20 +63,26 @@
   <td></td>
 </tr>
 <tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Actions"]</td>
+ <td></td>
+</tr>
+<tr>
+ <td>click</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Actions"]</td>
+ <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
-  <td>link=Add</td>
+  <td>link=New Text Document</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>link=Add</td>
+  <td>link=New Text Document</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
   <td>identifier=title</td>
@@ -112,16 +118,13 @@
   <td>identifier=description</td>
   <td>${description}</td>
 </tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Document']</td>
@@ -130,20 +133,26 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <!-- Verify Search, add another document -->
 <tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Actions"]</td>
+ <td></td>
+</tr>
+<tr>
+ <td>click</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Actions"]</td>
+ <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Add']</td>
+  <td>link=New Text Document</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Add']</td>
+  <td>link=New Text Document</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>store</td>
   <td>search</td>
@@ -164,11 +173,13 @@
   <td>name=title</td>
   <td>${search}</td>
 </tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Document']</td>
@@ -209,8 +220,13 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='${title}']</td>
   <td></td>
 </tr>
 <tr>
