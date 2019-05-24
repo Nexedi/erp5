@@ -1894,7 +1894,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
   @simulate('Test_countCatalog', '*args, **kwargs', """
 return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id', 'ASC')])
 """)
-  @createIndexedDocument(quantity=2)
+  @createIndexedDocument(quantity=3)
   @changeSkin('Hal')
   def test_getHateoas_count_method(self, document_list):
     """Test that count method also uses the query parameters.
@@ -1910,8 +1910,8 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
       form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
     )
     result_dict = json.loads(result)
-    self.assertEqual(len(result_dict['_embedded']['contents']), 2)
-    self.assertEqual(result_dict['_embedded']['count'], 2)
+    self.assertEqual(len(result_dict['_embedded']['contents']), 3)
+    self.assertEqual(result_dict['_embedded']['count'], 3)
 
     # Check that limiting the number of result doesn't impact count
     fake_request = do_fake_request("GET")
@@ -1927,7 +1927,22 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     result_dict = json.loads(result)
     # There is a count method on this listbox
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
-    self.assertEqual(result_dict['_embedded']['count'], 2)
+    self.assertEqual(result_dict['_embedded']['count'], 3)
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      relative_url='foo_module',
+      list_method="searchFolder",
+      query='portal_type:"Foo"',
+      limit=[2, 3],
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
+    )
+    result_dict = json.loads(result)
+    # There is a count method on this listbox
+    self.assertEqual(len(result_dict['_embedded']['contents']), 1)
+    self.assertEqual(result_dict['_embedded']['count'], 3)
 
     # Check that query parameters are passed to the count method
     fake_request = do_fake_request("GET")
@@ -1946,7 +1961,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
 
   @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
-  @createIndexedDocument(quantity=2)
+  @createIndexedDocument(quantity=3)
   @changeSkin('Hal')
   def test_getHateoas_length_as_count_method(self, document_list):
     """Test that erp5 listbox manually count result length.
@@ -1965,8 +1980,8 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
       form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
     )
     result_dict = json.loads(result)
-    self.assertEqual(len(result_dict['_embedded']['contents']), 2)
-    self.assertEqual(result_dict['_embedded']['count'], 2)
+    self.assertEqual(len(result_dict['_embedded']['contents']), 3)
+    self.assertEqual(result_dict['_embedded']['count'], 3)
 
     # Check that limiting the number of result doesn't impact count
     fake_request = do_fake_request("GET")
@@ -1982,7 +1997,22 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     result_dict = json.loads(result)
     # There is a count method on this listbox
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
-    self.assertEqual(result_dict['_embedded']['count'], 2)
+    self.assertEqual(result_dict['_embedded']['count'], 3)
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      relative_url='foo_module',
+      list_method="searchFolder",
+      query='portal_type:"Foo"',
+      limit=[2, 3],
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
+    )
+    result_dict = json.loads(result)
+    # There is a count method on this listbox
+    self.assertEqual(len(result_dict['_embedded']['contents']), 1)
+    self.assertEqual(result_dict['_embedded']['count'], 3)
 
     # Check that query parameters are passed to the count method
     fake_request = do_fake_request("GET")
