@@ -1095,6 +1095,7 @@ class ActivityTool (BaseTool):
       """
       return [x for x in self._family_list if x is not None]
 
+    security.declareProtected(CMFCorePermissions.ManagePortal, 'getFamilyNodeList')
     def getFamilyNodeList(self, family_name):
       """
       Return the list of node names in given family.
