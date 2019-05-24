@@ -193,6 +193,6 @@ class CacheableAction(object):
       param_dict['url'] = action is not None and action(ec) or ''
       icon = self.icon
       param_dict['icon'] = icon is not None and icon(ec) or ''
-    except:
+    except KeyError:
       pass
     return param_dict
