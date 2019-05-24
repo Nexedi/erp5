@@ -78,13 +78,13 @@
               scope: "action_field",
               element: fragment
             })
-            .push(function (action_gadget) {
-              return action_gadget.preRenderDocument(options);
-            })
-            .push(function (doc) {
-              state_options.doc = doc;
-              return gadget.changeState(state_options);
-            });
+              .push(function (action_gadget) {
+                return action_gadget.preRenderDocument(options);
+              })
+              .push(function (doc) {
+                state_options.doc = doc;
+                return gadget.changeState(state_options);
+              });
           } else {
             return gadget.changeState(state_options);
           }
@@ -93,17 +93,16 @@
 
     .onStateChange(function () {
       var fragment = document.createElement('div'),
-        gadget = this,
-        options;
+        gadget = this;
       while (this.element.firstChild) {
         this.element.removeChild(this.element.firstChild);
       }
       this.element.appendChild(fragment);
       return gadget.declareGadget("gadget_officejs_form_view.html", {element: fragment,
                                                                      scope: 'fg'})
-      .push(function (form_view_gadget) {
-        return form_view_gadget.render(gadget.state);
-      });
+        .push(function (form_view_gadget) {
+          return form_view_gadget.render(gadget.state);
+        });
     })
 
     .declareMethod('triggerSubmit', function () {
@@ -118,7 +117,8 @@
         //target_url = options[1],
         content_dict = options[2],
         fragment = document.createElement('div'),
-        action_gadget_url, jio_key;
+        action_gadget_url,
+        jio_key;
       if (gadget.state.valid_action) {
         action_gadget_url = gadget.state.form_definition.fields_raw_properties.gadget_field_action_js_script.values.gadget_url;
         gadget.element.appendChild(fragment);
@@ -126,30 +126,27 @@
           scope: "action_field",
           element: fragment
         })
-        .push(function (action_gadget) {
-          return action_gadget.handleSubmit(content_dict, gadget.state);
-        })
-        .push(function (id) {
-          jio_key = id;
-          return gadget.notifySubmitting();
-        })
-        .push(function () {
-          return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
-        })
-        .push(function () {
-          return gadget.redirect({
-            command: 'display',
-            options: {
-              jio_key: jio_key,
-              editable: true
-            }
+          .push(function (action_gadget) {
+            return action_gadget.handleSubmit(content_dict, gadget.state);
+          })
+          .push(function (id) {
+            jio_key = id;
+            return gadget.notifySubmitting();
+          })
+          .push(function () {
+            return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
+          })
+          .push(function () {
+            return gadget.redirect({
+              command: 'display',
+              options: {
+                jio_key: jio_key,
+                editable: true
+              }
+            });
           });
-        });
       } else {
-        return gadget.notifySubmitted({message: 'Could not perform this action: configuration error', status: 'fail'})
-        .push(function () {
-          return;
-        });
+        return gadget.notifySubmitted({message: 'Could not perform this action: configuration error', status: 'fail'});
       }
     });
 
