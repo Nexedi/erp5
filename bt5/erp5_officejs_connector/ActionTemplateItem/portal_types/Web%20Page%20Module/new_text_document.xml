@@ -43,6 +43,12 @@
             <value> <string>new_text_document</string> </value>
         </item>
         <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
