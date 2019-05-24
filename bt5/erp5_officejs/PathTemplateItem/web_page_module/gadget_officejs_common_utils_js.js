@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP */
+/*global window, rJS, Query, SimpleQuery, ComplexQuery */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, rJS, Query, SimpleQuery, ComplexQuery) {
   "use strict";
 
   // TODO: check if there are other categories that are 'views' and find a less hardcoded way to get this
@@ -55,11 +55,29 @@
       var gadget = this,
         //for now, views and actions are handle together via handle_action gadget
         has_more_dict = {views: {}, actions: {}},
-        query;
+        query,
+        query_type,
+        query_parent;
       // get all actions/views for the portal_type, if target action is a type of view
       // (exclude custom scripts and dialogs)
       if (view_categories.includes(action_category)) {
-        query = 'portal_type: "Action Information" AND parent_relative_url: "portal_types/' + portal_type + '"';
+        query_type = new SimpleQuery({
+          key: "portal_type",
+          operator: "",
+          type: "simple",
+          value: "Action Information"
+        });
+        query_parent = new SimpleQuery({
+          key: "parent_relative_url",
+          operator: "",
+          type: "simple",
+          value: "portal_types/" + portal_type
+        });
+        query = Query.objectToSearchText(new ComplexQuery({
+          operator: "AND",
+          query_list: [query_type, query_parent],
+          type: "complex"
+        }));
         return gadget.jio_allDocs({query: query})
           .push(function (action_list) {
             if (action_list.data.rows.length > 0) {
@@ -73,9 +91,36 @@
 
     .declareMethod("getFormDefinition", function (portal_type, action_reference, source_reference) {
       var gadget = this,
-        parent = "portal_types/" + portal_type,
-        query = 'portal_type: "Action Information" AND reference: "' + action_reference + '" AND parent_relative_url: "' + parent + '"',
-        action_type, action_title, form_definition;
+        query,
+        action_type,
+        action_title,
+        form_definition,
+        query_type,
+        query_parent,
+        query_reference;
+      query_reference = new SimpleQuery({
+        key: "reference",
+        operator: "",
+        type: "simple",
+        value: action_reference
+      });
+      query_type = new SimpleQuery({
+        key: "portal_type",
+        operator: "",
+        type: "simple",
+        value: "Action Information"
+      });
+      query_parent = new SimpleQuery({
+        key: "parent_relative_url",
+        operator: "",
+        type: "simple",
+        value: "portal_types/" + portal_type
+      });
+      query = Query.objectToSearchText(new ComplexQuery({
+        operator: "AND",
+        query_list: [query_type, query_parent, query_reference],
+        type: "complex"
+      }));
       return gadget.jio_allDocs({query: query})
         .push(function (data) {
           if (data.data.rows.length === 0) {
@@ -102,4 +147,4 @@
         });
     });
 
-}(window, rJS, RSVP));
+}(window, rJS, Query, SimpleQuery, ComplexQuery));
