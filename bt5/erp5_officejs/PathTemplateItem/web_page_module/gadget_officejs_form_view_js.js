@@ -95,6 +95,13 @@
       return form_json;
     })
 
+    .declareMethod("triggerSubmit", function (argument_list) {
+      return this.getDeclaredGadget('fg')
+        .push(function (gadget) {
+          return gadget.triggerSubmit(argument_list);
+        });
+    })
+
     .declareMethod("render", function (options) {
       var fragment = document.createElement('div'),
         gadget = this,
@@ -115,7 +122,8 @@
 
     .declareMethod("renderSubGadget", function (options, subgadget, form_json) {
       var this_gadget = this, erp5_document = form_json.erp5_document,
-          page_title = options.portal_type, add_url;
+        page_title = options.portal_type,
+        add_url = false;
       return subgadget.render({
         jio_key: options.jio_key,
         doc: options.doc,

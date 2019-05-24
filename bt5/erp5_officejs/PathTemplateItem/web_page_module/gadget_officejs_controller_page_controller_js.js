@@ -137,10 +137,7 @@
       var argument_list = arguments;
       return this.getDeclaredGadget('form_view')
         .push(function (view_gadget) {
-          return view_gadget.getDeclaredGadget('fg');
-        })
-        .push(function (gadget) {
-          return gadget.triggerSubmit.apply(gadget, argument_list);
+          return view_gadget.triggerSubmit(argument_list);
         });
     });
 
