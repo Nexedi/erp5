@@ -70,6 +70,8 @@ def valueDefaultSearchTextRenderer(value):
     This is just repr, but always surrounding text strings with doublequotes.
   """
   if isinstance(value, basestring):
+    if value.replace("\\\\", "")[-1] == "\\":
+      value = value[:-1]
     result = '"{}"'.format(value.replace('"', '\\"'))
   else:
     result = repr(value)
