@@ -55,13 +55,14 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("getHTMLElements", function (element_list) {
+    .declareMethod("getHTMLElementList", function (element_list) {
       var gadget = this,
         i = 0,
         element_info_list = [],
         url_for_parameter_list = [],
-        element_info;
-      for (var key in element_list) {
+        element_info,
+        key;
+      for (key in element_list) {
         if (element_list.hasOwnProperty(key)) {
           element_info = element_list[key];
           url_for_parameter_list.push({ command: 'change', options: element_info });
@@ -71,19 +72,19 @@
       }
       return gadget.getUrlForList(url_for_parameter_list)
         .push(function (url_list) {
-          var html_element_list = [], i, element;
-          for (i = 0; i < url_list.length; i += 1) {
-            element = { href: url_list[i],
+          var html_element_list = [], j, element;
+          for (j = 0; j < url_list.length; j += 1) {
+            element = { href: url_list[j],
               icon: null,
-              name: element_info_list[i].reference,
-              title: element_info_list[i].title };
+              name: element_info_list[j].reference,
+              title: element_info_list[j].title };
             html_element_list.push(element);
           }
           return html_element_list;
         });
     })
 
-    .declareMethod("getAllActions", function (portal_type, action_category, options) {
+    .declareMethod("getAllActions", function (portal_type, options) {
       var gadget = this,
         action_info_dict = {views: {}, actions: {}},
         query = 'portal_type: "Action Information" AND parent_relative_url: "portal_types/' + portal_type + '"';
@@ -98,7 +99,7 @@
           return RSVP.all(path_for_jio_get_list);
         })
         .push(function (action_document_list) {
-          var action_settings_list = [], page, action_key, action_doc;
+          var action_settings_list = [], page, action_key, action_doc, key, action_settings;
           for (action_key in action_document_list) {
             if (action_document_list.hasOwnProperty(action_key)) {
               action_doc = action_document_list[action_key];
@@ -117,9 +118,9 @@
               });
             }
           }
-          for (var key in action_settings_list) {
+          for (key in action_settings_list) {
             if (action_settings_list.hasOwnProperty(key)) {
-              var action_settings = action_settings_list[key];
+              action_settings = action_settings_list[key];
               if (view_categories.includes(action_settings.action_type)) {
                 action_info_dict.views[action_settings.action] = action_settings;
               } else {
@@ -144,17 +145,17 @@
         .push(function (document) {
           document_title = document.title;
           return document.portal_type;
-        }, function (error) {
+        }, function () {
           document_title = options.portal_type;
           return options.portal_type;
         })
         .push(function (portal_type) {
-          return gadget.getAllActions(portal_type, view_categories[0], options);
+          return gadget.getAllActions(portal_type, options);
         })
         .push(function (action_info_dict) {
           return RSVP.all([
-            gadget.getHTMLElements(action_info_dict.views),
-            gadget.getHTMLElements(action_info_dict.actions)
+            gadget.getHTMLElementList(action_info_dict.views),
+            gadget.getHTMLElementList(action_info_dict.actions)
           ]);
         })
           // TODO: check other lists like clone or delete?

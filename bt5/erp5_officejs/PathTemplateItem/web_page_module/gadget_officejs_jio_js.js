@@ -1,6 +1,6 @@
-/*global window, rJS, jIO, FormData, UriTemplate */
+/*global window, window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, console */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS, jIO, RSVP, document, URLSearchParams, console) {
+(function (window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, console) {
   "use strict";
 
   // jIO call wrapper for redirection to authentication page if needed
@@ -63,8 +63,8 @@
   function processHateoasDict(raw_dict) {
     var raw_fields, type, parent, field_key, field_id, return_dict = {};
     return_dict.raw_dict = raw_dict;
-    if ("_embedded" in raw_dict && "_view" in raw_dict._embedded) {
-      /*jslint nomen: true*/
+    /*jslint nomen: true*/
+    if (raw_dict.hasOwnProperty("_embedded") && raw_dict._embedded.hasOwnProperty("_view")) {
       raw_fields = raw_dict._embedded._view;
       type = raw_dict._links.type.name;
       parent = raw_dict._links.parent.name;
@@ -158,7 +158,6 @@
           if (jio_storage_name === undefined) { return; }
           appcache_storage = jIO.createJIO(jio_appchache_options);
           // verify if appcache-local sync needs to be done
-          // TODO: find a better flag for this?
           return appcache_storage.get(sync_flag)
             .push(undefined, function (error) {
               if (error && String(error.status_code) !== "404") {
@@ -168,41 +167,38 @@
                 .push(function () {
                   return appcache_storage.allAttachments(origin_url)
                     .push(function (attachment_dict) {
-                      return new RSVP.Queue()
-                        .push(function () {
-                          var id, promise_list = [], i = 0;
-                          for (id in attachment_dict) {
-                            if (attachment_dict.hasOwnProperty(id)) {
-                              if (id.indexOf(hateoas_script) === -1) {
-                                promise_list.push(appcache_storage.getAttachment(origin_url, id));
-                              } else {
-                                promise_list.push(appcache_storage.getAttachment(origin_url, id, {"format": "json"}));
-                              }
-                              configuration_ids_list[i] = id;
-                              i += 1;
-                            }
+                      var id, promise_list = [], i = 0;
+                      for (id in attachment_dict) {
+                        if (attachment_dict.hasOwnProperty(id)) {
+                          if (id.indexOf(hateoas_script) === -1) {
+                            promise_list.push(appcache_storage.getAttachment(origin_url, id));
+                          } else {
+                            promise_list.push(appcache_storage.getAttachment(origin_url, id, {"format": "json"}));
                           }
-                          return RSVP.all(promise_list);
-                        })
-                        .push(function (content_list) {
-                          var i, id, parser, urlParams, content, promise_list = [];
-                          for (i = 0; i < content_list.length; i += 1) {
-                            id = configuration_ids_list[i];
-                            parser = document.createElement('a');
-                            parser.href = id;
-                            urlParams = new URLSearchParams(parser.search);
-                            id = urlParams.get("relative_url");
-                            if (id !== null) { // ignore non configuration elements
-                              content = processHateoasDict(content_list[i]);
-                              promise_list.push(appcache_storage.put(id, content));
-                            }
-                          }
-                          return RSVP.all(promise_list);
-                        })
-                        .push(function () {
-                          return appcache_storage.put(sync_flag, {})
-                            .push(undefined);
-                        });
+                          configuration_ids_list[i] = id;
+                          i += 1;
+                        }
+                      }
+                      return RSVP.all(promise_list);
+                    })
+                    .push(function (content_list) {
+                      var i, id, parser, urlParams, content, promise_list = [];
+                      for (i = 0; i < content_list.length; i += 1) {
+                        id = configuration_ids_list[i];
+                        parser = document.createElement('a');
+                        parser.href = id;
+                        urlParams = new URLSearchParams(parser.search);
+                        id = urlParams.get("relative_url");
+                        if (id !== null) { // ignore non configuration elements
+                          content = processHateoasDict(content_list[i]);
+                          promise_list.push(appcache_storage.put(id, content));
+                        }
+                      }
+                      return RSVP.all(promise_list);
+                    })
+                    .push(function () {
+                      return appcache_storage.put(sync_flag, {})
+                        .push(undefined);
                     });
                 }, function (error) {
                   console.log("Error while appcache-local storage synchronization");
@@ -246,4 +242,4 @@
       return wrapJioCall(this, 'repair', arguments);
     });
 
-}(window, rJS, jIO, RSVP, document, URLSearchParams, console));
+}(window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, console));
