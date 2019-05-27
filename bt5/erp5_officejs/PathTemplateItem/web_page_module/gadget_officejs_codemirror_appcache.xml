@@ -204,6 +204,8 @@ gadget_button_maximize.js\n
 gadget_erp5_configure_editor.html\n
 gadget_erp5_configure_editor.js\n
 \n
+jio_appcachestorage.js\n
+\n
 #setting\n
 gadget_officejs_setting.js\n
 gadget_officejs_setting.html\n
@@ -398,7 +400,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.23494.2134.9352</string> </value>
+                <value> <string>975.65224.6078.42154</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -416,7 +418,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1549009933.21</float>
+                        <float>1558970026.48</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
