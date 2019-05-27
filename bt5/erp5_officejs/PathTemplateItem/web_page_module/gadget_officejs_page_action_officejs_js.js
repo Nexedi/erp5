@@ -105,7 +105,7 @@
               action_doc = action_document_list[action_key];
               page = "handle_action";
               if (view_categories.includes(action_doc.action_type)) {
-                page = "ojs_controller";
+                page = "ojs_local_controller";
               }
               action_settings_list.push({
                 page: page,
