@@ -34,6 +34,7 @@ from Products.ZSQLCatalog.interfaces.operator import IOperator
 from Products.ZSQLCatalog.Utils import sqlquote as escapeString
 from zope.interface.verify import verifyClass
 from zope.interface import implements
+import re
 
 def valueFloatRenderer(value):
   if isinstance(value, basestring):
@@ -65,14 +66,22 @@ value_search_text_renderer = {
   DateTime: str,
 }
 
+# Allows all ascii chars except query syntax special chars.
+# In other words it forbids operator chars !<=> as first character
+# plus forbids any other syntax special chars like : or space.
+raw_string_validator_re = re.compile(r"^[#\$%&'\*\+,\-\./0-9;\?@A-Z\[\\\]\^_`a-z\{\|\}~][!#\$%&'\*\+,\-\./0-9;<=>\?@A-Z\[\\\]\^_`a-z\{\|\}~]*$")
+
 def valueDefaultSearchTextRenderer(value):
   """
     This is just repr, but always surrounding text strings with doublequotes.
   """
   if isinstance(value, basestring):
-    if value.replace("\\\\", "")[-1] == "\\":
-      value = value[:-1]
-    result = '"{}"'.format(value.replace('"', '\\"'))
+    if raw_string_validator_re.match(value):
+      result = value
+    else:
+      if value.replace("\\\\", "")[-1] == "\\":
+        value = value[:-1]
+      result = '"{}"'.format(value.replace('"', '\\"'))
   else:
     result = repr(value)
   return result
