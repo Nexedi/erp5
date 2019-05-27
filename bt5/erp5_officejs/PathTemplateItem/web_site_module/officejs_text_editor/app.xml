@@ -385,7 +385,7 @@
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
-            <value> <string>gadget_ojs_jio.html</string> </value>
+            <value> <string>gadget_ojs_local_jio.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
@@ -680,7 +680,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>975.59928.32228.31914</string> </value>
+                <value> <string>975.65245.14433.33911</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -698,7 +698,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1558970713.21</float>
+                        <float>1558984804.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

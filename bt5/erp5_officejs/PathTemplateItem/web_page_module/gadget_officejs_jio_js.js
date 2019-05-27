@@ -1,6 +1,6 @@
-/*global window, window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, console */
+/*global window, rJS, jIO, FormData, UriTemplate */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, console) {
+(function (window, rJS, jIO) {
   "use strict";
 
   // jIO call wrapper for redirection to authentication page if needed
@@ -60,39 +60,6 @@
       });
   }
 
-  function processHateoasDict(raw_dict) {
-    var raw_fields, type, parent, field_key, field_id, return_dict = {};
-    return_dict.raw_dict = raw_dict;
-    /*jslint nomen: true*/
-    if (raw_dict.hasOwnProperty("_embedded") && raw_dict._embedded.hasOwnProperty("_view")) {
-      raw_fields = raw_dict._embedded._view;
-      type = raw_dict._links.type.name;
-      parent = raw_dict._links.parent.name;
-      /*jslint nomen: false*/
-      return_dict.parent_relative_url = "portal_types/" + parent;
-      return_dict.portal_type = type;
-      for (field_key in raw_fields) {
-        if (raw_fields.hasOwnProperty(field_key)) {
-          field_id = "";
-          if (raw_fields[field_key]["default"] !== undefined && raw_fields[field_key]["default"] !== "") {
-            if (field_key.startsWith("my_")) {
-              field_id = field_key.replace("my_", "");
-            } else if (field_key.startsWith("your_")) {
-              field_id = field_key.replace("your_", "");
-            } else {
-              field_id = field_key;
-            }
-            return_dict[field_id] = raw_fields[field_key]["default"];
-          }
-        }
-      }
-    } else {
-      // raw_dict is a blob
-      return raw_dict;
-    }
-    return return_dict;
-  }
-
   rJS(window)
 
     .ready(function (gadget) {
@@ -107,42 +74,10 @@
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
 
     .declareMethod('createJio', function (jio_options) {
-      var appcache_storage,
-        origin_url = window.location.href,
-        hateoas_script = "hateoas/ERP5Document_getHateoas",
-        // TODO manifest should come from gadget.props.cache_file -add script in html body
-        manifest = "gadget_officejs_discussion_tool.configuration",
-        jio_appchache_options = {
-          type: "replicate",
-          parallel_operation_attachment_amount: 10,
-          parallel_operation_amount: 1,
-          conflict_handling: 2,
-          signature_hash_key: 'hash',
-          check_remote_attachment_modification: true,
-          check_remote_attachment_creation: true,
-          check_remote_attachment_deletion: true,
-          check_remote_deletion: true,
-          check_local_creation: false,
-          check_local_deletion: false,
-          check_local_modification: false,
-          signature_sub_storage: {
-            type: "query",
-            sub_storage: {
-              type: "memory"
-            }
-          },
-          local_sub_storage: {},
-          remote_sub_storage: {
-            type: "appcache",
-            manifest: manifest
-          }
-        },
-        sync_flag = "appcache-stored",
-        configuration_ids_list = [];
+      var gadget = this;
       if (jio_options === undefined) {
         return;
       }
-      jio_appchache_options.local_sub_storage = JSON.parse(JSON.stringify(jio_options));
       jio_options = {
         type: 'dateupdater',
         sub_storage: jio_options,
@@ -155,63 +90,7 @@
       }
       return this.getSetting("jio_storage_name")
         .push(function (jio_storage_name) {
-          if (jio_storage_name === undefined) { return; }
-          appcache_storage = jIO.createJIO(jio_appchache_options);
-          // verify if appcache-local sync needs to be done
-          return appcache_storage.get(sync_flag)
-            .push(undefined, function (error) {
-              if (error && String(error.status_code) !== "404") {
-                throw error;
-              }
-              return appcache_storage.repair()
-                .push(function () {
-                  return appcache_storage.allAttachments(origin_url)
-                    .push(function (attachment_dict) {
-                      var id, promise_list = [], i = 0;
-                      for (id in attachment_dict) {
-                        if (attachment_dict.hasOwnProperty(id)) {
-                          if (id.indexOf(hateoas_script) === -1) {
-                            promise_list.push(appcache_storage.getAttachment(origin_url, id));
-                          } else {
-                            promise_list.push(appcache_storage.getAttachment(origin_url, id, {"format": "json"}));
-                          }
-                          configuration_ids_list[i] = id;
-                          i += 1;
-                        }
-                      }
-                      return RSVP.all(promise_list);
-                    })
-                    .push(function (content_list) {
-                      var i, id, parser, urlParams, content, promise_list = [];
-                      for (i = 0; i < content_list.length; i += 1) {
-                        id = configuration_ids_list[i];
-                        parser = document.createElement('a');
-                        parser.href = id;
-                        urlParams = new URLSearchParams(parser.search);
-                        id = urlParams.get("relative_url");
-                        if (id !== null) { // ignore non configuration elements
-                          content = processHateoasDict(content_list[i]);
-                          promise_list.push(appcache_storage.put(id, content));
-                        }
-                      }
-                      return RSVP.all(promise_list);
-                    })
-                    .push(function () {
-                      return appcache_storage.put(sync_flag, {})
-                        .push(undefined);
-                    });
-                }, function (error) {
-                  console.log("Error while appcache-local storage synchronization");
-                  if (error && error.currentTarget && error.currentTarget.status === "401") {
-                    console.log("Unauthorized access to storage, sync cancelled");
-                    return;
-                  }
-                  //TODO: ignore sync error to make other officejs apps work
-                  //until configuration manifest file name is get from app-settings
-                  return;
-                  throw error;
-                });
-            });
+          gadget.state_parameter_dict.jio_storage_name = jio_storage_name;
         });
     })
     .declareMethod('allDocs', function () {
@@ -245,4 +124,4 @@
       return wrapJioCall(this, 'repair', arguments);
     });
 
-}(window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, console));
+}(window, rJS, jIO));
