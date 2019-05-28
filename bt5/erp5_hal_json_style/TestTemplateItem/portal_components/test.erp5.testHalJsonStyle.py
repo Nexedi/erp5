@@ -577,7 +577,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['action_workflow'][0]['name'], "custom_action_no_dialog")
 
     self.assertEqual(result_dict['_links']['action_object_jump']['href'],
-                     "urn:jio:allDocs?query=portal_type%%3A%%22Query%%22%%20AND%%20default_agent_uid%%3A%sL" %
+                     "urn:jio:allDocs?query=portal_type%%3AQuery%%20AND%%20default_agent_uid%%3A%sL" %
                        document.getUid())
     self.assertEqual(result_dict['_links']['action_object_jump']['title'], "Queries")
     self.assertEqual(result_dict['_links']['action_object_jump']['name'], "jump_query")
@@ -909,7 +909,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_links']['action_workflow'][0]['name'], "custom_action_no_dialog")
 
     self.assertEqual(result_dict['_links']['action_object_jump']['href'],
-                     "urn:jio:allDocs?query=portal_type%%3A%%22Query%%22%%20AND%%20default_agent_uid%%3A%sL" %
+                     "urn:jio:allDocs?query=portal_type%%3AQuery%%20AND%%20default_agent_uid%%3A%sL" %
                        document.getUid())
     self.assertEqual(result_dict['_links']['action_object_jump']['title'], "Queries")
     self.assertEqual(result_dict['_links']['action_object_jump']['name'], "jump_query")
@@ -2328,7 +2328,7 @@ class TestERP5Document_getHateoas_mode_worklist(ERP5HALJSONStyleSkinsMixin):
     self.assertTrue(work_list[0]['count'] > 0)
     self.assertEqual(work_list[0]['name'], 'Draft To Validate')
     self.assertFalse('module' in work_list[0])
-    self.assertEqual(work_list[0]['href'], 'urn:jio:allDocs?query=portal_type%3A%28%22Bar%22%20OR%20%22Foo%22%29%20AND%20simulation_state%3A%22draft%22')
+    self.assertEqual(work_list[0]['href'], 'urn:jio:allDocs?query=portal_type%3A%28Bar%20OR%20Foo%29%20AND%20simulation_state%3Adraft')
 
     self.assertEqual(result_dict['_debug'], "worklist")
 
@@ -2431,7 +2431,7 @@ return msg"
     self.assertEqual(work_list[0]['name'], 'daiyanzhen')
     self.assertEqual(work_list[0]['count'], 1)
     self.assertFalse('module' in work_list[0])
-    self.assertEqual(work_list[0]['href'], 'urn:jio:allDocs?query=portal_type%3A%28%22Bar%22%20OR%20%22Foo%22%29%20AND%20simulation_state%3A%22draft%22')
+    self.assertEqual(work_list[0]['href'], 'urn:jio:allDocs?query=portal_type%3A%28Bar%20OR%20Foo%29%20AND%20simulation_state%3Adraft')
 
     self.assertEqual(result_dict['_debug'], "worklist")
 
