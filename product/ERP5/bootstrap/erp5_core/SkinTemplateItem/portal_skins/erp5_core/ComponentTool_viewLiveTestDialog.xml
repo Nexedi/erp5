@@ -75,7 +75,6 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>your_text_output</string>
                         <string>live_test_gadget</string>
                       </list>
                     </value>

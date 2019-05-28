@@ -1,10 +1,14 @@
+<!DOCTYPE html>
 <html>
   <head>
+    <title>Live test gadget</title>
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
     <script src="jio.js" type="text/javascript"></script>
     <script src="gadget_live_tests.js" type="text/javascript"></script>
   </head>
 
   <body>
-
+    <textarea class="live_test_output" rows="30" cols="120" spellcheck="false" style="font-family: monospace"></textarea>
   </body>
 </html>
