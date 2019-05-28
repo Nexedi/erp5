@@ -83,6 +83,7 @@
                       <list>
                         <string>my_int_offset_index</string>
                         <string>my_string_offset_index</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
