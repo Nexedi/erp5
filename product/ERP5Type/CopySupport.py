@@ -365,8 +365,8 @@ class CopyContainer:
         except AttributeError:
           pass
         else:
-          # Make sure there is not activity for this object
-          self.flushActivity(invoke=0)
+          # Cleanup any failed and spawned-during-current-transaction activities for this document.
+          self.flushActivity(invoke=0, only_safe=True)
           uid = getattr(self,'uid',None)
           if uid is None:
             return
