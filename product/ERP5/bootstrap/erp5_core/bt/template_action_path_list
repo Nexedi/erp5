@@ -145,6 +145,7 @@ Template Tool | jump_trash_bins
 Template Tool | update
 Template Tool | upgrade_from_repository
 Template Tool | view
+Test Component | run_live_test
 Test Component | view
 Trash Bin | jump_bt5
 Trash Bin | view
