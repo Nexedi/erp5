@@ -806,7 +806,7 @@ CREATE TABLE %s (
       self._log(WARNING,
         'Exception during notification phase of finalizeMessageExecution')
 
-  def flush(self, activity_tool, object_path, invoke=0, method_id=None, **kw):
+  def flush(self, activity_tool, object_path, invoke=0, method_id=None, only_safe=False, **kw):
     """
       object_path is a tuple
     """
@@ -843,6 +843,8 @@ CREATE TABLE %s (
     db = activity_tool.getSQLConnection()
     for line in self._getMessageList(db, path=path,
         **({'method_id': method_id} if method_id else {})):
+      if only_safe and line.processing_node > -2:
+        continue
       uid_list.append(line.uid)
       if invoke and line.processing_node <= 0:
         invoke(Message.load(line.message, uid=line.uid, line=line))
