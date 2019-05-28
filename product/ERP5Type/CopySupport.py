@@ -365,8 +365,6 @@ class CopyContainer:
         except AttributeError:
           pass
         else:
-          # Make sure there is not activity for this object
-          self.flushActivity(invoke=0)
           uid = getattr(self,'uid',None)
           if uid is None:
             return

@@ -27,22 +27,121 @@
 #
 ##############################################################################
 
+from functools import partial
+import httplib
 from random import randint
 import sys
+import threading
+import traceback
 import unittest
-import httplib
+import six
 from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from Acquisition import aq_base
 from DateTime import DateTime
 from _mysql_exceptions import ProgrammingError
 from OFS.ObjectManager import ObjectManager
+from Products.CMFActivity import ActivityTool
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import LogInterceptor, createZODBPythonScript, todo_erp5, getExtraSqlConnectionStringList
 from Products.PageTemplates.Expressions import getEngine
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 from Testing import ZopeTestCase
 from zLOG import LOG
+
+def format_stack(thread=None):
+  frame_dict = sys._current_frames()
+  if thread is not None:
+    thread_id = thread.ident
+    frame_dict = {
+      thread_id: frame_dict[thread_id],
+    }
+  frame = None
+  try:
+    return ''.join((
+      'Thread %s\n    %s' % (
+        thread_id,
+        '     '.join(traceback.format_stack(frame)),
+      )
+      for thread_id, frame in frame_dict.iteritems()
+    ))
+  finally:
+    del frame, frame_dict
+
+class TransactionThread(threading.Thread):
+  """
+  Run payload(portal_value=portal_value) within a separate transaction.
+  Note: because of transaction isolation, given portal_value will be a
+  different instance of the same persistent object.
+
+  Instances of this class may be used as a context manager to manage thread
+  lifespam, especially to be properly informed of any exception which happened
+  during thread's life. In which case, join_timeout is used upon context exit.
+  """
+  def __init__(self, portal_value, payload, join_timeout=10):
+    super(TransactionThread, self).__init__()
+    self.daemon = True
+    self.zodb = portal_value._p_jar.db()
+    self.root_physical_path = portal_value.getPhysicalPath()
+    self.payload = payload
+    self.exception = None
+    self.join_timeout = join_timeout
+
+  def run(self):
+    try:
+      # Get a new portal, in a new transactional connection bound to default
+      # transaction manager (which should be the threaded transaction manager).
+      portal_value = self.zodb.open().root()['Application'].unrestrictedTraverse(
+        self.root_physical_path,
+      )
+      # Trigger ERP5Site magic
+      portal_value.getSiteManager()
+      # Trigger skin magic
+      portal_value.changeSkin(None)
+      # Login
+      newSecurityManager(None, portal_value.acl_users.getUser('ERP5TypeTestCase'))
+      self.payload(portal_value=portal_value)
+    except Exception as self.exception:
+      if six.PY2:
+        self.exception.__traceback__ = sys.exc_info()[2]
+
+  def join(self, *args, **kw):
+    super(TransactionThread, self).join(*args, **kw)
+    if not self.is_alive():
+      exception = self.exception
+      # Break reference cycle:
+      # run frame -> self -> exception -> __traceback__ -> run frame
+      # Not re-raising on subsequent calls is kind of a bug, but it's really up
+      # to caller to either not ignore exceptions or keep them around.
+      self.exception = None
+      if exception is not None:
+        if six.PY3:
+          raise exception
+        six.reraise(exception, None, exception.__traceback__)
+
+  def __enter__(self):
+    self.start()
+    return self
+
+  def __exit__(self, exc_type, exc_val, exc_tb):
+    try:
+      self.join(self.join_timeout)
+      # Note: if context was interrupted by an exception, being unable to join
+      # the thread may be unavoidable (ex: context could not signal blocked
+      # thread), in which case this assertion will be mostly useless noise.
+      # But conditionally ignoring this seems worse.
+      assert not self.is_alive(), format_stack(self)
+    except Exception as join_exc_val:
+      if exc_val is None:
+        # No exception from context: just propagate exception
+        raise
+      # Both an exception from context and an exception in thread
+      if six.PY3:
+        # PY3: "raise join_exc_val from exc_val"
+        six.raise_from(join_exc_val, exc_val)
+      # PY2, handle our exception ourselves and let interpreter reraise
+      # context's.
+      traceback.print_exc()
 
 class IndexableDocument(ObjectManager):
   # This tests uses a simple ObjectManager, but ERP5Catalog only
@@ -229,6 +328,66 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Now delete things is made with activities
     self.checkRelativeUrlNotInSQLPathList(path_list)
     self.tic()
+    self.checkRelativeUrlNotInSQLPathList(path_list)
+    # Now delete document while its indexation is running
+    # (both started and not committed yet).
+    # First, create a person but do not index it.
+    person = person_module.newContent(id='4', portal_type='Person')
+    path_list = [person.getRelativeUrl()]
+    self.commit()
+    self.checkRelativeUrlNotInSQLPathList(path_list)
+    rendez_vous = threading.Event()
+    unblock_activity = threading.Event()
+    # Prepare an isolated transaction to act as one activity node.
+    def runValidablePendingActivities(portal_value, node_id):
+      """
+      Validate messages once, execute whatever is immediately executable.
+      """
+      activity_tool = portal_value.portal_activities
+      activity_tool.distribute()
+      # XXX: duplicate ActivityTool.tic, without locking as we are being
+      # multiple activity nodes in a single process.
+      for activity in ActivityTool.activity_dict.itervalues():
+        while not activity.dequeueMessage(activity_tool, node_id, ()):
+          pass
+    # Monkey-patch catalog to synchronise between main thread and the
+    # isolated transaction.
+    catalog_tool_class = self.portal.portal_catalog.__class__
+    orig_catalogObjectList = catalog_tool_class.catalogObjectList
+    def catalogObjectList(*args, **kw):
+      # Note: rendez-vous/unblock_activity *before* modifying tables, otherwise
+      # unindexation's synchronous catalog update will deadlock:
+      #   unindexation UPDATE -> indexation UPDATE -> unblock_activity -> unindexation commit
+      rendez_vous.set()
+      assert unblock_activity.wait(10), format_stack()
+      orig_catalogObjectList(*args, **kw)
+    catalog_tool_class.catalogObjectList = catalogObjectList
+    try:
+      # Let pending activities (indexation) start.
+      with TransactionThread(
+        portal_value=self.portal,
+        payload=partial(runValidablePendingActivities, node_id=2),
+      ):
+        # Wait until indexation is indeed initiated.
+        assert rendez_vous.wait(10), format_stack()
+        # Delete object, which will try to modify catalog content and spawn
+        # unindexation activity.
+        person_module.manage_delObjects(ids=['4'])
+        self.commit()
+        # Try to run this activity. It should not run, as it must wait on
+        # indexation to be over.
+        runValidablePendingActivities(self.portal, 1)
+        # Let indexation carry on, it is still able to access the object.
+        unblock_activity.set()
+    finally:
+      # Un-monkey-patch.
+      catalog_tool_class.catalogObjectList = orig_catalogObjectList
+    # Document must be indexed: unindexation must have waited for indexation
+    # to finish, so runValidablePendingActivities(..., 1) must have been
+    # a no-op.
+    self.checkRelativeUrlInSQLPathList(path_list)
+    self.tic()
+    # And now it's gone.
     self.checkRelativeUrlNotInSQLPathList(path_list)
 
   def test_04_SearchFolderWithDeletedObjects(self):

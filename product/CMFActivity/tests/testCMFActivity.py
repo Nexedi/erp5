@@ -1125,6 +1125,8 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def testTryUserNotificationOnActivityFailure(self, activity):
     message_list = self.portal.MailHost._message_list
     del message_list[:]
+    portal_activities = self.portal.portal_activities
+    countMessage = portal_activities.countMessage
     obj = self.portal.organisation_module.newContent(portal_type='Organisation')
     self.tic()
     def failingMethod(self): raise ValueError('This method always fails')
@@ -1140,13 +1142,16 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.assertIn("Module %s, line %s, in failingMethod" % (
         __name__, inspect.getsourcelines(failingMethod)[1]), mail)
       self.assertIn("ValueError:", mail)
+      portal_activities.manageClearActivities()
       # MESSAGE_NOT_EXECUTABLE
-      obj.getParentValue()._delObject(obj.getId())
+      obj_path = obj.getPath()
       obj.activate(activity=activity).failingMethod()
       self.commit()
-      self.assertTrue(obj.hasActivity())
+      obj.getParentValue()._delObject(obj.getId())
+      self.commit()
+      self.assertGreater(countMessage(path=obj_path), 0)
       self.tic()
-      self.assertFalse(obj.hasActivity())
+      self.assertEqual(countMessage(path=obj_path), 0)
       self.assertFalse(message_list)
     finally:
       del Organisation.failingMethod
