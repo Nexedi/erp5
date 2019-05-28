@@ -77,7 +77,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>data_chunk=None, data_stream=None, bucket_reference=None, out_data_stream=None</string> </value>
+            <value> <string>data_chunk, out_stream={}</string> </value>
         </item>
         <item>
             <key> <string>comment</string> </key>

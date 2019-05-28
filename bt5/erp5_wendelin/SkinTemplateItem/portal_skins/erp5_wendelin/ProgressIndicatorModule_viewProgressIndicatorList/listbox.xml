@@ -85,6 +85,14 @@
                           <string>string_offset_index</string>
                           <string>String Offset</string>
                         </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

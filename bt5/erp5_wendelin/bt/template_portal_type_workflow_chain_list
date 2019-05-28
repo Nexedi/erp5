@@ -3,8 +3,10 @@ Data Acquisition Unit | validation_workflow
 Data Aggregation Unit | edit_workflow
 Data Aggregation Unit | validation_workflow
 Data Analysis Line | edit_workflow
+Data Analysis | data_refresh_workflow
 Data Analysis | data_simulation_workflow
 Data Analysis | edit_workflow
+Data Array Line | edit_workflow
 Data Array | edit_workflow
 Data Array | validation_workflow
 Data Bucket Stream | data_stream_interaction_workflow
@@ -18,6 +20,9 @@ Data License | edit_workflow
 Data License | validation_workflow
 Data Operation | edit_workflow
 Data Operation | validation_workflow
+Data Order Line | edit_workflow
+Data Order | data_simulation_workflow
+Data Order | edit_workflow
 Data Product | edit_workflow
 Data Product | validation_workflow
 Data Release | edit_workflow
@@ -37,5 +42,6 @@ Data Transformation | validation_workflow
 Ingestion Policy | edit_workflow
 Ingestion Policy | validation_workflow
 Progress Indicator | edit_workflow
+Progress Indicator | validation_workflow
 Sensor | edit_workflow
 Sensor | validation_workflow
