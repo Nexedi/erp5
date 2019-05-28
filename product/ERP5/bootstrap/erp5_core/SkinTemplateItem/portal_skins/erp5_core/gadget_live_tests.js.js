@@ -4,15 +4,6 @@
   "use strict";
 
   rJS(window)
-    .setState({
-      first_call: false,
-      last_call: false,
-      data_size: 0,
-      test_running: false,
-      continue_loop: true,
-      paused: false
-    })
-
     .declareMethod('render', function (options) {
       return this.changeState({
         test_list: options.test_list,
@@ -21,12 +12,18 @@
         verbose: options.verbose,
         run_test_url: options.run_test_url,
         read_test_url: options.read_test_url,
-        first_call: true
+        // Reset everything on render
+        render_timestamp: new Date().getTime(),
+        last_call: false,
+        data_size: 0,
+        test_running: false,
+        continue_loop: true,
+        paused: false
       });
     })
 
     .onStateChange(function (modification_dict) {
-      if (modification_dict.hasOwnProperty('first_call')) {
+      if (modification_dict.hasOwnProperty('render_timestamp')) {
         return this.triggerLiveTest();
       }
     })
@@ -39,6 +36,9 @@
       form_data.append("run_only", gadget.state.run_only);
       form_data.append("debug", gadget.state.debug);
       form_data.append("verbose", gadget.state.verbose);
+
+      // Reset textarea content
+      gadget.element.querySelector('textarea').value = '';
 
       return new RSVP.Queue()
         .push(function () {
