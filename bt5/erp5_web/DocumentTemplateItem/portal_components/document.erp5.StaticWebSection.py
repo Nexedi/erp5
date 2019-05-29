@@ -34,21 +34,10 @@ from OFS.Traversable import NotFound
 from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixin
 from Products.ERP5.Document.WebSection import WebSection
 from Products.ERP5Type import Permissions
-from Persistence import Persistent
 
 from webdav.NullResource import NullResource
 
 MARKER = []
-
-class StaticWebSectionTraversalHook(Persistent):
-  """Traversal hook to change the skin selection for this websection.
-  """
-  def __call__(self, container, request):
-    if not request.get('ignore_layout', None):
-      # If a skin selection is defined in this web section, change the skin now.
-      skin_selection_name = container.getSkinSelectionName()
-      if skin_selection_name:# and request.get('portal_skin', None) is None:
-        container.getPortalObject().changeSkin(skin_selection_name)
 
 class StaticWebSection(WebSection):
   """
@@ -59,11 +48,6 @@ class StaticWebSection(WebSection):
   portal_type = 'Static Web Section'
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  def _getTraversalHookClass(self):
-    return StaticWebSectionTraversalHook
-
-  _traversal_hook_class = StaticWebSectionTraversalHook
 
   def getExtensibleContent(self, request, name):
     stack = request['TraversalRequestNameStack']
