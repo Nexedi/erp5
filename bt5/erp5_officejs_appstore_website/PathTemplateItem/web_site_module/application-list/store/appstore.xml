@@ -204,7 +204,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="WebSectionTraversalHook" module="Products.ERP5.Document.WebSection"/>
+      <global name="StaticWebSectionTraversalHook" module="erp5.component.document.erp5_version.StaticWebSection"/>
     </pickle>
     <pickle>
       <dictionary/>
@@ -352,7 +352,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.19266.58629.39680</string> </value>
+                <value> <string>975.65257.52010.52309</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -370,7 +370,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1548838110.59</float>
+                        <float>1559134964.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
