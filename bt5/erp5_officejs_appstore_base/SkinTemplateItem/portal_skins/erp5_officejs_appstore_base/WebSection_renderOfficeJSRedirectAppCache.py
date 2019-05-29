@@ -10,7 +10,7 @@ if REQUEST.getHeader('If-Modified-Since', '') == web_section.getModificationDate
   return ""
 
 response.setHeader('Content-Type', 'text/cache-manifest')
-response.setHeader('Cache-Control', 'max-age=0, public, must-revalidate')
+response.setHeader('Cache-Control', 'max-age=600, stale-while-revalidate=360000, stale-if-error=31536000, public')
 
 return """CACHE MANIFEST
 # %s + hash""" % context.getLayoutProperty("configuration_latest_version", default="development")
