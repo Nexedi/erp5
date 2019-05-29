@@ -451,7 +451,8 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
     def _edit(self, **kw):
       # XXX it is unclear if we should keep this behavior in other potential subclasses.
       # Probably yes.
-      if self.getPortalType() in ('Web Section', 'Web Site'):
+      if self.getPortalType() in ('Static Web Section', 'Static Web Site',
+                                  'Web Section', 'Web Site'):
         if getattr(self, '__before_traverse__', None) is None:
           # migrate beforeTraverse hook if missing
           handle = self.meta_type + '/' + self.getId()
