@@ -53,21 +53,21 @@ class IngestionPolicy(Folder):
     return self.portal_ingestion_policies.unpack(data)
   
   security.declarePublic('ingest')
-  def ingest(self, REQUEST, **kw):
+  def ingest(self, **kw):
     """
     Ingest chunk of raw data either from a Sensor or any of DAUs.
     """
-    environ = REQUEST.environ
+    environ = self.REQUEST.environ
     method = environ.pop('REQUEST_METHOD')
     try:
       if method != 'POST':
         raise BadRequest('Only POST request is allowed.')
-      if REQUEST._file is not None:
-        assert not REQUEST.form, REQUEST.form # Are cgi and HTTPRequest fixed ?
+      if self.REQUEST._file is not None:
+        assert not self.REQUEST.form, self.REQUEST.form # Are cgi and HTTPRequest fixed ?
         # Query string was ignored so parse again, faking a GET request.
         # Such POST is legit: https://stackoverflow.com/a/14710450
-        REQUEST.processInputs()
-        REQUEST.form['data_chunk'] = REQUEST._file.read()
+        self.REQUEST.processInputs()
+        self.REQUEST.form['data_chunk'] = self.REQUEST._file.read()
     finally:
       environ['REQUEST_METHOD'] = method
       
