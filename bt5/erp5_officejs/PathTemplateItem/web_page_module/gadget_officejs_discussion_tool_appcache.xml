@@ -231,6 +231,12 @@ gadget_erp5_page_handle_action.html\n
 gadget_erp5_page_handle_action.js\n
 gadget_officejs_common_utils.html\n
 gadget_officejs_common_utils.js\n
+gadget_erp5_page_create_document.html\n
+gadget_erp5_page_create_document.js\n
+gadget_erp5_page_add_element.html\n
+gadget_erp5_page_add_element.js\n
+\n
+#app routers\n
 gadget_officejs_discussion_tool_router.html\n
 gadget_officejs_text_editor_router.html\n
 \n
@@ -262,17 +268,21 @@ hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_o
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewReplyDialog&view=jio_view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_post%2FPostModule_newHTMLPost&view=jio_view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FPostModule_viewHTMLPostListAsJio&view=jio_view&appcache=1\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F1&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F2&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F3&view=view&appcache=1\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FPost%20Module&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FPost%20Module%2F1&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FPost%20Module%2F2&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FPost%20Module%2F3&view=view&appcache=1\n
 \n
 #text editor\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module%2F4&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module%2F5&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FWebPageModule_viewWebPageListAsJio&view=jio_view&appcache=1\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F9&view=view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FWebPage_viewAsJio&view=jio_view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FWebPageModule_newWebPage&view=jio_view&appcache=1\n
@@ -760,7 +770,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>975.65264.897.7441</string> </value>
+                <value> <string>976.2798.32101.13585</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -778,7 +788,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1558984889.91</float>
+                        <float>1559156188.36</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

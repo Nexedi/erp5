@@ -137,6 +137,10 @@
           form_definition = form_result.form_definition;
           form_definition.action_type = action_type;
           form_definition.title = action_title;
+          return gadget.jio_get("portal_types/" + portal_type);
+        })
+        .push(function (portal_type_definition) {
+          form_definition.allowed_sub_types_list = portal_type_definition.type_allowed_content_type_list;
           return gadget.checkMoreActions(portal_type, action_type);
         })
         .push(function (has_more_dict) {

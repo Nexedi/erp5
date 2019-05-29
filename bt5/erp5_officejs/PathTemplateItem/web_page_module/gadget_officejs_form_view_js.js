@@ -148,11 +148,10 @@
             page_title = options.doc.title;
           }
           erp5_document = form_json.erp5_document;
-          //add elements must be done via actions, so no 'add' button
-          /*if (erp5_document._links && erp5_document._links.action_object_new_content_action) {
-            url_for_parameter_list.push({command: 'change', options: erp5_document._links.action_object_new_content_action});
+          if (form_json.form_definition.allowed_sub_types_list.length > 0) {
+            url_for_parameter_list.push({command: 'change', options: {page: "create_document", jio_key: options.jio_key, portal_type: options.portal_type, allowed_sub_types_list: form_json.form_definition.allowed_sub_types_list}});
             add_url = true;
-          }*/
+          }
           return RSVP.all([
             this_gadget.getUrlForList(url_for_parameter_list),
             this_gadget.isDesktopMedia(),
