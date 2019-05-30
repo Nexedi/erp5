@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>movement_dict, reference</string> </value>
+            <value> <string>movement_dict, reference, modify=True</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

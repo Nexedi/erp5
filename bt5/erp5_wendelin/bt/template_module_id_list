@@ -9,6 +9,7 @@ data_ingestion_batch_module
 data_ingestion_module
 data_license_module
 data_operation_module
+data_order_module
 data_product_module
 data_release_module
 data_set_module

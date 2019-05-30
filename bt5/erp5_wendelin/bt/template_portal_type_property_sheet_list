@@ -16,6 +16,7 @@ Data Set | Predicate
 Data Stream | OffsetIndex
 Data Supply Line | DataMovement
 Data Supply | Version
+Data Transformation Operation Line | Aggregated
 Data Transformation Resource Line | Aggregated
 Device Configuration Type | TextDocument
 Device Configuration Type | Url
