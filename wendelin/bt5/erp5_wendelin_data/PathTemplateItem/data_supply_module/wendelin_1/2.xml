@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>out_data_stream</string> </value>
+            <value> <string>out_stream</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
