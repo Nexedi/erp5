@@ -21,7 +21,6 @@ This is a hotfix, it dynamically applies several patches to Zope.
 # Import from the Standard Library
 import logging
 import os
-from thread import allocate_lock, get_ident
 
 # Import from itools
 from .itools.i18n import AcceptLanguageType
@@ -29,9 +28,9 @@ from .itools.i18n import AcceptLanguageType
 # Import from Zope
 import Globals
 from ZPublisher import Publish
-from Products.ERP5Type.patches import WSGIPublisher
 from ZPublisher.HTTPRequest import HTTPRequest
-
+from zope.globalrequest import clearRequest, setRequest
+from zope.globalrequest import getRequest as get_request
 
 # Flag
 patch = False
@@ -58,37 +57,13 @@ logger = logging.getLogger('Localizer')
 # Also, we keep the get_request method in the Globals module for backwards
 # compatibility (with TranslationService for example).
 
-_requests = {}
-_requests_lock = allocate_lock()
-
-
-def get_request():
-    """Get a request object"""
-    return _requests.get(get_ident(), None)
-
 def get_new_publish(zope_publish):
     def publish(request, *args, **kwargs):
-        # Get the process id
-        ident = get_ident()
-
-        # Add the request object to the global dictionnary
-        with _requests_lock:
-            _requests[ident] = request
-
-        # Call the old publish
         try:
-            # Publish
+            setRequest(request)
             return zope_publish(request, *args, **kwargs)
         finally:
-            # Remove the request object.
-            # When conflicts occur the "publish" method is called again,
-            # recursively. In this situation the "_requests dictionary would
-            # be cleaned in the innermost call, hence outer calls find the
-            # request does not exist anymore. For this reason we check first
-            # wether the request is there or not.
-            if ident in _requests:
-                with _requests_lock:
-                    del _requests[ident]
+            clearRequest()
     return publish
 
 
@@ -97,16 +72,6 @@ if patch is False:
 
     # Apply the patch
     Publish.publish = get_new_publish(Publish.publish)
-    WSGIPublisher.publish = get_new_publish(WSGIPublisher.publish)
-
-    # Update WSGIPublisher.publish_module.__defaults__, otherwise it will use
-    # the unpatched WSGIPublisher.publish.
-    WSGIPublisher.publish_module.__defaults__ = (
-      WSGIPublisher.publish,
-      ) + WSGIPublisher.publish_module.__defaults__[1:]
-
-    # First import (it's not a refresh operation).
-    # We need to apply the patches.
     patch = True
 
     # Add to Globals for backwards compatibility
