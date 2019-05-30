@@ -94,7 +94,7 @@ class Test(ERP5TypeTestCase):
     # get related Data ingestion
     data_ingestion = data_supply.Base_getRelatedObjectList(portal_type='Data Ingestion')[0]
     self.assertNotEqual(None, data_ingestion)
-    data_ingestion_line = [x for x in data_ingestion.objectValues() if x.getReference() == 'out_data_stream'][0]
+    data_ingestion_line = [x for x in data_ingestion.objectValues() if x.getReference() == 'out_stream'][0]
 
     data_stream = data_ingestion_line.getAggregateValue()
     self.assertEqual('Data Stream', data_stream.getPortalType())

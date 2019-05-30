@@ -47,6 +47,9 @@
  <portal_type id="Data Supply Line">
   <item>DataMovement</item>
  </portal_type>
+ <portal_type id="Data Transformation Operation Line">
+  <item>Aggregated</item>
+ </portal_type>
  <portal_type id="Data Transformation Resource Line">
   <item>Aggregated</item>
  </portal_type>

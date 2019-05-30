@@ -2,6 +2,7 @@ portal = context.getPortalObject()
 operation = None
 use = None
 parameter_dict = {}
+context.checkConsistency(fixit=True)
 initial_product = context.getSpecialiseValue(portal_type="Data Transformation").getResourceValue()
 for analysis_line in context.objectValues(portal_type="Data Analysis Line"):
   resource = analysis_line.getResourceValue()
@@ -37,8 +38,14 @@ for analysis_line in context.objectValues(portal_type="Data Analysis Line"):
 script_id = operation.getScriptId()
 out = getattr(operation_analysis_line, script_id)(**parameter_dict)
 
-# only stop batch ingestions
-if use == "big_data/ingestion/batch":
-  context.stop()
+if out == 1:
+  context.activate(serialization_tag=str(context.getUid())).DataAnalysis_executeDataOperation()
+else:
+  # only stop batch ingestions
+  if use == "big_data/ingestion/batch":
+    context.stop()
+  # stop refresh
+  if context.getRefreshState() == "refresh_started":
+    context.stopRefresh()
 
 return out

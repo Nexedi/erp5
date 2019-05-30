@@ -117,12 +117,20 @@
                           <string>Client Project</string>
                         </tuple>
                         <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Start Date</string>
+                        </tuple>
+                        <tuple>
                           <string>delivery.stop_date</string>
                           <string>Stop Date</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>refresh_state_title</string>
+                          <string>Refresh State</string>
                         </tuple>
                       </list>
                     </value>
