@@ -4,13 +4,16 @@
   "use strict";
 
   rJS(window)
+    .declareAcquiredMethod('notifyChange', 'notifyChange')
     .declareMethod('render', function (options) {
       this.element.firstChild.value = options.value || "";
       this.element.firstChild.title = options.key;
       this.element.firstChild.setAttribute('data-name',
                                            options.key || "");
     })
-
+    .onEvent('change', function () {
+      return this.notifyChange();
+    })
     .declareMethod('getContent', function () {
       var input = this.element.firstChild,
         form_gadget = this,
