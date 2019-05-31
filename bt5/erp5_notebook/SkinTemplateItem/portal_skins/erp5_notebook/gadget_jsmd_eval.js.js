@@ -3,17 +3,6 @@
 (function (window) {
   "use strict";
 
-  function sideEffectDiv(sideEffectClass, reportSideEffect) {
-    // appends a side effect div to the side effect area
-    var div = document.createElement("div");
-    div.setAttribute("class", sideEffectClass);
-    if (reportSideEffect === undefined) {
-      div.setAttribute("style", "display:");
-    }
-    document.body.appendChild(div);
-    return div;
-  }
-
   var IODide = function createIODide() {
     var iodide = {
       output: {
@@ -49,6 +38,10 @@
     Module = {},
     packages,
     loadedPackages = [],
+    py_div_id_prefix = "py_div_id_",
+    py_div_id_count = 0,
+    py_div_id_count_2 = 0,
+    props = {},
     // Regexp for validating package name and URI
     package_name_regexp = '[a-z0-9_][a-z0-9_\-]*',
     package_uri_regexp = new RegExp('^https?://.*?(' + package_name_regexp + ').js$', 'i');
@@ -59,6 +52,20 @@
   IODide.prototype.addOutputHandler = function () {
     return;
   };
+
+  function sideEffectDiv(sideEffectClass, reportSideEffect) {
+    var div = document.getElementById(py_div_id_prefix + py_div_id_count_2),
+        pre = div.getElementsByTagName('pre')[0],
+        result = pre.getElementsByTagName('code')[0];
+
+    py_div_id_count_2 += 1;
+    div.removeChild(div.firstChild);
+    div.setAttribute("class", sideEffectClass);
+    if (reportSideEffect === undefined) {
+      div.setAttribute("style", "display:");
+    }
+    return div;
+  }
 
   // Copied from jio
   function ajax(param) {
@@ -419,24 +426,36 @@
       })
       .push(undefined, function(error) {
         console.log(error);
-      })
+      });
     return queue;
   }
 
   function renderCodeblock(result_text) {
+    if (result_text !== undefined) {
+      var div = document.getElementById(py_div_id_prefix + py_div_id_count_2),
+          pre = div.getElementsByTagName('pre')[0],
+          result = pre.getElementsByTagName('code')[0];
+
+      py_div_id_count_2 += 1;
+      result.innerHTML = result_text;
+    }
+  }
+
+  function addPyCellStub() {
     var div = document.createElement('div'),
       pre = document.createElement('pre'),
       result = document.createElement('code');
+    div.setAttribute("id", py_div_id_prefix + py_div_id_count);
+    py_div_id_count += 1;
+
     div.style.border = '1px solid #C3CCD0';
     div.style.margin = '40px 10px';
     div.style.paddingLeft = '10px';
 
-    if (result_text !== undefined) {
-      result.innerHTML = result_text;
-      pre.appendChild(result);
-      div.appendChild(pre);
-      document.body.appendChild(div);
-    }
+    result.innerHTML = "Loading pyodide";
+    pre.appendChild(result);
+    div.appendChild(pre);
+    document.body.appendChild(div);
   }
 
   function executePyCell(line_list) {
@@ -518,23 +537,22 @@
         // empty block, do nothing.
         return;
       }
-
-      var queue = new RSVP.Queue();
-
+      addPyCellStub();
       if (!is_pyodide_loaded) {
-        console.log("Loading pyodide");
-        queue.push(function () {
-          return initPyodide();
-        })
+        props.queue = new RSVP.Queue()
+          .push(function () {
+             return initPyodide();
+          })
           .push(function () {
             return pyodideLoadPackage('matplotlib');
           });
         is_pyodide_loaded = true;
       }
-      queue.push(function () {
+
+      props.queue.push(function () {
         return executePyCell(cell._line_list);
       });
-      return queue;
+      return;
     }
     return executeUnknownCellType(cell);
   }
@@ -557,6 +575,13 @@
     for (i = 0; i < len; i += 1) {
       queue.push(deferCellExecution(cell_list[i]));
     }
+
+    // Python packages loading and execution
+    queue
+      .push(function () {
+        return props.queue;
+    });
+
     return queue
       .push(function () {
         console.info('JSMD executed.');
