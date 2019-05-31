@@ -1,6 +1,6 @@
-/*global document, window, rJS, RSVP */
+/*global document, window, rJS, RSVP, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (document, window, rJS, RSVP) {
+(function (document, window, rJS, RSVP, ensureArray) {
   "use strict";
 
   function renderField(field_id, field_definition, document) {
@@ -36,7 +36,15 @@
     result.type = field_definition.type;
     result.key = field_id;
     if (document && document.hasOwnProperty(field_id)) {
-      result["default"] = document[field_id];
+      if (field_definition.type === "ListField") {
+        var item_list = ensureArray(document[field_id]).map(function (item) {
+          if (Array.isArray(item)) {return item; }
+          return [item, item];
+        });
+        result.items = item_list;
+      } else {
+        result["default"] = document[field_id];
+      }
     }
     return result;
   }
@@ -148,7 +156,7 @@
             page_title = options.doc.title;
           }
           erp5_document = form_json.erp5_document;
-          if (form_json.form_definition.allowed_sub_types_list.length > 0) {
+          if (form_json.form_definition.allowed_sub_types_list && form_json.form_definition.allowed_sub_types_list.length > 0) {
             url_for_parameter_list.push({command: 'change', options: {page: "create_document", jio_key: options.jio_key, portal_type: options.portal_type, allowed_sub_types_list: form_json.form_definition.allowed_sub_types_list}});
             add_url = true;
           }
@@ -212,4 +220,4 @@
         });
     });
 
-}(document, window, rJS, RSVP));
+}(document, window, rJS, RSVP, ensureArray));

@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars */
+/*global window, document, rJS, RSVP, Handlebars */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars) {
+(function (window, document, rJS, RSVP, Handlebars) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -77,6 +77,7 @@
     .declareMethod("render", function (options) {
       var gadget = this,
         allowed_sub_types_list = options.allowed_sub_types_list.split(","),
+        portal_type,
         document_title;
       return gadget.jio_get(options.jio_key)
         .push(function (document) {
@@ -86,32 +87,45 @@
           document_title = options.portal_type;
           return options.portal_type;
         })
-        // TODO: this gadget must load the form dialog to select the type of document
-        // somehow (a generic action?) get the path string:${object_url}/Base_viewNewContentDialog
-        // get corresponding form definition (only contains a select field)
-        // fill select field with allowed_sub_types_list
-        .push(function (portal_type) {
-          return gadget.getHTMLElementList(allowed_sub_types_list, options.jio_key, portal_type);
+        .push(function (portal_type_result) {
+          portal_type = portal_type_result;
+          // TODO: somehow (a generic action?) get the path string:${object_url}/Base_viewNewContentDialog
+          // for now hardcoded
+          // get corresponding form definition (only contains a select field)
+          return gadget.jio_get("portal_skins/erp5_hal_json_style/Base_viewNewContentDialog");
         })
-        .push(function (all_html_elements) {
-          return RSVP.all([
-            renderLinkList(gadget, "Create Document", "file", all_html_elements)
-          ]);
-        })
-        .push(function (translated_html_link_list) {
-          gadget.element.innerHTML = translated_html_link_list.join("\n");
-          return gadget.getUrlFor({command: 'change', options: {page: undefined}});
-        })
-        .push(function (back_url) {
-          return gadget.updateHeader({
-            page_title: document_title,
-            back_url: back_url
+        .push(function (form_result) {
+          form_result.form_definition.title = "Create Document";
+          return gadget.changeState({
+            doc: { title: document_title, portal_type: allowed_sub_types_list },
+            action_options: options,
+            child_gadget_url: 'gadget_erp5_pt_form_dialog.html',
+            form_type: 'dialog',
+            form_definition: form_result.form_definition,
+            view: "view"
           });
         });
     })
 
-    .declareMethod("triggerSubmit", function () {
-      return;
+    .onStateChange(function () {
+      var fragment = document.createElement('div'),
+        gadget = this;
+      while (this.element.firstChild) {
+        this.element.removeChild(this.element.firstChild);
+      }
+      this.element.appendChild(fragment);
+      return gadget.declareGadget("gadget_officejs_form_view.html", {element: fragment,
+                                                                     scope: 'fg'})
+        .push(function (form_view_gadget) {
+          return form_view_gadget.render(gadget.state);
+        });
+    })
+
+    .declareMethod('triggerSubmit', function () {
+      return this.getDeclaredGadget('fg')
+        .push(function (gadget) {
+          return gadget.triggerSubmit();
+        });
     });
 
-}(window, rJS, RSVP, Handlebars));
+}(window, document, rJS, RSVP, Handlebars));

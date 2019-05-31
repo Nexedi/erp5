@@ -115,6 +115,8 @@ CACHE MANIFEST\n
 # generated on Thu, 14 Jan 2019 11:55:33 +0000\n
 CACHE:\n
 \n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_hal_json_style%2FBase_viewNewContentDialog&view=jio_view&appcache=1\n
+\n
 #discussion tool\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view&appcache=1\n
 hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewReplyDialog&view=jio_view&appcache=1\n
@@ -301,7 +303,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1559155949.19</float>
+                        <float>1559314986.76</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
