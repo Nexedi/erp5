@@ -102,6 +102,8 @@ class TestInvalidationBug(ERP5TypeTestCase):
       "this unit test must be run with at least 2 ZEO clients"
 
     ### Prepare unit test, to minimize amount of work during critical section
+    ## make sure activity tool's OOBTree for family mapping is loaded before the test
+    _ = activity_tool.getCurrentNodeFamilyIdSet()
     ## url to create some content using another zope
     new_content_url = "http://ERP5TypeTestCase:@%s%s/Folder_create" % (
       node_list[0], self.portal.organisation_module.getPath())
