@@ -106,9 +106,24 @@ def sqltest_dict():
   _('retry')
   _('to_date', column="date", op="<=")
   _('uid')
-  _('from_date', column="date", op=">=")
-  _('from_priority', column="priority", op=">=")
-  _('above_uid', column="uid", op=">")
+  def renderAbovePriorityDateUid(value, render_string):
+    # Strictly dependent on _getMessageList's sort order: given a well-ordered
+    # list of values, rendered condition will match the immediate next row in
+    # that sort order.
+    priority, date, uid = value
+    assert isinstance(priority, no_quote_type)
+    assert isinstance(uid, no_quote_type)
+    return (
+        '(priority>%(priority)s OR (priority=%(priority)s AND '
+          '(date>%(date)s OR (date=%(date)s AND uid>%(uid)s))'
+        '))' % {
+        'priority': priority,
+        # render_datetime raises if "date" lacks date API, so no need to check
+        'date': render_string(render_datetime(date)),
+        'uid': uid,
+      }
+    )
+  sqltest_dict['above_priority_date_uid'] = renderAbovePriorityDateUid
   return sqltest_dict
 sqltest_dict = sqltest_dict()
 
@@ -414,9 +429,7 @@ CREATE TABLE %s (
           validated_count += distributable_count
           if validated_count >= MAX_VALIDATED_LIMIT:
             return
-      where_kw['from_priority'] = line.priority
-      where_kw['from_date'] = line.date
-      where_kw['above_uid'] = line.uid
+      where_kw['above_priority_date_uid'] = (line.priority, line.date, line.uid)
 
   def getReservedMessageList(self, db, date, processing_node, limit,
                              group_method_id=None, node_set=None):
