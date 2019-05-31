@@ -32,6 +32,7 @@ except ImportError: # BBB: ZODB < 4
   import cPickle
 import unittest
 import sys
+import mock
 
 import transaction
 from random import randint
@@ -3021,6 +3022,20 @@ return True''')
       method = getattr(person, 'providesICategoryAccessProvider', None)
       self.assertNotEquals(None, method)
       self.assertTrue(method())
+
+    def test_dynamic_accessor_mockable(self):
+      """Test dynamic accessors also work with mock and that
+      generally mock is usable in erp5 tests.
+      """
+      self._addProperty('Person',
+          'test_mocked_property',
+          elementary_type='string')
+      doc = self.portal.person_module.newContent(
+           portal_type='Person',
+           test_mocked_property='original')
+      with mock.patch('erp5.portal_type.Person.getTestMockedProperty', returned_value='mocked'):
+        self.assertEqual('mocked', doc.getTestMockedProperty())
+      self.assertEqual('original', doc.getTestMockedProperty())
 
     def test_type_provider(self):
       self.portal.newContent(id='dummy_type_provider', portal_type="Types Tool")
