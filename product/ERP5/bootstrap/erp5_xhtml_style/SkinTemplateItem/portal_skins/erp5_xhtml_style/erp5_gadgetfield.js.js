@@ -88,6 +88,17 @@
       return this.element.querySelector('form').querySelector('[type="submit"]').click();
     })
 
+    // Comply to interface_translation.html, but without actually translating.
+    .allowPublicAcquisition('translate', function (argument_list) {
+      return argument_list[0];
+    })
+    .allowPublicAcquisition('getTranslationList', function (argument_list) {
+      return argument_list[0];
+    })
+    .allowPublicAcquisition('translateHtml', function (argument_list) {
+      return argument_list[0];
+    })
+
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
