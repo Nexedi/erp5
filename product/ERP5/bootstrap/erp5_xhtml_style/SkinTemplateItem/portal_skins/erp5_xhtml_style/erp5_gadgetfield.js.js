@@ -74,6 +74,8 @@
     /////////////////////////////////////////////////////////////////
     .allowPublicAcquisition('notifyChange',
                             function () {
+       // This flag is used for erp5.js's onBeforeUnload warning for unsaved changes.
+        window.changed = true;
         return;
       })
 
