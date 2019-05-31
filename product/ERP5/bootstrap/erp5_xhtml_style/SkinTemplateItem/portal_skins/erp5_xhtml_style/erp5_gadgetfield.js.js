@@ -74,6 +74,8 @@
     /////////////////////////////////////////////////////////////////
     .allowPublicAcquisition('notifyChange',
                             function () {
+       // This flag is used for erp5.js's onBeforeUnload warning for unsaved changes.
+        window.changed = true;
         return;
       })
 
@@ -84,6 +86,17 @@
 
     .allowPublicAcquisition('notifySubmit', function () {
       return this.element.querySelector('form').querySelector('[type="submit"]').click();
+    })
+
+    // Comply to interface_translation.html, but without actually translating.
+    .allowPublicAcquisition('translate', function (argument_list) {
+      return argument_list[0];
+    })
+    .allowPublicAcquisition('getTranslationList', function (argument_list) {
+      return argument_list[0];
+    })
+    .allowPublicAcquisition('translateHtml', function (argument_list) {
+      return argument_list[0];
     })
 
     /////////////////////////////////////////////////////////////////

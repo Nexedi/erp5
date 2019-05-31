@@ -838,6 +838,10 @@ body[dir="rtl"] .logged_in_as {
   background-image: url('images/exec16.png');
 }
 
+.bottom_actions {
+  margin-bottom: 1em;
+}
+
 .document .actions {
   position: relative;
   float: left;
