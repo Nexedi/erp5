@@ -31,6 +31,9 @@ def finalize(self):
     if self.status == 304:
       headers.pop('content-length', None)
 
+    # Force the removal of "hop-by-hop" headers
+    headers.pop('Connection', None)
+
     # set 204 (no content) status if 200 and response is empty
     # and not streaming
     if ('content-type' not in headers and
