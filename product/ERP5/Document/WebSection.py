@@ -52,7 +52,9 @@ class WebSectionTraversalHook(Persistent):
     if not request.get('ignore_layout', None):
       # If a skin selection is defined in this web section, change the skin now.
       skin_selection_name = container.getSkinSelectionName()
-      if skin_selection_name and request.get('portal_skin', None) is None:
+      if skin_selection_name and \
+         ((request.get('portal_skin', None) is None) or \
+          container.getPortalType().startswith('Static Web S')):
         container.getPortalObject().changeSkin(skin_selection_name)
 
 class WebSection(Domain, DocumentExtensibleTraversableMixin):
