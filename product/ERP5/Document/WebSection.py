@@ -44,6 +44,7 @@ from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 # Global keys used for URL generation
 WEBSECTION_KEY = 'web_section_value'
 MARKER = []
+WEB_SECTION_PORTAL_TYPE_TUPLE = ('Web Section', 'Web Site')
 
 class WebSectionTraversalHook(Persistent):
   """Traversal hook to change the skin selection for this websection.
@@ -54,7 +55,7 @@ class WebSectionTraversalHook(Persistent):
       skin_selection_name = container.getSkinSelectionName()
       if skin_selection_name and \
          ((request.get('portal_skin', None) is None) or \
-          container.getPortalType().startswith('Static Web S')):
+          container.getPortalType() not in WEB_SECTION_PORTAL_TYPE_TUPLE):
         container.getPortalObject().changeSkin(skin_selection_name)
 
 class WebSection(Domain, DocumentExtensibleTraversableMixin):
@@ -453,8 +454,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
     def _edit(self, **kw):
       # XXX it is unclear if we should keep this behavior in other potential subclasses.
       # Probably yes.
-      if self.getPortalType() in ('Static Web Section', 'Static Web Site',
-                                  'Web Section', 'Web Site'):
+      if self.getPortalType() in WEB_SECTION_PORTAL_TYPE_TUPLE:
         if getattr(self, '__before_traverse__', None) is None:
           # migrate beforeTraverse hook if missing
           handle = self.meta_type + '/' + self.getId()
