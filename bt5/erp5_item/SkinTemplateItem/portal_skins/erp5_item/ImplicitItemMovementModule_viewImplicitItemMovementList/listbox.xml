@@ -17,7 +17,6 @@
                 <string>editable_columns</string>
                 <string>portal_types</string>
                 <string>selection_name</string>
-                <string>sort</string>
                 <string>title</string>
               </list>
             </value>
@@ -197,17 +196,6 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>implicit_item_movement_module_selection</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>title</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
