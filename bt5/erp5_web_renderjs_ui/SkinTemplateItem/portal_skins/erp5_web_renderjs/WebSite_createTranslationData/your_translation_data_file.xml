@@ -55,6 +55,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -63,6 +67,10 @@
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
                 </item>
               </dictionary>
             </value>
@@ -107,7 +115,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [ (x,x) for x in here.Base_getListFileFromAppcache()]</string> </value>
+            <value> <string>python: [ (x,x) for x in here.Base_getTranslationSourceFileList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
