@@ -8,10 +8,10 @@ import traceback
 import thread
 import re
 import sys, os, errno, time, socket
+from functools import partial
 from StringIO import StringIO
 from zLOG import LOG, INFO
 
-from ZServer.PubCore import handle
 from ZPublisher.BaseRequest import BaseRequest
 from ZPublisher.BaseResponse import BaseResponse
 from ZPublisher.HTTPRequest import HTTPRequest
@@ -38,21 +38,46 @@ class TimerServer:
             '\tInterval: %s seconds.\n'%(time.ctime(time.time()), interval))
 
     def run(self):
-        # wait until the zhttp_server exist in socket_map
-        # because TimerService has to be started after the Zope HTTPServer
-        from asyncore import socket_map
-        ip = port = ''
-        while 1:
-            time.sleep(5)
-            for k, v in socket_map.items():
-                if hasattr(v, 'addr'):
+        try:
+            zopewsgi = sys.modules['Products.ERP5.bin.zopewsgi']
+        except KeyError:
+            # wait until the zhttp_server exist in socket_map
+            # because TimerService has to be started after the Zope HTTPServer
+            from asyncore import socket_map
+            ip = port = ''
+            while 1:
+                time.sleep(5)
+                for k, v in socket_map.items():
+                    if hasattr(v, 'addr'):
                         # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
                         type = str(getattr(v, '__class__', 'unknown'))
                         if type == 'ZServer.HTTPServer.zhttp_server':
                             ip, port = v.addr
                             break
-            if port:
-                break
+                if port:
+                    break
+            from ZServer.PubCore import handle
+        else:
+            while 1:
+                time.sleep(5)
+                try:
+                    server = zopewsgi.server
+                    break
+                except AttributeError:
+                    pass
+
+            ip, port = server.addr
+            start_response = lambda *_: None
+
+            class handle(object):
+                def __init__(self, module_name, request, response):
+                    self.service = partial(zopewsgi.publish_module,
+                        request.environ,
+                        start_response,
+                        _module_name=module_name,
+                        _request=request,
+                        _response=response)
+                    server.add_task(self)
 
         if ip == '0.0.0.0':
           ip = socket.gethostbyname(socket.gethostname())
@@ -99,6 +124,9 @@ class TimerServer:
 
 
 class TimerResponse(BaseResponse):
+
+    after_list = ()
+
     def _finish(self):
         pass
 
@@ -107,6 +135,9 @@ class TimerResponse(BaseResponse):
 
     def _unauthorized(self):
         pass
+
+    def finalize(self):
+        return None, None
 
     # This is taken from ZPublisher.HTTPResponse
     # I don't think it's safe to make TimerResponse a subclass of HTTPResponse,
@@ -148,6 +179,7 @@ class TimerRequest(HTTPRequest):
         env['SERVER_PORT'] = ''
         env['REMOTE_ADDR'] = ''
         env['GATEWAY_INTERFACE'] = 'CGI/1.1'
+        env['SERVER_PROTOCOL'] = 'HTTP/1.0'
 
         env['PATH_INFO']= '/Control_Panel/timer_service/process_timer'
         return env
