@@ -22,6 +22,7 @@
 
 # Load all monkey patches
 from Products.ERP5Type.patches import backports
+from Products.ERP5Type.patches import WSGIPublisher
 from Products.ERP5Type.patches import HTTPRequest
 from Products.ERP5Type.patches import AccessControl_patch
 from Products.ERP5Type.patches import Restricted
