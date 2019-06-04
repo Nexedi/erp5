@@ -351,7 +351,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.ru *.erp5.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_jio_document_page_gadget_url</string> </key>
@@ -650,7 +650,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>admin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -664,7 +664,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>970.26748.61427.10154</string> </value>
+                <value> <string>975.43773.52403.63470</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -682,8 +682,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1537967626.41</float>
-                        <string>UTC</string>
+                        <float>1561472219.01</float>
+                        <string>GMT+3</string>
                       </tuple>
                     </state>
                   </object>

@@ -68,7 +68,7 @@
         .push(function (jio_gadget) {
           return jio_gadget.createJio({
             type: "cloudooo",
-            url: "https://cloudooo.erp5.net/",
+            url: "https://d1.erp5.ru/cloudooo",
             sub_storage: {
               type: "memory"
             }
