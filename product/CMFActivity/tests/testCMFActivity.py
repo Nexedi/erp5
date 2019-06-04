@@ -41,7 +41,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Base import Base
 from Products.CMFActivity import ActivityTool
-from Products.CMFActivity.Activity.SQLBase import INVOKE_ERROR_STATE
+from Products.CMFActivity.Activity.SQLBase import INVOKE_ERROR_STATE, DEPENDENCY_IGNORED_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Activity.SQLDict import SQLDict
 from Products.CMFActivity.Errors import ActivityPendingError, ActivityFlushError
@@ -1541,6 +1541,28 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # CMFActivity
     organisation.activate(activity=activity, serialization_tag=None).getTitle()
     self.tic()
+
+  @for_each_activity
+  def testIgnoreForDependencyIfFailed(self, activity):
+    organisation = self.portal.organisation_module.newContent(portal_type='Organisation')
+    self.tic()
+    activity_tool = self.getActivityTool()
+    organisation.activate(activity=activity, tag='test', ignore_for_dependency_if_failed=True).nonExistingMethod()
+    organisation.activate(activity=activity, after_tag='test').getTitle()
+    self.commit()
+    self.ticOnce()
+    for message in activity_tool.getMessageList():
+      if message.method_id == 'nonExistingMethod':
+        self.assertEqual(message.processing_node, 0)
+        self.assertEqual(message.retry, 1)
+      else:
+        self.assertEqual(message.processing_node, -1)
+        self.assertEqual(message.retry, 0)
+    self.assertRaises(RuntimeError, self.tic)
+    message, = activity_tool.getMessageList()
+    self.assertEqual(message.method_id, 'nonExistingMethod')
+    self.assertEqual(message.processing_node, DEPENDENCY_IGNORED_ERROR_STATE)
+    self.deleteMessageList(activity, [message])
 
   def test_110_testAbsoluteUrl(self):
     # Tests that absolute_url works in activities. The URL generation is based
