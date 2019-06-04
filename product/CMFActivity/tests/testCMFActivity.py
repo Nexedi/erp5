@@ -1176,7 +1176,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         self.flushAllActivities(silent=1, loop_size=100)
         message, = activity_tool.getMessageList(
           activity=activity, method_id='failingMethod')
-        self.assertEqual(message.processing_node, -2)
+        self.assertEqual(message.processing_node, INVOKE_ERROR_STATE)
         self.assertTrue(message.retry)
         activity_tool.manageDelete(message.uid, activity)
         self.commit()
