@@ -168,7 +168,16 @@
       caches.open(CACHE_NAME)
         .then(function (cache) {
           // Add all offline dependencies to the cache
-          return cache.addAll(REQUIRED_FILES);
+          return Promise.all(
+            REQUIRED_FILES
+              .map(function (url) {
+                /* Return a promise that's fulfilled
+                   when each url is cached.
+                */
+                // Use cache.add because safari does not support cache.addAll.
+                return cache.add(url);
+              })
+          )
         })
         .then(function () {
           // At this point everything has been cached
