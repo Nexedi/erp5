@@ -1,5 +1,9 @@
 portal_categories/payment_mode/**
-portal_categories/region/**
+portal_categories/region/afrique
+portal_categories/region/afrique/**
+portal_categories/region/europe
+portal_categories/region/united_states
+portal_categories/region/france
 portal_categories/role/client
 portal_categories/role/ubercart_delivery
 portal_integrations/ubercart/Catalog**
