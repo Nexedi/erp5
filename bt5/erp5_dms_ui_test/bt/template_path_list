@@ -1,5 +1,4 @@
 document_module/test_pdf
-portal_categories/classification
 portal_categories/classification/**
 portal_tests/dms_zuite
 portal_tests/dms_zuite/**
