@@ -78,20 +78,21 @@
     .onLoop(function () {
       var data_textarea = this.element.querySelector('textarea'),
         gadget = this,
-        state_dict = {};
+        state_dict = {},
+        queue = new RSVP.Queue();
 
       if (gadget.state.paused) {
-        return;
+        return queue;
       }
       if (!gadget.state.continue_loop) {
         if (gadget.state.last_call) {
           // Stop reading test output
-          return;
+          return queue;
         }
         state_dict.last_call = true;
       }
 
-      return new RSVP.Queue()
+      return queue
         .push(function () {
           return jIO.util.ajax({
             type: "GET",
