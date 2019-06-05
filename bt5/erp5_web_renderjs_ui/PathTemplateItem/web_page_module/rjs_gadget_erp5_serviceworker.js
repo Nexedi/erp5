@@ -161,7 +161,6 @@
       new URL(REQUIRED_FILES[i], location.toString()).toString()
     );
   }
-
   self.addEventListener('install', function (event) {
     // Perform install step:  loading each required file into cache
     event.waitUntil(
@@ -198,7 +197,10 @@
     return event.respondWith(
       caches.open(CACHE_NAME)
         .then(function (cache) {
-          return cache.match(event.request);
+          // Don't give request object itself. Firefox's Cache Storage
+          // does not work properly when VARY contains Accept-Language.
+          // Give URL string instead, then cache.match works on both Firefox and Chrome.
+          return cache.match(event.request.url);
         })
         .then(function (response) {
           // Cache hit - return the response from the cached version
