@@ -178,10 +178,6 @@
               })
           )
         })
-        .then(function () {
-          // At this point everything has been cached
-          return self.skipWaiting();
-        })
     );
   });
 
@@ -241,9 +237,6 @@
                 return caches.delete(key);
               })
           );
-        })
-        .then(function () {
-          self.clients.claim();
         })
     );
   });
