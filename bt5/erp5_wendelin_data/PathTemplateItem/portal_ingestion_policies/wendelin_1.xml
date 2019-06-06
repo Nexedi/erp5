@@ -54,13 +54,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>wendelin-fluentd-ingestion</string> </value>
+            <value> <string>wendelin-default-ingestion</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>An example Ingestion Policy.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -76,7 +74,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>wendelin fluentd ingestion</string> </value>
+            <value> <string>wendelin-default-ingestion</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -255,6 +253,51 @@
                     <state>
                       <tuple>
                         <float>1504785433.36</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>976.13678.57110.49271</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1559822283.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
