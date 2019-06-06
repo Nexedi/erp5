@@ -1,10 +1,11 @@
 /*jslint indent: 2*/
-/*global self, caches, fetch, Promise, URL, location*/
-(function (self, caches, fetch, Promise, URL, location) {
+/*global self, caches, fetch, Promise, URL, location, Response*/
+(function (self, caches, fetch, Promise, URL, location, Response) {
   "use strict";
 
   var prefix = location.toString() + '_',
-    CACHE_NAME = prefix + 'Tue, 26 Mars 2019 12:00:00 GMT',
+    CACHE_NAME = prefix + '_0001',
+    CACHE_MAP = {},
     // Files required to make this app work offline
     REQUIRED_FILES = [
       'favicon.ico',
@@ -164,26 +165,78 @@
   self.addEventListener('install', function (event) {
     // Perform install step:  loading each required file into cache
     event.waitUntil(
-      caches.open(CACHE_NAME)
-        .then(function (cache) {
-          // Add all offline dependencies to the cache
-          return Promise.all(
-            REQUIRED_FILES
-              .map(function (url) {
-                /* Return a promise that's fulfilled
-                   when each url is cached.
-                */
-                // Use cache.add because safari does not support cache.addAll.
-                return cache.add(url);
+      caches.has(CACHE_NAME)
+        .then(function (result) {
+          if (!result) {
+            caches.open(CACHE_NAME)
+              .then(function (cache) {
+                // Add all offline dependencies to the cache
+                return Promise.all(
+                  REQUIRED_FILES
+                    .map(function (url) {
+                      /* Return a promise that's fulfilled
+                         when each url is cached.
+                      */
+                      // Use cache.add because safari does not support cache.addAll.
+                      console.log("Install " + CACHE_NAME + " = " + url);
+                      return cache.add(url);
+                    })
+                );
               })
-          )
+              .then(function () {
+                return caches.keys();
+              })
+              .then(function (keys) {
+                keys = keys.filter(function (key) {return key.startsWith(prefix); });
+                if (keys.length === 1) {
+                  // If there is only one cache, it means that this is the first service worker,
+                  // thus we can do skipWaiting. And self.registration is unreliable on
+                  // Firefox, we can't use self.registration.active
+                  return self.skipWaiting();
+                }
+              })
+              .catch(function () {
+                caches.delete(CACHE_NAME);
+                throw "Download failed! Deleted " + CACHE_NAME;
+              });
+          }
         })
     );
   });
 
   self.addEventListener('fetch', function (event) {
-    var url = new URL(event.request.url);
+    /* When a new service worker is installed, it adds a new Cache
+       to Cache Storage. When a new client started using this
+       service worker, the new client uses the latest Cache at
+       that time by comparing with Cache keys. And once the client
+       is associated with a Cache key, it keeps using the same Cache
+       key, it must not use different Caches. Since service worker
+       is stateless, to maintain the mapping of client and Cache key,
+       we use Cache Storage as a persistent data store. The key of
+       this special Cache is `__erp5js`.
+    */
+    var url = new URL(event.request.url),
+      client_id = event.clientId.toString(),
+      // CACHE_MAP is a temprary data store.
+      // This should be kept until service worker stops.
+      CACHE_KEY = CACHE_MAP[client_id],
+      ERP5JS_CACHE;
     url.hash = '';
+    console.log("Client Id = " + client_id);
+
+    if (CACHE_KEY) {
+      console.log("CACHE_KEY from CACHE_MAP " + CACHE_KEY);
+    }
+
+    if (!client_id) {
+      // If Client is not supported by web browser,
+      // use the CACHE_NAME that is defined in this service worker.
+      // It means that even if there is a new Cache, but web browser
+      // uses the Cache that was installed by this service worker.
+      CACHE_KEY = CACHE_NAME;
+      CACHE_MAP[client_id] = CACHE_KEY;
+      console.log("CACHE_KEY from Service Worker " + CACHE_KEY);
+    }
     if ((event.request.method !== 'GET') ||
         (required_url_list.indexOf(url.toString()) === -1)) {
       // Try not to use the untrustable fetch function
@@ -191,7 +244,58 @@
       return;
     }
     return event.respondWith(
-      caches.open(CACHE_NAME)
+      Promise.resolve()
+        .then(function () {
+          if (!CACHE_KEY) {
+            // __erp5js stores CACHE_KEY of each client.
+            return caches.open('__erp5js');
+          }
+        })
+        .then(function (erp5js_cache) {
+          if (erp5js_cache) {
+            // Service worker forget everything when it stops. So, when it started
+            // again, CACHE_MAP is empty, get the associated CACHE_KEY from the
+            // special Cache named __erp5js.
+            ERP5JS_CACHE = erp5js_cache;
+            return erp5js_cache.match(client_id);
+          }
+        })
+        .then(function (response) {
+          if (response) {
+            // We use Cache Storage as a persistent database.
+            CACHE_KEY = response.statusText;
+            CACHE_MAP[client_id] = CACHE_KEY;
+            console.log("CACHE_KEY from Cache Storage " + CACHE_KEY);
+          }
+        })
+        .then(function () {
+          if (CACHE_KEY) {
+            return [];
+          }
+          // If associated CACHE_KEY is not found, it means this client is a new one.
+          // Let's find the latest Cache.
+          return caches.keys();
+        })
+        .then(function (keys) {
+          if (!CACHE_KEY) {
+            keys = keys.filter(function (key) {return key.startsWith(prefix); });
+            console.log("KEYS = " + keys);
+            if (keys.length) {
+              CACHE_KEY = keys.sort().reverse()[0];
+              CACHE_MAP[client_id] = CACHE_KEY;
+            } else {
+              CACHE_KEY = CACHE_NAME;
+              CACHE_MAP[client_id] = CACHE_NAME;
+            }
+            // Save the associated CACHE_KEY in a persistent database because service
+            // worker forget everything when it stops.
+            ERP5JS_CACHE.put(client_id, new Response(null, {"statusText": CACHE_KEY}));
+          }
+        })
+        .then(function () {
+          // Finally we have the associated CACHE_KEY. Let's find a cached response.
+          return caches.open(CACHE_KEY);
+        })
         .then(function (cache) {
           // Don't give request object itself. Firefox's Cache Storage
           // does not work properly when VARY contains Accept-Language.
@@ -205,6 +309,7 @@
           }
           // Not in cache - return the result from the live server
           // `fetch` is essentially a "fallback"
+          console.log("MISS " + CACHE_KEY + " " + url);
           return fetch(event.request);
         })
     );
@@ -221,15 +326,16 @@
         */
         .keys()
         .then(function (keys) {
+          keys = keys
+            .filter(function (key) {
+              // Filter by keys that don't start with the latest version prefix.
+              return key.startsWith(prefix);
+            })
+            .sort();
+          keys = keys.slice(0, keys.findIndex(function (element) {return element === CACHE_NAME; }));
           // We return a promise that settles when all outdated caches are deleted.
           return Promise.all(
             keys
-              .filter(function (key) {
-                // Filter by keys that don't start with the latest version prefix.
-                // return !key.startsWith(version);
-                return ((key !== CACHE_NAME) &&
-                        key.startsWith(prefix));
-              })
               .map(function (key) {
                 /* Return a promise that's fulfilled
                    when each outdated cache is deleted.
@@ -238,7 +344,10 @@
               })
           );
         })
+        .then(function () {
+          caches.delete("__erp5js");
+        })
     );
   });
 
-}(self, caches, fetch, Promise, URL, location));
+}(self, caches, fetch, Promise, URL, location, Response));
