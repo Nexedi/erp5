@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_dialog_updated</string> </value>
+            <value> <string>your_workflow_action</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -20,7 +20,7 @@
                 </item>
                 <item>
                     <key> <string>required_not_found</string> </key>
-                    <value> <string>Dialog is not updated.</string> </value>
+                    <value> <string>Input is required but no input given.</string> </value>
                 </item>
                 <item>
                     <key> <string>too_long</string> </key>
@@ -160,9 +160,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -241,7 +239,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Please click "Update" first and confirm that all parameters are fine before clicking "Solve Divergences".</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -263,26 +261,19 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+      <tuple>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
+      </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>request/dialog_updated | nothing</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:request.has_key(\'Base_callDialogMethod\')</string> </value>
+            <value> <string>request/workflow_action | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>
