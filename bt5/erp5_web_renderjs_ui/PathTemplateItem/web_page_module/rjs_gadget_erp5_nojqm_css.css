@@ -1063,9 +1063,6 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content .field_container > div > div.horizontal_align_form_box > .ui-field-contain {
   padding: 0;
 }
-.gadget-content .field_container > div > div.horizontal_align_form_box > .ui-field-contain > label {
-  padding-top: 9pt;
-}
 .gadget-content .field_container > div > div.horizontal_align_form_box .field_container > div {
   display: flex;
 }

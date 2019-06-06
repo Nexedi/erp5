@@ -1223,10 +1223,6 @@ div[data-gadget-scope='header'] .ui-header {
     & > .ui-field-contain {
       // makes field to high
       padding: 0;
-
-      & > label {
-        padding-top: @margin-size + @half-margin-size;
-      }
     }
 
     .field_container > div {
