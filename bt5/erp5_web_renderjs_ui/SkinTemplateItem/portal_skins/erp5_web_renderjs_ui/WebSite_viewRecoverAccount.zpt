@@ -22,28 +22,30 @@
       </div>
     </div>
 
-    <div class="gadget-content">
-      <article>
+    <div data-role="page">
+      <div class="gadget-content">
+        <article>
 
-        <section>
-          <form method="post" tal:attributes="action python: context.absolute_url()">
-            <div class="ui-field-contain">
-              <label i18n:domain="ui" i18n:translate="">Login</label>
-              <div><input autofocus type="text" name="user_login" value="" required=""></div>
-            </div>
-            <br/>
-            <div class="ui-field-contain">
-              <label></label>
-              <div><input type="submit" value="Validate" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/></div>
-            </div>
+          <section>
+            <form method="post" tal:attributes="action python: context.absolute_url()">
+              <div class="ui-field-contain">
+                <label i18n:domain="ui" i18n:translate="">Login</label>
+                <div><input autofocus type="text" name="user_login" value="" required=""></div>
+              </div>
+              <br/>
+              <div class="ui-field-contain">
+                <label></label>
+                <div><input type="submit" value="Validate" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/></div>
+              </div>
 
-            <input type="hidden" name="url" tal:attributes="value python: context.absolute_url()" />
-            <input tal:condition="exists: request/came_from"
-                   type="hidden" name="came_from"
-                   tal:attributes="value request/came_from" />
-          </form>
-         </section>
-      </article>
+              <input type="hidden" name="url" tal:attributes="value python: context.absolute_url()" />
+              <input tal:condition="exists: request/came_from"
+                     type="hidden" name="came_from"
+                     tal:attributes="value request/came_from" />
+            </form>
+           </section>
+        </article>
+      </div>
     </div>
   </body>
 </html>
