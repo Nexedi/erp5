@@ -8,6 +8,7 @@
     <script id="getData" type="text/x-handlebars-template">
       Date : {{time}} 
        <table>
+       <thead>
         <tr>
          <th>Type</th>
          <th>Count</th>
@@ -16,6 +17,7 @@
          <th>Min pri</th>
          <th>Max pri</th>
         </tr>
+      </thead><tbody>
   {{#each messageList1}}
       <tr> 
          <td>{{this.messagetype}} </td>
@@ -36,8 +38,10 @@
          <td>{{this.max_pri}}</td>
        </tr>    
   {{/each}}
+  </tbody>
   </table>
     <table>
+    <thead>
       <tr>
        <th>Type</th>
        <th>Priority</th>
@@ -45,6 +49,7 @@
        <th>Avg</th>
        <th>Max</th>
       </tr>
+    </thead><tbody>
   {{#each messagePri1}}
       <tr> 
          <td>{{this.messagetype}} </td>
@@ -63,6 +68,7 @@
          <td>{{this.max}}</td>
        </tr>    
   {{/each}}
+  </tbody>
   </table>
 </script> 
 
