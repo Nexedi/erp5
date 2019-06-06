@@ -938,7 +938,7 @@
         args = {};
       if (hash !== undefined) {
         split = hash.split('?');
-        command = split[0] || "";
+        command = decodeURIComponent((split[0] || "").replace(/\+/gm, "%20"));
         query = split[1] || "";
       }
       subhashes = query.split('&');
