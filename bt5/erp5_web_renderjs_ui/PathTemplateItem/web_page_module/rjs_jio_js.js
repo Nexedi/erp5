@@ -7456,7 +7456,7 @@ return new Parser;
 
   function sanitizeQueryValue(value) {
     if (typeof value === "string") {
-      return value.replace(/((?:\\\\)*)\\$/, "$1");
+      return value.replace(/((?:\\\\)*)\\$/, "$1").replace(/"/g, '\\"');
     }
     return value;
   }

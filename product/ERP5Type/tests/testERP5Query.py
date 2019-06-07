@@ -57,7 +57,7 @@ class TestERP5Query(ERP5TypeTestCase):
       self.portal.organisation_module.manage_delObjects(ids=[_id])
     return self.portal.organisation_module.newContent(portal_type="Organisation", id=_id, **kw)
 
-  def _assertQueryKwParsingRenderingMatching(self, query_kw, expected_match_list=None):
+  def _assertQueryKwParsingRenderingMatching(self, query_kw, expected_match_list=None, XXX=False):
     catalog = self.portal.portal_catalog
     sql_catalog = catalog.getSQLCatalog()
     parsed_query = sql_catalog.buildQuery(query_kw)
@@ -66,7 +66,7 @@ class TestERP5Query(ERP5TypeTestCase):
     parsed_query_2 = sql_catalog.buildQuery({"search_text": rendered_search_text})
     generated_sql_2 = catalog(query=parsed_query_2, src__=1)
 
-    self.assertEqual(generated_sql, generated_sql_2, "{!r} != {!r}\n\ntraceback_info : {!r}".format(
+    self.assertEqual(XXX if XXX else generated_sql, generated_sql_2, "{!r} != {!r}\n\ntraceback_info : {!r}".format(
       generated_sql,
       generated_sql_2,
       {
@@ -230,10 +230,21 @@ class TestERP5Query(ERP5TypeTestCase):
     # It actually matches [self.organisation_dict[k] for k in self.organisation_dict.keys() if k.startswith("01") or k.startswith("02")]) - should it really match "021" and "022" ? Behavior to be defined
 
   @skip('please fix parse(render(parse(search_text_with_a_space))) != parse(search_text_with_a_space)')
-  def test_search_text_parsing_and_rendering_space(self):
+  def test_search_text_parsing_and_rendering_with_space(self):
     self._assertQueryKwParsingRenderingMatching({'search_text': 'TestERP5QuerySpace AndText'})
-  def test_search_text_parsing_and_rendering_space_with_quote(self):
+  def test_search_text_parsing_and_rendering_with_space_and_quote(self):
     self._assertQueryKwParsingRenderingMatching({'search_text': '"TestERP5QuerySpace AndText"'})
+
+  def test_search_text_parsing_and_rendering_with_column_and_equal(self):  # XXX test it in ZSQLCatalog syntax tree check !
+    #self._assertQueryKwParsingRenderingMatching({'search_text': 'title:TestERP5QuerySpace"AndText'}, XXX=True)  # <SimpleQuery 'SearchableText' mroonga_boolean 'title:TestERP5QuerySpace"AndText'>
+    #self._assertQueryKwParsingRenderingMatching({'search_text': 'title:TestERP5QuerySpace(AndText'}, XXX=True)  # <SimpleQuery 'SearchableText' mroonga_boolean 'title:TestERP5QuerySpace(AndText'>
+    #self._assertQueryKwParsingRenderingMatching({'search_text': 'title:TestERP5QuerySpace)AndText'}, XXX=True)  # <SimpleQuery 'SearchableText' mroonga_boolean 'title:TestERP5QuerySpace)AndText'>
+    #self._assertQueryKwParsingRenderingMatching({'search_text': 'title:TestERP5QuerySpace:AndText'}, XXX=True)  # <SimpleQuery 'SearchableText' mroonga_boolean 'title:TestERP5QuerySpace:AndText'>
+    #self._assertQueryKwParsingRenderingMatching({'search_text': 'title:TestERP5QuerySpace>AndText'}, XXX=True)  # <SimpleQuery 'title' = 'TestERP5QuerySpace>AndText'>
+    #self._assertQueryKwParsingRenderingMatching({'search_text': 'title:TestERP5QuerySpace<AndText'}, XXX=True)  # <SimpleQuery 'title' = 'TestERP5QuerySpace<AndText'>
+    #self._assertQueryKwParsingRenderingMatching({'search_text': 'title:TestERP5QuerySpace!AndText'}, XXX=True)  # <SimpleQuery 'title' = 'TestERP5QuerySpace!AndText'>
+    #self._assertQueryKwParsingRenderingMatching({'search_text': 'title:TestERP5QuerySpace=AndText'}, XXX=True)  # <SimpleQuery 'title' = 'TestERP5QuerySpace=AndText'>
+    pass
 
 def test_suite():
   suite = unittest.TestSuite()
