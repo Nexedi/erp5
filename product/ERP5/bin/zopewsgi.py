@@ -9,7 +9,7 @@ from tempfile import TemporaryFile
 import time
 from urllib import quote
 
-from waitress import serve
+from waitress.server import create_server
 import ZConfig
 import Zope2
 from Zope2.Startup.run import make_wsgi_app
@@ -140,6 +140,8 @@ def app_wrapper(large_file_threshold, use_webdav):
 
 
 def runwsgi():
+    global server
+
     parser = argparse.ArgumentParser()
     parser.add_argument('-w', '--webdav', action='store_true')
     parser.add_argument('address', help='<ip>:<port>')
@@ -152,9 +154,10 @@ def runwsgi():
 
     make_wsgi_app({}, zope_conf=args.zope_conf)
 
-    serve(
+    server = create_server(
         TransLogger(app_wrapper(conf.large_file_threshold, args.webdav),
                     logger=logging.getLogger("access")),
         listen=args.address,
         threads=conf.zserver_threads,
     )
+    server.run()
