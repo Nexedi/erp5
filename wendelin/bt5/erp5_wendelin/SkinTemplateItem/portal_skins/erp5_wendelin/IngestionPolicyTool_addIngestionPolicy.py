@@ -1,51 +1,63 @@
 """
-  Create all required types for proper ingestion.
+  Create all required types for proper ingestion into Wendelin.
 """
 from DateTime import DateTime
 
 now = DateTime()
 ingestion_policy = context.newContent( \
       id = reference,
+      title = title,
       portal_type ='Ingestion Policy',
       reference = reference,
       version = '001',
-      script_id = 'ERP5Site_handleDefaultFluentdIngestion')
+      script_id = 'IngestionPolicy_parseSimpleFluentdTag')
 ingestion_policy.validate()
-    
-# create sensor
-sensor = context.sensor_module.newContent( \
-                            portal_type='Sensor', 
-                            reference = reference)
-sensor.validate()
 
-# create new Data Stream
-data_stream = context.data_stream_module.newContent( \
-                   portal_type='Data Stream', \
-                   version = '001', \
-                   reference=reference)
-data_stream.validate()
-    
+
+use_category = context.restrictedTraverse("portal_categories/use/big_data/ingestion")
+quantity_category = context.restrictedTraverse("portal_categories/quantity_unit/unit/piece")
+data_operation = context.restrictedTraverse("data_operation_module/wendelin_1")
+
+# create Data Product
+data_product = context.data_product_module.newContent(
+                 portal_type = "Data Product",
+                 title = "Append to Data Stream",
+                 reference = reference)
+data_product.setUseValue(use_category)
+data_product.setAggregatedPortalTypeList(["Data Stream"])
+data_product.validate()
+
 # create Data Supply
-resource = context.restrictedTraverse('data_product_module/wendelin_4')
-data_supply_kw = {'reference': reference,
+data_supply_kw = {'title': title,
+                  'reference': reference,
                   'version': '001',
-                  'start_date': now,
-                  'stop_date': now + 365}
-data_supply_line_kw = {'resource_value': resource,
-                       'source_value': sensor,
-                       'destination_value': data_stream}
-data_supply = ingestion_policy.PortalIngestionPolicy_addDataSupply( \
-                                  data_supply_kw, \
-                                  data_supply_line_kw)
-    
-data_array = context.data_array_module.newContent(
-                                        portal_type='Data Array',
-                                        reference = reference,
-                                        version = '001')
-data_array.validate()
+                  'effective_date': now,
+                  'expiration_date': now + 365*10}
+data_supply = context.data_supply_module.newContent( \
+                portal_type='Data Supply', **data_supply_kw)
+data_supply.validate()
+
+# add ingestion line
+data_supply_line_kw = {'title': 'Ingest Data',
+                       'reference': 'ingestion_operation',
+                       'int_index': 1,
+                       'quantity': 1.0}
+data_supply_line = data_supply.newContent(portal_type='Data Supply Line', \
+                                          **data_supply_line_kw)
+data_supply_line.setResourceValue(data_operation)
+
+# add append to Data Stream line
+data_supply_line_kw = {'title': 'Data Stream',
+                       'reference': 'out_stream',
+                       'int_index': 2,
+                       'quantity': 1.0}
+data_supply_line = data_supply.newContent(portal_type='Data Supply Line', \
+                                          **data_supply_line_kw)
+data_supply_line.setResourceValue(data_product)
+data_supply_line.setUseValue(use_category) 
 
 if batch_mode:
-  return ingestion_policy, data_supply, data_stream, data_array
+  return ingestion_policy, data_supply, data_product
 else:
   # UI case
   ingestion_policy.Base_redirect(\
