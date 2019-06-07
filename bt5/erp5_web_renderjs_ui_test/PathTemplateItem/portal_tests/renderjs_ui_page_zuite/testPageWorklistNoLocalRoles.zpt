@@ -16,15 +16,16 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/?page=worklist</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <!-- Wait for gadget to be loaded -->
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_worklist.html']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>Draft To Validate 1</td>
   <td></td>
 </tr>
@@ -32,7 +33,7 @@
 <!-- Generate links to worklist on default module view -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Draft To Validate ' and contains(@href, '#!display')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Draft To Validate ' and contains(@href, '#!display_stored_state')]</td>
   <td></td>
 </tr>
 
@@ -40,11 +41,13 @@
 <!-- Header has a link to the previous history entry -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Draft To Validate ' and contains(@href, '#!display')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Draft To Validate ' and contains(@href, '#!display_stored_state')]</td>
   <td></td>
 </tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
   <td></td>
 </tr>
