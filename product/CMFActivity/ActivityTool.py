@@ -134,14 +134,19 @@ def getServerAddress():
     global _server_address
     if _server_address is None:
         ip = port = ''
-        from asyncore import socket_map
-        for k, v in socket_map.items():
-            if hasattr(v, 'addr'):
-                # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
-                type = str(getattr(v, '__class__', 'unknown'))
-                if type == 'ZServer.HTTPServer.zhttp_server':
-                    ip, port = v.addr
-                    break
+        try:
+            zopewsgi = sys.modules['Products.ERP5.bin.zopewsgi']
+        except KeyError:
+            from asyncore import socket_map
+            for k, v in socket_map.items():
+                if hasattr(v, 'addr'):
+                    # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
+                    type = str(getattr(v, '__class__', 'unknown'))
+                    if type == 'ZServer.HTTPServer.zhttp_server':
+                        ip, port = v.addr
+                        break
+        else:
+            ip, port = zopewsgi.server.address
         if ip == '0.0.0.0':
             ip = socket.gethostbyname(socket.gethostname())
         _server_address = '%s:%s' %(ip, port)
