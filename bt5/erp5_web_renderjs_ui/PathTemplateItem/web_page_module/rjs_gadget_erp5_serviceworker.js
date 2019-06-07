@@ -4,6 +4,9 @@
   "use strict";
 
   var prefix = location.toString() + '_',
+    // CLIENT_CACHE_MAPPING_NAME must not start with `prefix`
+    // else it may be used as a normal content cache.
+    CLIENT_CACHE_MAPPING_NAME = '__erp5js_' + location.toString(),
     CACHE_NAME = prefix + '_0001',
     CACHE_MAP = {},
     // Files required to make this app work offline
@@ -213,7 +216,7 @@
        key, it must not use different Caches. Since service worker
        is stateless, to maintain the mapping of client and Cache key,
        we use Cache Storage as a persistent data store. The key of
-       this special Cache is `__erp5js`.
+       this special Cache is CLIENT_CACHE_MAPPING_NAME.
     */
     var url = new URL(event.request.url),
       client_id = event.clientId.toString(),
@@ -247,15 +250,15 @@
       Promise.resolve()
         .then(function () {
           if (!CACHE_KEY) {
-            // __erp5js stores CACHE_KEY of each client.
-            return caches.open('__erp5js');
+            // CLIENT_CACHE_MAPPING_NAME stores CACHE_KEY of each client.
+            return caches.open(CLIENT_CACHE_MAPPING_NAME);
           }
         })
         .then(function (erp5js_cache) {
           if (erp5js_cache) {
             // Service worker forget everything when it stops. So, when it started
             // again, CACHE_MAP is empty, get the associated CACHE_KEY from the
-            // special Cache named __erp5js.
+            // special Cache named CLIENT_CACHE_MAPPING_NAME.
             ERP5JS_CACHE = erp5js_cache;
             return erp5js_cache.match(client_id);
           }
@@ -345,7 +348,7 @@
           );
         })
         .then(function () {
-          caches.delete("__erp5js");
+          caches.delete(CLIENT_CACHE_MAPPING_NAME);
         })
     );
   });
