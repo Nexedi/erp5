@@ -243,13 +243,13 @@
       client_id = event.clientId.toString(),
       // CACHE_MAP is a temprary data store.
       // This should be kept until service worker stops.
-      CACHE_KEY = CACHE_MAP[client_id],
-      ERP5JS_CACHE;
+      cache_key = CACHE_MAP[client_id],
+      erp5js_cache;
     url.hash = '';
     console.log("Client Id = " + client_id);
 
-    if (CACHE_KEY) {
-      console.log("CACHE_KEY from CACHE_MAP " + CACHE_KEY);
+    if (cache_key) {
+      console.log("cache_key from CACHE_MAP " + cache_key);
     }
 
     if (!client_id) {
@@ -257,9 +257,9 @@
       // use the CACHE_NAME that is defined in this service worker.
       // It means that even if there is a new Cache, but web browser
       // uses the Cache that was installed by this service worker.
-      CACHE_KEY = CACHE_NAME;
-      CACHE_MAP[client_id] = CACHE_KEY;
-      console.log("CACHE_KEY from Service Worker " + CACHE_KEY);
+      cache_key = CACHE_NAME;
+      CACHE_MAP[client_id] = cache_key;
+      console.log("cache_key from Service Worker " + cache_key);
     }
     if ((event.request.method !== 'GET') ||
         (required_url_list.indexOf(url.toString()) === -1)) {
@@ -270,50 +270,50 @@
     return event.respondWith(
       Promise.resolve()
         .then(function () {
-          if (!CACHE_KEY) {
-            // CLIENT_CACHE_MAPPING_NAME stores CACHE_KEY of each client.
+          if (!cache_key) {
+            // CLIENT_CACHE_MAPPING_NAME stores cache_key of each client.
             return caches.open(CLIENT_CACHE_MAPPING_NAME)
-              .then(function (erp5js_cache) {
+              .then(function (cache) {
                 // Service worker forget everything when it stops. So, when it started
-                // again, CACHE_MAP is empty, get the associated CACHE_KEY from the
+                // again, CACHE_MAP is empty, get the associated cache_key from the
                 // special Cache named CLIENT_CACHE_MAPPING_NAME.
-                ERP5JS_CACHE = erp5js_cache;
+                erp5js_cache = cache;
                 return erp5js_cache.match(client_id)
                   .then(function (response) {
                     if (response) {
                       // We use Cache Storage as a persistent database.
-                      CACHE_KEY = response.statusText;
-                      CACHE_MAP[client_id] = CACHE_KEY;
-                      console.log("CACHE_KEY from Cache Storage " + CACHE_KEY);
+                      cache_key = response.statusText;
+                      CACHE_MAP[client_id] = cache_key;
+                      console.log("cache_key from Cache Storage " + cache_key);
                     }
-                  })
-              })
+                  });
+              });
           }
         })
         .then(function () {
-          if (!CACHE_KEY) {
-            // If associated CACHE_KEY is not found, it means this client is a new one.
+          if (!cache_key) {
+            // If associated cache_key is not found, it means this client is a new one.
             // Let's find the latest Cache.
             return caches.keys()
               .then(function (keys) {
                 keys = keys.filter(function (key) {return key.startsWith(prefix); });
                 console.log("KEYS = " + keys);
                 if (keys.length) {
-                  CACHE_KEY = keys.sort().reverse()[0];
-                  CACHE_MAP[client_id] = CACHE_KEY;
+                  cache_key = keys.sort().reverse()[0];
+                  CACHE_MAP[client_id] = cache_key;
                 } else {
-                  CACHE_KEY = CACHE_NAME;
+                  cache_key = CACHE_NAME;
                   CACHE_MAP[client_id] = CACHE_NAME;
                 }
-                // Save the associated CACHE_KEY in a persistent database because service
+                // Save the associated cache_key in a persistent database because service
                 // worker forget everything when it stops.
-                ERP5JS_CACHE.put(client_id, new Response(null, {"statusText": CACHE_KEY}));
-              })
+                erp5js_cache.put(client_id, new Response(null, {"statusText": cache_key}));
+              });
           }
         })
         .then(function () {
-          // Finally we have the associated CACHE_KEY. Let's find a cached response.
-          return caches.open(CACHE_KEY);
+          // Finally we have the associated cache_key. Let's find a cached response.
+          return caches.open(cache_key);
         })
         .then(function (cache) {
           // Don't give request object itself. Firefox's Cache Storage
@@ -328,7 +328,7 @@
           }
           // Not in cache - return the result from the live server
           // `fetch` is essentially a "fallback"
-          console.log("MISS " + CACHE_KEY + " " + url);
+          console.log("MISS " + cache_key + " " + url);
           return fetch(event.request);
         })
     );
