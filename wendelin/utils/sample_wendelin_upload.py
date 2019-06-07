@@ -7,11 +7,11 @@ Sample Python script to ingest into a Wendelin instance.
 import msgpack
 import requests
 
-# configure for your instance parameters below
-reference = ""
-username = ""
-password = ""
-ingestion_policy_url = "https://%s:%s@....../erp5/portal_ingestion_policies/...../ingest" %(username, password)
+# configure for your instance
+reference = "test-1"
+username = "zope"
+password = "insecure"
+ingestion_policy_url = "http://%s:%s@localhost:20000/erp5/portal_ingestion_policies/test-1/ingest" %(username, password)
 
 data = {"msg": 'Hello World! Zdravej Sviat!'}
 payload = msgpack.packb([0, data], use_bin_type=True)
