@@ -1,0 +1,89 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Page Front</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Page Front</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/?page=search</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<!-- Change the default sort -->
+<tr>
+  <td>assertElementPresent</td><!-- verification -->
+  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Modification Date']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//th/a[text()='Type']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tr>
+  <td>assertElementPresent</td><!-- verification -->
+  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Type']</td>
+  <td></td>
+</tr>
+
+<!-- Go to the worklist page -->
+<tal:block tal:define="click_configuration python: {'text': 'Search'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_worklist.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Draft To Validate 1</td>
+  <td></td>
+</tr>
+
+<!-- Generate links to worklist on default module view -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Draft To Validate ' and contains(@href, '#!display_stored_state')]</td>
+  <td></td>
+</tr>
+
+<!-- Follow one link -->
+<!-- Header has a link to the previous history entry -->
+<tal:block tal:define="click_configuration python: {'text': 'Draft To Validate '}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td></td>
+</tr>
+<tal:block tal:define="search_query python: '';
+                       parsed_query python: '( portal_type: (&nbsp; &#34;Bar&#34; OR&nbsp; &#34;Foo&#34; ) AND simulation_state:&nbsp; &#34;draft&#34; )'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
+</tal:block>
+
+<!-- Check it's back to default sort -->
+<tr>
+  <td>assertElementPresent</td><!-- verification -->
+  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Modification Date']</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
