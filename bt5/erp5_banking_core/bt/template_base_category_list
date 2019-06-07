@@ -2,9 +2,6 @@ aggregate_resource
 cash_status
 check_amount
 check_type
-composition
 emission_letter
 payment_type
-site
-variation
 vault_type

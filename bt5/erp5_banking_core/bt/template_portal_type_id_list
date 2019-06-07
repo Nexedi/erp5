@@ -3,7 +3,6 @@ Accounting Cancellation Line
 Accounting Cancellation Module
 Accounting Date
 Accounting Date Module
-Bank Account
 Banking Operation Line
 Banknote
 Cash Delivery Cell
@@ -23,8 +22,4 @@ Counter
 Counter Date
 Counter Date Module
 Counter Module
-Currency
 Currency Cash Module
-Currency Exchange Cell
-Currency Exchange Line
-Currency Module
