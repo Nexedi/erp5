@@ -272,48 +272,43 @@
         .then(function () {
           if (!CACHE_KEY) {
             // CLIENT_CACHE_MAPPING_NAME stores CACHE_KEY of each client.
-            return caches.open(CLIENT_CACHE_MAPPING_NAME);
-          }
-        })
-        .then(function (erp5js_cache) {
-          if (erp5js_cache) {
-            // Service worker forget everything when it stops. So, when it started
-            // again, CACHE_MAP is empty, get the associated CACHE_KEY from the
-            // special Cache named CLIENT_CACHE_MAPPING_NAME.
-            ERP5JS_CACHE = erp5js_cache;
-            return erp5js_cache.match(client_id);
-          }
-        })
-        .then(function (response) {
-          if (response) {
-            // We use Cache Storage as a persistent database.
-            CACHE_KEY = response.statusText;
-            CACHE_MAP[client_id] = CACHE_KEY;
-            console.log("CACHE_KEY from Cache Storage " + CACHE_KEY);
+            return caches.open(CLIENT_CACHE_MAPPING_NAME)
+              .then(function (erp5js_cache) {
+                // Service worker forget everything when it stops. So, when it started
+                // again, CACHE_MAP is empty, get the associated CACHE_KEY from the
+                // special Cache named CLIENT_CACHE_MAPPING_NAME.
+                ERP5JS_CACHE = erp5js_cache;
+                return erp5js_cache.match(client_id)
+                  .then(function (response) {
+                    if (response) {
+                      // We use Cache Storage as a persistent database.
+                      CACHE_KEY = response.statusText;
+                      CACHE_MAP[client_id] = CACHE_KEY;
+                      console.log("CACHE_KEY from Cache Storage " + CACHE_KEY);
+                    }
+                  })
+              })
           }
         })
         .then(function () {
-          if (CACHE_KEY) {
-            return [];
-          }
-          // If associated CACHE_KEY is not found, it means this client is a new one.
-          // Let's find the latest Cache.
-          return caches.keys();
-        })
-        .then(function (keys) {
           if (!CACHE_KEY) {
-            keys = keys.filter(function (key) {return key.startsWith(prefix); });
-            console.log("KEYS = " + keys);
-            if (keys.length) {
-              CACHE_KEY = keys.sort().reverse()[0];
-              CACHE_MAP[client_id] = CACHE_KEY;
-            } else {
-              CACHE_KEY = CACHE_NAME;
-              CACHE_MAP[client_id] = CACHE_NAME;
-            }
-            // Save the associated CACHE_KEY in a persistent database because service
-            // worker forget everything when it stops.
-            ERP5JS_CACHE.put(client_id, new Response(null, {"statusText": CACHE_KEY}));
+            // If associated CACHE_KEY is not found, it means this client is a new one.
+            // Let's find the latest Cache.
+            return caches.keys()
+              .then(function (keys) {
+                keys = keys.filter(function (key) {return key.startsWith(prefix); });
+                console.log("KEYS = " + keys);
+                if (keys.length) {
+                  CACHE_KEY = keys.sort().reverse()[0];
+                  CACHE_MAP[client_id] = CACHE_KEY;
+                } else {
+                  CACHE_KEY = CACHE_NAME;
+                  CACHE_MAP[client_id] = CACHE_NAME;
+                }
+                // Save the associated CACHE_KEY in a persistent database because service
+                // worker forget everything when it stops.
+                ERP5JS_CACHE.put(client_id, new Response(null, {"statusText": CACHE_KEY}));
+              })
           }
         })
         .then(function () {
