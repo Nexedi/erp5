@@ -215,11 +215,13 @@
                   return self.skipWaiting();
                 }
               })
-              .catch(function () {
+              .catch(function (error) {
                 // Since we do not allow to override existing cache, if cache installation
                 // failed, we need to delete the cache completely.
                 caches.delete(CACHE_NAME);
-                throw "Download failed! Deleted " + CACHE_NAME;
+                // Explicitly unregister service worker else it may not be done.
+                self.registration.unregister();
+                throw error;
               });
           }
         })
