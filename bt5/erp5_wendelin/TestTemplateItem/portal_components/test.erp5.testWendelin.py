@@ -27,7 +27,6 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from wendelin.bigarray.array_zodb import ZBigArray
-from DateTime import DateTime
 from cStringIO import StringIO
 import msgpack
 import numpy as np
@@ -58,11 +57,15 @@ class Test(ERP5TypeTestCase):
     simulating input from fluentd.
     """
     portal = self.portal
-    request = portal.REQUEST
 
-    ingestion_policy = portal.restrictedTraverse("portal_ingestion_policies/wendelin_1")
-    data_supply = portal.restrictedTraverse("data_supply_module/wendelin_1")
-    reference = 'wendelin-default-ingestion'
+    # add brand new ingestion
+    reference = getRandomString()
+    ingestion_policy, data_supply, data_product = portal.portal_ingestion_policies.IngestionPolicyTool_addIngestionPolicy(
+      reference = reference, 
+      title = reference, 
+      batch_mode=1)
+    self.tic()
+
     number_string_list = []
     for my_list in list(chunks(range(0, 100001), 10)):
       number_string_list.append(','.join([str(x) for x in my_list]))

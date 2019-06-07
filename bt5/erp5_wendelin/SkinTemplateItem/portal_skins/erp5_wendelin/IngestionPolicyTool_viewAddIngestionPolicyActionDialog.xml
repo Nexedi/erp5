@@ -71,6 +71,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>your_label</string>
+                        <string>your_title</string>
                         <string>your_reference</string>
                       </list>
                     </value>
