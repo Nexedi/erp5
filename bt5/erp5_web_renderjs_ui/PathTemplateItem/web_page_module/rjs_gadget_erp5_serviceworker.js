@@ -168,6 +168,12 @@
   self.addEventListener('install', function (event) {
     // Perform install step:  loading each required file into cache
     event.waitUntil(
+      // We create cache only if it does not exist. That is because
+      // we do not want to override an existing cache by mistake.
+      // Code consistency is very important. We must not mix different
+      // versions of code.
+      // (For example, developer change service worker code and forget
+      // to increase the cache version.)
       caches.has(CACHE_NAME)
         .then(function (result) {
           if (!result) {
@@ -192,6 +198,17 @@
               .then(function (keys) {
                 keys = keys.filter(function (key) {return key.startsWith(prefix); });
                 if (keys.length === 1) {
+                  // When user accesses ERP5JS web site first time, service worker is
+                  // installed but it is not activated yet, service worker is activated
+                  // when the page is refreshed or when a new tab opens the site again.
+                  // If user does not refresh the page and continue to use the site,
+                  // user can't use cache, so everything becomes slow. We must avoid this
+                  // situation.
+                  // So, we want to activate the new service worker immediately if it was
+                  // the first one. (We must not activate the new service worker by
+                  // skipWaiting if there is already an active service worker because it
+                  // causes code inconsistency by loading code from a different version of
+                  // cache.
                   // If there is only one cache, it means that this is the first service worker,
                   // thus we can do skipWaiting. And self.registration is unreliable on
                   // Firefox, we can't use self.registration.active
@@ -199,6 +216,8 @@
                 }
               })
               .catch(function () {
+                // Since we do not allow to override existing cache, if cache installation
+                // failed, we need to delete the cache completely.
                 caches.delete(CACHE_NAME);
                 throw "Download failed! Deleted " + CACHE_NAME;
               });
@@ -348,6 +367,9 @@
           );
         })
         .then(function () {
+          // If new service worker becomes active, it means that all clients
+          // (tabs, windows, etc) were already closed. Thus we can remove the
+          // client cache mapping.
           caches.delete(CLIENT_CACHE_MAPPING_NAME);
         })
     );
