@@ -198,7 +198,7 @@
               if (options.form_definition.has_more_views) {
                 header_dict.tab_url = url_list[0];
               }
-              if (options.editable) {
+              if (options.editable === "true") {
                 header_dict.save_action = true;
               }
             }

@@ -73,8 +73,7 @@
             child_gadget_url: child_gadget_url,
             form_definition: form_definition,
             form_type: form_type,
-            //TODO editable should come from getFormInfo(form_definition)
-            editable: true,
+            editable: options.editable,
             view: options.view || default_view,
             front_page: front_page
           });

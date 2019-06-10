@@ -1,6 +1,6 @@
-/*global window, document, rJS, RSVP */
-/*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, document, rJS, RSVP) {
+/*global window, document, rJS */
+/*jslint nomen: true, indent: 2, maxerr: 13 */
+(function (window, document, rJS) {
   "use strict";
 
   rJS(window)
@@ -39,8 +39,6 @@
         .push(function (portal_type_result) {
           portal_type = portal_type_result;
           // TODO: somehow (a generic action?) get the path string:${object_url}/Base_viewNewContentDialog
-          // for now hardcoded
-          // get corresponding form definition (only contains a select field)
           return gadget.jio_get("portal_skins/erp5_hal_json_style/Base_viewNewContentDialog");
         })
         .push(function (form_result) {
@@ -91,4 +89,4 @@
         });
     });
 
-}(window, document, rJS, RSVP));
+}(window, document, rJS));

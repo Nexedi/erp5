@@ -141,7 +141,7 @@
               command: 'display',
               options: {
                 jio_key: jio_key,
-                editable: true
+                editable: gadget.state.view === "edit"
               }
             });
           });

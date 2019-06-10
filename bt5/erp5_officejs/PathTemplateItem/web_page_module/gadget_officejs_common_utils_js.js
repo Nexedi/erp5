@@ -89,7 +89,7 @@
       return has_more_dict;
     })
 
-    .declareMethod("getFormDefinition", function (portal_type, action_reference, source_reference) {
+    .declareMethod("getFormDefinition", function (portal_type, action_reference) {
       var gadget = this,
         query,
         action_type,
