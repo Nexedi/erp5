@@ -53,16 +53,13 @@
   };
 
   function sideEffectDiv(sideEffectClass, reportSideEffect) {
-    var div = document.getElementById(py_div_id_prefix + py_div_id_count_2),
-        pre = div.getElementsByTagName('pre')[0],
-        result = pre.getElementsByTagName('code')[0];
-
-    py_div_id_count_2 += 1;
-    div.removeChild(div.firstChild);
+    // appends a side effect div to the side effect area
+    var div = document.createElement("div");
     div.setAttribute("class", sideEffectClass);
     if (reportSideEffect === undefined) {
       div.setAttribute("style", "display:");
     }
+    document.body.appendChild(div);
     return div;
   }
 
@@ -433,13 +430,18 @@
   }
 
   function renderCodeblock(result_text) {
-    if (result_text !== undefined) {
-      var div = document.getElementById(py_div_id_prefix + py_div_id_count_2),
-          pre = div.getElementsByTagName('pre')[0],
-          result = pre.getElementsByTagName('code')[0];
+    var div = document.createElement('div'),
+      pre = document.createElement('pre'),
+      result = document.createElement('code');
+    div.style.border = '1px solid #C3CCD0';
+    div.style.margin = '40px 10px';
+    div.style.paddingLeft = '10px';
 
-      py_div_id_count_2 += 1;
+    if (result_text !== undefined) {
       result.innerHTML = result_text;
+      pre.appendChild(result);
+      div.appendChild(pre);
+      document.body.appendChild(div);
     }
   }
 
@@ -551,11 +553,10 @@
         // empty block, do nothing.
         return;
       }
-      addPyCellStub();
-      if (!is_pyodide_loaded) {
-        props.queue = new RSVP.Queue()
-          .push(function () {
-             return initPyodide();
+      var queue = new RSVP.Queue();
+      if (is_pyodide_loaded === false) {
+        queue.push(function () {
+            return initPyodide();
           })
           .push(function () {
             return pyodideLoadPackage('matplotlib');
@@ -563,10 +564,10 @@
         is_pyodide_loaded = true;
       }
 
-      props.queue.push(function () {
+      queue.push(function () {
         return executePyCell(cell._line_list);
       });
-      return;
+      return queue
     }
     return executeUnknownCellType(cell);
   }
@@ -589,12 +590,6 @@
     for (i = 0; i < len; i += 1) {
       queue.push(deferCellExecution(cell_list[i]));
     }
-
-    // Python packages loading and execution
-    queue
-      .push(function () {
-        return props.queue;
-    });
 
     return queue
       .push(function () {
