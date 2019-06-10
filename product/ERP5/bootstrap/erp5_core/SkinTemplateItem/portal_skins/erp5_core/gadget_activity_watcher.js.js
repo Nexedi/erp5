@@ -27,7 +27,7 @@
       if (!form_gadget.state.read_activity_list_url) {
         // renderjs has not yet been called
         // gadget doesn't know which URL to call
-        return;
+        return undefined;
       }
       return new RSVP.Queue()
         .push(function () {
