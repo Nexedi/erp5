@@ -23,4 +23,6 @@ headers = {'CONTENT_TYPE': 'application/octet-stream'}
 r = requests.post(ingestion_policy_url, 
                   params = params, 
                   headers=headers)
-print "Response=%s" %r.status_code
+
+if r.status_code >= 200 and r.status_code<=204:
+  print "Successfully uploaded %s bytes to Wendelin." %len(payload)
