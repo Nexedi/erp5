@@ -35,83 +35,90 @@
       }
     }
 
-    return getContent.apply(this)
-      .push(function (content_dict) {
-        var data = {},
-          key;
-
-        // create a copy of sub_data so we do not modify them in-place
-        for (key in content_dict) {
-          if (content_dict.hasOwnProperty(key)) {
-            data[key] = content_dict[key];
-          }
-        }
-        // ERP5 expects target Script name in dialog_method field
-        data.dialog_method = gadget.state.form_definition.action;
-        // For Update Action - override the default value from "action"
-        if (is_updating) {
-          data.dialog_method = gadget.state.form_definition.update_action;
-          data.update_method = gadget.state.form_definition.update_action;
-        }
-
-        return data;
-      })
-      .push(function (data) {
-        return gadget.submitContent(
-          gadget.state.jio_key,
-          gadget.state.erp5_document._embedded._view._actions.put.href,  // most likely points to Base_callDialogMethod
-          data
-        );
-      })
-      .push(function (jio_key) {  // success redirect handler
-        var splitted_jio_key_list,
-          splitted_current_jio_key_list,
-          command,
-          i;
-        if (is_updating || !jio_key) {
+    return checkValidity.apply(gadget)
+      .push(function (is_valid) {
+        if (!is_valid) {
+          enableButton();
           return;
         }
-        if (gadget.state.redirect_to_parent) {
-          return gadget.redirect({command: 'history_previous'});
-        }
-        if (gadget.state.jio_key === jio_key) {
-          // don't update navigation history when not really redirecting
-          return gadget.redirect({command: 'cancel_dialog_with_history'});
-        }
-        // Check if the redirection goes to a same parent's subdocument.
-        // In this case, do not add current document to the history
-        // example: when cloning, do not keep the original document in history
-        splitted_jio_key_list = jio_key.split('/');
-        splitted_current_jio_key_list = gadget.state.jio_key.split('/');
-        command = 'display_with_history';
-        if (splitted_jio_key_list.length === splitted_current_jio_key_list.length) {
-          for (i = 0; i < splitted_jio_key_list.length - 1; i += 1) {
-            if (splitted_jio_key_list[i] !== splitted_current_jio_key_list[i]) {
+        return getContent.apply(gadget)
+          .push(function (content_dict) {
+            var data = {},
+              key;
+
+            // create a copy of sub_data so we do not modify them in-place
+            for (key in content_dict) {
+              if (content_dict.hasOwnProperty(key)) {
+                data[key] = content_dict[key];
+              }
+            }
+            // ERP5 expects target Script name in dialog_method field
+            data.dialog_method = gadget.state.form_definition.action;
+            // For Update Action - override the default value from "action"
+            if (is_updating) {
+              data.dialog_method = gadget.state.form_definition.update_action;
+              data.update_method = gadget.state.form_definition.update_action;
+            }
+
+            return data;
+          })
+          .push(function (data) {
+            return gadget.submitContent(
+              gadget.state.jio_key,
+              gadget.state.erp5_document._embedded._view._actions.put.href,  // most likely points to Base_callDialogMethod
+              data
+            );
+          })
+          .push(function (jio_key) {  // success redirect handler
+            var splitted_jio_key_list,
+              splitted_current_jio_key_list,
+              command,
+              i;
+            if (is_updating || !jio_key) {
+              return;
+            }
+            if (gadget.state.redirect_to_parent) {
+              return gadget.redirect({command: 'history_previous'});
+            }
+            if (gadget.state.jio_key === jio_key) {
+              // don't update navigation history when not really redirecting
+              return gadget.redirect({command: 'cancel_dialog_with_history'});
+            }
+            // Check if the redirection goes to a same parent's subdocument.
+            // In this case, do not add current document to the history
+            // example: when cloning, do not keep the original document in history
+            splitted_jio_key_list = jio_key.split('/');
+            splitted_current_jio_key_list = gadget.state.jio_key.split('/');
+            command = 'display_with_history';
+            if (splitted_jio_key_list.length === splitted_current_jio_key_list.length) {
+              for (i = 0; i < splitted_jio_key_list.length - 1; i += 1) {
+                if (splitted_jio_key_list[i] !== splitted_current_jio_key_list[i]) {
+                  command = 'push_history';
+                }
+              }
+            } else {
               command = 'push_history';
             }
-          }
-        } else {
-          command = 'push_history';
-        }
 
-        // forced document change thus we update history
-        return gadget.redirect({
-          command: command,
-          options: {
-            "jio_key": jio_key
-            // do not mingle with editable because it isn't necessary
-          }
-        });
-      })
-      .push(function (result) {
-        enableButton();
-        return result;
-      }, function (error) {
-        enableButton();
-        throw error;
+            // forced document change thus we update history
+            return gadget.redirect({
+              command: command,
+              options: {
+                "jio_key": jio_key
+                // do not mingle with editable because it isn't necessary
+              }
+            });
+          })
+          .push(function (result) {
+            enableButton();
+            return result;
+          }, function (error) {
+            enableButton();
+            throw error;
+          });
+          // We do not handle submit failures because Page Form handles them well
+          // If any error bubbles here we do not know what to do with it anyway
       });
-      // We do not handle submit failures because Page Form handles them well
-      // If any error bubbles here we do not know what to do with it anyway
   }
 
 
