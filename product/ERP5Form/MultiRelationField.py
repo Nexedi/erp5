@@ -757,10 +757,24 @@ class MultiRelationStringField(ZMIField):
     if (id == 'items') and (REQUEST is not None):
       # relation_item_list is not editable for the RelationField
       result = REQUEST.get('relation_item_list', None)
+    elif (id == 'default') and (REQUEST is not None):
+      field = REQUEST.get(
+       'field__proxyfield_%s_%s_%s' % (self.id, self._p_oid, id), self)
+      result = getattr(
+            self.widget._getContextValue(field, REQUEST),
+            'get%sTitleList' % ''.join(
+              part.capitalize()
+              for part in field.get_value('base_category').split('_')
+            )
+            )(
+              portal_type=[x[0] for x in field.get_value('portal_type')],
+              filter=dict(field.get_value('parameter_list'))
+            )
     else:
       result = ZMIField.get_value(self, id, REQUEST=REQUEST, **kw)
     return result
 
 # Register get_value
 from Products.ERP5Form.ProxyField import registerOriginalGetValueClassAndArgument
-registerOriginalGetValueClassAndArgument(MultiRelationStringField, 'items')
+registerOriginalGetValueClassAndArgument(MultiRelationStringField,
+                                         ('items','default'))
