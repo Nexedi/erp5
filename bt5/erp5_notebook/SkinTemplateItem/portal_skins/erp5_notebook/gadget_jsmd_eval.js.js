@@ -122,6 +122,50 @@
     return null;
   }
 
+  function preloadWasm() {
+    // On Chrome, we have to instantiate wasm asynchronously. Since that
+    // can't be done synchronously within the call to dlopen, we instantiate
+    // every .so that comes our way up front, caching it in the
+    // `preloadedWasm` dictionary.
+
+    let promise = new Promise((resolve) => resolve());
+    let FS = pyodide._module.FS;
+
+    function recurseDir(rootpath) {
+      let dirs;
+      var entry;
+      try {
+        dirs = FS.readdir(rootpath);
+      } catch {
+        return;
+      }
+      for (entry of dirs) {
+        if (entry.startsWith('.')) {
+          continue;
+        }
+        const path = rootpath + entry;
+        if (entry.endsWith('.so')) {
+          if (Module['preloadedWasm'][path] === undefined) {
+            promise = promise
+              .then(() => Module['loadWebAssemblyModule'](
+                FS.readFile(path), {
+                  loadAsync: true
+                }))
+              .then((module) => {
+                Module['preloadedWasm'][path] = module;
+              });
+          }
+        } else if (FS.isDir(FS.lookupPath(path).node.mode)) {
+          recurseDir(path + '/');
+        }
+      }
+    }
+
+    recurseDir('/');
+
+    return promise;
+  }
+
   function pyodideLoadPackage(names) {
     // DFS to find all dependencies of the requested packages
     var queue, toLoad, package_uri, package_name, k,
@@ -176,7 +220,9 @@
           }
           delete pyodide.monitorRunDependencies;
           packageList = Array.from(Object.keys(toLoad)).join(', ');
-          resolve("Loaded " + packageList);
+          preloadWasm().then(() => {
+            resolve(`Loaded ${packageList}`)
+          });
         }
       };
 
