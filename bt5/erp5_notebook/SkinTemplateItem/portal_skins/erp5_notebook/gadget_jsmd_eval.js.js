@@ -8,7 +8,6 @@
       output: {
         text: function (s, reportSideEffect) {
           var i, div, line_list;
-          console.log("Inside output.text");
           console.log(s);
           line_list = s.toString().split("\n");
           for (i = 0; i < line_list.length; i += 1) {
@@ -145,15 +144,12 @@
         package_uri = 'default channel';
       }
 
-      console.log("Loading " + package_name + " from " + package_uri);
-      console.log("Loaded packages");
-      console.log(loadedPackages);
       if (package_name in loadedPackages) {
         if (package_uri !== loadedPackages[package_name]) {
           throw new Error(
             "URI mismatch, attempting to load package " +
-              package_name + " from " + package_uri + " while it is already " +
-              "loaded from " + loadedPackages[package_name] + " ! "
+            package_name + " from " + package_uri + " while it is already " +
+            "loaded from " + loadedPackages[package_name] + " ! "
           );
         }
       } else {
@@ -166,7 +162,7 @@
             }
           }
         } else {
-          console.log("Unknown package " + package_name);
+          throw new Error("Unknown package " + package_name);
         }
       }
     }
@@ -207,7 +203,7 @@
       // see the new files. This is done here so it happens in parallel
       // with the fetching over the network.
       window.pyodide.runPython('import importlib as _importlib\n' +
-                               '_importlib.invalidate_caches()\n');
+        '_importlib.invalidate_caches()\n');
     });
     return promise;
   }
@@ -227,7 +223,7 @@
     function pushNewCell() {
       if (current_type !== undefined) {
         cell_list.push(new JSMDCell(current_type[1],
-                                      current_text_list));
+          current_text_list));
       }
     }
 
@@ -347,7 +343,9 @@
     console.log(line_split);
     return new RSVP.Queue()
       .push(function () {
-        return ajax({url: url});
+        return ajax({
+          url: url
+        });
       })
       .push(function (evt) {
         window[variable] = evt.target.responseText;
@@ -398,9 +396,10 @@
   function executeMarkdownCell(line_list) {
     var renderer = new marked.Renderer();
     return new RSVP.Promise(function (resolve, reject) {
-      marked(line_list.join('\n'),
-             {renderer: renderer},
-             function (err, content) {
+      marked(line_list.join('\n'), {
+          renderer: renderer
+        },
+        function (err, content) {
           if (err) {
             reject(err);
           }
@@ -416,15 +415,18 @@
   function loadPyodide(info, receiveInstance) {
     var queue = new RSVP.Queue();
     queue.push(function () {
-      return ajax({url: "pyodide.asm.wasm", dataType: "arraybuffer"})
-    })
+        return ajax({
+          url: "pyodide.asm.wasm",
+          dataType: "arraybuffer"
+        })
+      })
       .push(function (evt) {
         return WebAssembly.instantiate(evt.target.response, info);
       })
       .push(function (results) {
         return receiveInstance(results.instance);
       })
-      .push(undefined, function(error) {
+      .push(undefined, function (error) {
         console.log(error);
       });
     return queue;
@@ -460,7 +462,7 @@
 
   function executePyCell(line_list) {
     var result, code_text = line_list.join('\n');
-    result = pyodide.runPython(code_text);
+    result = window.pyodide.runPython(code_text);
     renderCodeblock(result);
   }
 
@@ -468,7 +470,8 @@
     window.pyodide = pyodide(Module);
     window.pyodide.loadPackage = pyodideLoadPackage;
 
-    var defer = RSVP.defer(), promise = defer.promise;
+    var defer = RSVP.defer(),
+      promise = defer.promise;
 
     Module.postRun = defer.resolve;
     promise.then(function () {
@@ -479,12 +482,21 @@
     return defer.promise;
   }
 
+  Module.checkABI = function(ABI_number) {
+    if (ABI_number !== parseInt('1')) {
+      var ABI_mismatch_exception = `ABI numbers differ. Expected 1, got ${ABI_number}`;
+      console.error(ABI_mismatch_exception);
+      throw ABI_mismatch_exception;
+    }
+    return true;
+  };
+
   function initPyodide() {
     var queue = new RSVP.Queue();
     queue.push(function () {
-      Module.instantiateWasm = loadPyodide;
-      window.Module = Module;
-    })
+        Module.instantiateWasm = loadPyodide;
+        window.Module = Module;
+      })
       .push(function () {
         return loadJSResource('pyodide.asm.data.js');
       })
@@ -495,7 +507,9 @@
         return pyodideSetting();
       })
       .push(function () {
-        return ajax({url: 'packages.json'});
+        return ajax({
+          url: 'packages.json'
+        });
       })
       .push(function (evt) {
         return JSON.parse(evt.target.response);
@@ -506,7 +520,7 @@
         window.pyodide._module.packages = json;
         return;
       })
-      .push(undefined, function(error) {
+      .push(undefined, function (error) {
         console.log(error);
       });
     return queue;
