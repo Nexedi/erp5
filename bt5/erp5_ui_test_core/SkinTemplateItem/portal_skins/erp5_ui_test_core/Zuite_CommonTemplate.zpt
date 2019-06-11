@@ -21,6 +21,11 @@
 <tal:block metal:define-macro="wait_for_activities">
   <!-- Wait for activities to finish -->
   <tr>
+    <td>pause</td>
+    <td>1000</td>
+    <td></td>
+  </tr>
+  <tr>
     <td>openAndWait</td>
     <td>${base_url}/Zuite_waitForActivities</td>
     <td></td>

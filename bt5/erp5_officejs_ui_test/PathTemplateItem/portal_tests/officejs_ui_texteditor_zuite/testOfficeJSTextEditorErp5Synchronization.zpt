@@ -304,7 +304,12 @@
   <td>${description}</td>
 </tr>
 <tr>
-  <td>open</td>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
   <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
