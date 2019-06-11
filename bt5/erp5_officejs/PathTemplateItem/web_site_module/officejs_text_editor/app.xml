@@ -325,6 +325,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_wallpaper_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -416,6 +426,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>configuration_wallpaper_url</string> </key>
+            <value> <string>officejs_logo_text_editor.png</string> </value>
         </item>
         <item>
             <key> <string>configuration_webapp_manifest_url</string> </key>
@@ -680,7 +694,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>975.65245.14433.33911</string> </value>
+                <value> <string>976.20971.62073.32870</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -698,7 +712,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1558984804.96</float>
+                        <float>1560246622.09</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
