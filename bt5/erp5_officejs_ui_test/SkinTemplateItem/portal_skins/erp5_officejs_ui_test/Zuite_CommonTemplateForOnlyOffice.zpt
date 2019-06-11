@@ -56,16 +56,6 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//span[contains(@class, "ui-icon-spinner")]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForNotElementPresent</td>
-      <td>//span[contains(@class, "ui-icon-spinner")]</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
       <td>//div[@id='id-toolbar-btn-insertimage' and not(contains(@class, "disabled"))]</td>
       <td></td>
     </tr>
