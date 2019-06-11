@@ -133,8 +133,11 @@
           },
           local_sub_storage: {},
           remote_sub_storage: {
-            type: "appcache",
-            manifest: manifest
+            type: "saferepair",
+            sub_storage: {
+              type: "appcache",
+              manifest: manifest
+            }
           }
         },
         sync_flag = "appcache-stored",
