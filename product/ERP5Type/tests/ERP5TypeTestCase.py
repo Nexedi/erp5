@@ -258,24 +258,28 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       try:
         PortalTestCase.login(self, user_name)
       except AttributeError:
-        self.addERP5TypeTestCaseUser()
-        return PortalTestCase.login(self, user_name)
+        if user_name == 'ERP5TypeTestCase':
+          self.addERP5TypeTestCaseUser()
+          return PortalTestCase.login(self, user_name)
+        else:
+          raise
 
     def loginByUserName(self, user_name='ERP5TypeTestCase', quiet=0):
       """
       Most of the time, we need to login before doing anything
       """
       uf = self.portal.acl_users
-      for i in range(2):
-        try:
+      user = uf.getUser(user_name)
+      if user is None:
+        if user_name == 'ERP5TypeTestCase':
+          self.addERP5TypeTestCaseUser(password='', user_folder=uf)
           user = uf.getUser(user_name)
-          if not hasattr(user, 'aq_base'):
-            user = user.__of__(uf)
-          newSecurityManager(None, user)
-          return
-        except AttributeError:
-          uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
-                        'Assignor', 'Author', 'Auditor', 'Associate'], [])
+        else:
+          raise RuntimeError("Could not find username '%s'" % user_name)
+
+      if not hasattr(user, 'aq_base'):
+        user = user.__of__(uf)
+      newSecurityManager(None, user)
 
     def changeSkin(self, skin_name):
       """
