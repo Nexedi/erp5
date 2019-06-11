@@ -1,6 +1,19 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal">
 
+  <tal:block metal:define-macro="wait_spinner">
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForNotElementPresent</td>
+      <td>//div[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
   <tal:block metal:define-macro="wait_install">
     <tr>
       <td colspan="3"><b>Install web site</b></td>
@@ -21,6 +34,7 @@
       <td>selenium.browserbot.currentWindow.navigator.serviceWorker.controller !== null</td>
       <td>150000</td>
     </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_spinner" />
     <tr>
       <td>setTimeout</td>
       <td>90000</td>
