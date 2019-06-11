@@ -394,6 +394,9 @@
                 ul.removeChild(ul.firstChild);
               }
               ul.appendChild(fragment_element);
+            })
+            .push(undefined, function () {
+              return gadget.notifyInvalid("Invalid search criteria");
             });
         });
 
