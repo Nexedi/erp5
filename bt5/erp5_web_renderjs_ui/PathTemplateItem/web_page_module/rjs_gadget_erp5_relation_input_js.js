@@ -243,7 +243,8 @@
       return RSVP.Queue()
         .push(function () {
           var plane = gadget.element.querySelector("a"),
-            ul = gadget.element.querySelector(".search_ul");
+            ul = gadget.element.querySelector(".search_ul"),
+            translation_promise;
           plane.href = '';
 
           // uid is known
@@ -309,8 +310,12 @@
               return RSVP.delay(200);
             })
             .push(function () {
-              return RSVP.all([
-                gadget.jio_allDocs({
+              translation_promise = gadget.getTranslationList([
+                  'Create New',
+                  'Explore the Search Result List'
+              ]);
+
+              return gadget.jio_allDocs({
                   query: Query.objectToSearchText(new ComplexQuery({
                     operator: "AND",
                     query_list: [
@@ -326,13 +331,12 @@
                   limit: [0, 10],
                   select_list: [gadget.state.catalog_index, "uid"],
                   sort_on: JSON.parse(gadget.state.sort_list_json)
-                }),
-                gadget.getTranslationList([
-                  'Create New',
-                  'Explore the Search Result List'
-                ])
-              ]);
-            })
+              })
+                .push(function (result) {
+                  return new RSVP.Queue()
+                    .push(function () {
+                      return RSVP.all([result, translation_promise]);
+                    })
             .push(function (result_list) {
               var i,
                 row,
@@ -396,6 +400,21 @@
               }
               ul.appendChild(fragment_element);
             });
+                }, function (error) {
+                  if (error && error.hash &&
+                      error.hash.expected &&
+                      error.hash.expected.length === 1 &&
+                      error.hash.expected[0] === "'QUOTE'") {
+                    return gadget.getTranslationList([
+                      "Invalid search criteria"
+                    ])
+                      .push(function (translation_list) {
+                        return gadget.notifyInvalid(translation_list[0]);
+                      });
+                  }
+                  throw error;
+                });
+        });
         });
 
     })
