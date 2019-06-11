@@ -190,6 +190,16 @@
       <td>//a[@data-i18n="Synchronize"]</td>
       <td></td>
     </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@class='ui-icon-spinner ui-btn-icon-notext first-loader']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForNotElementPresent</td>
+      <td>//div[@class='ui-icon-spinner ui-btn-icon-notext first-loader']</td>
+      <td></td>
+    </tr>
   </tal:block>
   <tal:block metal:define-macro="choice_erp5_storage">
     <tr>
