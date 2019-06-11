@@ -190,6 +190,6 @@
           });
       }
       return true;
-    }, {mutex: 'changestate'});
+    });
 
 }(window, rJS, document, RSVP, isEmpty, ensureArray, getFirstNonEmpty));
