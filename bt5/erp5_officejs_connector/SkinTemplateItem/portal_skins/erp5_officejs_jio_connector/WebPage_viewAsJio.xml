@@ -86,8 +86,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_language</string>
                         <string>my_version</string>
+                        <string>my_language</string>
                       </list>
                     </value>
                 </item>
