@@ -2603,6 +2603,28 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           self.assertEqual(len(result), 1)
           self.deleteMessageList(activity, result)
 
+  def test_message_auto_validation(self):
+    """
+    Test that messages without dependencies are directly spawned with
+    processing_node=0.
+    """
+    organisation = self.portal.organisation_module.newContent(portal_type='Organisation')
+    self.tic()
+    activity_tool = self.getActivityTool()
+    organisation.activate(tag='1').getId()
+    organisation.activate(tag='2', after_tag=None).getId()
+    organisation.activate(tag='3', after_tag='foo').getId()
+    self.commit()
+    activity_tool.getMessageList()
+    self.assertItemsEqual(
+      [('1', 0), ('2', 0), ('3', -1)],
+      [
+          (x.activity_kw['tag'], x.processing_node)
+          for x in self.getActivityTool().getMessageList()
+      ],
+    )
+    self.tic()
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
