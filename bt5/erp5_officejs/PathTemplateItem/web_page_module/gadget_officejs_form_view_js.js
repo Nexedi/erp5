@@ -221,8 +221,10 @@
             if (options.form_type === 'list') {
               header_dict = {
                 panel_action: true,
-                jump_url: "",
-                fast_input_url: "",
+                //TODO which header links/buttons will be displayed
+                //should be come from the configuration (form_definition)
+                //jump_url: "",
+                //fast_input_url: "",
                 filter_action: true,
                 page_title: result_list[2]
               };
