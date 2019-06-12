@@ -18,6 +18,7 @@
   }
 
   function submitDialog(is_updating) {
+    console.log('submitDialog is_updating', is_updating);
     var gadget = this,
       button_container =
           gadget.element.querySelector('.dialog_button_container'),
@@ -244,15 +245,27 @@
           selector.textContent = "\u00A0" + translated_title_list[0];
           selector.className = "ui-content-title ui-body-c ui-icon ui-icon-custom" + icon;
 
+          if (form_gadget.state.has_update_action) {
+            // console.log(form_gadget.state.form_definition);
+            // console.log(form_gadget.state.form_definition.update_action_title);
+            form_gadget.element.querySelector('button[name="action_update"]').textContent = form_gadget.state.form_definition.update_action_title;
+          }
+
           // Render the erp5_from
           return form_gadget.getDeclaredGadget("erp5_form");
         })
         .push(function (erp5_form) {
-          var form_options = form_gadget.state.erp5_form;
+          var form_options = form_gadget.state.erp5_form,
+            embedded_form,
+            rendered_form,
+            i,
+            len,
+            key;
 
           // pass own form options to the embedded form
           form_options.erp5_document = form_gadget.state.erp5_document;
           form_options.form_definition = form_gadget.state.form_definition;
+
           form_options.view = form_gadget.state.view;
           form_options.jio_key = form_gadget.state.jio_key;
           form_options.editable = true; // dialog is always editable
@@ -261,6 +274,31 @@
           if (form_gadget.state.extended_search) {
             form_options.form_definition.extended_search = form_gadget.state.extended_search;
           }
+
+          // console.log(form_options);
+          /* Remove empty non-editable fields to prevent them from displaying (business requirement).
+             Deleting objects inplace was not a good idea.
+             So we pass through only non-empty (non-editable) fields.
+          */
+          embedded_form = form_options.erp5_document._embedded._view;
+        /*
+          for (key in embedded_form) {
+            if (embedded_form.hasOwnProperty(key) && key[0] !== "_") {
+              embedded_form[key].hidden = 1;
+              embedded_form[key].required = 0;
+              delete embedded_form[key].error_text;
+            }
+          }
+          */
+          console.log(form_options);
+          /*
+          form_options.erp5_document = {
+            "_embedded": {
+              "_view": rendered_form
+            }
+          };
+          */
+
           return erp5_form.render(form_options);
         })
         .push(function () {
@@ -272,6 +310,7 @@
         })
         .push(function (all_result) {
           form_gadget.element.querySelector('a.dialogcancel').href = all_result[0];
+          form_gadget.enableButtonAsJob();
           return form_gadget.updateHeader({
             cancel_url: all_result[0],
             page_title: all_result[1]
@@ -280,25 +319,31 @@
     })
 
     .onEvent('submit', function submit() {
+      console.log('submit event');
+    /*
       if (this.state.has_update_action === true) {
         // default action on submit is update in case of its existence
         return submitDialog.apply(this, [true]);
       }
+      */
       return submitDialog.apply(this, [false]);
     }, false, true)
 
     .onEvent('click', function click(evt) {
+    /*
+      console.log('click', evt.target);
       if (evt.target.name === "action_confirm") {
         evt.preventDefault();
         return submitDialog.apply(this, [false]);
       }
+      */
       if (evt.target.name === "action_update") {
         evt.preventDefault();
         return submitDialog.apply(this, [true]);
       }
     }, false, false)
 
-    .declareService(function enableButton() {
+    .declareJob('enableButtonAsJob', function enableButton() {
       // click event listener is now activated
       // Change the state of the gadget
       var gadget = this,
@@ -311,5 +356,10 @@
         update_button.disabled = false;
       }
     });
+/*
+    .declareService(function () {
+      return this.enableButtonAsJob();
+    });
+*/
 
 }(window, rJS, RSVP, calculatePageTitle, Handlebars, ensureArray));
