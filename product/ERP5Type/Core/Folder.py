@@ -1359,6 +1359,14 @@ class Folder(OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     for document in self.objectValues():
       getattr(document, '_reindexOnCreation', dummy)(**reindex_kw)
 
+  security.declarePrivate('recursiveImmediateReindexObject')
+  def recursiveImmediateReindexObject(self, **reindex_kw):
+    warnings.warn(
+      "Use newContent's immediate_reindex argument instead of this method. "
+      "Uses outside of document creation will break your catalog.",
+    )
+    self._reindexOnCreation(**reindex_kw)
+
   security.declareProtected(Permissions.ModifyPortalContent, 'moveObject')
   def moveObject(self, idxs=None):
       """

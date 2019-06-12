@@ -2861,6 +2861,14 @@ class Base( CopyContainer,
         PortalContent.reindexObject(self, *args, **kw)
   _reindexOnCreation = immediateReindexObject
 
+  security.declarePrivate('recursiveImmediateReindexObject')
+  def recursiveImmediateReindexObject(self, **reindex_kw):
+    warnings.warn(
+      "Use newContent's immediate_reindex argument instead of this method. "
+      "Uses outside of document creation will break your catalog.",
+    )
+    self.immediateReindexObject(**reindex_kw)
+
   security.declarePublic('reindexObject')
   def reindexObject(self, *args, **kw):
     """
