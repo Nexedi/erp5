@@ -125,10 +125,15 @@
             element_id = my_element.replace("my_", "");
           } else if (my_element.startsWith("your_")) {
             element_id = my_element.replace("your_", "");
+            //TODO hardcoded to hide modification date in doc views
+            //fix bug that prevents to set field as hidden
+            if (my_element === "your_modification_date") {
+              element_id = undefined;
+            }
           } else {
             element_id = my_element;
           }
-          if (raw_properties.hasOwnProperty(my_element)) {
+          if (element_id && raw_properties.hasOwnProperty(my_element)) {
             field_info = raw_properties[my_element];
             rendered_field = renderField(element_id, field_info, document);
             form_json.erp5_document._embedded._view[my_element] = rendered_field;
