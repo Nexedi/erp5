@@ -164,6 +164,15 @@ class Updater(object):
           logger.exception("")
         if not(correct_url):
           self.deleteRepository()
+        else:
+          # Get the submodule only if we are in the correct repo
+          try:
+            parameter_list = ['submodule', 'update', '--init']
+            self._git(*parameter_list)
+          except SubprocessError:
+            # If working on a corrupt repository, just ignore it
+            logger.exception("")
+
       if not os.path.exists(self.repository_path):
         parameter_list = ['clone', self.url]
         if self.branch is not None:
@@ -184,12 +193,26 @@ class Updater(object):
         else:
           h = revision[1]
         if h != self._git('rev-parse', 'HEAD'):
+          try:
+            # Reset submodule first.
+            self._git('submodule', 'foreach', '--recursive', self.git_binary, 'clean', '-fdx')
+            self._git('submodule', 'foreach', '--recursive', self.git_binary, 'reset', '--hard')
+          except SubprocessError:
+            logger.exception("")
           self._git('clean', '-fdx')
+
           # For performance, it is ok to use 'git reset --hard',
           # theses days it is not slow like it was long time ago.
           self._git('reset', '--hard', h)
+          self._git('submodule', 'update', '--init', '--recursive')
       else:
+        try:
+          self._git('submodule', 'foreach', '--recursive', self.git_binary, 'clean', '-fdx')
+          self._git('submodule', 'foreach', '--recursive', self.git_binary, 'reset', '--hard')
+        except SubprocessError:
+          logger.exception("")
         self._git('clean', '-fdx')
+
         if os.path.exists('.git/svn'):
           self._git('svn', 'rebase')
         else:
@@ -202,6 +225,7 @@ class Updater(object):
               self._git('checkout',  'origin/%s' % self.branch, '-b',
                         self.branch)
           self._git('reset', '--hard', '@{u}')
+          self._git('submodule', 'update', '--init', '--recursive')
         self.revision = self._git_find_rev(self._git('rev-parse', 'HEAD'))
     elif self.getRepositoryType() == SVN_TYPE:
       # following code allows sparse checkout
