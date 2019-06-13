@@ -164,6 +164,9 @@ class Updater(object):
           logger.exception("")
         if not(correct_url):
           self.deleteRepository()
+        parameter_list = ['submodule', 'update', '--init']
+        self._git(*parameter_list)
+
       if not os.path.exists(self.repository_path):
         parameter_list = ['clone', self.url]
         if self.branch is not None:
