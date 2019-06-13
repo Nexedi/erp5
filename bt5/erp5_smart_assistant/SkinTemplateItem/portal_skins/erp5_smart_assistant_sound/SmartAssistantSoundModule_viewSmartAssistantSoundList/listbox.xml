@@ -10,7 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>portal_type</string>
+                <string>columns</string>
+                <string>portal_types</string>
                 <string>selection_name</string>
                 <string>title</string>
               </list>
@@ -66,6 +67,21 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>validation_state</string>
+                          <string>Validation State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_list_mode_listbox</string> </value>
                 </item>
@@ -85,8 +101,14 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>smart_assistant_sound_module_selection</string> </value>
+                    <value> <string>smart_assistant_sound_module_selectionxxxx</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

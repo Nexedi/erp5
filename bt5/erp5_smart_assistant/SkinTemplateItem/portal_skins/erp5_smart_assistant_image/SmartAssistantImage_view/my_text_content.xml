@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>reply</string> </value>
+            <value> <string>my_text_content</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -257,7 +257,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Reply</string> </value>
+                    <value> <string>Text Content</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

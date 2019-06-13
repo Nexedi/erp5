@@ -79,8 +79,9 @@
                         <string>my_language</string>
                         <string>my_version</string>
                         <string>my_portal_type</string>
-                        <string>your_modification_date</string>
                         <string>my_content_type</string>
+                        <string>my_translated_validation_state_title</string>
+                        <string>copy_of_my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -95,7 +96,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>File_viewAsJIO</string> </value>
+            <value> <string>SmartAssistantImage_viewAsJIO</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>SmartAssistantText_respond</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -72,10 +72,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_text_content</string>
-                        <string>your_modification_date</string>
-                        <string>your_validation_state</string>
+                        <string>your_reply</string>
                       </list>
                     </value>
                 </item>
@@ -90,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SmartAssistantText_viewAsJIO</string> </value>
+            <value> <string>SmartAssistantText_respondDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -98,11 +95,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SmartAssistantText_view</string> </value>
+            <value> <string>SmartAssistantText_respondDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -114,7 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Smart Assistant Text</string> </value>
+            <value> <string>Respond</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

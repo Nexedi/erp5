@@ -18,8 +18,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>form_view_editable\n
-ooffice_view</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -74,12 +73,11 @@ ooffice_view</string> </value>
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>your_modification_date</string>
-                        <string>my_content_type</string>
-                        <string>my_portal_type</string>
-                        <string>my_reference</string>
-                        <string>my_revision</string>
                         <string>your_player</string>
+                        <string>your_modification_date</string>
+                        <string>my_translated_validation_state_title</string>
+                        <string>my_text_content</string>
+                        <string>your_validation_state</string>
                       </list>
                     </value>
                 </item>
@@ -94,7 +92,7 @@ ooffice_view</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Sound_viewAsJio</string> </value>
+            <value> <string>SmartAssistantSound_viewAsJIO</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -102,11 +100,11 @@ ooffice_view</string> </value>
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WebTable_viewAsJio</string> </value>
+            <value> <string>SmartAssistantSound_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view_editable</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -118,7 +116,7 @@ ooffice_view</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Smart Assistant Sound</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
