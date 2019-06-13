@@ -1229,3 +1229,7 @@ body[dir="rtl"] .access_tab_table td > div > ul {
   padding-right: 10px !important;
   padding-left: 0 !important;
 }
+
+::selection {
+  background: orange;
+}
