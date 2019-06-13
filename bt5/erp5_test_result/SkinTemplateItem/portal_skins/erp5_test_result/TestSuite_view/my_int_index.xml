@@ -200,9 +200,10 @@
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>For Priority, please use :\n
-- 3 or 6 cores for a test suite taking less than 2 hours on 3 cores.\n
-- 9 cores if your test suite is still quite fast on 3 cores (at most 3 hours), but you are on an a quite active branch and you would like to reduce the time to wait before test start.\n
-- 15 cores if your test suite is slow on 3 cores (more than 3 hours). 15 cores is strictly required if you launch all ERP5 tests. This is also true even if the test suite is not urgent for you. If you do not do so, your test suite will block a testnode many hours, preventing others to have their results.\n
+- 3 cores for a test suite which is not needed to run in parallel testnodes and if quick results is not needed.\n
+- 12 cores if you can benefit parallel execution and you are on an a quite active branch and you would like to reduce the time to wait before test start.\n
+- 24 cores can be used when you want to have maximum reactivity for a medium size project which can benefit parallelization.\n
+- 45 cores is strictly required if you launch all ERP5 tests. This is also true even if the test suite is not urgent for you. If you do not do so, your test suite will block a testnode many hours, preventing others to have their results.\n
 \n
 In all cases, please avoid single test taking more than one hour (otherwise it is useless to distribute on many cores). So if a test is too long, please cut it in several tests.</string> </value>
                 </item>
@@ -274,7 +275,7 @@ In all cases, please avoid single test taking more than one hour (otherwise it i
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [("", None),("3 Cores", 1),("6 Cores",4),("9 Cores",7),("15 Cores",9)]</string> </value>
+            <value> <string>python: [("", None),("3 Cores", 1),("12 Cores",4),("24 Cores",7),("45 Cores",9)]</string> </value>
         </item>
       </dictionary>
     </pickle>
