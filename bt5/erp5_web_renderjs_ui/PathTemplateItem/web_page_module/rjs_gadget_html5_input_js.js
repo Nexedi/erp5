@@ -207,12 +207,6 @@
 
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .onEvent('change', function change() {
-      var input = this.element.querySelector("input");
-      if (input) {
-        // force the state to have the current edited value
-        this.state.checked = input.checked;
-        this.state.value = input.value;
-      }
       return RSVP.all([
         this.checkValidity(),
         this.notifyChange("change")
