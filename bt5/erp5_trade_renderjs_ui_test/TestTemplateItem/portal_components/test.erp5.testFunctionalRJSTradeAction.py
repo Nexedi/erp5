@@ -32,7 +32,7 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctiona
 
 class TestRenderJSUITradeAction(ERP5TypeFunctionalTestCase):
   foreground = 0
-  run_only = "renderjs_ui_crm_action_zuite"
+  run_only = "renderjs_ui_trade_action_zuite"
 
   def getBusinessTemplateList(self):
     return (
