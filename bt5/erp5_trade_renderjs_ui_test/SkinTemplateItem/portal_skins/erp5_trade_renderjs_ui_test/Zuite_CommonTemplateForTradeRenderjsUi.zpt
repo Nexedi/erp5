@@ -77,7 +77,7 @@
     </tr>
     <tr>
       <td>assertTextPresent</td>
-      <td>Create Response</td>
+      <td>Solve Divergences</td>
       <td></td>
     </tr>
   </tal:block>

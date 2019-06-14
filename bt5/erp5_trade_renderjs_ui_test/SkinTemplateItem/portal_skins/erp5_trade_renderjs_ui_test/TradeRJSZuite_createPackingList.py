@@ -25,9 +25,12 @@ delivery = module.newContent(
 
 delivery.newContent(
   portal_type='Sale Packing List Line',
-  resource_value=resource_value
+  resource_value=resource_value,
+  quantity=10
 )
 
 delivery.startBuilding()
+# portal.portal_workflow.doActionFor(delivery, 'confirm_action')
+# portal.portal_workflow.doActionFor(delivery, 'start_action')
 
 return "Sale Packing List Created."
