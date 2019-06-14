@@ -4,7 +4,7 @@
 # it requires socat command
 
 ZOPE_PIDS="$(slapos node | grep 'zope\|jupyter-lab' | awk '{print substr($0, 91, 5);}')"
-LOCAL_IPv4="$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')"
+LOCAL_IPv4="$(/sbin/ifconfig ens3 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')"
 
 port=20000
 
