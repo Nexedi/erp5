@@ -128,8 +128,12 @@
               }
             }
           }
+          //var default_view = "text_editor_view";
+          //TODO use app settings to get the default view, and then:
+          //if (action_info_dict.views.hasOwnProperty(default_view) {
+          //  remove all other views (iterate and delete every view in view_categories distinct from default view
+          //}
           //if portal_type has both view and jio_view, remove classic 'view'
-          //TODO use action type instead of reference
           //is the 'classic view' action needed at all here? -maybe it shouldn't be added in appcache manifest
           if (action_info_dict.views.hasOwnProperty("view") && action_info_dict.views.hasOwnProperty("jio_view")) {
             delete action_info_dict.views.view;

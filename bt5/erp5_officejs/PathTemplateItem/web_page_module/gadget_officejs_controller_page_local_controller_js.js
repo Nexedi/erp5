@@ -27,6 +27,8 @@
 
     .declareMethod("render", function (options) {
       var gadget = this,
+        //TODO get default and app views from app configuration
+        app_view = options.action || "text_editor_view",
         default_view = "jio_view",
         common_utils_gadget_url = "gadget_officejs_common_utils.html",
         form_definition,
@@ -57,6 +59,12 @@
             portal_type = parent_portal_type;
           }
           front_page = portal_type === parent_portal_type;
+          return gadget_utils.getFormDefinition(portal_type, app_view);
+        })
+        .push(function (result) {
+          return result;
+        }, function (error) {
+          console.log("Error getting app_view " + app_view + " for portal_type " + portal_type + ". Now trying with default_view " + default_view);
           return gadget_utils.getFormDefinition(portal_type, default_view);
         })
         .push(function (result) {

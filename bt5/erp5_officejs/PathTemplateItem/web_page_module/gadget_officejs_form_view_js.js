@@ -46,6 +46,11 @@
         result["default"] = document[field_id];
       }
     }
+    if (result.type === "GadgetField") {
+      //TODO: this must be done in hateoas script side
+      result.url = result.gadget_url;
+      result.renderjs_extra = result.renderjs_extra[0][0];
+    }
     return result;
   }
 
@@ -125,11 +130,6 @@
             element_id = my_element.replace("my_", "");
           } else if (my_element.startsWith("your_")) {
             element_id = my_element.replace("your_", "");
-            //TODO hardcoded to hide modification date in doc views
-            //fix bug that prevents to set field as hidden
-            if (my_element === "your_modification_date") {
-              element_id = undefined;
-            }
           } else {
             element_id = my_element;
           }
@@ -242,7 +242,7 @@
               if (options.form_definition.has_more_views) {
                 header_dict.tab_url = url_list[0];
               }
-              if (options.editable === "true") {
+              if (options.editable === true || options.editable === "true") {
                 header_dict.save_action = true;
               }
             }
