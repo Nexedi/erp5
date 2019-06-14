@@ -159,6 +159,17 @@
   page-break-inside: avoid;
 }
 
+.ci-book :not(.ci-book-header-image-wkhtmltopdf-image-wrapper) > img {
+  page-break-after: avoid;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  display: block;
+}
+.ci-book :not(.ci-book-header-image-wkhtmltopdf-image-wrapper) > img ~ span {
+  margin-left: 3cm;
+}
+
 .ci-book section:not(:last-child) {
   page-break-after: always;
   page-break-inside: always;
