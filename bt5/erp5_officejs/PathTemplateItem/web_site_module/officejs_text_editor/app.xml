@@ -335,6 +335,46 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_app_action_prefix</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_header_jump_button</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_app_actions</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_app_allowed_sub_types</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -366,6 +406,27 @@
             </value>
         </item>
         <item>
+            <key> <string>configuration_app_action_prefix</string> </key>
+            <value> <string>some_action_prefix</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_app_actions</string> </key>
+            <value>
+              <tuple>
+                <string>Web Page | text_editor_view</string>
+                <string>Web Page | jio_view</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>configuration_app_allowed_sub_types</string> </key>
+            <value>
+              <tuple>
+                <string>Web Page Module | Web Page</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>configuration_application_title</string> </key>
             <value> <string>Text Editor</string> </value>
         </item>
@@ -392,6 +453,10 @@
         <item>
             <key> <string>configuration_header_gadget_url</string> </key>
             <value> <string>gadget_erp5_header.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_header_jump_button</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
@@ -694,7 +759,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.20971.62073.32870</string> </value>
+                <value> <string>976.29963.55292.21623</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -712,7 +777,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1560246622.09</float>
+                        <float>1560786002.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

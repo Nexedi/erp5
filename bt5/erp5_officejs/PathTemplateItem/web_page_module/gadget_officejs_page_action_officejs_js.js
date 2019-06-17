@@ -85,6 +85,7 @@
     })
 
     .declareMethod("getAllActions", function (portal_type, options) {
+      //TODO for now this takes also views. Views should be handle in another gadget like "..tab_office.js"
       var gadget = this,
         action_info_dict = {views: {}, actions: {}},
         query = 'portal_type: "Action Information" AND parent_relative_url: "portal_types/' + portal_type + '"';
@@ -101,6 +102,8 @@
         .push(function (action_document_list) {
           var action_settings_list = [], page, action_key, action_doc, key, action_settings;
           for (action_key in action_document_list) {
+            //TODO filter actions: discard actions that are not in getSettings("app_actions")
+            //there must be one "View" action. If not, use default view (like jio_view in getsettings)
             if (action_document_list.hasOwnProperty(action_key)) {
               action_doc = action_document_list[action_key];
               page = "handle_action";
@@ -128,13 +131,6 @@
               }
             }
           }
-          //var default_view = "text_editor_view";
-          //TODO use app settings to get the default view, and then:
-          //if (action_info_dict.views.hasOwnProperty(default_view) {
-          //  remove all other views (iterate and delete every view in view_categories distinct from default view
-          //}
-          //if portal_type has both view and jio_view, remove classic 'view'
-          //is the 'classic view' action needed at all here? -maybe it shouldn't be added in appcache manifest
           if (action_info_dict.views.hasOwnProperty("view") && action_info_dict.views.hasOwnProperty("jio_view")) {
             delete action_info_dict.views.view;
           }
@@ -162,7 +158,7 @@
             gadget.getHTMLElementList(action_info_dict.actions)
           ]);
         })
-          // TODO: check other lists like clone or delete?
+          // check other lists like clone or delete? NO. For now, they will be actions
         .push(function (all_html_elements) {
           return RSVP.all([
             renderLinkList(gadget, "Views", "eye", all_html_elements[0]),

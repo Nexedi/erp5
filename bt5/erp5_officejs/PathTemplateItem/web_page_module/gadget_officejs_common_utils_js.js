@@ -91,13 +91,17 @@
 
     .declareMethod("getFormDefinition", function (portal_type, action_reference) {
       var gadget = this,
+        all_allowed_sub_types_list = [],
+        allowed_sub_types_list = [],
+        i = 0,
         query,
         action_type,
         action_title,
         form_definition,
         query_type,
         query_parent,
-        query_reference;
+        query_reference,
+        pair;
       query_reference = new SimpleQuery({
         key: "reference",
         operator: "",
@@ -137,10 +141,21 @@
           form_definition = form_result.form_definition;
           form_definition.action_type = action_type;
           form_definition.title = action_title;
-          return gadget.jio_get("portal_types/" + portal_type);
+          return gadget.getSetting("app_allowed_sub_types");
         })
-        .push(function (portal_type_definition) {
-          form_definition.allowed_sub_types_list = portal_type_definition.type_allowed_content_type_list;
+        .push(function (allowed_sub_types) {
+          allowed_sub_types = allowed_sub_types.replace(/\(/g, '[')
+            .replace(/\)/g, ']')
+            .replace(/,\]/g, ']')
+            .replace(/\'/g, '"');
+          all_allowed_sub_types_list = JSON.parse(allowed_sub_types);
+          for (i = 0; i < all_allowed_sub_types_list.length; i++) {
+            pair = all_allowed_sub_types_list[i].split(" | ");
+            if (pair[0] === portal_type) {
+              allowed_sub_types_list.push(pair[1]);
+            }
+          }
+          form_definition.allowed_sub_types_list = allowed_sub_types_list;
           return gadget.checkMoreActions(portal_type, action_type);
         })
         .push(function (has_more_dict) {
