@@ -90,6 +90,9 @@
                         <string>my_configuration_default_jio_document_page_gadget_url</string>
                         <string>my_configuration_stylesheet_url</string>
                         <string>my_configuration_wallpaper_url</string>
+                        <string>my_configuration_header_jump_button</string>
+                        <string>my_configuration_app_actions</string>
+                        <string>my_configuration_app_allowed_sub_types</string>
                       </list>
                     </value>
                 </item>

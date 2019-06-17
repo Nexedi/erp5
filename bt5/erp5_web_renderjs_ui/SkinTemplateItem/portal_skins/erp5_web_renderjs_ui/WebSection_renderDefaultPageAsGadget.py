@@ -51,6 +51,9 @@ mapping_dict = {
   "website_url_set": json.dumps(website_url_set),
   "site_description": web_section.getLayoutProperty("description", default=""),
   "site_keywords": web_section.getLayoutProperty("subject", default=""),
+  "app_action_prefix": web_section.getLayoutProperty("configuration_app_action_prefix", default=""),
+  "header_jump_button": web_section.getLayoutProperty("configuration_header_jump_button", default=False),
+  "app_actions": web_section.getLayoutProperty("configuration_app_actions", default=""),
 }
 
 configuration_manifest_url = web_section.getLayoutProperty("configuration_manifest_url", default=None)
