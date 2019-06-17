@@ -11,12 +11,16 @@
             <value> <string>workflow</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
             <value> <string>Solve Divergences</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/Delivery_solveDivergenceAction?field_your_workflow_action=solve_divergence_action</string> </value>
+            <value> <string>%(content_url)s/Delivery_viewSolveDivergenceDialog?workflow_action=solve_divergence_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
@@ -74,6 +78,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
