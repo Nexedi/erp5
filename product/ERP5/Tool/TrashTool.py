@@ -151,7 +151,7 @@ class TrashTool(BaseTool):
             subobject._p_oid, StringIO())
 
           if save: # remove subobjecs from backup object
-            obj._delObject(subobject_id)
+            obj._delObject(subobject_id, suppress_events=True)
             if subobject_id in obj.objectIds():
               LOG('Products.ERP5.Tool.TrashTool', WARNING,
                   'Cleaning corrupted BTreeFolder2 object at %r.' % \
