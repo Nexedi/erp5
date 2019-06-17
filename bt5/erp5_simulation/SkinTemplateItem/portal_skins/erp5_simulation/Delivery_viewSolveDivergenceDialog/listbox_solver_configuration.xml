@@ -134,6 +134,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>context_method_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -159,7 +163,7 @@
                 </item>
                 <item>
                     <key> <string>formbox_target_id</string> </key>
-                    <value> <string>Delivery_viewSolveDivergenceDialog_form_id_should_come_from_TALES</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -168,6 +172,10 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>listbox_solver_configuration</string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_form_field_prefix</string> </key>
+                    <value> <string>my_</string> </value>
                 </item>
               </dictionary>
             </value>
