@@ -69,9 +69,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_phase/default/delivery</string>
-                <string>trade_date/trade_phase/default/order</string>
-                <string>end_of/day</string>
+                <string>trade_phase/erp5_trade_renderjs_ui_test_trade_phase/delivery</string>
               </tuple>
             </value>
         </item>
@@ -96,7 +94,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>TMP-DELIVERY</string> </value>
+            <value> <string>RJS-TEST-DELIVERY</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

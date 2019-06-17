@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Trade Model Path" module="erp5.portal_type"/>
+      <global name="Float Divergence Tester" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19,21 +19,21 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>modification_date</string> </value>
+                      <value> <string>quantity_range_min</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
-                      <value> <string>date</string> </value>
+                      <value> <string>int</string> </value>
                   </item>
                 </dictionary>
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>creation_date</string> </value>
+                      <value> <string>quantity_range_max</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
-                      <value> <string>date</string> </value>
+                      <value> <string>int</string> </value>
                   </item>
                 </dictionary>
               </tuple>
@@ -46,75 +46,38 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>trade_phase/default/order</string>
-                <string>trade_date/trade_phase/default/order</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>creation_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1280440800.0</float>
-                    <string>GMT+2</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>TMP-ORDER</string> </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>divergence_provider</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>order_path</string> </value>
-        </item>
-        <item>
-            <key> <string>int_index</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass> <reference id="1.1"/> </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1280440800.0</float>
-                    <string>GMT+2</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
+            <value> <string>price_tester</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Trade Model Path</string> </value>
+            <value> <string>Float Divergence Tester</string> </value>
+        </item>
+        <item>
+            <key> <string>quantity_range_max</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>quantity_range_min</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>tested_property</string> </key>
+            <value> <string>price</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Order</string> </value>
+            <value> <string>price divergence tester</string> </value>
         </item>
       </dictionary>
     </pickle>
