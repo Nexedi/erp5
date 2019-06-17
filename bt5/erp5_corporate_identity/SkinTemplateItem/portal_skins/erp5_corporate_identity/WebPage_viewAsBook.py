@@ -89,9 +89,6 @@ book_title = html_quote(override_document_title) if override_document_title else
 if isinstance(book_content, unicode):
   book_content = book_content.encode("UTF-8")
 
-# backcompat
-book_history_section_list = re.findall('<section*?>.+?</section>', book_content, re.S)
-
 # override for tests
 if override_batch_mode:
   book_modification_date = DateTime("1976-11-04")
@@ -128,9 +125,6 @@ book_distribution_list = []
 book_image_list = []
 book_table_list = []
 book_table_of_content = blank
-
-# backcompat
-book_content = book_content.replace("${WebPage_insertTableOfReferences}", blank)
 
 # XXX: not done
 if book_include_history_table:
@@ -188,13 +182,9 @@ if book_include_reference_table:
   )
   #if book_format == 'html' or book_format == 'mhtml':
   #  book_references = book_references.encode('UTF-8').strip()
-
-  # backcompat for manual history tables at the beginning of documents
-  # NOTE: assumes <section>s are not used elsewhere!
-  if len(book_history_section_list) > 0:
-    book_content = book_content.replace(book_history_section_list[-1], (book_history_section_list[-1] + book_references.encode('UTF-8').strip()))
-  else:
-    book_content = book_references.encode('UTF-8').strip() + book_content
+  book_content = book_content.replace("${WebPage_insertTableOfReferences}", book_references.encode('UTF-8').strip())
+else:
+  book_content = book_content.replace("${WebPage_insertTableOfReferences}", blank)
 
 # table of content has to be created manually to run over everything that
 # should be indexed in the toc

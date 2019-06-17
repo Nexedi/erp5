@@ -45,6 +45,8 @@ if (doc_content.find('${WebPage_')):
   )]
   substitution_list = re.findall(r'\${WebPage_(.*)}', doc_content)
   for substitution_report in substitution_list:
+    if substitution_report == 'insertTableOfReferences':
+      continue
     placeholder = ''.join(['${WebPage_', substitution_report, '}'])
     substitution_content = getReportViaFancyName(substitution_report)
     doc_content = doc_content.replace(placeholder, substitution_content)
