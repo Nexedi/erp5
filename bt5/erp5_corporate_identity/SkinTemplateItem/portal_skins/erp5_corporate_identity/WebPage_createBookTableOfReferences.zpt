@@ -45,7 +45,6 @@ Creates the Tables of references.
   <tal:block metal:define-macro="book_references">
     <tal:comment tal:replace="nothing">We need to recheck in case macro is called directly</tal:comment>
     <tal:block tal:condition="python: book_include_reference != 0">
-      <h1 i18n:translate="" i18n:domain="erp5_ui">Introduction</h1>
       <h2 i18n:translate="" i18n:domain="erp5_ui">References</h2>
       <p i18n:translate="" i18n:domain="erp5_ui">This section provides the list of applicable documents and references.</p>
       <h3 i18n:translate="" i18n:domain="erp5_ui">Applicable Documents</h3>
