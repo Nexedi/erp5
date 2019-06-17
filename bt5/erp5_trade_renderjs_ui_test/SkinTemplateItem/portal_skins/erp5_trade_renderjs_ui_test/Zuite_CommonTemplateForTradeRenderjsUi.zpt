@@ -10,8 +10,8 @@
     </tr>
     <tr>
       <td>store</td>
-      <td>${renderjs_url}/sale_packing_list_module/erp5_trade_renderjs_ui_test_delivery</td>
-      <td>delivery_url</td>
+      <td>${renderjs_url}/sale_order_module/erp5_trade_renderjs_ui_test_order</td>
+      <td>order_url</td>
     </tr>
   </tal:block>
 
@@ -46,10 +46,23 @@
     </tr>
     <tr>
       <td>assertTextPresent</td>
-      <td>Sale Packing List Created.</td>
+      <td>Sale Order Created.</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+    <tr>
+      <td>open</td>
+      <td>${base_url}/portal_deliveries/erp5_trade_renderjs_ui_test_spl_builder/build</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Sale Packing List at</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
     <tr>
       <td colspan="3"><p></p></td>
     </tr>
@@ -62,71 +75,41 @@
 
     <tr>
       <td>open</td>
-      <td>${delivery_url}</td>
+      <td>${renderjs_url}/sale_packing_list_module/?extended_search=causality_relative_url%3A%20%20"sale_order_module%2Ferp5_trade_renderjs_ui_test_order"&amp;editable=true</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-    <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
-    </tal:block>
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-    <tal:block tal:define="click_configuration python: {'text': 'Confirm'}">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+    <tal:block tal:define="click_configuration python: {'text': 'erp5_trade_renderjs_ui_test_order_title'}">
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
     </tal:block>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
-
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
     <tr>
-      <td>open</td>
-      <td>${delivery_url}</td>
+      <td>storeLocation</td>
+      <td>delivery_url</td>
       <td></td>
     </tr>
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-    <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
-    </tal:block>
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-    <tal:block tal:define="click_configuration python: {'text': 'Ship Packing List'}">
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
-    </tal:block>
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
-    <tr>
-      <td>open</td>
-      <td>${delivery_url}</td>
-      <td></td>
-    </tr>
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-    <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
-    </tal:block>
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-    <tal:block tal:define="click_configuration python: {'text': 'Receive Packing List'}">
-      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
-    </tal:block>
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
-
-    <tr>
-      <td>open</td>
-      <td>${delivery_url}/1?editable=1</td>
-      <td></td>
-    </tr>
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
     <tr>
       <td>type</td>
-      <td>field_my_quantity</td>
-      <td>5</td>
+      <td>//input[@value=10]</td>
+      <td>11</td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+    <tr>
+      <td>open</td>
+      <td>${delivery_url}</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Diverged</td>
+      <td></td>
+    </tr>
 
   </tal:block>
 

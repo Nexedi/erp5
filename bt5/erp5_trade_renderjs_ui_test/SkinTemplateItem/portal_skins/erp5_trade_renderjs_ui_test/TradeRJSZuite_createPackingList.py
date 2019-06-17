@@ -2,8 +2,8 @@ from DateTime import DateTime
 
 portal = context.getPortalObject()
 
-delivery_portal_type = "Sale Packing List"
-delivery_id = "erp5_trade_renderjs_ui_test_delivery"
+delivery_portal_type = "Sale Order"
+delivery_id = "erp5_trade_renderjs_ui_test_order"
 
 source_value = portal.restrictedTraverse('organisation_module/erp5_trade_renderjs_ui_test_source_node')
 destination_value = portal.restrictedTraverse('organisation_module/erp5_trade_renderjs_ui_test_destination_node')
@@ -24,13 +24,14 @@ delivery = module.newContent(
 )
 
 delivery.newContent(
-  portal_type='Sale Packing List Line',
+  portal_type='Sale Order Line',
   resource_value=resource_value,
   quantity=10
 )
 
-delivery.startBuilding()
+delivery.confirm()
+# delivery.startBuilding()
 # portal.portal_workflow.doActionFor(delivery, 'confirm_action')
 # portal.portal_workflow.doActionFor(delivery, 'start_action')
 
-return "Sale Packing List Created."
+return "Sale Order Created."

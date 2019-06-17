@@ -36,26 +36,6 @@
                       <value> <string>date</string> </value>
                   </item>
                 </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>wait_time</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>float</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>lead_time</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>float</string> </value>
-                  </item>
-                </dictionary>
               </tuple>
             </value>
         </item>
@@ -69,9 +49,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>end_of/day</string>
-                <string>trade_phase/erp5_trade_renderjs_ui_test_tp/delivery</string>
-                <string>trade_date/trade_phase/erp5_trade_renderjs_ui_test_tp/order</string>
+                <string>trade_phase/erp5_trade_renderjs_ui_test_tp/invoicing</string>
+                <string>trade_date/trade_phase/erp5_trade_renderjs_ui_test_tp/delivery</string>
               </tuple>
             </value>
         </item>
@@ -87,7 +66,7 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1280440800.0</float>
+                    <float>1280786400.0</float>
                     <string>GMT+2</string>
                   </tuple>
                 </state>
@@ -96,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>RJS-TEST-DELIVERY</string> </value>
+            <value> <string>RJS-TEST-INVOICE</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -106,15 +85,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>delivery_path</string> </value>
+            <value> <string>invoice_path</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value> <int>2</int> </value>
-        </item>
-        <item>
-            <key> <string>lead_time</string> </key>
-            <value> <float>2.0</float> </value>
+            <value> <int>3</int> </value>
         </item>
         <item>
             <key> <string>modification_date</string> </key>
@@ -126,7 +101,7 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1280440800.0</float>
+                    <float>1280786400.0</float>
                     <string>GMT+2</string>
                   </tuple>
                 </state>
@@ -134,16 +109,8 @@
             </value>
         </item>
         <item>
-            <key> <string>payment_additional_term</string> </key>
-            <value> <int>10</int> </value>
-        </item>
-        <item>
             <key> <string>payment_end_of_month</string> </key>
             <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>payment_term</string> </key>
-            <value> <int>10</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -151,11 +118,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Delivery</string> </value>
-        </item>
-        <item>
-            <key> <string>wait_time</string> </key>
-            <value> <float>3.0</float> </value>
+            <value> <string>Invoicing</string> </value>
         </item>
       </dictionary>
     </pickle>

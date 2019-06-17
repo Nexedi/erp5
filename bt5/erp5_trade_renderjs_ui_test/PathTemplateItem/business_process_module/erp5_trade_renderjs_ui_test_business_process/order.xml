@@ -76,10 +76,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>predecessor/trade_state/ordered</string>
-                <string>successor/trade_state/delivered</string>
-                <string>trade_phase/erp5_trade_renderjs_ui_test_tp/delivery</string>
-                <string>delivery_builder/portal_deliveries/sale_packing_list_builder</string>
+                <string>successor/trade_state/ordered</string>
+                <string>trade_phase/erp5_trade_renderjs_ui_test_tp/order</string>
               </tuple>
             </value>
         </item>
@@ -87,9 +85,7 @@
             <key> <string>completed_state</string> </key>
             <value>
               <tuple>
-                <string>delivered</string>
-                <string>started</string>
-                <string>stopped</string>
+                <string>confirmed</string>
               </tuple>
             </value>
         </item>
@@ -106,23 +102,16 @@
         <item>
             <key> <string>frozen_state</string> </key>
             <value>
-              <tuple>
-                <string>delivered</string>
-                <string>stopped</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>deliver</string> </value>
+            <value> <string>order</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>lead_time</string> </key>
-            <value> <float>10.0</float> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -130,7 +119,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>deliver</string> </value>
+            <value> <string>order</string> </value>
         </item>
       </dictionary>
     </pickle>

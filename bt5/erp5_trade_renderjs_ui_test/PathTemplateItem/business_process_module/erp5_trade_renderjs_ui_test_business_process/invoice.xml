@@ -76,10 +76,9 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>predecessor/trade_state/ordered</string>
-                <string>successor/trade_state/delivered</string>
-                <string>trade_phase/erp5_trade_renderjs_ui_test_tp/delivery</string>
-                <string>delivery_builder/portal_deliveries/sale_packing_list_builder</string>
+                <string>predecessor/trade_state/delivered</string>
+                <string>successor/trade_state/invoiced</string>
+                <string>trade_phase/erp5_trade_renderjs_ui_test_tp/invoicing</string>
               </tuple>
             </value>
         </item>
@@ -87,6 +86,7 @@
             <key> <string>completed_state</string> </key>
             <value>
               <tuple>
+                <string>confirmed</string>
                 <string>delivered</string>
                 <string>started</string>
                 <string>stopped</string>
@@ -95,7 +95,7 @@
         </item>
         <item>
             <key> <string>deliverable</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -114,15 +114,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>deliver</string> </value>
+            <value> <string>invoice</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>lead_time</string> </key>
-            <value> <float>10.0</float> </value>
+            <value> <int>2</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -130,7 +126,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>deliver</string> </value>
+            <value> <string>invoice</string> </value>
         </item>
       </dictionary>
     </pickle>

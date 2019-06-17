@@ -7,12 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_identity_criterion</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_local_properties</string> </key>
             <value>
               <tuple>
@@ -37,32 +31,6 @@
                   </item>
                 </dictionary>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_range_criterion</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>solver/portal_solvers/Accept Solver</string>
-                <string>solver/portal_solvers/Adopt Solver</string>
-                <string>solver/portal_solvers/Quantity Cancel Solver</string>
-                <string>solver/portal_solvers/Quantity Split Move Solver</string>
-                <string>solver/portal_solvers/Quantity Split Solver</string>
-                <string>solver/portal_solvers/Trade Model Solver</string>
-                <string>solver/portal_solvers/Unify Solver</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -93,36 +61,6 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>quantity divergence tester</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary/>
-            </value>
         </item>
       </dictionary>
     </pickle>

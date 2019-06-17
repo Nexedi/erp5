@@ -55,7 +55,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>delivery</string> </value>
+            <value> <string>accounting</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -63,7 +63,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>delivery</string> </value>
+            <value> <string>accounting</string> </value>
         </item>
       </dictionary>
     </pickle>

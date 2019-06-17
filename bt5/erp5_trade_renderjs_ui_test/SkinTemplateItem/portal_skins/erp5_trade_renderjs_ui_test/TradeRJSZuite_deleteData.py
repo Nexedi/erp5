@@ -1,7 +1,7 @@
 portal = context.getPortalObject()
 
-delivery_portal_type = "Sale Packing List"
-delivery_id = "erp5_trade_renderjs_ui_test_delivery"
+delivery_portal_type = "Sale Order"
+delivery_id = "erp5_trade_renderjs_ui_test_order"
 
 # Delete event
 module = portal.getDefaultModule(delivery_portal_type)
