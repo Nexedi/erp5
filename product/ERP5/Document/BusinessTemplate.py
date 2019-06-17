@@ -1487,7 +1487,7 @@ class ObjectTemplateItem(BaseTemplateItem):
               if obj._getOb(subobject_id, None) is None:
                 subobject_data.seek(0)
                 subobject = connection.importFile(subobject_data)
-                obj._setObject(subobject_id, subobject)
+                obj._setObject(subobject_id, subobject, suppress_events=True)
             except AttributeError:
               # XXX this may happen when an object which can contain
               # sub-objects (e.g. ERP5 Form) has been replaced with
