@@ -22,4 +22,5 @@ for listbox_key in listbox:
     else:
       line.setProperty(property, value)
 request.set('your_dialog_updated', '1')
-return context.Delivery_viewSolveDivergenceDialog(listbox=listbox)
+request.form['listbox'] = listbox
+return context.Base_renderForm('Delivery_solveDivergenceParameterAction')
