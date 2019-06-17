@@ -98,20 +98,6 @@
 
     <tr>
       <td>open</td>
-      <td>${delivery_url}/1?editable=1</td>
-      <td></td>
-    </tr>
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-    <tr>
-      <td>type</td>
-      <td>field_my_quantity</td>
-      <td>5</td>
-    </tr>
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
-    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
-
-    <tr>
-      <td>open</td>
       <td>${delivery_url}</td>
       <td></td>
     </tr>
@@ -128,6 +114,19 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
+    <tr>
+      <td>open</td>
+      <td>${delivery_url}/1?editable=1</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+    <tr>
+      <td>type</td>
+      <td>field_my_quantity</td>
+      <td>5</td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
   </tal:block>
 
