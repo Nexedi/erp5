@@ -69,7 +69,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_phase/erp5_trade_renderjs_ui_test_trade_phase/delivery</string>
+                <string>trade_phase/erp5_trade_renderjs_ui_test_tp/delivery</string>
               </tuple>
             </value>
         </item>

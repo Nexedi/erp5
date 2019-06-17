@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_trade_renderjs_ui_test_trade_phase</string> </value>
+            <value> <string>erp5_trade_renderjs_ui_test_tp</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>erp5_trade_renderjs_ui_test_trade_phase_title</string> </value>
+            <value> <string>erp5_trade_renderjs_ui_test_tp_title</string> </value>
         </item>
       </dictionary>
     </pickle>

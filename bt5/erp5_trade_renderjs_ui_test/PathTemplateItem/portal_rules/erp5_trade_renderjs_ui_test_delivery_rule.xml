@@ -64,7 +64,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_phase/erp5_trade_renderjs_ui_test_trade_phase/delivery</string>
+                <string>trade_phase/erp5_trade_renderjs_ui_test_tp/delivery</string>
               </tuple>
             </value>
         </item>
@@ -220,7 +220,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.29602.666.53606</string> </value>
+                <value> <string>976.29621.4663.2645</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -238,7 +238,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1560765381.64</float>
+                        <float>1560773413.63</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
