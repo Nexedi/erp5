@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/Delivery_solveDivergenceAction?field_your_workflow_action=solve_divergence_action</string> </value>
+            <value> <string>%(content_url)s/Delivery_viewSolveDivergenceDialog?field_your_workflow_action=solve_divergence_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
