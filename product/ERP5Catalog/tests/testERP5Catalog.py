@@ -193,8 +193,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.checkRelativeUrlNotInSQLPathList(path_list)
     # Now we will ask to immediatly reindex
     person = person_module.newContent(id='2',
-                                      portal_type='Person',)
-    self.tic()
+                                      portal_type='Person',
+                                      immediate_reindex=True,
+    )
     path_list = [person.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list)
     self.tic()
