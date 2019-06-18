@@ -53,15 +53,16 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                        <string>listbox_creation_date</string>
+                      </list>
                     </value>
                 </item>
                 <item>
