@@ -767,7 +767,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     }
 
     # FormBox might have own context if 'context_method_id' is defined
-    formbox_context = traversed_document
+    formbox_context = REQUEST.get('cell', traversed_document)
     if field.get_value('context_method_id'):
       # harness acquisition and call the method right away
       formbox_context = getattr(traversed_document, field.get_value('context_method_id'))(
@@ -1876,7 +1876,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           # If the contents_item has field rendering in it, better is to add an
           # extra layer of abstraction to not get conflicts
           contents_item[select]['field_gadget_param'] = renderField(
-            brain_document,
+            traversed_document,
             editable_field,
             listbox_form,
             value=default_field_value,
