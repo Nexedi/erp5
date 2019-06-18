@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain, selection, selection_name, *args, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Brain_getItemExplanationUrl</string> </value>
+            <value> <string>ItemRJSZuite_deleteData</string> </value>
         </item>
       </dictionary>
     </pickle>
