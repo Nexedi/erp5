@@ -64,7 +64,6 @@
           return form_gadget.getContent();
         })
         .push(function (result) {
-          //xxxxxxxxxx add title
           var reply = result.reply;
           return gadget.updateDocument({
             'text_content': gadget.state.content.text_content + "\n" + reply
@@ -116,7 +115,7 @@
                   },
                   "my_reply": {
                     "default": "",
-                    "title": "XXX",
+                    "title": "Reply",
                     "css_class": "",
                     "required": 0,
                     "editable": 1,
