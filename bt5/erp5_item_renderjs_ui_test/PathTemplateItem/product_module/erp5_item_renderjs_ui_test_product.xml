@@ -61,6 +61,14 @@
             </value>
         </item>
         <item>
+            <key> <string>aggregated_portal_type</string> </key>
+            <value>
+              <tuple>
+                <string>Item</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>comment</string> </key>
             <value>
               <none/>
@@ -74,7 +82,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_trade_renderjs_ui_test_product</string> </value>
+            <value> <string>erp5_item_renderjs_ui_test_product</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -88,7 +96,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>erp5_trade_renderjs_ui_test_product_title</string> </value>
+            <value> <string>erp5_item_renderjs_ui_test_product_title</string> </value>
         </item>
       </dictionary>
     </pickle>
