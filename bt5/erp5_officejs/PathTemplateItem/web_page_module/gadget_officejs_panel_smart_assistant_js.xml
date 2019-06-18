@@ -73,6 +73,10 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>gadget_erp5_ojs_panel_smart_assistant.js</string> </value>
         </item>
@@ -233,7 +237,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>966.14275.9143.23296</string> </value>
+                <value> <string>975.47634.40473.58043</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -251,7 +255,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1522761698.8</float>
+                        <float>1557914924.67</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

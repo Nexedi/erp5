@@ -12,7 +12,8 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateDocument", "updateDocument")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
-    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
+    .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("jio_get", "jio_get")
 
 
@@ -63,14 +64,10 @@
           return form_gadget.getContent();
         })
         .push(function (result) {
-          title = result.title;
-
-          if (result.text_ === "") {
-            result.text_ = " ";
-          }
+          //xxxxxxxxxx add title
+          var reply = result.reply;
           return gadget.updateDocument({
-            'text_content': result.text_,
-            title: title
+            'text_content': gadget.state.content.text_content + "\n" + reply
           });
         })
         .push(function () {
@@ -78,6 +75,9 @@
             "message": "Data Updated",
             "status": "success"
           });
+        })
+        .push(function () {
+          return gadget.redirect({command: 'reload'});
         });
     })
     .declareMethod("triggerSubmit", function () {
@@ -104,15 +104,25 @@
                     "hidden": 0,
                     "type": "StringField"
                   },
-                  "my_text": {
-                    "default": gadget.state.text,
+                  "my_text_content": {
+                    "default": gadget.state.content.text_content,
+                    "css_class": "",
+                    "required": 0,
+                    "editable": 0,
+                    "key": "text_content",
+                    "hidden": 0,
+                    "title": 'History',
+                    "type": "TextAreaField"
+                  },
+                  "my_reply": {
+                    "default": "",
+                    "title": "XXX",
                     "css_class": "",
                     "required": 0,
                     "editable": 1,
-                    "key": "text_",
+                    "key": "reply",
                     "hidden": 0,
-                    "renderjs_extra": '{"editor": "fck_editor",' +
-                      '"maximize": "auto"}',
+                    "renderjs_extra": '{"editor": "fck_editor"}',
                     "type": "GadgetField",
                     "url": "gadget_editor.html",
                     "sandbox": "public"
@@ -131,8 +141,11 @@
                 "left",
                 [["my_title"]]
               ], [
+                "center",
+                [["my_text_content"]]
+              ], [
                 "bottom",
-                [["my_text"]]
+                [["my_reply"]]
               ]]
             }
           });
