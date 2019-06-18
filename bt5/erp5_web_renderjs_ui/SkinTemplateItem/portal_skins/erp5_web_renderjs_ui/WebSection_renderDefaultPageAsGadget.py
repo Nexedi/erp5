@@ -51,6 +51,7 @@ mapping_dict = {
   "website_url_set": json.dumps(website_url_set),
   "site_description": web_section.getLayoutProperty("description", default=""),
   "site_keywords": web_section.getLayoutProperty("subject", default=""),
+  "app_view_reference": web_section.getLayoutProperty("configuration_app_view_action_reference", default=""),
   "app_allowed_sub_types": web_section.getLayoutProperty("configuration_app_allowed_sub_types", default=""),
   "header_jump_button": web_section.getLayoutProperty("configuration_header_jump_button", default=False),
   "app_actions": web_section.getLayoutProperty("configuration_app_actions", default=""),
