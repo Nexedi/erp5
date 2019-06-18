@@ -14,6 +14,102 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeRenderjsUi/macros/prepare_data" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeRenderjsUi/macros/view_solve_divergence_dialog" />
 
+<tr>
+  <td colspan="3"><b>Ensure that dialog requests an update first</b></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                           'text': 'Input data has errors.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Dialog is not updated.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Select the solver</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@value="portal_solvers/Quantity Split Solver"]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data received.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Dialog is not updated.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Ensure solver parameters are required</b></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                           'text': 'Input data has errors.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Dialog is not updated.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Input is required but no input given.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Resolve the divergency</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@value="FIFO Delivery Solver"]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Divergence solvers started in background.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<tr>
+  <td colspan="3"><b>Ensure delivery is solved</b></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
+  <td>${delivery_url}</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Diverged</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Solved</td>
+  <td></td>
+</tr>
+
 </tbody></table>
 </body>
 </html>
