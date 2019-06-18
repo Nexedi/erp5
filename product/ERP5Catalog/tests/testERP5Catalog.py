@@ -185,10 +185,17 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog = self.getCatalogTool()
     person_module = self.getPersonModule()
     person = person_module.newContent(id='1',portal_type='Person')
-    path_list = [person.getRelativeUrl()]
+    address = person.newContent(portal_type='Address')
+    path_list = [person.getRelativeUrl(), address.getRelativeUrl()]
     self.checkRelativeUrlNotInSQLPathList(path_list)
     self.tic()
     self.checkRelativeUrlInSQLPathList(path_list)
+    # Delete subobject in a first transaction, then do not tic and...
+    person.manage_delObjects(ids=[address.getId()])
+    self.commit()
+    # ...delete its container in another transaction, to check that both
+    # do get properly unindexed (subobject's unindexation does not get
+    # deleted when deleting its container).
     person_module.manage_delObjects('1')
     self.tic()
     self.checkRelativeUrlNotInSQLPathList(path_list)
