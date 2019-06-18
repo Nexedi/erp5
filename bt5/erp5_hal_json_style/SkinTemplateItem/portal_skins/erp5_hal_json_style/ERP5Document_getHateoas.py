@@ -1874,7 +1874,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           # If the contents_item has field rendering in it, better is to add an
           # extra layer of abstraction to not get conflicts
           contents_item[select]['field_gadget_param'] = renderField(
-            traversed_document,
+            brain_document,
             editable_field,
             listbox_form,
             value=default_field_value,
