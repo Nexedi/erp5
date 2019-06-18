@@ -10,7 +10,6 @@ item_id = "erp5_item_renderjs_ui_test_item"
 source_value = portal.restrictedTraverse('organisation_module/erp5_item_renderjs_ui_test_source_node')
 destination_value = portal.restrictedTraverse('organisation_module/erp5_item_renderjs_ui_test_destination_node')
 resource_value = portal.restrictedTraverse('product_module/erp5_item_renderjs_ui_test_product')
-specialise_value = portal.restrictedTraverse('business_process_module/erp5_trade_renderjs_ui_test_business_process')
 
 item = portal.item_module.newContent(
   portal_type="Item",
@@ -29,8 +28,7 @@ for delivery_portal_type, delivery_id in zip(delivery_portal_type_list,
     source_value=source_value,
     source_section_value=source_value,
     destination_value=destination_value,
-    destination_section_value=destination_value,
-    specialise_value=specialise_value
+    destination_section_value=destination_value
   )
 
   delivery.newContent(
