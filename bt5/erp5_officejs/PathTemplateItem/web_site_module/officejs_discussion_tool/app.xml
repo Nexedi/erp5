@@ -325,6 +325,66 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>app_action_prefix</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>jump_button</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_app_action_prefix</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_header_jump_button</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_app_actions</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_app_allowed_sub_types</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -347,11 +407,35 @@
             </value>
         </item>
         <item>
+            <key> <string>app_action_prefix</string> </key>
+            <value> <string>some_app_prefix</string> </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
                 <string>caching_policy/must-revalidate</string>
                 <string>aggregate/web_page_module/rjs_gadget_erp5_launcher_html</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>configuration_app_action_prefix</string> </key>
+            <value> <string>some_action_prefix</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_app_actions</string> </key>
+            <value>
+              <tuple>
+                <string>HTML Post | reply</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>configuration_app_allowed_sub_types</string> </key>
+            <value>
+              <tuple>
+                <string>Post Module | HTML Post</string>
               </tuple>
             </value>
         </item>
@@ -382,6 +466,10 @@
         <item>
             <key> <string>configuration_header_gadget_url</string> </key>
             <value> <string>gadget_erp5_header.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_header_jump_button</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
@@ -456,6 +544,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>jump_button</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
@@ -680,7 +772,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>975.65245.13101.57361</string> </value>
+                <value> <string>976.31056.48964.3447</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -698,7 +790,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1558984800.9</float>
+                        <float>1560851666.23</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
