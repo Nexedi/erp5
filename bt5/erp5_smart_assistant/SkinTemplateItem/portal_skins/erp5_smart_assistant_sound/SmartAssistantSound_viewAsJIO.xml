@@ -75,8 +75,8 @@
                         <string>my_title</string>
                         <string>your_player</string>
                         <string>your_modification_date</string>
-                        <string>my_translated_validation_state_title</string>
                         <string>my_text_content</string>
+                        <string>your_validation_state</string>
                       </list>
                     </value>
                 </item>
@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SmartAssistantSound_view</string> </value>
+            <value> <string>SmartAssistantSound_viewAsJIO</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
