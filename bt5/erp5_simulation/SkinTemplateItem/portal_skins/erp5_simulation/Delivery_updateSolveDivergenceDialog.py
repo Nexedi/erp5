@@ -21,7 +21,6 @@ for listbox_key in listbox:
         line.updateConfiguration(**value.as_dict())
     else:
       line.setProperty(property, value)
-request.set('your_dialog_updated', '1')
-request.form['dialog_updated'] = '1'
+request.form['your_dialog_updated'] = '1'
 request.set('listbox', listbox)
 return context.Base_renderForm('Delivery_viewSolveDivergenceDialog')
