@@ -324,15 +324,9 @@ class DomainTool(BaseTool):
         # Look for each property the first predicate with unique criterion
         # categories which defines the property
         for predicate in predicate_list:
-          full_prop_dict = explanation_dict[
-            tuple(predicate.getMembershipCriterionCategoryList())]
           for mapped_value_property in predicate.getMappedValuePropertyList():
-            if mapped_value_property in full_prop_dict:
-              # we already have one value for this (categories, property)
-              continue
             value = predicate.getProperty(mapped_value_property)
             if value is not None:
-              full_prop_dict[mapped_value_property] = value
               mapped_value_property_dict[mapped_value_property].append(value)
         if explanation_only:
           return dict(explanation_dict)
