@@ -501,6 +501,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.portal.portal_caches.clearCache()
       self.assertEqual(cache(), cached_var)
 
+    def test_07_initScript(self):
+      """TODO: Similar to test_07_afterCloneScript"""
+      pass
+
     def test_07_afterCloneScript(self):
       """manage_afterClone can call a type based script."""
       # setup the script for Person portal type

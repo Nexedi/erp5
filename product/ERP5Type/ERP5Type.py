@@ -438,8 +438,13 @@ class ERP5TypeInformation(XMLObject,
         init_script = self.getTypeInitScriptId()
         if init_script:
           # Acquire the init script in the context of this object
+          deprecated("'type_init_script_id' deprecated in favor of getTypeBasedMethod()")
           getattr(ob, init_script)(created_by_builder=created_by_builder,
                                    edit_kw=kw)
+        else:
+          init_script = self._getTypeBasedMethod('init')
+          if init_script is not None and callable(init_script):
+            init_script(created_by_builder=created_by_builder, edit_kw=kw)
 
       if kw:
         ob._edit(force_update=1, **kw)
@@ -654,8 +659,7 @@ class ERP5TypeInformation(XMLObject,
       """Return keywords for "Find" tab in ZMI"""
       search_source_list = [self.getId(),
                             self.getTypeFactoryMethodId(),
-                            self.getTypeAddPermission(),
-                            self.getTypeInitScriptId()]
+                            self.getTypeAddPermission()]
       search_source_list += self.getTypePropertySheetList()
       search_source_list += self.getTypeBaseCategoryList()
       return ' '.join(filter(None, search_source_list))

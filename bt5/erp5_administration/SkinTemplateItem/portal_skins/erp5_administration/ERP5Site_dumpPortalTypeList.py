@@ -3,7 +3,6 @@ for ti in sorted(context.getPortalObject().portal_types.contentValues(), key=lam
   print " ", "\n  ".join([x for x in (
     "Short Title: %s" % ti.getShortTitle(),
     "Class: %s" % ti.getTypeClass(),
-    "Init Script: %s" % ti.getTypeInitScriptId(),
     "Add Permission: %s" % ti.getTypeAddPermission(),
     "Acquire Local Roles: %s" % ti.getTypeAcquireLocalRole(),
     "Property Sheets: %r" % sorted(ti.getTypePropertySheetList()),
