@@ -43,6 +43,13 @@ def isFieldType(field, type_name):
 # Well, REQUEST from arguments is a different instance than container.REQUEST so it will create problems...
 request = kw.get('REQUEST', None) or container.REQUEST
 
+# Add compatiblity with forms checking if user clicked on update/validate with `request.has_key('Base_callDialogMethod')`
+# See simulation divergence resolve dialog
+if dialog_method == update_method:
+  request.set('Base_showUpdateDialog', '')
+else:
+  request.set('Base_callDialogMethod', '')
+
 # request.form holds POST data thus containing 'field_' + field.id items
 # such as 'field_your_some_field'
 request_form = request.form
