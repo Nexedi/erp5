@@ -1,6 +1,6 @@
-/*global window, rJS, Query, SimpleQuery, ComplexQuery */
+/*global window, rJS, Query, SimpleQuery, ComplexQuery, console */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, Query, SimpleQuery, ComplexQuery) {
+(function (window, rJS, Query, SimpleQuery, ComplexQuery, console) {
   "use strict";
 
   // TODO: check if there are other categories that are 'views' and find a less hardcoded way to get this
@@ -51,7 +51,7 @@
       return [form_type, child_gadget_url];
     })
 
-    .declareMethod("checkMoreActions", function (portal_type, action_category) {
+    .declareMethod("checkViewsAndActions", function (portal_type, action_category) {
       var gadget = this,
         //for now, views and actions are handle together via handle_action gadget
         has_more_dict = {views: {}, actions: {}},
@@ -89,19 +89,44 @@
       return has_more_dict;
     })
 
+    .declareMethod("formatSettingList", function (configuration_list_string, portal_type) {
+      var i = 0, formatted_list = [], configuration_list, pair;
+      try {
+        configuration_list_string = configuration_list_string.replace(/\(/g, '[')
+          .replace(/\)/g, ']')
+          .replace(/,\]/g, ']')
+          .replace(/\'/g, '"');
+        configuration_list = JSON.parse(configuration_list_string);
+        for (i = 0; i < configuration_list.length; i += 1) {
+          pair = configuration_list[i].split(" | ");
+          if (!portal_type || pair[0] === portal_type) {
+            formatted_list.push(pair);
+          }
+        }
+      } catch (e) {
+        console.log("Error while parsing configuration settings. Format error maybe?");
+        console.log(e);
+      }
+      return formatted_list;
+    })
+
+    .declareMethod("getAppActions", function (portal_type) {
+      var gadget = this;
+      return gadget.getSetting('app_actions')
+        .push(function (app_actions_setting) {
+          return gadget.formatSettingList(app_actions_setting, portal_type);
+        });
+    })
+
     .declareMethod("getFormDefinition", function (portal_type, action_reference) {
       var gadget = this,
-        all_allowed_sub_types_list = [],
-        allowed_sub_types_list = [],
-        i = 0,
         query,
         action_type,
         action_title,
         form_definition,
         query_type,
         query_parent,
-        query_reference,
-        pair;
+        query_reference;
       query_reference = new SimpleQuery({
         key: "reference",
         operator: "",
@@ -143,20 +168,15 @@
           form_definition.title = action_title;
           return gadget.getSetting("app_allowed_sub_types");
         })
-        .push(function (allowed_sub_types) {
-          allowed_sub_types = allowed_sub_types.replace(/\(/g, '[')
-            .replace(/\)/g, ']')
-            .replace(/,\]/g, ']')
-            .replace(/\'/g, '"');
-          all_allowed_sub_types_list = JSON.parse(allowed_sub_types);
-          for (i = 0; i < all_allowed_sub_types_list.length; i++) {
-            pair = all_allowed_sub_types_list[i].split(" | ");
-            if (pair[0] === portal_type) {
-              allowed_sub_types_list.push(pair[1]);
-            }
-          }
-          form_definition.allowed_sub_types_list = allowed_sub_types_list;
-          return gadget.checkMoreActions(portal_type, action_type);
+        .push(function (allowed_sub_types_setting) {
+          return gadget.formatSettingList(allowed_sub_types_setting, portal_type);
+        })
+        .push(function (allowed_sub_types_pairs) {
+          var allowed_sub_types = allowed_sub_types_pairs.map(function (pair) {
+              return pair[1];
+            });
+          form_definition.allowed_sub_types_list = allowed_sub_types;
+          return gadget.checkViewsAndActions(portal_type, action_type);
         })
         .push(function (has_more_dict) {
           //view and actions are managed by same actions-gadget-page
@@ -166,4 +186,4 @@
         });
     });
 
-}(window, rJS, Query, SimpleQuery, ComplexQuery));
+}(window, rJS, Query, SimpleQuery, ComplexQuery, console));

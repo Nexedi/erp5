@@ -84,57 +84,62 @@
         });
     })
 
-    .declareMethod("getAllActions", function (portal_type, options) {
+    .declareMethod("getAllViewsAndActions", function (portal_type, options) {
       //TODO for now this takes also views. Views should be handle in another gadget like "..tab_office.js"
       var gadget = this,
         action_info_dict = {views: {}, actions: {}},
-        query = 'portal_type: "Action Information" AND parent_relative_url: "portal_types/' + portal_type + '"';
-      return gadget.jio_allDocs({query: query})
-        .push(function (action_list) {
-          var path_for_jio_get_list = [], row;
-          for (row in action_list.data.rows) {
-            if (action_list.data.rows.hasOwnProperty(row)) {
-              path_for_jio_get_list.push(gadget.jio_get(action_list.data.rows[row].id));
-            }
-          }
-          return RSVP.all(path_for_jio_get_list);
+        //TODO use Query to avoid strings
+        query = 'portal_type: "Action Information" AND parent_relative_url: "portal_types/' + portal_type + '"',
+        app_actions;
+      return RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.declareGadget("gadget_officejs_common_utils.html"),
+            gadget.getSetting('default_view_reference')
+          ]);
         })
-        .push(function (action_document_list) {
-          var action_settings_list = [], page, action_key, action_doc, key, action_settings;
-          for (action_key in action_document_list) {
-            //TODO filter actions: discard actions that are not in getSettings("app_actions")
-            //there must be one "View" action. If not, use default view (like jio_view in getsettings)
-            if (action_document_list.hasOwnProperty(action_key)) {
-              action_doc = action_document_list[action_key];
-              page = "handle_action";
-              if (view_categories.includes(action_doc.action_type)) {
-                page = "ojs_local_controller";
+        .push(function (result_list) {
+          return result_list[0].getAppActions(portal_type);
+        })
+        .push(function (app_actions_result) {
+          app_actions = app_actions_result;
+          return gadget.jio_allDocs({query: query})
+            .push(function (action_list) {
+              var path_for_jio_get_list = [], row;
+              for (row in action_list.data.rows) {
+                if (action_list.data.rows.hasOwnProperty(row)) {
+                  path_for_jio_get_list.push(gadget.jio_get(action_list.data.rows[row].id));
+                }
               }
-              action_settings_list.push({
-                page: page,
-                jio_key: options.jio_key,
-                title: action_doc.title,
-                action: action_doc.reference,
-                reference: action_doc.reference,
-                action_type: action_doc.action_type,
-                parent_portal_type: portal_type
-              });
-            }
-          }
-          for (key in action_settings_list) {
-            if (action_settings_list.hasOwnProperty(key)) {
-              action_settings = action_settings_list[key];
-              if (view_categories.includes(action_settings.action_type)) {
-                action_info_dict.views[action_settings.action] = action_settings;
-              } else {
-                action_info_dict.actions[action_settings.action] = action_settings;
+              return RSVP.all(path_for_jio_get_list);
+            })
+            .push(function (action_document_list) {
+              var action_settings_list = [], page, action_key, action_doc, key, action_settings;
+              for (action_key in action_document_list) {
+                //TODO filter actions: discard actions that are not in getSettings("app_actions")
+                //there must be one "View" action. If not, use default view (like jio_view in getsettings)
+                if (action_document_list.hasOwnProperty(action_key)) {
+                  action_doc = action_document_list[action_key];
+                  action_settings = {
+                    page: undefined,
+                    jio_key: options.jio_key,
+                    title: action_doc.title,
+                    action: action_doc.reference,
+                    reference: action_doc.reference,
+                    action_type: action_doc.action_type,
+                    parent_portal_type: portal_type
+                  };
+                  if (view_categories.includes(action_settings.action_type)) {
+                    action_settings.page = "ojs_local_controller";
+                    action_info_dict.views[action_settings.action] = action_settings;
+                  } else {
+                    action_settings.page = "handle_action";
+                    action_info_dict.actions[action_settings.action] = action_settings;
+                  }
+                }
               }
-            }
-          }
-          if (action_info_dict.views.hasOwnProperty("view") && action_info_dict.views.hasOwnProperty("jio_view")) {
-            delete action_info_dict.views.view;
-          }
-          return action_info_dict;
+              return action_info_dict;
+            });
         });
     })
 
@@ -150,7 +155,7 @@
           return options.portal_type;
         })
         .push(function (portal_type) {
-          return gadget.getAllActions(portal_type, options);
+          return gadget.getAllViewsAndActions(portal_type, options);
         })
         .push(function (action_info_dict) {
           return RSVP.all([
