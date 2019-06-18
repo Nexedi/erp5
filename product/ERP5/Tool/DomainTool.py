@@ -327,12 +327,9 @@ class DomainTool(BaseTool):
           full_prop_dict = explanation_dict[
             tuple(predicate.getMembershipCriterionCategoryList())]
           for mapped_value_property in predicate.getMappedValuePropertyList():
-            if mapped_value_property in full_prop_dict:
-              # we already have one value for this (categories, property)
-              continue
             value = predicate.getProperty(mapped_value_property)
             if value is not None:
-              full_prop_dict[mapped_value_property] = value
+              full_prop_dict.setdefault(mapped_value_property, []).append(value)
               mapped_value_property_dict[mapped_value_property].append(value)
         if explanation_only:
           return dict(explanation_dict)
