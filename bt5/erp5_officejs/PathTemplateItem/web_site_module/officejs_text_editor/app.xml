@@ -375,6 +375,16 @@
                       <value> <string>lines</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_app_view_action_reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -425,6 +435,10 @@
                 <string>Web Page Module | Web Page</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>configuration_app_view_action_reference</string> </key>
+            <value> <string>text_editor_view</string> </value>
         </item>
         <item>
             <key> <string>configuration_application_title</string> </key>
@@ -759,7 +773,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.29963.55292.21623</string> </value>
+                <value> <string>976.31037.397.45636</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -777,7 +791,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1560786002.25</float>
+                        <float>1560857896.33</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

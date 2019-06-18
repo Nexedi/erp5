@@ -1,6 +1,6 @@
-/*global document, window, rJS */
+/*global document, window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (document, window, rJS) {
+(function (document, window, rJS, RSVP) {
   "use strict";
 
   rJS(window)
@@ -27,18 +27,25 @@
 
     .declareMethod("render", function (options) {
       var gadget = this,
-        //TODO get default and app views from app configuration
-        app_view = options.action || "text_editor_view",
-        default_view = "jio_view",
-        common_utils_gadget_url = "gadget_officejs_common_utils.html",
+        default_view,
+        app_view,
         form_definition,
         gadget_utils,
         jio_document,
         portal_type,
         front_page;
-      return gadget.declareGadget(common_utils_gadget_url)
-        .push(function (result) {
-          gadget_utils = result;
+      return RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.declareGadget("gadget_officejs_common_utils.html"),
+            gadget.getSetting('app_view_reference'),
+            gadget.getSetting('default_view_reference')
+          ]);
+        })
+        .push(function (result_list) {
+          gadget_utils = result_list[0];
+          app_view = options.action || result_list[1];
+          default_view = result_list[2];
           return gadget.jio_get(options.jio_key);
         })
         .push(function (result) {
@@ -64,7 +71,6 @@
         .push(function (result) {
           return result;
         }, function (error) {
-          console.log("Error getting app_view " + app_view + " for portal_type " + portal_type + ". Now trying with default_view " + default_view);
           return gadget_utils.getFormDefinition(portal_type, default_view);
         })
         .push(function (result) {
@@ -135,4 +141,4 @@
         });
     });
 
-}(document, window, rJS));
+}(document, window, rJS, RSVP));
