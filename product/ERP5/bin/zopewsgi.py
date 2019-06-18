@@ -58,13 +58,8 @@ class TransLogger(object):
                 offset = "+%0.4d" % (offset)
         elif offset < 0:
                 offset = "%0.4d" % (offset)
-        remote_addr = '-'
-        if environ.get('HTTP_X_FORWARDED_FOR'):
-            remote_addr = environ['HTTP_X_FORWARDED_FOR']
-        elif environ.get('REMOTE_ADDR'):
-            remote_addr = environ['REMOTE_ADDR']
         d = {
-            'REMOTE_ADDR': remote_addr,
+            'REMOTE_ADDR': environ.get('REMOTE_ADDR') or '-',
             'REMOTE_USER': environ.get('REMOTE_USER') or '-',
             'REQUEST_METHOD': method,
             'REQUEST_URI': req_uri,
@@ -159,5 +154,8 @@ def runwsgi():
                     logger=logging.getLogger("access")),
         listen=args.address,
         threads=conf.zserver_threads,
+        trusted_proxy='*',
+        trusted_proxy_headers=('x-forwarded-for',),
+        clear_untrusted_proxy_headers=True,
     )
     server.run()
