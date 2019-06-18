@@ -38,6 +38,16 @@
     );
   }
 
+  function filterViews(views_dict, app_view, default_view) {
+    //TODO: there must be only one "View" action (title = "View")
+    // this is for scenarios were the portal type has several "View" (like view, jio_view, custom_view)
+    // priority: app_view ; default_view ; other (reference=view)
+    // if views_dict contains app_view -> remove all "View" entries
+    // else if contains default_view -> remove all "View" entries
+    // else get first "View" and remove all other "View" entries
+    return views_dict;
+  }
+
   gadget_klass
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -90,19 +100,26 @@
         action_info_dict = {views: {}, actions: {}},
         //TODO use Query to avoid strings
         query = 'portal_type: "Action Information" AND parent_relative_url: "portal_types/' + portal_type + '"',
-        app_actions;
+        app_actions,
+        app_view,
+        default_view;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
             gadget.declareGadget("gadget_officejs_common_utils.html"),
+            gadget.getSetting('app_view_reference'),
             gadget.getSetting('default_view_reference')
           ]);
         })
         .push(function (result_list) {
+          app_view = result_list[1];
+          default_view = result_list[2];
           return result_list[0].getAppActions(portal_type);
         })
         .push(function (app_actions_result) {
-          app_actions = app_actions_result;
+          app_actions = app_actions_result.map(function (pair) {
+            return pair[1];
+          });
           return gadget.jio_allDocs({query: query})
             .push(function (action_list) {
               var path_for_jio_get_list = [], row;
@@ -114,30 +131,31 @@
               return RSVP.all(path_for_jio_get_list);
             })
             .push(function (action_document_list) {
-              var action_settings_list = [], page, action_key, action_doc, key, action_settings;
+              var page, action_key, action_doc, key, action_settings;
               for (action_key in action_document_list) {
-                //TODO filter actions: discard actions that are not in getSettings("app_actions")
-                //there must be one "View" action. If not, use default view (like jio_view in getsettings)
                 if (action_document_list.hasOwnProperty(action_key)) {
                   action_doc = action_document_list[action_key];
-                  action_settings = {
-                    page: undefined,
-                    jio_key: options.jio_key,
-                    title: action_doc.title,
-                    action: action_doc.reference,
-                    reference: action_doc.reference,
-                    action_type: action_doc.action_type,
-                    parent_portal_type: portal_type
-                  };
-                  if (view_categories.includes(action_settings.action_type)) {
-                    action_settings.page = "ojs_local_controller";
-                    action_info_dict.views[action_settings.action] = action_settings;
-                  } else {
-                    action_settings.page = "handle_action";
-                    action_info_dict.actions[action_settings.action] = action_settings;
+                  if (app_actions.includes(action_doc.reference)) {
+                    action_settings = {
+                      page: undefined,
+                      jio_key: options.jio_key,
+                      title: action_doc.title,
+                      action: action_doc.reference,
+                      reference: action_doc.reference,
+                      action_type: action_doc.action_type,
+                      parent_portal_type: portal_type
+                    };
+                    if (view_categories.includes(action_settings.action_type)) {
+                      action_settings.page = "ojs_local_controller";
+                      action_info_dict.views[action_settings.action] = action_settings;
+                    } else {
+                      action_settings.page = "handle_action";
+                      action_info_dict.actions[action_settings.action] = action_settings;
+                    }
                   }
                 }
               }
+              action_info_dict.views = filterViews(action_info_dict.views, app_view, default_view);
               return action_info_dict;
             });
         });
