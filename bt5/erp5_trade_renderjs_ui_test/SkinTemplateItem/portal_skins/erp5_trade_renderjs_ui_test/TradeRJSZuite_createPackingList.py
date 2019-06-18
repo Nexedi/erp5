@@ -1,4 +1,4 @@
-from DateTime import DateTime
+from Products.ERP5Type.DateUtils import getClosestDate
 
 portal = context.getPortalObject()
 
@@ -15,7 +15,7 @@ delivery = module.newContent(
   portal_type=delivery_portal_type,
   id=delivery_id,
   title='%s_title' % delivery_id,
-  start_date=DateTime(),
+  start_date=getClosestDate(precision='day'),
   source_value=source_value,
   source_section_value=source_value,
   destination_value=destination_value,
