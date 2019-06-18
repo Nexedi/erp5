@@ -345,6 +345,11 @@
   <td></td>
 </tr>
 <tr>
+  <td>waitForElementPresent</td>
+  <td>//pre</td>
+  <td></td>
+</tr>
+<tr>
   <td>assertTextPresent</td>
   <td>Done.</td>
   <td></td>
