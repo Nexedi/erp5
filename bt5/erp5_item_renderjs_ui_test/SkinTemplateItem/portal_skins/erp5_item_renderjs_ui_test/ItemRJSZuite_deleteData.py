@@ -16,6 +16,8 @@ for delivery_portal_type, delivery_id in zip(delivery_portal_type_list,
       linking_document.getParentValue().manage_delObjects([linking_document.getId()])
     module.manage_delObjects([delivery_id])
 
-portal.item_module.manage_delObjects([item_id])
+item = getattr(module, item_id, None)
+if item is not None:
+  portal.item_module.manage_delObjects([item_id])
 
 return "Deleted Successfully."
