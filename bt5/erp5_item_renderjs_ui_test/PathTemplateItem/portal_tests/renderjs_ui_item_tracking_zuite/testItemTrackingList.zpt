@@ -11,6 +11,7 @@
 </thead><tbody>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForItemRenderjsUi/macros/init" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForItemRenderjsUi/macros/prepare_data" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForItemRenderjsUi/macros/view_item_tracking_list" />
 
 </tbody></table>
