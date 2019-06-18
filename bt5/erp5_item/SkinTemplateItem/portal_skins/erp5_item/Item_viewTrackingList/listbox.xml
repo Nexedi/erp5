@@ -14,7 +14,6 @@
                 <string>list_method</string>
                 <string>sort_columns</string>
                 <string>title</string>
-                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -162,53 +161,6 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Item Tracking</string> </value>
-                </item>
-                <item>
-                    <key> <string>url_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>uid</string>
-                          <string>Brain_getItemExplanationUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>explanation</string>
-                          <string>Brain_getItemExplanationUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Brain_getItemExplanationUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>date</string>
-                          <string>Brain_getItemExplanationUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>node_title</string>
-                          <string>Brain_getItemExplanationUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Brain_getItemExplanationUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>section_title</string>
-                          <string>Brain_getItemExplanationUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Brain_getItemExplanationUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>variation_category_item_list</string>
-                          <string>Brain_getItemExplanationUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>simulation_state</string>
-                          <string>Brain_getItemExplanationUrl</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
               </dictionary>
             </value>
