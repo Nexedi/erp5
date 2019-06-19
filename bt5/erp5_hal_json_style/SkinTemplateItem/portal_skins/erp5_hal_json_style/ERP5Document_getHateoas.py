@@ -778,8 +778,12 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     embedded_form = None
     if embedded_form_id:
       embedded_form = getattr(formbox_context, embedded_form_id, None)
+
     if embedded_form is None:
-      return
+      # Do not trigger the formbox rendering
+      result['type'] = 'BrokenFormBox'
+      return result
+
     # renderForm mutates `embedded_document` therefor no return/assignment
     renderForm(formbox_context, embedded_form, embedded_document, key_prefix=key)
     # fix editability which is hard-coded to 0 in `renderForm` implementation
