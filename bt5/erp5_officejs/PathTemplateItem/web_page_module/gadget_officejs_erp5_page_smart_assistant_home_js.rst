@@ -1,4 +1,4 @@
-/*global window, rJS, jIO, Handlebars, RSVP, Blob*/
+/*global window, rJS, jIO, Handlebars, RSVP, Blob, SimpleQuery, ComplexQuery, Query*/
 /*jslint indent:2, maxlen: 80, nomen: true */
 (function (window, rJS, jIO, RSVP, SimpleQuery, ComplexQuery, Query) {
   "use strict";
@@ -228,98 +228,95 @@
                     name: ""
                   }
                 }},
-                form_definition: {
-                  group_list: [[
-                    "left",
-                    [["upload"]]
-                  ], [
-                    "right",
-                    [["audio"]]
-                  ]]
+              form_definition: {
+                group_list: [[
+                  "left",
+                  [["upload"]]
+                ], [
+                  "right",
+                  [["audio"]]
+                ]]
+              }
+            }),
+
+            result[1].render({
+              erp5_document: {"_embedded": {"_view": {
+                "image": {
+                  "editable": 1,
+                  "key": "image",
+                  "css_class":
+                    "ui-view-only-label ui-label-circle ui-label-icon-camera",
+                  "capture": "camera",
+                  "title": " ",
+                  "accept": "image/*",
+                  "type": "FileField"
+                },
+                "text": {
+                  "editable": 1,
+                  "required": 1,
+                  "key": "",
+                  "css_class":
+                    "invisible ui-a-circle ui-a-icon-pencil-square-o",
+                  "title": " ",
+                  "default": {"target": "smart_assistant_text",
+                              "target_type": "text"},
+                  "url": "gadget_erp5_page_ojs_link_field.html",
+                  "type": "GadgetField"
                 }
-              }),
-
-              result[1].render({
-                erp5_document: {"_embedded": {"_view": {
-                  "image": {
-                    "editable": 1,
-                    "key": "image",
-                    "css_class":
-                      "ui-view-only-label ui-label-circle ui-label-icon-camera",
-                    "capture": "camera",
-                    "title": " ",
-                    "accept": "image/*",
-                    "type": "FileField"
-                  },
-                  "text": {
-                    "editable": 1,
-                    "required": 1,
-                    "key": "",
-                    "css_class":
-                      "invisible ui-a-circle ui-a-icon-pencil-square-o",
-                    "title": " ",
-                    "default": {"target": "smart_assistant_text",
-                                "target_type": "text"},
-                    "url": "gadget_erp5_page_ojs_link_field.html",
-                    "type": "GadgetField"
-                  }
-                  /*
-
-                  */
-                }},
+              }},
                 "_links": {
                   "type": {
                     // form_list display portal_type in header
                     name: ""
                   }
                 }},
-                form_definition: {
-                  group_list: [[
-                    "left",
-                    [["image"]]
-                  ], [
-                    "right",
-                    [["text"]]
-                  ]]
-                }
-              }),
+              form_definition: {
+                group_list: [[
+                  "left",
+                  [["image"]]
+                ], [
+                  "right",
+                  [["text"]]
+                ]]
+              }
+            }),
 
-              result[2].render({
-                erp5_document: {
-                  "_embedded": {"_view": {
-                    "listbox": {
-                      "column_list": column_list,
-                      "show_anchor": 0,
-                      "default_params": {},
-                      "editable": 1,
-                      "editable_column_list": [],
-                      "key": "field_listbox",
-                      "lines": 30,
-                      "list_method": "portal_catalog",
-                      "query": query,
-                      "portal_type": [],
-                      "search_column_list": column_list,
-                      "sort_column_list": column_list,
-                      "sort": [['modification_date', 'descending']],
-                      "title": "Notification",
-                      "type": "ListBox"
-                    }
-                  }},
-                  "_links": {
-                    "type": {
-                      // form_list display portal_type in header
-                      name: ""
-                    }
+            result[2].render({
+              erp5_document: {
+                "_embedded": {"_view": {
+                  "listbox": {
+                    "column_list": column_list,
+                    "show_anchor": 0,
+                    "default_params": {},
+                    "editable": 1,
+                    "editable_column_list": [],
+                    "key": "field_listbox",
+                    "lines": 30,
+                    "list_method": "portal_catalog",
+                    "query": query,
+                    "portal_type": [],
+                    "search_column_list": column_list,
+                    "sort_column_list": column_list,
+                    "sort": [['modification_date', 'descending']],
+                    "title": "Notification",
+                    "type": "ListBox"
                   }
-                },
-                form_definition: {
-                  group_list: [[
-                    "bottom",
-                    [["listbox"]]
-                  ]]
+                }},
+                "_links": {
+                  "type": {
+                      // form_list display portal_type in header
+                    name: ""
+                  }
                 }
-              })
-            ]);
+              },
+              form_definition: {
+                group_list: [[
+                  "bottom",
+                  [["listbox"]]
+                ]]
+              }
+            })
+          ]);
         })
 
         .push(function () {

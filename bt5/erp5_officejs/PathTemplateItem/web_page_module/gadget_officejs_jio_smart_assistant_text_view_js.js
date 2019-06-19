@@ -53,8 +53,7 @@
     })
 
     .onEvent('submit', function () {
-      var gadget = this,
-        title;
+      var gadget = this;
 
       return gadget.notifySubmitting()
         .push(function () {
