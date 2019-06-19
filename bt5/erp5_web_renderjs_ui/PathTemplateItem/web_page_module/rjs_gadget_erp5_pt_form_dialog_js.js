@@ -18,6 +18,7 @@
   }
 
   function submitDialog(is_updating) {
+    console.log('submitDialog is_updating', is_updating);
     var gadget = this,
       button_container =
           gadget.element.querySelector('.dialog_button_container'),
@@ -245,8 +246,8 @@
           selector.className = "ui-content-title ui-body-c ui-icon ui-icon-custom" + icon;
 
           if (form_gadget.state.has_update_action) {
-            console.log(form_gadget.state.form_definition);
-            console.log(form_gadget.state.form_definition.update_action_title);
+            // console.log(form_gadget.state.form_definition);
+            // console.log(form_gadget.state.form_definition.update_action_title);
             form_gadget.element.querySelector('button[name="action_update"]').textContent = form_gadget.state.form_definition.update_action_title;
           }
 
@@ -274,7 +275,7 @@
             form_options.form_definition.extended_search = form_gadget.state.extended_search;
           }
 
-          console.log(form_options);
+          // console.log(form_options);
           /* Remove empty non-editable fields to prevent them from displaying (business requirement).
              Deleting objects inplace was not a good idea.
              So we pass through only non-empty (non-editable) fields.
@@ -318,18 +319,24 @@
     })
 
     .onEvent('submit', function submit() {
+      console.log('submit event');
+    /*
       if (this.state.has_update_action === true) {
         // default action on submit is update in case of its existence
         return submitDialog.apply(this, [true]);
       }
+      */
       return submitDialog.apply(this, [false]);
     }, false, true)
 
     .onEvent('click', function click(evt) {
+    /*
+      console.log('click', evt.target);
       if (evt.target.name === "action_confirm") {
         evt.preventDefault();
         return submitDialog.apply(this, [false]);
       }
+      */
       if (evt.target.name === "action_update") {
         evt.preventDefault();
         return submitDialog.apply(this, [true]);
