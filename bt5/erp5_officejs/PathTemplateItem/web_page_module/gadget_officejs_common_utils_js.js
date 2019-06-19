@@ -50,11 +50,55 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
+    .declareMethod("formatSettingList", function (configuration_list_string, portal_type) {
+      var i = 0, formatted_list = [], configuration_list, pair;
+      try {
+        configuration_list_string = configuration_list_string.replace(/\(/g, '[')
+          .replace(/\)/g, ']')
+          .replace(/,\]/g, ']')
+          .replace(/\'/g, '"');
+        configuration_list = JSON.parse(configuration_list_string);
+        for (i = 0; i < configuration_list.length; i += 1) {
+          pair = configuration_list[i].split(" | ");
+          if (!portal_type || pair[0] === portal_type) {
+            formatted_list.push(pair);
+          }
+        }
+      } catch (e) {
+        console.log("Error while parsing configuration settings. Format error maybe?");
+        console.log(e);
+      }
+      return formatted_list;
+    })
+
+    .declareMethod("getAppActions", function (portal_type) {
+      var gadget = this;
+      return gadget.getSetting('app_actions')
+        .push(function (app_actions_setting) {
+          return gadget.formatSettingList(app_actions_setting, portal_type);
+        });
+    })
+
     .declareMethod("getAllViewsAndActions", function (portal_type, jio_key) {
       var gadget = this,
         action_info_dict = {views: {}, actions: {}},
-        //TODO use Query to avoid strings
-        query = 'portal_type: "Action Information" AND parent_relative_url: "portal_types/' + portal_type + '"',
+        query_type = new SimpleQuery({
+          key: "portal_type",
+          operator: "",
+          type: "simple",
+          value: "Action Information"
+        }),
+        query_parent = new SimpleQuery({
+          key: "parent_relative_url",
+          operator: "",
+          type: "simple",
+          value: "portal_types/" + portal_type
+        }),
+        query = Query.objectToSearchText(new ComplexQuery({
+          operator: "AND",
+          query_list: [query_type, query_parent],
+          type: "complex"
+        })),
         app_actions,
         app_view,
         default_view;
@@ -85,7 +129,7 @@
               return RSVP.all(path_for_jio_get_list);
             })
             .push(function (action_document_list) {
-              var page, action_key, action_doc, key, action_settings;
+              var action_key, action_doc, action_settings;
               for (action_key in action_document_list) {
                 if (action_document_list.hasOwnProperty(action_key)) {
                   action_doc = action_document_list[action_key];
@@ -137,73 +181,6 @@
         child_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
       }
       return [form_type, child_gadget_url];
-    })
-
-    .declareMethod("checkViewsAndActions", function (portal_type, action_category) {
-      var gadget = this,
-        //for now, views and actions are handle together via handle_action gadget
-        has_more_dict = {views: {}, actions: {}},
-        query,
-        query_type,
-        query_parent;
-      // get all actions/views for the portal_type, if target action is a type of view
-      // (exclude custom scripts and dialogs)
-      if (view_categories.includes(action_category)) {
-        query_type = new SimpleQuery({
-          key: "portal_type",
-          operator: "",
-          type: "simple",
-          value: "Action Information"
-        });
-        query_parent = new SimpleQuery({
-          key: "parent_relative_url",
-          operator: "",
-          type: "simple",
-          value: "portal_types/" + portal_type
-        });
-        query = Query.objectToSearchText(new ComplexQuery({
-          operator: "AND",
-          query_list: [query_type, query_parent],
-          type: "complex"
-        }));
-        return gadget.jio_allDocs({query: query})
-          .push(function (action_list) {
-            if (action_list.data.rows.length > 0) {
-              has_more_dict.has_more_actions = true;
-            }
-            return has_more_dict;
-          });
-      }
-      return has_more_dict;
-    })
-
-    .declareMethod("formatSettingList", function (configuration_list_string, portal_type) {
-      var i = 0, formatted_list = [], configuration_list, pair;
-      try {
-        configuration_list_string = configuration_list_string.replace(/\(/g, '[')
-          .replace(/\)/g, ']')
-          .replace(/,\]/g, ']')
-          .replace(/\'/g, '"');
-        configuration_list = JSON.parse(configuration_list_string);
-        for (i = 0; i < configuration_list.length; i += 1) {
-          pair = configuration_list[i].split(" | ");
-          if (!portal_type || pair[0] === portal_type) {
-            formatted_list.push(pair);
-          }
-        }
-      } catch (e) {
-        console.log("Error while parsing configuration settings. Format error maybe?");
-        console.log(e);
-      }
-      return formatted_list;
-    })
-
-    .declareMethod("getAppActions", function (portal_type) {
-      var gadget = this;
-      return gadget.getSetting('app_actions')
-        .push(function (app_actions_setting) {
-          return gadget.formatSettingList(app_actions_setting, portal_type);
-        });
     })
 
     .declareMethod("getFormDefinition", function (portal_type, action_reference) {
@@ -264,13 +241,11 @@
               return pair[1];
             });
           form_definition.allowed_sub_types_list = allowed_sub_types;
-          //TODO get rid of checkViewsAndActions and use getAllViewsAndActions result instead
-          return gadget.checkViewsAndActions(portal_type, action_type);
+          return gadget.getAllViewsAndActions(portal_type);
         })
-        .push(function (has_more_dict) {
-          //view and actions are managed by same actions-gadget-page
-          form_definition.has_more_views = false;
-          form_definition.has_more_actions = has_more_dict.has_more_actions;
+        .push(function (actions_views_dict) {
+          form_definition.has_more_views = Object.keys(actions_views_dict.views).length > 1;
+          form_definition.has_more_actions = Object.keys(actions_views_dict.actions).length > 0;
           return form_definition;
         });
     });
