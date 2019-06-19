@@ -77,7 +77,13 @@
       var gadget = this;
 
       if (gadget.state.auto_repair) {
-        return repair_and_redirect(gadget);
+        return repair_and_redirect(gadget)
+          .push(undefined, function (e) {
+            if (e.name === "ReplicateReport") {
+              throw new Error(e.toString());
+            }
+            throw e;
+          });
       }
     });
 
