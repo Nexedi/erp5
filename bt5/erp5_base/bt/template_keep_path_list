@@ -1,4 +1,5 @@
 portal_introspections
 portal_memcached/persistent_memcached_plugin
 portal_solver_processes
+portal_types/Solver Tool
 portal_web_services
