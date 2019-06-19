@@ -43,6 +43,7 @@
         }));
 
         configuration = {
+          debug: true,
           type: "replicate",
           // XXX This drop the signature lists...
           query: {
