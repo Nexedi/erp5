@@ -767,14 +767,23 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     }
 
     # FormBox might have own context if 'context_method_id' is defined
-    formbox_context = traversed_document
+    formbox_context = REQUEST.get('cell', traversed_document)
     if field.get_value('context_method_id'):
       # harness acquisition and call the method right away
       formbox_context = getattr(traversed_document, field.get_value('context_method_id'))(
         field=field, REQUEST=REQUEST)
       embedded_document['_debug'] = "Different context"
     # get embedded form definition
-    embedded_form = getattr(formbox_context, field.get_value('formbox_target_id'))
+    embedded_form_id = field.get_value('formbox_target_id')
+    embedded_form = None
+    if embedded_form_id:
+      embedded_form = getattr(formbox_context, embedded_form_id, None)
+
+    if embedded_form is None:
+      # Do not trigger the formbox rendering
+      result['type'] = 'BrokenFormBox'
+      return result
+
     # renderForm mutates `embedded_document` therefor no return/assignment
     renderForm(formbox_context, embedded_form, embedded_document, key_prefix=key)
     # fix editability which is hard-coded to 0 in `renderForm` implementation
