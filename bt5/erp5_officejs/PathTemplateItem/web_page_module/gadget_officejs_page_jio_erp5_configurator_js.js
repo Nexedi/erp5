@@ -43,6 +43,8 @@
         }));
 
         configuration = {
+          debug: true,
+          report_level: 1000,
           type: "replicate",
           // XXX This drop the signature lists...
           query: {
