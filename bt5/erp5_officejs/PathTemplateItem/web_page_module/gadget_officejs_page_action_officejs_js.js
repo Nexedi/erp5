@@ -39,12 +39,25 @@
   }
 
   function filterViews(views_dict, app_view, default_view) {
-    //TODO: there must be only one "View" action (title = "View")
+    // there must be only one "View" action (title = "View")
     // this is for scenarios were the portal type has several "View" (like view, jio_view, custom_view)
-    // priority: app_view ; default_view ; other (reference=view)
-    // if views_dict contains app_view -> remove all "View" entries
-    // else if contains default_view -> remove all "View" entries
-    // else get first "View" and remove all other "View" entries
+    // priority: app_view ; default_view ; other
+    var only_view, key,
+      view_list = Object.keys(views_dict).map(function (key) {
+        if (views_dict[key].title === "View") { return key; }
+      });
+    if (view_list.includes(app_view)) {
+      only_view = app_view;
+    } else if (view_list.includes(default_view)) {
+      only_view = default_view;
+    } else {
+      only_view = view_list[0];
+    }
+    for (key in view_list) {
+      if (view_list[key] !== only_view) {
+        delete views_dict[view_list[key]];
+      }
+    }
     return views_dict;
   }
 
@@ -95,7 +108,8 @@
     })
 
     .declareMethod("getAllViewsAndActions", function (portal_type, options) {
-      //TODO for now this takes also views. Views should be handle in another gadget like "..tab_office.js"
+      // TODO views are also listed here
+      // should views be handled in another gadget like "..tab_office.js" ?
       var gadget = this,
         action_info_dict = {views: {}, actions: {}},
         //TODO use Query to avoid strings
