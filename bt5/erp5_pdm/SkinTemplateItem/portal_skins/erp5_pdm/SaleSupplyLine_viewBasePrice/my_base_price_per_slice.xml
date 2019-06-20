@@ -10,13 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default</string>
+                <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>mapped_value_property_list</string> </value>
+            <value> <string>my_base_price_per_slice</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -41,10 +41,6 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -60,10 +56,6 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -72,27 +64,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <list>
-                        <string>base_price</string>
-                        <string>base_unit_price</string>
-                        <string>slice_base_price</string>
-                        <string>slice_quantity_range</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_mapped_value_property_list</string> </value>
+                    <value> <string>my_checkbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
+                    <key> <string>title</string> </key>
+                    <value> <string>Base Price Applies to Items in Slice</string> </value>
                 </item>
               </dictionary>
             </value>

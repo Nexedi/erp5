@@ -1,6 +1,11 @@
+from math import log
+
 result = context.getPriceParameterDict(context=movement, **kw)
 
 # Calculate
+#     If slice_base_price:
+#     base_price = SUM(number_of_items_in_slice * slice_base_price) for each slice
+#     Then
 #     ((base_price + SUM(additional_price) +
 #     variable_value * SUM(variable_additional_price)) *
 #     (1 - MIN(1, MAX(SUM(discount_ratio) , exclusive_discount_ratio ))) +
@@ -16,6 +21,23 @@ result = context.getPriceParameterDict(context=movement, **kw)
 # It can be seen as a way to define a pricing model that not only
 # depends on discrete variations, but also on a continuous property
 # of the object
+
+if result["slice_base_price"]:
+  total_price = 0.
+  quantity = movement.getQuantity()
+  sliced_base_price_list = zip(result["slice_base_price"], result["slice_quantity_range"])
+  for slice_price, slice_range in sliced_base_price_list:
+    slice_min, slice_max = slice_range
+    if slice_max is None:
+      slice_max = quantity + 1
+    if slice_min is None:
+      slice_min = 1
+    priced_quantity = min(slice_max - 1, quantity) - (slice_min - 1)
+    total_price += priced_quantity * slice_price
+  if result.get('base_unit_price', None) is None:
+    result["base_price"] = total_price / quantity
+  else:
+    result["base_price"] = round(total_price / quantity, int(round(- log(result['base_unit_price'], 10),0)))
 
 base_price = result["base_price"]
 if base_price in (None, ""):
