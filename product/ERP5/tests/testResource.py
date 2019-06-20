@@ -1128,6 +1128,114 @@ class TestResource(ERP5TypeTestCase):
     self.assertEqual(None, sale_order_line.getPrice())
 
 
+  def testGetPriceWithSlicedBasePricePrice(self):
+    """
+    [unit quantity]   [price defined for the units of this slice]
+     0 -> 10        = 10 currency/unit
+    11 -> 20        =  9 currency/unit
+    21 -> inf       =  8 currency/unit
+
+    unit -> price / unit
+     9   -> 10      currency/unit
+    15   -> 9.66667 currency/unit
+    25   -> 9.2     currency/unit
+    """
+    product_module = self.portal.getDefaultModule(self.product_portal_type)
+    product = product_module.newContent(
+      portal_type=self.product_portal_type,
+      title='FakeProduct'
+    )
+    product.validate()
+
+    sale_trade_condition_module = self.portal.getDefaultModule(
+      'Sale Trade Condition'
+    )
+    sale_trade_condition = sale_trade_condition_module.newContent(
+      portal_type='Sale Trade Condition',
+    )
+
+    supply_line = sale_trade_condition.newContent(
+      portal_type=self.sale_supply_line_portal_type,
+      resource_value=product,
+    )
+    supply_line.setQuantityStepList((11, 21))
+    supply_line.updateCellRange()
+
+    cell0 = supply_line.newContent(
+      portal_type=self.sale_supply_cell_portal_type,
+      id='path_0',
+      sliced_base_price={
+        'price': 10.,
+        'sliced_range': (1, 11),
+      }
+    )
+    cell0.setCriterionPropertyList(('quantity', ))
+    cell0.setCriterion('quantity', min=1, max=None)
+    cell0.setMappedValuePropertyList(["sliced_base_price"])
+
+    cell1 = supply_line.newContent(
+      portal_type=self.sale_supply_cell_portal_type,
+      id='path_1',
+      sliced_base_price={
+        'price': 9.,
+        'sliced_range': (11, 21),
+      }
+    )
+    cell1.setCriterionPropertyList(('quantity', ))
+    cell1.setCriterion('quantity', min=11, max=None)
+    cell1.setMappedValuePropertyList(["sliced_base_price"])
+
+    cell2 = supply_line.newContent(
+      portal_type=self.sale_supply_cell_portal_type,
+      id='path_2',
+      sliced_base_price={
+        'price': 8.,
+        'sliced_range': (21, None),
+      }
+    )
+    cell2.setCriterionPropertyList(('quantity', ))
+    cell2.setCriterion('quantity', min=21, max=None)
+    cell2.setMappedValuePropertyList(["sliced_base_price"])
+
+    sale_trade_condition.validate()
+    self.tic()
+
+    sale_order = self.portal.getDefaultModule("Sale Order").newContent(
+      portal_type='Sale Order',
+      specialise_value=sale_trade_condition,
+    )
+    sale_order_line = sale_order.newContent(
+      portal_type=self.sale_order_line_portal_type,
+      resource_value=product,
+      quantity=9,
+    )
+    self.assertEqual(10, sale_order_line.getPrice())
+    self.assertEqual(90, sale_order_line.getTotalPrice())
+
+    sale_order = self.portal.getDefaultModule("Sale Order").newContent(
+      portal_type='Sale Order',
+      specialise_value=sale_trade_condition,
+    )
+    sale_order_line = sale_order.newContent(
+      portal_type=self.sale_order_line_portal_type,
+      resource_value=product,
+      quantity=15,
+    )
+    self.assertEqual(9.66667, round(sale_order_line.getPrice(), 5))
+    self.assertEqual(145, sale_order_line.getTotalPrice())
+
+    sale_order = self.portal.getDefaultModule("Sale Order").newContent(
+      portal_type='Sale Order',
+      specialise_value=sale_trade_condition,
+    )
+    sale_order_line = sale_order.newContent(
+      portal_type=self.sale_order_line_portal_type,
+      resource_value=product,
+      quantity=25,
+    )
+    self.assertEqual(9.2, sale_order_line.getPrice())
+    self.assertEqual(230, round(sale_order_line.getTotalPrice(), 2))
+
   def testQuantityPrecision(self):
     """test how to define quantity precision on resources.
     """
