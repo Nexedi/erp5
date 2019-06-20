@@ -186,6 +186,13 @@ class ERP5TestNode(TestCase):
     #           ['4f1d14de1b04b4f878a442ee859791fa337bcf85', 'first_commit']]}
     return commit_dict
 
+  def setUpSubmodule(self):
+    repository_path = self.remote_repository1
+    call = self.getCaller(cwd=repository_path)
+    call(['git', 'submodule', 'add', self.remote_repository2 + '/.git', 'rep2'])
+    call("git submodule update --init".split())
+    call("git commit -av -m new_commit".split())
+
   def test_01_getDelNodeTestSuite(self):
     """
     We should be able to get/delete NodeTestSuite objects inside test_node
@@ -469,6 +476,79 @@ shared = true
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertTrue(rev_list is not None)
 
+  def test_05g_updateRevisionListWithSubmodule(self):
+    """
+    Check if we clone correctly repositories and get right submodule revisions
+    """
+    commit_dict = self.generateTestRepositoryList(add_third_repository=True)
+    self.setUpSubmodule()
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    # just add the third repository, but not set the vcs_repository_list
+    # because it is invisible to the buildout
+    # the submodule was set up in setUpSubmodule function
+    self.updateNodeTestSuiteData(node_test_suite)
+
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertEquals(2, len(rev_list))
+
+    # Check the submodule was set
+    submodule_file = open(os.path.join(self.remote_repository1, '.gitmodules'), 'r')
+    submodule_line = submodule_file.readline()
+    submodule_file.close()
+    self.assertEquals('[submodule "rep2"]\n', submodule_line)
+
+    # Get the current submodule revision rep1/rep2
+    rep1_rep2 = os.path.join(self.remote_repository1, 'rep2')
+    call = self.getCaller(cwd=rep1_rep2)
+    rep1_rep2_revision_0 = call("git rev-parse HEAD".split())
+
+    # Add new commit to rep2
+    call = self.getCaller(cwd=self.remote_repository2)
+    submodule_commit_file = open(os.path.join(self.remote_repository2, 'first_file'), 'w')
+    submodule_commit_file.write("next_content")
+    submodule_commit_file.close()
+    call("git commit -av -m new_commit".split())
+
+    # Update the submodule in rep1/rep2
+    call = self.getCaller(cwd=rep1_rep2)
+    call("git pull".split())
+    rep1_rep2_revision_1 = call("git rev-parse HEAD".split())
+
+    # Submodule revision in rep1/rep2 should be changed
+    self.assertNotEquals(rep1_rep2_revision_1, rep1_rep2_revision_0)
+
+    # Cloned repository check ---------
+    rep1_clone_path = [x['repository_path'] for x in \
+                       node_test_suite.vcs_repository_list \
+                       if x['repository_path'].endswith("rep1")][0]
+    rep1_clone_rep2_path = os.path.join(rep1_clone_path, "rep2")
+
+    # Get the cloned submodule rep1/rep2 revision
+    call = self.getCaller(cwd=rep1_clone_rep2_path)
+    cloned_rep1_rep2_revision_0 = call("git rev-parse HEAD".split())
+
+    # Cloned rep1/rep2 revision should equal to the original remote rep1/rep2
+    self.assertEquals(rep1_rep2_revision_0, cloned_rep1_rep2_revision_0)
+    # And not equal to the current remote rep1/rep2
+    self.assertNotEquals(rep1_rep2_revision_1, cloned_rep1_rep2_revision_0)
+
+    # We use `git pull` forwarded a commit in remote rep1/rep2 in above, 
+    # but didn't committed in remote rep1 yet. So the cloned rep1 doesn't
+    # know anything about it, commit it now
+    call = self.getCaller(cwd=self.remote_repository1)
+    call("git commit -av -m new_commit".split())
+
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+
+    # The cloned rep1/rep2 revision should be updated
+    # Aka, the revision that remote rep1 point to
+    call = self.getCaller(cwd=rep1_clone_rep2_path)
+    cloned_rep1_rep2_revision_1 = call("git rev-parse HEAD".split())
+
+    # The cloned rep1/rep2 revision should have the latest changes of remote rep1/rep2
+    self.assertEquals(rep1_rep2_revision_1, cloned_rep1_rep2_revision_1)
+
   def test_06_checkRevision(self):
     """
     Check if we are able to restore older commit hash if master decide so
@@ -504,6 +584,78 @@ shared = true
     self.assertEquals(['2', '1'], getRepInfo(count=1))
     self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][1][0]],
                       getRepInfo(hash=1))
+
+  def test_06a_checkRevisionWithSubmodule(self):
+    """
+    Check if we are able to restore older commit hash if master decide so
+    """
+    commit_dict = self.generateTestRepositoryList(add_third_repository=True)
+    self.setUpSubmodule()
+    call = self.getCaller(cwd=self.remote_repository1)
+    rep1_revision_0 = call("git rev-parse HEAD".split()).rstrip()
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    def getRepInfo(count=0, hash=0):
+      assert count or hash
+      info_list = []
+      for vcs_repository in node_test_suite.vcs_repository_list:
+        call = self.getCaller(cwd=vcs_repository['repository_path'])
+        if count:
+          info_list.append(
+            call("git rev-list --topo-order --count HEAD".split()).strip())
+        if hash:
+          info_list.append(
+            call("git log -n1 --format=%H".split()).strip())
+      return info_list
+    # Include the submodule commit in rep1 which added in setUpSubmodules
+    self.assertEquals(['2', '3'], getRepInfo(count=1))
+    # The latest revision in rep1 should be the submodule commit revision
+    self.assertEquals([commit_dict['rep0'][0][0],rep1_revision_0],
+            getRepInfo(hash=1))
+
+    # Add something in cloned repository rep1/rep2
+    rep1_clone_path = [x['repository_path'] for x in \
+                       node_test_suite.vcs_repository_list \
+                       if x['repository_path'].endswith("rep1")][0]
+    rep1_clone_rep2_path = os.path.join(rep1_clone_path, "rep2")
+    call = self.getCaller(cwd=rep1_clone_rep2_path)
+
+    # Store the original cloned rep1/rep2 revision
+    clone_rep1_rep2_revision_0 = call("git rev-parse HEAD".split()).rstrip()
+
+    # Add new commit to cloned rep1/rep2
+    submodule_commit_file = open(os.path.join(rep1_clone_rep2_path, 'first_file'), 'w')
+    submodule_commit_file.write("next_content")
+    submodule_commit_file.close()
+    call("git commit -av -m new_commit".split())
+
+    # Get new revision in rep1/rep2
+    clone_rep1_rep2_revision_1 = call("git rev-parse HEAD".split()).rstrip()
+
+    # The rep1/rep2 revision was changed
+    self.assertNotEquals(clone_rep1_rep2_revision_0, clone_rep1_rep2_revision_1)
+
+    class TestResult(object):
+      revision = NodeTestSuite.revision
+    test_result = TestResult()
+    # for test result to be one commit late for rep1 to force testnode to
+    # reset tree to older version
+    test_result.revision_list = (('rep0', (2, commit_dict['rep0'][0][0])),
+                                 ('rep1', (1, commit_dict['rep1'][1][0])))
+    test_node.checkRevision(test_result, node_test_suite)
+
+    call = self.getCaller(cwd=rep1_clone_rep2_path)
+    clone_rep1_rep2_revision_2 = call("git rev-parse HEAD".split()).rstrip()
+    revision_list = call("git log -n3 --format=%H".split())
+    # self.assertEquals(revision_list, clone_rep1_rep2_revision_0)
+    self.assertEquals(['2', '1'], getRepInfo(count=1))
+    # The rep1 revision should be restored
+    self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][1][0]],
+                      getRepInfo(hash=1))
+    # After checkRevision, the cloned_rep1/rep2 revision also restored
+    self.assertEquals(clone_rep1_rep2_revision_0, clone_rep1_rep2_revision_2)
 
   def test_07_checkExistingTestSuite(self):
     test_node = self.getTestNode()
