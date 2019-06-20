@@ -184,6 +184,10 @@
                     <key> <string>update_cell_range</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>url_cells</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -327,6 +331,12 @@
                 <item>
                     <key> <string>update_cell_range</string> </key>
                     <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>url_cells</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
               </dictionary>
             </value>
