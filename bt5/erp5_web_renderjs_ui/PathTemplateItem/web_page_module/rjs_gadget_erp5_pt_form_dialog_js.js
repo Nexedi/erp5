@@ -1,6 +1,8 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, RSVP, calculatePageTitle, Handlebars, ensureArray */
-(function (window, rJS, RSVP, calculatePageTitle, Handlebars, ensureArray) {
+/*global window, document, rJS, RSVP, calculatePageTitle, Handlebars,
+         ensureArray */
+(function (window, document, rJS, RSVP, calculatePageTitle, Handlebars,
+           ensureArray) {
   "use strict";
 
   function checkValidity() {
@@ -173,6 +175,7 @@
             erp5_form: options.erp5_form || {},
             // editable: true,  // ignore global editable state (be always editable)
             has_update_action: Boolean(options.form_definition.update_action),
+            update_action_title: options.form_definition.update_action_title,
             // pass extended_search from previous view in case any gadget is curious
             extended_search: extended_search,
             redirect_to_parent: options.erp5_document._embedded._view.field_your_redirect_to_parent !== undefined
@@ -221,13 +224,25 @@
       return new RSVP.Queue()
         .push(function () {
           // Set the dialog button
-          if (modification_dict.hasOwnProperty('has_update_action')) {
+          if (modification_dict.hasOwnProperty('has_update_action') ||
+              modification_dict.hasOwnProperty('update_action_title')) {
             return form_gadget.translateHtml(dialog_button_template({
               show_update_button: form_gadget.state.has_update_action
             }))
               .push(function (html) {
-                form_gadget.element.querySelector('.dialog_button_container')
-                                   .innerHTML = html;
+                var div = document.createElement('div'),
+                  dialog_button_container = form_gadget.element
+                                   .querySelector('.dialog_button_container');
+                div.innerHTML = html;
+                if (form_gadget.state.update_action_title) {
+                  div.querySelector('button[name="action_update"]')
+                     .textContent = form_gadget.state.form_definition
+                                                     .update_action_title;
+                }
+                while (dialog_button_container.firstChild) {
+                  dialog_button_container.firstChild.remove();
+                }
+                dialog_button_container.innerHTML = div.innerHTML;
               });
           }
         })
@@ -312,4 +327,4 @@
       }
     });
 
-}(window, rJS, RSVP, calculatePageTitle, Handlebars, ensureArray));
+}(window, document, rJS, RSVP, calculatePageTitle, Handlebars, ensureArray));
