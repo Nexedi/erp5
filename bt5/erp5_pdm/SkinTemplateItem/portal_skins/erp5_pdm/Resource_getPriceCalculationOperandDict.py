@@ -1,5 +1,8 @@
 result = context.getPriceParameterDict(context=movement, **kw)
 
+# XXX: Add "stepped_price" in calculation
+# sliced_base_price = {'price': 10.0, 'sliced_range': (1, None)}
+
 # Calculate
 #     ((base_price + SUM(additional_price) +
 #     variable_value * SUM(variable_additional_price)) *
@@ -16,6 +19,17 @@ result = context.getPriceParameterDict(context=movement, **kw)
 # It can be seen as a way to define a pricing model that not only
 # depends on discrete variations, but also on a continuous property
 # of the object
+if result["sliced_base_price"]:
+  total_price = 0.
+  quantity = movement.getQuantity()
+  sliced_base_price_list = result["sliced_base_price"]
+  for sliced_base_price in sliced_base_price_list:
+    slice_min, slice_max = sliced_base_price['sliced_range']
+    if slice_max is None:
+      slice_max = quantity + 1
+    priced_quantity = min(slice_max - 1, quantity) - (slice_min - 1)
+    total_price += priced_quantity * sliced_base_price['price']
+  result["base_price"] = total_price / quantity
 
 base_price = result["base_price"]
 if base_price in (None, ""):
