@@ -22,6 +22,25 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
+    .declareMethod("createDocument", function (portal_type, parent_portal_type) {
+      var gadget = this,
+        doc = {
+          title: "Untitled Document",
+          portal_type: portal_type,
+          parent_relative_url: parent_portal_type
+        };
+      return gadget.jio_post(doc)
+        .push(function (id) {
+          return gadget.redirect({
+            command: 'display',
+            options: {
+              jio_key: id,
+              editable: true
+            }
+          });
+        });
+    })
+
     .declareMethod("render", function (options) {
       var gadget = this,
         allowed_sub_types_list = options.allowed_sub_types_list.split(","),
@@ -50,7 +69,8 @@
             child_gadget_url: 'gadget_erp5_pt_form_dialog.html',
             form_type: 'dialog',
             form_definition: form_result.form_definition,
-            view: "view"
+            view: "view",
+            show_dialog: allowed_sub_types_list.length > 1
           });
         });
     })
@@ -58,35 +78,28 @@
     .onStateChange(function () {
       var fragment = document.createElement('div'),
         gadget = this;
-      while (this.element.firstChild) {
-        this.element.removeChild(this.element.firstChild);
+      if (gadget.state.show_dialog) {
+        while (this.element.firstChild) {
+          this.element.removeChild(this.element.firstChild);
+        }
+        this.element.appendChild(fragment);
+        return gadget.declareGadget("gadget_officejs_form_view.html", {element: fragment,
+                                                                       scope: 'fg'})
+          .push(function (form_view_gadget) {
+            return form_view_gadget.render(gadget.state);
+          });
+      } else {
+        // if there is only one sub portal type, skip create document dialog rendering
+        return gadget.createDocument(gadget.state.doc.portal_type[0],
+                                     gadget.state.parent_portal_type.replace(/ /g, '_').toLowerCase());
       }
-      this.element.appendChild(fragment);
-      return gadget.declareGadget("gadget_officejs_form_view.html", {element: fragment,
-                                                                     scope: 'fg'})
-        .push(function (form_view_gadget) {
-          return form_view_gadget.render(gadget.state);
-        });
     })
 
     .allowPublicAcquisition('submitContent', function (options) {
       var gadget = this,
-        content_dict = options[2],
-        doc = {
-          title: "Untitled Document",
-          portal_type: content_dict.portal_type,
-          parent_relative_url: gadget.state.parent_portal_type.replace(/ /g, '_').toLowerCase()
-        };
-      return gadget.jio_post(doc)
-        .push(function (id) {
-          return gadget.redirect({
-            command: 'display',
-            options: {
-              jio_key: id,
-              editable: true
-            }
-          });
-        });
+        content_dict = options[2];
+      return gadget.createDocument(content_dict.portal_type,
+                                   gadget.state.parent_portal_type.replace(/ /g, '_').toLowerCase());
     });
 
 }(window, document, rJS));
