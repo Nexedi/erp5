@@ -186,6 +186,12 @@ class ERP5TestNode(TestCase):
     #           ['4f1d14de1b04b4f878a442ee859791fa337bcf85', 'first_commit']]}
     return commit_dict
 
+  def setUpSubmodule(self):
+    repository_path = self.remote_repository1
+    call = self.getCaller(cwd=repository_path)
+    call(['git', 'submodule', 'add', self.remote_repository2 + '/.git', 'repo2'])
+    call("git submodule update --init".split())
+
   def test_01_getDelNodeTestSuite(self):
     """
     We should be able to get/delete NodeTestSuite objects inside test_node
@@ -468,6 +474,55 @@ shared = true
     # So next update should go fine
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertTrue(rev_list is not None)
+
+  def test_05g_updateRevisionListWithSubmodule(self):
+    """
+    Check if we clone correctly repositories and get right submodule revisions
+    """
+    commit_dict = self.generateTestRepositoryList(add_third_repository=True)
+    self.setUpSubmodule()
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    # just add the third repository, but not set the vcs_repository_list
+    # because it is invisible to the buildout
+    # the submodule was set up in setUpSubmodule function
+    self.updateNodeTestSuiteData(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertEquals(2, len(rev_list))
+
+    # Check the submodule was set
+    submodule_file = open(os.path.join(self.remote_repository1, '.gitmodules'), 'r')
+    submodule_line = submodule_file.readline()
+    submodule_file.close()
+    self.assertEquals('[submodule "repo2"]\n', submodule_line)
+
+    # Get the current submodule revision
+    repo1_repo2 = os.path.join(self.remote_repository1, 'repo2')
+    call = self.getCaller(cwd=repo1_repo2)
+    submodule_revision0 = call("git rev-parse HEAD".split())
+
+    # Add new commit to submodule
+    call = self.getCaller(cwd=self.remote_repository2)
+    submodule_commit_file = open(os.path.join(self.remote_repository2, 'first_file'), 'w')
+    submodule_commit_file.write("next_content")
+    submodule_commit_file.close()
+    call("git commit -av -m new_commit".split())
+
+    # Update the submodule in the main repo
+    call = self.getCaller(cwd=repo1_repo2)
+    call("git pull".split())
+    submodule_revision1 = call("git rev-parse HEAD".split())
+
+    # Submodule revision should be changed
+    self.assertNotEquals(submodule_revision0, submodule_revision1)
+
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+
+    call = self.getCaller(cwd=repo1_repo2)
+    submodule_revision2 = call("git rev-parse HEAD".split())
+
+    # Submodule revision should be restored
+    self.assertEquals(submodule_revision1, submodule_revision2)
 
   def test_06_checkRevision(self):
     """
