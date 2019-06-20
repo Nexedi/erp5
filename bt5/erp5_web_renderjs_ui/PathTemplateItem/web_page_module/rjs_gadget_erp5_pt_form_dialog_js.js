@@ -175,7 +175,7 @@
             erp5_form: options.erp5_form || {},
             // editable: true,  // ignore global editable state (be always editable)
             has_update_action: Boolean(options.form_definition.update_action),
-            has_update_action_title: Boolean(options.form_definition.update_action_title),
+            update_action_title: options.form_definition.update_action_title,
             // pass extended_search from previous view in case any gadget is curious
             extended_search: extended_search,
             redirect_to_parent: options.erp5_document._embedded._view.field_your_redirect_to_parent !== undefined
@@ -225,7 +225,7 @@
         .push(function () {
           // Set the dialog button
           if (modification_dict.hasOwnProperty('has_update_action') ||
-              modification_dict.hasOwnProperty('has_update_action_title')) {
+              modification_dict.hasOwnProperty('update_action_title')) {
             return form_gadget.translateHtml(dialog_button_template({
               show_update_button: form_gadget.state.has_update_action
             }))
@@ -234,7 +234,7 @@
                   dialog_button_container = form_gadget.element
                                    .querySelector('.dialog_button_container');
                 div.innerHTML = html;
-                if (form_gadget.state.has_update_action_title) {
+                if (form_gadget.state.update_action_title) {
                   div.querySelector('button[name="action_update"]')
                      .textContent = form_gadget.state.form_definition
                                                      .update_action_title;
