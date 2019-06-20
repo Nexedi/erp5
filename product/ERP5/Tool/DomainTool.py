@@ -303,7 +303,7 @@ class DomainTool(BaseTool):
     # (some users are not able to see resource's price)
     security.declarePublic('generateMultivaluedMappedValue')
     def generateMultivaluedMappedValue(self, context, test=1,
-        predicate_list=None, explanation_only=0, **kw):
+        predicate_list=None, **kw):
       """
       We will generate a mapped value with the list of all predicates
       found.
@@ -320,22 +320,13 @@ class DomainTool(BaseTool):
       if predicate_list:
         from Products.ERP5Type.Document import newTempSupplyCell
         mapped_value_property_dict = defaultdict(list)
-        explanation_dict = defaultdict(dict)
         # Look for each property the first predicate with unique criterion
         # categories which defines the property
         for predicate in predicate_list:
-          full_prop_dict = explanation_dict[
-            tuple(predicate.getMembershipCriterionCategoryList())]
           for mapped_value_property in predicate.getMappedValuePropertyList():
-            if mapped_value_property in full_prop_dict:
-              # we already have one value for this (categories, property)
-              continue
             value = predicate.getProperty(mapped_value_property)
             if value is not None:
-              full_prop_dict[mapped_value_property] = value
               mapped_value_property_dict[mapped_value_property].append(value)
-        if explanation_only:
-          return dict(explanation_dict)
         mapped_value = newTempSupplyCell(self.getPortalObject(),
                                          'multivalued_mapped_value')
         mapped_value._setMappedValuePropertyList(

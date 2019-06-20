@@ -1,10 +1,10 @@
 from DateTime import DateTime
 
 portal = context.getPortalObject()
-order_portal_type = "Sale Order"
-order_line_portal_type = "Sale Order Line"
-delivery_portal_type = "Sale Packing List"
-delivery_line_portal_type = "Sale Packing List Line"
+order_portal_type = "%s Order" % delivery_type
+order_line_portal_type = "%s Order Line" % delivery_type
+delivery_portal_type = "%s Packing List" % delivery_type
+delivery_line_portal_type = "%s Packing List Line" % delivery_type
 
 delivery_id = "erp5_pdm_ui_test_delivery"
 delivery_title = "erp5_pdm_ui_test_delivery_title"
@@ -13,9 +13,18 @@ source_node_id = "erp5_pdm_ui_test_source_node"
 destination_node_id = "erp5_pdm_ui_test_destination_node"
 
 resource_id = "erp5_pdm_ui_test_product"
-business_process = 'business_process_module/erp5_default_business_process'
+business_process_id = 'erp5_default_business_process'
 
 quantity = 1
+
+business_process_module = portal.getDefaultModule("Business Process")
+business_process = getattr(business_process_module, business_process_id, None)
+if business_process is None:
+  business_process = business_process_module.newContent(
+    portal_type="Business Process",
+    id=business_process_id,
+    reference=business_process_id,
+  )
 
 # Create an order or a packing list
 if state in ['planned', 'ordered']:
@@ -28,7 +37,7 @@ if state in ['planned', 'ordered']:
     source_section='organisation_module/%s' % source_node_id,
     destination='organisation_module/%s' % destination_node_id,
     destination_section='organisation_module/%s' % destination_node_id,
-    specialise=business_process,
+    specialise_value=business_process,
     start_date=DateTime(),
   )
   order_line = order.newContent(
@@ -51,7 +60,7 @@ else:
     source_section='organisation_module/%s' % source_node_id,
     destination='organisation_module/%s' % destination_node_id,
     destination_section='organisation_module/%s' % destination_node_id,
-    specialise=business_process,
+    specialise_value=business_process,
     start_date=DateTime(),
   )
   delivery_line = delivery.newContent(

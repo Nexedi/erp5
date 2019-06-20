@@ -66,4 +66,16 @@
       <td></td>
     </tr>
   </tal:block>
+  <tal:block metal:define-macro="toggleSupplyLineBasePricePerSlice">
+    <tr>
+      <td>click</td>
+      <td>//input[@name="field_my_base_price_per_slice"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>Base_edit:method</td>
+      <td></td>
+    </tr>
+  </tal:block>
 </tal:block>

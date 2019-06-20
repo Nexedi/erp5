@@ -4,9 +4,6 @@ resource_portal_type = "Product"
 node_portal_type = "Organisation"
 site_portal_type = "Category"
 
-order_portal_type = "Sale Order"
-delivery_portal_type = "Sale Packing List"
-
 resource_id = "erp5_pdm_ui_test_product"
 
 source_node_id = "erp5_pdm_ui_test_source_node"
@@ -35,18 +32,22 @@ for site_id in (source_site_id, destination_site_id):
     base_category.manage_delObjects([site_id])
 
 stool = portal.portal_simulation
-# Delete order
-module = portal.getDefaultModule(order_portal_type)
-if getattr(module, delivery_id, None) is not None:
-  delivery = getattr(module, delivery_id)
-  stool.manage_delObjects(delivery.getCausalityRelatedIdList(portal_type='Applied Rule'))
-  module.manage_delObjects([delivery_id])
+for delivery_type in ("Internal", "Purchase", "Sale"):
+  order_portal_type = delivery_type + " Order"
+  delivery_portal_type = delivery_type + " Packing List"
 
-# Delete delivery
-module = portal.getDefaultModule(delivery_portal_type)
-if getattr(module, delivery_id, None) is not None:
-  delivery = getattr(module, delivery_id)
-  stool.manage_delObjects(delivery.getCausalityRelatedIdList(portal_type='Applied Rule'))
-  module.manage_delObjects([delivery_id])
+  # Delete order
+  module = portal.getDefaultModule(order_portal_type)
+  if getattr(module, delivery_id, None) is not None:
+    delivery = getattr(module, delivery_id)
+    stool.manage_delObjects(delivery.getCausalityRelatedIdList(portal_type='Applied Rule'))
+    module.manage_delObjects([delivery_id])
+
+  # Delete delivery
+  module = portal.getDefaultModule(delivery_portal_type)
+  if getattr(module, delivery_id, None) is not None:
+    delivery = getattr(module, delivery_id)
+    stool.manage_delObjects(delivery.getCausalityRelatedIdList(portal_type='Applied Rule'))
+    module.manage_delObjects([delivery_id])
 
 return "Deleted Successfully."
