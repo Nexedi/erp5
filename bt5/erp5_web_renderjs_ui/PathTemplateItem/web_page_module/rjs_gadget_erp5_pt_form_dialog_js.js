@@ -287,6 +287,7 @@
         })
         .push(function (all_result) {
           form_gadget.element.querySelector('a.dialogcancel').href = all_result[0];
+          form_gadget.enableButtonAsJob();
           return form_gadget.updateHeader({
             cancel_url: all_result[0],
             page_title: all_result[1]
@@ -313,7 +314,7 @@
       }
     }, false, false)
 
-    .declareService(function enableButton() {
+    .declareJob('enableButtonAsJob', function enableButton() {
       // click event listener is now activated
       // Change the state of the gadget
       var gadget = this,
