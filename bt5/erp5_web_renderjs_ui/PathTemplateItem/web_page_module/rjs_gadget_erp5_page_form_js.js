@@ -512,8 +512,11 @@ and handling data send&receive.
 
           // If the response is JSON, then look for the translated message sent
           // by the portal and display it to the user
-          if (error.target.response.type === 'application/json' ||
-              error.target.response.type === 'application/hal+json') {
+          if (error.target.response && (
+              error.target.response.type === 'application/json' ||
+              error.target.response.type === 'application/hal+json'
+            )
+              ) {
 
             return gadget.notifySubmitted()
               .push(function () {
