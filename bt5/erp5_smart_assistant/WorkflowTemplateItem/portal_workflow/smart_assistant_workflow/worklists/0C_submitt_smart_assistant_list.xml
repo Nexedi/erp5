@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="WorklistDefinition" module="Products.DCWorkflow.Worklists"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>global</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string>Smart Assistant Sound to Respond (%(count)s)</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+smart_assistant_sound_module?validation_state=submitted&portal_type:list=%(portal_type)s&reset:int=1
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Submit SA sound</string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>0C_submitt_smart_assistant_list</string> </value>
+        </item>
+        <item>
+            <key> <string>var_matches</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Smart Assistant Sound</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>validation_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>submitted</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
