@@ -153,7 +153,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
         Return predicate id related to a price parameter.
       """
       predicate_id_start_with = "quantity_range_"
-      if price_parameter != "base_price":
+      if price_parameter not in ("base_price", "slice_base_price"):
         predicate_id_start_with = "%s_%s" % \
             (price_parameter, predicate_id_start_with)
       # XXX Hardcoded portal type name
@@ -183,7 +183,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
       """
       # We need to keep compatibility with generated accessor
       price_parameter = kw.get('price_parameter', "base_price")
-      if price_parameter == "base_price":
+      if price_parameter in ("base_price", "slice_base_price"):
         method_name = "_baseGetQuantityStepList"
       else:
         method_name = 'get%sList' % \
@@ -208,7 +208,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
         # With this script, we can change the title of the predicate
         script = getattr(self, 'SupplyLine_getTitle', None)
         predicate_id_start_with = "quantity_range"
-        if price_parameter != "base_price":
+        if price_parameter not in ("base_price", "slice_base_price"):
           predicate_id_start_with = "%s_%s" % \
               (price_parameter, predicate_id_start_with)
         for i in range(0, len(quantity_step_list)-1):
@@ -218,7 +218,11 @@ class SupplyLine(Path, Amount, XMLMatrix):
           p = self.newContent(id='%s_%s' % (predicate_id_start_with, str(i)),
                               portal_type='Predicate', int_index=i+1)
           p.setCriterionPropertyList(('quantity', ))
-          p.setCriterion('quantity', min=min_quantity, max=max_quantity)
+          p.setCriterion(
+            'quantity',
+            min=min_quantity,
+            max=(None if price_parameter == 'slice_base_price' else max_quantity)
+          )
           if script is not None:
             title = script(min=min_quantity, max=max_quantity)
             p.setTitle(title)
