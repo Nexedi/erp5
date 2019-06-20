@@ -110,4 +110,47 @@
       <td></td>
     </tr>
   </tal:block>
+
+  <tal:block metal:define-macro="wait_synchronize_end">
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//h3[text()[contains(.,'Synchronize your data')]]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td>//h3[text()[contains(.,'Synchronize your data')]]</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_spinner" />
+  </tal:block>
+
+
+  <tal:block metal:define-macro="synchronize">
+    <tr>
+      <td colspan="3"><b>Synchronize</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[@data-i18n="Storages"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[@data-i18n="Storages"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[text() = "Erp5"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//a[@data-i18n="Synchronize"]</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_synchronize_end" />
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
+  </tal:block>
 </tal:block>
