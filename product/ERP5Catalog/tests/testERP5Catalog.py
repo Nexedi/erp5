@@ -33,6 +33,7 @@ import threading
 import traceback
 import unittest
 import httplib
+import mock
 import six
 from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
@@ -318,8 +319,16 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       rendez_vous.set()
       assert unblock_activity.wait(10), print_all_stacks()
       orig_catalogObjectList(*args, **kw)
-    catalog_tool_class.catalogObjectList = catalogObjectList
-    try:
+    def synchronise(*args, **kw):
+      rendez_vous.set()
+      assert unblock_activity.wait(10), print_all_stacks()
+      return mock.DEFAULT
+    with mock.patch.object(
+      catalog_tool_class,
+      'catalogObjectList',
+    #  wraps=catalog_tool_class.catalogObjectList,
+      side_effect=synchronise,
+    ):
       # Let pending activities (indexation) start.
       activity_thread.start()
       # Wait until indexation is indeed initiated.
@@ -335,9 +344,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       unblock_activity.set()
       activity_thread.join(10)
       assert not activity_thread.is_alive()
-    finally:
-      # Un-monkey-patch.
-      catalog_tool_class.catalogObjectList = orig_catalogObjectList
     # Document must be indexed: unindexation must have waited for indexation
     # to finish, so runValidablePendingActivities(..., 1) must have been
     # a no-op.
