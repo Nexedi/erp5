@@ -230,7 +230,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="StaticWebSectionTraversalHook" module="erp5.component.document.erp5_version.StaticWebSection"/>
+      <global name="WebSectionTraversalHook" module="Products.ERP5.Document.WebSection"/>
     </pickle>
     <pickle>
       <dictionary/>
