@@ -2020,7 +2020,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       if len(stat_columns) > 0:
         # prefer stat per column (follow original ListBox.py implementation)
         for stat_name, stat_script in stat_columns:
-          contents_stat[stat_name] = getattr(traversed_document, stat_script)(REQUEST=REQUEST, **catalog_kw)
+          if stat_name in select_list:
+            # Do not trigger potential expensive calculation if column is not displayed
+            contents_stat[stat_name] = getattr(traversed_document, stat_script)(REQUEST=REQUEST, **catalog_kw)
         contents_stat_list.append(contents_stat)
       elif stat_method != "" and stat_method.getMethodName() != list_method:
         # general stat_method is second in priority list - should return dictionary or list of dictionaries
