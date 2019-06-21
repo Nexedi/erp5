@@ -96,7 +96,9 @@ class SlapOSMasterCommunicator(object):
     if instance_title is not None:
       self.name = instance_title 
     if request_kw is not None:
-      if isinstance(request_kw, (six.binary_type, six.text_type)):
+      if isinstance(request_kw, bytes):
+        self.request_kw = json.loads(request_kw.decode('utf-8'))
+      elif isinstance(request_kw, six.text_type):
         self.request_kw = json.loads(request_kw)
       else:
         self.request_kw = request_kw
@@ -388,7 +390,9 @@ class SlapOSTester(SlapOSMasterCommunicator):
     self.name = name
     self.computer_guid = computer_guid
 
-    if isinstance(request_kw, (six.binary_type, six.text_type)):
+    if isinstance(request_kw, bytes):
+      self.request_kw = json.loads(request_kw.decode('utf-8'))
+    elif isinstance(request_kw, six.text_type):
       self.request_kw = json.loads(request_kw)
     else:
       self.request_kw = request_kw
