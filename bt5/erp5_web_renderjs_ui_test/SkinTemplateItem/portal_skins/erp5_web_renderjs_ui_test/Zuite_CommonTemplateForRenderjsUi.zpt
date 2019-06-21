@@ -200,8 +200,19 @@
       <td colspan="3"><b tal:content="python: 'Submit a form list search: %s' % search_query"></b></td>
     </tr>
     <tr>
-      <td>waitForElementPresent</td>
+      <td>assertElementPresent</td>
       <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
+      <td></td>
+    </tr>
+    <!-- listbox is not loading anymore -->
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//h1//span[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementNotPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//h1//span[contains(@class, "ui-icon-spinner")]</td>
       <td></td>
     </tr>
     <tr>
