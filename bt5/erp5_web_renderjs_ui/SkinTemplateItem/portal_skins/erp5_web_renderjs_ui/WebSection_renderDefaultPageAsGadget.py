@@ -53,7 +53,8 @@ mapping_dict = {
   "site_keywords": web_section.getLayoutProperty("subject", default=""),
   "app_view_reference": web_section.getLayoutProperty("configuration_app_view_action_reference", default=""),
   "app_allowed_sub_types": web_section.getLayoutProperty("configuration_app_allowed_sub_types", default=""),
-  "header_jump_button": web_section.getLayoutProperty("configuration_header_jump_button", default=False),
+  "header_jump_button": web_section.getLayoutProperty("configuration_header_jump_button", default=0),
+  "hide_header_add_button": web_section.getLayoutProperty("configuration_hide_header_add_button", default=0),
   "app_actions": web_section.getLayoutProperty("configuration_app_actions", default=""),
 }
 
