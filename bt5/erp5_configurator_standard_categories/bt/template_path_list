@@ -30,7 +30,11 @@ portal_categories/salary_level/**
 portal_categories/site/**
 portal_categories/skill/**
 portal_categories/social_form/**
-portal_categories/trade_phase/**
+portal_categories/trade_phase/payroll
+portal_categories/trade_phase/payroll/**
+portal_categories/trade_phase/production/**
+portal_categories/trade_phase/trade
+portal_categories/trade_phase/trade/**
 portal_categories/trade_state/**
 portal_categories/use/**
 quantity_unit_conversion_module/area_conversion_group
