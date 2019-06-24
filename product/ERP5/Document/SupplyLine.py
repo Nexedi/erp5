@@ -141,7 +141,14 @@ class SupplyLine(Path, Amount, XMLMatrix):
           This method creates a new cell
       """
       kwd.setdefault('base_id', 'path')
-      return XMLMatrix.newCell(self, *kw, **kwd)
+      cell =  XMLMatrix.newCell(self, *kw, **kwd)
+      if kwd['base_id'] == 'path':
+        index = self.index[kwd['base_id']][0][kw[0]]
+        quantity_step_list = ['None'] + self.getQuantityStepList() + ['None']
+        min_quantity = quantity_step_list[index]
+        max_quantity = quantity_step_list[index+1]
+        cell.edit(sliced_range=(min_quantity, max_quantity))
+      return cell
 
     ############################################################
     # Quantity predicate API
