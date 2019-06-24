@@ -148,13 +148,13 @@
 </tr>
 -->
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name='field_my_successor_title']</td>
   <td>azértï</td>
 </tr>
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name='field_my_foo_category_title']</td>
   <td>a1</td>
 </tr>
@@ -173,7 +173,7 @@
 </tr>
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name='field_my_title']</td>
   <td>azértï</td>
 </tr>

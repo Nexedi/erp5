@@ -106,8 +106,11 @@
 
 
       // Always display an empty value at the end
-      value_relative_url_list.push("");
-      value_text_list.push("");
+      if ((value_text_list.length === 0) ||
+          (value_text_list[value_text_list.length - 1] !== "")) {
+        value_relative_url_list.push("");
+        value_text_list.push("");
+      }
 
       // Clear first to DOM, append after to reduce flickering/manip
       while (element.firstChild) {
@@ -196,7 +199,7 @@
 
             var result = {},
               j,
-              k = 0,
+              empty_line_count = 0,
               input_result;
 
             if (options.format === "erp5") {
@@ -216,16 +219,19 @@
                 if (input_result.hasOwnProperty('value_text')) {
                   if (input_result.value_text) {
                     if (input_result.value_portal_type) {
-                      result[gadget.state.relation_field_id + '_' + k] =
+                      result[gadget.state.relation_field_id + '_' +
+                             (j - empty_line_count)] =
                         "_newContent_" + input_result.value_portal_type;
                     } else if (input_result.value_uid) {
-                      result[gadget.state.relation_field_id + '_' + k] =
+                      result[gadget.state.relation_field_id + '_' +
+                             (j - empty_line_count)] =
                         input_result.value_uid;
                     }
                     result[gadget.state.key].push(input_result.value_text);
+                  } else {
+                    empty_line_count += 1;
                   }
                 }
-                k += 1;
               } else {
                 result[gadget.state.key].value_text_list
                   .push(input_result.value_text);
@@ -233,7 +239,8 @@
                   .push(input_result.value_relative_url);
                 result[gadget.state.key].value_portal_type_list
                   .push(input_result.value_portal_type);
-                result[gadget.state.key].value_uid_list.push(undefined);
+                result[gadget.state.key].value_uid_list
+                  .push(input_result.value_uid || undefined);
               }
             }
             //user remove all data

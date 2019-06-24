@@ -224,13 +224,13 @@
 
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
   <td>TEST</td>
 </tr>
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
   <td>TEST</td>
 </tr>

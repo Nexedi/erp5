@@ -198,13 +198,13 @@
 
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name="field_my_successor_title"]</td>
   <td>2</td>
 </tr>
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name="field_my_title"]</td>
   <td>TEST</td>
 </tr>
@@ -212,12 +212,12 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name="field_my_successor_title"]</td>
   <td>TEST</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name="field_my_title"]</td>
   <td>TEST</td>
 </tr>

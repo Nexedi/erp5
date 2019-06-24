@@ -83,9 +83,10 @@
   <td></td>
 </tr>
 
+
 <!-- Actual test -->
 <tr>
-  <td colspan="3"><b>Type the homonym in the mulit relation field and choose the whatever element (second for instance)</b></td>
+  <td colspan="3"><b>type the homonym in the mulit relation field and choose the whatever element (second for instance)</b></td>
 </tr>
 <tr> <!-- type the homonym in the mulit relation field and choose the whatever element (second for instance) -->
   <td>type</td>
@@ -163,9 +164,69 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//ul[@class="search_ul"]/li[1]</td>
+  <td>//li[@data-explore="true"]</td>
   <td></td>
 </tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tr>
+  <td>click</td>
+  <td>//tbody/tr[1]//a</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td colspan="3"><b>When coming back from a search listbox, the relation field rendering is done in a service</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//a[@class="ui-btn ui-corner-all ui-btn-icon-notext ui-icon-plane ui-shadow-inset ui-btn-inline"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check multi relation field display</b></td>
+</tr>
+<tr> <!-- Check field values -->
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[1]//input</td>
+  <td>Title0</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//input</td>
+  <td>Title2</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[3]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[1]//input</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[2]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[3]</td>
+  <td></td>
+</tr>
+
+
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
 <tr>
@@ -211,6 +272,7 @@
   <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[4]</td>
   <td></td>
 </tr>
+
 
 </tbody></table>
 </body>

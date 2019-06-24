@@ -84,17 +84,77 @@
 </tr>
 
 <!-- Actual test -->
+
 <tr>
-  <td colspan="3"><b>Type the homonym in the mulit relation field and choose the whatever element (second for instance)</b></td>
+  <td colspan="3"><b>add entry to the multi relation field</b></td>
 </tr>
-<tr> <!-- type the homonym in the mulit relation field and choose the whatever element (second for instance) -->
+<tr> <!-- add entry to the multi relation field -->
   <td>type</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[1]//input</td>
-  <td>Title0</td>
+  <td>Title2</td>
 </tr>
 <tr>
   <td>fireEvent</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[1]//input</td>
+  <td>input</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//ul[@class="search_ul"]//li</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//ul[@class="search_ul"]/li[1]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+<tr>
+  <td colspan="3"><b>Check multi relation field display</b></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>Title2</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[1]//input</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[2]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[3]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>type the homonym in the mulit relation field and choose the whatever element (second for instance)</b></td>
+</tr>
+<tr> <!-- type the homonym in the mulit relation field and choose the whatever element (second for instance) -->
+  <td>type</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//input</td>
+  <td>Title0</td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//input</td>
   <td>input</td>
 </tr>
 <tr>
@@ -112,14 +172,74 @@
 <tr>
   <td colspan="3"><b>Check multi relation field display</b></td>
 </tr>
+<tr> <!-- Check field values -->
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[1]//input</td>
+  <td>Title2</td>
+</tr>
 <tr>
   <td>assertValue</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//input</td>
   <td>Title0</td>
 </tr>
 <tr>
   <td>assertValue</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[3]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[1]//input</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[2]//input</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[3]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[4]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>delete the field value</b></td>
+</tr>
+<!-- delete the field value -->
+<tr>
+  <td>type</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[1]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[1]//input</td>
+  <td>input</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+<tr>
+  <td colspan="3"><b>Check multi relation field display</b></td>
+</tr>
+<tr> <!-- Check field values -->
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[1]//input</td>
+  <td>Title0</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//input</td>
   <td></td>
 </tr>
 <tr>
@@ -140,75 +260,6 @@
 <tr>
   <td>assertElementNotPresent</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[3]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td colspan="3"><b>add another entry to the multi relation field</b></td>
-</tr>
-<tr> <!-- add another entry to the multi relation field -->
-  <td>type</td>
-  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//input</td>
-  <td>Title2</td>
-</tr>
-<tr>
-  <td>fireEvent</td>
-  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//input</td>
-  <td>input</td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//ul[@class="search_ul"]//li</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//ul[@class="search_ul"]/li[1]</td>
-  <td></td>
-</tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
-
-<tr>
-  <td colspan="3"><b>Check multi relation field display</b></td>
-</tr>
-<tr> <!-- Check field values -->
-  <td>assertValue</td>
-  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[1]//input</td>
-  <td>Title0</td>
-</tr>
-<tr>
-  <td>assertValue</td>
-  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//input</td>
-  <td>Title2</td>
-</tr>
-<tr>
-  <td>assertValue</td>
-  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[3]//input</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[4]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertValue</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[1]//input</td>
-  <td>0</td>
-</tr>
-<tr>
-  <td>assertValue</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[2]//input</td>
-  <td>2</td>
-</tr>
-<tr>
-  <td>assertValue</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[3]//input</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[4]</td>
   <td></td>
 </tr>
 
