@@ -73,27 +73,23 @@
 
 <tr>
  <td>waitForElementPresent</td>
- <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Actions"]</td>
  <td></td>
 </tr>
 <tr>
  <td>click</td>
- <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Actions"]</td>
  <td></td>
 </tr>
+
 <tr>
   <td>waitForElementPresent</td>
-  <td>//select[@name="portal_type"]</td>
+  <td>link=New Post</td>
   <td></td>
-<tr>
-<tr>
-  <td>select</td>
-  <td>//select[@name="portal_type"]</td>
-  <td>value=HTML Post</td>
-<tr>
+</tr>
 <tr>
   <td>click</td>
-  <td>//div[contains(@class, 'dialog_button_container')]//input[@value="Create Document"]</td>
+  <td>link=New Post</td>
   <td></td>
 </tr>
 
@@ -115,11 +111,7 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Data Updated'}">
@@ -137,34 +129,26 @@
 
 <tr>
  <td>waitForElementPresent</td>
- <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Actions"]</td>
  <td></td>
 </tr>
 <tr>
  <td>click</td>
- <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Actions"]</td>
  <td></td>
 </tr>
+
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_list.html')]//select[@title="Document Type"]</td>
+  <td>link=New Post</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_list.html')]//select[@title="Document Type"]</td>
+  <td>link=New Post</td>
   <td></td>
 </tr>
-<tr>
-  <td>click</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_list.html')]//option[@value="HTML Post"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//div[contains(@class, 'dialog_button_container')]//input[@value="Create Document"]</td>
-  <td></td>
-</tr>
+
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
@@ -183,11 +167,7 @@
   <td>${search}</td>
 </tr>
 
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Data Updated'}">
