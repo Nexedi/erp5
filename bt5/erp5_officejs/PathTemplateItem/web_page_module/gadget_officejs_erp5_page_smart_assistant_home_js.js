@@ -21,7 +21,6 @@
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
-//added
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       var gadget = this;
       return gadget.jio_allDocs(param_list[0])
@@ -57,20 +56,6 @@
           return result;
         });
     })
-// good for now
-/*
-    .allowPublicAcquisition('notifySubmit', function () {
-      return this.triggerSubmit();
-    })
-
-    .declareMethod("triggerSubmit", function () {
-      var argument_list = arguments;
-      return this.getDeclaredGadget('form_list')
-        .push(function (gadget) {
-          return gadget.triggerSubmit.apply(gadget, argument_list);
-        });
-    })
-*/
 
     .allowPublicAcquisition('updateHeader', function () {
       return;
@@ -150,7 +135,6 @@
         });
     })
 
-
     .declareMethod("render", function () {
       var gadget = this;
       this.getDeclaredGadget('form_list');
@@ -196,8 +180,6 @@
             query_list: jio_query_list,
             type: "complex"
           }));
-
-
 
           return RSVP.all([
             result[0].render({
@@ -318,7 +300,6 @@
             })
           ]);
         })
-
         .push(function () {
           return RSVP.all([
             gadget.getSetting('document_title_plural'),
