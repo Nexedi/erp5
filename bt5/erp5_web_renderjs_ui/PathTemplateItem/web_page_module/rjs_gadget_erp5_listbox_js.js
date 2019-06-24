@@ -143,11 +143,12 @@
         tr_element.appendChild(td_element);
       }
 
-      if (options.line_icon) {
+      if (row.line_icon) {
         td_element = document.createElement('td');
         sub_element = document.createElement('a');
         sub_element.setAttribute('class', 'ui-btn-icon-right ui-icon-sign-in');
         sub_element.href = row.jump;
+        td_element.appendChild(sub_element);
         tr_element.appendChild(td_element);
       }
 
