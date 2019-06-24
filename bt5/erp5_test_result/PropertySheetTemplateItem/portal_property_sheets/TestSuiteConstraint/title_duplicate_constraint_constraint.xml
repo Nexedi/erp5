@@ -20,23 +20,19 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Test Suite has to have at least one vcs repository</string> </value>
+            <value> <string>Title must be unique</string> </value>
         </item>
         <item>
             <key> <string>expression</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python: len([x for x in object.objectValues(portal_type="Test Suite Repository") if x.getProfilePath() not in (\'\',None)])>0
-
-]]></string> </value>
+            <value> <string>python: len([x for x in object.getPortalObject().portal_catalog(portal_type="Test Suite", validation_state="validated", title=object.getTitle()) if x.uid != object.getUid()])==0</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>profile_path_constraint</string> </value>
+            <value> <string>title_duplicate_constraint_constraint</string> </value>
         </item>
         <item>
             <key> <string>message_expression_false</string> </key>
-            <value> <string>No vcs_repository (minimum 1)</string> </value>
+            <value> <string>Title must be unique, it is already used</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
