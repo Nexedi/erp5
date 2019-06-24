@@ -33,6 +33,7 @@ import threading
 import traceback
 import unittest
 import httplib
+import six
 from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
@@ -67,20 +68,39 @@ class TransactionThread(threading.Thread):
     self.root_physical_path = portal.getPhysicalPath()
     self.payload = payload
     self.payload_kw = payload_kw
+    self.exception = None
 
   def run(self):
-    # Get a new portal, in a new transactional connection bound to default
-    # transaction manager (which should be the threaded transaction manager).
-    portal = self.zodb.open().root()['Application'].unrestrictedTraverse(
-      self.root_physical_path,
-    )
-    # Trigger ERP5Site magic
-    portal.getSiteManager()
-    # Trigger skin magic
-    portal.changeSkin(None)
-    # Login
-    newSecurityManager(None, portal.acl_users.getUser('ERP5TypeTestCase'))
-    self.payload(portal=portal, **dict(self.payload_kw))
+    try:
+      # Get a new portal, in a new transactional connection bound to default
+      # transaction manager (which should be the threaded transaction manager).
+      portal = self.zodb.open().root()['Application'].unrestrictedTraverse(
+        self.root_physical_path,
+      )
+      # Trigger ERP5Site magic
+      portal.getSiteManager()
+      # Trigger skin magic
+      portal.changeSkin(None)
+      # Login
+      newSecurityManager(None, portal.acl_users.getUser('ERP5TypeTestCase'))
+      self.payload(portal=portal, **dict(self.payload_kw))
+    except Exception as self.exception:
+      if six.PY2:
+        self.exception.__traceback__ = sys.exc_info()[2]
+
+  def join(self, *args, **kw):
+    super(TransactionThread, self).join(*args, **kw)
+    if not self.is_alive():
+      exception = self.exception
+      # Break reference cycle:
+      # run frame -> self -> exception -> __traceback__ -> run frame
+      # Not re-raising on subsequent calls is kind of a bug, but it's really up
+      # to caller to either not ignore exceptions or keep them around.
+      self.exception = None
+      if exception is not None:
+        if six.PY3:
+          raise exception
+        six.reraise(exception, None, exception.__traceback__)
 
 class IndexableDocument(ObjectManager):
 
