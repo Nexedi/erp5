@@ -191,7 +191,8 @@
         form_definition,
         query_type,
         query_parent,
-        query_reference;
+        query_reference,
+        hide_add_button;
       query_reference = new SimpleQuery({
         key: "reference",
         operator: "",
@@ -246,6 +247,10 @@
         .push(function (actions_views_dict) {
           form_definition.has_more_views = Object.keys(actions_views_dict.views).length > 1;
           form_definition.has_more_actions = Object.keys(actions_views_dict.actions).length > 0;
+          return gadget.getSetting('hide_header_add_button');
+        })
+        .push(function (hide_add_button_setting) {
+          form_definition.hide_add_button = hide_add_button_setting === "1";
           return form_definition;
         });
     });

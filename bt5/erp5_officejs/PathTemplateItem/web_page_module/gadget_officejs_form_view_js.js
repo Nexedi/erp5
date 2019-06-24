@@ -198,7 +198,9 @@
             page_title = options.doc.title;
           }
           erp5_document = form_json.erp5_document;
-          if (form_json.form_definition.allowed_sub_types_list && form_json.form_definition.allowed_sub_types_list.length > 0) {
+          if (form_json.form_definition.allowed_sub_types_list &&
+              form_json.form_definition.allowed_sub_types_list.length > 0 &&
+              ! form_json.form_definition.hide_add_button) {
             url_for_parameter_list.push({command: 'change', options: {page: "create_document", jio_key: options.jio_key, portal_type: options.portal_type, allowed_sub_types_list: form_json.form_definition.allowed_sub_types_list}});
             add_url = true;
           }

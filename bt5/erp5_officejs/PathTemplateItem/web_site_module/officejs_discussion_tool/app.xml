@@ -385,6 +385,16 @@
                       <value> <string>lines</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_hide_header_add_button</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -471,6 +481,10 @@
         <item>
             <key> <string>configuration_header_jump_button</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>configuration_hide_header_add_button</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
@@ -773,7 +787,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.32636.4663.31641</string> </value>
+                <value> <string>976.34272.58294.24337</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -791,7 +805,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1560946399.88</float>
+                        <float>1561044558.86</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
