@@ -214,6 +214,7 @@
 
               if (options.format === "erp5") {
                 if (input_result.hasOwnProperty('value_text')) {
+                  result[gadget.state.key].push(input_result.value_text);
                   if (input_result.value_text) {
                     if (input_result.value_portal_type) {
                       result[gadget.state.relation_field_id + '_' + k] =
@@ -222,7 +223,6 @@
                       result[gadget.state.relation_field_id + '_' + k] =
                         input_result.value_uid;
                     }
-                    result[gadget.state.key].push(input_result.value_text);
                   }
                 }
                 k += 1;
