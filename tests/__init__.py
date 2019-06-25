@@ -35,6 +35,7 @@ class _ERP5(ERP5TypeTestSuite):
     component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
                               "/test\.[^.]+\.([^.]+).py$")
     for test_path in (
+        glob('%s/bt5/erp5_hal_json_style/TestTemplateItem/portal_components/test.*.test*Hal*.py' % path) +
         glob('%s/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*RJS*.py' % path) +
         glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*OfficeJS*.py' % path)):
       component_re_match = component_re.match(test_path)
