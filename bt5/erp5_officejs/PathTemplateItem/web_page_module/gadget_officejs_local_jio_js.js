@@ -209,10 +209,6 @@
                     console.log("Unauthorized access to storage, sync cancelled");
                     return;
                   }
-                  //TODO: ignore sync error to make other officejs apps work
-                  //until configuration manifest file name is get from app-settings
-                  console.log("ERROR WHILE SYNC. Omitting error in non-migrated app");
-                  return;
                   throw error;
                 });
             });

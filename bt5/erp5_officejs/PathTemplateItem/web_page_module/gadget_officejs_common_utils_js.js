@@ -191,8 +191,7 @@
         form_definition,
         query_type,
         query_parent,
-        query_reference,
-        hide_add_button;
+        query_reference;
       query_reference = new SimpleQuery({
         key: "reference",
         operator: "",

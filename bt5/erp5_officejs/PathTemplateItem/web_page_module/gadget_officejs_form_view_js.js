@@ -4,7 +4,7 @@
   "use strict";
 
   function renderField(field_id, field_definition, document) {
-    var key, raw_value, tales_expr, override, final_value, result = {};
+    var key, raw_value, tales_expr, override, final_value, item_list, result = {};
     for (key in field_definition.values) {
       if (field_definition.values.hasOwnProperty(key)) {
         // order to get the final value (based on Field.py get_value)
@@ -37,7 +37,7 @@
     result.key = field_id;
     if (document && document.hasOwnProperty(field_id)) {
       if (field_definition.type === "ListField") {
-        var item_list = ensureArray(document[field_id]).map(function (item) {
+        item_list = ensureArray(document[field_id]).map(function (item) {
           if (Array.isArray(item)) {return item; }
           return [item, item];
         });
@@ -200,7 +200,7 @@
           erp5_document = form_json.erp5_document;
           if (form_json.form_definition.allowed_sub_types_list &&
               form_json.form_definition.allowed_sub_types_list.length > 0 &&
-              ! form_json.form_definition.hide_add_button) {
+              !form_json.form_definition.hide_add_button) {
             url_for_parameter_list.push({command: 'change', options: {page: "create_document", jio_key: options.jio_key, portal_type: options.portal_type, allowed_sub_types_list: form_json.form_definition.allowed_sub_types_list}});
             add_url = true;
           }

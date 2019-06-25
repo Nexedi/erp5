@@ -53,7 +53,7 @@
           if (jio_document.portal_type === undefined) {
             throw new Error('Can not display document: ' + options.jio_key);
           }
-        }, function (error) {})
+        }, function () {})
         .push(function () {
           return gadget.getSetting('parent_portal_type');
         })
@@ -70,7 +70,7 @@
         })
         .push(function (result) {
           return result;
-        }, function (error) {
+        }, function () {
           return gadget_utils.getFormDefinition(portal_type, default_view);
         })
         .push(function (result) {

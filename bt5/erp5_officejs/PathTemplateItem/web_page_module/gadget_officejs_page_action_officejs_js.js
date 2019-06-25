@@ -10,9 +10,7 @@
   var gadget_klass = rJS(window),
     table_template = Handlebars.compile(gadget_klass.__template_element
                          .getElementById("table-template")
-                         .innerHTML),
-    // TODO: check if there are other categories that are 'views' and find a less hardcoded way to get this
-    view_categories = ["object_view", "object_jio_view", "object_web_view", "object_list"];
+                         .innerHTML);
 
   /** Render translated HTML of title + links
    *
