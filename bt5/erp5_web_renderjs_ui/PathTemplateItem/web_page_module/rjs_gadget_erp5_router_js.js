@@ -345,7 +345,7 @@
     return next_options;
   }
 
-  function execDisplayStoredStateCommand(gadget, next_options) {
+  function execDisplayStoredStateCommand(gadget, next_options, drop_options) {
     // console.warn(command_options);
     var jio_key = next_options.jio_key,
       storage_key = jio_key,
@@ -359,7 +359,7 @@
     if (storage_key) {
       queue = gadget.props.jio_state_gadget.get(storage_key)
         .push(function (options) {
-          calculateChangeOptions(options, next_options);
+          calculateChangeOptions(options, next_options, drop_options);
         }, function (error) {
           if ((error instanceof jIO.util.jIOError) &&
               (error.status_code === 404)) {
@@ -883,7 +883,7 @@
       return execKeepHistoryAndCancelDialogCommand(gadget, previous_options);
     }
     if (command_options.path === COMMAND_DISPLAY_STORED_STATE) {
-      return execDisplayStoredStateCommand(gadget, next_options);
+      return execDisplayStoredStateCommand(gadget, next_options, drop_options);
     }
     if (command_options.path === COMMAND_INDEX_STATE) {
       return execIndexCommand(gadget, previous_options, next_options);
@@ -938,7 +938,7 @@
         args = {};
       if (hash !== undefined) {
         split = hash.split('?');
-        command = split[0] || "";
+        command = decodeURIComponent((split[0] || "").replace(/\+/gm, "%20"));
         query = split[1] || "";
       }
       subhashes = query.split('&');

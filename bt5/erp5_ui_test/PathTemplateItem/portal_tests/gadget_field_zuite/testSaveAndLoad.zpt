@@ -61,6 +61,12 @@
 </tr>
 
 
+<!-- the flag used in erp5.js to warn unsaved changes is initially not set -->
+<tr>
+  <td>assertEval</td>
+  <td>selenium.browserbot.currentWindow.changed</td>
+  <td>false</td>
+</tr>
 
 <tr>
   <td>type</td>
@@ -68,6 +74,12 @@
   <td>123</td>
 </tr>
 
+<!-- the flag used in erp5.js to warn unsaved changes is set after gadget is changed -->
+<tr>
+  <td>waitForEval</td>
+  <td>selenium.browserbot.currentWindow.changed</td>
+  <td>true</td>
+</tr>
 
 
 <tr>

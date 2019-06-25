@@ -258,24 +258,28 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       try:
         PortalTestCase.login(self, user_name)
       except AttributeError:
-        self.addERP5TypeTestCaseUser()
-        return PortalTestCase.login(self, user_name)
+        if user_name == 'ERP5TypeTestCase':
+          self.addERP5TypeTestCaseUser()
+          return PortalTestCase.login(self, user_name)
+        else:
+          raise
 
     def loginByUserName(self, user_name='ERP5TypeTestCase', quiet=0):
       """
       Most of the time, we need to login before doing anything
       """
       uf = self.portal.acl_users
-      for i in range(2):
-        try:
+      user = uf.getUser(user_name)
+      if user is None:
+        if user_name == 'ERP5TypeTestCase':
+          self.addERP5TypeTestCaseUser(password='', user_folder=uf)
           user = uf.getUser(user_name)
-          if not hasattr(user, 'aq_base'):
-            user = user.__of__(uf)
-          newSecurityManager(None, user)
-          return
-        except AttributeError:
-          uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
-                        'Assignor', 'Author', 'Auditor', 'Associate'], [])
+        else:
+          raise RuntimeError("Could not find username '%s'" % user_name)
+
+      if not hasattr(user, 'aq_base'):
+        user = user.__of__(uf)
+      newSecurityManager(None, user)
 
     def changeSkin(self, skin_name):
       """
@@ -721,7 +725,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         '''Publishes the object at 'path' returning a response object.'''
 
         from ZPublisher.Response import Response
-        from ZPublisher.Test import publish_module
+        from ZPublisher.Publish import publish_module_standard
 
         from AccessControl.SecurityManagement import getSecurityManager
         from AccessControl.SecurityManagement import setSecurityManager
@@ -734,8 +738,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
         if env is None:
             env = {}
-        if extra is None:
-            extra = {}
 
         request = self.app.REQUEST
 
@@ -776,11 +778,20 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         try:
           if user:
             PAS._extractUserIds = _extractUserIds
-          publish_module('Zope2',
+
+          # The following `HTTPRequest` object would be created anyway inside
+          # `publish_module_standard` if no `request` argument was given.
+          request = request.__class__(stdin, env, response)
+          # However, we need to inject the content of `extra` inside the
+          # request.
+          if extra:
+            for k, v in extra.items(): request[k] = v
+
+          publish_module_standard('Zope2',
+                         request=request,
                          response=response,
                          stdin=stdin,
                          environ=env,
-                         extra=extra,
                          debug=not handle_errors,
                         )
         finally:

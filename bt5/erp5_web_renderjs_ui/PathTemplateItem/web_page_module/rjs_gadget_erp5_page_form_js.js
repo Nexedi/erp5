@@ -49,6 +49,8 @@ and handling data send&receive.
       'gadget_html5_textarea.html',
       'gadget_html5_select.html'
     ],
+    erp5_module_regexp = /^[^\/]+_module$/,
+    erp5_portal_document_regexp = /^portal_.*\/.+$/,
     erp5_module_document_regexp = /^[^\/]+_module\/.+$/;
   /*jslint regexp: false*/
 
@@ -114,6 +116,7 @@ and handling data send&receive.
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
@@ -268,6 +271,9 @@ and handling data send&receive.
         gadget = this,
         options = gadget.state.options,
         page_template_gadget,
+        is_module = erp5_module_regexp.test(gadget.state.options.jio_key),
+        is_module_document = erp5_module_document_regexp.test(gadget.state.options.jio_key),
+        is_portal_document = erp5_portal_document_regexp.test(gadget.state.options.jio_key),
         erp5_document = JSON.parse(gadget.state.erp5_document),
         erp5_form = JSON.parse(gadget.state.erp5_form);
 
@@ -307,17 +313,29 @@ and handling data send&receive.
           }
         })
         .push(function () {
-          var jio_key = gadget.state.options.jio_key;
-          /*jslint regexp: true*/
-          if ((erp5_module_document_regexp.test(jio_key)) || (/^portal_.*\/.+$/.test(jio_key))) {
-            /*jslint regexp: false*/
-            return gadget.updatePanel({
-              erp5_document: erp5_document,
-              editable: gadget.state.options.editable,
-              jio_key: jio_key,
-              view: options.view
-            });
+          if (is_module) {
+            return gadget.getTranslationList(["List"]);
           }
+        })
+        .push(function (translation_list) {
+          var display_workflow_list = true;
+          if (is_module) {
+            if (erp5_document._links) {
+              // hardcode "VIEWS: List" to hide "consistency", "history" and "metadata"
+              erp5_document._links.action_object_view =
+                [{"name": "view", "title": translation_list[0], "href": "view", "icon": null}];
+              display_workflow_list = false;
+            }
+          } else if (!(is_module_document || is_portal_document)) {
+            return;
+          }
+          return gadget.updatePanel({
+            display_workflow_list: display_workflow_list,
+            erp5_document: erp5_document,
+            editable: gadget.state.options.editable,
+            jio_key: gadget.state.options.jio_key,
+            view: options.view
+          });
         });
     })
     /** SubmitContent should be called by the gadget which renders submit button
@@ -494,8 +512,11 @@ and handling data send&receive.
 
           // If the response is JSON, then look for the translated message sent
           // by the portal and display it to the user
-          if (error.target.response.type === 'application/json' ||
-              error.target.response.type === 'application/hal+json') {
+          if (error.target.response && (
+              error.target.response.type === 'application/json' ||
+              error.target.response.type === 'application/hal+json'
+            )
+              ) {
 
             return gadget.notifySubmitted()
               .push(function () {

@@ -19,9 +19,6 @@ def manage_page_footer(self):
   except:
     editor = None
 
-  if editor not in ('ace', 'codemirror'):
-    return default
-
   # REQUEST['PUBLISHED'] can be the form in the acquisition context of the
   # document, or a method bound to the document (after a POST it is a bound method)
   published = self.REQUEST.get('PUBLISHED')
@@ -43,12 +40,16 @@ def manage_page_footer(self):
   if document.meta_type in ('DTML Document', 'DTML Method'):
     if document.getId().endswith('.js'):
       mode = 'javascript'
+    elif document.getId().endswith('.ts'):
+      mode = 'typescript'
     elif document.getId().endswith('.css'):
       mode = 'css'
     textarea_selector = 'textarea[name="data:text"]'
   elif document.meta_type in ('File', ):
     if 'javascript' in document.getContentType():
       mode = 'javascript'
+    elif 'typescript' in document.getContentType():
+      mode = 'typescript'
     elif 'css' in document.getContentType():
       mode = 'css'
     elif 'html' in document.getContentType():
@@ -96,7 +97,15 @@ def manage_page_footer(self):
                                                      mode=mode,
                                                      keymap=keymap,
                                                      portal_type=portal_type))
-  else:
+  elif editor == 'monaco' and getattr(portal, 'monaco_editor_support', None) is not None:
+    return '''%s
+              </body>
+            </html>''' % (portal.monaco_editor_support(
+                              textarea_selector=textarea_selector,
+                              portal_url=portal_url,
+                              bound_names=bound_names,
+                              mode=mode).encode('utf-8'))
+  elif editor == 'ace':
     return '''
 <script type="text/javascript" src="%(portal_url)s/jquery/core/jquery.min.js"></script>
 <script type="text/javascript" src="%(portal_url)s/ace/ace.js"></script>
@@ -182,5 +191,7 @@ $(document).ready(function() {
 </script>
 </body>
 </html>''' % locals()
+
+  return default
 
 Navigation.manage_page_footer = manage_page_footer

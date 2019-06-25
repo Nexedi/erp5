@@ -140,21 +140,22 @@ class Queue(object):
 
   def getOrderValidationText(self, message):
     # Return an identifier of validators related to ordering.
-    order_validation_item_list = []
-    key_list = message.activity_kw.keys()
-    key_list.sort()
-    for key in key_list:
-      method_id = "_validate_" + key
-      if getattr(self, method_id, None) is not None:
-        order_validation_item_list.append((key, message.activity_kw[key]))
-    if len(order_validation_item_list) == 0:
-      # When no order validation argument is specified, skip the computation
-      # of the checksum for speed. Here, 'none' is used, because this never be
-      # identical to SHA1 hexdigest (which is always 40 characters), and 'none'
-      # is true in Python. This is important, because dtml-if assumes that an empty
-      # string is false, so we must use a non-empty string for this.
-      return 'none'
-    return sha1(repr(order_validation_item_list)).hexdigest()
+    order_validation_item_list = [
+        (key, value)
+        for key, value in sorted(
+            message.activity_kw.iteritems(), key=lambda x: x[0],
+        )
+        if value is not None and
+        getattr(self, "_validate_" + key, None) is not None
+    ]
+    if order_validation_item_list:
+      return sha1(repr(order_validation_item_list)).hexdigest()
+    # When no order validation argument is specified, skip the computation
+    # of the checksum for speed. Here, 'none' is used, because this never be
+    # identical to SHA1 hexdigest (which is always 40 characters), and 'none'
+    # is true in Python. This is important, because dtml-if assumes that an empty
+    # string is false, so we must use a non-empty string for this.
+    return 'none'
 
   def getMessageList(self, activity_tool, processing_node=None,**kw):
     return []

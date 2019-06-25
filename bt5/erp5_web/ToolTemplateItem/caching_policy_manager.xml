@@ -675,7 +675,7 @@
                             </item>
                             <item>
                                 <key> <string>_stale_if_error_secs</string> </key>
-                                <value> <int>0</int> </value>
+                                <value> <int>31536000</int> </value>
                             </item>
                             <item>
                                 <key> <string>_stale_while_revalidate_secs</string> </key>
@@ -683,7 +683,7 @@
                             </item>
                             <item>
                                 <key> <string>_vary</string> </key>
-                                <value> <string>Cookie, Authorization</string> </value>
+                                <value> <string>Cookie, Authorization, Accept-Encoding</string> </value>
                             </item>
                           </dictionary>
                         </state>
@@ -770,7 +770,7 @@
                             </item>
                             <item>
                                 <key> <string>_public</string> </key>
-                                <value> <int>0</int> </value>
+                                <value> <int>1</int> </value>
                             </item>
                             <item>
                                 <key> <string>_s_max_age_secs</string> </key>
@@ -780,7 +780,7 @@
                             </item>
                             <item>
                                 <key> <string>_stale_if_error_secs</string> </key>
-                                <value> <int>0</int> </value>
+                                <value> <int>31536000</int> </value>
                             </item>
                             <item>
                                 <key> <string>_stale_while_revalidate_secs</string> </key>
@@ -893,7 +893,7 @@
                             </item>
                             <item>
                                 <key> <string>_vary</string> </key>
-                                <value> <string></string> </value>
+                                <value> <string>Cookie, Authorization, Accept-Encoding</string> </value>
                             </item>
                           </dictionary>
                         </state>

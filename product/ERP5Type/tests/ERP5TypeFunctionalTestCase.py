@@ -309,14 +309,6 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
       print "TRACEBACK :"
       print entry["tb_text"]
 
-  def _hasActivityFailure(self):
-    """ Return True if the portal has any Activity Failure
-    """
-    for m in self.portal.portal_activities.getMessageList():
-      if m.processing_node < -1:
-        return True
-    return False
-
   def testFunctionalTestRunner(self):
     # Check the zuite page templates can be rendered, because selenium test
     # runner does not report error in case there are errors in the page
@@ -348,18 +340,15 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.portal._p_jar.sync()
 
     debug = self.foreground or os.environ.get("erp5_debug_mode")
-    error = None
+    error = []
     try:
       iframe = self.runner.test(debug=debug)
     except TimeoutError, e:
-      error = repr(e)
-      self._verboseErrorLog(20)
-    else:
-      # In case of failure, verbose the error_log entries in order to collect
-      # appropriated information to debug the system.
-      if self._hasActivityFailure():
-        error = 'Failed activities exist.'
-        self._verboseErrorLog(20)
+      error.append(repr(e))
+    try:
+      self.assertNoPendingMessage()
+    except AssertionError as e:
+      error.append(str(e))
 
     detail, success, failure, \
         expected_failure, error_title_list = self.runner.processResult(iframe)
@@ -376,10 +365,11 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.logMessage("-" * 79)
     self.logMessage(detail)
     self.logMessage("-" * 79)
-    if failure:
+    if failure or error:
       self._verboseErrorLog(20)
-    self.assertEqual([], error_title_list, '\n'.join(error_title_list))
-    self.assertEqual(None, error, error)
+    error += error_title_list
+    if error:
+      self.fail('\n'.join(error))
 
 # monkey patch HTTPResponse._unauthorized so that we will not have HTTP
 # authentication dialog in case of Unauthorized exception to prevent

@@ -3,7 +3,7 @@ if not language:
   language = context.getLanguage()
   if not language:
     language = portal.portal_preferences.getPreferredCustomerRelationLanguage()
-    
+
 notification_message = portal.portal_notifications.getDocumentValue(
                                 language=language,
                                 reference=reference)
@@ -23,8 +23,9 @@ if notification_message is not None:
   mime, text_content = notification_message.convert(target_format,
       substitution_method_parameter_dict=substitution_method_parameter_dict)
   context.setTextContent(text_content)
-  context.setAggregateList(notification_message.getProperty('aggregate_list', []))
-  
+  context.setAggregateSet(
+      context.getAggregateList() + notification_message.getProperty('aggregate_list', []))
+
   if not context.hasTitle():
     context.setTitle(notification_message.asSubjectText(
       substitution_method_parameter_dict=substitution_method_parameter_dict))

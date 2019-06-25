@@ -183,6 +183,18 @@ class TestTaskDistribution(ERP5TypeTestCase):
     test_suite.validate()
     self.assertEqual(reference, test_suite.getReference())
 
+  def test_02d_checkTestSuiteTitleDuplication(self):
+    """
+    Check the constraint avoiding duplicates of test suites
+    """
+    test_suite, = self._createTestSuite()
+    self.tic()
+    test_suite_clone = test_suite.Base_createCloneDocument(batch_mode=1)
+    self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, test_suite_clone, 'validate_action')
+    test_suite_clone.setTitle(test_suite_clone.getTitle() + 'a')
+    self.portal.portal_workflow.doActionFor(test_suite_clone, 'validate_action')
+    self.assertEqual('validated', test_suite_clone.getValidationState())
+
   def _callOptimizeAlarm(self):
     self.portal.portal_alarms.task_distributor_alarm_optimize.activeSense()
     self.tic()

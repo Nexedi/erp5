@@ -1112,19 +1112,6 @@ class Folder(OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
   # Implementation
   hasContent = hasObject
 
-  security.declareProtected( Permissions.ModifyPortalContent, 'exportAll' )
-  def exportAll(self,dir=None):
-    """
-    Allows to export all object inside a particular folder, one by one
-    """
-    folder_id = self.getId()
-    if dir != None:
-      for id in self.objectIds():
-        f = os.path.join(dir, '%s___%s.zexp' % (folder_id,id))
-        ob = self._getOb(id)
-        ob._p_jar.exportFile(ob._p_oid,f)
-      transaction.commit()
-
   security.declareProtected( Permissions.ModifyPortalContent, 'recursiveApply')
   def recursiveApply(self, filter=dummyFilter, method=None,
                     test_after=dummyTestAfter, include=1, REQUEST=None, **kw):
@@ -1720,10 +1707,12 @@ for source_klass, destination_klass in \
 # inherits from via Base) and those bases in favour of the property
 # from Base (so it may override CopyContainer).
 for CopyContainer_property_id in CopyContainer.__dict__:
-  if CopyContainer_property_id in Folder.__dict__:
+  if CopyContainer_property_id.startswith('__') or CopyContainer_property_id in Folder.__dict__:
     continue
   try:
     Base_property = getattr(Base, CopyContainer_property_id)
   except AttributeError:
+    continue
+  if isinstance(Base_property, ClassSecurityInfo):
     continue
   setattr(Folder, CopyContainer_property_id, Base_property)

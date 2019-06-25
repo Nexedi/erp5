@@ -1,6 +1,8 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, RSVP, calculatePageTitle, Handlebars, ensureArray */
-(function (window, rJS, RSVP, calculatePageTitle, Handlebars, ensureArray) {
+/*global window, document, rJS, RSVP, calculatePageTitle, Handlebars,
+         ensureArray */
+(function (window, document, rJS, RSVP, calculatePageTitle, Handlebars,
+           ensureArray) {
   "use strict";
 
   function checkValidity() {
@@ -35,77 +37,84 @@
       }
     }
 
-    return getContent.apply(this)
-      .push(function (content_dict) {
-        var data = {},
-          key;
-
-        // create a copy of sub_data so we do not modify them in-place
-        for (key in content_dict) {
-          if (content_dict.hasOwnProperty(key)) {
-            data[key] = content_dict[key];
-          }
-        }
-        // ERP5 expects target Script name in dialog_method field
-        data.dialog_method = gadget.state.form_definition.action;
-        // For Update Action - override the default value from "action"
-        if (is_updating) {
-          data.dialog_method = gadget.state.form_definition.update_action;
-          data.update_method = gadget.state.form_definition.update_action;
-        }
-
-        return data;
-      })
-      .push(function (data) {
-        return gadget.submitContent(
-          gadget.state.jio_key,
-          gadget.state.erp5_document._embedded._view._actions.put.href,  // most likely points to Base_callDialogMethod
-          data
-        );
-      })
-      .push(function (jio_key) {  // success redirect handler
-        var splitted_jio_key_list,
-          splitted_current_jio_key_list,
-          command,
-          i;
-        if (is_updating || !jio_key) {
+    return checkValidity.apply(gadget)
+      .push(function (is_valid) {
+        if (!is_valid) {
+          enableButton();
           return;
         }
-        if (gadget.state.redirect_to_parent) {
-          return gadget.redirect({command: 'history_previous'});
-        }
-        if (gadget.state.jio_key === jio_key) {
-          // don't update navigation history when not really redirecting
-          return gadget.redirect({command: 'cancel_dialog_with_history'});
-        }
-        // Check if the redirection goes to a same parent's subdocument.
-        // In this case, do not add current document to the history
-        // example: when cloning, do not keep the original document in history
-        splitted_jio_key_list = jio_key.split('/');
-        splitted_current_jio_key_list = gadget.state.jio_key.split('/');
-        command = 'display_with_history';
-        if (splitted_jio_key_list.length === splitted_current_jio_key_list.length) {
-          for (i = 0; i < splitted_jio_key_list.length - 1; i += 1) {
-            if (splitted_jio_key_list[i] !== splitted_current_jio_key_list[i]) {
+        return getContent.apply(gadget)
+          .push(function (content_dict) {
+            var data = {},
+              key;
+
+            // create a copy of sub_data so we do not modify them in-place
+            for (key in content_dict) {
+              if (content_dict.hasOwnProperty(key)) {
+                data[key] = content_dict[key];
+              }
+            }
+            // ERP5 expects target Script name in dialog_method field
+            data.dialog_method = gadget.state.form_definition.action;
+            // For Update Action - override the default value from "action"
+            if (is_updating) {
+              data.dialog_method = gadget.state.form_definition.update_action;
+              data.update_method = gadget.state.form_definition.update_action;
+            }
+
+            return data;
+          })
+          .push(function (data) {
+            return gadget.submitContent(
+              gadget.state.jio_key,
+              gadget.state.erp5_document._embedded._view._actions.put.href,  // most likely points to Base_callDialogMethod
+              data
+            );
+          })
+          .push(function (jio_key) {  // success redirect handler
+            var splitted_jio_key_list,
+              splitted_current_jio_key_list,
+              command,
+              i;
+            if (is_updating || !jio_key) {
+              return;
+            }
+            if (gadget.state.redirect_to_parent) {
+              return gadget.redirect({command: 'history_previous'});
+            }
+            if (gadget.state.jio_key === jio_key) {
+              // don't update navigation history when not really redirecting
+              return gadget.redirect({command: 'cancel_dialog_with_history'});
+            }
+            // Check if the redirection goes to a same parent's subdocument.
+            // In this case, do not add current document to the history
+            // example: when cloning, do not keep the original document in history
+            splitted_jio_key_list = jio_key.split('/');
+            splitted_current_jio_key_list = gadget.state.jio_key.split('/');
+            command = 'display_with_history';
+            if (splitted_jio_key_list.length === splitted_current_jio_key_list.length) {
+              for (i = 0; i < splitted_jio_key_list.length - 1; i += 1) {
+                if (splitted_jio_key_list[i] !== splitted_current_jio_key_list[i]) {
+                  command = 'push_history';
+                }
+              }
+            } else {
               command = 'push_history';
             }
-          }
-        } else {
-          command = 'push_history';
-        }
 
-        // forced document change thus we update history
-        return gadget.redirect({
-          command: command,
-          options: {
-            "jio_key": jio_key
-            // do not mingle with editable because it isn't necessary
-          }
-        });
-      })
-      .push(function (result) {
-        enableButton();
-        return result;
+            // forced document change thus we update history
+            return gadget.redirect({
+              command: command,
+              options: {
+                "jio_key": jio_key
+                // do not mingle with editable because it isn't necessary
+              }
+            });
+          })
+          .push(function (result) {
+            enableButton();
+            return result;
+          });
       }, function (error) {
         enableButton();
         throw error;
@@ -166,6 +175,7 @@
             erp5_form: options.erp5_form || {},
             // editable: true,  // ignore global editable state (be always editable)
             has_update_action: Boolean(options.form_definition.update_action),
+            update_action_title: options.form_definition.update_action_title,
             // pass extended_search from previous view in case any gadget is curious
             extended_search: extended_search,
             redirect_to_parent: options.erp5_document._embedded._view.field_your_redirect_to_parent !== undefined
@@ -214,13 +224,25 @@
       return new RSVP.Queue()
         .push(function () {
           // Set the dialog button
-          if (modification_dict.hasOwnProperty('has_update_action')) {
+          if (modification_dict.hasOwnProperty('has_update_action') ||
+              modification_dict.hasOwnProperty('update_action_title')) {
             return form_gadget.translateHtml(dialog_button_template({
               show_update_button: form_gadget.state.has_update_action
             }))
               .push(function (html) {
-                form_gadget.element.querySelector('.dialog_button_container')
-                                   .innerHTML = html;
+                var div = document.createElement('div'),
+                  dialog_button_container = form_gadget.element
+                                   .querySelector('.dialog_button_container');
+                div.innerHTML = html;
+                if (form_gadget.state.update_action_title) {
+                  div.querySelector('button[name="action_update"]')
+                     .textContent = form_gadget.state.form_definition
+                                                     .update_action_title;
+                }
+                while (dialog_button_container.firstChild) {
+                  dialog_button_container.firstChild.remove();
+                }
+                dialog_button_container.innerHTML = div.innerHTML;
               });
           }
         })
@@ -265,6 +287,7 @@
         })
         .push(function (all_result) {
           form_gadget.element.querySelector('a.dialogcancel').href = all_result[0];
+          form_gadget.enableButtonAsJob();
           return form_gadget.updateHeader({
             cancel_url: all_result[0],
             page_title: all_result[1]
@@ -291,7 +314,7 @@
       }
     }, false, false)
 
-    .declareService(function enableButton() {
+    .declareJob('enableButtonAsJob', function enableButton() {
       // click event listener is now activated
       // Change the state of the gadget
       var gadget = this,
@@ -305,4 +328,4 @@
       }
     });
 
-}(window, rJS, RSVP, calculatePageTitle, Handlebars, ensureArray));
+}(window, document, rJS, RSVP, calculatePageTitle, Handlebars, ensureArray));

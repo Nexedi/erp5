@@ -89,16 +89,18 @@ def WorkflowTool_listActionParameterList(self):
   for action in action_list:
     if (action['workflow_id'] not in workflow_dict):
       workflow = self.getWorkflowById(action['workflow_id'])
-      workflow_dict[action['workflow_id']] = workflow.getWorklistVariableMatchDict(info, check_guard=False)
+      if workflow is not None:
+        workflow_dict[action['workflow_id']] = workflow.getWorklistVariableMatchDict(info, check_guard=False)
 
-    query = workflow_dict[action['workflow_id']][action['worklist_id']]
-    query.pop('metadata')
-    result_list.append({
-      'count': action['count'],
-      'name': action['name'],
-      'local_roles': query.pop('local_roles'),
-      'query': query
-    })
+    query = workflow_dict[action['workflow_id']].get(action['worklist_id'])
+    if query is not None:
+      query.pop('metadata')
+      result_list.append({
+        'count': action['count'],
+        'name': action['name'],
+        'local_roles': query.pop('local_roles'),
+        'query': query
+      })
 
 
   return result_list

@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Test Suite has to have at leat one vcs repository</string> </value>
+            <value> <string>Test Suite has to have at least one vcs repository</string> </value>
         </item>
         <item>
             <key> <string>expression</string> </key>

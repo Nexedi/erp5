@@ -809,14 +809,23 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     }
 
     # FormBox might have own context if 'context_method_id' is defined
-    formbox_context = traversed_document
+    formbox_context = REQUEST.get('cell', traversed_document)
     if field.get_value('context_method_id'):
       # harness acquisition and call the method right away
       formbox_context = getattr(traversed_document, field.get_value('context_method_id'))(
         field=field, REQUEST=REQUEST)
       embedded_document['_debug'] = "Different context"
     # get embedded form definition
-    embedded_form = getattr(formbox_context, field.get_value('formbox_target_id'))
+    embedded_form_id = field.get_value('formbox_target_id')
+    embedded_form = None
+    if embedded_form_id:
+      embedded_form = getattr(formbox_context, embedded_form_id, None)
+
+    if embedded_form is None:
+      # Do not trigger the formbox rendering
+      result['type'] = 'BrokenFormBox'
+      return result
+
     # renderForm mutates `embedded_document` therefor no return/assignment
     renderForm(formbox_context, embedded_form, embedded_document, key_prefix=key)
     # fix editability which is hard-coded to 0 in `renderForm` implementation
@@ -1160,6 +1169,7 @@ def renderFormDefinition(form, response_dict):
   response_dict["pt"] = form.pt
   response_dict["action"] = form.action
   response_dict["update_action"] = form.update_action
+  response_dict["update_action_title"] = Base_translateString(form.update_action_title)
 
 def statusLevelToString(level):
   """Transform any level format to lowercase string representation"""
@@ -1825,7 +1835,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         start, num_items = 0, limit
       else:
         start, num_items = 0, int(limit)
-      if len(search_result_iterable) <= num_items:
+      if not (is_rendering_listbox and not has_listbox_a_count_method):
         # the limit was most likely taken into account thus we don't need to slice
         start, num_items = 0, len(search_result_iterable)
     else:
@@ -2072,7 +2082,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       if len(stat_columns) > 0:
         # prefer stat per column (follow original ListBox.py implementation)
         for stat_name, stat_script in stat_columns:
-          contents_stat[stat_name] = getattr(traversed_document, stat_script)(REQUEST=REQUEST, **catalog_kw)
+          if stat_name in select_list:
+            # Do not trigger potential expensive calculation if column is not displayed
+            contents_stat[stat_name] = getattr(traversed_document, stat_script)(REQUEST=REQUEST, **catalog_kw)
         contents_stat_list.append(contents_stat)
       elif stat_method != "" and stat_method.getMethodName() != list_method:
         # general stat_method is second in priority list - should return dictionary or list of dictionaries

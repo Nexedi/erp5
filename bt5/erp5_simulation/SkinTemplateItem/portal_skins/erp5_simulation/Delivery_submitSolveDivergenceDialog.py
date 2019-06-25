@@ -16,8 +16,8 @@ if not listbox:
 line_list = context.Delivery_getSolverDecisionList(listbox=listbox)
 
 def displayParallelChangeMessage():
-  message = translateString("Workflow state may have been updated by other user. Please try again.")
-  return context.Base_redirect(form_id, keep_items={'portal_status_message': message}, **kw)
+  kw["keep_items"] = {'portal_status_message': translateString("Workflow state may have been updated by other user. Please try again.")}
+  return context.Base_redirect(form_id, **kw)
 
 # if we are not divergence any more
 if len(line_list) == 0:

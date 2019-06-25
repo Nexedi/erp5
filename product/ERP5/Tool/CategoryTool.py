@@ -158,11 +158,13 @@ class CategoryTool(CMFCategoryTool, BaseTool):
 # inherits from via BaseTool) and CMFCategoryTool in favour of the property
 # from BaseTool (so it may override CopyContainer).
 for CopyContainer_property_id in CopyContainer.__dict__:
-  if CopyContainer_property_id in CategoryTool.__dict__:
+  if CopyContainer_property_id.startswith('__') or CopyContainer_property_id in CategoryTool.__dict__:
     continue
   try:
     BaseTool_property = getattr(BaseTool, CopyContainer_property_id)
   except AttributeError:
+    continue
+  if isinstance(BaseTool_property, ClassSecurityInfo):
     continue
   setattr(CategoryTool, CopyContainer_property_id, BaseTool_property)
 

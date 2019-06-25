@@ -33,7 +33,7 @@ Usage:
 
     <tr tal:condition="exists:specific_reference">
         <td>assertText</td>
-        <td>${current_row}/td[1]//a</td>
+        <td tal:content="python:specific_reference and '${current_row}/td[1]//a' or '${current_row}/td[1]'"></td>
         <td tal:content="string:$specific_reference"></td></tr>
     <tr tal:condition="exists:date">
         <td>assertElementPresent</td>
@@ -41,19 +41,19 @@ Usage:
         <td></td></tr>
     <tr tal:condition="exists:title">
         <td>assertText</td>
-        <td>${current_row}/td[3]//a</td>
+        <td tal:content="python:title and '${current_row}/td[3]//a' or '${current_row}/td[3]'"></td>
         <td tal:content="string:$title"></td></tr>
     <tr tal:condition="exists:parent_reference">
         <td>assertText</td>
-        <td>${current_row}/td[4]//a</td>
+        <td tal:content="python:parent_reference and '${current_row}/td[4]//a' or '${current_row}/td[4]'"></td>
         <td tal:content="string:$parent_reference"></td></tr>
     <tr tal:condition="exists:node_title">
         <td>assertText</td>
-        <td>${current_row}/td[5]//a</td>
+        <td tal:content="python:node_title and '${current_row}/td[5]//a' or '${current_row}/td[5]'"></td>
         <td tal:content="string:$node_title"></td></tr>
     <tr tal:condition="exists:mirror_section_title">
         <td>assertText</td>
-        <td>${current_row}/td[6]//a</td>
+        <td tal:content="python:mirror_section_title and '${current_row}/td[6]//a' or '${current_row}/td[6]'"></td>
         <td tal:content="string:$mirror_section_title"></td></tr>
     <tr tal:condition="exists:debit">
         <td>assertFloat</td>
@@ -79,31 +79,31 @@ Usage:
         <td></td></tr>
     <tr tal:condition="exists:Movement_getExplanationTranslatedPortalType">
         <td>assertText</td><!-- Type -->
-        <td tal:content="python: '${{current_row}}/td[{:d}]//a'.format(offset + 2)"></td>
+        <td tal:content="python:Movement_getExplanationTranslatedPortalType and '${{current_row}}/td[{:d}]//a'.format(offset + 2) or '${{current_row}}/td[{:d}]'.format(offset + 2)"></td>
         <td tal:content="string:$Movement_getExplanationTranslatedPortalType"></td></tr>
     <tr tal:condition="exists:Movement_getNodeGapId">
         <td>assertText</td><!-- GAP -->
-        <td tal:content="python: '${{current_row}}/td[{:d}]//a'.format(offset + 3)"></td>
+        <td tal:content="python:Movement_getNodeGapId and '${{current_row}}/td[{:d}]//a'.format(offset + 3) or '${{current_row}}/td[{:d}]'.format(offset + 3)"></td>
         <td tal:content="string:$Movement_getNodeGapId"></td></tr>
     <tr tal:condition="exists:Movement_getExplanationReference">
         <td>assertText</td><!-- Invoice No -->
-        <td tal:content="python: '${{current_row}}/td[{:d}]//a'.format(offset + 4)"></td>
+        <td tal:content="python:Movement_getExplanationReference and '${{current_row}}/td[{:d}]//a'.format(offset + 4) or '${{current_row}}/td[{:d}]'.format(offset + 4)"></td>
         <td tal:content="string:$Movement_getExplanationReference"></td></tr>
     <tr tal:condition="exists:Movement_getExplanationTitle">
         <td>assertText</td><!-- Title -->
-        <td tal:content="python:'${{current_row}}/td[{:d}]//a'.format(offset + 5)"></td>
+        <td tal:content="python:Movement_getExplanationTitle and '${{current_row}}/td[{:d}]//a'.format(offset + 5) or '${{current_row}}/td[{:d}]'.format(offset + 5)"></td>
         <td tal:content="string:$Movement_getExplanationTitle"></td></tr>
     <tr tal:condition="exists:Movement_getSpecificReference">
         <td>assertText</td><!-- Reference -->
-        <td tal:content="python: '${{current_row}}/td[{:d}]//a'.format(offset + 6)"></td>
+        <td tal:content="python:Movement_getSpecificReference and '${{current_row}}/td[{:d}]//a'.format(offset + 6) or '${{current_row}}/td[{:d}]'.format(offset + 6)"></td>
         <td tal:content="string:$Movement_getSpecificReference">1</td></tr>
     <tr tal:condition="exists:getTranslatedSimulationStateTitle">
         <td>assertText</td><!-- State -->
-        <td tal:content="python: '${{current_row}}/td[{:d}]//a'.format(offset + 7)"></td>
+        <td tal:content="python:getTranslatedSimulationStateTitle and '${{current_row}}/td[{:d}]//a'.format(offset + 7) or '${{current_row}}/td[{:d}]'.format(offset + 7)"></td>
         <td tal:content="string:$getTranslatedSimulationStateTitle"></td></tr>
     <tr tal:condition="exists:debit_price">
         <td>assertFloat</td>
-        <td tal:content="python: '${{current_row}}/td[{:d}]//div[contains(@data-gadget-url, \'gadget_html5_element.html\')]/p'.format(offset + 8)"></td>
+        <td tal:content="python:debit_price and '${{current_row}}/td[{:d}]//div[contains(@data-gadget-url, \'gadget_html5_element.html\')]/p'.format(offset + 8)"></td>
         <td tal:content="string:$debit_price"></td></tr>
     <tr tal:condition="exists:credit_price">
         <td>assertFloat</td>

@@ -95,8 +95,7 @@
             return RSVP.all([
               context.getUrlFor({command: 'display', options: {page: "supportrequest_preference"}}),
               context.getUrlFor({command: 'display', options: {page: "logout"}}),
-              context.getUrlFor({command: 'display', options: {page: "search"}}),
-              context.getUrlFor({command: 'display', options: {jio_key: "support_request_module"}})
+              context.getUrlFor({command: 'display_stored_state', options: {jio_key: "support_request_module"}})
             ]);
           })
           .push(function (result_list) {
@@ -106,8 +105,7 @@
                 panel_template_body({
                   "preference_href": result_list[0],
                   "logout_href": result_list[1],
-                  "search_href": result_list[2],
-                  "supportrequest_href": result_list[3]
+                  "supportrequest_href": result_list[2]
                 })
             );
           })

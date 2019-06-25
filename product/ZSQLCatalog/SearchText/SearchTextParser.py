@@ -279,7 +279,7 @@ if __name__ == '__main__':
       query_list = [walk(x, key) for x in node.getNodeList()]
       operator = node.getLogicalOperator()
       if operator == 'not' or len(query_list) > 1:
-        result = ComplexQuery(query_list, logical_operator=logical_operator)
+        result = ComplexQuery(query_list, logical_operator=operator)
       elif len(query_list) == 1:
         result = query_list[0]
       else:

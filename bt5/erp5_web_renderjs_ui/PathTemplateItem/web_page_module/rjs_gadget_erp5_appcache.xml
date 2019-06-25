@@ -104,7 +104,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Wed, 21 Nov 2018 10:00:00 GMT+0100\n
+# generated on Wed, 3 Jun 2019 00:00:00 GMT+0100\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -399,7 +399,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1542819250.56</float>
+                        <float>1542819251.56</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

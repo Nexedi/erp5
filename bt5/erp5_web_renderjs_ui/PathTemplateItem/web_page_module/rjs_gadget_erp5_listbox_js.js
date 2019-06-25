@@ -939,6 +939,8 @@
                       } else {
                         url_value = false;
                       }
+                    } else if (value === "") {
+                      url_value = false;
                     } else {
                       url_value = line_link_list[i];
                     }

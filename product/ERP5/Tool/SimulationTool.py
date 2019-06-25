@@ -2647,7 +2647,7 @@ class SimulationTool(BaseTool):
 
       return result
 
-    def _findBuilderForDelivery(self, delivery):
+    def _findBuilderForDelivery(self, delivery, movement_portal_type):
       """
       Find out the builder corresponding to a delivery by looking at the business process
       """
@@ -2655,7 +2655,8 @@ class SimulationTool(BaseTool):
       portal_type = delivery.getPortalType()
       for business_link in delivery.asComposedDocument().objectValues(portal_type="Business Link"):
         for business_link_builder in business_link.getDeliveryBuilderValueList():
-          if business_link_builder.getDeliveryPortalType() == portal_type:
+          if business_link_builder.getDeliveryPortalType() == portal_type \
+          and business_link_builder.getDeliveryLinePortalType() == movement_portal_type:
             builder = business_link_builder
             break
         if builder is not None:
@@ -2681,87 +2682,93 @@ class SimulationTool(BaseTool):
         if len(portal_type_set) != 1:
           error_list.append(translateString("Please select only deliveries of same type"))
         else:
-          portal_type, = portal_type_set
           allowed_state_set = set(portal.getPortalReservedInventoryStateList() + \
                                  portal.getPortalFutureInventoryStateList())
           found_state_set = set([x.getSimulationState() for x in delivery_list])
           if found_state_set.difference(allowed_state_set):
             error_list.append(translateString("Found delivery having unexpected status for merge"))
           else:
-            # Allow to call a script to do custom checking conditions before merge
-            main_delivery = delivery_list[0]
-            check_merge_condition_method = main_delivery._getTypeBasedMethod("checkMergeConditionOnDeliveryList")
-            if check_merge_condition_method is not None:
-              error_list.extend(check_merge_condition_method(delivery_list=delivery_list))
-            if len(error_list) == 0:
-              # so far so good
-              # in delivery_list we have list of delivery to merge
-              simulation_movement_list = []
-              to_copy_delivery_line_list = [] # for lines not coming from upper simulation, thus
-                                              # created by hand should be manually added to main
-                                              # delivery since they are not coming from builder
-              for delivery in delivery_list:
-                line_id_to_delete_list = []
-                for movement in delivery.getMovementList():
-                  related_simulation_movement_list = movement.getDeliveryRelatedValueList()
-                  for simulation_movement in related_simulation_movement_list:
-                    # if we are on a root applied rule directly, so in the case of
-                    # a manually added line, we have to copy
-                    # the simulation movement into to main delivery
-                    if simulation_movement.getParentValue().getParentValue().getId() == "portal_simulation":
-                      # For manually added lines, make sure we have only one simulation movement
-                      assert len(related_simulation_movement_list) == 1
-                      if not(delivery is main_delivery):
-                        to_copy_delivery_line_list.append(movement)
-                    else:
-                      simulation_movement.setDeliveryValue(None)
-                      simulation_movement_list.append(simulation_movement)
-                      # Since we keep the main delivery, we remove existing lines already
-                      # coming from builder to let builder recreate them in the same time
-                      # as other ones (to possibly merge lines also)
-                      movement_id = movement.getId()
-                      if delivery is main_delivery and not(movement_id in line_id_to_delete_list):
-                        line_id_to_delete_list.append(movement.getId())
-                if line_id_to_delete_list:
-                  delivery.manage_delObjects(ids=line_id_to_delete_list)
-              # It is required to expand again simulation movement, because
-              # we unlinked them from delivery, so it is possible that some
-              # properties will change on simulation movement (mostly categories).
-              # By expanding again, we will avoid having many deliveries instead
-              # of one when doing "merge"
-              for simulation_movement in simulation_movement_list:
-                simulation_movement.expand(expand_policy='immediate')
+            movement_portal_type_set = set()
+            for delivery in delivery_list:
+              movement_portal_type_set.update([x.getPortalType() for x in delivery.getMovementList()])
+            if len(movement_portal_type_set) != 1:
+              error_list.append(translateString("Please Select only movement of same type"))
+            else:
+              # Allow to call a script to do custom checking conditions before merge
+              main_delivery = delivery_list[0]
+              check_merge_condition_method = main_delivery._getTypeBasedMethod("checkMergeConditionOnDeliveryList")
+              if check_merge_condition_method is not None:
+                error_list.extend(check_merge_condition_method(delivery_list=delivery_list))
+              if len(error_list) == 0:
+                # so far so good
+                # in delivery_list we have list of delivery to merge
+                simulation_movement_list = []
+                to_copy_delivery_line_list = [] # for lines not coming from upper simulation, thus
+                                                # created by hand should be manually added to main
+                                                # delivery since they are not coming from builder
+                for delivery in delivery_list:
+                  line_id_to_delete_list = []
+                  for movement in delivery.getMovementList():
+                    related_simulation_movement_list = movement.getDeliveryRelatedValueList()
+                    for simulation_movement in related_simulation_movement_list:
+                      # if we are on a root applied rule directly, so in the case of
+                      # a manually added line, we have to copy
+                      # the simulation movement into to main delivery
+                      if simulation_movement.getParentValue().getParentValue().getId() == "portal_simulation":
+                        # For manually added lines, make sure we have only one simulation movement
+                        assert len(related_simulation_movement_list) == 1
+                        if not(delivery is main_delivery):
+                          to_copy_delivery_line_list.append(movement)
+                      else:
+                        simulation_movement.setDeliveryValue(None)
+                        simulation_movement_list.append(simulation_movement)
+                        # Since we keep the main delivery, we remove existing lines already
+                        # coming from builder to let builder recreate them in the same time
+                        # as other ones (to possibly merge lines also)
+                        movement_id = movement.getId()
+                        if delivery is main_delivery and not(movement_id in line_id_to_delete_list):
+                          line_id_to_delete_list.append(movement.getId())
+                  if line_id_to_delete_list:
+                    delivery.manage_delObjects(ids=line_id_to_delete_list)
+                # It is required to expand again simulation movement, because
+                # we unlinked them from delivery, so it is possible that some
+                # properties will change on simulation movement (mostly categories).
+                # By expanding again, we will avoid having many deliveries instead
+                # of one when doing "merge"
+                for simulation_movement in simulation_movement_list:
+                  simulation_movement.expand(expand_policy='immediate')
 
-              # activate builder
-              merged_builder = self._findBuilderForDelivery(main_delivery)
-              if merged_builder is None:
-                error_list.append(translateString("Unable to find builder"))
-              else:
-                merged_builder.build(movement_relative_url_list=[q.getRelativeUrl() for q in \
-                                     simulation_movement_list], merge_delivery=True,
-                                     delivery_relative_url_list=[main_delivery.getRelativeUrl()])
-              # Finally, copy all lines that were created manually on all deliveries except
-              # the main one
-              @UnrestrictedMethod
-              def setMainDeliveryModifiable(delivery):
-                # set causality state in such way we can modify delivery
-                delivery.diverge()
-              setMainDeliveryModifiable(main_delivery)
-              delivery_type_list = portal.getPortalDeliveryTypeList()
-              for delivery_line in to_copy_delivery_line_list:
-                delivery = delivery_line.getParentValue()
-                if not(delivery.getPortalType() in delivery_type_list):
-                  raise NotImplementedError("Merge of deliveries doe not yet handle case of cells")
-                copy_data = delivery.manage_copyObjects(ids=[delivery_line.getId()])
-                main_delivery.manage_pasteObjects(copy_data)
-              main_delivery.updateCausalityState()
+                # activate builder
+                movement_portal_type, = movement_portal_type_set
+                merged_builder = self._findBuilderForDelivery(main_delivery, movement_portal_type)
+                if merged_builder is None:
+                  error_list.append(translateString("Unable to find builder"))
+                else:
+                  merged_builder.build(movement_relative_url_list=[q.getRelativeUrl() for q in \
+                                       simulation_movement_list], merge_delivery=True,
+                                       delivery_relative_url_list=[main_delivery.getRelativeUrl()])
+                # Finally, copy all lines that were created manually on all deliveries except
+                # the main one
+                @UnrestrictedMethod
+                def setMainDeliveryModifiable(delivery):
+                  # set causality state in such way we can modify delivery
+                  delivery.diverge()
+                setMainDeliveryModifiable(main_delivery)
+                delivery_type_list = portal.getPortalDeliveryTypeList()
+                for delivery_line in to_copy_delivery_line_list:
+                  delivery = delivery_line.getParentValue()
+                  if not(delivery.getPortalType() in delivery_type_list):
+                    raise NotImplementedError("Merge of deliveries doe not yet handle case of cells")
+                  copy_data = delivery.manage_copyObjects(ids=[delivery_line.getId()])
+                  main_delivery.manage_pasteObjects(copy_data)
+                main_delivery.updateCausalityState()
 
-              # Finally do cleanup
-              for delivery in delivery_list[1:]:
-                # cancel, delete - to disallow any user related operations on those deliveries
-                after_merge_method = delivery._getTypeBasedMethod('cleanDeliveryAfterMerge')
-                if after_merge_method is not None:
-                  after_merge_method()
+                # Finally do cleanup
+                for delivery in delivery_list[1:]:
+                  # cancel, delete - to disallow any user related operations on those deliveries
+                  after_merge_method = delivery._getTypeBasedMethod('cleanDeliveryAfterMerge')
+                  if after_merge_method is not None:
+                    after_merge_method()
       else:
         error_list.append(translateString("Please select at least two deliveries"))
       return error_list
