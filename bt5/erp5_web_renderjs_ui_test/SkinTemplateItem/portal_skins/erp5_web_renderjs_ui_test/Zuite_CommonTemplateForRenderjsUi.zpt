@@ -356,7 +356,7 @@
          Until this is fixed, we use the ugly pause command -->
     <tr>
       <td>pause</td>
-      <td>100</td>
+      <td>1000</td>
       <td></td>
     </tr>
     <tr>
