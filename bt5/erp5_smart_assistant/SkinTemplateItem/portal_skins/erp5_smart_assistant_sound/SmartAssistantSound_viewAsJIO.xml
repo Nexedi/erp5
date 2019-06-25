@@ -73,7 +73,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>your_player</string>
                         <string>your_modification_date</string>
                         <string>my_text_content</string>
                         <string>your_validation_state</string>
