@@ -145,7 +145,7 @@
 </tr>
 <tr>
   <td>verifyValue</td>
-  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[3]//input</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//input</td>
   <td></td>
 </tr>
 
