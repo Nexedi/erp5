@@ -1555,7 +1555,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
         fields_raw_properties = {}
         # check if it's the first call to calculateHateoas so nothing was rendered yet
-        if REQUEST != None and response != None:
+        if appcache and REQUEST != None and response != None:
           for group in traversed_document.Form_getGroupTitleAndId():
             if 'hidden' in group['gid']:
               for field in traversed_document.get_fields_in_group(group['goid']):
