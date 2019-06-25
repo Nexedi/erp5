@@ -233,7 +233,8 @@
                   .push(input_result.value_relative_url);
                 result[gadget.state.key].value_portal_type_list
                   .push(input_result.value_portal_type);
-                result[gadget.state.key].value_uid_list.push(undefined);
+                result[gadget.state.key].value_uid_list
+                  .push(input_result.value_uid || undefined);
               }
             }
             //user remove all data
