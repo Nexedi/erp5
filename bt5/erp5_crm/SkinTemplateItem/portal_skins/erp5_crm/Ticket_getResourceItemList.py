@@ -38,7 +38,9 @@ getPreferredCategoryChildItemListMethodId.
 # - all resource child must be properly indented
 # It is much simpler if only "empty_category=False" case is handled.
 from Products.ERP5Type.Cache import CachingMethod
+from AccessControl import getSecurityManager
 portal = context.getPortalObject()
+checkPermission = portal.portal_membership.checkPermission
 portal_preferences = portal.portal_preferences
 if use_relative_url is None:
   use_relative_url = portal_preferences.getPreference(
@@ -90,7 +92,7 @@ def getResourceItemList():
     append = result.append
     extend = result.extend
     for _, caption, grand_child_list in sorted(
-          [(x.getIntIndex(), getCategoryTitle(x, depth), recurse(x, depth + 1)) for x in child_list],
+          [(x.getIntIndex(), getCategoryTitle(x, depth), recurse(x, depth + 1)) for x in child_list if checkPermission('View', x)],
           key=lambda x: x[:2],
         ):
       if grand_child_list or empty_category:
@@ -99,7 +101,7 @@ def getResourceItemList():
         extend(grand_child_list)
     return result
   category = portal.portal_categories.getCategoryValue(use_relative_url, base_category='use')
-  if category is None:
+  if category is None or not checkPermission('View', category):
     return []
   return recurse(category, 0)
 
@@ -113,6 +115,7 @@ result = CachingMethod(
     accessor_id,
     bool(empty_category),
     use_relative_url,
+    getSecurityManager().getUser().getId(),
   ),
   cache_factory='erp5_ui_long',
 )()
