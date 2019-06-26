@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>EBULK DOC</title>
+
+    <!-- styles -->
+    <link rel="stylesheet" href="fif_gadget_erp5.css">
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="jiodev.js" type="text/javascript"></script>
+
+    <!-- custom script -->
+    <script src="gadget_erp5_page_ebulk_doc.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+    <div class="documentation">
+      <h2>Welcome to Ebulk tool documentation page</h2>
+
+      <h1>DESCRIPTION</h1>
+
+      <p class="last">Ebulk tool makes easy to exchange or archive very large data sets. It performs data set ingestion or download from different storage inputs, to Wendelin-IA platform (based on stack <a target="_blank" href="https://wendelin.nexedi.com/">Wendelin</a> - <a target="_blank" href="https://neo.nexedi.com/">NEO</a> - <a target="_blank" href="https://erp5.nexedi.com/">ERP5</a>). It also allows to perform local changes in data sets and to upload the added and modified files. One key feature of Ebulk is to be able to resume and recover from errors happening with interrupted transfers.</p>
+
+      <h1>REQUIREMENTS</h1>
+
+      <p class="last">Java 8: Ebulk relies on Embulk-v0.9.7 bulk data loader Java application (please see <a target="_blank" href="http://www.embulk.org/">Embulk-doc</a>), so Java 8 is required in order to install Ebulk tool.</p>
+
+      <div class="synopsis">
+        <h1>SYNOPSIS</h1>
+        <p class="first" >	  ebulk [-h|--help] [-r|--readme] [-e|--examples] &lt;command&gt; [&lt;args>]</p>
+        <p class="newline" >		[-d|--directory &lt;path&gt;] [-c|--chunk &lt;size&gt;]</p>
+        <p class="newline" >		[-s|--storage &lt;storage&gt;] [-cs|--custom-storage]</p>
+        <p class="newline last" >		[-a|--advanced] [-dc|--discard-changes] [-dd |--set-description]</p>
+      </div>
+
+      <h1>COMMANDS</h1>
+
+      <p class="command">-h</p>
+      <p class="command">--help</p>
+      <p class="last">Prints the synopsis and the list of commands and options, with a brief explanation of them.</p>
+
+      <p class="command">-r</p>
+      <p class="command">--readme</p>
+      <p class="last">Access the README file for a detailed explanation of Ebulk installation and usage.</p>
+
+      <p class="command">-e</p>
+      <p class="command">--example</p>
+      <p class="last">Prints some basic examples about Ebulk usage.</p>
+
+      <p class="command">pull [&lt;dataset&gt;]</p>
+      <p>Download operation: downloads the content of the specified remote data set from the Wendelin-IA site into the target output. By default, the output is a directory named as the data set.</p>
+      <p>&lt;dataset&gt; argument: unique reference of the remote data set. It is optional because if no data set is specified, the current directory will be used as data set reference and directory.</p>
+      <p>Data set reference must be one of the available datasets on the Wendelin-IA site.</p>
+      <p>Data set argument can be a path to a directory, then the directory name will be used as data set reference: e.g. ‘ebulk pull my_directory/sample/’  --&gt;  data set reference will be sample. That directory will be linked to the data set reference, so any future operation on it will refer to that data set, no matter if the directory is moved or renamed.</p>
+      <p>If pull operation is run on a previously downloaded data set, the tool will offer the options to update it or download it from scratch, warning about any conflict with local changes.</p>
+      <p class="last">pull options: [-d|--directory &lt;path&gt;] [-c|--chunk &lt;size&gt;] [-dc|--discard-changes]</p>
+
+      <p class="command">push [&lt;dataset&gt;]</p>
+      <p>Ingestion operation: uploads the content of the specified input data set to the Wendelin-IA site. By default, the input data set is the directory named as the data set.</p>
+      <p>&lt;dataset&gt; argument: unique reference for the data set. It is optional because if no data set is specified, the current directory will be used as data set reference and directory.</p>
+      <p>Data set argument can be a path to a directory, then the directory name will be used as data set reference: e.g. ‘ebulk push my_directory/sample/’  --&gt;  data set reference will be sample. That directory will be linked to the data set reference, so any future operation on it will refer to that data set, no matter if the directory is moved or renamed.</p>
+      <p>- New data set ingestion: an ingestion with a new data set reference will create a new data set on the site.</p>
+      <p>- Data set contribution: ingestion of local changes made on a previously downloaded data set. If no local changes were marked as ready for ingestion (see add/remove commands below), then by default the push command will use all the available local changes.</p>
+      <p>- Partial ingestion: allows to perform ingestions to a data set without downloading it previously, warning about any file conflict. This feature allows to upload portions of a very large dataset in parallel from different locations/computers.</p>
+      <p class="last">push options: [-d|--directory &lt;path&gt;] [-c|--chunk &lt;size&gt;] [-s|--storage &lt;storage&gt;] [-cs|--custom-storage] [-a|--advanced]</p>
+
+      <p class="command">status [&lt;dataset-path&gt;]</p>
+      <p class="last">Lists the local changes in data set path. If no data set path is specified, the current directory will be used as data set directory. Lists any new, modified or deleted file in the local data set, indicating if they were marked for ingestion or not.</p>
+
+      <p class="command">add &lt;path&gt;</p>
+      <p class="last">Marks new or modified files in path as ready for ingestion. The path can be a specific file or a directory. Any file in path that has been added or modified will be set as ready, then a future push operation will use the marked files for the ingestion.</p>
+
+      <p class="command">remove &lt;path&gt;</p>
+      <p class="last">Marks the files in path for removal. The path can be a specific file or a directory. Any file in path (deleted or not) will be removed. Then a future push operation will delete from remote data set the files marked as removed. Note: if an existing file (not deleted) is marked for removal, the push operation will also delete it from local data set.</p>
+
+      <p class="command">reset &lt;path&gt;</p>
+      <p class="last">Resets marked files in path. The path can be a specific file or a directory. Any file previously marked for ingestion (add or remove) will be reset.</p>
+
+      <p class="command">store-credentials</p>
+      <p class="last">Stores user and password for automatic authentication.</p>
+
+      <p class="command">config</p>
+      <p class="last">Allows user to set tool automatic actions. For example, automatic download/update for local datasets, automatic resume of interrupted operations, etc.</p>
+
+      <h1>OPTIONS</h1>
+
+      <p class="command">-d &lt;path&gt;</p>
+      <p class="command">--directory &lt;path&gt;</p>
+      <p class="last">Allows to use a custom location as data set directory. That directory will be linked to the data set reference, so any future operation on it will refer to that data set, no matter if the directory is moved or renamed.</p>
+
+      <p class="command">-dd</p>
+      <p class="command">--set-description</p>
+      <p class="last">Allows user to edit dataset description.</p>
+
+      <p class="command">-c &lt;size&gt;</p>
+      <p class="command">--chunk &lt;size&gt;</p>
+      <p class="last">Operations on large files are split into smaller chunks; by default, the size of the chunks is 50Mb. This command allows to set the size (in Megabytes) of the chunks in case is needed.</p>
+
+      <p class="command">-dc</p>
+      <p class="command">--discard-changes</p>
+      <p class="last">Discards all the changes made in the local data set by downloading the corresponding original files from the remote data set.</p>
+
+      <p class="command">-s &lt;storage&gt;</p>
+      <p class="command">--storage &lt;storage&gt;</p>
+      <p class="last">Uses the specified storage as input for data set ingestion. The storage must be one of the storages available in the installed Ebulk tool version. The tool will ask the corresponding inputs needed for that storage (like authentication, urls, etc.) and it will perform the ingestion of its content to the remote data set on the site. e.g. the command 'ebulk push my-dataset --storage ftp' allows to ingest the contents of a remote located dataset via ftp.</p>
+
+      <p class="command">-a</p>
+      <p class="command">--advanced</p>
+      <p class="last">When using -s|--storage option, it allows to configure more advanced aspects of the specified storage, by editing the corresponding configuration file.</p>
+
+      <p class="command">-cs</p>
+      <p class="command">--custom-storage</p>
+      <p>Allows to use a custom storage as input that is not available yet in the tool. The storage must be one of the available in embulk site: 'http://www.embulk.org/plugins/#input'. The tool will attempt to automatically install the plugin and it will request the user to edit the corresponding configuration file.</p>
+    </div>
+  </body>
+</html>

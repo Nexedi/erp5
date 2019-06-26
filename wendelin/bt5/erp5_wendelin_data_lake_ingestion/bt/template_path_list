@@ -1,0 +1,15 @@
+data_operation_module/ingestion_operation
+data_operation_module/transform_fif
+data_product_module/fif_array
+data_product_module/fif_data
+data_product_module/fif_descriptor
+data_supply_module/embulk
+data_supply_module/embulk/**
+data_transformation_module/transform_raw_fif_data
+data_transformation_module/transform_raw_fif_data/**
+portal_callables/DataIngestionLine_writeEmbulkIngestionToDataStream
+portal_callables/DataTransformation_transformFIFDataToDataArray
+portal_callables/HandleFifEmbulkIngestion
+portal_categories/function/**
+portal_categories/use/**
+portal_ingestion_policies/wendelin_embulk
