@@ -1,5 +1,4 @@
 result = context.getPriceParameterDict(context=movement, **kw)
-
 # XXX: Add "stepped_price" in calculation
 # sliced_base_price = {'price': 10.0, 'sliced_range': (1, None)}
 
@@ -22,13 +21,15 @@ result = context.getPriceParameterDict(context=movement, **kw)
 if result["sliced_base_price"]:
   total_price = 0.
   quantity = movement.getQuantity()
-  sliced_base_price_list = result["sliced_base_price"]
-  for sliced_base_price in sliced_base_price_list:
-    slice_min, slice_max = sliced_base_price['sliced_range']
+  sliced_base_price_list = zip(result["sliced_base_price"], result["sliced_range"])
+  for slice_price, slice_range in sliced_base_price_list:
+    slice_min, slice_max = slice_range
     if slice_max is None:
       slice_max = quantity + 1
+    if slice_min is None:
+      slice_min = 1
     priced_quantity = min(slice_max - 1, quantity) - (slice_min - 1)
-    total_price += priced_quantity * sliced_base_price['price']
+    total_price += priced_quantity * slice_price
   result["base_price"] = total_price / quantity
 
 base_price = result["base_price"]
