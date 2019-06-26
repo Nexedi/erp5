@@ -106,8 +106,11 @@
 
 
       // Always display an empty value at the end
-      value_relative_url_list.push("");
-      value_text_list.push("");
+      if ((value_text_list.length == 0) ||
+          (value_text_list[value_text_list.length - 1] != "")) {
+        value_relative_url_list.push("");
+        value_text_list.push("");
+      }
 
       // Clear first to DOM, append after to reduce flickering/manip
       while (element.firstChild) {
@@ -209,12 +212,12 @@
                 value_uid_list: []
               };
             }
+
             for (j = 0; j < result_list.length; j += 1) {
               input_result = result_list[j];
 
               if (options.format === "erp5") {
                 if (input_result.hasOwnProperty('value_text')) {
-                  result[gadget.state.key].push(input_result.value_text);
                   if (input_result.value_text) {
                     if (input_result.value_portal_type) {
                       result[gadget.state.relation_field_id + '_' + k] =
@@ -223,6 +226,7 @@
                       result[gadget.state.relation_field_id + '_' + k] =
                         input_result.value_uid;
                     }
+                    result[gadget.state.key].push(input_result.value_text);
                   }
                 }
                 k += 1;
