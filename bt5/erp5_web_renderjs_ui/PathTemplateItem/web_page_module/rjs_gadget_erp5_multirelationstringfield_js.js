@@ -226,6 +226,10 @@
                       result[gadget.state.relation_field_id + '_' + k] =
                         input_result.value_uid;
                     }
+                  }
+                  if (j !== result_list.length) {
+                    // Do send the last relation field
+                    // as it was automatically added and untouched
                     result[gadget.state.key].push(input_result.value_text);
                   }
                 }
