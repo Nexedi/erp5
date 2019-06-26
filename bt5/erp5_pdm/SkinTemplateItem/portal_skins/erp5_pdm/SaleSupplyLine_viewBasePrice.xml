@@ -93,6 +93,7 @@
                         <string>matrixbox_variation_category_list</string>
                         <string>matrixbox_predicate_category_list</string>
                         <string>matrixbox_base_price</string>
+                        <string>matrixbox_sliced_base_price</string>
                       </list>
                     </value>
                 </item>
@@ -106,6 +107,7 @@
                         <string>my_price_currency</string>
                         <string>my_start_date_range_min</string>
                         <string>my_start_date_range_max</string>
+                        <string>my_is_sliced_base_price</string>
                       </list>
                     </value>
                 </item>
