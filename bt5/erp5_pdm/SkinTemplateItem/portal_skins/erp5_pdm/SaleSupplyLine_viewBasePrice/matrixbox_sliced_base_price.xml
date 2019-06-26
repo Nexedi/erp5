@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>matrixbox_base_price</string> </value>
+            <value> <string>matrixbox_sliced_base_price</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getProperty(\'base_price\')</string> </value>
+            <value> <string>python: cell.getProperty(\'sliced_base_price\')</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -131,7 +131,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: not here.getIsSlicedBasePrice()</string> </value>
+            <value> <string>python: here.getIsSlicedBasePrice()</string> </value>
         </item>
       </dictionary>
     </pickle>
