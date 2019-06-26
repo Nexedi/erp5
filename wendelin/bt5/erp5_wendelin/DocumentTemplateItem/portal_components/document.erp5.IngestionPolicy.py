@@ -102,9 +102,17 @@ class IngestionPolicy(Folder):
     # and resource are defined on Data Ingestion Line and the rest is
     # defined on Data Ingestion. This assumption should be dropped later and
     # simulation be used instead.
-    ingestion_operation, parameter_dict = \
-      self.IngestionPolicy_getIngestionOperationAndParameterDict(movement_dict,
-                                                                 reference)
+    data_operation_script_id =  self.getDataOperationScriptId()
+    if data_operation_script_id is None:
+      raise NotFound('No data operation script found.')
+
+    data_operation_script = getattr(self, data_operation_script_id, None)
+    if data_operation_script is None:
+      raise NotFound('No data operation script found.')
+    
+    ingestion_operation, parameter_dict = data_operation_script(movement_dict,\
+                                                                reference)
+
     if ingestion_operation is None:
       raise NotFound('No ingestion operation found.')
 

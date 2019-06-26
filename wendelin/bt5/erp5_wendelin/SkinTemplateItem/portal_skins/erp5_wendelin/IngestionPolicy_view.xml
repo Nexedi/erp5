@@ -78,6 +78,7 @@
                         <string>my_reference</string>
                         <string>my_version</string>
                         <string>my_script_id</string>
+                        <string>my_data_operation_script_id</string>
                       </list>
                     </value>
                 </item>
