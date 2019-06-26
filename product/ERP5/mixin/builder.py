@@ -180,12 +180,13 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     # Inventory can be negative in some date, and positive in futur !!
     # This must be done by subclassing OrderBuilder with a new inventory
     # algorithm.
+    inventory_kw = kw.copy()
+    inventory_kw.setdefault('group_by_variation', 1)
+    inventory_kw.setdefault('group_by_resource', 1)
+    inventory_kw.setdefault('group_by_section', 0)
     sql_list = self.portal_simulation.getFutureInventoryList(
-                                                   group_by_variation=1,
-                                                   group_by_resource=1,
                                                    group_by_node=group_by_node,
-                                                   group_by_section=0,
-                                                   **kw)
+                                                   **inventory_kw)
     # min_flow and max_delay are stored on a supply line. By default
     # we can get them through a method having the right supply type prefix
     # like getPurchaseSupplyLineMinFlow. So we need to guess the supply prefix
