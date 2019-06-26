@@ -1152,7 +1152,7 @@ class TestResource(ERP5TypeTestCase):
     )
     sale_trade_condition = sale_trade_condition_module.newContent(
       portal_type='Sale Trade Condition',
-      is_sliced_base_price=True,
+      base_price_per_slice=True,
     )
 
     supply_line = sale_trade_condition.newContent(
