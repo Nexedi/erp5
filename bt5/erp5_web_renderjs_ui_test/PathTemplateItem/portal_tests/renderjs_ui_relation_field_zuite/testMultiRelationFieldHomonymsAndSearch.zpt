@@ -226,12 +226,12 @@
 <tr> <!-- Check field values -->
   <td>assertValue</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[1]//input</td>
-  <td>Title2</td>
+  <td>Title0</td>
 </tr>
 <tr>
   <td>assertValue</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//input</td>
-  <td>Title0</td>
+  <td>Title2</td>
 </tr>
 <tr>
   <td>assertValue</td>

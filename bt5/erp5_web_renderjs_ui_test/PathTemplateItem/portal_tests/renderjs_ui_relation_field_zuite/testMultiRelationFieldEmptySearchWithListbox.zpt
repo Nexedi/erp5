@@ -307,7 +307,7 @@
 <tr>
   <td>assertValue</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
-  <td>2</td>
+  <td>TEST</td>
 </tr>
 <tr>
   <td>assertValue</td>
@@ -322,11 +322,21 @@
 <tr>
   <td>assertValue</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[1]//input</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[2]//input</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[3]//input</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[2]</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[4]</td>
   <td></td>
 </tr>
 
