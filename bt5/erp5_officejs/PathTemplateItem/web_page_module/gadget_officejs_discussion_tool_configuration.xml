@@ -118,7 +118,7 @@ CACHE:\n
 hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_hal_json_style%2FBase_viewNewContentDialog&view=jio_view\n
 \n
 #discussion tool\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FHTMLPost_viewAsJio&view=jio_view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view\n
 hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FHTMLPost_viewReplyDialog&view=jio_view\n
 hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_post%2FPostModule_newHTMLPost&view=jio_view\n
 hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FPostModule_viewHTMLPostListAsJio&view=jio_view\n
@@ -284,7 +284,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.42909.10782.51046</string> </value>
+                <value> <string>976.43028.40236.42222</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -302,7 +302,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1561562890.42</float>
+                        <float>1561571185.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
