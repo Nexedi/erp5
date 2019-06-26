@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_is_sliced_base_price</string> </value>
+            <value> <string>my_base_price_per_slice</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,7 +73,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Slice Base Price Quantity Step</string> </value>
+                    <value> <string>Base Price Applies to Slice</string> </value>
                 </item>
               </dictionary>
             </value>
