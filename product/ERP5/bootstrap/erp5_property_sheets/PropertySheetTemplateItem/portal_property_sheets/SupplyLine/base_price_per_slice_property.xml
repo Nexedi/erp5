@@ -27,7 +27,7 @@ if 0->10 products cost 10$, and 11->infinity products cost 9$, in a command of 1
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>base_price_per_sliced_property</string> </value>
+            <value> <string>base_price_per_slice_property</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
