@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_language</string> </value>
+            <value> <string>my_portal_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -249,7 +249,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>My Language</string> </value>
+                    <value> <string>Portal Type</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
