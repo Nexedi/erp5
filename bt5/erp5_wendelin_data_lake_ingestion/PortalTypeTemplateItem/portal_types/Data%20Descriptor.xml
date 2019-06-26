@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Data Descriptor Type" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_icon</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>item</string>
+                <string>data_descriptor</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Data Descriptor</string> </value>
+        </item>
+        <item>
+            <key> <string>init_script</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Data Descriptor Type</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+    "$schema": "http://json-schema.org/draft-04/schema#",\n
+    "definitions": {},\n
+    "id": "http://example.com/example.json",\n
+    "properties": {\n
+        "ch_names": {\n
+            "id": "/properties/ch_names",\n
+            "items": {\n
+                "id": "/properties/ch_names/items",\n
+                "type": "string"\n
+            },\n
+            "type": "array"\n
+        },\n
+        "filename": {\n
+            "id": "/properties/filename",\n
+            "type": "string"\n
+        },\n
+        "nchan": {\n
+            "id": "/properties/nchan",\n
+            "type": "integer"\n
+        },\n
+        "sfreq": {\n
+            "id": "/properties/sfreq",\n
+            "type": "integer"\n
+        }\n
+    },\n
+    "type": "object"\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>JSONType</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,231 @@
+/*  ---------------------------  fif gadget css -------------------------- */
+
+/*
+   =========================================================================
+   ============================ download-page  =============================
+   =========================================================================
+*/
+
+div.download {
+    max-width: 650px;
+}
+
+.download td input {
+    margin-top:5px;
+}
+
+.download div.document_table.first {
+    margin-bottom:50px;
+}
+
+.download div.document_table {
+    margin-bottom:30px;
+}
+
+.download th {
+    font-size: 1.15em;
+}
+
+.download td {
+    font-size: 1.15em;
+}
+
+/*
+   =========================================================================
+   =========================== download-access  ============================
+   =========================================================================
+*/
+
+.download-access {
+    font-size: 1.15em;
+}
+
+div.download-tool {
+    margin-top:40px;
+    margin-bottom: 5px;
+    font-size: 1.15em;
+}
+
+.download-access input {
+    margin-top:10px;
+    font-size: 1.0em;
+}
+
+.download-access p.bottom {
+    margin-bottom:40px;
+}
+
+.download-access p {
+    margin-top:15px;
+}
+
+.download-access .ident {
+    margin-left:10px;
+}
+
+/*
+   =========================================================================
+   ================================ common  ================================
+   =========================================================================
+*/
+
+div.half {
+    width: 49.5%;
+    display: inline-block;
+}
+
+h1 {
+    font-size: 1.25em;
+    line-height: 1.58em;
+    letter-spacing: -.003em;
+}
+
+h2 {
+    font-size: 1.25em;
+    line-height: 1.58em;
+    letter-spacing: -.003em;
+}
+
+a {
+    color: #116D82;
+}
+
+.list ul li {
+    font-size: 1.25em;
+    line-height: 1.58em;
+    letter-spacing: -.003em;
+}
+
+.list ul {
+    display: block;
+    list-style-type: disc;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 55px;
+}
+
+/*
+   =========================================================================
+   ================================ header  ================================
+   =========================================================================
+*/
+
+.header h1 {
+    font-size: 1em;
+}
+
+.header p {
+    margin-top: 10px;
+}
+
+/*
+   =========================================================================
+   =============================== homepage  ===============================
+   =========================================================================
+*/
+
+.homepage p {
+    font-size: 1.25em;
+    line-height: 1.58em;
+    letter-spacing: -.003em;
+}
+
+.homepage h1 {
+    color: #116D82;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-family: "Roboto", Arial, sans-serif;
+    margin-top: 1.5em;
+    margin-bottom: 1.0em;
+    font-size: 1.75em;
+}
+
+.homepage .header p {
+    font-size: 1.5em;
+    vertical-align: middle;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+}
+
+.homepage div.header {
+    text-align: center;
+    margin-bottom: 1.0em;
+}
+
+.vertical-parent {
+    position: relative;
+}
+
+.vertical-parent .vertical-child {
+    text-align: center;
+    position: absolute;
+    top: 5%;
+}
+
+/*
+   =========================================================================
+   ============================= documentation  ============================
+   =========================================================================
+*/
+
+.documentation p {
+    font-size: 1.25em;
+    line-height: 1.58em;
+    letter-spacing: -.003em;
+}
+
+.documentation h1 {
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.documentation h2 {
+    margin-bottom: 15px;
+}
+
+.documentation .synopsis p.first {
+    margin-left: 60px;
+}
+
+.documentation .synopsis p.newline {
+    margin-left: 100px;
+}
+
+.documentation p.last {
+    margin-bottom: 15px;
+}
+
+.documentation p.command {
+    font-weight: bold;
+}
+
+/*
+   =========================================================================
+   =============================== contact  ===============================
+   =========================================================================
+*/
+
+div.contact {
+    margin-left: 30px;
+}
+
+.contact h1 {
+    color: #116D82;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-family: "Roboto", Arial, sans-serif;
+    margin-top: 1.5em;
+    margin-bottom: 1.0em;
+    font-size: 1.75em;
+}
+
+.contact h2 {
+    margin-top: 0.5em;
+}
+
+.contact h2.top {
+    margin-top: 1.75em;
+}

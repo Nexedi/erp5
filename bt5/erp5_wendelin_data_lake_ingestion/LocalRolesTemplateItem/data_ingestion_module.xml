@@ -1,0 +1,17 @@
+<local_roles_item>
+ <local_roles>
+  <role id='admin'>
+   <item>Manager</item>
+   <item>Auditor</item>
+   <item>Author</item>
+  </role>
+  <role id='contributor'>
+   <item>Manager</item>
+   <item>Auditor</item>
+   <item>Author</item>
+  </role>
+  <role id='downloader'>
+   <item>Auditor</item>
+  </role>
+ </local_roles>
+</local_roles_item>

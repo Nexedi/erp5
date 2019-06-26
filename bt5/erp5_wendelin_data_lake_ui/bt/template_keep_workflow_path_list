@@ -1,0 +1,7 @@
+image_module/fif_*
+web_page_module/*fif_*
+web_site_module/fif_data_runner
+web_site_module/fif_data_runner/**
+web_page_module/fif_*
+web_page_module/gadget_fif_*
+web_page_module/rjs_gadget_erp5_pt_form_dialog_js
