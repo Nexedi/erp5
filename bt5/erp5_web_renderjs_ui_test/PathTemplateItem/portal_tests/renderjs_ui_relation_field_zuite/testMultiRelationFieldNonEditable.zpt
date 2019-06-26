@@ -142,7 +142,7 @@
 
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//a[contains(@class, "ui-icon-plus")]</td>
   <td></td>
 </tr>
@@ -183,7 +183,7 @@
 
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//a[contains(@class, "ui-icon-plus")]</td>
   <td></td>
 </tr>
@@ -199,13 +199,13 @@
 
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
   <td>A New Foo</td>
 </tr>
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
   <td>Another Foo</td>
 </tr>

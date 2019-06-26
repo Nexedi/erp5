@@ -145,13 +145,13 @@
 
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name='field_my_successor_title']</td>
   <td>A new foo</td>
 </tr>
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name='field_my_foo_category_title']</td>
   <td>a1</td>
 </tr>

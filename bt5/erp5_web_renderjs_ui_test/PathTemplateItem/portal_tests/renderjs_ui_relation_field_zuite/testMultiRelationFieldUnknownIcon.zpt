@@ -153,7 +153,7 @@
 
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//a[contains(@class, "ui-icon-warning")]</td>
   <td></td>
 </tr>

@@ -117,17 +117,17 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr> <!-- Check field values -->
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[1]//input</td>
   <td>Title0</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//input</td>
   <td>Title2</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[3]//input</td>
   <td></td>
 </tr>
@@ -135,17 +135,17 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
 <tr> <!-- Check field values -->
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[1]//input</td>
   <td>Title0</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//input</td>
   <td>Title2</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[3]//input</td>
   <td></td>
 </tr>
