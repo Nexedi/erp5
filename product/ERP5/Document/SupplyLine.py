@@ -142,7 +142,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
       """
       kwd.setdefault('base_id', 'path')
       cell =  XMLMatrix.newCell(self, *kw, **kwd)
-      if kwd['base_id'] == 'path':
+      if kwd['base_id'] == 'path' and self.isBasePricePerSlice():
         index = self.index[kwd['base_id']][0][kw[0]]
         quantity_step_list = [None] + self.getQuantityStepList() + [None]
         min_quantity = quantity_step_list[index]
