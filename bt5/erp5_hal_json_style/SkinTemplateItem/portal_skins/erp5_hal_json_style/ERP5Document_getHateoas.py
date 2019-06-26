@@ -67,7 +67,8 @@ from collections import OrderedDict
 MARKER = []
 COUNT_LIMIT = 1000
 
-appcache = True if context.REQUEST.get('appcache', None) is not None else False
+# TODO replace appcache var use by (mode = 'appcache')
+appcache = True if mode == "appcache" else False
 
 if REQUEST is None:
   recursive_call = True
@@ -2219,6 +2220,100 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       work_list.append(worklist_dict)
 
     result_dict["worklist"] = work_list
+
+  elif (mode == 'appcache'):
+    ##
+    # return raw form definition
+    # render will be done in js side
+
+    # Default properties shared by all ERP5 Document and Site
+    current_action = {}
+    result_dict['title'] = traversed_document.getTitle()
+    extra_param_json = {}
+
+    # TODO: 'type' should be include outside "_links", but itrequires changes on js side rendering
+    if not is_portal:
+      document_type_name = traversed_document.getPortalType()
+      document_type = getattr(portal.portal_types, document_type_name, None)
+      if document_type is not None:
+        result_dict['_links']['type'] = {
+          "href": default_document_uri_template % {
+            "root_url": site_root.absolute_url(),
+            "relative_url": document_type.getRelativeUrl(),
+            "script_id": script.id
+          },
+          "name": Base_translateString(traversed_document.getPortalType())
+        }
+
+    # TODO: 'parent' should be include outside "_links", but it requires changes on js side rendering
+    if not is_portal:
+      container = traversed_document.getParentValue()
+      if container != portal:
+        result_dict['_links']['parent'] = {
+          "href": default_document_uri_template % {
+            "root_url": site_root.absolute_url(),
+            "relative_url": container.getRelativeUrl(),
+            "script_id": script.id
+          },
+          "name": Base_translateString(container.getTitle()),
+        }
+
+    # Find current action URL and extract embedded view
+    erp5_action_dict = portal.Base_filterDuplicateActions(
+      portal.portal_actions.listFilteredActionsFor(traversed_document))
+    for erp5_action_key in erp5_action_dict.keys():
+      for view_action in erp5_action_dict[erp5_action_key]:
+        if (view == view_action['id']):
+          current_action = parseActionUrl('%s' % view_action['url'])
+    if view and (view != 'view') and (current_action.get('view_id', None) is None):
+      current_action['view_id'] = view
+      current_action['url'] = '%s/%s' % (traversed_document.getRelativeUrl(), view)
+      current_action['params'] = {}
+
+    if current_action.get('view_id', ''):
+      view_instance = getattr(traversed_document, current_action['view_id'])
+      if (view_instance is not None):
+        embedded_dict = {
+          '_links': {
+            'self': {
+              'href': current_action['url']
+            }
+          }
+        }
+        # TODO: get from this method what is needed for appcaching, and avoid all rendering stuff
+        renderForm(traversed_document, view_instance, embedded_dict,
+                   selection_params=extra_param_json, extra_param_json=extra_param_json)
+        result_dict['_embedded'] = {
+          '_view': embedded_dict
+        }
+
+    if is_site_root:
+      result_dict['default_view'] = 'view'
+      REQUEST.set("X-HATEOAS-CACHE", 1)
+
+    else:
+      traversed_document_portal_type = traversed_document.getPortalType()
+      if traversed_document_portal_type in ("ERP5 Form", "ERP5 Report"):
+        # TODO: get from this method what is needed for appcaching, and avoid all rendering stuff
+        renderFormDefinition(traversed_document, result_dict)
+        if response is not None:
+          response.setHeader("Cache-Control", "private, max-age=1800")
+          response.setHeader("Vary", "Cookie,Authorization,Accept-Encoding")
+          response.setHeader("Last-Modified", DateTime().rfc822())
+          REQUEST.set("X-HATEOAS-CACHE", 1)
+        fields_raw_properties = {}
+        # check if it's the first call to calculateHateoas so nothing was rendered yet
+        if appcache and REQUEST != None and response != None:
+          for group in traversed_document.Form_getGroupTitleAndId():
+            if 'hidden' in group['gid']:
+              for field in traversed_document.get_fields_in_group(group['goid']):
+                if field.id == "gadget_field_action_js_script":
+                  fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
+              continue
+            for field in traversed_document.get_fields_in_group(group['goid']):
+              fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
+        if fields_raw_properties:
+          result_dict['fields_raw_properties'] = fields_raw_properties
 
   else:
     raise NotImplementedError("Unsupported mode %s" % mode)
