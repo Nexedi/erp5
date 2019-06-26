@@ -39,7 +39,7 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>appcache=1</td>
+  <td>mode=appcache</td>
   <td></td>
 </tr>
 <tr>
