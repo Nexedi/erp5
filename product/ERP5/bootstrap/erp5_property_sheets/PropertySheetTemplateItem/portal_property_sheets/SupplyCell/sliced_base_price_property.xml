@@ -27,19 +27,17 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/object</string>
+                <string>elementary_type/float</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>The base_price to apply to items of the matching range if base_price_per_sliced is set to True</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>sliced_range_property</string> </value>
+            <value> <string>sliced_base_price_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>

@@ -158,6 +158,7 @@ StandardBT5ConfiguratorItem
 StandardProperty
 State
 StockCapacity
+SupplyCell
 SupplyLine
 SupplyLink
 TALESConstraint

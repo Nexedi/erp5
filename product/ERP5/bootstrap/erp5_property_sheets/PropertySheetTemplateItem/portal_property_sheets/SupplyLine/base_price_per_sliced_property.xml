@@ -16,13 +16,18 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+Defines if the base_price of maching quantity step should be used as unit price for all items (value is False), or if it applies  only to items of the range (value is True).\n
+\n
+If this property is set to True, the base_price will be calculated as such :\n
+if 0->10 products cost 10$, and 11->infinity products cost 9$, in a command of 15 products, the unit base price is 9.6667$, as the 10 first products cost 10$, and the 5 others cost 9$ (and (10*10+5*9)/15 = 9.6667)
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>is_sliced_base_price_property</string> </value>
+            <value> <string>base_price_per_sliced_property</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
