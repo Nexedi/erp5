@@ -131,7 +131,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getIsSlicedBasePrice()</string> </value>
+            <value> <string>python: here.isBasePricePerSlice()</string> </value>
         </item>
       </dictionary>
     </pickle>
