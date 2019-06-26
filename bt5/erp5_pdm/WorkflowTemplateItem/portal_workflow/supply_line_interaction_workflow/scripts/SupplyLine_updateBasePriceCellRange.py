@@ -1,5 +1,5 @@
 supply_line = state_change['object']
-if supply_line.getIsSlicedBasePrice():
+if supply_line.isBasePricePerSlice():
   price_parameter = 'sliced_base_price'
 else:
   price_parameter = 'base_price'
