@@ -46,11 +46,6 @@
         result["default"] = document[field_id];
       }
     }
-    if (result.type === "GadgetField") {
-      //TODO: this must be done in hateoas script side
-      result.url = result.gadget_url;
-      result.renderjs_extra = result.renderjs_extra[0][0];
-    }
     return result;
   }
 
