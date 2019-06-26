@@ -291,13 +291,10 @@ class DomainTool(BaseTool):
           # Feel free to improve.
           if getMappedValuePropertyList is not None:
             for mapped_value_property in predicate.getMappedValuePropertyList():
-              value = predicate.getProperty(mapped_value_property)
               if not mapped_value_property_dict.has_key(mapped_value_property):
+                value = predicate.getProperty(mapped_value_property)
                 if value is not None:
-                  mapped_value_property_dict[mapped_value_property] = [value,]
-              else:
-                if value is not None:
-                  mapped_value_property_dict[mapped_value_property].append(value)
+                  mapped_value_property_dict[mapped_value_property] = value
         # Update mapped value
         mapped_value.edit(**mapped_value_property_dict)
       return mapped_value
