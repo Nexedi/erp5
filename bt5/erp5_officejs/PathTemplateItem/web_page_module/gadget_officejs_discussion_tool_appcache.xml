@@ -265,31 +265,31 @@ officejs_logo.png\n
 jio_appcachestorage.js\n
 \n
 #configuration resources\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_hal_json_style%2FBase_viewNewContentDialog&view=jio_view&appcache=1\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_hal_json_style%2FBase_viewNewContentDialog&view=jio_view\n
 \n
 #discussion tool\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewReplyDialog&view=jio_view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_post%2FPostModule_newHTMLPost&view=jio_view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FPostModule_viewHTMLPostListAsJio&view=jio_view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post&view=view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F1&view=view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F2&view=view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FHTML%20Post%2F3&view=view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FPost%20Module&view=view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FPost%20Module%2F1&view=view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FPost%20Module%2F2&view=view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FPost%20Module%2F3&view=view&appcache=1\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewReplyDialog&view=jio_view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_post%2FPostModule_newHTMLPost&view=jio_view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FPostModule_viewHTMLPostListAsJio&view=jio_view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FHTML%20Post&view=view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FHTML%20Post%2F1&view=view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FHTML%20Post%2F2&view=view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FHTML%20Post%2F3&view=view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FPost%20Module&view=view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FPost%20Module%2F1&view=view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FPost%20Module%2F2&view=view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FPost%20Module%2F3&view=view\n
 \n
 #text editor\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module&view=view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module%2F4&view=view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FWebPageModule_viewWebPageListAsJio&view=jio_view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page&view=view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F9&view=view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F10&view=view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FWebPage_viewAsJio&view=jio_view&appcache=1\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPage_viewAsTextDocument&view=jio_view&appcache=1\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FWeb%20Page%20Module&view=view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FWeb%20Page%20Module%2F4&view=view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FWebPageModule_viewWebPageListAsJio&view=jio_view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FWeb%20Page&view=view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FWeb%20Page%2F9&view=view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FWeb%20Page%2F10&view=view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FWebPage_viewAsJio&view=jio_view\n
+hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPage_viewAsTextDocument&view=jio_view\n
 \n
 \n
 #Ckeditor\n
@@ -774,7 +774,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.25443.36105.41028</string> </value>
+                <value> <string>976.42717.21998.56951</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -792,7 +792,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1560517760.12</float>
+                        <float>1561553934.35</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
