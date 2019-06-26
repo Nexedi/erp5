@@ -244,8 +244,6 @@ gadget_officejs_text_editor_router.html\n
 \n
 #custom action gadgets\n
 #TODO remove new text doc action\n
-gadget_field_new_text_document_action_js_script.html\n
-gadget_field_new_text_document_action_js_script.js\n
 gadget_field_new_action_js_script.html\n
 gadget_field_new_action_js_script.js\n
 gadget_field_reply_action_js_script.html\n
@@ -774,7 +772,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.42717.21998.56951</string> </value>
+                <value> <string>976.42762.59377.38007</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -792,7 +790,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1561553934.35</float>
+                        <float>1561555264.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
