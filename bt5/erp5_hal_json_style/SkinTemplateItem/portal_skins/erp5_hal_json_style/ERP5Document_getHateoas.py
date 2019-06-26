@@ -409,13 +409,17 @@ def getFieldRawProperties(field, meta_type=None, key=None, key_prefix=None):
     "overrides": field.overrides,
     "message_values": field.message_values
   }
+  # these patchs change the field property names as are required by js rendering
   form_list_patch = False
+  gadget_field_patch = False
   for key in field.values.keys():
     # sometimes, field.values returns a key as string and also as a tuple
     if type(key) is str:
       result["values"][key] = field.values[key]
       if key == "columns":
         form_list_patch = True
+      if key == "gadget_url":
+        gadget_field_patch = True
   if form_list_patch:
     try:
       result["values"]["column_list"] = result["values"]["columns"]
@@ -427,8 +431,14 @@ def getFieldRawProperties(field, meta_type=None, key=None, key_prefix=None):
       query = "portal_type%3A%22" + portal_type + "%22" if portal_type else ""
       full_query = "urn:jio:allDocs?query=" + query
       result["values"]["query"] = full_query
-    except:
+    except KeyError:
       log("error while patching form list definition")
+  if gadget_field_patch:
+    try:
+      result["values"]["url"] = result["values"]["gadget_url"]
+      result["values"]["renderjs_extra"] = result["values"]["renderjs_extra"][0][0]
+    except KeyError:
+      log("error while patching form gadget list definition")
   for key in field.tales.keys():
     if field.tales[key]:
       result["tales"][key] = str(field.tales[key])
