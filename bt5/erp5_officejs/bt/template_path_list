@@ -5,7 +5,6 @@ image_module/hr_logo_svg
 image_module/officejs_audioplayer_*
 image_module/officejs_todomvc_*
 image_module/wallsearch_icon_svg
-portal_categories/action_type/object_jio_js_script
 web_page_module/dhtmlx_gantt_*
 web_page_module/fb_sdk_js
 web_page_module/gadget_field_*
