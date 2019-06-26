@@ -144,7 +144,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
       cell =  XMLMatrix.newCell(self, *kw, **kwd)
       if kwd['base_id'] == 'path':
         index = self.index[kwd['base_id']][0][kw[0]]
-        quantity_step_list = ['None'] + self.getQuantityStepList() + ['None']
+        quantity_step_list = [None] + self.getQuantityStepList() + [None]
         min_quantity = quantity_step_list[index]
         max_quantity = quantity_step_list[index+1]
         cell.edit(sliced_range=(min_quantity, max_quantity))
@@ -228,7 +228,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
           p.setCriterionPropertyList(('quantity', ))
           p.setCriterion(
             'quantity',
-            min=min_quantity,
+            min=min_quantity or 1,
             max=(None if price_parameter == 'sliced_base_price' else max_quantity)
           )
           if script is not None:
