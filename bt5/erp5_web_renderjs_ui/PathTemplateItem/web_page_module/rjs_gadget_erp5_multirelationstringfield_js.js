@@ -68,7 +68,6 @@
           render_timestamp: new Date().getTime()
         };
 
-      console.log('multirender', field_json.default);
       if (field_json.default.hasOwnProperty('value_text_list')) {
         //load non saved value
         state_dict.value_relative_url_list =
@@ -222,10 +221,12 @@
                 if (input_result.hasOwnProperty('value_text')) {
                   if (input_result.value_text) {
                     if (input_result.value_portal_type) {
-                      result[gadget.state.relation_field_id + '_' + (j - empty_line_count)] =
+                      result[gadget.state.relation_field_id + '_' +
+                             (j - empty_line_count)] =
                         "_newContent_" + input_result.value_portal_type;
                     } else if (input_result.value_uid) {
-                      result[gadget.state.relation_field_id + '_' + (j - empty_line_count)] =
+                      result[gadget.state.relation_field_id + '_' +
+                             (j - empty_line_count)] =
                         input_result.value_uid;
                     }
                     result[gadget.state.key].push(input_result.value_text);
