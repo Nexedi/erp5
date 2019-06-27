@@ -256,14 +256,16 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           # if node_uid is provided, we have to look at all provided nodes
           if kw.has_key('node_uid'):
             node_uid = kw['node_uid']
+          optimized_kw = {}
+          if kw.get('group_by_variation', 1):
+            optimized_kw['variation_text'] = inventory_item.variation_text
           optimized_inventory_list = portal.portal_simulation.getInventoryList(
                                resource_uid=inventory_item.resource_uid,
                                node_uid=node_uid,
-                               variation_text=inventory_item.variation_text,
                                simulation_state="auto_planned",
                                sort_on=[("date", "descending")],
-                               group_by_node=group_by_node
-                               )
+                               group_by_node=group_by_node,
+                               **optimized_kw)
           for optimized_inventory in optimized_inventory_list:
             movement = newMovement(inventory_item, resource)
             quantity = min(delta, optimized_inventory.inventory)
