@@ -1,3 +1,5 @@
+from math import log
+
 result = context.getPriceParameterDict(context=movement, **kw)
 # XXX: Add "stepped_price" in calculation
 # sliced_base_price = {'price': 10.0, 'sliced_range': (1, None)}
@@ -30,7 +32,7 @@ if result["sliced_base_price"]:
       slice_min = 1
     priced_quantity = min(slice_max - 1, quantity) - (slice_min - 1)
     total_price += priced_quantity * slice_price
-  result["base_price"] = total_price / quantity
+  result["base_price"] = round(total_price / quantity, int(round(- log(result['base_unit_price'], 10),0)))
 
 base_price = result["base_price"]
 if base_price in (None, ""):
