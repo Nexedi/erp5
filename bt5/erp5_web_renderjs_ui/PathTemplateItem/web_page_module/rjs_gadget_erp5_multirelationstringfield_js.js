@@ -68,6 +68,7 @@
           render_timestamp: new Date().getTime()
         };
 
+      console.log('multirender', field_json.default);
       if (field_json.default.hasOwnProperty('value_text_list')) {
         //load non saved value
         state_dict.value_relative_url_list =
@@ -199,7 +200,8 @@
 
             var result = {},
               j,
-              k = 0,
+              empty_line_count = 0,
+              // k = 0,
               input_result;
 
             if (options.format === "erp5") {
@@ -220,20 +222,25 @@
                 if (input_result.hasOwnProperty('value_text')) {
                   if (input_result.value_text) {
                     if (input_result.value_portal_type) {
-                      result[gadget.state.relation_field_id + '_' + k] =
+                      result[gadget.state.relation_field_id + '_' + (j - empty_line_count)] =
                         "_newContent_" + input_result.value_portal_type;
                     } else if (input_result.value_uid) {
-                      result[gadget.state.relation_field_id + '_' + k] =
+                      result[gadget.state.relation_field_id + '_' + (j - empty_line_count)] =
                         input_result.value_uid;
                     }
+                    result[gadget.state.key].push(input_result.value_text);
+                  } else {
+                    empty_line_count += 1;
                   }
+                  /*
                   if (j !== result_list.length) {
                     // Do send the last relation field
                     // as it was automatically added and untouched
-                    result[gadget.state.key].push(input_result.value_text);
+                    
                   }
+                  */
                 }
-                k += 1;
+                // k += 1;
               } else {
                 result[gadget.state.key].value_text_list
                   .push(input_result.value_text);
