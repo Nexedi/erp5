@@ -346,8 +346,8 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     except TimeoutError, e:
       error.append(repr(e))
     try:
-      self.assertNoPendingMessage()
-    except AssertionError as e:
+      self.tic()
+    except RuntimeError as e:
       error.append(str(e))
 
     detail, success, failure, \
