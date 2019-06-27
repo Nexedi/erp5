@@ -1127,8 +1127,7 @@ class TestResource(ERP5TypeTestCase):
     # resource_b is member of product_line/b, so our supply line does not apply.
     self.assertEqual(None, sale_order_line.getPrice())
 
-
-  def testGetPriceWithSlicedBasePricePrice(self):
+  def testGetPriceWithBasePriceDefinedPerSlice(self):
     """
     [unit quantity]   [price defined for the units of this slice]
      0 -> 10        = 10 currency/unit
@@ -1158,6 +1157,7 @@ class TestResource(ERP5TypeTestCase):
     supply_line = sale_trade_condition.newContent(
       portal_type=self.sale_supply_line_portal_type,
       resource_value=product,
+      base_unit_price=0.00001,
     )
     supply_line.setQuantityStepList((11, 21))
     supply_line.updateCellRange()
@@ -1170,7 +1170,9 @@ class TestResource(ERP5TypeTestCase):
     )
     cell0.setCriterionPropertyList(('quantity', ))
     cell0.setCriterion('quantity', min=1, max=None)
-    cell0.setMappedValuePropertyList(["sliced_base_price", "sliced_range"])
+    cell0.setMappedValuePropertyList(
+      ["sliced_base_price", "sliced_range", "base_unit_price"]
+    )
 
     cell1 = supply_line.newContent(
       portal_type=self.sale_supply_cell_portal_type,
@@ -1180,7 +1182,9 @@ class TestResource(ERP5TypeTestCase):
     )
     cell1.setCriterionPropertyList(('quantity', ))
     cell1.setCriterion('quantity', min=11, max=None)
-    cell1.setMappedValuePropertyList(["sliced_base_price", "sliced_range"])
+    cell1.setMappedValuePropertyList(
+      ["sliced_base_price", "sliced_range", "base_unit_price"]
+    )
 
     cell2 = supply_line.newContent(
       portal_type=self.sale_supply_cell_portal_type,
@@ -1190,46 +1194,46 @@ class TestResource(ERP5TypeTestCase):
     )
     cell2.setCriterionPropertyList(('quantity', ))
     cell2.setCriterion('quantity', min=21, max=None)
-    cell2.setMappedValuePropertyList(["sliced_base_price", "sliced_range"])
+    cell2.setMappedValuePropertyList(
+      ["sliced_base_price", "sliced_range", "base_unit_price"]
+    )
 
     sale_trade_condition.validate()
     self.tic()
 
-    sale_order = self.portal.getDefaultModule("Sale Order").newContent(
-      portal_type='Sale Order',
-      specialise_value=sale_trade_condition,
+    currency_module = self.portal.getDefaultModule("Currency")
+    currency = currency_module.newContent(
+      portal_type="Currency",
+      title='Euro',
+      base_unit_quantity=0.01,
     )
-    sale_order_line = sale_order.newContent(
-      portal_type=self.sale_order_line_portal_type,
-      resource_value=product,
-      quantity=9,
-    )
-    self.assertEqual(10, sale_order_line.getPrice())
-    self.assertEqual(90, sale_order_line.getTotalPrice())
 
     sale_order = self.portal.getDefaultModule("Sale Order").newContent(
       portal_type='Sale Order',
       specialise_value=sale_trade_condition,
+      resource_value=currency,
     )
-    sale_order_line = sale_order.newContent(
-      portal_type=self.sale_order_line_portal_type,
-      resource_value=product,
-      quantity=15,
-    )
-    self.assertEqual(9.66667, round(sale_order_line.getPrice(), 5))
-    self.assertEqual(145, sale_order_line.getTotalPrice())
 
-    sale_order = self.portal.getDefaultModule("Sale Order").newContent(
-      portal_type='Sale Order',
-      specialise_value=sale_trade_condition,
-    )
-    sale_order_line = sale_order.newContent(
-      portal_type=self.sale_order_line_portal_type,
-      resource_value=product,
-      quantity=25,
-    )
-    self.assertEqual(9.2, sale_order_line.getPrice())
-    self.assertEqual(230, round(sale_order_line.getTotalPrice(), 2))
+    def _test(quantity, price, total_price):
+      sale_order_line = sale_order.newContent(
+        portal_type=self.sale_order_line_portal_type,
+        resource_value=product,
+        quantity=quantity,
+      )
+      self.assertEqual(price, sale_order_line.getPrice())
+      self.assertEqual(
+        total_price,
+        round(sale_order_line.getTotalPrice(), currency.getQuantityPrecision())
+      )
+
+    for case in [
+       {'quantity': 9, 'price': 10., 'total_price': 90.},
+       {'quantity': 11, 'price': 9.90909, 'total_price': 109.},
+       {'quantity': 15, 'price': 9.66667, 'total_price': 145.},
+       {'quantity': 19, 'price': 9.52632, 'total_price': 181.},
+       {'quantity': 25, 'price': 9.2, 'total_price': 230.},
+    ]:
+      _test(**case)
 
   def testQuantityPrecision(self):
     """test how to define quantity precision on resources.
