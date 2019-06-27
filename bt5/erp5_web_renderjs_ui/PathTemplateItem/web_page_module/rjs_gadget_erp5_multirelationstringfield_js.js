@@ -106,8 +106,8 @@
 
 
       // Always display an empty value at the end
-      if ((value_text_list.length == 0) ||
-          (value_text_list[value_text_list.length - 1] != "")) {
+      if ((value_text_list.length === 0) ||
+          (value_text_list[value_text_list.length - 1] !== "")) {
         value_relative_url_list.push("");
         value_text_list.push("");
       }
