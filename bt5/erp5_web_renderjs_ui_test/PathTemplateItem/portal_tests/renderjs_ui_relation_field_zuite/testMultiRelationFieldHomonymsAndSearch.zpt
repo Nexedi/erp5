@@ -179,6 +179,15 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
+  <td colspan="3"><b>When coming back from a search listbox, the relation field rendering is done in a service</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//a[@class="ui-btn ui-corner-all ui-btn-icon-notext ui-icon-plane ui-shadow-inset ui-btn-inline"]</td>
+  <td></td>
+</tr>
+
+<tr>
   <td colspan="3"><b>Check multi relation field display</b></td>
 </tr>
 <tr> <!-- Check field values -->
