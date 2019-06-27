@@ -200,7 +200,6 @@
             var result = {},
               j,
               empty_line_count = 0,
-              // k = 0,
               input_result;
 
             if (options.format === "erp5") {
@@ -213,7 +212,6 @@
                 value_uid_list: []
               };
             }
-
             for (j = 0; j < result_list.length; j += 1) {
               input_result = result_list[j];
 
@@ -233,15 +231,7 @@
                   } else {
                     empty_line_count += 1;
                   }
-                  /*
-                  if (j !== result_list.length) {
-                    // Do send the last relation field
-                    // as it was automatically added and untouched
-                    
-                  }
-                  */
                 }
-                // k += 1;
               } else {
                 result[gadget.state.key].value_text_list
                   .push(input_result.value_text);
