@@ -228,7 +228,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
           p.setCriterionPropertyList(('quantity', ))
           p.setCriterion(
             'quantity',
-            min=min_quantity or 1,
+            min=min_quantity,
             max=(None if price_parameter == 'sliced_base_price' else max_quantity)
           )
           if script is not None:
