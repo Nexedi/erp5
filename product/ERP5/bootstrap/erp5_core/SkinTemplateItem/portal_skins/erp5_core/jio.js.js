@@ -6930,6 +6930,9 @@ return new Parser;
       throw new TypeError("jioquery.sortOn(): " +
                           "Argument 1 is not of type 'array'");
     }
+    if (sort_on_option.length === 0) {
+      return list;
+    }
     list.sort(generateSortFunction(
       key_schema,
       sort_on_option
@@ -10357,7 +10360,8 @@ return new Parser;
               });
           }
           report.log(id, options.from_local ? LOG_UNEXPECTED_REMOTE_ATTACHMENT :
-                                              LOG_UNEXPECTED_LOCAL_ATTACHMENT);
+                                              LOG_UNEXPECTED_LOCAL_ATTACHMENT,
+                     JSON.stringify(attachment_dict));
         }, function (error) {
           if ((error instanceof jIO.util.jIOError) &&
               (error.status_code === 404)) {
@@ -14916,13 +14920,19 @@ return new Parser;
   }
 
   function waitForOpenIndexedDB(db_name, callback) {
+    var request;
+
+    function canceller() {
+      if ((request !== undefined) && (request.result !== undefined)) {
+        request.result.close();
+      }
+    }
+
     function resolver(resolve, reject) {
       // Open DB //
-      var request = indexedDB.open(db_name);
+      request = indexedDB.open(db_name);
       request.onerror = function (error) {
-        if (request.result) {
-          request.result.close();
-        }
+        canceller();
         if ((error !== undefined) &&
             (error.target instanceof IDBOpenDBRequest) &&
             (error.target.error instanceof DOMError)) {
@@ -14934,17 +14944,16 @@ return new Parser;
       };
 
       request.onabort = function () {
-        request.result.close();
+        canceller();
         reject("Aborting connection to: " + db_name);
       };
 
       request.ontimeout = function () {
-        request.result.close();
         reject("Connection to: " + db_name + " timeout");
       };
 
       request.onblocked = function () {
-        request.result.close();
+        canceller();
         reject("Connection to: " + db_name + " was blocked");
       };
 
@@ -14952,26 +14961,32 @@ return new Parser;
       request.onupgradeneeded = handleUpgradeNeeded;
 
       request.onversionchange = function () {
-        request.result.close();
+        canceller();
         reject(db_name + " was upgraded");
       };
 
       request.onsuccess = function () {
+        var result;
+        try {
+          result = callback(request.result);
+        } catch (error) {
+          reject(error);
+        }
         return new RSVP.Queue()
           .push(function () {
-            return callback(request.result);
+            return result;
           })
-          .push(function (result) {
-            request.result.close();
-            resolve(result);
+          .push(function (final_result) {
+            canceller();
+            resolve(final_result);
           }, function (error) {
-            request.result.close();
+            canceller();
             reject(error);
           });
       };
     }
 
-    return new RSVP.Promise(resolver);
+    return new RSVP.Promise(resolver, canceller);
   }
 
   function waitForTransaction(db, stores, flag, callback) {
@@ -15001,14 +15016,8 @@ return new Parser;
             reject(error);
           });
       };
-      tx.onerror = function (error) {
-        canceller();
-        reject(error);
-      };
-      tx.onabort = function (evt) {
-        reject(evt.target);
-      };
-      return tx;
+      tx.onerror = reject;
+      tx.onabort = reject;
     }
     return new RSVP.Promise(resolver, canceller);
   }
