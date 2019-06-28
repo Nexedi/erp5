@@ -42,8 +42,8 @@ except FormValidationError, validation_errors:
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)
   # Make sure editors are pushed back as values into the REQUEST object
-  for f in form.get_fields():
-    field_id = f.id
+  for field in form.get_fields():
+    field_id = field.id
     if request.has_key(field_id):
       value = request.get(field_id)
       if callable(value):
@@ -246,12 +246,12 @@ if message_only:
 
 ignore_layout = int(ignore_layout)
 editable_mode = int(editable_mode)
-spp = context.getPhysicalPath()
-spp =list(spp)
-s_url = request["SERVER_URL"]
-spp.insert(0,s_url)
+server_physical_path = context.getPhysicalPath()
+server_physical_path = list(server_physical_path)
+server_url = request["SERVER_URL"]
+server_physical_path.insert(0, server_url)
 #calculate direct the url instead of using absolute_url
-new_url = '/'.join(spp)
+new_url = '/'.join(server_physical_path)
 
 # for web mode, we should use 'view' instead of passed form_id
 # after 'Save & View'.
