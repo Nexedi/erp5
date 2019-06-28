@@ -307,6 +307,10 @@ def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
             del exc, exc_info
     finally:
         endInteraction()
+        if transaction.manager._txn is not None:
+            # Only abort a transaction, if one exists. Otherwise the
+            # abort creates a new transaction just to abort it.
+            transaction.abort()
 
 
 def publish(request, module_info):
@@ -347,19 +351,12 @@ def publish(request, module_info):
     return response
 
 
-@contextmanager
-def load_app(module_info):
-    app_wrapper, realm, debug_mode = module_info
-    # Loads the 'OFS.Application' from ZODB.
-    app = app_wrapper()
-
+def auto_close_app_iter(app, app_iter):
     try:
-        yield (app, realm, debug_mode)
+        yield
+        for result in app_iter:
+            yield result
     finally:
-        if transaction.manager._txn is not None:
-            # Only abort a transaction, if one exists. Otherwise the
-            # abort creates a new transaction just to abort it.
-            transaction.abort()
         app._p_jar.close()
 
 
@@ -400,39 +397,46 @@ def publish_module(environ, start_response,
                                   environ,
                                   new_response))
 
-        for i in range(getattr(new_request, 'retry_max_count', 3) + 1):
-            request = new_request
-            response = new_response
-            setRequest(request)
-            try:
-                with load_app(module_info) as new_mod_info:
+        app_wrapper, realm, debug_mode = module_info
+        app = app_wrapper()
+        try:
+            module_info = app, realm, debug_mode
+            for i in range(getattr(new_request, 'retry_max_count', 3) + 1):
+                request = new_request
+                response = new_response
+                setRequest(request)
+                try:
                     with transaction_pubevents(request, response, err_hook):
-                        response = _publish(request, new_mod_info)
-                break
-            except TransientError:
-                if request.supports_retry():
-                    new_request = request.retry()
-                    new_response = new_request.response
-                else:
-                    raise
-            finally:
-                request.close()
-                clearRequest()
+                        response = _publish(request, module_info)
+                    break
+                except TransientError:
+                    if request.supports_retry():
+                        new_request = request.retry()
+                        new_response = new_request.response
+                    else:
+                        raise
+                finally:
+                    request.close()
+                    clearRequest()
 
-        # Start the WSGI server response
-        status, headers = response.finalize()
-        start_response(status, headers)
+            # Start the WSGI server response
+            status, headers = response.finalize()
+            start_response(status, headers)
 
-        if isinstance(response.body, _FILE_TYPES) or \
-           IUnboundStreamIterator.providedBy(response.body):
+            for func in response.after_list:
+                func()
+
             result = response.body
-        else:
-            # If somebody used response.write, that data will be in the
-            # response.stdout BytesIO, so we put that before the body.
-            result = (response.stdout.getvalue(), response.body)
-
-        for func in response.after_list:
-            func()
+            if IUnboundStreamIterator.providedBy(result):
+                result = auto_close_app_iter(app, result)
+                app = next(result)
+            elif not isinstance(result, _FILE_TYPES):
+                # If somebody used response.write, that data will be in the
+                # response.stdout BytesIO, so we put that before the body.
+                result = response.stdout.getvalue(), result
+        finally:
+            if app is not None:
+                app._p_jar.close()
 
     # Return the result body iterable.
     return result
