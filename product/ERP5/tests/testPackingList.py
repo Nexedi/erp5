@@ -344,44 +344,21 @@ class TestPackingListMixin(TestOrderMixin):
     """
       Test if packing list was splitted
     """
-    order = sequence.get('order')
-    packing_list_list = order.getCausalityRelatedValueList(
-                               portal_type=self.packing_list_portal_type)
-    self.assertEqual(2,len(packing_list_list))
-    packing_list1 = None
-    packing_list2 = None
-    for packing_list in packing_list_list:
-      if packing_list.getUid() == sequence.get('packing_list').getUid():
-        packing_list1 = packing_list
-      else:
-        packing_list2 = packing_list
-    sequence.edit(new_packing_list=packing_list2)
-    for line in packing_list1.objectValues(
-          portal_type= self.packing_list_line_portal_type):
-      self.assertEqual(self.default_quantity-1,line.getQuantity())
-    for line in packing_list2.objectValues(
-          portal_type= self.packing_list_line_portal_type):
-      self.assertEqual(1,line.getQuantity())
+    packing_list1, packing_list2 = self.getTwoRelatedPackingList(sequence)
+    packing_list1_line, = packing_list1.objectValues(portal_type=self.packing_list_line_portal_type)
+    self.assertEqual(self.default_quantity-1,packing_list1_line.getQuantity())
+    packing_list2_line, = packing_list2.objectValues(portal_type=self.packing_list_line_portal_type)
+    self.assertEqual(1,packing_list2_line.getQuantity())
 
   def stepCheckPackingListSplittedTwoTimes(self, sequence=None, sequence_list=None, **kw):
     """
       Test if packing list is divergent
     """
-    order = sequence.get('order')
-    packing_list_list = order.getCausalityRelatedValueList(
-                               portal_type=self.packing_list_portal_type)
-    self.assertEqual(2,len(packing_list_list))
-    packing_list1 = None
-    packing_list2 = None
-    for packing_list in packing_list_list:
-      if packing_list.getUid() == sequence.get('packing_list').getUid():
-        packing_list1 = packing_list
-      else:
-        packing_list2 = packing_list
-    line1, =  packing_list1.objectValues(portal_type=self.packing_list_line_portal_type)
-    self.assertEqual(self.default_quantity-2,line1.getQuantity())
-    line2, = packing_list2.objectValues(portal_type=self.packing_list_line_portal_type)
-    self.assertEqual(2,line2.getQuantity())
+    packing_list1, packing_list2 = self.getTwoRelatedPackingList(sequence)
+    packing_list1_line, = packing_list1.objectValues(portal_type=self.packing_list_line_portal_type)
+    self.assertEqual(self.default_quantity-2,packing_list1_line.getQuantity())
+    packing_list2_line, = packing_list2.objectValues(portal_type=self.packing_list_line_portal_type)
+    self.assertEqual(2,packing_list2_line.getQuantity())
 
   def stepCheckPackingListNotSplitted(self, sequence=None, sequence_list=None, **kw):
     """
@@ -2096,6 +2073,76 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     sequence_list.play(self, quiet=quiet)
 
+  def stepIncreasePackingListLineNegativeQuantity(self, sequence=None,
+      sequence_list=None, **kw):
+    """
+    Set a decreased quantity on packing list lines
+    """
+    packing_list = sequence.get('packing_list')
+    quantity = sequence.get('line_quantity',default=self.default_quantity)
+    quantity = quantity + 1
+    sequence.edit(line_quantity=quantity)
+    packing_list_line, = packing_list.getMovementList(portal_type=self.packing_list_line_portal_type)
+    packing_list_line.edit(quantity=quantity)
+    for packing_list_line in packing_list.objectValues(
+        portal_type=self.packing_list_line_portal_type):
+      packing_list_line.edit(quantity=quantity)
+
+  def stepCheckPackingListSplittedWithNegativeQuantity(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test if packing list was splitted
+    """
+    packing_list1, packing_list2 = self.getTwoRelatedPackingList(sequence)
+    packing_list1_line, = packing_list1.objectValues(portal_type=self.packing_list_line_portal_type)
+    self.assertEqual(self.default_quantity+1,packing_list1_line.getQuantity())
+    packing_list2_line, = packing_list2.objectValues(portal_type=self.packing_list_line_portal_type)
+    self.assertEqual(-1,packing_list2_line.getQuantity())
+
+  def stepCheckPackingListSplittedTwoTimesWithNegativeQuantity(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test if packing list is splitted two times
+    """
+    packing_list1, packing_list2 = self.getTwoRelatedPackingList(sequence)
+    packing_list1_line, = packing_list1.objectValues(portal_type=self.packing_list_line_portal_type)
+    self.assertEqual(self.default_quantity+2,packing_list1_line.getQuantity())
+    packing_list2_line, = packing_list2.objectValues(portal_type=self.packing_list_line_portal_type)
+    self.assertEqual(-2,packing_list2_line.getQuantity())
+
+  def test_21_PackingListQuantitySplitNegativeQuantity(self):
+    """
+      Make sur quantity split solver works fine in the case we have
+      negative quantities. Probably rarely useful in the case of sale packing
+      list, but could be useful in other kinds of delivery (like in MRP).
+    """
+    try:
+      self.default_quantity = -99
+
+      sequence_list = SequenceList()
+
+      sequence_string = self.default_sequence + """
+          IncreasePackingListLineNegativeQuantity
+          CheckPackingListIsCalculating
+          Tic
+          CheckPackingListIsDiverged
+          SplitAndDeferPackingList
+          Tic
+          CheckPackingListIsSolved
+          CheckPackingListSplittedWithNegativeQuantity
+          IncreasePackingListLineNegativeQuantity
+          CheckPackingListIsCalculating
+          Tic
+          CheckPackingListIsDiverged
+          SplitAndMovePackingList
+          Tic
+          CheckNewPackingListIsSolved
+          stepCheckPackingListSplittedTwoTimesWithNegativeQuantity
+          """
+      sequence_list.addSequenceString(sequence_string)
+
+      sequence_list.play(self)
+
+    finally:
+      delattr(self, "default_quantity")
 
 class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
   quiet = 0
