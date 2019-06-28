@@ -21,7 +21,8 @@ Test quantity steps for price on sale supply line
 <tr>
   <td>type</td>
   <td>field_my_sale_supply_line_quantity_step_list</td>
-  <td>10<br />20</td>
+  <td>10
+20</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -31,8 +32,7 @@ Test quantity steps for price on sale supply line
 <tr>
   <td>assertText</td>
   <td>field_my_sale_supply_line_quantity_step_list</td>
-  <td>10.0
-20.0</td>
+  <td>10.0 20.0</td>
 <tr>
   <td>assertText</td>
   <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]/../../../td[1]</td>
@@ -94,7 +94,8 @@ Test quantity steps for price on sale supply line
 <tr>
   <td>type</td>
   <td>field_my_sale_supply_line_quantity_step_list</td>
-  <td>foo<br />bar</td>
+  <td>foo
+bar</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -104,14 +105,7 @@ Test quantity steps for price on sale supply line
 <tr>
   <td>assertText</td>
   <td>field_my_sale_supply_line_quantity_step_list</td>
-  <td>foo
-bar</td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>field_my_sale_supply_line_quantity_step_list</td>
-  <td>foo
-bar</td>
+  <td>foo bar</td>
 </tr>
 <tr>
   <td>assertText</td>
