@@ -307,6 +307,10 @@ def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
             del exc, exc_info
     finally:
         endInteraction()
+        if transaction.manager._txn is not None:
+            # Only abort a transaction, if one exists. Otherwise the
+            # abort creates a new transaction just to abort it.
+            transaction.abort()
 
 
 def publish(request, module_info):
@@ -347,22 +351,6 @@ def publish(request, module_info):
     return response
 
 
-@contextmanager
-def load_app(module_info):
-    app_wrapper, realm, debug_mode = module_info
-    # Loads the 'OFS.Application' from ZODB.
-    app = app_wrapper()
-
-    try:
-        yield (app, realm, debug_mode)
-    finally:
-        if transaction.manager._txn is not None:
-            # Only abort a transaction, if one exists. Otherwise the
-            # abort creates a new transaction just to abort it.
-            transaction.abort()
-        app._p_jar.close()
-
-
 def publish_module(environ, start_response,
                    _publish=publish,  # only for testing
                    _response=None,
@@ -400,24 +388,29 @@ def publish_module(environ, start_response,
                                   environ,
                                   new_response))
 
-        for i in range(getattr(new_request, 'retry_max_count', 3) + 1):
-            request = new_request
-            response = new_response
-            setRequest(request)
-            try:
-                with load_app(module_info) as new_mod_info:
+        app_wrapper, realm, debug_mode = module_info
+        app = app_wrapper()
+        module_info = app, realm, debug_mode
+        try:
+            for i in range(getattr(new_request, 'retry_max_count', 3) + 1):
+                request = new_request
+                response = new_response
+                setRequest(request)
+                try:
                     with transaction_pubevents(request, response, err_hook):
-                        response = _publish(request, new_mod_info)
-                break
-            except TransientError:
-                if request.supports_retry():
-                    new_request = request.retry()
-                    new_response = new_request.response
-                else:
-                    raise
-            finally:
-                request.close()
-                clearRequest()
+                        response = _publish(request, module_info)
+                    break
+                except TransientError:
+                    if request.supports_retry():
+                        new_request = request.retry()
+                        new_response = new_request.response
+                    else:
+                        raise
+                finally:
+                    request.close()
+                    clearRequest()
+        finally:
+            app._p_jar.close()
 
         # Start the WSGI server response
         status, headers = response.finalize()
