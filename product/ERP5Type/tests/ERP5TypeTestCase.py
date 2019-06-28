@@ -30,12 +30,9 @@ from ExtensionClass import pmc_init_of
 from DateTime import DateTime
 
 # XXX make sure that get_request works.
-import Products.ERP5Type.Utils
-from Products.ERP5Type import Globals
-
-# store a copy of the original method
-original_get_request = Globals.get_request
-convertToUpperCase = Products.ERP5Type.Utils.convertToUpperCase
+from new import function
+from zope.globalrequest import getRequest
+original_get_request = function(getRequest.__code__, getRequest.__globals__)
 
 from Testing.ZopeTestCase.connections import registry
 def get_context():
@@ -50,8 +47,8 @@ def get_request():
   if current_app is not None:
     return current_app.REQUEST
 
-Products.ERP5Type.Utils.get_request = get_request
-Globals.get_request = get_request
+sys.modules[getRequest.__module__].get_request = get_request
+getRequest.__code__ = (lambda: get_request()).__code__
 
 from zope.site.hooks import setSite
 
@@ -62,7 +59,7 @@ from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Form.PreferenceTool import Priority
 from zLOG import LOG, DEBUG
-
+from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import DummyMailHostMixin, parseListeningAddress

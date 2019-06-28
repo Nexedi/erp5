@@ -1464,7 +1464,7 @@ class ActivityTool (BaseTool):
     def invoke(self, message):
       if self.activity_tracking:
         activity_tracking_logger.info('invoking message: object_path=%s, method_id=%s, args=%r, kw=%r, activity_kw=%r, user_name=%s' % ('/'.join(message.object_path), message.method_id, message.args, message.kw, message.activity_kw, message.user_name))
-      old_request = None
+      restore_request = False
       if getattr(self, 'aq_chain', None) is not None:
         # Grab existing acquisition chain and extrach base objects.
         base_chain = [aq_base(x) for x in self.aq_chain]
@@ -1501,6 +1501,7 @@ class ActivityTool (BaseTool):
         if 'HTTP_ACCEPT_LANGUAGE' in request_info:
           new_request.environ['HTTP_ACCEPT_LANGUAGE'] = request_info['HTTP_ACCEPT_LANGUAGE']
           old_request = getRequest()
+          restore_request = True
           setRequest(new_request)
           new_request.processInputs()
 
@@ -1520,7 +1521,8 @@ class ActivityTool (BaseTool):
           # Restore default skin selection
           skinnable = self.getPortalObject()
           skinnable.changeSkin(skinnable.getSkinNameFromRequest(request))
-        setRequest(old_request)
+        if restore_request:
+          setRequest(old_request)
       if self.activity_tracking:
         activity_tracking_logger.info('invoked message')
       if my_self is not self: # We rewrapped self
