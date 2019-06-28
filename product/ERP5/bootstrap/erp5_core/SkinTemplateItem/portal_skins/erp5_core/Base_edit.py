@@ -55,30 +55,30 @@ def editListBox(listbox_field, listbox):
   """ Function called to edit a listbox
   """
   if listbox is not None:
-    gv = {}
+    global_property_dict = {}
     if listbox_field.has_value('global_attributes'):
-      hidden_attributes = map(lambda x:x[0], listbox_field.get_value('global_attributes'))
-      for k in hidden_attributes:
-        gv[k] = getattr(request, k, None)
-    for url, v in listbox.items():
-      v.update(gv)
+      hidden_attribute_list = map(lambda x:x[0], listbox_field.get_value('global_attributes'))
+      for hidden_attribute in hidden_attribute_list:
+        global_property_dict[hidden_attribute] = getattr(request, hidden_attribute, None)
+    for item_url, listbox_item_dict in listbox.items():
+      listbox_item_dict.update(global_property_dict)
       # Form: '' -> ERP5: None
       encapsulated_editor_list = []
       cleaned_v = {}
-      for key, value in v.items():
+      for key, value in listbox_item_dict.items():
         if hasattr(value, 'edit'):
           encapsulated_editor_list.append(value)
         else:
-          if value == '':        
+          if value == '':
             value = None
           cleaned_v[key] = value
 
       if cleaned_v:
         if listbox_edit is None:
-          obj = context.restrictedTraverse(url)
+          obj = context.restrictedTraverse(item_url)
           obj.edit(edit_order=edit_order, **cleaned_v)
         else:
-          listbox_edit(url, edit_order, cleaned_v)
+          listbox_edit(item_url, edit_order, cleaned_v)
 
       for encapsulated_editor in encapsulated_editor_list:
         encapsulated_editor.edit(obj)
@@ -95,14 +95,14 @@ def editMatrixBox(matrixbox_field, matrixbox):
     else:
       matrix_context = context
     if matrix_context is not None:
-      kd = {}
-      kd['portal_type'] = portal_type
-      kd['base_id'] = cell_base_id
-      gv = {}
+      k_dict = {}
+      k_dict['portal_type'] = portal_type
+      k_dict['base_id'] = cell_base_id
+      global_property_dict = {}
       if matrixbox_field.has_value('global_attributes'):
-        hidden_attributes = [x[0] for x in matrixbox_field.get_value('global_attributes')]
-        for k in hidden_attributes:
-          gv[k] = getattr(request, k, None)
+        hidden_attribute_list = [x[0] for x in matrixbox_field.get_value('global_attributes')]
+        for hidden_attribute in hidden_attribute_list:
+          global_property_dict[hidden_attribute] = getattr(request, hidden_attribute, None)
       if matrixbox_field.get_value('update_cell_range'):
         as_cell_range_script_id = matrixbox_field.get_value(
                 'as_cell_range_script_id')
@@ -157,57 +157,57 @@ def editMatrixBox(matrixbox_field, matrixbox):
           if cell_range != matrixbox_cell_range:
             matrix_context.setCellRange(base_id=cell_base_id, *matrixbox_cell_range)
 
-      for k,v in matrixbox.items():
+      for cell_index_tuple, cell_dict in matrixbox.items():
         # Only update cells which still exist
-        if matrix_context.hasInRange(*k, **kd):
-          c = matrix_context.newCell(*k, **kd)
-          if c is not None:
-            c.edit(edit_order=edit_order, **gv)  # First update globals which include the def. of property_list
-            if v.has_key('variated_property'):
+        if matrix_context.hasInRange(*cell_index_tuple, **k_dict):
+          cell = matrix_context.newCell(*cell_index_tuple, **k_dict)
+          if cell is not None:
+            cell.edit(edit_order=edit_order, **global_property_dict)  # First update globals which include the def. of property_list
+            if cell_dict.has_key('variated_property'):
               # For Variated Properties
-              value = v['variated_property']
-              del v['variated_property']
-              if gv.has_key('mapped_value_property_list'):
+              variated_property = cell_dict['variated_property']
+              del cell_dict['variated_property']
+              if global_property_dict.has_key('mapped_value_property_list'):
                 # Change the property which is defined by the
                 # first element of mapped_value_property_list
                 # XXX May require some changes with Sets
-                key = gv['mapped_value_property_list'][0]
-                v[key] = value
+                key = global_property_dict['mapped_value_property_list'][0]
+                cell_dict[key] = variated_property
             # Form: '' -> ERP5: None
-            cleaned_v = v.copy()
+            cleaned_v = cell_dict.copy()
             for key, value in cleaned_v.items():
               if value == '':
                 cleaned_v[key] = None
-            c.edit(edit_order=edit_order, **cleaned_v) # and update the cell specific values
+            cell.edit(edit_order=edit_order, **cleaned_v) # and update the cell specific values
           else:
-            return "Could not create cell %s" % str(k)
+            return "Could not create cell %s" % str(cell_index_tuple)
         else:
-          return "Cell %s does not exist" % str(k)
+          return "Cell %s does not exist" % str(cell_index_tuple)
 
 field_prefix_len = len(field_prefix)
 
-def parseField(f):
+def parseField(field):
   """
    Parse given form field, to put them in
    kw or in encapsulated_editor_list
   """
-  k = f.id
-  if f.has_value('alternate_name'):
-    k = f.get_value('alternate_name') or f.id
-  v = getattr(request, k, MARKER)
-  if hasattr(v, 'edit'):
+  field_id = field.id
+  if field.has_value('alternate_name'):
+    field_id = field.get_value('alternate_name') or field_id
+  value = getattr(request, field_id, MARKER)
+  if hasattr(value, 'edit'):
     # This is an encapsulated editor
     # call it
-    encapsulated_editor_list.append(v)
-  elif v is not MARKER:
-    if k.startswith(field_prefix):
+    encapsulated_editor_list.append(value)
+  elif value is not MARKER:
+    if field_id.startswith(field_prefix):
       # We only take into account
       # the object attributes
-      k = k[field_prefix_len:]
+      field_id = field_id[field_prefix_len:]
       # Form: '' -> ERP5: None
-      if v == '':
-        v = None
-      kw[k] = v
+      if value == '':
+        value = None
+      kw[field_id] = value
 
 # Some initilizations
 kw = {}
@@ -232,7 +232,7 @@ for field in form.get_fields():
   elif(field_meta_type == 'MatrixBox'):
     editMatrixBox(field, request.get(field.id))
 
-# Return parsed values 
+# Return parsed values
 if silent_mode: return (kw, encapsulated_editor_list), 'edit'
 
 # Maybe we should build a list of objects we need
@@ -275,7 +275,7 @@ redirect_url = '%s/%s?%s' % (
     make_query(**redirect_url_kw)
     )
 
-result = request['RESPONSE'].redirect(redirect_url) 
+result = request['RESPONSE'].redirect(redirect_url)
 
 if silent_mode: return result, 'redirect'
 return result
