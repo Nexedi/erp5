@@ -2,6 +2,7 @@ portal = context.getPortalObject()
 operation = None
 use = None
 parameter_dict = {}
+
 context.checkConsistency(fixit=True)
 initial_product = context.getSpecialiseValue(portal_type="Data Transformation").getResourceValue()
 for analysis_line in context.objectValues(portal_type="Data Analysis Line"):
@@ -28,6 +29,9 @@ for analysis_line in context.objectValues(portal_type="Data Analysis Line"):
       parameter[base_category] = analysis_line.getVariationCategoryItemList(
                                    base_category_list=(base_category,))[0][0]
     reference = analysis_line.getReference()
+    
+    parameter["Start Date"] = analysis_line.getStartDate()
+    parameter["Stop Date"] = analysis_line.getStopDate()
     # several lines with same reference wil turn the parameter into a list
     if reference in parameter_dict:
       if not isinstance(parameter_dict[reference], list):
@@ -35,7 +39,9 @@ for analysis_line in context.objectValues(portal_type="Data Analysis Line"):
       parameter_dict[reference].append(parameter)
     else:
       parameter_dict[reference] = parameter
+
 script_id = operation.getScriptId()
+
 out = getattr(operation_analysis_line, script_id)(**parameter_dict)
 
 if out == 1:
