@@ -167,13 +167,20 @@ class TestGoogleLogin(ERP5TypeTestCase):
 
     request["__ac_google_hash"] = response.cookies["__ac_google_hash"]["value"]
 
-    credentials = self.portal.acl_users.erp5_google_extraction.extractCredentials(request)
+    with mock.patch(
+        'Products.ERP5Security.ERP5ExternalOauth2ExtractionPlugin._setUserNameForAccessLog'
+      ) as _setUserNameForAccessLog:
+      credentials = self.portal.acl_users.erp5_google_extraction.extractCredentials(request)
     self.assertEqual(
         'Google Login',
         credentials['login_portal_type'])
     self.assertEqual(
         getUserId(None),
         credentials['external_login'])
+    # this is what will appear in Z2.log
+    _setUserNameForAccessLog.assert_called_once_with(
+        'erp5_google_extraction=%s' % getUserId(None),
+        request)
 
     user_id, login = self.portal.acl_users.erp5_login_users.authenticateCredentials(credentials)
     self.assertEqual(person.getUserId(), user_id)
