@@ -33,7 +33,8 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.interfaces import plugins
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
-from Products import ERP5Security
+from Products.ERP5Security import setUserNameForAccessLog
+
 from AccessControl.SecurityManagement import getSecurityManager, \
   setSecurityManager, newSecurityManager
 from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
@@ -224,6 +225,8 @@ class ERP5ExternalOauth2ExtractionPlugin:
       creds['remote_address'] = request.getClientAddr()
     except AttributeError:
       creds['remote_address'] = request.get('REMOTE_ADDR', '')
+
+    setUserNameForAccessLog('%s=%s' % (self.getId(), creds['external_login']) , request)
     return creds
 
 def getFacebookUserEntry(token):
