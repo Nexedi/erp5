@@ -21,8 +21,7 @@ Test quantity steps for price on sale supply line
 <tr>
   <td>type</td>
   <td>field_my_sale_supply_line_quantity_step_list</td>
-  <td>10
-20</td>
+  <td>10&NewLine;20</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -95,8 +94,7 @@ Test quantity steps for price on sale supply line
 <tr>
   <td>type</td>
   <td>field_my_sale_supply_line_quantity_step_list</td>
-  <td>foo
-bar</td>
+  <td>foo&NewLine;bar</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
