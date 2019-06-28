@@ -125,8 +125,10 @@
           form_options.editable = form_gadget.state.editable;
 
           // XXX Hardcoded for listbox's hide/configure functionalities
-          form_options.form_definition.hide_enabled = true;
           form_options.form_definition.configure_enabled = true;
+          // XXX Disable select and clipboard functionalities: 'uid'-workaround made for renderjs UI doesn't work on officejs
+          // TODO: ask if officejs app or regular renderjs ui
+          form_options.form_definition.hide_enabled = false;
 
           // XXX not generic, fix later
           if (form_gadget.state.extended_search) {
