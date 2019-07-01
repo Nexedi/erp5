@@ -443,6 +443,9 @@
           if (displayed_column_item_list.length === 0) {
             displayed_column_item_list = field_json.column_list;
           }
+          if (field_json.sort === undefined) {
+            field_json.sort = []
+          }
 
           return gadget.changeState({
             key: field_json.key,
@@ -1180,7 +1183,6 @@
       if (gadget.state.show_count === true) {
         aggregation_option_list.push("count");
       }
-
       return gadget.jio_allDocs({
         // XXX Not jIO compatible, but until a better api is found...
         "list_method_template": this.state.list_method_template,
