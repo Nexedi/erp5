@@ -47,6 +47,7 @@ When handling form, we can expect field values to be stored in REQUEST.form in t
 -  python-object parsed from raw values under <field.id>
 """
 
+
 from ZTUtils import make_query
 import json
 from base64 import urlsafe_b64encode, urlsafe_b64decode
@@ -66,6 +67,9 @@ from collections import OrderedDict
 MARKER = []
 COUNT_LIMIT = 1000
 
+# TODO replace appcache var use by (mode = 'appcache')
+appcache = True if mode == "appcache" else False
+
 if REQUEST is None:
   recursive_call = True
   REQUEST = context.REQUEST
@@ -74,7 +78,6 @@ else:
 
 if response is None:
   response = REQUEST.RESPONSE
-
 
 def isFieldType(field, type_name):
   if field.meta_type == 'ProxyField':
@@ -391,6 +394,56 @@ def getFieldDefault(form, field, key, value=MARKER):
     return "%s" % value
   return value
 
+def getFieldRawProperties(field, meta_type=None, key=None, key_prefix=None):
+  """ Return the raw properties of the field """
+  if meta_type is None:
+    meta_type = field.meta_type
+  if key is None:
+    key = field.generate_field_key(key_prefix=key_prefix)
+  if meta_type == "ProxyField":
+    meta_type = field.getRecursiveTemplateField().meta_type
+  result = {
+    "type": meta_type,
+    "key": key,
+    "values": {},
+    "tales": {},
+    "overrides": field.overrides,
+    "message_values": field.message_values
+  }
+  # these patchs change the field property names as are required by js rendering
+  form_list_patch = False
+  gadget_field_patch = False
+  for key in field.values.keys():
+    # sometimes, field.values returns a key as string and also as a tuple
+    if type(key) is str:
+      result["values"][key] = field.values[key]
+      if key == "columns":
+        form_list_patch = True
+      if key == "gadget_url":
+        gadget_field_patch = True
+  if form_list_patch:
+    try:
+      result["values"]["column_list"] = result["values"]["columns"]
+      result["values"]["sort_column_list"] = result["values"]["sort_columns"]
+      result["values"]["search_column_list"] = result["values"]["search_columns"]
+      portal_type = result["values"]["portal_types"][0][0] if "portal_types" in result["values"] else False
+      if not portal_type:
+        portal_type = result["values"]["portal_type"][0][0] if "portal_type" in result["values"] else False
+      query = "portal_type%3A%22" + portal_type + "%22" if portal_type else ""
+      full_query = "urn:jio:allDocs?query=" + query
+      result["values"]["query"] = full_query
+    except KeyError:
+      log("error while patching form list definition")
+  if gadget_field_patch:
+    try:
+      result["values"]["url"] = result["values"]["gadget_url"]
+      result["values"]["renderjs_extra"] = result["values"]["renderjs_extra"][0][0]
+    except KeyError:
+      log("error while patching form gadget list definition")
+  for key in field.tales.keys():
+    if field.tales[key]:
+      result["tales"][key] = str(field.tales[key])
+  return result
 
 def renderField(traversed_document, field, form, value=MARKER, meta_type=None, key=None, key_prefix=None, selection_params=None, request_field=True):
   """Extract important field's attributes into `result` dictionary."""
@@ -850,7 +903,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     action_to_call = "Base_callDialogMethod"
   else:
     action_to_call = form.action
-  if (action_to_call == 'Base_edit') and (not portal.portal_membership.checkPermission('Modify portal content', traversed_document)):
+  if (not appcache) and (action_to_call == 'Base_edit') and (not portal.portal_membership.checkPermission('Modify portal content', traversed_document)):
     # prevent allowing editing if user doesn't have permission
     include_action = False
 
@@ -913,7 +966,6 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       view='view'
     )
   }
-
   use_relation_form_page_template = (form.pt == "relation_form")
   if use_relation_form_page_template:
     # Provide the list of possible listboxes
@@ -1107,7 +1159,6 @@ def renderFormDefinition(form, response_dict):
 
       for field in form.get_fields_in_group(group['goid'], include_disabled=1):
         field_list.append((field.id, {'meta_type': field.meta_type}))
-
       group_list.append((group['gid'], field_list))
 
   # some forms might not have any fields so we put empty bottom group
@@ -1154,7 +1205,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                      relative_url=None, restricted=None, list_method=None,
                      default_param_json=None, form_relative_url=None, extra_param_json=None):
 
-  if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
+  if (not appcache) and (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
     login_relative_url = site_root.getLayoutProperty("configuration_login", default="")
     if (login_relative_url):
       response.setHeader(
@@ -1264,6 +1315,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     for k, v in byteify(extra_param_json.items()):
       REQUEST.set(k, v)
 
+
     # Add a link to the portal type if possible
     if not is_portal:
       # traversed_document should always have its Portal Type in ERP5 Portal Types
@@ -1363,66 +1415,72 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     for erp5_action_key in erp5_action_dict.keys():
       erp5_action_list = []
       for view_action in erp5_action_dict[erp5_action_key]:
+        continue_iteration = True
         # Action condition is probably checked in Base_filterDuplicateActions
-        erp5_action_list.append({
-          'href': '%s' % view_action['url'],
-          'name': view_action['id'],
-          'icon': view_action['icon'],
-          'title': Base_translateString(view_action['title'])
-        })
+        try:
+          erp5_action_list.append({
+            'href': '%s' % view_action['url'],
+            'name': view_action['id'],
+            'icon': view_action['icon'],
+            'title': Base_translateString(view_action['title'])
+          })
+        except:
+          continue_iteration = False
 
-        global_action_type = ("view", "workflow", "object_new_content_action",
-                              "object_clone_action", "object_delete_action",
-                              "object_list_action")
-        if (erp5_action_key == view_action_type or
-            erp5_action_key in global_action_type or
-            "_jio" in erp5_action_key):
+        if continue_iteration:
 
-          # select correct URL template based on action_type and form page template
-          url_template_key = "traverse_generator"
-          if erp5_action_key not in ("view", "object_view", "object_jio_view"):
-            url_template_key = "traverse_generator_action"
-          # but when we do not have the last form id we do not pass is of course
-          if not (current_action.get('view_id', '') or last_form_id):
+          global_action_type = ("view", "workflow", "object_new_content_action",
+                                "object_clone_action", "object_delete_action",
+                                "object_list_action")
+          if (erp5_action_key == view_action_type or
+              erp5_action_key in global_action_type or
+              "_jio" in erp5_action_key):
+
+            # select correct URL template based on action_type and form page template
             url_template_key = "traverse_generator"
+            if erp5_action_key not in ("view", "object_view", "object_jio_view"):
+              url_template_key = "traverse_generator_action"
+            # but when we do not have the last form id we do not pass is of course
+            if not (current_action.get('view_id', '') or last_form_id):
+              url_template_key = "traverse_generator"
 
-          # some dialogs need previous form_id when rendering to pass UID to embedded Listbox
-          extra_param_json['form_id'] = current_action['view_id'] \
-            if current_action.get('view_id', '') and view_instance.pt in ("form_view", "form_list") \
-            else last_form_id
+            # some dialogs need previous form_id when rendering to pass UID to embedded Listbox
+            extra_param_json['form_id'] = current_action['view_id'] \
+              if current_action.get('view_id', '') and view_instance.pt in ("form_view", "form_list") \
+              else last_form_id
 
-          erp5_action_list[-1]['href'] = url_template_dict[url_template_key] % {
-                "root_url": site_root.absolute_url(),
-                "script_id": script.id,                                   # this script (ERP5Document_getHateoas)
-                "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
-                "view": erp5_action_list[-1]['name'],
-                "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
+            erp5_action_list[-1]['href'] = url_template_dict[url_template_key] % {
+                  "root_url": site_root.absolute_url(),
+                  "script_id": script.id,                                   # this script (ERP5Document_getHateoas)
+                  "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
+                  "view": erp5_action_list[-1]['name'],
+                  "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
+                }
+
+          if erp5_action_key == 'object_jump':
+            if 'Base_jumpToRelatedObject?' in view_action['url']:
+              # Fetch the URL arguments
+              # XXX Correctly unquote arguments
+              argument_dict = dict([x.split('=') for x in view_action['url'].split('?', 1)[1].split("&")])
+              jump_portal_type = argument_dict.pop('portal_type', None)
+              if (jump_portal_type is not None):
+                jump_portal_type = jump_portal_type.replace('+', ' ')
+              final_argument_dict = {'portal_type': jump_portal_type}
+              jump_related = argument_dict.pop('related', 1)
+              if (jump_related):
+                jump_related_suffix = ''
+              else:
+                jump_related_suffix = 'related_'
+
+              jump_uid = portal.restrictedTraverse(argument_dict.pop('jump_from_relative_url', getRealRelativeUrl(traversed_document))).getUid()
+              final_argument_dict['default_%s_%suid' % (argument_dict.pop('base_category'), jump_related_suffix)] = jump_uid
+
+              erp5_action_list[-1]['href'] = url_template_dict["jio_search_template"] % {
+                "query": make_query({"query": sql_catalog.buildQuery(final_argument_dict).asSearchTextExpression(sql_catalog)})
               }
-
-        if erp5_action_key == 'object_jump':
-          if 'Base_jumpToRelatedObject?' in view_action['url']:
-            # Fetch the URL arguments
-            # XXX Correctly unquote arguments
-            argument_dict = dict([x.split('=') for x in view_action['url'].split('?', 1)[1].split("&")])
-            jump_portal_type = argument_dict.pop('portal_type', None)
-            if (jump_portal_type is not None):
-              jump_portal_type = jump_portal_type.replace('+', ' ')
-            final_argument_dict = {'portal_type': jump_portal_type}
-            jump_related = argument_dict.pop('related', 1)
-            if (jump_related):
-              jump_related_suffix = ''
             else:
-              jump_related_suffix = 'related_'
-
-            jump_uid = portal.restrictedTraverse(argument_dict.pop('jump_from_relative_url', getRealRelativeUrl(traversed_document))).getUid()
-            final_argument_dict['default_%s_%suid' % (argument_dict.pop('base_category'), jump_related_suffix)] = jump_uid
-
-            erp5_action_list[-1]['href'] = url_template_dict["jio_search_template"] % {
-              "query": make_query({"query": sql_catalog.buildQuery(final_argument_dict).asSearchTextExpression(sql_catalog)})
-            }
-          else:
-            # XXX How to handle all custom jump actions?
-            erp5_action_list.pop(-1)
+              # XXX How to handle all custom jump actions?
+              erp5_action_list.pop(-1)
 
       if erp5_action_list:
         if len(erp5_action_list) == 1:
@@ -1439,7 +1497,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     # XXX Custom slapos code
     ##############
     if is_site_root:
-  
+
       result_dict['default_view'] = 'view'
       REQUEST.set("X-HATEOAS-CACHE", 1)
   
@@ -1483,19 +1541,19 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         'method': 'POST',
         'name': 'Bulk'
       }
-  
+
       # Handle also other kind of users: instance, computer, master
       person = portal.portal_membership.getAuthenticatedMember().getUserValue()
       if person is not None and portal.portal_membership.checkPermission('View', person):
         result_dict['_links']['me'] = {
           "href": default_document_uri_template % {
             "root_url": site_root.absolute_url(),
-            "relative_url": person.getRelativeUrl(), 
+            "relative_url": person.getRelativeUrl(),
             "script_id": script.id
           },
-  #         '_relative_url': person.getRelativeUrl()
+            #'_relative_url': person.getRelativeUrl()
         }
-  
+
     else:
       traversed_document_portal_type = traversed_document.getPortalType()
       if traversed_document_portal_type in ("ERP5 Form", "ERP5 Report"):
@@ -1505,6 +1563,21 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           response.setHeader("Vary", "Cookie,Authorization,Accept-Encoding")
           response.setHeader("Last-Modified", DateTime().rfc822())
           REQUEST.set("X-HATEOAS-CACHE", 1)
+
+        fields_raw_properties = {}
+        # check if it's the first call to calculateHateoas so nothing was rendered yet
+        if appcache and REQUEST != None and response != None:
+          for group in traversed_document.Form_getGroupTitleAndId():
+            if 'hidden' in group['gid']:
+              for field in traversed_document.get_fields_in_group(group['goid']):
+                if field.id == "gadget_field_action_js_script":
+                  fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
+              continue
+            for field in traversed_document.get_fields_in_group(group['goid']):
+              fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
+        if fields_raw_properties:
+          result_dict['fields_raw_properties'] = fields_raw_properties
+
       elif relative_url == 'portal_workflow':
         result_dict['_links']['action_worklist'] = {
           "href": url_template_dict['worklist_template'] % {
@@ -2148,11 +2221,116 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
     result_dict["worklist"] = work_list
 
+  elif (mode == 'appcache'):
+    ##
+    # return raw form definition
+    # render will be done in js side
+
+    # Default properties shared by all ERP5 Document and Site
+    current_action = {}
+    result_dict['title'] = traversed_document.getTitle()
+    extra_param_json = {}
+
+    # TODO: 'type' should be include outside "_links", but itrequires changes on js side rendering
+    if not is_portal:
+      document_type_name = traversed_document.getPortalType()
+      document_type = getattr(portal.portal_types, document_type_name, None)
+      if document_type is not None:
+        result_dict['_links']['type'] = {
+          "href": default_document_uri_template % {
+            "root_url": site_root.absolute_url(),
+            "relative_url": document_type.getRelativeUrl(),
+            "script_id": script.id
+          },
+          "name": Base_translateString(traversed_document.getPortalType())
+        }
+
+    # TODO: 'parent' should be include outside "_links", but it requires changes on js side rendering
+    if not is_portal:
+      container = traversed_document.getParentValue()
+      if container != portal:
+        result_dict['_links']['parent'] = {
+          "href": default_document_uri_template % {
+            "root_url": site_root.absolute_url(),
+            "relative_url": container.getRelativeUrl(),
+            "script_id": script.id
+          },
+          "name": Base_translateString(container.getTitle()),
+        }
+
+    # Find current action URL and extract embedded view
+    erp5_action_dict = portal.Base_filterDuplicateActions(
+      portal.portal_actions.listFilteredActionsFor(traversed_document))
+    for erp5_action_key in erp5_action_dict.keys():
+      for view_action in erp5_action_dict[erp5_action_key]:
+        if (view == view_action['id']):
+          current_action = parseActionUrl('%s' % view_action['url'])
+    if view and (view != 'view') and (current_action.get('view_id', None) is None):
+      current_action['view_id'] = view
+      current_action['url'] = '%s/%s' % (traversed_document.getRelativeUrl(), view)
+      current_action['params'] = {}
+
+    if current_action.get('view_id', ''):
+      view_instance = getattr(traversed_document, current_action['view_id'])
+      if (view_instance is not None):
+        embedded_dict = {
+          '_links': {
+            'self': {
+              'href': current_action['url']
+            }
+          }
+        }
+        # TODO: get from this method what is needed for appcaching, and avoid all rendering stuff
+        renderForm(traversed_document, view_instance, embedded_dict,
+                   selection_params=extra_param_json, extra_param_json=extra_param_json)
+        result_dict['_embedded'] = {
+          '_view': embedded_dict
+        }
+
+    if is_site_root:
+      result_dict['default_view'] = 'view'
+      REQUEST.set("X-HATEOAS-CACHE", 1)
+
+    else:
+      traversed_document_portal_type = traversed_document.getPortalType()
+      if traversed_document_portal_type in ("ERP5 Form", "ERP5 Report"):
+        # TODO: get from this method what is needed for appcaching, and avoid all rendering stuff
+        renderFormDefinition(traversed_document, result_dict)
+        if response is not None:
+          response.setHeader("Cache-Control", "private, max-age=1800")
+          response.setHeader("Vary", "Cookie,Authorization,Accept-Encoding")
+          response.setHeader("Last-Modified", DateTime().rfc822())
+          REQUEST.set("X-HATEOAS-CACHE", 1)
+        fields_raw_properties = {}
+        # check if it's the first call to calculateHateoas so nothing was rendered yet
+        if appcache and REQUEST != None and response != None:
+          for group in traversed_document.Form_getGroupTitleAndId():
+            if 'hidden' in group['gid']:
+              for field in traversed_document.get_fields_in_group(group['goid']):
+                if field.id == "gadget_field_action_js_script":
+                  fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
+              continue
+            for field in traversed_document.get_fields_in_group(group['goid']):
+              fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
+        if fields_raw_properties:
+          result_dict['fields_raw_properties'] = fields_raw_properties
+
   else:
     raise NotImplementedError("Unsupported mode %s" % mode)
-  
-  return result_dict
 
+  # if form has my_form_definition field, set it with fields_raw_properties and form_definition
+  # my_form_definition will be used for rendering in JS side
+  if "_embedded" in result_dict:
+    if "_view" in result_dict["_embedded"]:
+      if "my_form_definition" in  result_dict["_embedded"]["_view"]:
+        default_form_definition = result_dict["_embedded"]["_view"]["_embedded"]["form_definition"].copy()
+        default_form_definition["group_list"] = result_dict["group_list"]
+        default_form_definition["_actions"] = result_dict["_embedded"]["_view"]["_actions"]
+        if result_dict["fields_raw_properties"]:
+          default_form_definition["fields_raw_properties"] = result_dict["fields_raw_properties"].copy()
+          result_dict.pop('fields_raw_properties', None)
+        result_dict["_embedded"]["_view"]["my_form_definition"]["default"] = default_form_definition
+  return result_dict
 
 mime_type = 'application/hal+json'
 portal = context.getPortalObject()
@@ -2178,6 +2356,18 @@ hateoas = calculateHateoas(relative_url=relative_url,
                            default_param_json=default_param_json,
                            form_relative_url=form_relative_url,
                            extra_param_json=extra_param_json)
+
+
+# [HARDCODED] expresion string:${object_url} must be evaluated before return
+try:
+  if "_embedded" in hateoas.keys() and "_view" in hateoas["_embedded"].keys() and "my_action" in hateoas["_embedded"]["_view"].keys():
+    if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/HTMLPost_viewAsJio':
+      hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_officejs_jio_connector/HTMLPost_viewAsJio'
+
+    if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/WebPage_viewAsJio' or hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/WebPage_view':
+      hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_officejs_jio_connector/WebPage_viewAsJio'
+except:
+  pass
 if hateoas == "":
   return hateoas
 else:
