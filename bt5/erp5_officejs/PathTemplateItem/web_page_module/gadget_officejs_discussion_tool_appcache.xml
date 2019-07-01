@@ -245,7 +245,6 @@ gadget_officejs_text_editor_router.html\n
 /\n
 app/\n
 gadget_officejs_discussion_tool.configuration\n
-gadget_officejs_discussion_tool.json\n
 gadget_officejs_bootloader.js\n
 gadget_officejs_bootloader_presentation.html\n
 gadget_officejs_bootloader_presentation.js\n
