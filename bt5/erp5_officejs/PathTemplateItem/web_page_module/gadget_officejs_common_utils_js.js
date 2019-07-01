@@ -1,0 +1,257 @@
+/*global window, rJS, RSVP, Query, SimpleQuery, ComplexQuery, console */
+/*jslint nomen: true, indent: 2, maxerr: 3 */
+(function (window, rJS, RSVP, Query, SimpleQuery, ComplexQuery, console) {
+  "use strict";
+
+  // TODO: check if there are other categories that are 'views' and find a less hardcoded way to get this
+  var view_categories = ["object_view", "object_jio_view", "object_web_view", "object_list"];
+
+  function filterViews(views_dict, app_view, default_view) {
+    // there must be only one "View" action (title = "View")
+    // this is for scenarios were the portal type has several "View" (like view, jio_view, custom_view)
+    // priority: app_view ; default_view ; other
+    var only_view, key,
+      view_list = Object.keys(views_dict).map(function (key) {
+        if (views_dict[key].title === "View") { return key; }
+      });
+    if (view_list.includes(app_view)) {
+      only_view = app_view;
+    } else if (view_list.includes(default_view)) {
+      only_view = default_view;
+    } else {
+      only_view = view_list[0];
+    }
+    for (key in view_list) {
+      if (view_list[key] !== only_view) {
+        delete views_dict[view_list[key]];
+      }
+    }
+    return views_dict;
+  }
+
+  rJS(window)
+    /////////////////////////////////////////////////////////////////
+    // Acquired methods
+    /////////////////////////////////////////////////////////////////
+    .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("isDesktopMedia", "isDesktopMedia")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
+    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("jio_get", "jio_get")
+    .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("jio_post", "jio_post")
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
+    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
+
+    /////////////////////////////////////////////////////////////////
+    // declared methods
+    /////////////////////////////////////////////////////////////////
+
+    .declareMethod("formatSettingList", function (configuration_list_string, portal_type) {
+      var i = 0, formatted_list = [], configuration_list, pair;
+      try {
+        configuration_list_string = configuration_list_string.replace(/\(/g, '[')
+          .replace(/\)/g, ']')
+          .replace(/,\]/g, ']')
+          .replace(/\'/g, '"');
+        configuration_list = JSON.parse(configuration_list_string);
+        for (i = 0; i < configuration_list.length; i += 1) {
+          pair = configuration_list[i].split(" | ");
+          if (!portal_type || pair[0] === portal_type) {
+            formatted_list.push(pair);
+          }
+        }
+      } catch (e) {
+        console.log("Error while parsing configuration settings. Format error maybe?");
+        console.log(e);
+      }
+      return formatted_list;
+    })
+
+    .declareMethod("getAppActions", function (portal_type) {
+      var gadget = this;
+      return gadget.getSetting('app_actions')
+        .push(function (app_actions_setting) {
+          return gadget.formatSettingList(app_actions_setting, portal_type);
+        });
+    })
+
+    .declareMethod("getAllViewsAndActions", function (portal_type, jio_key) {
+      var gadget = this,
+        action_info_dict = {views: {}, actions: {}},
+        query_type = new SimpleQuery({
+          key: "portal_type",
+          operator: "",
+          type: "simple",
+          value: "Action Information"
+        }),
+        query_parent = new SimpleQuery({
+          key: "parent_relative_url",
+          operator: "",
+          type: "simple",
+          value: "portal_types/" + portal_type
+        }),
+        query = Query.objectToSearchText(new ComplexQuery({
+          operator: "AND",
+          query_list: [query_type, query_parent],
+          type: "complex"
+        })),
+        app_actions,
+        app_view,
+        default_view;
+      return RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.getSetting('app_view_reference'),
+            gadget.getSetting('default_view_reference')
+          ]);
+        })
+        .push(function (result_list) {
+          app_view = result_list[0];
+          default_view = result_list[1];
+          return gadget.getAppActions(portal_type);
+        })
+        .push(function (app_actions_result) {
+          app_actions = app_actions_result.map(function (pair) {
+            return pair[1];
+          });
+          return gadget.jio_allDocs({query: query})
+            .push(function (action_list) {
+              var path_for_jio_get_list = [], row;
+              for (row in action_list.data.rows) {
+                if (action_list.data.rows.hasOwnProperty(row)) {
+                  path_for_jio_get_list.push(gadget.jio_get(action_list.data.rows[row].id));
+                }
+              }
+              return RSVP.all(path_for_jio_get_list);
+            })
+            .push(function (action_document_list) {
+              var action_key, action_doc, action_settings;
+              for (action_key in action_document_list) {
+                if (action_document_list.hasOwnProperty(action_key)) {
+                  action_doc = action_document_list[action_key];
+                  if (app_actions.includes(action_doc.reference)) {
+                    action_settings = {
+                      page: undefined,
+                      jio_key: jio_key,
+                      title: action_doc.title,
+                      action: action_doc.reference,
+                      reference: action_doc.reference,
+                      action_type: action_doc.action_type,
+                      parent_portal_type: portal_type
+                    };
+                    if (view_categories.includes(action_settings.action_type)) {
+                      action_settings.page = "ojs_local_controller";
+                      action_info_dict.views[action_settings.action] = action_settings;
+                    } else {
+                      action_settings.page = "handle_action";
+                      action_info_dict.actions[action_settings.action] = action_settings;
+                    }
+                  }
+                }
+              }
+              action_info_dict.views = filterViews(action_info_dict.views, app_view, default_view);
+              return action_info_dict;
+            });
+        });
+    })
+
+    .declareMethod("getFormInfo", function (form_definition) {
+      var child_gadget_url,
+        form_type,
+        action_category = form_definition.action_type;
+      switch (action_category) {
+      case 'object_list':
+        form_type = 'list';
+        child_gadget_url = 'gadget_erp5_pt_form_list.html';
+        break;
+      case 'object_dialog':
+        form_type = 'dialog';
+        child_gadget_url = 'gadget_erp5_pt_form_dialog.html';
+        break;
+      case 'object_jio_js_script':
+        form_type = 'dialog';
+        child_gadget_url = 'gadget_erp5_pt_form_dialog.html';
+        break;
+      default:
+        form_type = 'page';
+        child_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
+      }
+      return [form_type, child_gadget_url];
+    })
+
+    .declareMethod("getFormDefinition", function (portal_type, action_reference) {
+      var gadget = this,
+        query,
+        action_type,
+        action_title,
+        form_definition,
+        query_type,
+        query_parent,
+        query_reference;
+      query_reference = new SimpleQuery({
+        key: "reference",
+        operator: "",
+        type: "simple",
+        value: action_reference
+      });
+      query_type = new SimpleQuery({
+        key: "portal_type",
+        operator: "",
+        type: "simple",
+        value: "Action Information"
+      });
+      query_parent = new SimpleQuery({
+        key: "parent_relative_url",
+        operator: "",
+        type: "simple",
+        value: "portal_types/" + portal_type
+      });
+      query = Query.objectToSearchText(new ComplexQuery({
+        operator: "AND",
+        query_list: [query_type, query_parent, query_reference],
+        type: "complex"
+      }));
+      return gadget.jio_allDocs({query: query})
+        .push(function (data) {
+          if (data.data.rows.length === 0) {
+            throw "Can not find action '" + action_reference + "' for portal type '" + portal_type + "'";
+          }
+          return gadget.jio_get(data.data.rows[0].id);
+        })
+        .push(function (action_result) {
+          action_title = action_result.title;
+          action_type = action_result.action_type;
+          return gadget.jio_get(action_result.action);
+        })
+        .push(function (form_result) {
+          form_definition = form_result.form_definition;
+          form_definition.action_type = action_type;
+          form_definition.title = action_title;
+          return gadget.getSetting("app_allowed_sub_types");
+        })
+        .push(function (allowed_sub_types_setting) {
+          return gadget.formatSettingList(allowed_sub_types_setting, portal_type);
+        })
+        .push(function (allowed_sub_types_pairs) {
+          var allowed_sub_types = allowed_sub_types_pairs.map(function (pair) {
+              return pair[1];
+            });
+          form_definition.allowed_sub_types_list = allowed_sub_types;
+          return gadget.getAllViewsAndActions(portal_type);
+        })
+        .push(function (actions_views_dict) {
+          form_definition.has_more_views = Object.keys(actions_views_dict.views).length > 1;
+          form_definition.has_more_actions = Object.keys(actions_views_dict.actions).length > 0;
+          return gadget.getSetting('hide_header_add_button');
+        })
+        .push(function (hide_add_button_setting) {
+          form_definition.hide_add_button = hide_add_button_setting === "1";
+          return form_definition;
+        });
+    });
+
+}(window, rJS, RSVP, Query, SimpleQuery, ComplexQuery, console));
