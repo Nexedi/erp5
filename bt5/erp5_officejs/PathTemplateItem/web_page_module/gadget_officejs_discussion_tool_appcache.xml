@@ -239,7 +239,6 @@ gadget_erp5_page_create_document.html\n
 gadget_erp5_page_create_document.js\n
 \n
 #app routers\n
-gadget_officejs_discussion_tool_router.html\n
 gadget_officejs_text_editor_router.html\n
 \n
 #custom action gadgets\n
@@ -264,20 +263,6 @@ jio_appcachestorage.js\n
 \n
 #configuration resources\n
 hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_hal_json_style%2FBase_viewNewContentDialog&view=jio_view\n
-\n
-#discussion tool\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_officejs_jio_connector%2FHTMLPost_viewAsJio&view=jio_view\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FHTMLPost_viewReplyDialog&view=jio_view\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_post%2FPostModule_newHTMLPost&view=jio_view\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FPostModule_viewHTMLPostListAsJio&view=jio_view\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FHTML%20Post&view=view\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FHTML%20Post%2F1&view=view\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FHTML%20Post%2F2&view=view\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FHTML%20Post%2F3&view=view\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FPost%20Module&view=view\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FPost%20Module%2F1&view=view\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FPost%20Module%2F2&view=view\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FPost%20Module%2F3&view=view\n
 \n
 #text editor\n
 hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_types%2FWeb%20Page%20Module&view=view\n
