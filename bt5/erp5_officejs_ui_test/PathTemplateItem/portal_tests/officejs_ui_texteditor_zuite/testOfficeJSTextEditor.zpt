@@ -46,21 +46,35 @@
   <td>link=Local is Enough</td>
   <td></td>
 </tr>
+  
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td></td>
+</tr>
+<tr>
+ <td>click</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td></td>
+</tr>
+<!-- Skip dialog form if only one portal type
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=Add</td>
+  <td>//select[@name="portal_type"]</td>
   <td></td>
-</tr>
+<tr>
+<tr>
+  <td>select</td>
+  <td>//select[@name="portal_type"]</td>
+  <td>value=Web Page</td>
+<tr>
 <tr>
   <td>click</td>
-  <td>link=Add</td>
+  <td>//div[contains(@class, 'dialog_button_container')]//input[@value="Create Document"]</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
+-->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>store</td>
   <td tal:content="python: 'Test Titre %s' % DateTime()">Titre</td>
@@ -116,25 +130,27 @@
   <td>//textarea[@title='Description']</td>
   <td>${description}</td>
 </tr>
+
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Document']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>link=Add</td>
-  <td></td>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -175,9 +191,4 @@
   <td>verifyValue</td>
   <td>//textarea[@title='Description']</td>
   <td>${description}</td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>identifier=cke_1_contents</td>
-  <td></td>
 </tr>
