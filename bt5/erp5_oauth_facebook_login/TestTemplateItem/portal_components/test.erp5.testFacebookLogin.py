@@ -98,6 +98,49 @@ class TestFacebookLogin(ERP5TypeTestCase):
     self.assertNotIn("secret_key=", location)
     self.assertIn("ERP5Site_callbackFacebookLogin", location)
 
+  def test_existing_user(self):
+    self.login()
+    person = self.portal.person_module.newContent(
+        portal_type='Person',
+    )
+    person.newContent(
+        portal_type='Facebook Login',
+        reference=getUserId(None)
+    ).validate()
+    person.newContent(portal_type='Assignment').open()
+    self.tic()
+    self.logout()
+
+    request = self.portal.REQUEST
+    response = request.RESPONSE
+    with mock.patch(
+        'erp5.component.extension.FacebookLoginUtility.getAccessTokenFromCode',
+        side_effect=getAccessTokenFromCode,
+    ) as getAccessTokenFromCode_mock, \
+      mock.patch(
+        'erp5.component.extension.FacebookLoginUtility.getUserEntry',
+        side_effect=getUserEntry
+      ) as getUserEntry_mock:
+      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
+      getUserEntry_mock.func_code = getUserEntry.func_code
+      self.portal.ERP5Site_callbackFacebookLogin(code=CODE)
+    getAccessTokenFromCode_mock.assert_called_once()
+    getUserEntry_mock.assert_called_once()
+
+    request["__ac_facebook_hash"] = response.cookies["__ac_facebook_hash"]["value"]
+
+    credentials = self.portal.acl_users.erp5_facebook_extraction.extractCredentials(request)
+    self.assertEqual(
+        'Facebook Login',
+        credentials['login_portal_type'])
+    self.assertEqual(
+        getUserId(None),
+        credentials['external_login'])
+
+    user_id, login = self.portal.acl_users.erp5_login_users.authenticateCredentials(credentials)
+    self.assertEqual(person.getUserId(), user_id)
+    self.assertEqual(getUserId(None), login)
+
   def test_auth_cookie(self):
     request = self.portal.REQUEST
     response = request.RESPONSE
