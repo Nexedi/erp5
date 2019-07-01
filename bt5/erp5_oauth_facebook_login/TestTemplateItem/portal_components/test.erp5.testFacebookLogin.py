@@ -26,8 +26,8 @@
 ##############################################################################
 
 import uuid
+import mock
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from erp5.component.extension import FacebookLoginUtility
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 CLIENT_ID = "a1b2c3"
@@ -50,17 +50,8 @@ def getUserEntry(access_token):
           'reference': getUserId(None),
           'email': "dummy@example.org"}
 
-FacebookLoginUtility_getAccessTokenFromCode = FacebookLoginUtility.getAccessTokenFromCode
-FacebookLoginUtility_getUserEntry = FacebookLoginUtility.getUserEntry
 
 class TestFacebookLogin(ERP5TypeTestCase):
-
-  def getTitle(self):
-    return "Test Facebook Login"
-
-  def beforeTearDown(self):
-    FacebookLoginUtility.getAccessTokenFromCode = FacebookLoginUtility_getAccessTokenFromCode
-    FacebookLoginUtility.getUserEntry = FacebookLoginUtility_getUserEntry
 
   def afterSetUp(self):
     """
@@ -68,10 +59,6 @@ class TestFacebookLogin(ERP5TypeTestCase):
     """
     self.login()
     self.portal.TemplateTool_checkFacebookExtractionPluginExistenceConsistency(fixit=True)
-    # Patch extension to avoid external connection
-    FacebookLoginUtility.getUserId = getUserId
-    FacebookLoginUtility.getAccessTokenFromCode = getAccessTokenFromCode
-    FacebookLoginUtility.getUserEntry = getUserEntry
 
     self.dummy_connector_id = "test_facebook_connector"
     portal_catalog = self.portal.portal_catalog
@@ -116,8 +103,18 @@ class TestFacebookLogin(ERP5TypeTestCase):
     response = request.RESPONSE
     # (the secure flag is only set if we accessed through https)
     request.setServerURL('https', 'example.com')
+    with mock.patch(
+        'erp5.component.extension.FacebookLoginUtility.getAccessTokenFromCode',
+        side_effect=getAccessTokenFromCode,
+    ) as getAccessTokenFromCode_mock, \
+      mock.patch(
+        'erp5.component.extension.FacebookLoginUtility.getUserEntry',
+        side_effect=getUserEntry
+      ) as getUserEntry_mock:
+      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
+      getUserEntry_mock.func_code = getUserEntry.func_code
+      self.portal.ERP5Site_callbackFacebookLogin(code=CODE)
 
-    self.portal.ERP5Site_callbackFacebookLogin(code=CODE)
     ac_cookie, = [v for (k, v) in response.listHeaders() if k.lower() == 'set-cookie' and '__ac_facebook_hash=' in v]
     self.assertIn('; Secure', ac_cookie)
     self.assertIn('; HTTPOnly', ac_cookie)
@@ -171,7 +168,17 @@ context.portal_alarms.accept_submitted_credentials.activeSense()
 return credential_request
 """)
     self.logout()
-    response = self.portal.ERP5Site_callbackFacebookLogin(code=CODE)
+    with mock.patch(
+        'erp5.component.extension.FacebookLoginUtility.getAccessTokenFromCode',
+        side_effect=getAccessTokenFromCode,
+    ) as getAccessTokenFromCode_mock, \
+      mock.patch(
+        'erp5.component.extension.FacebookLoginUtility.getUserEntry',
+        side_effect=getUserEntry
+      ) as getUserEntry_mock:
+      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
+      getUserEntry_mock.func_code = getUserEntry.func_code
+      response = self.portal.ERP5Site_callbackFacebookLogin(code=CODE)
     facebook_hash = self.portal.REQUEST.RESPONSE.cookies.get("__ac_facebook_hash")["value"]
     self.assertEqual("8cec04e21e927f1023f4f4980ec11a77", facebook_hash)
     # The # is because we workaround facebook adding #_=_ in return URL
