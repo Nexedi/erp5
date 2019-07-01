@@ -49,6 +49,7 @@ from functools import partial
 from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 from Products.ERP5.mixin.extensible_traversable import OOoDocumentExtensibleTraversableMixin
+from DateTime import DateTime
 
 # connection plugins
 from Products.ERP5Type.ConnectionPlugin.TimeoutTransport import TimeoutTransport
@@ -60,6 +61,10 @@ dec=base64.decodestring
 EMBEDDED_FORMAT = '_embedded'
 OOO_SERVER_PROXY_TIMEOUT = 360
 OOO_SERVER_RETRY = 0
+
+# store time (as int) where we had last failure in order
+# to try using proxy server that worked the most recently
+global_server_proxy_uri_failure_time = {}
 
 class OOoServerProxy():
   """
@@ -95,7 +100,8 @@ class OOoServerProxy():
 
       transport = TimeoutTransport(timeout=timeout, scheme=scheme)
       
-      self._serverproxy_list.append(ServerProxy(uri, allow_none=True, transport=transport))
+      self._serverproxy_list.append((uri, ServerProxy(uri, allow_none=True, transport=transport)))
+
   def _proxy_function(self, func_name, *args, **kw):
     result_error_set_list = []
     protocol_error_list = []
@@ -103,10 +109,13 @@ class OOoServerProxy():
     fault_error_list = []
     count = 0
     serverproxy_list = self._serverproxy_list
+    # we have list of tuple (uri, ServerProxy()). Sort by uri having oldest failure
+    serverproxy_list.sort(key=lambda x: global_server_proxy_uri_failure_time.get(x[0], 0))
     while True:
       retry_server_list = []
-      for server_proxy in serverproxy_list:
+      for uri, server_proxy in serverproxy_list:
         func = getattr(server_proxy, func_name)
+        failure = True
         try:
           # Cloudooo return result in (200 or 402, dict(), '') format or just based type
           # 402 for error and 200 for ok
@@ -115,7 +124,6 @@ class OOoServerProxy():
           message = 'Socket Error: %s' % (repr(e) or 'undefined.')
           socket_error_list.append(message)
           retry_server_list.append(server_proxy)
-          continue
         except ProtocolError, e:
           # Network issue
           message = "%s: %s %s" % (e.url, e.errcode, e.errmsg)
@@ -123,23 +131,28 @@ class OOoServerProxy():
             message = "%s: Connection refused" % (e.url)
           protocol_error_list.append(message)
           retry_server_list.append(server_proxy)
-          continue
         except Fault, e:
           # Return not supported data types
           fault_error_list.append(e)
-          continue
-
-        try:
-          response_code, response_dict, response_message = result_set
-        except ValueError:
-          # Compatibility for old oood, result is based type, like string
-           response_code = 200
-
-        if response_code == 200:
-          return result_set
         else:
-          # If error, try next one
-          result_error_set_list.append(result_set)
+          failure = False
+
+        if not(failure):
+          try:
+            response_code, response_dict, response_message = result_set
+          except ValueError:
+            # Compatibility for old oood, result is based type, like string
+             response_code = 200
+
+          if response_code == 200:
+            return result_set
+          else:
+            # If error, try next one
+            result_error_set_list.append(result_set)
+
+        # Still there ? this means we had no result,
+        # avoid using same server again
+        global_server_proxy_uri_failure_time[uri] = int(DateTime())
 
       # All servers are failed
       if count == self._ooo_server_retry or len(retry_server_list) == 0:
