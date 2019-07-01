@@ -241,13 +241,6 @@ gadget_erp5_page_create_document.js\n
 #app routers\n
 gadget_officejs_text_editor_router.html\n
 \n
-#custom action gadgets\n
-#TODO remove new text doc action\n
-gadget_field_new_action_js_script.html\n
-gadget_field_new_action_js_script.js\n
-gadget_field_reply_action_js_script.html\n
-gadget_field_reply_action_js_script.js\n
-\n
 #needed for appcachestorage sync\n
 /\n
 app/\n
