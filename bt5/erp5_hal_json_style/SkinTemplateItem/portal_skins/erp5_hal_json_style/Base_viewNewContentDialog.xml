@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Folder_create</string> </value>
+            <value> <string>Base_doAction</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -71,7 +71,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_type_name</string>
+                        <string>your_select_action</string>
                       </list>
                     </value>
                 </item>
