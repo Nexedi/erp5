@@ -32,6 +32,6 @@ template.makeTemplate()
 
 context.portal_caches.clearCacheFactory('erp5_ui_short')
 
+kw['keep_items'] = dict(portal_status_message=message)
 return context.Base_redirect(form_id,
-                             keep_items=dict(portal_status_message=message),
                              **kw)
