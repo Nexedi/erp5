@@ -16,7 +16,7 @@ for pid in $ZOPE_PIDS;
   echo $pid, $ip_port, $port
 
   # socat
-  if [[ $ip_port == 2001* ]];
+  if [[ $ip_port == fd46* ]];
   then
     ipv6_ip=${ip_port:0:10}
     ipv6_port=${ip_port:11:15}
