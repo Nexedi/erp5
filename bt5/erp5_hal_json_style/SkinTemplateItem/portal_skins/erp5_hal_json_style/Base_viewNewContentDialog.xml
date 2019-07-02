@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_newContentFromJS</string> </value>
+            <value> <string>Folder_create</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -71,7 +71,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_portal_type</string>
+                        <string>your_type_name</string>
                       </list>
                     </value>
                 </item>
