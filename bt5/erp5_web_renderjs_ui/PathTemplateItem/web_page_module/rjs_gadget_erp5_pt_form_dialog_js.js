@@ -234,7 +234,7 @@
                   dialog_button_container = form_gadget.element
                                    .querySelector('.dialog_button_container');
                 div.innerHTML = html;
-                if (form_gadget.state.update_action_title) {
+                if (form_gadget.state.has_update_action && form_gadget.state.update_action_title) {
                   div.querySelector('button[name="action_update"]')
                      .textContent = form_gadget.state.form_definition
                                                      .update_action_title;
