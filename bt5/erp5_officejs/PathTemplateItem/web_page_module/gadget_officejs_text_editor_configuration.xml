@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_discussion_tool.configuration</string> </value>
+            <value> <string>gadget_officejs_text_editor.configuration</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_discussion_tool_configuration</string> </value>
+            <value> <string>gadget_officejs_text_editor_configuration</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -133,7 +133,7 @@ NETWORK:\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Discussion Tool Configuration</string> </value>
+            <value> <string>OfficeJS Text Editor Configuration</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -270,7 +270,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.43028.40236.42222</string> </value>
+                <value> <string>976.52887.28486.34730</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -288,7 +288,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1561571185.19</float>
+                        <float>1562075019.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
