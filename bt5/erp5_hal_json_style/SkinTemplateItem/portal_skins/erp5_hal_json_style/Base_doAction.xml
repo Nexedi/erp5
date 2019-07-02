@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_id, **kw</string> </value>
+            <value> <string>select_action, dialog_id, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_newContentFromJS</string> </value>
+            <value> <string>Base_doAction</string> </value>
         </item>
       </dictionary>
     </pickle>
