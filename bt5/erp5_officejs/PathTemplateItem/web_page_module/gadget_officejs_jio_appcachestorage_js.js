@@ -87,13 +87,14 @@
   };
 
   AppCacheStorage.prototype.repair = function () {
-    var storage = this;
+    var storage = this, url = "";
     return new RSVP.Queue()
       .push(function () {
+        url = new URL(storage._manifest, new URL(storage._version,
+                                                 storage._origin_url));
         return jIO.util.ajax({
           type: "GET",
-          url: new URL(storage._manifest, new URL(storage._version,
-                       storage._origin_url))
+          url: url
         });
       })
       .push(function (response) {
@@ -123,7 +124,7 @@
       })
       .push(undefined, function (error) {
         if (!error.message) {
-          error.message = "Can't get manifest";
+          error.message = "Can't get manifest. URL: " + url;
         }
         throw error;
       });
