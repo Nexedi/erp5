@@ -111,7 +111,7 @@
         origin_url = window.location.href,
         hateoas_script = "hateoas/ERP5Document_getHateoas",
         // TODO manifest should come from gadget.props.cache_file -add script in html body
-        manifest = "gadget_officejs_discussion_tool.configuration",
+        manifest = "gadget_officejs_text_editor.configuration",
         jio_appchache_options = {
           type: "replicate",
           parallel_operation_attachment_amount: 10,
