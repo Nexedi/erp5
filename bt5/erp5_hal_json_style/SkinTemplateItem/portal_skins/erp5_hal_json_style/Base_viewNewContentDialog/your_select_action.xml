@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_type_name</string> </value>
+            <value> <string>your_select_action</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -269,7 +269,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(here.Base_translateString(x), x) for x in context.getVisibleAllowedContentTypeList()]</string> </value>
+            <value> <string>python: [(here.Base_translateString(x), \'add %s\' % x) for x in context.getVisibleAllowedContentTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
