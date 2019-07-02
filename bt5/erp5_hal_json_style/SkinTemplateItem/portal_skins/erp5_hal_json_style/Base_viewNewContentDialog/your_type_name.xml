@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_portal_type</string> </value>
+            <value> <string>your_type_name</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
