@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Standard Property" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>mode</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>elementary_type/object</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>A per unit base price applying to the products whose quantity is in slice. This per unit base price will be weighted with the per unit base price of other slices.\n
+\n
+This property is useful for the following case :\n
+0-10 products cost 10$, and 11-inf products cost 9$. Thus in a command of 15 products, the unit base price is 9.6667$, as 10 * 10 + 5 * 9 = 145, and 145 / 15 = 9.6667</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>sliced_base_price_property</string> </value>
+        </item>
+        <item>
+            <key> <string>mode</string> </key>
+            <value> <string>w</string> </value>
+        </item>
+        <item>
+            <key> <string>multivalued</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Standard Property</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
