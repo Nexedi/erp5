@@ -13,6 +13,6 @@
  </chain>
  <chain>
   <type>Smart Assistant Text</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, smart_assistant_interaction_workflow, smart_assistant_workflow</workflow>
  </chain>
 </workflow_chain>
