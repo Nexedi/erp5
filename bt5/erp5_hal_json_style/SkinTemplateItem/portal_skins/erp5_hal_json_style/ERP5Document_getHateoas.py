@@ -1414,72 +1414,66 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     for erp5_action_key in erp5_action_dict.keys():
       erp5_action_list = []
       for view_action in erp5_action_dict[erp5_action_key]:
-        continue_iteration = True
         # Action condition is probably checked in Base_filterDuplicateActions
-        try:
-          erp5_action_list.append({
-            'href': '%s' % view_action['url'],
-            'name': view_action['id'],
-            'icon': view_action['icon'],
-            'title': Base_translateString(view_action['title'])
-          })
-        except:
-          continue_iteration = False
+        erp5_action_list.append({
+          'href': view_action['url'] if ('url' in view_action) else '',
+          'name': view_action['id'],
+          'icon': view_action['icon'] if ('icon' in view_action) else '',
+          'title': Base_translateString(view_action['title'])
+        })
 
-        if continue_iteration:
+        global_action_type = ("view", "workflow", "object_new_content_action",
+                              "object_clone_action", "object_delete_action",
+                              "object_list_action")
+        if (erp5_action_key == view_action_type or
+            erp5_action_key in global_action_type or
+            "_jio" in erp5_action_key):
 
-          global_action_type = ("view", "workflow", "object_new_content_action",
-                                "object_clone_action", "object_delete_action",
-                                "object_list_action")
-          if (erp5_action_key == view_action_type or
-              erp5_action_key in global_action_type or
-              "_jio" in erp5_action_key):
-
-            # select correct URL template based on action_type and form page template
+          # select correct URL template based on action_type and form page template
+          url_template_key = "traverse_generator"
+          if erp5_action_key not in ("view", "object_view", "object_jio_view"):
+            url_template_key = "traverse_generator_action"
+          # but when we do not have the last form id we do not pass is of course
+          if not (current_action.get('view_id', '') or last_form_id):
             url_template_key = "traverse_generator"
-            if erp5_action_key not in ("view", "object_view", "object_jio_view"):
-              url_template_key = "traverse_generator_action"
-            # but when we do not have the last form id we do not pass is of course
-            if not (current_action.get('view_id', '') or last_form_id):
-              url_template_key = "traverse_generator"
 
-            # some dialogs need previous form_id when rendering to pass UID to embedded Listbox
-            extra_param_json['form_id'] = current_action['view_id'] \
-              if current_action.get('view_id', '') and view_instance.pt in ("form_view", "form_list") \
-              else last_form_id
+          # some dialogs need previous form_id when rendering to pass UID to embedded Listbox
+          extra_param_json['form_id'] = current_action['view_id'] \
+            if current_action.get('view_id', '') and view_instance.pt in ("form_view", "form_list") \
+            else last_form_id
 
-            erp5_action_list[-1]['href'] = url_template_dict[url_template_key] % {
-                  "root_url": site_root.absolute_url(),
-                  "script_id": script.id,                                   # this script (ERP5Document_getHateoas)
-                  "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
-                  "view": erp5_action_list[-1]['name'],
-                  "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
-                }
-
-          if erp5_action_key == 'object_jump':
-            if 'Base_jumpToRelatedObject?' in view_action['url']:
-              # Fetch the URL arguments
-              # XXX Correctly unquote arguments
-              argument_dict = dict([x.split('=') for x in view_action['url'].split('?', 1)[1].split("&")])
-              jump_portal_type = argument_dict.pop('portal_type', None)
-              if (jump_portal_type is not None):
-                jump_portal_type = jump_portal_type.replace('+', ' ')
-              final_argument_dict = {'portal_type': jump_portal_type}
-              jump_related = argument_dict.pop('related', 1)
-              if (jump_related):
-                jump_related_suffix = ''
-              else:
-                jump_related_suffix = 'related_'
-
-              jump_uid = portal.restrictedTraverse(argument_dict.pop('jump_from_relative_url', getRealRelativeUrl(traversed_document))).getUid()
-              final_argument_dict['default_%s_%suid' % (argument_dict.pop('base_category'), jump_related_suffix)] = jump_uid
-
-              erp5_action_list[-1]['href'] = url_template_dict["jio_search_template"] % {
-                "query": make_query({"query": sql_catalog.buildQuery(final_argument_dict).asSearchTextExpression(sql_catalog)})
+          erp5_action_list[-1]['href'] = url_template_dict[url_template_key] % {
+                "root_url": site_root.absolute_url(),
+                "script_id": script.id,                                   # this script (ERP5Document_getHateoas)
+                "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
+                "view": erp5_action_list[-1]['name'],
+                "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
               }
+
+        if erp5_action_key == 'object_jump':
+          if 'Base_jumpToRelatedObject?' in view_action['url']:
+            # Fetch the URL arguments
+            # XXX Correctly unquote arguments
+            argument_dict = dict([x.split('=') for x in view_action['url'].split('?', 1)[1].split("&")])
+            jump_portal_type = argument_dict.pop('portal_type', None)
+            if (jump_portal_type is not None):
+              jump_portal_type = jump_portal_type.replace('+', ' ')
+            final_argument_dict = {'portal_type': jump_portal_type}
+            jump_related = argument_dict.pop('related', 1)
+            if (jump_related):
+              jump_related_suffix = ''
             else:
-              # XXX How to handle all custom jump actions?
-              erp5_action_list.pop(-1)
+              jump_related_suffix = 'related_'
+
+            jump_uid = portal.restrictedTraverse(argument_dict.pop('jump_from_relative_url', getRealRelativeUrl(traversed_document))).getUid()
+            final_argument_dict['default_%s_%suid' % (argument_dict.pop('base_category'), jump_related_suffix)] = jump_uid
+
+            erp5_action_list[-1]['href'] = url_template_dict["jio_search_template"] % {
+              "query": make_query({"query": sql_catalog.buildQuery(final_argument_dict).asSearchTextExpression(sql_catalog)})
+            }
+          else:
+            # XXX How to handle all custom jump actions?
+            erp5_action_list.pop(-1)
 
       if erp5_action_list:
         if len(erp5_action_list) == 1:
@@ -2365,7 +2359,9 @@ try:
 
     if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/WebPage_viewAsJio' or hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/WebPage_view':
       hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_officejs_jio_connector/WebPage_viewAsJio'
-except:
+except KeyError:
+  pass
+except AttributeError:
   pass
 if hateoas == "":
   return hateoas
