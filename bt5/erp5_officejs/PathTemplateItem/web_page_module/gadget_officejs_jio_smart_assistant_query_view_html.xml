@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -59,6 +59,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/team</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -66,11 +74,11 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/javascript</string> </value>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_ojs_panel_smart_assistant.js</string> </value>
+            <value> <string>gadget_officejs_jio_query_view.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -80,17 +88,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_panel_smart_assistant_js</string> </value>
+            <value> <string>gadget_officejs_jio_smart_assistant_query_view_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -100,7 +106,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Smart Assistant Panel JS</string> </value>
+            <value> <string>Gadget Officejs Smart Assistant Query Viewer View</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -151,7 +163,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
     <pickle>
       <tuple>
@@ -186,7 +198,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1562163551.28</float>
+                        <float>1565796736.47</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -204,7 +216,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
     <pickle>
       <tuple>
@@ -231,7 +243,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.54306.32835.10854</string> </value>
+                <value> <string>977.53611.10439.54545</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -249,7 +261,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1562160158.27</float>
+                        <float>1566050622.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -263,7 +275,7 @@
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
     <pickle>
       <tuple>
@@ -272,9 +284,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>detect_converted_file</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -290,7 +300,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>empty</string> </value>
+                <value> <string>converted</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -308,7 +318,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1562159899.76</float>
+                        <float>1565712912.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
