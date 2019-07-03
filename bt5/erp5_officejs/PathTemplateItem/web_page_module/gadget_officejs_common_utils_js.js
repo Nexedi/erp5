@@ -191,7 +191,8 @@
         form_definition,
         query_type,
         query_parent,
-        query_reference;
+        query_reference,
+        error;
       query_reference = new SimpleQuery({
         key: "reference",
         operator: "",
@@ -218,7 +219,9 @@
       return gadget.jio_allDocs({query: query})
         .push(function (data) {
           if (data.data.rows.length === 0) {
-            throw "Can not find action '" + action_reference + "' for portal type '" + portal_type + "'";
+            error = new Error("Can not find action '" + action_reference + "' for portal type '" + portal_type + "'");
+            error.status_code = 400;
+            throw error;
           }
           return gadget.jio_get(data.data.rows[0].id);
         })

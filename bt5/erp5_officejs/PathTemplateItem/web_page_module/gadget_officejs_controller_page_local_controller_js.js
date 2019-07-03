@@ -53,9 +53,12 @@
           if (jio_document.portal_type === undefined) {
             throw new Error('Can not display document: ' + options.jio_key);
           }
-        }, function () {})
-        .push(function () {
-          return gadget.getSetting('parent_portal_type');
+        }, function (error) {
+          // instaceof error is Object, so use status_code and undefined jio_key
+          if (error.status_code === 400 && !options.jio_key) {
+            return gadget.getSetting('parent_portal_type');
+          }
+          throw error;
         })
         .push(function (parent_portal_type) {
           if (jio_document) {
@@ -70,8 +73,11 @@
         })
         .push(function (result) {
           return result;
-        }, function () {
-          return gadget_utils.getFormDefinition(portal_type, default_view);
+        }, function (error) {
+          if (error.status_code === 400) {
+            return gadget_utils.getFormDefinition(portal_type, default_view);
+          }
+          throw error;
         })
         .push(function (result) {
           form_definition = result;
