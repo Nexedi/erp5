@@ -47,7 +47,6 @@ When handling form, we can expect field values to be stored in REQUEST.form in t
 -  python-object parsed from raw values under <field.id>
 """
 
-
 from ZTUtils import make_query
 import json
 from base64 import urlsafe_b64encode, urlsafe_b64decode
@@ -78,6 +77,7 @@ else:
 
 if response is None:
   response = REQUEST.RESPONSE
+
 
 def isFieldType(field, type_name):
   if field.meta_type == 'ProxyField':
@@ -966,6 +966,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       view='view'
     )
   }
+
   use_relation_form_page_template = (form.pt == "relation_form")
   if use_relation_form_page_template:
     # Provide the list of possible listboxes
@@ -1159,6 +1160,7 @@ def renderFormDefinition(form, response_dict):
 
       for field in form.get_fields_in_group(group['goid'], include_disabled=1):
         field_list.append((field.id, {'meta_type': field.meta_type}))
+
       group_list.append((group['gid'], field_list))
 
   # some forms might not have any fields so we put empty bottom group
@@ -1314,7 +1316,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
     for k, v in byteify(extra_param_json.items()):
       REQUEST.set(k, v)
-
 
     # Add a link to the portal type if possible
     if not is_portal:
@@ -1497,7 +1498,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     # XXX Custom slapos code
     ##############
     if is_site_root:
-
+  
       result_dict['default_view'] = 'view'
       REQUEST.set("X-HATEOAS-CACHE", 1)
   
@@ -1541,7 +1542,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         'method': 'POST',
         'name': 'Bulk'
       }
-
+  
       # Handle also other kind of users: instance, computer, master
       person = portal.portal_membership.getAuthenticatedMember().getUserValue()
       if person is not None and portal.portal_membership.checkPermission('View', person):
@@ -1551,9 +1552,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             "relative_url": person.getRelativeUrl(),
             "script_id": script.id
           },
-            #'_relative_url': person.getRelativeUrl()
+  #         '_relative_url': person.getRelativeUrl()
         }
-
+  
     else:
       traversed_document_portal_type = traversed_document.getPortalType()
       if traversed_document_portal_type in ("ERP5 Form", "ERP5 Report"):
