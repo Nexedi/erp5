@@ -1557,20 +1557,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           response.setHeader("Last-Modified", DateTime().rfc822())
           REQUEST.set("X-HATEOAS-CACHE", 1)
 
-        fields_raw_properties = {}
-        # check if it's the first call to calculateHateoas so nothing was rendered yet
-        if appcache and REQUEST != None and response != None:
-          for group in traversed_document.Form_getGroupTitleAndId():
-            if 'hidden' in group['gid']:
-              for field in traversed_document.get_fields_in_group(group['goid']):
-                if field.id == "gadget_field_action_js_script":
-                  fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
-              continue
-            for field in traversed_document.get_fields_in_group(group['goid']):
-              fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
-        if fields_raw_properties:
-          result_dict['fields_raw_properties'] = fields_raw_properties
-
       elif relative_url == 'portal_workflow':
         result_dict['_links']['action_worklist'] = {
           "href": url_template_dict['worklist_template'] % {
@@ -2216,7 +2202,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
   elif (mode == 'appcache'):
     ##
-    # return raw form definition
+    # return raw form definition and json structure
     # render will be done in js side
 
     # Default properties shared by all ERP5 Document and Site
@@ -2270,7 +2256,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             }
           }
         }
-        # TODO: get from this method what is needed for appcaching, and avoid all rendering stuff
+        # this gets needed form json structure: embedded; actions; links; my_form_definition field; form_id;
         renderForm(traversed_document, view_instance, embedded_dict,
                    selection_params=extra_param_json, extra_param_json=extra_param_json, appcache=True)
         result_dict['_embedded'] = {
@@ -2284,7 +2270,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     else:
       traversed_document_portal_type = traversed_document.getPortalType()
       if traversed_document_portal_type in ("ERP5 Form", "ERP5 Report"):
-        # TODO: get from this method what is needed for appcaching, and avoid all rendering stuff
+        # this gets the form fields (group_list)
         renderFormDefinition(traversed_document, result_dict)
         if response is not None:
           response.setHeader("Cache-Control", "private, max-age=1800")
@@ -2292,16 +2278,14 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           response.setHeader("Last-Modified", DateTime().rfc822())
           REQUEST.set("X-HATEOAS-CACHE", 1)
         fields_raw_properties = {}
-        # check if it's the first call to calculateHateoas so nothing was rendered yet
-        if appcache and REQUEST != None and response != None:
-          for group in traversed_document.Form_getGroupTitleAndId():
-            if 'hidden' in group['gid']:
-              for field in traversed_document.get_fields_in_group(group['goid']):
-                if field.id == "gadget_field_action_js_script":
-                  fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
-              continue
+        for group in traversed_document.Form_getGroupTitleAndId():
+          if 'hidden' in group['gid']:
             for field in traversed_document.get_fields_in_group(group['goid']):
-              fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
+              if field.id == "gadget_field_action_js_script":
+                fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
+            continue
+          for field in traversed_document.get_fields_in_group(group['goid']):
+            fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
         if fields_raw_properties:
           result_dict['fields_raw_properties'] = fields_raw_properties
 
@@ -2320,6 +2304,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           default_form_definition["fields_raw_properties"] = result_dict["fields_raw_properties"].copy()
           result_dict.pop('fields_raw_properties', None)
         result_dict["_embedded"]["_view"]["my_form_definition"]["default"] = default_form_definition
+
   return result_dict
 
 mime_type = 'application/hal+json'
