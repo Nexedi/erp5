@@ -66,9 +66,6 @@ from collections import OrderedDict
 MARKER = []
 COUNT_LIMIT = 1000
 
-# TODO replace appcache var use by (mode = 'appcache')
-appcache = True if mode == "appcache" else False
-
 if REQUEST is None:
   recursive_call = True
   REQUEST = context.REQUEST
@@ -868,7 +865,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
   return result
 
 
-def renderForm(traversed_document, form, response_dict, key_prefix=None, selection_params=None, extra_param_json=None):
+def renderForm(traversed_document, form, response_dict, key_prefix=None, selection_params=None, extra_param_json=None, appcache=False):
   """
   Render a `form` in plain python dict.
 
@@ -963,7 +960,8 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       is_portal=False,
       mode='traverse',
       restricted=1,
-      view='view'
+      view='view',
+      appcache=appcache
     )
   }
 
@@ -1205,7 +1203,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                      response=None, view=None, mode=None,
                      query=None, select_list=None, limit=None, form=None,
                      relative_url=None, restricted=None, list_method=None,
-                     default_param_json=None, form_relative_url=None, extra_param_json=None):
+                     default_param_json=None, form_relative_url=None, extra_param_json=None, appcache=False):
 
   if (not appcache) and (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
     login_relative_url = site_root.getLayoutProperty("configuration_login", default="")
@@ -2283,7 +2281,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         }
         # TODO: get from this method what is needed for appcaching, and avoid all rendering stuff
         renderForm(traversed_document, view_instance, embedded_dict,
-                   selection_params=extra_param_json, extra_param_json=extra_param_json)
+                   selection_params=extra_param_json, extra_param_json=extra_param_json, appcache=True)
         result_dict['_embedded'] = {
           '_view': embedded_dict
         }
@@ -2356,7 +2354,7 @@ hateoas = calculateHateoas(relative_url=relative_url,
                            restricted=restricted, list_method=list_method,
                            default_param_json=default_param_json,
                            form_relative_url=form_relative_url,
-                           extra_param_json=extra_param_json)
+                           extra_param_json=extra_param_json, appcache=mode == "appcache")
 
 
 # [HARDCODED] expresion string:${object_url} must be evaluated before return
