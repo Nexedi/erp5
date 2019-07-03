@@ -1,10 +1,11 @@
 from math import log
 
 result = context.getPriceParameterDict(context=movement, **kw)
-# XXX: Add "stepped_price" in calculation
-# sliced_base_price = {'price': 10.0, 'sliced_range': (1, None)}
 
 # Calculate
+#     If slice_base_price:
+#     base_price = SUM(number_of_items_in_slice * slice_base_price) for each slice
+#     Then
 #     ((base_price + SUM(additional_price) +
 #     variable_value * SUM(variable_additional_price)) *
 #     (1 - MIN(1, MAX(SUM(discount_ratio) , exclusive_discount_ratio ))) +
@@ -20,10 +21,11 @@ result = context.getPriceParameterDict(context=movement, **kw)
 # It can be seen as a way to define a pricing model that not only
 # depends on discrete variations, but also on a continuous property
 # of the object
-if result["sliced_base_price"]:
+
+if result["slice_base_price"]:
   total_price = 0.
   quantity = movement.getQuantity()
-  sliced_base_price_list = zip(result["sliced_base_price"], result["sliced_range"])
+  sliced_base_price_list = zip(result["slice_base_price"], result["slice_quantity_range"])
   for slice_price, slice_range in sliced_base_price_list:
     slice_min, slice_max = slice_range
     if slice_max is None:
