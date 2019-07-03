@@ -303,7 +303,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: ([\'sliced_base_price\', \'sliced_range\'] if here.isBasePricePerSlice() else \'base_price\')</string> </value>
+            <value> <string>python: [\'sliced_quantity_range\', \'base_unit_price\', \'base_price\']</string> </value>
         </item>
       </dictionary>
     </pickle>
