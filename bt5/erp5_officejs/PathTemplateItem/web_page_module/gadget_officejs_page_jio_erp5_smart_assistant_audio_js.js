@@ -96,7 +96,8 @@
             return gadget.jio_post({
               "title": "record_" + title,
               portal_type: portal_type,
-              parent_relative_url: parent_relative_url
+              parent_relative_url: parent_relative_url,
+              validation_state: 'draft'
             });
           }
         })
