@@ -129,6 +129,8 @@
   <td>link=${title}</td>
   <td></td>
 </tr>
-<tal:block tal:define="text_content python: '<p>This is a test too simple</p>'">
-  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/verify_ckeditor_text_content"/>
-</tal:block>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//pre[contains(text(), "This is a test too simple")]</td>
+  <td></td>
+</tr>
