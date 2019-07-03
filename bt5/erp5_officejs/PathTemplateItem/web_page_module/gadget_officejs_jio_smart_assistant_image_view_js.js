@@ -1,6 +1,6 @@
 /*global window, rJS, RSVP, jIO, URL, Blob, promiseEventListener, document*/
 /*jslint indent:2, maxlen: 80, nomen: true */
-(function (window, jIO, rJS, RSVP, URL) {
+(function (window, jIO, rJS, RSVP, URL, SimpleQuery, ComplexQuery, Query) {
   "use strict";
 
   rJS(window)
@@ -24,6 +24,7 @@
       var gadget = this,
         state = {
           title: options.doc.title,
+          validation_state: options.doc.validation_state,
           jio_key: options.jio_key
         };
       gadget.type = options.doc.type;
@@ -94,7 +95,35 @@
     })
 
     .onStateChange(function () {
-      var gadget = this;
+      var gadget = this,
+        column_list = [
+          ['agent_title', 'Title'],
+          ['description', 'Reply'],
+          ['modification_date', 'Modification Date'],
+          ['validation_state', 'Validation State']
+        ],
+        jio_key = gadget.state.jio_key,
+        portal_type = ["Query"],
+        agent_relative_url = jio_key,
+        query = "urn:jio:allDocs?query=",
+        jio_query_list = [];
+      jio_query_list.push(new SimpleQuery({
+        key: "portal_type",
+        operator: "",
+        type: "simple",
+        value: portal_type
+      }));
+      jio_query_list.push(new SimpleQuery({
+        key: "agent_relative_url",
+        operater: "",
+        type: "simple",
+        value: agent_relative_url
+      }));
+      query += Query.objectToSearchText(new ComplexQuery({
+          operator: "AND",
+          query_list: jio_query_list,
+          type: "complex"
+        }));
 
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
@@ -115,7 +144,7 @@
                   },
                   "my_image": {
                     "description": "",
-                    "title": "Change it",
+                    "title": "Re-upload",
                     "default": "",
                     "css_class": "",
                     "required": 1,
@@ -126,9 +155,20 @@
                     "capture": "camera",
                     "type": "FileField"
                   },
+                  "my_validation_state": {
+                    "description": "",
+                    "title": "State",
+                    "default": gadget.state.validation_state,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 0,
+                    "key": "validation_state",
+                    "hidden": 0,
+                    "type": "StringField"
+                  },
                   "my_image_preview": {
                     "description": "",
-                    "title": "Actually",
+                    "title": "Preview",
                     "default": gadget.state.image,
                     "css_class": "",
                     "height" : "10",
@@ -137,6 +177,23 @@
                     "key": "image_preview",
                     "hidden": 0,
                     "type": "ImageField"
+                  },
+                  "listbox": {
+                    "column_list": column_list,
+                    "show_anchor": 0,
+                    "default_params": {},
+                    "editable": 0,
+                    "editable_column_list": [],
+                    "key": "field_listbox",
+                    "lines": 5,
+                    "list_method": "portal_catalog",
+                    "query": query,
+                    "portal_type": [],
+                    "search_column_list": column_list,
+                    "sort_column_list": column_list,
+                    "sort": [['modification_date', 'descending']],
+                    "title": "Related Queries",
+                    "type": "ListBox"
                   }
                 }
               },
@@ -150,10 +207,14 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_title"], ["my_image"], ["my_image_preview"]]
+                [["my_title"], ["my_image"],
+                  ["my_validation_state"], ["my_image_preview"]]
+              ], [
+                "bottom",
+                [['listbox']]
               ]]
             }
           });
         });
     });
-}(window, jIO, rJS, RSVP, URL));
+}(window, jIO, rJS, RSVP, URL, SimpleQuery, ComplexQuery, Query));
