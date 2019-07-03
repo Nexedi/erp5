@@ -73,7 +73,9 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>image</string>
+                        <string>your_modification_date</string>
+                        <string>my_text_content</string>
+                        <string>your_validation_state</string>
                       </list>
                     </value>
                 </item>
@@ -88,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SmartAssistantImage_view</string> </value>
+            <value> <string>SmartAssistantSound_viewAsJIO</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -96,7 +98,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SmartAssistantImage_view</string> </value>
+            <value> <string>SmartAssistantSound_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -112,7 +114,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Smart Assistant Image</string> </value>
+            <value> <string>Smart Assistant Sound</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

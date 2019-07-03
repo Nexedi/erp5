@@ -73,6 +73,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_text_content</string>
                       </list>
                     </value>
                 </item>
