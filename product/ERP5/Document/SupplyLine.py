@@ -150,6 +150,18 @@ class SupplyLine(Path, Amount, XMLMatrix):
         cell.edit(sliced_quantity_range=(min_quantity, max_quantity))
       return cell
 
+    security.declareProtected(Permissions.ModifyPortalContent, 'newCell')
+    def updateCellSlicedQuantityRange(self, base_id):
+      quantity_step_list = [None] + self.getQuantityStepList(base_id) + [None]
+      for cell in self.getCellValueList():
+        if not self.isBasePricePerSlice():
+          cell.setSlicedQuantityRange(None)
+        else:
+          index = quantity_step_list.index(cell._range_criterion['quantity'][0])
+          min_quantity = quantity_step_list[index]
+          max_quantity = quantity_step_list[index+1]
+          cell.setSlicedQuantityRange((min_quantity, max_quantity))
+
     ############################################################
     # Quantity predicate API
     ############################################################
