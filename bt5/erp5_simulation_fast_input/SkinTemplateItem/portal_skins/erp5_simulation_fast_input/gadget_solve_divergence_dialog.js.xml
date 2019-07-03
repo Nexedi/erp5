@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts56910329.62</string> </value>
+            <value> <string>ts62038271.29</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -112,6 +112,10 @@ function loopEventListener(target, type, useCapture, callback) {\n
     .declareService(function () {\n
       var gadget = this;\n
       console.log("location",location);\n
+      // WARNING: This considers that the view (in this case,\n
+      // \'Delivery_solveDivergenceAction\') is at the end of the pathname\n
+      // but if there are several pages in the ListBox (not handled), this\n
+      // will not be the case...\n
       var basedir = location.pathname.split(\'/\').slice(0, -1).join(\'/\') + \'/\',\n
         divergence_choice_list = [],\n
         i,\n
@@ -124,10 +128,18 @@ function loopEventListener(target, type, useCapture, callback) {\n
         console.log("fillDialog, event", event);\n
         console.log("fillDialog, value", event.target.value);\n
         var solver_decision_uid = event.target.name.split("_").pop();\n
-        gadget.props.filling_count += 1;\n
-        var button = document.querySelector(\'#dialog_submit_button\');\n
-        button.disabled = true;\n
-        button.setAttribute(\'style\', \'visibility:hidden\');\n
+\n
+        var data_cell = event.target.parentElement.parentElement.querySelectorAll(\n
+          ".listbox-table-data-cell")[2];\n
+        // The purpose here is to not make visible the submit button until\n
+        // there is no error which should not be counted twice...\n
+        if (!data_cell.innerHTML.includes(\'ERROR\')) {\n
+          gadget.props.filling_count += 1;\n
+          var button = document.querySelector(\'#dialog_submit_button\');\n
+          button.disabled = true;\n
+          button.setAttribute(\'style\', \'visibility:hidden\');\n
+        }\n
+\n
         return new RSVP.Queue()\n
           .push(function () {\n
             return jIO.util.ajax(\n
@@ -141,14 +153,23 @@ function loopEventListener(target, type, useCapture, callback) {\n
             );\n
           })\n
           .push(function (data) {\n
-            event.target.parentElement.parentElement.querySelectorAll(\n
-              ".listbox-table-data-cell")[2].innerHTML = data.target.response;\n
+            data_cell.innerHTML = data.target.response;\n
             gadget.props.filling_count -= 1;\n
             if (gadget.props.filling_count === 0) {\n
               var button = document.querySelector(\'#dialog_submit_button\');\n
               button.disabled = false;\n
               button.setAttribute(\'style\', \'visibility:visible\');\n
             }\n
+          }, function (error) {\n
+            var error_message;\n
+            if (error.target !== undefined) {\n
+              error_message = \'<a class="error" href="\' + error.target.responseURL + \'">Request failed</a>\' +\n
+                \' (\' + error.target.status + \' \' + error.target.statusText + \')\';\n
+            }\n
+            else {\n
+              error_message = \'Request failed\';\n
+            }\n
+            data_cell.innerHTML = \'<span class="error"><b>ERROR: \' + error_message + \'</b></span>\';\n
           });\n
       }\n
 \n
@@ -178,7 +199,7 @@ function loopEventListener(target, type, useCapture, callback) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5018</int> </value>
+            <value> <int>6005</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
