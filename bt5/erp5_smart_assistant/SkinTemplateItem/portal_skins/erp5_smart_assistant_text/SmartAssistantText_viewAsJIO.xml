@@ -75,6 +75,7 @@
                         <string>my_title</string>
                         <string>my_text_content</string>
                         <string>your_modification_date</string>
+                        <string>your_validation_state</string>
                       </list>
                     </value>
                 </item>
