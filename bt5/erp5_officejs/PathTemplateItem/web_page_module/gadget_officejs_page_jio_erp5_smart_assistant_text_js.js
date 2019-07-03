@@ -60,7 +60,8 @@
               "title": title,
               "text_content": content.text_content,
               portal_type: portal_type,
-              parent_relative_url: parent_relative_url
+              parent_relative_url: parent_relative_url,
+              validation_state: 'draft'
             })
               .push(function () {
                 return gadget.notifySubmitted({"message": "Data created",
@@ -85,7 +86,7 @@
           return form_gadget.render({
             erp5_document: {
               "_embedded": {"_view": {
-                "my_content": {
+                "my_text_content": {
                   "default": "",
                   "css_class": "",
                   "required": 0,
@@ -118,7 +119,7 @@
                 [["my_description"]]
               ], [
                 "bottom",
-                [["my_content"]]
+                [["my_text_content"]]
               ]]
             }
           });
