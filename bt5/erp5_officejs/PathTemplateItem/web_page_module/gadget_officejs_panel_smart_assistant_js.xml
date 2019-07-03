@@ -59,18 +59,14 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>classification/collaborative/team</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -88,7 +84,9 @@
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -188,7 +186,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1520002302.38</float>
+                        <float>1562163551.28</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -233,7 +231,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>966.14275.9143.23296</string> </value>
+                <value> <string>976.54306.32835.10854</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -251,7 +249,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1522761698.8</float>
+                        <float>1562160158.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -274,7 +272,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -290,7 +290,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -308,7 +308,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1520001217.02</float>
+                        <float>1562159899.76</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
