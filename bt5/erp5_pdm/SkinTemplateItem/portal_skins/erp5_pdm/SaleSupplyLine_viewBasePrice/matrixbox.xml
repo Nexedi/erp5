@@ -271,10 +271,6 @@
                           <string>base_price</string>
                         </tuple>
                         <tuple>
-                          <string>sliced_range</string>
-                          <string>sliced_range</string>
-                        </tuple>
-                        <tuple>
                           <string>variation_category_list</string>
                           <string>variation_category_list</string>
                         </tuple>

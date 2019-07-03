@@ -73,7 +73,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Base Price Applies to Slice</string> </value>
+                    <value> <string>Base Price Applies to Items in Slice</string> </value>
                 </item>
               </dictionary>
             </value>
