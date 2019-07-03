@@ -1541,7 +1541,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         result_dict['_links']['me'] = {
           "href": default_document_uri_template % {
             "root_url": site_root.absolute_url(),
-            "relative_url": person.getRelativeUrl(),
+            "relative_url": person.getRelativeUrl(), 
             "script_id": script.id
           },
   #         '_relative_url': person.getRelativeUrl()
@@ -2224,12 +2224,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     result_dict['title'] = traversed_document.getTitle()
     extra_param_json = {}
 
-    # TODO: 'type' should be include outside "_links", but itrequires changes on js side rendering
     if not is_portal:
       document_type_name = traversed_document.getPortalType()
       document_type = getattr(portal.portal_types, document_type_name, None)
       if document_type is not None:
-        result_dict['_links']['type'] = {
+        result_dict['type'] = {
           "href": default_document_uri_template % {
             "root_url": site_root.absolute_url(),
             "relative_url": document_type.getRelativeUrl(),
@@ -2238,11 +2237,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           "name": Base_translateString(traversed_document.getPortalType())
         }
 
-    # TODO: 'parent' should be include outside "_links", but it requires changes on js side rendering
-    if not is_portal:
       container = traversed_document.getParentValue()
       if container != portal:
-        result_dict['_links']['parent'] = {
+        result_dict['parent'] = {
           "href": default_document_uri_template % {
             "root_url": site_root.absolute_url(),
             "relative_url": container.getRelativeUrl(),
