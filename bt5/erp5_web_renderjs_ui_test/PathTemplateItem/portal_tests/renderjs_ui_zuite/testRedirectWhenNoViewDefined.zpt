@@ -32,13 +32,13 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//select[@name='field_your_portal_type']</td>
+  <td>//select[@name='field_your_select_action']</td>
   <td>label=Sale Invoice Transaction</td>
 </tr>
 
 <tr>
   <td>select</td>
-  <td>//select[@name='field_your_portal_type']</td>
+  <td>//select[@name='field_your_select_action']</td>
   <td>label=Sale Invoice Transaction</td>
 </tr>
 

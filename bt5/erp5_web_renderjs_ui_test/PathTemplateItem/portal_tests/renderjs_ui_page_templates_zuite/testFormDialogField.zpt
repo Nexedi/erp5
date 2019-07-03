@@ -51,12 +51,12 @@
 <!-- Field are displayed -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//label[@for='field_your_portal_type' and text()='Document Type']</td>
+  <td>//label[@for='field_your_select_action' and text()='Document Type']</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_your_portal_type']//div[@data-gadget-scope='field' and @data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_field_list.html']</td>
+  <td>//div[@data-gadget-scope='field_your_select_action']//div[@data-gadget-scope='field' and @data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_field_list.html']</td>
   <td></td>
 </tr>
 <tr>
