@@ -2289,21 +2289,18 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         if fields_raw_properties:
           result_dict['fields_raw_properties'] = fields_raw_properties
 
+    # my_form_definition will be used for rendering in JS side
+    if "my_form_definition" in  result_dict["_embedded"]["_view"]:
+      default_form_definition = result_dict["_embedded"]["_view"]["_embedded"]["form_definition"].copy()
+      default_form_definition["group_list"] = result_dict["group_list"]
+      default_form_definition["_actions"] = result_dict["_embedded"]["_view"]["_actions"]
+      if result_dict["fields_raw_properties"]:
+        default_form_definition["fields_raw_properties"] = result_dict["fields_raw_properties"].copy()
+        result_dict.pop('fields_raw_properties', None)
+      result_dict["_embedded"]["_view"]["my_form_definition"]["default"] = default_form_definition
+
   else:
     raise NotImplementedError("Unsupported mode %s" % mode)
-
-  # if form has my_form_definition field, set it with fields_raw_properties and form_definition
-  # my_form_definition will be used for rendering in JS side
-  if "_embedded" in result_dict:
-    if "_view" in result_dict["_embedded"]:
-      if "my_form_definition" in  result_dict["_embedded"]["_view"]:
-        default_form_definition = result_dict["_embedded"]["_view"]["_embedded"]["form_definition"].copy()
-        default_form_definition["group_list"] = result_dict["group_list"]
-        default_form_definition["_actions"] = result_dict["_embedded"]["_view"]["_actions"]
-        if result_dict["fields_raw_properties"]:
-          default_form_definition["fields_raw_properties"] = result_dict["fields_raw_properties"].copy()
-          result_dict.pop('fields_raw_properties', None)
-        result_dict["_embedded"]["_view"]["my_form_definition"]["default"] = default_form_definition
 
   return result_dict
 
