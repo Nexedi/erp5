@@ -1,8 +1,4 @@
 Component | DefaultImage
-Internal Supply Cell | SupplyCell
 Measure Cell | Amount
 Product | DefaultImage
-Purchase Supply Cell | SupplyCell
-Sale Supply Cell | SupplyCell
 Supply Cell | Reference
-Supply Cell | SupplyCell
