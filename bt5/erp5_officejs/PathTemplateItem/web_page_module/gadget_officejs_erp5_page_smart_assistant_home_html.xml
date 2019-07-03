@@ -62,7 +62,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>contributor/person_module/1</string>
                 <string>classification/collaborative/team</string>
               </tuple>
             </value>
@@ -279,7 +278,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>967.17859.46531.61866</string> </value>
+                      <value> <string>979.64140.28065.34372</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -297,7 +296,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1525278837.04</float>
+                              <float>1574460415.05</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
