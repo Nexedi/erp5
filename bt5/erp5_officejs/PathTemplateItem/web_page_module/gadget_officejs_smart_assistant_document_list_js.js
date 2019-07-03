@@ -78,10 +78,12 @@
         .push(function (result) {
           var column_list = [
             ['title', 'Title'],
-            ['modification_date', 'Modification Date']
+            ['modification_date', 'Modification Date'],
+            ['validation_state', 'State'],
+            ['portal_type', 'Smart Assistant Type']
           ],
 
-            portal_type = result[1].split(','),
+            portal_type = ["Smart Assistant Text", "Smart Assistant Sound", "Smart Assistant Image", "Smart Assistant File" ],
             query = "urn:jio:allDocs?query=",
             i,
             jio_query_list = [];
@@ -140,7 +142,9 @@
         .push(function () {
           return RSVP.all([
             gadget.getSetting('document_title_plural'),
-            gadget.getUrlFor({command: "change", options: {"page": "ojs_smart_assistant_home"}})
+            gadget.getUrlFor({command: "change",
+                              options: {"page": "ojs_smart_assistant_home",
+                                       "extended_search": undefined}})
           ]);
         })
         .push(function (result) {
