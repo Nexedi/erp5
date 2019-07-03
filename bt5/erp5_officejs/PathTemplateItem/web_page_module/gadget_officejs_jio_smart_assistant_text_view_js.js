@@ -1,7 +1,7 @@
 /*global window, rJS, RSVP, URL,
   promiseEventListener, document*/
 /*jslint indent:2, maxlen: 80, nomen: true */
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, SimpleQuery, ComplexQuery, Query) {
   "use strict";
 
   rJS(window)
@@ -23,6 +23,9 @@
       var gadget = this,
         state = {
           title: options.doc.title,
+          agent_title: options.doc.agent_title,
+          description: options.doc.description,
+          validation_state: options.doc.validation_state,
           jio_key: options.jio_key
         };
 
@@ -85,7 +88,35 @@
     })
 
     .onStateChange(function () {
-      var gadget = this;
+      var gadget = this,
+        column_list = [
+          ['agent_title', 'Title'],
+          ['description', 'Reply'],
+          ['modification_date', 'Modification Date'],
+          ['validation_state', 'Validation State']
+        ],
+        jio_key = gadget.state.jio_key,
+        portal_type = ["Query"],
+        agent_relative_url = jio_key,
+        query = "urn:jio:allDocs?query=",
+        jio_query_list = [];
+      jio_query_list.push(new SimpleQuery({
+        key: "portal_type",
+        operator: "",
+        type: "simple",
+        value: portal_type
+      }));
+      jio_query_list.push(new SimpleQuery({
+        key: "agent_relative_url",
+        operater: "",
+        type: "simple",
+        value: agent_relative_url
+      }));
+      query += Query.objectToSearchText(new ComplexQuery({
+          operator: "AND",
+          query_list: jio_query_list,
+          type: "complex"
+        }));
 
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
@@ -111,11 +142,38 @@
                     "editable": 1,
                     "key": "text_",
                     "hidden": 0,
-                    "renderjs_extra": '{"editor": "fck_editor",' +
-                      '"maximize": "auto"}',
+                    "renderjs_extra": '{"editor": "fck_editor"}',
                     "type": "GadgetField",
                     "url": "gadget_editor.html",
                     "sandbox": "public"
+                  },
+                  "my_validation_state": {
+                    "description": "",
+                    "title": "State",
+                    "default": gadget.state.validation_state,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 0,
+                    "key": "validation_state",
+                    "hidden": 0,
+                    "type": "StringField"
+                  },
+                  "listbox": {
+                    "column_list": column_list,
+                    "show_anchor": 0,
+                    "default_params": {},
+                    "editable": 0,
+                    "editable_column_list": [],
+                    "key": "field_listbox",
+                    "lines": 5,
+                    "list_method": "portal_catalog",
+                    "query": query,
+                    "portal_type": [],
+                    "search_column_list": column_list,
+                    "sort_column_list": column_list,
+                    "sort": [['modification_date', 'descending']],
+                    "title": "Related Queries",
+                    "type": "ListBox"
                   }
                 }
               },
@@ -129,13 +187,14 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_title"]]
+                [["my_title"],
+                  ["my_validation_state"]]
               ], [
                 "bottom",
-                [["my_text"]]
+                [["listbox"], ["my_text"]]
               ]]
             }
           });
         });
     });
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, SimpleQuery, ComplexQuery, Query));

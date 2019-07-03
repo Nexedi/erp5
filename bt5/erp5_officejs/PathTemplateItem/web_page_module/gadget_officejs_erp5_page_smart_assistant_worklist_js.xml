@@ -59,22 +59,20 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>classification/collaborative/team</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_smart_assistant_image_view.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_smart_assistant_worklist.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -84,7 +82,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_smart_assistant_image_view_js</string> </value>
+            <value> <string>gadget_officejs_erp5_page_smart_assistant_worklist_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -102,13 +100,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Jio Smart Assistant Image View JS</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget Smart Assistant Worklist JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -196,7 +188,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1520441149.34</float>
+                              <float>1574265383.85</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -245,7 +237,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>980.55724.18905.19933</string> </value>
+                      <value> <string>980.59840.57186.50995</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -263,7 +255,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1577801156.98</float>
+                              <float>1578492203.79</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -324,7 +316,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1520440560.63</float>
+                              <float>1574265345.9</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
