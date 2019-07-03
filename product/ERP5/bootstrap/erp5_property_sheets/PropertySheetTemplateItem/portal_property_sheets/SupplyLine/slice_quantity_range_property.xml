@@ -33,13 +33,13 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>quantiy range of the items for which the sliced_base_price will be applied if base_price_per_sliced is True.\n
+            <value> <string>quantiy range of the items for which the slice_base_price will be applied if base_price_per_slice is True.\n
 \n
-sliced_quantity_range is a 2-tuple : (min_bound, max_bound)</string> </value>
+slice_quantity_range is a 2-tuple : (min_bound, max_bound)</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>sliced_quantity_range_property</string> </value>
+            <value> <string>slice_quantity_range_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>

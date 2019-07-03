@@ -40,7 +40,7 @@ This property is useful for the following case :\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>sliced_base_price_property</string> </value>
+            <value> <string>slice_base_price_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>
