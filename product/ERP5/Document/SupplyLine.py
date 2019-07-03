@@ -147,7 +147,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
         quantity_step_list = [None] + self.getQuantityStepList() + [None]
         min_quantity = quantity_step_list[index]
         max_quantity = quantity_step_list[index+1]
-        cell.edit(sliced_range=(min_quantity, max_quantity))
+        cell.edit(sliced_quantity_range=(min_quantity, max_quantity))
       return cell
 
     ############################################################
