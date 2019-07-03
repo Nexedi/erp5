@@ -29,7 +29,8 @@ elif doAction0 == 'template':
     redirect_url = context.absolute_url()
 else:
   redirect_url = request['ACTUAL_URL']
-  preserved_parameter_dict['portal_status_message'] = Base_translateString('Error: the action "%s" is not recognised.' % (doAction0, ))
+  preserved_parameter_dict['portal_status_message'] = 
 """
+message = Base_translateString('Error: the action "%s" is not recognised.' % (doAction0, ))
 context.REQUEST.RESPONSE.setStatus(400)
-return context.Base_renderForm(dialog_id)
+return context.Base_renderForm(dialog_id, message=message, level='error')
