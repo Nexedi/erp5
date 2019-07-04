@@ -8,6 +8,10 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Internal Supply Cell</type>
+  <workflow>supply_cell_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Internal Supply Line</type>
   <workflow>edit_workflow, reindex_object_interaction_workflow, supply_line_interaction_workflow</workflow>
  </chain>
@@ -22,6 +26,10 @@
  <chain>
   <type>Purchase Supply</type>
   <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Supply Cell</type>
+  <workflow>supply_cell_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Purchase Supply Line</type>
@@ -44,12 +52,20 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Sale Supply Cell</type>
+  <workflow>supply_cell_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Sale Supply Line</type>
   <workflow>edit_workflow, reindex_object_interaction_workflow, supply_line_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Service</type>
   <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Supply Cell</type>
+  <workflow>supply_cell_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Supply Line</type>
