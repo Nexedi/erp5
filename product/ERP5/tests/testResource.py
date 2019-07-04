@@ -1146,15 +1146,14 @@ class TestResource(ERP5TypeTestCase):
     )
     product.validate()
 
-    sale_trade_condition_module = self.portal.getDefaultModule(
-      'Sale Trade Condition'
-    )
-    sale_trade_condition = sale_trade_condition_module.newContent(
-      portal_type='Sale Trade Condition',
+    sale_supply = self.portal.getDefaultModule(
+      self.sale_supply_portal_type
+    ).newContent(
+      self.sale_supply_portal_type,
       base_price_per_slice=True,
     )
 
-    supply_line = sale_trade_condition.newContent(
+    supply_line = sale_supply.newContent(
       portal_type=self.sale_supply_line_portal_type,
       resource_value=product,
       base_unit_price=0.00001,
@@ -1165,40 +1164,40 @@ class TestResource(ERP5TypeTestCase):
     cell0 = supply_line.newContent(
       portal_type=self.sale_supply_cell_portal_type,
       id='path_0',
-      sliced_base_price=10.,
-      sliced_range=(1, 11),
+      slice_base_price=10.,
+      slice_quantity_range=(1, 11),
     )
     cell0.setCriterionPropertyList(('quantity', ))
     cell0.setCriterion('quantity', min=1, max=None)
     cell0.setMappedValuePropertyList(
-      ["sliced_base_price", "sliced_range", "base_unit_price"]
+      ["slice_base_price", "slice_quantity_range", "base_price", "base_unit_price"]
     )
 
     cell1 = supply_line.newContent(
       portal_type=self.sale_supply_cell_portal_type,
       id='path_1',
-      sliced_base_price=9.,
-      sliced_range=(11, 21),
+      slice_base_price=9.,
+      slice_quantity_range=(11, 21),
     )
     cell1.setCriterionPropertyList(('quantity', ))
     cell1.setCriterion('quantity', min=11, max=None)
     cell1.setMappedValuePropertyList(
-      ["sliced_base_price", "sliced_range", "base_unit_price"]
+      ["slice_base_price", "slice_quantity_range", "base_price", "base_unit_price"]
     )
 
     cell2 = supply_line.newContent(
       portal_type=self.sale_supply_cell_portal_type,
       id='path_2',
-      sliced_base_price=8.,
-      sliced_range=(21, None),
+      slice_base_price=8.,
+      slice_quantity_range=(21, None),
     )
     cell2.setCriterionPropertyList(('quantity', ))
     cell2.setCriterion('quantity', min=21, max=None)
     cell2.setMappedValuePropertyList(
-      ["sliced_base_price", "sliced_range", "base_unit_price"]
+      ["slice_base_price", "slice_quantity_range", "base_price", "base_unit_price"]
     )
 
-    sale_trade_condition.validate()
+    sale_supply.validate()
     self.tic()
 
     currency_module = self.portal.getDefaultModule("Currency")
@@ -1210,7 +1209,7 @@ class TestResource(ERP5TypeTestCase):
 
     sale_order = self.portal.getDefaultModule("Sale Order").newContent(
       portal_type='Sale Order',
-      specialise_value=sale_trade_condition,
+      specialise_value=sale_supply,
       resource_value=currency,
     )
 
