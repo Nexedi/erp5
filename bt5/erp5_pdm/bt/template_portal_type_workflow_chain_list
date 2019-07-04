@@ -1,5 +1,6 @@
 Component | edit_workflow
 Component | validation_workflow
+Internal Supply Cell | supply_cell_interaction_workflow
 Internal Supply Line | edit_workflow
 Internal Supply Line | reindex_object_interaction_workflow
 Internal Supply Line | supply_line_interaction_workflow
@@ -9,6 +10,7 @@ Measure | conversion_interaction_workflow
 Measure | edit_workflow
 Product | edit_workflow
 Product | validation_workflow
+Purchase Supply Cell | supply_cell_interaction_workflow
 Purchase Supply Line | edit_workflow
 Purchase Supply Line | reindex_object_interaction_workflow
 Purchase Supply Line | supply_line_interaction_workflow
@@ -21,6 +23,7 @@ Quantity Unit Conversion Group | conversion_interaction_workflow
 Quantity Unit Conversion Group | edit_workflow
 Quantity Unit Conversion Group | validation_workflow
 Resource Measures Consistency Constraint | dynamic_class_generation_interaction_workflow
+Sale Supply Cell | supply_cell_interaction_workflow
 Sale Supply Line | edit_workflow
 Sale Supply Line | reindex_object_interaction_workflow
 Sale Supply Line | supply_line_interaction_workflow
@@ -28,6 +31,7 @@ Sale Supply | edit_workflow
 Sale Supply | validation_workflow
 Service | edit_workflow
 Service | validation_workflow
+Supply Cell | supply_cell_interaction_workflow
 Supply Line | edit_workflow
 Supply Line | reindex_object_interaction_workflow
 Supply Line | supply_line_interaction_workflow
