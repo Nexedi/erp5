@@ -147,20 +147,26 @@ class SupplyLine(Path, Amount, XMLMatrix):
         quantity_step_list = [None] + self.getQuantityStepList() + [None]
         min_quantity = quantity_step_list[index]
         max_quantity = quantity_step_list[index+1]
-        cell.edit(sliced_quantity_range=(min_quantity, max_quantity))
+        cell.setSliceQuantityRange((min_quantity, max_quantity))
       return cell
 
     security.declareProtected(Permissions.ModifyPortalContent, 'newCell')
-    def updateCellSlicedQuantityRange(self, base_id):
+    def updateCellSliceParameterList(self, base_id):
       quantity_step_list = [None] + self.getQuantityStepList(base_id) + [None]
       for cell in self.getCellValueList():
         if not self.isBasePricePerSlice():
-          cell.setSlicedQuantityRange(None)
+          cell.setSliceQuantityRange(None)
+          cell.setSliceBasePrice(None)
         else:
-          index = quantity_step_list.index(cell._range_criterion['quantity'][0])
+          try:
+            index = quantity_step_list.index(cell._range_criterion['quantity'][0])
+          except KeyError:
+            # _range_criterion is set to {} if criterion is None
+            index = 0
           min_quantity = quantity_step_list[index]
           max_quantity = quantity_step_list[index+1]
-          cell.setSlicedQuantityRange((min_quantity, max_quantity))
+          cell.setSliceQuantityRange((min_quantity, max_quantity))
+          cell.setSliceBasePrice(cell.getBasePrice())
 
     ############################################################
     # Quantity predicate API
@@ -172,7 +178,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
         Return predicate id related to a price parameter.
       """
       predicate_id_start_with = "quantity_range_"
-      if price_parameter not in ("base_price", "sliced_base_price"):
+      if price_parameter not in ("base_price", "slice_base_price"):
         predicate_id_start_with = "%s_%s" % \
             (price_parameter, predicate_id_start_with)
       # XXX Hardcoded portal type name
@@ -202,7 +208,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
       """
       # We need to keep compatibility with generated accessor
       price_parameter = kw.get('price_parameter', "base_price")
-      if price_parameter in ("base_price", "sliced_base_price"):
+      if price_parameter in ("base_price", "slice_base_price"):
         method_name = "_baseGetQuantityStepList"
       else:
         method_name = 'get%sList' % \
@@ -227,7 +233,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
         # With this script, we can change the title of the predicate
         script = getattr(self, 'SupplyLine_getTitle', None)
         predicate_id_start_with = "quantity_range"
-        if price_parameter not in ("base_price", "sliced_base_price"):
+        if price_parameter not in ("base_price", "slice_base_price"):
           predicate_id_start_with = "%s_%s" % \
               (price_parameter, predicate_id_start_with)
         for i in range(0, len(quantity_step_list)-1):
@@ -236,12 +242,11 @@ class SupplyLine(Path, Amount, XMLMatrix):
           # XXX Hardcoded portal type name
           p = self.newContent(id='%s_%s' % (predicate_id_start_with, str(i)),
                               portal_type='Predicate', int_index=i+1)
-          self.log('Nicolas, creating predicate %s' % p.getId())
           p.setCriterionPropertyList(('quantity', ))
           p.setCriterion(
             'quantity',
             min=min_quantity,
-            max=(None if price_parameter == 'sliced_base_price' else max_quantity)
+            max=(None if price_parameter == 'slice_base_price' else max_quantity)
           )
           if script is not None:
             title = script(min=min_quantity, max=max_quantity)

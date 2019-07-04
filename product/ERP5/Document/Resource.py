@@ -712,8 +712,8 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
         'non_discountable_additional_price': [],
         'priced_quantity': None,
         'base_unit_price': None,
-        'sliced_base_price_list': [],
-        'sliced_quantity_range_list': [],
+        'slice_base_price': [],
+        'slice_quantity_range': [],
       }
       if mapped_value is None:
         return price_parameter_dict
