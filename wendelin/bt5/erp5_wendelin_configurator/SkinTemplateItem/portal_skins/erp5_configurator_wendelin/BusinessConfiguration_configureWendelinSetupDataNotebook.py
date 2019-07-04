@@ -18,3 +18,10 @@ if kw.get('setup_data_lake'):
     update_catalog=False,
     install_dependency=True,
   )
+  configuration_save.addConfigurationItem(
+    "Standard BT5 Configurator Item",
+    title='erp5_wendelin_data_lake_ui', 
+    bt5_id='erp5_wendelin_data_lake_ui',
+    update_catalog=False,
+    install_dependency=True,
+  )
