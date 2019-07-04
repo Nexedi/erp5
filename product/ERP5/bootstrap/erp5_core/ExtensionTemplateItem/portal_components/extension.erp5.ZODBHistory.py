@@ -117,7 +117,7 @@ def getChangeHistoryList(document, size=50, attribute_name=None):
     if previous_state is None:
       previous_state = {}
     for key in current_state:
-      if key.startswith('_') or key == 'workflow_history' or key == 'categories':
+      if key == 'workflow_history' or key == 'categories':
         continue
       if previous_state.get(key) != current_state[key]:
         changes[key] = current_state[key]
