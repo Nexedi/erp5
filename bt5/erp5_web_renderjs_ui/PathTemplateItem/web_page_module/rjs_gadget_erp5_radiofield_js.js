@@ -29,7 +29,8 @@
   }
 
   rJS(window)
-
+    .declareAcquiredMethod("notifyValid", "notifyValid")
+    .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
@@ -151,11 +152,20 @@
     }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
-      var name = this.state.name;
+      var name = this.state.name,
+          gadget = this,
+          empty;
       if (this.state.editable && this.state.required) {
         return this.getContent()
           .push(function (result) {
-            return !result[name];
+            empty = !result[name];
+            if (empty) {
+              return gadget.notifyInvalid("Please fill out this field.");
+            }
+            return gadget.notifyValid();
+          })
+          .push(function () {
+            return !empty;
           });
       }
       return true;
