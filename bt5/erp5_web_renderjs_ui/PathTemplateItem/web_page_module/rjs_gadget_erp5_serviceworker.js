@@ -243,24 +243,22 @@
       client_id = event.clientId.toString(),
       // CACHE_MAP is a temprary data store.
       // This should be kept until service worker stops.
-      cache_key = CACHE_MAP[client_id],
+      cache_key,
       erp5js_cache;
     url.hash = '';
+    if (client_id) {
+      // client_id is null when it is the first request, in other words
+      // if request is navigate mode. Since major web browsers already
+      // implement client_id, if client_is is null, let's use the latest cache
+      // and don't get cache_key from CACHE_MAP and erp5js_cache.
+      cache_key = CACHE_MAP[client_id];
+    }
     console.log("Client Id = " + client_id);
 
     if (cache_key) {
       console.log("cache_key from CACHE_MAP " + cache_key);
     }
 
-    if (!client_id) {
-      // If Client is not supported by web browser,
-      // use the CACHE_NAME that is defined in this service worker.
-      // It means that even if there is a new Cache, but web browser
-      // uses the Cache that was installed by this service worker.
-      cache_key = CACHE_NAME;
-      CACHE_MAP[client_id] = cache_key;
-      console.log("cache_key from Service Worker " + cache_key);
-    }
     if ((event.request.method !== 'GET') ||
         (required_url_list.indexOf(url.toString()) === -1)) {
       // Try not to use the untrustable fetch function
@@ -300,14 +298,20 @@
                 console.log("KEYS = " + keys);
                 if (keys.length) {
                   cache_key = keys.sort().reverse()[0];
-                  CACHE_MAP[client_id] = cache_key;
+                  if (client_id) {
+                    CACHE_MAP[client_id] = cache_key;
+                  }
                 } else {
                   cache_key = CACHE_NAME;
-                  CACHE_MAP[client_id] = CACHE_NAME;
+                  if (client_id) {
+                    CACHE_MAP[client_id] = CACHE_NAME;
+                  }
                 }
                 // Save the associated cache_key in a persistent database because service
                 // worker forget everything when it stops.
-                erp5js_cache.put(client_id, new Response(null, {"statusText": cache_key}));
+                if (client_id) {
+                  erp5js_cache.put(client_id, new Response(null, {"statusText": cache_key}));
+                }
               });
           }
         })
@@ -319,6 +323,7 @@
           // Don't give request object itself. Firefox's Cache Storage
           // does not work properly when VARY contains Accept-Language.
           // Give URL string instead, then cache.match works on both Firefox and Chrome.
+          console.log("MATCH " + cache_key + " " + url);
           return cache.match(event.request.url);
         })
         .then(function (response) {
