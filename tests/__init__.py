@@ -39,6 +39,9 @@ class _ERP5(SavedTestSuite):
         # glob('%s/product/Formulator/tests/test*.py' % path) +
         # glob('%s/product/ERP5Form/tests/test*.py' % path) +
         # ['%s/product/ERP5/tests/testXHTML.py' % path] +
+        ['%s/product/ERP5/tests/testQueryModule.py' % path] +
+        ['%s/product/ERP5/tests/testERP5Core.py' % path] +
+        glob('%s/bt5/erp5_monaco_editor_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # ['%s/product/ERP5Type/tests/testFunctionalCore.py' % path] +
         # ['%s/product/ERP5Type/tests/testFunctionalAnonymousSelection.py' % path] +
         # glob('%s/bt5/erp5_web/TestTemplateItem/portal_components/test.*.test*.py' % path) +
