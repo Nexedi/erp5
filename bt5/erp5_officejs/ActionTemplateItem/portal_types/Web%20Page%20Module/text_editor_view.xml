@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jio_view</string> </value>
+            <value> <string>text_editor_view</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -57,12 +57,8 @@
             </value>
         </item>
         <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Action Information</string> </value>
-        </item>
-        <item>
             <key> <string>priority</string> </key>
-            <value> <float>40.0</float> </value>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

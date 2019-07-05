@@ -385,6 +385,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_hide_header_add_button</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -424,7 +434,6 @@
             <value>
               <tuple>
                 <string>Web Page | text_editor_view</string>
-                <string>Web Page | jio_view</string>
               </tuple>
             </value>
         </item>
@@ -470,6 +479,10 @@
         </item>
         <item>
             <key> <string>configuration_header_jump_button</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>configuration_hide_header_add_button</string> </key>
             <value> <int>0</int> </value>
         </item>
         <item>
@@ -773,7 +786,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.31037.397.45636</string> </value>
+                <value> <string>976.57117.42638.37239</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -791,7 +804,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1560857896.33</float>
+                        <float>1562329188.33</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
