@@ -3,7 +3,7 @@
 # the way to use it is to wget it and then simply run it.
 # it requires socat command
 
-ZOPE_PIDS="$(slapos node | grep 'zope\|jupyter-lab' | awk '{print substr($0, 91, 5);}')"
+ZOPE_PIDS="$(slapos node | grep 'zope\|jupyter-lab' | awk '{print substr($0, 92, 5);}')"
 LOCAL_IPv4="$(/sbin/ifconfig ens3 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')"
 
 port=20000
@@ -16,7 +16,7 @@ for pid in $ZOPE_PIDS;
   echo $pid, $ip_port, $port
 
   # socat
-  if [[ $ip_port == 2001* ]];
+  if [[ $ip_port == 2001* ]] || [[ $ip_port == fd46*]];
   then
     ipv6_ip=${ip_port:0:10}
     ipv6_port=${ip_port:11:15}
