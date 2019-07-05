@@ -1556,7 +1556,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           response.setHeader("Vary", "Cookie,Authorization,Accept-Encoding")
           response.setHeader("Last-Modified", DateTime().rfc822())
           REQUEST.set("X-HATEOAS-CACHE", 1)
-
       elif relative_url == 'portal_workflow':
         result_dict['_links']['action_worklist'] = {
           "href": url_template_dict['worklist_template'] % {
@@ -2329,19 +2328,6 @@ hateoas = calculateHateoas(relative_url=relative_url,
                            form_relative_url=form_relative_url,
                            extra_param_json=extra_param_json, appcache=mode == "appcache")
 
-
-# [HARDCODED] expresion string:${object_url} must be evaluated before return
-try:
-  if "_embedded" in hateoas.keys() and "_view" in hateoas["_embedded"].keys() and "my_action" in hateoas["_embedded"]["_view"].keys():
-    if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/HTMLPost_viewAsJio':
-      hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_officejs_jio_connector/HTMLPost_viewAsJio'
-
-    if hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/WebPage_viewAsJio' or hateoas["_embedded"]["_view"]["my_action"]["default"] == 'string:${object_url}/WebPage_view':
-      hateoas["_embedded"]["_view"]["my_action"]["default"] = 'portal_skins/erp5_officejs_jio_connector/WebPage_viewAsJio'
-except KeyError:
-  pass
-except AttributeError:
-  pass
 if hateoas == "":
   return hateoas
 else:
