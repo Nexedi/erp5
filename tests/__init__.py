@@ -1,13 +1,13 @@
 from glob import glob
 import os, subprocess, re
 # test_suite is provided by 'run_test_suite'
-from test_suite import SavedTestSuite
+from test_suite import SavedTestSuite, ERP5TypeTestSuite
 import sys
 
 HERE = os.path.dirname(__file__)
 
-class _ERP5(SavedTestSuite):
-  _saved_test_id = "erp5_web_renderjs_ui_test:testFunctionalRJSInterfaceValidator"
+class _ERP5(ERP5TypeTestSuite):
+  # _saved_test_id = "erp5_web_renderjs_ui_test:testFunctionalRJSInterfaceValidator"
   realtime_output = False
   enabled_product_list = ('CMFActivity', 'CMFCategory', 'ERP5', 'ERP5Catalog',
                           'ERP5eGovSecurity', 'ERP5Form',
