@@ -750,6 +750,28 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
   @simulate('Base_getRequestHeader', '*args, **kwargs',
             'return "application/hal+json"')
   @changeSkin('Hal')
+  def test_getHateoasDocument_base_domain_view(self):
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url='portal_domains/foo_domain', view="view")
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['list_method_template'],
+                     '%s/web_site_module/hateoas/ERP5Document_getHateoas?mode=search&relative_url=portal_domains%%2Ffoo_domain&form_relative_url=portal_skins/erp5_core/BaseDomain_view/listbox&list_method=objectValues&extra_param_json=eyJmb3JtX2lkIjogIkJhc2VEb21haW5fdmlldyJ9&default_param_json=eyJjaGVja2VkX3Blcm1pc3Npb24iOiAiVmlldyIsICJpZ25vcmVfdW5rbm93bl9jb2x1bW5zIjogdHJ1ZX0={&query,select_list*,limit*,group_by*,sort_on*,local_roles*,selection_domain*}' % self.portal.absolute_url())
+
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['href'], 'urn:jio:get:portal_domains/foo_domain')
+
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['self']['href'], "%s/portal_domains/foo_domain/BaseDomain_view" %
+                                                                                    self.portal.absolute_url())
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
   def test_getHateoasDocument_listbox_vs_relation_inconsistency(self):
     """Purpose of this test is to point to inconsistencies in search-enabled field rendering.
 
