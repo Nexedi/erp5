@@ -264,6 +264,12 @@ class DataBucketStream(Document):
     """
     key = self._long_index_tree[index]
     return self.getBucketByKey(key).value
+
+  def getKeyByIndex(self, index):
+    """
+      Get the bucket key by a given index
+    """
+    return self._long_index_tree[index]
     
   def hasBucketKey(self, key):
     """
