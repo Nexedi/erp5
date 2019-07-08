@@ -66,9 +66,14 @@
     /*jslint nomen: true*/
     if (raw_dict.hasOwnProperty("_embedded") && raw_dict._embedded.hasOwnProperty("_view")) {
       raw_fields = raw_dict._embedded._view;
-      type = raw_dict.type.name;
-      parent = raw_dict.parent.name;
-      /*jslint nomen: false*/
+      //TODO: unify structure between modes (traverse & appcache)
+      if (raw_dict._debug == "traverse") {
+        type = raw_dict._links.type.name;
+        parent = raw_dict._links.parent.name;
+      } else {
+        type = raw_dict.type.name;
+        parent = raw_dict.parent.name;
+      }
       return_dict.parent_relative_url = "portal_types/" + parent;
       return_dict.portal_type = type;
       for (field_key in raw_fields) {
