@@ -131,6 +131,7 @@
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getFormContent", "getFormContent")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod("translate", "translate")
     // .declareAcquiredMethod("addRelationInput", "addRelationInput")
 
     /////////////////////////////////////////////////////////////////
@@ -494,12 +495,17 @@
     }, true, false)
 
     .declareMethod('checkValidity', function () {
+      var gadget = this;
+
       if ((this.state.value_text) && (
           (this.state.value_relative_url === null) &&
             (this.state.value_uid === null) &&
             (this.state.value_portal_type === null)
         )) {
-        return this.notifyInvalid("No such document was found")
+        return gadget.translate("No such document was found")
+          .push(function (error_message) {
+            return gadget.notifyInvalid(error_message);
+          })
           .push(function () {
             return false;
           });

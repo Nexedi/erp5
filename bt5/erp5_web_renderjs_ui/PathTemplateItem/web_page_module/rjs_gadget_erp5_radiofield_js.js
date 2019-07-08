@@ -31,6 +31,7 @@
   rJS(window)
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
+    .declareAcquiredMethod("translate", "translate")
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
@@ -153,14 +154,22 @@
 
     .declareMethod('checkValidity', function () {
       var name = this.state.name,
-          gadget = this,
-          empty;
+        gadget = this,
+        empty;
       if (this.state.editable && this.state.required) {
-        return this.getContent()
-          .push(function (result) {
-            empty = !result[name];
+        return new RSVP.Queue()
+          .push(function () {
+            return RSVP.all([
+              gadget.getContent(),
+              gadget.translate("Input is required but no input given.")
+            ]);
+          })
+          .push(function (all_result) {
+            var content = all_result[0],
+              error_message = all_result[1];
+            empty = !content[name];
             if (empty) {
-              return gadget.notifyInvalid("Please fill out this field.");
+              return gadget.notifyInvalid(error_message);
             }
             return gadget.notifyValid();
           })

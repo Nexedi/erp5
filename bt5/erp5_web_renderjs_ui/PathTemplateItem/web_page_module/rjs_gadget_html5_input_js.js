@@ -17,7 +17,7 @@
   }
 
   rJS(window)
-
+    .declareAcquiredMethod("translate", "translate")
     .declareMethod('render', function render(options) {
       return this.changeState({
         value: getFirstNonEmpty(options.value, ""),
@@ -192,7 +192,10 @@
               if (value) {
                 date = Date.parse(value);
                 if (isNaN(date)) {
-                  return gadget.notifyInvalid("Invalid DateTime")
+                  return gadget.translate("Invalid DateTime")
+                    .push(function (error_message) {
+                      return gadget.notifyInvalid(error_message);
+                    })
                     .push(function () {
                       return false;
                     });
