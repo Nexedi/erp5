@@ -209,7 +209,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>WARNING: This exposes ERP5 to remote code execution and should be used carefully. Please note that still proper authentication is needed for remote code execution.</string> </value>
+                    <value> <string>WARNING: Setup of Data Notebook module for Jupyter integration exposes ERP5 to remote code execution and should be used carefully. Please note that still proper authentication is needed for remote code execution.</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
