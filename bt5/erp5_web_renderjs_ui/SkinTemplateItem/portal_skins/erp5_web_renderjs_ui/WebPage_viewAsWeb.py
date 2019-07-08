@@ -51,6 +51,7 @@ else:
   # Only fetch code (html, js, css, image) and data from this ERP5, to prevent any data leak as the web site do not control the gadget's code
   response.setHeader("Content-Security-Policy", content_security_policy)
 
-  response.setHeader('Content-Type', web_page.getContentType('text/html'))
+  response.setHeader('Content-Type', '%s; charset=utf-8' % web_page.getContentType('text/html'))
+
 
 return web_content
