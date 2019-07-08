@@ -536,7 +536,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     }
 
     result.update({
-      "url": traversed_document.getRelativeUrl(),
+      "url": getRealRelativeUrl(traversed_document),
       "translated_portal_types": translated_portal_type,
       "portal_types": portal_type_list,
       "query": query,
@@ -547,7 +547,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
       "search_view": url_template_dict['traverse_generator_action'] % {
         "root_url": site_root.absolute_url(),
         "script_id": script.id,
-        "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
+        "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
         "view": "Base_viewRelatedObjectList",
         "extra_param_json": urlsafe_b64encode(
           json.dumps(ensureSerializable({
@@ -671,7 +671,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
       list_method_custom = url_template_dict["custom_search_template"] % {
         "root_url": site_root.absolute_url(),
         "script_id": script.id,
-        "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
+        "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
         "form_relative_url": "%s/%s" % (getFormRelativeUrl(form), field.id),
         "list_method": list_method_name,
         "default_param_json": urlsafe_b64encode(
@@ -860,7 +860,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     response_dict['_actions'] = {
       'put': {
         "href": url_template_dict["form_action"] % {
-          "traversed_document_url": site_root.absolute_url() + "/" + traversed_document.getRelativeUrl(),
+          "traversed_document_url": site_root.absolute_url() + "/" + getRealRelativeUrl(traversed_document),
           "action_id": action_to_call
         },
         "action": form.action,
@@ -886,10 +886,10 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
   response_dict['_links']['traversed_document'] = {
     "href": default_document_uri_template % {
       "root_url": site_root.absolute_url(),
-      "relative_url": traversed_document.getRelativeUrl(),
+      "relative_url": getRealRelativeUrl(traversed_document),
       "script_id": script.id
     },
-    "name": traversed_document.getRelativeUrl(),
+    "name": getRealRelativeUrl(traversed_document),
     "title": traversed_document.getTitle()
   }
 
@@ -929,7 +929,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       "items": [(Base_translateString(y), url_template_dict['traverse_generator_action'] % {
         "root_url": site_root.absolute_url(),
         "script_id": script.id,
-        "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
+        "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
         "view": "Base_viewRelatedObjectList",
         "extra_param_json": urlsafe_b64encode(
           json.dumps(ensureSerializable({
@@ -952,7 +952,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       response_dict["proxy_form_id_list"]["default"] = url_template_dict['traverse_generator_action'] % {
         "root_url": site_root.absolute_url(),
         "script_id": script.id,
-        "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
+        "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
         "view": "Base_viewRelatedObjectList",
         "extra_param_json": urlsafe_b64encode(
           json.dumps(ensureSerializable({
@@ -1307,7 +1307,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     if view and (view != 'view') and (current_action.get('view_id', None) is None):
       # XXX Allow to directly render a form
       current_action['view_id'] = view
-      current_action['url'] = '%s/%s' % (traversed_document.getRelativeUrl(), view)
+      current_action['url'] = '%s/%s' % (getRealRelativeUrl(traversed_document), view)
       current_action['params'] = {}
 
     # If we have current action definition we are able to render embedded view
@@ -1395,7 +1395,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           erp5_action_list[-1]['href'] = url_template_dict[url_template_key] % {
                 "root_url": site_root.absolute_url(),
                 "script_id": script.id,                                   # this script (ERP5Document_getHateoas)
-                "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
+                "relative_url": getRealRelativeUrl(traversed_document).replace("/", "%2F"),
                 "view": erp5_action_list[-1]['name'],
                 "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
               }
@@ -1821,7 +1821,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # JIO requires every item to have _links.self.href so it can construct
         # links to the document. Here we have a object in RAM (which should
         # never happen!) thus we provide temporary UID
-        brain_relative_url = "{}/{}".format(traversed_document.getRelativeUrl(), brain_uid)
+        brain_relative_url = "{}/{}".format(getRealRelativeUrl(traversed_document), brain_uid)
       else:
         brain_uid = brain.uid
         brain_relative_url = getRealRelativeUrl(brain_document)
