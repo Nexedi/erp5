@@ -850,7 +850,8 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     action_to_call = "Base_callDialogMethod"
   else:
     action_to_call = form.action
-  if (action_to_call == 'Base_edit') and (not portal.portal_membership.checkPermission('Modify portal content', traversed_document)):
+  if (not action_to_call) or \
+     ((action_to_call == 'Base_edit') and (not portal.portal_membership.checkPermission('Modify portal content', traversed_document))):
     # prevent allowing editing if user doesn't have permission
     include_action = False
 
