@@ -116,6 +116,8 @@
             <value>
               <tuple>
                 <string>resource/workflow_module/erp5_wendelin_workflow</string>
+                <string>current_state/workflow_module/erp5_wendelin_workflow/63</string>
+                <string>specialise/portal_templates/47</string>
               </tuple>
             </value>
         </item>
