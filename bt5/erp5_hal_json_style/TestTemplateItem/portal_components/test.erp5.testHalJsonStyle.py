@@ -1188,6 +1188,40 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['group_list'][0][1][0], ['my_id', {'meta_type': 'ProxyField'}])
     self.assertEqual(result_dict['_debug'], "traverse")
 
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoasForm_no_pt_action(self):
+    document = self._makeDocument()
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="traverse",
+      relative_url=document.getRelativeUrl(),
+      view="view_simple_graph"
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+
+    self.assertEqual(result_dict['title'].encode('UTF-8'), document.getTitle())
+    self.assertEqual(
+      result_dict['_embedded']['_view']['_embedded']['form_definition']['pt'],
+      'form_view'
+    )
+    self.assertEqual(
+      result_dict['_embedded']['_view']['_embedded']['form_definition']['action'],
+      ''
+    )
+
+    self.assertTrue('_actions' not in result_dict['_embedded']['_view'])
+
+
 
 class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
 
