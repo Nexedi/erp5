@@ -115,16 +115,15 @@ CACHE MANIFEST\n
 # generated on Thu, 14 Jan 2019 11:55:33 +0000\n
 CACHE:\n
 \n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_hal_json_style%2FBase_viewNewContentDialog&view=jio_view\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_hal_json_style%2FBase_viewNewContentDialog&view=definition_view\n
 \n
-#text editor\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module&view=view\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module%2F4&view=view\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPageModule_viewWebPageListAsJio&view=jio_view\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page&view=view\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F9&view=view\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F10&view=view\n
-hateoas/ERP5Document_getHateoas?mode=appcache&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPage_viewAsTextDocument&view=jio_view\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module&view=definition_view\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module%2F4&view=definition_view\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPageModule_viewWebPageListAsJio&view=definition_view\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page&view=definition_view\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F9&view=definition_view\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F10&view=definition_view\n
+hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPage_viewAsTextDocument&view=definition_view\n
 \n
 NETWORK:\n
 *
@@ -270,7 +269,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.57227.25553.20036</string> </value>
+                <value> <string>976.63059.54000.34389</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -288,7 +287,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1562527641.88</float>
+                        <float>1562686825.95</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
