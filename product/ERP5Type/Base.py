@@ -755,6 +755,14 @@ class Base( CopyContainer,
   aq_method_generating = []
   aq_portal_type = {}
   aq_related_generated = 0
+  # These sets are generated when dynamically making a portal type class to
+  # short-cut guarded_getattr in edit/getProperty. For classes that are not
+  # dynamically generated from portal type, we always check security.
+  _restricted_getter_set = _restricted_setter_set = type(
+      'infinite set',
+      (set, ),
+      {'__contains__': lambda *args: True},
+  )()
   # Only generateIdList may look at this property. Anything else is unsafe.
   _id_generator_state = None
 
@@ -1222,7 +1230,15 @@ class Base( CopyContainer,
   def _getProperty(self, key, d=_MARKER, restricted=False, **kw):
     __traceback_info__ = (key,)
     accessor_name = 'get' + UpperCase(key)
-    _getattr = guarded_getattr if restricted else getattr
+
+    # for restricted properties (ie. properties protected with another permission
+    # that AccessContentsInformation, which was already checked when calling this
+    # getProperty), we use guarded_getattr, other we use a simple getattr that
+    # is slightly faster.
+    _getattr = getattr
+    if restricted and accessor_name in self.__class__._restricted_getter_set:
+      _getattr = guarded_getattr
+
     aq_self = aq_base(self)
     if getattr(aq_self, accessor_name, None) is not None:
       try:
@@ -1470,14 +1486,8 @@ class Base( CopyContainer,
     unordered_key_list = [k for k in key_list if k not in edit_order]
     ordered_key_list = [k for k in edit_order if k in key_list]
     if restricted:
-      # retrieve list of accessors which doesn't use default permissions
-      restricted_method_set = {method
-        for ancestor in self.__class__.mro()
-        for permissions in getattr(ancestor, '__ac_permissions__', ())
-        if permissions[0] not in ('Access contents information',
-                                  'Modify portal content')
-        for method in permissions[1]
-        if method.startswith('set')}
+      # accessors which doesn't use default permissions
+      restricted_method_set = self.__class__._restricted_setter_set
     else:
       restricted_method_set = ()
 
@@ -1512,7 +1522,7 @@ class Base( CopyContainer,
           accessor_name = 'set' + UpperCase(key)
           if accessor_name in restricted_method_set:
             # will raise Unauthorized when not allowed
-            guarded_getattr(self, accessor_name)
+            guarded_getattr(self, accessor_name, None)
         modified_property_dict[key] = old_value
         if key != 'id':
           modified_object_list = _setProperty(key, kw[key])
@@ -3642,3 +3652,26 @@ class TempBase(Base):
 # allow_class(TempBase) in ERP5Type/Document/__init__.py will trample our
 # ClassSecurityInfo with one that doesn't declare our public methods
 InitializeClass(TempBase)
+
+# TempBase is not a dynamic class, so it does not get _restricted_getter_set
+# and _restricted_setter_set initialized ( this is only about
+# Products.ERP5Type.Document.newTempBase , other temp objects are initialized ).
+# Because TempBase.edit is public there are existing cases in ERP5 code base
+# where TempBase.edit is called on documents for which current user does not have
+# modify portal content permission. If we use the default behavior from Base which
+# is to check security for everything, some usages starts to raise Unauthorized.
+# Also, these calls becomes slower and the typical use case is to build a list
+# of temp objects for a listbox, so we'd like to keep this fast.
+TempBase._restricted_setter_set = {
+    method for ancestor in TempBase.mro()
+    for permissions in getattr(ancestor, '__ac_permissions__', ())
+    if permissions[0] not in (
+        'Access contents information', 'Modify portal content')
+    for method in permissions[1] if method.startswith('set')
+}
+TempBase._restricted_getter_set = {
+    method for ancestor in TempBase.mro()
+    for permissions in getattr(ancestor, '__ac_permissions__', ())
+    if permissions[0] not in ('Access contents information',)
+    for method in permissions[1] if method.startswith('get')
+}
