@@ -31,6 +31,7 @@ from time import time
 import gc
 import subprocess
 
+from zExceptions import Unauthorized
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
@@ -368,3 +369,75 @@ class TestPerformance(TestPerformanceMixin):
               MIN_OBJECT_MANY_LINES_VIEW,
               req_time,
               MAX_OBJECT_MANY_LINES_VIEW))
+
+
+class TestPropertyPerformance(TestPerformanceMixin):
+  def afterSetUp(self):
+    super(TestPerformanceMixin, self).afterSetUp()
+    self.foo = self.portal.foo_module.newContent(
+        portal_type='Foo',
+        title='Foo Test',
+        protected_property='Restricted Property',
+    )
+
+    # we will run the test as anonymous user. Setup permissions so that anymous can
+    # get and set all properties, except `protected_property` (unless test change to another user)
+    for permission in ('View', 'Access contents information', 'Modify portal content'):
+      self.foo.manage_permission(permission, ['Anonymous'], 1)
+
+    self.tic()
+    self.logout()
+
+  def _benchmark(self, nb_iterations, min_time, max_time):
+    def decorated(f):
+      before = time()
+      for i in xrange(nb_iterations):
+        f(i)
+      after = time()
+      total_time = (after - before) / 100.
+
+      print ("time %s.%s %.4f < %.4f < %.4f\n" % \
+              ( self.id(),
+                f.__doc__ or f.__name__,
+                min_time,
+                total_time,
+                max_time ))
+      if PROFILE:
+        self.profile(f)
+      if DO_TEST:
+        self.assertTrue(
+            min_time < total_time < max_time,
+            '%.4f < %.4f < %.4f' %
+            (min_time, total_time, max_time))
+    return decorated
+
+  def test_getProperty_protected_property_refused(self):
+    getProperty = self.foo.getProperty
+    self.assertRaises(Unauthorized, getProperty, 'protected_property')
+
+    @self._benchmark(100000, 0.0001, 1)
+    def getPropertyWithRestrictedPropertyRefused(_):
+      getProperty('protected_property', checked_permission='Access contents information')
+
+  def test_getProperty_protected_property_allowed(self):
+    getProperty = self.foo.getProperty
+    self.login()
+    @self._benchmark(100000, 0.0001, 1)
+    def getPropertyWithRestrictedPropertyAllowed(_):
+      getProperty('protected_property', checked_permission='Access contents information')
+
+  def test_getProperty_simple_property(self):
+    getProperty = self.foo.getProperty
+    @self._benchmark(100000, 0.0001, 1)
+    def getPropertyWithSimpleProperty(_):
+      getProperty('title', checked_permission='Access contents information')
+
+  def test_edit_restricted_properties(self):
+    _edit = self.foo.edit
+    self.login()
+    @self._benchmark(10000, 0.0001, 1)
+    def edit(i):
+      _edit(
+          title=str(i),
+          protected_property=str(i)
+      )
