@@ -303,6 +303,10 @@ def cartesianProduct(list_of_list):
       append([v] + p)
   return result
 
+# Emulate an infinite-set, ie. returning containing all objects.
+# At this point we don't implement full API compatibility with set.
+INFINITE_SET = type('INFINITE_SET', (object,), {'__contains__': lambda *args: True})()
+
 # Some list operations
 def keepIn(value_list, filter_list):
   # XXX this is [x for x in value_list if x in filter_list]
