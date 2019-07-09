@@ -1404,7 +1404,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # thus we send extra_param_json (=rjs way of passing parameters to REQUEST) as
         # selection_params so they get into callable's **kw.
         renderForm(traversed_document, view_instance, embedded_dict,
-                   selection_params=extra_param_json, extra_param_json=extra_param_json)
+                   selection_params=extra_param_json, extra_param_json=extra_param_json, appcache=appcache)
 
         result_dict['_embedded'] = {
           '_view': embedded_dict
@@ -1556,6 +1556,20 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           response.setHeader("Vary", "Cookie,Authorization,Accept-Encoding")
           response.setHeader("Last-Modified", DateTime().rfc822())
           REQUEST.set("X-HATEOAS-CACHE", 1)
+        # appcache ----------------------------------------------------------------------------
+        if view == "definition_view":
+          fields_raw_properties = {}
+          for group in traversed_document.Form_getGroupTitleAndId():
+            if 'hidden' in group["gid"]:
+              for field in traversed_document.get_fields_in_group(group["goid"]):
+                if field.id == "gadget_field_action_js_script":
+                  fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
+              continue
+            for field in traversed_document.get_fields_in_group(group["goid"]):
+              fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
+          if fields_raw_properties:
+            result_dict["fields_raw_properties"] = fields_raw_properties
+        # /appcache ----------------------------------------------------------------------------
       elif relative_url == 'portal_workflow':
         result_dict['_links']['action_worklist'] = {
           "href": url_template_dict['worklist_template'] % {
@@ -1586,6 +1600,19 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
               "template": True
             }
           }
+
+    # appcache ----------------------------------------------------------------------------
+    if view == "definition_view":
+      # my_form_definition will be used for rendering in JS side
+      if "_embedded" in result_dict and "_view" in result_dict["_embedded"] and "my_form_definition" in  result_dict["_embedded"]["_view"]:
+        default_form_definition = result_dict["_embedded"]["_view"]["_embedded"]["form_definition"].copy()
+        default_form_definition["group_list"] = result_dict["group_list"] if "group_list" in result_dict else []
+        default_form_definition["_actions"] = result_dict["_embedded"]["_view"]["_actions"]
+        if "fields_raw_properties" in result_dict:
+          default_form_definition["fields_raw_properties"] = result_dict["fields_raw_properties"].copy()
+          result_dict.pop('fields_raw_properties', None)
+        result_dict["_embedded"]["_view"]["my_form_definition"]["default"] = default_form_definition
+    # /appcache ----------------------------------------------------------------------------
 
     # Define document action
     if action_dict:
@@ -2199,105 +2226,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
     result_dict["worklist"] = work_list
 
-  elif (mode == 'appcache'):
-    ##
-    # return raw form definition and json structure
-    # render will be done in js side
-
-    # Default properties shared by all ERP5 Document and Site
-    current_action = {}
-    result_dict['title'] = traversed_document.getTitle()
-    extra_param_json = {}
-
-    if not is_portal:
-      document_type_name = traversed_document.getPortalType()
-      document_type = getattr(portal.portal_types, document_type_name, None)
-      if document_type is not None:
-        result_dict['type'] = {
-          "href": default_document_uri_template % {
-            "root_url": site_root.absolute_url(),
-            "relative_url": document_type.getRelativeUrl(),
-            "script_id": script.id
-          },
-          "name": Base_translateString(traversed_document.getPortalType())
-        }
-
-      container = traversed_document.getParentValue()
-      if container != portal:
-        result_dict['parent'] = {
-          "href": default_document_uri_template % {
-            "root_url": site_root.absolute_url(),
-            "relative_url": container.getRelativeUrl(),
-            "script_id": script.id
-          },
-          "name": Base_translateString(container.getTitle()),
-        }
-
-    # Find current action URL and extract embedded view
-    erp5_action_dict = portal.Base_filterDuplicateActions(
-      portal.portal_actions.listFilteredActionsFor(traversed_document))
-    for erp5_action_key in erp5_action_dict.keys():
-      for view_action in erp5_action_dict[erp5_action_key]:
-        if (view == view_action['id']):
-          current_action = parseActionUrl('%s' % view_action['url'])
-    if view and (view != 'view') and (current_action.get('view_id', None) is None):
-      current_action['view_id'] = view
-      current_action['url'] = '%s/%s' % (traversed_document.getRelativeUrl(), view)
-      current_action['params'] = {}
-
-    if current_action.get('view_id', ''):
-      view_instance = getattr(traversed_document, current_action['view_id'])
-      if (view_instance is not None):
-        embedded_dict = {
-          '_links': {
-            'self': {
-              'href': current_action['url']
-            }
-          }
-        }
-        # this gets needed form json structure: embedded; actions; links; my_form_definition field; form_id;
-        renderForm(traversed_document, view_instance, embedded_dict,
-                   selection_params=extra_param_json, extra_param_json=extra_param_json, appcache=True)
-        result_dict['_embedded'] = {
-          '_view': embedded_dict
-        }
-
-    if is_site_root:
-      result_dict['default_view'] = 'view'
-      REQUEST.set("X-HATEOAS-CACHE", 1)
-
-    else:
-      traversed_document_portal_type = traversed_document.getPortalType()
-      if traversed_document_portal_type in ("ERP5 Form", "ERP5 Report"):
-        # this gets the form fields (group_list)
-        renderFormDefinition(traversed_document, result_dict)
-        if response is not None:
-          response.setHeader("Cache-Control", "private, max-age=1800")
-          response.setHeader("Vary", "Cookie,Authorization,Accept-Encoding")
-          response.setHeader("Last-Modified", DateTime().rfc822())
-          REQUEST.set("X-HATEOAS-CACHE", 1)
-        fields_raw_properties = {}
-        for group in traversed_document.Form_getGroupTitleAndId():
-          if 'hidden' in group['gid']:
-            for field in traversed_document.get_fields_in_group(group['goid']):
-              if field.id == "gadget_field_action_js_script":
-                fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
-            continue
-          for field in traversed_document.get_fields_in_group(group['goid']):
-            fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
-        if fields_raw_properties:
-          result_dict['fields_raw_properties'] = fields_raw_properties
-
-    # my_form_definition will be used for rendering in JS side
-    if "my_form_definition" in  result_dict["_embedded"]["_view"]:
-      default_form_definition = result_dict["_embedded"]["_view"]["_embedded"]["form_definition"].copy()
-      default_form_definition["group_list"] = result_dict["group_list"]
-      default_form_definition["_actions"] = result_dict["_embedded"]["_view"]["_actions"]
-      if result_dict["fields_raw_properties"]:
-        default_form_definition["fields_raw_properties"] = result_dict["fields_raw_properties"].copy()
-        result_dict.pop('fields_raw_properties', None)
-      result_dict["_embedded"]["_view"]["my_form_definition"]["default"] = default_form_definition
-
   else:
     raise NotImplementedError("Unsupported mode %s" % mode)
 
@@ -2326,7 +2254,7 @@ hateoas = calculateHateoas(relative_url=relative_url,
                            restricted=restricted, list_method=list_method,
                            default_param_json=default_param_json,
                            form_relative_url=form_relative_url,
-                           extra_param_json=extra_param_json, appcache=mode == "appcache")
+                           extra_param_json=extra_param_json, appcache = view == 'definition_view')
 
 if hateoas == "":
   return hateoas
