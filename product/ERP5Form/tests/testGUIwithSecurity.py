@@ -60,7 +60,7 @@ class TestGUISecurity(ERP5TypeTestCase):
 
   def stepCreateTestFoo(self, sequence = None, sequence_list = None, **kw):
     foo_module = self.portal.foo_module
-    foo_module.newContent(portal_type='Foo', id='foo', foo_category='a')
+    foo_module.newContent(portal_type='Foo', id='foo', foo_category='a', protected_property='Protected Property')
     # allow Member to view foo_module in a hard coded way as it is not required to setup complex
     # security for this test (by default only 5A roles + Manager can view default modules)
     for permission in ('Access contents information', 'View'):
@@ -146,4 +146,19 @@ class TestGUISecurity(ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def test_read_permission_property(self):
+    """
+      This test checks that property defined with a `read_property` that the
+      logged in user does not have are not displayed.
+    """
+    self.login() # as manager
+    self.stepCreateObjects()
+    self.stepCreateTestFoo()
+
+    protected_property_markup = '<input name="field_my_protected_property" value="Protected Property" type="text"'
+    self.assertIn(protected_property_markup, self.portal.foo_module.foo.Foo_viewSecurity())
+
+    self.loginAs() # user without permission to access protected property
+    self.assertNotIn(protected_property_markup, self.portal.foo_module.foo.Foo_viewSecurity())
 
