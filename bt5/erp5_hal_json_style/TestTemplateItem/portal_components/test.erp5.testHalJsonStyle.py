@@ -1223,7 +1223,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
       REQUEST=fake_request,
       mode="traverse",
       relative_url=document.getRelativeUrl(),
-      view="view_simple_graph"
+      view="Base_viewDocumentList"
     )
     self.assertEquals(fake_request.RESPONSE.status, 200)
     self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
