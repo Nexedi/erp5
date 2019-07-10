@@ -2545,4 +2545,68 @@ class TestERP5Action_getHateoas(ERP5HALJSONStyleSkinsMixin):
       'your_custom_workflow_variable', response))
     self.assertIn('error_text', response['your_custom_workflow_variable'], "Invalid field must contain error message")
     self.assertGreater(len(response['your_custom_workflow_variable']['error_text']), 0, "Error message must not be empty")
-    
+
+class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
+
+  def afterSetUp(self):
+    ERP5HALJSONStyleSkinsMixin.afterSetUp(self)
+    document = self._makeDocument()
+    document.edit(title='foook1')
+
+    document = self._makeDocument()
+    document.edit(title='foook2')
+
+    document = self._makeDocument()
+    document.edit(title='foonotok')
+    self.tic()
+
+  @changeSkin('Hal')
+  def test_getHateoas_exportCSV(self, **kw):
+    """Check that ODS export returns lines calculated from latest search
+    """
+    # Create the listbox selection
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      # local_roles=["Assignor"],
+      query='title:"foook%"',
+      list_method='searchFolder',
+      select_list=['title', 'creation_date', 'uid'],
+      relative_url='foo_module',
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
+    )
+
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(len(result_dict['_embedded']['contents']), 2)
+
+    # Export as CSV
+    fake_request = do_fake_request("POST", data=(
+      ('dialog_method', 'Base_viewAsODS'),
+      ('dialog_id', 'Base_viewAsODSDialog'),
+      ('form_id',  'FooModule_viewFooList'),
+      ('field_your_format',  'csv'),
+      ('default_field_your_format:int',  '0'),
+    ))
+    # user form fields
+    """
+    fake_request.set('dialog_method', 'Base_viewAsODS')
+    fake_request.set('dialog_id', 'Base_viewAsODSDialog')
+    fake_request.set('form_id',  'FooModule_viewFooList')
+    fake_request.set('field_your_format',  'csv')
+    fake_request.set('default_field_your_format:int',  '0')
+    """
+
+    response = self.portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
+      REQUEST=fake_request,
+      dialog_method='Base_viewAsODS',
+      dialog_id='Base_viewAsODSDialog',
+      form_id='FooModule_viewFooList',
+      # format='csv'
+    )
+    self.assertEqual(fake_request.RESPONSE.status, 400)
+
