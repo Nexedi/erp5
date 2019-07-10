@@ -1555,20 +1555,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           response.setHeader("Vary", "Cookie,Authorization,Accept-Encoding")
           response.setHeader("Last-Modified", DateTime().rfc822())
           REQUEST.set("X-HATEOAS-CACHE", 1)
-        # appcache ----------------------------------------------------------------------------
-        if view == "definition_view":
-          fields_raw_properties = {}
-          for group in traversed_document.Form_getGroupTitleAndId():
-            if 'hidden' in group["gid"]:
-              for field in traversed_document.get_fields_in_group(group["goid"]):
-                if field.id == "gadget_field_action_js_script":
-                  fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
-              continue
-            for field in traversed_document.get_fields_in_group(group["goid"]):
-              fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
-          if fields_raw_properties:
-            result_dict["fields_raw_properties"] = fields_raw_properties
-        # /appcache ----------------------------------------------------------------------------
       elif relative_url == 'portal_workflow':
         result_dict['_links']['action_worklist'] = {
           "href": url_template_dict['worklist_template'] % {
@@ -1602,7 +1588,19 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
     # appcache ----------------------------------------------------------------------------
     if view == "definition_view":
-      # my_form_definition will be used for rendering in JS side
+      traversed_document_portal_type = traversed_document.getPortalType()
+      if traversed_document_portal_type in ("ERP5 Form", "ERP5 Report"):
+        fields_raw_properties = {}
+        for group in traversed_document.Form_getGroupTitleAndId():
+          if 'hidden' in group["gid"]:
+            for field in traversed_document.get_fields_in_group(group["goid"]):
+              if field.id == "gadget_field_action_js_script":
+                fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
+            continue
+          for field in traversed_document.get_fields_in_group(group["goid"]):
+            fields_raw_properties[field.id] = getFieldRawProperties(field, key_prefix=None)
+        if fields_raw_properties:
+          result_dict["fields_raw_properties"] = fields_raw_properties
       if "_embedded" in result_dict and "_view" in result_dict["_embedded"] and "my_form_definition" in  result_dict["_embedded"]["_view"]:
         default_form_definition = result_dict["_embedded"]["_view"]["_embedded"]["form_definition"].copy()
         if "group_list" in result_dict:
@@ -2232,6 +2230,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
   return result_dict
 
+
 mime_type = 'application/hal+json'
 portal = context.getPortalObject()
 sql_catalog = portal.portal_catalog.getSQLCatalog()
@@ -2256,7 +2255,6 @@ hateoas = calculateHateoas(relative_url=relative_url,
                            default_param_json=default_param_json,
                            form_relative_url=form_relative_url,
                            extra_param_json=extra_param_json)
-
 if hateoas == "":
   return hateoas
 else:
