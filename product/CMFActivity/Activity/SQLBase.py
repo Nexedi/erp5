@@ -624,10 +624,9 @@ CREATE TABLE %s (
         node_family_id_list)
     if message_list:
       # Remove group_id parameter from group_method_id
-      if group_method_id is not None:
-        group_method_id = group_method_id.split('\0')[0]
-      if group_method_id not in (None, ""):
-        method  = activity_tool.invokeGroup
+      group_method_id = group_method_id.split('\0')[0]
+      if group_method_id != "":
+        method = activity_tool.invokeGroup
         args = (group_method_id, message_list, self.__class__.__name__,
                 hasattr(self, 'generateMessageUID'))
         activity_runtime_environment = ActivityRuntimeEnvironment(None)
