@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Section" module="erp5.portal_type"/>
+      <global name="Web Site" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -133,7 +133,7 @@
                     <key>
                       <tuple>
                         <int>99</int>
-                        <string>ERP5 Web Section/app</string>
+                        <string>ERP5 Web Site/hateoas_appcache</string>
                       </tuple>
                     </key>
                     <value>
@@ -141,12 +141,6 @@
                     </value>
                 </item>
               </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>__translation_dict</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
         <item>
@@ -168,27 +162,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_router_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_application_title</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_jio_gadget_url</string> </value>
+                      <value> <string>configuration_x_frame_options</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -208,7 +182,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_panel_gadget_url</string> </value>
+                      <value> <string>configuration_login</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -218,181 +192,11 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_translation_gadget_url</string> </value>
+                      <value> <string>configuration_logout</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
                       <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_header_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_hateoas_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_manifest_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_x_frame_options</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_default_jio_document_page_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_default_view_action_reference</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_frontpage_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_view_action_category</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_stylesheet_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_webapp_manifest_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_wallpaper_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_app_action_prefix</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_header_jump_button</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>int</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_app_actions</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>lines</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_app_allowed_sub_types</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>lines</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_app_view_action_reference</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_hide_header_add_button</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>int</string> </value>
                   </item>
                 </dictionary>
               </tuple>
@@ -417,131 +221,50 @@
             </value>
         </item>
         <item>
+            <key> <string>authorization_forced</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>available_language</string> </key>
+            <value>
+              <tuple>
+                <string>en</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>caching_policy/must-revalidate</string>
-                <string>aggregate/web_page_module/rjs_gadget_erp5_launcher_html</string>
-              </tuple>
+              <tuple/>
             </value>
-        </item>
-        <item>
-            <key> <string>configuration_app_action_prefix</string> </key>
-            <value> <string>some_action_prefix</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_app_actions</string> </key>
-            <value>
-              <tuple>
-                <string>Web Page | text_editor_view</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_app_allowed_sub_types</string> </key>
-            <value>
-              <tuple>
-                <string>Web Page Module | Web Page</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_app_view_action_reference</string> </key>
-            <value> <string>text_editor_view</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_application_title</string> </key>
-            <value> <string>Text Editor</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net *.erp5.ru; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data: *.app.officejs.com</string> </value>
         </item>
         <item>
-            <key> <string>configuration_default_jio_document_page_gadget_url</string> </key>
-            <value> <string>ojs_local_controller</string> </value>
+            <key> <string>configuration_login</string> </key>
+            <value> <string>connection/login_form{?came_from}</string> </value>
         </item>
         <item>
-            <key> <string>configuration_default_view_action_reference</string> </key>
-            <value> <string>jio_view</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_frontpage_gadget_url</string> </key>
-            <value> <string>ojs_local_controller</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_hateoas_url</string> </key>
-            <value> <string>../hateoas_appcache/</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_header_gadget_url</string> </key>
-            <value> <string>gadget_erp5_header.html</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_header_jump_button</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>configuration_hide_header_add_button</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>configuration_jio_gadget_url</string> </key>
-            <value> <string>gadget_ojs_local_jio.html</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs_text_editor.appcache</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_panel_gadget_url</string> </key>
-            <value> <string>gadget_erp5_ojs_panel.html</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_router_gadget_url</string> </key>
-            <value> <string>gadget_officejs_text_editor_router.html</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_stylesheet_url</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_translation_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_view_action_category</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_wallpaper_url</string> </key>
-            <value> <string>officejs_logo_text_editor.png</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_webapp_manifest_url</string> </key>
-            <value> <string>gadget_officejs_text_editor.json</string> </value>
+            <key> <string>configuration_logout</string> </key>
+            <value> <string>connection/WebSite_logout{?came_from}</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
-            <value> <string>SAMEORIGIN</string> </value>
+            <value> <string>ALLOW-FROM-ALL</string> </value>
         </item>
         <item>
             <key> <string>container_layout</string> </key>
-            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+            <value> <string>ERP5Document_getHateoas</string> </value>
         </item>
         <item>
             <key> <string>content_layout</string> </key>
-            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+            <value> <string>ERP5Document_getHateoas</string> </value>
         </item>
         <item>
             <key> <string>custom_render_method_id</string> </key>
-            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+            <value> <string>ERP5Document_getHateoas</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -550,32 +273,16 @@
             </value>
         </item>
         <item>
-            <key> <string>empty_criterion_valid</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>app</string> </value>
-        </item>
-        <item>
-            <key> <string>int_index</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>hateoas_appcache</string> </value>
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
-            <value> <string>WebSection_viewRenderJSPreference</string> </value>
-        </item>
-        <item>
-            <key> <string>membership_criterion_category</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <value> <string>WebSection_viewHateoasPreference</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Section</string> </value>
+            <value> <string>Web Site</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -585,27 +292,19 @@
         </item>
         <item>
             <key> <string>skin_selection_name</string> </key>
-            <value> <string>RJS</string> </value>
+            <value> <string>Hal</string> </value>
         </item>
         <item>
-            <key> <string>string_index</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>test_method_id</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <key> <string>static_language_selection</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Text Editor App</string> </value>
+            <value> <string>Hateoas appcache</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -618,7 +317,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="WebSectionTraversalHook" module="Products.ERP5.Document.WebSection"/>
+      <global name="WebSiteTraversalHook" module="Products.ERP5.Document.WebSite"/>
     </pickle>
     <pickle>
       <dictionary/>
@@ -719,7 +418,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>vincent</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -741,7 +440,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487769854.51</float>
+                        <float>1562751918.1</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -786,7 +485,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.64162.28072.21213</string> </value>
+                <value> <string>976.64170.30918.60808</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -804,7 +503,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1562752515.93</float>
+                        <float>1562752490.8</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

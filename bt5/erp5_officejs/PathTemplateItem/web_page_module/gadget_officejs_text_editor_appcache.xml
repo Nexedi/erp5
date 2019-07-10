@@ -248,15 +248,15 @@ officejs_logo.png\n
 jio_appcachestorage.js\n
 \n
 #configuration resources\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_hal_json_style%2FBase_viewNewContentDialog&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_hal_json_style%2FBase_viewNewContentDialog&view=definition_view\n
 \n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module&view=definition_view\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module%2F4&view=definition_view\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPageModule_viewWebPageListAsJio&view=definition_view\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page&view=definition_view\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F9&view=definition_view\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F10&view=definition_view\n
-hateoas/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPage_viewAsTextDocument&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module%2F4&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPageModule_viewWebPageListAsJio&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F9&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F10&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPage_viewAsTextDocument&view=definition_view\n
 \n
 \n
 #Ckeditor\n
@@ -741,7 +741,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.63049.33091.45004</string> </value>
+                <value> <string>976.64175.33468.26470</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -759,7 +759,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1562685348.0</float>
+                        <float>1562752478.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

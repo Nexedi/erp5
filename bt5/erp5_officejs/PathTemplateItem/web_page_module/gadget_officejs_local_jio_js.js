@@ -108,7 +108,7 @@
     .declareMethod('createJio', function (jio_options) {
       var appcache_storage,
         origin_url = window.location.href,
-        hateoas_script = "hateoas/ERP5Document_getHateoas",
+        hateoas_script = "hateoas_appcache/ERP5Document_getHateoas",
         // TODO manifest should come from gadget.props.cache_file -add script in html body
         manifest = "gadget_officejs_text_editor.configuration",
         jio_appchache_options = {
