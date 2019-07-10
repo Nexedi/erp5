@@ -76,7 +76,6 @@ class TestXHTMLMixin(ERP5TypeTestCase):
         'wz_dragdrop.js',
         )
   JSL_IGNORE_SKIN_LIST = (
-        'erp5_ace_editor',
         'erp5_code_mirror',
         'erp5_fckeditor',
         'erp5_ckeditor',
