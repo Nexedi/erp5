@@ -1717,10 +1717,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         if 'selection_domain' in catalog_kw:
           selection_kw['params']["selection_domain"] = catalog_kw['selection_domain']
 
-        column_list = [(name, title) for name, title in source_field.get_value("columns") if name in select_list]
-        all_column_list = [(name, title) for name, title in source_field.get_value("all_columns") if name in select_list]
-        selection_kw['columns'] = [(name, Base_translateString(title))
-                                   for name, title in OrderedDict(column_list + all_column_list).items()]
+        if select_list:
+          column_list = [(name, title) for name, title in source_field.get_value("columns") if name in select_list]
+          all_column_list = [(name, title) for name, title in source_field.get_value("all_columns") if name in select_list]
+          selection_kw['columns'] = [(name, Base_translateString(title))
+                                     for name, title in OrderedDict(column_list + all_column_list).items()]
+        else:
+          selection_kw['columns'] = []
 
         selection_tool.setSelectionFor(selection_name, Selection(selection_name, **selection_kw))
 
