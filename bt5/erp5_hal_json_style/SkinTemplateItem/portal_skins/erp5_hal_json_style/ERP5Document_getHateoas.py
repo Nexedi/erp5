@@ -865,7 +865,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
   return result
 
 
-def renderForm(traversed_document, form, response_dict, key_prefix=None, selection_params=None, extra_param_json=None, appcache=False):
+def renderForm(traversed_document, form, response_dict, key_prefix=None, selection_params=None, extra_param_json=None):
   """
   Render a `form` in plain python dict.
 
@@ -900,7 +900,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     action_to_call = "Base_callDialogMethod"
   else:
     action_to_call = form.action
-  if (not appcache) and (action_to_call == 'Base_edit') and (not portal.portal_membership.checkPermission('Modify portal content', traversed_document)):
+  if (action_to_call == 'Base_edit') and (not portal.portal_membership.checkPermission('Modify portal content', traversed_document)):
     # prevent allowing editing if user doesn't have permission
     include_action = False
 
@@ -959,9 +959,8 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       is_site_root=False,
       is_portal=False,
       mode='traverse',
-      restricted=1,
-      view='view',
-      appcache=appcache
+      restricted=restricted,
+      view='view'
     )
   }
 
@@ -1203,9 +1202,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                      response=None, view=None, mode=None,
                      query=None, select_list=None, limit=None, form=None,
                      relative_url=None, restricted=None, list_method=None,
-                     default_param_json=None, form_relative_url=None, extra_param_json=None, appcache=False):
+                     default_param_json=None, form_relative_url=None, extra_param_json=None):
 
-  if (not appcache) and (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
+  if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
     login_relative_url = site_root.getLayoutProperty("configuration_login", default="")
     if (login_relative_url):
       response.setHeader(
@@ -1404,7 +1403,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # thus we send extra_param_json (=rjs way of passing parameters to REQUEST) as
         # selection_params so they get into callable's **kw.
         renderForm(traversed_document, view_instance, embedded_dict,
-                   selection_params=extra_param_json, extra_param_json=extra_param_json, appcache=appcache)
+                   selection_params=extra_param_json, extra_param_json=extra_param_json)
 
         result_dict['_embedded'] = {
           '_view': embedded_dict
@@ -1606,8 +1605,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # my_form_definition will be used for rendering in JS side
       if "_embedded" in result_dict and "_view" in result_dict["_embedded"] and "my_form_definition" in  result_dict["_embedded"]["_view"]:
         default_form_definition = result_dict["_embedded"]["_view"]["_embedded"]["form_definition"].copy()
-        default_form_definition["group_list"] = result_dict["group_list"] if "group_list" in result_dict else []
-        default_form_definition["_actions"] = result_dict["_embedded"]["_view"]["_actions"]
+        if "group_list" in result_dict:
+          default_form_definition["group_list"] = result_dict["group_list"]
+        if "_actions" in result_dict["_embedded"]["_view"]:
+          default_form_definition["_actions"] = result_dict["_embedded"]["_view"]["_actions"]
         if "fields_raw_properties" in result_dict:
           default_form_definition["fields_raw_properties"] = result_dict["fields_raw_properties"].copy()
           result_dict.pop('fields_raw_properties', None)
@@ -2254,7 +2255,7 @@ hateoas = calculateHateoas(relative_url=relative_url,
                            restricted=restricted, list_method=list_method,
                            default_param_json=default_param_json,
                            form_relative_url=form_relative_url,
-                           extra_param_json=extra_param_json, appcache = view == 'definition_view')
+                           extra_param_json=extra_param_json)
 
 if hateoas == "":
   return hateoas
