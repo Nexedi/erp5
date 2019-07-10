@@ -16,6 +16,11 @@ import json
 import re
 import urllib
 
+from zope.globalrequest import setRequest
+from Acquisition import aq_base
+from Products.ERP5Form.Selection import Selection, DomainSelection
+
+
 def changeSkin(skin_name):
   """Change skin for following commands and attribute resolution.
 
@@ -126,7 +131,29 @@ def do_fake_request(request_method, headers=None, data=()):
       body_stream.write('{}={!s}&'.format(
         urllib.quote_plus(key), urllib.quote(value)))
 
-  return HTTPRequest(body_stream, env, HTTPResponse())
+  request = HTTPRequest(body_stream, env, HTTPResponse())
+  if data and request_method.upper() == 'POST':
+    for key, value in data:
+      request.form[key] = value
+
+  return request
+
+
+def replace_request(new_request, context):
+    base_chain = [aq_base(x) for x in context.aq_chain]
+    # Grab existig request (last chain item) and create a copy.
+    request_container = base_chain.pop()
+    # request = request_container.REQUEST
+
+    setRequest(new_request)
+
+    new_request_container = request_container.__class__(REQUEST=new_request)
+    # Recreate acquisition chain.
+    my_self = new_request_container
+    base_chain.reverse()
+    for item in base_chain:
+      my_self = item.__of__(my_self)
+    return my_self
 
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -2085,6 +2112,59 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
     self.assertEqual(result_dict['_embedded']['count'], 1)
 
+  @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
+  @simulate('Test_listCatalog', '*args, **kwargs', "return []")
+  @changeSkin('Hal')
+  def test_getHateoas_selection_compatibility(self, **kw):
+    """Check that listbox line calculation modify the selection
+    """
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_count_method = '')
+
+    selection_tool = self.portal.portal_selections
+    selection_name = self.portal.foo_module.FooModule_viewFooList.listbox.get_value('selection_name')
+    selection_tool.setSelectionFor(selection_name, Selection(selection_name))
+
+    # Create the listbox selection
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      local_roles=["Manager"],
+      query='bar:"foo"',
+      list_method='Test_listCatalog',
+      select_list=['title', 'uid'],
+      selection_domain=json.dumps({'foo_domain': 'a/a1', 'foo_category': 'a/a2'}),
+      relative_url='foo_module',
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox',
+      sort_on=json.dumps(["title","descending"])
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+
+    selection = selection_tool.getSelectionFor(selection_name)
+    self.assertEquals(
+      selection.getParams(), {
+        'local_roles': ['Manager'],
+        'full_text': 'bar:"foo"',
+        'ignore_unknown_columns': True
+      })
+    self.assertEquals(selection.getSortOrder(), [('title', 'DESC')])
+    self.assertEquals(selection.columns, [('title', 'Title')])
+    self.assertEquals(selection.getDomainPath(), ['foo_domain', 'foo_category'])
+    self.assertEquals(selection.getDomainList(), ['foo_domain/a', 'foo_domain/a/a1', 'foo_category/a', 'foo_category/a/a2'])
+    self.assertEquals(selection.flat_list_mode, 0)
+    self.assertEquals(selection.domain_tree_mode, 1)
+    self.assertEquals(selection.report_tree_mode, 0)
+    self.assertTrue(isinstance(selection.domain, DomainSelection))
+    self.assertEquals(selection.domain.domain_dict,
+                      {'foo_category': ('portal_categories', 'foo_category/a/a2'),
+                       'foo_domain': ('portal_domains', 'foo_domain/a/a1')})
+
+
 class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   """Test HAL_JSON operations on cataloged Persons and other allowed content types of Person Module."""
 
@@ -2545,4 +2625,76 @@ class TestERP5Action_getHateoas(ERP5HALJSONStyleSkinsMixin):
       'your_custom_workflow_variable', response))
     self.assertIn('error_text', response['your_custom_workflow_variable'], "Invalid field must contain error message")
     self.assertGreater(len(response['your_custom_workflow_variable']['error_text']), 0, "Error message must not be empty")
-    
+
+class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
+
+  def afterSetUp(self):
+    ERP5HALJSONStyleSkinsMixin.afterSetUp(self)
+    document = self._makeDocument()
+    document.edit(title='foook1')
+
+    document = self._makeDocument()
+    document.edit(title='foook2')
+
+    document = self._makeDocument()
+    document.edit(title='foonotok')
+    self.tic()
+
+  @changeSkin('Hal')
+  def test_getHateoas_exportCSV(self, **kw):
+    """Check that ODS export returns lines calculated from latest search
+    """
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_columns = '\n'.join((
+        'id | ID',
+        'title | Title',
+        'creation_date | Creation Date',
+      )))
+    # Create the listbox selection
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      # local_roles=["Manager"],
+      query='title:"foook%"',
+      list_method='searchFolder',
+      select_list=['title', 'creation_date', 'uid'],
+      relative_url='foo_module',
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox',
+      sort_on=json.dumps(["title","descending"])
+    )
+
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(len(result_dict['_embedded']['contents']), 2)
+
+    # Export as CSV
+    fake_request = do_fake_request("POST", data=(
+      ('dialog_method', 'Base_viewAsODS'),
+      ('dialog_id', 'Base_viewAsODSDialog'),
+      ('form_id', 'FooModule_viewFooList'),
+      ('field_your_format', 'csv'),
+      ('default_field_your_format:int', '0'),
+      ('field_your_target_language', ''),
+      ('default_field_your_target_language:int', '0'),
+      ('extra_param_json', '{}'),
+    ))
+    fake_portal = replace_request(fake_request, self.portal)
+
+    result = fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
+      dialog_method='Base_viewAsODS',
+      dialog_id='Base_viewAsODSDialog',
+      form_id='FooModule_viewFooList',
+    )
+    self.assertEqual(fake_request.get('portal_skin'), 'ODS')
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'application/csv')
+    expected_csv = 'Title,Creation Date\nfoook2,XX/XX/XXXX XX:XX:XX\nfoook1,XX/XX/XXXX XX:XX:XX\n'
+    self.assertEqual(len(result), len(expected_csv), result)
+    prefix_length = len('Title,Creation Date\nfoook2,')
+    self.assertEqual(result[:prefix_length], expected_csv[:prefix_length])
+
+
