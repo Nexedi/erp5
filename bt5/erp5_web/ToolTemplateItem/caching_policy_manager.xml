@@ -1464,7 +1464,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: getattr(object, \'getModificationDate\', object.modified)()</string> </value>
+            <value> <string>python: getattr(object, \'Base_getWebSiteDrivenModificationDate\', object.modified)()</string> </value>
         </item>
       </dictionary>
     </pickle>
