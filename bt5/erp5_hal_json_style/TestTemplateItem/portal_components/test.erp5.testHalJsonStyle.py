@@ -2601,13 +2601,36 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
       ('extra_param_json', '{}'),
     ))
 
-    result = self.portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
-      REQUEST=fake_request,
+    from Products.ERP5Type.Context import newContext
+    # from Products.ERP5Type.patches.globalrequest import setRequest
+    from zope.globalrequest import getRequest, setRequest
+    from Acquisition import aq_base, aq_inner, aq_parent
+    # fake_portal = self.portal#newContext(context=self.portal, REQUEST=fake_request)
+    #fake_portal.REQUEST = fake_request
+    # setRequest(fake_request)
+
+    base_chain = [aq_base(x) for x in self.portal.aq_chain]
+    # Grab existig request (last chain item) and create a copy.
+    request_container = base_chain.pop()
+    request = request_container.REQUEST
+
+    setRequest(fake_request)
+
+    new_request_container = request_container.__class__(REQUEST=fake_request)
+    # Recreate acquisition chain.
+    my_self = new_request_container
+    base_chain.reverse()
+    for item in base_chain:
+      my_self = item.__of__(my_self)
+
+    result = my_self.web_site_module.hateoas.foo_module.Base_callDialogMethod(
+      #REQUEST=fake_request,
       dialog_method='Base_viewAsODS',
       dialog_id='Base_viewAsODSDialog',
       form_id='FooModule_viewFooList',
     )
+    # self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
-    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'), 'application/csv')
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'application/csv')
     self.assertEqual(result, 'couscous')
 
