@@ -2594,12 +2594,13 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
       REQUEST=fake_request,
       mode="search",
-      # local_roles=["Assignor"],
+      # local_roles=["Manager"],
       query='title:"foook%"',
       list_method='searchFolder',
       select_list=['title', 'creation_date', 'uid'],
       relative_url='foo_module',
-      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox'
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox',
+      sort_on=json.dumps(["title","descending"])
     )
 
     self.assertEquals(fake_request.RESPONSE.status, 200)
@@ -2630,5 +2631,9 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
     self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'application/csv')
-    self.assertEqual(result, 'couscous')
+    expected_csv = 'Title,Creation Date\nfoook2,XX/XX/XXXX XX:XX:XX\nfoook1,XX/XX/XXXX XX:XX:XX\n'
+    self.assertEqual(len(result), len(expected_csv))
+    prefix_length = len('Title,Creation Date\nfoook2,')
+    self.assertEqual(result[:prefix_length], expected_csv[:prefix_length])
+
 
