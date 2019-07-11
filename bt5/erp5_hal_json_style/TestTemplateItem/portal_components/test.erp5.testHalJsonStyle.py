@@ -16,6 +16,9 @@ import json
 import re
 import urllib
 
+from zope.globalrequest import setRequest
+from Acquisition import aq_base
+
 def changeSkin(skin_name):
   """Change skin for following commands and attribute resolution.
 
@@ -132,6 +135,23 @@ def do_fake_request(request_method, headers=None, data=()):
       request.form[key] = value
 
   return request
+
+
+def replace_request(new_request, context):
+    base_chain = [aq_base(x) for x in context.aq_chain]
+    # Grab existig request (last chain item) and create a copy.
+    request_container = base_chain.pop()
+    # request = request_container.REQUEST
+
+    setRequest(new_request)
+
+    new_request_container = request_container.__class__(REQUEST=new_request)
+    # Recreate acquisition chain.
+    my_self = new_request_container
+    base_chain.reverse()
+    for item in base_chain:
+      my_self = item.__of__(my_self)
+    return my_self
 
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -2600,36 +2620,14 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
       ('default_field_your_target_language:int', '0'),
       ('extra_param_json', '{}'),
     ))
+    fake_portal = replace_request(fake_request, self.portal)
 
-    from Products.ERP5Type.Context import newContext
-    # from Products.ERP5Type.patches.globalrequest import setRequest
-    from zope.globalrequest import getRequest, setRequest
-    from Acquisition import aq_base, aq_inner, aq_parent
-    # fake_portal = self.portal#newContext(context=self.portal, REQUEST=fake_request)
-    #fake_portal.REQUEST = fake_request
-    # setRequest(fake_request)
-
-    base_chain = [aq_base(x) for x in self.portal.aq_chain]
-    # Grab existig request (last chain item) and create a copy.
-    request_container = base_chain.pop()
-    request = request_container.REQUEST
-
-    setRequest(fake_request)
-
-    new_request_container = request_container.__class__(REQUEST=fake_request)
-    # Recreate acquisition chain.
-    my_self = new_request_container
-    base_chain.reverse()
-    for item in base_chain:
-      my_self = item.__of__(my_self)
-
-    result = my_self.web_site_module.hateoas.foo_module.Base_callDialogMethod(
-      #REQUEST=fake_request,
+    result = fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
       dialog_method='Base_viewAsODS',
       dialog_id='Base_viewAsODSDialog',
       form_id='FooModule_viewFooList',
     )
-    # self.assertEqual(fake_request.get('portal_skin'), 'ODS')
+    self.assertEqual(fake_request.get('portal_skin'), 'ODS')
     self.assertEqual(fake_request.RESPONSE.status, 200)
     self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'application/csv')
     self.assertEqual(result, 'couscous')
