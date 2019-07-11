@@ -551,7 +551,7 @@ CREATE TABLE %s (
         message_list = [m]
         uid_to_duplicate_uid_list_dict[uid] = uid_list
         group_method_id = m.line.group_method_id
-        if group_method_id != '\0':
+        if group_method_id[0] != '\0':
           # Count the number of objects to prevent too many objects.
           cost = m.activity_kw.get('group_method_cost', .01)
           assert 0 < cost <= 1, (self.sql_table, uid)
@@ -632,8 +632,8 @@ CREATE TABLE %s (
         activity_runtime_environment = ActivityRuntimeEnvironment(None)
       else:
         method = activity_tool.invoke
-        message = message_list[0]
-        args = (message, )
+        message, = message_list
+        args = message_list
         activity_runtime_environment = ActivityRuntimeEnvironment(message)
       # Commit right before executing messages.
       # As MySQL transaction does not start exactly at the same time as ZODB
