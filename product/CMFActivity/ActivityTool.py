@@ -197,6 +197,7 @@ class Message(BaseMessage):
   active_process_uid = None
   call_traceback = None
   exc_info = None
+  exc_type = None
   is_executed = MESSAGE_NOT_EXECUTED
   traceback = None
   oid = None
