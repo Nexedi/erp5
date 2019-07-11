@@ -126,7 +126,12 @@ def do_fake_request(request_method, headers=None, data=()):
       body_stream.write('{}={!s}&'.format(
         urllib.quote_plus(key), urllib.quote(value)))
 
-  return HTTPRequest(body_stream, env, HTTPResponse())
+  request = HTTPRequest(body_stream, env, HTTPResponse())
+  if data and request_method.upper() == 'POST':
+    for key, value in data:
+      request.form[key] = value
+
+  return request
 
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -2588,25 +2593,21 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     fake_request = do_fake_request("POST", data=(
       ('dialog_method', 'Base_viewAsODS'),
       ('dialog_id', 'Base_viewAsODSDialog'),
-      ('form_id',  'FooModule_viewFooList'),
-      ('field_your_format',  'csv'),
-      ('default_field_your_format:int',  '0'),
+      ('form_id', 'FooModule_viewFooList'),
+      ('field_your_format', 'csv'),
+      ('default_field_your_format:int', '0'),
+      ('field_your_target_language', ''),
+      ('default_field_your_target_language:int', '0'),
+      ('extra_param_json', '{}'),
     ))
-    # user form fields
-    """
-    fake_request.set('dialog_method', 'Base_viewAsODS')
-    fake_request.set('dialog_id', 'Base_viewAsODSDialog')
-    fake_request.set('form_id',  'FooModule_viewFooList')
-    fake_request.set('field_your_format',  'csv')
-    fake_request.set('default_field_your_format:int',  '0')
-    """
 
-    response = self.portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
+    result = self.portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
       REQUEST=fake_request,
       dialog_method='Base_viewAsODS',
       dialog_id='Base_viewAsODSDialog',
       form_id='FooModule_viewFooList',
-      # format='csv'
     )
-    self.assertEqual(fake_request.RESPONSE.status, 400)
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'), 'application/csv')
+    self.assertEqual(result, 'couscous')
 
