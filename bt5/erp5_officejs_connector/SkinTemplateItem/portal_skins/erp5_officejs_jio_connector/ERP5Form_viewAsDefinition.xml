@@ -72,7 +72,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_form_definition</string>
+                        <string>my_fields_raw_properties</string>
                       </list>
                     </value>
                 </item>
@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Form_viewAsJio</string> </value>
+            <value> <string>ERP5Form_viewAsDefinition</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
