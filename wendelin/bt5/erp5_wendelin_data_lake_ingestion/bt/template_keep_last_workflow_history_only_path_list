@@ -10,3 +10,5 @@ data_transformation_module/transform_raw_fif_data/**
 portal_ingestion_policies/wendelin_embulk
 portal_categories/function/**
 portal_categories/use/**
+portal_alarms/wendelin_data_lake_handle_analysis
+portal_alarms/wendelin_data_lake_handle_analysis/**
