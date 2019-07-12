@@ -1714,8 +1714,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           selection_kw['params']['full_text'] = catalog_kw["full_text"]
         if 'sort_on' in catalog_kw:
           selection_kw['sort_on'] = catalog_kw['sort_on']
-        if 'selection_domain' in catalog_kw:
-          selection_kw['params']["selection_domain"] = catalog_kw['selection_domain']
 
         if select_list:
           column_list = [(name, title) for name, title in source_field.get_value("columns") if name in select_list]
@@ -1725,7 +1723,39 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         else:
           selection_kw['columns'] = []
 
-        selection_tool.setSelectionFor(selection_name, Selection(selection_name, **selection_kw))
+        selection = Selection(selection_name, **selection_kw)
+        selection_tool.setSelectionFor(selection_name, selection)
+
+        if 'selection_domain' in catalog_kw:
+          # for selection_domain_key, selection_domain_value in catalog_kw['selection_domain'].items():
+          # selection_domain_dict = ensureDeserialized(
+          #   byteify(json.loads(selection_domain)))
+
+          # selection.domain_root = selection_domain_dict.keys()
+          # selection.domain_list = selection_domain_dict.values()
+
+          # selection.edit(domain_path=catalog_kw['selection_domain'].keys(), domain_list=[x.getRelativeUrl() for x in catalog_kw['selection_domain'].values()])
+          # selection.domain_path = catalog_kw['selection_domain'].keys()
+          # selection.domain_list = [x.getRelativeUrl() for x in catalog_kw['selection_domain'].values()]
+
+          """
+          raise NotImplementedError(catalog_kw['selection_domain'])
+          selection.domain_root = catalog_kw['selection_domain'].keys()
+          selection.domain_list = [x.getRelativeUrl() for x in catalog_kw['selection_domain'].values()] 
+          """
+          # selection.domain_list = selection_domain_dict.values()
+          # selection_tool.setDomainRootFromParam(REQUEST, selection_name, catalog_kw['selection_domain'].keys(),
+          #                                       domain_list=[x.getRelativeUrl() for x in catalog_kw['selection_domain'].values()])
+          # new
+
+          new_selection_dict = {}
+          selection_domain_dict = ensureDeserialized(
+              byteify(json.loads(selection_domain)))
+          for domain_root_id in selection_domain_dict:
+            # new_selection_dict[domain_root_id] = ('%s/%s' % (domain_root_id, selection_domain_dict[domain_root_id]), )
+            new_selection_dict[domain_root_id] = ('portal_categories', '%s/%s' % (domain_root_id, selection_domain_dict[domain_root_id]), )
+
+          selection_tool.setDomainDictFromParam(selection_name, new_selection_dict)
 
       # Some search scripts impertinently grab their arguments from REQUEST
       # instead of being nice and specify them as their input parameters.
