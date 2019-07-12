@@ -13,10 +13,10 @@ for pid in $ZOPE_PIDS;
   # remove any trailing character in case PID is less than 5 digits
   pid="$(echo ${pid} | sed 's/,//')"
   ip_port="$(netstat -lpn --inet --inet6 | grep " $pid"/ |awk '{print substr($0, 21, 17);}')";
-  echo $pid, $ip_port, $port
+  #echo $pid, $ip_port, $port
 
   # socat
-  if [[ $ip_port == 2001* ]] || [[ $ip_port == fd46*]];
+  if [[ $ip_port == 2001* ]] || [[ $ip_port == fd46* ]];
   then
     ipv6_ip=${ip_port:0:10}
     ipv6_port=${ip_port:11:15}
