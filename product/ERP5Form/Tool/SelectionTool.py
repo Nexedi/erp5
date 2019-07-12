@@ -941,6 +941,18 @@ class SelectionTool( BaseTool, SimpleItem ):
       selection = self.getSelectionFor(selection_name, REQUEST)
       selection.edit(domain_path=domain_root, domain_list=())
 
+    security.declareProtected(ERP5Permissions.View, 'setDomainDictFromParam')
+    def setDomainDictFromParam(self, selection_name, domain_dict):
+      selection = self.getSelectionFor(selection_name)
+      selection.edit(
+        domain_list=[x[1] for x in domain_dict.values()],
+        domain_path=domain_dict.keys(),
+        domain=DomainSelection(domain_dict=domain_dict),
+        flat_list_mode=0,
+        domain_tree_mode=1,
+        report_tree_mode=0,
+      )
+
     security.declareProtected(ERP5Permissions.View, 'unfoldDomain')
     def unfoldDomain(self, REQUEST, form_id=None, query_string=None):
       """
