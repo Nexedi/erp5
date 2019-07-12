@@ -231,7 +231,10 @@
           return gadget.jio_get(action_result.action);
         })
         .push(function (form_result) {
-          form_definition = form_result.form_definition;
+          form_definition = form_result.raw_dict._embedded._view._embedded.form_definition;
+          form_definition.fields_raw_properties = form_result.raw_dict._embedded._view.my_fields_raw_properties["default"];
+          form_definition._actions = form_result.raw_dict._embedded._view._actions;
+          form_definition.group_list = form_result.raw_dict.group_list;
           form_definition.action_type = action_type;
           form_definition.title = action_title;
           return gadget.getSetting("app_allowed_sub_types");

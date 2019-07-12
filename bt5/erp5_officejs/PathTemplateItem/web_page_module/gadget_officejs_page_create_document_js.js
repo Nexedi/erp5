@@ -46,6 +46,7 @@
         allowed_sub_types_list = options.allowed_sub_types_list.split(","),
         parent_portal_type = options.portal_type,
         portal_type,
+        form_definition,
         document_title;
       return gadget.jio_get(options.jio_key)
         .push(function (document) {
@@ -61,14 +62,18 @@
           return gadget.jio_get("portal_skins/erp5_hal_json_style/Base_viewNewContentDialog");
         })
         .push(function (form_result) {
-          form_result.form_definition.title = "Create Document";
+          form_definition = form_result.raw_dict._embedded._view._embedded.form_definition;
+          form_definition.fields_raw_properties = form_result.raw_dict._embedded._view.my_fields_raw_properties["default"];
+          form_definition._actions = form_result.raw_dict._embedded._view._actions;
+          form_definition.group_list = form_result.raw_dict.group_list;
+          form_definition.title = "Create Document";
           return gadget.changeState({
             doc: { title: document_title, portal_type: allowed_sub_types_list },
             parent_portal_type: parent_portal_type,
             action_options: options,
             child_gadget_url: 'gadget_erp5_pt_form_dialog.html',
             form_type: 'dialog',
-            form_definition: form_result.form_definition,
+            form_definition: form_definition,
             view: "view",
             show_dialog: allowed_sub_types_list.length > 1
           });
