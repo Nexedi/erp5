@@ -1,3 +1,5 @@
+from Products.ERP5Type.Log import log
+
 def getFieldRawProperties(field, meta_type=None, key=None, key_prefix=None):
   """ Return the raw properties of the field """
   if meta_type is None:
