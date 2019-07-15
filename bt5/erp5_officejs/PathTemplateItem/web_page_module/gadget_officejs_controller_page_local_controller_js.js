@@ -26,6 +26,8 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("render", function (options) {
+      //TODO: set this in site configuration
+      options.editable = true;
       var gadget = this,
         default_view,
         app_view,

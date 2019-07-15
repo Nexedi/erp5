@@ -60,7 +60,9 @@
             action_gadget_url,
             form_type = form_info[0],
             child_gadget_url = form_info[1],
-            valid_action = form_definition.action_type === "object_jio_js_script" &&
+            //an action form must have a GadgetField called "gadget_field_new_action_js_script"
+            //this gadget will point the custom action gadget
+            valid_action = form_definition.action_type === "object_action" &&
               form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script"),
             state_options = {
               doc: {},
@@ -73,6 +75,8 @@
             };
           if (valid_action) {
             action_gadget_url = form_definition.fields_raw_properties.gadget_field_action_js_script.values.gadget_url;
+            // as custom gadget render is being done here, avoid to child gadget to render it
+            delete form_definition.fields_raw_properties.gadget_field_action_js_script;
             gadget.element.appendChild(fragment);
             return gadget.declareGadget(action_gadget_url, {
               scope: "action_field",
@@ -83,6 +87,7 @@
               })
               .push(function (doc) {
                 state_options.doc = doc;
+                state_options.action_gadget_url = action_gadget_url;
                 return gadget.changeState(state_options);
               });
           } else {
@@ -117,12 +122,10 @@
         //target_url = options[1],
         content_dict = options[2],
         fragment = document.createElement('div'),
-        action_gadget_url,
         jio_key;
       if (gadget.state.valid_action) {
-        action_gadget_url = gadget.state.form_definition.fields_raw_properties.gadget_field_action_js_script.values.gadget_url;
         gadget.element.appendChild(fragment);
-        return gadget.declareGadget(action_gadget_url, {
+        return gadget.declareGadget(gadget.state.action_gadget_url, {
           scope: "action_field",
           element: fragment
         })
