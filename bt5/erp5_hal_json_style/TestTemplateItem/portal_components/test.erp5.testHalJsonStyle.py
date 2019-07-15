@@ -18,7 +18,7 @@ import urllib
 
 from zope.globalrequest import setRequest
 from Acquisition import aq_base
-from Products.ERP5Form.Selection import Selection
+from Products.ERP5Form.Selection import Selection, DomainSelection
 
 
 def changeSkin(skin_name):
@@ -2159,8 +2159,10 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     self.assertEquals(selection.flat_list_mode, 0)
     self.assertEquals(selection.domain_tree_mode, 1)
     self.assertEquals(selection.report_tree_mode, 0)
-    self.assertTrue(selection.domain)
-    # domain=DomainSelection(domain_dict=domain_dict),
+    self.assertTrue(isinstance(selection.domain, DomainSelection))
+    self.assertEquals(selection.domain.domain_dict,
+                      {'foo_category': ('portal_categories', 'foo_category/a/a2'),
+                       'foo_domain': ('portal_domains', 'foo_domain/a/a1')})
 
 
 class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
