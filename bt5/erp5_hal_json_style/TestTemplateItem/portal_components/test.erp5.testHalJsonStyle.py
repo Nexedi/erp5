@@ -2155,7 +2155,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     self.assertEquals(selection.getSortOrder(), [('title', 'DESC')])
     self.assertEquals(selection.columns, [('title', 'Title')])
     self.assertEquals(selection.getDomainPath(), ['foo_domain', 'foo_category'])
-    self.assertEquals(selection.getDomainList(), ['foo_domain/a/a1', 'foo_category/a/a2'])
+    self.assertEquals(selection.getDomainList(), ['foo_domain/a', 'foo_domain/a/a1', 'foo_category/a', 'foo_category/a/a2'])
     self.assertEquals(selection.flat_list_mode, 0)
     self.assertEquals(selection.domain_tree_mode, 1)
     self.assertEquals(selection.report_tree_mode, 0)
