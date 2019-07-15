@@ -1,15 +1,26 @@
 /*global window, console, RSVP, document, URL, eval, XMLHttpRequest, marked, pyodide, WebAssembly, fetch*/
-/*jslint nomen: true, indent: 2, maxerr: 3 */
+/*jslint nomen: true, indent: 2, maxerr: 3, regexp: true */
 (function (window) {
   "use strict";
+
+  function sideEffectDiv(sideEffectClass, reportSideEffect) {
+    // appends a side effect div to the side effect area
+    var div = document.createElement("div");
+    div.setAttribute("class", sideEffectClass);
+    if (reportSideEffect === undefined) {
+      div.setAttribute("style", "display:");
+    }
+    document.body.appendChild(div);
+    return div;
+  }
 
   var IODide = function createIODide() {
     var iodide = {
       output: {
-        text: function (s, reportSideEffect) {
+        text: function (content, reportSideEffect) {
           var i, div, line_list;
-          console.log(s);
-          line_list = s.toString().split("\n");
+          console.log(content);
+          line_list = content.toString().split("\n");
           for (i = 0; i < line_list.length; i += 1) {
             div = sideEffectDiv("side-effect-print", reportSideEffect);
             div.textContent = line_list[i];
@@ -37,31 +48,17 @@
     Module = {},
     packages,
     loadedPackages = [],
-    py_div_id_prefix = "py_div_id_",
-    py_div_id_count = 0,
-    py_div_id_count_2 = 0,
-    props = {},
     // Regexp for validating package name and URI
-    package_name_regexp = '[a-z0-9_][a-z0-9_\-]*',
-    package_uri_regexp = new RegExp('^https?://.*?(' + package_name_regexp + ').js$', 'i');
+    package_uri_regexp = /^https?:\/\/.*?([a-z0-9_][a-z0-9_\-]*).js$/,
+    package_name_regexp = /^[a-z0-9_][a-z0-9_\-]*$/;
 
-  package_name_regexp = new RegExp('^' + package_name_regexp + '$', 'i');
+  package_uri_regexp = new RegExp(package_uri_regexp, 'i');
+  package_name_regexp = new RegExp(package_name_regexp, 'i');
   window.iodide = new IODide();
 
   IODide.prototype.addOutputHandler = function () {
     return;
   };
-
-  function sideEffectDiv(sideEffectClass, reportSideEffect) {
-    // appends a side effect div to the side effect area
-    var div = document.createElement("div");
-    div.setAttribute("class", sideEffectClass);
-    if (reportSideEffect === undefined) {
-      div.setAttribute("style", "display:");
-    }
-    document.body.appendChild(div);
-    return div;
-  }
 
   // Copied from jio
   function ajax(param) {
@@ -132,32 +129,33 @@
     FS = pyodide._module.FS;
 
     function recurseDir(rootpath) {
-      var entry, dirs;
+      var i, entry, dirs, path;
       try {
         dirs = FS.readdir(rootpath);
-      } catch {
+      } catch (e) {
         return;
       }
-      for (entry of dirs) {
-        if (entry.startsWith('.')) {
-          continue;
-        }
-        const path = rootpath + entry;
-        if (entry.endsWith('.so')) {
-          if (Module['preloadedWasm'][path] === undefined) {
-            queue.push(function () {
-              return Module['loadWebAssemblyModule'](
-                FS.readFile(path), {
-                  loadAsync: true
-                }
-              )
-            })
-            .push(function (module) {
-              Module['preloadedWasm'][path] = module;
-            });
+
+      for (i = 0; i < dirs.length; i += 1) {
+        entry = dirs[i];
+        if (!entry.startsWith('.')) {
+          const path = rootpath + entry;
+          if (entry.endsWith('.so')) {
+            if (Module.preloadedWasm[path] === undefined) {
+              queue.push(function () {
+                return Module.loadWebAssemblyModule(
+                  FS.readFile(path), {
+                    loadAsync: true
+                  }
+                )
+              })
+              .push(function (module) {
+                Module.preloadedWasm[path] = module;
+              });
+            }
+          } else if (FS.isDir(FS.lookupPath(path).node.mode)) {
+            recurseDir(path + '/');
           }
-        } else if (FS.isDir(FS.lookupPath(path).node.mode)) {
-          recurseDir(path + '/');
         }
       }
     }
@@ -187,20 +185,20 @@
         package_uri = 'default channel';
       }
 
-      if (package_name in loadedPackages) {
+      if (loadedPackages.indexOf(package_name) !== -1) {
         if (package_uri !== loadedPackages[package_name]) {
           throw new Error(
             "URI mismatch, attempting to load package " +
-            package_name + " from " + package_uri + " while it is already " +
-            "loaded from " + loadedPackages[package_name] + " ! "
+              package_name + " from " + package_uri + " while it is already " +
+              "loaded from " + loadedPackages[package_name] + " ! "
           );
         }
       } else {
         toLoad[package_name] = package_uri;
         if (packages.hasOwnProperty(package_name)) {
-          for (k in packages[package_name]) {
+          for (k = 0; k < packages[package_name].length; k += 1) {
             subpackage = packages[package_name][k];
-            if (!(subpackage in loadedPackages) && !(subpackage in toLoad)) {
+            if (loadedPackages.indexOf(subpackage) === -1 && toLoad.indexOf(subpackage) === -1) {
               queue.push(subpackage);
             }
           }
@@ -211,13 +209,14 @@
     }
 
     if (Object.keys(toLoad).length === 0) {
-        console.log('No new packages to load');
-        return;
+      // No new packages to load
+      return;
     }
 
     pyodide.monitorRunDependencies = function (n) {
       if (n === 0) {
-        for (package_name in toLoad) {
+        for (k = 0; k < toLoad.length; k += 1) {
+          package_name = toLoad[k];
           loadedPackages[package_name] = toLoad[package_name];
         }
         delete pyodide.monitorRunDependencies;
@@ -225,9 +224,8 @@
         return preloadWasm()
           .push(function () {
             defer.resolve();
-            console.log('Loaded ' + packageList);
             return;
-        });
+          });
       }
     };
 
@@ -235,7 +233,9 @@
       defer.reject(e);
     }
 
-    for (package_name in toLoad) {
+    packageList = Object.keys(toLoad);
+    for (k = 0; k < packageList.length; k += 1) {
+      package_name = packageList[k];
       script = document.createElement('script');
       package_uri = toLoad[package_name];
       if (package_uri === 'default channel') {
@@ -270,7 +270,7 @@
     function pushNewCell() {
       if (current_type !== undefined) {
         cell_list.push(new JSMDCell(current_type[1],
-          current_text_list));
+                                      current_text_list));
       }
     }
 
@@ -298,6 +298,20 @@
 
   function executeUnknownCellType(cell) {
     throw new Error('Unsupported cell: ' + cell._type);
+  }
+
+  function renderCodeblock(result_text) {
+    var div = document.createElement('div'),
+      pre = document.createElement('pre'),
+      result = document.createElement('code');
+    div.classList.add('code-block');
+
+    if (result_text !== undefined) {
+      result.innerHTML = result_text;
+      pre.appendChild(result);
+      div.appendChild(pre);
+      document.body.appendChild(div);
+    }
   }
 
   function executeJSCell(line_list) {
@@ -443,10 +457,9 @@
   function executeMarkdownCell(line_list) {
     var renderer = new marked.Renderer();
     return new RSVP.Promise(function (resolve, reject) {
-      marked(line_list.join('\n'), {
-          renderer: renderer
-        },
-        function (err, content) {
+      marked(line_list.join('\n'),
+             {renderer: renderer},
+             function (err, content) {
           if (err) {
             reject(err);
           }
@@ -462,11 +475,11 @@
   function loadPyodide(info, receiveInstance) {
     var queue = new RSVP.Queue();
     queue.push(function () {
-        return ajax({
-          url: "pyodide.asm.wasm",
-          dataType: "arraybuffer"
-        })
-      })
+      return ajax({
+        url: "pyodide.asm.wasm",
+        dataType: "arraybuffer"
+      });
+    })
       .push(function (evt) {
         return WebAssembly.instantiate(evt.target.response, info);
       })
@@ -477,34 +490,6 @@
         console.log(error);
       });
     return queue;
-  }
-
-  function renderCodeblock(result_text) {
-    var div = document.createElement('div'),
-      pre = document.createElement('pre'),
-      result = document.createElement('code');
-    div.classList.add('code-block');
-
-    if (result_text !== undefined) {
-      result.innerHTML = result_text;
-      pre.appendChild(result);
-      div.appendChild(pre);
-      document.body.appendChild(div);
-    }
-  }
-
-  function addPyCellStub() {
-    var div = document.createElement('div'),
-      pre = document.createElement('pre'),
-      result = document.createElement('code');
-    div.setAttribute("id", py_div_id_prefix + py_div_id_count);
-    py_div_id_count += 1;
-    div.classList.add('code-block');
-
-    result.innerHTML = "Loading pyodide";
-    pre.appendChild(result);
-    div.appendChild(pre);
-    document.body.appendChild(div);
   }
 
   function executePyCell(line_list) {
@@ -523,9 +508,9 @@
     return defer.promise;
   }
 
-  Module.checkABI = function(ABI_number) {
-    if (ABI_number !== parseInt('1')) {
-      var ABI_mismatch_exception = `ABI numbers differ. Expected 1, got ${ABI_number}`;
+  Module.checkABI = function (ABI_number) {
+    if (ABI_number !== parseInt('1', 10)) {
+      var ABI_mismatch_exception = 'ABI numbers differ. Expected 1, got ' + ABI_number;
       console.error(ABI_mismatch_exception);
       throw ABI_mismatch_exception;
     }
@@ -535,9 +520,9 @@
   function initPyodide() {
     var queue = new RSVP.Queue();
     queue.push(function () {
-        Module.instantiateWasm = loadPyodide;
-        window.Module = Module;
-      })
+      Module.instantiateWasm = loadPyodide;
+      window.Module = Module;
+    })
       .push(function () {
         return loadJSResource('pyodide.asm.data.js');
       })
@@ -561,9 +546,6 @@
         window.pyodide.loadedPackages = [];
         window.pyodide._module.packages = json;
         return;
-      })
-      .push(undefined, function (error) {
-        console.log(error);
       });
     return queue;
   }
@@ -596,8 +578,8 @@
       var queue = new RSVP.Queue();
       if (is_pyodide_loaded === false) {
         queue.push(function () {
-            return initPyodide();
-          })
+          return initPyodide();
+        })
           .push(function () {
             return pyodideLoadPackage('matplotlib');
           });
@@ -607,7 +589,7 @@
       queue.push(function () {
         return executePyCell(cell._line_list);
       });
-      return queue
+      return queue;
     }
     return executeUnknownCellType(cell);
   }
