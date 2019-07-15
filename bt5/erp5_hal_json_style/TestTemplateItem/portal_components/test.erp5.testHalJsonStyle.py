@@ -2637,6 +2637,12 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoas_exportCSV(self, **kw):
     """Check that ODS export returns lines calculated from latest search
     """
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_columns = '\n'.join((
+        'id | ID',
+        'title | Title',
+        'creation_date | Creation Date',
+      )))
     # Create the listbox selection
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
