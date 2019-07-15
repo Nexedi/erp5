@@ -18,7 +18,7 @@ bt5_installation_list = ('erp5_full_text_mroonga_catalog',
                          'erp5_rss_style',
                          'erp5_trade',
                          # to develop faster
-                         'erp5_ace_editor',
+                         'erp5_code_mirror',
                          'erp5_forge',
                          'erp5_development_wizard',
                          'erp5_dhtml_style',
