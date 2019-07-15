@@ -2680,7 +2680,7 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(fake_request.RESPONSE.status, 200)
     self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'application/csv')
     expected_csv = 'Title,Creation Date\nfoook2,XX/XX/XXXX XX:XX:XX\nfoook1,XX/XX/XXXX XX:XX:XX\n'
-    self.assertEqual(len(result), len(expected_csv))
+    self.assertEqual(len(result), len(expected_csv), result)
     prefix_length = len('Title,Creation Date\nfoook2,')
     self.assertEqual(result[:prefix_length], expected_csv[:prefix_length])
 
