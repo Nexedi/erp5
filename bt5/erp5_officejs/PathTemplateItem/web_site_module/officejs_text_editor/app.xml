@@ -434,6 +434,7 @@
             <value>
               <tuple>
                 <string>Web Page | text_editor_view</string>
+                <string>Web Page | text_editor_clone</string>
               </tuple>
             </value>
         </item>
@@ -786,7 +787,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.64162.28072.21213</string> </value>
+                <value> <string>976.64179.17400.52480</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -804,7 +805,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1562752515.93</float>
+                        <float>1563192454.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

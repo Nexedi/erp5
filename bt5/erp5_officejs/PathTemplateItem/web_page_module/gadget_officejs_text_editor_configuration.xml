@@ -123,7 +123,9 @@ hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins
 hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page&view=definition_view\n
 hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F9&view=definition_view\n
 hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F10&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F11&view=definition_view\n
 hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPage_viewAsTextDocument&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FTextEditor_cloneDocument&view=definition_view\n
 \n
 NETWORK:\n
 *
@@ -269,7 +271,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.64178.35953.5256</string> </value>
+                <value> <string>976.64206.22853.836</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,7 +289,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1562754140.91</float>
+                        <float>1563193388.95</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
