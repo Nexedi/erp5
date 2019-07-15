@@ -172,7 +172,7 @@
         form_type = 'dialog';
         child_gadget_url = 'gadget_erp5_pt_form_dialog.html';
         break;
-      case 'object_action':
+      case 'object_jio_js_script':
         form_type = 'dialog';
         child_gadget_url = 'gadget_erp5_pt_form_dialog.html';
         break;

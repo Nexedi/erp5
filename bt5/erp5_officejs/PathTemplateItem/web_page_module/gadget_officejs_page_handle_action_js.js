@@ -62,7 +62,7 @@
             child_gadget_url = form_info[1],
             //an action form must have a GadgetField called "gadget_field_new_action_js_script"
             //this gadget will point the custom action gadget
-            valid_action = form_definition.action_type === "object_action" &&
+            valid_action = form_definition.action_type === "object_jio_js_script" &&
               form_definition.fields_raw_properties.hasOwnProperty("gadget_field_action_js_script"),
             state_options = {
               doc: {},
