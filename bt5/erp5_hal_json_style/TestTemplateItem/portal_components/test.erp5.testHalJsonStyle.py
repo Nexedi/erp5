@@ -16,6 +16,9 @@ import json
 import re
 import urllib
 
+from Products.ERP5Form.Selection import Selection, DomainSelection
+
+
 def changeSkin(skin_name):
   """Change skin for following commands and attribute resolution.
 
@@ -2084,6 +2087,63 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     # There is a count method on this listbox
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
     self.assertEqual(result_dict['_embedded']['count'], 1)
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
+  @simulate('Test_listCatalog', '*args, **kwargs', "return []")
+  @changeSkin('Hal')
+  def test_getHateoas_selection_compatibility(self, **kw):
+    """Check that listbox line calculation modify the selection
+    """
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_count_method = '')
+
+    selection_tool = self.portal.portal_selections
+    selection_name = self.portal.foo_module.FooModule_viewFooList.listbox.get_value('selection_name')
+    selection_tool.setSelectionFor(selection_name, Selection(selection_name))
+
+    # Create the listbox selection
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      local_roles=["Manager"],
+      query='bar:"foo"',
+      list_method='Test_listCatalog',
+      select_list=['title', 'uid'],
+      selection_domain=json.dumps({'foo_domain': 'a/a1', 'foo_category': 'a/a2'}),
+      relative_url='foo_module',
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox',
+      default_param_json='eyJwb3J0YWxfdHlwZSI6IFsiRm9vIl0sICJpZ25vcmVfdW5rbm93bl9jb2x1bW5zIjogdHJ1ZX0=',
+      sort_on=json.dumps(["title","descending"])
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+
+    selection = selection_tool.getSelectionFor(selection_name)
+    self.assertEquals(selection.method_path, '/%s/foo_module/Test_listCatalog' % self.portal.getId())
+    self.assertEquals(
+      selection.getParams(), {
+        'local_roles': ['Manager'],
+        'full_text': 'bar:"foo"',
+        'ignore_unknown_columns': True,
+        'portal_type': ['Foo'],
+        'limit': 1000
+      })
+    self.assertEquals(selection.getSortOrder(), [('title', 'DESC')])
+    self.assertEquals(selection.columns, [('title', 'Title')])
+    self.assertEquals(selection.getDomainPath(), ['foo_domain', 'foo_category'])
+    self.assertEquals(selection.getDomainList(), ['foo_domain/a', 'foo_domain/a/a1', 'foo_category/a', 'foo_category/a/a2'])
+    self.assertEquals(selection.flat_list_mode, 0)
+    self.assertEquals(selection.domain_tree_mode, 1)
+    self.assertEquals(selection.report_tree_mode, 0)
+    self.assertTrue(isinstance(selection.domain, DomainSelection))
+    self.assertEquals(selection.domain.domain_dict,
+                      {'foo_category': ('portal_categories', 'foo_category/a/a2'),
+                       'foo_domain': ('portal_domains', 'foo_domain/a/a1')})
+
 
 class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   """Test HAL_JSON operations on cataloged Persons and other allowed content types of Person Module."""
