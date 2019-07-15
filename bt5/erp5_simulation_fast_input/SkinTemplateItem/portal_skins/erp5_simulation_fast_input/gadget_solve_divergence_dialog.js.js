@@ -82,6 +82,10 @@ function loopEventListener(target, type, useCapture, callback) {
     .declareService(function () {
       var gadget = this;
       console.log("location",location);
+      // WARNING: This considers that the view (in this case,
+      // 'Delivery_solveDivergenceAction') is at the end of the pathname
+      // but if there are several pages in the ListBox (not handled), this
+      // will not be the case...
       var basedir = location.pathname.split('/').slice(0, -1).join('/') + '/',
         divergence_choice_list = [],
         i,
@@ -94,10 +98,18 @@ function loopEventListener(target, type, useCapture, callback) {
         console.log("fillDialog, event", event);
         console.log("fillDialog, value", event.target.value);
         var solver_decision_uid = event.target.name.split("_").pop();
-        gadget.props.filling_count += 1;
-        var button = document.querySelector('#dialog_submit_button');
-        button.disabled = true;
-        button.setAttribute('style', 'visibility:hidden');
+
+        var data_cell = event.target.parentElement.parentElement.querySelectorAll(
+          ".listbox-table-data-cell")[2];
+        // The purpose here is to not make visible the submit button until
+        // there is no error which should not be counted twice...
+        if (!data_cell.innerHTML.includes('ERROR')) {
+          gadget.props.filling_count += 1;
+          var button = document.querySelector('#dialog_submit_button');
+          button.disabled = true;
+          button.setAttribute('style', 'visibility:hidden');
+        }
+
         return new RSVP.Queue()
           .push(function () {
             return jIO.util.ajax(
@@ -111,14 +123,23 @@ function loopEventListener(target, type, useCapture, callback) {
             );
           })
           .push(function (data) {
-            event.target.parentElement.parentElement.querySelectorAll(
-              ".listbox-table-data-cell")[2].innerHTML = data.target.response;
+            data_cell.innerHTML = data.target.response;
             gadget.props.filling_count -= 1;
             if (gadget.props.filling_count === 0) {
               var button = document.querySelector('#dialog_submit_button');
               button.disabled = false;
               button.setAttribute('style', 'visibility:visible');
             }
+          }, function (error) {
+            var error_message;
+            if (error.target !== undefined) {
+              error_message = '<a class="error" href="' + error.target.responseURL + '">Request failed</a>' +
+                ' (' + error.target.status + ' ' + error.target.statusText + ')';
+            }
+            else {
+              error_message = 'Request failed';
+            }
+            data_cell.innerHTML = '<span class="error"><b>ERROR: ' + error_message + '</b></span>';
           });
       }
 
