@@ -127,13 +127,12 @@
     // can't be done synchronously within the call to dlopen, we instantiate
     // every .so that comes our way up front, caching it in the
     // `preloadedWasm` dictionary.
-
-    let promise = new Promise((resolve) => resolve());
-    let FS = pyodide._module.FS;
+    var queue, FS;
+    queue = new RSVP.Queue();
+    FS = pyodide._module.FS;
 
     function recurseDir(rootpath) {
-      let dirs;
-      var entry;
+      var entry, dirs;
       try {
         dirs = FS.readdir(rootpath);
       } catch {
@@ -146,14 +145,16 @@
         const path = rootpath + entry;
         if (entry.endsWith('.so')) {
           if (Module['preloadedWasm'][path] === undefined) {
-            promise = promise
-              .then(() => Module['loadWebAssemblyModule'](
+            queue.push(function () {
+              return Module['loadWebAssemblyModule'](
                 FS.readFile(path), {
                   loadAsync: true
-                }))
-              .then((module) => {
-                Module['preloadedWasm'][path] = module;
-              });
+                }
+              )
+            })
+            .push(function (module) {
+              Module['preloadedWasm'][path] = module;
+            });
           }
         } else if (FS.isDir(FS.lookupPath(path).node.mode)) {
           recurseDir(path + '/');
@@ -163,16 +164,17 @@
 
     recurseDir('/');
 
-    return promise;
+    return queue;
   }
 
   function pyodideLoadPackage(names) {
     // DFS to find all dependencies of the requested packages
     var queue, toLoad, package_uri, package_name, k,
-      subpackage, promise, packageList, script;
+      subpackage, packageList, script, defer;
     packages = window.pyodide.packages.dependencies;
     queue = new Array(names);
     toLoad = [];
+    defer = RSVP.defer();
     while (queue.length) {
       package_uri = queue.pop();
       package_name = _uri_to_package_name(package_uri);
@@ -208,47 +210,49 @@
       }
     }
 
-    promise = new RSVP.Promise(function (resolve, reject) {
-      if (Object.keys(toLoad).length === 0) {
-        resolve('No new packages to load');
-      }
+    if (Object.keys(toLoad).length === 0) {
+        console.log('No new packages to load');
+        return;
+    }
 
-      pyodide.monitorRunDependencies = function (n) {
-        if (n === 0) {
-          for (package_name in toLoad) {
-            loadedPackages[package_name] = toLoad[package_name];
-          }
-          delete pyodide.monitorRunDependencies;
-          packageList = Array.from(Object.keys(toLoad)).join(', ');
-          preloadWasm().then(() => {
-            resolve(`Loaded ${packageList}`)
-          });
+    pyodide.monitorRunDependencies = function (n) {
+      if (n === 0) {
+        for (package_name in toLoad) {
+          loadedPackages[package_name] = toLoad[package_name];
         }
-      };
-
-      function script_reject(e) {
-        reject(e);
+        delete pyodide.monitorRunDependencies;
+        packageList = Array.from(Object.keys(toLoad)).join(', ');
+        return preloadWasm()
+          .push(function () {
+            defer.resolve();
+            console.log('Loaded ' + packageList);
+            return;
+        });
       }
+    };
 
-      for (package_name in toLoad) {
-        script = document.createElement('script');
-        package_uri = toLoad[package_name];
-        if (package_uri === 'default channel') {
-          script.src = package_name + ".js";
-        } else {
-          script.src = package_uri;
-        }
-        script.onerror = script_reject;
-        document.body.appendChild(script);
+    function script_reject(e) {
+      defer.reject(e);
+    }
+
+    for (package_name in toLoad) {
+      script = document.createElement('script');
+      package_uri = toLoad[package_name];
+      if (package_uri === 'default channel') {
+        script.src = package_name + ".js";
+      } else {
+        script.src = package_uri;
       }
+      script.onerror = script_reject;
+      document.body.appendChild(script);
+    }
 
-      // We have to invalidate Python's import caches, or it won't
-      // see the new files. This is done here so it happens in parallel
-      // with the fetching over the network.
-      window.pyodide.runPython('import importlib as _importlib\n' +
-        '_importlib.invalidate_caches()\n');
-    });
-    return promise;
+    // We have to invalidate Python's import caches, or it won't
+    // see the new files. This is done here so it happens in parallel
+    // with the fetching over the network.
+    window.pyodide.runPython('import importlib as _importlib\n' +
+      '_importlib.invalidate_caches()\n');
+    return defer.promise;
   }
 
   function parseJSMDCellList(jsmd) {
@@ -479,9 +483,7 @@
     var div = document.createElement('div'),
       pre = document.createElement('pre'),
       result = document.createElement('code');
-    div.style.border = '1px solid #C3CCD0';
-    div.style.margin = '40px 10px';
-    div.style.paddingLeft = '10px';
+    div.classList.add('code-block');
 
     if (result_text !== undefined) {
       result.innerHTML = result_text;
@@ -497,10 +499,7 @@
       result = document.createElement('code');
     div.setAttribute("id", py_div_id_prefix + py_div_id_count);
     py_div_id_count += 1;
-
-    div.style.border = '1px solid #C3CCD0';
-    div.style.margin = '40px 10px';
-    div.style.paddingLeft = '10px';
+    div.classList.add('code-block');
 
     result.innerHTML = "Loading pyodide";
     pre.appendChild(result);
@@ -518,14 +517,8 @@
     window.pyodide = pyodide(Module);
     window.pyodide.loadPackage = pyodideLoadPackage;
 
-    var defer = RSVP.defer(),
-      promise = defer.promise;
-
+    var defer = RSVP.defer();
     Module.postRun = defer.resolve;
-    promise.then(function () {
-      console.log("postRun get called");
-      delete window.Module;
-    });
 
     return defer.promise;
   }
@@ -555,6 +548,7 @@
         return pyodideSetting();
       })
       .push(function () {
+        delete window.Module;
         return ajax({
           url: 'packages.json'
         });
