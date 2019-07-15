@@ -42,7 +42,7 @@ def getFieldRawProperties(field, meta_type=None, key=None, key_prefix=None):
     try:
       result["values"]["url"] = result["values"]["gadget_url"]
       result["values"]["renderjs_extra"] = result["values"]["renderjs_extra"][0][0]
-    except KeyError:
+    except (ValueError, KeyError, IndexError):
       log("error while patching form gadget list definition")
   for key in field.tales.keys():
     if field.tales[key]:
