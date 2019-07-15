@@ -1656,12 +1656,23 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             byteify(json.loads(selection_domain)))
         category_tool = portal.portal_categories
         domain_tool = portal.portal_domains
+
+        if is_rendering_listbox:
+          new_selection_dict = {}
+
         for domain_root_id in selection_domain_dict:
           domain_root = category_tool.restrictedTraverse(domain_root_id, None)
+          selection_path = selection_domain_dict[domain_root_id]
           if domain_root is None:
+            selection_root = 'portal_domains'
             selection_domain_dict[domain_root_id] = domain_tool.getDomainByPath('%s/%s' % (domain_root_id, selection_domain_dict[domain_root_id]))
           else:
+            selection_root = 'portal_categories'
             selection_domain_dict[domain_root_id] = domain_root.restrictedTraverse(selection_domain_dict[domain_root_id])
+
+          if is_rendering_listbox:
+            new_selection_dict[domain_root_id] = (selection_root, '%s/%s' % (domain_root_id, selection_path), )
+
         catalog_kw["selection_domain"] = selection_domain_dict
 
       if sort_on is not None:
@@ -1723,16 +1734,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         else:
           selection_kw['columns'] = []
 
-        selection = Selection(selection_name, **selection_kw)
-        selection_tool.setSelectionFor(selection_name, selection)
+        selection_tool.setSelectionFor(selection_name, Selection(selection_name, **selection_kw))
 
         if 'selection_domain' in catalog_kw:
-          new_selection_dict = {}
-          selection_domain_dict = ensureDeserialized(
-              byteify(json.loads(selection_domain)))
-          for domain_root_id in selection_domain_dict:
-            new_selection_dict[domain_root_id] = ('portal_categories', '%s/%s' % (domain_root_id, selection_domain_dict[domain_root_id]), )
-
           selection_tool.setDomainDictFromParam(selection_name, new_selection_dict)
 
       # Some search scripts impertinently grab their arguments from REQUEST
