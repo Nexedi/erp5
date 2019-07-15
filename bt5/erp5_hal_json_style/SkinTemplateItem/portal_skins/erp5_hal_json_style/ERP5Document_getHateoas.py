@@ -62,6 +62,7 @@ from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Utils import UpperCase
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from collections import OrderedDict
+from Products.ERP5Form.Selection import Selection
 
 MARKER = []
 COUNT_LIMIT = 1000
@@ -1655,12 +1656,23 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             byteify(json.loads(selection_domain)))
         category_tool = portal.portal_categories
         domain_tool = portal.portal_domains
+
+        if is_rendering_listbox:
+          new_selection_dict = {}
+
         for domain_root_id in selection_domain_dict:
           domain_root = category_tool.restrictedTraverse(domain_root_id, None)
+          selection_path = selection_domain_dict[domain_root_id]
           if domain_root is None:
+            selection_root = 'portal_domains'
             selection_domain_dict[domain_root_id] = domain_tool.getDomainByPath('%s/%s' % (domain_root_id, selection_domain_dict[domain_root_id]))
           else:
+            selection_root = 'portal_categories'
             selection_domain_dict[domain_root_id] = domain_root.restrictedTraverse(selection_domain_dict[domain_root_id])
+
+          if is_rendering_listbox:
+            new_selection_dict[domain_root_id] = (selection_root, '%s/%s' % (domain_root_id, selection_path), )
+
         catalog_kw["selection_domain"] = selection_domain_dict
 
       if sort_on is not None:
@@ -1699,6 +1711,33 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # When rendering a listbox without count method, add a dummy manual count
         # by fetching more documents than requested
         catalog_kw["limit"] = [0, COUNT_LIMIT]
+
+      if is_rendering_listbox:
+        # Store the current search parameters in the listbox selection
+        # This is done to improve compatibility with existing actions (ODS style for example)
+        # No need to edit current selection. Replace it with a new one
+        selection_tool = portal.portal_selections
+        selection_name = source_field.get_value('selection_name')
+        selection_kw = {}
+
+        selection_kw['params'] = {'local_roles': catalog_kw["local_roles"]}
+        if 'full_text' in catalog_kw:
+          selection_kw['params']['full_text'] = catalog_kw["full_text"]
+        if 'sort_on' in catalog_kw:
+          selection_kw['sort_on'] = catalog_kw['sort_on']
+
+        if select_list:
+          column_list = [(name, title) for name, title in source_field.get_value("columns") if name in select_list]
+          all_column_list = [(name, title) for name, title in source_field.get_value("all_columns") if name in select_list]
+          selection_kw['columns'] = [(name, Base_translateString(title))
+                                     for name, title in OrderedDict(column_list + all_column_list).items()]
+        else:
+          selection_kw['columns'] = []
+
+        selection_tool.setSelectionFor(selection_name, Selection(selection_name, **selection_kw))
+
+        if 'selection_domain' in catalog_kw:
+          selection_tool.setDomainDictFromParam(selection_name, new_selection_dict)
 
       # Some search scripts impertinently grab their arguments from REQUEST
       # instead of being nice and specify them as their input parameters.
