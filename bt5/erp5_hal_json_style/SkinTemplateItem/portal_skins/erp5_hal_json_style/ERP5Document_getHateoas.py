@@ -1738,6 +1738,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             ensureDeserialized(
               byteify(
                 json.loads(urlsafe_b64decode(default_param_json)))))
+        selection_kw['params']['limit'] = COUNT_LIMIT
         selection_kw['params']['local_roles'] = catalog_kw["local_roles"]
         if 'full_text' in catalog_kw:
           selection_kw['params']['full_text'] = catalog_kw["full_text"]
