@@ -660,7 +660,7 @@
           })
           .push(function (hide_listbox_buttons) {
             // XXX Disable select and clipboard functionalities on migrated apps: 'uid'-workaround made for renderjs UI doesn't work on officejs
-            hide_buttons = ((hide_listbox_buttons !== undefined && hide_listbox_buttons == "1") ? false : true);
+            hide_buttons = ((hide_listbox_buttons !== undefined && hide_listbox_buttons == "1") ? true : false);
             return RSVP.all([
               gadget.getUrlForList(url_for_option_list),
               is_sortable_list,
@@ -779,7 +779,7 @@
               button_element.type = 'button';
               button_element.setAttribute('class', 'ui-icon-list-ul ui-btn-icon-left ' + gadget.state.hide_class);
               button_element.textContent = translation_list[5];
-              if (hide_buttons && gadget.state.hide_class !== "ui-disabled") {
+              if (!hide_buttons) {
                 div_element.appendChild(button_element);
               }
 
@@ -792,7 +792,7 @@
               button_element.type = 'button';
               button_element.setAttribute('class', 'ui-icon-check-square-o ui-btn-icon-left ' + gadget.state.hide_class);
               button_element.textContent = translation_list[1];
-              if (hide_buttons && gadget.state.hide_class !== "ui-disabled") {
+              if (!hide_buttons) {
                 div_element.appendChild(button_element);
               }
             }
