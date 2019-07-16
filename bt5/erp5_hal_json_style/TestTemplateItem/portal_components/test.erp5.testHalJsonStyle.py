@@ -2680,6 +2680,70 @@ class TestERP5ODS(ERP5HALJSONStyleSkinsMixin):
       ('dialog_method', 'Base_viewAsODS'),
       ('dialog_id', 'Base_viewAsODSDialog'),
       ('form_id', 'FooModule_viewFooList'),
+      ('selection_name', 'foo_selection'),
+      ('field_your_print_mode', 'list'),
+      ('default_field_your_print_mode:int', '0'),
+      ('field_your_format', 'csv'),
+      ('default_field_your_format:int', '0'),
+      ('field_your_target_language', ''),
+      ('default_field_your_target_language:int', '0'),
+      ('extra_param_json', '{}'),
+    ))
+    fake_portal = replace_request(fake_request, self.portal)
+
+    result = fake_portal.web_site_module.hateoas.foo_module.Base_callDialogMethod(
+      dialog_method='Base_viewAsODS',
+      dialog_id='Base_viewAsODSDialog',
+      form_id='FooModule_viewFooList',
+    )
+    self.assertEqual(fake_request.get('portal_skin'), 'ODS')
+    self.assertEqual(fake_request.RESPONSE.status, 200)
+    self.assertEqual(fake_request.RESPONSE.getHeader('Content-Type'), 'application/csv')
+    expected_csv = 'Title,Creation Date\nfoook2,XX/XX/XXXX XX:XX:XX\nfoook1,XX/XX/XXXX XX:XX:XX\n'
+    self.assertEqual(len(result), len(expected_csv), result)
+    prefix_length = len('Title,Creation Date\nfoook2,')
+    self.assertEqual(result[:prefix_length], expected_csv[:prefix_length])
+
+
+  @changeSkin('Hal')
+  def test_getHateoas_exportAllViewCSV(self, **kw):
+    """Check that ODS export returns views calculated from latest search
+    """
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_columns = '\n'.join((
+        'id | ID',
+        'title | Title',
+        'creation_date | Creation Date',
+      )))
+    # Create the listbox selection
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="search",
+      # local_roles=["Manager"],
+      query='title:"foook%"',
+      list_method='searchFolder',
+      select_list=['title', 'creation_date', 'uid'],
+      relative_url='foo_module',
+      form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox',
+      sort_on=json.dumps(["title","descending"])
+    )
+
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(len(result_dict['_embedded']['contents']), 2)
+
+    # Export as CSV
+    fake_request = do_fake_request("POST", data=(
+      ('dialog_method', 'Base_viewAsODS'),
+      ('dialog_id', 'Base_viewAsODSDialog'),
+      ('form_id', 'FooModule_viewFooList'),
+      ('selection_name', 'foo_selection'),
+      ('field_your_print_mode', 'list_view'),
+      ('default_field_your_print_mode:int', '0'),
       ('field_your_format', 'csv'),
       ('default_field_your_format:int', '0'),
       ('field_your_target_language', ''),
