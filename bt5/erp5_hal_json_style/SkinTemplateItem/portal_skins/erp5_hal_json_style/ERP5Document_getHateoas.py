@@ -1732,7 +1732,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         selection_kw = {}
 
         selection_kw['method_path'] = '%s/%s' % (traversed_document.getPath(), list_method)
-        selection_kw['params'] = {'local_roles': catalog_kw["local_roles"]}
+        selection_kw['params'] = {}
+        if default_param_json is not None:
+          selection_kw['params'].update(
+            ensureDeserialized(
+              byteify(
+                json.loads(urlsafe_b64decode(default_param_json)))))
+        selection_kw['params']['local_roles'] = catalog_kw["local_roles"]
         if 'full_text' in catalog_kw:
           selection_kw['params']['full_text'] = catalog_kw["full_text"]
         if 'sort_on' in catalog_kw:
