@@ -771,7 +771,7 @@
               button_element.setAttribute('data-rel', 'clipboard');
               button_element.setAttribute('name', 'Clipboard');
               button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-list-ul ui-btn-icon-left ');
+              button_element.setAttribute('class', 'ui-icon-list-ul ui-btn-icon-left ' + gadget.state.hide_class);
               button_element.textContent = translation_list[5];
               div_element.appendChild(button_element);
 
