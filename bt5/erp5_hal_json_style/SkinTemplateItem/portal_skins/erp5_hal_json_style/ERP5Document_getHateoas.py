@@ -986,9 +986,16 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     # overwrite "form_id" field's value because old UI does that by passing
     # the form_id in query string and hidden fields
     renderHiddenField(response_dict, "form_id", last_form_id)
-    if last_listbox is not None:
-      last_selection_name = last_listbox.get_value('selection_name')
-      renderHiddenField(response_dict, "selection_name", last_selection_name)
+    if (last_listbox is not None):
+      try:
+        current_listbox = form.Base_getListbox()
+      except AttributeError:
+        current_listbox = None
+      if (current_listbox is None):
+        # If dialog has a listbox, do not return selection name
+        # or it will lead to unexpected selection name
+        last_selection_name = last_listbox.get_value('selection_name')
+        renderHiddenField(response_dict, "selection_name", last_selection_name)
     # dialog_id is a mandatory field in any form_dialog
     renderHiddenField(response_dict, 'dialog_id', form.id)
     # some dialog actions use custom cancel_url
