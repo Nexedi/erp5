@@ -2138,6 +2138,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
       selection_domain=json.dumps({'foo_domain': 'a/a1', 'foo_category': 'a/a2'}),
       relative_url='foo_module',
       form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox',
+      default_param_json='eyJwb3J0YWxfdHlwZSI6IFsiRm9vIl0sICJpZ25vcmVfdW5rbm93bl9jb2x1bW5zIjogdHJ1ZX0=',
       sort_on=json.dumps(["title","descending"])
     )
     self.assertEquals(fake_request.RESPONSE.status, 200)
@@ -2151,7 +2152,8 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
       selection.getParams(), {
         'local_roles': ['Manager'],
         'full_text': 'bar:"foo"',
-        'ignore_unknown_columns': True
+        'ignore_unknown_columns': True,
+        'portal_type': ['Foo']
       })
     self.assertEquals(selection.getSortOrder(), [('title', 'DESC')])
     self.assertEquals(selection.columns, [('title', 'Title')])
