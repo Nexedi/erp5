@@ -986,6 +986,9 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     # overwrite "form_id" field's value because old UI does that by passing
     # the form_id in query string and hidden fields
     renderHiddenField(response_dict, "form_id", last_form_id)
+    if last_listbox is not None:
+      last_selection_name = last_listbox.get_value('selection_name')
+      renderHiddenField(response_dict, "selection_name", last_selection_name)
     # dialog_id is a mandatory field in any form_dialog
     renderHiddenField(response_dict, 'dialog_id', form.id)
     # some dialog actions use custom cancel_url
@@ -1122,6 +1125,7 @@ def renderFormDefinition(form, response_dict):
   if form.pt == "form_dialog":
     # every form dialog has its dialog_id and meta (control) attributes in extra_param_json
     group_list[-1][1].extend([
+      ('selection_name', {'meta_type': 'StringField'}),
       ('dialog_id', {'meta_type': 'StringField'}),
       ('extra_param_json', {'meta_type': 'StringField'})
     ])
