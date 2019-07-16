@@ -1731,6 +1731,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         selection_name = source_field.get_value('selection_name')
         selection_kw = {}
 
+        selection_kw['method_path'] = '%s/%s' % (traversed_document.getPath(), list_method)
         selection_kw['params'] = {'local_roles': catalog_kw["local_roles"]}
         if 'full_text' in catalog_kw:
           selection_kw['params']['full_text'] = catalog_kw["full_text"]

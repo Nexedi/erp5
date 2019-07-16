@@ -2146,6 +2146,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     )
 
     selection = selection_tool.getSelectionFor(selection_name)
+    self.assertEquals(selection.method_path, '/erp5/foo_module/Test_listCatalog')
     self.assertEquals(
       selection.getParams(), {
         'local_roles': ['Manager'],
