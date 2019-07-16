@@ -2153,7 +2153,8 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
         'local_roles': ['Manager'],
         'full_text': 'bar:"foo"',
         'ignore_unknown_columns': True,
-        'portal_type': ['Foo']
+        'portal_type': ['Foo'],
+        'limit': 1000
       })
     self.assertEquals(selection.getSortOrder(), [('title', 'DESC')])
     self.assertEquals(selection.columns, [('title', 'Title')])
