@@ -247,6 +247,9 @@ gadget_officejs_bootloader_serviceworker.js\n
 officejs_logo.png\n
 jio_appcachestorage.js\n
 \n
+action_texteditor_clone.html\n
+action_texteditor_clone.js\n
+\n
 #configuration resources\n
 hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_hal_json_style%2FBase_viewNewContentDialog&view=definition_view\n
 \n
@@ -743,7 +746,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.6157.31428.12151</string> </value>
+                <value> <string>977.7584.19758.5632</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -761,7 +764,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1563203394.83</float>
+                        <float>1563346667.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
