@@ -192,6 +192,11 @@
   <td>//textarea[@title='Description']</td>
   <td>${description}</td>
 </tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>identifier=cke_1_contents</td>
+  <td></td>
+</tr>
 <!-- Clone action -->
 <tr>
  <td>waitForElementPresent</td>
@@ -310,4 +315,9 @@
   <td>verifyValue</td>
   <td>//textarea[@title='Description']</td>
   <td>${description}</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>identifier=cke_1_contents</td>
+  <td></td>
 </tr>

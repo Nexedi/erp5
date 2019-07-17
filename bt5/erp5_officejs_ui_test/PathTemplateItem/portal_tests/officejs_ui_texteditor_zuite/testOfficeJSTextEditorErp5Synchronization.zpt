@@ -62,7 +62,7 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
-  
+
 <tr>
  <td>waitForElementPresent</td>
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
@@ -73,23 +73,6 @@
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
  <td></td>
 </tr>
-<!-- Skip dialog form
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//select[@name="portal_type"]</td>
-  <td></td>
-<tr>
-<tr>
-  <td>select</td>
-  <td>//select[@name="portal_type"]</td>
-  <td>value=Web Page</td>
-<tr>
-<tr>
-  <td>click</td>
-  <td>//div[contains(@class, 'dialog_button_container')]//input[@value="Create Document"]</td>
-  <td></td>
-</tr>
--->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>waitForElementPresent</td>
@@ -155,23 +138,6 @@
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
  <td></td>
 </tr>
-<!-- Skip dialog form
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//select[@name="portal_type"]</td>
-  <td></td>
-<tr>
-<tr>
-  <td>select</td>
-  <td>//select[@name="portal_type"]</td>
-  <td>value=Web Page</td>
-<tr>
-<tr>
-  <td>click</td>
-  <td>//div[contains(@class, 'dialog_button_container')]//input[@value="Create Document"]</td>
-  <td></td>
-</tr>
--->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr>
   <td>store</td>
