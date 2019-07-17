@@ -746,7 +746,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.7584.19758.5632</string> </value>
+                <value> <string>977.8821.29343.5888</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -764,7 +764,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1563346667.69</float>
+                        <float>1563363682.11</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
