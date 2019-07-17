@@ -32,6 +32,7 @@ for analysis_line in context.objectValues(portal_type="Data Analysis Line"):
     
     parameter["Start Date"] = analysis_line.getStartDate()
     parameter["Stop Date"] = analysis_line.getStopDate()
+    parameter["Id"] = analysis_line.getId()
     # several lines with same reference wil turn the parameter into a list
     if reference in parameter_dict:
       if not isinstance(parameter_dict[reference], list):
