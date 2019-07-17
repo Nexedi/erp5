@@ -2,6 +2,8 @@
 Paramameter list :
 reference -- User login is mandatory (String)
 default_email_text -- Email is mandatory (String)"""
+import json
+
 # create the credential request
 portal = context.getPortalObject()
 module = portal.getDefaultModule(portal_type='Credential Request')
@@ -10,7 +12,11 @@ category_list = portal_preferences.getPreferredSubscriptionAssignmentCategoryLis
 
 if not context.CredentialRequest_checkLoginAvailability(reference):
   message_str = "Selected login is already in use, please choose different one."
-  return portal.Base_redirect(keep_items = dict(portal_status_message=context.Base_translateString(message_str)))
+  if not batch_mode:
+    return portal.Base_redirect(keep_items = dict(portal_status_message=context.Base_translateString(message_str)))
+  else:
+    return  json.dumps({'msg': message_str, 
+                        'code':1})
  
 credential_request = module.newContent(
                 portal_type="Credential Request",
@@ -68,6 +74,10 @@ else:
     credential_request.submit("Automatic submit")
     message_str = "Credential Request Created."
 
+message_str = "Registration submitted. Wait for an email."
 if not batch_mode:
   return portal.Base_redirect(form_id='login_form', 
                      keep_items = dict(portal_status_message=context.Base_translateString(message_str)))
+else:
+    return   json.dumps({'msg': message_str, 
+                        'code':0})
