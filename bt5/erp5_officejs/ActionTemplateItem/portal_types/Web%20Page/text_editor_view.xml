@@ -83,7 +83,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>portal_skins/erp5_web_officejs_ui/WebPage_viewAsTextDocument</string> </value>
+            <value> <string>string:${object_url}/WebPage_viewAsTextDocument</string> </value>
         </item>
       </dictionary>
     </pickle>

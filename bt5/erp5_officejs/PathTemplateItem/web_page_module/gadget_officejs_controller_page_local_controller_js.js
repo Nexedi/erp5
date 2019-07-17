@@ -26,8 +26,6 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("render", function (options) {
-      //TODO: set this in site configuration
-      options.editable = true;
       var gadget = this,
         default_view,
         app_view,
@@ -41,13 +39,15 @@
           return RSVP.all([
             gadget.declareGadget("gadget_officejs_common_utils.html"),
             gadget.getSetting('app_view_reference'),
-            gadget.getSetting('default_view_reference')
+            gadget.getSetting('default_view_reference'),
+            gadget.getSetting('documents_editable')
           ]);
         })
         .push(function (result_list) {
           gadget_utils = result_list[0];
           app_view = options.action || result_list[1];
           default_view = result_list[2];
+          options.editable = ((result_list[3] == "1") ? true : options.editable);
           return gadget.jio_get(options.jio_key);
         })
         .push(function (result) {

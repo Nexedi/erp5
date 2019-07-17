@@ -228,6 +228,9 @@
         .push(function (action_result) {
           action_title = action_result.title;
           action_type = action_result.action_type;
+          if (action_result.action.includes("string:${object_url}")) {
+            action_result.action = action_result.action.replace("string:${object_url}", "portal_skins/erp5_web_officejs_ui");
+          }
           return gadget.jio_get(action_result.action);
         })
         .push(function (form_result) {
