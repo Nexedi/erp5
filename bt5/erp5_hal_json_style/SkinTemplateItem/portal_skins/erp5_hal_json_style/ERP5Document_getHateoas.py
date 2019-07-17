@@ -391,6 +391,7 @@ def getFieldDefault(form, field, key, value=MARKER):
     return "%s" % value
   return value
 
+
 def renderField(traversed_document, field, form, value=MARKER, meta_type=None, key=None, key_prefix=None, selection_params=None, request_field=True):
   """Extract important field's attributes into `result` dictionary."""
   if selection_params is None:
@@ -1364,9 +1365,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       for view_action in erp5_action_dict[erp5_action_key]:
         # Action condition is probably checked in Base_filterDuplicateActions
         erp5_action_list.append({
-          'href': view_action['url'] if ('url' in view_action) else '',
+          'href': '%s' % view_action['url'],
           'name': view_action['id'],
-          'icon': view_action['icon'] if ('icon' in view_action) else '',
+          'icon': view_action['icon'],
           'title': Base_translateString(view_action['title'])
         })
 
@@ -2149,7 +2150,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
   else:
     raise NotImplementedError("Unsupported mode %s" % mode)
-
+  
   return result_dict
 
 
