@@ -124,34 +124,41 @@
     // can't be done synchronously within the call to dlopen, we instantiate
     // every .so that comes our way up front, caching it in the
     // `preloadedWasm` dictionary.
-    var queue, FS;
+    var queue, FS, path;
     queue = new RSVP.Queue();
     FS = pyodide._module.FS;
 
     function recurseDir(rootpath) {
-      var i, entry, dirs, path;
+      var i, entry, dirs;
       try {
         dirs = FS.readdir(rootpath);
       } catch (e) {
         return;
       }
 
+      function readModuleFile(path) {
+        return function () {
+          return Module.loadWebAssemblyModule(
+            FS.readFile(path),
+            {loadAsync: true}
+          );
+        };
+      }
+      function setModule(path) {
+        return function (module) {
+          Module.preloadedWasm[path] = module;
+        };
+      }
+
       for (i = 0; i < dirs.length; i += 1) {
         entry = dirs[i];
         if (!entry.startsWith('.')) {
-          const path = rootpath + entry;
+          path = rootpath + entry;
+
           if (entry.endsWith('.so')) {
             if (Module.preloadedWasm[path] === undefined) {
-              queue.push(function () {
-                return Module.loadWebAssemblyModule(
-                  FS.readFile(path), {
-                    loadAsync: true
-                  }
-                )
-              })
-              .push(function (module) {
-                Module.preloadedWasm[path] = module;
-              });
+              queue.push(readModuleFile(path))
+                .push(setModule(path));
             }
           } else if (FS.isDir(FS.lookupPath(path).node.mode)) {
             recurseDir(path + '/');
