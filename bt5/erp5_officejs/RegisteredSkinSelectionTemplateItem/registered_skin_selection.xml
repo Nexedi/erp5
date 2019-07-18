@@ -1,6 +1,18 @@
 <registered_skin_selection>
  <skin_folder_selection>
+  <skin_folder>erp5_hal_json_style</skin_folder>
+  <skin_selection>AppCache</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
   <skin_folder>erp5_web_officejs_ui</skin_folder>
-  <skin_selection>RJS,View</skin_selection>
+  <skin_selection>AppCache,Hal,RJS,View</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_web_redirect_assist</skin_folder>
+  <skin_selection>AppCache</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_xhtml_style</skin_folder>
+  <skin_selection>AppCache</skin_selection>
  </skin_folder_selection>
 </registered_skin_selection>
