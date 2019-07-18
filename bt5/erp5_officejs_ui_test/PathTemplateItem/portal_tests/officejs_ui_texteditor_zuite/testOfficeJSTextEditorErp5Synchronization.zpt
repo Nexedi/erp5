@@ -62,19 +62,22 @@
   <td>//button[@data-i18n='Proceed']</td>
   <td></td>
 </tr>
+
 <tr>
-  <td>waitForElementPresent</td>
-  <td>link=Add</td>
-  <td></td>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td></td>
 </tr>
 <tr>
-  <td>click</td>
-  <td>link=Add</td>
-  <td></td>
+ <td>click</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td></td>
 </tr>
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before continue -->
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
+  <td>pause</td>
+  <td>100</td>
   <td></td>
 </tr>
 <tr>
@@ -113,35 +116,55 @@
   <td>${description}</td>
 </tr>
 <tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before continue -->
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
+  <td>pause</td>
+  <td>100</td>
   <td></td>
 </tr>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Document']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before continue -->
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
 <!-- Verify Search, add another document -->
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Add']</td>
-  <td></td>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td></td>
 </tr>
 <tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Add']</td>
-  <td></td>
+ <td>click</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td></td>
 </tr>
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before continue -->
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
+  <td>pause</td>
+  <td>100</td>
   <td></td>
 </tr>
 <tr>
@@ -165,16 +188,39 @@
   <td>${search}</td>
 </tr>
 <tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before continue -->
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Document']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before continue -->
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
 <tal:block tal:define="search_query python: 'Titre'">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list_without_header_url" />
 </tal:block>
@@ -209,8 +255,13 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='${title}']</td>
   <td></td>
 </tr>
 <tr>
@@ -306,6 +357,11 @@
 <tr>
   <td>open</td>
   <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//pre</td>
   <td></td>
 </tr>
 <tr>

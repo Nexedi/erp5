@@ -24,7 +24,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_skins/erp5_officejs_ui_test/gadget_officejs_create_bad_storage.html</td>
+  <td>${base_url}/portal_skins/erp5_officejs_ui_test/gadget_officejs_create_bad_storage_for_text_editor.html</td>
   <td></td>
 </tr>
 <tr>
