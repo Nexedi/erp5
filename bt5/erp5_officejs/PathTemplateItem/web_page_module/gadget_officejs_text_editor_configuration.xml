@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -65,7 +65,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>classification/collaborative/team</string>
+                <string>contributor/person_module/1</string>
               </tuple>
             </value>
         </item>
@@ -76,8 +76,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_text_editor.json</string> </value>
+            <value> <string>gadget_officejs_text_editor.configuration</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_text_editor_json</string> </value>
+            <value> <string>gadget_officejs_text_editor_configuration</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -95,7 +99,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -104,8 +108,39 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+CACHE MANIFEST\n
+# generated on Thu, 14 Jan 2019 11:55:33 +0000\n
+CACHE:\n
+\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_hal_json_style%2FBase_viewNewContentDialog&view=definition_view\n
+\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module%2Ftext_editor_view&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPageModule_viewWebPageListAsJio&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2Fjio_view&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2Ftext_editor_view&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2Ftext_editor_clone&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPage_viewAsTextDocument&view=definition_view\n
+hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FTextEditor_cloneDocument&view=definition_view\n
+\n
+NETWORK:\n
+*
+
+]]></string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Officejs Text Editor Web Manifest</string> </value>
+            <value> <string>OfficeJS Text Editor Configuration</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -191,7 +226,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1537948338.59</float>
+                        <float>1552575414.66</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -236,7 +271,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.52707.23546.23773</string> </value>
+                <value> <string>977.17471.41864.29440</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +289,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1563367320.4</float>
+                        <float>1563896533.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -311,7 +346,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1537887404.89</float>
+                        <float>1552575268.51</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
