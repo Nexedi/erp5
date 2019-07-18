@@ -26,23 +26,23 @@
 
     .onEvent('submit', function (evt) {
       var gadget = this,
-        first_name =  document.getElementById("first_name").value,
-        last_name =  document.getElementById("last_name").value,
-        email =  document.getElementById("email").value;
+          first_name =  document.getElementById("first_name").value,
+          last_name =  document.getElementById("last_name").value,
+          email =  document.getElementById("email").value,
+          reference =  document.getElementById("reference").value,
+          password =  document.getElementById("password").value,
+          confirm_password =  document.getElementById("confirm_password").value;
 
-      function showMessage(msg) {
-        document.getElementById("status-message").innerHTML = msg;
-      }
 
-      if ((validateEmail(email)) && (first_name) && (last_name)) {
+      if ((validateEmail(email)) && (first_name) && (last_name) && (reference) && (password) && (confirm_password) && (password === confirm_password) ) {
           /* send to server */
-        var url =  "ERP5Site_newCredentialRequest?batch_mode=1&reference=" + email + "&default_email_text=" + email + "&first_name=" + first_name + "&last_name=" + last_name;
+        var url =  "ERP5Site_newCredentialRequest?batch_mode=1&reference=" + reference + "&default_email_text=" + email + "&first_name=" + first_name + "&last_name=" + last_name + "&password=" + password;
 
         return RSVP.Queue()
          .push(function () {
             return jIO.util.ajax({"type": "POST",
-                              "url": url,
-                              "xhrFields": {withCredentials: true}});
+                                  "url": url,
+                                  "xhrFields": {withCredentials: true}});
           })
          .push(function (server_response) {
             var response =  server_response.target.response;
@@ -68,7 +68,7 @@
             });
           })*/;
       } else {
-        return gadget.notifySubmitted({message: 'bad fields', status: 'error'});
+        return gadget.notifySubmitted({message: 'Misformatted email and / or passwords not matching. Please note that all fields are required!', status: 'error'});
       }
     });
 
