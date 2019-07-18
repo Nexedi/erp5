@@ -59,14 +59,14 @@
             return gadget.notifySubmitted({message: 'HTTP ERROR. Registration NOT done.', status: 'error'});
           })
           //if you want to redirect to a specific page after registration:
-          /*.push(function () {
+          .push(function () {
             return gadget.redirect({
               command: 'display',
               options: {
                 page: "home"
               }
             });
-          })*/;
+          })
       } else {
         return gadget.notifySubmitted({message: 'Misformatted email and / or passwords not matching. Please note that all fields are required!', status: 'error'});
       }
