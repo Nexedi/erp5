@@ -17,7 +17,7 @@ if not context.CredentialRequest_checkLoginAvailability(reference):
   else:
     return  json.dumps({'msg': message_str, 
                         'code':1})
- 
+
 credential_request = module.newContent(
                 portal_type="Credential Request",
                 first_name=first_name,
