@@ -911,7 +911,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       is_site_root=False,
       is_portal=False,
       mode='traverse',
-      restricted=1,
+      restricted=restricted,
       view='view'
     )
   }
