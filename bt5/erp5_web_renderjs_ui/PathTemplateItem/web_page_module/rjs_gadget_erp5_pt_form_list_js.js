@@ -74,6 +74,7 @@
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod("getSetting", "getSetting")
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
@@ -111,10 +112,18 @@
     })
 
     .onStateChange(function onStateChange() {
-      var form_gadget = this;
+      var form_gadget = this, hide_enabled;
 
-      // render the erp5 form
-      return form_gadget.getDeclaredGadget("erp5_form")
+      return RSVP.Queue()
+        .push(function () {
+          return form_gadget.getSetting('hide_listbox_buttons');
+        })
+        .push(function (hide_listbox_buttons) {
+          // XXX Disable select and clipboard functionalities on migrated apps: 'uid'-workaround made for renderjs UI doesn't work on officejs
+          hide_enabled = ((hide_listbox_buttons !== undefined && hide_listbox_buttons == "1") ? false : true);
+          // render the erp5 form
+          return form_gadget.getDeclaredGadget("erp5_form");
+        })
         .push(function (erp5_form) {
           var form_options = form_gadget.state.erp5_form;
 
@@ -125,8 +134,8 @@
           form_options.editable = form_gadget.state.editable;
 
           // XXX Hardcoded for listbox's hide/configure functionalities
-          form_options.form_definition.hide_enabled = true;
           form_options.form_definition.configure_enabled = true;
+          form_options.form_definition.hide_enabled = hide_enabled;
 
           // XXX not generic, fix later
           if (form_gadget.state.extended_search) {
