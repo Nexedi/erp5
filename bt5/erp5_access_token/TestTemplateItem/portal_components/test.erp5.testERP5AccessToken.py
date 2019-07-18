@@ -33,6 +33,7 @@ from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlug
 from DateTime import DateTime
 import base64
 import StringIO
+import mock
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Security.ERP5DumbHTTPExtractionPlugin import ERP5DumbHTTPExtractionPlugin
 
@@ -110,12 +111,18 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
     self.portal.REQUEST["ACTUAL_URL"] = access_url
     self.portal.REQUEST.form["access_token_secret"] = access_token.getReference()
 
-    result = self._getTokenCredential(self.portal.REQUEST)
+    with mock.patch(
+        'Products.ERP5Security.ERP5AccessTokenExtractionPlugin._setUserNameForAccessLog'
+      ) as _setUserNameForAccessLog:
+      result = self._getTokenCredential(self.portal.REQUEST)
     self.assertTrue(result)
     user_id, login = result
     self.assertEqual(user_id, person.Person_getUserId())
-    # tokens have a login value, for auditing purposes
-    self.assertEqual(access_token.getRelativeUrl(), login)
+    # tokens have a login value, for auditing purposes. This is the ID of the plugin
+    # and the relative URL of the token.
+    self.assertEqual('erp5_access_token_plugin=%s' % access_token.getRelativeUrl(), login)
+    # this is also what will appear in Z2.log
+    _setUserNameForAccessLog.assert_called_once_with(login, self.portal.REQUEST)
 
   def test_bad_token(self):
     person = self._createPerson(self.new_id)

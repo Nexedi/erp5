@@ -1,0 +1,9 @@
+Internal Order Line | -trade_matrix_workflow
+Internal Packing List Line | -trade_matrix_workflow
+Inventory Line | -trade_matrix_workflow
+Purchase Order Line | -trade_matrix_workflow
+Purchase Packing List Line | -trade_matrix_workflow
+Returned Purchase Packing List Line | -trade_matrix_workflow
+Returned Sale Packing List Line | -trade_matrix_workflow
+Sale Order Line | -trade_matrix_workflow
+Sale Packing List Line | -trade_matrix_workflow

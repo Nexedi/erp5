@@ -173,7 +173,7 @@ from Products.ERP5Type.Utils import checkPythonSourceCode
 
 def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
   """
-  Check Python source suitable for Ace Editor and return a JSON object
+  Check Python source suitable for Source Code Editor and return a JSON object
   """
   import json
 

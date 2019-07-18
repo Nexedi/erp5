@@ -73,7 +73,6 @@ class EditorWidget(Widget.TextAreaWidget):
                                           ('FCK Editor', 'fck_editor'),
                                           ('SVG Editor', 'svg_editor'),
                                           ('Spreadsheet Editor', 'spreadsheet_editor'),
-                                          ('Ace Editor', 'ace'),
                                           ('CodeMirror', 'codemirror')])
 
   def render(self, field, key, value, REQUEST, render_prefix=None):
@@ -92,12 +91,6 @@ class EditorWidget(Widget.TextAreaWidget):
       sheet_editor_support = getattr(here, 'sheet_editor_support', None)
       if sheet_editor_support is not None:
         return sheet_editor_support.pt_render()
-    elif text_editor == 'ace':
-      ace_editor_support = getattr(here, 'ace_editor_support', None)
-      if ace_editor_support is not None:
-        return ace_editor_support.pt_render(extra_context={'field': field,
-                                                         'content': value,
-                                                         'id': key})
     elif text_editor == 'monaco':
       monaco_editor_support = getattr(here, 'monaco_editor_support', None)
       if monaco_editor_support is not None:

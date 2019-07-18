@@ -225,10 +225,6 @@
                           <string>Plain Text</string>
                           <string>text_area</string>
                         </tuple>
-                        <tuple>
-                          <string>Ace Editor</string>
-                          <string>ace</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>

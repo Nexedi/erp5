@@ -17,6 +17,7 @@
 
 from copy import deepcopy
 from collections import defaultdict
+from base64 import encodestring
 
 from Acquisition import aq_inner, aq_parent
 from AccessControl.Permissions import manage_users as ManageUsers
@@ -52,6 +53,23 @@ def mergedLocalRoles(object):
       continue
     break
   return deepcopy(merged)
+
+
+def _setUserNameForAccessLog(username, REQUEST):
+  """Make the current user look as `username` in Zope's Z2.log
+
+  Taken from Products.CMFCore.CookieCrumbler._setAuthHeader
+  """
+  # Set the authorization header in the medusa http request
+  # so that the username can be logged to the Z2.log
+  try:
+    # Put the full-arm latex glove on now...
+    medusa_headers = REQUEST.RESPONSE.stdout._request._header_cache
+  except AttributeError:
+    pass
+  else:
+    medusa_headers['authorization'] = 'Basic %s' % encodestring('%s:' % username).rstrip()
+
 
 def initialize(context):
   import ERP5UserManager

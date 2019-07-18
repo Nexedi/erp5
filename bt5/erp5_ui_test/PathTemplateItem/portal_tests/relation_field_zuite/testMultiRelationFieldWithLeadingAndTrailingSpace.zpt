@@ -1,0 +1,95 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title tal:content="template/title"></title>
+</head>
+
+<body>
+  <table cellpadding="1" cellspacing="1" border="1">
+    <thead>
+      <tr>
+        <td rowspan="1" colspan="3" tal:content="template/title"></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />
+      <tr>
+        <td>open</td>
+        <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Reset Successfully.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>open</td>
+        <td>${base_url}/foo_module/FooModule_createObjects?num:int=2&amp;title_format=%20%20leading and trailing spaces {index:d}%20%20</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Created Successfully.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>open</td>
+        <td>${base_url}/foo_module/Zuite_waitForActivities</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertTextPresent</td>
+        <td>Done.</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>open</td>
+        <td>${base_url}/foo_module/0/Foo_viewRelationField</td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>type</td>
+        <td>field_my_bar_category_title_list</td>
+        <td>${space}${space}leading and trailing spaces 1${space}${space}</td>
+      </tr>
+      <tr>
+        <td>clickAndWait</td>
+        <td>//button[@title='Save']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertPortalStatusMessage</td>
+        <td>Data updated.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertEval</td>
+        <td>selenium.browserbot.getCurrentWindow().document.querySelector('textarea[name="field_my_bar_category_title_list"]').value == '&nbsp;&nbsp;leading and trailing spaces 1&nbsp;&nbsp;'</td>
+        <td>true</td>
+      </tr>
+      <!-- saving again does not cause "this document is not found" -->
+      <tr>
+        <td>clickAndWait</td>
+        <td>//button[@title='Save']</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>verifyPortalStatusMessage</td>
+        <td>Data updated.</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>assertEval</td>
+        <td>selenium.browserbot.getCurrentWindow().document.querySelector('textarea[name="field_my_bar_category_title_list"]').value == '&nbsp;&nbsp;leading and trailing spaces 1&nbsp;&nbsp;'</td>
+        <td>true</td>
+      </tr>
+
+    </tbody>
+  </table>
+</body>
+
+</html>

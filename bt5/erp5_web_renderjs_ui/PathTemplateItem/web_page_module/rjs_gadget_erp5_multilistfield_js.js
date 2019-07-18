@@ -28,6 +28,7 @@
   }
 
   rJS(window)
+    .declareAcquiredMethod("translate", "translate")
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         item_list = ensureArray(field_json.items).map(function (item) {
@@ -171,9 +172,16 @@
       var gadget = this,
         empty = true;
       if (this.state.editable && this.state.required) {
-        return this.getContent()
-          .push(function (result) {
-            var value_list = result[gadget.state.sub_select_key],
+        return new RSVP.Queue()
+          .push(function () {
+            return RSVP.all([
+              gadget.getContent(),
+              gadget.translate("Input is required but no input given.")
+            ]);
+          })
+          .push(function (all_result) {
+            var value_list = all_result[0][gadget.state.sub_select_key],
+              error_message = all_result[1],
               i;
             for (i = 0; i < value_list.length; i += 1) {
               if (value_list[i]) {
@@ -181,7 +189,7 @@
               }
             }
             if (empty) {
-              return gadget.notifyInvalid("Please fill out this field.");
+              return gadget.notifyInvalid(error_message);
             }
             return gadget.notifyValid();
           })
