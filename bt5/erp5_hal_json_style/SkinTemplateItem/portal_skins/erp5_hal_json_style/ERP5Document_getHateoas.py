@@ -1167,7 +1167,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                      relative_url=None, restricted=None, list_method=None,
                      default_param_json=None, form_relative_url=None, extra_param_json=None):
 
-  if (restricted == 1) and (portal.portal_membership.isAnonymousUser()):
+  if (restricted == 1) and (portal.portal_membership.isAnonymousUser() and (response is not None)):
     login_relative_url = site_root.getLayoutProperty("configuration_login", default="")
     if (login_relative_url):
       response.setHeader(
