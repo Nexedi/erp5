@@ -50,9 +50,9 @@
             <value>
               <list>
                 <string>left</string>
+                <string>right</string>
                 <string>bottom</string>
                 <string>hidden</string>
-                <string>right</string>
               </list>
             </value>
         </item>

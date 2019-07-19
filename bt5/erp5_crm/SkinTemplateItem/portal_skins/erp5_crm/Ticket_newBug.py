@@ -21,4 +21,5 @@ bug = module.newContent(portal_type=portal_type,
 portal_status_message = Base_translateString(
   "Created and associated a new ${portal_type} to the ticket.",
   mapping = dict(portal_type=Base_translateString(portal_type)))
-return bug.Base_redirect('view', keep_items = dict(portal_status_message=portal_status_message), **kw)
+kw['keep_items'] = dict(portal_status_message=portal_status_message)
+return bug.Base_redirect('view', **kw)
