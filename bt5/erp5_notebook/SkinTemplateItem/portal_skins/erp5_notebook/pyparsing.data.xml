@@ -7,12 +7,16 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>must_revalidate_http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>pyparsing.data</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/octet-stream</string> </value>
+            <value> <string>application/wasm</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
