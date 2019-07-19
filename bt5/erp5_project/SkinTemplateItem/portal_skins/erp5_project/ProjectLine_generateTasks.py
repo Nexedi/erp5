@@ -7,7 +7,7 @@ source_project_type = [ 'Project Line' , 'Project']
 task_module = context.getDefaultModule(module_type)
 
 if context_obj.getPortalType() not in source_project_type:
- return context.REQUEST.RESPONSE.redirect(context.absolute_url() + '?portal_status_message=Error:+bad+context.')
+  return context.Base_redirect('view', keep_items={'portal_status_message': 'Error: bar context.'})
 
 # this list contain all task items
 task_items = []
@@ -70,4 +70,4 @@ for item in task_items:
       task.setSourceProjectValue(context_obj)
 
 # return to the project
-return context.REQUEST.RESPONSE.redirect(context.absolute_url() + '?portal_status_message=Tasks+added+at+Task+Module.')
+return context.Base_redirect('view', keep_items={'portal_status_message': 'Tasks added at Task Module.'})
