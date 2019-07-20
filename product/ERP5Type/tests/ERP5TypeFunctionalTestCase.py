@@ -208,6 +208,7 @@ class FunctionalTestRunner:
       browser = webdriver.Firefox(**kw)
       start_time = time.time()
       browser.get(self._getTestURL())
+      browser.maximize_window()
 
       WebDriverWait(browser, 10).until(EC.presence_of_element_located((
         By.XPATH, '//iframe[@id="testSuiteFrame"]'
