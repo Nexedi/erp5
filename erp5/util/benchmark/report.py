@@ -31,6 +31,7 @@
 #
 ##############################################################################
 
+from __future__ import print_function
 import argparse
 import re
 
@@ -537,7 +538,7 @@ def generateReport():
   for filename in filename_iter:
     # There may be no results at all in case of errors
     if not os.stat(filename).st_size:
-      print >>sys.stderr, "Ignoring empty file %s" % filename
+      print("Ignoring empty file %s" % filename, file=sys.stderr)
       continue
 
     report_dict = per_nb_users_report_dict.setdefault(
@@ -546,8 +547,8 @@ def generateReport():
     report_dict['filename'].append(filename)
 
   if not per_nb_users_report_dict:
-    print >>sys.stderr, "ERROR: No result file found, perhaps "\
-        "``--filename-prefix'' should be specified?"
+    print("ERROR: No result file found, perhaps "\
+        "``--filename-prefix'' should be specified?", file=sys.stderr)
 
     sys.exit(1)
 
