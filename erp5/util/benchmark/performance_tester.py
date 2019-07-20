@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from __future__ import print_function
 import argparse
 import os
 import sys
@@ -264,7 +265,7 @@ class PerformanceTester(object):
         error_message = exit_msg_queue.get()
 
       except KeyboardInterrupt, e:
-        print >>sys.stderr, "\nInterrupted by user, stopping gracefully..."
+        print("\nInterrupted by user, stopping gracefully...", file=sys.stderr)
         exit_status = 2
 
       # An IOError may be raised  when receiving a SIGINT which interrupts the
@@ -337,7 +338,7 @@ class PerformanceTester(object):
 def main():
   error_message_set, exit_status = PerformanceTester().run()
   for error_message in error_message_set:
-    print >>sys.stderr, "ERROR: %s" % error_message
+    print("ERROR: %s" % error_message, file=sys.stderr)
 
   sys.exit(exit_status)
 

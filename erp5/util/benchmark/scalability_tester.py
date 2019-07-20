@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from __future__ import print_function
 from .result import CSVBenchmarkResult, NothingFlushedException
 
 class CSVScalabilityBenchmarkResult(CSVBenchmarkResult):
@@ -60,7 +61,7 @@ class ScalabilityTester(PerformanceTester):
                       urllib.urlencode({'error_message_set': '|'.join(error_message_set)})).close()
 
     except:
-      print >>sys.stderr, "ERROR: %s" % Formatter().formatException(sys.exc_info())
+      print("ERROR: %s" % Formatter().formatException(sys.exc_info()), file=sys.stderr)
 
   def getResultClass(self):
     if not self._argument_namespace.erp5_publish_url:
