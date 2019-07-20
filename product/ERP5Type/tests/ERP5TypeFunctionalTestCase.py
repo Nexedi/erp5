@@ -231,6 +231,8 @@ class FunctionalTestRunner:
         html_parser
       )
       browser.quit()
+      # XXX ffmpeg lose last video part if xvfb quit before ffmpeg
+      time.sleep(5)
     finally:
       xvfb.quit()
     return iframe
