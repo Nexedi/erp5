@@ -334,7 +334,7 @@ Require valid-user
     htaccess_file.close()
     password_path = testsuite_directory + PASSWORD_FILE
     with open(password_path, "w") as password_file:
-      password = ''.join(random.choice(string.digits + string.letters) for i in range(PASSWORD_LENGTH))
+      password = ''.join(random.choice(string.digits + string.ascii_letters) for i in range(PASSWORD_LENGTH))
       password_file.write(password)
     user = TESTNODE_USER
     command = [apache_htpasswd, "-bc", testsuite_directory + HTPASSWD, user, password]
