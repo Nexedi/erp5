@@ -6,12 +6,13 @@
   var IODide = function createIODide() {
     return;
   },
-    JSMDCell = function createJSMDCell(type, line_list) {
+    JSMDCell = function createJSMDCell(type, line_list, option) {
       this._type = type;
       this._line_list = line_list;
+      this._option = option;
     },
     split_line_regex = /[\r\n|\n|\r]/,
-    cell_type_regexp = /^\%\% (\w+)$/;
+    cell_type_regexp = /^\%\% (\w+)/;
 
   window.iodide = new IODide();
 
@@ -67,16 +68,24 @@
     var line_list = jsmd.split(split_line_regex),
       i,
       len = line_list.length,
+      code_type,
       current_line,
       current_type,
+      current_header,
       current_text_list,
+      option,
       next_type,
       cell_list = [];
 
     function pushNewCell() {
       if (current_type !== undefined) {
+        option = current_header.slice(current_type[0].length);
+        if (option !== '') {
+          option = JSON.parse(option);
+        }
+
         cell_list.push(new JSMDCell(current_type[1],
-                                      current_text_list));
+                                      current_text_list, option));
       }
     }
 
@@ -84,9 +93,10 @@
       current_line = line_list[i];
       next_type = current_line.match(cell_type_regexp);
       if (next_type) {
-        // New type detexted
+        // New type detected
         pushNewCell();
         current_type = next_type;
+        current_header = current_line;
         current_text_list = [];
       } else if (current_text_list !== undefined) {
         current_text_list.push(current_line);
@@ -253,8 +263,15 @@
     });
   }
 
+  function executeCodeCell(line_list, language) {
+    if (language === 'py') {
+      console.log(line_list);
+      console.log("We are processing Python code!!!");
+    }
+  }
+
   function executeCell(cell) {
-    if (cell._type === 'raw') {
+    if (cell._type === 'raw' || cell._type === 'meta' || cell._type === 'plugin') {
       // Do nothing...
       return;
     }
@@ -272,6 +289,9 @@
     }
     if (cell._type === 'css') {
       return executeCssCell(cell._line_list);
+    }
+    if (cell._type === 'code') {
+      return executeCodeCell(cell._line_list, cell._option.language);
     }
     return executeUnknownCellType(cell);
   }
