@@ -39,6 +39,16 @@ Creates the Book header.
           var y = document.getElementsByClassName(x[i]);
           for (var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
         }
+        var z = document.getElementsByClassName("hack");
+        for (var k=0; k<z.length; ++k) {
+          var pic = z[k];
+          if (pic.naturalWidth / pic.naturalHeight <= 1) {
+            pic.style.width = "auto";
+            pic.style.maxWidth = "28mm";
+            pic.style.maxHeight = "28mm"
+            pic.style.height = "auto";
+          }
+        }
       }
     </script>
     </head>
@@ -55,7 +65,7 @@ Creates the Book header.
           <tr>
             <td>
               <div class="ci-book-header-image-wkhtmltopdf-image-wrapper">
-                <img tal:attributes="src python: book_logo_url; alt python: book_logo_title"/>
+                <img class="hack" tal:attributes="src python: book_logo_url; alt python: book_logo_title"/>
               </div>
             </td>
             <td>

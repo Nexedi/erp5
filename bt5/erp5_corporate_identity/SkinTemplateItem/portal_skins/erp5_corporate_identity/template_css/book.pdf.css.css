@@ -258,17 +258,25 @@
   width: 100%;
   line-height: 25mm;
 }
+/* BACKUP:
+   fits all logos, unless you have to use a really wiiiiide logo like Nexedi
+*/
 .ci-book .ci-book-header .ci-book-header-image-wkhtmltopdf-image-wrapper img {
-  /*
-  display: inline-block;
-  width: auto;
   height: auto;
-  */
-  max-width: 28mm;
-  height: auto;
-  max-height: 14mm;
   vertical-align: middle;
+  max-height: 14mm;
 }
+
+/* hardcode here we go.
+NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
+.ci-book .ci-book-header .ci-book-header-image-wkhtmltopdf-image-wrapper img {
+  height: auto;
+  vertical-align: middle;
+  display: inline-block;
+  width: 60%;
+  object-fit: contain;
+}
+*/
 /* header spec section */
 .ci-book .ci-book-header td:last-child {
   text-align: left;
