@@ -10,8 +10,8 @@ kw.setdefault('sort_on', (('date', 'ascending',),))
 
 history_list = []
 for brain in method(aggregate_uid=context.getUid(), **kw):
-  history = newTempBase(context, str(len(history_list)))
   explanation = brain.getExplanationValue()
+  history = newTempBase(explanation.getParentValue(), explanation.getId())
   date = brain.getDate()
   history.edit(
       date=date,
@@ -22,7 +22,6 @@ for brain in method(aggregate_uid=context.getUid(), **kw):
       explanation=explanation.getTitle(),
       translated_portal_type=explanation.getTranslatedPortalType(),
       quantity=explanation.getQuantity(),
-      url=explanation.absolute_url(),
       # item_quantity=context.getQuantity(at_date=date),
       variation_category_item_list=[x[0] for x in explanation.getVariationCategoryItemList()],
       simulation_state=explanation.getTranslatedSimulationStateTitle(),

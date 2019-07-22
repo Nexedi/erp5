@@ -30,12 +30,9 @@ from ExtensionClass import pmc_init_of
 from DateTime import DateTime
 
 # XXX make sure that get_request works.
-import Products.ERP5Type.Utils
-from Products.ERP5Type import Globals
-
-# store a copy of the original method
-original_get_request = Globals.get_request
-convertToUpperCase = Products.ERP5Type.Utils.convertToUpperCase
+from new import function
+from zope.globalrequest import getRequest
+original_get_request = function(getRequest.__code__, getRequest.__globals__)
 
 from Testing.ZopeTestCase.connections import registry
 def get_context():
@@ -50,8 +47,8 @@ def get_request():
   if current_app is not None:
     return current_app.REQUEST
 
-Products.ERP5Type.Utils.get_request = get_request
-Globals.get_request = get_request
+sys.modules[getRequest.__module__].get_request = get_request
+getRequest.__code__ = (lambda: get_request()).__code__
 
 from zope.site.hooks import setSite
 
@@ -62,7 +59,7 @@ from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Form.PreferenceTool import Priority
 from zLOG import LOG, DEBUG
-
+from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError
 from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.ERP5Type.tests.utils import DummyMailHostMixin, parseListeningAddress
@@ -725,7 +722,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         '''Publishes the object at 'path' returning a response object.'''
 
         from ZPublisher.Response import Response
-        from ZPublisher.Test import publish_module
+        from ZPublisher.Publish import publish_module_standard
 
         from AccessControl.SecurityManagement import getSecurityManager
         from AccessControl.SecurityManagement import setSecurityManager
@@ -738,8 +735,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
         if env is None:
             env = {}
-        if extra is None:
-            extra = {}
 
         request = self.app.REQUEST
 
@@ -780,11 +775,20 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         try:
           if user:
             PAS._extractUserIds = _extractUserIds
-          publish_module('Zope2',
+
+          # The following `HTTPRequest` object would be created anyway inside
+          # `publish_module_standard` if no `request` argument was given.
+          request = request.__class__(stdin, env, response)
+          # However, we need to inject the content of `extra` inside the
+          # request.
+          if extra:
+            for k, v in extra.items(): request[k] = v
+
+          publish_module_standard('Zope2',
+                         request=request,
                          response=response,
                          stdin=stdin,
                          environ=env,
-                         extra=extra,
                          debug=not handle_errors,
                         )
         finally:

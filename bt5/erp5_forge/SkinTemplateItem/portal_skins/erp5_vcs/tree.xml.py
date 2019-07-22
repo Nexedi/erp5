@@ -11,6 +11,6 @@ if not root:
 
 if REQUEST is not None: # XXX workaround to prevent zodb bloat (bt build)
   # This script is mostly used by javascript, we can abort the transaction
-  REQUEST.RESPONSE.write(vcs_tool.treeToXML(root))
-  raise ValueError("Abort transaction")
+  import transaction
+  transaction.doom()
 return vcs_tool.treeToXML(root)

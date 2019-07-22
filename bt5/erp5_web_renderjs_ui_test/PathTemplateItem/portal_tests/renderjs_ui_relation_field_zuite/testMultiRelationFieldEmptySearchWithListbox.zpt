@@ -42,7 +42,7 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
-                                                           'text': 'Document created.'}">
+                                                           'text': 'Object created.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
@@ -57,14 +57,13 @@
   <td>//a[@data-i18n='Views']</td>
   <td></td>
 </tr>
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>storeLocation</td>
   <td>url</td>
   <td></td>
 </tr>
-
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
@@ -73,24 +72,20 @@
   <td>${url}</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
-  <td></td>
-</tr>
+
 
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Relation Fields']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
-  <td></td>
+  <td colspan="3"><b>Fill required field</b></td>
 </tr>
 
 <tr>
@@ -124,15 +119,33 @@
   <td></td>
 </tr>
 
-
-
 <tr>
-  <td>waitForElementPresent</td>
+  <td colspan="3"><b>Check multi relation field display</b></td>
+</tr>
+<tr>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[1]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[2]</td>
+  <td></td>
+</tr>
 
-
+<tr>
+  <td colspan="3"><b>Select an existing document in the relation field first line</b></td>
+</tr>
 <tr>
   <td>type</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
@@ -164,10 +177,9 @@
   <td></td>
 </tr>
 
-
-
-
-
+<tr>
+  <td colspan="3"><b>Trigger a search in the relation field new second line</b></td>
+</tr>
 
 <tr>
   <td>waitForElementPresent</td>
@@ -177,7 +189,7 @@
 
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
   <td></td>
 </tr>
@@ -236,7 +248,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name="field_my_title"]</td>
   <td>TEST</td>
 </tr>
@@ -250,44 +262,81 @@
 
 
 <tr>
-  <td>verifyValue</td>
+  <td colspan="3"><b>Check multi relation field display</b></td>
+</tr>
+<tr>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
   <td>A New Foo</td>
 </tr>
-
-
-
-
-
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
   <td>2</td>
 </tr>
-
 <tr>
-  <td>verifyElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[3]</td>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[3]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[1]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[2]</td>
   <td></td>
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
-
 <tr>
-  <td>verifyValue</td>
+  <td colspan="3"><b>Check multi relation field display</b></td>
+</tr>
+<tr>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
   <td>A New Foo</td>
 </tr>
-
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
   <td>TEST</td>
 </tr>
-
 <tr>
-  <td>verifyElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[3]</td>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[3]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[1]//input</td>
+  <td>3</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[2]//input</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[3]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[4]</td>
   <td></td>
 </tr>
 

@@ -12,6 +12,9 @@
     // can contain editable fields
     if (field.type === "ListBox") {return true; }
     if (field.type === "FormBox") {return true; }
+    // MatrixBox is often used for price tables or code tables. So it is always
+    // useful for end users to display its contents.
+    if (field.type === "MatrixBox") {return true; }
     // hidden fields should not be obviously rendered
     if (field.hidden === 1) {return false; }
     // empty default value must not be displayed

@@ -1114,7 +1114,8 @@ class TestItemScripts(ERP5TypeTestCase):
     self.assertEqual('explanation title', history_item.explanation)
     self.assertEqual('Sale Packing List Line', history_item.translated_portal_type)
     self.assertEqual(1, history_item.quantity)
-    self.assertEqual(line.absolute_url(), history_item.url)
+    self.assertEqual(line.getId(), history_item.getId())
+    self.assertEqual(line.getParentValue(), history_item.getParentValue())
     self.assertEqual((), history_item.variation_category_item_list)
     self.assertEqual('Delivered', history_item.simulation_state)
 

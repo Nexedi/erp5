@@ -44,7 +44,7 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
-                                                           'text': 'Document created.'}">
+                                                           'text': 'Object created.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
@@ -69,7 +69,7 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
-                                                           'text': 'Document created.'}">
+                                                           'text': 'Object created.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
@@ -101,7 +101,7 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
-                                                           'text': 'Document created.'}">
+                                                           'text': 'Object created.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
@@ -296,13 +296,13 @@
 
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name="field_my_short_title"]</td>
   <td>TEST</td>
 </tr>
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name="field_my_foo_big_category_title"]</td>
   <td>TEST1</td>
 </tr>
@@ -316,7 +316,7 @@
 
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//select[@name="field_my_local_title"]</td>
   <td>First title</td>
 </tr>
@@ -329,28 +329,28 @@
 </tr>
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//tbody//tr[1]//div[@data-gadget-scope="INPUT"]//input</td>
   <td>2000-12-12</td>
 </tr>
 
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//tbody//tr[1]//input[@title="Quantity"]</td>
   <td>2.3</td>
 </tr>
 
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//tbody//tr[2]//div[@data-gadget-scope="INPUT"]//input</td>
   <td>2012-12-12</td>
 </tr>
 
 
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//tbody//tr[2]//input[@title="Quantity"]</td>
   <td>10.1</td>
 </tr>
@@ -438,13 +438,13 @@
 </tr>
 
 <tr>
-  <td>verifyNotValue</td>
+  <td>assertNotValue</td>
   <td>//input[@name="field_my_short_title"]</td>
   <td>TEST</td>
 </tr>
 
 <tr>
-  <td>verifyNotValue</td>
+  <td>assertNotValue</td>
   <td>//input[@name="field_my_foo_big_category_title"]</td>
   <td>TEST1</td>
 </tr>
@@ -458,7 +458,7 @@
 
 
 <tr>
-  <td>verifyNotValue</td>
+  <td>assertNotValue</td>
   <td>//select[@name="field_my_local_title"]</td>
   <td>First title</td>
 </tr>
@@ -471,28 +471,28 @@
 </tr>
 
 <tr>
-  <td>verifyNotValue</td>
+  <td>assertNotValue</td>
   <td>//tbody//tr[1]//div[@data-gadget-scope="INPUT"]//input</td>
   <td>2000-12-12</td>
 </tr>
 
 
 <tr>
-  <td>verifyNotValue</td>
+  <td>assertNotValue</td>
   <td>//tbody//tr[1]//input[@title="Quantity"]</td>
   <td>2.3</td>
 </tr>
 
 
 <tr>
-  <td>verifyNotValue</td>
+  <td>assertNotValue</td>
   <td>//tbody//tr[2]//div[@data-gadget-scope="INPUT"]//input</td>
   <td>2012-12-12</td>
 </tr>
 
 
 <tr>
-  <td>verifyNotValue</td>
+  <td>assertNotValue</td>
   <td>//tbody//tr[2]//input[@title="Quantity"]</td>
   <td>10.1</td>
 </tr>

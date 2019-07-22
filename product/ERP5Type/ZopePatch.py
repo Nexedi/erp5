@@ -21,6 +21,7 @@
 ##############################################################################
 
 # Load all monkey patches
+from Products.ERP5Type.patches import WSGIPublisher
 from Products.ERP5Type.patches import HTTPRequest
 from Products.ERP5Type.patches import AccessControl_patch
 from Products.ERP5Type.patches import Restricted
@@ -77,7 +78,7 @@ from Products.ERP5Type.patches import OFSImage
 from Products.ERP5Type.patches import _transaction
 from Products.ERP5Type.patches import default_zpublisher_encoding
 from Products.ERP5Type.patches import DCWorkflowGraph
-from Products.ERP5Type.patches import AceEditorZMI
+from Products.ERP5Type.patches import SourceCodeEditorZMI
 from Products.ERP5Type.patches import CachingPolicyManager
 from Products.ERP5Type.patches import AcceleratedHTTPCacheManager
 from Products.ERP5Type.patches import ExceptionFormatter

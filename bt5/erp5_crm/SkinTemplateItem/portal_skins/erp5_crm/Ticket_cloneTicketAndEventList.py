@@ -2,7 +2,7 @@ portal = context.getPortalObject()
 
 new_ticket = context.Base_createCloneDocument(form_id=None, batch_mode=True)
 
-portal.portal_catalog.searchAndActivate(
+portal.portal_catalog.activate(activity='SQLQueue').searchAndActivate(
   portal_type=portal.getPortalEventTypeList(),
   default_follow_up_uid=context.getUid(),
   method_id='Event_clone',

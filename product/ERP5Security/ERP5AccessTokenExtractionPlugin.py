@@ -38,6 +38,8 @@ from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Security import _setUserNameForAccessLog
+
 
 class ERP5AccessTokenExtractionPlugin(BasePlugin):
   """
@@ -68,6 +70,7 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
       creds['erp5_access_token_id'] = token
       creds['remote_host'] = request.get('REMOTE_HOST', '')
       creds['remote_address'] = request.getClientAddr()
+      creds['request'] = request
     return creds
 
   #######################
@@ -86,7 +89,9 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
         if method is not None:
           user_value = method()
           if user_value is not None:
-            return (user_value.getUserId(), token_document.getRelativeUrl())
+            username = '%s=%s' % (self.getId(), token_document.getRelativeUrl())
+            _setUserNameForAccessLog(username, credentials['request'])
+            return (user_value.getUserId(), username)
 
 
 #Form for new plugin in ZMI

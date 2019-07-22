@@ -26,9 +26,10 @@
 ##############################################################################
 
 import uuid
+import mock
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from erp5.component.extension import GoogleLoginUtility
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+
 
 CLIENT_ID = "a1b2c3"
 SECRET_KEY = "3c2ba1"
@@ -87,17 +88,8 @@ def getUserEntry(access_token):
     "reference": getUserId(None)
   }
 
-GoogleLoginUtility_getAccessTokenFromCode = GoogleLoginUtility.getAccessTokenFromCode
-GoogleLoginUtility_getUserEntry = GoogleLoginUtility.getUserEntry
 
 class TestGoogleLogin(ERP5TypeTestCase):
-
-  def getTitle(self):
-    return "Test Google Login"
-
-  def beforeTearDown(self):
-    GoogleLoginUtility.getAccessTokenFromCode = GoogleLoginUtility_getAccessTokenFromCode
-    GoogleLoginUtility.getUserEntry = GoogleLoginUtility_getUserEntry
 
   def afterSetUp(self):
     """
@@ -105,10 +97,6 @@ class TestGoogleLogin(ERP5TypeTestCase):
     """
     self.login()
     self.portal.TemplateTool_checkGoogleExtractionPluginExistenceConsistency(fixit=True)
-    # Patch extension to avoid external connection
-    GoogleLoginUtility.getUserId = getUserId
-    GoogleLoginUtility.getAccessTokenFromCode = getAccessTokenFromCode
-    GoogleLoginUtility.getUserEntry = getUserEntry
 
     self.dummy_connector_id = "test_google_connector"
     portal_catalog = self.portal.portal_catalog
@@ -148,13 +136,77 @@ class TestGoogleLogin(ERP5TypeTestCase):
     self.assertNotIn("secret_key=", location)
     self.assertIn("ERP5Site_receiveGoogleCallback", location)
 
+  def test_existing_user(self):
+    self.login()
+    person = self.portal.person_module.newContent(
+        portal_type='Person',
+    )
+    person.newContent(
+        portal_type='Google Login',
+        reference=getUserId(None)
+    ).validate()
+    person.newContent(portal_type='Assignment').open()
+    self.tic()
+    self.logout()
+
+    request = self.portal.REQUEST
+    response = request.RESPONSE
+    with mock.patch(
+        'erp5.component.extension.GoogleLoginUtility.getAccessTokenFromCode',
+        side_effect=getAccessTokenFromCode,
+    ) as getAccessTokenFromCode_mock, \
+      mock.patch(
+        'erp5.component.extension.GoogleLoginUtility.getUserEntry',
+        side_effect=getUserEntry
+      ) as getUserEntry_mock:
+      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
+      getUserEntry_mock.func_code = getUserEntry.func_code
+      self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
+    getAccessTokenFromCode_mock.assert_called_once()
+    getUserEntry_mock.assert_called_once()
+
+    request["__ac_google_hash"] = response.cookies["__ac_google_hash"]["value"]
+
+    with mock.patch(
+        'Products.ERP5Security.ERP5ExternalOauth2ExtractionPlugin._setUserNameForAccessLog'
+      ) as _setUserNameForAccessLog:
+      credentials = self.portal.acl_users.erp5_google_extraction.extractCredentials(request)
+    self.assertEqual(
+        'Google Login',
+        credentials['login_portal_type'])
+    self.assertEqual(
+        getUserId(None),
+        credentials['external_login'])
+    # this is what will appear in Z2.log
+    _setUserNameForAccessLog.assert_called_once_with(
+        'erp5_google_extraction=%s' % getUserId(None),
+        request)
+
+    user_id, login = self.portal.acl_users.erp5_login_users.authenticateCredentials(credentials)
+    self.assertEqual(person.getUserId(), user_id)
+    self.assertEqual(getUserId(None), login)
+
   def test_auth_cookie(self):
     request = self.portal.REQUEST
     response = request.RESPONSE
     # (the secure flag is only set if we accessed through https)
     request.setServerURL('https', 'example.com')
 
-    self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
+    with mock.patch(
+        'erp5.component.extension.GoogleLoginUtility.getAccessTokenFromCode',
+        side_effect=getAccessTokenFromCode,
+    ) as getAccessTokenFromCode_mock, \
+      mock.patch(
+        'erp5.component.extension.GoogleLoginUtility.getUserEntry',
+        side_effect=getUserEntry
+      ) as getUserEntry_mock:
+      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
+      getUserEntry_mock.func_code = getUserEntry.func_code
+      self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
+
+    getAccessTokenFromCode_mock.assert_called_once()
+    getUserEntry_mock.assert_called_once()
+
     ac_cookie, = [v for (k, v) in response.listHeaders() if k.lower() == 'set-cookie' and '__ac_google_hash=' in v]
     self.assertIn('; Secure', ac_cookie)
     self.assertIn('; HTTPOnly', ac_cookie)
@@ -209,7 +261,21 @@ context.portal_alarms.accept_submitted_credentials.activeSense()
 return credential_request
 """)
     self.logout()
-    response = self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
+
+    with mock.patch(
+        'erp5.component.extension.GoogleLoginUtility.getAccessTokenFromCode',
+        side_effect=getAccessTokenFromCode,
+    ) as getAccessTokenFromCode_mock, \
+      mock.patch(
+        'erp5.component.extension.GoogleLoginUtility.getUserEntry',
+        side_effect=getUserEntry
+      ) as getUserEntry_mock:
+      getAccessTokenFromCode_mock.func_code = getAccessTokenFromCode.func_code
+      getUserEntry_mock.func_code = getUserEntry.func_code
+      response = self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
+    getAccessTokenFromCode_mock.assert_called_once()
+    getUserEntry_mock.assert_called_once()
+
     google_hash = self.portal.REQUEST.RESPONSE.cookies.get("__ac_google_hash")["value"]
     self.assertEqual("b01533abb684a658dc71c81da4e67546", google_hash)
     self.assertEqual(self.portal.absolute_url(), response)

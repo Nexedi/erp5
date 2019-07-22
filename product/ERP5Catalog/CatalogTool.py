@@ -42,6 +42,7 @@ from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.CMFActivity.ActivityTool import GroupedMessage
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ZMySQLDA.DA import DeferredConnection
 
 from AccessControl.PermissionRole import rolesForPermissionOn
 
@@ -1361,20 +1362,45 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     security.declareProtected(Permissions.ManagePortal, 'upgradeSchema')
     def upgradeSchema(self, sql_catalog_id=None, src__=0):
       """Upgrade all catalog tables, with ALTER or CREATE queries"""
+      portal = self.getPortalObject()
       catalog = self.getSQLCatalog(sql_catalog_id)
-      connection_id = catalog.z_create_catalog.connection_id
-      src = []
-      db = self.getPortalObject()[connection_id]()
-      with db.lock():
-        for clear_method in catalog.sql_clear_catalog:
-          r = catalog[clear_method]._upgradeSchema(
-            connection_id, create_if_not_exists=1, src__=1)
-          if r:
-            src.append(r)
-        if not src__:
-          for r in src:
-            db.query(r)
-      return src
+
+      # group methods by connection
+      method_list_by_connection_id = defaultdict(list)
+      for method_id in catalog.sql_clear_catalog:
+        method = catalog[method_id]
+        method_list_by_connection_id[method.connection_id].append(method)
+
+      # Because we cannot select on deferred connections, _upgradeSchema
+      # cannot be used on SQL methods using a deferred connection.
+      # We try to find a "non deferred" connection using the same connection
+      # string and we'll use it instead.
+      connection_by_connection_id = {}
+      for connection_id in method_list_by_connection_id:
+        connection = portal[connection_id]
+        connection_string = connection.connection_string
+        connection_by_connection_id[connection_id] = connection
+        if isinstance(connection, DeferredConnection):
+          for other_connection in portal.objectValues(
+                spec=('Z MySQL Database Connection',)):
+            if connection_string == other_connection.connection_string:
+              connection_by_connection_id[connection_id] = other_connection
+              break
+
+      queries_by_connection_id = defaultdict(list)
+      for connection_id, method_list in method_list_by_connection_id.items():
+        connection = connection_by_connection_id[connection_id]
+        db = connection()
+        with db.lock():
+          for method in method_list:
+            query = method._upgradeSchema(connection.getId(), create_if_not_exists=1, src__=1)
+            if query:
+              queries_by_connection_id[connection_id].append(query)
+          if not src__:
+            for query in queries_by_connection_id[connection_id]:
+              db.query(query)
+
+      return sum(queries_by_connection_id.values(), [])
 
     security.declarePublic('getDocumentValueList')
     def getDocumentValueList(self, sql_catalog_id=None,

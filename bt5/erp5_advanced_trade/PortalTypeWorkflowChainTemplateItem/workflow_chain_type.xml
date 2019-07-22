@@ -1,0 +1,38 @@
+<workflow_chain>
+ <chain>
+  <type>Internal Order Line</type>
+  <workflow>-trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Internal Packing List Line</type>
+  <workflow>-trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Inventory Line</type>
+  <workflow>-trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Order Line</type>
+  <workflow>-trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Packing List Line</type>
+  <workflow>-trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Returned Purchase Packing List Line</type>
+  <workflow>-trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Returned Sale Packing List Line</type>
+  <workflow>-trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Order Line</type>
+  <workflow>-trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Packing List Line</type>
+  <workflow>-trade_matrix_workflow</workflow>
+ </chain>
+</workflow_chain>

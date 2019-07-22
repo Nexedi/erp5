@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>expression</string> </key>
-            <value> <string>python: object.getCausalityState() in ("draft", "solved")</string> </value>
+            <value> <string>python: object.getCausalityState() in ("draft", "solved") if getattr(object, "getCausalityState", None) is not None else True</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

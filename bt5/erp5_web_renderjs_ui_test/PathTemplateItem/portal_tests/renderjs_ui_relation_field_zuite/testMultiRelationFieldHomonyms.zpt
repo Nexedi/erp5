@@ -57,13 +57,36 @@
   <td>//a[text()="Relation Fields"]</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name="field_my_bar_category_title_list"]</td>
+  <td colspan="3"><b>Check multi relation field display</b></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[1]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[2]</td>
   <td></td>
 </tr>
 
 <!-- Actual test -->
+<tr>
+  <td colspan="3"><b>Type the homonym in the mulit relation field and choose the whatever element (second for instance)</b></td>
+</tr>
 <tr> <!-- type the homonym in the mulit relation field and choose the whatever element (second for instance) -->
   <td>type</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[1]//input</td>
@@ -86,6 +109,43 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
+<tr>
+  <td colspan="3"><b>Check multi relation field display</b></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>Title0</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[1]//input</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[2]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[3]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>add another entry to the multi relation field</b></td>
+</tr>
 <tr> <!-- add another entry to the multi relation field -->
   <td>type</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//input</td>
@@ -108,19 +168,47 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
+<tr>
+  <td colspan="3"><b>Check multi relation field display</b></td>
+</tr>
 <tr> <!-- Check field values -->
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[1]//input</td>
   <td>Title0</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[2]//input</td>
   <td>Title2</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//div[@data-gadget-scope="field_my_bar_category_title_list"]//fieldset[3]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[1]//input</td>
+  <td>0</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[2]//input</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[3]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_id_list']//fieldset[4]</td>
   <td></td>
 </tr>
 

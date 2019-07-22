@@ -38,19 +38,7 @@ from App.class_init import default__class_init__, ApplicationDefaultPermissions
 # Nicer alias for class initializer.
 InitializeClass = default__class_init__
 
-##########################################
-# Localizer is not always loaded prior to ERP5 products,
-# thus, as Localizer is supposed to patch Global to add get_request to it,
-# we prefer to redefine get_request inside ERP5Type/Utils,
-# to avoid the case when Global wasn't patched and get_request is not available.
-# This is specially important on Zope 2.12 where Globals doesn't even exist.
-##########################################
-try:
-    import Products.iHotfix
-    get_request = Products.iHotfix.get_request
-except (ImportError, AttributeError):
-    import Products.Localizer
-    get_request = Products.Localizer.get_request
+from zope.globalrequest import getRequest as get_request
 
 # Persistency stuff also hasn't moved much from Zope 2.8, although the old
 # "Persistence" module remains there for ancient backward compatibility.

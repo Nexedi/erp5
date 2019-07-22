@@ -180,12 +180,13 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     # Inventory can be negative in some date, and positive in futur !!
     # This must be done by subclassing OrderBuilder with a new inventory
     # algorithm.
+    inventory_kw = kw.copy()
+    inventory_kw.setdefault('group_by_variation', 1)
+    inventory_kw.setdefault('group_by_resource', 1)
+    inventory_kw.setdefault('group_by_section', 0)
     sql_list = self.portal_simulation.getFutureInventoryList(
-                                                   group_by_variation=1,
-                                                   group_by_resource=1,
                                                    group_by_node=group_by_node,
-                                                   group_by_section=0,
-                                                   **kw)
+                                                   **inventory_kw)
     # min_flow and max_delay are stored on a supply line. By default
     # we can get them through a method having the right supply type prefix
     # like getPurchaseSupplyLineMinFlow. So we need to guess the supply prefix
@@ -255,14 +256,16 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           # if node_uid is provided, we have to look at all provided nodes
           if kw.has_key('node_uid'):
             node_uid = kw['node_uid']
+          optimized_kw = {}
+          if kw.get('group_by_variation', 1):
+            optimized_kw['variation_text'] = inventory_item.variation_text
           optimized_inventory_list = portal.portal_simulation.getInventoryList(
                                resource_uid=inventory_item.resource_uid,
                                node_uid=node_uid,
-                               variation_text=inventory_item.variation_text,
                                simulation_state="auto_planned",
                                sort_on=[("date", "descending")],
-                               group_by_node=group_by_node
-                               )
+                               group_by_node=group_by_node,
+                               **optimized_kw)
           for optimized_inventory in optimized_inventory_list:
             movement = newMovement(inventory_item, resource)
             quantity = min(delta, optimized_inventory.inventory)

@@ -527,6 +527,15 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
   editor = MultiRelationEditor
   default_validator_instance = Validator.LinesValidatorInstance
 
+  # For relation fields, we want to preserve whitespaces by default
+  # so that we can search for "  things   "
+  whitespace_preserve = fields.CheckBoxField('whitespace_preserve',
+                                            title="Preserve whitespace",
+                                            description=(
+    "Checked if the field preserves whitespace. This means even "
+    "just whitespace input is considered to be data."),
+                                            default=1)
+
   def _generateItemUidList(self, field, key, relation_uid_list, REQUEST=None):
     """
     Generate tuple...

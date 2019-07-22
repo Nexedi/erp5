@@ -70,15 +70,24 @@ class FIFODeliverySolver(XMLObject):
   security.declareProtected(Permissions.ModifyPortalContent, 'setTotalQuantity')
   def setTotalQuantity(self, new_quantity, activate_kw=None):
     """
+    Affect the difference of quantity to different simulation movements
+
+    We assume that quantities are either all positives, or all negatives.
     """
     result = []
     remaining_quantity = self.getTotalQuantity() - new_quantity
-    if remaining_quantity < 0:
-      return result
+    if new_quantity < 0:
+      if remaining_quantity > 0:
+        return result
+    else:
+      if remaining_quantity < 0:
+        return result
     simulation_movement_list = self._getSimulationMovementList()
     for movement in simulation_movement_list:
       quantity = movement.getQuantity()
-      if quantity < remaining_quantity:
+      # make sure we have same sign, or this code solver would not work
+      assert (quantity * remaining_quantity) >= 0, "Could not solve if we do not have same sign"
+      if abs(quantity) < abs(remaining_quantity):
         result.append((movement, quantity))
         remaining_quantity -= quantity
         movement.edit(quantity=0, delivery_ratio=0, activate_kw=activate_kw)

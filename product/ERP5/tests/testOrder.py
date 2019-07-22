@@ -165,6 +165,21 @@ class TestOrderMixin(SubcontentReindexingWrapper):
                                                  portal_type='Category',
                                                  id=category_id)
 
+  def getTwoRelatedPackingList(self, sequence):
+    order = sequence.get('order')
+    packing_list_list = order.getCausalityRelatedValueList(
+                               portal_type=self.packing_list_portal_type)
+    self.assertEqual(2,len(packing_list_list))
+    packing_list1 = None
+    packing_list2 = None
+    for packing_list in packing_list_list:
+      if packing_list.getUid() == sequence.get('packing_list').getUid():
+        packing_list1 = packing_list
+      else:
+        packing_list2 = packing_list
+    sequence.edit(new_packing_list=packing_list2)
+    return packing_list1, packing_list2
+
   def stepCreateNotVariatedResource(self,sequence=None, sequence_list=None, \
                                     **kw):
     """

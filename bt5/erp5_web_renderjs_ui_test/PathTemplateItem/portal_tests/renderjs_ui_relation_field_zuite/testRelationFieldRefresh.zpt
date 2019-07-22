@@ -59,7 +59,7 @@
 
 <!-- Check the relation field is up to date -->
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name="field_my_foo_category_title"]</td>
   <td>a</td>
 </tr>
@@ -87,7 +87,7 @@
 
 <!-- Check the element is updated, not re-created -->
 <tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//input[@name="field_my_foo_category_title" and @test-relation-field-refresh="1"]</td>
   <td></td>
 </tr>
@@ -95,7 +95,7 @@
 <!-- Here waitForTextNotPresent or waitForElementPresent passes no matter the state of the field, because the field is updated in javascript (not in html attributes) and so the selection //input[@value=''] does not work. -->
 <!-- When not passing, you can see that the plane is correctly replaced by a magnifying glass, as if the field was only partly updated -->
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name="field_my_foo_category_title"]</td>
   <td></td>
 </tr>

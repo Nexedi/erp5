@@ -309,6 +309,20 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
                                  mapping=mapping)
     return translateString('Unknown')
 
+  def getVariationCategoryValueListDict(self):
+    result = {}
+    if not self.variation_text:
+      return result
+    category_tool = self.portal_categories
+    for category_path in self.variation_text.split('\n'):
+      category_value = category_tool.getCategoryValue(category_path)
+      base_category_id = category_tool.getBaseCategoryId(category_path)
+      if not base_category_id in result:
+        result[base_category_id] = []
+      result[base_category_id].append(category_value)
+    return result
+
+
 class TrackingListBrain(InventoryListBrain):
   """
   List of aggregated movements

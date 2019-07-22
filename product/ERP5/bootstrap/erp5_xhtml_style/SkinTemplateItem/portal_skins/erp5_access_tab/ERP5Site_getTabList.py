@@ -1,5 +1,3 @@
-from Products.ERP5Type.Cache import CachingMethod
-
 def getTabList(status_dict, info_dict, add_all_tabs):
   tab_list = []
   basic_mode = status_dict.get('basic_mode', 1)
@@ -67,10 +65,6 @@ if not add_all_tabs:
   # we have to calculate possible tabs
   status_dict = context.ERP5Site_getConfiguredStatusDict()
   info_dict = context.ERP5Site_getCategorizedModuleActionInformationDict()
-
-getTabList = CachingMethod(getTabList, \
-                           id = 'ERP5Site_getTabListInternal', \
-                           cache_factory = 'erp5_ui_long')
 
 return getTabList(status_dict = status_dict, \
                   info_dict = info_dict, \

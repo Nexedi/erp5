@@ -55,7 +55,7 @@ class TestNamingConvention(ERP5TypeTestCase):
       'erp5_secure_payment', 'erp5_paypal_secure_payment', 'erp5_payzen_secure_payment',
       'erp5_public_accounting_budget', 'erp5_publication', 'erp5_run_my_doc',
       'erp5_short_message', 'erp5_simplified_invoicing', 'erp5_trade_knowledge_pad',
-      'erp5_trade_ui_test', 'erp5_ace_editor',
+      'erp5_trade_ui_test',
       'erp5_authentication_policy', 'erp5_bearer_token',
       'erp5_certificate_authority', 'erp5_code_mirror', 'erp5_computer_immobilisation',
       'erp5_credential_oauth2', 'erp5_data_protection', 'erp5_data_set',
