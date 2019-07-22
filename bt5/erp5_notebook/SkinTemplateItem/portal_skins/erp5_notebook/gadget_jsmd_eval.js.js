@@ -1,59 +1,18 @@
-/*global window, console, RSVP, document, URL, eval, XMLHttpRequest, marked, pyodide, WebAssembly, fetch*/
-/*jslint nomen: true, indent: 2, maxerr: 3, regexp: true */
+/*global window, console, RSVP, document, URL, eval, XMLHttpRequest, marked */
+/*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window) {
   "use strict";
 
-  function sideEffectDiv(side_effect_class, report_side_effect) {
-    // appends a side effect div to the side effect area
-    var div = document.createElement("div");
-    div.setAttribute("class", side_effect_class);
-    if (report_side_effect === undefined) {
-      div.setAttribute("style", "display:");
-    }
-    document.body.appendChild(div);
-    return div;
-  }
-
   var IODide = function createIODide() {
-    var iodide = {
-      output: {
-        text: function (content, report_side_effect) {
-          var i, div, line_list;
-          console.log(content);
-          line_list = content.toString().split("\n");
-          for (i = 0; i < line_list.length; i += 1) {
-            div = sideEffectDiv("side-effect-print", report_side_effect);
-            div.textContent = line_list[i];
-          }
-        },
-        element: function (node_type, report_side_effect) {
-          var div, node;
-          div = sideEffectDiv("side-effect-element", report_side_effect);
-          node = document.createElement(node_type);
-          div.append(node);
-          return node;
-        }
-      }
-    };
-    return iodide;
+    return;
   },
     JSMDCell = function createJSMDCell(type, line_list) {
       this._type = type;
       this._line_list = line_list;
     },
     split_line_regex = /[\r\n|\n|\r]/,
-    cell_type_regexp = /^\%\% (\w+)\b/,
-    language_type_regexp = /\{[\S\s]+\}/,
-    is_pyodide_loaded = false,
-    Module = {},
-    packages,
-    loadedPackages = [],
-    // Regexp for validating package name and URI
-    package_uri_regexp = /^https?:\/\/.*?([a-z0-9_][a-z0-9_\-]*).js$/,
-    package_name_regexp = /^[a-z0-9_][a-z0-9_\-]*$/;
+    cell_type_regexp = /^\%\% (\w+)$/;
 
-  package_uri_regexp = new RegExp(package_uri_regexp, 'i');
-  package_name_regexp = new RegExp(package_name_regexp, 'i');
   window.iodide = new IODide();
 
   IODide.prototype.addOutputHandler = function () {
@@ -103,165 +62,6 @@
     });
   }
 
-  // Pyodide package loading
-  function _uri_to_package_name(package_uri) {
-    // Generate a unique package name from URI
-    if (package_name_regexp.test(package_uri)) {
-      return package_uri;
-    }
-
-    if (package_uri_regexp.test(package_uri)) {
-      var match = package_uri_regexp.exec(package_uri);
-      // Get the regexp group corresponding to the package name
-      return match[1];
-    }
-
-    return null;
-  }
-
-  function preloadWasm() {
-    // On Chrome, we have to instantiate wasm asynchronously. Since that
-    // can't be done synchronously within the call to dlopen, we instantiate
-    // every .so that comes our way up front, caching it in the
-    // `preloadedWasm` dictionary.
-    var queue, FS, path;
-    queue = new RSVP.Queue();
-    FS = pyodide._module.FS;
-
-    function recurseDir(rootpath) {
-      var i, entry, dirs;
-      try {
-        dirs = FS.readdir(rootpath);
-      } catch (e) {
-        return;
-      }
-
-      function readModuleFile(path) {
-        return function () {
-          return Module.loadWebAssemblyModule(
-            FS.readFile(path),
-            {loadAsync: true}
-          );
-        };
-      }
-      function setModule(path) {
-        return function (module) {
-          Module.preloadedWasm[path] = module;
-        };
-      }
-
-      for (i = 0; i < dirs.length; i += 1) {
-        entry = dirs[i];
-        if (!entry.startsWith('.')) {
-          path = rootpath + entry;
-
-          if (entry.endsWith('.so')) {
-            if (Module.preloadedWasm[path] === undefined) {
-              queue.push(readModuleFile(path))
-                .push(setModule(path));
-            }
-          } else if (FS.isDir(FS.lookupPath(path).node.mode)) {
-            recurseDir(path + '/');
-          }
-        }
-      }
-    }
-
-    recurseDir('/');
-
-    return queue;
-  }
-
-  function pyodideLoadPackage(names) {
-    // DFS to find all dependencies of the requested packages
-    var queue, toLoad, package_uri, package_name, k,
-      subpackage, packageList, script, defer;
-    packages = window.pyodide.packages.dependencies;
-    queue = new Array(names);
-    toLoad = [];
-    defer = RSVP.defer();
-    while (queue.length) {
-      package_uri = queue.pop();
-      package_name = _uri_to_package_name(package_uri);
-
-      if (package_name === null) {
-        throw new Error("Invalid package name or URI " + package_uri);
-      }
-
-      if (package_name === package_uri) {
-        package_uri = 'default channel';
-      }
-
-      if (loadedPackages.indexOf(package_name) !== -1) {
-        if (package_uri !== loadedPackages[package_name]) {
-          throw new Error(
-            "URI mismatch, attempting to load package " +
-              package_name + " from " + package_uri + " while it is already " +
-              "loaded from " + loadedPackages[package_name] + " ! "
-          );
-        }
-      } else {
-        toLoad[package_name] = package_uri;
-        if (packages.hasOwnProperty(package_name)) {
-          for (k = 0; k < packages[package_name].length; k += 1) {
-            subpackage = packages[package_name][k];
-            if (loadedPackages.indexOf(subpackage) === -1 && toLoad.indexOf(subpackage) === -1) {
-              queue.push(subpackage);
-            }
-          }
-        } else {
-          throw new Error("Unknown package " + package_name);
-        }
-      }
-    }
-
-    if (Object.keys(toLoad).length === 0) {
-      // No new packages to load
-      return;
-    }
-
-    pyodide.monitorRunDependencies = function (n) {
-      if (n === 0) {
-        for (k = 0; k < toLoad.length; k += 1) {
-          package_name = toLoad[k];
-          loadedPackages[package_name] = toLoad[package_name];
-        }
-        delete pyodide.monitorRunDependencies;
-        packageList = Array.from(Object.keys(toLoad)).join(', ');
-        return preloadWasm()
-          .push(function () {
-            defer.resolve();
-            return;
-          });
-      }
-    };
-
-    function script_reject(e) {
-      defer.reject(e);
-    }
-
-    packageList = Object.keys(toLoad);
-    for (k = 0; k < packageList.length; k += 1) {
-      package_name = packageList[k];
-      script = document.createElement('script');
-      package_uri = toLoad[package_name];
-      if (package_uri === 'default channel') {
-        script.src = package_name + ".js";
-      } else {
-        script.src = package_uri;
-      }
-      script.onerror = script_reject;
-      document.body.appendChild(script);
-    }
-
-    // We have to invalidate Python's import caches, or it won't
-    // see the new files. This is done here so it happens in parallel
-    // with the fetching over the network.
-    window.pyodide.runPython('import importlib as _importlib\n' +
-      '_importlib.invalidate_caches()\n');
-    return defer.promise;
-  }
-
   function parseJSMDCellList(jsmd) {
     // Split the text into a list of Iodide cells
     var line_list = jsmd.split(split_line_regex),
@@ -269,7 +69,6 @@
       len = line_list.length,
       current_line,
       current_type,
-      language_type,
       current_text_list,
       next_type,
       cell_list = [];
@@ -286,11 +85,6 @@
       next_type = current_line.match(cell_type_regexp);
       if (next_type) {
         // New type detexted
-        if (next_type[1] === 'code') {
-          // language detected
-          language_type = JSON.parse(current_line.match(language_type_regexp)).language;
-          next_type[1] = next_type[1] + '_' + language_type;
-        }
         pushNewCell();
         current_type = next_type;
         current_text_list = [];
@@ -307,32 +101,14 @@
     throw new Error('Unsupported cell: ' + cell._type);
   }
 
-  function renderCodeblock(result_text) {
-    var div = document.createElement('div'),
-      pre = document.createElement('pre'),
-      result = document.createElement('code');
-    div.classList.add('code-block');
-
-    if (result_text !== undefined) {
-      result.innerHTML = result_text;
-      pre.appendChild(result);
-      div.appendChild(pre);
-      document.body.appendChild(div);
-    }
-  }
-
   function executeJSCell(line_list) {
     // console.info('eval', line_list);
     var text = line_list.join('\n'),
       pre,
       br,
-      code,
-      result;
-
+      code;
     try {
-      result = eval.call(window, text);
-      renderCodeblock(result);
-      return result;
+      return eval.call(window, text);
     } catch (e) {
       console.error(e);
       pre = document.createElement('pre');
@@ -411,9 +187,7 @@
     console.log(line_split);
     return new RSVP.Queue()
       .push(function () {
-        return ajax({
-          url: url
-        });
+        return ajax({url: url});
       })
       .push(function (evt) {
         window[variable] = evt.target.responseText;
@@ -479,90 +253,12 @@
     });
   }
 
-  function loadPyodide(info, receive_instance) {
-    var queue = new RSVP.Queue();
-    queue.push(function () {
-      return ajax({
-        url: "pyodide.asm.wasm",
-        dataType: "arraybuffer"
-      });
-    })
-      .push(function (evt) {
-        return WebAssembly.instantiate(evt.target.response, info);
-      })
-      .push(function (results) {
-        return receive_instance(results.instance);
-      })
-      .push(undefined, function (error) {
-        console.log(error);
-      });
-    return queue;
-  }
-
-  function executePyCell(line_list) {
-    var result, code_text = line_list.join('\n');
-    result = window.pyodide.runPython(code_text);
-    renderCodeblock(result);
-  }
-
-  function pyodideSetting() {
-    window.pyodide = pyodide(Module);
-    window.pyodide.loadPackage = pyodideLoadPackage;
-
-    var defer = RSVP.defer();
-    Module.postRun = defer.resolve;
-
-    return defer.promise;
-  }
-
-  Module.checkABI = function (ABI_number) {
-    if (ABI_number !== parseInt('1', 10)) {
-      var ABI_mismatch_exception = 'ABI numbers differ. Expected 1, got ' + ABI_number;
-      console.error(ABI_mismatch_exception);
-      throw ABI_mismatch_exception;
-    }
-    return true;
-  };
-
-  function initPyodide() {
-    var queue = new RSVP.Queue();
-    queue.push(function () {
-      Module.instantiateWasm = loadPyodide;
-      window.Module = Module;
-    })
-      .push(function () {
-        return loadJSResource('pyodide.asm.data.js');
-      })
-      .push(function () {
-        return loadJSResource('pyodide.asm.js');
-      })
-      .push(function () {
-        return pyodideSetting();
-      })
-      .push(function () {
-        delete window.Module;
-        return ajax({
-          url: 'packages.json'
-        });
-      })
-      .push(function (evt) {
-        return JSON.parse(evt.target.response);
-      })
-      .push(function (json) {
-        window.pyodide._module = Module;
-        window.pyodide.loadedPackages = [];
-        window.pyodide._module.packages = json;
-        return;
-      });
-    return queue;
-  }
-
   function executeCell(cell) {
-    if (['raw', 'meta', 'plugin'].indexOf(cell._type) !== -1) {
+    if (cell._type === 'raw') {
       // Do nothing...
       return;
     }
-    if (cell._type === 'js' || cell._type === 'code_js') {
+    if (cell._type === 'js') {
       return executeJSCell(cell._line_list);
     }
     if (cell._type === 'resource') {
@@ -576,27 +272,6 @@
     }
     if (cell._type === 'css') {
       return executeCssCell(cell._line_list);
-    }
-    if (cell._type === 'code_py') {
-      if (cell._line_list.length === 0) {
-        // empty block, do nothing.
-        return;
-      }
-      var queue = new RSVP.Queue();
-      if (is_pyodide_loaded === false) {
-        queue.push(function () {
-          return initPyodide();
-        })
-          .push(function () {
-            return pyodideLoadPackage('matplotlib');
-          });
-        is_pyodide_loaded = true;
-      }
-
-      queue.push(function () {
-        return executePyCell(cell._line_list);
-      });
-      return queue;
     }
     return executeUnknownCellType(cell);
   }
@@ -619,7 +294,6 @@
     for (i = 0; i < len; i += 1) {
       queue.push(deferCellExecution(cell_list[i]));
     }
-
     return queue
       .push(function () {
         console.info('JSMD executed.');
