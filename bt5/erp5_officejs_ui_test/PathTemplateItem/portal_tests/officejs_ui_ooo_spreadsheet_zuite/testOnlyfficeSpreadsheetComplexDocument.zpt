@@ -13,6 +13,17 @@
   </thead>
   <tbody>
   <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init"/>
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
   <!-- Initialize -->
   <tr>
     <td>store</td>
