@@ -3,11 +3,11 @@
 (function (window) {
   "use strict";
 
-  function sideEffectDiv(sideEffectClass, reportSideEffect) {
+  function sideEffectDiv(side_effect_class, report_side_effect) {
     // appends a side effect div to the side effect area
     var div = document.createElement("div");
-    div.setAttribute("class", sideEffectClass);
-    if (reportSideEffect === undefined) {
+    div.setAttribute("class", side_effect_class);
+    if (report_side_effect === undefined) {
       div.setAttribute("style", "display:");
     }
     document.body.appendChild(div);
@@ -17,19 +17,19 @@
   var IODide = function createIODide() {
     var iodide = {
       output: {
-        text: function (content, reportSideEffect) {
+        text: function (content, report_side_effect) {
           var i, div, line_list;
           console.log(content);
           line_list = content.toString().split("\n");
           for (i = 0; i < line_list.length; i += 1) {
-            div = sideEffectDiv("side-effect-print", reportSideEffect);
+            div = sideEffectDiv("side-effect-print", report_side_effect);
             div.textContent = line_list[i];
           }
         },
-        element: function (nodeType, reportSideEffect) {
+        element: function (node_type, report_side_effect) {
           var div, node;
-          div = sideEffectDiv("side-effect-element", reportSideEffect);
-          node = document.createElement(nodeType);
+          div = sideEffectDiv("side-effect-element", report_side_effect);
+          node = document.createElement(node_type);
           div.append(node);
           return node;
         }
@@ -479,7 +479,7 @@
     });
   }
 
-  function loadPyodide(info, receiveInstance) {
+  function loadPyodide(info, receive_instance) {
     var queue = new RSVP.Queue();
     queue.push(function () {
       return ajax({
@@ -491,7 +491,7 @@
         return WebAssembly.instantiate(evt.target.response, info);
       })
       .push(function (results) {
-        return receiveInstance(results.instance);
+        return receive_instance(results.instance);
       })
       .push(undefined, function (error) {
         console.log(error);
