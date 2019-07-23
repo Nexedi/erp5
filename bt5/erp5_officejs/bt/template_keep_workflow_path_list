@@ -41,4 +41,3 @@ web_site_module/officejs_wallsearch
 web_site_module/officejs_wallsearch/**
 web_site_module/officejs_whiteboard
 web_site_module/officejs_media_player/**
-web_site_module/hateoas_appcache

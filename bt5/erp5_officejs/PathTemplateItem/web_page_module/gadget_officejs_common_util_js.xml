@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_common_utils.js</string> </value>
+            <value> <string>gadget_officejs_common_util.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_common_utils_js</string> </value>
+            <value> <string>gadget_officejs_common_util_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -132,7 +132,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget OfficeJS Common Utils JS</string> </value>
+            <value> <string>Gadget OfficeJS Common Util JS</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -269,7 +269,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.8828.22214.8772</string> </value>
+                <value> <string>977.16294.5398.40106</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,7 +287,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1563365942.38</float>
+                        <float>1563811574.1</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

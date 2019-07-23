@@ -230,8 +230,8 @@ gadget_officejs_form_view.html\n
 gadget_officejs_form_view.js\n
 gadget_erp5_page_handle_action.html\n
 gadget_erp5_page_handle_action.js\n
-gadget_officejs_common_utils.html\n
-gadget_officejs_common_utils.js\n
+gadget_officejs_common_util.html\n
+gadget_officejs_common_util.js\n
 gadget_erp5_page_create_document.html\n
 gadget_erp5_page_create_document.js\n
 \n
@@ -746,7 +746,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.10238.57791.10683</string> </value>
+                <value> <string>977.8821.29343.5888</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -764,7 +764,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1563448279.94</float>
+                        <float>1563363682.11</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

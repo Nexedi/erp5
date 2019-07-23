@@ -1,5 +1,5 @@
 /*global document, window, rJS, RSVP */
-/*jslint nomen: true, indent: 2, maxerr: 3 */
+/*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
 (function (document, window, rJS, RSVP) {
   "use strict";
 
@@ -10,16 +10,9 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_put", "jio_put")
-    .declareAcquiredMethod("jio_post", "jio_post")
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("isDesktopMedia", "isDesktopMedia")
     .declareAcquiredMethod("getSetting", "getSetting")
-    .declareAcquiredMethod("getUrlForList", "getUrlForList")
-    .declareAcquiredMethod('getUrlParameter', 'getUrlParameter')
-    .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
-    .declareAcquiredMethod("redirect", "redirect")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -30,24 +23,25 @@
         default_view,
         app_view,
         form_definition,
-        gadget_utils,
+        gadget_util,
         jio_document,
         portal_type,
         front_page;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
-            gadget.declareGadget("gadget_officejs_common_utils.html"),
+            gadget.declareGadget("gadget_officejs_common_util.html"),
             gadget.getSetting('app_view_reference'),
             gadget.getSetting('default_view_reference'),
             gadget.getSetting('documents_editable')
           ]);
         })
         .push(function (result_list) {
-          gadget_utils = result_list[0];
+          gadget_util = result_list[0];
           app_view = options.action || result_list[1];
           default_view = result_list[2];
-          options.editable = ((result_list[3] == "1") ? true : options.editable);
+          options.editable = ((result_list[3] == "1") ?
+                              true : options.editable);
           return gadget.jio_get(options.jio_key);
         })
         .push(function (result) {
@@ -71,19 +65,19 @@
             portal_type = parent_portal_type;
           }
           front_page = portal_type === parent_portal_type;
-          return gadget_utils.getFormDefinition(portal_type, app_view);
+          return gadget_util.getFormDefinition(portal_type, app_view);
         })
         .push(function (result) {
           return result;
         }, function (error) {
           if (error.status_code === 400) {
-            return gadget_utils.getFormDefinition(portal_type, default_view);
+            return gadget_util.getFormDefinition(portal_type, default_view);
           }
           throw error;
         })
         .push(function (result) {
           form_definition = result;
-          return gadget_utils.getFormInfo(form_definition);
+          return gadget_util.getFormInfo(form_definition);
         })
         .push(function (form_info) {
           var form_type = form_info[0],
@@ -109,8 +103,8 @@
         this.element.removeChild(this.element.firstChild);
       }
       this.element.appendChild(fragment);
-      return gadget.declareGadget("gadget_officejs_form_view.html", {element: fragment,
-                                                                     scope: 'form_view'})
+      return gadget.declareGadget("gadget_officejs_form_view.html",
+                                  {element: fragment, scope: 'form_view'})
         .push(function (form_view_gadget) {
           return form_view_gadget.render(gadget.state);
         });
@@ -137,7 +131,8 @@
           return gadget.notifySubmitting();
         })
         .push(function () {
-          return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
+          return gadget.notifySubmitted({message: 'Data Updated',
+                                         status: 'success'});
         });
     })
 

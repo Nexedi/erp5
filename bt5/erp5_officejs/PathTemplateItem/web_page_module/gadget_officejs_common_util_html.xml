@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Manifest" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -64,9 +64,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -80,8 +78,16 @@
             <value> <string>text/html</string> </value>
         </item>
         <item>
+            <key> <string>creators</string> </key>
+            <value>
+              <tuple>
+                <string>cedric.le.ninivin</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_text_editor.configuration</string> </value>
+            <value> <string>gadget_officejs_common_util.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -91,15 +97,36 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_text_editor_configuration</string> </value>
+            <value> <string>gadget_officejs_common_util_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>modification_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1455284351.46</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -108,33 +135,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-CACHE MANIFEST\n
-# generated on Thu, 14 Jan 2019 11:55:33 +0000\n
-CACHE:\n
-\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_hal_json_style%2FBase_viewNewContentDialog&view=definition_view\n
-\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module%2F4&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPageModule_viewWebPageListAsJio&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F9&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F10&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2F11&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPage_viewAsTextDocument&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FTextEditor_cloneDocument&view=definition_view\n
-\n
-NETWORK:\n
-*
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Text Editor Configuration</string> </value>
+            <value> <string>Gadget OfficeJS Common Util</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -226,7 +228,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1552575414.66</float>
+                        <float>1556112006.95</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -271,7 +273,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.64206.22853.836</string> </value>
+                <value> <string>977.16290.38883.28228</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -289,7 +291,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1563193388.95</float>
+                        <float>1563811367.37</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -346,7 +348,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1552575268.51</float>
+                        <float>1556111928.55</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

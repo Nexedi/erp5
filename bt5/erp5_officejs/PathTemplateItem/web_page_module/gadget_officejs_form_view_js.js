@@ -1,52 +1,84 @@
 /*global document, window, rJS, RSVP, ensureArray */
-/*jslint nomen: true, indent: 2, maxerr: 3 */
+/*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
 (function (document, window, rJS, RSVP, ensureArray) {
   "use strict";
 
-  function renderField(field_id, field_definition, document) {
-    var key, raw_value, tales_expr, override, final_value, item_list, result = {};
+  function renderField(field_id, field_definition, context_document) {
+    var key, raw_value, override, final_value, item_list, result = {};
     for (key in field_definition.values) {
       if (field_definition.values.hasOwnProperty(key)) {
         // order to get the final value (based on Field.py get_value)
-        // 1.tales, 2.override, 3.form-def-value, 4.context-default
+        // 1.override, 2.form-def-value, 3.context-default
         raw_value = field_definition.values[key];
-        tales_expr = field_definition.tales[key];
         override = field_definition.overrides[key];
         final_value = undefined;
-        if (tales_expr !== undefined && tales_expr !== null && tales_expr !== '') {
-          try {
-            throw "error";
-            //final_value = eval(tales_expr);
-          } catch (ignore) {} // TALES expressions are usually python code, so for now ignore
-        }
         if (final_value === undefined) {
           if (override !== undefined && override !== null && override !== '') {
             final_value = override;
-          } else if (raw_value !== undefined && raw_value !== null && raw_value !== '') {
+          } else if (raw_value !== undefined && raw_value !== null &&
+                     raw_value !== '') {
             final_value = raw_value;
-          } else if (document && document.hasOwnProperty(key)) {
-            final_value = document[key];
+          } else if (context_document && context_document.hasOwnProperty(key)) {
+            final_value = context_document[key];
           }
         }
-        if (final_value !== undefined && final_value !== null && final_value !== '') {
+        if (final_value !== undefined && final_value !== null &&
+            final_value !== '') {
           result[key] = final_value;
         }
       }
     }
     result.type = field_definition.type;
     result.key = field_id;
-    if (document && document.hasOwnProperty(field_id)) {
+    if (context_document && context_document.hasOwnProperty(field_id)) {
       if (field_definition.type === "ListField") {
-        item_list = ensureArray(document[field_id]).map(function (item) {
-          if (Array.isArray(item)) {return item; }
-          return [item, item];
-        });
+        item_list = ensureArray(context_document[field_id])
+          .map(function (item) {
+            if (Array.isArray(item)) {return item; }
+            return [item, item];
+          });
         result.items = item_list;
       } else {
-        result["default"] = document[field_id];
+        result["default"] = context_document[field_id];
       }
     }
     return result;
+  }
+
+  function renderForm(form_definition, context_document) {
+    var i, j, field_list, field_info, my_element, element_id, rendered_field,
+      raw_properties = form_definition.fields_raw_properties,
+      form_json = {
+        erp5_document: {
+          "_embedded": {"_view": {}},
+          "_links": {}
+        },
+        form_definition: form_definition
+      };
+    for (i = 0; i < form_definition.group_list.length; i += 1) {
+      field_list = form_definition.group_list[i][1];
+      for (j = 0; j < field_list.length; j += 1) {
+        my_element = field_list[j][0];
+        if (my_element.startsWith("my_")) {
+          element_id = my_element.replace("my_", "");
+        } else if (my_element.startsWith("your_")) {
+          element_id = my_element.replace("your_", "");
+        } else {
+          element_id = my_element;
+        }
+        if (element_id && raw_properties.hasOwnProperty(my_element)) {
+          field_info = raw_properties[my_element];
+          rendered_field = renderField(element_id, field_info,
+                                       context_document);
+          form_json.erp5_document._embedded._view[my_element] =
+            rendered_field;
+        }
+      }
+    }
+    form_json.erp5_document._embedded._view._actions =
+      form_definition._actions;
+    form_json.erp5_document._links = form_definition._links;
+    return form_json;
   }
 
   rJS(window)
@@ -57,14 +89,7 @@
     .declareAcquiredMethod("isDesktopMedia", "isDesktopMedia")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getSetting", "getSetting")
-    .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("jio_get", "jio_get")
-    .declareAcquiredMethod("jio_put", "jio_put")
-    .declareAcquiredMethod("jio_post", "jio_post")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
-    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
-    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
 
     // XXX Hardcoded for modification_date rendering
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
@@ -107,39 +132,6 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("renderForm", function (form_definition, document) {
-      var i, j, fields, field_info, my_element, element_id, rendered_field,
-        raw_properties = form_definition.fields_raw_properties,
-        form_json = {
-          erp5_document: {
-            "_embedded": {"_view": {}},
-            "_links": {}
-          },
-          form_definition: form_definition
-        };
-      for (i = 0; i < form_definition.group_list.length; i += 1) {
-        fields = form_definition.group_list[i][1];
-        for (j = 0; j < fields.length; j += 1) {
-          my_element = fields[j][0];
-          if (my_element.startsWith("my_")) {
-            element_id = my_element.replace("my_", "");
-          } else if (my_element.startsWith("your_")) {
-            element_id = my_element.replace("your_", "");
-          } else {
-            element_id = my_element;
-          }
-          if (element_id && raw_properties.hasOwnProperty(my_element)) {
-            field_info = raw_properties[my_element];
-            rendered_field = renderField(element_id, field_info, document);
-            form_json.erp5_document._embedded._view[my_element] = rendered_field;
-          }
-        }
-      }
-      form_json.erp5_document._embedded._view._actions = form_definition._actions;
-      form_json.erp5_document._links = form_definition._links;
-      return form_json;
-    })
-
     .declareMethod("triggerSubmit", function (argument_list) {
       return this.getDeclaredGadget('fg')
         .push(function (gadget) {
@@ -148,20 +140,28 @@
     })
 
     .declareMethod("render", function (options) {
+      var state_dict = {
+        doc: options.doc,
+        form_definition: options.form_definition,
+        child_gadget_url: options.child_gadget_url,
+        options: options
+      };
+      return this.changeState(state_dict);
+    })
+
+    .onStateChange(function onStateChange() {
       var fragment = document.createElement('div'),
         gadget = this,
-        form_json;
-      return gadget.renderForm(options.form_definition, options.doc)
-        .push(function (json) {
-          form_json = json;
-          while (gadget.element.firstChild) {
-            gadget.element.removeChild(gadget.element.firstChild);
-          }
-          gadget.element.appendChild(fragment);
-          return gadget.declareGadget(options.child_gadget_url, {element: fragment, scope: 'fg'});
-        })
+        form_json = renderForm(gadget.state.form_definition, gadget.state.doc);
+      while (gadget.element.firstChild) {
+        gadget.element.removeChild(gadget.element.firstChild);
+      }
+      gadget.element.appendChild(fragment);
+      return gadget.declareGadget(gadget.state.child_gadget_url,
+                                      {element: fragment, scope: 'fg'})
         .push(function (form_gadget) {
-          return gadget.renderSubGadget(options, form_gadget, form_json);
+          return gadget.renderSubGadget(gadget.state.options, form_gadget,
+                                        form_json);
         });
     })
 
@@ -182,7 +182,9 @@
         .push(function () {
           var url_for_parameter_list = [
             {command: 'change', options: {page: "tab"}},
-            {command: 'change', options: {page: "action_officejs", jio_key: options.jio_key, portal_type: options.portal_type}},
+            {command: 'change', options: {page: "action_officejs",
+                                          jio_key: options.jio_key,
+                                          portal_type: options.portal_type}},
             {command: 'history_previous'},
             {command: 'selection_previous'},
             {command: 'selection_next'},
@@ -196,7 +198,15 @@
           if (form_json.form_definition.allowed_sub_types_list &&
               form_json.form_definition.allowed_sub_types_list.length > 0 &&
               !form_json.form_definition.hide_add_button) {
-            url_for_parameter_list.push({command: 'change', options: {page: "create_document", jio_key: options.jio_key, portal_type: options.portal_type, allowed_sub_types_list: form_json.form_definition.allowed_sub_types_list}});
+            url_for_parameter_list.push({command: 'change',
+                                         options: {page: "create_document",
+                                                   jio_key: options.jio_key,
+                                                   portal_type:
+                                                   options.portal_type,
+                                                   allowed_sub_types_list:
+                                                   form_json.form_definition
+                                                   .allowed_sub_types_list
+                                                  }});
             add_url = true;
           }
           return RSVP.all([
@@ -243,7 +253,8 @@
                 header_dict.save_action = true;
               }
             }
-            if (options.form_definition.has_more_actions || options.form_definition.has_more_views) {
+            if (options.form_definition.has_more_actions ||
+                options.form_definition.has_more_views) {
               header_dict.actions_url = url_list[1];
             }
             if (add_url) {

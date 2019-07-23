@@ -1,5 +1,5 @@
 /*global window, rJS, RSVP, Handlebars */
-/*jslint nomen: true, indent: 2, maxerr: 3 */
+/*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
 (function (window, rJS, RSVP, Handlebars) {
   "use strict";
 
@@ -36,51 +36,49 @@
     );
   }
 
+  function getHTMLElementList(gadget, element_list) {
+    var i = 0,
+      element_info_list = [],
+      url_for_parameter_list = [],
+      element_info,
+      key;
+    for (key in element_list) {
+      if (element_list.hasOwnProperty(key)) {
+        element_info = element_list[key];
+        url_for_parameter_list.push({ command: 'change',
+                                      options: element_info });
+        element_info_list[i] = { reference: element_info.reference,
+                                 title: element_info.title};
+        i += 1;
+      }
+    }
+    return gadget.getUrlForList(url_for_parameter_list)
+      .push(function (url_list) {
+        var html_element_list = [], j, element;
+        for (j = 0; j < url_list.length; j += 1) {
+          element = { href: url_list[j],
+            icon: null,
+            name: element_info_list[j].reference,
+            title: element_info_list[j].title };
+          html_element_list.push(element);
+        }
+        return html_element_list;
+      });
+  }
+
   gadget_klass
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
-    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("getSetting", "getSetting")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-
-    .declareMethod("getHTMLElementList", function (element_list) {
-      var gadget = this,
-        i = 0,
-        element_info_list = [],
-        url_for_parameter_list = [],
-        element_info,
-        key;
-      for (key in element_list) {
-        if (element_list.hasOwnProperty(key)) {
-          element_info = element_list[key];
-          url_for_parameter_list.push({ command: 'change', options: element_info });
-          element_info_list[i] = { reference: element_info.reference, title: element_info.title};
-          i += 1;
-        }
-      }
-      return gadget.getUrlForList(url_for_parameter_list)
-        .push(function (url_list) {
-          var html_element_list = [], j, element;
-          for (j = 0; j < url_list.length; j += 1) {
-            element = { href: url_list[j],
-              icon: null,
-              name: element_info_list[j].reference,
-              title: element_info_list[j].title };
-            html_element_list.push(element);
-          }
-          return html_element_list;
-        });
-    })
 
     .declareMethod("render", function (options) {
       var gadget = this,
@@ -96,20 +94,20 @@
         })
         .push(function (result) {
           portal_type = result;
-          return gadget.declareGadget("gadget_officejs_common_utils.html");
+          return gadget.declareGadget("gadget_officejs_common_util.html");
         })
         .push(function (gadget_utils) {
           // TODO views are also listed here
           // should views be handled in another gadget like "..tab_office.js" ?
-          return gadget_utils.getAllViewsAndActions(portal_type, options.jio_key);
+          return gadget_utils.getViewAndActionDict(portal_type,
+                                                   options.jio_key);
         })
         .push(function (action_info_dict) {
           return RSVP.all([
-            gadget.getHTMLElementList(action_info_dict.views),
-            gadget.getHTMLElementList(action_info_dict.actions)
+            getHTMLElementList(gadget, action_info_dict.view_list),
+            getHTMLElementList(gadget, action_info_dict.action_list)
           ]);
         })
-          // check other lists like clone or delete? NO. For now, they will be actions
         .push(function (all_html_elements) {
           return RSVP.all([
             renderLinkList(gadget, "Views", "eye", all_html_elements[0]),
@@ -118,7 +116,8 @@
         })
         .push(function (translated_html_link_list) {
           gadget.element.innerHTML = translated_html_link_list.join("\n");
-          return gadget.getUrlFor({command: 'change', options: {page: undefined}});
+          return gadget.getUrlFor({command: 'change',
+                                   options: {page: undefined}});
         })
         .push(function (back_url) {
           return gadget.updateHeader({

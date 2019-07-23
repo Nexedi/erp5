@@ -1,5 +1,5 @@
 /*global window, document, rJS */
-/*jslint nomen: true, indent: 2, maxerr: 13 */
+/*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
 (function (window, document, rJS) {
   "use strict";
 
@@ -8,12 +8,6 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("getUrlForList", "getUrlForList")
-    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
-    .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("jio_post", "jio_post")
@@ -22,7 +16,8 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("createDocument", function (portal_type, parent_portal_type) {
+    .declareMethod("createDocument", function (portal_type,
+                                               parent_portal_type) {
       var gadget = this,
         doc = {
           title: "Untitled Document",
@@ -58,13 +53,21 @@
         })
         .push(function (portal_type_result) {
           portal_type = portal_type_result;
-          // TODO: somehow (a generic action?) get the path string:${object_url}/Base_viewNewContentDialog
-          return gadget.jio_get("portal_skins/erp5_hal_json_style/Base_viewNewContentDialog");
+          return gadget.getSetting("new_content_action");
+        })
+        .push(function (new_content_action) {
+          if (!new_content_action) {
+            throw new Error("Missing site configuration 'new_content_action'");
+          }
+          return gadget.jio_get(new_content_action);
         })
         .push(function (form_result) {
-          form_definition = form_result.raw_dict._embedded._view._embedded.form_definition;
-          form_definition.fields_raw_properties = form_result.raw_dict._embedded._view.my_fields_raw_properties["default"];
-          form_definition._actions = form_result.raw_dict._embedded._view._actions;
+          form_definition = form_result.raw_dict._embedded._view
+            ._embedded.form_definition;
+          form_definition.fields_raw_properties = form_result.raw_dict._embedded
+            ._view.my_fields_raw_properties["default"];
+          form_definition._actions = form_result.raw_dict._embedded
+            ._view._actions;
           form_definition.group_list = form_result.raw_dict.group_list;
           form_definition.title = "Create Document";
           return gadget.changeState({
@@ -88,15 +91,17 @@
           this.element.removeChild(this.element.firstChild);
         }
         this.element.appendChild(fragment);
-        return gadget.declareGadget("gadget_officejs_form_view.html", {element: fragment,
-                                                                       scope: 'fg'})
+        return gadget.declareGadget("gadget_officejs_form_view.html",
+                                    {element: fragment, scope: 'fg'})
           .push(function (form_view_gadget) {
             return form_view_gadget.render(gadget.state);
           });
       } else {
-        // if there is only one sub portal type, skip create document dialog rendering
+        // if there is only one sub portal type
+        // skip create document dialog rendering
         return gadget.createDocument(gadget.state.doc.portal_type[0],
-                                     gadget.state.parent_portal_type.replace(/ /g, '_').toLowerCase());
+                                     gadget.state.parent_portal_type
+                                     .replace(/ /g, '_').toLowerCase());
       }
     })
 
@@ -104,7 +109,8 @@
       var gadget = this,
         content_dict = options[2];
       return gadget.createDocument(content_dict.portal_type,
-                                   gadget.state.parent_portal_type.replace(/ /g, '_').toLowerCase());
+                                   gadget.state.parent_portal_type
+                                   .replace(/ /g, '_').toLowerCase());
     });
 
 }(window, document, rJS));

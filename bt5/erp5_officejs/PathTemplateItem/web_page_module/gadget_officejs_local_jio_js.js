@@ -1,13 +1,15 @@
 /*global window, window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, console */
-/*jslint indent: 2, maxerr: 3 */
-(function (window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, console) {
+/*jslint indent: 2, maxerr: 10, maxlen: 80 */
+(function (window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate,
+           console) {
   "use strict";
 
   // jIO call wrapper for redirection to authentication page if needed
   function wrapJioCall(gadget, method_name, argument_list) {
     var storage = gadget.state_parameter_dict.jio_storage;
     if (storage === undefined) {
-      return gadget.redirect({command: 'display', options: {page: 'ojs_configurator'}});
+      return gadget.redirect({command: 'display',
+                              options: {page: 'ojs_configurator'}});
     }
     return storage[method_name].apply(storage, argument_list)
       .push(undefined, function (error) {
@@ -27,7 +29,8 @@
                   return gadget.redirect({
                     command: 'raw',
                     options: {
-                      url: UriTemplate.parse(regexp.exec(login_page)[1]).expand({came_from: came_from})
+                      url: UriTemplate.parse(regexp.exec(login_page)[1])
+                      .expand({came_from: came_from})
                     }
                   });
                 });
@@ -50,7 +53,8 @@
           }
           // User entered wrong password ?
           // Notify
-          return gadget.notifySubmitted({message: 'Unauthorized storage access', status: 'error'})
+          return gadget.notifySubmitted({message: 'Unauthorized storage access',
+                                         status: 'error'})
             .push(function () {
               return gadget.redirect({command: 'display',
                                       options: {page: 'ojs_configurator'}});
@@ -61,19 +65,21 @@
   }
 
   function processHateoasDict(raw_dict) {
-    var raw_fields, type, parent, field_key, field_id, return_dict = {};
+    var raw_field_list, type, parent, field_key, field_id, return_dict = {};
     return_dict.raw_dict = raw_dict;
     /*jslint nomen: true*/
-    if (raw_dict.hasOwnProperty("_embedded") && raw_dict._embedded.hasOwnProperty("_view")) {
-      raw_fields = raw_dict._embedded._view;
+    if (raw_dict.hasOwnProperty("_embedded") &&
+        raw_dict._embedded.hasOwnProperty("_view")) {
+      raw_field_list = raw_dict._embedded._view;
       type = raw_dict._links.type.name;
       parent = raw_dict._links.parent.name;
       return_dict.parent_relative_url = "portal_types/" + parent;
       return_dict.portal_type = type;
-      for (field_key in raw_fields) {
-        if (raw_fields.hasOwnProperty(field_key)) {
+      for (field_key in raw_field_list) {
+        if (raw_field_list.hasOwnProperty(field_key)) {
           field_id = "";
-          if (raw_fields[field_key]["default"] !== undefined && raw_fields[field_key]["default"] !== "") {
+          if (raw_field_list[field_key]["default"] !== undefined &&
+              raw_field_list[field_key]["default"] !== "") {
             if (field_key.startsWith("my_")) {
               field_id = field_key.replace("my_", "");
             } else if (field_key.startsWith("your_")) {
@@ -81,7 +87,7 @@
             } else {
               field_id = field_key;
             }
-            return_dict[field_id] = raw_fields[field_key]["default"];
+            return_dict[field_id] = raw_field_list[field_key]["default"];
           }
         }
       }
@@ -109,7 +115,8 @@
       var appcache_storage,
         origin_url = window.location.href,
         hateoas_script = "hateoas_appcache/ERP5Document_getHateoas",
-        // TODO manifest should come from gadget.props.cache_file -add script in html body
+        // TODO manifest should come from gadget.props.cache_file
+        // add script in html body
         manifest = "gadget_officejs_text_editor.configuration",
         jio_appchache_options = {
           type: "replicate",
@@ -144,7 +151,8 @@
       if (jio_options === undefined) {
         return;
       }
-      jio_appchache_options.local_sub_storage = JSON.parse(JSON.stringify(jio_options));
+      jio_appchache_options.local_sub_storage = JSON.parse(
+        JSON.stringify(jio_options));
       jio_options = {
         type: 'dateupdater',
         sub_storage: jio_options,
@@ -173,9 +181,13 @@
                       for (id in attachment_dict) {
                         if (attachment_dict.hasOwnProperty(id)) {
                           if (id.indexOf(hateoas_script) === -1) {
-                            promise_list.push(appcache_storage.getAttachment(origin_url, id));
+                            promise_list.push(appcache_storage
+                                              .getAttachment(origin_url, id));
                           } else {
-                            promise_list.push(appcache_storage.getAttachment(origin_url, id, {"format": "json"}));
+                            promise_list.push(
+                              appcache_storage
+                              .getAttachment(origin_url, id,
+                                             {"format": "json"}));
                           }
                           configuration_ids_list[i] = id;
                           i += 1;
@@ -203,9 +215,12 @@
                         .push(undefined);
                     });
                 }, function (error) {
-                  console.log("Error while appcache-local storage synchronization");
-                  if (error && error.currentTarget && error.currentTarget.status === "401") {
-                    console.log("Unauthorized access to storage, sync cancelled");
+                  console.log("Error while appcache-local " +
+                              "storage synchronization");
+                  if (error && error.currentTarget &&
+                      error.currentTarget.status === "401") {
+                    console.log("Unauthorized access to storage," +
+                                "sync cancelled");
                     return;
                   }
                   throw error;
