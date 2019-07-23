@@ -267,6 +267,8 @@
     if (language === 'py') {
       console.log(line_list);
       console.log("We are processing Python code!!!");
+    } else {
+      throw new Error('Unsupported code language: ' + language);
     }
   }
 
