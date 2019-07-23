@@ -1,1 +1,9 @@
 Provides ERP5 Web Site User Interface based on renderjs UI for Data Lake functionality on top of Wendelin.
+
+For better user experience it is required to consider to do following changes which are not explicitly done by default
+
+1. "Automatic Approval of Credential Request" should be enabled in respective portal preference which will allow users from web site to register themselves.
+
+2. "System Generate Password" should be disabled, this will allow users to set their own password
+
+3. If you want to allow anonymous users to browse Data Sets you can enable "Access contents Information" permission on "data_set_module" and "data_stream_module". By default all contributed Data Sets are accessible to anonymous user.
