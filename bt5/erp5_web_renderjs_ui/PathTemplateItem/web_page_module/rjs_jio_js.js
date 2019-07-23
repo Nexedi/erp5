@@ -10369,6 +10369,7 @@ return new Parser;
             }
           }
           if (!has_error) {
+            // Attachment repication has been correctly resolved
             if (options.conflict) {
               report.log(id, options.from_local ? LOG_FORCE_DELETE_REMOTE :
                                                   LOG_FORCE_DELETE_LOCAL);
