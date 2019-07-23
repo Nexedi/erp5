@@ -82,6 +82,7 @@
         sub_element.setAttribute('class', 'ui-icon-carat-r ui-btn-icon-notext');
         sub_element.href = row.jump;
         sub_element.textContent = ' ';
+        td_element.appendChild(sub_element);
         tr_element.appendChild(td_element);
       }
 

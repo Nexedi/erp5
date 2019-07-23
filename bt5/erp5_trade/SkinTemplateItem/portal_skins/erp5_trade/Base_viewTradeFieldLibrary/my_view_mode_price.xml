@@ -136,7 +136,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.isMovement() and not here.getVariationCategoryList()</string> </value>
+            <value> <string>python: here.Movement_isQuantityEnabled()</string> </value>
         </item>
       </dictionary>
     </pickle>
