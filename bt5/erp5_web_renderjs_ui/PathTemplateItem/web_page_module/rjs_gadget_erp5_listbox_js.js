@@ -446,9 +446,6 @@
           if (displayed_column_item_list.length === 0) {
             displayed_column_item_list = field_json.column_list;
           }
-          if (field_json.sort === undefined) {
-            field_json.sort = []
-          }
 
           return gadget.changeState({
             key: field_json.key,
