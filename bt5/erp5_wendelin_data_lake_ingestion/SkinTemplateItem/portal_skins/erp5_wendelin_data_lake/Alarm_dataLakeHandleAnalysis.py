@@ -1,4 +1,3 @@
-context.logEntry("Alarm_dataLakeHandleAnalysis FIRED!")
 portal = context.getPortalObject()
 portal.DataLake_stopIngestionList()
 portal.DataLake_createDataAnalysisList()
