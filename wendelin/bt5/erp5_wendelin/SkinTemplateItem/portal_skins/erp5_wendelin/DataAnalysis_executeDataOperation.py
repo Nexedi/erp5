@@ -29,10 +29,11 @@ for analysis_line in context.objectValues(portal_type="Data Analysis Line"):
       parameter[base_category] = analysis_line.getVariationCategoryItemList(
                                    base_category_list=(base_category,))[0][0]
     reference = analysis_line.getReference()
-    
+
     parameter["Start Date"] = analysis_line.getStartDate()
     parameter["Stop Date"] = analysis_line.getStopDate()
-    parameter["Id"] = analysis_line.getId()
+    parameter["causality_reference"] = analysis_line.getCausalityReference()
+    parameter["reference"] = analysis_line.getReference()
     # several lines with same reference wil turn the parameter into a list
     if reference in parameter_dict:
       if not isinstance(parameter_dict[reference], list):
