@@ -33,6 +33,7 @@ for analysis_line in context.objectValues(portal_type="Data Analysis Line"):
     parameter["Start Date"] = analysis_line.getStartDate()
     parameter["Stop Date"] = analysis_line.getStopDate()
     parameter["causality_reference"] = analysis_line.getCausalityReference()
+    parameter["causality_relative_url"] = analysis_line.getCausality()
     parameter["reference"] = analysis_line.getReference()
     # several lines with same reference wil turn the parameter into a list
     if reference in parameter_dict:
