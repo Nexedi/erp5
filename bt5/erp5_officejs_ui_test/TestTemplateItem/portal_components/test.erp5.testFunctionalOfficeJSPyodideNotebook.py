@@ -1,8 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2011 Nexedi SARL and Contributors. All Rights Reserved.
-#                     Kazuhiko <kazuhiko@nexedi.com>
-#                     Rafael Monnerat <rafael@nexedi.com>
+# Copyright (c) 2019 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -30,18 +28,20 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
 
-class TestOfficejSUINotebook(ERP5TypeFunctionalTestCase):
+class TestOfficejSUIPyodideNotebook(ERP5TypeFunctionalTestCase):
   foreground = 0
-  run_only = "officejs_ui_notebook_zuite"
+  run_only = "officejs_ui_pyodide_notebook_zuite"
 
   def getBusinessTemplateList(self):
     return (
-      'erp5_officejs',
-      'erp5_officejs_ui_test',
+      'erp5_web_renderjs_ui',
+      'erp5_notebook',
       'erp5_ui_test_core',
-      )
+      'erp5_accounting',
+      'erp5_test_result',
+    )
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOfficejSUINotebook))
+  suite.addTest(unittest.makeSuite(TestOfficejSUIPyodideNotebook))
   return suite

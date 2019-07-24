@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Notebook" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>notebook_test_python_basic</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Notebook</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>%% meta\n
+{\n
+  "title": "Lecture-3-Matplotlib",\n
+  "lastSaved": "2018-10-16T13:50:00.550Z",\n
+  "languages": {\n
+    "js": {\n
+      "pluginType": "language",\n
+      "languageId": "js",\n
+      "displayName": "Javascript",\n
+      "codeMirrorMode": "javascript",\n
+      "module": "window",\n
+      "evaluator": "eval",\n
+      "keybinding": "j",\n
+      "url": ""\n
+    },\n
+    "py": {\n
+      "languageId": "py",\n
+      "displayName": "python",\n
+      "codeMirrorMode": "python",\n
+      "keybinding": "p",\n
+      "url": "https://iodide.io/pyodide-demo/pyodide.js",\n
+      "module": "pyodide",\n
+      "evaluator": "runPython",\n
+      "pluginType": "language"\n
+    }\n
+  },\n
+  "lastExport": "2018-10-16T13:50:03.563Z"\n
+}\n
+\n
+%% plugin\n
+{\n
+  "languageId": "py",\n
+  "displayName": "python",\n
+  "codeMirrorMode": "python",\n
+  "keybinding": "p",\n
+  "url": "https://iodide.io/pyodide-demo/pyodide.js",\n
+  "module": "pyodide",\n
+  "evaluator": "runPython",\n
+  "pluginType": "language"\n
+}\n
+\n
+%% md\n
+# Notebook JSMD Viewer Basic Python Test\n
+\n
+%% md\n
+This is a sample content for check the Python section can be executed in JSMD viewer.\n
+\n
+%% code {"language":"py"}\n
+2 + 40\n
+\n
+%% md\n
+Can we display some texts ealier?\n
+\n
+%% code {"language":"py"}\n
+import matplotlib.pyplot as plt\n
+\n
+plt.plot([1,23,2,4])\n
+plt.ylabel(\'some numbers\')\n
+\n
+plt.show()\n
+\n
+%% md\n
+# Conlusion\n
+\n
+So...</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Notebook test python basic</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
