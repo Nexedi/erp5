@@ -1,4 +1,6 @@
 document_module/test_officejs_*
+notebook_module/notebook_test_purejs
+notebook_module/notebook_test_python_basic
 portal_tests/officejs_ui_*_zuite
 portal_tests/officejs_ui_*_zuite/**
 sound_module/test_audio
