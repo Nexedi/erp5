@@ -141,16 +141,9 @@ class SupplyLine(Path, Amount, XMLMatrix):
           This method creates a new cell
       """
       kwd.setdefault('base_id', 'path')
-      cell =  XMLMatrix.newCell(self, *kw, **kwd)
-      if kwd['base_id'] == 'path' and self.isBasePricePerSlice():
-        index = self.index[kwd['base_id']][0][kw[0]]
-        quantity_step_list = [None] + self.getQuantityStepList() + [None]
-        min_quantity = quantity_step_list[index]
-        max_quantity = quantity_step_list[index+1]
-        cell.setSliceQuantityRange((min_quantity, max_quantity))
-      return cell
+      return XMLMatrix.newCell(self, *kw, **kwd)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'newCell')
+    security.declareProtected(Permissions.ModifyPortalContent, 'updateCellSliceParameterList')
     def updateCellSliceParameterList(self, base_id):
       quantity_step_list = [None] + self.getQuantityStepList(base_id) + [None]
       for cell in self.getCellValueList():
