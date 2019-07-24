@@ -1,5 +1,6 @@
 supply_cell = state_change['object']
+supply_line = supply_cell.getParentValue()
 if supply_cell.getParentValue().isBasePricePerSlice():
-  supply_cell.setSliceBasePrice(supply_cell.getBasePrice())
+  supply_line.updateCellSliceParameterList(base_id='path')
 else:
-  supply_cell.setSliceBasePrice(None)
+  supply_line.updateCellSliceParameterList(base_id='path')
