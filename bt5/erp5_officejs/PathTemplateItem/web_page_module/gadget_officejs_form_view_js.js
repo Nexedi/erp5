@@ -135,7 +135,30 @@
     .declareMethod("triggerSubmit", function (argument_list) {
       return this.getDeclaredGadget('fg')
         .push(function (gadget) {
-          return gadget.triggerSubmit(argument_list);
+          if (gadget.state.save_action !== true) {
+            return;// If not action is defined on form, do nothing
+          }
+          var action = gadget.state.erp5_document._embedded._view._actions.put;
+          return gadget.getDeclaredGadget("erp5_form")
+            .push(function (sub_gadget) {
+              return sub_gadget.checkValidity();
+            })
+            .push(function (is_valid) {
+              if (!is_valid) {
+                return null;
+              }
+              return gadget.getContent();
+            })
+            .push(function (content_dict) {
+              if (content_dict === null) {
+                return;
+              }
+              return gadget.submitContent(
+                gadget.state.jio_key,
+                action.href,
+                content_dict
+              );
+            }); // page form handles failures well enough
         });
     })
 
