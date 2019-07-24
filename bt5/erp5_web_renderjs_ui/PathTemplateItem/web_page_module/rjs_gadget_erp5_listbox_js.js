@@ -342,7 +342,6 @@
                            "triggerListboxSelectAction")
     .declareAcquiredMethod("triggerListboxClipboardAction",
                            "triggerListboxClipboardAction")
-    .declareAcquiredMethod("getSetting", "getSetting")
 
     //////////////////////////////////////////////
     // initialize the gadget content
@@ -513,10 +512,6 @@
                                 'button[name="Clipboard"]',
                                 'button[name="Configure"]',
                                 'button[name="SelectRows"]'],
-        url_for_option_list = [],
-        is_sortable_list = [],
-        select_list,
-        hide_buttons,
         button;
 
 /*
@@ -611,7 +606,10 @@
               column,
               is_sortable,
               current_sort,
-              options;
+              options,
+              url_for_option_list = [],
+              is_sortable_list = [],
+              select_list;
 
             for (k = 0; k < column_list.length; k += 1) {
               column = column_list[k];
@@ -654,11 +652,7 @@
                   throw error;
                 });
             }
-            return gadget.getSetting('hide_listbox_buttons');
-          })
-          .push(function (hide_listbox_buttons) {
-            // XXX Disable select and clipboard functionalities on migrated apps: 'uid'-workaround made for renderjs UI doesn't work on officejs
-            hide_buttons = ((hide_listbox_buttons !== undefined && hide_listbox_buttons == "1") ? true : false);
+
             return RSVP.all([
               gadget.getUrlForList(url_for_option_list),
               is_sortable_list,
@@ -775,11 +769,9 @@
               button_element.setAttribute('data-rel', 'clipboard');
               button_element.setAttribute('name', 'Clipboard');
               button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-list-ul ui-btn-icon-left ' + gadget.state.hide_class);
+              button_element.setAttribute('class', 'ui-icon-list-ul ui-btn-icon-left ');
               button_element.textContent = translation_list[5];
-              if (!hide_buttons) {
-                div_element.appendChild(button_element);
-              }
+              div_element.appendChild(button_element);
 
               // Add Select button
               // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
@@ -790,9 +782,7 @@
               button_element.type = 'button';
               button_element.setAttribute('class', 'ui-icon-check-square-o ui-btn-icon-left ' + gadget.state.hide_class);
               button_element.textContent = translation_list[1];
-              if (!hide_buttons) {
-                div_element.appendChild(button_element);
-              }
+              div_element.appendChild(button_element);
             }
             fragment.appendChild(div_element);
 
@@ -1192,6 +1182,7 @@
       if (gadget.state.show_count === true) {
         aggregation_option_list.push("count");
       }
+
       return gadget.jio_allDocs({
         // XXX Not jIO compatible, but until a better api is found...
         "list_method_template": this.state.list_method_template,
