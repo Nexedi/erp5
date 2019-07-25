@@ -11,7 +11,6 @@
             <value>
               <list>
                 <string>css_class</string>
-                <string>default</string>
                 <string>external_validator</string>
                 <string>title</string>
                 <string>width</string>
@@ -57,10 +56,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -84,12 +85,6 @@
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string>figure</string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
