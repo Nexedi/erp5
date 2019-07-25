@@ -28,6 +28,12 @@
         } else {
           message += JSON.stringify(gadget.state.error);
         }
+        if (modification_dict.error.currentTarget) {
+          message += " - URL: " +
+            modification_dict.error.currentTarget.responseURL;
+        } else {
+          message += " " + modification_dict.error;
+        }
         error_div.textContent = message;
       }
       if (modification_dict.redirect_url) {
