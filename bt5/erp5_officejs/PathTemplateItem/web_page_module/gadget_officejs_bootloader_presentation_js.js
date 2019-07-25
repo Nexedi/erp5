@@ -31,6 +31,8 @@
         if (modification_dict.error.currentTarget) {
           message += " - URL: " +
             modification_dict.error.currentTarget.responseURL;
+        } else {
+          message += " " + modification_dict.error;
         }
         error_div.textContent = message;
       }
