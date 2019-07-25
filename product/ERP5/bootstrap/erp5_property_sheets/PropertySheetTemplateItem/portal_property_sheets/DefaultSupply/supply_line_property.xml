@@ -36,6 +36,7 @@
             <value>
               <tuple>
                 <string>base_price</string>
+                <string>base_price_per_slice</string>
                 <string>id</string>
                 <string>priced_quantity</string>
                 <string>price_currency</string>
