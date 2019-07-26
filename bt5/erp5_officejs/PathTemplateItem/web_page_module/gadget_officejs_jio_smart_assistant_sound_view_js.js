@@ -11,9 +11,10 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateDocument", "updateDocument")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
-    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
+    .declareAcquiredMethod("jio_get", "jio_get")
 
 
     /////////////////////////////////////////////////////////////////
@@ -28,8 +29,11 @@
 
       gadget.type = options.doc.type;
 
-      return RSVP.Queue()
-        .push(function () {
+      return gadget.jio_get(options.jio_key)
+        .push(function (content) {
+          state.content = content;
+          state.text = content.text_content;
+
           return RSVP.all([
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'selection_previous'}),
@@ -75,6 +79,12 @@
             return gadget.updateDocument({title: title});
           });
           return queue;
+        })
+        .push(function (result1) {
+          var reply = result1.reply;
+          return gadget.updateDocument({
+            'text_content': gadget.state.content.text_content + "\n" + reply
+          });
         })
         .push(function () {
           return gadget.notifySubmitted({
@@ -136,6 +146,29 @@
                     "accept": "audio/*",
                     "capture": "microphone",
                     "type": "FileField"
+                  },
+                  "my_text_content": {
+                    "default": gadget.state.content.text_content,
+                    "css_class": "",
+                    "required": 0,
+                    "editable": 0,
+                    "key": "text_content",
+                    "hidden": 0,
+                    "title": 'History',
+                    "type": "TextAreaField"
+                  },
+                  "my_reply": {
+                    "default": "",
+                    "title": "Reply",
+                    "css_class": "",
+                    "required": 0,
+                    "editable": 1,
+                    "key": "reply",
+                    "hidden": 0,
+                    "renderjs_extra": '{"editor": "fck_editor"}',
+                    "type": "GadgetField",
+                    "url": "gadget_editor.html",
+                    "sandbox": "public"
                   }
                 }
               },
@@ -149,7 +182,13 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_title"], ["my_actual_audio"], ["my_audio"]]
+                [["my_title"], ["my_actual_audio"]]
+              ], [
+                "center",
+                [["my_text_content"]]
+              ], [
+                "bottom",
+                [["my_reply"]]
               ]]
             }
           });

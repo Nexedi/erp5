@@ -104,6 +104,9 @@
                   "message": "Data created",
                   "status": "success"
                 });
+              })
+              .push(function () {
+                return window.location.reload();
               });
           }
         });
