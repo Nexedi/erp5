@@ -9,7 +9,7 @@
  </chain>
  <chain>
   <type>Smart Assistant Sound</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, smart_assistant_interaction_workflow, smart_assistant_workflow</workflow>
  </chain>
  <chain>
   <type>Smart Assistant Text</type>
