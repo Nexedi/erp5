@@ -3,6 +3,7 @@ import string
 import random
 import csv
 import os
+import time
 import numpy as np
 import base64
 from datetime import datetime
@@ -101,26 +102,26 @@ class TestDataIngestion(SecurityTestCase):
                     reference = reference)
     return data_stream
 
-  def ingestRequest(self, reference, eof, data_chunk, ingestion):
+  def ingestRequest(self, reference, eof, data_chunk, ingestion_policy):
     encoded_data_chunk = base64.b64encode(data_chunk)
     request = self.portal.REQUEST
     # only POST for Wendelin allowed
     request.environ["REQUEST_METHOD"] = 'POST'
-    request.set('reference', reference + eof + self.SIZE_HASH)
+    reference = reference + eof + self.SIZE_HASH
+    self.portal.log("Ingest with reference=%s" %reference)
+    request.set('reference', reference)
     request.set('data_chunk', encoded_data_chunk)
-    ingestion.ingest()
+    ingestion_policy.ingest()
     self.tic()
     return
 
-  def ingest(self, data_chunk, reference, extension):
-    ingestion_policy = self.getIngestionPolicy(reference, self.INGESTION_SCRIPT)
+  def ingest(self, data_chunk, reference, extension, eof):
     ingestion_reference = self.getIngestionReference(reference, extension)
     
     # use default ebulk policy
     ingestion_policy = self.portal.portal_ingestion_policies.wendelin_embulk
     
-    now = datetime.now()
-    self.ingestRequest(ingestion_reference, self.SINGLE_INGESTION_END, data_chunk, ingestion_policy)
+    self.ingestRequest(ingestion_reference, eof, data_chunk, ingestion_policy)
     ingestion_id, ingestion_reference = self.sanitizeReference(ingestion_reference)
 
     return ingestion_reference     
@@ -141,7 +142,7 @@ class TestDataIngestion(SecurityTestCase):
         else:
           break
 
-    ingestion_reference = self.ingest(data_chunk, reference, extension)
+    ingestion_reference = self.ingest(data_chunk, reference, extension, self.SINGLE_INGESTION_END)
     
     if os.path.exists(file_name):
       os.remove(file_name)
@@ -166,3 +167,45 @@ class TestDataIngestion(SecurityTestCase):
     delimiter = ","
     extension = self.CSV
     self.stepIngest(extension, delimiter)
+    
+  def test_02_DefaultSplitIngestion(self):
+    """
+      Test multiple uploads from ebulk end up in same Data Stream concatenated 
+      (in case of large file upload when ebluk by default splits file to 50MBs
+      chunks).
+    """
+    data_chunk_1 = ''.join([random.choice(string.ascii_letters + string.digits) \
+                              for _ in xrange(250)])
+    data_chunk_2 = ''.join([random.choice(string.ascii_letters + string.digits) \
+                              for _ in xrange(250)])
+    data_chunk_3 = ''.join([random.choice(string.ascii_letters + string.digits) \
+                              for _ in xrange(250)])
+    data_chunk_4 = ''.join([random.choice(string.ascii_letters + string.digits) \
+                              for _ in xrange(250)])
+    data_chunk = data_chunk_1 + data_chunk_2 + data_chunk_3 + data_chunk_4
+    
+    reference = self.getRandomReference()
+    
+    ingestion_reference = self.ingest(data_chunk_1, reference, self.FIF, self.PART_1)
+    time.sleep(1)
+    self.tic()
+    
+    ingestion_reference = self.ingest(data_chunk_2, reference, self.FIF, self.PART_2)
+    time.sleep(1)    
+    self.tic()
+    
+    ingestion_reference = self.ingest(data_chunk_3, reference, self.FIF, self.PART_3)
+    time.sleep(1)    
+    self.tic()
+    
+    ingestion_reference = self.ingest(data_chunk_4, reference, self.FIF, self.EOF)
+    time.sleep(1)    
+    self.tic()
+    
+    # call explicitly alarm so all 4 Data Streams can be concatenated to one
+    self.portal.portal_alarms.wendelin_data_lake_handle_analysis.Alarm_dataLakeHandleAnalysis()
+    self.tic()
+    
+    # check resulting Data Stream
+    data_stream = self.getDataStream(ingestion_reference)
+    self.assertEqual(data_chunk, data_stream.getData())
