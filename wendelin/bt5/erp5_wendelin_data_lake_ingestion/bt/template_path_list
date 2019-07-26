@@ -5,8 +5,6 @@ data_product_module/fif_data
 data_product_module/fif_descriptor
 data_supply_module/embulk
 data_supply_module/embulk/**
-data_transformation_module/transform_raw_fif_data
-data_transformation_module/transform_raw_fif_data/**
 portal_alarms/wendelin_data_lake_handle_analysis
 portal_alarms/wendelin_data_lake_handle_analysis/**
 portal_callables/DataIngestionLine_writeEmbulkIngestionToDataStream
