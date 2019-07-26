@@ -46,10 +46,10 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W:124,  4: Unused variable \'ingestion_id\' (unused-variable)</string>
-                <string>W:122,  4: Unused variable \'now\' (unused-variable)</string>
-                <string>W:131, 34: Unused variable \'i\' (unused-variable)</string>
-                <string>W:131, 76: Unused variable \'j\' (unused-variable)</string>
+                <string>W:125,  4: Unused variable \'ingestion_id\' (unused-variable)</string>
+                <string>W:132, 34: Unused variable \'i\' (unused-variable)</string>
+                <string>W:132, 76: Unused variable \'j\' (unused-variable)</string>
+                <string>W:  9,  0: Unused datetime imported from datetime (unused-import)</string>
               </tuple>
             </value>
         </item>
