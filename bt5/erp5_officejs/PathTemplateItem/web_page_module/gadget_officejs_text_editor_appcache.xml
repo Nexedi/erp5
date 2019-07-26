@@ -106,9 +106,7 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-CACHE MANIFEST\n
+            <value> <string>CACHE MANIFEST\n
 # generated on Fri, 25 Jun 2016 11:45:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
@@ -251,18 +249,29 @@ action_texteditor_clone.html\n
 action_texteditor_clone.js\n
 \n
 #configuration resources\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_hal_json_style%2FBase_viewNewContentDialog&view=definition_view\n
 \n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%20Module%2Ftext_editor_view&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPageModule_viewWebPageListAsJio&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2Fjio_view&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2Ftext_editor_view&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_types%2FWeb%20Page%2Ftext_editor_clone&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FWebPage_viewAsTextDocument&view=definition_view\n
-hateoas_appcache/ERP5Document_getHateoas?mode=traverse&relative_url=portal_skins%2Ferp5_web_officejs_ui%2FTextEditor_cloneDocument&view=definition_view\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_web_officejs_ui/Base_viewNewContentDialog)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX29mZmljZWpzX3VpL0Jhc2Vfdmlld05ld0NvbnRlbnREaWFsb2c=\n
 \n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_web_officejs_ui/WebPageModule_viewWebPageListAsJio)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX29mZmljZWpzX3VpL1dlYlBhZ2VNb2R1bGVfdmlld1dlYlBhZ2VMaXN0QXNKaW8=\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_web_officejs_ui/WebPage_viewAsTextDocument)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX29mZmljZWpzX3VpL1dlYlBhZ2Vfdmlld0FzVGV4dERvY3VtZW50\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_web_officejs_ui/TextEditor_cloneDocument)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX29mZmljZWpzX3VpL1RleHRFZGl0b3JfY2xvbmVEb2N1bWVudA==\n
+\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Page Module)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Page Module/text_editor_view)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS90ZXh0X2VkaXRvcl92aWV3\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Page)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdl\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Page/jio_view)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL2ppb192aWV3\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Page/text_editor_view)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX3ZpZXc=\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Page/text_editor_clone)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX2Nsb25l\n
 \n
 #Ckeditor\n
 ckeditor.gadget.html\n
@@ -603,9 +612,7 @@ ckeditor/ckeditor.js\n
 ckeditor/adapters/jquery.js\n
 \n
 NETWORK:\n
-*
-
-]]></string> </value>
+*</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -746,7 +753,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.17471.41864.29440</string> </value>
+                <value> <string>977.21668.9028.25924</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -764,7 +771,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1563896549.57</float>
+                        <float>1564134256.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

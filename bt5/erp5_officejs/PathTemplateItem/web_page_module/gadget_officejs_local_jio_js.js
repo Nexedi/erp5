@@ -1,6 +1,6 @@
-/*global window, window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, console */
+/*global window, window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, atob, console */
 /*jslint indent: 2, maxerr: 10, maxlen: 80 */
-(function (window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate,
+(function (window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, atob,
            console) {
   "use strict";
 
@@ -114,7 +114,8 @@
     .declareMethod('createJio', function (jio_options) {
       var appcache_storage,
         origin_url = window.location.href,
-        hateoas_script = "hateoas_appcache/ERP5Document_getHateoas",
+        hateoas_section = "./hateoas_appcache/",
+        hateoas_section_and_view = hateoas_section + "definition_view/",
         // TODO manifest should come from gadget.props.cache_file
         // add script in html body
         manifest = "gadget_officejs_text_editor.configuration",
@@ -177,17 +178,18 @@
                 .push(function () {
                   return appcache_storage.allAttachments(origin_url)
                     .push(function (attachment_dict) {
-                      var id, promise_list = [], i = 0;
+                      var id, base64, promise_list = [], i = 0;
                       for (id in attachment_dict) {
                         if (attachment_dict.hasOwnProperty(id)) {
-                          if (id.indexOf(hateoas_script) === -1) {
-                            promise_list.push(appcache_storage
-                                              .getAttachment(origin_url, id));
-                          } else {
+                          if (id.startsWith(hateoas_section)) {
                             promise_list.push(
                               appcache_storage
                               .getAttachment(origin_url, id,
                                              {"format": "json"}));
+                          } else {
+                            promise_list.push(
+                              appcache_storage
+                              .getAttachment(origin_url, id));
                           }
                           configuration_ids_list[i] = id;
                           i += 1;
@@ -199,11 +201,16 @@
                       var i, id, parser, urlParams, content, promise_list = [];
                       for (i = 0; i < content_list.length; i += 1) {
                         id = configuration_ids_list[i];
-                        parser = document.createElement('a');
-                        parser.href = id;
-                        urlParams = new URLSearchParams(parser.search);
-                        id = urlParams.get("relative_url");
+                        if (id.startsWith(hateoas_section)) {
+                          id = id.replace(hateoas_section_and_view, "");
+                        } else {
+                          parser = document.createElement('a');
+                          parser.href = id;
+                          urlParams = new URLSearchParams(parser.search);
+                          id = urlParams.get("relative_url");
+                        }
                         if (id !== null) { // ignore non configuration elements
+                          id = atob(id);
                           content = processHateoasDict(content_list[i]);
                           promise_list.push(appcache_storage.put(id, content));
                         }
@@ -259,4 +266,5 @@
       return wrapJioCall(this, 'repair', arguments);
     });
 
-}(window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, console));
+}(window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, atob,
+  console));
