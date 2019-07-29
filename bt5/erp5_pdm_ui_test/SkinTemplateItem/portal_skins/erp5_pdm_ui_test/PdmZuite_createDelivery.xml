@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state</string> </value>
+            <value> <string>state, delivery_type="Sale"</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
