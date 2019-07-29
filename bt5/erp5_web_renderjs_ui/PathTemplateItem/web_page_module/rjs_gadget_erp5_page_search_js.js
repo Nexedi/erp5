@@ -1,6 +1,6 @@
-/*global window, rJS */
+/*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS) {
+(function (window, rJS, RSVP) {
   "use strict";
 
   rJS(window)
@@ -88,17 +88,31 @@
           return gadget.updateHeader(header_dict);
         })
         .push(function () {
-          return gadget.getDeclaredGadget('form_list');
+          return RSVP.all([
+            gadget.getUrlParameter('extended_search'),
+            gadget.getDeclaredGadget('form_list')
+          ]);
         })
-        .push(function (form_gadget) {
-          var column_list = [
-            ['translated_portal_type', 'Type'],
-            ['modification_date', 'Modification Date'],
-            ['title', 'Title'],
-            ['reference', 'Reference'],
-            ['description', 'Description'],
-            ['translated_validation_state_title', 'State']
-          ];
+        .push(function (result_list) {
+          var form_gadget = result_list[1],
+            extended_search = result_list[0],
+            group_list = [],
+            column_list = [
+              ['translated_portal_type', 'Type'],
+              ['modification_date', 'Modification Date'],
+              ['title', 'Title'],
+              ['reference', 'Reference'],
+              ['description', 'Description'],
+              ['translated_validation_state_title', 'State']
+            ];
+          if (extended_search) {
+            group_list.push([
+              "bottom",
+              [["listbox"]]
+            ], [
+              "hidden", ["listbox_modification_date"]
+            ]);
+          }
           return form_gadget.render({
             erp5_document: {"_embedded": {"_view": {
               "listbox": {
@@ -126,12 +140,9 @@
                 }
               }},
             form_definition: {
-              group_list: [[
-                "bottom",
-                [["listbox"]]
-              ], ["hidden", ["listbox_modification_date"]]]
+              group_list: group_list
             }
           });
         });
     });
-}(window, rJS));
+}(window, rJS, RSVP));
