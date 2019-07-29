@@ -213,11 +213,13 @@ def generateInformation(dir, info=id, err=None):
       property_list = BusinessTemplate.fromDir(path)
     else:
       continue
-    xml.write(b'  <template id="%s">\n' % name.encode('utf-8'))
+    xml.write(b'  <template id="%s">\n' % name.encode())
     for k, v in property_list:
-      k = k.encode('utf-8')
+      if str is not bytes:
+        k = k.encode()
       for v in (v,) if type(v) is bytes else v:
-        xml.write(b'    <%s>%s</%s>\n' % (k, escape(v.decode('utf-8')).encode('utf-8'), k))
+        xml.write(b'    <%s>%s</%s>\n' % (k, escape(v) if str is bytes else
+                                             escape(v.decode()).encode(), k))
     xml.write(b'  </template>\n')
     info('done\n')
   xml.write(b'</repository>\n')

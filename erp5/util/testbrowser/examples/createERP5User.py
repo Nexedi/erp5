@@ -20,11 +20,8 @@ try:
   user_nbr = int(user_nbr)
 
 except ValueError:
-  print("ERROR: Missing arguments: %s URL USERNAME " \
-      "PASSWORD NUMBER_OF_USERS NEW_USERNAME_PREFIX NEW_USERS_PASSWORD" % \
-      sys.argv[0], file=sys.stderr)
-
-  sys.exit(1)
+  sys.exit("ERROR: Missing arguments: %s URL USERNAME PASSWORD NUMBER_OF_USERS "
+           "NEW_USERNAME_PREFIX NEW_USERS_PASSWORD" % sys.argv[0])
 
 # Create a browser instance
 browser = Browser(url, username, password)

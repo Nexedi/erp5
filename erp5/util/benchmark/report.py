@@ -547,10 +547,8 @@ def generateReport():
     report_dict['filename'].append(filename)
 
   if not per_nb_users_report_dict:
-    print("ERROR: No result file found, perhaps "\
-        "``--filename-prefix'' should be specified?", file=sys.stderr)
-
-    sys.exit(1)
+    sys.exit("ERROR: No result file found, perhaps ``--filename-prefix'' should"
+             "be specified?")
 
   pdf = PdfPages(argument_namespace.output_filename)
 

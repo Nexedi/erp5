@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
+from __future__ import division, print_function
 from erp5.util.testbrowser.browser import Browser
 
 ITERATION = 20
@@ -90,4 +90,4 @@ if __name__ == '__main__':
     counter += 1
 
   for title, time_list in result_dict.iteritems():
-    print("%s: %.4fs" % (title, float(sum(time_list)) / ITERATION))
+    print("%s: %.4fs" % (title, sum(time_list) / ITERATION))

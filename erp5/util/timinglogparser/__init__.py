@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from __future__ import print_function
+from __future__ import division, print_function
 
 import os
 import sys
@@ -150,7 +150,7 @@ def parseFile(filename, measure_dict):
   if line_number > 0:
     duration = time() - begin
     print("Matched %i lines (%.2f%%), %i skipped (%.2f%%), %i unmatched (%.2f%%) in %.2fs (%i lines per second)." % \
-      (match_count, (float(match_count) / line_number) * 100, skip_count, (float(skip_count) / line_number) * 100, (line_number - match_count - skip_count), (1 - (float(match_count + skip_count) / line_number)) * 100, duration, line_number / duration),
+      (match_count, (match_count / line_number) * 100, skip_count, (skip_count / line_number) * 100, (line_number - match_count - skip_count), (1 - (match_count + skip_count) / line_number)) * 100, duration, line_number // duration),
       file=sys.stderr)
 
 debug = False
