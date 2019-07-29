@@ -80,12 +80,12 @@
             <tbody>
                   <tr>
                       <td>
-                            wget http://www.wendelin.io//document_module/1/Base_download
+                            wget http://www.wendelin.io//document_module/1/Base_download -O ebulk-1.1.2-1.rpm
                       </td>
                  </tr>
                   <tr>
                       <td>
-                           dpkg -i ebulk-1.1.2-1-en.rpm
+                           rpm -Uhv ebulk-1.1.2-1.rpm
                       </td>
                  </tr>
 
@@ -93,6 +93,9 @@
             <tfoot>
             </tfoot>
         </table>
+
+
+
 
       </div>
       <div class="document_table">
@@ -116,7 +119,7 @@
             </tfoot>
         </table>
       </div>
-
+     
       <div class="document_table">
         <div class="ui-table-header ui-header ui-bar-c ui-corner-all">
           <h1 class="ui-title ui-override-theme">Linux Source</h1>
