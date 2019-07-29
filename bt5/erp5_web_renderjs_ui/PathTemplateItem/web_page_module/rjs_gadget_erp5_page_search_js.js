@@ -105,6 +105,7 @@
               ['description', 'Description'],
               ['translated_validation_state_title', 'State']
             ];
+
           if (extended_search) {
             group_list.push([
               "bottom",
@@ -112,33 +113,47 @@
             ], [
               "hidden", ["listbox_modification_date"]
             ]);
+          } else {
+            group_list.push([
+              "bottom",
+              [["message"]]
+            ]);
           }
+
           return form_gadget.render({
-            erp5_document: {"_embedded": {"_view": {
-              "listbox": {
-                "column_list": column_list,
-                "show_anchor": 0,
-                "default_params": {},
-                "editable": 1,
-                "editable_column_list": [],
-                "key": "field_listbox",
-                "lines": 30,
-                "list_method": "portal_catalog",
-                "query": "urn:jio:allDocs?query=",
-                "portal_type": [],
-                "search_column_list": column_list,
-                "sort_column_list": column_list,
-                "sort": [],
-                "title": "Documents",
-                "type": "ListBox"
-              }
-            }},
+            erp5_document: {
+              "_embedded": {
+                "_view": {
+                  "listbox": {
+                    "column_list": column_list,
+                    "show_anchor": 0,
+                    "default_params": {},
+                    "editable": 1,
+                    "editable_column_list": [],
+                    "key": "field_listbox",
+                    "lines": 30,
+                    "list_method": "portal_catalog",
+                    "query": "urn:jio:allDocs?query=",
+                    "portal_type": [],
+                    "search_column_list": column_list,
+                    "sort_column_list": column_list,
+                    "sort": [],
+                    "title": "Documents",
+                    "type": "ListBox"
+                  },
+                  "message": {
+                    "default": "What are you looking for?",
+                    "type": "Stringfield"
+                  }
+                }
+              },
               "_links": {
                 "type": {
                   // form_list display portal_type in header
                   name: ""
                 }
-              }},
+              }
+            },
             form_definition: {
               group_list: group_list
             }
