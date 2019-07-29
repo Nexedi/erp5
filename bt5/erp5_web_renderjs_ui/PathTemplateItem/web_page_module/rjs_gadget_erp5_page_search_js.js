@@ -16,8 +16,12 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
-      var gadget = this;
-      return gadget.jio_allDocs(param_list[0])
+      var gadget = this,
+        options = param_list[0];
+      if (!options.query) {
+        return {data: {rows: [], total_rows: 0}};
+      }
+      return gadget.jio_allDocs(options)
         .push(function (result) {
           var i, date, len = result.data.total_rows;
           for (i = 0; i < len; i += 1) {
@@ -110,7 +114,7 @@
                 "portal_type": [],
                 "search_column_list": column_list,
                 "sort_column_list": column_list,
-                "sort": [['modification_date', 'descending']],
+                "sort": [],
                 "title": "Documents",
                 "type": "ListBox"
               }
