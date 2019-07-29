@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>fc32f2587622824041c924e50fc13fa7</string> </value>
+            <value> <string>cf46bbaed6fee430bcdd7e7fd6d7ebf1</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -99,11 +99,11 @@
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>nexedi-logo.png</string> </value>
+            <value> <string>vifib-logo.png</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>57</int> </value>
+            <value> <int>117</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -133,7 +133,7 @@
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>311</int> </value>
+            <value> <int>131</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -276,7 +276,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>976.34131.824.20292</string> </value>
+                <value> <string>977.15920.26405.25335</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -294,7 +294,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1561460987.77</float>
+                        <float>1564406071.02</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
