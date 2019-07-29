@@ -71,4 +71,82 @@
       <td></td>
     </tr>
   </tal:block>
+  <tal:block metal:define-macro="toggleSaleSupplyLineBasePricePerSlice">
+    <tr>
+      <td>click</td>
+      <td>//input[@name="field_my_sale_supply_line_base_price_per_slice"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>Base_edit:method</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="togglePurchaseSupplyLineBasePricePerSlice">
+    <tr>
+      <td>click</td>
+      <td>//input[@name="field_my_purchase_supply_line_base_price_per_slice"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>Base_edit:method</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="toggleInternalSupplyLineBasePricePerSlice">
+    <tr>
+      <td>click</td>
+      <td>//input[@name="field_my_internal_supply_line_base_price_per_slice"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>Base_edit:method</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="enterAndCheckPricePerSliceInSupplyLine">
+    <tr>
+      <td>type</td>
+      <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//input[@name="field_matrixbox_base_price_cell_1_0_0"]</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//input[@name="field_matrixbox_base_price_cell_2_0_0"]</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>Base_edit:method</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertFloatValue</td>
+      <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>assertFloatValue</td>
+      <td>//input[@name="field_matrixbox_base_price_cell_1_0_0"]</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <td>assertFloatValue</td>
+      <td>//input[@name="field_matrixbox_base_price_cell_2_0_0"]</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Zuite_waitForActivities</td>
+      <td></td>
+    </tr>
+  </tal:block>
 </tal:block>
