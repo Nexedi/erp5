@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_purchase_line_base_price_per_slice</string> </value>
+            <value> <string>my_purchase_supply_line_base_price_per_slice</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

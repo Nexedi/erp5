@@ -116,7 +116,7 @@
                         <string>my_purchase_supply_line_max_flow</string>
                         <string>my_purchase_supply_line_min_stock</string>
                         <string>my_purchase_supply_line_max_stock</string>
-                        <string>my_purchase_line_base_price_per_slice</string>
+                        <string>my_purchase_supply_line_base_price_per_slice</string>
                       </list>
                     </value>
                 </item>
