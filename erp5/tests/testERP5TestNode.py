@@ -804,15 +804,15 @@ shared = true
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     folder = node_test_suite.test_suite_directory
-    self.assertEqual(False, os.path.exists(folder))
+    self.assertFalse(os.path.exists(folder))
     createFolder(folder)
-    self.assertEqual(True, os.path.exists(folder))
+    self.assertTrue(os.path.exists(folder))
     to_drop_path = os.path.join(folder, 'drop')
     to_drop = open(to_drop_path, 'w')
     to_drop.close()
-    self.assertEqual(True, os.path.exists(to_drop_path))
+    self.assertTrue(os.path.exists(to_drop_path))
     createFolder(folder, clean=True)
-    self.assertEqual(False, os.path.exists(to_drop_path))
+    self.assertFalse(os.path.exists(to_drop_path))
 
   def test_15_suite_log_directory(self, my_test_type='UnitTest', grade='master'):
     def doNothing(self, *args, **kw):

@@ -39,7 +39,7 @@ from .ScalabilityTestRunner import ScalabilityTestRunner
 from .UnitTestRunner import UnitTestRunner
 from .Utils import deunicodeData
 from .Utils import rmtree
-from erp5.util import taskdistribution
+from .. import taskdistribution
 
 MAX_LOG_TIME = 15 # time in days we should keep logs that we can see through
                   # httd
@@ -171,7 +171,7 @@ shared = true
       # only limit to particular error, if we run that code for all errors,
       # then if server having most repositories is down for some time, we would
       # erase all repositories and facing later hours of downloads
-      if getattr(error, 'stderr', b'').find(b'index') >= 0:
+      if b'index' in getattr(error, 'stderr', b''):
         rmtree(repository_path)
       logger.warning("Error while getting repository, ignoring this test suite",
                      exc_info=1)

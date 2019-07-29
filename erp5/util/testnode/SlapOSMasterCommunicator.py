@@ -11,7 +11,7 @@ from uritemplate import expand
 import slapos.slap
 from slapos.slap import SoftwareProductCollection
 from requests.exceptions import HTTPError
-from erp5.util.taskdistribution import SAFE_RPC_EXCEPTION_LIST
+from ..taskdistribution import SAFE_RPC_EXCEPTION_LIST
 from . import logger
 
 import six

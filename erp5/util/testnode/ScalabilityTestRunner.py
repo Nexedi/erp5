@@ -37,7 +37,7 @@ import shutil
 import logging
 import string
 import random
-from six.moves.urllib import parse
+from six.moves.urllib.parse import urlparse
 import base64
 from six.moves import http_client as httplib
 from . import Utils
@@ -364,7 +364,7 @@ Require valid-user
     user, password = self.generateProfilePasswordAccess()
     logger.info("Software Profile password: %s" % password)
     self.reachable_profile = "https://%s:%s@%s" % (user, password,
-      os.path.join(parse.urlparse(self.testnode.config['frontend_url']).netloc,
+      os.path.join(urlparse(self.testnode.config['frontend_url']).netloc,
                    "software", self.randomized_path, "software.cfg"))
 
   def prepareSlapOSForTestSuite(self, node_test_suite):

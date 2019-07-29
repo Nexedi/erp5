@@ -33,7 +33,6 @@ import signal
 import sys
 import time
 from . import logger
-from slapos.util import bytes2str
 
 MAX_TIMEOUT = 3600 * 4
 
@@ -80,7 +79,7 @@ def subprocess_capture(p, log_prefix, get_output=True):
         break
       if get_output:
         buffer.append(data)
-      log(log_prefix + bytes2str(data).rstrip('\n'))
+      log(log_prefix + data.decode('utf-8', errors='replace').rstrip('\n'))
   if p.stdout:
     stdout = []
     stdout_thread = threading.Thread(target=readerthread,

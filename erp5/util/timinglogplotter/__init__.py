@@ -27,7 +27,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from __future__ import print_function
+from __future__ import division, print_function
 
 from datetime import date
 from os import path
@@ -84,9 +84,9 @@ class CSVFile(object):
             if cell > value_max.get(key, 0):
               value_max[key] = cell
         column_dict[key].append(cell)
-    line_num = float(line_num) / 100
+    line_num = line_num / 100
     for key in ratio_dict:
-      ratio_dict[key] /= line_num
+      ratio_dict[key] //= line_num
 
   def getColumn(self, column_id):
     return self.column_dict[self.column_list[column_id]]
@@ -103,7 +103,7 @@ def computeExpr(expr):
   if expr:
     assert expr[0] == '='
     num, denom = expr[1:].split('/')
-    result = float(int(num)) / int(denom)
+    result = int(num) / int(denom)
   else:
     result = None
   return result
@@ -136,7 +136,7 @@ def main():
     # date_list will be like ['2009/07/01', '2009/07/05', '2009/07/10', ...]
     factor = 1
     if len(date_string_list) > 20:
-      factor = int(len(date_string_list) / 20)
+      factor = int(len(date_string_list) // 20)
     i = 0
     for date_string in date_string_list:
       if i % factor == 0:
@@ -190,7 +190,7 @@ def main():
       if options.minimal_non_empty_ratio is not None:
         column_len = len(column)
         if column_len:
-          if float(len(x_data))/column_len < options.minimal_non_empty_ratio:
+          if len(x_data) / column_len < options.minimal_non_empty_ratio:
             print('Not enough values to plot for %s...' % (out_file_name, ))
             continue
       r_y_data = robjects.FloatVector(y_data)
