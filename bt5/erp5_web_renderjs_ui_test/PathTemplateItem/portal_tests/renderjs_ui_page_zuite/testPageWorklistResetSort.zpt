@@ -17,13 +17,16 @@
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block tal:define="search_query python: 'title:&quot;Title 1&quot;'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
+</tal:block>
+
+<!-- No default sort -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
+<tr><td>assertElementNotPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_sort_editor.html']//select</td><td></td></tr>
 
 <!-- Change the default sort -->
-<tr>
-  <td>assertElementPresent</td><!-- verification -->
-  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Modification Date']</td>
-  <td></td>
-</tr>
 <tr>
   <td>click</td>
   <td>//th/a[text()='Type']</td>
@@ -31,7 +34,7 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
-  <td>assertElementPresent</td><!-- verification -->
+  <td>waitForElementPresent</td><!-- verification -->
   <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Type']</td>
   <td></td>
 </tr>
@@ -79,10 +82,15 @@
 
 <!-- Check it's back to default sort -->
 <tr>
-  <td>assertElementPresent</td><!-- verification -->
-  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Modification Date']</td>
+  <td>assertElementNotPresent</td><!-- verification -->
+  <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Type']</td>
   <td></td>
 </tr>
+<!-- No default sort -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
+<tr><td>assertElementNotPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_sort_editor.html']//select</td><td></td></tr>
+
 
 </tbody></table>
 </body>
