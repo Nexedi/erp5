@@ -219,10 +219,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>ticket_use_domain</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
                           <string>causality_event_portal_type_domain</string>
                           <string>Channel</string>
                         </tuple>
