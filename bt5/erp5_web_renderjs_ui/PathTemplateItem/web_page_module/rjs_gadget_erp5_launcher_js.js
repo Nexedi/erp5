@@ -520,6 +520,7 @@
     })
 
     .allowPublicAcquisition("updateHeader", function updateHeader(param_list) {
+      console.log('launcher updateHeader', param_list);
       initHeaderOptions(this);
       var text_list = [],
         key,
@@ -541,6 +542,9 @@
           if (result_list.length === 2) {
             gadget.props.header_argument_list.right_title = result_list[1];
           }
+          // return updateHeader(gadget);
+          return route(gadget, "header", 'render',
+                       [gadget.props.header_argument_list]);
         });
     })
 
