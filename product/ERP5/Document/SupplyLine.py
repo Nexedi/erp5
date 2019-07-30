@@ -143,24 +143,6 @@ class SupplyLine(Path, Amount, XMLMatrix):
       kwd.setdefault('base_id', 'path')
       return XMLMatrix.newCell(self, *kw, **kwd)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'updateCellSliceParameterList')
-    def updateCellSliceParameterList(self, base_id):
-      quantity_step_list = [None] + self.getQuantityStepList(base_id) + [None]
-      for cell in self.getCellValueList():
-        if not self.isBasePricePerSlice():
-          cell.setSliceQuantityRange(None)
-          cell.setSliceBasePrice(None)
-        else:
-          try:
-            index = quantity_step_list.index(cell._range_criterion['quantity'][0])
-          except KeyError:
-            # _range_criterion is set to {} if criterion is None
-            index = 0
-          min_quantity = quantity_step_list[index]
-          max_quantity = quantity_step_list[index+1]
-          cell.setSliceQuantityRange((min_quantity, max_quantity))
-          cell.setSliceBasePrice(cell.getBasePrice())
-
     ############################################################
     # Quantity predicate API
     ############################################################
