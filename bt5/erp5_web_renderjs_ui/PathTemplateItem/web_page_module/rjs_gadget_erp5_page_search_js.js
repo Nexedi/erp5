@@ -11,6 +11,7 @@
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("translate", "translate")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -18,9 +19,6 @@
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       var gadget = this,
         options = param_list[0];
-      if (!options.query) {
-        return {data: {rows: [], total_rows: 0}};
-      }
       return gadget.jio_allDocs(options)
         .push(function (result) {
           var i, date, len = result.data.total_rows;
@@ -90,13 +88,16 @@
         .push(function () {
           return RSVP.all([
             gadget.getUrlParameter('extended_search'),
-            gadget.getDeclaredGadget('form_list')
+            gadget.getDeclaredGadget('form_list'),
+            gadget.translate('What are you looking for?')
           ]);
         })
         .push(function (result_list) {
           var form_gadget = result_list[1],
             extended_search = result_list[0],
+            translated_text = result_list[2],
             group_list = [],
+            field_dict = {},
             column_list = [
               ['translated_portal_type', 'Type'],
               ['modification_date', 'Modification Date'],
@@ -107,13 +108,42 @@
             ];
 
           if (extended_search) {
+            field_dict.listbox = {
+              "column_list": column_list,
+              "show_anchor": 0,
+              "default_params": {},
+              "editable": 1,
+              "editable_column_list": [],
+              "key": "field_listbox",
+              "lines": 30,
+              "list_method": "portal_catalog",
+              "query": "urn:jio:allDocs?query=",
+              "portal_type": [],
+              "search_column_list": column_list,
+              "sort_column_list": column_list,
+              "sort": [],
+              "title": "Documents",
+              "type": "ListBox"
+            };
             group_list.push([
               "bottom",
               [["listbox"]]
             ], [
               "hidden", ["listbox_modification_date"]
             ]);
+
           } else {
+            field_dict.message = {
+              default: translated_text,
+              css_class: "",
+              description: "",
+              editable: 0,
+              hidden: 0,
+              key: "message",
+              required: 0,
+              title: "",
+              type: "StringField"
+            };
             group_list.push([
               "bottom",
               [["message"]]
@@ -123,29 +153,7 @@
           return form_gadget.render({
             erp5_document: {
               "_embedded": {
-                "_view": {
-                  "listbox": {
-                    "column_list": column_list,
-                    "show_anchor": 0,
-                    "default_params": {},
-                    "editable": 1,
-                    "editable_column_list": [],
-                    "key": "field_listbox",
-                    "lines": 30,
-                    "list_method": "portal_catalog",
-                    "query": "urn:jio:allDocs?query=",
-                    "portal_type": [],
-                    "search_column_list": column_list,
-                    "sort_column_list": column_list,
-                    "sort": [],
-                    "title": "Documents",
-                    "type": "ListBox"
-                  },
-                  "message": {
-                    "default": "What are you looking for?",
-                    "type": "Stringfield"
-                  }
-                }
+                "_view": field_dict
               },
               "_links": {
                 "type": {
