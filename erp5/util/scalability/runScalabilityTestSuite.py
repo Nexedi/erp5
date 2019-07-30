@@ -177,25 +177,22 @@ class ScalabilityLauncher(object):
   def clearUsersFile(self, user_file_path):
     self.log("Clearing users file: %s" % user_file_path)
     os.remove(user_file_path)
-    users_file = open(user_file_path, "w")
-    for line in self.users_file_original_content:
-      users_file.write(line)
-    users_file.close()
+    with open(user_file_path, "w") as users_file:
+      for line in self.users_file_original_content:
+        users_file.write(line)
 
   def updateUsersFile(self, user_quantity, password, user_file_path):
     self.log("Updating users file: %s" % user_file_path)
-    users_file = open(user_file_path, "r")
-    file_content = users_file.readlines()
+    with open(user_file_path, "r") as users_file:
+      file_content = users_file.readlines()
     self.users_file_original_content = file_content
     new_file_content = []
     for line in file_content:
       new_file_content.append(line.replace('<password>', password).replace('<user_quantity>', str(user_quantity)))
-    users_file.close()
     os.remove(user_file_path)
-    users_file = open(user_file_path, "w")
-    for line in new_file_content:
-      users_file.write(line)
-    users_file.close()
+    with open(user_file_path, "w") as users_file:
+      for line in new_file_content:
+        users_file.write(line)
 
   def run(self):
     self.log("Scalability Launcher started, with:")

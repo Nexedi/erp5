@@ -206,9 +206,8 @@ file_number = 0
 measure_dict = {}
 if len(load_file_name_list):
   for load_file_name in load_file_name_list:
-    load_file = open(load_file_name)
-    temp_measure_dict = eval(load_file.read(), {})
-    load_file.close()
+    with open(load_file_name) as load_file:
+      temp_measure_dict = eval(load_file.read(), {})
     assert isinstance(measure_dict, dict)
     for filter_id, result_dict in temp_measure_dict.iteritems():
       for result, date_dict in result_dict.iteritems():
@@ -222,9 +221,8 @@ for filename in file_list:
   parseFile(filename, measure_dict)
 
 if save_file_name is not None:
-  save_file = open(save_file_name, 'w')
-  save_file.write(repr(measure_dict))
-  save_file.close()
+  with open(save_file_name, 'w') as save_file:
+    save_file.write(repr(measure_dict))
   print('Processing result saved to %r' % (save_file_name, ), file=sys.stderr)
 
 if outfile_prefix is not None:

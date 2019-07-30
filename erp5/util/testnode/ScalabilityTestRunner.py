@@ -323,15 +323,13 @@ ces or already launched.")
     software_hash_directory = self.testnode.config['slapos_binary'].rsplit("bin/slapos", 1)[0]
     apache_htpasswd = software_hash_directory + "parts/apache/bin/htpasswd"
     testsuite_directory = self.testnode.config['repository_path_list'][0].rsplit('/', 1)[0]
-    htaccess_file = open(testsuite_directory + HTACCESS, "w")
-    file_content = """
+    with open(testsuite_directory + HTACCESS, "w") as htaccess_file:
+      htaccess_file.write("""
 AuthType Basic
 AuthName "Password Protected Area"
 AuthUserFile "%s%s"
 Require valid-user
-""" % (testsuite_directory, HTPASSWD)
-    htaccess_file.write(file_content)
-    htaccess_file.close()
+""" % (testsuite_directory, HTPASSWD))
     password_path = testsuite_directory + PASSWORD_FILE
     with open(password_path, "w") as password_file:
       password = ''.join(random.choice(string.digits + string.ascii_letters) for i in range(PASSWORD_LENGTH))
