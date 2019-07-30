@@ -198,10 +198,6 @@
                           <string>Ledger</string>
                         </tuple>
                         <tuple>
-                          <string>validated_project_domain</string>
-                          <string>Open Projects</string>
-                        </tuple>
-                        <tuple>
                           <string>preferred_group_person_list_domain</string>
                           <string>Persons</string>
                         </tuple>
