@@ -15,4 +15,3 @@ portal_domains/task_module_project_domain
 portal_domains/task_report_module_domain
 portal_domains/task_report_module_person_domain
 portal_domains/task_report_module_project_domain
-portal_domains/validated_project_domain
