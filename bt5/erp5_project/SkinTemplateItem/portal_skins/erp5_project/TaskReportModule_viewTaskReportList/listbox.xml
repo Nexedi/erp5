@@ -208,10 +208,6 @@
                           <string>ledger</string>
                           <string>Ledger</string>
                         </tuple>
-                        <tuple>
-                          <string>preferred_group_person_list_domain</string>
-                          <string>Persons</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -264,10 +260,6 @@
                         <tuple>
                           <string>ledger</string>
                           <string>Ledger</string>
-                        </tuple>
-                        <tuple>
-                          <string>preferred_group_person_list_domain</string>
-                          <string>Persons</string>
                         </tuple>
                       </list>
                     </value>
