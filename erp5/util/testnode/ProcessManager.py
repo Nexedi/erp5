@@ -79,7 +79,8 @@ def subprocess_capture(p, log_prefix, get_output=True):
         break
       if get_output:
         buffer.append(data)
-      log(log_prefix + data.decode('utf-8', errors='replace').rstrip('\n'))
+      log(log_prefix + data if str is bytes else
+                       data.decode('utf-8', errors='replace').rstrip('\n'))
   if p.stdout:
     stdout = []
     stdout_thread = threading.Thread(target=readerthread,
