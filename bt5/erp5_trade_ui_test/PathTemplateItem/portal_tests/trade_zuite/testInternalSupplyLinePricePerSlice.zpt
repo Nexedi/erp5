@@ -1,0 +1,218 @@
+<html>
+<head><title>Test toggling price per slice updates internal supply cells correctly</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test quantity steps for price on internal supply line
+</td></tr>
+</thead>
+<tbody tal:define="init_method string:PdmZuite_createDelivery?state=draft&delivery_type=Internal">
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_deleteDataForTradeZuite</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Deleted Successfully.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_resetForTradeZuite</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td tal:content="string:$${base_url}/Zuite_createTradeConditionForTradeZuite?delivery_type=Internal" />
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Internal Trade Condition Created.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+<tr>
+  <td>open</td>
+  <td tal:content="string:$${base_url}/internal_trade_condition_module/erp5_trade_ui_test_trade_condition/1" />
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_base_unit_price</td>
+  <td>0.00001</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Base Price</td>
+  <td></td>
+</tr>
+<!-- Enter quantity step list and check -->
+<tr>
+  <td>type</td>
+  <td>field_my_quantity_step_list</td>
+  <td>11
+21</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>field_my_quantity_step_list</td>
+  <td>11.0 21.0</td>
+<tr>
+  <td>assertText</td>
+  <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]/../../../td[1]</td>
+  <td>Quantity &lt; 11.0</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//input[@name="field_matrixbox_base_price_cell_1_0_0"]/../../../td[1]</td>
+  <td>11.0 &lt;= Quantity &lt; 21.0</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//input[@name="field_matrixbox_base_price_cell_2_0_0"]/../../../td[1]</td>
+  <td>21.0 &lt;= Quantity</td>
+</tr>
+<tr>
+<!-- Enter price per quantity step and check-->
+<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/enterAndCheckPricePerSliceInSupplyLine" />
+<!-- Open Delivery Line with the product and check price is correct -->
+<tr>
+  <td>open</td>
+  <td tal:content="string:$${base_url}/internal_packing_list_module/erp5_pdm_ui_test_delivery/1" />
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_my_quantity"]</td>
+  <td>15</td>
+</tr>
+  <tr>
+  <td>type</td>
+  <td>//input[@name="field_my_price"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertFloatValue</td>
+  <td>//input[@name="field_my_price"]</td>
+  <td>9</td>
+</tr>
+<!-- Select the new method "Price per slice" on the Internal Supply
+     and enter the prices again-->
+<tr>
+  <td>open</td>
+  <td>${base_url}/internal_trade_condition_module/erp5_trade_ui_test_trade_condition/1/InternalSupplyLine_viewBasePrice</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeZuite/macros/toggleSupplyLineBasePricePerSlice" />
+<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/enterAndCheckPricePerSliceInSupplyLine" />
+<!-- Open Delivery Line with the product and check price is correct -->
+<tr>
+  <td>open</td>
+  <td tal:content="string:$${base_url}/internal_packing_list_module/erp5_pdm_ui_test_delivery/1" />
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_my_quantity"]</td>
+  <td>15</td>
+</tr>
+  <tr>
+  <td>type</td>
+  <td>//input[@name="field_my_price"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertFloatValue</td>
+  <td>//input[@name="field_my_price"]</td>
+  <td>9.66667</td>
+</tr>
+<!-- Unselect the new method "Price per slice" on the Internal Supply
+     and enter the prices again-->
+<tr>
+  <td>open</td>
+  <td>${base_url}/internal_trade_condition_module/erp5_trade_ui_test_trade_condition/1/InternalSupplyLine_viewBasePrice</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeZuite/macros/toggleSupplyLineBasePricePerSlice" />
+<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/enterAndCheckPricePerSliceInSupplyLine" />
+<!-- Open Delivery Line with the product and check price is correct -->
+<tr>
+  <td>open</td>
+  <td tal:content="string:$${base_url}/internal_packing_list_module/erp5_pdm_ui_test_delivery/1" />
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_my_quantity"]</td>
+  <td>15</td>
+</tr>
+  <tr>
+  <td>type</td>
+  <td>//input[@name="field_my_price"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertFloatValue</td>
+  <td>//input[@name="field_my_price"]</td>
+  <td>9</td>
+</tr>
+</tbody></table>
+</body>
+</html>
