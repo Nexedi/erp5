@@ -56,24 +56,12 @@
 
 <!-- Check sorted by modification date -->
 <tr>
-  <td colspan="3"><b>Check sorted by modification date</b></td>
+  <td colspan="3"><b>Check no default sort</b></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class='sort_item_container']//select</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//div[@class='sort_item_container']/div[1]//select[1]</td>
-  <td>modification_date</td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//div[@class='sort_item_container']/div[1]//select[2]</td>
-  <td>descending</td>
-</tr>
+<tr><td>assertElementNotPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_sort_editor.html']//select</td><td></td></tr>
+
 
 <!-- Go to another page than search -->
 <tr>
