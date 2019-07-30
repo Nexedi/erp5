@@ -95,6 +95,7 @@
                         <string>my_quantity_unit</string>
                         <string>my_price_currency</string>
                         <string>my_start_date_range_max</string>
+                        <string>my_base_price_per_slice</string>
                       </list>
                     </value>
                 </item>
