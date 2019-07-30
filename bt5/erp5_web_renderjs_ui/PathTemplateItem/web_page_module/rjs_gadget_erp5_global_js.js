@@ -15,7 +15,10 @@
           return portal_type;
         }
         console.warn(title);
-        title = erp5_document._embedded._view._links.traversed_document.title;
+        if (erp5_document.hasOwnProperty('_embedded') &&
+            erp5_document._embedded._hasOwnProperty('_view')) {
+          title = erp5_document._embedded._view._links.traversed_document.title;
+        }
         console.warn(title);
         return portal_type + ': ' + title;
       });
