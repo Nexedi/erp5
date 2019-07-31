@@ -617,9 +617,8 @@ def web_checker_utility():
   result = instance.start(prohibited_file_name_list=prohibited_file_name_list,
                        prohibited_folder_name_list=prohibited_folder_name_list)
   if options.output_file:
-    file_object = open(options.output_file, 'w')
-    file_object.write(result)
-    file_object.close()
+    with open(options.output_file, 'w') as file_object:
+      file_object.write(result)
   else:
     print(result)
 
