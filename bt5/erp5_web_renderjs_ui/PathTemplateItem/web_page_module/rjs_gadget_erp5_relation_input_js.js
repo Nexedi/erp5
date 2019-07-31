@@ -185,13 +185,16 @@
         "select_list": [catalog_index]
       })
         .push(function (result) {
+          if (!result.data.total_rows) {
+            return;
+          }
           return gadget.changeState({
             value_text: result.data.rows[0]
-              .value[catalog_index]
-          });
-        })
-        .push(function () {
-          return gadget.notifyChange();
+                              .value[catalog_index]
+          });/*
+            .push(function () {
+              return gadget.notifyChange();
+            });*/
         });
     })
 
