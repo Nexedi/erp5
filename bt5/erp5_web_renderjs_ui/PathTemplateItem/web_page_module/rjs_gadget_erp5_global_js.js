@@ -16,7 +16,7 @@
         }
         console.warn(title);
         if (erp5_document.hasOwnProperty('_embedded') &&
-            erp5_document._embedded._hasOwnProperty('_view')) {
+            erp5_document._embedded.hasOwnProperty('_view')) {
           title = erp5_document._embedded._view._links.traversed_document.title;
         }
         console.warn(title);
