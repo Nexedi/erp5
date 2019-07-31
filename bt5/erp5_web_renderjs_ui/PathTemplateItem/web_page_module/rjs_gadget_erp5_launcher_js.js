@@ -96,9 +96,16 @@
     return route(gadget, 'panel', 'render', [gadget.props.panel_argument_list]);
   }
 
-  function refreshHeaderAndPanel(gadget) {
+  function refreshHeaderAndPanel(gadget, refresh) {
+    var promise;
+    if (refresh) {
+      promise = route(gadget, "header", 'render',
+                      [gadget.props.header_argument_list]);
+    } else {
+      promise = updateHeader(gadget);
+    }
     return RSVP.all([
-      updateHeader(gadget),
+      promise,
       updatePanel(gadget)
     ]);
   }
@@ -560,7 +567,7 @@
 
     .allowPublicAcquisition('refreshHeaderAndPanel',
                             function acquireRefreshHeaderAndPanel() {
-      return refreshHeaderAndPanel(this);
+      return refreshHeaderAndPanel(this, true);
     })
 
     .allowPublicAcquisition('hidePanel', function hidePanel(param_list) {
