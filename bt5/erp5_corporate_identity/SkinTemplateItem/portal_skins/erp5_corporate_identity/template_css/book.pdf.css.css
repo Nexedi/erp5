@@ -163,7 +163,7 @@
   page-break-after: avoid;
   margin-left: auto;
   margin-right: auto;
-  width: 50%;
+  width: 90%;
   display: block;
 }
 .ci-book :not(.ci-book-header-image-wkhtmltopdf-image-wrapper) > img ~ span {
@@ -766,7 +766,7 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
   padding-top: 20px;
   max-width: 240mm;
   page-break-after: avoid;
-  width: 50%;
+  width: 90%;
 }
 .ci-book .ci-book-img > img ~ span {
   margin-left: 3cm;
