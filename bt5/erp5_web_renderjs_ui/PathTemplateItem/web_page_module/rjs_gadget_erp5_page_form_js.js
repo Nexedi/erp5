@@ -558,7 +558,8 @@ and handling data send&receive.
                       var erp5_document = JSON.parse(gadget.state.erp5_document);
                       erp5_document._embedded._view = response;
                       erp5_document._now = Date.now();
-                      return gadget.changeState({erp5_document: JSON.stringify(erp5_document)});
+                      return gadget.changeState({erp5_document: JSON.stringify(erp5_document),
+                                                 is_refresh: true});
                     });
                 }
               })
