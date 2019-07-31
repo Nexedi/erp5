@@ -1,0 +1,106 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Dialog Main</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test that the content of LinesField textarea doesn't change when sort button in sub document list is clicked</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<!-- Shortcut for full renderjs url -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module/1?editable=1</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_lines.html"]//textarea</td><td></td></tr>
+<tr><td>type</td>
+    <td>field_my_lines_list</td>
+    <td>foo<br/><!-- tags and comments get stripped away -->
+bar</td></tr>
+
+<!-- Change sorting of the listbox -->
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table/thead/tr/th/a[text()='Title']</td><td></td></tr>
+<tr>
+  <td>chooseOkOnNextConfirmation</td>
+  <td></td>
+  <td></td>
+</tr>
+
+<tr><td>click</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table/thead/tr/th/a[text()='Title']</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_confirmation" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr><td>assertValue</td>
+    <td>//textarea[@name='field_my_lines_list']</td>
+    <td>foo<br/>
+bar</td></tr>
+
+<!-- Save and force unloading of Form and its content from the memory by going back -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+<tr><td>click</td>
+    <td>//div[@data-role='header']//h1/a</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_field_listbox.html']//table/tbody/tr//a</td><td></td></tr>
+<tr><td>click</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_field_listbox.html']//table/tbody/tr[1]//a</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_lines.html"]//textarea</td><td></td></tr>
+
+<!-- Assert value still holds and change it -->
+<tr><td>assertValue</td>
+    <td>//textarea[@name='field_my_lines_list']</td>
+    <td>foo<br/>
+bar</td></tr>
+<tr><td>assertValue</td>
+    <td>//textarea[@name='field_my_lines_list']</td>
+    <td>foo<br/>
+bar</td></tr>
+<tr><td>type</td>
+    <td>//textarea[@name='field_my_lines_list']</td>
+    <td>foo bar</td></tr>
+<tr>
+  <td>chooseOkOnNextConfirmation</td>
+  <td></td>
+  <td></td>
+</tr>
+<tr><td>click</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table/thead/tr/th/a[text()='Title']</td>
+    <td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_confirmation" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr><td>assertValue</td>
+    <td>//textarea[@name='field_my_lines_list']</td>
+    <td>foo bar</td></tr>
+
+<!-- Save and force unloading of Form and its content from the memory by going back -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+<tr><td>click</td>
+    <td>//div[@data-role='header']//h1/a</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_field_listbox.html']//table/tbody/tr//a</td><td></td></tr>
+<tr><td>click</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_field_listbox.html']//table/tbody/tr[1]//a</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_lines.html"]//textarea</td><td></td></tr>
+
+
+<tr><td>assertValue</td>
+    <td>//textarea[@name='field_my_lines_list']</td>
+    <td>foo bar</td></tr>
+
+</body>
+</html>
