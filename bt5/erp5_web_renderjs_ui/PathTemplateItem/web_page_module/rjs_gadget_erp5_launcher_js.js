@@ -96,6 +96,13 @@
     return route(gadget, 'panel', 'render', [gadget.props.panel_argument_list]);
   }
 
+  function refreshHeaderAndPanel(gadget) {
+    return RSVP.all([
+      updateHeader(gadget),
+      updatePanel(gadget)
+    ]);
+  }
+
   function callJioGadget(gadget, method, param_list) {
     return route(gadget, 'jio_gadget', method, param_list);
   }
@@ -520,7 +527,6 @@
     })
 
     .allowPublicAcquisition("updateHeader", function updateHeader(param_list) {
-      console.log('launcher updateHeader', param_list);
       initHeaderOptions(this);
       var text_list = [],
         key,
@@ -552,6 +558,11 @@
       var gadget = this;
       initPanelOptions(gadget);
       gadget.props.panel_argument_list = param_list[0];
+    })
+
+    .allowPublicAcquisition('refreshHeaderAndPanel',
+                            function acquireRefreshHeaderAndPanel() {
+      return refreshHeaderAndPanel(this);
     })
 
     .allowPublicAcquisition('hidePanel', function hidePanel(param_list) {
@@ -734,10 +745,7 @@
               content_container.appendChild(main_gadget.element);
               element.appendChild(content_container);
 
-              return RSVP.all([
-                updateHeader(gadget),
-                updatePanel(gadget)
-              ]);
+              return refreshHeaderAndPanel(gadget);
               // XXX Drop notification
               // return header_gadget.notifyLoaded();
             }
@@ -749,10 +757,7 @@
             return page_gadget.render(gadget.state.options);
           })
           .push(function () {
-            return RSVP.all([
-              updateHeader(gadget),
-              updatePanel(gadget)
-            ]);
+            return refreshHeaderAndPanel(gadget);
           }));
       }
 

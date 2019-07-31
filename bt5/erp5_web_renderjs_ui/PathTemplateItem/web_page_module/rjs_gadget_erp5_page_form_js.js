@@ -113,6 +113,7 @@ and handling data send&receive.
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("updatePanel", "updatePanel")
+    .declareAcquiredMethod("refreshHeaderAndPanel", "refreshHeaderAndPanel")
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
@@ -432,6 +433,9 @@ and handling data send&receive.
                     }
                     */
                     return gadget.render(options);
+                  })
+                  .push(function () {
+                    return gadget.refreshHeaderAndPanel();
                   })
                   .push(function () {
                     // Make sure to return nothing (previous render can return
