@@ -549,8 +549,6 @@
             gadget.props.header_argument_list.right_title = result_list[1];
           }
           // return updateHeader(gadget);
-          return route(gadget, "header", 'render',
-                       [gadget.props.header_argument_list]);
         });
     })
 
