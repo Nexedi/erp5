@@ -256,4 +256,4 @@ if context.REQUEST.get('is_web_mode', False) and \
     not editable_mode:
   form_id = 'view'
 
-return context.Base_renderForm(form_id, message=message)
+return context.Base_redirect(keep_items={'portal_status_message': message})

@@ -29,10 +29,8 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-
 <tr>
-  <td>assertElementPresent</td>
+  <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Add']</td>
   <td></td>
 </tr>
@@ -42,17 +40,16 @@
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Save</td>
+  <td></td>
+</tr>
+
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Object created.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-<tr>
-  <td>assertTextPresent</td>
-  <td>Save</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>assertSelected</td>

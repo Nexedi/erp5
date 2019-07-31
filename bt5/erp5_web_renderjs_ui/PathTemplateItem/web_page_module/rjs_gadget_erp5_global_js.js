@@ -8,20 +8,11 @@
   window.calculatePageTitle = function (gadget, erp5_document) {
     return new RSVP.Queue()
       .push(function () {
-        console.log(erp5_document);
         var title = erp5_document.title,
           portal_type = erp5_document._links.type.name;
         if (/ Module$/.test(erp5_document._links.type.href)) {
           return portal_type;
         }
-        console.warn(title);
-        if (erp5_document.hasOwnProperty('_embedded') &&
-            erp5_document._embedded.hasOwnProperty('_view') &&
-            erp5_document._embedded._view.hasOwnProperty('_links') &&
-            erp5_document._embedded._view._links.hasOwnProperty('traversed_document')) {
-          title = erp5_document._embedded._view._links.traversed_document.title;
-        }
-        console.warn(title);
         return portal_type + ': ' + title;
       });
   };
