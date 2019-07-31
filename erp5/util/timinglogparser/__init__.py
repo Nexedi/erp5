@@ -254,20 +254,20 @@ if outfile_prefix is not None:
     for sheet_id, sheet_column_list in sheet_dict.iteritems():
       outfile_name = '%s_%s_%s.csv' % (outfile_prefix, sheet_id, filename_suffix)
       print('Writing to %r...' % (outfile_name, ), file=sys.stderr)
-      outfile = open(outfile_name, 'w')
-      print('"date",%s' % (','.join(['"%s"' % (x[0], ) for x in sheet_column_list]), ), file=outfile)
-      decimate_dict = {}
-      decimate = 0
-      for date in date_list:
-        for key, value in line_dict[date].iteritems():
-          decimate_dict.setdefault(key, []).extend(value)
-        decimate += 1
-        if decimate == decimate_count:
+      with open(outfile_name, 'w') as outfile:
+        print('"date",%s' % (','.join(['"%s"' % (x[0], ) for x in sheet_column_list]), ), file=outfile)
+        decimate_dict = {}
+        decimate = 0
+        for date in date_list:
+          for key, value in line_dict[date].iteritems():
+            decimate_dict.setdefault(key, []).extend(value)
+          decimate += 1
+          if decimate == decimate_count:
+            print('"%s",%s' % (date, ','.join([render_cell(decimate_dict.get(x[1], ''), data_format) for x in sheet_column_list])), file=outfile)
+            decimate_dict = {}
+            decimate = 0
+        if len(decimate_dict):
           print('"%s",%s' % (date, ','.join([render_cell(decimate_dict.get(x[1], ''), data_format) for x in sheet_column_list])), file=outfile)
-          decimate_dict = {}
-          decimate = 0
-      if len(decimate_dict):
-        print('"%s",%s' % (date, ','.join([render_cell(decimate_dict.get(x[1], ''), data_format) for x in sheet_column_list])), file=outfile)
 
   if do_average:
     renderOutput('=%(sum)i/%(count)i', 'avg')
