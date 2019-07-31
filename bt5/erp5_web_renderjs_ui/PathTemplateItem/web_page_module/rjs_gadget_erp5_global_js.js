@@ -16,7 +16,9 @@
         }
         console.warn(title);
         if (erp5_document.hasOwnProperty('_embedded') &&
-            erp5_document._embedded.hasOwnProperty('_view')) {
+            erp5_document._embedded.hasOwnProperty('_view') &&
+            erp5_document._embedded._view.hasOwnProperty('_links') &&
+            erp5_document._embedded._view._links.hasOwnProperty('traversed_document')) {
           title = erp5_document._embedded._view._links.traversed_document.title;
         }
         console.warn(title);
