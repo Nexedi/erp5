@@ -1,13 +1,12 @@
 from glob import glob
 import os, subprocess, re
 # test_suite is provided by 'run_test_suite'
-from test_suite import SavedTestSuite
+from test_suite import ERP5TypeTestSuite
 import sys
 
 HERE = os.path.dirname(__file__)
 
-class _ERP5(SavedTestSuite):
-  _saved_test_id = "erp5_web_renderjs_ui_test:testFunctionalRJSInterfaceValidator"
+class _ERP5(ERP5TypeTestSuite):
   realtime_output = False
   enabled_product_list = ('CMFActivity', 'CMFCategory', 'ERP5', 'ERP5Catalog',
                           'ERP5eGovSecurity', 'ERP5Form',
@@ -36,30 +35,9 @@ class _ERP5(SavedTestSuite):
     component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
                               "/test\.[^.]+\.([^.]+).py$")
     for test_path in (
-        # glob('%s/product/Formulator/tests/test*.py' % path) +
-        # glob('%s/product/ERP5Form/tests/test*.py' % path) +
-        # ['%s/product/ERP5/tests/testXHTML.py' % path] +
-        # ['%s/product/ERP5Type/tests/testFunctionalCore.py' % path] +
-        # ['%s/product/ERP5Type/tests/testFunctionalAnonymousSelection.py' % path] +
-        # glob('%s/bt5/erp5_web/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_web_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        glob('%s/bt5/erp5_hal_json_style/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        glob('%s/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_web_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_token_login/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_trade_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_pdm_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_crm_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_accounting_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_gadget_interface_validator_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_web_monitoring_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_travel_expense_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_officejs_support_request_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_officejs_afs_directory_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        # glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        []
-      ):
+        glob('%s/product/*/tests/test*.py' % path) +
+        glob('%s/bt5/*/TestTemplateItem/test*.py' % path) +
+        glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
       component_re_match = component_re.match(test_path)
       if component_re_match is not None:
         test_case = "%s:%s" % (component_re_match.group(1),
