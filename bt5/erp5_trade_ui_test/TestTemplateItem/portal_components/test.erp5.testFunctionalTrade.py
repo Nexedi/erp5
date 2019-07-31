@@ -28,17 +28,11 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
 
+
 class TestFunctionalPDM(ERP5TypeFunctionalTestCase):
   foreground = 0
   run_only = "trade_zuite"
 
-  def getBusinessTemplateList(self):
-    return (
-      'erp5_pdm',
-      'erp5_trade',
-      'erp5_pdm_ui_test',
-      'erp5_trade_ui_test',
-    )
 
 def test_suite():
   suite = unittest.TestSuite()
