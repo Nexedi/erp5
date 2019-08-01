@@ -87,8 +87,7 @@ Test quantity steps for price on internal supply line
 <tr>
   <td>type</td>
   <td>field_my_quantity_step_list</td>
-  <td>11
-21</td>
+  <td>11<br />21</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
