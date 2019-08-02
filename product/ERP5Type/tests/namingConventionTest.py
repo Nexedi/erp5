@@ -43,7 +43,8 @@ class TestNamingConvention(ERP5TypeTestCase):
           Return the list of business templates.
         """
         # include all standard Business Templates, i.e. erp5_*
-        return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
+        return ('erp5_base', 'erp5_simulation',
+                'erp5_pdm', 'erp5_trade', 'erp5_accounting',
                 'erp5_apparel', 'erp5_mrp', 'erp5_project', 'erp5_dms',
                 'erp5_web', 'erp5_csv_style', 'erp5_crm',
                 'erp5_budget', 'erp5_item', 'erp5_ui_test',

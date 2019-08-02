@@ -52,6 +52,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     """
     return ('erp5_core_proxy_field_legacy',
             'erp5_base',
+            'erp5_simulation',
             'erp5_pdm',
             'erp5_trade',
             'erp5_item',

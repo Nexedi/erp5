@@ -3,7 +3,6 @@ Currency Exchange Cell | currency_exchange_type
 Currency Exchange Cell | price_currency
 Currency Exchange Line | price_currency
 Currency Module | business_application
-Delivery Type | ledger
 Notification Message Module | business_application
 Notification Message | specialise
 Organisation Module | business_application

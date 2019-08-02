@@ -36,10 +36,6 @@
   <workflow>currency_exchange_line_interaction_workflow, edit_workflow, reindex_object_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Delivery Type</type>
-  <workflow>base_type_interaction_workflow, dynamic_class_generation_interaction_workflow</workflow>
- </chain>
- <chain>
   <type>ERP5 Login</type>
   <workflow>edit_workflow, login_validation_workflow</workflow>
  </chain>
@@ -106,10 +102,6 @@
  <chain>
   <type>Rounding Model</type>
   <workflow>validation_workflow</workflow>
- </chain>
- <chain>
-  <type>Simulation Movement</type>
-  <workflow>simulation_movement_causality_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Telephone</type>
