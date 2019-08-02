@@ -7,31 +7,13 @@ Agent | signature
 Agent | view
 Assignment | view
 Bank Account | view
-Base Variant Movement Group | view
 Career | change_function
 Career | view
-Category Movement Group | view
-Causality Assignment Movement Group | view
-Causality Movement Group | view
 Chat Address | view
 Credit Card | view
 Currency Exchange Line | view
 Currency Module | view
 Currency | view
-Day Movement Group | view
-Delivery Builder | view
-Delivery Builder | view_predicate_group
-Delivery Builder | view_profile
-Delivery Causality Assignment Movement Group | view
-Delivery Tool | view
-Delivery Type | action_view
-Delivery Type | copy_roles
-Delivery Type | delivery_view
-Delivery Type | jump_property_sheets
-Delivery Type | role_view
-Delivery Type | translation_view
-Delivery Type | update_local_roles
-Delivery Type | view
 ERP5 Login | view
 Email | change_function
 Email | view
@@ -56,29 +38,19 @@ Image | download
 Image | fullsize_view
 Image | update_content_from_url
 Image | view
-Invoice Movement Group | view
 Link | view
 Mapped Property | view
-Monthly Range Movement Group | view
-Nested Line Movement Group | view
 Notification Message Module | view
 Notification Message | list
 Notification Message | local_permission
 Notification Message | view
 Notification Message | view_editor
-Order Builder | view
-Order Builder | view_predicate_group
-Order Builder | view_profile
-Order Movement Group | view
-Order Tool | view
 Organisation Module | view
 Organisation | details
 Organisation | document_view
 Organisation | financial_view
 Organisation | jump_to_persons
 Organisation | view
-Parent Delivery Property Movement Group | view
-Parent Explanation Movement Group | view
 Person Module | view
 Person | assignment
 Person | details
@@ -90,25 +62,14 @@ Person | view
 Preference Tool | advanced
 Preference | base_preference
 Preference | change_password
-Previous Causality Movement Group | view
-Property Assignment Movement Group | view
-Property Grouping Movement Group | view
-Property Movement Group | view
-Quantity Sign Movement Group | view
 Query Module | view
 Query | view
-Requirement Movement Group | view
 Role Definition | view
-Root Applied Rule Causality Movement Group | view
 Rounding Model | predicate_view
 Rounding Model | view
 Rounding Tool | view
-Split Movement Group | view
 Telephone | change_function
 Telephone | view
-Title Movement Group | view
-Variant Movement Group | view
-Variation Property Movement Group | view
 portal_actions | jump_query
 portal_actions | jump_related_object
 portal_actions | post_query
