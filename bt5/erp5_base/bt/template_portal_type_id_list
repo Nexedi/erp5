@@ -3,21 +3,13 @@ Agent
 Agent Privilege
 Assignment
 Bank Account
-Base Variant Movement Group
 Career
-Category Movement Group
-Causality Assignment Movement Group
-Causality Movement Group
 Chat Address
 Credit Card
 Currency
 Currency Exchange Cell
 Currency Exchange Line
 Currency Module
-Day Movement Group
-Delivery Builder
-Delivery Causality Assignment Movement Group
-Delivery Tool
 Delivery Type
 ERP5 Login
 Email
@@ -29,38 +21,18 @@ File
 Geographical Area
 Geographical Location
 Image
-Invoice Movement Group
 Link
 Mapped Property
-Monthly Range Movement Group
-Nested Line Movement Group
 Notification Message
 Notification Message Module
 OOo Document
-Order Builder
-Order Movement Group
-Order Tool
 Organisation
 Organisation Module
-Parent Delivery Property Movement Group
-Parent Explanation Movement Group
 Person
 Person Module
-Previous Causality Movement Group
-Property Assignment Movement Group
-Property Grouping Movement Group
-Property Movement Group
-Quantity Sign Movement Group
 Query
 Query Module
-Requirement Movement Group
 Role Definition
-Root Applied Rule Causality Movement Group
 Rounding Model
 Rounding Tool
-Solver Tool
-Split Movement Group
 Telephone
-Title Movement Group
-Variant Movement Group
-Variation Property Movement Group

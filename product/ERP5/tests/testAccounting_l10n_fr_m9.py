@@ -62,6 +62,7 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return ( 'erp5_base',
+             'erp5_simulation',
              'erp5_trade',
              'erp5_invoicing',
              'erp5_pdm',

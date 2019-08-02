@@ -62,6 +62,7 @@ class TestBug(ERP5TypeTestCase):
       Return the list of required business templates.
     """
     return ( 'erp5_base'
+           , 'erp5_simulation'
            , 'erp5_crm'
            , 'erp5_forge'
            , 'erp5_pdm'
