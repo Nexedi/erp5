@@ -1,16 +1,51 @@
 Applied Rule | view
+Base Variant Movement Group | view
 Category Membership Divergence Tester | configuration
 Category Membership Divergence Tester | predicate
 Category Membership Divergence Tester | view
+Category Movement Group | view
+Causality Assignment Movement Group | view
+Causality Movement Group | view
 DateTime Divergence Tester | configuration
 DateTime Divergence Tester | predicate
 DateTime Divergence Tester | view
+Day Movement Group | view
+Delivery Builder | view
+Delivery Builder | view_predicate_group
+Delivery Builder | view_profile
+Delivery Causality Assignment Movement Group | view
+Delivery Tool | view
+Delivery Type | action_view
+Delivery Type | copy_roles
+Delivery Type | delivery_view
+Delivery Type | jump_property_sheets
+Delivery Type | role_view
+Delivery Type | translation_view
+Delivery Type | update_local_roles
+Delivery Type | view
 Float Divergence Tester | configuration
 Float Divergence Tester | predicate
 Float Divergence Tester | view
+Invoice Movement Group | view
+Monthly Range Movement Group | view
+Nested Line Movement Group | view
 Net Converted Quantity Divergence Tester | configuration
 Net Converted Quantity Divergence Tester | predicate
 Net Converted Quantity Divergence Tester | view
+Order Builder | view
+Order Builder | view_predicate_group
+Order Builder | view_profile
+Order Movement Group | view
+Order Tool | view
+Parent Delivery Property Movement Group | view
+Parent Explanation Movement Group | view
+Previous Causality Movement Group | view
+Property Assignment Movement Group | view
+Property Grouping Movement Group | view
+Property Movement Group | view
+Quantity Sign Movement Group | view
+Requirement Movement Group | view
+Root Applied Rule Causality Movement Group | view
 Simulation Movement | view
 Simulation Tool | view
 Solver Decision | configuration
@@ -28,10 +63,14 @@ Solver Type | view
 Specialise Divergence Tester | configuration
 Specialise Divergence Tester | predicate
 Specialise Divergence Tester | view
+Split Movement Group | view
 String Divergence Tester | configuration
 String Divergence Tester | predicate
 String Divergence Tester | view
+Title Movement Group | view
+Variant Movement Group | view
 Variation Divergence Tester | configuration
 Variation Divergence Tester | predicate
 Variation Divergence Tester | view
+Variation Property Movement Group | view
 portal_actions | rule_predicate_view

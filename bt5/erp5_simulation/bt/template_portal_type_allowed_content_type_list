@@ -1,5 +1,59 @@
+Delivery Builder | Base Variant Movement Group
+Delivery Builder | Category Movement Group
+Delivery Builder | Causality Assignment Movement Group
+Delivery Builder | Causality Movement Group
+Delivery Builder | Day Movement Group
+Delivery Builder | Delivery Causality Assignment Movement Group
+Delivery Builder | Invoice Movement Group
+Delivery Builder | Monthly Range Movement Group
+Delivery Builder | Nested Line Movement Group
+Delivery Builder | Order Movement Group
+Delivery Builder | Parent Delivery Property Movement Group
+Delivery Builder | Parent Explanation Movement Group
+Delivery Builder | Predicate
+Delivery Builder | Previous Causality Movement Group
+Delivery Builder | Property Assignment Movement Group
+Delivery Builder | Property Grouping Movement Group
+Delivery Builder | Property Movement Group
+Delivery Builder | Quantity Sign Movement Group
+Delivery Builder | Requirement Movement Group
+Delivery Builder | Root Applied Rule Causality Movement Group
+Delivery Builder | Split Movement Group
+Delivery Builder | Title Movement Group
+Delivery Builder | Variant Movement Group
+Delivery Builder | Variation Property Movement Group
+Delivery Tool | Delivery Builder
+Delivery Type | Action Information
+Delivery Type | Role Information
+Order Builder | Base Variant Movement Group
+Order Builder | Category Movement Group
+Order Builder | Causality Assignment Movement Group
+Order Builder | Causality Movement Group
+Order Builder | Day Movement Group
+Order Builder | Delivery Causality Assignment Movement Group
+Order Builder | First Causality Movement Group
+Order Builder | Invoice Movement Group
+Order Builder | Monthly Range Movement Group
+Order Builder | Nested Line Movement Group
+Order Builder | Order Movement Group
+Order Builder | Parent Delivery Property Movement Group
+Order Builder | Parent Explanation Movement Group
+Order Builder | Predicate
+Order Builder | Previous Causality Movement Group
+Order Builder | Property Assignment Movement Group
+Order Builder | Property Grouping Movement Group
+Order Builder | Property Movement Group
+Order Builder | Quantity Sign Movement Group
+Order Builder | Requirement Movement Group
+Order Builder | Root Applied Rule Causality Movement Group
+Order Builder | Split Movement Group
+Order Builder | Title Movement Group
+Order Builder | Variant Movement Group
+Order Builder | Variation Property Movement Group
+Order Tool | Order Builder
 Solver Process Tool | Solver Process
 Solver Process | Solver Decision
+Solver Tool | Solver Type
 Solver Tool | Solver Type
 Solver Type | Action Information
 Solver Type | Role Information

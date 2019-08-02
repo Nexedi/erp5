@@ -19,8 +19,6 @@ Currency Exchange Line | reindex_object_interaction_workflow
 Currency Exchange Line | validation_workflow
 Currency | edit_workflow
 Currency | validation_workflow
-Delivery Type | base_type_interaction_workflow
-Delivery Type | dynamic_class_generation_interaction_workflow
 ERP5 Login | edit_workflow
 ERP5 Login | login_validation_workflow
 Email | coordinate_interaction_workflow
@@ -63,7 +61,6 @@ Query | query_workflow
 Role Definition | edit_workflow
 Role Definition | local_permission_interaction_workflow
 Rounding Model | validation_workflow
-Simulation Movement | simulation_movement_causality_interaction_workflow
 Telephone | coordinate_interaction_workflow
 Telephone | edit_workflow
 Telephone | reachability_workflow

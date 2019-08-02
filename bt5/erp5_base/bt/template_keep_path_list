@@ -2,3 +2,55 @@ portal_introspections
 portal_memcached/persistent_memcached_plugin
 portal_solver_processes
 portal_web_services
+portal_types
+portal_types/Base Variant Movement Group
+portal_types/Category Movement Group
+portal_types/Causality Assignment Movement Group
+portal_types/Causality Movement Group
+portal_types/Day Movement Group
+portal_types/Delivery Builder
+portal_types/Delivery Causality Assignment Movement Group
+portal_types/Delivery Tool
+portal_types/Delivery Type
+portal_types/Invoice Movement Group
+portal_types/Monthly Range Movement Group
+portal_types/Nested Line Movement Group
+portal_types/Order Builder
+portal_types/Order Movement Group
+portal_types/Order Tool
+portal_types/Parent Delivery Property Movement Group
+portal_types/Parent Explanation Movement Group
+portal_types/Previous Causality Movement Group
+portal_types/Property Assignment Movement Group
+portal_types/Property Grouping Movement Group
+portal_types/Property Movement Group
+portal_types/Quantity Sign Movement Group
+portal_types/Requirement Movement Group
+portal_types/Root Applied Rule Causality Movement Group
+portal_types/Solver Tool
+portal_types/Split Movement Group
+portal_types/Title Movement Group
+portal_types/Variant Movement Group
+portal_types/Variation Property Movement Group
+portal_categories/collect_order_group
+portal_categories/collect_order_group/cell
+portal_categories/collect_order_group/delivery
+portal_categories/collect_order_group/line
+portal_categories/conflicting_solver
+portal_categories/delivery_builder
+portal_categories/delivery_solver
+portal_categories/divergence_scope
+portal_categories/divergence_scope/category
+portal_categories/divergence_scope/property
+portal_categories/divergence_scope/quantity
+portal_categories/order_builder
+portal_categories/property_mapping
+portal_roundings
+portal_solver_processes
+portal_solvers
+portal_workflow/delivery_causality_interaction_workflow
+portal_workflow/delivery_causality_workflow
+portal_workflow/delivery_movement_causality_interaction_workflow
+portal_workflow/delivery_movement_simulation_interaction_workflow
+portal_workflow/delivery_simulation_interaction_workflow
+portal_workflow/simulation_movement_causality_interaction_workflow

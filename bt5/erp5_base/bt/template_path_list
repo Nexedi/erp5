@@ -1,12 +1,6 @@
 portal_alarms/upgrader_migrate_to_embedded_file
 portal_caches/document_cache_factory
 portal_caches/document_cache_factory/**
-portal_categories/collect_order_group/cell
-portal_categories/collect_order_group/delivery
-portal_categories/collect_order_group/line
-portal_categories/divergence_scope/category
-portal_categories/divergence_scope/property
-portal_categories/divergence_scope/quantity
 portal_contribution_registry/image_extension
 portal_contribution_registry/image_mimetype
 portal_memcached/persistent_memcached_plugin
