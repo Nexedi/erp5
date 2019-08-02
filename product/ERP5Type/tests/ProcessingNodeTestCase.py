@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import base64, errno, os, select, socket, sys, time
+import base64, errno, logging, os, select, socket, sys, time
 from threading import Thread
 from UserDict import IterableUserDict
 import Lifetime
@@ -8,8 +8,8 @@ from Testing import ZopeTestCase
 from ZODB.POSException import ConflictError
 from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
-from Products.ERP5Type.tests.utils import addUserToDeveloperRole
-from Products.ERP5Type.tests.utils import createZServer
+from Products.ERP5Type.tests.utils import \
+  addUserToDeveloperRole, createZServer, parseListeningAddress
 from Products.CMFActivity.ActivityTool import getCurrentNode
 
 
@@ -141,23 +141,63 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     if utils._Z2HOST is None:
       from Products.ERP5Type.tests.runUnitTest import tests_home
       log = os.path.join(tests_home, "Z2.log")
-      _print = lambda hs: verbose and ZopeTestCase._print(
-        "Running %s server at %s:%s\n" % (
-          hs.server_protocol, hs.server_name, hs.server_port))
-      try:
-        hs = createZServer(log)
-      except RuntimeError, e:
-        ZopeTestCase._print(str(e))
-      else:
-        utils._Z2HOST, utils._Z2PORT = hs.server_name, hs.server_port
-        _print(hs)
+      message = "Running %s server at %s:%s\n"
+      if int(os.environ.get('erp5_wsgi', 0)):
+        from Products.ERP5.bin.zopewsgi import app_wrapper, createServer
+        sockets = []
+        server_type = 'HTTP'
+        zserver = os.environ.get('zserver')
         try:
-          _print(createZServer(log, zserver_type='webdav'))
-        except RuntimeError, e:
-          ZopeTestCase._print('Could not start webdav zserver: %s\n' % e)
-        t = Thread(target=Lifetime.loop)
-        t.setDaemon(1)
-        t.start()
+          for ip, port in parseListeningAddress(zserver):
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            try:
+              s.bind((ip, port))
+            except socket.error as e:
+              s.close()
+              if e[0] != errno.EADDRINUSE:
+                raise
+              if zserver:
+                raise RuntimeError(str(e))
+            else:
+              if sockets:
+                webdav_ports = port,
+              else:
+                webdav_ports = ()
+              sockets.append(s)
+              ZopeTestCase._print(message % (server_type, ip, port))
+              if webdav_ports:
+                break
+              server_type = 'WebDAV'
+        except RuntimeError as e:
+          ZopeTestCase._print('Could not start %s server: %s\n'
+            % (server_type, e))
+        if sockets:
+          logger = logging.getLogger("access")
+          logger.addHandler(logging.FileHandler(log))
+          logger.propagate = False
+          hs = createServer(app_wrapper(webdav_ports=webdav_ports),
+            logger, sockets=sockets)
+          utils._Z2HOST, utils._Z2PORT = hs.addr
+          t = Thread(target=hs.run)
+          t.setDaemon(1)
+          t.start()
+      else:
+        _print = lambda hs: verbose and ZopeTestCase._print(
+          message % (hs.server_protocol, hs.server_name, hs.server_port))
+        try:
+          hs = createZServer(log)
+        except RuntimeError as e:
+          ZopeTestCase._print(str(e))
+        else:
+          utils._Z2HOST, utils._Z2PORT = hs.server_name, hs.server_port
+          _print(hs)
+          try:
+            _print(createZServer(log, zserver_type='webdav'))
+          except RuntimeError as e:
+            ZopeTestCase._print('Could not start webdav zserver: %s\n' % e)
+          t = Thread(target=Lifetime.loop)
+          t.setDaemon(1)
+          t.start()
       from Products.CMFActivity import ActivityTool
       # Reset, in case that getServerAddress was already called,
       # in which case, the value was ('', '')
