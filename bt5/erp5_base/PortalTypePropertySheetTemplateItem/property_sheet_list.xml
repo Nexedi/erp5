@@ -21,9 +21,6 @@
  <portal_type id="Preference">
   <item>TelephonePreference</item>
  </portal_type>
- <portal_type id="Previous Causality Movement Group">
-  <item>PreviousCausalityMovementGroup</item>
- </portal_type>
  <portal_type id="Query">
   <item>TextDocument</item>
  </portal_type>

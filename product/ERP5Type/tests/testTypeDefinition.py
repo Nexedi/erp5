@@ -32,7 +32,7 @@ class PortalTypeOfPortalTypeTestCase(ERP5TypeTestCase):
   Base class to test Portal Types of other Portal Types
   """
   def getBusinessTemplateList(self):
-    return ('erp5_core', 'erp5_base', 'erp5_accounting')
+    return ('erp5_core', 'erp5_base', 'erp5_simulation', 'erp5_accounting')
 
   def setUpPropertyOnPortalType(self, portal_type_id, property_name, property_value):
     portal_type = self.portal.portal_types.get(portal_type_id, None)

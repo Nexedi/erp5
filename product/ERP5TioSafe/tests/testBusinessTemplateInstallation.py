@@ -65,6 +65,7 @@ class TestPackaging(testTioSafeMixin):
   def test_skins(self):
     """Test skins are present."""
     for skin_name in ( 'erp5_base',
+                       'erp5_simulation',
                        'erp5_pdm',
                        'erp5_trade',
                        'erp5_syncml',

@@ -124,7 +124,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       """
         Return the list of business templates.
       """
-      return ('erp5_base',)
+      return ('erp5_base', 'erp5_simulation')
 
     def afterSetUp(self):
       self.login()
