@@ -1,7 +1,10 @@
 Category Membership Divergence Tester | edit_workflow
 DateTime Divergence Tester | edit_workflow
+Delivery Type | base_type_interaction_workflow
+Delivery Type | dynamic_class_generation_interaction_workflow
 Float Divergence Tester | edit_workflow
 Net Converted Quantity Divergence Tester | edit_workflow
+Simulation Movement | simulation_movement_causality_interaction_workflow
 Solver Process | solver_process_workflow
 Solver Type | edit_workflow
 Solver Type | validation_workflow
