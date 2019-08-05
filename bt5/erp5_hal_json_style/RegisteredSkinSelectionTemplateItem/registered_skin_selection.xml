@@ -5,7 +5,7 @@
  </skin_folder_selection>
  <skin_folder_selection>
   <skin_folder>erp5_hal_json_style</skin_folder>
-  <skin_selection>Hal,HalRestricted</skin_selection>
+  <skin_selection>AppCache,Hal,HalRestricted</skin_selection>
  </skin_folder_selection>
  <skin_folder_selection>
   <skin_folder>erp5_xhtml_style</skin_folder>
