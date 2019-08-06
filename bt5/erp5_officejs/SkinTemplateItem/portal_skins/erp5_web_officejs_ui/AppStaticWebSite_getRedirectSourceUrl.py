@@ -9,9 +9,14 @@ Redirect to domain specified as layout property on website
 import binascii
 import base64
 
-name = context.REQUEST.other['source_path']
-result_dict = {"error":"url path must start with definition_view"}
+result_dict = {"error":"url missing definition view path"}
 base_64 = False
+
+
+try:
+  name = context.REQUEST.other['source_path']
+except KeyError:
+  return result_dict
 
 try:
     encoded = name.replace("definition_view/", "", 1)

@@ -472,7 +472,9 @@
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
-            <value> <string>../hateoas_appcache_texteditor/</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_header_gadget_url</string> </key>
@@ -787,7 +789,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.21913.51373.65194</string> </value>
+                <value> <string>977.37715.19028.59613</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -805,7 +807,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1564148846.11</float>
+                        <float>1565099350.01</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
