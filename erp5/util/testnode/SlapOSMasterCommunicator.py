@@ -10,6 +10,8 @@ from uritemplate import expand
 
 import slapos.slap
 from slapos.slap import SoftwareProductCollection
+from slapos.client import SOFTWARE_PRODUCT_NAMESPACE
+from slapos.slap.util import xml2dict
 from requests.exceptions import HTTPError
 from ..taskdistribution import SAFE_RPC_EXCEPTION_LIST
 from . import logger
@@ -18,8 +20,6 @@ import six
 
 # max time to instance changing state: 3 hour
 MAX_INSTANCE_TIME = 60*60*3
-
-SOFTWARE_PRODUCT_NAMESPACE = "product."
 
 SOFTWARE_STATE_UNKNOWN = "SOFTWARE_STATE_UNKNOWN"
 SOFTWARE_STATE_INSTALLING = "SOFTWARE_STATE_INSTALLING"
@@ -83,6 +83,10 @@ class SlapOSMasterCommunicator(object):
 
     self.url = url  
 
+  #########################################################
+  # Wrapper functions to support network retries
+  #########################################################
+
   @retryOnNetworkFailure
   def _supply(self, state="available"):
     if self.computer_guid is None:
@@ -113,126 +117,35 @@ class SlapOSMasterCommunicator(object):
             state=state,
             **self.request_kw)
 
+  @retryOnNetworkFailure
   def isInstanceRequested(self, instance_title):
-    hateoas = getattr(self.slap, '_hateoas_navigator', None)
-    return instance_title in hateoas.getHostingSubscriptionDict()
+    return len(self.hateoas_navigator._getHostingSubscriptionList(
+        title=instance_title))
 
   @retryOnNetworkFailure
-  def _hateoas_getComputer(self, reference):
-    root_document = self.hateoas_navigator.getRootDocument()
-    search_url = root_document["_links"]['raw_search']['href']
+  def getComputer(self, reference):
+    return self.hateoas_navigator.getComputer(reference)
 
-    getter_link = expand(search_url, { 
-      "query": "reference:%s AND portal_type:Computer" % reference, 
-      "select_list": ["relative_url"],
-      "limit": 1})
-
-    result = self.hateoas_navigator.GET(getter_link)
-    content_list = json.loads(result)['_embedded']['contents']
-
-    if len(content_list) == 0:
-      raise Exception('No Computer found.')
-
-    computer_relative_url = content_list[0]["relative_url"]
-    
-    getter_url = self.hateoas_navigator.getDocumentAndHateoas(
-      computer_relative_url)
-
-    return json.loads(self.hateoas_navigator.GET(getter_url))
-    
- 
   @retryOnNetworkFailure
   def getSoftwareInstallationList(self, computer_guid=None):
-    # XXX Move me to slap.py API
-    computer = self._hateoas_getComputer(computer_guid) if computer_guid else self._hateoas_getComputer(self.computer_guid)
-
-    # Not a list ?
-    action = computer['_links']['action_object_slap']
-
-    if action.get('title') == 'getHateoasSoftwareInstallationList':
-      getter_link = action['href']
-    else:
-      raise Exception('No Link found found.')
-
-    result = self.hateoas_navigator.GET(getter_link)
-    return json.loads(result)['_links']['content']
-
-
-  @retryOnNetworkFailure
-  def getSoftwareInstallationNews(self, computer_guid=None):
-    getter_link = None
-    for si in self.getSoftwareInstallationList(computer_guid):
-      if si["title"] == self.url:
-        getter_link = si["href"]
-        break
-
-    # We could not find the document, so it is probably too soon.
-    if getter_link is None:
-      return ""
-    
-    result = self.hateoas_navigator.GET(getter_link)
-    action_object_slap_list = json.loads(result)['_links']['action_object_slap']
-
-    for action in action_object_slap_list:
-      if action.get('title') == 'getHateoasNews':
-        getter_link = action['href']
-        break
-    else:
-      raise Exception('getHateoasNews not found.')
-
-    result = self.hateoas_navigator.GET(getter_link)
-    if len(json.loads(result)['news']) > 0:
-      return json.loads(result)['news'][0]["text"]
-    return ""
+    return self.hateoas_navigator.getSoftwareInstallationList(computer_guid=computer_guid)
 
   @retryOnNetworkFailure
   def getInstanceUrlList(self):
-    hosting_subscription_dict = self.hateoas_navigator._hateoas_getHostingSubscriptionDict()
-    # Don't store hosting subscription url. It changes from time to time.
-    hosting_subscription_url = None
-    for hs in hosting_subscription_dict:
-      if hs['title'] == self.name:
-        hosting_subscription_url = hs['href']
-        break
-
-    if hosting_subscription_url is None:
-      return None
-
-    return self.hateoas_navigator.getHateoasInstanceList(
-            hosting_subscription_url)
-
-  @retryOnNetworkFailure
-  def getNewsFromInstance(self, url):
-    result = self.hateoas_navigator.GET(url)
-    result = json.loads(result)
-    if result['_links'].get('action_object_slap', None) is None:
-      return None
-
-    object_link = self.hateoas_navigator.hateoasGetLinkFromLinks(
-       result['_links']['action_object_slap'], 'getHateoasNews')
-    
-    result = self.hateoas_navigator.GET(object_link)
-    return json.loads(result)['news']
+    return self.hateoas_navigator.getHostingSubscriptionInstanceList(
+      self.title)
 
   @retryOnNetworkFailure
   def getInformationFromInstance(self, url):
-    result = self.hateoas_navigator.GET(url)
-    result = json.loads(result)
-    if result['_links'].get('action_object_slap', None) is None:
-      print(result['links'])
-      return None
+    return self.hateoas_navigator.jio_get(url)
 
-    object_link = self.hateoas_navigator.hateoasGetLinkFromLinks(
-       result['_links']['action_object_slap'], 'getHateoasInformation')
-
-    result = self.hateoas_navigator.GET(object_link)
-    return json.loads(result)
-
+  @retryOnNetworkFailure
   def _getSoftwareState(self, computer_guid=None):
     if self.computer_guid is None:
       return SOFTWARE_STATE_INSTALLED
 
-    message = self.getSoftwareInstallationNews(computer_guid)
+    message = self.hateoas_navigator.getSoftwareInstallationNews(
+            computer_guid=computer_guid, self.url)
     logger.info(message)
     if message.startswith("#error no data found"):
       return SOFTWARE_STATE_UNKNOWN
@@ -270,19 +183,18 @@ class SlapOSMasterCommunicator(object):
     message_list = []
     try:
       for instance in self.getInstanceUrlList():
-        news = self.getNewsFromInstance(instance["href"])
-        information = self.getInformationFromInstance(instance["href"])
+        news = instance['SoftwareInstance_getNewsDict']
         state = INSTANCE_STATE_UNKNOWN
         monitor_information_dict = {}
 
         info_created_at = "-1"
-        is_slave = information['slave']
+        is_slave = instance['portal_type'] == "Slave Instance"
         if is_slave:
-          if (information["connection_dict"]) > 0:
+          if len(instance['getConnectionXmlAsDict']) > 0:
             state =  INSTANCE_STATE_STARTED
         else:
           # not slave
-          instance_state = news[0]
+          instance_state = news
           if instance_state.get('created_at', '-1') != "-1":
             # the following does NOT take TZ into account
             created_at = datetime.datetime.strptime(instance_state['created_at'], 
@@ -306,7 +218,7 @@ class SlapOSMasterCommunicator(object):
 
         if state == INSTANCE_STATE_STARTED_WITH_ERROR:
           # search for monitor url
-          monitor_v6_url = information["connection_dict"].get("monitor_v6_url")
+          monitor_v6_url = instance['getConnectionXmlAsDict'].get("monitor_v6_url")
           try:
             monitor_information_dict = self.getRSSEntryFromMonitoring(monitor_v6_url)
           except Exception:
@@ -314,11 +226,13 @@ class SlapOSMasterCommunicator(object):
             logger.error(traceback.format_exc())
             monitor_information_dict = {"message": "Unable to download"}
 
+        instance["connection_dict"] = instance["getConnectionXmlAsDict"]
+        instance["parameter_dict"] = xml2dict(instance["text_content"]))
         message_list.append({
           'title': instance["title"],
           'slave': is_slave,
-          'news': news[0],
-          'information': information,
+          'news': news,
+          'information': instance,
           'monitor': monitor_information_dict,
           'state': state
         })
@@ -456,8 +370,7 @@ class SlapOSTester(SlapOSMasterCommunicator):
     for instance in self.getInstanceUrlList():
       if instance["title"] == "Monitor Frontend apache-frontend-1":
         try:
-          information = self.getInformationFromInstance(instance["href"])
-          frontend_master_ipv6 = information['parameter_dict']['url']
+          frontend_master_ipv6 = xml2dict(instance['text_content'])['url']
         except Exception as e:
           pass
     start_time = time.time()
@@ -471,18 +384,17 @@ class SlapOSTester(SlapOSMasterCommunicator):
   def getInstanceUrlDict(self):
     frontend_url_list = []
     for instance in self.getInstanceUrlList():
-      information = self.getInformationFromInstance(instance["href"])
       if "frontend-" in instance["title"]:
         try:
           frontend = [instance["title"].replace("frontend-", ""),
-                      information["connection_dict"]["secure_access"]]
+                      instance["getConnectionXmlAsDict"]["secure_access"]]
           frontend_url_list.append(frontend)
         except Exception as e:
           logger.info("Frontend url not generated yet for instance: " + instance["title"])
           pass
       if instance["title"] == self.name:
         try:
-          connection_json = json.loads(information["connection_dict"]["_"])
+          connection_json = json.loads(instance["getConnectionXmlAsDict"]["_"])
           user = connection_json["inituser-login"]
           password = connection_json["inituser-password"]
         except Exception as e:
@@ -491,8 +403,9 @@ class SlapOSTester(SlapOSMasterCommunicator):
 
   def destroyInstance(self, instance_title):
     self.name = instance_title
-    if self.getInstanceUrlList():
-      for instance in self.getInstanceUrlList():
+    instance_url_list = self.InstanceUrlList()
+    if instance_url_list:
+      for instance in instance_url_list:
         if instance["title"] != instance_title:
           self._request(INSTANCE_STATE_DESTROYED, instance["title"])
         else:
