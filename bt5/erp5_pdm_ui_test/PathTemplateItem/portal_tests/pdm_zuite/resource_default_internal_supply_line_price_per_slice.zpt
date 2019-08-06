@@ -24,8 +24,7 @@ Test toggling price per slice updates internal supply cells correctly
 <tr>
   <td>type</td>
   <td>field_my_internal_supply_line_quantity_step_list</td>
-  <td>11
-21</td>
+  <td>11<br />21</td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -35,7 +34,8 @@ Test toggling price per slice updates internal supply cells correctly
 <tr>
   <td>assertText</td>
   <td>field_my_internal_supply_line_quantity_step_list</td>
-  <td>11.0 21.0</td>
+  <td>11.0
+21.0</td>
 <tr>
   <td>assertText</td>
   <td>//input[@name="field_matrixbox_base_price_cell_0_0_0"]/../../../td[1]</td>
