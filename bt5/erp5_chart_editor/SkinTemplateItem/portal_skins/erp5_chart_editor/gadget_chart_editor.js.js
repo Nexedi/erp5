@@ -22,10 +22,10 @@
     })
 
     .declareMethod('render', function (options) {
+  
       return this.changeState({
         key: options.key,
-        value: options.value.value || "",
-        url: options.value.url || "",
+        value: options.value || "",
         editable: options.editable === undefined ? true : options.editable,
         configuration: options.configuration,
         configuration_mobile: options.configuration_mobile,
@@ -60,13 +60,10 @@
           modification_dict.hasOwnProperty('is_responsive') ||
           modification_dict.hasOwnProperty('is_mobile') ||
           modification_dict.hasOwnProperty('editable') ||
-          modification_dict.hasOwnProperty('url')) {
+          modification_dict.hasOwnProperty('value')) {
         // Expected configuration changed.
         if ("value" in modification_dict && modification_dict.value != ""){
           props = {...props, ...JSON.parse(modification_dict.value)};
-        }
-        if ("url" in modification_dict){
-          props = {...props, ...{url: modification_dict.url}};
         }
         ReactDOM.unmountComponentAtNode(container);
         gadget.state.component = ReactDOM.render(React.createElement(EntryPoint.default.App, props, null), container);
