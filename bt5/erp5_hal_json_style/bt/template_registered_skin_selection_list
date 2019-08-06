@@ -1,5 +1,7 @@
 erp5_hal_json_restricted_style | HalRestricted
+erp5_hal_json_style | AppCache
 erp5_hal_json_style | Hal
 erp5_hal_json_style | HalRestricted
+erp5_xhtml_style | AppCache
 erp5_xhtml_style | Hal
 erp5_xhtml_style | HalRestricted
