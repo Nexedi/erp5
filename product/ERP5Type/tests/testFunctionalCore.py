@@ -56,8 +56,6 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
                 'erp5_configurator_standard_invoicing_template',
                 'erp5_simulation_test',
                 'erp5_accounting_ui_test',
-                'erp5_pdm_ui_test',
-                'erp5_trade_ui_test',
                 'erp5_project_ui_test',
                 'erp5_ingestion_mysql_innodb_catalog', 'erp5_ingestion',
                 'erp5_web', 'erp5_dms', 'erp5_dms_ui_test',
