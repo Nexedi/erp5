@@ -16,18 +16,41 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/?page=search</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <!-- Wait for gadget to be loaded -->
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_search.html']</td>
   <td></td>
 </tr>
+<tal:block tal:define="parsed_query python: '';
+                       search_query python: ''">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
+</tal:block>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Title 1</td>
+  <td>assertTextPresent</td>
+  <td>What are you looking for?</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_field_listbox.html']</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="search_query python: 'title:&quot;Title 1&quot;'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
+</tal:block>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_field_listbox.html']</td>
+  <td></td>
+</tr>
+<!-- Check the listbox cell -->
+<tal:block tal:define="cell_configuration python: {'text': 'Title 1', 'line': 0, 'index': 2}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_cell_text" />
+</tal:block>
 
 <!-- Search with default sort on modification date -->
 <tr>

@@ -24,7 +24,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-import ConfigParser
+from six.moves import configparser
 import argparse
 import logging
 import logging.handlers
@@ -64,7 +64,7 @@ def main(*args):
   CONFIG = {
     'partition_reference': 'test0',
   }
-  config = ConfigParser.SafeConfigParser()
+  config = configparser.SafeConfigParser()
   # do not change case of option keys
   config.optionxform = str
   config.readfp(parsed_argument.configuration_file[0])

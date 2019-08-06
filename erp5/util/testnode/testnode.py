@@ -171,7 +171,7 @@ shared = true
       # only limit to particular error, if we run that code for all errors,
       # then if server having most repositories is down for some time, we would
       # erase all repositories and facing later hours of downloads
-      if getattr(error, 'stderr', '').find('index') >= 0:
+      if b'index' in getattr(error, 'stderr', b''):
         rmtree(repository_path)
       logger.warning("Error while getting repository, ignoring this test suite",
                      exc_info=1)

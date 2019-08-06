@@ -28,6 +28,8 @@ from hashlib import md5
 from warnings import warn
 from ExtensionClass import pmc_init_of
 from DateTime import DateTime
+import Products.ZMySQLDA.DA
+from Products.ZMySQLDA.DA import Connection as ZMySQLDA_Connection
 
 # XXX make sure that get_request works.
 from new import function
@@ -818,6 +820,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
 
 class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
+    __original_ZMySQLDA_connect = None
 
     def addERP5TypeTestCaseUser(self, password=None, **kw):
       return super(ERP5TypeCommandLineTestCase, self).addERP5TypeTestCaseUser(password='', **kw)
@@ -901,11 +904,21 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       self.tic()
       return uninstalled_list
 
+    def __onConnect(self, connector):
+      self.__connector_set.add(connector)
+
     def setUp(self):
       '''Sets up the fixture. Do not override,
          use the hooks instead.
       '''
       from Products.CMFActivity.ActivityRuntimeEnvironment import BaseMessage
+      self.__connector_set = set()
+      onConnect = self.__onConnect
+      self.__original_ZMySQLDA_connect = original_ZMySQLDA_connect = ZMySQLDA_Connection.connect
+      def connect(self, *args, **kw):
+        onConnect(self)
+        return original_ZMySQLDA_connect(self, *args, **kw)
+      ZMySQLDA_Connection.connect = connect
       # Activities in unit tests shall never fail.
       # Let's be a litte tolerant for the moment.
       BaseMessage.max_retry = property(lambda self:
@@ -1276,6 +1289,14 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                                   % count)
               break
       PortalTestCase.tearDown(self)
+      if self.__original_ZMySQLDA_connect is not None:
+        ZMySQLDA_Connection.connect = self.__original_ZMySQLDA_connect
+        for connector in self.__connector_set:
+          connector.__dict__.pop('_v_database_connection', None)
+        database_connection_pool = Products.ZMySQLDA.DA.database_connection_pool
+        for value in database_connection_pool.itervalues():
+          value.clear()
+        database_connection_pool.clear()
 
     def importObjectFromFile(self, container, relative_path, **kw):
       """Import an object from a file located in $TESTFILEDIR/input/"""

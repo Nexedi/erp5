@@ -27,7 +27,7 @@ def main():
   if error_message_set:
     exit_status = 1
     for error in error_message_set:
-      print error
+      print(error)
   elif result:
-    print result
+    print(result)
   sys.exit(exit_status)

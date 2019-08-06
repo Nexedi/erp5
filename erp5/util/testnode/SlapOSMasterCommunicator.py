@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import datetime
 import json
 import traceback
@@ -11,6 +13,8 @@ from slapos.slap import SoftwareProductCollection
 from requests.exceptions import HTTPError
 from ..taskdistribution import SAFE_RPC_EXCEPTION_LIST
 from . import logger
+
+import six
 
 # max time to instance changing state: 3 hour
 MAX_INSTANCE_TIME = 60*60*3
@@ -52,7 +56,7 @@ def retryOnNetworkFailure(func,
       except _except_list:
         traceback.print_exc()
 
-      print 'Network failure. Retry method %s in %i seconds' % (func, retry_time)
+      print('Network failure. Retry method %s in %i seconds' % (func, retry_time))
       time.sleep(retry_time)
       retry_time = min(retry_time*1.5, 640)
 
@@ -92,8 +96,9 @@ class SlapOSMasterCommunicator(object):
     if instance_title is not None:
       self.name = instance_title 
     if request_kw is not None:
-      if isinstance(request_kw, basestring) or \
-        isinstance(request_kw, unicode):
+      if isinstance(request_kw, bytes):
+        self.request_kw = json.loads(request_kw.decode('utf-8'))
+      elif isinstance(request_kw, six.text_type):
         self.request_kw = json.loads(request_kw)
       else:
         self.request_kw = request_kw
@@ -214,7 +219,7 @@ class SlapOSMasterCommunicator(object):
     result = self.hateoas_navigator.GET(url)
     result = json.loads(result)
     if result['_links'].get('action_object_slap', None) is None:
-      print result['links']
+      print(result['links'])
       return None
 
     object_link = self.hateoas_navigator.hateoasGetLinkFromLinks(
@@ -385,8 +390,9 @@ class SlapOSTester(SlapOSMasterCommunicator):
     self.name = name
     self.computer_guid = computer_guid
 
-    if isinstance(request_kw, str) or \
-      isinstance(request_kw, unicode):
+    if isinstance(request_kw, bytes):
+      self.request_kw = json.loads(request_kw.decode('utf-8'))
+    elif isinstance(request_kw, six.text_type):
       self.request_kw = json.loads(request_kw)
     else:
       self.request_kw = request_kw

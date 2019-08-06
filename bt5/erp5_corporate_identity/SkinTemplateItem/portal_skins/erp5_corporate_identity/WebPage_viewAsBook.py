@@ -90,7 +90,7 @@ if isinstance(book_content, unicode):
   book_content = book_content.encode("UTF-8")
 
 # backcompat
-book_history_section_list = re.findall('<section*?>.+?</section>', book_content, re.S)
+#book_history_section_list = re.findall('<section*?>.+?</section>', book_content, re.S)
 
 # override for tests
 if override_batch_mode:
@@ -130,7 +130,7 @@ book_table_list = []
 book_table_of_content = blank
 
 # backcompat
-book_content = book_content.replace("${WebPage_insertTableOfReferences}", blank)
+# book_content = book_content.replace("${WebPage_insertTableOfReferences}", blank)
 
 # XXX: not done
 if book_include_history_table:
@@ -191,10 +191,13 @@ if book_include_reference_table:
 
   # backcompat for manual history tables at the beginning of documents
   # NOTE: assumes <section>s are not used elsewhere!
-  if len(book_history_section_list) > 0:
-    book_content = book_content.replace(book_history_section_list[-1], (book_history_section_list[-1] + book_references.encode('UTF-8').strip()))
-  else:
-    book_content = book_references.encode('UTF-8').strip() + book_content
+  #if len(book_history_section_list) > 0:
+  #  book_content = book_content.replace(book_history_section_list[-1], (book_history_section_list[-1] + book_references.encode('UTF-8').strip()))
+  #else:
+  #  book_content = book_content.replace("${WebPage_insertTableOfReferences}", book_references.encode('UTF-8').strip())
+  book_content = book_content.replace("${WebPage_insertTableOfReferences}", book_references.encode('UTF-8').strip())
+else:
+  book_content = book_content.replace("${WebPage_insertTableOfReferences}", blank)
 
 # table of content has to be created manually to run over everything that
 # should be indexed in the toc
@@ -241,7 +244,7 @@ if book_format == "html" or book_format == "mhtml":
     book_signature_list=book_signature_list,
     book_version_list=book_version_list,
     book_distribution_list=book_distribution_list,
-    book_logo_url=book.Base_setUrl(path=book_source.get("enhanced_logo_url"), display=None),
+    book_logo_url=book.Base_setUrl(path=book_source.get("enhanced_logo_url"), display="small"),
     book_logo_title=book_theme.get("theme_logo_description"),
     book_reference=book_reference,
     book_revision=book_revision,
@@ -290,7 +293,7 @@ if book_format == "pdf":
     book_language=book_language,
     book_theme_css_font_list=book_theme.get("theme_css_font_list"),
     book_theme_css_url=book_theme.get("theme_css_url"),
-    book_theme_logo_url=book.Base_setUrl(path=book_source.get("enhanced_logo_url"), display=None),
+    book_theme_logo_url=book.Base_setUrl(path=book_source.get("enhanced_logo_url"), display="small"),
     book_theme_logo_alt=book_theme.get("theme_logo_alt"),
     book_template_css_url=book_theme.get("template_css_url"),
     book_include_history=book_include_history_table,
@@ -300,7 +303,6 @@ if book_format == "pdf":
   )
 
   # book_references created and added above
-
   book_content = book.WebPage_createBookContent(
     book_format=book_format,
     book_rendering_fix=book_rendering_fix,
@@ -321,7 +323,7 @@ if book_format == "pdf":
     book_theme_css_font_list=book_theme.get("theme_css_font_list"),
     book_theme_css_url=book_theme.get("theme_css_url"),
     book_template_css_url=book_theme.get("template_css_url"),
-    book_logo_url=book.Base_setUrl(path=book_source.get("enhanced_logo_url"), display=None),
+    book_logo_url=book.Base_setUrl(path=book_source.get("enhanced_logo_url"), display="small"),
     book_logo_title=book_theme.get("theme_logo_description"),
     book_short_title=book_short_title,
     book_reference=book_reference,
@@ -336,7 +338,7 @@ if book_format == "pdf":
     book_language=book_language,
     book_theme_css_font_list=book_theme.get("theme_css_font_list"),
     book_theme_css_url=book_theme.get("theme_css_url"),
-    book_theme_logo_url=book.Base_setUrl(path=book_source.get("enhanced_logo_url"), display=None),
+    book_theme_logo_url=book.Base_setUrl(path=book_source.get("enhanced_logo_url"), display="small"),
     book_theme_logo_alt=book_theme.get("theme_logo_description"),
     book_template_css_url=book_theme.get("template_css_url"),
     book_full_reference=book_full_reference,
@@ -375,7 +377,6 @@ if book_format == "pdf":
     footer_spacing=3,
     )
   )
-
   return book.WebPage_finishPdfCreation(
     doc_download=book_download,
     doc_save=book_save,

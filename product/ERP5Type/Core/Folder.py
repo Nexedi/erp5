@@ -581,7 +581,7 @@ class FolderMixIn(ExtensionClass.Base):
       if hook_raised:
         raise
       reactivate_kw = activate_kw.copy()
-      reactivate_kw['group_method_id'] = kw['group_id'] = '' # no grouping
+      reactivate_kw['group_method_id'] = reactivate_kw['group_id'] = '' # no grouping
       reactivate_kw['activity'] = 'SQLQueue'
       activate(self, **reactivate_kw)._recurseCallMethod(
         method_id, method_args, method_kw, restricted=restricted, **kw)

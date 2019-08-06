@@ -30,29 +30,30 @@ import subprocess
 import sys
 import time
 import glob
-import SlapOSControler
-import SlapOSMasterCommunicator
+from . import SlapOSControler, SlapOSMasterCommunicator
 import json
 import time
 import shutil
 import logging
 import string
 import random
-import urlparse
+from six.moves.urllib.parse import urlparse
 import base64
-import httplib
-import Utils
+from six.moves import http_client as httplib
+from . import Utils
 import requests
 import slapos.slap
-import cPickle as pickle
-from ProcessManager import SubprocessError, ProcessManager, CancellationError
+from six.moves import cPickle as pickle
+from .ProcessManager import SubprocessError, ProcessManager, CancellationError
 from subprocess import CalledProcessError
-from Updater import Updater
+from .Updater import Updater
 from erp5.util import taskdistribution
 from erp5.util.benchmark.thread import TestThread
 # for dummy slapos answer
 import signal
 from . import logger
+
+from six.moves import range
 
 # max time to generate frontend instance: 1.5 hour
 MAX_FRONTEND_TIME = 60*90
@@ -322,18 +323,16 @@ ces or already launched.")
     software_hash_directory = self.testnode.config['slapos_binary'].rsplit("bin/slapos", 1)[0]
     apache_htpasswd = software_hash_directory + "parts/apache/bin/htpasswd"
     testsuite_directory = self.testnode.config['repository_path_list'][0].rsplit('/', 1)[0]
-    htaccess_file = open(testsuite_directory + HTACCESS, "w")
-    file_content = """
+    with open(testsuite_directory + HTACCESS, "w") as htaccess_file:
+      htaccess_file.write("""
 AuthType Basic
 AuthName "Password Protected Area"
 AuthUserFile "%s%s"
 Require valid-user
-""" % (testsuite_directory, HTPASSWD)
-    htaccess_file.write(file_content)
-    htaccess_file.close()
+""" % (testsuite_directory, HTPASSWD))
     password_path = testsuite_directory + PASSWORD_FILE
     with open(password_path, "w") as password_file:
-      password = ''.join(random.choice(string.digits + string.letters) for i in xrange(PASSWORD_LENGTH))
+      password = ''.join(random.choice(string.digits + string.ascii_letters) for i in range(PASSWORD_LENGTH))
       password_file.write(password)
     user = TESTNODE_USER
     command = [apache_htpasswd, "-bc", testsuite_directory + HTPASSWD, user, password]
@@ -363,7 +362,7 @@ Require valid-user
     user, password = self.generateProfilePasswordAccess()
     logger.info("Software Profile password: %s" % password)
     self.reachable_profile = "https://%s:%s@%s" % (user, password,
-      os.path.join(urlparse.urlparse(self.testnode.config['frontend_url']).netloc,
+      os.path.join(urlparse(self.testnode.config['frontend_url']).netloc,
                    "software", self.randomized_path, "software.cfg"))
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
@@ -526,7 +525,7 @@ Require valid-user
     if not self.launchable:
       return {'status_code' : 1, 'error_message': "Current test_suite is not actually launchable." }
     configuration_list = node_test_suite.configuration_list
-    test_list = range(0, len(configuration_list))
+    test_list = list(range(len(configuration_list)))
     try:
       test_result_proxy = self.testnode.taskdistribution.createTestResult(
                           node_test_suite.revision, test_list,
