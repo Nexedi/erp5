@@ -1,4 +1,7 @@
+erp5_hal_json_style | AppCache
 erp5_web_officejs_ui | AppCache
 erp5_web_officejs_ui | Hal
 erp5_web_officejs_ui | RJS
 erp5_web_officejs_ui | View
+erp5_web_redirect_assist | AppCache
+erp5_xhtml_style | AppCache
