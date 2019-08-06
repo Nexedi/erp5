@@ -75,7 +75,7 @@ class TransLogger(object):
 
 def app_wrapper(large_file_threshold, use_webdav):
     try:
-        from product.DeadlockDebugger.dumper import dump_threads, dump_url
+        from Products.DeadlockDebugger.dumper import dump_threads, dump_url
     except Exception:
         dump_url = '\0'
     def app(environ, start_response):
