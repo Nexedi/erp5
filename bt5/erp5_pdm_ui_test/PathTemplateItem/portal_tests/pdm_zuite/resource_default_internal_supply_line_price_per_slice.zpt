@@ -4,7 +4,7 @@
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tr><td rowspan="1" colspan="4">
-Test quantity steps for price on internal supply line
+Test toggling price per slice updates internal supply cells correctly
 </td></tr>
 </thead>
 <tbody tal:define="init_method string:PdmZuite_createDelivery?state=draft&delivery_type=Internal">
