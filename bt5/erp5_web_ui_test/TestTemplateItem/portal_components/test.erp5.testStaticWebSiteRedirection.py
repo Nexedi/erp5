@@ -203,6 +203,9 @@ class TestStaticWebSectionRedirection(TestStaticWebSiteRedirection):
     websection = website.newContent(
       portal_type="Static Web Section",
       id='foobarsection',
+      layout_configuration_form_id="StaticWebSite_viewRedirectAssistConfiguration",
+      skin_selection_name="RedirectAssist",
+      custom_render_method_id="StaticWebSite_getRedirectSourceUrl",
       redirect_domain="https://www.example.org",
       use_moved_temporarily=use_moved_temporarily or 0,
       **kw
