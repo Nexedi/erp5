@@ -188,7 +188,7 @@ class SupplyLine(Path, Amount, XMLMatrix):
       else:
         method_name = 'get%sList' % \
                      convertToUpperCase("%s_quantity_step" % price_parameter)
-      return getattr(self, method_name)()
+      return getattr(self, method_name)() or []
 
     security.declareProtected(Permissions.ModifyPortalContent,
                               'updateQuantityPredicate')
