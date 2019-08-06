@@ -35,10 +35,10 @@ import ssl
 LOCATION = "Location"
 WEB_SITE_ID = "bouncer"
 
-class TestStaticWebSectionRedirection(ERP5TypeTestCase):
+class TestStaticWebSiteRedirection(ERP5TypeTestCase):
 
   def getTitle(self):
-    return "Test Static Web Section Redirection."
+    return "Test Static Web Site Redirection."
 
   def getBusinessTemplateList(self):
     return (
@@ -182,3 +182,32 @@ class TestStaticWebSectionRedirection(ERP5TypeTestCase):
   def test_302queryStringRedirectFolderDeepNested(self):
     self.runTestRedirect("foo/bar/baz?baz=bam&cous=cous&amp;the=end", use_moved_temporarily=1)
 
+
+class TestStaticWebSectionRedirection(TestStaticWebSiteRedirection):
+
+  def getTitle(self):
+    return "Test Static Web Section Redirection."
+
+  def setupWebSite(self, use_moved_temporarily=None, **kw):
+    """
+    Setup Web Site
+    """
+
+    if WEB_SITE_ID in self.portal.web_site_module.objectIds():
+      self.portal.web_site_module.manage_delObjects(WEB_SITE_ID)
+
+    website = self.portal.web_site_module.newContent(
+      portal_type="Web Site",
+      id=WEB_SITE_ID
+    )
+    websection = website.newContent(
+      portal_type="Static Web Section",
+      id='foobarsection',
+      redirect_domain="https://www.example.org",
+      use_moved_temporarily=use_moved_temporarily or 0,
+      **kw
+    )
+    website.publish()
+
+    self.tic()
+    return websection
