@@ -21,7 +21,8 @@
     .declareMethod("render", function (options) {
       return this.changeState({
         jio_key: options.jio_key,
-        doc: options.doc
+        doc: options.doc,
+        editable: options.editable///P
       });
     })
 
@@ -59,7 +60,7 @@
                   "default": gadget.state.doc.title,
                   "css_class": "",
                   "required": 1,
-                  "editable": 1,
+                  "editable": gadget.state.editable,///P
                   "key": "title",
                   "hidden": 0,
                   "type": "StringField"
@@ -70,7 +71,7 @@
                   "default": gadget.state.doc.reference,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1,
+                  "editable": gadget.state.editable,///P
                   "key": "reference",
                   "hidden": 0,
                   "type": "StringField"
@@ -81,7 +82,7 @@
                   "default": gadget.state.doc.version,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1,
+                  "editable": gadget.state.editable,///P
                   "key": "version",
                   "hidden": 0,
                   "type": "StringField"
@@ -92,7 +93,7 @@
                   "default": gadget.state.doc.language,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1,
+                  "editable": gadget.state.editable,///P
                   "key": "language",
                   "hidden": 0,
                   "type": "StringField"
@@ -103,7 +104,7 @@
                   "default": gadget.state.doc.description,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1,
+                  "editable": gadget.state.editable,///P
                   "key": "description",
                   "hidden": 0,
                   "type": "TextAreaField"
@@ -112,13 +113,13 @@
                   "default": gadget.state.doc.text_content,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1,
+                  "editable": gadget.state.editable,///P
                   "key": "text_content",
                   "hidden": 0,
                   "type": "GadgetField",
                   "url": "gadget_editor.html",
                   "sandbox": "public",
-                  "renderjs_extra": '{"editor": "notebook_editor", "maximize": true}'
+                  "renderjs_extra": '{"editor": "jsmd_editor", "maximize": true}'///P
                 }
               }},
               "_links": {
