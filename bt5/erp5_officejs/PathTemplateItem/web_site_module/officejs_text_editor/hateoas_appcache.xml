@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Static Web Site" module="erp5.portal_type"/>
+      <global name="Static Web Section" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -98,7 +98,7 @@
                     <key>
                       <tuple>
                         <int>99</int>
-                        <string>ERP5 Static Web Site/hateoas_appcache</string>
+                        <string>ERP5 Web Section/hateoas_appcache</string>
                       </tuple>
                     </key>
                     <value>
@@ -115,43 +115,18 @@
             </value>
         </item>
         <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>redirect_domain</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>use_moved_temporarily</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>int</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>_range_criterion</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>available_language</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <key> <string>container_layout</string> </key>
+            <value> <string>AppStaticWebSite_getRedirectSourceUrl</string> </value>
+        </item>
+        <item>
+            <key> <string>content_layout</string> </key>
+            <value> <string>AppStaticWebSite_getRedirectSourceUrl</string> </value>
         </item>
         <item>
             <key> <string>custom_render_method_id</string> </key>
@@ -164,6 +139,10 @@
             </value>
         </item>
         <item>
+            <key> <string>empty_criterion_valid</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>hateoas_appcache</string> </value>
         </item>
@@ -173,13 +152,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Static Web Site</string> </value>
-        </item>
-        <item>
-            <key> <string>redirect_domain</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Static Web Section</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -193,15 +166,17 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Hateoas appcache</string> </value>
-        </item>
-        <item>
-            <key> <string>use_moved_temporarily</string> </key>
-            <value> <int>0</int> </value>
+            <value> <string>hateoas_appcache</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
         </item>
       </dictionary>
     </pickle>
@@ -242,6 +217,148 @@
             </value>
         </item>
       </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>category_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1565084393.33</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>embedded</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>977.37527.25553.57105</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1565101049.15</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
     </pickle>
   </record>
 </ZopeData>
