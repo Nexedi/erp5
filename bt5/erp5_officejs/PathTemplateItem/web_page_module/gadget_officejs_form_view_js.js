@@ -136,7 +136,8 @@
       return this.getDeclaredGadget('fg')
         .push(function (gadget) {
           if (gadget.state.save_action !== true) {
-            return;// If not action is defined on form, do nothing
+            //rely on child gadget to submit (filter, panels, etc.)
+            return gadget.triggerSubmit(argument_list);
           }
           var action = gadget.state.erp5_document._embedded._view._actions.put;
           return gadget.getDeclaredGadget("erp5_form")
