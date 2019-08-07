@@ -3,7 +3,7 @@ from zope.interface import implements
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
 
-class OdsToPdf:
+class TransformOdsToPdf:
   """Transforms ods to pdf by using Cloudooo"""
 
   implements(itransform)
@@ -37,4 +37,4 @@ class OdsToPdf:
       return stream
 
 def register():
-  return OdsToPdf()
+  return TransformOdsToPdf()

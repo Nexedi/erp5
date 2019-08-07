@@ -2,7 +2,7 @@ from Products.PortalTransforms.interfaces import itransform
 from zope.interface import implements
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
-class DocxToDocy:
+class TransformDocxToDocy:
   """Transforms docx to docy by using Cloudooo"""
 
   implements(itransform)
@@ -36,4 +36,4 @@ class DocxToDocy:
       return stream
 
 def register():
-  return DocxToDocy()
+  return TransformDocxToDocy()

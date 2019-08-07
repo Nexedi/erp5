@@ -3,7 +3,7 @@ from zope.interface import implements
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
 
-class XlsxToXlsy:
+class TransformXlsxToXlsy:
   """Transforms xlsx to xlsy by using Cloudooo"""
 
   implements(itransform)
@@ -37,4 +37,4 @@ class XlsxToXlsy:
       return stream
 
 def register():
-  return XlsxToXlsy()
+  return TransformXlsxToXlsy()

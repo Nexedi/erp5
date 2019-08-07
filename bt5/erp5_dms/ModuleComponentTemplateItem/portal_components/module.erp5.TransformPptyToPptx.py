@@ -2,7 +2,7 @@ from Products.PortalTransforms.interfaces import itransform
 from zope.interface import implements
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
-class PptyToPptx:
+class TransformPptyToPptx:
   """Transforms ppty to pptx by using Cloudooo"""
 
   implements(itransform)
@@ -36,4 +36,4 @@ class PptyToPptx:
       return stream
 
 def register():
-  return PptyToPptx()
+  return TransformPptyToPptx()

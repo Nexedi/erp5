@@ -3,7 +3,7 @@ from zope.interface import implements
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
 
-class DocToDocx:
+class TransformDocToDocx:
   """Transforms doc to docx by using Cloudooo"""
 
   implements(itransform)
@@ -37,4 +37,4 @@ class DocToDocx:
       return stream
 
 def register():
-  return DocToDocx()
+  return TransformDocToDocx()
