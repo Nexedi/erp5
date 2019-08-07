@@ -15,18 +15,28 @@ source_site_title = "erp5_pdm_ui_test_source_site_title"
 destination_site_id = "erp5_pdm_ui_test_destination_site"
 destination_site_title = "erp5_pdm_ui_test_destination_site_title"
 
+quantity_unit_category = portal.portal_categories.quantity_unit
+
 # validate rules
 for rule in portal.portal_rules.objectValues():
   if rule.getValidationState() != 'validated':
     rule.validate()
 
 # Create resource
+if getattr(quantity_unit_category, "unit", None) is None:
+  quantity_unit_category.newContent(
+    portal_type="Category",
+    id="unit"
+  )
 module = portal.getDefaultModule(resource_portal_type)
+
 resource = module.newContent(
   portal_type=resource_portal_type,
   id=resource_id,
-  title=resource_title
+  title=resource_title,
+  quantity_unit='unit',
 )
+resource.validate()
 
 # Create site categories
 base_category = portal.restrictedTraverse('portal_categories/site')

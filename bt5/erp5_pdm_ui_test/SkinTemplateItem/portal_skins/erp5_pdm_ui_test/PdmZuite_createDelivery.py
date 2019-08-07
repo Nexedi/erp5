@@ -17,11 +17,6 @@ business_process = 'business_process_module/erp5_default_business_process'
 
 quantity = 1
 
-resource_value = portal.product_module["erp5_pdm_ui_test_product"]
-if resource_value.getValidationState() != "validated":
-  resource_value.validate()
-  resource_value.setQuantityUnit('unit')
-
 # Create an order or a packing list
 if state in ['planned', 'ordered']:
   module = portal.getDefaultModule(order_portal_type)
