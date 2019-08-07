@@ -266,8 +266,6 @@ hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS90ZXh0X2VkaXRvcl92aWV3\n
 #hateoas_appcache/definition_view/BASE64(portal_types/Web Page)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdl\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Web Page/jio_view)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL2ppb192aWV3\n
 #hateoas_appcache/definition_view/BASE64(portal_types/Web Page/text_editor_view)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX3ZpZXc=\n
 #hateoas_appcache/definition_view/BASE64(portal_types/Web Page/text_editor_clone)\n
@@ -753,7 +751,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.21668.9028.25924</string> </value>
+                <value> <string>977.38907.49328.4659</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -771,7 +769,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1564134256.06</float>
+                        <float>1565169141.75</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
