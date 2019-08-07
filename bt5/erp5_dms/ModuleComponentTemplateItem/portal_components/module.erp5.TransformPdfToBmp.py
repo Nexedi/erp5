@@ -3,7 +3,7 @@ from zope.interface import implements
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
 
-class PdfToBmp:
+class TransformPdfToBmp:
   """Transforms pdf to bmp by using Cloudooo"""
 
   implements(itransform)
@@ -37,4 +37,4 @@ class PdfToBmp:
       return stream
 
 def register():
-  return PdfToBmp()
+  return TransformPdfToBmp()

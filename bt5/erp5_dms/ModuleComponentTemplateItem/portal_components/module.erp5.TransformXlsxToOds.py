@@ -2,7 +2,7 @@ from Products.PortalTransforms.interfaces import itransform
 from zope.interface import implements
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
-class XlsxToOds:
+class TransformXlsxToOds:
   """Transforms xlsx to ods by using Cloudooo"""
 
   implements(itransform)
@@ -36,4 +36,4 @@ class XlsxToOds:
       return stream
 
 def register():
-  return XlsxToOds()
+  return TransformXlsxToOds()

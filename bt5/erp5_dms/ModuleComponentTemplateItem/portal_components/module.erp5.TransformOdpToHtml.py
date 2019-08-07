@@ -3,7 +3,7 @@ from zope.interface import implements
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
 
-class OdpToHtml:
+class TransformOdpToHtml:
   """Transforms odp to html by using Cloudooo"""
 
   implements(itransform)
@@ -37,4 +37,4 @@ class OdpToHtml:
       return stream
 
 def register():
-  return OdpToHtml()
+  return TransformOdpToHtml()

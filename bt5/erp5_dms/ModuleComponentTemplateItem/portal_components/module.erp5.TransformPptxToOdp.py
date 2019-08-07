@@ -3,7 +3,7 @@ from zope.interface import implements
 from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
 
 
-class PptxToOdp:
+class TransformPptxToOdp:
   """Transforms pptx to odp by using Cloudooo"""
 
   implements(itransform)
@@ -37,4 +37,4 @@ class PptxToOdp:
       return stream
 
 def register():
-  return PptxToOdp()
+  return TransformPptxToOdp()
