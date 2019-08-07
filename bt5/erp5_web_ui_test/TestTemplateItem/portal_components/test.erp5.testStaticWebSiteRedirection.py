@@ -166,6 +166,9 @@ class TestStaticWebSiteRedirection(ERP5TypeTestCase):
   def test_queryStringRedirectSlashQuestion(self):
     self.runTestRedirect("foo/bar/?")
 
+  def test_queryStringRedirectWithEqual(self):
+    self.runTestRedirect("foo/bar=")
+
   @unittest.expectedFailure
   def test_queryStringIgnoreLayout(self):
     self.runTestRedirect("?ignore_layout=1")
