@@ -73,6 +73,13 @@
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
  <td></td>
 </tr>
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before continue -->
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>identifier=title</td>
@@ -109,8 +116,20 @@
   <td>${description}</td>
 </tr>
 <tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
   <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before continue -->
+<tr>
+  <td>pause</td>
+  <td>100</td>
   <td></td>
 </tr>
 <tal:block tal:define="notification_configuration python: {'class': 'success',
@@ -123,7 +142,13 @@
   <td>//a[@data-i18n='Document']</td>
   <td></td>
 </tr>
-
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before continue -->
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
 <!-- Verify Search, add another document -->
 <tr>
  <td>waitForElementPresent</td>
@@ -134,6 +159,13 @@
  <td>click</td>
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
  <td></td>
+</tr>
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before continue -->
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
 </tr>
 <tr>
   <td>store</td>
@@ -156,8 +188,20 @@
   <td>${search}</td>
 </tr>
 <tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
   <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before continue -->
+<tr>
+  <td>pause</td>
+  <td>100</td>
   <td></td>
 </tr>
 <tal:block tal:define="notification_configuration python: {'class': 'success',
@@ -168,6 +212,13 @@
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Document']</td>
+  <td></td>
+</tr>
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before continue -->
+<tr>
+  <td>pause</td>
+  <td>100</td>
   <td></td>
 </tr>
 <tal:block tal:define="search_query python: 'Titre'">
