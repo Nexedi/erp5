@@ -280,6 +280,12 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         user = user.__of__(uf)
       newSecurityManager(None, user)
 
+    def whoami(self):
+        """
+        Returns username of currently logged in user
+        """
+        self.portal.portal_membership.getAuthenticatedMember().getUserName()
+
     def changeSkin(self, skin_name):
       """
         Change current Skin
