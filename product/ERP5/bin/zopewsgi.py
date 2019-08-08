@@ -6,7 +6,7 @@ import posixpath
 import socket
 from tempfile import TemporaryFile
 import time
-from urllib import quote
+from urllib import quote, splitport
 
 from waitress.server import create_server
 import ZConfig
@@ -73,9 +73,9 @@ class TransLogger(object):
         self.logger.warn(message)
 
 
-def app_wrapper(large_file_threshold, use_webdav):
+def app_wrapper(large_file_threshold=10<<20, webdav_ports=()):
     try:
-        from product.DeadlockDebugger.dumper import dump_threads, dump_url
+        from Products.DeadlockDebugger.dumper import dump_threads, dump_url
     except Exception:
         dump_url = '\0'
     def app(environ, start_response):
@@ -115,7 +115,7 @@ def app_wrapper(large_file_threshold, use_webdav):
                 return [msg]
             new_wsgi_input.seek(0)
 
-        if use_webdav:
+        if int(environ['SERVER_PORT']) in webdav_ports:
             # Munge the request to ensure that we call manage_FTPGet.
 
             # Set a flag to indicate this request came through the WebDAV source
@@ -132,10 +132,22 @@ def app_wrapper(large_file_threshold, use_webdav):
         return publish_module(environ, start_response)
     return app
 
+def createServer(application, logger, **kw):
+    global server
+    server = create_server(
+        TransLogger(application, logger=logger),
+        trusted_proxy='*',
+        trusted_proxy_headers=('x-forwarded-for',),
+        clear_untrusted_proxy_headers=True,
+        **kw
+    )
+    if not hasattr(server, 'addr'):
+      server.addr = server.adj.listen[0][3]
+    elif not server.addr:
+      server.addr = server.sockinfo[3]
+    return server
 
 def runwsgi():
-    global server
-
     parser = argparse.ArgumentParser()
     parser.add_argument('-w', '--webdav', action='store_true')
     parser.add_argument('address', help='<ip>:<port>')
@@ -148,13 +160,13 @@ def runwsgi():
 
     make_wsgi_app({}, zope_conf=args.zope_conf)
 
-    server = create_server(
-        TransLogger(app_wrapper(conf.large_file_threshold, args.webdav),
-                    logger=logging.getLogger("access")),
+    ip, port = splitport(args.address)
+    port = int(port)
+    createServer(
+        app_wrapper(
+          large_file_threshold=conf.large_file_threshold,
+          webdav_ports=[port] if args.webdav else ()),
         listen=args.address,
+        logger=logging.getLogger("access"),
         threads=conf.zserver_threads,
-        trusted_proxy='*',
-        trusted_proxy_headers=('x-forwarded-for',),
-        clear_untrusted_proxy_headers=True,
-    )
-    server.run()
+    ).run()

@@ -2166,6 +2166,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       response.setStatus(405)
       return ""
     action_list = portal.portal_workflow.WorkflowTool_listActionParameterList()
+    checkPermission = portal.Base_checkPermission
     work_list = []
     for action in action_list:
       query = sql_catalog.buildQuery(action['query'])\
@@ -2193,13 +2194,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
         for portal_type in portal_type_list:
           if (worklist_module_id is None):
-            worklist_module_id = portal.getDefaultModuleId(portal_type, default=None, only_visible=True)
-          elif (worklist_module_id != portal.getDefaultModuleId(portal_type, default=None, only_visible=True)):
+            worklist_module_id = portal.getDefaultModuleId(portal_type, default=None, only_visible=False)
+          elif (worklist_module_id != portal.getDefaultModuleId(portal_type, default=None, only_visible=False)):
             worklist_module_id = None
           if worklist_module_id is None:
             break
 
-        if (worklist_module_id is not None):
+        if (worklist_module_id is not None and checkPermission(worklist_module_id, 'View')):
           worklist_dict['module'] = default_document_uri_template % {
             "relative_url": worklist_module_id
           }
