@@ -225,7 +225,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     """
     return "text/x-python"
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'checkConsistency')
+  security.declareProtected(Permissions.AccessContentsInformation, 'checkConsistency')
   def checkConsistency(self, *args, **kw):
     """
     Check the consistency of the Component upon validate or when being
