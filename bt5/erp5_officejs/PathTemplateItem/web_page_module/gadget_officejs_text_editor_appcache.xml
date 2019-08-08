@@ -206,6 +206,7 @@ gadget_erp5_configure_editor.js\n
 gadget_officejs_setting.js\n
 gadget_officejs_setting.html\n
 \n
+favicon.ico\n
 gadget_officejs_text_editor.json\n
 officejs_logo_text_editor.png\n
 gadget_officejs_text_editor_router.html\n
@@ -770,7 +771,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1565280014.84</float>
+                        <float>1565293643.74</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
