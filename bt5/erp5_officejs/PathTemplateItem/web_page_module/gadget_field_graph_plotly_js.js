@@ -25,6 +25,12 @@
     if (configuration_dict.constructor === String) {
       configuration_dict = JSON.parse(configuration_dict);
     }
+    // To preserve ploly graph layout
+    if (configuration_dict.isPlotlyGraph !== undefined) {
+      graph_data_and_parameter.data_list = configuration_dict.data;
+      graph_data_and_parameter.layout = configuration_dict.layout;
+      return graph_data_and_parameter;
+    }
     given_data_list = configuration_dict.data;
 
     console.log("getGraphDataAndParameterFromConfiguration 1 configuration_dict", configuration_dict);
