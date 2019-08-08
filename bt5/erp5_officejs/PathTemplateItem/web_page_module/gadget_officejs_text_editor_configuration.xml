@@ -113,16 +113,6 @@
 # generated on Thu, 14 Jan 2019 11:55:33 +0000\n
 CACHE:\n
 \n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_web_officejs_ui/Base_viewNewContentDialog)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX29mZmljZWpzX3VpL0Jhc2Vfdmlld05ld0NvbnRlbnREaWFsb2c=\n
-\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_web_officejs_ui/WebPageModule_viewWebPageListAsJio)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX29mZmljZWpzX3VpL1dlYlBhZ2VNb2R1bGVfdmlld1dlYlBhZ2VMaXN0QXNKaW8=\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_web_officejs_ui/WebPage_viewAsTextDocument)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX29mZmljZWpzX3VpL1dlYlBhZ2Vfdmlld0FzVGV4dERvY3VtZW50\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_web_officejs_ui/TextEditor_cloneDocument)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX29mZmljZWpzX3VpL1RleHRFZGl0b3JfY2xvbmVEb2N1bWVudA==\n
-\n
 #hateoas_appcache/definition_view/BASE64(portal_types/Web Page Module)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
 #hateoas_appcache/definition_view/BASE64(portal_types/Web Page Module/text_editor_view)\n
@@ -133,6 +123,16 @@ hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdl\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX3ZpZXc=\n
 #hateoas_appcache/definition_view/BASE64(portal_types/Web Page/text_editor_clone)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX2Nsb25l\n
+\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/TextEditor_viewNewContentDialog)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvVGV4dEVkaXRvcl92aWV3TmV3Q29udGVudERpYWxvZw==\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/TextEditor_WebPageModule_viewWebPageListAsJio)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvVGV4dEVkaXRvcl9XZWJQYWdlTW9kdWxlX3ZpZXdXZWJQYWdlTGlzdEFzSmlv\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/TextEditor_WebPage_viewAsTextDocument)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvVGV4dEVkaXRvcl9XZWJQYWdlX3ZpZXdBc1RleHREb2N1bWVudA==\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/TextEditor_cloneDocument)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvVGV4dEVkaXRvcl9jbG9uZURvY3VtZW50\n
+\n
 \n
 NETWORK:\n
 *</string> </value>
@@ -276,7 +276,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.38907.23409.44561</string> </value>
+                <value> <string>977.40657.33169.36983</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -294,7 +294,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1565169131.28</float>
+                        <float>1565279996.03</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

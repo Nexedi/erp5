@@ -75,7 +75,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/WebPage_viewAsTextDocument</string> </value>
+            <value> <string>string:${object_url}/TextEditor_WebPage_viewAsTextDocument</string> </value>
         </item>
       </dictionary>
     </pickle>

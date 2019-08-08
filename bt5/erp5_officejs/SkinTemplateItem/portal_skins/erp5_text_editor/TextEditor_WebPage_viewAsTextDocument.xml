@@ -7,27 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -35,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doAction</string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -60,6 +39,10 @@
             <value>
               <list>
                 <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -68,10 +51,43 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list>
+                        <string>my_text_content</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list>
+                        <string>my_description</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_select_action</string>
+                        <string>my_title</string>
+                        <string>my_reference</string>
+                        <string>your_modification_date</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list>
+                        <string>my_version</string>
+                        <string>my_language</string>
                       </list>
                     </value>
                 </item>
@@ -80,7 +96,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewNewContentDialog</string> </value>
+            <value> <string>TextEditor_WebPage_viewAsTextDocument</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -88,11 +104,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_viewNewContentDialog</string> </value>
+            <value> <string>WebTable_viewAsJio</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -104,7 +120,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Create Document</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
