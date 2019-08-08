@@ -92,7 +92,7 @@
         }
       }
     } else {
-      // raw_dict is a blob
+      // ignore non configuration elements
       return raw_dict;
     }
     return return_dict;
@@ -203,13 +203,6 @@
                         id = configuration_ids_list[i];
                         if (id.startsWith(hateoas_section)) {
                           id = id.replace(hateoas_section_and_view, "");
-                        } else {
-                          parser = document.createElement('a');
-                          parser.href = id;
-                          urlParams = new URLSearchParams(parser.search);
-                          id = urlParams.get("relative_url");
-                        }
-                        if (id !== null) { // ignore non configuration elements
                           id = atob(id);
                           content = processHateoasDict(content_list[i]);
                           promise_list.push(appcache_storage.put(id, content));
@@ -220,6 +213,12 @@
                     .push(function () {
                       return appcache_storage.put(sync_flag, {})
                         .push(undefined);
+                    }, function (error) {
+                      console.log("Error while appcache-local " +
+                                  "storage synchronization. Bad " +
+                                  "configuration maybe?");
+                      console.log(error);
+                      throw error;
                     });
                 }, function (error) {
                   console.log("Error while appcache-local " +
