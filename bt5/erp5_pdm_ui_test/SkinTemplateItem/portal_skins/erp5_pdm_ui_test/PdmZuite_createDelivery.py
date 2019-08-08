@@ -18,7 +18,7 @@ business_process_id = 'erp5_default_business_process'
 quantity = 1
 
 business_process_module = portal.getDefaultModule("Business Process")
-business_process = getattr(business_process_module, business_process_id)
+business_process = getattr(business_process_module, business_process_id, None)
 if business_process is None:
   business_process = business_process_module.newContent(
     portal_type="Business Process",
