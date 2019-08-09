@@ -145,7 +145,7 @@ class SlapOSMasterCommunicator(object):
       return SOFTWARE_STATE_INSTALLED
 
     message = self.hateoas_navigator.getSoftwareInstallationNews(
-            computer_guid=computer_guid, self.url)
+            computer_guid, self.url)
     logger.info(message)
     if message.startswith("#error no data found"):
       return SOFTWARE_STATE_UNKNOWN
@@ -227,7 +227,7 @@ class SlapOSMasterCommunicator(object):
             monitor_information_dict = {"message": "Unable to download"}
 
         instance["connection_dict"] = instance["getConnectionXmlAsDict"]
-        instance["parameter_dict"] = xml2dict(instance["text_content"]))
+        instance["parameter_dict"] = xml2dict(instance["text_content"])
         message_list.append({
           'title': instance["title"],
           'slave': is_slave,
