@@ -151,7 +151,9 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           for ip, port in parseListeningAddress(zserver):
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             try:
+              s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
               s.bind((ip, port))
+              s.listen(0)
             except socket.error as e:
               s.close()
               if e[0] != errno.EADDRINUSE:
