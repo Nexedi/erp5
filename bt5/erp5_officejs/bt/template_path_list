@@ -6,7 +6,6 @@ image_module/officejs_audioplayer_*
 image_module/officejs_todomvc_*
 image_module/wallsearch_icon_svg
 portal_types/Web Page Module/text_editor_view
-portal_types/Web Page/jio_view
 portal_types/Web Page/text_editor_clone
 portal_types/Web Page/text_editor_view
 web_page_module/dhtmlx_gantt_*
