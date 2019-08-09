@@ -22,7 +22,7 @@
     })
 
     .declareMethod('render', function (options) {
-  
+      
       return this.changeState({
         key: options.key,
         value: options.value || "",
@@ -37,7 +37,6 @@
 
     .declareMethod('getContent', function () {
       var result = {};
-
       result[this.state.key] = JSON.stringify(this.state.component.getContent());
       return result;
     })
