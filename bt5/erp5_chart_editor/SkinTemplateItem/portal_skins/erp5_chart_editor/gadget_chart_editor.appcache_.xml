@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>gadget_chart_editor.appcache</string> </value>
+            <value> <string>gadget_chart_editor.appcache_</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
