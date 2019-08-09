@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>main.8b730bc1.js</string> </value>
+            <value> <string>react-dom.development.js</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>main.8b730bc1.js</string> </value>
+            <value> <string>react-dom.development.js</string> </value>
         </item>
       </dictionary>
     </pickle>
