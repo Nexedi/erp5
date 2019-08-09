@@ -1,21 +1,14 @@
-/*global window, rJS*/
+/*global window, rJS, RSVP, Event, XMLHttpRequest*/
 /*jslint nomen: true, maxlen:80, indent:2*/
-(function (window, rJS) {
+(function (window, rJS, RSVP, Event, XMLHttpRequest) {
   "use strict";
 
-  function displayErrorContent(gadget, original_error) {
+  function displayErrorContent(original_error) {
     var error_list = [original_error],
       i,
       error,
       error_text = "";
-
-    // Do not break the application in case of errors.
-    // Display it to the user for now,
-    // and allow user to go back to the frontpage
-
-    // Add error handling stack
     error_list.push(new Error('stopping ERP5JS'));
-
     for (i = 0; i < error_list.length; i += 1) {
       error = error_list[i];
       if (error instanceof Event) {
@@ -48,10 +41,8 @@
         } catch (ignore) {
         }
       }
-
       error_text += error.message || error;
       error_text += '\n';
-
       if (error.fileName !== undefined) {
         error_text += 'File: ' +
           error.fileName +
@@ -62,30 +53,14 @@
       }
       error_text += '---\n';
     }
-
-    console.error(original_error);
-    if (original_error instanceof Error) {
-      console.error(original_error.stack);
-    }
-    console.log("generated error_text:");
-    console.log(error_text);
-
     return error_text;
-    /*if (gadget.props === undefined) {
-      // Gadget has not yet been correctly initialized
-      throw error;
-    }
-    return gadget.changeState({
-      error_text: error_text,
-      url: undefined
-    });*/
   }
 
-  function displayError(gadget, error) {
+  function displayError(error) {
     if (error instanceof RSVP.CancellationError) {
       return "RSVP cancelation error";
     }
-    return displayErrorContent(gadget, error);
+    return displayErrorContent(error);
   }
 
   rJS(window)
@@ -93,9 +68,8 @@
       return this.changeState(options);
     })
     .onStateChange(function (modification_dict) {
-      var skip_link, error_div, app_name_div, message,
+      var skip_link, error_div, app_name_div, message, error_text,
         gadget = this;
-
       if (modification_dict.app_name) {
         app_name_div = gadget.element.querySelector(".app-name");
         app_name_div.textContent = gadget.state.app_name +
@@ -108,10 +82,7 @@
       if (modification_dict.error) {
         error_div = gadget.element.querySelector(".error-message");
         message = "Last Error: ";
-        
-        console.log("CALLING DISPLAY ERROR...");
-        var error_text = displayError(gadget, gadget.state.error);
-        
+        error_text = displayError(gadget.state.error);
         if (gadget.state.error.message) {
           message += gadget.state.error.message;
         } else {
@@ -123,7 +94,7 @@
         } else {
           message += " " + modification_dict.error;
         }
-        message += " - ERROR TEXT: " + error_text;
+        message += " - FULL ERROR: " + error_text;
         error_div.textContent = message;
       }
       if (modification_dict.redirect_url) {
@@ -131,5 +102,4 @@
         skip_link.setAttribute('href', gadget.state.redirect_url);
       }
     });
-
-}(window, rJS));
+}(window, rJS, RSVP, Event, XMLHttpRequest));

@@ -124,14 +124,14 @@ hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX3Z
 #hateoas_appcache/definition_view/BASE64(portal_types/Web Page/text_editor_clone)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX2Nsb25l\n
 \n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/TextEditor_viewNewContentDialog)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvVGV4dEVkaXRvcl92aWV3TmV3Q29udGVudERpYWxvZw==\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/TextEditor_WebPageModule_viewWebPageListAsJio)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvVGV4dEVkaXRvcl9XZWJQYWdlTW9kdWxlX3ZpZXdXZWJQYWdlTGlzdEFzSmlv\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/TextEditor_WebPage_viewAsTextDocument)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvVGV4dEVkaXRvcl9XZWJQYWdlX3ZpZXdBc1RleHREb2N1bWVudA==\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/TextEditor_cloneDocument)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvVGV4dEVkaXRvcl9jbG9uZURvY3VtZW50\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/Base_viewNewContentDialogForTextEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvQmFzZV92aWV3TmV3Q29udGVudERpYWxvZ0ZvclRleHRFZGl0b3I=\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/WebPageModule_viewWebPageListAsJioForTextEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvV2ViUGFnZU1vZHVsZV92aWV3V2ViUGFnZUxpc3RBc0ppb0ZvclRleHRFZGl0b3I=\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/WebPage_viewAsTextDocumentForTextEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvV2ViUGFnZV92aWV3QXNUZXh0RG9jdW1lbnRGb3JUZXh0RWRpdG9y\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/Base_cloneDocumentForTextEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvQmFzZV9jbG9uZURvY3VtZW50Rm9yVGV4dEVkaXRvcg==\n
 \n
 \n
 NETWORK:\n
@@ -276,7 +276,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.40657.33169.36983</string> </value>
+                <value> <string>977.41790.42136.10513</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -294,7 +294,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1565279996.03</float>
+                        <float>1565341511.13</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

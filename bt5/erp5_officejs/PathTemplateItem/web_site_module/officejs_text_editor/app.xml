@@ -524,7 +524,9 @@
         </item>
         <item>
             <key> <string>configuration_wallpaper_url</string> </key>
-            <value> <string>officejs_logo_text_editor.png</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_webapp_manifest_url</string> </key>
@@ -789,7 +791,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.37715.19028.59613</string> </value>
+                <value> <string>977.37757.10944.9710</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -807,7 +809,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1565099350.01</float>
+                        <float>1565295153.9</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

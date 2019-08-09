@@ -53,9 +53,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -67,17 +65,15 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_effective_date</string>
-                        <string>listbox_modification_date</string>
-                        <string>listbox_subject</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>gadget_field_action_js_script</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -91,7 +87,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TextEditor_WebPageModule_viewWebPageListAsJio</string> </value>
+            <value> <string>Base_cloneDocumentForTextEditor</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -99,11 +95,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WebPageModule_viewWebPageListAsJio</string> </value>
+            <value> <string>TextEditor_cloneDocument</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -115,7 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Documents</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

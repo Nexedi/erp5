@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AppStaticWebSite_getRedirectSourceUrl</string> </value>
+            <value> <string>StaticWebSite_getRedirectSourceUrlForOfficeJSApplication</string> </value>
         </item>
       </dictionary>
     </pickle>

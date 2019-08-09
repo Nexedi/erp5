@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -54,41 +54,36 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>my_text_content</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_effective_date</string>
+                        <string>listbox_modification_date</string>
+                        <string>listbox_subject</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                        <string>my_reference</string>
-                        <string>your_modification_date</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_version</string>
-                        <string>my_language</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -96,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TextEditor_WebPage_viewAsTextDocument</string> </value>
+            <value> <string>WebPageModule_viewWebPageListAsJioForTextEditor</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -104,7 +99,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WebTable_viewAsJio</string> </value>
+            <value> <string>WebPageModule_viewWebPageListAsJio</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -120,7 +115,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Documents</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

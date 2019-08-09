@@ -122,15 +122,15 @@
         </item>
         <item>
             <key> <string>container_layout</string> </key>
-            <value> <string>AppStaticWebSite_getRedirectSourceUrl</string> </value>
+            <value> <string>StaticWebSite_getRedirectSourceUrlForOfficeJSApplication</string> </value>
         </item>
         <item>
             <key> <string>content_layout</string> </key>
-            <value> <string>AppStaticWebSite_getRedirectSourceUrl</string> </value>
+            <value> <string>StaticWebSite_getRedirectSourceUrlForOfficeJSApplication</string> </value>
         </item>
         <item>
             <key> <string>custom_render_method_id</string> </key>
-            <value> <string>AppStaticWebSite_getRedirectSourceUrl</string> </value>
+            <value> <string>StaticWebSite_getRedirectSourceUrlForOfficeJSApplication</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -331,7 +331,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.37527.25553.57105</string> </value>
+                <value> <string>977.37785.31847.31180</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -349,7 +349,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1565101049.15</float>
+                        <float>1565341627.79</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
