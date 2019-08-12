@@ -256,6 +256,7 @@
                 //should be come from the configuration (form_definition)
                 //jump_url: "",
                 //fast_input_url: "",
+                //export_url: "",
                 filter_action: true,
                 page_title: result_list[2]
               };
@@ -284,12 +285,10 @@
             if (add_url) {
               header_dict.add_url = url_list[url_list.length - 1];
             }
-            if (result_list[1]) {
-              header_dict.export_url = (
-                erp5_document._links.action_object_jio_report ||
+            if (erp5_document._links.action_object_jio_report ||
                 erp5_document._links.action_object_jio_exchange ||
-                erp5_document._links.action_object_jio_print
-              ) ? url_list[5] : '';
+                erp5_document._links.action_object_jio_print) {
+              header_dict.export_url = url_list[5];
             }
           }
           return this_gadget.updateHeader(header_dict);
