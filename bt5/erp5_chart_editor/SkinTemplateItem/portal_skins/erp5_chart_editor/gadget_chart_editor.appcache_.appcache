@@ -6,8 +6,8 @@ rsvp.js
 gadget_chart_editor.js
 static/css/main.88fa11bf.css
 static/js/main.8b730bc1.js
-#react.development.js
-#react-dom.development.js
+react.development.js
+react-dom.development.js
 
 
 
