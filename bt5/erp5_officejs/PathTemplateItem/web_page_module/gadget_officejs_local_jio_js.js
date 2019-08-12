@@ -112,7 +112,8 @@
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
 
     .declareMethod('createJio', function (jio_options) {
-      var appcache_storage,
+      var gadget = this,
+        appcache_storage,
         origin_url = window.location.href,
         hateoas_section = "./hateoas_appcache/",
         hateoas_section_and_view = hateoas_section + "definition_view/",
@@ -224,9 +225,10 @@
                   console.log("Error while appcache-local " +
                               "storage synchronization");
                   if (error && error.currentTarget &&
-                      error.currentTarget.status === "401") {
+                      error.currentTarget.status === 401) {
                     console.log("Unauthorized access to storage," +
                                 "sync cancelled");
+                    gadget.state_parameter_dict.jio_storage_name = "ERP5";
                     return;
                   }
                   throw error;
