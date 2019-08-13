@@ -49,6 +49,7 @@ setup(name=name,
       install_requires=[
         'setuptools', # namespaces
         'psutil >= 0.5.0',
+        'six',
       ],
       extras_require={
         'testnode': ['slapos.core', 'xml_marshaller', 'psutil >= 0.5.0'],
