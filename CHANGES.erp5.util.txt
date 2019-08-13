@@ -1,6 +1,14 @@
 Changes
 =======
 
+
+0.4.59.1 (2019-08-13)
+---------------------
+
+  * erp5.util:
+
+    - Minor fix: Add missing 'six' dependency on setup.py
+
 0.4.59 (2019-08-13)
 -------------------
 
