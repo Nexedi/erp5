@@ -1,6 +1,18 @@
 Changes
 =======
 
+0.4.59 (2019-08-13)
+-------------------
+
+  * erp5.util:
+
+    - testnode: Update the SlapOS API
+    - erp5.util: add support for Python 3
+    - testnode: handle cases of errors when updating git repositories
+    - testnode: fixed condition to not build dependencies like firefox
+    - testnode: kill processes having slapos_directory in command line
+    - testnode: spawn with close_fds=True in ProcessManager
+
 0.4.58 (2019-03-05)
 -------------------
 
