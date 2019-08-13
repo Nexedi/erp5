@@ -1,4 +1,0 @@
-[submodule "doc-bt5"]
-	path = doc-bt5
-	url = https://lab.nexedi.com/nexedi/erp5-doc.git
-	branch = master
