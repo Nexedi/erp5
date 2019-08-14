@@ -169,7 +169,7 @@
               a_element,
               li_element,
               icon_and_key_list = [
-                'home', null,
+                'home', 'home',
                 'refresh', 'r',
                 'gear', 's'
               ],

@@ -155,6 +155,12 @@
               command: 'change',
               options: {'page': "ojs_download"}
             })
+            /*//P
+            gadget.getUrlFor({
+              command: 'change',
+              options: {'page': "ojs_cloudooo_download"}
+            })
+            ///P*/
           ]);
         })
         .push(function (url_list) {
@@ -165,6 +171,7 @@
             previous_url: url_list[1],
             next_url: url_list[2],
             download_url: url_list[3]
+            //export_url: url_list[4]///P
           });
         });
     });
