@@ -2,6 +2,44 @@
  * Selenium extensions for the ERP5 project
  */
 
+/**
+ * You can set file data to file input field without security error.
+ * After this command you must use pause command because this command
+ * is asynchronous.
+ *   <tr>
+ *    <td>setFile</td>
+ *    <td>field_my_file</td>
+ *    <td>/data.jpg myfilename.jpg</td>
+ *  </tr>
+ *  <tr>
+ *    <td>pause</td>
+ *    <td>10000</td>
+ *    <td></td>
+ *  </tr>
+ */
+Selenium.prototype.doSetFile = function(locator, url_and_filename) {
+    var tmpArray = url_and_filename.split(' ', 2);
+    var url = tmpArray[0];
+    var fileName = tmpArray[1];
+    if (!fileName) {
+        throw new Error('file name must not be empty.');
+    }
+    var fileField = this.page().findElement(locator);
+    fetch(url)
+    .then(function (response){
+        if (!response.ok) {
+            throw new Error('HTTP error, status = ' + response.status);
+        }
+        return response.blob();
+    })
+    .then(function (blob){
+        var dT = new ClipboardEvent('').clipboardData || // Firefox < 62 workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655
+                 new DataTransfer(); // specs compliant (as of March 2018 only Chrome)
+        dT.items.add(new File([blob], fileName));
+        fileField.files = dT.files;
+    });
+};
+
 
 /**
  * Checks the element referenced by `locator` is a float equals to `text`.
