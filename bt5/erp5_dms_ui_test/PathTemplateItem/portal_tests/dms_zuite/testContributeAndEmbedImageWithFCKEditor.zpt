@@ -37,9 +37,14 @@ Wait for activities</span>
   <td>60000</td>
 </tr>
 <tr>
-  <td>type</td>
+  <td>setFile</td>
   <td>file</td>
-  <td tal:content="python: here.Zuite_getFilenameLocation('tiolive-ERP5.Freedom.TioLive.Logo-001-en.png')"></td>
+  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.Logo-001-en.png tiolive-ERP5.Freedom.TioLive.Logo-001-en.png</td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>10000</td>
+  <td></td>
 </tr>
 <tr>
   <td>clickAndWait</td>

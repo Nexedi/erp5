@@ -4,8 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>testPortalContributionsToolNewFile</title>
 </head>
-<body tal:define="file_name string:tiolive-ERP5.DMS.TioLive-001-en.odp;
-                  full_filename_location python: here.Zuite_getFilenameLocation(file_name)">
+<body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tr><td rowspan="1" colspan="3">testPortalContributionsToolNewFile</td></tr>
@@ -29,9 +28,14 @@
   <td>label=Contribute File</td>
 </tr>
 <tr>
-  <td>type</td>
+  <td>setFile</td>
   <td>field_your_file</td>
-  <td tal:content="full_filename_location"></td>
+  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.DMS.TioLive-001-en.odp tiolive-ERP5.DMS.TioLive-001-en.odp</td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>10000</td>
+  <td></td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -50,7 +54,7 @@
 </tr>
 <tr>
   <td>verifyTextPresent</td>
-  <td tal:content="file_name"></td>
+  <td>tiolive-ERP5.DMS.TioLive-001-en.odp</td>
   <td></td>
 </tr>
 <tr>
@@ -92,9 +96,14 @@ Wait for activities</span>
   <td>label=Contribute File</td>
 </tr>
 <tr>
-  <td>type</td>
+  <td>setFile</td>
   <td>field_your_file</td>
-  <td tal:content="full_filename_location"></td>
+  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.DMS.TioLive-001-en.odp tiolive-ERP5.DMS.TioLive-001-en.odp</td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>10000</td>
+  <td></td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -108,7 +117,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>verifyTextPresent</td>
-  <td tal:content="file_name"></td>
+  <td>tiolive-ERP5.DMS.TioLive-001-en.odp</td>
   <td></td>
 </tr>
 <tr>
