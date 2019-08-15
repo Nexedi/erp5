@@ -61,6 +61,7 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
                 'erp5_project_ui_test',
                 'erp5_ingestion_mysql_innodb_catalog', 'erp5_ingestion',
                 'erp5_web', 'erp5_dms', 'erp5_dms_ui_test',
+                'erp5_ui_test_data',
                 'erp5_knowledge_pad_ui_test',
                 'erp5_crm',
                 'erp5_forge',
