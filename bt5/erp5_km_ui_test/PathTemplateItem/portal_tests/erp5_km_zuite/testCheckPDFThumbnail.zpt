@@ -4,8 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>testCheckPDFThumbnail</title>
 </head>
-<body tal:define="file_name string:tiolive-ERP5.Freedom.TioLive.MultiplePages.PDF-001-en.pdf;
-                  full_filename_location python: here.Zuite_getFilenameLocation(file_name)">
+<body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tr><td rowspan="1" colspan="3">testCheckPDFThumbnail</td></tr>
@@ -26,9 +25,14 @@
   <td></td>
 </tr>
 <tr>
-  <td>type</td>
+  <td>setFile</td>
   <td>field_your_file</td>
-  <td tal:content="full_filename_location"></td>
+  <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.MultiplePages.PDF-001-en.pdf tiolive-ERP5.Freedom.TioLive.MultiplePages.PDF-001-en.pdf</td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>10000</td>
+  <td></td>
 </tr>
 <tr>
   <td>clickAndWait</td>
