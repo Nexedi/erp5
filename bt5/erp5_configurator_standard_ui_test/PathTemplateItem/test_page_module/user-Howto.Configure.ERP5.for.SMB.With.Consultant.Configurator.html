@@ -209,10 +209,15 @@
             <td>Configure Categories</td> 
           </tr> 
           <tr> 
-            <td>type</td> 
+            <td>setFile</td> 
             <td>//input[@name=&quot;field_your_configuration_spreadsheet&quot;]</td> 
-            <td tal:content="python: here.Zuite_getConfiguratorFilenameLocation('consulting_configurator_sample_categories.ods')"> </td> 
+            <td>${base_url}/functional_test_data_folder/consulting_configurator_sample_categories.ods consulting_configurator_sample_categories.ods</td> 
           </tr> 
+          <tr>
+            <td>pause</td>
+            <td>10000</td>
+            <td></td>
+          </tr>
           <tr> 
             <td>clickAndWait</td> 
             <td>//input[@name=&quot;next:method&quot;]</td> 
@@ -297,8 +302,13 @@
           <tr> 
             <td>type</td> 
             <td>//input[@name=&quot;field_your_portal_type_roles_spreadsheet&quot;]</td> 
-            <td tal:content="python: here.Zuite_getConfiguratorFilenameLocation('consulting_configurator_sample_roles_configuration_sheet.ods')"> </td> 
+            <td>${base_url}/functional_test_data_folder/consulting_configurator_sample_roles_configuration_sheet.ods consulting_configurator_sample_roles_configuration_sheet.ods</td> 
           </tr> 
+          <tr>
+            <td>pause</td>
+            <td>10000</td>
+            <td></td>
+          </tr>
           <tr> 
             <td>clickAndWait</td> 
             <td>//input[@name=&quot;next:method&quot;]</td> 
