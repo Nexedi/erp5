@@ -8,7 +8,22 @@ Test Accounting Transaction Template
 </td></tr>
 </thead><tbody tal:define="init_method string:AccountingZuite_initializeAccountingTransactionTemplateTest">
 <tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
-
+<!-- Delete existing accounting transaction templates -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/AccountingZuite_deleteAccountingTransactionTemplate</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
 <!-- Setup {{{ -->
 <tr>
   <td>selectAndWait</td>
@@ -96,6 +111,11 @@ Test Accounting Transaction Template
   <td>selectAndWait</td>
   <td>select_action</td>
   <td>label=Make a Template</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>id=dialog_submit_button</td>
+  <td></td>
 </tr>
 <tr>
   <td>open</td>
