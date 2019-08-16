@@ -63,11 +63,6 @@ Wait for activities</span>
   <td>field_your_file</td>
   <td>${base_url}/functional_test_data_folder/tiolive-ERP5.DMS.TioLive-001-en.odp tiolive-ERP5.DMS.TioLive-001-en.odp</td>
 </tr>
-  <tr>
-  <td>pause</td>
-  <td>10000</td>
-  <td></td>
-</tr>
 <tr>
   <td>type</td>
   <td>field_your_title</td>

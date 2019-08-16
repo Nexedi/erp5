@@ -41,11 +41,6 @@ Wait for activities</span>
   <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive-001-en.odp tiolive-ERP5.Freedom.TioLive-001-en.odp</td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>10000</td>
-  <td></td>
-</tr>
-<tr>
   <td>clickAndWait</td>
   <td>Base_contribute:method</td>
   <td></td>
@@ -111,11 +106,6 @@ Wait for activities</span>
   <td>setFile</td>
   <td>file</td>
   <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive-001-en.odp tiolive-ERP5.Freedom.TioLive-001-en.odp</td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>10000</td>
-  <td></td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -185,11 +175,6 @@ Wait for activities</span>
   <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.PDF-001-en.pdf tiolive-ERP5.Freedom.TioLive.PDF-001-en.pdf</td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>10000</td>
-  <td></td>
-</tr>
-<tr>
   <td>clickAndWait</td>
   <td>Base_contribute:method</td>
   <td></td>
@@ -237,11 +222,6 @@ Wait for activities</span>
   <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.Logo-001-en.png tiolive-ERP5.Freedom.TioLive.Logo-001-en.png</td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>10000</td>
-  <td></td>
-</tr>
-<tr>
   <td>clickAndWait</td>
   <td>Base_contribute:method</td>
   <td></td>
@@ -287,11 +267,6 @@ Wait for activities</span>
   <td>setFile</td>
   <td>file</td>
   <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods</td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>10000</td>
-  <td></td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -349,11 +324,6 @@ Wait for activities</span>
   <td>setFile</td>
   <td>file</td>
   <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.Drawing-001-en.odg tiolive-ERP5.Freedom.TioLive.Drawing-001-en.odg</td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>10000</td>
-  <td></td>
 </tr>
 <tr>
   <td>clickAndWait</td>

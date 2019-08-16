@@ -4,17 +4,10 @@
 
 /**
  * You can set file data to file input field without security error.
- * After this command you must use pause command because this command
- * is asynchronous.
  *   <tr>
  *    <td>setFile</td>
  *    <td>field_my_file</td>
  *    <td>/data.jpg myfilename.jpg</td>
- *  </tr>
- *  <tr>
- *    <td>pause</td>
- *    <td>10000</td>
- *    <td></td>
  *  </tr>
  */
 Selenium.prototype.doSetFile = function(locator, url_and_filename) {
@@ -38,6 +31,10 @@ Selenium.prototype.doSetFile = function(locator, url_and_filename) {
         dT.items.add(new File([blob], fileName));
         fileField.files = dT.files;
     });
+    return Selenium.decorateFunctionWithTimeout(function () {
+        var window = selenium.browserbot.getCurrentWindow();
+        return (fileField.value || "").endsWith(fileName);
+    }, 60000);
 };
 
 

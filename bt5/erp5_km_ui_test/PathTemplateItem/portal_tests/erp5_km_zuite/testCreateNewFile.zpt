@@ -35,11 +35,6 @@
   <td>${base_url}/functional_test_data_folder/tiolive-ERP5.DMS.TioLive-001-en.odp tiolive-ERP5.DMS.TioLive-001-en.odp</td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>10000</td>
-  <td></td>
-</tr>
-<tr>
   <td>clickAndWait</td>
   <td>dialog_submit_button</td>
   <td></td>

@@ -42,11 +42,6 @@ Wait for activities</span>
   <td>${base_url}/functional_test_data_folder/tiolive-ERP5.Freedom.TioLive.Logo-001-en.png tiolive-ERP5.Freedom.TioLive.Logo-001-en.png</td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>10000</td>
-  <td></td>
-</tr>
-<tr>
   <td>clickAndWait</td>
   <td>Base_contribute:method</td>
   <td></td>
@@ -81,10 +76,13 @@ Wait for activities</span>
   <td>Image</td>
   <td></td>
 </tr>
+  <td>waitForElementPresent</td>
+  <td>//select[@name="select_action"]</td>
+  <td></td>
 <tr>
   <td>selectAndWait</td>
   <td>select_action</td>
-  <td>label=Publish Document</td>
+  <td>Publish Document</td>
 </tr>
 <tr>
   <td>type</td>
@@ -113,6 +111,16 @@ Wait for activities</span>
   <td></td>
 </tr>
 <!-- javascript:SelectFile('tiolive-ERP5.Freedom.TioLive.Logo?format=png') -->
+<tr>
+  <td>type</td>
+  <td>//input[@name="listbox_reference"]</td>
+  <td>tiolive-ERP5.Freedom.TioLive.Logo</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_callDialogMethod:method</td>
+  <td></td>
+</tr>
 <tr>
   <td>verifyTextPresent</td>
   <td>tiolive-ERP5.Freedom.TioLive.Logo-001-en</td>
