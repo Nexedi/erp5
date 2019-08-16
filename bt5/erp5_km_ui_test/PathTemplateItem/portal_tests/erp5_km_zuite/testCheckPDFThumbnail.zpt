@@ -86,179 +86,27 @@
   <td>PDF</td>
   <td></td>
 </tr>
-<!-- Check PDF thumbnail preview works -->
+<!-- Check PDFJS preview appears -->
 <tr>
   <td>clickAndWait</td>
   <td>link=Preview</td>
   <td></td>
 </tr>
 <tr>
-  <td>verifyText</td>
-  <td>//span[@class="listbox-current-page-start-number"]</td>
-  <td>1</td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>//span[@class="listbox-current-page-stop-number"]</td>
-  <td>10</td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>16 records</td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//img[@title='Thumbnail']</td>
-  <td></td>
-</tr>
-<!-- Check PDF thumbnail preview navigation-->
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@class="listbox_next_page"]</td>
+  <td>waitForElementPresent</td>
+  <td>//div[@id='pageContainer1']</td>
   <td></td>
 </tr>
 <tr>
-  <td>verifyText</td>
-  <td>//span[@class="listbox-current-page-start-number"]</td>
-  <td>11</td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>//span[@class="listbox-current-page-stop-number"]</td>
-  <td>16</td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>16 records</td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//img[@title='Thumbnail']</td>
+  <td>isElementPresent</td>
+  <td>//button[@id='zoomOut']</td>
   <td></td>
 </tr>
 <tr>
-  <td>clickAndWait</td>
-  <td>//button[@class="listbox_previous_page"]</td>
+  <td>isElementPresent</td>
+  <td>//button[@id='zoomIn']</td>
   <td></td>
 </tr>
-<tr>
-  <td>verifyText</td>
-  <td>//span[@class="listbox-current-page-start-number"]</td>
-  <td>1</td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>//span[@class="listbox-current-page-stop-number"]</td>
-  <td>10</td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>16 records</td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//img[@title='Thumbnail']</td>
-  <td></td>
-</tr>
-
-<!-- Go to PDF default big preview -->
-<tr>
-  <td>clickAndWait</td>
-  <td>//tr[@class="listbox-data-line-1 DataB"]/td/div/a/img[@title='Thumbnail']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//input[@name="pdf_selection_index"]</td>
-  <td>2</td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//img[@alt='First']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//img[@alt='Previous']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//img[@alt='Next']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//img[@alt='Last']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//div[@class='pdf-preview-content']/img</td>
-  <td></td>
-</tr>
-
-<!-- Check if PDF thumbnail navigation works -->
-<tr>
-  <td>clickAndWait</td>
-  <td>//img[@alt='Next']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//input[@name="pdf_selection_index"]</td>
-  <td>3</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//img[@alt='First']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//input[@name="pdf_selection_index"]</td>
-  <td>1</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//img[@alt='Last']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//input[@name="pdf_selection_index"]</td>
-  <td>16</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//img[@alt='First']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//input[@name="pdf_selection_index"]</td>
-  <td>1</td>
-</tr>
-<!-- Type in test -->
-<tr>
-  <td>type</td>
-  <td>//input[@name="pdf_selection_index"]</td>
-  <td>5</td>
-</tr>
-<tr>
-  <td>keyPressAndWait</td>
-  <td>//input[@name="pdf_selection_index"]</td>
-  <td>\13</td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//input[@name="pdf_selection_index"]</td>
-  <td>5</td>
-</tr>
-
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />
 
 </tbody></table>

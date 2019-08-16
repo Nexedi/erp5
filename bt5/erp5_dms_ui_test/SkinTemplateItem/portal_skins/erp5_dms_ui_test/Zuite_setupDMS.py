@@ -34,5 +34,13 @@ for gadget in context.portal_gadgets.objectValues():
     gadget.visible()
     gadget.public()
 
+# Reject the tiolive logo image if it is published. This image
+# is used by testContributeAndEmbedImageWithFCKEditor
+tiolive_logo_image = context.portal_catalog.getResultValue(
+  reference='tiolive-ERP5.Freedom.TioLive.Logo',
+  validation_state='published')
+if tiolive_logo_image is not None and tiolive_logo_image.getValidationState() == 'published':
+  tiolive_logo_image.reject()
+
 print "Done"
 return printed

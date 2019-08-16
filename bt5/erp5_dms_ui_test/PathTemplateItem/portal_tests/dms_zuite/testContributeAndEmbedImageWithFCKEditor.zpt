@@ -77,7 +77,7 @@ Wait for activities</span>
   <td></td>
 </tr>
   <td>waitForElementPresent</td>
-  <td>//select[@name="select_action"]</td>
+  <td>//option[contains(@value, "publish_action")]</td>
   <td></td>
 <tr>
   <td>selectAndWait</td>
