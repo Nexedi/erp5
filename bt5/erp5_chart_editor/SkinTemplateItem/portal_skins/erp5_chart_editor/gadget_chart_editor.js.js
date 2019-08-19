@@ -1,4 +1,4 @@
-/*global window, document, rJS, Quill, RSVP*/
+/*global window, document, rJS, RSVP*/
 /*jslint nomen: true, maxlen:80, indent:2*/
 (function (window, document, React, ReactDOM, EntryPoint, rJS, RSVP) {
   "use strict";
@@ -19,6 +19,10 @@
     .setState({
       is_mobile: false,
       
+    })
+    
+    .declareMethod('purge', function () {
+      ReactDOM.unmountComponentAtNode(this.element.querySelector("div"));
     })
 
     .declareMethod('render', function (options) {
