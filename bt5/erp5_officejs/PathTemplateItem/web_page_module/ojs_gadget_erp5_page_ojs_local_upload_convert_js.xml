@@ -74,16 +74,14 @@
             </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
+            <key> <string>content_type</string> </key>
             <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_common_util.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_local_upload_convert.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,31 +91,12 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_common_util_js</string> </value>
+            <value> <string>ojs_gadget_erp5_page_ojs_local_upload_convert_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284351.49</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
             </value>
         </item>
         <item>
@@ -132,13 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget OfficeJS Common Util JS</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget OfficeJS Local Upload And Convert JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -224,7 +197,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1556112172.71</float>
+                        <float>1566906018.13</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -269,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.3948.30252.20241</string> </value>
+                <value> <string>978.4007.12716.13977</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1567003344.66</float>
+                        <float>1567070122.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -344,7 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1556112092.1</float>
+                        <float>1566905824.65</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
