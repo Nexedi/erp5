@@ -1,9 +1,10 @@
-/*global document, window, rJS, RSVP, ensureArray */
+/*global document, window, rJS, RSVP, Blob, jIO, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
-(function (document, window, rJS, RSVP, ensureArray) {
+(function (document, window, rJS, RSVP, Blob, jIO, ensureArray) {
   "use strict";
 
-  function renderField(field_id, field_definition, context_document) {
+  function renderField(field_id, field_definition,
+                       context_document, data, blob_type) {
     var key, raw_value, override, final_value, item_list, result = {};
     for (key in field_definition.values) {
       if (field_definition.values.hasOwnProperty(key)) {
@@ -42,10 +43,13 @@
         result["default"] = context_document[field_id];
       }
     }
+    if (field_id === "text_content" && result.renderjs_extra && blob_type) {
+      result["default"] = data;
+    }
     return result;
   }
 
-  function renderForm(form_definition, context_document) {
+  function renderForm(form_definition, context_document, data, blob_type) {
     var i, j, field_list, field_info, my_element, element_id, rendered_field,
       raw_properties = form_definition.fields_raw_properties,
       form_json = {
@@ -69,7 +73,7 @@
         if (element_id && raw_properties.hasOwnProperty(my_element)) {
           field_info = raw_properties[my_element];
           rendered_field = renderField(element_id, field_info,
-                                       context_document);
+                                       context_document, data, blob_type);
           form_json.erp5_document._embedded._view[my_element] =
             rendered_field;
         }
@@ -90,6 +94,8 @@
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
+    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
 
     // XXX Hardcoded for modification_date rendering
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
@@ -133,13 +139,14 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("triggerSubmit", function (argument_list) {
+      var this_gadget = this, data, action;
       return this.getDeclaredGadget('fg')
         .push(function (gadget) {
           if (gadget.state.save_action !== true) {
             //rely on child gadget to submit (filter, panels, etc.)
             return gadget.triggerSubmit(argument_list);
           }
-          var action = gadget.state.erp5_document._embedded._view._actions.put;
+          action = gadget.state.erp5_document._embedded._view._actions.put;
           return gadget.getDeclaredGadget("erp5_form")
             .push(function (sub_gadget) {
               return sub_gadget.checkValidity();
@@ -154,29 +161,68 @@
               if (content_dict === null) {
                 return;
               }
+              if (this_gadget.state.blob_type) {
+                data = content_dict.text_content;
+                delete content_dict.text_content;
+              }
               return gadget.submitContent(
                 gadget.state.jio_key,
                 action.href,
                 content_dict
-              );
+              )
+                .push(function () {
+                  if (this_gadget.state.blob_type) {
+                    return this_gadget
+                      .jio_putAttachment(gadget.state.jio_key,
+                                         'data',
+                                         jIO.util.dataURItoBlob(data));
+                  }
+                });
             }); // page form handles failures well enough
         });
     })
 
     .declareMethod("render", function (options) {
-      var state_dict = {
-        doc: options.doc,
-        form_definition: options.form_definition,
-        child_gadget_url: options.child_gadget_url,
-        options: options
-      };
-      return this.changeState(state_dict);
+      var gadget = this,
+        state_dict = {
+          doc: options.doc,
+          form_definition: options.form_definition,
+          child_gadget_url: options.child_gadget_url,
+          options: options
+        },
+        data;
+      return gadget.getSetting('blob_type')
+        .push(function (blob_type) {
+          if (blob_type) {
+            if (options.jio_key) {
+              return gadget.jio_getAttachment(options.jio_key, "data")
+                .push(undefined, function (error) {
+                  if (error.status_code === 404) {
+                    return new Blob([''], {type: blob_type});
+                  }
+                  throw new Error(error);
+                })
+                .push(function (blob) {
+                  blob.name = options.jio_key;
+                  return jIO.util.readBlobAsDataURL(blob);
+                })
+                .push(function (result) {
+                  data = {blob: result.target.result, name: options.jio_key};
+                  state_dict.data = data;
+                  state_dict.blob_type = blob_type;
+                  return gadget.changeState(state_dict);
+                });
+            }
+          }
+          return gadget.changeState(state_dict);
+        });
     })
 
     .onStateChange(function onStateChange() {
       var fragment = document.createElement('div'),
         gadget = this,
-        form_json = renderForm(gadget.state.form_definition, gadget.state.doc);
+        form_json = renderForm(gadget.state.form_definition, gadget.state.doc,
+                               gadget.state.data, gadget.state.blob_type);
       while (gadget.element.firstChild) {
         gadget.element.removeChild(gadget.element.firstChild);
       }
@@ -295,4 +341,4 @@
         });
     });
 
-}(document, window, rJS, RSVP, ensureArray));
+}(document, window, rJS, RSVP, Blob, jIO, ensureArray));
