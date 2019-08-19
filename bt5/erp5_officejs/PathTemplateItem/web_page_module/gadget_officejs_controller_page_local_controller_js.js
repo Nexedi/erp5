@@ -25,23 +25,17 @@
         form_definition,
         gadget_util,
         jio_document,
-        portal_type,
-        front_page;
+        portal_type;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
             gadget.declareGadget("gadget_officejs_common_util.html"),
-            gadget.getSetting('app_view_reference'),
-            gadget.getSetting('default_view_reference'),
-            gadget.getSetting('documents_editable')
+            gadget.getSetting('app_view_reference')
           ]);
         })
         .push(function (result_list) {
           gadget_util = result_list[0];
           app_view = options.action || result_list[1];
-          default_view = result_list[2];
-          options.editable = ((result_list[3] == "1") ?
-                              true : options.editable);
           return gadget.jio_get(options.jio_key);
         })
         .push(function (result) {
@@ -64,19 +58,14 @@
           } else {
             portal_type = parent_portal_type;
           }
-          front_page = portal_type === parent_portal_type;
           return gadget_util.getFormDefinition(portal_type, app_view);
         })
         .push(function (result) {
           return result;
-        }, function (error) {
-          if (error.status_code === 400) {
-            return gadget_util.getFormDefinition(portal_type, default_view);
-          }
-          throw error;
         })
         .push(function (result) {
           form_definition = result;
+          //TODO delete this, should come in form_definition itself
           return gadget_util.getFormInfo(form_definition);
         })
         .push(function (form_info) {
@@ -89,21 +78,25 @@
             child_gadget_url: child_gadget_url,
             form_definition: form_definition,
             form_type: form_type,
-            editable: options.editable,
-            view: options.view || default_view,
-            front_page: front_page
+            view: options.view || app_view
           });
         });
     })
 
     .onStateChange(function () {
       var fragment = document.createElement('div'),
-        gadget = this;
+        gadget = this,
+        view_gadget_url = "gadget_officejs_form_view.html",
+        custom_gadget_url = gadget.state.form_definition.portal_type_dict
+      .custom_view_gadget;
       while (this.element.firstChild) {
         this.element.removeChild(this.element.firstChild);
       }
-      this.element.appendChild(fragment);
-      return gadget.declareGadget("gadget_officejs_form_view.html",
+      if (custom_gadget_url) {
+        view_gadget_url = custom_gadget_url;
+      }
+      gadget.element.appendChild(fragment);
+      return gadget.declareGadget(view_gadget_url,
                                   {element: fragment, scope: 'form_view'})
         .push(function (form_view_gadget) {
           return form_view_gadget.render(gadget.state);

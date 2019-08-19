@@ -395,6 +395,16 @@
                       <value> <string>int</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_app_configuration</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -445,6 +455,10 @@
                 <string>Web Page Module | Web Page</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>configuration_app_configuration</string> </key>
+            <value> <string>gadget_officejs_text_editor.configuration</string> </value>
         </item>
         <item>
             <key> <string>configuration_app_view_action_reference</string> </key>
@@ -791,7 +805,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.37757.10944.9710</string> </value>
+                <value> <string>977.41020.37035.31197</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -809,7 +823,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1565295153.9</float>
+                        <float>1566215825.1</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
