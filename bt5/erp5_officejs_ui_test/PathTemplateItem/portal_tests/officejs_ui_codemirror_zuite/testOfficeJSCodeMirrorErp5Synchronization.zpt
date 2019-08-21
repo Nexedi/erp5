@@ -170,6 +170,16 @@
   <td></td>
 </tr>
 <tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
   <td>//a[@data-i18n='Document']</td>
   <td></td>
@@ -206,6 +216,11 @@
 <tr>
   <td>waitForElementPresent</td>
   <td>identifier=title</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
   <td></td>
 </tr>
 <tr>
@@ -306,6 +321,11 @@
 <tr>
   <td>openAndWait</td>
   <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
   <td></td>
 </tr>
 <tr>
