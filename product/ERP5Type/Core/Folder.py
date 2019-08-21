@@ -1304,7 +1304,19 @@ class Folder(OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     )(*args, **kw)
 
   security.declarePublic('recursiveReindexObject')
-  def recursiveReindexObject(self, activate_kw=None, **kw):
+  def recursiveReindexObject(self, activate_kw=None, REQUEST=None, **kw):
+    """Recursively indexes the content of self.
+    """
+    if REQUEST is not None:
+      # Being able to trigger recursive reindexation from URL is convenient
+      # when administrating an ERP5 instance. However, appropriate security
+      # is important to prevent DoS on big objects (in number of subobjects),
+      # i.e. modules. For consistency, we check the same permission as for
+      # reindexObjectSecurity. A normal user is usually not allowed to modify
+      # a module (only add/delete subobjects).
+      if not getSecurityManager().checkPermission(
+          Permissions.ModifyPortalContent, self):
+        raise AccessControl_Unauthorized
     if self.isAncestryIndexable():
       kw, activate_kw = self._getReindexAndActivateParameterDict(
         kw,
