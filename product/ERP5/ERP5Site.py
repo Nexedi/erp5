@@ -322,7 +322,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     from Products.Localizer.MessageCatalog import (
       message_catalog_alias_sources
     )
-    sm = self.getSiteManager()
+    sm = self._components
     for message_catalog in self.Localizer.objectValues():
       sm.registerUtility(message_catalog,
                          provided=ITranslationDomain,
@@ -332,21 +332,20 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
                            provided=ITranslationDomain,
                            name=alias)
 
-  def _doInitialSiteManagerMigration(self):
-    self._createInitialSiteManager()
-    # Now that we have a sitemanager, se can do things that require
-    # one. Including setting up ZTK style utilities and adapters. We
-    # can even call setSite(self), as long as we roll back that later,
-    # since we are actually in the middle of a setSite() call.
-    from zope.site.hooks import getSite, setSite
-    old_site = getSite()
-    try:
-      setSite(self)
-      # setSite(self) is not really necessary for the migration below, but
-      # could be needed by other migrations to be added here.
-      self._doTranslationDomainRegistration()
-    finally:
-      setSite(old_site)
+  def _registerMissingTools(self):
+    from Products.CMFCore import interfaces, utils
+    sm = self._components
+    for tool_id, tool_interface in utils._tool_interface_registry.iteritems():
+      if tool_interface is interfaces.IMemberDataTool:
+        continue
+
+      # XXX: need to find the proper API to access "self.tool_id"
+      tool = getattr(self, tool_id, None)
+      if tool is not None:
+        # Note: already registered tools will be either:
+        # - updated
+        # - registered again after being unregistered
+        sm.registerUtility(tool, tool_interface)
 
   # backward compatibility auto-migration
   def getSiteManager(self):
@@ -364,13 +363,25 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     # as cheap as it is on the case that self._components is already
     # set.
     _components = self._components
-    if _components is not None:
-      return _components
-    # This method below can take as (reasonably) long as it pleases
-    # since it will not be run ever again
-    self._doInitialSiteManagerMigration()
-    assert self._components is not None, 'Migration Failed!'
-    return self._components
+    if _components is None:
+      # only create _components
+      self._createInitialSiteManager()
+      _components = self._components
+      # Now that we have a sitemanager, se can do things that require
+      # one. Including setting up ZTK style utilities and adapters. We
+      # can even call setSite(self), as long as we roll back that later,
+      # since we are actually in the middle of a setSite() call.
+      from zope.site.hooks import getSite, setSite
+      old_site = getSite()
+      try:
+        setSite(self)
+        self._doTranslationDomainRegistration()
+        self._registerMissingTools()
+      finally:
+        setSite(old_site)
+    else:
+      self._registerMissingTools()
+    return _components
 
   security.declareProtected(Permissions.View, 'view')
   def view(self):
