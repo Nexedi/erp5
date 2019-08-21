@@ -1,11 +1,8 @@
 Production Report Cell | delivery_movement_causality_interaction_workflow
-Production Report Cell | delivery_movement_simulation_interaction_workflow
 Production Report Line | delivery_movement_causality_interaction_workflow
-Production Report Line | delivery_movement_simulation_interaction_workflow
 Production Report Line | edit_workflow
 Production Report Line | production_matrix_workflow
 Production Report | delivery_causality_interaction_workflow
 Production Report | delivery_causality_workflow
-Production Report | delivery_simulation_interaction_workflow
 Production Report | edit_workflow
 Production Report | production_packing_list_workflow
