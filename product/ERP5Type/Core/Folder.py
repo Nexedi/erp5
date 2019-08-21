@@ -1303,8 +1303,11 @@ class Folder(OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       'recursiveReindexObject',
     )(*args, **kw)
 
-  security.declarePublic('recursiveReindexObject')
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'recursiveReindexObject')
   def recursiveReindexObject(self, activate_kw=None, **kw):
+    """Recursively indexes the content of self.
+    """
     if self.isAncestryIndexable():
       kw, activate_kw = self._getReindexAndActivateParameterDict(
         kw,
