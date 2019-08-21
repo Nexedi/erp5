@@ -54,16 +54,6 @@
  <chain>
   <type>Production Simulation Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
-  <type>Production Report</type>
-  <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, edit_workflow, production_packing_list_workflow</workflow>
- </chain>
- <chain>
-  <type>Production Report Cell</type>
-  <workflow>delivery_movement_causality_interaction_workflow</workflow>
- </chain>
- <chain>
-  <type>Production Report Line</type>
-  <workflow>delivery_movement_causality_interaction_workflow, edit_workflow, production_matrix_workflow</workflow>
  </chain>
  <chain>
   <type>Transformation Simulation Rule</type>
