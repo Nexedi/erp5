@@ -51,14 +51,6 @@ Production Packing List | edit_workflow
 Production Packing List | production_packing_list_workflow
 Production Simulation Rule | edit_workflow
 Production Simulation Rule | rule_validation_workflow
-Production Report Cell | delivery_movement_causality_interaction_workflow
-Production Report Line | delivery_movement_causality_interaction_workflow
-Production Report Line | edit_workflow
-Production Report Line | production_matrix_workflow
-Production Report | delivery_causality_interaction_workflow
-Production Report | delivery_causality_workflow
-Production Report | edit_workflow
-Production Report | production_packing_list_workflow
 Transformation Simulation Rule | edit_workflow
 Transformation Simulation Rule | rule_validation_workflow
 Transformation Sourcing Simulation Rule | edit_workflow
