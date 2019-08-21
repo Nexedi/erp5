@@ -2,19 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Document Component" module="erp5.portal_type"/>
+      <global name="Test Component" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_recorded_property_dict</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>Person</string> </value>
+            <value> <string>testCertificateAuthorityTool</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -24,11 +18,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>document.erp5.Person</string> </value>
+            <value> <string>test.erp5.testCertificateAuthorityTool</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Document Component</string> </value>
+            <value> <string>Test Component</string> </value>
         </item>
         <item>
             <key> <string>sid</string> </key>
@@ -45,7 +39,12 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W: 65,  4: Unused variable \'user_id\' (unused-variable)</string>
+                <string>W: 88,  4: Unused variable \'user_id2\' (unused-variable)</string>
+                <string>W: 87,  4: Unused variable \'user_id\' (unused-variable)</string>
+                <string>W: 96,  4: Unused variable \'user_id2\' (unused-variable)</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -55,7 +54,7 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
       </dictionary>
@@ -70,26 +69,11 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <dictionary/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
               <dictionary>
                 <item>
                     <key> <string>component_validation_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -98,7 +82,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>

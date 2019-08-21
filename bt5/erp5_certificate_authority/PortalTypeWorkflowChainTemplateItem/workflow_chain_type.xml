@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Certificate Login</type>
+  <workflow>edit_workflow, login_validation_workflow</workflow>
+ </chain>
+</workflow_chain>
