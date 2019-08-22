@@ -1,6 +1,6 @@
-/*global document, window, rJS, RSVP, Blob, jIO, ensureArray */
+/*global document, window, rJS, RSVP, Blob, URL jIO, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
-(function (document, window, rJS, RSVP, Blob, jIO, ensureArray) {
+(function (document, window, rJS, RSVP, Blob, URL, jIO, ensureArray) {
   "use strict";
 
   function renderField(field_id, field_definition,
@@ -43,7 +43,7 @@
         result["default"] = context_document[field_id];
       }
     }
-    if (field_id === "text_content" && result.renderjs_extra && blob_type) {
+    if (result.renderjs_extra && blob_type) {
       result["default"] = data;
     }
     return result;
@@ -190,7 +190,8 @@
           child_gadget_url: options.child_gadget_url,
           options: options
         },
-        data;
+        data,
+        blob;
       return gadget.getSetting('blob_type')
         .push(function (blob_type) {
           if (blob_type) {
@@ -202,12 +203,21 @@
                   }
                   throw new Error(error);
                 })
-                .push(function (blob) {
+                .push(function (result) {
+                  blob = result;
                   blob.name = options.jio_key;
+                  return gadget.getSetting('blob_create_object_url');
+                })
+                .push(function (blob_create_object_url) {
+                  if (blob_create_object_url) {
+                    data = URL.createObjectURL(blob);
+                  }
                   return jIO.util.readBlobAsDataURL(blob);
                 })
                 .push(function (result) {
-                  data = {blob: result.target.result, name: options.jio_key};
+                  if (!data) {
+                    data = {blob: result.target.result, name: options.jio_key};
+                  }
                   state_dict.data = data;
                   state_dict.blob_type = blob_type;
                   return gadget.changeState(state_dict);
@@ -341,4 +351,4 @@
         });
     });
 
-}(document, window, rJS, RSVP, Blob, jIO, ensureArray));
+}(document, window, rJS, RSVP, Blob, URL, jIO, ensureArray));
