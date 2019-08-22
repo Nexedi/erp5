@@ -382,6 +382,8 @@ class SlapOSTester(SlapOSMasterCommunicator):
   # In the future, this should allow customization so each project to be tested parses its own information,
   # probably in the test suite definition class
   def getInstanceUrlDict(self):
+    user = None
+    password = None
     frontend_url_list = []
     for instance in self.getInstanceUrlList():
       if "frontend-" in instance["title"]:
