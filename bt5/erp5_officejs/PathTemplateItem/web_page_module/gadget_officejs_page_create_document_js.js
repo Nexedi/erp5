@@ -40,6 +40,7 @@
       var gadget = this,
         allowed_sub_types_list = options.allowed_sub_types_list.split(","),
         parent_portal_type = options.portal_type,
+        new_content_action_path = options.new_content_action_path,
         portal_type,
         form_definition,
         document_title;
@@ -53,13 +54,7 @@
         })
         .push(function (portal_type_result) {
           portal_type = portal_type_result;
-          return gadget.getSetting("new_content_action");
-        })
-        .push(function (new_content_action) {
-          if (!new_content_action) {
-            throw new Error("Missing site configuration 'new_content_action'");
-          }
-          return gadget.jio_get(new_content_action);
+          return gadget.jio_get(new_content_action_path);
         })
         .push(function (form_result) {
           form_definition = form_result.raw_dict._embedded._view
