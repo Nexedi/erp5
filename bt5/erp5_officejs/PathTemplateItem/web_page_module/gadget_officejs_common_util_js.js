@@ -203,18 +203,35 @@
                                                   action_reference) {
       var gadget = this,
         query = buildSearchQuery(portal_type, action_reference),
+        portal_type_dict_setting = portal_type.replace(/ /g, '_')
+                                    .toLowerCase() + "_dict",
+        portal_type_dict = {},
         action_type,
         action_title,
         form_definition,
         portal_skin_folder,
         error;
-      return gadget.getSetting("portal_skin_folder")
+      return gadget.getSetting(portal_type_dict_setting)
+        .push(function (result_dict) {
+          if (result_dict) {
+            try {
+              portal_type_dict = window.JSON.parse(result_dict);
+            } catch (e) {
+              if (e instanceof SyntaxError) {
+                throw new Error("Bad JSON dict in configuration setting '" +
+                                portal_type_dict_setting + "'");
+              } else {
+                throw e;
+              }
+            }
+          }
+          return gadget.getSetting("portal_skin_folder");
+        })
         .push(function (result) {
           if (!result) {
             throw new Error("Missing site configuration 'portal_skin_folder'");
           }
-          result = "portal_skins/" + result;
-          portal_skin_folder = result;
+          portal_skin_folder = "portal_skins/" + result;
           return gadget.jio_allDocs({query: query});
         })
         .push(function (data) {
@@ -255,6 +272,7 @@
           form_definition.group_list = form_result.raw_dict.group_list;
           form_definition.action_type = action_type;
           form_definition.title = action_title;
+          form_definition.portal_type_dict = portal_type_dict;
           return gadget.getSetting("app_allowed_sub_types");
         })
         .push(function (allowed_sub_types_setting) {
@@ -265,17 +283,24 @@
               return pair[1];
             });
           form_definition.allowed_sub_types_list = allowed_sub_types;
+          return gadget.getSetting("new_content_action");
+        })
+        .push(function (new_content_action) {
+          if (!new_content_action) {
+            throw new Error("Missing site configuration 'new_content_action'");
+          }
+          form_definition.new_content_action_path = portal_skin_folder +
+            "/" + new_content_action;
           return gadget.getViewAndActionDict(portal_type);
         })
         .push(function (action_view_dict) {
-          form_definition.has_more_views =
+          form_definition.portal_type_dict.has_more_views =
             Object.keys(action_view_dict.view_list).length > 1;
-          form_definition.has_more_actions =
+          form_definition.portal_type_dict.has_more_actions =
             Object.keys(action_view_dict.action_list).length > 0;
           return gadget.getSetting('hide_header_add_button');
         })
         .push(function (hide_add_button_setting) {
-          form_definition.hide_add_button = hide_add_button_setting === "1";
           return form_definition;
         });
     });
