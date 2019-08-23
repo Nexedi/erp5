@@ -157,6 +157,33 @@
     </tr>
     <-->
   </tal:block>
+  <tal:block metal:define-macro="save-without-header-spinner">
+    <tr>
+      <td colspan="3"><b>Save</b></td>
+    </tr>
+    <tr>
+     <td>waitForElementPresent</td>
+     <td>//button[@data-i18n='Save']</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>click</td>
+     <td>//button[@data-i18n='Save']</td>
+     <td></td>
+    </tr>
+    <!-- First loader while calling Base_edit -->
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Data Updated</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>pause</td>
+      <td>2000</td>
+      <td></td>
+    </tr>
+  </tal:block>
+  
   <tal:block metal:define-macro="click_to_align_center">
     <tr>
       <td>waitForElementPresent</td>
