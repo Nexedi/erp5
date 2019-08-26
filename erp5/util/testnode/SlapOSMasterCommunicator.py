@@ -261,7 +261,6 @@ class SlapOSMasterCommunicator(object):
 
     if started and stopped:
       return INSTANCE_STATE_STOPPED
-      return INSTANCE_STATE_UNKNOWN
 
     if started:
       return INSTANCE_STATE_STARTED
