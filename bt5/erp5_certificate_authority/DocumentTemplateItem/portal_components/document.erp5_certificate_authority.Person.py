@@ -7,7 +7,16 @@ class Person(ERP5Person):
   security.declarePublic('getCertificate')
 
   def _getCertificateLoginDocument(self):
-    for _certificate_login in self.objectValues(portal_type="Certificate Login"):
+    for _erp5_login in self.objectValues(
+          portal_type=["ERP5 Login"]):
+      if _erp5_login.getValidationState() == "validated" and \
+        _erp5_login.getReference() == self.getUserId():
+        # The user already created a Login document as UserId, so 
+        # So just use this one.
+        return _erp5_login
+
+    for _certificate_login in self.objectValues(
+         portal_type=["Certificate Login"]):
       if _certificate_login.getValidationState() == "validated":
         return _certificate_login
     
