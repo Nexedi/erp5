@@ -187,7 +187,6 @@ class SlapOSMasterCommunicator(object):
         state = INSTANCE_STATE_UNKNOWN
         monitor_information_dict = {}
 
-        info_created_at = "-1"
         is_slave = instance['portal_type'] == "Slave Instance"
         if is_slave:
           if len(instance['getConnectionXmlAsDict']) > 0:
@@ -196,24 +195,15 @@ class SlapOSMasterCommunicator(object):
           # not slave
           instance_state = news
           if instance_state.get('created_at', '-1') != "-1":
-            # the following does NOT take TZ into account
-            created_at = datetime.datetime.strptime(instance_state['created_at'], 
-              '%a, %d %b %Y %H:%M:%S %Z')
-            gmt_now = datetime.datetime(*time.gmtime()[:6])
+            instance_text = instance_state['text']
 
-            info_created_at = '%s (%d)' % (
-               instance_state['created_at'], (gmt_now - created_at).seconds)
-
-            if instance_state['text'].startswith('#access'):
+            if instance_text.startswith('#access Instance correctly stopped'):
               state =  INSTANCE_STATE_STARTED
-
-            if instance_state['text'].startswith('#access Instance correctly stopped'):
+            elif instance_text.startswith('#access'):
               state =  INSTANCE_STATE_STOPPED
-
-            if instance_state['text'].startswith('#destroy'):
+            elif instance_text.startswith('#destroy'):
               state = INSTANCE_STATE_DESTROYED
-
-            if instance_state['text'].startswith('#error'):
+            elif instance_text.startswith('#error'):
               state = INSTANCE_STATE_STARTED_WITH_ERROR
 
         if state == INSTANCE_STATE_STARTED_WITH_ERROR:
