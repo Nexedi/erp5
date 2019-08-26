@@ -31,6 +31,7 @@ import os
 import random
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl import Unauthorized
 
 class TestCertificateAuthority(ERP5TypeTestCase):
@@ -39,8 +40,9 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     return "Test Certificate Authority"
 
   def afterSetUp(self):
-    self.portal.portal_certificate_authority.certificate_authority_path = \
-        os.environ['TEST_CA_PATH']
+    if "TEST_CA_PATH" in os.environ:
+      self.portal.portal_certificate_authority.certificate_authority_path = \
+          os.environ['TEST_CA_PATH']
 
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_certificate_authority')
@@ -59,6 +61,30 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     self.loginByUserName(login)
     person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
     certificate = person.getCertificate()
+
+    certificate_login_list = person.objectValues(
+      portal_type="Certificate Login"
+    )
+    self.assertEquals(len(certificate_login_list), 1)
+    certificate_login = certificate_login_list[0]
+    self.assertEquals(certificate_login.getReference(), user_id)
+    self.assertEquals(certificate_login.getValidationState(), "validated")
+    
+    self.assertTrue('CN=%s' % user_id in certificate['certificate'])
+
+  def test_person_duplicated_login(self):
+    user_id, login = self._createPerson()
+    self.loginByUserName(login)
+    person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
+    person.newContent(portal_type='ERP5 Login', reference=user_id).validate()
+    self.tic()
+
+    certificate = person.getCertificate()
+    certificate_login_list = person.objectValues(
+      portal_type="Certificate Login"
+    )
+    # If a erp5_login is already using the User ID, just reuse it for now
+    self.assertEquals(len(certificate_login_list), 0)
     self.assertTrue('CN=%s' % user_id in certificate['certificate'])
 
   def test_person_revoke_certificate(self):
@@ -72,6 +98,14 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     self.loginByUserName(login)
     person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
     certificate = person.getCertificate()
+    certificate_login_list = person.objectValues(
+      portal_type="Certificate Login"
+    )
+    self.assertEquals(len(certificate_login_list), 1)
+    certificate_login = certificate_login_list[0]
+    self.assertEquals(certificate_login.getReference(), user_id)
+    self.assertEquals(certificate_login.getValidationState(), "validated")
+
     self.assertTrue('CN=%s' % user_id in certificate['certificate'])
     person.revokeCertificate()
 
@@ -80,8 +114,55 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     self.loginByUserName(login)
     person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
     certificate = person.getCertificate()
+
+    certificate_login_list = person.objectValues(
+      portal_type="Certificate Login"
+    )
+    self.assertEquals(len(certificate_login_list), 1)
+    certificate_login = certificate_login_list[0]
+    self.assertEquals(certificate_login.getReference(), user_id)
+
     self.assertTrue('CN=%s' % user_id in certificate['certificate'])
+    self.assertEquals(certificate_login.getValidationState(), "validated")
+
     self.assertRaises(ValueError, person.getCertificate)
+
+    # Ensure it don't create a second object
+    certificate_login_list = person.objectValues(
+      portal_type="Certificate Login"
+    )
+    self.assertEquals(len(certificate_login_list), 1)
+    certificate_login = certificate_login_list[0]
+    self.assertEquals(certificate_login.getReference(), user_id)
+    self.assertEquals(certificate_login.getValidationState(), "validated")
+
+  def test_person_request_revoke_request_certificate(self):
+    user_id, login = self._createPerson()
+    self.loginByUserName(login)
+    person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
+    certificate = person.getCertificate()
+
+    certificate_login_list = person.objectValues(
+      portal_type="Certificate Login"
+    )
+    self.assertEquals(len(certificate_login_list), 1)
+    certificate_login = certificate_login_list[0]
+    self.assertEquals(certificate_login.getReference(), user_id)
+
+    self.assertTrue('CN=%s' % user_id in certificate['certificate'])
+    self.assertEquals(certificate_login.getValidationState(), "validated")
+
+    person.revokeCertificate()
+
+    certificate = person.getCertificate()
+    # Ensure it don't create a second object
+    certificate_login_list = person.objectValues(
+      portal_type="Certificate Login"
+    )
+    self.assertEquals(len(certificate_login_list), 1)
+    certificate_login = certificate_login_list[0]
+    self.assertEquals(certificate_login.getReference(), user_id)
+    self.assertEquals(certificate_login.getValidationState(), "validated")
 
   def test_person_request_certificate_for_another(self):
     _, login = self._createPerson()
@@ -90,6 +171,25 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
     self.loginByUserName(login2)
     self.assertRaises(Unauthorized, person.getCertificate)
+
+  def test_person_duplicated_login_from_another_user(self):
+    user_id, login = self._createPerson()    
+    person = self.portal.person_module.newContent(portal_type='Person',
+      reference=str(random.random()), password=login)
+    person.newContent(portal_type='Assignment').open()
+
+    # Try to create a login with other person user_id to cheat the system
+    person.newContent(portal_type='ERP5 Login', reference=user_id).validate()
+    self.tic()
+    self.loginByUserName(login)
+    person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
+    self.assertRaises(ValidationFailed, person.getCertificate)
+
+    certificate_login_list = [ i for i in person.objectValues(
+      portal_type="Certificate Login"
+    ) if i.getValidationState() == "validated"]
+    
+    self.assertEquals(len(certificate_login_list), 0)
 
   def test_person_revoke_certificate_for_another(self):
     user_id, login = self._createPerson()
