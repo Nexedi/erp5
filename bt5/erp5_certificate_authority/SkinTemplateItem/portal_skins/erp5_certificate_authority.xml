@@ -9,7 +9,18 @@
         <item>
             <key> <string>_local_properties</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>business_template_skin_layer_priority</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>float</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
             </value>
         </item>
         <item>
@@ -17,6 +28,10 @@
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>business_template_skin_layer_priority</string> </key>
+            <value> <float>1.0</float> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
