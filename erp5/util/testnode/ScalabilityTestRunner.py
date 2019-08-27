@@ -467,6 +467,8 @@ Require valid-user
     instance_information_time = time.time()
     instance_information = self.slapos_communicator.getInstanceUrlDict()
     while not instance_information['frontend-url-list'] and \
+          not instance_information['user'] and \
+          not instance_information['password'] and \
           time.time() - instance_information_time < MAX_FRONTEND_TIME:
       time.sleep(5*60)
       instance_information = self.slapos_communicator.getInstanceUrlDict()
