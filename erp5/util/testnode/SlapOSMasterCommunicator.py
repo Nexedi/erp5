@@ -197,9 +197,9 @@ class SlapOSMasterCommunicator(object):
           if instance_state.get('created_at', '-1') != "-1":
             instance_text = instance_state['text']
 
-            if instance_text.startswith('#access Instance correctly stopped'):
+            if instance_text.startswith('#access Instance correctly started'):
               state =  INSTANCE_STATE_STARTED
-            elif instance_text.startswith('#access'):
+            elif instance_text.startswith('#access Instance correctly stopped'):
               state =  INSTANCE_STATE_STOPPED
             elif instance_text.startswith('#destroy'):
               state = INSTANCE_STATE_DESTROYED
