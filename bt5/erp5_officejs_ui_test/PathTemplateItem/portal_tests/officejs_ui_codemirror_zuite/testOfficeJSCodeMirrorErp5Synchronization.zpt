@@ -194,11 +194,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>title=${title}</td>
-  <td></td>
-</tr>
-<tr>
   <td>assertTextPresent</td>
   <td>${title}</td>
   <td></td>
