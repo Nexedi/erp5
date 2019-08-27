@@ -41,11 +41,11 @@ manage_addERP5ExternalAuthenticationPluginForm = PageTemplateFile(
   'www/ERP5Security_addERP5ExternalAuthenticationPlugin', globals(),
   __name__='manage_addERP5ExternalAuthenticationPluginForm')
 
-def addERP5ExternalAuthenticationPlugin(dispatcher, id, title=None, user_id_key='',
-                              REQUEST=None):
+def addERP5ExternalAuthenticationPlugin(dispatcher, id, title=None, user_id_key='', 
+                 login_portal_type_list=None, REQUEST=None):
   """ Add a ERP5ExternalAuthenticationPlugin to a Pluggable Auth Service. """
 
-  plugin = ERP5ExternalAuthenticationPlugin(id, title, user_id_key)
+  plugin = ERP5ExternalAuthenticationPlugin(id, title, user_id_key, login_portal_type_list)
   dispatcher._setObject(plugin.getId(), plugin)
 
   if REQUEST is not None:
@@ -76,15 +76,27 @@ class ERP5ExternalAuthenticationPlugin(BasePlugin):
                    'mode':'w',
                    'label':'HTTP request header key where the user_id is stored'
                    },
+                  {'id': 'login_portal_type_list',
+                   'type':'lines',
+                   'mode':'w',
+                   'label': 'List of Login Portal Types to search'
+                   },
+                  
                   )
                  + BasePlugin._properties[:]
                  )
 
-  def __init__(self, id, title=None, user_id_key=''):
+  def __init__(self, id, title=None, user_id_key='', login_portal_type_list=None):
     #Register value
     self._setId(id)
     self.title = title
     self.user_id_key = user_id_key
+
+    if login_portal_type_list is None:
+      # Keep at least one portal type as Login
+      login_portal_type_list = ["ERP5 Login"]
+
+    self.login_portal_type_list = login_portal_type_list
 
   ####################################
   #ILoginPasswordHostExtractionPlugin#
@@ -97,9 +109,10 @@ class ERP5ExternalAuthenticationPlugin(BasePlugin):
     if getHeader is None:
       # use get_header instead for Zope-2.8
       getHeader = request.get_header
-    user_id = getHeader(self.user_id_key)
-    if user_id is not None:
-      creds['external_login'] = user_id
+    external_login = getHeader(self.user_id_key)
+    if external_login is not None:
+      creds['external_login'] = external_login
+      creds['login_portal_type'] = self.login_portal_type_list
     else:
       # fallback to default way
       return DumbHTTPExtractor().extractCredentials(request)
@@ -125,7 +138,7 @@ class ERP5ExternalAuthenticationPlugin(BasePlugin):
       __name__='manage_editERP5ExternalAuthenticationPluginForm')
 
   security.declareProtected(ManageUsers, 'manage_editERP5ExternalAuthenticationPlugin')
-  def manage_editERP5ExternalAuthenticationPlugin(self, user_id_key, RESPONSE=None):
+  def manage_editERP5ExternalAuthenticationPlugin(self, user_id_key, login_portal_type_list, RESPONSE=None):
     """Edit the object"""
     error_message = ''
 
@@ -134,6 +147,11 @@ class ERP5ExternalAuthenticationPlugin(BasePlugin):
       error_message += 'Invalid key value '
     else:
       self.user_id_key = user_id_key
+
+    if login_portal_type_list == '' or login_portal_type_list is None:
+      error_message += 'Invalid portal type value '
+    else:
+      self.login_portal_type_list = login_portal_type_list
 
     #Redirect
     if RESPONSE is not None:
