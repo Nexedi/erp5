@@ -1,5 +1,5 @@
 /*global window, document, rJS, RSVP, jIO */
-/*jslint nomen: true, indent: 2, maxerr: 3 */
+/*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80  */
 (function (window, document, rJS, RSVP, jIO) {
   "use strict";
 
@@ -122,8 +122,8 @@
           return gadget.declareGadget("gadget_officejs_common_util.html");
         })
         .push(function (gadget_util) {
-          return gadget_util.getDialogFormDefinition(
-            gadget.state.download_document_form);
+          return gadget_util.getDialogFormDefinition(gadget.state
+                                                     .download_document_form);
         })
         .push(function (form_definition) {
           while (gadget.element.firstChild) {
