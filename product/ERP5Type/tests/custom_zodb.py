@@ -56,10 +56,23 @@ if load:
       _print("Could not find MySQL dump (%r), will recreate catalog ... " % dump_sql_path)
       os.environ['erp5_tests_recreate_catalog'] = '1'
   _print("Restoring static files ... ")
-elif save and not (neo_storage or zeo_client) and os.path.exists(data_fs_path):
-  _print("About to remove existing Data.fs %s (press Ctrl+C to abort)" % data_fs_path)
-  time.sleep(5)
-  os.remove(data_fs_path)
+elif save:
+  if not (neo_storage or zeo_client) and os.path.exists(data_fs_path):
+    _print("About to remove existing Data.fs %s (press Ctrl+C to abort)" % data_fs_path)
+    time.sleep(5)
+    os.remove(data_fs_path)
+
+# Whether passing --save or not passing both --load and --save, the catalog
+# must be cleared of data from previous execution if any
+if not load:
+  _print("Catalog will be recreated to clear data (if any) from previous execution")
+  import Products.ZMySQLDA.db
+  sql_db = Products.ZMySQLDA.db.DB(os.environ['erp5_sql_connection_string'])
+  table_list = sql_db.tables()
+  if table_list:
+    sql_db.query('DROP TABLE ' +
+                 ','.join('`%s`' % table['TABLE_NAME'] for table in table_list))
+  del sql_db
 
 zeo_server_pid = None
 node_pid_list = []
