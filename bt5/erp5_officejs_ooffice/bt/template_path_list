@@ -1,5 +1,7 @@
 image_module/ooo_logo_*
+portal_types/Document Module/ooffice_presentation_view
 portal_types/Document Module/ooffice_text_view
+portal_types/Presentation/ooffice_presentation_view
 portal_types/Text/ooffice_text_view
 web_page_module/gadget_ooffice_*
 web_site_module/ooffice_presentation
