@@ -16,7 +16,8 @@ document = context
 # backcompat
 def getReportViaFancyName(my_report_name):
   for follow_up in document_required_follow_up_list:
-    report_name = follow_up.split("insertFollowUp").pop().split("Report")[0]
+    #report_name = follow_up.split("insertFollowUp").pop().split("Report")[0]
+    report_name = my_report_name.split("insertFollowUp").pop().split("Report")[0]
     detail_name = "Detail" in report_name
     coverage_name = "Coverage" in report_name
 
@@ -24,17 +25,18 @@ def getReportViaFancyName(my_report_name):
     if detail_name:
       report_name = report_name.replace("Detail", "")
 
-    method_name = ''.join(['Base_render', report_name, 'TextDocumentReportAsHtml'])
+    #method_name = ''.join(['Base_render', report_name, 'TextDocumentReportAsHtml'])
+    method_name = ''.join(['Base_generate', report_name, 'Report'])
     method_call = getattr(follow_up, method_name)
     if method_call is not None:
 
       # extra curl: Coverage report requires parameter details (1|0)
       if coverage_name:
-        return method_call(comment_visibility=True).encode(encoding='UTF-8')
+        return method_call(comment_visibility=True)[0].encode(encoding='UTF-8')
       elif detail_name:
-        return method_call(format='detailed').encode(encoding='UTF-8')
+        return method_call(format='detailed',display_detail = 1)[0].encode(encoding='UTF-8')
       else:
-        return method_call().encode(encoding='UTF-8')
+        return method_call()[0].encode(encoding='UTF-8')
 
 if (doc_content.find('${WebPage_')):
   document_allowed_portal_type_list = ["Project", "Sale Opportunity", "Sale Order"]
