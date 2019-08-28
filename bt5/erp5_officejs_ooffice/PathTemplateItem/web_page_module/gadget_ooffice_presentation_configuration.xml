@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -41,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -61,7 +64,9 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -76,7 +81,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_ooffice_presentation_router.html</string> </value>
+            <value> <string>gadget_ooffice_presentation.configuration</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -86,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_ooffice_presentation_router_html</string> </value>
+            <value> <string>gadget_ooffice_presentation_configuration</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -94,7 +99,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -103,8 +108,38 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>CACHE MANIFEST\n
+# generated on Thu, 14 Jan 2019 11:55:33 +0000\n
+CACHE:\n
+\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Document Module)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Document Module/ooffice_presentation_view)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3ByZXNlbnRhdGlvbl92aWV3\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Presentation)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1ByZXNlbnRhdGlvbg==\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Presentation/ooffice_presentation_view)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1ByZXNlbnRhdGlvbi9vb2ZmaWNlX3ByZXNlbnRhdGlvbl92aWV3\n
+\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_presentation_editor/Base_viewNewContentDialogForOofficePresentationEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9wcmVzZW50YXRpb25fZWRpdG9yL0Jhc2Vfdmlld05ld0NvbnRlbnREaWFsb2dGb3JPb2ZmaWNlUHJlc2VudGF0aW9uRWRpdG9y\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_presentation_editor/DocumentModule_viewDocumentListAsJioForOofficePresentationEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9wcmVzZW50YXRpb25fZWRpdG9yL0RvY3VtZW50TW9kdWxlX3ZpZXdEb2N1bWVudExpc3RBc0ppb0Zvck9vZmZpY2VQcmVzZW50YXRpb25FZGl0b3I=\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_presentation_editor/PresentationDocument_viewAsJioForOofficePresentationEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9wcmVzZW50YXRpb25fZWRpdG9yL1ByZXNlbnRhdGlvbkRvY3VtZW50X3ZpZXdBc0ppb0Zvck9vZmZpY2VQcmVzZW50YXRpb25FZGl0b3I=\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_presentation_editor/Base_uploadDialogForOofficePresentationEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9wcmVzZW50YXRpb25fZWRpdG9yL0Jhc2VfdXBsb2FkRGlhbG9nRm9yT29mZmljZVByZXNlbnRhdGlvbkVkaXRvcg==\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_presentation_editor/Base_downloadDialogForOofficePresentationEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9wcmVzZW50YXRpb25fZWRpdG9yL0Jhc2VfZG93bmxvYWREaWFsb2dGb3JPb2ZmaWNlUHJlc2VudGF0aW9uRWRpdG9y\n
+\n
+\n
+NETWORK:\n
+*</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Onlyoffice Presentation Router Gadget</string> </value>
+            <value> <string>Presentation OnlyOffice Configuration</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -170,7 +205,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -196,7 +231,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486996771.55</float>
+                        <float>1566484424.21</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -205,7 +240,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -241,7 +276,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.4085.25597.45346</string> </value>
+                <value> <string>978.4075.3666.1058</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -259,7 +294,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1567011534.03</float>
+                        <float>1567010646.11</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -316,7 +351,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486996101.34</float>
+                        <float>1566484365.77</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
