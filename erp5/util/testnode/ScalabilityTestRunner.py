@@ -466,12 +466,16 @@ Require valid-user
     logger.info("Getting instance information:")
     instance_information_time = time.time()
     instance_information = self.slapos_communicator.getInstanceUrlDict()
-    while not instance_information['frontend-url-list'] and \
-          not instance_information['user'] and \
-          not instance_information['password'] and \
-          time.time() - instance_information_time < MAX_FRONTEND_TIME:
-      time.sleep(5*60)
+    while (time.time() - instance_information_time < MAX_FRONTEND_TIME):
+      logger.info("getInstanceInformation=%s" %instance_information)
+      # loop until frontend is instanciated
+      if instance_information['frontend-url-list'] and \
+         instance_information['user'] and \
+         instance_information['password']:
+        break
+      time.sleep(60)
       instance_information = self.slapos_communicator.getInstanceUrlDict()
+    
     logger.info(instance_information)
     if not instance_information['frontend-url-list']:
       raise ValueError("Error getting instance information: frontend url not available")
