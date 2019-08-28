@@ -199,6 +199,29 @@
       return [form_type, child_gadget_url];
     })
 
+    .declareMethod("getDialogFormDefinition", function (form_name) {
+      var gadget = this,
+        form_definition,
+        dialog_form_path = "portal_skins/";
+      return gadget.getSetting('portal_skin_folder')
+      .push(function (portal_skin_folder) {
+        dialog_form_path += portal_skin_folder + "/" + form_name;
+        return gadget.jio_get(dialog_form_path);
+      })
+      .push(function (form_result) {
+        form_definition = form_result.raw_dict._embedded._view
+          ._embedded.form_definition;
+        form_definition.fields_raw_properties = form_result.raw_dict._embedded
+          ._view.my_fields_raw_properties["default"];
+        form_definition._actions = form_result.raw_dict._embedded
+          ._view._actions;
+        form_definition.group_list = form_result.raw_dict.group_list;
+        form_definition.title = form_result.raw_dict.title;
+        form_definition.portal_type_dict = {};
+        return form_definition;
+      });
+    })
+
     .declareMethod("getFormDefinition", function (portal_type,
                                                   action_reference) {
       var gadget = this,

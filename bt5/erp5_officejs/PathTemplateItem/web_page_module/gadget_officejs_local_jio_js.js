@@ -145,7 +145,8 @@
             }
           }
         },
-        sync_flag = "appcache-stored",
+        //flag must be different for each app
+        sync_flag = "appcachestored-" + Math.random().toString(36).substring(7),
         configuration_ids_list = [];
       if (jio_options === undefined) {
         return;
