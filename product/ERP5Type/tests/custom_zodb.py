@@ -82,8 +82,11 @@ if load:
         if not live_instance_path:
           backup_path = os.path.basename(backup_path)
         os.symlink(backup_path, full_path)
-elif save and not (neo_storage or zeo_client) and os.path.exists(data_fs_path):
-  os.remove(data_fs_path)
+elif save:
+  if not (neo_storage or zeo_client) and os.path.exists(data_fs_path):
+    os.remove(data_fs_path)
+
+  os.environ['erp5_tests_recreate_catalog'] = '1'
 
 for static_dir in static_dir_list:
   static_dir = os.path.join(instance_home, static_dir)
