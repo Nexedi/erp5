@@ -358,13 +358,13 @@ class DB(TM):
               raise OperationalError(m[0], '%s: %s' % (m[1], query))
             if m[0] in lock_error:
               raise ConflictError('%s: %s: %s' % (m[0], m[1], query))
-            if not allow_reconnect and self._use_TM or \
-              m[0] not in hosed_connection:
-                LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
-                raise
-            # Hm. maybe the db is hosed.  Let's restart it.
-            self._forceReconnection()
-            self.db.query(query)
+            if (allow_reconnect or not self._use_TM) and \
+              m[0] in hosed_connection:
+              self._forceReconnection()
+              self.db.query(query)
+            else:
+              LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
+              raise
         except ProgrammingError:
           LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
           raise
