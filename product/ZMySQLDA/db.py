@@ -365,33 +365,9 @@ class DB(TM):
             # Hm. maybe the db is hosed.  Let's restart it.
             self._forceReconnection()
             self.db.query(query)
-        except ProgrammingError, exception:
+        except ProgrammingError:
           LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
-          # XXX sometimes, after a programming error, the database object
-          # gets fully broken and non-functional. So recover it by
-          # recreation.
-          self._forceReconnection()
-          if exception[0] == ER.PARSE_ERROR:
-            # You have an error in your SQL syntax
-            # Replace MySQL brain dead error message with a more meaningful
-            # one. (MySQL only reports the SQL query *from* the error place,
-            # which strips important contextual information).
-            error_text = exception[1]
-            prefix, suffix = error_text.split("'", 1)
-            if prefix == "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ":
-              sql, suffix = suffix.rsplit("'", 1)
-              try:
-                line_number = int(suffix.rsplit(' ', 1)[-1])
-              except TypeError:
-                pass
-              else:
-                reference_sql = query
-                split_reference_sql = reference_sql.split('\n')
-                candidate_sql = '\n'.join(split_reference_sql[line_number - 1:])
-                error_position = len(reference_sql) - len(candidate_sql) + candidate_sql.find(sql)
-                if error_position > -1:
-                  raise ProgrammingError(exception[0], "%s '%s' HERE '%s' %s" % (prefix, reference_sql[:error_position], reference_sql[error_position:], suffix))
-          raise exception
+          raise
         return self.db.store_result()
 
     def query(self, query_string, max_rows=1000):
