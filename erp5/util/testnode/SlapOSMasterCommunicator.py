@@ -133,7 +133,7 @@ class SlapOSMasterCommunicator(object):
   @retryOnNetworkFailure
   def getInstanceUrlList(self):
     return self.hateoas_navigator.getHostingSubscriptionInstanceList(
-      self.title)
+      self.name)
 
   @retryOnNetworkFailure
   def getInformationFromInstance(self, url):
