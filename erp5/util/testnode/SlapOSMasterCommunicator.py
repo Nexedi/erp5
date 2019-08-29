@@ -403,7 +403,7 @@ class SlapOSTester(SlapOSMasterCommunicator):
 
   def destroyInstance(self, instance_title):
     self.name = instance_title
-    instance_url_list = self.InstanceUrlList()
+    instance_url_list = self.getInstanceUrlList()
     if instance_url_list:
       for instance in instance_url_list:
         if instance["title"] != instance_title:
