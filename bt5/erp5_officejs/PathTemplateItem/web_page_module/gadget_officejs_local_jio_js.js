@@ -145,8 +145,8 @@
             }
           }
         },
-        //flag must be different for each app
-        sync_flag = "appcachestored-" + Math.random().toString(36).substring(7),
+        //TODO flag must be different for each app (get from global)
+        sync_flag = "appcachestored",
         configuration_ids_list = [];
       if (jio_options === undefined) {
         return;
@@ -243,6 +243,7 @@
                     gadget.state_parameter_dict.jio_storage_name = "ERP5";
                     return;
                   }
+                  console.log(error);
                   throw error;
                 });
             });
