@@ -12,8 +12,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateDocument", "updateDocument")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
-    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
-    .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("jio_get", "jio_get")
 
 
@@ -53,7 +52,8 @@
     })
 
     .onEvent('submit', function () {
-      var gadget = this;
+      var gadget = this,
+        title;
 
       return gadget.notifySubmitting()
         .push(function () {
@@ -63,9 +63,14 @@
           return form_gadget.getContent();
         })
         .push(function (result) {
-          var reply = result.reply;
+          title = result.title;
+
+          if (result.text_ === "") {
+            result.text_ = " ";
+          }
           return gadget.updateDocument({
-            'text_content': gadget.state.content.text_content + "\n" + reply
+            'text_content': result.text_,
+            title: title
           });
         })
         .push(function () {
@@ -73,9 +78,6 @@
             "message": "Data Updated",
             "status": "success"
           });
-        })
-        .push(function () {
-          return gadget.redirect({command: 'reload'});
         });
     })
     .declareMethod("triggerSubmit", function () {
@@ -102,23 +104,12 @@
                     "hidden": 0,
                     "type": "StringField"
                   },
-                  "my_text_content": {
-                    "default": gadget.state.content.text_content,
-                    "css_class": "",
-                    "required": 0,
-                    "editable": 0,
-                    "key": "text_content",
-                    "hidden": 0,
-                    "title": 'History',
-                    "type": "TextAreaField"
-                  },
-                  "my_reply": {
-                    "default": "",
-                    "title": "Reply",
+                  "my_text": {
+                    "default": gadget.state.text,
                     "css_class": "",
                     "required": 0,
                     "editable": 1,
-                    "key": "reply",
+                    "key": "text_",
                     "hidden": 0,
                     "renderjs_extra": '{"editor": "fck_editor"}',
                     "type": "GadgetField",
@@ -139,11 +130,8 @@
                 "left",
                 [["my_title"]]
               ], [
-                "center",
-                [["my_text_content"]]
-              ], [
                 "bottom",
-                [["my_reply"]]
+                [["my_text"]]
               ]]
             }
           });

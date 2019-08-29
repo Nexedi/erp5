@@ -104,6 +104,12 @@
                   "message": "Data created",
                   "status": "success"
                 });
+              })
+              .push(function () {
+                return gadget.redirect({
+                  command: 'display',
+                  options: {page: "ojs_smart_assistant_document_list"}
+                });
               });
           }
         });
@@ -156,12 +162,13 @@
         })
         .push(function (result) {
           var column_list = [
-            ['title', 'Title'],
+            ['agent_title', 'Title'],
+            ['description', 'Reply'],
             ['modification_date', 'Modification Date'],
             ['validation_state', 'Validation State']
           ],
 
-            portal_type = result[3].split(','),
+            portal_type = ["Query"],
             query = "urn:jio:allDocs?query=",
             i,
             jio_query_list = [];
@@ -273,7 +280,7 @@
                     "editable": 1,
                     "editable_column_list": [],
                     "key": "field_listbox",
-                    "lines": 30,
+                    "lines": 10,
                     "list_method": "portal_catalog",
                     "query": query,
                     "portal_type": [],
