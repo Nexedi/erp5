@@ -8,7 +8,6 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
-    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("jio_post", "jio_post")
 
@@ -40,7 +39,7 @@
       var gadget = this,
         allowed_sub_types_list = options.allowed_sub_types_list.split(","),
         parent_portal_type = options.portal_type,
-        new_content_action_path = options.new_content_action_path,
+        new_content_dialog_form = options.new_content_dialog_form,
         portal_type,
         form_definition,
         document_title;
@@ -54,17 +53,12 @@
         })
         .push(function (portal_type_result) {
           portal_type = portal_type_result;
-          return gadget.jio_get(new_content_action_path);
+          return gadget.declareGadget("gadget_officejs_common_util.html");
         })
-        .push(function (form_result) {
-          form_definition = form_result.raw_dict._embedded._view
-            ._embedded.form_definition;
-          form_definition.fields_raw_properties = form_result.raw_dict._embedded
-            ._view.my_fields_raw_properties["default"];
-          form_definition._actions = form_result.raw_dict._embedded
-            ._view._actions;
-          form_definition.group_list = form_result.raw_dict.group_list;
-          form_definition.title = "Create Document";
+        .push(function (gadget_util) {
+          return gadget_util.getDialogFormDefinition(new_content_dialog_form);
+        })
+        .push(function (form_definition) {
           return gadget.changeState({
             doc: { title: document_title, portal_type: allowed_sub_types_list },
             parent_portal_type: parent_portal_type,

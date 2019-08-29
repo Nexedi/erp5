@@ -348,9 +348,9 @@
                                           jio_key: options.jio_key,
                                           portal_type:
                                           options.portal_type,
-                                          new_content_action_path:
+                                          new_content_dialog_form:
                                           form_json.form_definition
-                                            .new_content_action_path,
+                                            .new_content_dialog_form,
                                           allowed_sub_types_list:
                                           form_json.form_definition
                                             .allowed_sub_types_list

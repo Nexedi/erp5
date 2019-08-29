@@ -306,14 +306,15 @@
               return pair[1];
             });
           form_definition.allowed_sub_types_list = allowed_sub_types;
+          //TODO use portal_type_dict.new_content_dialog_form instead
           return gadget.getSetting("new_content_action");
         })
         .push(function (new_content_action) {
+          //TODO it can be undefined! this means that creation dialog isn't needed
           if (!new_content_action) {
             throw new Error("Missing site configuration 'new_content_action'");
           }
-          form_definition.new_content_action_path = portal_skin_folder +
-            "/" + new_content_action;
+          form_definition.new_content_dialog_form = new_content_action;
           return gadget.getViewAndActionDict(portal_type);
         })
         .push(function (action_view_dict) {
