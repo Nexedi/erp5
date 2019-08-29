@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_ooffice_text.configuration</string> </value>
+            <value> <string>gadget_ooffice_text_configuration</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -276,7 +276,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.3843.61086.59392</string> </value>
+                <value> <string>978.3845.16582.3976</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -294,7 +294,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1566996795.17</float>
+                        <float>1567070344.51</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
