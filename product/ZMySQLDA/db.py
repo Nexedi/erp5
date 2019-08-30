@@ -105,7 +105,7 @@ from MySQLdb.converters import conversions
 from MySQLdb.constants import FIELD_TYPE, CR, ER, CLIENT
 from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
-from zLOG import LOG, ERROR
+from zLOG import LOG, ERROR, WARNING
 from ZODB.POSException import ConflictError
 
 import sys
@@ -208,6 +208,7 @@ class DB(TM):
     del conv[FIELD_TYPE.TIME]
 
     _sort_key = TM._sort_key
+    db = None
 
     def __init__(self,connection):
         """
@@ -282,6 +283,28 @@ class DB(TM):
       self.db.close()
 
     def _forceReconnection(self):
+      db = self.db
+      if db is not None:
+        try:
+          db.close()
+        except Exception as exception:
+          # XXX: MySQLdb seems to think it's smart to use such general SQL
+          # exception for such a specific case error, rather than subclassing
+          # it. In an attempt to be future-proof (if it ever raises the same
+          # exception for unrelated reasons, like errors which would happen in
+          # mysql_close), check also the exception message.
+          # Anyway, this is just to avoid useless log spamming, so it's not a
+          # huge deal either way.
+          if not isinstance(
+            exception,
+            ProgrammingError,
+          ) or exception.message != 'closing a closed connection':
+            LOG(
+              'ZMySQLDA.db',
+              WARNING,
+              'Failed to close pre-existing connection, discarding it',
+              error=True,
+            )
       self.db = MySQLdb.connect(**self._kw_args)
 
     def tables(self, rdb=0,
