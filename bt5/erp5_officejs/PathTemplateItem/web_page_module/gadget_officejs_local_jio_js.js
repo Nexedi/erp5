@@ -145,7 +145,6 @@
             }
           }
         },
-        //TODO flag must be different for each app (get from global)
         sync_flag = "appcachestored",
         configuration_ids_list = [];
       if (jio_options === undefined) {

@@ -91,6 +91,30 @@
     }));
   }
 
+  function getFormInfo(form_definition) {
+    var child_gadget_url,
+      form_type,
+      action_category = form_definition.action_type;
+    switch (action_category) {
+    case 'object_list':
+      form_type = 'list';
+      child_gadget_url = 'gadget_erp5_pt_form_list.html';
+      break;
+    case 'object_dialog':
+      form_type = 'dialog';
+      child_gadget_url = 'gadget_erp5_pt_form_dialog.html';
+      break;
+    case 'object_jio_js_script':
+      form_type = 'dialog';
+      child_gadget_url = 'gadget_erp5_pt_form_dialog.html';
+      break;
+    default:
+      form_type = 'page';
+      child_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
+    }
+    return [form_type, child_gadget_url];
+  }
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -112,6 +136,7 @@
         default_view;
       return RSVP.Queue()
         .push(function () {
+          //TODO these should come as method parameters
           return RSVP.all([
             gadget.getSetting('app_view_reference'),
             gadget.getSetting('default_view_reference'),
@@ -175,38 +200,21 @@
         });
     })
 
+    //TODO this should be used locally.
+    //after refactor, change to a function
+    //check where else is used (controller and handle_action?)
     .declareMethod("getFormInfo", function (form_definition) {
-      var child_gadget_url,
-        form_type,
-        action_category = form_definition.action_type;
-      switch (action_category) {
-      case 'object_list':
-        form_type = 'list';
-        child_gadget_url = 'gadget_erp5_pt_form_list.html';
-        break;
-      case 'object_dialog':
-        form_type = 'dialog';
-        child_gadget_url = 'gadget_erp5_pt_form_dialog.html';
-        break;
-      case 'object_jio_js_script':
-        form_type = 'dialog';
-        child_gadget_url = 'gadget_erp5_pt_form_dialog.html';
-        break;
-      default:
-        form_type = 'page';
-        child_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
-      }
-      return [form_type, child_gadget_url];
+      return getFormInfo(form_definition);
     })
 
-    .declareMethod("getDialogFormDefinition", function (form_name) {
+    .declareMethod("getDialogFormDefinition", function (form_name, category) {
       var gadget = this,
         form_definition,
-        dialog_form_path = "portal_skins/";
+        form_info;
       return gadget.getSetting('portal_skin_folder')
       .push(function (portal_skin_folder) {
-        dialog_form_path += portal_skin_folder + "/" + form_name;
-        return gadget.jio_get(dialog_form_path);
+        return gadget.jio_get("portal_skins/" + portal_skin_folder + "/" +
+                              form_name);
       })
       .push(function (form_result) {
         form_definition = form_result.raw_dict._embedded._view
@@ -218,6 +226,10 @@
         form_definition.group_list = form_result.raw_dict.group_list;
         form_definition.title = form_result.raw_dict.title;
         form_definition.portal_type_dict = {};
+        form_definition.action_type = category;
+        form_info = getFormInfo(form_definition);
+        form_definition.form_type = form_info[0];
+        form_definition.child_gadget_url = form_info[1];
         return form_definition;
       });
     })
@@ -234,6 +246,7 @@
         form_definition,
         portal_skin_folder,
         error;
+      //TODO get all settings at once using RSVP.all
       return gadget.getSetting(portal_type_dict_setting)
         .push(function (result_dict) {
           if (result_dict) {
@@ -306,15 +319,10 @@
               return pair[1];
             });
           form_definition.allowed_sub_types_list = allowed_sub_types;
-          //TODO use portal_type_dict.new_content_dialog_form instead
-          return gadget.getSetting("new_content_action");
-        })
-        .push(function (new_content_action) {
-          //TODO it can be undefined! this means that creation dialog isn't needed
-          if (!new_content_action) {
-            throw new Error("Missing site configuration 'new_content_action'");
-          }
-          form_definition.new_content_dialog_form = new_content_action;
+          form_definition.new_content_dialog_form = portal_type_dict
+            .new_content_dialog_form;
+          form_definition.new_content_category = portal_type_dict
+            .new_content_category;
           return gadget.getViewAndActionDict(portal_type);
         })
         .push(function (action_view_dict) {
@@ -322,9 +330,6 @@
             Object.keys(action_view_dict.view_list).length > 1;
           form_definition.portal_type_dict.has_more_actions =
             Object.keys(action_view_dict.action_list).length > 0;
-          return gadget.getSetting('hide_header_add_button');
-        })
-        .push(function (hide_add_button_setting) {
           return form_definition;
         });
     });
