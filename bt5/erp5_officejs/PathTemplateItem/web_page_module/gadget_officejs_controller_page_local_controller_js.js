@@ -65,6 +65,7 @@
         })
         .push(function (result) {
           form_definition = result;
+          //TODO delete this, should come in form_definition itself
           return gadget_util.getFormInfo(form_definition);
         })
         .push(function (form_info) {
@@ -84,12 +85,18 @@
 
     .onStateChange(function () {
       var fragment = document.createElement('div'),
-        gadget = this;
+        gadget = this,
+        view_gadget_url = "gadget_officejs_form_view.html",
+        custom_gadget_url = gadget.state.form_definition.portal_type_dict
+      .custom_view_gadget;
       while (this.element.firstChild) {
         this.element.removeChild(this.element.firstChild);
       }
-      this.element.appendChild(fragment);
-      return gadget.declareGadget("gadget_officejs_form_view.html",
+      if (custom_gadget_url) {
+        view_gadget_url = custom_gadget_url;
+      }
+      gadget.element.appendChild(fragment);
+      return gadget.declareGadget(view_gadget_url,
                                   {element: fragment, scope: 'form_view'})
         .push(function (form_view_gadget) {
           return form_view_gadget.render(gadget.state);

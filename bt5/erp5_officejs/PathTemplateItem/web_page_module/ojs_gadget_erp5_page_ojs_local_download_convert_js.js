@@ -136,6 +136,8 @@
               return form_view_gadget.render({
                 doc: { title: form_definition.title,
                        format: format_list },
+                //url and form type should come in form defenition, which should
+                //get those values via getFormInfo using dialog_category setting
                 child_gadget_url: 'gadget_erp5_pt_form_dialog.html',
                 form_type: 'dialog',
                 form_definition: form_definition,

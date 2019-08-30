@@ -320,6 +320,8 @@
         page_title;
       if (options.doc && options.doc.title) {
         page_title = options.doc.title;
+      } else if (options.doc && options.doc.header_title) {
+        page_title = options.doc.header_title;
       } else {
         page_title = portal_type_dict.title;
       }
@@ -351,6 +353,9 @@
                                           new_content_dialog_form:
                                           form_json.form_definition
                                             .new_content_dialog_form,
+                                          new_content_category:
+                                          form_json.form_definition
+                                            .new_content_category,
                                           allowed_sub_types_list:
                                           form_json.form_definition
                                             .allowed_sub_types_list
