@@ -440,11 +440,6 @@
             <td>Europe/Western Europe/France</td> 
           </tr> 
           <tr> 
-            <td>select</td> 
-            <td>//select[@name=&quot;field_your_group&quot;]</td> 
-            <td>My company</td> 
-          </tr> 
-          <tr> 
             <td>clickAndWait</td> 
             <td>//input[@name=&quot;next:method&quot;]</td> 
             <td> </td> 
@@ -717,7 +712,7 @@
           <tr> 
             <td>verifyValue</td> 
             <td>//input[@name=&quot;field_your_default_address_city&quot;]</td> 
-            <td>Lille</td> 
+            <td>Marcq en Baroeul</td> 
           </tr> 
           <tr> 
             <td>clickAndWait</td> 
@@ -1145,6 +1140,11 @@
             <td>verifyValue</td> 
             <td>//input[@name=&quot;field_your_period_title&quot;]</td> 
             <td tal:content="python: DateTime().year()"></td> 
+          </tr> 
+          <tr> 
+            <td>select</td> 
+            <td>//select[@name=&quot;field_your_accounting_plan&quot;]</td> 
+            <td>IAS-IFRS Compliant</td> 
           </tr> 
           <tr> 
             <td>clickAndWait</td> 
