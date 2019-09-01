@@ -589,10 +589,17 @@ and handling data send&receive.
     .declareJob("forceDownload", function forceDownload(attachment) {
       /*jslint regexp: true */
       var attachment_data = attachment.target.response,
+        filename_utf8_quoted = /(?:^|;)\s*filename\*=UTF-8''?([^";]+)/i.exec(
+          attachment.target.getResponseHeader("Content-Disposition") || ""
+        ),
         filename = /(?:^|;)\s*filename\s*=\s*"?([^";]+)/i.exec(
           attachment.target.getResponseHeader("Content-Disposition") || ""
         ),
         a_tag = document.createElement("a");
+        if (filename_utf8_quoted) {
+          filename = filename_utf8_quoted;
+          filename[1] = decodeURI(filename[1]);
+        }
       /*jslint regexp: false */
 
       if (attachment.target.responseType !== "blob") {
