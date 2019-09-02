@@ -2522,6 +2522,16 @@ SafariBrowserBot.prototype.modifyWindowToRecordPopUpDialogs = function(windowToM
 
 MozillaBrowserBot.prototype._fireEventOnElement = function(eventType, element, clientX, clientY) {
     var win = this.getCurrentWindow();
+    if (eventType === "click" && element.disabled) {
+      // From firefox 68 (and maybe earlier), the event handlers are executed
+      // when using element.dispatchEvent on a disabled element, whereas they
+      // were not with firefox 52.
+      // To keep compatibility with tests using click on disabled elements,
+      // we don't dispatch events when elements are disabled. We only do this
+      // for click events, to minimize the potential side effects of such change.
+      LOG.debug("not triggering event " + eventType + " on disabled element " + element);
+      return
+    }
     triggerEvent(element, 'focus', false);
 
     // Add an event listener that detects if the default action has been prevented.

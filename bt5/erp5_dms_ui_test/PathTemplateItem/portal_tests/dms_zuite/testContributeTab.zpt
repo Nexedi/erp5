@@ -66,19 +66,19 @@ Wait for activities</span>
   <td>001</td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
+  <td>assertText</td>
+  <td>//label[normalize-space(text()) = "Original Filename"]/../div[@class="input"]</td>
   <td>tiolive-ERP5.Freedom.TioLive-001-en.odp</td>
-  <td></td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
+  <td>assertText</td>
+  <td>//label[normalize-space(text()) = "Type"]/../div[@class="input"]</td>
   <td>Presentation</td>
-  <td></td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
-  <td>Converted</td>
-  <td></td>
+  <td>assertText</td>
+  <td>//label[normalize-space(text()) = "File State"]/../div[@class="input"]</td>
+  <td>regexp:Convert(ing|ed)</td>
 </tr>
 <tr>
   <td>storeEval</td>
@@ -114,7 +114,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>assertAbsoluteLocation</td>
-  <td>regexp:${document_location}</td>
+  <td>glob:${document_location}*</td>
   <td></td>
 </tr>
 <tr>
@@ -143,19 +143,19 @@ Wait for activities</span>
   <td>001</td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
+  <td>assertText</td>
+  <td>//label[normalize-space(text()) = "Original Filename"]/../div[@class="input"]</td>
   <td>tiolive-ERP5.Freedom.TioLive-001-en.odp</td>
-  <td></td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
+  <td>assertText</td>
+  <td>//label[normalize-space(text()) = "Type"]/../div[@class="input"]</td>
   <td>Presentation</td>
-  <td></td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
-  <td>Converted</td>
-  <td></td>
+  <td>assertText</td>
+  <td>//label[normalize-space(text()) = "File State"]/../div[@class="input"]</td>
+  <td>regexp:Convert(ing|ed)</td>
 </tr>
 
 <!-- Contribute PDF -->
@@ -200,9 +200,9 @@ Wait for activities</span>
   <td>001</td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
+  <td>assertText</td>
+  <td>//label[normalize-space(text()) = "Type"]/../div[@class="input"]</td>
   <td>PDF</td>
-  <td></td>
 </tr>
 
 <!-- Contribute Image -->
@@ -294,19 +294,19 @@ Wait for activities</span>
   <td>001</td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
+  <td>assertText</td>
+  <td>//label[normalize-space(text()) = "Original Filename"]/../div[@class="input"]</td>
   <td>tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods</td>
-  <td></td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
+  <td>assertText</td>
+  <td>//label[normalize-space(text()) = "Type"]/../div[@class="input"]</td>
   <td>Spreadsheet</td>
-  <td></td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
-  <td>Converted</td>
-  <td></td>
+  <td>assertText</td>
+  <td>//label[normalize-space(text()) = "File State"]/../div[@class="input"]</td>
+  <td>regexp:Convert(ing|ed)</td>
 </tr>
 
 <!-- Contribute Drawing -->
@@ -351,19 +351,19 @@ Wait for activities</span>
   <td>001</td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
+  <td>assertText</td>
+  <td>//label[normalize-space(text()) = "Original Filename"]/../div[@class="input"]</td>
   <td>tiolive-ERP5.Freedom.TioLive.Drawing-001-en.odg</td>
-  <td></td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
+  <td>assertText</td>
+  <td>//label[normalize-space(text()) = "Type"]/../div[@class="input"]</td>
   <td>Drawing</td>
-  <td></td>
 </tr>
 <tr>
-  <td>verifyTextPresent</td>
-  <td>Converted</td>
-  <td></td>
+  <td>assertText</td>
+  <td>//label[normalize-space(text()) = "File State"]/../div[@class="input"]</td>
+  <td>regexp:Convert(ing|ed)</td>
 </tr>
 
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">
