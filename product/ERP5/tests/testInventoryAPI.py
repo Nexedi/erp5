@@ -2818,15 +2818,15 @@ class TestTrackingList(InventoryAPITestCase):
     node_b = self._makeOrganisation(title='Node B')
     node_c = self._makeOrganisation(title='Node C')
     movement_a = self._makeMovement(source_value=node_a,
-      destination_value=node_b, resource=self.resource,
+      destination_value=node_b, resource=self.resource.getRelativeUrl(),
       quantity=1, aggregate_value=item_a, start_date=now,
       simulation_state=state_a)
     movement_b = self._makeMovement(source_value=node_b,
-      destination_value=node_c, resource=self.resource,
+      destination_value=node_c, resource=self.resource.getRelativeUrl(),
       quantity=1, aggregate_value=item_a, start_date=now+1,
       simulation_state=state_b)
     movement_c = self._makeMovement(source_value=node_a,
-      destination_value=node_b, resource=self.resource,
+      destination_value=node_b, resource=self.resource.getRelativeUrl(),
       quantity=1, aggregate_value=item_b, start_date=now+1,
       simulation_state=state_c)
     self.tic()

@@ -6765,7 +6765,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     # we simulated above, but we just want to test that an exported role
     # information can be imported back
     object_type.newContent(portal_type='Role Information',
-                           local_role_group_value=self.portal.portal_categories.local_role_group.Alternate.getRelativeUrl(),
+                           local_role_group_value=self.portal.portal_categories.local_role_group.Alternate,
                            role_name_list=('Assignee', ))
 
     bt = self.portal.portal_templates.newContent(

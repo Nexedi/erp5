@@ -94,18 +94,18 @@ class TestBPMMixin(ERP5TypeTestCase):
     if create_order_to_invoice_path:
       self.createTradeModelPath(self.business_process,
         reference='order_path',
-        trade_phase_value_list=('default/order',))
+        trade_phase_list=('default/order',))
       self.createTradeModelPath(self.business_process,
         reference='delivery_path',
-        trade_phase_value_list=('default/delivery',),
+        trade_phase_list=('default/delivery',),
         trade_date='trade_phase/default/order')
       self.createTradeModelPath(self.business_process,
         reference='invoice_path',
-        trade_phase_value_list=('default/invoicing',),
+        trade_phase_list=('default/invoicing',),
         trade_date='trade_phase/default/delivery')
     self.createTradeModelPath(business_process,
       reference='default_path',
-      trade_phase_value_list=('default/discount', 'default/tax'),
+      trade_phase_list=('default/discount', 'default/tax'),
       trade_date='trade_phase/default/invoicing')
     # A trade model path already exist for root simulation movements
     # (Accounting Transaction Root Simulation Rule).
