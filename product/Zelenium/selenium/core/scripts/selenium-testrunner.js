@@ -506,12 +506,48 @@ objectExtend(HtmlTestCaseRow.prototype, {
         if (testFrame.currentTestCase.headerRow.trElement.textContent.indexOf("expected failure") === -1) {
           var aElement = this.trElement.ownerDocument.createElement("a");
           aElement.textContent = ' (HTML)';
+          /**
+          * encode a string to base64
+          * @param {string} str string to be encoded
+          * @return {string}
+          */
           function b64EncodeUnicode(str) {
             return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
               return String.fromCharCode('0x' + p1);
             }));
           }
-          aElement.href = 'data:text/html;charset=utf-8;base64,' + b64EncodeUnicode(sel$('selenium_myiframe').contentWindow.document.body.innerHTML);
+
+          /**
+          * converts a Document to a base64 link containing the page content.
+          * @param {Document} doc the document
+          * @return {string}
+           */
+          function convertDocumentToDataUrl(doc){
+            return 'data:text/html;charset=utf-8;base64,' + b64EncodeUnicode(doc.body.innerHTML);
+          }
+
+          /**
+          * converts all iframs to a base64 link containing the page content.
+          * @param {Document} doc the document
+          * @return {string}
+           */
+          function recursiveConvertIframeToDataUrl(doc) {
+            doc.querySelectorAll('iframe').forEach(
+              function (frame) {
+                var frame_document;
+                try {
+                  // iframe access might be refused because cross-origin
+                  frame_document = frame.contentWindow.document;
+                } catch (e) {
+                  console.warn("Ignored error while dumping iframe");
+                  return
+                }
+                frame.src = recursiveConvertIframeToDataUrl(frame_document);
+              }
+            )
+            return convertDocumentToDataUrl(doc);
+          }
+          aElement.href = recursiveConvertIframeToDataUrl(sel$('selenium_myiframe').contentWindow.document);
           this.trElement.cells[2].appendChild(aElement);
         }
     },
