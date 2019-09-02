@@ -298,7 +298,7 @@ class TestKM(TestKMMixIn):
     # Web Section mode
     websection_knowledge_pad = user_pref.newContent(portal_type = 'Knowledge Pad',
                                                     title = "web_section")
-    websection_knowledge_pad.setGroupValue(default_pad_group)
+    websection_knowledge_pad.setGroup(default_pad_group)
     websection_knowledge_pad1 = websection_knowledge_pad.newContent( \
                                                     portal_type = 'Knowledge Box',
                                                     title = "web_section_1")
@@ -311,7 +311,7 @@ class TestKM(TestKMMixIn):
     websection_content_knowledge_pad = user_pref.newContent( \
                                           portal_type = 'Knowledge Pad', \
                                           title = "web_section_content")
-    websection_content_knowledge_pad.setGroupValue(default_pad_group_section_content_title)
+    websection_content_knowledge_pad.setGroup(default_pad_group_section_content_title)
     websection_content_knowledge_pad1 = websection_content_knowledge_pad.newContent( \
                                           portal_type = 'Knowledge Box', \
                                           title = "web_section_content_1")

@@ -110,14 +110,14 @@ CREATE TABLE alternate_roles_and_users (
       role_name='Auditor',
       role_base_category_script_id='ERP5Type_getSecurityCategoryFromSelf',
       role_base_category='agent',
-      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate.getRelativeUrl())
+      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate)
     # add another role information that does not grant view permission
     self.portal.portal_types.Person.newContent(
       portal_type='Role Information',
       role_name='Unknown',
       role_category_list=('group/g1'),
       role_base_category='group',
-      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate.getRelativeUrl())
+      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate)
 
     self.portal.portal_caches.clearAllCache()
     self.tic()
