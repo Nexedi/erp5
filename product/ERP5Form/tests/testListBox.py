@@ -738,6 +738,77 @@ class TestListBox(ERP5TypeTestCase):
     self.assertEqual(form.getId(), request.get('listbox_form_id'))
     self.assertEqual(form.listbox.getId(), request.get('listbox_field_id'))
 
+  def test_query_timeout(self):
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+
+    # Set short enough publisher timeout configuration
+    import Products.ERP5Type.Timeout
+    Products.ERP5Type.Timeout.publisher_timeout = 2.0
+
+    # We create a Z SQL Method that takes too long
+    list_method_id = 'ListBox_zSlowQuery'
+    portal.portal_skins.custom.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+      id=list_method_id,
+      title='',
+      connection_id='erp5_sql_connection',
+      arguments='',
+      template="SELECT uid, path FROM catalog WHERE SLEEP(3) = 0 AND path='%s'" % portal.foo_module.getPath(),
+    )
+    portal.changeSkin(None)
+
+    # set the listbox to use this as list method
+    listbox = portal.FooModule_viewFooList.listbox
+    listbox.ListBox_setPropertyList(
+      field_list_method=list_method_id,
+      field_count_method='',
+    )
+
+    # access the form
+    result = self.publish(
+      '%s/FooModule_viewFooList' % portal.foo_module.absolute_url(relative=True),
+      'ERP5TypeTestCase:',
+    )
+    self.assertEqual(result.getStatus(), 500)
+    self.assertTrue('Error Type: TimeoutReachedError' in result.getBody())
+    self.assertTrue('Error Value: 1969: Query execution was interrupted (max_statement_time exceeded): SET STATEMENT' in result.getBody())
+
+  def test_zodb_timeout(self):
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+
+    # Set short enough publisher timeout configuration
+    import Products.ERP5Type.Timeout
+    Products.ERP5Type.Timeout.publisher_timeout = 2.0
+
+    # We create a Z SQL Method that takes too long
+    list_method_id = 'ListBox_getSlowObjectValues'
+    createZODBPythonScript(
+        portal.portal_skins.custom,
+        list_method_id,
+        'selection=None, **kw',
+        """
+from time import sleep
+sleep(3)
+return context.objectValues()
+        """)
+
+    # set the listbox to use this as list method
+    listbox = portal.FooModule_viewFooList.listbox
+    listbox.ListBox_setPropertyList(
+      field_list_method=list_method_id,
+      field_count_method='',
+    )
+
+    portal.foo_module.newContent()
+
+    # access the form
+    result = self.publish(
+      '%s/FooModule_viewFooList' % portal.foo_module.absolute_url(relative=True),
+      'ERP5TypeTestCase:',
+    )
+    self.assertEqual(result.getStatus(), 500)
+    self.assertTrue('Error Type: TimeoutReachedError' in result.getBody())
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -11,5 +11,10 @@
         Description
       </description>
     </key>
+    <key name="publisher-timeout" required="no" datatype="integer">
+      <description>
+        If a request takes more than this value (in seconds), data connection can be terminated.
+      </description>
+    </key>
   </sectiontype>
 </component>

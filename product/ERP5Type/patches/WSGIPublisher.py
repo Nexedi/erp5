@@ -33,6 +33,7 @@ from AccessControl.SecurityManagement import noSecurityManager
 from Acquisition import aq_acquire
 from Acquisition import aq_inner
 from Acquisition import aq_parent
+from Products.ERP5Type.Timeout import wrap_call_object
 from transaction.interfaces import TransientError
 from zExceptions import Redirect
 from zExceptions import Unauthorized
@@ -49,7 +50,8 @@ from ZPublisher import pubevents, Retry
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.Iterators import IUnboundStreamIterator
 from ZPublisher.mapply import mapply
-from ZPublisher.WSGIPublisher import call_object, missing_name, WSGIResponse
+from ZPublisher.WSGIPublisher import call_object as call_object_orig
+from ZPublisher.WSGIPublisher import missing_name, WSGIResponse
 
 
 if sys.version_info >= (3, ):
@@ -61,6 +63,7 @@ _DEFAULT_DEBUG_MODE = False
 _DEFAULT_REALM = None
 _MODULE_LOCK = allocate_lock()
 _MODULES = {}
+call_object = wrap_call_object(call_object_orig)
 
 
 AC_LOGGER = logging.getLogger('event.AccessControl')
