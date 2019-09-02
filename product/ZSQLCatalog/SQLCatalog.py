@@ -2280,6 +2280,7 @@ class Catalog(Folder,
         # XXX should get zsql_brain from ZSQLMethod class itself
         zsql_brain=None,
         implicit_join=False,
+        query_timeout=None,
         **kw
       ):
     if build_sql_query_method is None:
@@ -2301,6 +2302,7 @@ class Catalog(Folder,
       from_expression=query['from_expression'],
       sort_on=query['order_by_expression'],
       limit_expression=query['limit_expression'],
+      query_timeout=query_timeout,
     )
 
   def getSqlSearchResults(self):
