@@ -17,6 +17,8 @@
 # transactions so that, for instance, activity processing can see a recent
 # enough state of the ZODB.
 
+import time
+from Products.ERP5Type.Timeout import TimeoutReachedError, getDeadline
 from ZODB.Connection import Connection
 
 FORCE_STORAGE_SYNC_ON_CONNECTION_OPENING = False
@@ -70,3 +72,12 @@ if 1: # keep indentation. Also good for quick disabling.
 
         Connection_open = Connection.open
         Connection.open = open
+
+    setstate_orig = Connection.setstate
+    def setstate(self, obj):
+        deadline = getDeadline()
+        if deadline is not None and deadline < time.time():
+          raise TimeoutReachedError()
+        setstate_orig(self, obj)
+
+    Connection.setstate = setstate
