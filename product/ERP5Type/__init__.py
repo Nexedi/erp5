@@ -30,6 +30,7 @@
     ERP5Type is provides a RAD environment for Zope / CMF
     All ERP5 classes derive from ERP5Type
 """
+from App.config import getConfiguration
 from patches import python, pylint, globalrequest
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
@@ -156,6 +157,11 @@ def initialize( context ):
     LOG('ERP5Type.__init__', INFO, 'installInteractorClassRegistry')
   installInteractorClassRegistry()
 
+  from Products.ERP5Type import Timeout
+  erp5_conf = getattr(getConfiguration(), 'product_config', {}).get('erp5')
+  # Note: erp5_conf attributes are missing in unit tests, fallback to no timeout
+  # in that case.
+  Timeout.publisher_timeout = getattr(erp5_conf, 'publisher_timeout', None)
 
 from AccessControl.SecurityInfo import allow_module
 from AccessControl.SecurityInfo import ModuleSecurityInfo
