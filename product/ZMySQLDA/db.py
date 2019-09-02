@@ -93,6 +93,7 @@ import MySQLdb
 import warnings
 from contextlib import contextmanager, nested
 from _mysql_exceptions import OperationalError, NotSupportedError, ProgrammingError
+from Products.ERP5Type.Timeout import TimeoutReachedError, getTimeLeft
 MySQLdb_version_required = (0,9,2)
 
 _v = getattr(_mysql, 'version_info', (0,0,0))
@@ -121,6 +122,10 @@ lock_error = (
     ER.LOCK_WAIT_TIMEOUT,
     ER.LOCK_DEADLOCK,
     )
+
+query_timeout_error = (
+    1969, # ER_STATEMENT_TIMEOUT in MariaDB
+)
 
 key_types = {
     "PRI": "PRIMARY KEY",
@@ -193,6 +198,11 @@ def DATE_to_DateTime_or_None(s):
 def ord_or_None(s):
     if s is not None:
         return ord(s)
+
+match_select = re.compile(
+    r'(?:SET\s+STATEMENT\s+(.+?)\s+FOR\s+)?SELECT\s+(.+)',
+    re.IGNORECASE | re.DOTALL,
+).match
 
 class DB(TM):
     """This is the ZMySQLDA Database Connection Object."""
@@ -379,6 +389,8 @@ class DB(TM):
               raise OperationalError(m[0], '%s: %s' % (m[1], query))
             if m[0] in lock_error:
               raise ConflictError('%s: %s: %s' % (m[0], m[1], query))
+            if m[0] in query_timeout_error:
+              raise TimeoutReachedError('%s: %s: %s' % (m[0], m[1], query))
             if (allow_reconnect or not self._use_TM) and \
               m[0] in hosed_connection:
               self._forceReconnection()
@@ -389,7 +401,13 @@ class DB(TM):
         except ProgrammingError:
           LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
           raise
-        return self.db.store_result()
+        try:
+          return self.db.store_result()
+        except OperationalError, m:
+          if m[0] in query_timeout_error:
+            raise TimeoutReachedError('%s: %s: %s' % (m[0], m[1], query))
+          else:
+            raise
 
     def query(self, query_string, max_rows=1000):
         """Execute 'query_string' and return at most 'max_rows'."""
@@ -403,8 +421,18 @@ class DB(TM):
         for qs in query_string.split('\0'):
             qs = qs.strip()
             if qs:
-                if qs[:6].upper() == "SELECT" and max_rows:
-                    qs = "%s LIMIT %d" % (qs, max_rows)
+                select_match = match_select(qs)
+                if select_match:
+                    query_timeout = getTimeLeft()
+                    if query_timeout is not None:
+                        statement, select = select_match.groups()
+                        if statement:
+                            statement += ", max_statement_time=%f" % query_timeout
+                        else:
+                            statement = "max_statement_time=%f" % query_timeout
+                        qs = "SET STATEMENT %s FOR SELECT %s" % (statement, select)
+                    if max_rows:
+                        qs = "%s LIMIT %d" % (qs, max_rows)
                 c = self._query(qs)
                 if c:
                     if desc is not None is not c.describe():
@@ -606,12 +634,12 @@ class DeferredDB(DB):
         assert self._use_TM
         self._sql_string_list = []
 
-    def query(self,query_string, max_rows=1000):
+    def query(self, query_string, max_rows=1000):
         self._register()
         for qs in query_string.split('\0'):
             qs = qs.strip()
             if qs:
-                if qs[:6].upper() == "SELECT":
+                if match_select(qs):
                     raise NotSupportedError(
                         "can not SELECT in deferred connections")
                 self._sql_string_list.append(qs)
