@@ -41,6 +41,8 @@ from Products.CMFActivity.ActivityRuntimeEnvironment import (
   DEFAULT_MAX_RETRY, ActivityRuntimeEnvironment)
 from Queue import Queue, VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Errors import ActivityFlushError
+from Products.ERP5Type import Timeout
+from Products.ERP5Type.Timeout import TimeoutReachedError, Deadline
 
 # Stop validating more messages when this limit is reached
 MAX_VALIDATED_LIMIT = 1000
@@ -646,7 +648,11 @@ CREATE TABLE %s (
       transaction.begin()
       # Try to invoke
       try:
-        with activity_runtime_environment:
+        # Refer Timeout.activity_timeout instead of
+        #   from Products.ERP5Type.Timeout import activity_timeout
+        # so that we can override the value in Timeout namescope in unit tests.
+        offset = Timeout.activity_timeout
+        with activity_runtime_environment, Deadline(offset):
           method(*args)
         # Abort if at least 1 message failed. On next tic, only those that
         # succeeded will be selected because their at_date won't have been
@@ -737,7 +743,8 @@ CREATE TABLE %s (
         else:
           max_retry = m.max_retry
           retry = m.line.retry
-          if max_retry is not None and retry >= max_retry:
+          if (max_retry is not None and retry >= max_retry) or \
+              m.exc_type == TimeoutReachedError:
             # Always notify when we stop retrying.
             notify_user_list.append((m, False))
             final_error_uid_list.append(uid)
