@@ -110,8 +110,13 @@ LISTBOX_COEF=0.00173                # 0.02472
 #   LISTBOX_COEF : 0.02472 -> 0.001725
 DO_TEST = 1
 
+# Profiler support.
 # set 1 to get profiler's result (unit_test/tests/<func_name>)
-PROFILE=0
+PROFILE = 0
+# set this to 'pprofile' to profile with pprofile ( https://github.com/vpelletier/pprofile )
+# instad of python's standard library profiler ( https://docs.python.org/2/library/profile.html )
+PROFILER = 'pprofile'
+
 
 class TestPerformanceMixin(ERP5TypeTestCase, LogInterceptor):
 
@@ -147,21 +152,33 @@ class TestPerformanceMixin(ERP5TypeTestCase, LogInterceptor):
       """
       return self.portal['bar_module']
 
-    def profile(self, func, suffix=''):
+    def profile(self, func, suffix='', args=(), kw=None):
+      """Profile `func(*args, **kw)` with selected profiler,
+      and dump output in a file called `func.__name__ + suffix`
+      """
+      if not kw:
+        kw = {}
+
+      if PROFILER == 'pprofile':
+        import pprofile
+        prof = pprofile.Profile()
+      else:
         from cProfile import Profile
-        prof_file = '%s%s' % (func.__name__, suffix)
-        try:
-            os.unlink(prof_file)
-        except OSError:
-            pass
         prof = Profile()
-        prof.runcall(func)
-        prof.dump_stats(prof_file)
+
+      prof_file = '%s%s' % (func.__name__, suffix)
+      try:
+        os.unlink(prof_file)
+      except OSError:
+        pass
+      prof.runcall(func, *args, **kw)
+      prof.dump_stats(prof_file)
 
     def beforeTearDown(self):
       # Re-enable gc at teardown.
       gc.enable()
       self.abort()
+
 
 class TestPerformance(TestPerformanceMixin):
 
