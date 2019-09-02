@@ -76,6 +76,3 @@ class TestTimeout(ERP5TypeTestCase):
       time.sleep(2)
       with self.assertRaises(TimeoutReachedError):
         [x.getObject() for x in self.portal.portal_templates.searchFolder()]
-
-if __name__ == '__main__':
-  unittest.main()
