@@ -33,6 +33,7 @@ import unittest
 import httplib
 from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
+from Acquisition import aq_base
 from DateTime import DateTime
 from _mysql_exceptions import ProgrammingError
 from OFS.ObjectManager import ObjectManager
@@ -44,6 +45,8 @@ from Testing import ZopeTestCase
 from zLOG import LOG
 
 class IndexableDocument(ObjectManager):
+  # This tests uses a simple ObjectManager, but ERP5Catalog only
+  # support classes inherting from ERP5Type.Base.
 
   # this property is required for dummy providesIMovement
   __allow_access_to_unprotected_subobjects__ = 1
@@ -65,6 +68,11 @@ class IndexableDocument(ObjectManager):
        name.startswith('provides'):
       return lambda: 0
     raise AttributeError, name
+
+  def getProperty(self, prop, default=None):
+    return getattr(aq_base(self), prop, default)
+
+  _getProperty = getProperty
 
   def getPath(self):
     return self._path

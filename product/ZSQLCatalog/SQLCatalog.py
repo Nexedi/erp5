@@ -1395,7 +1395,7 @@ class Catalog(Folder,
                 # objects but we could also use over multiple transactions
                 # if this can improve performance significantly
                 # ZZZ - we could find a way to compute this once only
-                cache_key = tuple(object.getProperty(key) for key
+                cache_key = tuple(object._getProperty(key) for key
                                   in expression_cache_key_list)
                 try:
                   if expression_result_cache[cache_key]:
