@@ -2625,6 +2625,32 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     )
     self.tic()
 
+  def test_activity_timeout(self):
+    slow_method_id = 'Base_getSlowObjectList'
+    createZODBPythonScript(
+        self.portal.portal_skins.custom,
+        slow_method_id,
+        'selection=None, **kw',
+        """
+from time import sleep
+sleep(3)
+return [x.getObject() for x in context.portal_catalog(limit=100)]
+        """)
+
+    # Set short enough activity timeout configuration
+    import Products.ERP5Type.Timeout
+    Products.ERP5Type.Timeout.activity_timeout = 2.0
+
+    self.portal.portal_templates.activate().Base_getSlowObjectList()
+    with self.assertRaises(RuntimeError):
+      self.tic()
+    message, = self.getMessageList('SQLDict')
+    self.assertEqual(message.retry, 0)
+    self.deleteMessageList(
+      'SQLDict',
+      [message],
+    )
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))

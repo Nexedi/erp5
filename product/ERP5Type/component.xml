@@ -16,5 +16,10 @@
         If a request takes more than this value (in seconds), data connection can be terminated.
       </description>
     </key>
+    <key name="activity-timeout" required="no" datatype="integer">
+      <description>
+        If an activity takes more than this value (in seconds), data connection can be terminated.
+      </description>
+    </key>
   </sectiontype>
 </component>

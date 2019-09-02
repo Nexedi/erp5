@@ -162,6 +162,7 @@ def initialize( context ):
   # Note: erp5_conf attributes are missing in unit tests, fallback to no timeout
   # in that case.
   Timeout.publisher_timeout = getattr(erp5_conf, 'publisher_timeout', None)
+  Timeout.activity_timeout = getattr(erp5_conf, 'activity_timeout', None)
 
 from AccessControl.SecurityInfo import allow_module
 from AccessControl.SecurityInfo import ModuleSecurityInfo

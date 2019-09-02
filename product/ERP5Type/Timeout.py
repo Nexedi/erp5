@@ -48,6 +48,7 @@ del status_codes
 
 # Placeholder timeouts until product's "initialize" is called.
 publisher_timeout = None
+activity_timeout = None
 
 _site_local = threading.local()
 
