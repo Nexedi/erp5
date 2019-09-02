@@ -47,6 +47,14 @@
   <td>//h1[contains(text(),'Notebook JSMD Viewer Basic Python Test')]</td>
   <td></td>
 </tr>
+
+<!-- increase timeout a bit, because next step needs to load pyiode -->
+<tr>
+  <td>setTimeout</td>
+  <td>30000</td>
+  <td></td>
+</tr>
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//code[contains(text(),'42')]</td>
