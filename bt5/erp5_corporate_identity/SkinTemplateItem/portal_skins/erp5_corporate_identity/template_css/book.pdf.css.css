@@ -11,9 +11,11 @@
 .ci-book h3 {
   font-size: 6.879167mm; /* 19.5pt; */ /* 26px; */
 }
-.ci-book .ci-book-header .ci-book-header-title,
+.ci-book .ci-book-header .ci-book-header-title
+/*,
 .ci-book table thead tr:first-child:nth-last-child(2) th,
-.ci-book table thead tr:first-child:nth-last-child(2) td {
+.ci-book table thead tr:first-child:nth-last-child(2) td
+*/ {
   font-size: 6.35mm; /* 18pt; */ /* 24px; */
 }
 .ci-book div.ci-book-box-offer span,
@@ -440,15 +442,26 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
   margin: initial;
   background-color: transparent !important;
 }
+/*
 .ci-book table th,
 .ci-book table td {
   border: 1px solid #a1a1a1;
-  padding: 0 2mm;  text-align: center;
+  padding: 0 2mm; text-align: center;
 }
+*/
+.ci-book table th,
+.ci-book table td {
+  border: 1px solid #a1a1a1;
+  padding: 0 2mm;
+}
+.ci-book table th {
+  text-align: center;
+}
+
 /* opinionated align for content tables, overwrite in html if required */
 .ci-book table:not(.ci-book-header):not(.ci-book-footer):not(.ci-book-table) tbody td,
 .ci-book table:not(.ci-book-header):not(.ci-book-footer):not(.ci-book-table) tbody th {
-  text-align: center;
+  /*text-align: center;*/
 }
 /*
 .ci-book table:not(.ci-book-header):not(.ci-book-footer):not(.ci-book-table) tbody tr td:first-child,
@@ -461,11 +474,11 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
 }
 .ci-book a + table tbody tr td:first-child,
 .ci-book a + table tbody tr th:first-child {
-  text-align: center;
+  /*text-align: center;*/
 }
 .ci-book a + table tbody tr td:not(:first-child),
 .ci-book a + table tbody tr th:not(:first-child) {
-  text-align: right;
+  /*text-align: right;*/
 }
 .ci-book p + table td a {
   display: block;
@@ -486,7 +499,7 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
 .ci-book table:not(.ci-book-header):not(.ci-book-footer) tbody tr:first-child th {
   background-color: #e0e0e0;
   font-weight: bold;
-  text-align: center;
+ /* text-align: center;*/
 }
 .ci-book .ci-book-table tbody tr td,
 .ci-book .ci-book-table tbody tr th {
@@ -505,7 +518,7 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
 .ci-book table.ci-document-page-header tbody tr td, 
 .ci-book table.ci-document-page-footer tbody tr td {
   /* background-color: #ffffff !important; */
-  text-align: center;
+  /*text-align: center;*/
   font-weight: 100;
 }
 .ci-book table thead tr td,
@@ -794,8 +807,9 @@ html .ci-book table td p {
 /* === code boxes === */
 .ci-book pre {
 	text-align: left;
-	white-space: pre-line;
+	/*white-space: pre-line;*/
 	word-wrap: break-word;
+  font-family: TexGyreCursor;
   padding: 10px 20px 36px;
   background-color: rgb(234,246,246);
   /*
