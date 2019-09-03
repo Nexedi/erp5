@@ -38,7 +38,7 @@ if context.getReference() and '-' in context.getReference(): # tolerate invalid 
 for test_result_repository in test_suite.contentValues(portal_type='Test Suite Repository'):
   repository_data = repository_dict.setdefault(test_result_repository.getBuildoutSectionId(), {})
   repository_data['repository_url'] = test_result_repository.getGitUrl()
-
+  repository_data['connector_relative_url'] = test_result_repository.getDestination()
 
 if REQUEST:
   REQUEST.RESPONSE.setHeader('content-type', 'application/json; charset=utf-8')

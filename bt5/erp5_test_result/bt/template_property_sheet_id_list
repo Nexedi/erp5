@@ -1,4 +1,5 @@
 TestSuite
+GitlabRESTConnector
 CommandLineResult
 TestSuiteRepository
 TestSuiteRepositoryConstraint

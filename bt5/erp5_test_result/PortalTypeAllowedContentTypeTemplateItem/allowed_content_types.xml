@@ -33,4 +33,7 @@
   <item>SlapOS Agent Test Suite</item>
   <item>Test Suite</item>
  </portal_type>
+ <portal_type id="Web Service Tool">
+  <item>Gitlab REST Connector</item>
+ </portal_type>
 </allowed_content_type_list>

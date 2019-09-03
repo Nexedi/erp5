@@ -4,6 +4,9 @@ Benchmark Result | SortIndex
 Benchmark Result | Task
 ERP5 Project Unit Test Distributor | UnitTestDistributor
 ERP5 Scalability Distributor | ScalabilityDistributor
+Gitlab REST Connector | GitlabRESTConnector
+Gitlab REST Connector | Reference
+Gitlab REST Connector | Url
 Scalability Test Suite | Arrow
 Scalability Test Suite | ScalabilityTestSuite
 Scalability Test Suite | TestSuite
@@ -23,6 +26,7 @@ Test Result Node | Task
 Test Result | Comment
 Test Result | SortIndex
 Test Result | Task
+Test Suite Repository | Arrow
 Test Suite Repository | TestSuiteRepository
 Test Suite Repository | TestSuiteRepositoryConstraint
 Test Suite | Arrow

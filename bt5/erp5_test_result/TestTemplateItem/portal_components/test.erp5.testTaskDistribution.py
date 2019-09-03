@@ -3,6 +3,9 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import json 
 from time import sleep
 from DateTime import DateTime
+import responses
+import httplib
+
 
 class TestTaskDistribution(ERP5TypeTestCase):
   def afterSetUp(self):
@@ -1410,3 +1413,132 @@ class TestTaskDistribution(ERP5TypeTestCase):
 
     self._createTestResult(test_title='Periodicity Disabled Test Suite')
     self.assertEqual(None, test_suite.getAlarmDate())
+
+
+class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
+  """Tests for Gitlab commits annotations.
+  """
+  def afterSetUp(self):
+    connector = self.portal.portal_web_services.newContent(
+        portal_type='Gitlab REST Connector',
+        reference='lab.example.com',
+        url_string='https://lab.example.com/api/v4/',
+        token='123456'
+    )
+    connector.validate()
+
+    self.project = self.portal.project_module.newContent(
+        portal_type='Project',
+        title=self.id()
+    )
+    self.test_suite = self.portal.test_suite_module.newContent(
+        portal_type='Test Suite',
+        title=self.id(),
+        source_project_value=self.project,
+    )
+    self.test_suite.newContent(
+        portal_type='Test Suite Repository',
+        branch='master',
+        git_url='https://lab.example.com/nexedi/test.git',
+        buildout_section_id='test',
+        destination_value=connector,
+    )
+    # another unrelated repository, without connector, this
+    # should not cause any API call.
+    self.test_suite.newContent(
+        portal_type='Test Suite Repository',
+        branch='master',
+        git_url='https://lab.nexedi.com/nexedi/erp5.git',
+        buildout_section_id='erp5',
+        profile_path='software-release/software.cfg'
+    )
+    self.test_suite.validate()
+
+    self.test_result = self.portal.test_result_module.newContent(
+        portal_type='Test Result',
+        source_project_value=self.project,
+        title=self.id(),
+        reference='erp5=1-dc7b6e2e85e9434a97694a698884b057b7d30286,test=10-cc4c79c003f7cfe0bfcbc7b302eac988110c96ae'
+    )
+    self.post_commit_status_url = \
+        'https://lab.example.com/api/v4/projects/nexedi%2Ftest/statuses/cc4c79c003f7cfe0bfcbc7b302eac988110c96ae'
+    self.tic()
+
+  def beforeTearDown(self):
+    self.test_suite.invalidate()
+    self.tic()
+
+  def _response_callback(self, state):
+    """Callback for responses, checking that request was correct to mark commit as `state`
+    """
+    def _callback(request):
+      self.assertEqual(
+          '123456',
+          request.headers['PRIVATE-TOKEN'])
+
+      body = json.loads(request.body)
+      self.assertEqual(
+          state,
+          body['state'])
+      self.assertIn(
+          self.test_result.getRelativeUrl(),
+          body['target_url'])
+      self.assertEqual(
+          self.id(),
+          body['name'])
+      return (httplib.CREATED, {'content-type': 'application/json'}, '{}')
+    return _callback
+
+  def test_start_test(self):
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('running'))
+      self.test_result.start()
+      self.tic()
+
+  def _start_test_result(self):
+    with responses.RequestsMock() as rsps:
+      rsps.add(
+          responses.POST,
+          self.post_commit_status_url,
+          {})
+      self.test_result.start()
+      self.tic()
+
+  def test_cancel_test(self):
+    self._start_test_result()
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('canceled'))
+      self.test_result.cancel()
+      self.tic()
+
+  def test_stop_test_success(self):
+    self._start_test_result()
+    self.test_result.newContent(
+        portal_type='Test Result Line',
+        all_tests=1
+    )
+    self.test_result.setStringIndex('PASS')
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('success'))
+      self.test_result.stop()
+      self.tic()
+
+  def test_stop_test_failure(self):
+    self._start_test_result()
+    self.test_result.setStringIndex('FAILED')
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('failed'))
+      self.test_result.stop()
+      self.tic()
