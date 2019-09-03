@@ -15,6 +15,7 @@
                 <string>editable</string>
                 <string>lines</string>
                 <string>list_method</string>
+                <string>select</string>
                 <string>selection_name</string>
               </list>
             </value>
@@ -121,6 +122,10 @@
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>select</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
