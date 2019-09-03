@@ -136,7 +136,6 @@
         default_view;
       return RSVP.Queue()
         .push(function () {
-          //TODO these should come as method parameters
           return RSVP.all([
             gadget.getSetting('app_view_reference'),
             gadget.getSetting('default_view_reference'),
@@ -200,38 +199,31 @@
         });
     })
 
-    //TODO this should be used locally.
-    //after refactor, change to a function
-    //check where else is used (controller and handle_action?)
-    .declareMethod("getFormInfo", function (form_definition) {
-      return getFormInfo(form_definition);
-    })
-
     .declareMethod("getDialogFormDefinition", function (form_name, category) {
       var gadget = this,
         form_definition,
         form_info;
       return gadget.getSetting('portal_skin_folder')
-      .push(function (portal_skin_folder) {
-        return gadget.jio_get("portal_skins/" + portal_skin_folder + "/" +
-                              form_name);
-      })
-      .push(function (form_result) {
-        form_definition = form_result.raw_dict._embedded._view
-          ._embedded.form_definition;
-        form_definition.fields_raw_properties = form_result.raw_dict._embedded
-          ._view.my_fields_raw_properties["default"];
-        form_definition._actions = form_result.raw_dict._embedded
-          ._view._actions;
-        form_definition.group_list = form_result.raw_dict.group_list;
-        form_definition.title = form_result.raw_dict.title;
-        form_definition.portal_type_dict = {};
-        form_definition.action_type = category;
-        form_info = getFormInfo(form_definition);
-        form_definition.form_type = form_info[0];
-        form_definition.child_gadget_url = form_info[1];
-        return form_definition;
-      });
+        .push(function (portal_skin_folder) {
+          return gadget.jio_get("portal_skins/" + portal_skin_folder + "/" +
+                                form_name);
+        })
+        .push(function (form_result) {
+          form_definition = form_result.raw_dict._embedded._view
+            ._embedded.form_definition;
+          form_definition.fields_raw_properties = form_result.raw_dict._embedded
+            ._view.my_fields_raw_properties["default"];
+          form_definition._actions = form_result.raw_dict._embedded
+            ._view._actions;
+          form_definition.group_list = form_result.raw_dict.group_list;
+          form_definition.title = form_result.raw_dict.title;
+          form_definition.portal_type_dict = {};
+          form_definition.action_type = category;
+          form_info = getFormInfo(form_definition);
+          form_definition.form_type = form_info[0];
+          form_definition.child_gadget_url = form_info[1];
+          return form_definition;
+        });
     })
 
     .declareMethod("getFormDefinition", function (portal_type,
@@ -245,29 +237,36 @@
         action_title,
         form_definition,
         portal_skin_folder,
+        app_allowed_sub_types,
+        form_info,
         error;
-      //TODO get all settings at once using RSVP.all
-      return gadget.getSetting(portal_type_dict_setting)
-        .push(function (result_dict) {
-          if (result_dict) {
+      return RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.getSetting(portal_type_dict_setting),
+            gadget.getSetting("portal_skin_folder"),
+            gadget.getSetting("app_allowed_sub_types")
+          ]);
+        })
+        .push(function (result_list) {
+          app_allowed_sub_types = result_list[2];
+          if (!result_list[1]) {
+            throw new Error("Missing site configuration 'portal_skin_folder'");
+          }
+          portal_skin_folder = "portal_skins/" + result_list[1];
+      //return gadget.getSetting(portal_type_dict_setting)
+        //.push(function (result_dict) {
+          if (result_list[0]) {
             try {
-              portal_type_dict = window.JSON.parse(result_dict);
+              portal_type_dict = window.JSON.parse(result_list[0]);
             } catch (e) {
               if (e instanceof SyntaxError) {
                 throw new Error("Bad JSON dict in configuration setting '" +
                                 portal_type_dict_setting + "'");
-              } else {
-                throw e;
               }
+              throw e;
             }
           }
-          return gadget.getSetting("portal_skin_folder");
-        })
-        .push(function (result) {
-          if (!result) {
-            throw new Error("Missing site configuration 'portal_skin_folder'");
-          }
-          portal_skin_folder = "portal_skins/" + result;
           return gadget.jio_allDocs({query: query});
         })
         .push(function (data) {
@@ -297,7 +296,8 @@
             ._view._actions;
           //[PATCH] if custom action and anonymous
           // get _actions field from fields_raw_properties
-          if ("_actions" in form_definition.fields_raw_properties) {
+          if (form_definition.fields_raw_properties
+              .hasOwnProperty("_actions")) {
             if (!form_definition._actions &&
                 action_type === "object_jio_js_script") {
               form_definition._actions = form_definition
@@ -307,12 +307,12 @@
           }
           form_definition.group_list = form_result.raw_dict.group_list;
           form_definition.action_type = action_type;
+          form_info = getFormInfo(form_definition);
+          form_definition.form_type = form_info[0];
+          form_definition.child_gadget_url = form_info[1];
           form_definition.title = action_title;
           form_definition.portal_type_dict = portal_type_dict;
-          return gadget.getSetting("app_allowed_sub_types");
-        })
-        .push(function (allowed_sub_types_setting) {
-          return formatSettingList(allowed_sub_types_setting, portal_type);
+          return formatSettingList(app_allowed_sub_types, portal_type);
         })
         .push(function (allowed_sub_types_pairs) {
           var allowed_sub_types = allowed_sub_types_pairs.map(function (pair) {

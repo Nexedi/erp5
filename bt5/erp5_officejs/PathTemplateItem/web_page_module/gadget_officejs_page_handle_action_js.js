@@ -34,14 +34,13 @@
     })
 
     .declareMethod("render", function (options) {
-      var gadget = this, action_reference, gadget_util, form_definition;
+      var gadget = this, action_reference;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
             gadget.getUrlParameter('portal_type'),
             gadget.getUrlParameter('parent_relative_url'),
-            gadget.getUrlParameter("action"),
-            gadget.declareGadget("gadget_officejs_common_util.html")
+            gadget.getUrlParameter("action")
           ]);
         })
         .push(function (result) {
@@ -50,18 +49,13 @@
             options.parent_relative_url = result[1];
           }
           action_reference = result[2];
-          gadget_util = result[3];
           return gadget.getActionFormDefinition(action_reference);
         })
-        .push(function (result) {
-          form_definition = result;
-          return gadget_util.getFormInfo(form_definition);
-        })
-        .push(function (form_info) {
+        .push(function (form_definition) {
           var fragment = document.createElement('div'),
             action_gadget_url,
-            form_type = form_info[0],
-            child_gadget_url = form_info[1],
+            form_type = form_definition.form_type,
+            child_gadget_url = form_definition.child_gadget_url,
             //an action form must have a GadgetField called
             //"gadget_field_new_action_js_script"
             //this gadget will point the custom action gadget
@@ -97,9 +91,8 @@
                 state_options.action_gadget_url = action_gadget_url;
                 return gadget.changeState(state_options);
               });
-          } else {
-            return gadget.changeState(state_options);
           }
+          return gadget.changeState(state_options);
         });
     })
 
@@ -156,11 +149,10 @@
               }
             });
           });
-      } else {
-        return gadget.notifySubmitted(
-          {message: 'Could not perform this action: configuration error',
-           status: 'fail'});
       }
+      return gadget.notifySubmitted(
+        {message: 'Could not perform this action: configuration error',
+         status: 'fail'});
     });
 
 }(window, document, rJS, RSVP));

@@ -145,7 +145,7 @@
             }
           }
         },
-        sync_flag = "appcachestored",
+        sync_flag = "appcache-stored",
         configuration_ids_list = [];
       if (jio_options === undefined) {
         return;

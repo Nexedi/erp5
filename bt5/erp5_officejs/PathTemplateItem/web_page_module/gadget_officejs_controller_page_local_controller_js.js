@@ -20,9 +20,7 @@
 
     .declareMethod("render", function (options) {
       var gadget = this,
-        default_view,
         app_view,
-        form_definition,
         gadget_util,
         jio_document,
         portal_type;
@@ -63,21 +61,14 @@
         .push(function (result) {
           return result;
         })
-        .push(function (result) {
-          form_definition = result;
-          //TODO delete this, should come in form_definition itself
-          return gadget_util.getFormInfo(form_definition);
-        })
-        .push(function (form_info) {
-          var form_type = form_info[0],
-            child_gadget_url = form_info[1];
+        .push(function (form_definition) {
           return gadget.changeState({
             jio_key: options.jio_key,
             doc: jio_document,
             portal_type: portal_type,
-            child_gadget_url: child_gadget_url,
+            child_gadget_url: form_definition.child_gadget_url,
             form_definition: form_definition,
-            form_type: form_type,
+            form_type: form_definition.form_type,
             view: options.view || app_view
           });
         });
@@ -88,7 +79,7 @@
         gadget = this,
         view_gadget_url = "gadget_officejs_form_view.html",
         custom_gadget_url = gadget.state.form_definition.portal_type_dict
-      .custom_view_gadget;
+          .custom_view_gadget;
       while (this.element.firstChild) {
         this.element.removeChild(this.element.firstChild);
       }

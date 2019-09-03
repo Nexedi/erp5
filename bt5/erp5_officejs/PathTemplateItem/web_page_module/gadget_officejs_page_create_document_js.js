@@ -22,7 +22,6 @@
         dialog_form = options.new_content_dialog_form,
         dialog_category = options.new_content_category,
         portal_type,
-        form_definition,
         document_title;
       return gadget.jio_get(options.jio_key)
         .push(function (document) {
@@ -36,24 +35,24 @@
           portal_type = portal_type_result;
           if (dialog_form) {
             return gadget.declareGadget("gadget_officejs_common_util.html")
-            .push(function (gadget_util) {
-              return gadget_util.getDialogFormDefinition(dialog_form,
-                                                         dialog_category);
-            })
-            .push(function (form_definition) {
-              return gadget.changeState({
-                doc: { header_title: form_definition.title || document_title,
-                       portal_type: allowed_sub_types_list },
-                //TODO this should be a portal_dict setting and not global
-                parent_portal_type: parent_portal_type,
-                action_options: options,
-                child_gadget_url: form_definition.child_gadget_url,
-                form_type: form_definition.form_type,
-                form_definition: form_definition,
-                view: "view",
-                show_dialog: true
+              .push(function (gadget_util) {
+                return gadget_util.getDialogFormDefinition(dialog_form,
+                                                           dialog_category);
+              })
+              .push(function (form_definition) {
+                return gadget.changeState({
+                  doc: { header_title: form_definition.title || document_title,
+                         portal_type: allowed_sub_types_list },
+                  //TODO this should be a portal_dict setting and not global
+                  parent_portal_type: parent_portal_type,
+                  action_options: options,
+                  child_gadget_url: form_definition.child_gadget_url,
+                  form_type: form_definition.form_type,
+                  form_definition: form_definition,
+                  view: "view",
+                  show_dialog: true
+                });
               });
-            });
           }
           return gadget.changeState({
             doc: { header_title: document_title,
@@ -77,12 +76,11 @@
           .push(function (form_view_gadget) {
             return form_view_gadget.render(gadget.state);
           });
-      } else {
-        // if no form, skip dialog assuming there is only one portal type
-        return gadget.createDocument(gadget.state.doc.portal_type[0],
-                                     gadget.state.parent_portal_type
-                                     .replace(/ /g, '_').toLowerCase());
       }
+      // if no form, skip dialog assuming there is only one portal type
+      return gadget.createDocument(gadget.state.doc.portal_type[0],
+                                   gadget.state.parent_portal_type
+                                   .replace(/ /g, '_').toLowerCase());
     })
 
     .declareMethod("createDocument", function (portal_type,
@@ -118,9 +116,13 @@
     .allowPublicAcquisition('submitContent', function (options) {
       var gadget = this,
         content_dict = options[2];
-      content_dict.portal_type = gadget.state.doc.portal_type[0];
-      content_dict.parent_relative_url = gadget.state.parent_portal_type
-        .replace(/ /g, '_').toLowerCase();
+      if (!content_dict.portal_type) {
+        content_dict.portal_type = gadget.state.doc.portal_type[0];
+      }
+      if (!content_dict.parent_relative_url) {
+        content_dict.parent_relative_url = gadget.state.parent_portal_type
+          .replace(/ /g, '_').toLowerCase();
+      }
       return gadget.createDocument(gadget.state.doc.portal_type[0],
                                    gadget.state.parent_portal_type
                                    .replace(/ /g, '_').toLowerCase(),
