@@ -115,8 +115,7 @@
   <td>${description}</td>
 </tr>
  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load_spreadsheet"/>
-<!-- <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/save"/> -->
- <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/save-without-header-spinner"/>
+ <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/save"/>
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Document']</td>
