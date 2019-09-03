@@ -8,7 +8,7 @@
     <!-- Huge timout for onlyoffice_presentation ( 120s is enought for all other app ) -->
     <tr>
       <td>setTimeout</td>
-      <td>200000</td>
+      <td>250000</td>
       <td></td>
     </tr>
     <tr>
@@ -23,7 +23,7 @@
     </tr>
     <tr>
       <td>setTimeout</td>
-      <td>160000</td>
+      <td>250000</td>
       <td></td>
     </tr>
   </tal:block>
