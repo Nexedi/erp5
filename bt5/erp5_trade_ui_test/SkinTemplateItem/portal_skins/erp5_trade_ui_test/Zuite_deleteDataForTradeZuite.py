@@ -10,8 +10,6 @@ object_value_list = [
 for object_value in object_value_list:
   if object_value is None:
     continue
-  try:
-    object_value.getParentValue().manage_delObjects(ids=[object_value.getId()])
-  except:
-    pass
+  object_value.getParentValue().manage_delObjects(ids=[object_value.getId()])
+
 return "Deleted Successfully."
