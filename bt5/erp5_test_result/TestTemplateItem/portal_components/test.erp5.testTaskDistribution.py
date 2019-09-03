@@ -152,7 +152,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
                        self.scalability_distributor.getRelativeUrl())
 
   def test_02b_checkConsistencyOnTestSuite(self):
-    test_suite, = self._createTestSuite()
+    test_suite, = self._createTestSuite() # pylint: disable=unbalanced-tuple-unpacking
     self.tic()
     test_suite_repository, = test_suite.objectValues(portal_type="Test Suite Repository")
     self.checkPropertyConstraint(test_suite, 'title', 'ERP5-MASTER')
@@ -169,7 +169,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     Make sure validation of test suite generate a reference, and revalidating
     a test suite should not change reference
     """
-    test_suite, = self._createTestSuite()
+    test_suite, = self._createTestSuite() # pylint: disable=unbalanced-tuple-unpacking
     self.assertTrue(test_suite.getReference() != None)
     self.tic()
     test_suite.invalidate()
@@ -187,7 +187,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     """
     Check the constraint avoiding duplicates of test suites
     """
-    test_suite, = self._createTestSuite()
+    test_suite, = self._createTestSuite() # pylint: disable=unbalanced-tuple-unpacking
     self.tic()
     test_suite_clone = test_suite.Base_createCloneDocument(batch_mode=1)
     self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, test_suite_clone, 'validate_action')
@@ -360,10 +360,9 @@ class TestTaskDistribution(ERP5TypeTestCase):
     while a test suite with high priority is waiting for more nodes to speed up.
     """
     for x in range(10):
-      config_list = json.loads(self.distributor.startTestSuite(
-                             title="COMP%s-Node1" % x))
+      json.loads(self.distributor.startTestSuite(title="COMP%s-Node1" % x))
     test_suite_list = self._createTestSuite(quantity=3)
-    test_suite_1, test_suite_2, test_suite_3 = test_suite_list
+    test_suite_1, test_suite_2, test_suite_3 = test_suite_list # pylint: disable=unbalanced-tuple-unpacking
     test_suite_list[0].setIntIndex(1) # test suite 1, up to 1 testnode
     test_suite_list[1].setIntIndex(5) # test suite 2, up to 5 testnodes
     test_suite_list[2].setIntIndex(8) # test suite 3, up to 10 testnodes
@@ -869,7 +868,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     It shall be possible on a test suite to define configuration we would like
     to use to create slapos instance.
     """
-    test_suite, = self._createTestSuite(cluster_configuration=None)
+    test_suite, = self._createTestSuite(cluster_configuration=None) # pylint: disable=unbalanced-tuple-unpacking
     self.tic()
     self.assertEquals('{"configuration_list": [{}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
     test_suite.setClusterConfiguration("{'foo': 3}")
@@ -896,7 +895,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     When we have two test suites and we have two test nodes, we should have
     one test suite distributed per test node
     """
-    test_node_one, test_node_two = self._createTestNode(quantity=2)
+    test_node_one, test_node_two = self._createTestNode(quantity=2) # pylint: disable=unbalanced-tuple-unpacking
     test_suite_one = self._createTestSuite(reference_correction=+0,
                               title='one')[0]
     self._createTestSuite(reference_correction=+1,
@@ -989,23 +988,23 @@ class TestTaskDistribution(ERP5TypeTestCase):
           [test_node_two, ["one", "seven", "height" , "six"]])
     # Check that additional test node would get work for missing assignments
     # No move a test suite is done since in average we miss slots
-    test_node_three, = self._createTestNode(reference_correction=2)
+    test_node_three, = self._createTestNode(reference_correction=2) # pylint: disable=unbalanced-tuple-unpacking
     check([test_node_zero, ["three", "four", "height", "six"]],
           [test_node_one, ["two", "four", "seven" , "six"]],
           [test_node_two, ["one", "seven", "height" , "six"]],
           [test_node_three, ["seven", "height"]])
     # With even more test node, check that we move some work to less
     # busy test nodes
-    test_node_four, = self._createTestNode(reference_correction=3)
-    test_node_five, = self._createTestNode(reference_correction=4)
+    test_node_four, = self._createTestNode(reference_correction=3) # pylint: disable=unbalanced-tuple-unpacking
+    test_node_five, = self._createTestNode(reference_correction=4) # pylint: disable=unbalanced-tuple-unpacking
     check([test_node_zero, ["three", "six", "height"]],
           [test_node_one, ["two", "six", "seven"]],
           [test_node_two, ["one", "seven", "height"]],
           [test_node_three, ["four", "seven", "height"]],
           [test_node_four, ["four", "seven", "height"]],
           [test_node_five, ["six", "seven", "height"]])
-    test_node_six, = self._createTestNode(reference_correction=5)
-    test_node_seven, = self._createTestNode(reference_correction=6)
+    test_node_six, = self._createTestNode(reference_correction=5) # pylint: disable=unbalanced-tuple-unpacking
+    test_node_seven, = self._createTestNode(reference_correction=6) # pylint: disable=unbalanced-tuple-unpacking
     check([test_node_zero, ["three", "height"]],
           [test_node_one, ["two", "seven"]],
           [test_node_two, ["one", "height"]],
@@ -1020,7 +1019,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     Check that the property max_test_suite on the distributor could
     be used to customize the quantity of test suite affected per test node
     """
-    test_node, = self._createTestNode(quantity=1)
+    test_node, = self._createTestNode(quantity=1) # pylint: disable=unbalanced-tuple-unpacking
     test_suite_list = self._createTestSuite(quantity=5)
     self.tool.TestTaskDistribution.setMaxTestSuite(None)
     self.tic()
@@ -1040,8 +1039,9 @@ class TestTaskDistribution(ERP5TypeTestCase):
     When we have two test suites and we have two test nodes, we should have
     one test suite distributed per test node
     """
-    test_node_one, test_node_two = self._createTestNode(quantity=2,
-                               specialise_value=self.performance_distributor)
+    test_node_one, test_node_two = self._createTestNode(  # pylint: disable=unbalanced-tuple-unpacking
+        quantity=2,
+        specialise_value=self.performance_distributor)
     test_suite_one = self._createTestSuite(
                           title='one', specialise_value=self.performance_distributor)[0]
     self._createTestSuite(title='two', reference_correction=+1,
@@ -1103,7 +1103,6 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.assertEqual(set(['test suite 1|COMP32-Node1',
                            'test suite 2|COMP32-Node1']),
                       set([x['test_suite_title'] for x in config_list]))
-    revision = 'a=a,b=b,c=c'
     result = self._createTestResult(test_title='test suite 1|COMP32-Node1',
                                     distributor=self.performance_distributor)
     self.tic()
