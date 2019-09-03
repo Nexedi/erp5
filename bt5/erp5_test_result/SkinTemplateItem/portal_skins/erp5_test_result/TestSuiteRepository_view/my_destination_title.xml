@@ -10,16 +10,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>anchor</string>
                 <string>columns</string>
-                <string>portal_types</string>
+                <string>description</string>
+                <string>portal_type</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>my_destination_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -75,51 +75,43 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>anchor</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>git_url</string>
+                          <string>title</string>
+                          <string>Gitlab REST Connector</string>
+                        </tuple>
+                        <tuple>
+                          <string>url_string</string>
                           <string>URL</string>
                         </tuple>
                         <tuple>
-                          <string>profile_path</string>
-                          <string>Profile Path</string>
-                        </tuple>
-                        <tuple>
-                          <string>buildout_section_id</string>
-                          <string>Buildout</string>
-                        </tuple>
-                        <tuple>
-                          <string>branch</string>
-                          <string>Branch</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Gitlab Connector</string>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Connector to gitlab API to annotate commits from this repository with test result status.</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewBaseFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
+                    <key> <string>portal_type</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>Test Suite Repository</string>
-                          <string>Test Suite Repository</string>
+                          <string>Gitlab REST Connector</string>
+                          <string>Gitlab REST Connector</string>
                         </tuple>
                       </list>
                     </value>
@@ -130,7 +122,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Repository</string> </value>
+                    <value> <string>Gitlab Connector</string> </value>
                 </item>
               </dictionary>
             </value>
