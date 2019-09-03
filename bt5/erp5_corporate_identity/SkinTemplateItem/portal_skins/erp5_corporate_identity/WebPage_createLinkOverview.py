@@ -79,69 +79,54 @@ for citation in re.findall(r'\[(.*?)\]', document_content or ''):
   citation_dict = {}
   citation_dict["input"] = citation
   citation_type = re.findall(match_citation_type, citation)[0]
-
+  # Those 3 parts has similar codes, leave as it so that it's easy to customize for each other
   if citation_type == "AD":
-    item_dict = {}
-    item_dict["type"] = citation_type
-    item_dict["title"] = citation_info[0]
-    item_dict["number"] = citation_info[1]
-    item_dict["version"] = citation_info[2]
-    item_dict["href"] = citation_href
-    if citation_ad_doubles.get(citation_href, None) is None:
+    if citation_href not in citation_ad_doubles:
       citation_ad_doubles[citation_href] = citation_ad_count
-      citation_relevant_count = citation_ad_count
-    else:
-      citation_relevant_count = citation_ad_doubles[citation_href]
-    citation_id = ''.join([citation_type, "-", str(citation_relevant_count)])
-    item_dict["id"] = citation_id
-    citation_dict["item"] = item_dict
-    citation_dict["output"] = setCitation(citation_id, citation_info[0])
-    citation_ad_list.append(citation_dict)
-    citation_ad_count = citation_ad_count + 1
+      citation_id = ''.join([citation_type, "-", str(citation_ad_count)])
+      citation_dict["item"] = {
+        "type": citation_type,
+        "title": citation_info[0],
+        "number": citation_info[1],
+        "version": citation_info[2],
+        "href": citation_href,
+        "id": citation_id
+      }
+      citation_dict["output"] = setCitation(citation_id, citation_info[0])
+      citation_ad_list.append(citation_dict)
+      citation_ad_count = citation_ad_count + 1
   elif citation_type == "RD":
-    item_dict = {}
-    item_dict["type"] = citation_type
-    item_dict["title"] = citation_info[0]
-    item_dict["number"] = citation_info[1]
-    item_dict["version"] = citation_info[2]
-    item_dict["href"] = citation_href
-    if citation_rd_doubles.get(citation_href, None) is None:
+    if citation_href not in citation_rd_doubles:
       citation_rd_doubles[citation_href] = citation_rd_count
-      citation_relevant_count = citation_rd_count
-    else:
-      citation_relevant_count = citation_rd_doubles[citation_href]
-    citation_id = ''.join([citation_type, "-", str(citation_relevant_count)])
-    item_dict["id"] = citation_id
-    citation_dict["item"] = item_dict
-    citation_dict["output"] = setCitation(
-      citation_id,
-      item_dict.get("title")
-    )
-    citation_rd_list.append(citation_dict)
-    citation_rd_count = citation_rd_count + 1
+      citation_id = ''.join([citation_type, "-", str(citation_rd_count)])
+      citation_dict["item"] = {
+        "type": citation_type,
+        "title": citation_info[0],
+        "number": citation_info[1],
+        "version": citation_info[2],
+        "href": citation_href,
+        "id" : citation_id
+      }
+      citation_dict["output"] = setCitation(citation_id,citation_info[0])
+      citation_rd_list.append(citation_dict)
+      citation_rd_count = citation_rd_count + 1
   else:
-    citation_abbreviation = citation_type
-    citation_type = "AB"
-    item_dict = {}
-    item_dict["type"] = citation_type
-    item_dict["abbreviation"] = citation_abbreviation
-    item_dict["title"] = citation_info[0]
-    item_dict["description"] = citation_info[1]
-    item_dict["href"] = citation_href
-    if citation_ab_doubles.get(citation_href, None) is None:
+    if citation_href not in citation_ab_doubles:
       citation_ab_doubles[citation_href] = citation_ab_count
-      citation_relevant_count = citation_ab_count
-    else:
-      citation_relevant_count = citation_ab_doubles[citation_href]
-    citation_id = ''.join([citation_type, "-", str(citation_relevant_count)])
-    item_dict["id"] = citation_id
-    citation_dict["item"] = item_dict
-    citation_dict["output"] = setCitation(
-      citation_id,
-      item_dict.get("title")
-    )
-    citation_ab_list.append(citation_dict)
-    citation_ab_count = citation_ab_count + 1
+      citation_abbreviation = citation_type
+      citation_type = "AB"
+      citation_id = ''.join([citation_type, "-", str(citation_ab_count)])
+      citation_dict["item"] = {
+        "type": citation_type,
+        "abbreviation": citation_abbreviation,
+        "title": citation_info[0],
+        "description": citation_info[1],
+        "href": citation_href,
+        "id": citation_id
+      }
+      citation_dict["output"] = setCitation(citation_id, citation_info[0])
+      citation_ab_list.append(citation_dict)
+      citation_ab_count = citation_ab_count + 1
 
 response_dict = {}
 response_dict["reference_list"] = citation_rd_list
