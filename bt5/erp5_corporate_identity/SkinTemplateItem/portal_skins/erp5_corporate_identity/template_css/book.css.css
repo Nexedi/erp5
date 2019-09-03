@@ -788,7 +788,7 @@ html .ci-book table td p {
 .ci-book pre {
 	text-align: left;
   font-family: TexGyreCursor;
-	/*white-space: pre-line;*/
+	white-space: pre-wrap;
 	word-wrap: break-word;
   padding: 10px 20px 36px;
   background-color: rgb(234,246,246);

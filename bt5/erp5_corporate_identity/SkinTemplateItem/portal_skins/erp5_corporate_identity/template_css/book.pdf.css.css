@@ -807,7 +807,7 @@ html .ci-book table td p {
 /* === code boxes === */
 .ci-book pre {
 	text-align: left;
-	/*white-space: pre-line;*/
+	white-space: pre-wrap;
 	word-wrap: break-word;
   font-family: TexGyreCursor;
   padding: 10px 20px 36px;
