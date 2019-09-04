@@ -1142,6 +1142,7 @@ def renderFormDefinition(form, response_dict):
   response_dict["title"] = Base_translateString(form.getTitle())
   response_dict["pt"] = form.pt
   response_dict["action"] = form.action
+  response_dict["action_title"] = form.action_title
   response_dict["update_action"] = form.update_action
   response_dict["update_action_title"] = Base_translateString(form.update_action_title)
 
