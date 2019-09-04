@@ -238,14 +238,13 @@ class SlapOSMasterCommunicator(object):
     stopped = 0
     self.message_history.append(message_list)
     for instance in message_list:
-      if not instance['slave'] and \
-        instance['state'] in (INSTANCE_STATE_UNKNOWN, INSTANCE_STATE_STARTED_WITH_ERROR):
-        return instance['state']
-      elif not instance['slave'] and instance['state'] == INSTANCE_STATE_STARTED:
-        started = 1
-      elif not instance['slave'] and instance['state'] == INSTANCE_STATE_STOPPED:
-        stopped = 1
-
+      if not instance['slave']:
+        if instance['state'] in (INSTANCE_STATE_UNKNOWN, INSTANCE_STATE_STARTED_WITH_ERROR):
+          return instance['state']
+        elif instance['state'] == INSTANCE_STATE_STARTED:
+          started = 1
+        elif instance['state'] == INSTANCE_STATE_STOPPED:
+          stopped = 1
       if instance['slave'] and instance['state'] == INSTANCE_STATE_UNKNOWN:
         return instance['state']
 
