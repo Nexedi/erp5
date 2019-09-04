@@ -132,7 +132,7 @@
     })
 
     .allowPublicAcquisition("getFormDefinition", function getFormDefinition() {
-      return JSON.parse(JSON.stringify( this.state.form_definition ));
+      return JSON.parse(JSON.stringify(this.state.form_definition));
     })
 
     /////////////////////////////////////////////////////////////////
