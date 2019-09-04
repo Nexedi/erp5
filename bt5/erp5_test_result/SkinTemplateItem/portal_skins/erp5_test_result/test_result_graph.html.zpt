@@ -21,7 +21,7 @@ body {
 .bullet .title { font-size: 14px; font-weight: bold; }
 </style>
 
- <script src="http://d3js.org/d3.v3.js"></script>
+ <script src="https://d3js.org/d3.v3.min.js"></script>
  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
 
  
