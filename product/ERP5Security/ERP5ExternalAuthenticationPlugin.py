@@ -107,7 +107,7 @@ class ERP5ExternalAuthenticationPlugin(BasePlugin):
     external_login = getHeader(self.user_id_key)
     if external_login is not None:
       creds['external_login'] = external_login
-      creds['login_portal_type'] = self.login_portal_type_list.split()
+      creds['login_portal_type'] = self.login_portal_type_list.split(",")
     else:
       # fallback to default way
       return DumbHTTPExtractor().extractCredentials(request)
