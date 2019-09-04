@@ -270,9 +270,6 @@ ces or already launched.")
 
     logger.info("Waiting for new configuration")
     time.sleep(60*5)
-    self.slapos_communicator.requestInstanceStop(instance_title, request_kw)
-    self.slapos_communicator.waitInstanceStopped(instance_title)
-    self.slapos_communicator.requestInstanceStart(instance_title, request_kw)
 
     return {'status_code' : 0} 
 
