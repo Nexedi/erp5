@@ -285,7 +285,7 @@ def generatePortalTypeClass(site, portal_type_name):
 
       mixin_class_list.append(mixin_class)
 
-  base_class_list = [klass] + accessor_holder_list + mixin_class_list + [
+  base_class_list = mixin_class_list + [klass] + accessor_holder_list + [
     # _getAcquireLocalRoles is accessed by security machinery, so it needs to
     # be fast: make it a ConstantGetter while we have access to portal_type
     # configuration.
