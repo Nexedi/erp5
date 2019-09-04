@@ -78,12 +78,20 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>classification/collaborative/team</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>3f1a886a5859a7b0b9531d3f875a8782</string> </value>
+            <value> <string>c2fc29a075c30241ad5e5e6496daeb9d</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>image/x-bmp</string> </value>
+            <value> <string>image/x-ms-bmp</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -94,8 +102,12 @@
             <value> <string>Screenshot generated from template_test_book_input_002_en_pdf</string> </value>
         </item>
         <item>
+            <key> <string>filename</string> </key>
+            <value> <string>2.bmp</string> </value>
+        </item>
+        <item>
             <key> <string>height</string> </key>
-            <value> <int>595</int> </value>
+            <value> <int>842</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -125,7 +137,7 @@
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>842</int> </value>
+            <value> <int>595</int> </value>
         </item>
       </dictionary>
     </pickle>
