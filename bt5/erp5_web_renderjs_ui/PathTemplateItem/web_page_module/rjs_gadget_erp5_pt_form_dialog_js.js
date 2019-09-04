@@ -174,6 +174,7 @@
             form_definition: options.form_definition,
             erp5_form: options.erp5_form || {},
             // editable: true,  // ignore global editable state (be always editable)
+            action_title: options.form_definition.action_title,
             has_update_action: Boolean(options.form_definition.update_action),
             update_action_title: options.form_definition.update_action_title,
             // pass extended_search from previous view in case any gadget is curious
@@ -254,7 +255,12 @@
           ]);
         })
         .push(function (translated_title_list) {
-          form_gadget.element.querySelector('input.dialogconfirm').value = translated_title_list[1];
+          var action_confirm = form_gadget.element.querySelector('input.dialogconfirm')
+          if (form_gadget.state.action_title) {
+            action_confirm.value = form_gadget.state.action_title;
+          } else {
+            action_confirm.value = translated_title_list[1];
+          }
 
           selector.textContent = "\u00A0" + translated_title_list[0];
           selector.className = "ui-content-title ui-body-c ui-icon ui-icon-custom" + icon;
