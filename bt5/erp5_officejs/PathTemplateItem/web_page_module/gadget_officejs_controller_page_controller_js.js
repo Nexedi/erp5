@@ -55,7 +55,7 @@
 
           return gadget.changeState({
             jio_key: options.jio_key,
-            editable: options.editable || false,///P
+            editable: options.editable || false,
             doc: result,
             child_gadget_url: child_gadget_url
           });
@@ -70,7 +70,7 @@
             return child_gadget.render({
               jio_key: gadget.state.jio_key,
               doc: gadget.state.doc,
-              editable: gadget.state.editable///P
+              editable: gadget.state.editable
             });
           });
       }
@@ -86,7 +86,7 @@
           return form_gadget.render({
             jio_key: gadget.state.jio_key,
             doc: gadget.state.doc,
-            editable: gadget.state.editable///P
+            editable: gadget.state.editable
           });
         });
     });

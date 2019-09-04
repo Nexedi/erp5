@@ -30,6 +30,7 @@
         .push(function (result) {
           var doc = {
             title: "Untitled Document",
+            text_content: "None",
             portal_type: result[0],
             parent_relative_url: result[1],
             content_type: result[2]
