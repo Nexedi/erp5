@@ -518,6 +518,10 @@ def create_settings_form():
                                 title='Form action',
                                 required=0,
                                 default="")
+    action_title = fields.StringField('action_title',
+                               title="Action Title",
+                               required=0,
+                               default="")
     update_action = fields.StringField('update_action',
                                 title='Form update action',
                                 required=0,
@@ -559,7 +563,7 @@ def create_settings_form():
                                    title='Setters for these properties should be'
                                    '<br /> called by edit() in the defined order')
 
-    form.add_fields([title, description, row_length, name, pt, action, update_action, update_action_title,
+    form.add_fields([title, description, row_length, name, pt, action, action_title, update_action, update_action_title,
                      method, enctype, encoding, stored_encoding, unicode_mode, edit_order])
     return form
 
@@ -621,6 +625,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
 
     # Default Attributes
     pt = 'form_view'
+    action_title = ''
     update_action = ''
     update_action_title = ''
     edit_order = []
