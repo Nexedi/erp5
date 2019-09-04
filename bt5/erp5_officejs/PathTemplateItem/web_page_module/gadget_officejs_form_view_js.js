@@ -94,6 +94,8 @@
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
+    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
+    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
 
     // XXX Hardcoded for modification_date rendering
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
@@ -138,73 +140,77 @@
 
     .declareMethod("triggerSubmit", function (argument_list) {
       var gadget = this, data, action, name_list;
-      return gadget.getDeclaredGadget('erp5_pt_gadget')
-        .push(function (child_gadget) {
-          if (child_gadget.state.save_action !== true) {
-            //rely on child gadget to submit (filter, panels, etc.)
-            return child_gadget.triggerSubmit(argument_list);
-          }
-          action = child_gadget.state.erp5_document._embedded._view
-            ._actions.put;
-          return child_gadget.getDeclaredGadget("erp5_form")
-            .push(function (sub_gadget) {
-              return sub_gadget.checkValidity();
-            })
-            .push(function (is_valid) {
-              if (!is_valid) {
-                return null;
+      return gadget.notifySubmitting()
+        .push(function () {
+          return gadget.getDeclaredGadget('erp5_pt_gadget')
+            .push(function (child_gadget) {
+              if (child_gadget.state.save_action !== true) {
+                //rely on child gadget to submit (filter, panels, etc.)
+                return child_gadget.triggerSubmit(argument_list);
               }
-              return child_gadget.getContent();
-            })
-            .push(function (content_dict) {
-              if (content_dict === null) {
-                return;
-              }
-              if (gadget.state.blob_type) {
-                data = content_dict.text_content;
-                delete content_dict.text_content;
-
-                //ONLY OFFICE
-                if (gadget.state.only_office) {
-                  name_list = gadget.state.doc.filename.split('.');
-                  if (name_list.pop() !== gadget.state.mime_type) {
-                    name_list.push(gadget.state.mime_type);
-                    content_dict.filename = name_list.join('.');
+              action = child_gadget.state.erp5_document._embedded._view
+                ._actions.put;
+              return child_gadget.getDeclaredGadget("erp5_form")
+                .push(function (sub_gadget) {
+                  return sub_gadget.checkValidity();
+                })
+                .push(function (is_valid) {
+                  if (!is_valid) {
+                    return null;
                   }
-                }//
-
-              }
-              return child_gadget.submitContent(
-                child_gadget.state.jio_key,
-                action.href,
-                content_dict
-              )
-                .push(function () {
+                  return child_gadget.getContent();
+                })
+                .push(function (content_dict) {
+                  if (content_dict === null) {
+                    return;
+                  }
                   if (gadget.state.blob_type) {
-                    return gadget
-                      .jio_putAttachment(child_gadget.state.jio_key,
-                                         'data',
-                                         jIO.util.dataURItoBlob(data))
+                    data = content_dict.text_content;
+                    delete content_dict.text_content;
 
-                      //ONLY OFFICE
-                      .push(function () {
-                        if (gadget.state.only_office) {
-                          return gadget
-                            .declareGadget("gadget_ojs_cloudooo.html");
-                        }
-                      })
-                      .push(function (cloudooo) {
-                        if (gadget.state.only_office) {
-                          return cloudooo.putAllCloudoooConvertionOperation({
-                            format: gadget.state.mime_type,
-                            jio_key: child_gadget.state.jio_key
-                          });
-                        }
-                      });//
+                    //ONLY OFFICE
+                    if (gadget.state.only_office) {
+                      name_list = gadget.state.doc.filename.split('.');
+                      if (name_list.pop() !== gadget.state.mime_type) {
+                        name_list.push(gadget.state.mime_type);
+                        content_dict.filename = name_list.join('.');
+                      }
+                    }//
 
                   }
-                });
-            }); // TODO check how erp5 form gadgets handle failures
+                  return child_gadget.submitContent(
+                    child_gadget.state.jio_key,
+                    action.href,
+                    content_dict
+                  )
+                    .push(function () {
+                      if (gadget.state.blob_type) {
+                        return gadget
+                          .jio_putAttachment(child_gadget.state.jio_key,
+                                             'data',
+                                             jIO.util.dataURItoBlob(data))
+
+                          //ONLY OFFICE
+                          .push(function () {
+                            if (gadget.state.only_office) {
+                              return gadget
+                                .declareGadget("gadget_ojs_cloudooo.html");
+                            }
+                          })
+                          .push(function (cloudooo) {
+                            if (gadget.state.only_office) {
+                              return cloudooo
+                                .putAllCloudoooConvertionOperation({
+                                  format: gadget.state.mime_type,
+                                  jio_key: child_gadget.state.jio_key
+                                });
+                            }
+                          });//
+
+                      }
+                    });
+                }); // TODO check how erp5 form gadgets handle failures
+            });
         });
     })
 
