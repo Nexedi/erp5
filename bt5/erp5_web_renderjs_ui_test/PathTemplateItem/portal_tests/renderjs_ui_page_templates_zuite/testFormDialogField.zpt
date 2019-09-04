@@ -64,7 +64,11 @@
   <td>//option[text()='Foo Line']</td>
   <td></td>
 </tr>
-
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name='action_confirm' and @value='Create Document']</td>
+  <td></td>
+</tr>
 </tbody></table>
 </body>
 </html>
