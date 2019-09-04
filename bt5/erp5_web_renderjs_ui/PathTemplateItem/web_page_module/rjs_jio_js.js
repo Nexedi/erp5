@@ -15905,7 +15905,7 @@ return new Parser;
   var parser = new DOMParser(),
     serializer = new XMLSerializer();
 
-  function makeXmlRpcRequest(file, from, to) {
+  function makeXmlRpcRequest(file, from, to, conversion_kw) {
     var xml = parser.parseFromString(
       '<?xml version="1.0" encoding="UTF-8"?><methodCall>' +
         '<methodName>convertFile</methodName><params>' +
@@ -15914,10 +15914,29 @@ return new Parser;
         '<param><value><string></string></value></param></params></methodCall>',
       'text/xml'
     ),
-      string_list = xml.getElementsByTagName('string');
+    string_list = xml.getElementsByTagName('string');
     string_list[0].textContent = file;
     string_list[1].textContent = from;
     string_list[2].textContent = to;
+    //
+    if (conversion_kw){
+      var param = parser.parseFromString('<param><value><boolean>0</boolean></value></param>','text/xml').firstChild;
+      xml.firstChild.lastChild.appendChild(param);
+      var param = parser.parseFromString('<param><value><boolean>0</boolean></value></param>','text/xml').firstChild;
+      xml.firstChild.lastChild.appendChild(param);
+      param =  parser.parseFromString('<param><struct></struct></param>','text/xml').firstChild;
+      var struct = param.firstChild;
+      for (var key in conversion_kw) {
+        var element_value = document.createElement(conversion_kw[key][1]);
+        var member = parser.parseFromString('<member><name></name><value></value></member>','text/xml').firstChild;
+        element_value.textContent = conversion_kw[key][0];
+        member.getElementsByTagName('name')[0].textContent = key;
+        member.getElementsByTagName('value')[0].appendChild(element_value);
+        struct.appendChild(member);
+      }
+      xml.firstChild.lastChild.appendChild(param);
+    }
+    //
     return serializer.serializeToString(xml);
   }
 
@@ -15926,7 +15945,7 @@ return new Parser;
    * from a format to another
    * return converted blob.
    **/
-  function convert(url, blob, from, to) {
+  function convert(url, blob, from, to, conversion_kw) {
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.readBlobAsDataURL(blob);
@@ -15938,7 +15957,8 @@ return new Parser;
           data: makeXmlRpcRequest(
             result.target.result.split('base64,')[1],
             from,
-            to
+            to,
+            conversion_kw
           )
         });
       })
@@ -15988,11 +16008,11 @@ return new Parser;
     return this._sub_storage.getAttachment.apply(this._sub_storage, arguments);
   };
 
-  CloudoooStorage.prototype.putAttachment = function (id, name, blob) {
+  CloudoooStorage.prototype.putAttachment = function (id, name, blob, conversion_kw) {
     var storage = this;
-    return storage.get(id)
+  return storage.get(id)
       .push(function (doc) {
-        return convert(storage._url, blob, doc.from, doc.to);
+        return convert(storage._url, blob, doc.from, doc.to, conversion_kw);
       })
       .push(function (converted_blob) {
         return storage._sub_storage.putAttachment(id, name, converted_blob);
