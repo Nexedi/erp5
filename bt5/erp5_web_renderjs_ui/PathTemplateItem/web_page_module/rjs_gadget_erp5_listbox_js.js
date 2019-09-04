@@ -1028,7 +1028,8 @@
                   next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child",
                   fragment = document.createDocumentFragment(),
                   sub_element,
-                  nav_element = gadget.element.querySelector('nav');
+                  nav_element = gadget.element.querySelector('nav'),
+                  from_index;
 
                 if ((gadget.state.begin_from === 0) && (counter === 0)) {
                   record = variable.translated_no_record;
@@ -1037,7 +1038,8 @@
                   record = counter + " " + variable.translated_records;
                   pagination_message = counter;
                 } else {
-                  pagination_message = (((gadget.state.begin_from + lines) / lines - 1) * lines + 1) + " - " + (((gadget.state.begin_from + lines) / lines - 1) * lines + counter);
+                  from_index = Math.round(((gadget.state.begin_from + lines) / lines - 1) * lines);
+                  pagination_message = (from_index + 1) + " - " + (from_index + counter);
                   if (allDocs_result.count !== undefined) {
                     if ((allDocs_result.count === 1000) && (!gadget.state.show_count)) {
                       pagination_message += ' / ' + sample_string + ' ' + allDocs_result.count;
