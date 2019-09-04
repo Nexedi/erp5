@@ -20,6 +20,10 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Gitlab REST Connector</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Scalability Test Suite</type>
   <workflow>edit_workflow, test_suite_workflow</workflow>
  </chain>
@@ -37,7 +41,7 @@
  </chain>
  <chain>
   <type>Test Result</type>
-  <workflow>edit_workflow, test_result_workflow</workflow>
+  <workflow>edit_workflow, test_result_gitlab_interaction_workflow, test_result_workflow</workflow>
  </chain>
  <chain>
   <type>Test Result Line</type>

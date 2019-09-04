@@ -3,6 +3,9 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import json 
 from time import sleep
 from DateTime import DateTime
+import responses
+import httplib
+
 
 class TestTaskDistribution(ERP5TypeTestCase):
   def afterSetUp(self):
@@ -152,7 +155,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
                        self.scalability_distributor.getRelativeUrl())
 
   def test_02b_checkConsistencyOnTestSuite(self):
-    test_suite, = self._createTestSuite()
+    test_suite, = self._createTestSuite() # pylint: disable=unbalanced-tuple-unpacking
     self.tic()
     test_suite_repository, = test_suite.objectValues(portal_type="Test Suite Repository")
     self.checkPropertyConstraint(test_suite, 'title', 'ERP5-MASTER')
@@ -169,7 +172,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     Make sure validation of test suite generate a reference, and revalidating
     a test suite should not change reference
     """
-    test_suite, = self._createTestSuite()
+    test_suite, = self._createTestSuite() # pylint: disable=unbalanced-tuple-unpacking
     self.assertTrue(test_suite.getReference() != None)
     self.tic()
     test_suite.invalidate()
@@ -187,7 +190,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     """
     Check the constraint avoiding duplicates of test suites
     """
-    test_suite, = self._createTestSuite()
+    test_suite, = self._createTestSuite() # pylint: disable=unbalanced-tuple-unpacking
     self.tic()
     test_suite_clone = test_suite.Base_createCloneDocument(batch_mode=1)
     self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, test_suite_clone, 'validate_action')
@@ -360,10 +363,9 @@ class TestTaskDistribution(ERP5TypeTestCase):
     while a test suite with high priority is waiting for more nodes to speed up.
     """
     for x in range(10):
-      config_list = json.loads(self.distributor.startTestSuite(
-                             title="COMP%s-Node1" % x))
+      json.loads(self.distributor.startTestSuite(title="COMP%s-Node1" % x))
     test_suite_list = self._createTestSuite(quantity=3)
-    test_suite_1, test_suite_2, test_suite_3 = test_suite_list
+    test_suite_1, test_suite_2, test_suite_3 = test_suite_list # pylint: disable=unbalanced-tuple-unpacking
     test_suite_list[0].setIntIndex(1) # test suite 1, up to 1 testnode
     test_suite_list[1].setIntIndex(5) # test suite 2, up to 5 testnodes
     test_suite_list[2].setIntIndex(8) # test suite 3, up to 10 testnodes
@@ -869,7 +871,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     It shall be possible on a test suite to define configuration we would like
     to use to create slapos instance.
     """
-    test_suite, = self._createTestSuite(cluster_configuration=None)
+    test_suite, = self._createTestSuite(cluster_configuration=None) # pylint: disable=unbalanced-tuple-unpacking
     self.tic()
     self.assertEquals('{"configuration_list": [{}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
     test_suite.setClusterConfiguration("{'foo': 3}")
@@ -896,7 +898,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     When we have two test suites and we have two test nodes, we should have
     one test suite distributed per test node
     """
-    test_node_one, test_node_two = self._createTestNode(quantity=2)
+    test_node_one, test_node_two = self._createTestNode(quantity=2) # pylint: disable=unbalanced-tuple-unpacking
     test_suite_one = self._createTestSuite(reference_correction=+0,
                               title='one')[0]
     self._createTestSuite(reference_correction=+1,
@@ -989,23 +991,23 @@ class TestTaskDistribution(ERP5TypeTestCase):
           [test_node_two, ["one", "seven", "height" , "six"]])
     # Check that additional test node would get work for missing assignments
     # No move a test suite is done since in average we miss slots
-    test_node_three, = self._createTestNode(reference_correction=2)
+    test_node_three, = self._createTestNode(reference_correction=2) # pylint: disable=unbalanced-tuple-unpacking
     check([test_node_zero, ["three", "four", "height", "six"]],
           [test_node_one, ["two", "four", "seven" , "six"]],
           [test_node_two, ["one", "seven", "height" , "six"]],
           [test_node_three, ["seven", "height"]])
     # With even more test node, check that we move some work to less
     # busy test nodes
-    test_node_four, = self._createTestNode(reference_correction=3)
-    test_node_five, = self._createTestNode(reference_correction=4)
+    test_node_four, = self._createTestNode(reference_correction=3) # pylint: disable=unbalanced-tuple-unpacking
+    test_node_five, = self._createTestNode(reference_correction=4) # pylint: disable=unbalanced-tuple-unpacking
     check([test_node_zero, ["three", "six", "height"]],
           [test_node_one, ["two", "six", "seven"]],
           [test_node_two, ["one", "seven", "height"]],
           [test_node_three, ["four", "seven", "height"]],
           [test_node_four, ["four", "seven", "height"]],
           [test_node_five, ["six", "seven", "height"]])
-    test_node_six, = self._createTestNode(reference_correction=5)
-    test_node_seven, = self._createTestNode(reference_correction=6)
+    test_node_six, = self._createTestNode(reference_correction=5) # pylint: disable=unbalanced-tuple-unpacking
+    test_node_seven, = self._createTestNode(reference_correction=6) # pylint: disable=unbalanced-tuple-unpacking
     check([test_node_zero, ["three", "height"]],
           [test_node_one, ["two", "seven"]],
           [test_node_two, ["one", "height"]],
@@ -1020,7 +1022,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     Check that the property max_test_suite on the distributor could
     be used to customize the quantity of test suite affected per test node
     """
-    test_node, = self._createTestNode(quantity=1)
+    test_node, = self._createTestNode(quantity=1) # pylint: disable=unbalanced-tuple-unpacking
     test_suite_list = self._createTestSuite(quantity=5)
     self.tool.TestTaskDistribution.setMaxTestSuite(None)
     self.tic()
@@ -1040,8 +1042,9 @@ class TestTaskDistribution(ERP5TypeTestCase):
     When we have two test suites and we have two test nodes, we should have
     one test suite distributed per test node
     """
-    test_node_one, test_node_two = self._createTestNode(quantity=2,
-                               specialise_value=self.performance_distributor)
+    test_node_one, test_node_two = self._createTestNode(  # pylint: disable=unbalanced-tuple-unpacking
+        quantity=2,
+        specialise_value=self.performance_distributor)
     test_suite_one = self._createTestSuite(
                           title='one', specialise_value=self.performance_distributor)[0]
     self._createTestSuite(title='two', reference_correction=+1,
@@ -1103,7 +1106,6 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.assertEqual(set(['test suite 1|COMP32-Node1',
                            'test suite 2|COMP32-Node1']),
                       set([x['test_suite_title'] for x in config_list]))
-    revision = 'a=a,b=b,c=c'
     result = self._createTestResult(test_title='test suite 1|COMP32-Node1',
                                     distributor=self.performance_distributor)
     self.tic()
@@ -1411,3 +1413,132 @@ class TestTaskDistribution(ERP5TypeTestCase):
 
     self._createTestResult(test_title='Periodicity Disabled Test Suite')
     self.assertEqual(None, test_suite.getAlarmDate())
+
+
+class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
+  """Tests for Gitlab commits annotations.
+  """
+  def afterSetUp(self):
+    connector = self.portal.portal_web_services.newContent(
+        portal_type='Gitlab REST Connector',
+        reference='lab.example.com',
+        url_string='https://lab.example.com/api/v4/',
+        token='123456'
+    )
+    connector.validate()
+
+    self.project = self.portal.project_module.newContent(
+        portal_type='Project',
+        title=self.id()
+    )
+    self.test_suite = self.portal.test_suite_module.newContent(
+        portal_type='Test Suite',
+        title=self.id(),
+        source_project_value=self.project,
+    )
+    self.test_suite.newContent(
+        portal_type='Test Suite Repository',
+        branch='master',
+        git_url='https://lab.example.com/nexedi/test.git',
+        buildout_section_id='test',
+        destination_value=connector,
+    )
+    # another unrelated repository, without connector, this
+    # should not cause any API call.
+    self.test_suite.newContent(
+        portal_type='Test Suite Repository',
+        branch='master',
+        git_url='https://lab.nexedi.com/nexedi/erp5.git',
+        buildout_section_id='erp5',
+        profile_path='software-release/software.cfg'
+    )
+    self.test_suite.validate()
+
+    self.test_result = self.portal.test_result_module.newContent(
+        portal_type='Test Result',
+        source_project_value=self.project,
+        title=self.id(),
+        reference='erp5=1-dc7b6e2e85e9434a97694a698884b057b7d30286,test=10-cc4c79c003f7cfe0bfcbc7b302eac988110c96ae'
+    )
+    self.post_commit_status_url = \
+        'https://lab.example.com/api/v4/projects/nexedi%2Ftest/statuses/cc4c79c003f7cfe0bfcbc7b302eac988110c96ae'
+    self.tic()
+
+  def beforeTearDown(self):
+    self.test_suite.invalidate()
+    self.tic()
+
+  def _response_callback(self, state):
+    """Callback for responses, checking that request was correct to mark commit as `state`
+    """
+    def _callback(request):
+      self.assertEqual(
+          '123456',
+          request.headers['PRIVATE-TOKEN'])
+
+      body = json.loads(request.body)
+      self.assertEqual(
+          state,
+          body['state'])
+      self.assertIn(
+          self.test_result.getRelativeUrl(),
+          body['target_url'])
+      self.assertEqual(
+          self.id(),
+          body['name'])
+      return (httplib.CREATED, {'content-type': 'application/json'}, '{}')
+    return _callback
+
+  def test_start_test(self):
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('running'))
+      self.test_result.start()
+      self.tic()
+
+  def _start_test_result(self):
+    with responses.RequestsMock() as rsps:
+      rsps.add(
+          responses.POST,
+          self.post_commit_status_url,
+          {})
+      self.test_result.start()
+      self.tic()
+
+  def test_cancel_test(self):
+    self._start_test_result()
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('canceled'))
+      self.test_result.cancel()
+      self.tic()
+
+  def test_stop_test_success(self):
+    self._start_test_result()
+    self.test_result.newContent(
+        portal_type='Test Result Line',
+        all_tests=1
+    )
+    self.test_result.setStringIndex('PASS')
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('success'))
+      self.test_result.stop()
+      self.tic()
+
+  def test_stop_test_failure(self):
+    self._start_test_result()
+    self.test_result.setStringIndex('FAILED')
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('failed'))
+      self.test_result.stop()
+      self.tic()

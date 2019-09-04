@@ -7,27 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -53,7 +32,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -80,7 +59,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -93,10 +74,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_git_url</string>
-                        <string>my_branch</string>
-                        <string>my_buildout_section_id</string>
-                        <string>my_profile_path</string>
+                        <string>my_reference</string>
+                        <string>my_url_string</string>
                       </list>
                     </value>
                 </item>
@@ -104,7 +83,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_destination_title</string>
+                        <string>my_token</string>
+                        <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
                 </item>
@@ -113,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestSuiteRepository_view</string> </value>
+            <value> <string>GitlabRESTConnector_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -121,7 +101,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TestNode_view</string> </value>
+            <value> <string>GitlabRESTConnector_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -137,7 +117,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Test Suite Parameters</string> </value>
+            <value> <string>Gitlab REST Connector</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

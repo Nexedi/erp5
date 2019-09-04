@@ -8,6 +8,8 @@ ERP5 Project Unit Test Distributor | edit_workflow
 ERP5 Project Unit Test Distributor | validation_workflow
 ERP5 Scalability Distributor | edit_workflow
 ERP5 Scalability Distributor | validation_workflow
+Gitlab REST Connector | edit_workflow
+Gitlab REST Connector | validation_workflow
 Scalability Test Suite | edit_workflow
 Scalability Test Suite | test_suite_workflow
 SlapOS Agent Distributor | edit_workflow
@@ -21,6 +23,7 @@ Test Result Line | test_result_workflow
 Test Result Node | edit_workflow
 Test Result Node | test_result_workflow
 Test Result | edit_workflow
+Test Result | test_result_gitlab_interaction_workflow
 Test Result | test_result_workflow
 Test Suite | edit_workflow
 Test Suite | test_suite_workflow

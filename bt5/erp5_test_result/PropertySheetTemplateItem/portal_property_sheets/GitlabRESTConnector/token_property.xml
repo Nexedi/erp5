@@ -16,21 +16,21 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Personal access token\n
+\n
+https://docs.gitlab.com/ce/user/profile/personal_access_tokens.html</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>computer_guid_property</string> </value>
+            <value> <string>token_property</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Standard Property</string> </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string>computer_guid</string> </value>
+            <key> <string>read_permission</string> </key>
+            <value> <string>Manage properties</string> </value>
         </item>
       </dictionary>
     </pickle>

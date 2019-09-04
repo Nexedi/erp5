@@ -13,6 +13,11 @@
  <portal_type id="ERP5 Scalability Distributor">
   <item>ScalabilityDistributor</item>
  </portal_type>
+ <portal_type id="Gitlab REST Connector">
+  <item>GitlabRESTConnector</item>
+  <item>Reference</item>
+  <item>Url</item>
+ </portal_type>
  <portal_type id="Scalability Test Suite">
   <item>Arrow</item>
   <item>ScalabilityTestSuite</item>
@@ -58,6 +63,7 @@
   <item>TestSuiteConstraint</item>
  </portal_type>
  <portal_type id="Test Suite Repository">
+  <item>Arrow</item>
   <item>TestSuiteRepository</item>
   <item>TestSuiteRepositoryConstraint</item>
  </portal_type>

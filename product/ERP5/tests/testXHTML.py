@@ -443,6 +443,7 @@ class TestXHTML(TestXHTMLMixin):
       'erp5_email_reader',
       'erp5_commerce',
       'erp5_credential',
+      'erp5_web_service',
       'erp5_test_result',
 
       'erp5_forge',

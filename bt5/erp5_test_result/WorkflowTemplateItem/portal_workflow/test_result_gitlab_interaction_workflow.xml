@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="InteractionWorkflowDefinition" module="Products.ERP5.InteractionWorkflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>creation_guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Update gitlab status of commits after test results</string> </value>
+        </item>
+        <item>
+            <key> <string>groups</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_result_gitlab_interaction_workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>manager_bypass</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Interaction Workflow Definition</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

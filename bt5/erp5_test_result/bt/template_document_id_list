@@ -3,3 +3,4 @@ document.erp5.TestSuite
 document.erp5.TestSuiteRepository
 document.erp5.ERP5ScalabilityDistributor
 document.erp5.SlapOSAgentDistributor
+document.erp5.GitlabRESTConnector
