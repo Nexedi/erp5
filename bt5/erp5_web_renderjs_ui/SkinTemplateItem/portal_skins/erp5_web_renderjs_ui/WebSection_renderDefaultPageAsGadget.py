@@ -1,5 +1,6 @@
 import json
 import re
+import urlparse
 
 if REQUEST is None:
   REQUEST = context.REQUEST
@@ -73,6 +74,10 @@ wallpaper_url = web_section.getLayoutProperty("configuration_wallpaper_url", def
 if wallpaper_url is None:
   mapping_dict["extra_css_full_link_tag"] = ''
 else:
+  if not urlparse.urlparse(wallpaper_url).scheme:
+    wallpaper_absolute_url = urlparse.urljoin(root_website_url+'/', wallpaper_url);
+  else:
+    wallpaper_absolute_url = wallpaper_url
   from base64 import urlsafe_b64encode
   mapping_dict["extra_css_full_link_tag"] = '<link rel="stylesheet" href="data:text/css;base64,%s">' % urlsafe_b64encode("""
   html::after {
@@ -89,6 +94,6 @@ else:
     background-attachment: fixed;
     background-image: url("%s");
   }
-  """ % wallpaper_url);
+  """ % wallpaper_absolute_url);
 
 return view_as_web_method(mapping_dict=mapping_dict)
