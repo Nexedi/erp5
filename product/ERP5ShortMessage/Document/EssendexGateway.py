@@ -47,7 +47,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products import ERP5Security
 
 #Product Module
-from Products.ERP5ShortMessage.Errors import SMSGatewayError
+from Products.ERP5ShortMessage.SMSGatewayError import SMSGatewayError
 
 
 
