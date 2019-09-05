@@ -3,7 +3,12 @@
 (function (window, RSVP, rJS, Handlebars, jIO) {
   "use strict";
 
-  var gadget_klass = rJS(window),
+  var WIKI_URL = "https://en.wikipedia.org/api/rest_v1/page/summary/",
+    EMPTY = ["N/A", "", 0],
+    FALLBACK_SOFTWARE_LOGO_PATH = "gadget_erp5_afs_camera.png?format=png",
+    GET = "GET",
+    HEADERS_DICT = {"api-user-agent": "https://www.nexedi.com/contact"},
+    gadget_klass = rJS(window),
     templater = gadget_klass.__template_element,
     display_widget_table = Handlebars.compile(
       templater.getElementById("display-template").innerHTML
@@ -30,47 +35,45 @@
     .declareMethod('render', function (options) {
       var gadget = this;
 
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.jio_get(options.jio_key);
-        })
+      return gadget.jio_get(options.jio_key)
         .push(function (publisher) {
-          // https://en.wikipedia.org/api/rest_v1/
-          // only works in for english
-          var wikipedia_api_url =
-              'https://en.wikipedia.org/api/rest_v1/page/summary/',
-            wiki_list = [];
-
+          var wiki_list = [];
           publisher.free_software_list.map(function (software) {
-            if (software.commercial_support === "N/A") {
+            if (EMPTY.includes(software.commercial_support)) {
               delete software.commercial_support;
             }
-            if (software.logo === "N/A" || software.logo === "") {
-              software.logo = 'gadget_erp5_afs_camera.png?format=png';
+            if (EMPTY.includes(software.logo)) {
+              software.logo = FALLBACK_SOFTWARE_LOGO_PATH;
             }
-            if (software.success_case_list.length === 0 ||
-                software.success_case_list === "N/A" ||
-                software.success_case_list[0].title === "N/A" ||
-                software.success_case_list[0].title === "") {
+            if (EMPTY.includes(software.success_case_list) ||
+              EMPTY.includes(software.success_case_list.length)
+            ) {
               delete software.success_case_list;
             } else {
+              software.success_case_list = software.success_case_list
+                .filter(function (entry) {
+                  if (!!EMPTY.includes(entry.title)) {
+                    return entry;
+                  }
+                });
               software.success_case_list = clean(software.success_case_list);
             }
-            if (software.wikipedia_url === "N/A") {
+            if (EMPTY.includes(software.wikipedia_url)) {
               delete software.wikipedia_url;
             } else {
               wiki_list.push(
                 new RSVP.Queue()
                   .push(function () {
                     return jIO.util.ajax({
-                      type: "GET",
-                      headers: {"api-user-agent": "https://www.nexedi.com/contact"},
-                      url: wikipedia_api_url + software.wikipedia_url.split("/").pop()
+                      type: GET,
+                      headers: HEADERS_DICT,
+                      url: WIKI_URL + software.wikipedia_url.split("/").pop()
                     });
                   })
                   .push(function (my_content) {
-                    var response = my_content.target.response || my_content.target.responseText;
-                    return JSON.parse(response).extract;
+                    return JSON.parse(
+                      my_content.target.response || my_content.target.responseText
+                    ).extract;
                   }, function () {
                     return undefined;
                   })

@@ -9,10 +9,10 @@
 <thead>
 <tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
 </thead><tbody>
-<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init"/>
 
 <!-- Clean Up -->
-<tr>
+<!--tr>
   <td>open</td>
   <td>${base_url}/bar_module/ListBoxZuite_reset</td>
   <td></td>
@@ -21,7 +21,7 @@
   <td>assertTextPresent</td>
   <td>Reset Successfully.</td>
   <td></td>
-</tr>
+</tr-->
 
 <!-- Initialize -->
 <tr>
@@ -232,7 +232,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//span[text()='1 Records']</td>
+  <td>//span[text()='2 Records']</td>
   <td></td>
 </tr>
 <tr>

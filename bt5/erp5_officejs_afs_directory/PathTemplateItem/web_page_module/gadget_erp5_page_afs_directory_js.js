@@ -1,7 +1,7 @@
-/*global window, rJS, RSVP, Handlebars, URI, console, jIO, document */
+/*global window, rJS, RSVP, Handlebars, URI, console, jIO, document, Boolean */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 
-(function (window, rJS, RSVP, Handlebars, URI, document) {
+(function (window, rJS, RSVP, Handlebars, URI, document, Boolean) {
   "use strict";
 
   var gadget_klass = rJS(window),
@@ -52,7 +52,8 @@
             // get categories and flatten array of category arrays
             categories = softwares
               .map((obj) => obj.value.category_list)
-              .reduce((cur, prev) => cur.concat(prev)),
+              .reduce((cur, prev) => cur.concat(prev))
+              .filter(Boolean),
 
             // remove duplicates (case sensitive!)
             unique_categories = Array.from(new Set(categories)),
@@ -86,7 +87,7 @@
               };
             });
           });
-        
+
           return RSVP.all(softwares_by_category);
         })
         .push(function (result) {
@@ -99,4 +100,4 @@
           masonry_container.innerHTML = content;
         });
     });
-}(window, rJS, RSVP, Handlebars, URI, document));
+}(window, rJS, RSVP, Handlebars, URI, document, Boolean));
