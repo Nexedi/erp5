@@ -26,5 +26,8 @@
 #
 ##############################################################################
 
-# This file is kept for backward compatibility only
-from Products.ERP5ShortMessage.SMSGatewayError import SMSGatewayError
+class SMSGatewayError(Exception):
+  pass
+
+from Products.PythonScripts.Utility import allow_class
+allow_class(SMSGatewayError)
