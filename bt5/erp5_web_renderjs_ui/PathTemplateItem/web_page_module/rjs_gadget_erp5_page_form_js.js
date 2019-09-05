@@ -70,7 +70,6 @@ and handling data send&receive.
           if (typeof result[key] === "object" &&
               result[key].hasOwnProperty("key") &&
               gadget.state.options.form_content[result[key].key]) {
-            console.log('loadFOrmcontent', key, gadget.state.options.form_content[result[key].key]);
             result[key]['default'] = gadget.state.options.form_content[result[key].key];
           }
         }
@@ -292,6 +291,11 @@ and handling data send&receive.
 
           var sub_options = options.fg || {};
 
+          if (gadget.state.is_refresh) {
+            // Delete the previous form content when refreshing
+            // to prevent loosing user modification
+            delete gadget.state.options.form_content;
+          }
           loadFormContent(gadget, erp5_document._embedded._view);
 
           sub_options.erp5_document = erp5_document;
@@ -402,8 +406,6 @@ and handling data send&receive.
                 var erp5_document = JSON.parse(gadget.state.erp5_document),
                   response_view = JSON.parse(response_text.target.result),
                   options = gadget.state.options;
-                console.warn('delete form content 2');
-                delete gadget.state.options.form_content;
                 erp5_document._embedded._view = response_view;
                 erp5_document._now = Date.now();  // force refresh
                 // We choose render instead of changeState because the new form can use
@@ -566,8 +568,6 @@ and handling data send&receive.
                       var erp5_document = JSON.parse(gadget.state.erp5_document);
                       erp5_document._embedded._view = response;
                       erp5_document._now = Date.now();
-                      console.warn('delete form content');
-                      delete gadget.state.options.form_content;
                       return gadget.changeState({erp5_document: JSON.stringify(erp5_document),
                                                  is_refresh: true});
                     });
