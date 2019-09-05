@@ -11,7 +11,11 @@
       setting_id: "setting/" + document.head.querySelector(
         'script[data-renderjs-configuration="application_title"]'
       ).textContent
-    });
+    }),
+    index,
+    styleSheet,
+    wallpaper_url,
+    a_element;
 
   function renderMainGadget(gadget, url, options) {
     var page_gadget;
@@ -824,6 +828,28 @@
     .onEvent('submit', function submit() {
       return displayError(this, new Error("Unexpected form submit"));
     });
+
+  //
+  // For Firefox, Wallpaper URL must be absolute one.
+  //
+  if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+    for (index = 0; index < document.styleSheets.length; index += 1) {
+      styleSheet = document.styleSheets[index];
+      if (styleSheet.href.startsWith('data:text/css;')) {
+        wallpaper_url = styleSheet.cssRules[0].style
+          .backgroundImage.slice(4, -1).replace(/["']/g, '');
+        a_element = document.createElement('a');
+        a_element.href = wallpaper_url;
+        styleSheet.cssRules[0].style.backgroundImage =
+          'url("' + a_element.href + '")';
+        break;
+      }
+    }
+    index = null;
+    styleSheet = null;
+    wallpaper_url = null;
+    a_element = null;
+  }
 
 }(window, document, RSVP, rJS,
   XMLHttpRequest, location, console, navigator, Event));
