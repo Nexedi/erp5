@@ -31,8 +31,8 @@ test_suite = context.getPortalObject().test_suite_module.searchFolder(title=cont
 
 xs = map(int, test_suite.getGraphCoordinate())
 
-# XXX: Ivan testnode can run multiple tests, for example for Person and Sale Order creation but
-# viewer shows only one graph thus for now we show only one test
-tests = results['Person']
+# testnode usually runs multiple tests, for example for Person and Sale Order creation but
+# viewer shows only one graph thus return only one test
+tests = results[test_suite_name]
 
 return json.dumps({"test": tests, "xs": xs})

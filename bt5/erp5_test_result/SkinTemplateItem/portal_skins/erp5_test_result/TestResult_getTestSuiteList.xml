@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>test_suite_name, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestResult_getJsonScalabilityStats</string> </value>
+            <value> <string>TestResult_getTestSuiteList</string> </value>
         </item>
       </dictionary>
     </pickle>

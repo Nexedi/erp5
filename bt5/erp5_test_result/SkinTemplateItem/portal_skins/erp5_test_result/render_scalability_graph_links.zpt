@@ -1,0 +1,5 @@
+<tal:block tal:repeat="test_suite here/TestResult_getTestSuiteList">
+
+  <a tal:attributes="href python: 'test_result_graph.html?test_suite_name=' + test_suite">Show the graph for <span tal:content="test_suite"/></a><br/>
+
+</tal:block>
