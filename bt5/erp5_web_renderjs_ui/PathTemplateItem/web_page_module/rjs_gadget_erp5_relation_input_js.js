@@ -186,6 +186,8 @@
       })
         .push(function (result) {
           if (!result.data.total_rows) {
+            // Uid was not found.
+            // Do not change the display
             return;
           }
           return gadget.changeState({
@@ -254,10 +256,8 @@
           // User selected a document from a listbox
           if ((gadget.state.value_uid) && (!gadget.state.value_text)) {
             plane.className = SEARCHING_CLASS_STR;
-            gadget.detachChangeState(gadget.state.value_uid,
-                                     gadget.state.catalog_index);
-            // return gadget.notifyChange();
-            return;
+            return gadget.detachChangeState(gadget.state.value_uid,
+                                            gadget.state.catalog_index);
           }
 
 
