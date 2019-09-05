@@ -85,13 +85,13 @@
   <td></td>
 </tr>
 
-<!-- Check the element is updated, not re-created -->
+<!-- Check the element is recreated -->
 <tr>
-  <td>assertElementPresent</td>
+  <td>assertElementNotPresent</td>
   <td>//input[@name="field_my_foo_category_title" and @test-relation-field-refresh="1"]</td>
   <td></td>
 </tr>
-<!-- The field should be updated to empty -->
+<!-- The field should be created as empty -->
 <!-- Here waitForTextNotPresent or waitForElementPresent passes no matter the state of the field, because the field is updated in javascript (not in html attributes) and so the selection //input[@value=''] does not work. -->
 <!-- When not passing, you can see that the plane is correctly replaced by a magnifying glass, as if the field was only partly updated -->
 <tr>
