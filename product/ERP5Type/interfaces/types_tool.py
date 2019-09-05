@@ -40,8 +40,5 @@ class ITypesTool(ICMFCoreTypesTool):
   type_provider_list = Attribute('type_provider_list',
                                  'List of ids of types providers')
 
-class ITypeProvider(ICMFCoreTypesTool):
-  """A type provider contains type information, and conforms to CMF's
-  TypesTool interface, especially listTypeInfo and getTypeInfo methods.
-  """
-
+# For backward compatibility only
+from Products.ERP5Type.interfaces.type_provider import ITypeProvider

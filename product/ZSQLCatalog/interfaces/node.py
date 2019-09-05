@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Ivan Tyagov <ivan@nexedi.com>
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Vincent Pelletier <vincent@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,17 +27,21 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.legacy_extensible_traversable import ILegacyExtensibleTraversable
+from zope.interface import Interface
 
-class IExtensibleTraversable(ILegacyExtensibleTraversable):
+class INode(Interface):
   """
-  Extensible Traversable interface specification
-
-  IExtensibleTraversable provides methods so a document may become a container for extensible content
-  during traversal.
+    Any kind of node in an Abstract Syntax Tree.
   """
 
-  def getExtensibleContent(request, name):
+  def isLeaf():
     """
-    Return extensible subcontent of context document during traversal.
+      Returns True if current node is a leaf in node tree.
+      Returns False otherwise.
+    """
+
+  def isColumn():
+    """
+      Returns True if current node is a column in node tree.
+      Returns False otherwise.
     """

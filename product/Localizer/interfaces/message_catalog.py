@@ -15,14 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from Zope
-from zope.interface import Interface
 from zope.i18n.interfaces import ITranslationDomain
-
-
-class ILocalizer(Interface):
-    pass
-
 
 class IMessageCatalog(ITranslationDomain):
     pass
-

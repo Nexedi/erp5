@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Ivan Tyagov <ivan@nexedi.com>
+# Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Vincent Pelletier <vincent@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,17 +27,23 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.legacy_extensible_traversable import ILegacyExtensibleTraversable
+from Products.ZSQLCatalog.interfaces.node import INode
 
-class IExtensibleTraversable(ILegacyExtensibleTraversable):
+class IColumnNode(INode):
   """
-  Extensible Traversable interface specification
-
-  IExtensibleTraversable provides methods so a document may become a container for extensible content
-  during traversal.
+    Column-name-containing node.
+    They are internal tree nodes.
+    Their value applies to any contained ValueNode, except if there is another
+    ColumnNode between current one and a ValueNode, for which the other
+    ColumnNode will take precedence.
   """
 
-  def getExtensibleContent(request, name):
+  def getColumnName():
     """
-    Return extensible subcontent of context document during traversal.
+      Returns node's column name.
+    """
+
+  def getSubNode():
+    """
+      Returns node's (only) subnode.
     """
