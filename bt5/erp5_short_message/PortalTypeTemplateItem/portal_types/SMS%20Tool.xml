@@ -63,7 +63,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>Products.ERP5ShortMessage.Tool.SMSTool.SMSTool</string> </value>
+            <value> <string>SMSTool</string> </value>
         </item>
         <item>
             <key> <string>type_mixin</string> </key>
