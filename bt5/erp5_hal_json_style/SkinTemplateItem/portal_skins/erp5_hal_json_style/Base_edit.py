@@ -256,7 +256,8 @@ if context.REQUEST.get('is_web_mode', False) and \
     not editable_mode:
   form_id = 'view'
 
-# to cleanup formulator's special key in request
+# Directly render the form after a successful edit
+# Cleanup formulator's special key in request to ensure field are only calculated from context and not the request anymore
 for key in list(context.REQUEST.keys()):
   if str(key).startswith('field') or str(key).startswith('subfield'):
     context.REQUEST.form.pop(key, None)
