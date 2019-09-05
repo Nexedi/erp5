@@ -27,17 +27,14 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.legacy_extensible_traversable import ILegacyExtensibleTraversable
+from zope.interface import Interface
 
-class IExtensibleTraversable(ILegacyExtensibleTraversable):
+class ILegacyExtensibleTraversable(Interface):
   """
-  Extensible Traversable interface specification
-
-  IExtensibleTraversable provides methods so a document may become a container for extensible content
-  during traversal.
+  Extensible Traversable legacy interface specification
   """
 
-  def getExtensibleContent(request, name):
+  def _getExtensibleContent(request, name):
     """
     Return extensible subcontent of context document during traversal.
     """

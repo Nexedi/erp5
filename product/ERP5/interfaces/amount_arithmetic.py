@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Ivan Tyagov <ivan@nexedi.com>
+# Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,18 +26,40 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+"""
+Products.ERP5.interfaces.amount_arithmetic
+"""
 
-from Products.ERP5.interfaces.legacy_extensible_traversable import ILegacyExtensibleTraversable
+from zope.interface import Interface
 
-class IExtensibleTraversable(ILegacyExtensibleTraversable):
+class IAmountArithmetic(Interface):
+  """Amount Arithmetic private interface specification
+
+  IAmountArithmetic defines methods to add, substract,
+  multiply or device amounts of resources. No rounding
+  should happen. All amounts should be converted to
+  the default management unit using getNetConvertedQuantity.
   """
-  Extensible Traversable interface specification
+  def __add__(value):
+    """Add an amount to another amount
 
-  IExtensibleTraversable provides methods so a document may become a container for extensible content
-  during traversal.
-  """
-
-  def getExtensibleContent(request, name):
+      'value' is an IAmount document
     """
-    Return extensible subcontent of context document during traversal.
+
+  def __sub__(value):
+    """Substract an amount from another amount
+
+      'value' is an IAmount document
+    """
+
+  def __mul__(value):
+    """Multiply an Amount by a float
+
+      'value' is a float
+    """
+
+  def __div__(value):
+    """Divide an Amount by a float
+
+      'value' is a float
     """

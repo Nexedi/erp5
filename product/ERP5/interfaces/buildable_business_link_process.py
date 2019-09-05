@@ -27,53 +27,60 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.trade_model_path_process import ITradeModelPathProcess
-from Products.ERP5.interfaces.business_link_process import IBusinessLinkProcess
-from Products.ERP5.interfaces.buildable_business_link_process import IBuildableBusinessLinkProcess
-from Products.ERP5.interfaces.trade_state_process import ITradeStateProcess
-from Products.ERP5.interfaces.trade_phase_process import ITradePhaseProcess
-from Products.ERP5.interfaces.simulation_movement_process import ISimulationMovementProcess
+from zope.interface import Interface
 
-class IBusinessProcess(ITradeModelPathProcess, IBusinessLinkProcess, IBuildableBusinessLinkProcess,
-                       ITradeStateProcess, ITradePhaseProcess, ISimulationMovementProcess):
-  """Business Process interface specification.
+class IBuildableBusinessLinkProcess(Interface):
+  """Buildable Business Link Process interface specification
 
-  Business Process APIs are used to manage the completion status,
-  the completion dates, the start date and stop date, and trigger
-  build process of a complex simulation process in ERP5.
+  IBuildableBusinessLinkProcess defines an API to build
+  simulation movements related to business link in the context
+  of a given explanation.
   """
 
-  def isCompleted(explanation):
-    """Returns True is all applicable Trade States and Trade Phases
-    are completed in the context of given explanation.
+  def getBuildableBusinessLinkValueList(explanation):
+    """Returns the list of Business Link which are buildable
+    by taking into account trade state dependencies between
+    Business Link.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
+    """
+
+  def getPartiallyBuildableBusinessLinkValueList(explanation):
+    """Returns the list of Business Link which are partially buildable
+    by taking into account trade state dependencies between
+    Business Link.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
+    """
+
+  def isBusinessLinkBuildable(explanation, business_link):
+    """Returns True if any of the related Simulation Movement
+    is buildable and if the predecessor trade state is completed.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
+
+    business_link -- a Business Link document
+    """
+
+  def isBusinessPatPartiallyBuildable(explanation, business_link):
+    """Returns True if any of the related Simulation Movement
+    is buildable and if the predecessor trade state is partially completed.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
+
+    business_link -- a Business Link document
     """
 
   def isBuildable(explanation):
-    """Returns True is one Business Link of this Business Process
-    is buildable in the context of given explanation.
-
-    explanation -- an Order, Order Line, Delivery or Delivery Line or
-                   Applied Rule which implicitely defines a simulation subtree
+    """Returns True is this business process has at least one
+    Business Link which is buildable
     """
 
   def isPartiallyBuildable(explanation):
-    """Returns True is one Business Link of this Business Process
-    is partially buildable in the context of given explanation.
-
-    explanation -- an Order, Order Line, Delivery or Delivery Line or
-                   Applied Rule which implicitely defines a simulation subtree
-    """
-
-  def build(explanation, include_partially_buildable=False):
-    """Build whatever is buildable in the context of given explanation.
-
-    explanation -- an Order, Order Line, Delivery or Delivery Line or
-                   Applied Rule which implicitely defines a simulation subtree
-
-    include_partially_buildable -- if set to True, also build partially
-                                   buildable business link. Else
-                                   only build strictly buildable link.
+    """Returns True is this business process has at least one
+    Business Link which is partially buildable
     """

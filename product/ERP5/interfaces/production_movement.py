@@ -2,7 +2,7 @@
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Ivan Tyagov <ivan@nexedi.com>
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,17 +27,44 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.legacy_extensible_traversable import ILegacyExtensibleTraversable
+from Products.ERP5.interfaces.amount import IAmount
 
-class IExtensibleTraversable(ILegacyExtensibleTraversable):
+class IProductionMovement(IAmount):
+  """Production Movement private interface specification
+
+  Production movements have a source or a destination equal
+  to None. They are used to represent productions or
+  consumptions or resources according to the following
+  specification:
+
+    (A -> B)
+      production_quantity means nothing
+      consumption_quantity means nothing
+
+    (A -> Nothing)
+    if quantity > 0
+      consumption_quantity = quantity
+      production_quantity = 0
+
+    if quantity < 0
+      consumption_quantity = 0
+      production_quantity = - quantity
+
+    (Nothing -> B)
+    if quantity > 0
+      consumption_quantity = 0
+      production_quantity = quantity
+
+    if quantity < 0
+      consumption_quantity = - quantity
+      production_quantity = 0
   """
-  Extensible Traversable interface specification
-
-  IExtensibleTraversable provides methods so a document may become a container for extensible content
-  during traversal.
-  """
-
-  def getExtensibleContent(request, name):
+  def getConsumptionQuantity():
     """
-    Return extensible subcontent of context document during traversal.
+    Returns the consumed quantity during production
+    """
+
+  def getProductionQuantity():
+    """
+    Returns the produced quantity during production
     """

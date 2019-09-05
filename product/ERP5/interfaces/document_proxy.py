@@ -27,14 +27,7 @@
 #
 ##############################################################################
 
-from zope.interface import Interface
-
-class ILegacyDocumentProxy(Interface):
-
-  def getProxiedDocument(self, **kw):
-    """
-    Get the proxied document
-    """
+from Products.ERP5.interfaces.legacy_document_proxy import ILegacyDocumentProxy
 
 class IDocumentProxy(ILegacyDocumentProxy):
   """

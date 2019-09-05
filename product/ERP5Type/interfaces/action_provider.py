@@ -25,44 +25,6 @@
 #
 ##############################################################################
 
-"""Action Interfaces.
-"""
-
-from zope.interface import Interface
-
-class IAction(Interface):
-  """
-  """
-  def __getitem__(attr):
-    """Return any information independant of the context
-
-    The following keys must have a value:
-    - id (string)
-    - category (string)
-    - priority (numeric)
-    """
-  def test(ec):
-    """Test if the action should be displayed or not for the given context
-    """
-  def cook(ec):
-    """Return a dict with information required to display the action
-
-    The dict must contain the following keys:
-    - id (string)
-    - name (string)
-    - description (string)
-    - url (string)
-    - icon (string)
-    - category (string)
-    - priority (numeric)
-    """
-
-class IActionContainer(Interface):
-  """
-  """
-  def getCacheableActionList():
-    """Return a cacheable list of enabled actions
-    """
-  def getActionList():
-    """Return the list of enabled actions from cache, sorted by priority
-    """
+# This file has been kept for backward compatibility only
+from Products.ERP5Type.interfaces.action_container import IActionContainer
+from Products.ERP5Type.interfaces.action import IAction
