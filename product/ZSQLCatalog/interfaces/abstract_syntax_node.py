@@ -27,73 +27,8 @@
 #
 ##############################################################################
 
-from zope.interface import Interface
-
-class INode(Interface):
-  """
-    Any kind of node in an Abstract Syntax Tree.
-  """
-
-  def isLeaf():
-    """
-      Returns True if current node is a leaf in node tree.
-      Returns False otherwise.
-    """
-
-  def isColumn():
-    """
-      Returns True if current node is a column in node tree.
-      Returns False otherwise.
-    """
-
-class IValueNode(INode):
-  """
-    Value- and comparison-operator-containig node.
-    They are leaf nodes in the syntax tree.
-  """
-
-  def getValue():
-    """
-      Returns node's value.
-    """
-
-  def getComparisonOperator():
-    """
-      Returns node's comparison operator.
-    """
-
-class ILogicalNode(INode):
-  """
-    Logical-operator-containing node.
-    They are internal tree nodes.
-  """
-
-  def getLogicalOperator():
-    """
-      Returns node's logical operator.
-    """
-
-  def getNodeList():
-    """
-      Returns the list of subnodes.
-    """
-
-class IColumnNode(INode):
-  """
-    Column-name-containing node.
-    They are internal tree nodes.
-    Their value applies to any contained ValueNode, except if there is another
-    ColumnNode between current one and a ValueNode, for which the other
-    ColumnNode will take precedence.
-  """
-
-  def getColumnName():
-    """
-      Returns node's column name.
-    """
-
-  def getSubNode():
-    """
-      Returns node's (only) subnode.
-    """
-
+# This file has been kept for backward compatibility only
+from Products.ZSQLCatalog.interfaces.node import INode
+from Products.ZSQLCatalog.interfaces.value_node import IValueNode
+from Products.ZSQLCatalog.interfaces.logical_node import ILogicalNode
+from Products.ZSQLCatalog.interfaces.column_node import IColumnNode

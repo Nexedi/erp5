@@ -26,36 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from zope.interface import Interface
 
-
-class ISmsSendingGateway(Interface):
-  """SMS Gateway allow sending Short Messages to phones.
-  """
-
-  def send(text, recipient, sender):
-    """Send a message.
-    
-    * text: the message as an utf-8 encoded string
-    * recipient: relative URL of recipient person or organisation. Recipient must have a defaut mobile phone
-    * sender: relative URL of sender person or organisation.
-
-    On most implementations, returns a message-id that can be later passed to
-    getMessageStatus to check the status of the message.
-    """
-
-  def getMessageStatus(message_id):
-    """Retrieve the status of a message
-       Should return x in ['sent', 'delivered', 'queued', 'failed']"""
-
-
-class ISmsReceivingGateway(Interface):
-  """Gateway to subscribe to events fired when Short Messages are send to SMS interface.
-  """
-
-  def receive(REQUEST):
-    """Public handler to push notifications from the gateway
-
-    REQUEST parameters are service provider dependent.
-    """
-
+# This file has been kept for backward compatiblity only
+from Products.ERP5ShortMessage.interfaces.sms_receiving_gateway import ISmsReceivingGateway
+from Products.ERP5ShortMessage.interfaces.sms_sending_gateway import ISmsSendingGateway

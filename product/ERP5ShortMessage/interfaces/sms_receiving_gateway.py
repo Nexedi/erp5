@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Ivan Tyagov <ivan@nexedi.com>
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+#                    François-Xavier Algrain <fxalgrain@tiolive.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,17 +27,14 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.legacy_extensible_traversable import ILegacyExtensibleTraversable
+from zope.interface import Interface
 
-class IExtensibleTraversable(ILegacyExtensibleTraversable):
-  """
-  Extensible Traversable interface specification
-
-  IExtensibleTraversable provides methods so a document may become a container for extensible content
-  during traversal.
+class ISmsReceivingGateway(Interface):
+  """Gateway to subscribe to events fired when Short Messages are send to SMS interface.
   """
 
-  def getExtensibleContent(request, name):
-    """
-    Return extensible subcontent of context document during traversal.
+  def receive(REQUEST):
+    """Public handler to push notifications from the gateway
+
+    REQUEST parameters are service provider dependent.
     """

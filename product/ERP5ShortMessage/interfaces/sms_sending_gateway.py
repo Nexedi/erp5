@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Ivan Tyagov <ivan@nexedi.com>
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+#                    François-Xavier Algrain <fxalgrain@tiolive.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,17 +27,23 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.legacy_extensible_traversable import ILegacyExtensibleTraversable
+from zope.interface import Interface
 
-class IExtensibleTraversable(ILegacyExtensibleTraversable):
-  """
-  Extensible Traversable interface specification
-
-  IExtensibleTraversable provides methods so a document may become a container for extensible content
-  during traversal.
+class ISmsSendingGateway(Interface):
+  """SMS Gateway allow sending Short Messages to phones.
   """
 
-  def getExtensibleContent(request, name):
+  def send(text, recipient, sender):
+    """Send a message.
+    
+    * text: the message as an utf-8 encoded string
+    * recipient: relative URL of recipient person or organisation. Recipient must have a defaut mobile phone
+    * sender: relative URL of sender person or organisation.
+
+    On most implementations, returns a message-id that can be later passed to
+    getMessageStatus to check the status of the message.
     """
-    Return extensible subcontent of context document during traversal.
-    """
+
+  def getMessageStatus(message_id):
+    """Retrieve the status of a message
+       Should return x in ['sent', 'delivered', 'queued', 'failed']"""
