@@ -24,6 +24,8 @@ import tempfile
 import json
 import time
 import re
+import psutil
+
 
 @contextmanager
 def dummySuiteLog(_):
@@ -780,14 +782,50 @@ shared = true
     RunnerClass.runTestSuite = original_runTestSuite
 
   def test_12_spawn(self):
-    def _checkCorrectStatus(expected_status,*args):
-      result = process_manager.spawn(*args)
-      self.assertEqual(result['status_code'], expected_status)
+
     process_manager = ProcessManager(max_timeout=1)
-    _checkCorrectStatus(0, *['sleep','0'])
-    # We must make sure that if the command is too long that
-    # it will be automatically killed
-    self.assertRaises(SubprocessError, process_manager.spawn, 'sleep','3')
+
+    # process manager returns status_code
+    self.assertEqual(0, process_manager.spawn('sleep', '0')['status_code'])
+
+    # process manager terminates programs taking longer than max_timeout
+    self.assertRaises(SubprocessError, process_manager.spawn, 'sleep', '3')
+
+    # process manager terminates programs by sending them SIGTERM,
+    # so that they can perform cleanups.
+    with tempfile.NamedTemporaryFile(mode='w') as prog, tempfile.NamedTemporaryFile(delete=False) as f:
+      # this program will remove f if is terminated
+      prog.write("""
+      trap "rm {f.name}; exit 1" SIGTERM
+      for i in $(seq 600); do sleep .1; done
+      """.format(**locals()))
+      prog.flush()
+      self.assertRaises(
+          SubprocessError,
+          process_manager.spawn,
+          '/bin/bash',
+          prog.name)
+      # prog have removed this file in its SIGTERM handler
+      self.assertFalse(os.path.exists(f.name))
+
+    # if program are still running after SIGTERM process manager send SIGKILL
+    with tempfile.NamedTemporaryFile(mode='w') as prog:
+      # this program does not terminate on SIGTERM
+      prog.write("""
+      trap "echo not yet" SIGTERM
+      for i in $(seq 600); do sleep .1; done
+      """.format(**locals()))
+      prog.flush()
+      self.assertRaises(
+          SubprocessError,
+          process_manager.spawn,
+          '/bin/bash',
+          prog.name)
+      self.assertEqual(
+          [],
+          [p.info for p in psutil.process_iter(attrs=['pid', 'name', 'cmdline'])
+           if prog.name in p.info['cmdline']]
+      )
 
   def test_13_SlaposControlerResetSoftware(self):
     test_node = self.getTestNode()

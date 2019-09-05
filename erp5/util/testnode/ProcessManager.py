@@ -102,32 +102,45 @@ def subprocess_capture(p, log_prefix, get_output=True):
           p.stderr and b''.join(stderr))
 
 def killCommand(pid):
+  """terminate process with pid and all its child processes.
+
+  Inspired from psutil recipe
+  https://psutil.readthedocs.io/en/latest/index.html#terminate-my-children
   """
-  To prevent processes from reacting to the KILL of other processes,
-  we STOP them all first, and we repeat until the list of children does not
-  change anymore. Only then, we KILL them all.
-  """
+  def on_terminate(proc):
+    logger.debug("process {} terminated with exit code {}".format(proc, proc.returncode))
+
+  def terminate(procs, timeout):
+    # send SIGTERM
+    for p in procs:
+      try:
+        p.terminate()
+      except psutil.NoSuchProcess:
+        pass
+    _, alive = psutil.wait_procs(procs, timeout=timeout, callback=on_terminate)
+    if alive:
+      # send SIGKILL
+      for p in alive:
+        logger.info("process {} survived SIGTERM; trying SIGKILL".format(p))
+        try:
+          p.kill()
+        except psutil.NoSuchProcess:
+          pass
+      _, alive = psutil.wait_procs(alive, timeout=timeout, callback=on_terminate)
+      if alive:
+        # give up
+        for p in alive:
+          logger.error("process {} survived SIGKILL; giving up".format(p))
+
   try:
     process = psutil.Process(pid)
-    process.suspend()
-  except psutil.Error as e:
-    return
-  process_list = [process]
-  new_list = process.children(recursive=True)
-  while new_list:
-    process_list += new_list
-    for child in new_list:
-      try:
-        child.suspend()
-      except psutil.Error as e:
-        logger.debug("killCommand/suspend: %s", e)
-    time.sleep(1)
-    new_list = set(process.children(recursive=True)).difference(process_list)
-  for process in process_list:
-    try:
-      process.kill()
-    except psutil.Error as e:
-      logger.debug("killCommand/kill: %s", e)
+  except psutil.NoSuchProcess:
+    logger.info("process {} already terminated".format(pid))
+  else:
+    childrens = process.children(recursive=True)
+    terminate((process, ), 3)
+    terminate(childrens, 3)
+
 
 class ProcessManager(object):
 
