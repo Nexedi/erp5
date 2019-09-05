@@ -246,6 +246,7 @@ gadget_officejs_bootloader_presentation.css\n
 gadget_officejs_bootloader_serviceworker.js\n
 officejs_logo.png\n
 jio_appcachestorage.js\n
+jio_configuration_storage.js\n
 \n
 #configuration resources\n
 \n
@@ -665,7 +666,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1566395569.65</float>
+                        <float>1567773436.57</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
