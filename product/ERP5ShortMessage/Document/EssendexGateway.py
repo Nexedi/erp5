@@ -203,7 +203,7 @@ class EssendexGateway(XMLObject):
         raise SMSGatewayError, urllib.unquote(result.get('Message', "Impossible to get the message status"))
 
     security.declarePublic('receive')
-    def receive(self,REQUEST):
+    def receive(self, REQUEST, **kw):
       """Receive push notification"""
 
       #XML is stored is BODY of request
@@ -328,7 +328,7 @@ class EssendexGateway(XMLObject):
       if result['Result'] == "OK":
         #Push all message
         type_mapping = {'Text': 'text/plain'}
-        now == DateTime()
+        now = DateTime()
         for key, value in result.items():
           if type(key) == int:
             reception_date = self._parseDate(value['ReceivedAt'])
