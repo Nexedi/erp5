@@ -18,7 +18,7 @@ class ERP5_scalability():
     return 'example/scalabilityUsers'
 
   def getUserQuantity(self, test_number):
-    return [8, 14, 20, 28, 36][test_number]
+    return [8, 14, 20, 28, 36, 46, 56, 68, 80][test_number]
 
   def getTestDuration(self, test_number):
     return 60*10
