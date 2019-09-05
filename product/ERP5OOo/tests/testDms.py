@@ -1455,7 +1455,7 @@ class TestDocument(TestDocumentMixin):
     upload_file = makeFileUpload('cmyk_sample.jpg')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEqual('Image', document.getPortalType())
-    self.assertEqual('ERP5 is a free software.\n\x0c', document.asText())
+    self.assertEqual('ERP5 is a free software.', document.asText())
 
   def test_MonochromeImageResize(self):
     upload_file = makeFileUpload('monochrome_sample.tiff')
@@ -1464,7 +1464,7 @@ class TestDocument(TestDocumentMixin):
     resized_image = document.convert(format='png', display='small')[1]
     identify_output = Popen(['identify', '-verbose', '-'], stdin=PIPE, stdout=PIPE).communicate(resized_image)[0]
     self.assertFalse('1-bit' in identify_output)
-    self.assertEqual('ERP5 is a free software.\n\x0c', document.asText())
+    self.assertEqual('ERP5 is a free software.', document.asText())
 
   def test_Base_showFoundText(self):
     # Create document with good content
@@ -2032,7 +2032,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     module = self.portal.getDefaultModule(portal_type)
     upload_file = makeFileUpload('TEST.Embedded.Image.pdf')
     document = module.newContent(portal_type=portal_type, file=upload_file)
-    self.assertEqual(document.asText(), 'ERP5 is a free software.\n\n \n\x0c')
+    self.assertEqual('ERP5 is a free software.', document.asText())
 
   def createRestrictedSecurityHelperScript(self):
     script_content_list = ['format=None, **kw', """

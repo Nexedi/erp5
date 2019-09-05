@@ -53,7 +53,7 @@ class tiff_to_text(commandtransform):
         self.cleanDir(tmp_dir)
 
       data = datastream('output.txt')
-      data.setData(out)
+      data.setData(out.rstrip()) # .rstrip() also removes page breaks
       return data
 
 def register():
