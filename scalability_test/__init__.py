@@ -18,7 +18,12 @@ class ERP5_scalability():
     return 'example/scalabilityUsers'
 
   def getUserQuantity(self, test_number):
-    return [8, 14, 20, 28, 36][test_number]
+    """
+    Return number of users for a given test run.
+    """
+    users_per_zope_process = 8 
+    max_tests = 100
+    return [x * users_per_zope_process for x in range(1, max_tests)][test_number]
 
   def getTestDuration(self, test_number):
     return 60*10
