@@ -28,24 +28,6 @@
 """Role Interfaces.
 """
 
-from zope.interface import Interface
-
-class ILocalRoleGenerator(Interface):
-  """
-  """
-  def getLocalRolesFor(ob, user_name=None):
-    """Compute the security that should be applied on an object
-
-    Returned value is a dict: {groud_id: role_name_set, ...}
-    """
-
-class ILocalRoleAssignor(Interface):
-  """
-  """
-  def updateLocalRolesOnDocument(ob, user_name=None, reindex=True):
-    """Assign Local Roles to Groups on a document
-    """
-
-  def getFilteredRoleListFor(ob=None):
-    """Return all role generators applicable to the object
-    """
+# This file has been kept for backward compatibility only
+from Products.ERP5Type.interfaces.local_role_generator import ILocalRoleGenerator
+from Products.ERP5Type.interfaces.local_role_assignor import ILocalRoleAssignor

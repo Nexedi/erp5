@@ -83,32 +83,5 @@ class IAmountGenerator(Interface):
         simplistic)
     """
 
-
-class IAmountGeneratorLine(Interface):
-  """Amount Generator Line interface specification
-  """
-
-  def getCellAggregateKey():
-    """Define a key in order to aggregate amounts at cell level
-
-      Transformed Resource (Transformation)
-        key must be None because:
-          - quantity and variation are defined in different cells so that the
-            user does not need to enter values depending on all axes
-          - amount_generator_cell.test should filter only 1 variant
-        current key = (acquired resource, acquired variation)
-
-      Assorted Resource (Transformation)
-        key = (assorted resource, assorted resource variation)
-        usually resource and quantity provided together
-
-      Payroll
-        key = (payroll resource, payroll resource variation)
-
-      Tax
-        key = (tax resource, tax resource variation)
-    """
-
-  def getBaseAmountQuantity(delivery_amount, base_application, rounding):
-    """Default method to compute quantity for the given base_application
-    """
+# For backward compatibility only
+from Products.ERP5.interfaces.amount_generator_line import IAmountGeneratorLine

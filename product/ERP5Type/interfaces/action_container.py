@@ -1,14 +1,12 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Ivan Tyagov <ivan@nexedi.com>
+# Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly advised to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -27,17 +25,14 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.legacy_extensible_traversable import ILegacyExtensibleTraversable
+from zope.interface import Interface
 
-class IExtensibleTraversable(ILegacyExtensibleTraversable):
+class IActionContainer(Interface):
   """
-  Extensible Traversable interface specification
-
-  IExtensibleTraversable provides methods so a document may become a container for extensible content
-  during traversal.
   """
-
-  def getExtensibleContent(request, name):
+  def getCacheableActionList():
+    """Return a cacheable list of enabled actions
     """
-    Return extensible subcontent of context document during traversal.
+  def getActionList():
+    """Return the list of enabled actions from cache, sorted by priority
     """

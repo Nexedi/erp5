@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -26,21 +26,50 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+"""
+Products.ERP5.interfaces.amount_conversion
+"""
 
-from Products.ERP5.interfaces.text_convertable_legacy import ITextConvertableLegacy
+from zope.interface import Interface
 
-class ITextConvertable(ITextConvertableLegacy):
+class IAmountConversion(Interface):
+  """Amount Conversion private interface specification
+
+  IAmountConversion defines methods which can be used
+  to convert an amount from one quantity unit and to another,
+  taking into account efficiency.
   """
-  Text Convertable interface specification
 
-  Documents which implement the ITextConvertable interface
-  can be converted to plain text.
-  """
-
-  def asText(**kw):
+  def getNetQuantity():
     """
-    Converts the current document to plain text
+    Take into account efficiency in quantity. This is
+    only useful in Path which define a loss ratio, such
+    as Transformation.
 
-    kw -- optional parameters which can be passed to the
-          conversion engine
+    Formula:
+      net_quantity = quantity / efficiency
+    """
+
+  def getConvertedQuantity(quantity_unit=None, measure=None):
+    """
+    Returns the quantity of the resource converted in the
+    default management unit of the resource.
+
+    quantity_unit -- optional quantity unit to use
+                     for conversion.
+
+    measure -- optional quantity unit to use
+               for conversion.
+    """
+
+  def getNetConvertedQuantity(quantity_unit=None, measure=None):
+    """
+    Returns the net quantity of the resource converted in the
+    default management unit of the resource.
+
+    quantity_unit -- optional quantity unit to use
+                     for conversion.
+
+    measure -- optional quantity unit to use
+               for conversion.
     """
