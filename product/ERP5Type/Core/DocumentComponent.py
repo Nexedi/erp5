@@ -27,8 +27,8 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.mixin.component import ComponentMixin
-from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
+from Products.ERP5Type.Core.ModuleComponent import ModuleComponent
+
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
@@ -37,7 +37,7 @@ import zope.interface
 import re
 from Products.ERP5Type.interfaces.component import IComponent
 
-class DocumentComponent(ComponentMixin, TextContentHistoryMixin):
+class DocumentComponent(ModuleComponent):
   """
   ZODB Component for Documents in bt5 only for now (which used to be installed
   in INSTANCE_HOME/Document) but this will also be used later on for Documents

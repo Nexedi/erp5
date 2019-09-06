@@ -23,7 +23,9 @@ Component Tool | Document Component
 Component Tool | Extension Component
 Component Tool | Interface Component
 Component Tool | Mixin Component
+Component Tool | Module Component
 Component Tool | Test Component
+Component Tool | Tool Component
 Contribution Registry Tool | Contribution Predicate
 Domain Tool | Base Domain
 Domain | Domain

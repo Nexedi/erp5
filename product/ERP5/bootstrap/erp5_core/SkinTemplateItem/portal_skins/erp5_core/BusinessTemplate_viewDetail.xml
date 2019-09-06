@@ -64,11 +64,13 @@
                       <list>
                         <string>my_template_role_list</string>
                         <string>my_template_site_property_id_list</string>
+                        <string>my_template_module_component_id_list</string>
                         <string>my_template_interface_id_list</string>
                         <string>my_template_mixin_id_list</string>
                         <string>my_template_document_id_list</string>
                         <string>my_template_property_sheet_id_list</string>
                         <string>my_template_extension_id_list</string>
+                        <string>my_template_tool_component_id_list</string>
                         <string>my_template_tool_id_list</string>
                         <string>my_template_preference_list</string>
                         <string>my_template_update_tool</string>
