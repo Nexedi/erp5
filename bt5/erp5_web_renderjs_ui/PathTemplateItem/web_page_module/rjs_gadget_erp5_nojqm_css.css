@@ -1427,7 +1427,7 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
   animation: fadein 0.2s ease-out;
 }
 .document_table table tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: rgba(230, 230, 230, 0.65);
 }
 .document_table table tbody tr:hover,
 .document_table table tbody tr:active {

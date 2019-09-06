@@ -1675,7 +1675,7 @@ div[data-gadget-scope='erp5_searchfield'] {
 
       tr {
         &:nth-child(even) {
-          background-color: darken(@colorbackground, 5%);
+          background-color: fade(darken(@colorbackground, 10%), 65%);
         }
         &:hover, &:active {
           background-color: @colorblocklinkbackground
