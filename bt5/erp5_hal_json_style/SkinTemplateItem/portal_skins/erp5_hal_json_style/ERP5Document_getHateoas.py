@@ -139,18 +139,29 @@ def byteify(string):
     return string
 
 
+def ensureUTF8(obj):
+  """Make sure string is UTF-8, by replacing characters that
+  cannot be decoded.
+  """
+  if isinstance(obj, str):
+    return obj.decode('utf-8', 'replace').encode('utf-8')
+  elif isinstance(obj, unicode):
+    return obj.encode('utf-8', 'replace')
+  return obj
+
 def ensureSerializable(obj):
   """Ensure obj and all sub-objects are JSON serializable."""
   if isinstance(obj, dict):
     for key in obj:
       obj[key] = ensureSerializable(obj[key])
   # throw away date's type information and later reconstruct as Zope's DateTime
-  if isinstance(obj, DateTime):
+  elif isinstance(obj, DateTime):
     return obj.ISO() + ' ' + obj.timezone()  # ISO with timezone
-  if isinstance(obj, (datetime.datetime, datetime.date, datetime.time)):
+  elif isinstance(obj, (datetime.datetime, datetime.date, datetime.time)):
     return obj.isoformat()
   # let us believe that iterables don't contain other unserializable objects
-  return obj
+
+  return ensureUTF8(obj)
 
 
 datetime_iso_re = re.compile(r'^\d{4}-\d{2}-\d{2} |T\d{2}:\d{2}:\d{2}.*$')
@@ -428,7 +439,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
   if "Field" in meta_type:
     # fields have default value and can be required (unlike boxes)
     result["required"] = field.get_value("required") if field.has_value("required") else None
-    result["default"] = getFieldDefault(form, field, key, value=value)
+    result["default"] = ensureUTF8(getFieldDefault(form, field, key, value=value))
 
   # start the actual "switch" on field's meta_type here
   if meta_type in ("ListField", "RadioField", "ParallelListField", "MultiListField"):
@@ -560,6 +571,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
 
     if not isinstance(result["default"], list):
       result["default"] = [result["default"], ]
+    result["default"] = [ensureUTF8(x) for x in result["default"]]
 
     result.update({
       "relation_field_id": traversed_document.Field_getSubFieldKeyDict(field, "relation", key=result["key"]),
@@ -892,7 +904,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       "script_id": script.id
     },
     "name": getRealRelativeUrl(traversed_document),
-    "title": traversed_document.getTitle()
+    "title": ensureUTF8(traversed_document.getTitle())
   }
 
   form_relative_url = getFormRelativeUrl(form)
@@ -1265,7 +1277,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     action_dict = {}  # actions available on current `traversed_document`
     last_form_id = None  # will point to the previous form so we can obtain previous selection
 
-    result_dict['title'] = traversed_document.getTitle()
+    result_dict['title'] = ensureUTF8(traversed_document.getTitle())
 
     # extra_param_json should be base64 encoded JSON at this point
     # only for mode == 'form' it is already a dictionary
