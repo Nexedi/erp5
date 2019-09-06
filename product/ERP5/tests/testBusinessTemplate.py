@@ -7840,6 +7840,7 @@ class _ProductMigrationTemplateItemMixin:
     """
     sequence_list = SequenceList()
     sequence_string = """
+      SetPreferredWorkingCopyList
       CreateProductDocumentAndPortalType
       CreateNewBusinessTemplate
       UseExportBusinessTemplate
@@ -8189,6 +8190,30 @@ class _LocalTemplateItemMixin:
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepSetPreferredWorkingCopyList(self, sequence=None, **kw):
+    """
+    TODO: Merge with Zuite_setPreference (ERP5TypeFunctionalTestCase)?
+    """
+    pref = getattr(self.portal.portal_preferences,
+                   "testBusinessTemplate_test_preference",
+                   None)
+    if pref is None:
+      pref = self.portal.portal_preferences.newContent(
+        id="testBusinessTemplate_test_preference",
+        portal_type="Preference",
+        priority=1)
+
+    import inspect
+    import Products.ERP5
+    erp5_product_directory = os.path.realpath(
+      inspect.getsourcefile(Products.ERP5)).rsplit('/', 1)[0]
+    pref.setPreferredWorkingCopyList(
+      [erp5_product_directory.rsplit('/', 2)[0] + '/bt5',
+       erp5_product_directory + '/bootstrap'])
+
+    if pref.getPreferenceState() == 'disabled':
+      pref.enable()
+
   def stepCopyAndMigrateDocumentBusinessTemplate(self, sequence=None, **kw):
     """
     Simulate migration from filesystem to ZODB
@@ -8243,6 +8268,7 @@ class _LocalTemplateItemMixin:
     """
     sequence_list = SequenceList()
     sequence_string = '\
+                       SetPreferredWorkingCopyList \
                        CreateDocument \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \

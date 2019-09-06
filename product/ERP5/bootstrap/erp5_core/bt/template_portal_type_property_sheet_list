@@ -14,6 +14,7 @@ Document Component | SortIndex
 Extension Component | SortIndex
 Interface Component | SortIndex
 Mixin Component | SortIndex
+Module Component | SortIndex
 Property Existence Constraint | ConstraintType
 Property Type Validity Constraint | ConstraintType
 Python Script | CatalogFilter
@@ -29,6 +30,7 @@ Simulation Movement | SortIndex
 String Attribute Match Constraint | ConstraintType
 TALES Constraint | ConstraintType
 Test Component | SortIndex
+Tool Component | SortIndex
 Trash Bin | Base
 Trash Bin | SimpleItem
 Trash Bin | Task
