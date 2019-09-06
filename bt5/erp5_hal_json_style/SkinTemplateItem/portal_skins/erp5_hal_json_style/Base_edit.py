@@ -256,4 +256,9 @@ if context.REQUEST.get('is_web_mode', False) and \
     not editable_mode:
   form_id = 'view'
 
-return context.Base_redirect(keep_items={'portal_status_message': message})
+# Directly render the form after a successful edit
+# Cleanup formulator's special key in request to ensure field are only calculated from context and not the request anymore
+for key in list(context.REQUEST.keys()):
+  if str(key).startswith('field') or str(key).startswith('subfield'):
+    context.REQUEST.form.pop(key, None)
+return context.Base_renderForm(form_id, message=message)
