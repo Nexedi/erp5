@@ -73,7 +73,9 @@
                 <string>Extension Component</string>
                 <string>Interface Component</string>
                 <string>Mixin Component</string>
+                <string>Module Component</string>
                 <string>Test Component</string>
+                <string>Tool Component</string>
               </list>
             </value>
         </item>

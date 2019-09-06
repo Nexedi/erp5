@@ -124,6 +124,10 @@
   <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Module Component</type>
+  <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Predicate</type>
   <workflow>edit_workflow</workflow>
  </chain>
@@ -173,6 +177,10 @@
  </chain>
  <chain>
   <type>Test Component</type>
+  <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Tool Component</type>
   <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
 </workflow_chain>
