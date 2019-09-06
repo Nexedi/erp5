@@ -318,9 +318,11 @@ class ComponentDynamicPackage(ModuleType):
       import erp5.component
       erp5.component.ref_manager.add_module(module)
 
-      return module
     finally:
       imp.release_lock()
+
+    component._hookAfterLoad(module)
+    return module
 
   def load_module(self, fullname):
     """
@@ -411,3 +413,18 @@ class ComponentDynamicPackage(ModuleType):
       del sys.modules[module_name]
 
       delattr(package, name)
+
+class ToolComponentDynamicPackage(ComponentDynamicPackage):
+  def reset(self, *args, **kw):
+    """
+    Reset CMFCore list of Tools (manage_addToolForm)
+    """
+    import Products.ERP5
+    toolinit = Products.ERP5.__FactoryDispatcher__.toolinit
+    reset_tool_set = set()
+    for tool in toolinit.tools:
+      if not tool.__module__.startswith(self._namespace_prefix):
+        reset_tool_set.add(tool)
+    toolinit.tools = reset_tool_set
+
+    super(ToolComponentDynamicPackage, self).reset(*args, **kw)
