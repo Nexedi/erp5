@@ -1,0 +1,389 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Notebook" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>romain_notebook_4</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Notebook</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+%% md\n
+# Eviction Notices by SF Neighborhood, 1997-present\n
+\n
+<div id=\'sit-tight\'>\n
+    <i class="fa fa-circle-o-notch fa-spin fa-5x"></i> \n
+    <div>Loading the data - sit tight!</div>\n
+</div>\n
+\n
+%% md\n
+<canvas id=\'lat-lon\' height=700></canvas>\n
+\n
+%% fetch\n
+js: https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.js\n
+css: https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\n
+js: https://raw.githubusercontent.com/hamilton/ply.js/master/dist/ply.js\n
+text: rawData =https://data.sfgov.org/api/views/5cei-gny5/rows.csv?accessType=DOWNLOAD\n
+\n
+%% fetch\n
+// depends on d3 to be loaded first.\n
+js: https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.js\n
+css: https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.css\n
+js: https://gist.githubusercontent.com/hamilton/316c9af12dfbe0ab9b653ecc20dae7f0/raw/mg-smallmultiple.js\n
+\n
+%% css\n
+\n
+div#sit-tight {\n
+\tmargin-top:30px;\n
+\tcolor: lightgray;\n
+\tdisplay: block;\n
+\ttext-align:center;\n
+\ttransition: 100ms;\n
+}\n
+\n
+div#sit-tight div {\n
+\tfont-style: italic;\n
+\ttext-align:center;\n
+}\n
+\n
+%% js\n
+\n
+// let\'s clear our little spinner, now that the fetch chunks above have loaded.\n
+document.getElementById(\'sit-tight\').innerHTML = \'\'\n
+\n
+%% css\n
+\n
+.user-markdown h1 {\n
+  text-align:center\n
+}\n
+\n
+.small-multiple .mg-y-axis text {\n
+  font-size:10px;\n
+}\n
+\n
+.small-multiple .mg-x-axis text {\n
+  font-size:10px;\n
+}\n
+\n
+.small-multiple g.mg-active-datapoint-container tspan {\n
+  font-size:10px;\n
+}\n
+\n
+.small-multiple .mg-line-legend-color {\n
+  font-size:10px;\n
+}\n
+\n
+.small-multiple .mg-marker-text {\n
+  font-size:10px;\n
+}\n
+\n
+.small-multiple g.mg-active-datapoint-container {\n
+  transform: translate(0px, -20px);\n
+}\n
+\n
+.description {\n
+  margin: auto;\n
+  background-color: rgb(245,245,245);\n
+  text-align:center;\n
+  padding:8px;\n
+  font-weight:300;\n
+  font-style: italic;\n
+  font-size:12px;\n
+}\n
+\n
+#evictions-by-neighborhood {\n
+\tmargin-top:30px;\n
+\tmargin-bottom:30px !important;\n
+}\n
+\n
+#lat-lon {\n
+  margin-top:-90px;\n
+  margin-bottom:30px;\n
+}\n
+\n
+#padding {\n
+\tmargin-bottom: 100px !important;\n
+}\n
+\n
+%% md\n
+<div id=\'evictions-by-neighborhood\'>\n
+</div>\n
+\n
+%% md\n
+## Motivation\n
+\n
+The above visualization demonstrates the volume of eviction notices San Francisco, yearly, from 1997 onward, by neighborhood.\n
+\n
+The dataset is made available by [DataSF](https://data.sfgov.org/Housing-and-Buildings/Eviction-Notices/5cei-gny5), the City of San Francisco\'s data portal. The data updates monthly, maintained by the Rent Arbitration Board.\n
+\n
+There are many legal reasons for eviction notices - a tenant may fall behind in rent, or perhaps has violated their lease in a way that, to the property owner or manager, merits eviction. In many cases, however, owners pursue various legal means to push out tenants to charge more in rent for a property, or to demolish a building to make way for more dense or more upscale housing. It is no secret that housing prices in San Francisco have skyrocketed past what many residents were previously able to pay, and the consequence of this increased demand and unmatched supply often takes the form of evictions.\n
+\n
+## Articles that inspired this analysis\n
+\n
+- [Why S.F. evictions are on the rise](https://www.sfchronicle.com/politics/article/Why-S-F-evictions-are-on-the-rise-6408950.php) (2015)\n
+- [San Francisco\'s new pro-tenant rules increased evictions](https://www.bizjournals.com/sanfrancisco/morning_call/2015/07/san-francisco-rent-control-buyout-rules-evictions.html) (2015)\n
+- [San Francisco evictions continue to rise each year since 2010](http://www.sfexaminer.com/san-francisco-evictions-continue-rise-year-since-2010/) (2016)\n
+\n
+<!-- please fix this. I shouldn\'t have to create padding to make this report readable. -->\n
+<div id=\'padding\'></div>\n
+\n
+%% js\n
+\n
+rawData = d3.csvParse(rawData)\n
+\n
+%% js\n
+var data = rawData.map(d=>{\n
+  d[\'File Date\'] = d3.timeParse(\'%m/%d/%Y\')(d[\'File Date\'])\n
+  d.neighborhood = d[\'Neighborhoods - Analysis Boundaries\']\n
+  delete d[\'Neighborhoods - Analysis Boundaries\']\n
+  d.fileDate = d[\'File Date\']\n
+  delete d[\'File Date\']\n
+  d.supervisorDistrict = d[\'Supervisor District\']\n
+  delete d[\'Supervisor District\']\n
+  return d\n
+}).filter(d => d.fileDate < new Date(\'2018-06-02\'))\n
+\n
+%% js\n
+var DATA = new Ply(data)\n
+\n
+%% js\n
+\n
+var getYear = d => {\n
+    d.date = new Date(d.fileDate.getFullYear(), 0, 1)\n
+    return d\n
+  }\n
+\n
+var countAndDate = \t{\n
+  count: arr=>arr.length,\n
+  date: arr=>arr[0].date\n
+}\n
+\n
+var byYear = DATA.clear()\n
+\t.map(getYear)\n
+\t.filter((d) => d.neighborhood !== \'\')\n
+\t.group(\'neighborhood\', \'date\')\n
+\t.reduce(countAndDate)\n
+\t.group(\'neighborhood\')\n
+\t.transform()\n
+\n
+var latLon = DATA.clear()\n
+\t.filter(d=>d.Location.length)\n
+\t.map(d=>{\n
+      let d2 = {}\n
+      let location = d.Location.split(\', \')\n
+      d2.lat = +location[0].slice(1)\n
+      d2.lon = +location[1].slice(0, -1)\n
+      return d2\n
+    }).transform()\n
+\n
+\n
+%% js\n
+\n
+Object.keys(byYear).forEach(n=> {\n
+  byYear[n] = byYear[n].map(d=> {\n
+    d.date = new Date(d.date)\n
+    return d\n
+  })\n
+})\n
+%% raw\n
+overall\n
+// eviction rates by neighborhood\n
+// eviction rates by supervisor\n
+block most likely to have evictions\n
+eviction rates by type\n
+\n
+%% js\n
+var sm = new SmallMultiple({\n
+  width: 800,\n
+  target: \'#evictions-by-neighborhood\',\n
+  label: \'evictions-by-neighborhood\',\n
+  cols: 5,\n
+  left:30,\n
+  titleFontSize: 12,\n
+  cellHeaderHeight: 16,\n
+  showOnlyFirstXAxis: true,\n
+  titleTextAlign:\'center\'\n
+})\n
+\n
+var neighborhoods = Object.keys(byYear).map(d=>{\n
+  let sum = Ply.sum(\'count\')(byYear[d])\n
+  return [sum, d]\n
+})\n
+neighborhoods.sort((a,b)=>{\n
+  return b[0] - a[0]\n
+})\n
+neighborhoods = neighborhoods.map(d=>d[1]).slice(0,15)\n
+\n
+var maxY = Math.max(...neighborhoods.map(d=> Math.max(...byYear[d].map(di=>di.count))  )) * 1.1\n
+\n
+neighborhoods.forEach(neighborhood=>{\n
+  let yearData = byYear[neighborhood]\n
+  sm.plot({\n
+    titleText: neighborhood,\n
+    //mainNumber: Ply.sum(\'count\')(yearData),\n
+    data: yearData,\n
+    x_accessor: \'date\',\n
+    y_accessor: \'count\',\n
+    xax_count:3,\n
+    max_y: maxY,\n
+    area: false,\n
+\tlinked: true,\n
+    min_x: new Date(\'1996-12-31\'),\n
+    mouseover_align:\'center\',\n
+    x_rollover_format: \'%Y  \',\n
+    y_rollover_format: function(d) { return d.count + \' notices\'},\n
+  })\n
+})\n
+\n
+%% js\n
+var PIXEL_RATIO = (function () {\n
+    var ctx = document.createElement("canvas").getContext("2d"),\n
+        dpr = window.devicePixelRatio || 1,\n
+        bsr = ctx.webkitBackingStorePixelRatio ||\n
+              ctx.mozBackingStorePixelRatio ||\n
+              ctx.msBackingStorePixelRatio ||\n
+              ctx.oBackingStorePixelRatio ||\n
+              ctx.backingStorePixelRatio || 1;\n
+\n
+    return dpr / bsr;\n
+})();\n
+\n
+var canvas = document.getElementById(\'lat-lon\')\n
+var w = 700\n
+var h = 700\n
+\n
+canvas.width = w * PIXEL_RATIO;\n
+canvas.height = h * PIXEL_RATIO;\n
+canvas.style.width = w + "px";\n
+canvas.style.height = h + "px";\n
+canvas.getContext("2d").setTransform(PIXEL_RATIO, 0, 0, PIXEL_RATIO, 0, 0);\n
+\n
+var pl = (ar, f) => ar.map((d)=>d[f])\n
+var dom = (ar, f) => [Math.min(...pl(ar, f)), Math.max(...pl(ar, f))]\n
+\n
+var latDom = dom(latLon, \'lat\')\n
+latDom.reverse()\n
+var lonDom = dom(latLon, \'lon\')\n
+\n
+//var xs = d3.scaleLinear().domain([-123.51+.7, -122.56+.7]).range([0,w])\n
+//var ys = d3.scaleLinear().domain([37.90, 37.35]).range([0,h])\n
+var xs = d3.scaleLinear().domain(lonDom).range([0,w])\n
+var ys = d3.scaleLinear().domain(latDom).range([0,h])\n
+\n
+var ctx = canvas.getContext(\'2d\')\n
+ctx.imageSmoothingEnabled = true;\n
+let noise = (amt=4) => (Math.random() -.5) * amt\n
+function circle(x,y,group) {\n
+  ctx.beginPath()\n
+  ctx.arc(x + noise(), y + noise(), 1, 0, Math.PI * 2, true)\n
+  ctx.fillStyle = \'rgba(250,0,0,.5)\'\n
+  ctx.fill()\n
+  ctx.closePath()\n
+}\n
+\n
+function draw() {\n
+  \tctx.clearRect(0, 0, w, h)\n
+\tlatLon.forEach((d)=>{ \n
+      circle(xs(d.lon), ys(d.lat)) \n
+    }) \n
+}\n
+draw()\n
+dom(latLon, \'lon\')
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Eviction Notices by SF Neighborhood, 1997-present</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
