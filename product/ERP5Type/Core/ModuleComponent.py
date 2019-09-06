@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2012 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2019 Nexedi SA and Contributors. All Rights Reserved.
 #                    Arnaud Fontaine <arnaud.fontaine@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -27,40 +27,36 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Core.ModuleComponent import ModuleComponent
-
+from Products.ERP5Type.mixin.component import ComponentMixin
+from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 
 import zope.interface
 from Products.ERP5Type.interfaces.component import IComponent
 
-class TestComponent(ModuleComponent):
+class ModuleComponent(ComponentMixin, TextContentHistoryMixin):
   """
-  ZODB Component for Live Tests only (previously defined in the bt5 and
-  installed in INSTANCE_HOME/tests) as other kind of Tests should be
-  deprecated at some point
+  ZODB Component for Modules, eg non-Documents from Products, and the base
+  class for all other Components
   """
-  meta_type = 'ERP5 Test Component'
-  portal_type = 'Test Component'
+  meta_type = 'ERP5 Module Component'
+  portal_type = 'Module Component'
 
   zope.interface.implements(IComponent)
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  do_validate_on_import_from_filesystem = True
-
   @staticmethod
   def _getFilesystemPath():
-    import os.path
-    from App.config import getConfiguration
-    return os.path.join(getConfiguration().instancehome, 'tests')
+    # TODO-arnau: useful?
+    raise NotImplementedError
 
   @staticmethod
   def _getDynamicModuleNamespace():
-    return 'erp5.component.test'
+    return 'erp5.component.module'
 
   @staticmethod
   def getIdPrefix():
-    return 'test'
+    return 'module'

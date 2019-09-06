@@ -1,4 +1,3 @@
-document.erp5.DiffTool
 document.erp5.ScriptConstraint
 document.erp5.TransformOdtToDocx
 document.erp5.TransformOdtToHtml
@@ -28,4 +27,3 @@ document.erp5.TransformPptxToPpty
 document.erp5.TransformPptyToPptx
 document.erp5.TransformImageToPcx
 document.erp5.TransformImageToBmp
-document.erp5.CallableTool
