@@ -257,7 +257,8 @@ class TypesTool(TypeProvider):
     Documents) that can be used as Base classes
     """
     from Products.ERP5Type import document_class_registry
-    return self._getTypeList('Document Component', document_class_registry)
+    return self._getTypeList(('Document Component', 'Tool Component'),
+                             document_class_registry)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getMixinTypeList')
   def getMixinTypeList(self):
