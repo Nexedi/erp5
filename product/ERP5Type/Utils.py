@@ -507,10 +507,10 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
 
       if portal_type == 'Interface Component':
         # Interface inherits from InterfaceClass:
-        # E: 4, 0: Inheriting 'Interface', which is not a class. (inherit-non-class)
+        # Inheriting 'Interface', which is not a class. (inherit-non-class)
         args.append('--disable=E0239')
-        # Interfaces methods have no arguments:
-        # E: 5, 2: Method has no argument (no-method-argument)
+        # Interfaces methods may have no arguments:
+        # Method has no argument (no-method-argument)
         args.append('--disable=E0211')
         # Method should have "self" as first argument (no-self-argument)
         args.append('--disable=E0213')
