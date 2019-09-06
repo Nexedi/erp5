@@ -1,0 +1,628 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Notebook" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>romain_notebook_svg</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Notebook</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+%% md\n
+# SVG Creator\n
+\n
+%% fetch\n
+js: ./domsugar.js\n
+js: ./jiodev.js\n
+\n
+%% js\n
+\n
+var SVG_NS = "http://www.w3.org/2000/svg",\n
+  TEXT_COLOR = \'#FFF\';\n
+\n
+function createBoxTemplateElement(id, width, height, text_height) {\n
+  return domsugar(document.createElementNS(SVG_NS, \'svg\'), {\n
+    id: id,\n
+    width: width + \'em\',\n
+    height: height + \'em\'\n
+  }, [\n
+    domsugar(document.createElementNS(SVG_NS, \'g\'), {\n
+      stroke: "#000",\n
+      "stroke-width": 3,\n
+    }, [\n
+      domsugar(document.createElementNS(SVG_NS, \'rect\'), {\n
+        width: width + \'em\',\n
+        height: height + \'em\',\n
+        fill: "#FFFFCC"\n
+      }),\n
+      domsugar(document.createElementNS(SVG_NS, \'rect\'), {\n
+        width: width + \'em\',\n
+        height: text_height + \'em\',\n
+        fill: "#333366"\n
+      })\n
+    ])\n
+  ]);\n
+}\n
+\n
+function createPortalTypeTemplateElement(portal_type, template_id, element_id, width, height) {\n
+  var element;\n
+  element = domsugar(document.createElementNS(SVG_NS, \'svg\'), {\n
+    id: element_id,\n
+    width: width + \'em\',\n
+    height: height + \'em\'\n
+  }, [\n
+    domsugar(document.createElementNS(SVG_NS, \'g\'), {\n
+    }, [\n
+      domsugar(document.createElementNS(SVG_NS, \'use\'), {\n
+        "xlink:href": "#" + template_id,\n
+        // "fill": "#00F",\n
+        // "stroke": "orange",\n
+        // "stroke-width": "5px"\n
+      }),\n
+      domsugar(document.createElementNS(SVG_NS, \'text\'), {\n
+        // textLength: TEXT_WIDTH + \'em\',\n
+        y: \'1.8em\',\n
+        x: \'0.5em\',\n
+        "font-size": "1em",\n
+        text: portal_type,\n
+        fill: TEXT_COLOR\n
+      }),\n
+    ])\n
+  ]);\n
+  return element;\n
+}\n
+\n
+function useTemplateElement(template_id, x, y) {\n
+  return domsugar(document.createElementNS(SVG_NS, \'use\'), {\n
+    "xlink:href": "#" + template_id,\n
+    x: x + \'em\',\n
+    y: y + \'em\'\n
+  });\n
+}\n
+\n
+function drawArrow(source_x, source_y, destination_x, destination_y,\n
+                   box_side, arrow_location, text, width, height) {\n
+  var x1,\n
+    y1,\n
+    x2,\n
+    y2,\n
+    x3,\n
+    y3,\n
+    tx = 1,\n
+    ty = 1,\n
+    margin = 0.1,\n
+    text_margin = 0.25,\n
+    element_list = [],\n
+    marker_end,\n
+    stroke_options;\n
+\n
+  if (box_side === \'top\') {\n
+    x1 = source_x + 0.5;\n
+    y1 = source_y;\n
+    x2 = x1;\n
+    if (source_x === destination_x) {\n
+      x3 = x1;\n
+      // Always put the end line at the bottom\n
+      y2 = destination_y + 1 + margin;\n
+    } else if (source_x < destination_x) {\n
+      // End arrow on the left side of the destination\n
+      x3 = destination_x - margin;\n
+      y2 = destination_y + 0.5;\n
+    } else {\n
+      // End arrow on the right side of the destination\n
+      x3 = destination_x + 1 + margin;\n
+      y2 = destination_y + 0.5;\n
+    }\n
+    y3 = y2;\n
+    y1 -= margin;\n
+    tx = x1 + margin;\n
+    ty = y2 + text_margin;\n
+  } else if (box_side === \'bottom\') {\n
+    x1 = source_x + 0.5;\n
+    y1 = source_y + 1;\n
+    x2 = x1;\n
+    if (source_x === destination_x) {\n
+      x3 = x1;\n
+      // Always put the end line at the bottom\n
+      y2 = destination_y - margin;\n
+    } else if (source_x < destination_x) {\n
+      x3 = destination_x - margin;\n
+      y2 = destination_y + 0.5;\n
+    } else {\n
+      x3 = destination_x + 1 + margin;\n
+      y2 = destination_y + 0.5;\n
+    }\n
+    y3 = y2;\n
+    y1 += margin;\n
+    tx = x1 + margin;\n
+    ty = y2 - text_margin;\n
+  } else if (box_side === \'right\') {\n
+    x1 = source_x + 1;\n
+    y1 = source_y + 0.5;\n
+    y2 = y1;\n
+    if (source_y === destination_y) {\n
+      y3 = y1;\n
+      // Always put the end line at the bottom\n
+      x2 = destination_x - margin;\n
+    } else if (source_y < destination_y) {\n
+      // End arrow on the left side of the destination\n
+      y3 = destination_y - margin;\n
+      x2 = destination_x + 0.5;\n
+    } else {\n
+      // End arrow on the left side of the destination\n
+      y3 = destination_y + 1 + margin;\n
+      x2 = destination_x + 0.5;\n
+    }\n
+    x3 = x2;\n
+    x1 += margin;\n
+    tx = x1 + margin;\n
+    ty = y1 + margin;\n
+  } else if (box_side === \'left\') {\n
+    x1 = source_x;\n
+    y1 = source_y + 0.5;\n
+    y2 = y1;\n
+    if (source_y === destination_y) {\n
+      y3 = y1;\n
+      // Always put the end line at the bottom\n
+      x2 = destination_x + 1 + margin;\n
+    } else if (source_y < destination_y) {\n
+      // End arrow on the left side of the destination\n
+      y3 = destination_y - margin;\n
+      x2 = destination_x + 0.5;\n
+    } else {\n
+      // End arrow on the left side of the destination\n
+      y3 = destination_y + 1 + margin;\n
+      x2 = destination_x + 0.5;\n
+    }\n
+    x3 = x2;\n
+    x1 -= margin;\n
+    tx = x2 + margin;\n
+    ty = y1 + margin;\n
+  } else {\n
+    throw new Error(\'not supported box side \' + box_side);\n
+  }\n
+\n
+  if (arrow_location === \'end\') {\n
+    marker_end = "url(#arrowhead)";\n
+    stroke_options = {\n
+      stroke: "#4C1900",\n
+      "stroke-width": "4",\n
+      "stroke-dasharray": "10,5"\n
+    };\n
+  } else if (arrow_location === \'parent\') {\n
+    marker_end = null;\n
+    stroke_options = {\n
+      stroke: "black",\n
+      "stroke-width": "2",\n
+    };\n
+  } else {\n
+    throw new Error(\'Unsupported arrow_location: \' + arrow_location);\n
+  }\n
+\n
+  if ((x2 === x3) && (y2 === y3)) {\n
+    element_list = [\n
+      domsugar(document.createElementNS(SVG_NS, \'line\'), {\n
+        x1: x1 * width + \'em\',\n
+        y1: y1 * height + \'em\',\n
+        x2: x2 * width + \'em\',\n
+        y2: y2 * height + \'em\',\n
+        "marker-end": marker_end\n
+      })\n
+    ];\n
+  } else {\n
+    element_list = [\n
+      domsugar(document.createElementNS(SVG_NS, \'line\'), {\n
+        x1: x1 * width + \'em\',\n
+        y1: y1 * height + \'em\',\n
+        x2: x2 * width + \'em\',\n
+        y2: y2 * height + \'em\',\n
+      }),\n
+      domsugar(document.createElementNS(SVG_NS, \'line\'), {\n
+        x1: x2 * width + \'em\',\n
+        y1: y2 * height + \'em\',\n
+        x2: x3 * width + \'em\',\n
+        y2: y3 * height + \'em\',\n
+        "marker-end": marker_end\n
+      })\n
+    ];\n
+  }\n
+\n
+  // Display the related text\n
+  if (text) {\n
+    element_list.push(\n
+      domsugar(document.createElementNS(SVG_NS, \'text\'), {\n
+        // textLength: TEXT_WIDTH + \'em\',\n
+        // y: ty * width + \'em\',\n
+        // x: tx * width + \'em\',\n
+        "font-size": "1em",\n
+        // text: text,\n
+        stroke: \'none\'\n
+      }, text.split(\' \').map(function (word, i) {\n
+        return domsugar(document.createElementNS(SVG_NS, \'tspan\'), {\n
+          text: word,\n
+          x: tx * width + \'em\',\n
+          y: (ty * height) + i + \'em\'\n
+        });\n
+      }))\n
+    );\n
+  }\n
+\n
+  return domsugar(document.createElementNS(SVG_NS, \'g\'), stroke_options, element_list);\n
+}\n
+\n
+function createSVG(definition) {\n
+  var xml_document,\n
+    i,\n
+    max_string_length,\n
+    element_list,\n
+    BOX_TEMPLATE_ID = \'box_template\',\n
+    // grid_cell_size = PORTAL_TYPE_WIDTH,\n
+    node_list = definition.node_list,\n
+    arrow_list = definition.arrow_list,\n
+    box_width,\n
+    box_heigth,\n
+    max_grid_x,\n
+    max_grid_y,\n
+    NODE_ID_PREFIX = \'node_template_\',\n
+    node_location_dict = {},\n
+    IMAGE_MARGIN = 0.25;\n
+\n
+  // calculate the max length\n
+  max_string_length = 0;\n
+  for (i = 0; i < node_list.length; i += 1) {\n
+    max_string_length = Math.max(max_string_length, node_list[i][0].length);\n
+  }\n
+\n
+  // create all node boxes as SVG templates\n
+  // The idea is to be able to reuse a box multiple time on the drawing\n
+  // without increasing the svg size too much\n
+  // Add 2 as left/right padding for the text\n
+  box_width = (max_string_length / 2) + 2;\n
+  box_height = 8;\n
+  element_list = [\n
+    createBoxTemplateElement(BOX_TEMPLATE_ID, box_width, box_height, 3)\n
+  ];\n
+  for (i = 0; i < node_list.length; i += 1) {\n
+    element_list.push(\n
+      createPortalTypeTemplateElement(node_list[i][0], BOX_TEMPLATE_ID,\n
+                                      NODE_ID_PREFIX + i, box_width, box_height)\n
+    );\n
+  }\n
+  // Create arrow markers\n
+  element_list.push(\n
+    domsugar(document.createElementNS(SVG_NS, \'marker\'), {\n
+      id: "arrowhead",\n
+      markerWidth: "10",\n
+      markerHeight: "7",\n
+      refX: "8",\n
+      refY: "3.5",\n
+      orient: "auto",\n
+      stroke: "#4C1900",\n
+      fill: "#4C1900",\n
+    }, [\n
+      domsugar(document.createElementNS(SVG_NS, \'polygon\'), {\n
+        points: "0 0, 10 3.5, 0 7"\n
+      })\n
+    ]),\n
+  );\n
+\n
+  // Create the defs part\n
+  element_list = [\n
+    domsugar(document.createElementNS(SVG_NS, \'defs\'), element_list),\n
+  ];\n
+\n
+  // Draw boxes\n
+  max_grid_x = 0;\n
+  max_grid_y = 0\n
+  for (i = 0; i < node_list.length; i += 1) {\n
+    max_grid_x = Math.max(max_grid_x, node_list[i][1]);\n
+    max_grid_y = Math.max(max_grid_y, node_list[i][2]);\n
+    node_location_dict[node_list[i][0]] = [node_list[i][1], node_list[i][2]];\n
+    element_list.push(\n
+      useTemplateElement(NODE_ID_PREFIX + i, (node_list[i][1] + IMAGE_MARGIN) * box_width,\n
+                         (node_list[i][2] + IMAGE_MARGIN) * box_height)\n
+    );\n
+  }\n
+\n
+  // Draw arrows before the boxes, so they are "behind"\n
+  for (i = arrow_list.length - 1; i >= 0; i -= 1) {\n
+    element_list.unshift(\n
+      drawArrow(\n
+        node_location_dict[arrow_list[i][1]][0] + IMAGE_MARGIN,\n
+        node_location_dict[arrow_list[i][1]][1] + IMAGE_MARGIN,\n
+        node_location_dict[arrow_list[i][3]][0] + IMAGE_MARGIN,\n
+        node_location_dict[arrow_list[i][3]][1] + IMAGE_MARGIN,\n
+        arrow_list[i][0],\n
+        arrow_list[i][2],\n
+        arrow_list[i][4],\n
+        box_width,\n
+        box_height\n
+      )\n
+    );\n
+  }\n
+\n
+  // Background\n
+  element_list.unshift(\n
+    domsugar(document.createElementNS(SVG_NS, \'rect\'), {\n
+      width: "100%",\n
+      height: "100%",\n
+      fill: "white"\n
+    })\n
+  );\n
+\n
+  xml_document = document.createElementNS("http://www.w3.org/2000/svg",\n
+                                          "svg");\n
+  domsugar(xml_document, {\n
+    width: box_width * (max_grid_x + 1 + 2 * IMAGE_MARGIN) + \'em\',\n
+    height: box_height * (max_grid_y + 1 + 2 * IMAGE_MARGIN) + \'em\',\n
+    baseProfile: \'full\',\n
+    version: \'1.1\',\n
+    "xmlns:xlink": "http://www.w3.org/1999/xlink"\n
+  }, element_list);\n
+\n
+  return (new XMLSerializer()).serializeToString(xml_document);\n
+}\n
+\n
+function attachSVG(id, definition) {\n
+  return new RSVP.Queue(jIO.util.readBlobAsDataURL(\n
+    new Blob([createSVG(definition)],\n
+             {type : \'image/svg+xml\'})\n
+  ))\n
+    .push(function (evt) {\n
+      var data_url = evt.target.result;\n
+      domsugar(document.querySelector(\'#\' + id), {src: data_url});\n
+    });\n
+}\n
+\n
+\n
+%% md\n
+\n
+## Cloud\n
+\n
+<img id=\'img_cloud\'/>\n
+\n
+%% js\n
+\n
+attachSVG(\'img_cloud\', {\n
+ node_list: [\n
+  ["Person", 2, 0],\n
+  ["Software Installation", 0, 1],\n
+  ["Computer", 2, 2],\n
+  ["Computer Partition", 2, 4],\n
+  ["Hosting Subscription", 4, 0],\n
+  ["Software/Slave Instance", 5, 2]\n
+ ],\n
+ arrow_list: [\n
+  ["top", "Software Installation", "end", "Person", "destination_section"],\n
+  ["top", "Computer", "end", "Person", "source_administration"],\n
+  ["left", "Hosting Subscription", "end", "Person", "destination_section"],\n
+  ["bottom", "Software Installation", "end", "Computer", "aggregate"],\n
+  ["bottom", "Software/Slave Instance", "end", "Computer Partition", "aggregate"],\n
+  ["top", "Software/Slave Instance", "end", "Hosting Subscription", "specialise"],\n
+  ["bottom", "Hosting Subscription", "end", "Software/Slave Instance", "predecessor"],\n
+  ["top", "Computer Partition", "parent", "Computer"],\n
+  // TODO ["bottom", "Software/Slave Instance", "end", "Software/Slave Instance", "predecessor"],\n
+ ]\n
+});\n
+\n
+%% md\n
+\n
+## Consumption Eco\n
+\n
+<img id=\'img_consumption_eco\'/>\n
+\n
+%% js\n
+\n
+attachSVG(\'img_consumption_eco\', {\n
+ node_list: [\n
+  ["Computer", 0, 0],\n
+  ["Consumption Document", 0, 2],\n
+  ["Sale Packing List", 2, 1],\n
+  ["Sale Packing List Line", 2, 3],\n
+  ["Person", 4, 2],\n
+  ["Organisation", 4, 0]\n
+ ],\n
+ arrow_list: [\n
+  ["top", "Consumption Document", "end", "Computer", "contribution"],\n
+  ["right", "Sale Packing List", "end", "Person", "destination_decision destination"],\n
+  ["right", "Sale Packing List Line", "end", "Person", "destination_decision destination_section"],\n
+  ["top", "Sale Packing List Line", "parent", "Sale Packing List"],\n
+  ["top", "Sale Packing List", "end", "Organisation", "source source_section destination_section"],\n
+ ]\n
+});\n
+\n
+%% md\n
+\n
+## CRM\n
+\n
+<img id=\'img_crm\'/>\n
+\n
+%% js\n
+\n
+attachSVG(\'img_crm\', {\n
+ node_list: [\n
+  ["Person (user)", 0, 0],\n
+  ["Person (agent)", 2, 0],\n
+  ["Organisation", 4, 0],\n
+  ["Hosting Subscription", 6, 0],\n
+  ["Support Request", 4, 2],\n
+  ["Notification Message", 0, 3],\n
+  ["Event", 2, 3],\n
+  ["Incident Response", 6, 4],\n
+ ],\n
+ arrow_list: [\n
+  ["left", "Support Request", "end", "Person (user)", "destination_decision"],\n
+  ["left", "Support Request", "end", "Person (agent)", "source_decision"],\n
+  ["top", "Support Request", "end", "Organisation", "source source_section source_trade"],\n
+  ["right", "Support Request", "end", "Hosting Subscription", "aggregate"],\n
+  ["right", "Event", "end", "Support Request", "follow_up"],\n
+  ["bottom", "Support Request", "end", "Incident Response", "follow_up"],\n
+ ]\n
+});\n
+\n
+%% md\n
+\n
+## Invoicing\n
+\n
+<img id=\'img_invoicing\'/>\n
+\n
+%% js\n
+\n
+attachSVG(\'img_invoicing\', {\n
+ node_list: [\n
+  ["Organisation", 0, 0],\n
+  ["Person", 2, 0],\n
+  ["Sale Packing List", 0, 2],\n
+  ["Sale Invoice Transaction", 3, 2],\n
+  ["Payment", 5, 2],\n
+  ["Applied Rule", 0, 4],\n
+ ],\n
+ arrow_list: [\n
+  ["top", "Sale Packing List", "end", "Organisation", "source_section"],\n
+  ["right", "Sale Packing List", "end", "Person", "source destination destination_section"],\n
+  ["top", "Applied Rule", "end", "Sale Packing List", "causality"],\n
+ ]\n
+});\n
+\n
+%% md\n
+\n
+## Subscription\n
+\n
+<img id=\'img_subscription\'/>\n
+\n
+%% js\n
+\n
+attachSVG(\'img_subscription\', {\n
+ node_list: [\n
+  ["Business Process", 6, 0],\n
+  ["Sale Trade Condition", 4, 0],\n
+  ["Person", 0, 0],\n
+  ["Organisation", 0, 2],\n
+  ["Open Sale Order", 2, 2],\n
+  ["Open Sale Order Line", 2, 4],\n
+  ["Hosting Subscription", 4, 4],\n
+  ["Applied Rule", 4, 6],\n
+  ["Subscription Item Root Sim. Rule", 2, 6],\n
+  ["Simulation Movement", 6, 6],\n
+  ["Sale Packing List", 6, 2],\n
+  ["Sale Packing List Line", 6, 4],\n
+\n
+\n
+\n
+ ],\n
+ arrow_list: [\n
+  ["right", "Sale Trade Condition", "end", "Business Process", "specialise"],\n
+  ["top", "Open Sale Order", "end", "Person", "destination destination_decision"],\n
+  ["left", "Open Sale Order", "end", "Organisation", "source source_section destination_section"],\n
+  ["right", "Open Sale Order", "end", "Sale Trade Condition", "specialise"],\n
+  ["top", "Open Sale Order Line", "parent", "Open Sale Order"],\n
+  ["right", "Open Sale Order Line", "end", "Hosting Subscription", "aggregate"],\n
+  ["top", "Applied Rule", "end", "Hosting Subscription", "causality"],\n
+  ["left", "Applied Rule", "end", "Subscription Item Root Sim. Rule", "specialise"],\n
+  ["left", "Simulation Movement", "parent", "Applied Rule"],\n
+  ["top", "Sale Packing List Line", "parent", "Sale Packing List"],\n
+  ["top", "Simulation Movement", "end", "Sale Packing List Line", "delivery"],\n
+  ["left", "Sale Packing List Line", "end", "Hosting Subscription", "aggregate"],\n
+  ["left", "Sale Packing List", "end", "Sale Trade Condition", "specialise"],\n
+\n
+ ]\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Generate SVG</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
