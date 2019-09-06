@@ -1,0 +1,358 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Notebook" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>romain_notebook_3</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Notebook</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+%% fetch\n
+js: https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js\n
+blob: rawbrain = https://devinbayly.github.io/host_brain/flatbrain.raw\n
+\n
+%% md \n
+<div id="content">\n
+<h1 id="peering-into-the-unknown">Peering into the Unknown</h2>\n
+<p>Can you tell what I\'m thinking right now? If you could you would know that I\'m hoping I don\'t have to rewrite this introduction for the third time, but that would make you an uncommon individual. Most people don\'t have the ability to read someone\'s mind let alone the purely physical process of looking into another person\'s head. Those lucky enough to belong to the latter category probably have access to medical imaging technology and someone willing to crawl inside it. The rest of us -- at least for now -- must settle for looking inside my head.</p>\n
+<p>Briefly lets tangent into a light background on one particular sort of medical imaging known as MRI. MRI stands for Magnetic Resonance Imaging and you can see a cartoon of one scanner here. The parts of an MRI are roughly as follows: the patient table, which shifts the body part to be scanned into the center of the scanner; the magnetic and radiofrequency transmitter coils; radiofrequency receiver antenna coils.<br />\n
+\n
+<img src="https://drive.google.com/uc?export=view&id=1ZrwNFCjKlTkc-lC3uJLZSC3h3LkmHn3_" alt="machine" /></p>\n
+<p>When the superconducting electromagnet is turned on the hydrogen atoms in the magnetic field align along the axis running through the machine </p><img src="https://drive.google.com/uc?export=view&id=1G9f5lOPDgF5MK8n2ZtvtazEmviOpcow1" alt="machine on" />. \n
+<p>The hydrogens are excited by the radio transmitter pulses and flip direction. The hydrogens return to their original direction and emit a radiofrequency signal that\'s picked up by the receivers within the scanner. </p>\n
+<img src="https://drive.google.com/uc?export=view&id=1H8BT1w0Od8NF1GyHNIT1G8v0bSYLRKpq" alt="Radio excitation" />\n
+<p>The tissue to which the hydrogen belongs influences the rate at which this happens and gives rise to Image contrast. </p>\n
+<img src="https://drive.google.com/uc?export=view&id=1EK5PS6T9PEnq_hZDqFejbiErzs2HTgdc" alt="Image Contrast" />\n
+</div>\n
+\n
+## For more educational neuroscience web content explore the [mental landscapes](mental-landscapes.cs.arizona.edu) project. \n
+%% md\n
+\n
+<body>\n
+    <div id="container">\n
+    </div>\n
+</body>\n
+\n
+%% js\n
+var vShaderText = `\n
+        #ifdef GL_ES\n
+        precision highp float;\n
+        #endif\n
+        attribute float displacement;\n
+        varying vec2 vUv;\n
+        varying vec3 worldcoords;\n
+        varying vec4 projcoords;\n
+        void main()\n
+        {\n
+            vUv =uv;\n
+            vec3 newPos = position;\n
+            //worldcoords = (modelViewMatrix*vec4(position + vec3(0.5,0.5,0.5),1.0)).xyz; //changed slightly from first pass\n
+            worldcoords =position; //changed slightly from first pass\n
+            projcoords =  projectionMatrix * modelViewMatrix * vec4(newPos,1.0);// this makes it screen coordinates\n
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(newPos,1.0);\n
+        }\n
+\n
+`\n
+\n
+var fShaderText = `\n
+        #ifdef GL_ES\n
+        precision highp float;\n
+        #endif\n
+        varying vec2 vUv;   \n
+        varying vec3 worldcoords;\n
+        varying vec4 projcoords;\n
+        uniform float shift;\n
+        uniform float scale;\n
+        uniform float xshift;\n
+        uniform sampler2D textyah;\n
+        uniform vec3 dir;\n
+        uniform float delta;\n
+        uniform float alphaCorrection;// not sure what alpha correction is\n
+        // lebarba code from github volumetric rendering\n
+        const int MAX_STEPS = 800;\n
+            // again lebarba code, but with some changes in the z indexing\n
+            //Acts like a texture3D using Z slices and trilinear filtering.\n
+\n
+        //cpos was originally -6.5 to 6.5\n
+        vec4 marcher(vec3 cpos) { // cpos is the current position\n
+                vec3 colorCoords = cpos + shift; // takes position makesonly positive\n
+                //transforms (13,13,13) to 0-1 ranges\n
+                colorCoords /=scale;\n
+\n
+                // convinced the problem is teh x\n
+                colorCoords.x += mod(floor(colorCoords.z*256.0),16.0); // 16 is the number of images on each axis\n
+                colorCoords.y += floor(colorCoords.z*256.0/16.0);\n
+                colorCoords/= 16.0;\n
+                vec4 colorSample = texture2D(textyah,colorCoords.xy);\n
+                return colorSample;\n
+        }\n
+        void main( void ) {\n
+                //!! I don\'t have the same setup for my alpha because I didn\'t alpha the background image\n
+                // worldcoords /16.0 will range 0-176 for height 0-240 for width a total of 256 slices so z will only go that high\n
+                // for each slice we have to move x up by 240 and after 16 of these go down (canvas is zero in top) \n
+                //gl_FragColor  =vec4(colorCoords,1.0);\n
+                vec4 deepColor = vec4(0.0);// this is the total color through the cube\n
+                vec4 marchColor;// this is the color at part\n
+                float alphaSum;\n
+                //! unsure if this factor allows stepping through from all angles\n
+                const float mod_factor = sqrt(pow(13.0,2.0) + pow(13.0,2.0))/float(MAX_STEPS); // the sqrt part should be the longest len within the cube\n
+                vec3 pos = worldcoords;\n
+                vec3 mod_dir =normalize(pos -dir); // this may need to change depending on the direction we face\n
+                float dbg;\n
+                for (float i = 0.0; i < float(MAX_STEPS); i++) {\n
+                    // stop marchin at sides of cube\n
+                    if (pos.x < -6.5|| pos.x > 6.5||\n
+                        pos.y < -6.5|| pos.y > 6.5||\n
+                        pos.z < -6.5|| pos.z > 6.5 )  {\n
+                        break;\n
+                        }\n
+\n
+                    marchColor = marcher(pos);\n
+                    if (marchColor.r > .1) { // prevents the black from taking over too much\n
+                        alphaSum += marchColor.a*alphaCorrection;\n
+                        deepColor += marchColor*alphaCorrection;\n
+                    }\n
+                    pos += mod_dir*mod_factor;\n
+                }\n
+                gl_FragColor =vec4(deepColor.r,deepColor.g,deepColor.b,alphaSum);\n
+                //gl_FragColor= vec4(dbg,0,0,1);\n
+                //gl_FragColor= vec4(mod_dir,1);\n
+            }\n
+            `\n
+%% fetch\n
+js: https://threejs.org/examples/js/controls/OrbitControls.js\n
+\n
+%% js\n
+        function changeScale (val) {\n
+            uniforms.scale.value = new THREE.Vector2(val,val)\n
+            uniforms.scale.value.needsUpdate = true\n
+        }\n
+var WIDTH = 800,\n
+    HEIGHT = 600;\n
+// set some camera attributes\n
+var VIEW_ANGLE = 45,\n
+    ASPECT = WIDTH / HEIGHT,\n
+    NEAR = 1,\n
+    FAR = 1000;\n
+// get the DOM element to attach to\n
+// - assume we\'ve got jQuery to hand\n
+var container = document.getElementById(\'container\');\n
+// create a WebGL renderer, camera\n
+// and a scene\n
+var renderer = new THREE.WebGLRenderer();\n
+var camera = new THREE.PerspectiveCamera(\n
+    VIEW_ANGLE,\n
+    ASPECT,\n
+    NEAR,\n
+    FAR  );\n
+\n
+var scene_first_pass = new THREE.Scene();\n
+var scene_second_pass = new THREE.Scene();\n
+// the camera starts at 0,0,0 so pull it back\n
+// start the renderer\n
+renderer.setSize(WIDTH, HEIGHT);\n
+// attach the render-supplied DOM element\n
+container.append(renderer.domElement);\n
+var uniforms ={} \n
+var w = 100,\n
+    h = 100,\n
+    wsegs= 1,\n
+    hsegs= 1,\n
+    halfh = h/2,\n
+    halfw = w/2\n
+var piecew = w/wsegs;\n
+var pieceh = h/hsegs;\n
+var uvs = []\n
+for (var iy = 0;iy < hsegs+1 ;iy++) {\n
+    for (var ix = 0;ix < wsegs+1;ix++) {\n
+        uvs.push(ix/wsegs)\n
+            uvs.push(1-(iy/hsegs))\n
+            }\n
+            }\n
+            var loader = new THREE.TextureLoader()\n
+            var geo\n
+\n
+            var boxDim = 13\n
+            var upscale = boxDim\n
+            var size =(boxDim)**3;\n
+            var dataDim = [2816,3840]\n
+            var totalDatapoints  =dataDim[0]*dataDim[1] \n
+            var data = new Uint8Array(totalDatapoints);\n
+            console.log(size)\n
+\n
+            function rawFetch() {\n
+            return fetch(\'https://cdn.glitch.com/105e4c0c-a685-402d-9aad-40fb3f0ad94b%2Fflatbrain%20(copy)?1551628542895\')\n
+            .then(function (res) {\n
+            return res.arrayBuffer()\n
+            })\n
+            .then(function(buf) {\n
+            return {buf}\n
+            })\n
+            }\n
+\n
+            new Response(rawbrain).arrayBuffer().then(texturedata=> {\n
+\n
+            var arr = new Uint8Array(texturedata)\n
+            texture = new THREE.DataTexture( arr, 240*16,176*16,THREE.LuminanceFormat, THREE.UnsignedByteType );\n
+            // create the sphere\'s material\n
+            // not sure yet why this is necessary, maybe backface tells us when to stop the marching?\n
+            // this connects the first pass and the second passes\n
+            rtTexture = new THREE.WebGLRenderTarget(HEIGHT,WIDTH,{ minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, wrapS:  THREE.ClampToEdgeWrapping, wrapT:  THREE.ClampToEdgeWrapping, type: THREE.FloatType, generateMipmaps: false} ); \n
+\n
+uniforms.textyah = {type:\'t\',value:texture}\n
+uniforms.dir = {type:\'v3\',value:camera.position}\n
+uniforms.delta = {type:\'1f\',value: .01}\n
+uniforms.scale = {type:\'1f\',value:boxDim} // 733 is the ratio for the larger dimension to the smaller\n
+uniforms.xshift = {type:\'1f\',value:.5} \n
+\n
+uniforms.scale.value.needsUpdate = true\n
+uniforms.alphaCorrection = {type:\'1f\',value: 0.0080 }\n
+uniforms.shift = {type:\'1f\',value:boxDim/2}\n
+uniforms.shift.value.needsUpdate = true\n
+var shaderMatSecondPass = new THREE.ShaderMaterial({\n
+    uniforms:uniforms,\n
+    vertexShader:   vShaderText,\n
+    fragmentShader: fShaderText,\n
+    side: THREE.FrontSide,\n
+    transparent:true\n
+\n
+})\n
+// create a new mesh with sphere geometry -\n
+    // we will cover the sphereMaterial next!\n
+    // create my uvs\n
+geo2 = new THREE.BoxBufferGeometry(boxDim,boxDim,boxDim)\n
+var boxmat = new THREE.MeshBasicMaterial({color:\'blue\'})\n
+var bufbox2= new THREE.Mesh(geo2,shaderMatSecondPass)\n
+// create axis tool to assist in sanity checks\n
+// x axis is red, y axis is green z is blue\n
+var axis = new THREE.AxesHelper(20)\n
+bufbox2.add(axis)\n
+//var bufbox2= new THREE.Mesh(geo2,boxmat)// sanity check for secondpass\n
+scene_second_pass.add(bufbox2);\n
+scene_second_pass.background = new THREE.Color(\'white\')\n
+uniforms.textyah.value.needsUpdate = true\n
+//scene_first_pass.add(camera);\n
+//scene_second_pass.add(camera);\n
+// create a rendering loop\n
+var frame = 0;\n
+//checking rendered textures\n
+//bufbox2.rotation.y += 2.5\n
+var range = 30\n
+camera.position.set(0, -42, 0) // set first view upright\n
+function update() {\n
+    frame += 1\n
+    camera.position.x =Math.cos(frame * .01)*range; \n
+    //camera.position.y =(Math.cos(frame * .01)*range + Math.sin(frame*.01)*range)/2; \n
+    camera.position.z =Math.sin(frame * .01)*range; \n
+    camera.lookAt(new THREE.Vector3(0,0,0))\n
+    //bufbox2.rotation.z += .01\n
+    //bufbox2.rotation.x += .01\n
+    //renderer.render(scene_first_pass, camera,rtTexture,true);// this will make nothing appear on screen from first render\n
+    renderer.render(scene_second_pass,camera)\n
+    uniforms.textyah.value.needsUpdate = true\n
+    uniforms.dir = {type:\'v3\',value:camera.position}\n
+    //console.log(camera.position)\n
+    uniforms.dir.value.needsUpdate = true\n
+            requestAnimationFrame(update)\n
+            }\n
+            requestAnimationFrame(update)\n
+            })
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Peering into the Unknown</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
