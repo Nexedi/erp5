@@ -48,6 +48,8 @@ class ExtensionComponent(ComponentMixin, TextContentHistoryMixin):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  do_validate_on_import_from_filesystem = True
+
   @staticmethod
   def _getFilesystemPath():
     import os.path

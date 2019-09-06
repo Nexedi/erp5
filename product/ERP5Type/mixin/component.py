@@ -342,6 +342,13 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     """
     return self.getTextContent()
 
+
+  # Whether ZODB Components is going to be validated or not should depend on
+  # its types because it is fine to validate '{Test,Extension} Component' as
+  # it not going to break anything but not for {Document,Interface,Mixin,Tool}
+  # Components...
+  do_validate_on_import_from_filesystem = False
+
   security.declareProtected(Permissions.ModifyPortalContent,
                             'importFromFilesystem')
   @classmethod
@@ -388,7 +395,9 @@ class ComponentMixin(PropertyRecordableMixin, Base):
       from Products.DCWorkflow.DCWorkflow import ValidationFailed
       raise ValidationFailed(consistency_message_list)
 
-    new_component.validate()
+    if cls.do_validate_on_import_from_filesystem:
+      new_component.validate()
+
     return new_component
 
 InitializeClass(ComponentMixin)

@@ -8225,7 +8225,14 @@ class _LocalTemplateItemMixin:
     self.assertEqual(component.getTextContent(), sequence['document_data'])
     self.assertEqual(component.getPortalType(), self.component_portal_type)
     self.assertEqual(component.getSourceReference(), sequence['document_source_reference'])
-    self.assertEqual(component.getValidationState(), 'validated')
+    if self.component_portal_type in ('Extension Component', 'Test Component'):
+      self.assertEqual(component.getValidationState(), 'validated')
+    else:
+      # Not validated automatically
+      self.assertEqual(component.getValidationState(), 'draft')
+      component.validate()
+      self.tic()
+      self.assertEqual(component.getValidationState(), 'validated')
     sequence.edit(document_id=component_id)
 
   def test_BusinessTemplateWithZodbDocumentMigrated(self):

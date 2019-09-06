@@ -6597,7 +6597,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if list_selection_name is not None:
         message = (
           "All components were successfully imported from filesystem to ZODB. "
-          "You can now delete them from your instance home and Products.")
+          "Please note that imported {Document,Interfaces,Mixin,Tool Components} "
+          "have not been validated automatically as imports must probably be "
+          "adjusted before deleting them from the filesystem.")
 
         if still_used_list_dict:
           message = (
