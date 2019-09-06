@@ -1,0 +1,300 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Notebook" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>https://alpha.iodide.io/notebooks/34/?viewMode=report</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>romain_notebook_1</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Notebook</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+%% md\n
+# The Lorenz Attractor in Iodide\n
+\n
+This notebook is inspired by the [demo notebook](https://mybinder.org/v2/gh/jupyterlab/jupyterlab-demo/18a9793b58ba86660b5ab964e1aeaf7324d667c8?urlpath=lab%2Ftree%2Fdemo%2FLorenz.ipynb) featured at the top of the ["JupyterLab is ready for users"](https://blog.jupyter.org/jupyterlab-is-ready-for-users-5a6f039b8906) announcement on the [Jupyter blog](https://blog.jupyter.org/).\n
+\n
+Having access to browser APIs and live computation alongside an analysis opens up a few opportunities when it comes to telling certain [computational narratives](https://blog.jupyter.org/project-jupyter-computational-narratives-as-the-engine-of-collaborative-data-science-2b5fb94c3c58). In this case the browser gives us richer real-time interactivity and much greater responsiveness than is typically possible with a remotely hosted kernel, and access to the media APIs offered by the web platform (particularly WebGL) allow us to create 3d graphics that are highly portable.\n
+\n
+%% js\n
+// this is a hack to allow the ode45-cash-karp lib to import as expected.\n
+// need to browserify this module.\n
+module = {}\n
+\n
+%% fetch\n
+js: https://cdn.jsdelivr.net/npm/ode45-cash-karp@1.1.0/lib/index.min.js\n
+js: https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.36.1/plotly.min.js\n
+js: https://d3js.org/d3.v5.min.js\n
+js: https://code.jquery.com/jquery-1.12.4.js\n
+%% js\n
+ode45 = module.exports\n
+\n
+%% js\n
+function integrateLorenz(t0, tmax, dt0, S0, sigma, beta, rho) {\n
+  const lorenzSystem = function(dSdt, S, t) {\n
+    const [x,y,z] = S\n
+    dSdt[0] = sigma*(y-x)\n
+    dSdt[1] = x*(rho-z) - y\n
+    dSdt[2] = x*y - beta*z\n
+  }\n
+  const integrator = ode45( S0.slice(), lorenzSystem, t0, dt0 )\n
+  // Integrate up to tmax:\n
+  const t = [], S = []\n
+  while( integrator.step( tmax ) ) {\n
+  // while( t.length < 2000 ) {\n
+    // Store the solution at this timestep:\n
+    // integrator.step()\n
+    t.push( integrator.t )\n
+    S.push( integrator.y.slice() )\n
+  }\n
+  return [S,t]\n
+}\n
+\n
+%% js\n
+sigma = 10\n
+beta = 2.67\n
+rho = 28\n
+\n
+var t0 = 0, tmax = 4, dt0 = 1e-3\n
+S0random = () => [50*(Math.random()-.5), 50*(Math.random()-.5), 40*Math.random()+10]\n
+var S0 = S0random()\n
+\n
+var numTraces = 10\n
+tracesS0 = []\n
+traceData = []\n
+traces = []\n
+for (let i=0; i<numTraces; i++){\n
+  tracesS0.push(S0random())\n
+  traceData.push(integrateLorenz(t0, tmax, dt0, tracesS0[i].slice(), sigma, beta, rho))\n
+  traces.push({\n
+    type: \'scatter3d\',\n
+    mode: \'lines\',\n
+    x: traceData[i][0].map(s => s[0]),\n
+    y: traceData[i][0].map(s => s[1]),\n
+    z: traceData[i][0].map(s => s[2]),\n
+    // opacity: .5,\n
+    name: "line-"+i,\n
+    line: {width: 4, color: d3.interpolateRainbow(i/numTraces)}\n
+    })\n
+}\n
+\n
+%% js\n
+function initPlot(targetDiv){\n
+  targetDiv.innerHTML = \'\'\n
+  Plotly.newPlot(\n
+    targetDiv,\n
+    traces,\n
+    {\n
+      showlegend: false,\n
+      height: 550,\n
+      width: 800,\n
+      autosize: false,\n
+      scene:{\n
+        xaxis: {range: [-30, 30], autorange: false, tickmode: \'linear\', tick0: 0, dtick: 5},\n
+        yaxis: {range: [-30, 30], autorange: false, tickmode: \'linear\', tick0: 0, dtick: 5},\n
+        zaxis: {range: [0, 70], autorange: false, tickmode: \'linear\', tick0: 0, dtick: 5},\n
+        aspectratio: {x: 1, y: 1, z: 1}\n
+      },\n
+      margin: { l: 0, r: 0, b: 0, t: 0, pad: 0},\n
+    }            \n
+  )\n
+}\n
+\n
+%% js\n
+function updateTraces(tracesS0, sigma, beta, rho){\n
+  const traceUpdates = []\n
+  for (let i=0; i<numTraces; i++){\n
+    traceUpdates.push(integrateLorenz(t0, tmax, dt0, tracesS0[i].slice(), sigma, beta, rho))\n
+  }\n
+  var data_update = {\n
+      x: traceUpdates.map(tr => tr[0].map(s => s[0])),\n
+      y: traceUpdates.map(tr => tr[0].map(s => s[1])),\n
+      z: traceUpdates.map(tr => tr[0].map(s => s[2])),\n
+      }\n
+  Plotly.restyle(\'lorenz-graph\', data_update)\n
+}\n
+\n
+%% js\n
+// jQuery is out of fashion for building gigantic web apps, but it\'s extremely well-documented \n
+// and quite well-suited for doing interactive manipulations of the DOM in smaller code bases,\n
+// like an Iodide notebook.\n
+\n
+// In the future, we may wrap this functionality into a "widgets" section of our standard lib,\n
+// but because we\'re close to the DOM and there are already so many libs that do this, it\'s not\n
+// a pressing need.\n
+\n
+function initControls(){ \n
+  props = {\n
+    sigma: {min:0, max:50, value:10, step: .01},\n
+    beta: {min:-2, max:10, value:2.67, step: .01},\n
+    rho: {min:0, max:50, value:28, step: .01},\n
+  }\n
+\n
+  $("#lorenz-controls").empty();\n
+  // set up sliders\n
+  ["sigma","beta","rho"].forEach( (param) => {\n
+    controlDiv = $(`<div><input id="${param}-slider" type="range" step="0.01"></input>\n
+${param} (<span id="${param}-val">${props[param].value}</span>)<div>`)\n
+    $("#lorenz-controls").append(controlDiv)\n
+    \n
+    const thisSlider = $(`#${param}-slider`)\n
+    thisSlider.prop(props[param])   \n
+    thisSlider.on("input", () => {\n
+      const [sigma, beta, rho] = getUiParamVals()\n
+      updateTraces(tracesS0, sigma, beta, rho)\n
+      setUiParamVals({sigma, beta, rho})\n
+    })      \n
+  })\n
+  \n
+  // set up reset button\n
+  const buttonDiv = $(\'<div><input id="reset-button" type="button" value="Reset parameters"></div>)\')\n
+  $("#lorenz-controls").append(buttonDiv)\n
+  $("#reset-button").on("click", () => {\n
+    const [sigma,beta,rho] = [10, 2.67, 28]\n
+    setUiParamVals({sigma, beta, rho})\n
+    setSliderVals({sigma, beta, rho})\n
+    updateTraces(tracesS0, sigma, beta, rho)\n
+  })\n
+}\n
+\n
+function getUiParamVals(){\n
+  return ["sigma","beta","rho"].map( param => \n
+    $(`#${param}-slider`).prop("value")\n
+  )\n
+}\n
+  \n
+function setUiParamVals(paramObj){\n
+  ["sigma","beta","rho"].forEach( param => $(`#${param}-val`).html(paramObj[param]) )\n
+}\n
+\n
+function setSliderVals(paramObj){\n
+  ["sigma","beta","rho"].forEach( param => $(`#${param}-slider`).prop("value", paramObj[param]) )\n
+}\n
+\n
+%% md\n
+### The Lorenz system\n
+\n
+Let\'s explore the Lorenz system of differential equations:\n
+\n
+$$\n
+\\begin{aligned}\n
+\\dot{x} & = \\sigma(y-x) \\\\\n
+\\dot{y} & = \\rho x - y - xz \\\\\n
+\\dot{z} & = -\\beta z + xy\n
+\\end{aligned}\n
+$$\n
+\n
+Below we plot the evolution of this system for several different randomly chosen initial conditions (the trajectory for each initial condition is shown in a different color). You can rotate, pan, and zoom to gain a better understanding of the three-dimensional structure of the attractor. Additionally, you can adjust the sliders below to change the parameters of the system.\n
+\n
+<div id="lorenz-graph" style="text-align:center">\n
+  (loading Plotly graphing lib)\n
+  </br></br>\n
+  <img src="https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif"></img>\n
+</div>\n
+\n
+<div id="lorenz-controls"> </div>\n
+\n
+%% js\n
+initPlot(document.getElementById(\'lorenz-graph\'))\n
+initControls()\n
+\n
+%% css\n
+/* let\'s add a fine border around the plot canvas to make it clearer when the plot gets cut off at the edge of the canvas*/\n
+canvas { border: 1px solid #eee }\n
+\n
+%% js
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>The Lorenz Attractor in Iodide</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
