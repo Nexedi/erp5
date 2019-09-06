@@ -36,6 +36,12 @@ class IComponent(Interface):
   Extensions or Documents, or any interfaces, mixin and Documents from
   Products. Any Component class must implement this interface
   """
+  def _hookAfterLoad(self, module_obj):
+    """
+    Idempotent hook called after loading the module
+    """
+    pass
+
   def checkConsistency(obj, *args, **kwargs):
     """
     Check the consistency of a ZODB Component when validating from draft state
@@ -68,7 +74,12 @@ class IComponent(Interface):
     Return the ID prefix for Component objects
     """
 
-  def importFromFilesystem(cls, context, reference, version, source_reference=None):
+  def importFromFilesystem(cls,
+                           context,
+                           reference,
+                           version,
+                           source_reference=None,
+                           filesystem_zodb_module_mapping_set=None):
     """
     Import a Component from the filesystem into ZODB after checking that the
     source code is valid

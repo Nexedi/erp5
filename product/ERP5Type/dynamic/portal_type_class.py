@@ -212,8 +212,16 @@ def generatePortalTypeClass(site, portal_type_name):
     type_class_namespace = document_class_registry.get(type_class, '')
     if not (type_class_namespace.startswith('Products.ERP5Type') or
             portal_type_name in core_portal_type_class_dict):
-      import erp5.component.document
-      module = erp5.component.document.find_load_module(type_class)
+      module = None
+      if portal_type_name.endswith('Tool'):
+        import erp5.component.tool
+        module = erp5.component.tool.find_load_module(type_class)
+
+      # Tool Component was introduced recently and some Tool have already been
+      # migrated as Document Component
+      if module is None:
+        import erp5.component.document
+        module = erp5.component.document.find_load_module(type_class)
       if module is not None:
         try:
           klass = getattr(module, type_class)
@@ -230,7 +238,14 @@ def generatePortalTypeClass(site, portal_type_name):
                              % (type_class, portal_type_name))
 
   if klass is None:
-    klass = _importClass(type_class_path)
+    try:
+      klass = _importClass(type_class_path)
+    except ImportError:
+      error_msg = 'Could not import %s of Portal Type %s' % (type_class,
+                                                             portal_type_name)
+
+      LOG("ERP5Type.Dynamic", WARNING, error_msg, error=True)
+      raise AttributeError(error_msg)
 
   global property_sheet_generating_portal_type_set
 
