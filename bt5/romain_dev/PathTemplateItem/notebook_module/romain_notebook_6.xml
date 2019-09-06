@@ -1,0 +1,298 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Notebook" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>romain_notebook_6</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Notebook</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+%% raw\n
+               __      __  ___   _       ___    ___    __  __   ___ \n
+               \\ \\    / / | __| | |     / __|  / _ \\  |  \\/  | | __|\n
+                \\ \\/\\/ /  | _|  | |__  | (__  | (_) | | |\\/| | | _| \n
+                 \\_/\\_/   |___| |____|  \\___|  \\___/  |_|  |_| |___|\n
+                                                   \n
+                                 _____    ___  \n
+                                |_   _|  / _ \\ \n
+                                  | |   | (_) |\n
+                                  |_|    \\___/ \n
+             \n
+                        ___    ___    ___    ___   ___    ___ \n
+                       |_ _|  / _ \\  |   \\  |_ _| |   \\  | __|\n
+                        | |  | (_) | | |) |  | |  | |) | | _| \n
+                       |___|  \\___/  |___/  |___| |___/  |___|\n
+                                     \n
+\n
+\n
+Let\'s get started! You can just start trying things out, or you can follow the steps described below to get a quick introduction. Just read along and click or enter keystrokes when instructed.\n
+\n
+The first thing you\'ll need to know is how to navigate within the notebook. An iodide notebook is one flat text file in a format we call JSMD. Each cell is delimited by `%%`, and that means you can easily add cells just by typing those two characters on a new line. This cell, for instance, has `%% raw`, which means it\'s a raw cell. Raw cells are useful for taking notes and leaving comments in your notebook.\n
+\n
+Right below this is `%% js` which is a javascript cell.\n
+\n
+Click somewhere in the javascript cell right below this one, and hit `shift+enter`. This will evaluate whatever chunk your cursor is on. Notice in the console to the right, you\'ll see the code and the output.\n
+\n
+%% js\n
+\n
+var tableSize = 10\n
+var range = []\n
+for (let i=0; i<tableSize; i++){range.push(i)}\n
+var A = range.map( (x,i) => range.map( (y,j) => (Math.random() + i + j )))\n
+A\n
+\n
+%% raw\n
+\n
+This entire buffer is a single text editor, so you can add `%% js` or `%% raw` (or any of our cell types) at any point (starting with a new line) and that automatically creates a new cell.\n
+\n
+%% raw\n
+\n
+There is another kind of cell - `%% md`, the _Markdown cell_. The contents of this cell renders in the "Report Preview" pane. You don\'t have to evaluate it the way you did the `js` cell. \n
+\n
+Click the tab next to "Console", titled "Report Preview" in the top right to see that pane. \n
+\n
+Markdown cells are where the output of your data analysis will live. It\'s your way of separating your exploratory code with your final explanation.\n
+\n
+Try editing parts of the markdown cell directly below, and watch it live-update in the Report Preview. When you\'re done, click on the "Console" tab again - we\'re going to need it in a minute.\n
+\n
+%% md \n
+\n
+# My First Iodide Notebook ~~~\n
+\n
+Try editing this line. It\'s easy!\n
+\n
+<img src=\'https://media.giphy.com/media/lcjNHIJilbfGOdqIkd/giphy.gif\' width=250 style="display: block; margin: auto; margin-bottom:20px" />\n
+\n
+Markdown cells support the full range of normal markdown formatting, like _multiple_ **levels** of ***emphasis***,\n
+## headings \n
+### of different\n
+#### sizes\n
+\n
+```\n
+and multiline raw text blocks\n
+```\n
+\n
+Markdown cells also support LaTeX, like this:\n
+\n
+$$\n
+\\left[\\begin{array}{c}\n
+\\mathbf{x}_{t,i}\\\\\n
+\\mathbf{v}_{t,i}\\\\\n
+\\theta_{t,i}\\\\\n
+\\omega_{t,i}\n
+\\end{array}\\right]  =  \\left[\\begin{array}{c}\n
+\\mathbf{x}_{t-1,i}\\\\\n
+\\mathbf{v}_{t-1,i}\\\\\n
+\\theta_{t-1,i}\\\\\n
+\\omega_{t-1,i}\n
+\\end{array}\\right]+\\Delta\\left[\\begin{array}{c}\n
+\\mathbf{v}_{t-1,i}\\\\\n
+\\left(T_{t,i}+\\epsilon_{T}\\right)cos\\left(\\theta_{t-1,i}\\right)-\\rho_{\\mathbf{v}}\\left\\Vert \\mathbf{v}_{t-1,i}\\right\\Vert ^{2}\\frac{\\mathbf{v}_{t-1,i}}{\\left\\Vert \\mathbf{v}_{t-1,i}\\right\\Vert }\\\\\n
+\\left(T_{t,i}+\\epsilon_{T}\\right)sin\\left(\\theta_{t-1,i}\\right)-\\rho_{\\mathbf{v}}\\left\\Vert \\mathbf{v}_{t-1,i}\\right\\Vert ^{2}\\frac{\\mathbf{v}_{t-1,i}}{\\left\\Vert \\mathbf{v}_{t-1,i}\\right\\Vert }\\\\\n
+\\omega_{t-1,i}\\\\\n
+Y_{t,i}-\\rho_{\\omega}\\omega_{t-1,i}^{2}+\\epsilon_{Y}\n
+\\end{array}\\right]\n
+$$\n
+\n
+%% raw\n
+\n
+The cell below this is an fetch cell, which allows you to load external libraries, css, and even data. It can be evaluated just like any other cell with `ctrl+enter` or `shift+enter`.\n
+\n
+When a resource is successfully loaded, you will see `SUCCESS` printed in the console. If a resource fails to load, then you will see `ERROR`.\n
+\n
+Let\'s go ahead and load the library "three.js", which we\'ll use a little farther below.\n
+\n
+%% fetch\n
+// click inside this chunk and hit shift+enter to load the resource\n
+js: https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js\n
+\n
+%% raw\n
+\n
+Ok! Time to do something interesting with three.js.\n
+\n
+%% md\n
+\n
+You can also use in-line html, which is very handy for creating DOM elements within the flow of a narrative that you can then manipulate. This is great for adding plots and figures.\n
+\n
+Let\'s create a `div` right below:\n
+\n
+<div id="totalRows"></div>\n
+<div id="spinningThing"></div>\n
+\n
+...in a moment, we\'ll put something fancy right above this line.\n
+\n
+%% js\n
+// We\'ll now define a real JS function that does something cool.\n
+// Go ahead and evaluate this cell.\n
+\n
+// first off, let\'s clear the div where we draw, just in case.\n
+document.getElementById(\'spinningThing\').innerHTML = \'\'\n
+\n
+function spinCubeInTarget(targetSelector) {\n
+    //\'use strict\';\n
+    var width = 600, height = 400\n
+    var scene = new THREE.Scene();\n
+    var camera = new THREE.PerspectiveCamera(75, \n
+\t\twidth/height, 0.1, 100);\n
+    var renderer = new THREE.WebGLRenderer();\n
+    renderer.setSize(width, height);\n
+\tconst COLOR = 0xFFFFFF\n
+    const LIGHT = 0xFFFFFF\n
+\n
+\tdocument.body\n
+\t\t.querySelector(targetSelector)\n
+\t\t.appendChild(renderer.domElement);\n
+    var geometry = new THREE.CubeGeometry(5, 5, 5);\n
+    var material = new THREE.MeshLambertMaterial({color: COLOR });\n
+    var cube = new THREE.Mesh(geometry, material);\n
+    scene.add(cube);\n
+    camera.position.z = 12; \n
+    var pointLight = new THREE.PointLight(LIGHT);\n
+    pointLight.position.z = 130;\n
+    scene.add(pointLight);\n
+    var reqAnimFrame = window.requestAnimationFrame\n
+    var render = function() {\n
+        reqAnimFrame(render);\n
+        var delta = (Math.random()/10) * (0.06 - 0.02) + 0.03;\n
+        cube.rotation.x += delta;\n
+        cube.rotation.y += delta;\n
+        renderer.render(scene, camera);\n
+    };\n
+    render();\n
+}\n
+\n
+spinCubeInTarget("#spinningThing")\n
+\n
+%% raw\n
+If you followed all the steps described, you should now see a cube spinning in the markdown cell above!\n
+\n
+Note that if you make any changes to that markdown cell, you will have to re-run the function `spinCubeInTarget("#targetDiv")`, because each time you change a markdown cell it\'s contents have to be regenerated, which will overwrite changes you\'ve made to it with code.\n
+\n
+%% raw\n
+\n
+One last cell type - `%% css`. This lets you change the styles of your presentation in realtime. Select the "Report Preview" tab on the top right, and then uncomment the css in the code below.\n
+\n
+%% css\n
+/* remove the comments here */\n
+/* \n
+.user-markdown {\n
+\tfont-style: italic;\n
+} \n
+*/\n
+\n
+%% md\n
+\n
+## to summarize:\n
+\n
+Ok! Let\'s end this notebook with a markdown cell. With all of these tools, you\'re ready to get started! For review, we covered the following tools:\n
+\n
+1. `raw` cells - make notes, add comments\n
+2. `js` cells - run javascript code\n
+3. `fetch` cells - grab libraries, external stylesheets, and data sets\n
+4. `md` cells - write your report, add DOM elements, etc.\n
+5. `css` cells - style your report\n
+\n
+For next steps, try these:\n
+\n
+- [JSMD Docs](https://iodide-project.github.io/docs/jsmd/)\n
+- [Using Python in Iodide](https://github.com/iodide-project/pyodide/tree/master/docs)\n
+- [Check out our example data analysis notebooks](https://iodide.io)
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>A Tour of an Iodide Notebook</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
