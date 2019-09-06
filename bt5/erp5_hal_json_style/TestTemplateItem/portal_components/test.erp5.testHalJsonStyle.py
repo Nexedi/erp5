@@ -1270,6 +1270,25 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
 
     self.assertTrue('_actions' not in result_dict['_embedded']['_view'])
 
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoasDocument_property_corrupted_encoding(self):
+    document = self._makeDocument()
+    # this sequence of bytes does not encode to UTF-8
+    document.setTitle('\xe9\xcf\xf3\xaf')
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_embedded']['_view']['my_title']['default'], u'\ufffd\ufffd\ufffd')
+    self.assertEqual(result_dict['title'], u'\ufffd\ufffd\ufffd')
+    self.assertEqual(result_dict['_embedded']['_view']['_links']['traversed_document']['title'], u'\ufffd\ufffd\ufffd')
 
 
 class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
