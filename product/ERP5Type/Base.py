@@ -2844,15 +2844,16 @@ class Base( CopyContainer,
     """
     Tells whether this document is indexable, taking into account its entire
     ancestry: a document may only be indexed if its parent is indexable, and
-    it's parent's parent, etc until ERP5Site object (inclusive).
+    its parent's parent, etc until ERP5Site object (inclusive).
     """
-    node = self.aq_inner
-    portal = aq_base(self.getPortalObject())
-    is_indexable = self.isIndexable
-    while is_indexable and aq_base(node) is not portal:
-      node = node.aq_parent
-      is_indexable = node.isSubtreeIndexable()
-    return is_indexable
+    if self.isIndexable:
+      node = self.aq_inner.aq_parent
+      portal = aq_base(node.getPortalObject())
+      while node.isSubtreeIndexable():
+        if aq_base(node) is portal:
+          return True
+        node = node.aq_parent
+    return False
 
   security.declarePrivate('immediateReindexObject')
   def immediateReindexObject(self, *args, **kw):
