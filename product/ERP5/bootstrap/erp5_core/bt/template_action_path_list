@@ -89,6 +89,7 @@ Interface Component | view
 Memcached Plugin | view
 Memcached Tool | view
 Mixin Component | view
+Module Component | view
 Predicate | view
 Preference Tool Type | jump_property_sheets
 Preference Tool Type | view
@@ -147,6 +148,7 @@ Template Tool | upgrade_from_repository
 Template Tool | view
 Test Component | run_live_test
 Test Component | view
+Tool Component | view
 Trash Bin | jump_bt5
 Trash Bin | view
 Trash Folder | view

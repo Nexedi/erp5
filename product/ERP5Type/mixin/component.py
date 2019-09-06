@@ -193,6 +193,9 @@ class ComponentMixin(PropertyRecordableMixin, Base):
   _message_text_content_not_set = "No source code"
   _message_text_content_error = "Error in Source Code: ${error_message}"
 
+  def _hookAfterLoad(self, module_obj):
+    pass
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getValidationState')
   def getValidationState(self):
@@ -352,7 +355,12 @@ class ComponentMixin(PropertyRecordableMixin, Base):
   security.declareProtected(Permissions.ModifyPortalContent,
                             'importFromFilesystem')
   @classmethod
-  def importFromFilesystem(cls, context, reference, version, source_reference=None):
+  def importFromFilesystem(cls,
+                           context,
+                           reference,
+                           version,
+                           source_reference=None,
+                           filesystem_zodb_module_mapping_set=None):
     """
     Import a Component from the filesystem into ZODB and validate it so it can
     be loaded straightaway provided validate() does not raise any error of
@@ -368,7 +376,20 @@ class ComponentMixin(PropertyRecordableMixin, Base):
       path = inspect.getsourcefile(module_obj)
 
     with open(path) as f:
-      source_code = f.read()
+      if filesystem_zodb_module_mapping_set is None:
+        source_code = f.read()
+      else:
+        source_code_line_list = []
+        for line in f:
+          for (filesystem_module,
+               zodb_module) in filesystem_zodb_module_mapping_set:
+            if line.startswith("from " + filesystem_module):
+              line = line.replace(filesystem_module, zodb_module, 1)
+              break
+
+          source_code_line_list.append(line)
+
+        source_code = ''.join(source_code_line_list)
 
     # Checking that the source code is syntactically correct is not
     # needed when importing from filesystem, moreover errors may occur

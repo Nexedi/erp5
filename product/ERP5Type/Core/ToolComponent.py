@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2012 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2019 Nexedi SA and Contributors. All Rights Reserved.
 #                    Arnaud Fontaine <arnaud.fontaine@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Core.ModuleComponent import ModuleComponent
+from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
@@ -35,32 +35,48 @@ from Products.ERP5Type import Permissions
 import zope.interface
 from Products.ERP5Type.interfaces.component import IComponent
 
-class TestComponent(ModuleComponent):
+from Products.CMFCore import utils
+
+class ToolComponent(DocumentComponent):
   """
-  ZODB Component for Live Tests only (previously defined in the bt5 and
-  installed in INSTANCE_HOME/tests) as other kind of Tests should be
-  deprecated at some point
+  ZODB Component for Tools, used to be found on Products.XXX.Tool on FS
   """
-  meta_type = 'ERP5 Test Component'
-  portal_type = 'Test Component'
+  meta_type = 'ERP5 Tool Component'
+  portal_type = 'Tool Component'
 
   zope.interface.implements(IComponent)
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  do_validate_on_import_from_filesystem = True
+  def _hookAfterLoad(self, module_obj):
+    """
+    Register Tool so that it can be added in ZMI through manage_addToolForm.
+
+    For FS Tools, this is done during Product initialize() by
+    Products.CMFCore.utils.ToolInit.
+    """
+    tool_class = getattr(module_obj, self.getReference())
+
+    # Should we really use ERP5 Product and not ERP5Type considering that ERP5
+    # may be gone at some point? Or the other way around? For now, all tools
+    # have meta_type='ERP5 ...' so just use ERP5 Product.
+    import Products.ERP5
+    toolinit = Products.ERP5.__FactoryDispatcher__.toolinit
+    # Products.CMFCore.utils.ToolInit.initialize()
+    tool_class.__factory_meta_type__ = toolinit.meta_type
+    tool_class.icon = 'misc_/%s/%s' % ('ERP5', toolinit.icon)
+    toolinit.tools.add(tool_class)
 
   @staticmethod
   def _getFilesystemPath():
-    import os.path
-    from App.config import getConfiguration
-    return os.path.join(getConfiguration().instancehome, 'tests')
+    # TODO-arnau: useful?
+    raise NotImplementedError
 
   @staticmethod
   def _getDynamicModuleNamespace():
-    return 'erp5.component.test'
+    return 'erp5.component.tool'
 
   @staticmethod
   def getIdPrefix():
-    return 'test'
+    return 'tool'

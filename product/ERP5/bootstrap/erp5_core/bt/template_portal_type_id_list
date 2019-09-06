@@ -53,6 +53,7 @@ Mapped Value
 Memcached Plugin
 Memcached Tool
 Mixin Component
+Module Component
 Movement
 Notification Tool
 Order Tool
@@ -85,6 +86,7 @@ TALES Constraint
 Template Tool
 Test Component
 Test Tool
+Tool Component
 Trash Bin
 Trash Folder
 Trash Tool

@@ -47,6 +47,9 @@
  <portal_type id="Mixin Component">
   <item>SortIndex</item>
  </portal_type>
+ <portal_type id="Module Component">
+  <item>SortIndex</item>
+ </portal_type>
  <portal_type id="Property Existence Constraint">
   <item>ConstraintType</item>
  </portal_type>
@@ -77,6 +80,9 @@
   <item>ConstraintType</item>
  </portal_type>
  <portal_type id="Test Component">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Tool Component">
   <item>SortIndex</item>
  </portal_type>
  <portal_type id="Trash Bin">

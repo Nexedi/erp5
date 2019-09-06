@@ -61,7 +61,9 @@ class PropertySheetTool(BaseTool):
   _bootstrap_business_template_property_tuple = (
     'template_catalog_security_uid_column_property',
     'template_interface_id_property',
-    'template_mixin_id_property')
+    'template_mixin_id_property',
+    'template_module_component_id_property',
+    'template_tool_component_id_property')
 
   def _isBootstrapRequired(self):
     if not self.has_key('BaseType'):
