@@ -1,7 +1,9 @@
 /*jslint indent:2, maxlen: 80, nomen: true */
-/*global jIO, RSVP, window, URL, atob */
-(function (window, jIO, RSVP, URL, atob) {
+/*global jIO, RSVP, window, URL, atob, Rusha */
+(function (window, jIO, RSVP, URL, atob, Rusha) {
   "use strict";
+
+  var rusha = new Rusha();
 
   function decodeDocumentId(id, hateoas_appcache) {
     var hateoas_section,
@@ -74,6 +76,10 @@
     return true;
   };
 
+  ConfigurationStorage.prototype.put = function () {
+    return this._sub_storage.put.apply(this._sub_storage, arguments);
+  };
+
   ConfigurationStorage.prototype.getAttachment = function () {
     return this._sub_storage.getAttachment.apply(this._sub_storage, arguments);
   };
@@ -108,7 +114,8 @@
       configuration_id_index = 0,
       url = "",
       attachment_id,
-      decoded_id;
+      decoded_id,
+      hash;
     return new RSVP.Queue()
       .push(function () {
         return storage._sub_storage.repair.apply(storage._sub_storage,
@@ -127,6 +134,7 @@
           relative_url_list = text.split('\n'),
           take = false,
           i;
+        hash = rusha.digestFromString(text);
         for (i = 0; i < relative_url_list.length; i += 1) {
           if (relative_url_list[i].indexOf("NETWORK:") >= 0) {
             take = false;
@@ -138,7 +146,10 @@
             decoded_id = decodeDocumentId(attachment_id,
                                           storage._hateoas_appcache);
             promise_list.push(storage._sub_storage.getAttachment(
-              storage._origin_url, attachment_id, {"format": "json"}));
+              storage._origin_url,
+              attachment_id,
+              {"format": "json"}
+            ));
             configuration_ids_list[configuration_id_index] = decoded_id;
             configuration_id_index += 1;
           }
@@ -149,15 +160,19 @@
         return RSVP.all(promise_list);
       })
       .push(function (content_list) {
-        var i, id;
+        var i, id, content;
         for (i = 0; i < content_list.length; i += 1) {
           id = configuration_ids_list[i];
-          storage._documents[id] = processHateoasDict(content_list[i]);
-          //storage._documents[id] = {"new": "content"};
+          content = processHateoasDict(content_list[i]);
+          //TODO what about calculate the hash for each document content?
+          //is slower than using appcache-hash, but these documents are
+          //json form definitions, not big blobs:
+          //hash = rusha.digestFromString(content);
+          content.hash = hash;
+          storage._documents[id] = content;
         }
-        //storage._documents.couscous = {};
       });
   };
 
   jIO.addStorage('configuration', ConfigurationStorage);
-}(window, jIO, RSVP, URL, atob));
+}(window, jIO, RSVP, URL, atob, Rusha));
