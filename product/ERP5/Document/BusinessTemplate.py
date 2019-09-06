@@ -6412,7 +6412,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                                         uid=uid,
                                         portal_type=portal_type,
                                         reference=reference,
-                                        source_reference=source_reference)
+                                        source_reference=source_reference,
+                                        migrate=migrate)
 
         migratable_component_list.append(obj)
 
