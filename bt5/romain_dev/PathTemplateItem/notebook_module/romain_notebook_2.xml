@@ -1,0 +1,741 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Notebook" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>https://alpha.iodide.io/notebooks/193/?</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>romain_notebook_2</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Notebook</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+%% raw\n
+To view the notebook in presentation mode, click on \'Run All Cells\' followed by the \'View\' button\n
+\n
+%% md\n
+# World Happiness Report\n
+\n
+%% md\n
+The World Happiness Report is an annual publication of the United Nations Sustainable Development Solutions Network which contains rankings of national happiness.\n
+\n
+This notebook uses the dataset available on the website [World Happiness Report 2018](http://worldhappiness.report/ed/2018/) to demonstrate the various aspects which affect the happiness of a country through exploratory  analysis. Only 7 main factors have been considered. There were other supporting factors such as Life Ladder, Democratic Quality etc. which are not included in this notebook. The contribution of these supporting factors has been noted down as a Residual score.\n
+\n
+%% fetch\n
+js: https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.2/d3.js\n
+js: https://cdn.plot.ly/plotly-latest.min.js\n
+text: happinessData=https://gist.githubusercontent.com/djbarnwal/521eb8da9f6546c18f2b7d6d0f365549/raw/f9f39e0e58fdbcf4bbd66a8cbfec5df497ae1b79/happiness_data.csv\n
+\n
+%% md\n
+<svg class=\'ranking\'></svg>\n
+\n
+The above visualization ranks the countries based on Happiness score. Scoring 7.632, **Finland** is at the top while **Burundi** is at the very bottom with a score of 2.905. The Scandinavian countries have taken the top four spots.\n
+\n
+%% js\n
+var dataset;\n
+var keys;\n
+\n
+var width = 1080,\n
+    height = 1800;\n
+\n
+var svg = d3.select(".ranking").attr("width", width).attr("height", height),\n
+    margin = {top: 20, right: 20, bottom: 30, left: 150},\n
+    width = +svg.attr("width") - margin.left - margin.right,\n
+    height = +svg.attr("height") - margin.top - margin.bottom,\n
+    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");\n
+\n
+var y = d3.scaleBand()\n
+    .rangeRound([0, height])\n
+    .paddingInner(0.05)\n
+    .align(0.1);\n
+\n
+var x = d3.scaleLinear()\n
+    .rangeRound([0, width]);\n
+\n
+var z = d3.scaleOrdinal()\n
+    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);\n
+\n
+var data = d3.csvParse(happinessData)\n
+dataset = data \n
+keys = data.columns.slice(3);\n
+\n
+// Sort row on basis of Happiness Score\n
+data.sort(function(a, b) { return b[\'Happiness score\'] - a[\'Happiness score\']; });\n
+y.domain(data.map(function(d) { return d.Country; }));\n
+x.domain([0, d3.max(data, function(d) { return d[\'Happiness score\']; })]).nice();\n
+z.domain(keys);\n
+\n
+g.append("g")\n
+  .selectAll("g")\n
+  .data(d3.stack().keys(keys)(data))\n
+  .enter().append("g")\n
+    .attr("fill", function(d) { return z(d.key); })\n
+  .selectAll("rect")\n
+  .data(function(d) { return d; })\n
+  .enter().append("rect")\n
+    .attr("y", function(d) { return y(d.data.Country); })\n
+    .attr("x", function(d) { return x(d[0]); })\n
+    .attr("width", function(d) { return x(d[1]) - x(d[0]); })\n
+    .attr("height", y.bandwidth());\n
+\n
+g.append("g")\n
+    .attr("class", "axis")\n
+    .attr("transform", "translate(0,0)")\n
+    .call(d3.axisLeft(y));\n
+\n
+g.append("g")\n
+    .attr("class", "axis")\n
+    .attr("transform", "translate(0,"+height+")")\n
+    .call(d3.axisBottom(x).ticks(null, "s"))\n
+  .append("text")\n
+    .attr("y", 2)\n
+    .attr("x", x(x.ticks().pop()) + 0.5)\n
+    .attr("dy", "0.32em")\n
+    .attr("fill", "#dddddd")\n
+    .attr("font-weight", "bold")\n
+    .attr("text-anchor", "start")\n
+    .text("Happiness Score")\n
+    .attr("transform", "translate("+ (-width) +",-10)");\n
+\n
+var legend = g.append("g")\n
+    .attr("font-family", "sans-serif")\n
+    .attr("font-size", 10)\n
+    .attr("font-weight", "bold")\n
+    .attr("text-anchor", "end")\n
+  .selectAll("g")\n
+  .data(keys.slice().reverse())\n
+  .enter().append("g")\n
+  //.attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });\n
+   .attr("transform", function(d, i) { return "translate(-50," + (300 + i * 20) + ")"; });\n
+\n
+legend.append("rect")\n
+    .attr("x", width - 19)\n
+    .attr("width", 19)\n
+    .attr("height", 19)\n
+    .attr("fill", z);\n
+\n
+legend.append("text")\n
+    .attr("x", width - 24)\n
+    .attr("y", 9.5)\n
+    .attr("fill", "#dddddd")\n
+    .attr("dy", "0.32em")\n
+    .text(function(d) { return d; });\n
+\n
+%% js\n
+dataset\n
+\n
+%% js\n
+function unpack(key, data) {\n
+    return data.map(function(object) { return object[key]; });\n
+}\n
+\n
+%% md\n
+<div id=\'choropleth\'/>\n
+\n
+%% js\n
+var data = [{\n
+    type: \'choropleth\',\n
+    locationmode: \'country names\',\n
+    locations: unpack(\'Country\', dataset),\n
+    z: unpack(\'Happiness score\', dataset),\n
+    text: unpack(\'Country\', dataset),\n
+    colorscale: [\n
+      [0, \'rgb(254,235,226)\'], [0.2, \'rgb(252,197,192)\'],\n
+      [0.4, \'rgb(250,159,181)\'], [0.6, \'rgb(247,104,161)\'],\n
+      [0.8, \'rgb(197,27,138)\'], [1, \'rgb(122,1,119)\']\n
+  ]\n
+    // autocolorscale: true\n
+}];\n
+\n
+var layout = {\n
+  title: \'Happiness Score 2018\',\n
+  colorbar: {\n
+    tickfont: {\n
+      color: \'#ccc\'\n
+    }\n
+  },\n
+  plot_bgcolor: \'transparent\',\n
+  paper_bgcolor: \'transparent\',\n
+  width: 1080,\n
+  geo: {\n
+      projection: {\n
+          type: \'equirectangular\'\n
+      }\n
+  },\n
+  margin: {\n
+    l: 0,\n
+    r: 0,\n
+    b: 0,\n
+    t: 0,\n
+    pad: 2\n
+  },\n
+              marker: {\n
+              line:{\n
+                color: \'rgb(255,255,255)\',\n
+                width: 2\n
+              }\n
+            }\n
+};\n
+\n
+Plotly.plot(choropleth, data, layout, {showLink: false});\n
+\n
+%% js\n
+keys\n
+\n
+%% md\n
+## Happiness Score\n
+\n
+<div class=\'stats\'>\n
+  <div class=\'count\'><span class=\'max\'></span>Max</div>\n
+  <div class=\'count\'><span class=\'mean\'></span>Mean</div>\n
+  <div class=\'count\'><span class=\'min\'></span>Min</div>\n
+</div>\n
+\n
+%% css\n
+.stats {\n
+  display: flex;\n
+  padding: 15px 15px 30px;\n
+}\n
+\n
+.count {\n
+  text-align: center;\n
+  font-size: 20px;\n
+  border-radius: 50%;\n
+  width: 150px;\n
+  height: 150px;\n
+  padding: 25px;\n
+}\n
+\n
+.count span {\n
+  display: block;\n
+  font-size: 34px;\n
+  font-weight: 100;\n
+}\n
+\n
+%% js\n
+var hapMax = d3.max(dataset, function(d) {return d[\'Happiness score\']})\n
+var hapMin = d3.min(dataset, function(d) {return d[\'Happiness score\']})\n
+var hapMean = d3.mean(dataset, function(d) {return d[\'Happiness score\']}).toFixed(3)\n
+\n
+var hapColors = [\'#f0675c\', \'#375d81\',\'#d4273e\'];\n
+\n
+d3.select(\'.max\').text(hapMax);\n
+d3.select(\'.mean\').text(hapMean);\n
+d3.select(\'.min\').text(hapMin);\n
+\n
+d3.select(\'.stats\')\n
+  .selectAll(\'.count\')\n
+  .data(hapColors)\n
+  .style(\'background\', function(d) {return d});\n
+\n
+%% js\n
+keys\n
+\n
+%% md\n
+The scores for various factors are in different scales and thus not suitable for individual comparison. We will normalize the dataset using the below formula in order to achieve uniformity throughout our dataset for a more natural comparison and analysis.\n
+\n
+$$\n
+X_{norm} = \\dfrac{X - X_{min}}{X_{max} - X_{min}}\n
+$$\n
+\n
+The **mean** value for the various parameters after normalizing them are -\n
+\n
+%% js\n
+// Deep cloning array of objects for later use\n
+var unscaled_dataset = JSON.parse(JSON.stringify(dataset));\n
+\n
+var extendedKeys = [\'Happiness score\', ...keys];\n
+var scales = {};\n
+\n
+for (key of extendedKeys) {\n
+  scales[key] = d3.scaleLinear().domain(d3.extent(unpack(key, dataset)))\n
+}\n
+\n
+function normalize(value, property) {\n
+ return scales[property](value);\n
+}\n
+\n
+\n
+dataset.forEach(function(d){\n
+  for(var property in d) {\n
+    if(extendedKeys.indexOf(property) >=0) {\n
+      d[property] = normalize(d[property], property).toFixed(3)\n
+    }\n
+  }\n
+});\n
+\n
+%% js\n
+dataset\n
+\n
+%% md\n
+<div class=\'meanStats\'></div>\n
+\n
+%% md\n
+Some interesting observations -\n
+\n
+1. Perceptions of corruption are bad throughout the world. With **Singapore** at the top, the rest of the world averages with a score of only **0.246**.\n
+2. The world average for Social Support is reasonably close to the global maximum. **8** out of the bottom **10** countries in this category are **African**. The exceptions being Afghanistan and Georgia.\n
+3. **Myanmar** is the most generous country whereas  **Greece** is the least.\n
+\n
+%% css\n
+.meanCount {\n
+  height: 150px;\n
+  width: 150px;\n
+  border-radius: 50%;\n
+  flex-direction: column-reverse;\n
+  font-size: 13px;\n
+  text-align: center;\n
+  justify-content: flex-end;\n
+  padding: 0 11px;\n
+  display: flex;\n
+  margin: 10px 25px;\n
+}\n
+\n
+.meanCount h {\n
+    font-size: 30px;\n
+    margin-top: 30px;\n
+    font-weight: 100;\n
+}\n
+\n
+.meanStats {\n
+    display: flex;\n
+    flex-wrap: wrap;\n
+    justify-content: center;\n
+}\n
+\n
+%% js\n
+var mean = [];\n
+for(var key of keys) {\n
+  mean.push(d3.mean(dataset, function(d) {return d[key]}).toFixed(3))\n
+}\n
+\n
+ d3.select(\'.meanStats\')\n
+   .selectAll(\'g\')\n
+   .data(keys)\n
+   .enter()\n
+   .append(\'g\')\n
+   .attr(\'class\', \'meanCount\')\n
+   .text(function(d) {return d})\n
+   .append(\'h\')\n
+   .data(mean)\n
+   .text(function(d) {return d});\n
+\n
+var hapColors = [\'#c9283e\', \'#c42f59\', \'#0091ff\', \'#e88e34\', \'#5670d6\', \'#9d3bc0\', \'#006f67\'];\n
+\n
+d3.select(\'.meanStats\')\n
+  .selectAll(\'.meanCount\')\n
+  .data(hapColors)\n
+  .style(\'background\', function(d) {return d});\n
+\n
+%% md\n
+## What makes a country happy?\n
+\n
+What are the things that make a country happy? Below we have a plot consisting of the top 5 and bottom 5 nations ranked according to their Happiness score.\n
+\n
+%% md\n
+<div id=\'top5\'/>\n
+<div id=\'bottom5\'/>\n
+\n
+%% js\n
+var topTrace = [],\n
+    bottomTrace = [];\n
+\n
+var top5 = dataset.slice(0,5);\n
+var bottom5 = dataset.slice(-5);\n
+\n
+for(var key of keys) {\n
+  topTrace.push({\n
+    x: unpack(\'Country\',top5),\n
+    y: unpack(key,top5),\n
+    name: key,\n
+    type: \'bar\'\n
+  })\n
+\n
+  bottomTrace.push({\n
+    x: unpack(\'Country\',bottom5),\n
+    y: unpack(key,bottom5),\n
+    name: key,\n
+    type: \'bar\'\n
+  })\n
+}\n
+\n
+var layout = {\n
+  height: 280,\n
+  width: 1080,\n
+  margin: {\n
+    t: 10,\n
+  },\n
+  xaxis: {\n
+    tickfont: {\n
+      color: \'#fefefe\'\n
+    },\n
+  },\n
+  yaxis: {\n
+    domain: [0, 1],\n
+    tickfont: {\n
+      color: \'#fefefe\'\n
+    },\n
+    gridcolor: \'#555\',\n
+  },\n
+  legend: {\n
+    font: {\n
+      color: \'#fefefe\'\n
+    }\n
+  },\n
+  plot_bgcolor: \'#302f33\',\n
+  paper_bgcolor: \'#302f33\'\n
+};\n
+\n
+Plotly.newPlot(\'top5\', topTrace, layout, {displayModeBar: false});\n
+Plotly.newPlot(\'bottom5\', bottomTrace, layout, {displayModeBar: false});\n
+\n
+%% md\n
+Happy Countries share in common a high GDP, great Social Support, a good life expectancy and a relatively high Freedom to make life choices. Countries with a bad happy score are in general poor and rank low on perceptions of corruption.\n
+\n
+%% md\n
+## Are Happiness and Money correlated?\n
+\n
+Happiness and Money are two states which are often compared. Let\'s see if they are correlated or not. Before we begin, we would need to remove the component of **GDP Per Capita** from **Happiness Score** for an unbiased comparison. Thus, we create a new parameter defined as -\n
+\n
+$$HapScore_{new} = HapScore_{original} - GDPPerCapita$$\n
+\n
+The below visualization depicts the spread of **Happiness** (new) with the change in **GDP Per capita** (un-normalized)\n
+\n
+%% js\n
+var hap_new = [];\n
+var GDP = unpack(\'GDP per capita\', unscaled_dataset)\n
+\n
+unscaled_dataset.forEach(function(d){\n
+  hap_new.push((d[\'Happiness score\'] - d[\'GDP per capita\']).toFixed(3))\n
+});\n
+\n
+%% md\n
+<div id=\'hapGDP\'/>\n
+\n
+%% js\n
+var HapTrace = [{\n
+  x: GDP,\n
+  y: hap_new,\n
+  mode: \'markers\',\n
+  text: unpack(\'Country\', dataset),\n
+  marker: {\n
+    color: \'rgb(255, 217, 102)\',\n
+    size: 12\n
+  },\n
+  type: \'scatter\'\n
+}];\n
+\n
+\n
+var layout = {\n
+  width: 1080,\n
+  margin: {\n
+    t: 10,\n
+  },\n
+  xaxis: {\n
+    title: \'GDP per Capita\',\n
+    showgrid: false,\n
+    zeroline: false,\n
+    color: \'#fefefe\',\n
+  },\n
+  yaxis: {\n
+    title: \'Happiness\',\n
+    color: \'#fefefe\',\n
+    showline: false,\n
+    gridcolor: \'#555\',\n
+  },\n
+  plot_bgcolor: \'#302f33\',\n
+  paper_bgcolor: \'#302f33\'\n
+};\n
+\n
+Plotly.newPlot(\'hapGDP\', HapTrace, layout,{displayModeBar: false});\n
+\n
+%% md\n
+The data points are spread throughout the plot. We can observe that on average happiness increases as GDP per Capita increases. There are outliers such as **Somalia** and **Qatar**, both having similar Happiness score but are on the opposite end of the spectrum in terms of GDP Per Capita.\n
+\n
+On average countries with higher GDP Per Capita have higher happiness and countries with lower GDP Per Capita have lower happiness. The spread is very diverse for nations having GDP Per Capita in the mid range.\n
+\n
+%% md\n
+## Does region affect Happiness?\n
+\n
+It is quite evident from the Choropleth map (at the beginning of this report) that some areas are more happy than the others. The below tables shows us the disparities between different regions of the world.\n
+\n
+%% js\n
+var regions = [...new Set(unpack(\'Region indicator\', dataset))];\n
+\n
+var dataByRegion = d3.nest()\n
+  .key(function(d) { return d[\'Region indicator\']; })\n
+  .rollup(function(v) {\n
+    var regData = {};\n
+    for(key of keys) {\n
+      regData[key] = d3.mean(v, function(d) { return d[key]; }).toFixed(3)\n
+    }\n
+    return {...regData, \'Happiness score\': d3.mean(v, function(d) { return d[\'Happiness score\']; }).toFixed(3)}; })\n
+  .entries(dataset);\n
+\n
+dataByRegion\n
+\n
+%% css\n
+#regionTable {\n
+  font: 13px\n
+}\n
+\n
+#regionTable th {\n
+  text-align: right;\n
+  padding-right: 6px;\n
+  min-width: 43px;\n
+  text-align: left;\n
+}\n
+\n
+#regionTable thead td {\n
+  cursor: s-resize;\n
+}\n
+\n
+#regionTable tbody tr:first-child td {\n
+  padding-top: 2px;\n
+}\n
+\n
+.user-markdown table th, .user-markdown table td {\n
+  border: none !important;\n
+}\n
+\n
+#regionTable thead tr:first-child th {\n
+  text-align: center;\n
+}\n
+\n
+#regionTable tbody td {\n
+  padding: 0;\n
+  border-left: solid 1px #000;\n
+  width: 110px;\n
+}\n
+\n
+/* #regionTable tbody circle {\n
+  fill: steelblue;\n
+} */\n
+\n
+.toolTip {\n
+  position: absolute;\n
+  display: none;\n
+  min-width: 80px;\n
+  height: auto;\n
+  background: none repeat scroll 0 0 #ffffff;\n
+  border: 1px solid #6F257F;\n
+  padding: 14px;\n
+  text-align: center;\n
+}\n
+\n
+%% js\n
+extendedKeys\n
+\n
+%% md\n
+<table id=\'regionTable\'>\n
+  <thead>\n
+    <tr>\n
+      <td>Region</td>\n
+      <th>Happiness Score</th>\n
+    </tr>\n
+  </thead>\n
+  <tbody>\n
+  </tbody>\n
+</table>\n
+\n
+%% md\n
+North America and ANZ is the happiest region. They are doing considerably better than the other regions in almost all the categories. Sub-Saharan Africa and South Asia are lagging behind the others. Perceptions of corruption are bad in most of the regions. There is a great resemblance between Western Europe and North America with the current scoring parameters.\n
+\n
+%% js\n
+d3.select("#regionTable thead tr").selectAll("th")\n
+  .data(extendedKeys)\n
+  .enter().append("th")\n
+  .text(function(d) { return d });\n
+\n
+var regColors = [\'#600ce8\', \'#c42f59\', \'#0574ab\', \'#5f4bb6\', \'#86a5d9\', \'#499f68\', \'#34515f\', \'#73c2be\', \'#d7907b\', \'#27476e\'];\n
+\n
+var tooltip = d3.select("body").append("div").attr("class", "toolTip");\n
+\n
+var tr = d3.select("#regionTable tbody").selectAll("th")\n
+    .data(dataByRegion)\n
+  .enter().append("tr");\n
+\n
+tr.append("th")\n
+    .text(function(d) { return d.key; });\n
+\n
+tr.selectAll("td")\n
+    .data(function(d) { return extendedKeys.map(function(k) { return d.value[k]}); })\n
+  .enter().append("td").append("svg")\n
+    .attr("width", 110)\n
+    .attr("height", 50)\n
+  .append("circle")\n
+    .attr("r", function(d) { return d * 25; })\n
+    .attr("cx", 55)\n
+    .attr("cy", 25)\n
+    .on("mousemove", function(d){\n
+        tooltip\n
+          .style("left", d3.event.pageX - 50 + "px")\n
+          .style("top", d3.event.pageY - 70 + "px")\n
+          .style("display", "inline-block")\n
+          .html(\'Value\' + "<br>" + (d));\n
+    })\n
+        .on("mouseout", function(d){ tooltip.style("display", "none");});\n
+    // .attr("width", function(d) { return d * 50; });\n
+\n
+d3.select("#regionTable tbody")\n
+  .selectAll("tr")\n
+  .data(regColors)\n
+  .style("fill", function(d) {return d});\n
+\n
+%% css\n
+/* Notebook Presentation view settings */\n
+ @import url(\'https://fonts.googleapis.com/css?family=Roboto:700,900\');\n
+.user-markdown h1, .user-markdown h2, .user-markdown h3, .user-markdown h4, .user-markdown h5, .user-markdown h6 {\n
+  font-family: \'Roboto\';\n
+  text-transform: uppercase;\n
+  text-align: center;\n
+}\n
+\n
+.user-markdown p, .user-markdown h1, .user-markdown h2, .user-markdown h3, .user-markdown h4, .user-markdown h5, .user-markdown h6, .user-markdown ol, .user-markdown ul, .user-markdown pre, .user-markdown address, .user-markdown blockquote, .user-markdown dl, .user-markdown div, .user-markdown fieldset, .user-markdown form, .user-markdown hr, .user-markdown noscript, .user-markdown table {\n
+  max-width: 1080px;\n
+}\n
+\n
+.pane-content {\n
+  background: #302f33;\n
+}\n
+.user-markdown a {\n
+  color: #f0675c;\n
+}\n
+\n
+.user-markdown h1 {\n
+  font-size: 50px;\n
+  padding: 30px 0;\n
+  letter-spacing: 2px;\n
+    font-weight: 900;\n
+}\n
+\n
+.user-markdown h2 {\n
+  font-size: 35px;\n
+  letter-spacing: 2px;\n
+    padding-top: 35px;\n
+}\n
+\n
+.user-markdown {\n
+  color: #fefefe;\n
+}\n
+\n
+.tick line {\n
+   stroke: #ddd;\n
+}\n
+\n
+.tick text{\n
+   fill: #ddd;\n
+}\n
+\n
+.axis .domain {\n
+   stroke: #ddd;\n
+}\n
+\n
+#choropleth .cbaxis.crisp text {\n
+  fill: #fefefe !important;\n
+}\n
+\n
+#choropleth .layer.bg rect {\n
+    fill-opacity: 0 !important;\n
+}\n
+\n
+.user-markdown table tr {\n
+    background-color: transparent !important;\n
+    border-color: #444;\n
+}\n
+\n
+%% js
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>World Happiness Report</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
