@@ -40,6 +40,9 @@ Memcached Plugin | memcached_plugin_interaction_workflow
 Mixin Component | component_validation_workflow
 Mixin Component | dynamic_class_generation_interaction_workflow
 Mixin Component | edit_workflow
+Module Component | component_validation_workflow
+Module Component | dynamic_class_generation_interaction_workflow
+Module Component | edit_workflow
 Predicate | edit_workflow
 Preference | edit_workflow
 Preference | preference_workflow
@@ -57,3 +60,6 @@ TALES Constraint | dynamic_class_generation_interaction_workflow
 Test Component | component_validation_workflow
 Test Component | dynamic_class_generation_interaction_workflow
 Test Component | edit_workflow
+Tool Component | component_validation_workflow
+Tool Component | dynamic_class_generation_interaction_workflow
+Tool Component | edit_workflow
