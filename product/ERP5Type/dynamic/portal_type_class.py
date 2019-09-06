@@ -212,8 +212,16 @@ def generatePortalTypeClass(site, portal_type_name):
     type_class_namespace = document_class_registry.get(type_class, '')
     if not (type_class_namespace.startswith('Products.ERP5Type') or
             portal_type_name in core_portal_type_class_dict):
-      import erp5.component.document
-      module = erp5.component.document.find_load_module(type_class)
+      module = None
+      if portal_type_name.endswith('Tool'):
+        import erp5.component.tool
+        module = erp5.component.tool.find_load_module(type_class)
+
+      # Tool Component was introduced recently and some Tool have already been
+      # migrated as Document Component
+      if module is None:
+        import erp5.component.document
+        module = erp5.component.document.find_load_module(type_class)
       if module is not None:
         try:
           klass = getattr(module, type_class)

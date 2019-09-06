@@ -1164,13 +1164,13 @@ def initializeProduct( context,
       registerDocumentClass(tool.__module__, tool.__name__)
     try:
       utils.ToolInit('%s Tool' % product_name,
-                      tools=tools,
+                      tools=set(tools),
                       icon='tool.png',
                       ).initialize( context )
     except TypeError:
       # product_name parameter is deprecated in CMF
       utils.ToolInit('%s Tool' % product_name,
-                      tools=tools,
+                      tools=set(tools),
                       product_name=product_name,
                       icon='tool.png',
                       ).initialize( context )

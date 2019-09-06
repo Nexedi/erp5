@@ -27,15 +27,15 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.mixin.component import ComponentMixin
-from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
+from Products.ERP5Type.Core.ModuleComponent import ModuleComponent
+
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 
 import zope.interface
 from Products.ERP5Type.interfaces.component import IComponent
 
-class ExtensionComponent(ComponentMixin, TextContentHistoryMixin):
+class ExtensionComponent(ModuleComponent):
   """
   ZODB Component for Extensions previously defined in the bt5 and installed in
   INSTANCE_HOME/Extensions
