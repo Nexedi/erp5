@@ -180,12 +180,16 @@ def initializeDynamicModules():
       holds accessors holders of Portal Types
     erp5.component:
       holds ZODB Component packages
+    erp5.component.module:
+      holds Module (eg any module not being one of the following and used to be found in Products.NAME on FS)
     erp5.component.document:
       holds Document modules previously found in bt5 in $INSTANCE_HOME/Document
     erp5.component.interface:
       holds Interface modules previously found in Products.NAME.interfaces
     erp5.component.mixin:
       holds Mixin modules previously found in Products.NAME.mixin
+    erp5.component.Tool:
+      holds Tool modules previously found in Products.NAME.Tool
     erp5.component.extension:
       holds Extension modules previously found in bt5 in
       $INSTANCE_HOME/Extensions
@@ -221,7 +225,8 @@ def initializeDynamicModules():
   # ZODB Components
   erp5.component = ComponentPackageType("erp5.component")
 
-  from component_package import ComponentDynamicPackage
+  from component_package import (ComponentDynamicPackage,
+                                 ToolComponentDynamicPackage)
 
   # Prevent other threads to create erp5.* packages and modules or seeing them
   # incompletely
@@ -234,11 +239,17 @@ def initializeDynamicModules():
         erp5.accessor_holder.property_sheet
     sys.modules["erp5.component"] = erp5.component
 
+    erp5.component.module = ComponentDynamicPackage('erp5.component.module',
+                                                    'Module Component')
+
     erp5.component.extension = ComponentDynamicPackage('erp5.component.extension',
                                                        'Extension Component')
 
     erp5.component.document = ComponentDynamicPackage('erp5.component.document',
                                                       'Document Component')
+
+    erp5.component.tool = ToolComponentDynamicPackage('erp5.component.tool',
+                                                      'Tool Component')
 
     erp5.component.interface = ComponentDynamicPackage('erp5.component.interface',
                                                        'Interface Component')
