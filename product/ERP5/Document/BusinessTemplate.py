@@ -89,6 +89,7 @@ from urllib import quote, unquote
 from difflib import unified_diff
 import posixpath
 import transaction
+import inspect
 
 import threading
 from ZODB.broken import Broken, BrokenModified
@@ -138,6 +139,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "Interface Component": ("py",   0, "text_content"),
   "OOoTemplate":         ("oot",  1, "_text"),
   "Mixin Component":     ("py",   0, "text_content"),
+  "Module Component":    ("py",   0, "text_content"),
   "PDF":                 ("pdf",  0, "data"),
   "PDFForm":             ("pdf",  0, "data"),
   "PyData Script":       ("py",   0, "_body"),
@@ -148,6 +150,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "SQL Method":          ("sql",  0, "src"),
   "Test Component":      ("py",   0, "text_content"),
   "Test Page":           (None,   0, "text_content"),
+  "Tool Component":      ("py",   0, "text_content"),
   "Web Page":            (None,   0, "text_content"),
   "Web Script":          (None,   0, "text_content"),
   "Web Style":           (None,   0, "text_content"),
@@ -4262,6 +4265,12 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
     self.portal_components.reset(force=True,
                                  reset_portal_type_at_transaction_boundary=True)
 
+from Products.ERP5Type.Core.ModuleComponent import ModuleComponent
+class ModuleComponentTemplateItem(_ZodbComponentTemplateItem):
+  @staticmethod
+  def _getZodbObjectId(id):
+    return ModuleComponent.getIdPrefix() + '.' + id
+
 from Products.ERP5Type.Core.InterfaceComponent import InterfaceComponent
 class InterfaceTemplateItem(_ZodbComponentTemplateItem):
   @staticmethod
@@ -4273,6 +4282,12 @@ class MixinTemplateItem(_ZodbComponentTemplateItem):
   @staticmethod
   def _getZodbObjectId(id):
     return MixinComponent.getIdPrefix() + '.' + id
+
+from Products.ERP5Type.Core.ToolComponent import ToolComponent
+class ToolComponentTemplateItem(_ZodbComponentTemplateItem):
+  @staticmethod
+  def _getZodbObjectId(id):
+    return ToolComponent.getIdPrefix() + '.' + id
 
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 class DocumentTemplateItem(FilesystemToZodbTemplateItem,
@@ -4370,7 +4385,6 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem,
   afterUninstall = _ZodbComponentTemplateItem.afterUninstall
 
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
-
 class ExtensionTemplateItem(DocumentTemplateItem):
   """
   Extensions are now stored in ZODB rather than on the filesystem. However,
@@ -5243,10 +5257,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_security_uid_column_item = \
           CatalogSecurityUidColumnTemplateItem(
                self.getTemplateCatalogSecurityUidColumnList())
+      self._module_component_item = \
+          ModuleComponentTemplateItem(self.getTemplateModuleComponentIdList())
       self._interface_item = \
           InterfaceTemplateItem(self.getTemplateInterfaceIdList())
       self._mixin_item = \
           MixinTemplateItem(self.getTemplateMixinIdList())
+      self._tool_component_item = \
+          ToolComponentTemplateItem(self.getTemplateToolComponentIdList())
 
     security.declareProtected(Permissions.ManagePortal, 'build')
     def build(self, no_action=0, update_revision=True):
@@ -5982,9 +6000,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'Product' : '_product_item',
         'PropertySheet' : '_property_sheet_item',
         'Constraint' : '_constraint_item',
+        'ModuleComponent' : '_module_component_item',
         'Document' : '_document_item',
         'Interface': '_interface_item',
         'Mixin': '_mixin_item',
+        'ToolComponent' : '_tool_component_item',
         'Extension' : '_extension_item',
         'Test' : '_test_item',
         'Role' : '_role_item',
@@ -6095,7 +6115,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Text objects (no need to export them into XML)
       # XXX Bad naming
-      item_list_3 = ['_document_item', '_interface_item', '_mixin_item',
+      item_list_3 = ['_module_component_item',
+                     '_document_item', '_interface_item', '_mixin_item',
+                     '_tool_component_item',
                      '_property_sheet_item',
                      '_constraint_item', '_extension_item',
                      '_test_item', '_message_translation_item',]
@@ -6341,13 +6363,41 @@ Business Template is a set of definitions, such as skins, portal types and categ
       setattr(self, 'template_portal_type_base_category', ())
       return
 
-    @staticmethod
-    def _getAllFilesystemModuleFromPortalTypeIdList(portal_type_id_list):
-      import erp5.portal_type
-      import inspect
-      import Products.ERP5Type
+    def _getWorkingCopyPathList(self):
+      working_copy_list = self.getPortalObject().portal_preferences.getPreferredWorkingCopyList([])
+      if not working_copy_list:
+        raise RuntimeError("No 'Working Copies' set in Preferences")
 
-      product_base_path = inspect.getfile(Products.ERP5Type).rsplit('/', 2)[0]
+      return [ os.path.realpath(p) for p in working_copy_list ]
+
+    def _checkFilesystemModulePath(self,
+                                   module_obj,
+                                   working_copy_path_list):
+      """
+      Return the path of the given module iff its path is in Working Copies
+      """
+      try:
+        module_path = inspect.getsourcefile(module_obj)
+      except TypeError:
+        # No file, builtin or 'erp5' dynamic module
+        return None
+      else:
+        for working_copy_path in working_copy_path_list:
+          if module_path.startswith(working_copy_path):
+            # Product
+            if module_path.endswith('/__init__.py'):
+              return module_path.rsplit('/', 1)[0]
+            else:
+              return module_path
+
+        return None
+
+    def _getAllFilesystemModuleFromPortalTypeIdList(self, portal_type_id_list):
+      import erp5.portal_type
+      import Products.ERP5Type
+      import zope.interface
+
+      working_copy_path_list = self._getWorkingCopyPathList()
       seen_cls_set = set()
       for portal_type in portal_type_id_list:
         # According to ObjectTemplateItem.__init__, this could happen (see
@@ -6366,24 +6416,22 @@ Business Template is a set of definitions, such as skins, portal types and categ
               error=True)
           continue
 
-        for cls in portal_type_cls.mro():
-          if (not cls.__module__.startswith('erp5.') and
-              cls not in seen_cls_set):
-            seen_cls_set.add(cls)
-            try:
-              cls_path = inspect.getfile(cls)
-            except TypeError:
-              pass
-            else:
-              if cls_path.startswith(product_base_path):
-                cls_name = cls.__name__
-                cls_module = cls.__module__
-                yield cls_name, cls_module, cls_path
+        for cls in (tuple(zope.interface.implementedBy(portal_type_cls)) +
+                    portal_type_cls.mro()):
+          if cls in seen_cls_set:
+            continue
+          seen_cls_set.add(cls)
+
+          cls_module_filepath = self._checkFilesystemModulePath(
+            inspect.getmodule(cls),
+            working_copy_path_list)
+          if cls_module_filepath is not None:
+            cls_module_name = cls.__module__
+            yield cls.__name__, cls.__module__, cls_module_filepath
 
     security.declareProtected(Permissions.ManagePortal,
                               'getMigratableSourceCodeFromFilesystemList')
     def getMigratableSourceCodeFromFilesystemList(self,
-                                                  current_bt_only=False,
                                                   *args,
                                                   **kwargs):
       """
@@ -6430,35 +6478,112 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Inspect Portal Types classes mro() of this Business Template to find
       # Products Documents to migrate by default
-      portal_type_module_set = set(
+      portal_type_module_filepath_set = set([
+        filepath for _, _, filepath in 
         self._getAllFilesystemModuleFromPortalTypeIdList(
-          self.getTemplatePortalTypeIdList()))
+          self.getTemplatePortalTypeIdList())])
 
-      # XXX: Only migrate Documents in ERP5 for the moment...
-      import Products.ERP5.Document
-      for name, obj in Products.ERP5.Document.__dict__.iteritems():
-        if not name.startswith('_') and inspect.ismodule(obj):
-          source_reference = obj.__name__
+      working_copy_path_list = self._getWorkingCopyPathList()
+      import Products
+      for product_name, product_obj in inspect.getmembers(Products,
+                                                          inspect.ismodule):
+        if (product_name[0] == '_' or
+            # Returned by inspect.getmembers()
+            product_name == 'this_module' or
+            product_name in (
+              # Never going to be migrated (bootstrap)
+              'ERP5Type',
+              # Probably going to be migrated but at the end and should not be
+              # done for now (especially ActiveObject and HBTreeFolder2
+              # classes found in the MRO of most classes)
+              'CMFActivity', 'HBTreeFolder2')):
+          continue
 
-          migrate = ((name, source_reference, inspect.getfile(obj))
-                     in portal_type_module_set)
-          if current_bt_only and not migrate:
+        product_base_path = self._checkFilesystemModulePath(
+          product_obj,
+          working_copy_path_list)
+        if product_base_path is None:
+          continue
+
+        # 'Module Component': Only handle Product top-level modules
+        for submodule_name, submodule_obj in inspect.getmembers(product_obj,
+                                                                inspect.ismodule):
+          if (submodule_name[0] == '_' or
+              submodule_name in ('this_module', 'Permissions')):
             continue
 
-          obj = __newTempComponent(portal_type='Document Component',
-                                   reference=name,
-                                   source_reference=source_reference,
-                                   migrate=migrate)
+          try:
+            submodule_filepath = inspect.getsourcefile(submodule_obj)
+          except TypeError:
+            # No file, builtin?
+            continue
 
-      if not current_bt_only:
-        import Products.ERP5.tests
-        from glob import iglob
-        for test_path in iglob("%s/test*.py" %
-                               inspect.getfile(Products.ERP5.tests).rsplit('/', 1)[0]):
-          reference = test_path.rsplit('/', 1)[1][:-3]
-          obj = __newTempComponent(portal_type='Test Component',
-                                   reference=reference,
-                                   source_reference="Products.ERP5.tests." + reference)
+          if submodule_filepath and submodule_filepath.rsplit('/', 1)[0] == product_base_path:
+            source_reference = submodule_obj.__name__
+            migrate = submodule_filepath in portal_type_module_filepath_set
+            obj = __newTempComponent(portal_type='Module Component',
+                                     reference=submodule_name,
+                                     source_reference=source_reference,
+                                     migrate=migrate)
+
+        # {Document,interfaces,mixin,Tool,tests} directories
+        for directory_name, component_portal_type in (
+            ('Document', 'Document Component'),
+            ('interfaces', 'Interface Component'),
+            ('mixin', 'Mixin Component'),
+            ('Tool', 'Tool Component'),
+            ('tests', 'Test Component')):
+          submodule_name = '%s.%s' % (product_obj.__name__, directory_name)
+          for filepath in glob.iglob("%s/%s/*.py" % (product_base_path,
+                                                     directory_name)):
+            subsubmodule_name = os.path.splitext(os.path.basename(filepath))[0]
+            if subsubmodule_name == '__init__':
+              continue
+
+            subsubmodule_portal_type = component_portal_type
+            source_reference = "%s.%s" % (submodule_name, subsubmodule_name)
+            migrate = filepath in portal_type_module_filepath_set
+            if component_portal_type == 'Test Component':
+              # For non test classes (Mixin, utils...)
+              if not subsubmodule_name.startswith('test'):
+                subsubmodule_portal_type = 'Module Component'
+            # FS: Products/ERP5ShortMessage/interfaces/sms_sending_gateway.py: ISmsSendingGateway
+            # => ZODB Component Reference: ISmsSendingGateway
+            elif component_portal_type == 'Interface Component':
+              # Generally: foo_bar.py => IFooBar, but to avoid quirks (such as
+              # 'sql_foo.py' => 'ISQLFoo'), get the Interface class __name__
+              try:
+                interface_module = __import__(source_reference, {}, {}, source_reference)
+              except ImportError, e:
+                LOG("BusinessTemplate", WARNING,
+                    "Skipping %s: Cannot be imported (%s)" % (filepath, e))
+                continue
+
+              from zope.interface.interface import InterfaceClass
+              interface_class_name = None
+              for _, m in inspect.getmembers(interface_module):
+                if (isinstance(m, InterfaceClass) and
+                    # Local definition only
+                    m.__module__ == interface_module.__name__):
+                  if interface_class_name is not None:
+                    # Do not try to be clever, just let the developer fix the problem
+                    LOG("BusinessTemplate", WARNING,
+                        "Skipping %s: More than one InterfaceClass defined" % filepath)
+                    interface_class_name = None
+                    break
+                  else:
+                    interface_class_name = m.__name__
+
+              if interface_class_name is None:
+                continue
+
+              subsubmodule_name = interface_class_name
+
+            obj = __newTempComponent(portal_type=subsubmodule_portal_type,
+                                     reference=subsubmodule_name,
+                                     source_reference=source_reference,
+                                     migrate=migrate)
+
 
       # Automatically select ZODB Components to be migrated in Migration Dialog
       selection_name = kwargs.get('selection_name')
@@ -6490,13 +6615,16 @@ Business Template is a set of definitions, such as skins, portal types and categ
       list_selection_name = kw.get('list_selection_name')
       migrated_product_module_set = set()
 
+      template_module_component_id_set = set(self.getTemplateModuleComponentIdList())
+      template_mixin_id_set = set(self.getTemplateMixinIdList())
+      template_interface_id_set = set(self.getTemplateInterfaceIdList())
       template_document_id_set = set(self.getTemplateDocumentIdList())
+      template_tool_component_id_set = set(self.getTemplateToolComponentIdList())
       template_extension_id_set = set(self.getTemplateExtensionIdList())
       template_test_id_set = set(self.getTemplateTestIdList())
 
       if list_selection_name is None:
-        temp_obj_list = self.getMigratableSourceCodeFromFilesystemList(
-          current_bt_only=True)
+        temp_obj_list = self.getMigratableSourceCodeFromFilesystemList()
       else:
         from base64 import b64decode
         import cPickle
@@ -6521,13 +6649,22 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
         return
 
+      filesystem_zodb_module_mapping_set = set()
+      for temp_obj in temp_obj_list:
+        source_reference = temp_obj.getSourceReference()
+        if source_reference is not None:
+          filesystem_zodb_module_mapping_set.add(
+            (source_reference, "%s.%s" % (temp_obj._getDynamicModuleNamespace(),
+                                          temp_obj.getReference())))
+
       for temp_obj in temp_obj_list:
         source_reference = temp_obj.getSourceReference()
         try:
           obj = temp_obj.importFromFilesystem(component_tool,
                                               temp_obj.getReference(),
                                               version,
-                                              source_reference)
+                                              source_reference,
+                                              filesystem_zodb_module_mapping_set)
         except Exception, e:
           LOG("BusinessTemplate", WARNING,
               "Could not import component '%s' ('%s') from the filesystem" %
@@ -6542,6 +6679,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
             id_set = template_extension_id_set
           elif portal_type == 'Test Component':
             id_set = template_test_id_set
+          elif portal_type == 'Mixin Component':
+            id_set = template_mixin_id_set
+          elif portal_type == 'Module Component':
+            id_set = template_module_component_id_set
+          elif portal_type == 'Interface Component':
+            id_set = template_interface_id_set
+          elif portal_type == 'Tool Component':
+            id_set = template_tool_component_id_set
           # 'Document Component'
           else:
             id_set = template_document_id_set
@@ -6567,12 +6712,19 @@ Business Template is a set of definitions, such as skins, portal types and categ
         transaction.abort()
         raise RuntimeError(message)
 
+      self.setTemplateModuleComponentIdList(sorted(template_module_component_id_set))
+      self.setTemplateMixinIdList(sorted(template_mixin_id_set))
+      self.setTemplateInterfaceIdList(sorted(template_interface_id_set))
       self.setTemplateDocumentIdList(sorted(template_document_id_set))
+      self.setTemplateToolComponentIdList(sorted(template_tool_component_id_set))
       self.setTemplateExtensionIdList(sorted(template_extension_id_set))
       self.setTemplateTestIdList(sorted(template_test_id_set))
 
       # This will trigger a reset so that Portal Types mro() can be checked
       # after migration for filesystem Products modules still being used
+      #
+      # TODO-arnau: checkPythonSource code done twice (importFromFilesystem()
+      # and newContent() through Interaction Workflow)
       transaction.commit()
 
       still_used_list_dict = {}
