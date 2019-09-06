@@ -512,6 +512,8 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
         # Interfaces methods have no arguments:
         # E: 5, 2: Method has no argument (no-method-argument)
         args.append('--disable=E0211')
+        # Method should have "self" as first argument (no-self-argument)
+        args.append('--disable=E0213')
 
       try:
         from pylint.extensions.bad_builtin import __name__ as ext
