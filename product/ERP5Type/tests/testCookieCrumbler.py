@@ -20,8 +20,7 @@ from OFS.DTMLMethod import DTMLMethod
 from OFS.Folder import Folder
 from AccessControl.User import UserFolder
 
-from Products.CMFCore.CookieCrumbler \
-     import CookieCrumbler, manage_addCC, Redirect
+from Products.CMFCore.CookieCrumbler import CookieCrumbler, manage_addCC
 from Products.CMFCore.tests.test_CookieCrumbler import makerequest
 from Products.CMFCore.tests.test_CookieCrumbler import CookieCrumblerTests
 
