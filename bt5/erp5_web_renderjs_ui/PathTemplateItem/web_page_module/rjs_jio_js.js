@@ -15285,8 +15285,7 @@ return new Parser;
                   var index = parseInt(
                     cursor.primaryKey.slice(key_path.length + 1),
                     10
-                  ),
-                    i;
+                  );
 
                   if ((start !== 0) && (index < start_index)) {
                     // No need to fetch blobs at the start
@@ -15297,12 +15296,6 @@ return new Parser;
                     return;
                   }
 
-                  i = index - start_index;
-                  // Extend array size
-                  while (i > promise_list.length) {
-                    promise_list.push(null);
-                    i -= 1;
-                  }
                   // Sort the blob by their index
                   promise_list.splice(
                     index - start_index,
@@ -15336,7 +15329,7 @@ return new Parser;
                           {type: "application/octet-stream"});
           index = Math.floor(start / UNITE) * UNITE;
           if (end === undefined) {
-            end = blob.length;
+            end = blob.size;
           } else {
             end = end - index;
           }
@@ -15359,13 +15352,8 @@ return new Parser;
                 var index = parseInt(
                   cursor.primaryKey.slice(key_path.length + 1),
                   10
-                ),
-                  i = index;
-                // Extend array size
-                while (i > array_buffer_list.length) {
-                  array_buffer_list.push(null);
-                  i -= 1;
-                }
+                );
+
                 // Sort the blob by their index
                 array_buffer_list.splice(
                   index,
@@ -15407,7 +15395,7 @@ return new Parser;
 
         blob = new Blob(array_buffer_list,
                         {type: attachment.info.content_type});
-        if (blob.length !== attachment.info.total_length) {
+        if (blob.size !== attachment.info.length) {
           throw new jIO.util.jIOError(
             "IndexedDB: attachment '" +
                 buildKeyPath([id, name]) +
