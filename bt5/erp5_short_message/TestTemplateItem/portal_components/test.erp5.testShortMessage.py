@@ -27,33 +27,23 @@
 ##############################################################################
 
 import unittest
-import os
 
 from zope.interface.verify import verifyObject 
-from DateTime import DateTime
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 
 class ShortMessageTestCase(ERP5TypeTestCase):
-
-  def getBusinessTemplateList(self):
-    return ('erp5_full_text_mroonga_catalog',
-            'erp5_core_proxy_field_legacy',
-            'erp5_base',
-            'erp5_crm',
-            'erp5_short_message'
-            )
-
+  pass
 
 class TestShortMessageGateway(ShortMessageTestCase):
 
   def _verifyGatewayPortalType(self, portal_type):
-    import Products.ERP5Type.interfaces
-
     gateway = self.portal.portal_sms.newContent(portal_type=portal_type)
-    verifyObject(Products.ERP5Type.interfaces.ISmsSendingGateway, gateway)
-    verifyObject(Products.ERP5Type.interfaces.ISmsReceivingGateway, gateway)
+    from erp5.component.interface.ISmsSendingGateway import ISmsSendingGateway
+    verifyObject(ISmsSendingGateway, gateway)
+    from erp5.component.interface.ISmsReceivingGateway import ISmsReceivingGateway
+    verifyObject(ISmsReceivingGateway, gateway)
 
 
   def test_EssendexGateway(self):
@@ -74,7 +64,7 @@ class TestShortMessageSending(ShortMessageTestCase):
             self.portal.portal_sms,
             self.portal.person_module,
             self.portal.event_module ):
-        module.manage_delObjects(list(module.objectIds()))
+      module.manage_delObjects(list(module.objectIds()))
     self.tic()
 
   def test_ShortMessage_start(self):
