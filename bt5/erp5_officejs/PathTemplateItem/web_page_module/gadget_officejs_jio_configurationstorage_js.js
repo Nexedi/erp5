@@ -63,6 +63,7 @@
     this._version = spec.version || "";
     this._prefix = spec.prefix || "./";
     this._version = this._prefix + this._version;
+    this._current_storage = spec.current_storage;
   }
 
   ConfigurationStorage.prototype.get = function (id) {
@@ -133,7 +134,8 @@
           relative_url_list = text.split('\n'),
           take = false,
           i;
-        hash = rusha.digestFromString(text);
+        //the hash is updated when manifest text changed or the app storage
+        hash = rusha.digestFromString(text + storage._current_storage);
         for (i = 0; i < relative_url_list.length; i += 1) {
           if (relative_url_list[i].indexOf("NETWORK:") >= 0) {
             take = false;
