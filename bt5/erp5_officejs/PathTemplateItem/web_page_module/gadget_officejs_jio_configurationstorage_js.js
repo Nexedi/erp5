@@ -90,7 +90,6 @@
 
   ConfigurationStorage.prototype.buildQuery = function () {
     var result = [],
-      promise_list,
       id;
     for (id in this._documents) {
       if (this._documents.hasOwnProperty(id)) {
@@ -101,10 +100,10 @@
         });
       }
     }
-    promise_list = [result];
-    promise_list.push(this._sub_storage.buildQuery.apply(this._sub_storage,
-                                                         arguments));
-    return RSVP.any(promise_list);
+    return this._sub_storage.allDocs({})
+      .push(function (all_docs_result) {
+        return result.concat(all_docs_result.data.rows);
+      });
   };
 
   ConfigurationStorage.prototype.repair = function () {
