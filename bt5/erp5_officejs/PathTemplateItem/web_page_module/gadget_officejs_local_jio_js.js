@@ -120,17 +120,6 @@
           ]);
         })
         .push(function (result_list) {
-          jio_options = {
-            type: 'dateupdater',
-            sub_storage: jio_options,
-            property_list: ['modification_date']
-          };
-          try {
-            gadget.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);
-          } catch (error) {
-            gadget.state_parameter_dict.jio_storage = undefined;
-          }
-          if (result_list[2] === undefined) { return; }
           var jio_appchache_options = {
             type: "replicate",
             parallel_operation_attachment_amount: 10,
@@ -167,18 +156,23 @@
               }
             }
           };
+          jio_options = {
+            type: 'dateupdater',
+            sub_storage: jio_options,
+            property_list: ['modification_date']
+          };
+          try {
+            gadget.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);
+          } catch (error) {
+            gadget.state_parameter_dict.jio_storage = undefined;
+          }
+          if (result_list[2] === undefined) { return; }
           appcache_storage = jIO.createJIO(jio_appchache_options);
-        
-          
-          //return gadget.state_parameter_dict.jio_storage.put("appcache-stored", {});
-          
         })
         .push(function () {
-          console.log("SYNC FLAG ADDED. Cleaning...");
           return gadget.clean(appcache_storage);
         })
         .push(function () {
-          console.log("STORAGE CLEANED. repairing...");
           return appcache_storage.repair();
         })
         .push(undefined, function (error) {
