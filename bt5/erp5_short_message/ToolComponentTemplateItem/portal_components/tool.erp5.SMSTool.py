@@ -32,7 +32,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Permissions import ManagePortal
 
 from Products.ERP5Type.Globals import DTMLFile
-from Products.ERP5ShortMessage import _dtmldir
+#from Products.ERP5ShortMessage import _dtmldir
 
 class SMSTool(BaseTool):
   """
@@ -47,7 +47,7 @@ class SMSTool(BaseTool):
   # Declarative Security
   security = ClassSecurityInfo()
   security.declareProtected(ManagePortal, 'manage_overview')
-  manage_overview = DTMLFile('explainSMSTool', _dtmldir )
+  #manage_overview = DTMLFile('explainSMSTool', _dtmldir )
 
   security.declareProtected(ManagePortal, 'send')
   def send(self, text, recipient, sender, gateway_reference='default',
