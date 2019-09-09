@@ -204,8 +204,13 @@
     })
     .declareJob('submitPostComment', function () {
       var gadget = this,
-        submitButton = null,
+        submitButton = gadget.element.querySelector("input[type=submit]"),
         queue = null;
+
+      function enableSubmitButton() {
+        submitButton.disabled = false;
+        submitButton.classList.remove("ui-disabled");
+      }
 
       return gadget.getDeclaredGadget("editor")
         .push(function (e) {
@@ -216,14 +221,6 @@
             return gadget.notifySubmitted({message: "Post content can not be empty!"});
           }
 
-          submitButton = gadget.element.querySelector("input[type=submit]");
-          submitButton.disabled = true;
-          submitButton.classList.add("ui-disabled");
-
-          function enableSubmitButton() {
-            submitButton.disabled = false;
-            submitButton.classList.remove("ui-disabled");
-          }
           queue = gadget.notifySubmitted({message: "Posting comment"})
             .push(function () {
               var choose_file_html_element = gadget.element.querySelector('#attachment'),
@@ -273,6 +270,11 @@
       );
     }, 5000)
     .onEvent('submit', function () {
+      // Disable submit button ASAP to prevent double click
+      var submitButton = this.element.querySelector("input[type=submit]");
+      submitButton.disabled = true;
+      submitButton.classList.add("ui-disabled");
+
       return this.submitPostComment();
     });
 }(window, rJS, RSVP, calculatePageTitle, moment, Handlebars));
