@@ -1,0 +1,2 @@
+interface.erp5.ISmsReceivingGateway
+interface.erp5.ISmsSendingGateway
