@@ -2049,7 +2049,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     portal = context.getPortalObject()
-    skin_tool = getToolByName(portal, 'portal_skins')
+    skin_tool = portal.portal_skins
 
     for skin_folder_id in self._objects.keys():
 
@@ -2091,7 +2091,7 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
 
   def uninstall(self, context, **kw):
     portal = context.getPortalObject()
-    skin_tool = getToolByName(portal, 'portal_skins')
+    skin_tool = portal.portal_skins
     object_path = kw.get('object_path')
     for skin_folder_id in (object_path,) if object_path else self._objects:
       skin_selection_list = self._objects[skin_folder_id]
