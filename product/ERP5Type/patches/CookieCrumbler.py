@@ -176,12 +176,21 @@ def modifyRequest(self, req, resp):
 CookieCrumbler.modifyRequest = modifyRequest
 
 
-def credentialsChanged(self, user, name, pw):
-  ac = standard_b64encode('%s:%s' % (name, pw))
-  method = self.getCookieMethod( 'setAuthCookie'
-                                 , self.defaultSetAuthCookie )
-  resp = self.REQUEST['RESPONSE']
-  method( resp, self.auth_cookie, quote( ac ) )
+def credentialsChanged(self, user, name, pw, request=None):
+  """
+  Updates cookie credentials if user details are changed.
+  """
+  if request is None:
+    request = getRequest() # BBB for Membershiptool
+  reponse = request['RESPONSE']
+  # <patch>
+  # We don't want new lines, so use base64.standard_b64encode instead of
+  # base64.encodestring
+  ac = standard_b64encode('%s:%s' % (name, pw)).rstrip()
+  # </patch>
+  method = self.getCookieMethod('setAuthCookie',
+                                 self.defaultSetAuthCookie)
+  method(reponse, self.auth_cookie, quote(ac))
 
 CookieCrumbler.credentialsChanged = credentialsChanged
 
