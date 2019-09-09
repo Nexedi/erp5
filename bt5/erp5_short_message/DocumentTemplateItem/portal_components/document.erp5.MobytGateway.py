@@ -40,13 +40,13 @@ from AccessControl.SecurityManagement import  getSecurityManager, \
 import zope.interface
 from zLOG import LOG, INFO
 
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products import ERP5Security
 
-#Product Module
-from Products.ERP5ShortMessage.SMSGatewayError import SMSGatewayError
-
+from erp5.component.module.SMSGatewayError import SMSGatewayError
+from erp5.component.interface.ISmsSendingGateway import ISmsSendingGateway
+from erp5.component.interface.ISmsReceivingGateway import ISmsReceivingGateway
 
 class MobytGateway(XMLObject):
 
@@ -58,8 +58,8 @@ class MobytGateway(XMLObject):
     add_permission = Permissions.AddPortalContent
 
     zope.interface.implements(
-        interfaces.ISmsSendingGateway,
-        interfaces.ISmsReceivingGateway)
+        ISmsSendingGateway,
+        ISmsReceivingGateway)
 
     # Declarative security
     security = ClassSecurityInfo()
