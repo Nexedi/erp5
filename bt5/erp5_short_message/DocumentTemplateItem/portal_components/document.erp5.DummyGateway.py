@@ -40,10 +40,12 @@ from AccessControl.SecurityManagement import  getSecurityManager, \
                                               newSecurityManager
 import zope.interface
 
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products import ERP5Security
 
+from erp5.component.interface.ISmsSendingGateway import ISmsSendingGateway
+from erp5.component.interface.ISmsReceivingGateway import ISmsReceivingGateway
 
 class DummyGateway(XMLObject):
 
@@ -56,8 +58,8 @@ class DummyGateway(XMLObject):
     add_permission = Permissions.AddPortalContent
 
     zope.interface.implements(
-        interfaces.ISmsSendingGateway,
-        interfaces.ISmsReceivingGateway)
+        ISmsSendingGateway,
+        ISmsReceivingGateway)
 
     # Declarative security
     security = ClassSecurityInfo()
