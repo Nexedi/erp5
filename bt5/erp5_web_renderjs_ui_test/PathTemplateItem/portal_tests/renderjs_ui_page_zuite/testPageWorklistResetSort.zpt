@@ -32,12 +32,12 @@
   <td>//th/a[text()='Type']</td>
   <td></td>
 </tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
   <td>waitForElementPresent</td><!-- verification -->
   <td>//th[@class='ui-icon ui-icon-sort-amount-desc']/a[text()='Type']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <!-- Go to the worklist page -->
 <tal:block tal:define="click_configuration python: {'text': 'Search'}">
