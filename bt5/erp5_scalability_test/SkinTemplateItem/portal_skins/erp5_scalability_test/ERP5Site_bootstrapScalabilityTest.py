@@ -13,15 +13,19 @@ error_message = "No error."
 
 context.ERP5Site_setUpActivityTool()
 
-user_quantity = request.get('user_quantity')
-if user_quantity is None: return json.dumps({"status_code" : 1, "error_message": "Parameter 'user_quantity' is required.", "password" : None })
+if user_quantity is None: 
+  return json.dumps({"status_code" : 1, 
+                     "error_message": "Parameter 'user_quantity' is required.", 
+                     "password" : None })
+
 password = ''.join(random.choice(string.digits + string.letters) for i in xrange(10))
 
 # check erp5_scalability_test business template is present
 configurator = portal.business_configuration_module.default_standard_configuration
 if configurator == None or not configurator.contentValues(portal_type='Configuration Save'):
   error_message = "Could not find the scalability business configuration object. Be sure to have erp5_scalability_test business template installed."
-  return json.dumps({"status_code" : 1, "error_message": error_message })
+  return json.dumps({"status_code" : 1, 
+                     "error_message": error_message })
 
 # install configurator if not intalled
 if configurator.getSimulationState() == "draft":
@@ -33,7 +37,8 @@ if configurator.getSimulationState() == "draft":
     except Exception as e:
       status_code = 1
       error_message = "Error during installation: " + str(e)
-      return json.dumps({"status_code" : 1, "error_message": error_message })
+      return json.dumps({"status_code" : 1, 
+                         "error_message": error_message })
 
 # create users if installation is done
 try:
@@ -46,5 +51,10 @@ try:
 except Exception as e:
   status_code = 1
   error_message = "Error calling ERP5Site_createTestData script: " + str(e)
-  return json.dumps({"status_code" : 1, "error_message": error_message })
-return json.dumps({"status_code" : status_code, "error_message": error_message, "password" : password, "quantity" : user_quantity })
+  return json.dumps({"status_code" : 1, 
+                     "error_message": error_message })
+
+return json.dumps({"status_code" : status_code, 
+                   "error_message": error_message, 
+                   "password" : password, 
+                   "quantity" : user_quantity })
