@@ -2,7 +2,11 @@ from Products.PythonScripts.standard import Object
 import json
 
 # Get result lines
-test_result_lines = context.objectValues(portal_type="Test Result Line", sort_on='int_index')
+test_result_lines = context.objectValues(portal_type="Test Result Line")
+                                         
+# XXX: Test Result Line misses int_index and test title is used for this. 
+# we need to fix this butn for backwards compatability use it now.
+test_result_lines = sorted(test_result_lines, key=lambda x: int(x.getTitle()))                             
 
 # Create a dict containing stats for each test
 tests = []
@@ -35,4 +39,5 @@ xs = map(int, test_suite.getGraphCoordinate())
 # viewer shows only one graph thus return only one test
 tests = results[test_suite_name]
 
-return json.dumps({"test": tests, "xs": xs})
+return json.dumps({"test": tests, 
+                   "xs": xs})

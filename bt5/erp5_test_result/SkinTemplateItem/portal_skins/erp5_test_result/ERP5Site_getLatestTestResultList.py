@@ -1,55 +1,55 @@
 """
   Return list of latest test results.
 """
-from Products.ERP5Type.Document import newTempBase
 
+# XXX: move comments to Test Suite description and add a relation (category) from
+# Test Result -> Test Suite
+# source: http://community.slapos.org/unit_test
 test_suite_list= [
                   # unit tests of ERP5
-                  {"title": "ERP5-Master",
-                   "description": "Test ERP5's master branch code.",
-                   "repository-url": "https://lab.nexedi.com/nexedi/erp5"},
+                  "ERP5-Master",
 
                   # unit tests of Wendelin
-                  {"title":"WENDELIN-MASTER-DEV",
-                   "description": "Test Wendelin's master branch code.",
-                   "repository-url": "https://lab.nexedi.com/nexedi/wendelin"},                  
+                  "WENDELIN-MASTER-DEV",
 
                   # deployment tests
-                  {"title": "SLAPOS-DEPLOY-erp5-standalone-stretch",
-                   "description": "Test deploying Wendelin inside Debian stretch release OS.",
-                   "repository-url": "https://lab.nexedi.com/nexedi/erp5"}, 
-
-                  {"title": "SLAPOS-DEPLOY-wendelin-master-standalone-stretch",
-                   "description": "Test deploying Wendelin inside Debian stretch release OS.",
-                   "repository-url": "https://lab.nexedi.com/nexedi/wendelin"},                  
+                  "SLAPOS-DEPLOY-erp5-standalone-stretch",
+                  "SLAPOS-DEPLOY-wendelin-master-standalone-stretch",
+                  "SLAPOS-DEPLOY-slapos-master-standalone-stretch",
+                  "SLAPOS-DEPLOY-erp5-standalone-centos74",
+                  "SLAPOS-DEPLOY-slapos-master-standalone-jessie",
+                  "SLAPOS-DEPLOY-wendelin-standalone-jessie",
 
                   # XXX: scalability tests
-                  {"title": "IVAN-WENDELIN-SCALABILITY-TEST-COMP2732-LATESTNODE-1",
-                   "description": "Test Wendelin's scalability.",
-                   "repository-url": "https://lab.nexedi.com/nexedi/wendelin"},
-               								
-                  # XXX: webrunner tests
-                  # XXX: slapos master tests
-                  ]
+                  "IVAN-WENDELIN-SCALABILITY-TEST-COMP2732-LATESTNODE-1",
 
+                  # NEO
+                  "NEO-Master",
+
+                  "PERF-ERP5-MASTER",
+                  "JIO-MASTER",
+                  "RENDERJS-MASTER",
+
+                  # SlapOS
+                  "SLAPOS-MASTER-MASTER",
+                  "SLAPOS-WR-UNITTEST",
+                  "SLAPOS-RESILIENCE-WR-MASTER",
+                  "SLAPOS-RESILIENCE-WR-ERP5-MASTER",
+                  "SLAPOS-SR-TEST",
+                  "SLAPOS-SR-TEST-MASTER",
+                  "SLAPOS-EGG-TEST",
+                  "SLAPOS-RESILIENCE-KVM-MASTER",
+                  "SLAPOS-RESILIENCE-WR-GITLAB-MASTER",
+                  "SLAPOS-SR-TEST-1.0",
+                  ]
+test_result_list = []
 for test_suite in test_suite_list:
-  test_title = test_suite["title"]
+  # XXX: sort_on not working!
   test_result = context.portal_catalog.getResultValue(
                   portal_type = "Test Result",
-                  simulation_state = ["stopped", "failed"],
-                  sort_on=(('creation_date', 'ascending'))
-                 )
-  if test_result is not None:
-    context.log(test_result)
-    test_suite["result"] = test_result.getTranslatedSimulationStateTitle()
-    test_suite["start_date"] = test_result.getStartDate()
-    test_suite["stop_date"] = test_result.getStopDate()
-    test_suite["reference"] = test_result.getReference()
-    test_suite["test_result"] = test_result.getStringIndex()
-    for key in ("all_tests", "failures", "errors", "skips"):
-      test_suite[key] = getattr(test_result, key, None)
+                  title = "=%s" %test_suite,
+                  simulation_state = ["stopped", "failed", "public_stopped"],
+                  sort_on=(('creation_date', 'descending'),))
+  test_result_list.append(test_result)
 
-portal = context.getPortalObject()
-return [newTempBase(portal, 
-                    x['title'], 
-                    **x) for x in test_suite_list]
+return test_result_list
