@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -71,15 +69,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_afs_jio.js</string> </value>
+            <value> <string>gadget_erp5_page_afs_financial_list.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Custom AFS storage gadget</string> </value>
+            <value> <string>Custom AFS publisher list gadget</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_erp5_afs_jio_js</string> </value>
+            <value> <string>gadget_erp5_page_afs_financial_list_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -97,7 +95,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget AFS Storage JS</string> </value>
+            <value> <string>Gadget AFS Page Financial List JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -183,7 +181,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1472635704.41</float>
+                        <float>1567688744.91</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -228,7 +226,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.57314.3759.273</string> </value>
+                <value> <string>978.57299.34791.13755</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -246,7 +244,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1570118702.65</float>
+                        <float>1570538607.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -303,7 +301,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1472635627.87</float>
+                        <float>1567688727.22</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
