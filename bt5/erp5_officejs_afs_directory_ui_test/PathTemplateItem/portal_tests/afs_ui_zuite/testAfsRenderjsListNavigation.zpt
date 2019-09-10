@@ -245,6 +245,31 @@
   <td>//div[contains(@class, 'custom-success-story-image-wrapper')]</td>
   <td></td>
 </tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Financial Data']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[contains(@class, 'ui-icon-euro')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@class, 'dygraph-title')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Aggregate Financial Performance</td>
+  <td></td>
+</tr>
 
 </tbody></table>
 </body>
