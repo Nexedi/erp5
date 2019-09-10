@@ -1,6 +1,7 @@
 """
   Return list of latest test results.
 """
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 
 # XXX: move comments to Test Suite description and add a relation (category) from
 # Test Result -> Test Suite
@@ -26,9 +27,17 @@ test_suite_list= [
                   # NEO
                   "NEO-Master",
 
+                  # Cloudoo
+                  "CLOUDOOO-MASTER",
+
+                  # performance tests
                   "PERF-ERP5-MASTER",
+
+                  # javascript
                   "JIO-MASTER",
+                  "JIO-MASTER-NODE",
                   "RENDERJS-MASTER",
+                  "P-OJS.Appstore-master",
 
                   # SlapOS
                   "SLAPOS-MASTER-MASTER",
@@ -44,12 +53,18 @@ test_suite_list= [
                   ]
 test_result_list = []
 for test_suite in test_suite_list:
-  # XXX: sort_on not working!
+  test_query = ComplexQuery(
+                  SimpleQuery(portal_type = "Test Result"),
+                  SimpleQuery(title = test_suite),
+                  SimpleQuery(simulation_state = ["stopped", "failed", "public_stopped"]),
+                  logical_operator='and')
+
   test_result = context.portal_catalog.getResultValue(
-                  portal_type = "Test Result",
-                  title = "=%s" %test_suite,
-                  simulation_state = ["stopped", "failed", "public_stopped"],
-                  sort_on=(('creation_date', 'descending'),))
-  test_result_list.append(test_result)
+                          query = test_query,
+                          #group_by_list = ('title',), # XXX: try to reduce queries from N to 1
+                          sort_on=(('creation_date', 'DESC'),))
+                        
+  if test_result is not None:
+    test_result_list.append(test_result)
 
 return test_result_list
