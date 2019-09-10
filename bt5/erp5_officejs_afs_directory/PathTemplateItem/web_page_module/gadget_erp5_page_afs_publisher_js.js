@@ -56,7 +56,7 @@
             } else {
               software.success_case_list = clean(software.success_case_list);
             }
-            if (software.wikipedia_url === "N/A") {
+            if (software.wikipedia_url === "N/A" || software.wikipedia_url === "") {
               delete software.wikipedia_url;
             } else {
               wiki_list.push(
