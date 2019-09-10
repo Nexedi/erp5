@@ -118,8 +118,8 @@ class WorkingCopy(Implicit):
     parts = path.split(os.sep)
     try:
       i = len(parts) - parts[::-1].index(os.pardir)
-      parts[:i] = os.path.realpath(parts[:i].join(os.sep)),
-      path = parts.join(os.sep)
+      parts[:i] = os.path.realpath(os.sep.join(parts[:i])),
+      path = os.sep.join(parts)
     except ValueError:
       pass
     # Allow symlinks inside instance home.
