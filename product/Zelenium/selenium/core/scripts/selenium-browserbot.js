@@ -2522,6 +2522,10 @@ SafariBrowserBot.prototype.modifyWindowToRecordPopUpDialogs = function(windowToM
 
 MozillaBrowserBot.prototype._fireEventOnElement = function(eventType, element, clientX, clientY) {
     var win = this.getCurrentWindow();
+    if (element.disabled) {
+      LOG.debug("not triggering event " + eventType + " on disabled element " + element);
+      return
+    }
     triggerEvent(element, 'focus', false);
 
     // Add an event listener that detects if the default action has been prevented.
