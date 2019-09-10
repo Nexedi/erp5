@@ -272,6 +272,9 @@
     .onEvent('submit', function () {
       // Disable submit button ASAP to prevent double click
       var submitButton = this.element.querySelector("input[type=submit]");
+      if (submitButton.getAttribute('data-i18n') !== ("[value]Post Comment")) {
+        throw new Error('unexpected submitButton: ' + submitButton.outerHTML);
+      }
       submitButton.disabled = true;
       submitButton.classList.add("ui-disabled");
 
