@@ -52,7 +52,8 @@
             g.getUrlFor({command: 'display', options: {page: "afs_publisher_statistic"}}),
             g.getUrlFor({command: 'display', options: {page: "afs_publisher_list"}}),
             g.getUrlFor({command: 'display', options: {page: "afs_software_list"}}),
-            g.getUrlFor({command: 'display', options: {page: "afs_success_case_list"}})
+            g.getUrlFor({command: 'display', options: {page: "afs_success_case_list"}}),
+            g.getUrlFor({command: 'display', options: {page: "afs_financial_list"}})
           ]);
         })
         .push(function (all_result) {
@@ -63,6 +64,7 @@
               "directory_href": all_result[0],
               "publisher_statistic_href": all_result[1],
               "publisher_href": all_result[2],
+              "financial_href": all_result[5],
               "software_href": all_result[3],
               "success_case_href": all_result[4]
             });
