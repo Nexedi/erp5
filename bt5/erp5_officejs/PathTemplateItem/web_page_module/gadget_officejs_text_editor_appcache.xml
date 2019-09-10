@@ -221,7 +221,7 @@ gadget_erp5_field_listbox.js\n
 gadget_html5_select.html\n
 gadget_html5_select.js\n
 gadget_ojs_local_jio.html\n
-#gadget_ojs_local_jio.js\n
+gadget_ojs_local_jio.js\n
 gadget_erp5_page_action_officejs.html\n
 gadget_erp5_page_action_officejs.js\n
 gadget_erp5_page_ojs_local_controller.html\n
@@ -754,7 +754,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.16895.8965.31232</string> </value>
+                <value> <string>978.21271.39164.52684</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -772,7 +772,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1568038618.93</float>
+                        <float>1568104914.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
