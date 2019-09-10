@@ -338,7 +338,10 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   def _registerMissingTools(self):
     from Products.CMFCore import interfaces, utils
     tool_id_list = ("portal_skins", "portal_types", "portal_membership",
-                    "portal_url", "portal_workflow")
+                    "portal_url", "portal_workflow",
+                    # Registering portal_actions allows CMFDefault 2.3 to
+                    # redirect correctly, cf UnauthorizedView.__call__
+                    "portal_actions")
     if None in map(self.get, tool_id_list):
       return False
     sm = self._components
