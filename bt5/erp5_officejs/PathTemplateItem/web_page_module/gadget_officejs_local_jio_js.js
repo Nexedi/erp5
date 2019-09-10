@@ -75,6 +75,7 @@
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
 
     .declareMethod('clean', function (appcache_storage) {
+      if (!appcache_storage) { return; }
       //clean previous app version documents
       var sync_flag = "appcache-stored",
         document_id_list = [sync_flag,
@@ -173,7 +174,9 @@
           return gadget.clean(appcache_storage);
         })
         .push(function () {
-          return appcache_storage.repair();
+          if (appcache_storage) {
+            return appcache_storage.repair();
+          }
         })
         .push(undefined, function (error) {
           console.log("Error while appcache-local " +
