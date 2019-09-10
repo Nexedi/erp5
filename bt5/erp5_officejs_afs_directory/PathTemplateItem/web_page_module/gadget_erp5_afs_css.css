@@ -1,10 +1,23 @@
 /*
    -------------------------------------------------------------------------
+   ----------------------------- Dygraph -----------------------------------
+   -------------------------------------------------------------------------
+*/
+body .dygraph-legend {
+  left: 15%;
+  top: 5%;
+}
+body .dygraph-legend > span {
+  display: block;
+}
+
+/*
+   -------------------------------------------------------------------------
    ----------------------------- Masonry -----------------------------------
    -------------------------------------------------------------------------
 */
 .ui-masonry-container {
-  margin-top: -5em;  
+  margin-top: -5em;
 }
 .ui-masonry-container > ul {
   margin: 1.5em 0;
@@ -156,15 +169,15 @@
   position: relative;
 }
 .custom-software-profile-image-wrapper img {
-  max-height: 100%;  
-  max-width: 100%; 
+  max-height: 100%;
+  max-width: 100%;
   width: auto;
   height: auto;
-  position: absolute;  
-  top: 0;  
-  bottom: 0;  
-  left: 0;  
-  right: 0;  
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   margin: auto;
   padding: .25em;
   -moz-box-sizing: border-box;
@@ -173,7 +186,7 @@
 }
 @media (max-width: 40em) {
   .custom-software-profile-image-wrapper {
-    margin: 0 auto; 
+    margin: 0 auto;
   }
 }
 
@@ -292,15 +305,15 @@
   padding-top: 80vh;
 }
 .ui-banner-section img {
-  /* max-height: 100%; */  
-  max-width: 100%; 
+  /* max-height: 100%; */
+  max-width: 100%;
   width: auto;
   height: auto;
-  position: absolute;  
-  top: 0;  
-  bottom: 0;  
-  left: 0;  
-  right: 0;  
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   margin: auto;
   z-index: -1;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.6));
@@ -366,7 +379,51 @@ div[data-gadget-scope='header'] .ui-header {
 .document_table table tbody tr th:not(:first-child) {
   text-align: right;
 }
-
+/* break lines... hacky */
+.financial_listbox .document_table tbody tr td:not(:first-of-type) a {
+  display: table-caption;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+}
+@media (max-width: 45em) {
+  .financial_listbox .document_table tbody tr td:not(:first-of-type) a {
+    display: block;
+  }
+  .financial_listbox .document_table table tbody tr {
+    height: auto;
+  }
+  .document_table table tbody tr td:first-child ~ th:not(:last-child) a:not(:empty):after, .document_table table tbody tr th:first-child ~ th:not(:last-child) a:not(:empty):after, .document_table 
+table tbody tr td:first-child ~ td:not(:last-child) a:not(:empty):after, .document_table table tbody tr th:first-child ~ td:not(:last-child) a:not(:empty):after, .document_table table tbody tr td:first-child ~ th:not(:last-child) label:not(:empty):after, .document_table table tbody tr th:first-child ~ th:not(:last-child) label:not(:empty):after, .document_table table tbody tr td:first-child ~ td:not(:last-child) label:not(:empty):after, .document_table table tbody tr th:first-child ~ td:not(:last-child) label:not(:empty):after {
+    content: none;
+  }
+  .document_table table tbody tr td:first-child ~ th, .document_table table tbody tr th:first-child ~ th, .document_table table tbody tr td:first-child ~ td, .document_table table tbody tr th:first-child ~ td {
+    display: inherit;
+  }
+  .financial_listbox tbody tr td:not(:first-child) {
+     margin-left: 5em;
+   }
+  .financial_listbox tbody tr td:nth-child(2):before {
+    content: "Staff";
+    position: absolute;
+    left: .5em;
+  }
+  .financial_listbox tbody tr td:nth-child(3):before {
+    content: "Assets";
+    position: absolute;
+    left: .5em;
+  }
+  .financial_listbox tbody tr td:nth-child(4):before {
+    content: "Revenues";
+    position: absolute;
+    left: .5em;
+  }
+  .financial_listbox tbody tr td:nth-child(5):before {
+    content: "Earnings";
+    position: absolute;
+    left: .5em;
+  }
+}
 /* align header and background colors */
 div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button, div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a,
 div[data-gadget-scope='header'] .ui-header h1 {
