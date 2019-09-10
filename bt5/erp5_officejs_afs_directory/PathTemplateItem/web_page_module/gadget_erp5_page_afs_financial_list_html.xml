@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -70,16 +68,20 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_afs_jio.js</string> </value>
+            <value> <string>gadget_erp5_page_afs_financial_list.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Custom AFS storage gadget</string> </value>
+            <value> <string>Custom AFS publisher list gadget</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_erp5_afs_jio_js</string> </value>
+            <value> <string>gadget_erp5_page_afs_financial_list_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -87,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -97,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget AFS Storage JS</string> </value>
+            <value> <string>Gadget AFS Page Financial List</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -183,7 +185,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1472635704.41</float>
+                        <float>1567688658.42</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -228,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.57314.3759.273</string> </value>
+                <value> <string>978.15403.27252.14950</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -246,7 +248,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1570118702.65</float>
+                        <float>1567690801.37</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -303,7 +305,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1472635627.87</float>
+                        <float>1567688635.75</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
