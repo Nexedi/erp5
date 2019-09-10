@@ -8,6 +8,16 @@ def waitForActivities(self, count=1000):
     to finish activities.
   """
   activity_tool = self.getPortalObject().portal_activities
+
+  # Check that activities are not subscribed to timer server.
+  # Tests are controlling the time of activity executions.
+  # Note that we don't just unsubscribe while calling this method,
+  # because several tests would fail more or less randomly if activities
+  # were processing in the background, so we just want to tell developper
+  # that it's not supported to run tests like this.
+  assert not activity_tool.isSubscribed(), \
+      "During Zelenium tests, activity tool should not be subscribed."
+
   while count > 0:
     count -= 1
     x = activity_tool.getMessageList()
