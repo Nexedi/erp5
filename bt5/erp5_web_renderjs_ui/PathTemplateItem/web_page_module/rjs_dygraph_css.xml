@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Style" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,8 +58,13 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -71,15 +75,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_afs_jio.js</string> </value>
+            <value> <string>dygraph.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Custom AFS storage gadget</string> </value>
+            <value> <string>version 2.1.0</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_erp5_afs_jio_js</string> </value>
+            <value> <string>rjs_dygraph_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -87,7 +91,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Style</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -97,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget AFS Storage JS</string> </value>
+            <value> <string>Dygraph CSS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -183,7 +187,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1472635704.41</float>
+                        <float>1567690608.53</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -228,7 +232,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.16910.53194.19217</string> </value>
+                <value> <string>978.15408.30609.16640</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -246,7 +250,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1567783876.42</float>
+                        <float>1567690602.64</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -303,7 +307,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1472635627.87</float>
+                        <float>1567690571.35</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
