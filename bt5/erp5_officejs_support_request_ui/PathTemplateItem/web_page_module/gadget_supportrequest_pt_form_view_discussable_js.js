@@ -217,6 +217,11 @@
           }
 
           submitButton = gadget.element.querySelector("input[type=submit]");
+          if (submitButton.disabled) {
+            // this should not happen, because browser does not allow submitting a
+            // disabled button, but it seems possible with selenium on firefox 68.
+            return gadget.notifySubmitted({ message: "Error: form was submitted, even though button is disabled", status: "error" });
+          }
           submitButton.disabled = true;
           submitButton.classList.add("ui-disabled");
 
