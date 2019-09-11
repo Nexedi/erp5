@@ -138,7 +138,7 @@
               type: "query",
               sub_storage: {
                 type: "indexeddb",
-                database: "configuration-hash"
+                database: result_list[2] + "-configuration-hash"
               }
             },
             local_sub_storage: JSON.parse(JSON.stringify(jio_options)),
@@ -147,7 +147,6 @@
               sub_storage: {
                 type: "configuration",
                 origin_url: origin_url,
-                current_storage: result_list[2],
                 hateoas_appcache: result_list[1],
                 manifest: result_list[0],
                 sub_storage: {
