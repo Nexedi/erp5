@@ -6,5 +6,5 @@ class TimerServerFactory(ServerFactory):
         self.interval = section.interval
 
     def create(self):
-        from timerserver.TimerServer import TimerServer
+        from .TimerServer import TimerServer
         return TimerServer(self.module, self.interval)

@@ -2,7 +2,7 @@
   <import package="ZServer" />
   
   <sectiontype name="timer-server"
-               datatype="timerserver.TimerServerFactory"
+               datatype="Products.TimerService.timerserver.TimerServerFactory"
                implements="ZServer.server">
     <key name="interval" datatype="float" default="600">
       <description>
