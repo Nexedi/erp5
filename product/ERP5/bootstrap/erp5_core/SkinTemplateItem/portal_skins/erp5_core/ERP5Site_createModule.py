@@ -102,6 +102,7 @@ form.manage_settings(
          field_name=form.name,
          field_description=form.description,
          field_action='Base_edit',
+         field_action_title=form.action_title,
          field_update_action=form.update_action,
          field_update_action_title=form.update_action_title,
          field_enctype=form.enctype,
