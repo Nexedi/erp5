@@ -139,17 +139,14 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("triggerSubmit", function (argument_list) {
-      var gadget = this, data, action, name_list;
+      var gadget = this, data, name_list;
       return gadget.notifySubmitting()
         .push(function () {
           return gadget.getDeclaredGadget('erp5_pt_gadget')
             .push(function (child_gadget) {
-              if (child_gadget.state.save_action !== true) {
-                //rely on child gadget to submit (filter, panels, etc.)
+              if (!child_gadget.state.editable) {
                 return child_gadget.triggerSubmit(argument_list);
               }
-              action = child_gadget.state.erp5_document._embedded._view
-                ._actions.put;
               return child_gadget.getDeclaredGadget("erp5_form")
                 .push(function (sub_gadget) {
                   return sub_gadget.checkValidity();
@@ -180,7 +177,7 @@
                   }
                   return child_gadget.submitContent(
                     child_gadget.state.jio_key,
-                    action.href,
+                    undefined,//action.href,
                     content_dict
                   )
                     .push(function () {
@@ -337,6 +334,7 @@
         erp5_document: form_json.erp5_document,
         form_definition: form_json.form_definition,
         editable: portal_type_dict.editable,
+        save_action: portal_type_dict.editable,
         view: options.view,
         form_json: form_json
       })
