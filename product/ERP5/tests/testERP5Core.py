@@ -33,6 +33,7 @@ import httplib
 import urlparse
 import base64
 import urllib
+import pkg_resources
 
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
@@ -641,7 +642,12 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       }
     )
     response = connection.getresponse()
-    self.assertEqual(response.status, 401)
+    if pkg_resources.get_distribution("Products.CMFCore").version < "2.3":
+      self.assertEqual(response.status, 401)
+    else:
+      # BBB: no longer required after we drop Products.CMFDefault
+      self.assertEqual(response.status, 302)
+      self.assertIn("/login_form", response.getheader('location'))
     self.assertEqual(response.getheader('WWW-Authenticate'), None)
 
   def test_standardErrorMessageShouldNotRaiseUnauthorizeOnUnauthorizeDocument(self):
@@ -668,7 +674,12 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     document_1.standard_error_message(error_type="MyErrorType", error_message="my error message.")
 
     response = self.publish(document_1.getPath(), self.auth)
-    self.assertEqual(response.getStatus(), 401)
+    if pkg_resources.get_distribution("Products.CMFCore").version < "2.3":
+      self.assertEqual(response.getStatus(), 401)
+    else:
+      # BBB: no longer required after we drop Products.CMFDefault
+      self.assertEqual(response.getStatus(), 302)
+      self.assertIn("/login_form", response.headers['location'])
     self.assertNotIn("Also, the following error occurred", str(response))
 
   def testCategoryExport(self):
