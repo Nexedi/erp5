@@ -31,6 +31,7 @@
 """
 
 import itertools
+import pkg_resources
 import transaction
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -1067,7 +1068,12 @@ class TestLocalRoleManagement(RoleManagementTestCase):
     self.assertEqual(response.getStatus(), 200)
     response = self.publish('/%s/first_last/getFirstName' % person_module_path,
                             basic='guest:guest')
-    self.assertEqual(response.getStatus(), 401)
+    if pkg_resources.get_distribution("Products.CMFCore").version < "2.3":
+      self.assertEqual(response.getStatus(), 401)
+    else:
+      # BBB: no longer required after we drop Products.CMFDefault
+      self.assertEqual(response.getStatus(), 302)
+      self.assertIn("/login_form", response.headers['location'])
 
     # Organisation does not have explicitly declared getTitle method in
     # the class definition.
@@ -1078,7 +1084,11 @@ class TestLocalRoleManagement(RoleManagementTestCase):
     self.tic()
     response = self.publish('/%s/my_company/getTitle' % self.getOrganisationModule().absolute_url(relative=1),
                             basic='guest:guest')
-    self.assertEqual(response.getStatus(), 401)
+    if pkg_resources.get_distribution("Products.CMFCore").version < "2.3":
+      self.assertEqual(response.getStatus(), 401)
+    else:
+      self.assertEqual(response.getStatus(), 302)
+      self.assertIn("/login_form", response.headers['location'])
 
 
 class TestKeyAuthentication(RoleManagementTestCase):
