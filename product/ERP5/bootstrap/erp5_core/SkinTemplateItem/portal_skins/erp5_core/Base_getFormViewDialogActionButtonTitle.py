@@ -17,4 +17,7 @@ if workflow_action:
   message = translateString("Workflow state may have been updated by other user. Please try again.")
   context.Base_redirect('view', keep_items={'portal_status_message': message})
 
+if form.action_title:
+  return form.action_title
+
 return form.title
