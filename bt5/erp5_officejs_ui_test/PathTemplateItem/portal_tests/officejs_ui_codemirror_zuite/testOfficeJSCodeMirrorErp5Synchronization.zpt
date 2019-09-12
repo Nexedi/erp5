@@ -169,13 +169,6 @@
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
-<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
-     Wait for spinner was removed, but a minimum pause is needed before continue -->
-<tr>
-  <td>pause</td>
-  <td>100</td>
-  <td></td>
-</tr>
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Data Updated'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
