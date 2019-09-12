@@ -9,6 +9,7 @@ import thread
 import re
 import sys, os, errno, time, socket
 from functools import partial
+from urlparse import urlsplit
 from StringIO import StringIO
 from zLOG import LOG, INFO
 
@@ -123,6 +124,19 @@ class TimerServer:
                 pass
 
 
+TIMER_SERVICE_PATH = '/Control_Panel/timer_service'
+TIMER_ENVIRON = {
+    'REQUEST_METHOD': 'GET',
+    'SERVER_SOFTWARE': 'TimerServer for Zope',
+    'SERVER_NAME': '',
+    'SERVER_PORT': '',
+    'REMOTE_ADDR': '',
+    'GATEWAY_INTERFACE': 'CGI/1.1',
+    'SERVER_PROTOCOL': 'HTTP/1.0',
+    'PATH_INFO': TIMER_SERVICE_PATH + '/process_timer',
+}
+
+
 class TimerResponse(BaseResponse):
 
     after_list = ()
@@ -158,6 +172,10 @@ class TimerResponse(BaseResponse):
         # Use the default character encoding
         return body.encode(ZPublisher.HTTPResponse.default_encoding,'replace')
 
+    def notFoundError(self, url):
+        assert urlsplit(url).path == TIMER_SERVICE_PATH, url
+        return lambda: None
+
 
 class TimerRequest(HTTPRequest):
 
@@ -172,17 +190,7 @@ class TimerRequest(HTTPRequest):
 
     def _get_env(self, stdin):
         "Returns a CGI style environment"
-        env={}
-        env['REQUEST_METHOD']='GET'
-        env['SERVER_SOFTWARE']= 'TimerServer for Zope'
-        env['SERVER_NAME'] = ''
-        env['SERVER_PORT'] = ''
-        env['REMOTE_ADDR'] = ''
-        env['GATEWAY_INTERFACE'] = 'CGI/1.1'
-        env['SERVER_PROTOCOL'] = 'HTTP/1.0'
-
-        env['PATH_INFO']= '/Control_Panel/timer_service/process_timer'
-        return env
+        return TIMER_ENVIRON.copy()
 
     def clone(self):
         # This method is a dumb copy of Zope-2.8's one that makes timerserver
