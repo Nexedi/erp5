@@ -74,7 +74,7 @@ for handler_id, module_id in handler_module_dict.iteritems():
     LOG('ERP5TioSafe.__init__', WARNING,
         'Unable to import module %r. %r transport will not be available.' % \
         (module_id, handler_id),
-        error=sys.exc_info())
+        error=True)
   else:
     try:
       registerConnectionPlugin(handler_id, getattr(module, module_id))
@@ -82,4 +82,4 @@ for handler_id, module_id in handler_module_dict.iteritems():
       LOG('ERP5TioSafe.ConnectionPlugin.__init__', WARNING,
           'Unable to register module %r. error is %r.' % \
           (module_id, msg),
-          error=sys.exc_info())
+          error=True)

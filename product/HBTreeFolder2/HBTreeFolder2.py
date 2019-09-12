@@ -12,7 +12,7 @@
 #
 ##############################################################################
 
-import operator, sys
+import operator
 from cgi import escape
 from itertools import chain, imap, islice
 from urllib import quote
@@ -491,7 +491,7 @@ class HBTreeFolder2Base (Persistent):
             raise
         except Exception:
             LOG('Zope', ERROR, 'manage_beforeDelete() threw',
-                error=sys.exc_info())
+                error=True)
         self._delOb(id)
 
 

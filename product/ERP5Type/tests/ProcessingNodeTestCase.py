@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import base64, errno, logging, os, select, socket, sys, time
+import errno, logging, os, socket, time
 from threading import Thread
 from UserDict import IterableUserDict
 import Lifetime
@@ -326,6 +326,6 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
           try:
             portal.portal_activities.process_timer(None, None)
           except Exception:
-            LOG('Invoking Activity Tool', ERROR, '', error=sys.exc_info())
+            LOG('Invoking Activity Tool', ERROR, '', error=True)
     except KeyboardInterrupt:
       pass

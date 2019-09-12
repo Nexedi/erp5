@@ -25,7 +25,6 @@
 
 from Shared.DC.ZRDB.TM import TM
 from zLOG import LOG, ERROR
-import sys
 from collections import defaultdict
 
 import transaction
@@ -66,7 +65,7 @@ class ActivityBuffer(TM):
       self.activity_tool = None
     except:
       LOG('ActivityBuffer', ERROR, "exception during _prepare",
-          error=sys.exc_info())
+          error=True)
       raise
 
   def deferredQueueMessage(self, activity_tool, activity, message):

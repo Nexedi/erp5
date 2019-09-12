@@ -255,7 +255,7 @@ class Localizer(LanguageManager, Folder):
         def set(self, lang, priority):
           if lang != self.lang:
             LOG('Localizer', PROBLEM,
-               'Cannot change language inside a translationContext', error=1)
+               'Cannot change language inside a translationContext', error=True)
       MARKER = []
       from patches import get_request # late import, as this is patched by
                                       # unit tests

@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import sys
 import os
 import inspect
 import transaction
@@ -441,7 +440,7 @@ def synchronizeDynamicModules(context, force=False):
         # Required because the exception may be silently dropped by the caller.
         transaction.doom()
         LOG('ERP5Site', PANIC, "Automatic migration of core tools failed",
-            error=sys.exc_info())
+            error=True)
         raise
 
     LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")

@@ -31,7 +31,6 @@ from Products.PluggableAuthService.interfaces.plugins import IUserEnumerationPlu
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Security.ERP5UserManager import ERP5UserManager
 from ZODB.POSException import ConflictError
-import sys
 from DateTime import DateTime
 from zLOG import LOG, PROBLEM
 from AccessControl.AuthEncoding import pw_validate
@@ -241,7 +240,7 @@ class EGOVUserManager(ERP5UserManager):
           except ConflictError:
             raise
           except:
-            LOG('ERP5Security', PROBLEM, 'getUserByLogin failed', error=sys.exc_info())
+            LOG('ERP5Security', PROBLEM, 'getUserByLogin failed', error=True)
             # Here we must raise an exception to prevent callers from caching
             # a result of a degraded situation.
             # The kind of exception does not matter as long as it's catched by

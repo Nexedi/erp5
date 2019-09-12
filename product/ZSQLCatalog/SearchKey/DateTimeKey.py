@@ -28,7 +28,6 @@
 #
 ##############################################################################
 
-import sys
 from SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
 from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
@@ -282,7 +281,7 @@ class DateTimeKey(SearchKey):
         else:
           subquery_list = matchExact(self, group, column, value_list, comparison_operator, logical_operator)
       except DateTimeError:
-        LOG('DateTimeKey', 100, 'Got an exception while generating a query for %r %r.' % (comparison_operator, value_list), error=sys.exc_info())
+        LOG('DateTimeKey', 100, 'Got an exception while generating a query for %r %r.' % (comparison_operator, value_list), error=True)
       else:
         extend(subquery_list)
     return query_list

@@ -108,8 +108,6 @@ from DateTime import DateTime
 from zLOG import LOG, ERROR, WARNING
 from ZODB.POSException import ConflictError
 
-import sys
-
 hosed_connection = (
     CR.SERVER_GONE_ERROR,
     CR.SERVER_LOST
@@ -438,7 +436,7 @@ class DB(TM):
                 self._query("SELECT GET_LOCK('%s',0)" % self._mysql_lock, allow_reconnect=not self._transactions)
         except:
             LOG('ZMySQLDA', ERROR, "exception during _begin",
-                error=sys.exc_info())
+                error=True)
             raise
 
     def tpc_vote(self, *ignored):
@@ -477,7 +475,7 @@ class DB(TM):
                 LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
         except OperationalError, m:
             LOG('ZMySQLDA', ERROR, "exception during _abort",
-                error=sys.exc_info())
+                error=True)
             if m[0] not in hosed_connection:
                 raise
 

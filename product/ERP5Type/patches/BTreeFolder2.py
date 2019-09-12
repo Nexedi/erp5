@@ -14,7 +14,6 @@
 ##############################################################################
 
 # Stribger repair of BTreeFolder2
-import sys
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base
 from Acquisition import aq_base
 from BTrees.OOBTree import OOBTree
@@ -72,7 +71,7 @@ def _cleanup(self):
     except (AssertionError, KeyError):
         LOG('BTreeFolder2', WARNING,
             'Detected damage to %s. Fixing now.' % path,
-            error=sys.exc_info())
+            error=True)
         try:
             self._tree = OOBTree(self._tree)
             mt_index = OOBTree()
@@ -89,7 +88,7 @@ def _cleanup(self):
             self._mt_index = OOBTree(mt_index)
         except:
             LOG('BTreeFolder2', ERROR, 'Failed to fix %s.' % path,
-                error=sys.exc_info())
+                error=True)
             raise
         else:
             LOG('BTreeFolder2', INFO, 'Fixed %s.' % path)

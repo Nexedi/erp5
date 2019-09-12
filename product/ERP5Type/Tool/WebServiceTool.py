@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import sys
 from zLOG import LOG, WARNING
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
@@ -69,7 +68,7 @@ for handler_id, module_id in handler_module_dict.iteritems():
     LOG('WebServiceTool', WARNING,
         'Unable to import module %r. %r transport will not be available.' % \
         (module_id, handler_id),
-        error=sys.exc_info())
+        error=True)
   else:
     registerConnectionPlugin(handler_id, getattr(module, module_id))
 

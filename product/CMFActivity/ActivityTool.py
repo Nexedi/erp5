@@ -269,7 +269,7 @@ class Message(BaseMessage):
       obj = self._getObject(activity_tool)
     except KeyError:
       LOG('CMFActivity', WARNING, "Message dropped (no object found at path %r)"
-          % (self.object_path,), error=sys.exc_info())
+          % (self.object_path,), error=True)
       self.setExecutionState(MESSAGE_NOT_EXECUTABLE)
     else:
       if (self.oid and self.oid != getattr(aq_base(obj), '_p_oid', None) and
@@ -1277,7 +1277,7 @@ class ActivityTool (BaseTool):
           except:
             # Catch ALL exception to avoid killing timerserver.
             LOG('ActivityTool', ERROR, 'process_timer received an exception',
-                error=sys.exc_info())
+                error=True)
           finally:
             setSecurityManager(old_sm)
         finally:

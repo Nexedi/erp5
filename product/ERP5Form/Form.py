@@ -51,7 +51,6 @@ from zExceptions import Forbidden
 
 from Products.ERP5Type.PsycoWrapper import psyco
 from Products.ERP5Type.Base import Base
-import sys
 
 class FieldValueCacheDict(dict):
   _last_sync = -1
@@ -237,7 +236,7 @@ class TALESValue(StaticValue):
       # something reasonable rather than generate plenty of errors
       LOG('ERP5Form', PROBLEM,
           'Field.get_value %r [%s], exception on tales_expr: ' %
-          (field, id), error=sys.exc_info())
+          (field, id), error=True)
       # field may be ProxyField
       # here we avoid calling field.get_recursive_orig_value
       # on all fields because it can be acquired from another

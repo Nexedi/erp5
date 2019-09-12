@@ -68,12 +68,11 @@ class Git(WorkingCopy):
     try:
       return subprocess.Popen(argv + list(args), **kw)
     except OSError, e:
-      import sys
       from zLOG import LOG, WARNING
       LOG('Git', WARNING,
           'will not work as the executable cannot be executed, perhaps not '
           'in the Zope PATH or because of permissions.',
-          error=sys.exc_info())
+          error=True)
 
       raise GitInstallationError("git command cannot be executed: %s" % \
                                    e.strerror)

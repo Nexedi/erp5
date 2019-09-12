@@ -1052,7 +1052,7 @@ def initializeLocalRegistry(directory_name, import_local_method):
             raise
           LOG('E5RP5Type', PROBLEM,
               'Failed to add local %s to ERP5Type repository: %s (%s)'
-              % (directory_name, module_name, document_path), error=e)
+              % (directory_name, module_name, document_path), error=True)
 
 def initializeLocalDocumentRegistry():
   # XXX Arg are not consistent
@@ -1368,7 +1368,7 @@ def assertAttributePortalType(o, attribute_name, portal_type):
           o._delObject(attribute_name)
       except (KeyError, AttributeError), err:
         LOG('ERP5Type', PROBLEM, "assertAttributePortalType failed on %s" % o,
-            error=err)
+            error=True)
 
 #####################################################
 # Miscellaneous

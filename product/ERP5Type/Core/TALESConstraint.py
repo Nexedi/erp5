@@ -27,8 +27,6 @@
 #
 ##############################################################################
 
-import sys
-
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from Products.ERP5Type import PropertySheet
 from zLOG import LOG, PROBLEM
@@ -79,7 +77,7 @@ class TALESConstraint(ConstraintMixin):
       raise
     except Exception, e:
       LOG('ERP5Type', PROBLEM, 'TALESConstraint error on "%s" on %s' %
-          (expression_text, obj), error=sys.exc_info())
+          (expression_text, obj), error=True)
 
       return [self._generateError(obj,
                                   self._getMessage('message_expression_error'),

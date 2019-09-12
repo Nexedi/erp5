@@ -37,8 +37,6 @@ from Products.ERP5Type.Cache import transactional_cached
 # IMAP imports
 import imaplib
 
-import sys
-
 # Transaction Management
 from Shared.DC.ZRDB.TM import TM
 
@@ -107,7 +105,7 @@ class IMAPSServer(MailServer):
       self.server.logout()
     except:
       LOG('IMAPSServer', ERROR, "exception during _finish",
-          error=sys.exc_info())
+          error=True)
       raise
 
   def _abort(self, *ignored):
@@ -123,7 +121,7 @@ class IMAPSServer(MailServer):
       self.server.logout()
     except:
       LOG('IMAPSServer', ERROR, "exception during _abort",
-          error=sys.exc_info())
+          error=True)
       raise
 
   def _selectMessageFolder(self, message_folder):

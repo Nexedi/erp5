@@ -26,8 +26,6 @@
 #
 ##############################################################################
 
-import sys
-
 from Products.CMFCore.Expression import Expression
 from ZODB.POSException import ConflictError
 
@@ -80,7 +78,7 @@ class TALESConstraint(Constraint):
       raise
     except Exception, e:
       LOG('ERP5Type', PROBLEM, 'TALESConstraint error on "%s" on %s' %
-         (self.constraint_definition['expression'], obj), error=sys.exc_info())
+         (self.constraint_definition['expression'], obj), error=True)
       error_list.append(self._generateError(obj,
                   self._getMessage('message_expression_error'),
                   mapping=dict(error_text=str(e))))

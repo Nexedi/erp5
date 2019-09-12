@@ -28,8 +28,6 @@
 #
 ##############################################################################
 
-import sys
-
 from Acquisition import Implicit
 
 from Products.PythonScripts.Utility import allow_class
@@ -243,7 +241,7 @@ class OOoParser(Implicit):
     try:
       oo_unzipped = ZipFile(file_descriptor, mode="r")
     except Exception, e:
-      LOG('ERP5OOo', DEBUG, 'Error in openFile', error=sys.exc_info())
+      LOG('ERP5OOo', DEBUG, 'Error in openFile', error=True)
       raise CorruptedOOoFile(e)
     # Test the integrity of the file
     if oo_unzipped.testzip() is not None:

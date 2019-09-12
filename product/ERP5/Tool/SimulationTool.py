@@ -59,7 +59,6 @@ from hashlib import md5
 from warnings import warn
 from cPickle import loads, dumps
 from copy import deepcopy
-from sys import exc_info
 
 MYSQL_MIN_DATETIME_RESOLUTION = 1/86400.
 
@@ -1400,7 +1399,7 @@ class SimulationTool(BaseTool):
       except TypeError:
           LOG("SimulationTool._getCachedInventoryList", WARNING,
               "Failed copying sql_kw, disabling stock cache",
-              error=exc_info())
+              error=True)
           raise StockOptimisationError
       no_date_sql_kw, no_date_new_kw = self._generateKeywordDict(**no_date_kw)
       no_date_stock_sql_kw = self._generateSQLKeywordDictFromKeywordDict(

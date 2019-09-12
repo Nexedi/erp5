@@ -27,7 +27,6 @@ from Acquisition import aq_base, aq_parent
 from zLOG import LOG, INFO, ERROR
 from cStringIO import StringIO
 from Products.ERP5Type import Permissions
-import sys
 
 security = ClassSecurityInfo()
 DA.security = security
@@ -224,7 +223,7 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
 #           LOG("DA query", INFO, "query = %s" %(query,))
         result=DB__.query(query, self.max_rows_)
       except:
-        LOG("DA call raise", ERROR, "DB = %s, c = %s, query = %s" %(DB__, c, query), error=sys.exc_info())
+        LOG("DA call raise", ERROR, "DB = %s, c = %s, query = %s" %(DB__, c, query), error=True)
         raise
 
     # patch: dynamic brain configuration

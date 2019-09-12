@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sys
-
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass
@@ -117,7 +115,7 @@ class GhostBaseMetaClass(ExtensionClass, AccessorHolderType):
         raise
       except Exception, e:
         LOG('lazy_class.__getattribute__', WARNING, 'Failed to load class : %r' % (e,),
-            error=sys.exc_info())
+            error=True)
         raise
       return getattr(self, attr)
 
@@ -353,7 +351,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       except AttributeError:
         LOG("ERP5Type.Dynamic", WARNING,
             "Could not access Portal Type Object for type %r"
-            % portal_type, error=sys.exc_info())
+            % portal_type, error=True)
         base_tuple = (ERP5BaseBroken, )
         portal_type_category_list = []
         attribute_dict = dict(_categories=[], constraints=[])

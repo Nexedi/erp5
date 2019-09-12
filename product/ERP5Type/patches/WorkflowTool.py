@@ -13,7 +13,6 @@
 #
 ##############################################################################
 
-import sys
 from zLOG import LOG, WARNING
 from types import StringTypes
 
@@ -565,7 +564,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         LOG('WorkflowTool.listActions', WARNING,
             'Exception while computing worklists: %s'
             % grouped_worklist_dict.keys(),
-            error=sys.exc_info())
+            error=True)
         continue
       except ProgrammingError, error_value:
         # 1146 = table does not exist
@@ -715,7 +714,7 @@ def WorkflowTool_refreshWorklistCache(self):
               raise
             LOG('WorkflowTool', WARNING, 'Insertion in worklist cache table ' \
                 'failed. Recreating table and retrying.',
-                error=sys.exc_info())
+                error=True)
             self.Base_zCreateWorklistTable()
             Base_zInsertIntoWorklistTable(**value_column_dict)
 

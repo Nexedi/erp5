@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import sys
 from AccessControl import ClassSecurityInfo
 from AccessControl.ZopeGuards import guarded_getattr
 from ZODB.POSException import ConflictError
@@ -381,7 +380,7 @@ class MatrixBoxWidget(Widget.Widget):
                         except:
                           LOG('MatrixBox', WARNING, 'Could not evaluate the url '
                               'method %r with %r' % (url_method, cell),
-                              error=sys.exc_info())
+                              error=True)
                       else:
                         LOG('MatrixBox', WARNING,
                             'Could not find the url method %s' % (url_method_id,))

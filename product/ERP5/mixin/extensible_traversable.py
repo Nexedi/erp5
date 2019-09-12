@@ -40,7 +40,6 @@ from Products.ERP5Type import Permissions
 from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCacheHeaders, _ViewEmulator
 from OFS.Image import File as OFSFile
 from warnings import warn
-import sys
 from base64 import decodestring
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.ERP5.Document.Document import ConversionError, NotConvertedError
@@ -125,7 +124,7 @@ class BaseExtensibleTraversableMixin(ExtensibleTraversableMixIn):
           except:
             LOG("ERP5 WARNING",0,
                 "Failed to retrieve user in __bobo_traverse__ of WebSection %s" % self.getPath(),
-                error=sys.exc_info())
+                error=True)
             user = None
       if user is not None and user.getUserName() == 'Anonymous User':
         user = None # If the user which is connected is anonymous,

@@ -377,7 +377,7 @@ CREATE TABLE %s (
 
   def _log(self, severity, summary):
     LOG(self.__class__.__name__, severity, summary,
-        error=severity>INFO and sys.exc_info() or None)
+        error=severity > INFO)
 
   def distribute(self, activity_tool, node_count):
     db = activity_tool.getSQLConnection()
