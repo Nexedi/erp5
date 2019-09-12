@@ -19,7 +19,6 @@ from base64 import b16encode
 from lxml import etree
 from zLOG import LOG, ERROR
 from DateTime import DateTime
-import sys
 from Products.ERP5Type.Cache import CachingMethod
 
 # Global variables
@@ -63,16 +62,7 @@ class TioSafeBrain(Explicit):
     """
     Build the TioSafe XML
     """
-    try:
-      return self._asXML()
-    except:
-      raise
-      error_type, error_value, error_tb = sys.exc_info()
-      LOG("TioSafeBrain.asXML", ERROR, "%s - %s" %(error_type, error_value), error=sys.exc_info())
-      if debug:
-        raise ValueError, "%s - %s" %(error_type, error_value)
-      else:
-        raise
+    return self._asXML()
 
   def getDefaultUnknownNodeGID(self):
     """
