@@ -245,6 +245,7 @@ gadget_officejs_bootloader_presentation.css\n
 gadget_officejs_bootloader_serviceworker.js\n
 officejs_logo.png\n
 jio_appcachestorage.js\n
+jio_configuration_storage.js\n
 \n
 #configuration resources\n
 \n
@@ -456,7 +457,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.57983.23244.34969</string> </value>
+                <value> <string>977.57984.44848.64477</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -474,7 +475,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1566313001.05</float>
+                        <float>1567773407.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
