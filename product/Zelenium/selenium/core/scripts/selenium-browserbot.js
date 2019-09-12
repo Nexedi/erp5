@@ -1922,7 +1922,17 @@ BrowserBot.prototype.submit = function(formElement) {
 };
 
 BrowserBot.prototype.clickElement = function(element, clientX, clientY) {
-       this._fireEventOnElement("click", element, clientX, clientY);
+       // To preserve compatibility with firefox 52, where clicking a disabled
+       // element did not trigger the click event handler, we use element.click
+       // instead of element.dispatchEvent because the former does not trigger
+       // handlers when element is disabled on both chrome and recent firefox
+       // (verified on chrome 76 and firefox 69).
+       // We can only do this when clicking on the element without clie.
+       if (clientX || clientY) {
+           this._fireEventOnElement("click", element, clientX, clientY);
+       } else {
+           element.click();
+       }
 };
 
 BrowserBot.prototype.doubleClickElement = function(element, clientX, clientY) {
