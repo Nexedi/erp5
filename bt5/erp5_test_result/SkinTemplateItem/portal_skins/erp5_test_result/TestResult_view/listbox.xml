@@ -344,6 +344,10 @@
                           <string>Test Case</string>
                         </tuple>
                         <tuple>
+                          <string>int_index</string>
+                          <string>Int Index</string>
+                        </tuple>
+                        <tuple>
                           <string>start_date</string>
                           <string>Start Date</string>
                         </tuple>
