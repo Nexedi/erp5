@@ -19,6 +19,7 @@ portal_catalog = portal.portal_catalog
 
 try:
 
+  hateoas_appcache = context.getLayoutProperty("hateoas_appcache", default="hateoas_appcache")
   router_file_reference = context.getLayoutProperty("configuration_router_gadget_url", default="")
   if router_file_reference is "":
     raise ValueError("Router Gadget Layout Property is missing")
@@ -28,8 +29,6 @@ try:
   configuration_file_reference = context.getLayoutProperty("configuration_app_configuration", default="")
   if configuration_file_reference is "":
     raise ValueError("Configuration URL Layout Property is missing")
-  #configuration_file_reference = "testmanifest.configuration" # TODO DELETE THIS WHEN FINISH so configuration_manifest var is used
-  #appcache_file_reference = "testmanifest.appcache"
 
   router_file = portal_catalog.getResultValue(
       portal_type = 'Web Page',
@@ -47,19 +46,19 @@ try:
       portal_type = 'Web Manifest',
       reference = configuration_file_reference)
   if configuration_manifest is None:
-    #TODO create it
-    raise ValueError("Configuration manifest '%s' not found" % configuration_file_reference)
+    module = portal.getDefaultModule('Web Page')
+    configuration_manifest = module.newContent(portal_type='Web Manifest',
+                                               reference=configuration_file_reference)
+    configuration_manifest.publish()
 
   router_content = router_file.getTextContent()
 
-  hateoas_appcache = "hateoas_appcache" #HARDCODED - get from hateoas static web section (here.parent.lines[hateoas_appcache])
   portal_skin = getElementFromContent("portal_skin_folder", router_content)
   if portal_skin is None:
     raise KeyError("portal_skin_folder setting not found in router")
   app_action_string = getElementFromContent("app_actions", router_content)
   if app_action_string is None:
     raise KeyError("app_actions setting not found in router")
-  new_dialog_form = getElementFromContent("new_content_action", router_content)
   date = datetime.now().strftime("%c")
   app_action_list = []
 
@@ -80,6 +79,15 @@ try:
     else:
       portal_actions_dict[portal_type] = [action]
 
+  new_dialog_form_list = []
+  for portal_type in portal_actions_dict:
+    portal_type_dict_setting = portal_type.replace(" ", '_').lower() + "_dict"
+    portal_type_dict = getElementFromContent(portal_type_dict_setting, router_content)
+    if portal_type_dict is not None:
+      portal_type_dict = json.loads(portal_type_dict)
+      if "new_content_dialog_form" in portal_type_dict:
+        new_dialog_form_list.append(str(portal_type_dict["new_content_dialog_form"]))
+
   configuration_path_list = []
 
   for key in portal_actions_dict:
@@ -96,9 +104,10 @@ try:
       except KeyError as e:
         raise KeyError("Error getting portal action info: " + str(e))
 
-  if new_dialog_form is not None:
-    path = "portal_skins/%s/%s" % (portal_skin, new_dialog_form)
-    configuration_path_list.append(base64.b64encode(path))
+  if new_dialog_form_list:
+    for form in new_dialog_form_list:
+      path = "portal_skins/%s/%s" % (portal_skin, form)
+      configuration_path_list.append(base64.b64encode(path))
 
   configuration_element_lines = ""
   for path in configuration_path_list:
@@ -137,8 +146,6 @@ except Exception as e:
   if batch_mode:
     return 'ERROR: ' + str(e)
   return context.Base_redirect('view', keep_items=dict(portal_status_message='ERROR creating configuration manifest: ' + str(e)))
-
-return printed
 
 if batch_mode:
   return 'done'
