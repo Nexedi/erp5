@@ -2429,18 +2429,16 @@ def initialize(self):
   for _ in self.getApp().objectIds(meta_type):
     return
 
-  # We defer the call to manage_addERP5Site via ZServer.PubCore because:
+  # We defer the call to manage_addERP5Site via TimerService because:
   # - we use ZPublisher so that get_request() works
-  #   (see new_publish in Localizer.patches)
+  #   (see Localizer patch)
   # - we want errors to be logged correctly
   #   (see Zope2.zpublisher_exception_hook in Zope2.App.startup)
-  import inspect, time
+  import inspect, sys, time
   from AccessControl.SecurityManagement import newSecurityManager
-  from cStringIO import StringIO
+  from App.ZApplication import ZApplicationWrapper
   from Products.ZMySQLDA.db import DB, OperationalError
-  from ZPublisher import HTTPRequest, HTTPResponse
-  from ZServer.PubCore import handle
-  def addERP5Site():
+  def addERP5Site(REQUEST):
     default_kw = inspect.getcallargs(manage_addERP5Site, None, '')
     db = (kw.get('erp5_sql_connection_string') or
       default_kw['erp5_sql_connection_string'])
@@ -2459,15 +2457,18 @@ def initialize(self):
       try:
         with DB(db).lock():
           transaction.begin()
-          app = request['PARENTS'][0] = request['PARENTS'][0]()
+          app = REQUEST['PARENTS'][0]
+          if isinstance(app, ZApplicationWrapper):
+            # BBB: With ZServer, it is not loaded yet.
+            app = REQUEST['PARENTS'][0] = app()
           for _ in app.objectIds(meta_type):
             return
           uf = app.acl_users
           user = uf.getUser(kw['owner'])
           if not user.has_role('Manager'):
-            response.unauthorized()
+            REQUEST.RESPONSE.unauthorized()
           newSecurityManager(None, user.__of__(uf))
-          manage_addERP5Site(app.__of__(RequestContainer(REQUEST=request)),
+          manage_addERP5Site(app.__of__(RequestContainer(REQUEST=REQUEST)),
             **{k: kw.get(k, v) for k, v in default_kw.iteritems()
                                if isinstance(v, str)})
           transaction.get().note('Created ' + meta_type)
@@ -2484,11 +2485,19 @@ def initialize(self):
               'MySQL error while trying to create ERP5 site. Retrying...',
               error=1)
         time.sleep(5)
-  response = HTTPResponse.HTTPResponse(stdout=StringIO())
-  response._finish = lambda: None
-  request = HTTPRequest.HTTPRequest(
-    StringIO(), dict(REQUEST_METHOD='GET', SERVER_URL=''), response)
-  request.traverse = lambda *args, **kw: addERP5Site
-  handle('Zope2', request, response)
+  try:
+      TimerServer = sys.modules['Products.TimerService.timerserver.TimerServer']
+  except KeyError:
+      try: # BBB
+          TimerServer = sys.modules['timerserver.TimerServer']
+      except KeyError:
+          # There's no point installing ERP5 automatically
+          # if there's no timer service configured.
+          return
+  TimerRequest = TimerServer.TimerRequest
+  def traverse(*args, **kw):
+    del TimerRequest.traverse
+    return addERP5Site
+  TimerRequest.traverse = traverse
 
 AppInitializer.initialize = initialize
