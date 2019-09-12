@@ -642,7 +642,7 @@ def WorkflowTool_refreshWorklistCache(self):
     if len(worklist_dict):
       Base_zClearWorklistTable = getattr(self, 'Base_zClearWorklistTable', None)
       if Base_zClearWorklistTable is None:
-        LOG('WorkflowTool', 100, 'Base_zClearWorklistTable cannot be found. ' \
+        LOG('WorkflowTool', WARNING, 'Base_zClearWorklistTable cannot be found. ' \
             'Falling back to former refresh method. Please update ' \
             'erp5_worklist_sql business template.')
         self.Base_zCreateWorklistTable()
@@ -713,7 +713,7 @@ def WorkflowTool_refreshWorklistCache(self):
             # OperationalError 1054 = unknown column
             if isinstance(error_value, OperationalError) and error_value[0] != 1054:
               raise
-            LOG('WorkflowTool', 100, 'Insertion in worklist cache table ' \
+            LOG('WorkflowTool', WARNING, 'Insertion in worklist cache table ' \
                 'failed. Recreating table and retrying.',
                 error=sys.exc_info())
             self.Base_zCreateWorklistTable()
