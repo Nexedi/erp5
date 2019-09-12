@@ -1618,6 +1618,7 @@ class ActivityTool (BaseTool):
               m.setExecutionState(MESSAGE_EXECUTED, context=self)
               continue
           m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, context=self)
+      exc_info = None
       if self.activity_tracking:
         activity_tracking_logger.info('invoked group messages')
 
