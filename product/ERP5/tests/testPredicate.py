@@ -33,6 +33,7 @@
 
 import unittest
 
+from Products.ERP5Type.Document import newTempMovement
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
@@ -323,7 +324,6 @@ class TestPredicates(TestPredicateMixIn):
                 ['region/europe/western_europe/germany'])
     self.assertFalse(pred.test(doc))
 
-
   def test_NonExistantCategoryMembership(self):
     # the predicate also return false for non existant category and no error is
     # raised.
@@ -333,6 +333,45 @@ class TestPredicates(TestPredicateMixIn):
         membership_criterion_category_list=['not_exist/nothing'])
     self.assertFalse(pred.test(doc))
 
+  def test_PropertyCriterion(self):
+    movement = newTempMovement(self.portal, 'tmp')
+    predicate = self.createPredicate()
+    predicate.setCriterionPropertyList(['quantity'])
+    request = self.portal.REQUEST
+    request.set(
+      'listbox',
+      {'quantity': {'max': '', 'identity': [], 'min': ''}},
+    )
+    predicate.Predicate_edit('Predicate_view')
+    self.assertEqual(predicate._identity_criterion, {'quantity': []})
+    self.assertEqual(predicate._range_criterion, {})
+    self.assertTrue(predicate.test(movement))
+    request.set(
+      'listbox',
+      {'quantity': {'max': '', 'identity': [], 'min': 1.0}},
+    )
+    predicate.Predicate_edit('Predicate_view')
+    self.assertEqual(predicate._range_criterion, {'quantity': (1.0, None)})
+    self.assertFalse(predicate.test(movement.asContext(quantity=0.5)))
+    self.assertTrue(predicate.test(movement.asContext(quantity=1.0)))
+    request.set(
+      'listbox',
+      {'quantity': {'max': 2.0, 'identity': [], 'min': ''}},
+    )
+    predicate.Predicate_edit('Predicate_view')
+    self.assertEqual(predicate._range_criterion, {'quantity': (None, 2.0)})
+    self.assertFalse(predicate.test(movement.asContext(quantity=2.0)))
+    self.assertTrue(predicate.test(movement.asContext(quantity=1.5)))
+    request.set(
+      'listbox',
+      {'quantity': {'max': 2.0, 'identity': [], 'min': 1.0}},
+    )
+    predicate.Predicate_edit('Predicate_view')
+    self.assertEqual(predicate._range_criterion, {'quantity': (1.0, 2.0)})
+    self.assertFalse(predicate.test(movement.asContext(quantity=0.5)))
+    self.assertTrue(predicate.test(movement.asContext(quantity=1.0)))
+    self.assertTrue(predicate.test(movement.asContext(quantity=1.5)))
+    self.assertFalse(predicate.test(movement.asContext(quantity=2.0)))
 
   def test_EmptyPredicates(self):
     # empty predicate are true
