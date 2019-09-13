@@ -950,4 +950,17 @@ def canDoActionFor(self, ob, action, wf_id=None, guard_kw={}):
 
 WorkflowTool.canDoActionFor = canDoActionFor
 
+security.declarePrivate('_listTypeInfo')
+def _listTypeInfo(self):
+    """ List the portal types which are available.
+    """
+    # <patch>
+    ttool = getattr(self.getPortalObject(), "portal_types", None)
+    # </patch>
+    if ttool is not None:
+        return ttool.listTypeInfo()
+    return ()
+
+WorkflowTool._listTypeInfo = _listTypeInfo
+
 InitializeClass(WorkflowTool)
