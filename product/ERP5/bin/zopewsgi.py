@@ -3,7 +3,9 @@ from io import BytesIO
 import logging
 import os
 import posixpath
+import signal
 import socket
+import sys
 from tempfile import TemporaryFile
 import time
 from urllib import quote, splitport
@@ -159,6 +161,9 @@ def runwsgi():
     conf, _ = ZConfig.loadConfig(schema, args.zope_conf)
 
     make_wsgi_app({}, zope_conf=args.zope_conf)
+
+    from Signals.SignalHandler import SignalHandler
+    SignalHandler.registerHandler(signal.SIGTERM, sys.exit)
 
     ip, port = splitport(args.address)
     port = int(port)
