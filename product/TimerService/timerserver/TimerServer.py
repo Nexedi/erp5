@@ -80,6 +80,9 @@ class TimerServer:
                         _response=response)
                     server.add_task(self)
 
+                def cancel(self):
+                    pass
+
         if ip == '0.0.0.0':
           ip = socket.gethostbyname(socket.gethostname())
 
