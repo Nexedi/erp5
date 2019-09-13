@@ -256,10 +256,11 @@
         })
         .push(function (translated_title_list) {
           var action_confirm = form_gadget.element.querySelector('input.dialogconfirm')
-          if (form_gadget.state.action_title)
+          if (form_gadget.state.action_title) {
             action_confirm.value = form_gadget.state.action_title;
-          else
+          } else {
             action_confirm.value = translated_title_list[1];
+          }
 
           selector.textContent = "\u00A0" + translated_title_list[0];
           selector.className = "ui-content-title ui-body-c ui-icon ui-icon-custom" + icon;
