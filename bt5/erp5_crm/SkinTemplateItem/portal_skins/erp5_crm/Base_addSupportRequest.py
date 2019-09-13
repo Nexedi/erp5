@@ -67,7 +67,7 @@ for method_id in {
     }[support_request_state]:
   getattr(support_request, method_id)()
 
-support_request.Base_redirect(
+return support_request.Base_redirect(
   keep_items={
     'portal_status_message': portal.Base_translateString(
       'New ${portal_type} created.',
