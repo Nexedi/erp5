@@ -1,3 +1,18 @@
+print '---<br>'
+for brain in context.getPortalObject().portal_catalog(portal_type='Action Information', sort_on=[['relative_url', 'ASC']]):
+  action = brain.getObject()
+  action_type = action.getActionType()
+  if ('web' in action_type) or ('jio' in action_type) or (action_type in ['object_view', 'object_list', 'object_jump', 'object_sort', 'object_ui']):
+    continue
+  if (action_type in ['object_button', 'object_search']):
+    continue
+  print action.getParentTitle(), '<a href="%s">%s</a>' % (action.getRelativeUrl(), action.getTitle()), action.getActionType(), '<br>'
+return printed
+
+
+
+
+
 context.getPortalObject().notebook_module.olapy_notebook.edit(title="olapy_notebook.jsmd", reference="olapy_notebook.jsmd")
 return "ok"
 
