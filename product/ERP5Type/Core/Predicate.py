@@ -115,6 +115,8 @@ class Predicate(XMLObject):
 #        'testing %s on context of %s' % \
 #        (self.getRelativeUrl(), context.getRelativeUrl()))
     for property, value in self._identity_criterion.iteritems():
+      if not value:
+        continue
       if isinstance(value, (list, tuple)):
         result = context.getProperty(property) in value
       else:
