@@ -138,6 +138,16 @@ class TestERP5Administration(InventoryAPITestCase):
     # next time the alarm run, document is not reported anymore
     alarm.activeSense()
     self.tic()
+
+    from DateTime import DateTime
+    self.assertFalse(
+        alarm.sense(),
+        (DateTime(),
+         self.portal.erp5_sql_connection().query(
+            """SELECT UTC_TIMESTAMP, CURRENT_TIMESTAMP"""
+         )
+        )
+    )
     self.assertFalse(alarm.sense())
     self.assertEqual([], alarm.getLastActiveProcess().getResultList())
 
