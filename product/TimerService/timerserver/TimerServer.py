@@ -104,15 +104,6 @@ class TimerServer:
         module = self.module
         interval = self.interval
 
-        # minutes = time.gmtime(time.time()[4], seconds = time.gmtime(time.time()[5]
-        # max interval is therefore 59*60 + 59 = 208919 seconds
-
-        wait = ((time.gmtime(time.time())[4] * 60) + time.gmtime(time.time())[5]) % interval
-        sleep = interval - wait
-
-        if sleep > 0:
-            time.sleep(sleep)
-
         LOG('ZServer', INFO, 'Timerserver ready, starting timer services.')
 
         while 1:
