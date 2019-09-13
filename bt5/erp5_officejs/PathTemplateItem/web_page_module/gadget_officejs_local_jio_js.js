@@ -72,13 +72,14 @@
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
 
-    .declareMethod('clean', function (appcache_storage) {
+    .declareMethod('clean', function (appcache_storage, origin_url) {
       if (!appcache_storage) { return; }
-      //clean previous app version documents
-      var sync_flag = "appcache-stored",
-        document_id_list = [sync_flag,
+      var gadget = this,
+        document_id_list = [origin_url,
+                            "appcache-stored",
                             "portal_skins/erp5_text_editor/" +
                             "Base_cloneDocumentForTextEditor",
                             "portal_skins/erp5_text_editor/" +
@@ -94,16 +95,17 @@
                             "portal_types/Web Page/text_editor_clone"],
         promise_list = [],
         i = 0;
-      return appcache_storage.get(sync_flag)
+      return gadget.getSetting("clean-storage")
+        .push(function (clean_storage) {
+          if (!clean_storage) {
+            for (i = 0; i < document_id_list.length; i += 1) {
+              promise_list = [appcache_storage.remove(document_id_list[i])];
+            }
+            return RSVP.all(promise_list);
+          }
+        })
         .push(function () {
-          for (i = 0; i < document_id_list.length; i += 1) {
-            promise_list = [appcache_storage.remove(document_id_list[i])];
-          }
-          return RSVP.all(promise_list);
-        }, function (error) {
-          if (error && String(error.status_code) !== "404") {
-            throw error;
-          }
+          return gadget.setSetting("clean-storage", true);
         });
     })
 
@@ -171,7 +173,7 @@
           appcache_storage = jIO.createJIO(jio_appchache_options);
         })
         .push(function () {
-          return gadget.clean(appcache_storage);
+          return gadget.clean(appcache_storage, origin_url);
         })
         .push(function () {
           if (appcache_storage) {
