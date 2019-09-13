@@ -34,6 +34,7 @@ from Products.ERP5Type.patches import DCWorkflow
 from Products.ERP5Type.patches import Worklists
 from Products.ERP5Type.patches import BTreeFolder2
 from Products.ERP5Type.patches import WorkflowTool
+from Products.ERP5Type.patches import DynamicType
 from Products.ERP5Type.patches import XMLExportImport
 from Products.ERP5Type.patches import ppml
 from Products.ERP5Type.patches import Expression
