@@ -90,7 +90,7 @@ else:
   message = translateString('${portal_type} updated successfully.',
               mapping=dict(portal_type=document_portal_type))
 
-if redirect_to_document or redirect_url is not None:
+if redirect_to_context or redirect_to_document or redirect_url is not None:
   # this is an UI mode where script should handle HTTP redirects and is likely used
   # by ERP5 form
   if redirect_to_document and document is not None:
@@ -103,6 +103,10 @@ if redirect_to_document or redirect_url is not None:
     redirect_url= '%s?%s' %(redirect_url, 
                             make_query(dict(portal_status_message=message)))
     return context.REQUEST.RESPONSE.redirect(redirect_url)
+  elif redirect_to_context:
+    # explicitly required to view ingested document
+    return context.Base_redirect('view',
+                                 keep_items={'portal_status_message': message})
 
 # return document (for non UI mode)
 return document

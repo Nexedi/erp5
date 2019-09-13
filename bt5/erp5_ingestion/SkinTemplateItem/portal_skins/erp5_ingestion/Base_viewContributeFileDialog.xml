@@ -96,7 +96,7 @@
                         <string>your_classification</string>
                         <string>your_portal_type</string>
                         <string>your_file</string>
-                        <string>your_redirect_url</string>
+                        <string>your_redirect_to_context</string>
                       </list>
                     </value>
                 </item>
