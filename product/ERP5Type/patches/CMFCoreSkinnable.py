@@ -141,11 +141,9 @@ def CMFCoreSkinnableSkinnableObjectManager_changeSkin(self, skinname, REQUEST=No
     Patched not to call getSkin.
   '''
   if skinname is None:
-    sfn = self.getSkinsFolderName()
-    if sfn is not None:
-      sf = getattr(self, sfn, None)
-      if sf is not None:
-        skinname = sf.getDefaultSkin()
+    sf = getattr(self, "portal_skins", None)
+    if sf is not None:
+      skinname = sf.getDefaultSkin()
   tid = get_ident()
   SKINDATA[tid] = (
     None,
