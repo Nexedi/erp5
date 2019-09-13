@@ -2485,16 +2485,7 @@ def initialize(self):
               'MySQL error while trying to create ERP5 site. Retrying...',
               error=1)
         time.sleep(5)
-  try:
-    TimerServer = sys.modules['Products.TimerService.timerserver.TimerServer']
-  except KeyError:
-    try: # BBB
-      TimerServer = sys.modules['timerserver.TimerServer']
-    except KeyError:
-      # There's no point installing ERP5 automatically
-      # if there's no timer service configured.
-      return
-  TimerRequest = TimerServer.TimerRequest
+  from Products.TimerService.timerserver.TimerServer import TimerRequest
   def traverse(*args, **kw):
     del TimerRequest.traverse
     return addERP5Site
