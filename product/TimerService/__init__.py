@@ -3,10 +3,7 @@
 # Authors: Nik Kim <fafhrd@legco.biz>
 
 from App.ImageFile import ImageFile
-from AccessControl import ModuleSecurityInfo, allow_module
-from AccessControl.Permissions import view
-
-from TimerService import TimerService, current_version
+from .TimerService import TimerService, current_version
 
 misc_ = { 'timer_icon.gif':
           ImageFile('zpt/timer_icon.gif', globals())}

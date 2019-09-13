@@ -1,42 +1,29 @@
 # -*- coding: UTF-8 -*-
 # -*- Mode: Python; py-indent-offset: 4 -*-
 # Authors: Nik Kim <fafhrd@legco.biz>
-__version__ = 'TimerServer for Zope 0.1'
 
-import traceback
-
-import thread
-import re
-import sys, os, errno, time, socket
+import errno, logging, os, re, socket, sys, threading, time, traceback
 from functools import partial
 from urlparse import urlsplit
 from StringIO import StringIO
-from zLOG import LOG, INFO
 
-from ZPublisher.BaseRequest import BaseRequest
 from ZPublisher.BaseResponse import BaseResponse
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
 import ZPublisher.HTTPRequest
 
-class TimerServer:
+logger = logging.getLogger('TimerServer')
+
+class TimerServer(threading.Thread):
+
     def __init__(self, module, interval=600):
+        super(TimerServer, self).__init__()
+        self.daemon = True
         self.module = module
-
         self.interval = interval
-
-        sync = thread.allocate_lock()
-
-        self._a = sync.acquire
-        self._r = sync.release
-
-        self._a()
-        thread.start_new_thread(self.run, ())
-        self._r()
-
-        LOG('ZServer', INFO,
-            'Timer server started at %s\n'
-            '\tInterval: %s seconds.\n'%(time.ctime(time.time()), interval))
+        self.start()
+        logger.info('Service initialized with interval of %s second(s).',
+                    interval)
 
     def run(self):
         try:
@@ -104,7 +91,7 @@ class TimerServer:
         module = self.module
         interval = self.interval
 
-        LOG('ZServer', INFO, 'Timerserver ready, starting timer services.')
+        logger.info('Service ready.')
 
         while 1:
             time.sleep(interval)
