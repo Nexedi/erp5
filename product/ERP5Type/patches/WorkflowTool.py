@@ -721,7 +721,7 @@ def WorkflowTool_refreshWorklistCache(self):
 security.declareProtected(Permissions.ManagePortal, 'refreshWorklistCache')
 WorkflowTool.refreshWorklistCache = WorkflowTool_refreshWorklistCache
 
-class WorkflowHistoryList(Persistent):
+class WorkflowHistoryBucketList(Persistent):
     _bucket_size = 16
 
     def __init__(self, iterable=None, prev=None):
@@ -747,6 +747,13 @@ class WorkflowHistoryList(Persistent):
             if index < 0:
                 # XXX this implementation is not so good, but rarely used.
                 index += len(self)
+            elif index <= self._bucket_size:
+                if getattr(self,'_first', None):
+                  # Speed up access to the first elements
+                  return self._first._slots[index]
+                if self._prev is not None and getattr(self, "_init_first", None):
+                  self._init_first()
+                  return self._first._slots[index]
             iterator = self.__iter__()
             for i in xrange(index):
                 iterator.next()
@@ -804,6 +811,42 @@ class WorkflowHistoryList(Persistent):
         else:
             self._prev = self.__class__(self._slots, prev=self._prev)
             self._slots = [value]
+
+class WorkflowHistoryList(WorkflowHistoryBucketList):
+
+    def __init__(self, iterable=None, prev=None):
+        WorkflowHistoryBucketList.__init__(self, iterable, prev)
+        self._first = None
+
+    def _init_first(self):
+        if getattr(self,'_first', None) is None:
+            # Handle migration of old workflow history
+            bucket = self._prev
+            while bucket._prev is not None:
+              bucket = bucket._prev
+            self._first = bucket
+            self._p_changed = 1
+
+    def append(self, value):
+        if len(self._slots) < self._bucket_size:
+            self._slots.append(value)
+            self._p_changed = 1
+        else:
+            self._prev = WorkflowHistoryBucketList(
+                             self._slots, prev=self._prev)
+            self._slots = [value]
+            self._init_first() 
+
+    def __setstate__(self, state):
+        if len(state) == 2:
+          self._prev, self._slots = state
+          self._first = None
+        else:
+          self._prev, self._slots, self._first = state
+
+
+    def __getstate__(self):
+        return (self._prev, self._slots, getattr(self, "_first", None))
 
 def WorkflowTool_setStatusOf(self, wf_id, ob, status):
     """ Append an entry to the workflow history.
