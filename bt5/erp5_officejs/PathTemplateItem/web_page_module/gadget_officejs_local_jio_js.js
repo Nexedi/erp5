@@ -143,49 +143,16 @@
             },
             local_sub_storage: JSON.parse(JSON.stringify(jio_options)),
             remote_sub_storage: {
-              type: "replicate",
-              parallel_operation_attachment_amount: 10,
-              parallel_operation_amount: 1,
-              conflict_handling: 2, //keep remote
-              signature_hash_key: 'hash',
-              check_remote_attachment_modification: true,
-              check_remote_attachment_creation: true,
-              check_remote_attachment_deletion: true,
-              check_remote_deletion: true,
-              check_local_creation: false,
-              check_local_deletion: false,
-              check_local_modification: false,
-              signature_sub_storage: {
-                type: "query",
+              type: "saferepair",
+              sub_storage: {
+                type: "configuration",
+                origin_url: origin_url,
+                hateoas_appcache: result_list[1],
+                manifest: result_list[0],
                 sub_storage: {
-                  type: "uuid",
-                  sub_storage: {
-                    type: "indexeddb",
-                    database: "configuration-hash"
-                  }
-                }
-              },
-              local_sub_storage: {
-                type: "query",
-                sub_storage: {
-                  type: "uuid",
-                  sub_storage: {
-                    type: "indexeddb",
-                    database: "configuration-elements"
-                  }
-                }
-              },
-              remote_sub_storage: {
-                type: "saferepair",
-                sub_storage: {
-                  type: "configuration",
+                  type: "appcache",
                   origin_url: origin_url,
-                  hateoas_appcache: result_list[1],
-                  manifest: result_list[0],
-                  sub_storage: {
-                    type: "appcache",
-                    manifest: result_list[0]
-                  }
+                  manifest: result_list[0]
                 }
               }
             }

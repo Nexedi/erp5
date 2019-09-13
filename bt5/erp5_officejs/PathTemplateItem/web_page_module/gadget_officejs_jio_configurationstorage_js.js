@@ -1,6 +1,6 @@
 /*jslint indent:2, maxlen: 80, nomen: true */
-/*global jIO, RSVP, window, URL, atob, Rusha */
-(function (window, jIO, RSVP, URL, atob, Rusha) {
+/*global jIO, RSVP, window, URL, atob, btoa, Rusha */
+(function (window, jIO, RSVP, URL, atob, btoa, Rusha) {
   "use strict";
 
   var rusha = new Rusha();
@@ -12,6 +12,16 @@
     hateoas_section_and_view = hateoas_section + "definition_view/";
     id = id.replace(hateoas_section_and_view, "");
     id = atob(id);
+    return id;
+  }
+
+  function encodeDocumentId(id, hateoas_appcache) {
+    var hateoas_section,
+      hateoas_section_and_view;
+    id = btoa(id);
+    hateoas_section = "./" + hateoas_appcache + "/";
+    hateoas_section_and_view = hateoas_section + "definition_view/";
+    id = hateoas_section_and_view + id;
     return id;
   }
 
@@ -59,25 +69,27 @@
     this._manifest = spec.manifest;
     this._origin_url = spec.origin_url !== undefined ?
         spec.origin_url : window.location.href;
-    this._documents = {};
     this._version = spec.version || "";
     this._prefix = spec.prefix || "./";
     this._version = this._prefix + this._version;
+    this._hash = "";
   }
 
   ConfigurationStorage.prototype.get = function (id) {
-    if (this._documents.hasOwnProperty(id)) {
-      return this._documents[id];
-    }
-    return this._sub_storage.get.apply(this._sub_storage, arguments);
+    var storage = this;
+    id = encodeDocumentId(id, storage._hateoas_appcache);
+    return storage._sub_storage.getAttachment(storage._origin_url,
+                                              id,
+                                              {"format": "json"})
+      .push(function (content) {
+        content = processHateoasDict(content);
+        content.hash = storage._hash;
+        return content;
+      });
   };
 
   ConfigurationStorage.prototype.hasCapacity = function () {
     return true;
-  };
-
-  ConfigurationStorage.prototype.put = function () {
-    return this._sub_storage.put.apply(this._sub_storage, arguments);
   };
 
   ConfigurationStorage.prototype.getAttachment = function () {
@@ -89,89 +101,51 @@
   };
 
   ConfigurationStorage.prototype.buildQuery = function () {
-    var result = [],
-      id;
-    for (id in this._documents) {
-      if (this._documents.hasOwnProperty(id)) {
-        result.push({
-          'id': id,
-          'value': this._documents[id],
-          'doc': this._documents[id]
-        });
-      }
-    }
-    return this._sub_storage.allDocs({})
-      .push(function (all_docs_result) {
-        return result.concat(all_docs_result.data.rows);
+    var storage = this,
+      promise_list = [],
+      configuration_ids_list = [],
+      configuration_id_index = 0,
+      result = [],
+      decoded_id;
+    return storage.allAttachments(storage._origin_url)
+      .push(function (all_attachments) {
+        for (var attachment_id in all_attachments) {
+          if (all_attachments.hasOwnProperty(attachment_id)) {
+            if (attachment_id !== storage._version &&
+               attachment_id !== storage._version + "/" &&
+               attachment_id !== storage._version + storage._manifest) {
+              decoded_id = decodeDocumentId(attachment_id,
+                                            storage._hateoas_appcache);
+              result.push({
+                'id': decoded_id,
+                'value': {hash: storage._hash},
+                'doc': {hash: storage._hash}
+              });
+            }
+          }
+        }
+        return result;
       });
   };
 
   ConfigurationStorage.prototype.repair = function () {
     var storage = this,
-      promise_list = [],
-      configuration_ids_list = [],
-      configuration_id_index = 0,
-      url = "",
-      attachment_id,
-      decoded_id,
-      hash;
+      url = new URL(storage._manifest, new URL(storage._version,
+                                               storage._origin_url));
     return new RSVP.Queue()
       .push(function () {
-        return storage._sub_storage.repair.apply(storage._sub_storage,
-                                                 arguments);
-      })
-      .push(function () {
-        url = new URL(storage._manifest, new URL(storage._version,
-                                                 storage._origin_url));
         return jIO.util.ajax({
           type: "GET",
           url: url
         });
       })
       .push(function (response) {
-        var text = response.target.responseText,
-          relative_url_list = text.split('\n'),
-          take = false,
-          i;
-        hash = rusha.digestFromString(text);
-        for (i = 0; i < relative_url_list.length; i += 1) {
-          if (relative_url_list[i].indexOf("NETWORK:") >= 0) {
-            take = false;
-          } else if (relative_url_list[i] !== "" &&
-              relative_url_list[i].charAt(0) !== '#' &&
-              relative_url_list[i].charAt(0) !== ' ' &&
-              take) {
-            attachment_id = storage._version + relative_url_list[i];
-            decoded_id = decodeDocumentId(attachment_id,
-                                          storage._hateoas_appcache);
-            promise_list.push(storage._sub_storage.getAttachment(
-              storage._origin_url,
-              attachment_id,
-              {"format": "json"}
-            ));
-            configuration_ids_list[configuration_id_index] = decoded_id;
-            configuration_id_index += 1;
-          }
-          if (relative_url_list[i].indexOf("CACHE:") >= 0) {
-            take = true;
-          }
-        }
-        return RSVP.all(promise_list);
-      })
-      .push(function (content_list) {
-        var i, id, content;
-        for (i = 0; i < content_list.length; i += 1) {
-          id = configuration_ids_list[i];
-          content = processHateoasDict(content_list[i]);
-          //TODO what about calculate the hash for each document content?
-          //is slower than using appcache-hash, but these documents are
-          //json form definitions, not big blobs:
-          //hash = rusha.digestFromString(content);
-          content.hash = hash;
-          storage._documents[id] = content;
-        }
+        var text = response.target.responseText;
+        storage._hash = rusha.digestFromString(text);
+        return storage._sub_storage.repair.apply(storage._sub_storage,
+                                                 arguments);
       });
   };
 
   jIO.addStorage('configuration', ConfigurationStorage);
-}(window, jIO, RSVP, URL, atob, Rusha));
+}(window, jIO, RSVP, URL, atob, btoa, Rusha));
