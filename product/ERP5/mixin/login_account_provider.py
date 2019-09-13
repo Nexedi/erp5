@@ -96,6 +96,9 @@ class LoginAccountProviderMixin:
     If password is valid, the returned list is empty.
     """
     method = self._getTypeBasedMethod('analyzePassword')
+    if method is None:
+      # Password is always valid by default
+      return []
     return method(password, **kw)
 
   security.declareProtected(Permissions.SetOwnPassword, 'isPasswordAlreadyUsed')
