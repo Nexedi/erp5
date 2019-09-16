@@ -1358,8 +1358,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # (e.g. function or bound class method will) not have .meta_type thus be considered a Script
         # then we execute it directly
         if "Script" in getattr(view_instance, "meta_type", "Script"):
+          view_instance = getattr(traversed_document, 'Base_viewFakePythonScriptActionForm')
+
+          """
           # we suppose that the script takes only what is given in the URL params
-          returned_value = view_instance(**current_action['params'])
+          # returned_value = view_instance(**current_action['params'])
 
           # returned value is usually REQUEST.RESPONSE.redirect()
           log('ERP5Document_getHateoas', 'HAL_JSON cannot handle returned value "{!s}" from {}({!s})'.format(
@@ -1369,6 +1372,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             status_message = re.match(r'portal_status_message=([^&]*)', returned_value).group(1).replace('+', ' ')
           return traversed_document.Base_redirect(keep_items={
             'portal_status_message': status_message})
+          """
 
         if view_instance.pt == "form_dialog":
           # If there is a "form_id" in the REQUEST then it means that last view was actually a form
@@ -1381,6 +1385,23 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # selection_params so they get into callable's **kw.
         renderForm(traversed_document, view_instance, embedded_dict,
                    selection_params=extra_param_json, extra_param_json=extra_param_json)
+
+        if view_instance.pt == "form_python_action":
+          for k, v in current_action['params'].items():
+            renderHiddenField(embedded_dict, k, v)
+            embedded_dict['_embedded']['form_definition']['group_list'][-1][1].append((k, {'meta_type': 'StringField'}))
+
+          # Form action
+          embedded_dict['_actions'] = {
+            'put': {
+              "href": url_template_dict["form_action"] % {
+                "traversed_document_url": site_root.absolute_url() + "/" + getRealRelativeUrl(traversed_document),
+                "action_id": current_action['view_id']
+              }
+            },
+            "action": current_action['view_id'],
+            "method": 'POST'#form.method
+          }
 
         result_dict['_embedded'] = {
           '_view': embedded_dict
@@ -1400,8 +1421,16 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
         global_action_type = ("view", "workflow", "object_new_content_action",
                               "object_clone_action", "object_delete_action",
-                              "object_list_action")
-        if (erp5_action_key == view_action_type or
+                              "object_list_action", "object_script_action")
+        if erp5_action_key == "object_script_action":
+          # raise NotImplementedError('COUSCOUS %s' % str(view_action))
+          view_action_dict = parseActionUrl('%s' % view_action['url'])
+          # current_action['params'])
+          erp5_action_list[-1]['href'] = url_template_dict["form_action"] % {
+            "traversed_document_url": site_root.absolute_url() + "/" + getRealRelativeUrl(traversed_document),
+            "action_id": view_action_dict.get('view_id', '')
+          }
+        elif (erp5_action_key == view_action_type or
             erp5_action_key in global_action_type or
             "_jio" in erp5_action_key):
 
