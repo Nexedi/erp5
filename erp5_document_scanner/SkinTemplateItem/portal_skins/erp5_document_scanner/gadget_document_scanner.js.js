@@ -118,7 +118,7 @@
     //grayscale(canvas, canvas);
     //contrastImage(canvas, canvas, 10);
 
-    gadget.querySelector(".output").style.display = "";
+    gadget.querySelector(".camera-output").style.display = "";
     if (cropper) {
       cropper.destroy();
     }
