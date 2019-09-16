@@ -73,7 +73,9 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>gadget_field_action_js_script</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -87,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_downloadDialogForOofficeSpreadsheetEditor</string> </value>
+            <value> <string>Base_downloadDialogForOofficeEditor</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

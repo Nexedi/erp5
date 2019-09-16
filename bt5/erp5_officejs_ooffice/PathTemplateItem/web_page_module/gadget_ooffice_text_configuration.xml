@@ -109,30 +109,20 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# generated on Thu, 14 Jan 2019 11:55:33 +0000\n
+            <value> <string>CONFIGURATION MANIFEST\n
+# generated on Tue Sep 17 14:54:17 2019\n
 CACHE:\n
 \n
-#hateoas_appcache/definition_view/BASE64(portal_types/Document Module)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Document Module/ooffice_text_view)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3RleHRfdmlldw==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Text)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQ=\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Text/ooffice_text_view)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQvb29mZmljZV90ZXh0X3ZpZXc=\n
-\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_text_editor/Base_viewNewContentDialogForOofficeTextEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9CYXNlX3ZpZXdOZXdDb250ZW50RGlhbG9nRm9yT29mZmljZVRleHRFZGl0b3I=\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_text_editor/DocumentModule_viewDocumentListAsJioForOofficeTextEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9Eb2N1bWVudE1vZHVsZV92aWV3RG9jdW1lbnRMaXN0QXNKaW9Gb3JPb2ZmaWNlVGV4dEVkaXRvcg==\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_text_editor/TextDocument_viewAsJioForOofficeTextEditor)\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9UZXh0RG9jdW1lbnRfdmlld0FzSmlvRm9yT29mZmljZVRleHRFZGl0b3I=\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_text_editor/Base_uploadDialogForOofficeTextEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9CYXNlX3VwbG9hZERpYWxvZ0Zvck9vZmZpY2VUZXh0RWRpdG9y\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_text_editor/Base_downloadDialogForOofficeTextEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9CYXNlX2Rvd25sb2FkRGlhbG9nRm9yT29mZmljZVRleHRFZGl0b3I=\n
-\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQvb29mZmljZV9kb3dubG9hZF9kb2N1bWVudA==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9CYXNlX2Rvd25sb2FkRGlhbG9nRm9yT29mZmljZUVkaXRvcg==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3RleHRfdmlldw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9Eb2N1bWVudE1vZHVsZV92aWV3RG9jdW1lbnRMaXN0QXNKaW9Gb3JPb2ZmaWNlVGV4dEVkaXRvcg==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3VwbG9hZF9kb2N1bWVudA==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9CYXNlX3VwbG9hZERpYWxvZ0Zvck9vZmZpY2VFZGl0b3I=\n
 \n
 NETWORK:\n
 *</string> </value>
@@ -276,7 +266,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.3845.16582.3976</string> </value>
+                <value> <string>978.30918.49161.62720</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -294,7 +284,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1567070344.51</float>
+                        <float>1568621227.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
