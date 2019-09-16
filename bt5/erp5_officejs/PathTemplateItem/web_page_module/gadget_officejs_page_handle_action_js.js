@@ -84,6 +84,7 @@
               element: fragment
             })
               .push(function (action_gadget) {
+                options.form_definition = form_definition;
                 return action_gadget.preRenderDocument(options);
               })
               .push(function (doc) {
@@ -122,32 +123,36 @@
         //target_url = options[1],
         content_dict = options[2],
         fragment = document.createElement('div'),
-        jio_key;
+        submit_dict;
       if (gadget.state.valid_action) {
-        gadget.element.appendChild(fragment);
-        return gadget.declareGadget(gadget.state.action_gadget_url, {
-          scope: "action_field",
-          element: fragment
-        })
+        return gadget.notifySubmitting()
+          .push(function () {
+            gadget.element.appendChild(fragment);
+            return gadget.declareGadget(gadget.state.action_gadget_url, {
+              scope: "action_field",
+              element: fragment
+            });
+          })
           .push(function (action_gadget) {
             return action_gadget.handleSubmit(content_dict, gadget.state);
           })
-          .push(function (id) {
-            jio_key = id;
-            return gadget.notifySubmitting();
+          .push(function (submit_result) {
+            submit_dict = submit_result;
+            //submit_dict must contain:
+            //notify: options_dict for notifySubmitted
+            //redirect: options_dict for redirect
+            return gadget.notifySubmitted(submit_dict.notify);
           })
           .push(function () {
-            return gadget.notifySubmitted({message: 'Data Updated',
-                                           status: 'success'});
-          })
-          .push(function () {
-            return gadget.redirect({
-              command: 'display',
-              options: {
-                jio_key: jio_key,
-                editable: gadget.state.view === "edit"
-              }
-            });
+            return gadget.redirect(submit_dict.redirect);
+          }, function (error) {
+            if (!(error instanceof RSVP.CancellationError)) {
+              return gadget.notifySubmitted({
+                message: "Action Failed",
+                status: "error"
+              });
+            }
+            throw error;
           });
       }
       return gadget.notifySubmitted(
