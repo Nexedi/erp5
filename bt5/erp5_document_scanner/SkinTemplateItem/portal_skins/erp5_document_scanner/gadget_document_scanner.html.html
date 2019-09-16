@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <link rel="stylesheet" href="gadget_document_scanner.css">
+    <link rel="stylesheet" href="cropper.min.css">
+    <script type="text/javascript" src="cropper.min.js"></script>
+    <script type="text/javascript" src="gadget_document_scanner.js"></script>
+    <title>Gadget Document Scanner</title>
+  </head>
+  <body>
+    <div class="camera">
+      <div class="camera-header">
+        <h4>Page <label class="page-number">1</label></h4>
+      </div>
+      <div class="camera-input" style="display: none">
+        <video class="video">Webcam is not available</video>
+      </div>
+      <canvas class="canvas"></canvas>
+      <div class="camera-output" style="display: none">
+    	  <img class="photo" alt="Photo">
+        <input class="photoInput" type="hidden">
+        <input type="hidden" name="page-number" value="1">
+      </div>
+      <div class="edit-picture">
+        <button type="button" class="reset-btn ui-icon-times ui-btn-icon-left"> Reset</button>
+        <button type="button" class="take-picture-btn ui-icon-circle ui-btn-icon-left"> Take Picture</button>
+        <button type="button" class="confirm-btn ui-icon-check ui-btn-icon-left"> Confirm</button>
+        <button type="button" class="edit-btn ui-icon-pencil ui-btn-icon-left"> Edit</button>
+        <button type="button" class="change-camera-btn ui-icon-refresh ui-btn-icon-left"> Change Camera</button>
+      </div>
+    </div>
+  </body>
+</html>
