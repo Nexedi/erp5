@@ -50,15 +50,19 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, redirect_to_context=False, cancel_url=None, batch_mode=False, max_repeat=0, editable_mode = 1, follow_up_list=None, user_login=None, group=None, publication_section=None, extra_document_kw={}, **kw</string> </value>
+            <value> <string>active_process</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_contribute</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Contribute file or url to ERP5</string> </value>
+            <value> <string>Base_removeActiveProcessFromActivityTool</string> </value>
         </item>
       </dictionary>
     </pickle>
