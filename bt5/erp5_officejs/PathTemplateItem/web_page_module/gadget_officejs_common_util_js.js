@@ -254,8 +254,6 @@
             throw new Error("Missing site configuration 'portal_skin_folder'");
           }
           portal_skin_folder = "portal_skins/" + result_list[1];
-      //return gadget.getSetting(portal_type_dict_setting)
-        //.push(function (result_dict) {
           if (result_list[0]) {
             try {
               portal_type_dict = window.JSON.parse(result_list[0]);

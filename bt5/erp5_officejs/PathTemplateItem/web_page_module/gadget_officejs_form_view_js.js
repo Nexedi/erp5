@@ -172,12 +172,13 @@
                         name_list.push(gadget.state.mime_type);
                         content_dict.filename = name_list.join('.');
                       }
+                      content_dict.content_type = gadget.state.blob_type;
                     }//
 
                   }
                   return child_gadget.submitContent(
                     child_gadget.state.jio_key,
-                    undefined,//action.href,
+                    undefined,
                     content_dict
                   )
                     .push(function () {
@@ -230,6 +231,9 @@
         }
         state_dict.mime_type = portal_type_dict.file_extension;
         state_dict.only_office = true;
+        if (options.doc.action) {
+          return gadget.changeState(state_dict);
+        }
         state_dict.content_editable = options.doc.content_type === undefined ||
           options.doc.content_type.indexOf("application/x-asc") === 0;
         return new RSVP.Queue()
@@ -363,9 +367,7 @@
                                           allowed_sub_types_list:
                                           form_json.form_definition
                                             .allowed_sub_types_list
-                                         }},
-            {command: "change", options: {"page": "ojs_local_upload_convert"}},
-            {command: "change", options: {"page": "ojs_local_download_convert"}}
+                                         }}
           ];
           erp5_document = form_json.erp5_document;
           return RSVP.all([
@@ -409,12 +411,6 @@
                   erp5_document._links.action_object_jio_print) {
                 header_dict.export_url = url_list[5];
               }
-            }
-            if (portal_type_dict.upload_button) {
-              header_dict.upload_url = url_list[8];
-            }
-            if (portal_type_dict.download_button) {
-              header_dict.download_url = url_list[9];
             }
           }
           return gadget.updateHeader(header_dict);
