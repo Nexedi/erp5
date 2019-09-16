@@ -144,7 +144,10 @@ def createServer(application, logger, **kw):
         **kw
     )
     if not hasattr(server, 'addr'):
-      server.addr = server.adj.listen[0][3]
+      try:
+        server.addr = kw['sockets'][0].getsockname()
+      except KeyError:
+        server.addr = server.adj.listen[0][3]
     elif not server.addr:
       server.addr = server.sockinfo[3]
     return server

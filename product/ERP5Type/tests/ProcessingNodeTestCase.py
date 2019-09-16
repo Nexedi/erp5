@@ -166,7 +166,8 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
               else:
                 webdav_ports = ()
               sockets.append(s)
-              ZopeTestCase._print(message % (server_type, ip, port))
+              if verbose:
+                ZopeTestCase._print(message % (server_type, ip, port))
               if webdav_ports:
                 break
               server_type = 'WebDAV'
