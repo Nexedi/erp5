@@ -1,0 +1,46 @@
+.device-selector {
+  text-align: center;
+  font-size: 19px;
+}
+
+.video, .photo, .output {
+  width: auto;
+  height: 360px;
+  filter: brightness(1);
+}
+.canvas {
+  display: none;
+  filter: brightness(1);
+}
+
+.output {
+  float: right;
+}
+
+.camera {
+  float: left;
+  padding-right: 2em;
+}
+
+.camera, .output {
+  display:inline-block;
+}
+
+.startbutton, .crop-button {
+  display:block;
+  position:relative;
+  margin: 0 auto;
+  bottom: 3em;
+  background-color: rgba(0, 150, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0px 0px 1px 2px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  font-family: "Lucida Grande", "Arial", sans-serif;
+  color: rgba(255, 255, 255, 1.0);
+}
+
+.contentarea {
+  font-size: 16px;
+  font-family: "Lucida Grande", "Arial", sans-serif;
+  width: 760px;
+}
