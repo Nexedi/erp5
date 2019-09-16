@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <link rel="stylesheet" href="gadget_document_scanner.css">
+    <link rel="stylesheet" href="cropper.min.css">
+    <script type="text/javascript" src="cropper.min.js"></script>
+    <script type="text/javascript" src="gadget_document_scanner.js?foo=005"></script>
+    <title>Gadget Document Scanner</title>
+  </head>
+  <body>
+    <div class="device-selector">
+      <select>
+        <option value="">--------</option>
+      </select>
+    </div>
+    <div style="display: inline-block;">
+      <div class="camera">
+    	  <video class="video">Webcam is not available</video>
+    	  <button type="button" class="startbutton">Take a picture!</button>
+      </div>
+      <canvas class="canvas"></canvas>
+  		<div class="output" style="display: none;">
+    	  <img class="photo" alt="Photo">
+        <input class="photoInput" type="hidden">
+        <button class="crop-button">Crop</button>
+      </div>
+    </div>
+  </body>
+</html>
