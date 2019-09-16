@@ -841,7 +841,8 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       handle_errors=False)
     # When password reset is succesful, user is logged out
     self.assertEqual(httplib.FOUND, ret.getStatus())
-    self.assertTrue(ret.getHeader("Location").endswith("/logout"))
+    self.assertEqual(self.portal.portal_preferences.absolute_url(),
+                     ret.getHeader("Location"))
 
     # password is changed on the login
     self.assertTrue(login.checkPassword('long_enough_password'))
