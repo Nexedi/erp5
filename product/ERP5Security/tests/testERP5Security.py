@@ -544,7 +544,7 @@ class TestPreferences(UserManagementTestCase):
       current_password=password,
       new_password=new_password,
     )
-    self.assertEqual(result, self.portal.absolute_url()+'/logout')
+    self.assertEqual(result, self.portal.absolute_url()+'/portal_preferences')
 
     self.login()
     self._assertUserExists(login, new_password)
