@@ -3,7 +3,7 @@
   font-size: 19px;
 }
 
-.video, .photo, .output {
+.video, .photo, .camera-output {
   width: auto !important;
   height: 360px;
   filter: brightness(1);
@@ -14,18 +14,23 @@
   filter: brightness(1);
 }
 
-.output {
+.camera-output {
   float: right;
 }
 
-.camera {
+.camera-input {
   float: left;
   padding-right: 0;
   max-width: 50%;
 }
 
-.camera, .output {
+.camera-input, .camera-output {
   display: inline-block;
+}
+
+.camera {
+  display: inline-block;
+  padding-top: 2em;
 }
 
 .startbutton, .crop-button {
