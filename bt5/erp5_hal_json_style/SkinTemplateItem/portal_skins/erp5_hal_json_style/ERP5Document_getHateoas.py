@@ -1357,7 +1357,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # If our "form" is actually a Script (nothing is sure in ERP5) or anything else than Form
         # (e.g. function or bound class method will) not have .meta_type thus be considered a Script
         # then we execute it directly
-        if "Script" in getattr(view_instance, "meta_type", "Script"):
+        if "ScriptXXX" in getattr(view_instance, "meta_type", "Script"):
           # we suppose that the script takes only what is given in the URL params
           returned_value = view_instance(**current_action['params'])
 
@@ -1400,8 +1400,16 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
         global_action_type = ("view", "workflow", "object_new_content_action",
                               "object_clone_action", "object_delete_action",
-                              "object_list_action")
-        if (erp5_action_key == view_action_type or
+                              "object_list_action", "object_script_action")
+        if erp5_action_key == "object_script_action":
+          # raise NotImplementedError('COUSCOUS %s' % str(view_action))
+          view_action_dict = parseActionUrl('%s' % view_action['url'])
+          # current_action['params'])
+          erp5_action_list[-1]['href'] = url_template_dict["form_action"] % {
+            "traversed_document_url": site_root.absolute_url() + "/" + getRealRelativeUrl(traversed_document),
+            "action_id": view_action_dict.get('view_id', '')
+          }
+        elif (erp5_action_key == view_action_type or
             erp5_action_key in global_action_type or
             "_jio" in erp5_action_key):
 
