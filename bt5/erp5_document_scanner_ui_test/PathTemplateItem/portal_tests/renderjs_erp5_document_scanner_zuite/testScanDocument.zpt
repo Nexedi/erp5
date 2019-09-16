@@ -1,0 +1,255 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Page Front</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr><td rowspan="1" colspan="3">Test Page Action Breadcrumb List</td></tr>
+</thead><tbody>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/</td>
+  <td></td>
+</tr>
+
+<!-- Wait for gadget to be loaded -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_worklist.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Modules</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text()="Modules"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li/a[text()="Accounting"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//li/a[text()="Accounting"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="ui-subheader"]/ul/li[3]/a[text()="Add"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@class="ui-subheader"]/ul/li[3]/a[text()="Add"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>name=field_your_select_action</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>id=field_your_select_action</td>
+  <td>Sale Invoice Transaction</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>name=action_confirm</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="ui-subheader"]/ul/li[2]/a[text()="Actions"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@class="ui-subheader"]/ul/li[2]/a[text()="Actions"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text()="Scan Document"]</td>
+  <td></td>
+</tr>
+<tal:block tal:condition="here/Base_enableDocumentScannerTest">
+<tr>
+  <td>click</td>
+  <td>//a[text()="Scan Document"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_dialog.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>field_your_title</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_title</td>
+  <td>Sample <span tal:replace="python: DateTime().strftime('%d_%m_%Y')"></span></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_reference</td>
+  <td>REF<span tal:replace="python: DateTime().strftime('%d%m%Y')"></span></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_language</td>
+  <td>en</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_version</td>
+  <td>001</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_your_publication_section</td>
+  <td>Financial Reports</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_your_publication_state</td>
+  <td>Released</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_your_description</td>
+  <td>DESC <span tal:replace="python: DateTime().strftime('%d%m%Y')"></span></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.browserbot.getCurrentWindow().document.querySelector("video").readyState == 4</td>
+  <td>30000</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@class="photoInput"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//input[@class="photoInput"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.browserbot.getCurrentWindow().document.querySelector(".confirm-btn").style.display != "none"</td>
+  <td>30000</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class="reset-btn ui-btn-icon-left ui-icon-times"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.browserbot.getCurrentWindow().document.querySelector(".confirm-btn").style.display == "none"</td>
+  <td>30000</td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.browserbot.getCurrentWindow().document.querySelector(".photoInput").value == ""</td>
+  <td>30000</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>//input[@class="photoInput"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.browserbot.getCurrentWindow().document.querySelector(".photoInput").value != ""</td>
+  <td>30000</td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.browserbot.getCurrentWindow().document.querySelector(".confirm-btn").style.display != "none"</td>
+  <td>30000</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class="confirm-btn ui-btn-icon-left ui-icon-check"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.browserbot.getCurrentWindow().document.querySelector(".photoInput").value == ""</td>
+  <td>30000</td>
+</tr>
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.browserbot.getCurrentWindow().document.querySelector(".page-number").innerText == "2"</td>
+  <td>30000</td>
+</tr>
+<tr>
+  <td>storeValue</td>
+  <td>//input[@id="field_your_active_process_url"]</td>
+  <td>active_process_url</td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/erp5/Base_assertActiveProcessHasOneImage?active_process_url=${active_process_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>OK</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/erp5/Base_removeActiveProcessFromFileSystem?active_process_url=${active_process_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
+</tal:block>
+</tbody></table>
+</body>
+</html>
