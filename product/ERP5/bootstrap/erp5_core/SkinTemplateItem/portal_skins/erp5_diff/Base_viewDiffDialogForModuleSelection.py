@@ -19,6 +19,9 @@ if list_selection_name is not None:
     message = context.Base_translateString("This action can only compare exactly 2 objects.")
     return context.Base_redirect('view', keep_items={'portal_status_message': message})
   else:
+    # Compare "oldest" with "newest"
+    selected_obj_list = [x.getObject() for x in selected_obj_list]
+    selected_obj_list = sorted(selected_obj_list, key=lambda x: x.getCreationDate())
     # Keep the `list_selection_name` in keep_items as we will be needing it
     # while displaying the paths of the selected objects.
     return context.Base_redirect('ERP5Site_viewDiffTwoObjectDialog',

@@ -2,12 +2,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test Generic Search Dialog</title>
+<title>Test Diff Action on Module</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test Portal Diff<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
+<tr><td rowspan="1" colspan="3">Test Diff Action on Module<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/expected_failure_for_anonymous_selection" /></td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 <tr>
@@ -67,12 +67,12 @@
 <tr>
   <td>verifyValue</td>
   <td>field_your_first_path</td>
-  <td>bar_module/2</td>
+  <td>bar_module/1</td>
 </tr>
 <tr>
   <td>verifyValue</td>
   <td>field_your_second_path</td>
-  <td>bar_module/1</td>
+  <td>bar_module/2</td>
 </tr>
 
 <tr>
@@ -103,7 +103,7 @@
 <tr>
   <td>verifyEval</td>
   <td>storedVars['_data_gadget_value'].replace(/(\r\n\t|\n|\r\t)/gm,"").replace(/\s+/g, '')</td>
-  <td>---+++@@-1+1@@-Title2+Title1</td>
+  <td>---+++@@-1+1@@-Title1+Title2</td>
 </tr>
 
 </body>

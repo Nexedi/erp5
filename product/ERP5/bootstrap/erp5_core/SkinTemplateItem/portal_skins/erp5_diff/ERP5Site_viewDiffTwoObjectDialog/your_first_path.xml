@@ -122,7 +122,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.Base_getObjectPathFromSelection(0, list_selection_name=REQUEST.get(\'list_selection_name\', None))</string> </value>
+            <value> <string>request/your_first_path | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>
