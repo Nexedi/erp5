@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>repeat=10, crawling_depth=0, form_id=None</string> </value>
+            <value> <string>repeat=10, crawling_depth=0, form_id=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
