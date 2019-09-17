@@ -125,6 +125,11 @@
   <td></td>
 </tr>
 <tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
   <td>link=Document</td>
   <td></td>
@@ -188,6 +193,11 @@
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Synchronize']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
   <td></td>
 </tr>
 <tr>
