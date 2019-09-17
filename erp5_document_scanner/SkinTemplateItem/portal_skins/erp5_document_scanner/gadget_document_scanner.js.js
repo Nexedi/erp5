@@ -1,4 +1,4 @@
-(function (rJS, RSVP, window, document, navigator, Cropper, console, alert, FileReader, URL) {
+(function (rJS, RSVP, window, document, navigator, Cropper, console, alert, FileReader, URL, jIO) {
   "use strict";
 
   var imageWidth,
@@ -9,6 +9,7 @@
       photo,
       startbutton,
       photoInput,
+      storage,
       imageCapture;
 
   function gotStream(mediaStream) {
@@ -18,12 +19,12 @@
   }
 
   function contrastImage(input, output, contrast) {
-
     var outputContext,
       inputContext = input.getContext("2d"),
       imageData = inputContext.getImageData(0, 0, input.width, input.height),
       data = imageData.data,
       factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+
     for (var i=0;i<data.length;i+=4) {
       data[i] = factor * (data[i] - 128) + 128;
       data[i+1] = factor * (data[i+1] - 128) + 128;
@@ -68,9 +69,6 @@
         imageHeight = photoCapabilities.imageHeight.max;
         document.querySelector("textarea[name='field_your_description']").value = "Max => " + imageWidth + "x" + imageHeight;
         video.play();
-      })
-      .catch(function(e) {
-         console.log(e);
       });
 
     startbutton.addEventListener("click", function(evt){
@@ -122,38 +120,59 @@
     if (cropper) {
       cropper.destroy();
     }
-    cropper = new Cropper(gadget.querySelector('.photo'), {});
-    gadget.querySelector(".crop-button").addEventListener("click", function(evt) {
-      var canvasData;
-      evt.preventDefault();
-      canvasData = cropper.getCanvasData();
-      cropper.getCroppedCanvas().toBlob(function(blob){
-        var reader = new window.FileReader(),
+    return RSVP.Queue()
+     .push(function () {
+        return storage.get("settings");
+     })
+     .push(function (data) {
+       cropper = new Cropper(gadget.querySelector('.photo'), {data: data});
+       gadget.querySelector(".crop-button").addEventListener("click", function(evt) {
+         var canvasData;
+         evt.preventDefault();
+        canvasData = cropper.getCanvasData();
+        storage.put("settings", cropper.getData());
+        cropper.getCroppedCanvas().toBlob(function(blob){
+          var reader = new window.FileReader(),
             photo = gadget.querySelector(".photo");
-        reader.readAsDataURL(blob);
-        reader.onloadend = function () {
-          var base64data = reader.result,
-            block = base64data.split(";"),
-            contentType = block[0].split(":")[1],
-            realData = block[1].split(",")[1];
+          reader.readAsDataURL(blob);
+          reader.onloadend = function () {
+            var base64data = reader.result,
+              block = base64data.split(";"),
+              contentType = block[0].split(":")[1],
+              realData = block[1].split(",")[1];
 
-          photo.style.width = canvasData.width + "px";
-          photo.style.height = canvasData.height + "px";
+            photo.style.width = canvasData.width + "px";
+            photo.style.height = canvasData.height + "px";
 
-          photo.src = base64data;
-          photoInput.value = realData;
-          cropper.destroy();
-        };
-     });
-   });
+            photo.src = base64data;
+            photoInput.value = realData;
+            cropper.destroy();
+          };
+        });
+      });
+    });
   }
-
   rJS(window)
+    .ready(function (g) {
+      return RSVP.Queue()
+       .push(function () {
+         return jIO.createJIO({
+           "type": "indexeddb",
+           "database": "cropper_settings"
+         });
+       })
+       .push(function (proxy) {
+          storage = proxy;
+          return storage.get("settings");
+       })
+       .then(undefined, function (error) {
+         return storage.put("settings");
+       });
+    })
     .declareMethod('render', function (options) {
       var el,
         root,
         selector;
-
       return this.getElement()
         .push(function (element) {
           root = element;
@@ -192,4 +211,4 @@
       return result;
     });
 
-}(rJS, RSVP, window, document, navigator, Cropper, console, alert, FileReader, URL));
+}(rJS, RSVP, window, document, navigator, Cropper, console, alert, FileReader, URL, jIO));
