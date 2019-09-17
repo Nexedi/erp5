@@ -6,11 +6,17 @@
   function submitDialog() {
     var gadget = this;
 
-    return gadget.submitContent(
-      gadget.state.jio_key,
-      gadget.state.erp5_document._embedded._view._actions.put.href,  // most likely points to Base_callDialogMethod
-      {}
-    )
+    return gadget.getDeclaredGadget("erp5_form")
+      .push(function (sub_gadget) {
+        return sub_gadget.getContent();
+      })
+      .push(function (data) {
+        return gadget.submitContent(
+          gadget.state.jio_key,
+          gadget.state.erp5_document._embedded._view._actions.put.href,  // most likely points to Base_callDialogMethod
+          data
+        );
+      })
       .push(function (jio_key) {  // success redirect handler
         var splitted_jio_key_list,
           splitted_current_jio_key_list,
@@ -76,6 +82,7 @@
         jio_key: options.jio_key,
         view: options.view,
         erp5_document: options.erp5_document,
+        form_definition: options.form_definition,
         erp5_form: options.erp5_form || {}
       });
     })
@@ -89,6 +96,20 @@
       console.warn('fpa state', d);
       var form_gadget = this;
       return new RSVP.Queue()
+        .push(function () {
+          // Render the erp5_from
+          return form_gadget.getDeclaredGadget("erp5_form");
+        })
+        .push(function (erp5_form) {
+          var form_options = form_gadget.state.erp5_form;
+          // pass own form options to the embedded form
+          form_options.erp5_document = form_gadget.state.erp5_document;
+          form_options.form_definition = form_gadget.state.form_definition;
+          form_options.view = form_gadget.state.view;
+          form_options.jio_key = form_gadget.state.jio_key;
+          form_options.editable = true; // dialog is always editable
+          return erp5_form.render(form_options);
+        })
         .push(function () {
           // Render the headers
           return RSVP.all([
