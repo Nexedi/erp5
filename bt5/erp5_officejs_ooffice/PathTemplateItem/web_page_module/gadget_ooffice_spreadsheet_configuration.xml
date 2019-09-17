@@ -109,30 +109,20 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# generated on Thu, 14 Jan 2019 11:55:33 +0000\n
+            <value> <string>CONFIGURATION MANIFEST\n
+# generated on Tue Sep 17 13:40:08 2019\n
 CACHE:\n
 \n
-#hateoas_appcache/definition_view/BASE64(portal_types/Document Module)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Document Module/ooffice_spreadsheet_view)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3NwcmVhZHNoZWV0X3ZpZXc=\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Spreadsheet)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Spreadsheet/ooffice_spreadsheet_view)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0L29vZmZpY2Vfc3ByZWFkc2hlZXRfdmlldw==\n
-\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_spreadsheet_editor/Base_viewNewContentDialogForOofficeSpreadsheetEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV92aWV3TmV3Q29udGVudERpYWxvZ0Zvck9vZmZpY2VTcHJlYWRzaGVldEVkaXRvcg==\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_spreadsheet_editor/DocumentModule_viewDocumentListAsJioForOofficeSpreadsheetEditor)\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvRG9jdW1lbnRNb2R1bGVfdmlld0RvY3VtZW50TGlzdEFzSmlvRm9yT29mZmljZVNwcmVhZHNoZWV0RWRpdG9y\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_spreadsheet_editor/SpreadsheetDocument_viewAsJioForOofficeSpreadsheetEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3VwbG9hZF9kb2N1bWVudA==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV91cGxvYWREaWFsb2dGb3JPb2ZmaWNlRWRpdG9y\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0L29vZmZpY2Vfc3ByZWFkc2hlZXRfdmlldw==\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvU3ByZWFkc2hlZXREb2N1bWVudF92aWV3QXNKaW9Gb3JPb2ZmaWNlU3ByZWFkc2hlZXRFZGl0b3I=\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_spreadsheet_editor/Base_uploadDialogForOofficeSpreadsheetEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV91cGxvYWREaWFsb2dGb3JPb2ZmaWNlU3ByZWFkc2hlZXRFZGl0b3I=\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_spreadsheet_editor/Base_downloadDialogForOofficeSpreadsheetEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV9kb3dubG9hZERpYWxvZ0Zvck9vZmZpY2VTcHJlYWRzaGVldEVkaXRvcg==\n
-\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0L29vZmZpY2VfZG93bmxvYWRfZG9jdW1lbnQ=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV9kb3dubG9hZERpYWxvZ0Zvck9vZmZpY2VFZGl0b3I=\n
 \n
 NETWORK:\n
 *</string> </value>
