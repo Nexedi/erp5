@@ -209,7 +209,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string>ooffice_text_download_action.html</string> </value>
+                    <value> <string>ooffice_upload_action.html</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>

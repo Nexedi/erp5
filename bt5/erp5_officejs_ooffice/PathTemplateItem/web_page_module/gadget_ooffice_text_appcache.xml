@@ -1286,40 +1286,29 @@ jio_appcachestorage.js\n
 jio_configuration_storage.js\n
 \n
 #custom app actions\n
-ooffice_text_upload_action.html\n
-ooffice_text_upload_action.js\n
-ooffice_text_download_action.html\n
-ooffice_text_download_action.js\n
-\n
+ooffice_upload_action.html\n
+ooffice_upload_action.js\n
+ooffice_download_action.html\n
+ooffice_download_action.js\n
 \n
 #app_configuration_resources\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Document Module)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Document Module/ooffice_text_view)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3RleHRfdmlldw==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Document Module/ooffice_text_upload)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3RleHRfdXBsb2Fk\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Text)\n
+#CONFIGURATION ELEMENTS generated on Tue Sep 17 14:54:17 2019. Same as in configuration manifest\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQ=\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Text/ooffice_text_view)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQvb29mZmljZV90ZXh0X3ZpZXc=\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Text/ooffice_text_download)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQvb29mZmljZV90ZXh0X2Rvd25sb2Fk\n
-\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_text_editor/Base_viewNewContentDialogForOofficeTextEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9CYXNlX3ZpZXdOZXdDb250ZW50RGlhbG9nRm9yT29mZmljZVRleHRFZGl0b3I=\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_text_editor/DocumentModule_viewDocumentListAsJioForOofficeTextEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9Eb2N1bWVudE1vZHVsZV92aWV3RG9jdW1lbnRMaXN0QXNKaW9Gb3JPb2ZmaWNlVGV4dEVkaXRvcg==\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_text_editor/TextDocument_viewAsJioForOofficeTextEditor)\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9UZXh0RG9jdW1lbnRfdmlld0FzSmlvRm9yT29mZmljZVRleHRFZGl0b3I=\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_text_editor/Base_uploadDialogForOofficeTextEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9CYXNlX3VwbG9hZERpYWxvZ0Zvck9vZmZpY2VUZXh0RWRpdG9y\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_text_editor/Base_downloadDialogForOofficeTextEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9CYXNlX2Rvd25sb2FkRGlhbG9nRm9yT29mZmljZVRleHRFZGl0b3I=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQvb29mZmljZV9kb3dubG9hZF9kb2N1bWVudA==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9CYXNlX2Rvd25sb2FkRGlhbG9nRm9yT29mZmljZUVkaXRvcg==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3RleHRfdmlldw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9Eb2N1bWVudE1vZHVsZV92aWV3RG9jdW1lbnRMaXN0QXNKaW9Gb3JPb2ZmaWNlVGV4dEVkaXRvcg==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3VwbG9hZF9kb2N1bWVudA==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9CYXNlX3VwbG9hZERpYWxvZ0Zvck9vZmZpY2VFZGl0b3I=\n
 #/app_configuration_resources\n
+\n
 \n
 NETWORK:\n
 *\n
+\n
 </string> </value>
         </item>
         <item>
@@ -1461,7 +1450,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.32612.23234.51524</string> </value>
+                <value> <string>978.32613.12762.62071</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1479,7 +1468,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1568722871.67</float>
+                        <float>1568728047.24</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

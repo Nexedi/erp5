@@ -90,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_uploadDialogForOofficeTextEditor</string> </value>
+            <value> <string>Base_uploadDialogForOofficeEditor</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

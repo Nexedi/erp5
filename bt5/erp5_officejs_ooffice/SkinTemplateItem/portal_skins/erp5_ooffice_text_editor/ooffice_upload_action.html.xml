@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>ooffice_text_download_action.js</string> </value>
+            <value> <string>ooffice_upload_action.html</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/javascript</string> </value>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>

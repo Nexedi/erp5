@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>ooffice_text_upload_action.html</string> </value>
+            <value> <string>ooffice_download_action.html</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
