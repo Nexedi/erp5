@@ -152,21 +152,21 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     _, row_list = sql_connection().query(sql, max_rows=0)
     return [x for x, in row_list]
 
-  def checkRelativeUrlInSQLPathList(self,url_list,connection_id=None):
+  def checkRelativeUrlInSQLPathList(self, url_list, connection_id=None):
     path_list = self.getSQLPathList(connection_id=connection_id)
-    portal_id = self.getPortalId()
+    path_base = '/' + self.getPortalId() + '/'
     for url in url_list:
-      path = '/' + portal_id + '/' + url
-      self.assertTrue(path in path_list)
-      LOG('checkRelativeUrlInSQLPathList found path:',0,path)
+      # Note: not using assertIn as path_list is expected to be huge:
+      # including it in the error message would not provide any help.
+      self.assertTrue(path_base + url in path_list, url)
 
-  def checkRelativeUrlNotInSQLPathList(self,url_list,connection_id=None):
+  def checkRelativeUrlNotInSQLPathList(self, url_list, connection_id=None):
     path_list = self.getSQLPathList(connection_id=connection_id)
-    portal_id = self.getPortalId()
+    path_base = '/' + self.getPortalId() + '/'
     for url in url_list:
-      path = '/' + portal_id + '/' + url
-      self.assertTrue(path not in  path_list)
-      LOG('checkRelativeUrlInSQLPathList not found path:',0,path)
+      # Note: not using assertNotIn as path_list is expected to be huge:
+      # including it in the error message would not provide any help.
+      self.assertFalse(path_base + url in path_list, url)
 
   def test_01_HasEverything(self):
     self.assertNotEquals(self.getCategoryTool(), None)
