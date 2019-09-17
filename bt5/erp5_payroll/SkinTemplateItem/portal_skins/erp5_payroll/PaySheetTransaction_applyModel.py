@@ -8,9 +8,14 @@ category_list = [
 ]
 new_category_dict = {}
 
-model = paysheet.getSpecialiseValue().getEffectiveModel(\
+specialise_value = paysheet.getSpecialiseValue()
+if specialise_value is None:
+  model = None
+else:
+  model = specialise_value.getEffectiveModel(
     start_date=paysheet.getStartDate(),
-    stop_date=paysheet.getStopDate())
+    stop_date=paysheet.getStopDate()
+  )
 
 if model is None:
   return context.Base_redirect(form_id,
