@@ -30,10 +30,4 @@ for cell_key in cell_key_list:
       cell.setMembershipCriterionCategoryList( cell_key )
       cell.setMembershipCriterionBaseCategoryList( context.getQVariationBaseCategoryList() )
 
-redirect_url = '%s/%s?%s&%s&%s' % ( context.absolute_url()
-                              , form_id
-                              , 'selection_index=%s' % selection_index
-                              , 'selection_name=%s' % selection_name
-                              , 'portal_status_message=Consumption+applied.'
-                              )
-return request[ 'RESPONSE' ].redirect( redirect_url )
+return context.Base_redirect(form_id, keep_item={'portal_status_message': 'Consumption applied.'})
