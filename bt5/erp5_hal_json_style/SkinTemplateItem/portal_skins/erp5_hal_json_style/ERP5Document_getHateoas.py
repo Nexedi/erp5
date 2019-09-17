@@ -1358,7 +1358,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # (e.g. function or bound class method will) not have .meta_type thus be considered a Script
         # then we execute it directly
         if "Script" in getattr(view_instance, "meta_type", "Script"):
-          embedded_dict['couscous'] = 'taboulet'
           view_instance = getattr(traversed_document, 'Base_viewFakePythonScriptActionForm')
 
           """
@@ -1388,6 +1387,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                    selection_params=extra_param_json, extra_param_json=extra_param_json)
 
         if view_instance.pt == "form_python_action":
+          for k, v in current_action['params'].items():
+            renderHiddenField(embedded_dict, k, v)
+            embedded_dict['_embedded']['form_definition']['group_list'][-1][1].append((k, {'meta_type': 'StringField'}))
+
           # Form action
           embedded_dict['_actions'] = {
             'put': {
