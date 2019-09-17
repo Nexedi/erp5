@@ -12,7 +12,6 @@
     .declareAcquiredMethod("jio_post", "jio_post")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSetting", "getSetting")
-    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
 
     /////////////////////////////////////////////////////////////////
@@ -44,8 +43,7 @@
           options: {}
         }
       }, gadget = this;
-      //TODO notifySubmitting must be in handle_action before call this method
-      return gadget.notifySubmitting()
+      return RSVP.Queue()
         .push(function () {
           return RSVP.all([
             gadget.getSetting('portal_type'),

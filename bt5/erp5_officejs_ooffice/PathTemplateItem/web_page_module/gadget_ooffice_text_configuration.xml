@@ -109,18 +109,23 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# generated on Thu, 14 Jan 2019 11:55:33 +0000\n
+            <value> <string>CONFIGURATION MANIFEST\n
+# generated on Thu Sep 12 13:36:50 2019\n
 CACHE:\n
+\n
 \n
 #hateoas_appcache/definition_view/BASE64(portal_types/Document Module)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
 #hateoas_appcache/definition_view/BASE64(portal_types/Document Module/ooffice_text_view)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3RleHRfdmlldw==\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Document Module/ooffice_text_upload)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3RleHRfdXBsb2Fk\n
 #hateoas_appcache/definition_view/BASE64(portal_types/Text)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQ=\n
 #hateoas_appcache/definition_view/BASE64(portal_types/Text/ooffice_text_view)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQvb29mZmljZV90ZXh0X3ZpZXc=\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Text/ooffice_text_download)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQvb29mZmljZV90ZXh0X2Rvd25sb2Fk\n
 \n
 #hateoas_appcache/definition_view/BASE64(portal_skins/erp5_ooffice_text_editor/Base_viewNewContentDialogForOofficeTextEditor)\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9CYXNlX3ZpZXdOZXdDb250ZW50RGlhbG9nRm9yT29mZmljZVRleHRFZGl0b3I=\n
@@ -276,7 +281,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.3845.16582.3976</string> </value>
+                <value> <string>978.30918.49161.62720</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -294,7 +299,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1567070344.51</float>
+                        <float>1568621227.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
