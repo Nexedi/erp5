@@ -2342,7 +2342,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           self.assertEqual(1, activity_tool.countMessage())
           self.flushAllActivities()
           sender, recipients, mail = message_list.pop()
-          self.assertIn('OID mismatch', mail)
+          self.assertIn('UID mismatch', mail)
           m, = activity_tool.getMessageList()
           self.assertEqual(m.processing_node, INVOKE_ERROR_STATE)
           obj.flushActivity()

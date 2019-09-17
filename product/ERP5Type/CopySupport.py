@@ -498,6 +498,20 @@ class CopyContainer:
         new_ob.setDefaultReindexParameterDict(reindex_kw)
       if is_indexable is not None and not is_indexable:
         new_ob._setNonIndexable()
+      if is_clone:
+        # Clear uids before spawning indexation activities, so the activity does
+        # not do an uid check (as the uid is still the old one, and a new one
+        # will be allocated by _postDuplicate, which must run after object gets
+        # a parent).
+        # Note: do not use __recurse as it only iterates over immediate content,
+        # and then stop instead of calling itself into them. It relies on called
+        # methods to call it back, and we do not want that for _setUid .
+        todo_list = [new_ob]
+        while todo_list:
+          document = todo_list.pop()
+          todo_list.extend(document.objectValues())
+          todo_list.extend(document.opaqueValues())
+          document._setUid(None)
       self._setObject(new_id, new_ob, set_owner=set_owner)
       new_ob = self._getOb(new_id)
       new_ob._postCopy(self, op=op)
