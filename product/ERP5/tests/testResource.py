@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-import unittest
+import random, unittest
 from unittest import expectedFailure
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -891,27 +891,19 @@ class TestResource(ERP5TypeTestCase):
       if variation:
         categories.append(variation)
 
-      def sortResult(a, b):
-        def _pricingSortMethod(a, b): # XXX copied from Resource.py
-          # Simple method : the one that defines a destination section wins
-          if a.getDestinationSection():
-            return -1 # a defines a destination section and wins
-          return 1 # a defines no destination section and loses
-        if _pricingSortMethod(a, b):
+      def sort_key(supply_line):
+        return (
+          # same as in Resource._pricingSortKeyMethod
+          not supply_line.getDestinationSection(),
+          ###
           # now sort based on resource definition
-          if a.getResourceValue():
-            if b.getResourceValue():
-              return 1
-            else:
-              return -1
-          else:
-            return 1
-        else:
-          return -1
-
+          supply_line.getResourceValue() is None,
+          # and make sure this is enough
+          random.random(),
+        )
 
       self.assertEqual(base_price, product.getPrice(categories=categories,
-                                                    sort_method=sortResult))
+                                                    sort_key_method=sort_key))
 
 
   # The following test tests Movement.getPrice, which is based on the movement
