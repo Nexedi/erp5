@@ -3,4 +3,4 @@ for email in email_recipient_list:
                         mto=email, mfrom=email_sender,
                         subject=email_title, encode='8bit')
 
-return "Done"
+return context.Base_redirect('view', keep_items={'portal_status_message': "Done"})

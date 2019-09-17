@@ -20,4 +20,5 @@ generateReference('%s-M' % reference, context, "%s Milestone" % context.getPorta
 msg = translateString('Reference generated for all order lines and milestones.')
 
 # Return to view mode
-return context.Base_redirect(form_id, keep_items = {'portal_status_message' : msg},  **kw)
+kw['keep_items'] = {'portal_status_message' : msg}
+return context.Base_redirect(form_id, **kw)
