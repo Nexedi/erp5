@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ListField" module="Products.Formulator.StandardFields"/>
+      <global name="GadgetField" module="Products.ERP5Form.GadgetField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_select_action</string> </value>
+            <value> <string>gadget_field_action_js_script</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -19,12 +19,8 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>required_not_found</string> </key>
-                    <value> <string>Input is required but no input given.</string> </value>
-                </item>
-                <item>
-                    <key> <string>unknown_selection</string> </key>
-                    <value> <string>You selected an item that was not in the list.</string> </value>
+                    <key> <string>no_validator</string> </key>
+                    <value> <string>Does not support this operation.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -39,6 +35,10 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>data_url</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -66,11 +66,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
+                    <key> <string>gadget_url</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -78,15 +74,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
+                    <key> <string>js_sandbox</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>required</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>size</string> </key>
+                    <key> <string>renderjs_extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -94,11 +86,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>unicode</string> </key>
+                    <key> <string>validator_field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
+                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -117,6 +109,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>data_url</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -141,11 +137,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
+                    <key> <string>gadget_url</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -153,17 +145,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>required</string> </key>
+                    <key> <string>js_sandbox</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>size</string> </key>
+                    <key> <string>renderjs_extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -171,11 +157,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>unicode</string> </key>
+                    <key> <string>validator_field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
+                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -194,6 +180,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>data_url</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -218,58 +208,37 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>extra_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <int>1</int> </value>
+                    <key> <string>gadget_url</string> </key>
+                    <value> <string>ooffice_download_action.html</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
+                    <key> <string>js_sandbox</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>size</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Document Type</string> </value>
+                    <value> <string>gadget_field_action_js_script</string> </value>
                 </item>
                 <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>validator_form_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.Base_getNewContentList()</string> </value>
         </item>
       </dictionary>
     </pickle>
