@@ -18,4 +18,5 @@ generateReference(reference, context, "Requirement")
 msg = translateString('Reference generated for all requirements.')
 
 # Return to view mode
-return context.Base_redirect(form_id, keep_items = {'portal_status_message' : msg},  **kw)
+kw['keep_items'] = {'portal_status_message' : msg}
+return context.Base_redirect(form_id, **kw)

@@ -5,4 +5,4 @@ task = context.task_module.newContent( portal_type = 'Task')
 # Set the source_project 
 task.setSourceProjectValue(context_obj)
 
-return context.REQUEST.RESPONSE.redirect(task.absolute_url() + '?portal_status_message=Created+Task.')
+return task.Base_redirect('view', keep_items={'portal_status_message': 'Created Task.'})
