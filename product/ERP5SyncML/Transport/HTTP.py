@@ -55,9 +55,7 @@ class HTTPTransport:
       # XXX- Syncml content-type is not supported by Zope server
       # for now disable it until ZServer get patched
       # 'Content-Type' : content_type,
-      # 'Content-Length' : str(len(xml)), XXX-Bad way to compute length
       'Cache-control' : 'no-store',
-      'Transfer-encoding' : 'chunked',
       'Accept' : 'application/vnd.syncml+xml',
       'Accept-Charset' : 'UTF-8',
       'User-Agent' : 'ERP5SyncML Tool',
