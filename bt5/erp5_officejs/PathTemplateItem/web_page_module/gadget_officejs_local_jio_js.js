@@ -94,10 +94,15 @@
                             "portal_types/Web Page/text_editor_clone",
                             "portal_types/Web Page/text_editor_clone"],
         promise_list = [],
-        i = 0;
-      return gadget.getSetting("clean-storage")
-        .push(function (clean_storage) {
-          if (!clean_storage) {
+        i = 0,
+        current_version,
+        index;
+      current_version = window.location.href.replace(window.location.hash, "");
+      index = current_version.indexOf(window.location.host) + window.location.host.length;
+      current_version = current_version.substr(index);
+      return gadget.getSetting("migration_version")
+        .push(function (migration_version) {
+          if (migration_version !== current_version) {
             for (i = 0; i < document_id_list.length; i += 1) {
               promise_list = [appcache_storage.remove(document_id_list[i])];
             }
@@ -105,7 +110,7 @@
           }
         })
         .push(function () {
-          return gadget.setSetting("clean-storage", true);
+          return gadget.setSetting("migration_version", current_version);
         });
     })
 
