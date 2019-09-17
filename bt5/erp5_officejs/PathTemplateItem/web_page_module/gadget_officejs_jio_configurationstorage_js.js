@@ -128,7 +128,7 @@
       });
   };
 
-  ConfigurationStorage.prototype.repair = function () {
+  ConfigurationStorage.prototype.repair = function (app_version) {
     var storage = this,
       url = new URL(storage._manifest, new URL(storage._version,
                                                storage._origin_url));
@@ -141,7 +141,10 @@
       })
       .push(function (response) {
         var text = response.target.responseText;
-        storage._hash = rusha.digestFromString(text);
+        //hash is attached to manifest text and app version
+        //if the app version has changed, then a cleanup was done in the storage
+        //documents must be updated to restore any potential missing document
+        storage._hash = rusha.digestFromString(text + app_version);
         return storage._sub_storage.repair.apply(storage._sub_storage,
                                                  arguments);
       });

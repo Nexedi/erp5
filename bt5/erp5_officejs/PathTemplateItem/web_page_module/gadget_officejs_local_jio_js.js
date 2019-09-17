@@ -111,6 +111,9 @@
         })
         .push(function () {
           return gadget.setSetting("migration_version", current_version);
+        })
+        .push(function () {
+          return current_version;
         });
     })
 
@@ -180,9 +183,10 @@
         .push(function () {
           return gadget.clean(appcache_storage, origin_url);
         })
-        .push(function () {
+        .push(function (current_version) {
           if (appcache_storage) {
-            return appcache_storage.repair();
+            //if the app version has changed, force configuration storage sync
+            return appcache_storage.repair(current_version);
           }
         })
         .push(undefined, function (error) {
