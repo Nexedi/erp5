@@ -66,21 +66,26 @@ class TestCopySupport(ERP5TypeTestCase):
     # Try to rename: must work
     self.organisation_module.setId('new_organisation_module')
     self.commit()
-    self.assertTrue(person.getCareerSubordination().startswith('organisation_module'))
-    initial_activity_count = len(self.portal.portal_activities.getMessageList())
-    self.assertNotEqual(0, initial_activity_count)
-    # Try to rename again with pending activities: must raise
-    self.assertRaises(ActivityPendingError, self.organisation_module.setId, 'organisation_module')
-    self.commit()
-    # Activity count must not have changed
-    self.assertEqual(initial_activity_count, len(self.portal.portal_activities.getMessageList()))
-    self.tic()
-    # Check that external relation was updated
-    self.assertTrue(person.getCareerSubordination().startswith('new_organisation_module'))
-    self.assertTrue(person.getCareerSubordinationValue().aq_base is organisation.aq_base)
-    # Rename back to original name
-    self.organisation_module.setId('organisation_module')
-    self.tic()
+    try:
+      self.assertTrue(person.getCareerSubordination().startswith('organisation_module'))
+      initial_activity_count = len(self.portal.portal_activities.getMessageList())
+      self.assertNotEqual(0, initial_activity_count)
+      # Try to rename again with pending activities: must raise
+      self.assertRaises(ActivityPendingError, self.organisation_module.setId, 'organisation_module')
+      self.commit()
+      # Activity count must not have changed
+      self.assertEqual(initial_activity_count, len(self.portal.portal_activities.getMessageList()))
+      self.tic()
+      # Check that external relation was updated
+      self.assertTrue(person.getCareerSubordination().startswith('new_organisation_module'))
+      self.assertTrue(person.getCareerSubordinationValue().aq_base is organisation.aq_base)
+    except Exception:
+      self.abort()
+      raise
+    finally:
+      # Rename back to original name
+      self.organisation_module.setId('organisation_module')
+      self.tic()
     # Check that relation is back to what it was
     self.assertTrue(person.getCareerSubordination().startswith('organisation_module'))
     self.assertTrue(person.getCareerSubordinationValue().aq_base is organisation.aq_base)
