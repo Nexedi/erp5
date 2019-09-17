@@ -177,6 +177,9 @@
         .push(function (element) {
           root = element;
           selector = element.querySelector("select");
+          if (!navigator.mediaDevices) {
+            throw("mediaDevices is not supported");
+          }
           return navigator.mediaDevices.enumerateDevices();
         })
         .push(function (info_list) {
@@ -202,6 +205,9 @@
               return startup(root, evt.target.value);
             }
           });
+        })
+        .then(undefined, function(e) {
+          alert(e);
         });
     })
     .declareMethod('getContent', function () {
