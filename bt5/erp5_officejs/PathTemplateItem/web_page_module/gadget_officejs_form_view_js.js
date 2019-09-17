@@ -207,8 +207,14 @@
 
                       }
                     });
-                }); // TODO check how erp5 form gadgets handle failures
+                });
             });
+        }, function (error) {
+          console.log(error);
+          return gadget.notifySubmitted({
+            message: "Submit failed",
+            status: "error"
+          });
         });
     })
 
