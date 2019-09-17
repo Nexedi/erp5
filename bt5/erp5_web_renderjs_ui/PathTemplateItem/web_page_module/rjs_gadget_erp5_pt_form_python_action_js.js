@@ -16,6 +16,10 @@
           splitted_current_jio_key_list,
           command,
           i;
+
+        if (!jio_key) {
+          return;
+        }
         if (gadget.state.jio_key === jio_key) {
           // don't update navigation history when not really redirecting
           return gadget.redirect({command: 'cancel_dialog_with_history'});
