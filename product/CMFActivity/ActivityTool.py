@@ -194,13 +194,13 @@ class Message(BaseMessage):
   exc_type = None
   is_executed = MESSAGE_NOT_EXECUTED
   traceback = None
-  oid = None
+  document_uid = None
   is_registered = False
 
   def __init__(
       self,
       url,
-      oid,
+      document_uid,
       active_process,
       active_process_uid,
       activity_kw,
@@ -210,7 +210,7 @@ class Message(BaseMessage):
       portal_activities=None,
     ):
     self.object_path = url
-    self.oid = oid
+    self.document_uid = document_uid
     self.active_process = active_process
     self.active_process_uid = active_process_uid
     self.activity_kw = activity_kw
@@ -266,10 +266,8 @@ class Message(BaseMessage):
           % (self.object_path,), error=True)
       self.setExecutionState(MESSAGE_NOT_EXECUTABLE)
     else:
-      if (self.oid and self.oid != getattr(aq_base(obj), '_p_oid', None) and
-          # XXX: BusinessTemplate must be fixed to preserve OID
-          'portal_workflow' not in self.object_path):
-        raise ValueError("OID mismatch for %r" % obj)
+      if self.document_uid and self.document_uid != getattr(aq_base(obj), 'uid', None):
+        raise ValueError("UID mismatch for %r" % obj)
       return obj
 
   def getObjectList(self, activity_tool):
@@ -506,7 +504,7 @@ class Method(object):
   __slots__ = (
     '_portal_activities',
     '_passive_url',
-    '_passive_oid',
+    '_passive_uid',
     '_activity',
     '_active_process',
     '_active_process_uid',
@@ -515,11 +513,11 @@ class Method(object):
     '_request',
   )
 
-  def __init__(self, portal_activities, passive_url, passive_oid, activity,
+  def __init__(self, portal_activities, passive_url, passive_uid, activity,
       active_process, active_process_uid, kw, method_id, request):
     self._portal_activities = portal_activities
     self._passive_url = passive_url
-    self._passive_oid = passive_oid
+    self._passive_uid = passive_uid
     self._activity = activity
     self._active_process = active_process
     self._active_process_uid = active_process_uid
@@ -531,7 +529,7 @@ class Method(object):
     portal_activities = self._portal_activities
     m = Message(
       url=self._passive_url,
-      oid=self._passive_oid,
+      document_uid=self._passive_uid,
       active_process=self._active_process,
       active_process_uid=self._active_process_uid,
       activity_kw=self._kw,
@@ -552,7 +550,7 @@ class ActiveWrapper(object):
   __slots__ = (
     '__portal_activities',
     '__passive_url',
-    '__passive_oid',
+    '__passive_uid',
     '__activity',
     '__active_process',
     '__active_process_uid',
@@ -562,12 +560,12 @@ class ActiveWrapper(object):
   # Shortcut security lookup (avoid calling __getattr__)
   __parent__ = None
 
-  def __init__(self, portal_activities, url, oid, activity, active_process,
+  def __init__(self, portal_activities, url, uid, activity, active_process,
       active_process_uid, kw, request):
     # second parameter can be an object or an object's path
     self.__portal_activities = portal_activities
     self.__passive_url = url
-    self.__passive_oid = oid
+    self.__passive_uid = uid
     self.__activity = activity
     self.__active_process = active_process
     self.__active_process_uid = active_process_uid
@@ -578,7 +576,7 @@ class ActiveWrapper(object):
     return Method(
       self.__portal_activities,
       self.__passive_url,
-      self.__passive_oid,
+      self.__passive_uid,
       self.__activity,
       self.__active_process,
       self.__active_process_uid,
@@ -1396,7 +1394,7 @@ class ActivityTool (BaseTool):
 
     def activateObject(self, object, activity=DEFAULT_ACTIVITY,
                        active_process=None, serialization_tag=None,
-                       node=None, **kw):
+                       node=None, uid=None, **kw):
       if active_process is None:
         active_process_uid = None
       elif isinstance(active_process, str):
@@ -1406,15 +1404,11 @@ class ActivityTool (BaseTool):
         active_process_uid = active_process.getUid()
         active_process = active_process.getPhysicalPath()
       if isinstance(object, str):
-        oid = None
         url = tuple(object.split('/'))
       else:
-        try:
-          oid = aq_base(object)._p_oid
-          # Note that it's too early to get the OID of a newly created object,
-          # so at this point, self.oid may still be None.
-        except AttributeError:
-          pass
+        if uid is not None:
+          raise ValueError
+        uid = getattr(aq_base(object), 'uid', None)
         url = object.getPhysicalPath()
       if serialization_tag is not None:
         kw['serialization_tag'] = serialization_tag
@@ -1438,7 +1432,7 @@ class ActivityTool (BaseTool):
         except ValueError:
           pass
         break
-      return ActiveWrapper(self, url, oid, activity,
+      return ActiveWrapper(self, url, uid, activity,
                            active_process, active_process_uid, kw,
                            getattr(self, 'REQUEST', None))
 

@@ -137,7 +137,7 @@ class ZSQLBrain(Acquisition.Implicit):
       # a queue can be provided as well as extra parameters
       # which can be used for example to define deferred tasks
       return activity_tool.activateObject(
-        self.getPath(), activity, active_process, **new_kw)
+        self.getPath(), activity, active_process, uid=self.getUid(), **new_kw)
 
 allow_class(ZSQLBrain)
 
