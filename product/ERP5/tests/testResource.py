@@ -1129,15 +1129,18 @@ class TestResource(ERP5TypeTestCase):
 
   def testGetPriceWithBasePriceDefinedPerSlice(self):
     """
+    Slices allow to apply a different price per item given the quantity of this
+    item ordered. See exemple
     [unit quantity]   [price defined for the units of this slice]
      0 -> 10        = 10 currency/unit
     11 -> 20        =  9 currency/unit
     21 -> inf       =  8 currency/unit
 
-    unit -> price / unit
-     9   -> 10      currency/unit
-    15   -> 9.66667 currency/unit
-    25   -> 9.2     currency/unit
+    So the price for an order of X unit is :
+    unit -> total order price             -> price / unit
+     9   -> 90 currency                   -> 10      currency/unit
+    15   -> 10*10+5*9 = 145 currency      -> 9.66667 currency/unit
+    25   -> 20*10+10*9+5*8 = 230 currency -> 9.2     currency/unit
     """
     product_module = self.portal.getDefaultModule(self.product_portal_type)
     product = product_module.newContent(
