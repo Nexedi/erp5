@@ -186,7 +186,7 @@ class WorkflowMethod(Method):
     except AttributeError:
       # XXX instance is unwrapped(no acquisition)
       # XXX I must think that what is a correct behavior.(Yusei)
-      return self._m(instance, *args, **kw)
+      return self.__dict__['_m'](instance, *args, **kw)
 
     # Build a list of transitions which may need to be invoked
     instance_path = instance.getPhysicalPath()
