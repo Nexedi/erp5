@@ -2,13 +2,7 @@ from Products.ERP5Type.Log import log
 
 log("Folder method received dialog_id, form_id, uids and {!s}".format(kwargs.keys()))
 
-if kwargs.get('has_changed', None) is None:
-  message = "First submission."
-else:
-  if kwargs['has_changed']:
-    message = "Data has changed."
-  else:
-    message = "Data the same."
+message = "First submission."
 
 if kwargs.get("update_method", ""):
   return context.Base_renderForm(dialog_id, message="Updated. " + message)
