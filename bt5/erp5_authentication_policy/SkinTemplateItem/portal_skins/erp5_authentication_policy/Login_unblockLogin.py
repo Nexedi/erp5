@@ -5,7 +5,7 @@ portal_preferences = portal.portal_preferences
 
 if not portal.portal_preferences.isAuthenticationPolicyEnabled():
   # no policy, no sense to unblock account
-  return 0
+  return context.Base_redirect(form_id=form_id)
 
 now = DateTime()
 one_second = 1/24.0/60.0/60.0
@@ -31,7 +31,7 @@ for authentication_event in authentication_event_list:
 if not batch_mode:
   message = context.Base_translateString('User Login unblocked.')
   if cancel_url is None:
-    context.Base_redirect(form_id=form_id, keep_items={'portal_status_message': message})
+    return context.Base_redirect(form_id=form_id, keep_items={'portal_status_message': message})
   else:
     context.REQUEST.RESPONSE.redirect('%s?portal_status_message=%s' %(cancel_url, message))
 

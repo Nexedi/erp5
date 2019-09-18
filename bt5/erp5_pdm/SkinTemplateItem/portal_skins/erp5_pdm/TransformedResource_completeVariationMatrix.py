@@ -11,9 +11,5 @@ for cell_key in cell_key_list:
     cell.setCategoryList( context.getVariationCategoryList() )
     cell.setMembershipCriterionCategoryList( cell_key )
     cell.setMembershipCriterionBaseCategoryList( context.getVVariationBaseCategoryList() )
-          
-redirect_url = '%s/%s?%s' % ( context.absolute_url()
-                              , form_id
-                              , 'portal_status_message=Variation+matrix++updated.'
-)
-return request[ 'RESPONSE' ].redirect( redirect_url )
+
+return context.Base_redirect(form_id, keep_items={'portal_status_message': 'Variation matrix updated.'})
