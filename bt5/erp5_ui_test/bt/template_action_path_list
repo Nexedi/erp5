@@ -26,6 +26,7 @@ Foo | dummy_multilistfield_report
 Foo | dummy_radiofield_report
 Foo | dummy_report
 Foo | list
+Foo | python_action_jio
 Foo | select_bar
 Foo | view
 Foo | view_action_title
