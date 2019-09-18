@@ -120,14 +120,6 @@ try:
   editable_mode = request.get('editable_mode', 1)
   request.set('editable_mode', 1)
   form_data = form.validate_all_to_request(request)
-  # Notify the underlying script whether user did modifications
-  form_hash = form.hash_validated_data(form_data)
-  # Inject `has_changed` parameter to arguments
-  if "form_hash" in extra_param:
-    kw['has_changed'] = (form_hash != extra_param.get('form_hash'))
-  # update form_hash here so we do not rely on developer/Dialog Script
-  # to pass it correctly
-  extra_param["form_hash"] = form_hash
 
   # Put extra_param into request so we can pass it behind developers back
   # it is picked up at Base_renderForm so the developer does not need to
