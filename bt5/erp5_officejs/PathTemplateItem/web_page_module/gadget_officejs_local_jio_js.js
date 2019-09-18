@@ -91,7 +91,6 @@
                             "portal_types/Web Page",
                             "portal_types/Web Page Module",
                             "portal_types/Web Page Module/text_editor_view",
-                            "portal_types/Web Page/text_editor_clone",
                             "portal_types/Web Page/text_editor_clone"],
         promise_list = [],
         i = 0,
@@ -111,6 +110,12 @@
         })
         .push(function () {
           return gadget.setSetting("migration_version", current_version);
+        }, function (error) {
+          if ((error instanceof jIO.util.jIOError) &&
+              (error.status_code === 404)) {
+            return gadget.setSetting("migration_version", current_version);
+          }
+          throw error;
         })
         .push(function () {
           return current_version;
