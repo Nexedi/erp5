@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS */
-(function (window, rJS) {
+/*global window, rJS, RSVP, calculatePageTitle */
+(function (window, rJS, RSVP, calculatePageTitle) {
   "use strict";
 
   function submitDialog() {
@@ -73,11 +73,7 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("submitContent", "submitContent")
 
-    .ready(function () {
-      console.warn('fpa ready');
-    })
     .declareMethod('render', function render(options) {
-      console.warn('fpa render', options);
       return this.changeState({
         jio_key: options.jio_key,
         view: options.view,
@@ -88,12 +84,10 @@
     })
 
     .declareJob('submit', function () {
-      console.warn('fpa submit');
       return submitDialog.apply(this);
     })
 
-    .onStateChange(function onStateChange(d) {
-      console.warn('fpa state', d);
+    .onStateChange(function onStateChange() {
       var form_gadget = this;
       return new RSVP.Queue()
         .push(function () {
@@ -128,4 +122,4 @@
         });
     });
 
-}(window, rJS));
+}(window, rJS, RSVP, calculatePageTitle));
