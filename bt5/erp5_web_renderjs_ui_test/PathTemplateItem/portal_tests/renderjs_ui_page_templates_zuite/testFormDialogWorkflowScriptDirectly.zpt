@@ -45,12 +45,13 @@
   <td>//a[@data-i18n='Custom Action No Dialog']</td>
   <td></td>
 </tr>
-<tr>
-  <td rowspan="1" colspan="3">
-    Action should succeed and redirect back to the context.<br/>
-    It will not show messages because we do not parse the response.
-  </td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'direct workflow action done.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
   <tr>
   <td>waitForElementPresent</td>
   <td>//input[@name="field_my_title"]</td>
