@@ -91,6 +91,14 @@
                 state_options.doc = doc;
                 state_options.action_gadget_url = action_gadget_url;
                 return gadget.changeState(state_options);
+              }, function (error) {
+                if (error.status === 404) {
+                  return gadget.notifySubmitted({
+                    message: "Error in action",
+                    status: "error"
+                  });
+                }
+                throw error;
               });
           }
           return gadget.changeState(state_options);
