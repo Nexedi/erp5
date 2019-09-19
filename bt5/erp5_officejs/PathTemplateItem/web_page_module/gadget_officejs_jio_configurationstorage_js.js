@@ -102,18 +102,16 @@
 
   ConfigurationStorage.prototype.buildQuery = function () {
     var storage = this,
-      promise_list = [],
-      configuration_ids_list = [],
-      configuration_id_index = 0,
       result = [],
-      decoded_id;
+      decoded_id,
+      attachment_id;
     return storage.allAttachments(storage._origin_url)
       .push(function (all_attachments) {
-        for (var attachment_id in all_attachments) {
+        for (attachment_id in all_attachments) {
           if (all_attachments.hasOwnProperty(attachment_id)) {
             if (attachment_id !== storage._version &&
-               attachment_id !== storage._version + "/" &&
-               attachment_id !== storage._version + storage._manifest) {
+                attachment_id !== storage._version + "/" &&
+                attachment_id !== storage._version + storage._manifest) {
               decoded_id = decodeDocumentId(attachment_id,
                                             storage._hateoas_appcache);
               result.push({
