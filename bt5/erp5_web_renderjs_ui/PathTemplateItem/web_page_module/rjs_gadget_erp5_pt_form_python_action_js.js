@@ -3,6 +3,20 @@
 (function (window, rJS, RSVP, calculatePageTitle) {
   "use strict";
 
+  function checkValidity() {
+    return this.getDeclaredGadget("erp5_form")
+      .push(function (declared_gadget) {
+        return declared_gadget.checkValidity();
+      });
+  }
+
+  function getContent() {
+    return this.getDeclaredGadget("erp5_form")
+      .push(function (sub_gadget) {
+        return sub_gadget.getContent();
+      });
+  }
+
   function submitDialog() {
     var gadget = this;
 
@@ -67,11 +81,14 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("translate", "translate")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("submitContent", "submitContent")
+
+    .declareMethod('triggerSubmit', function () {
+      return;
+    })
+    .declareMethod('checkValidity', checkValidity, {mutex: 'changestate'})
+    .declareMethod('getContent', getContent, {mutex: 'changestate'})
 
     .declareMethod('render', function render(options) {
       return this.changeState({
