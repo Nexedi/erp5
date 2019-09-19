@@ -1,12 +1,10 @@
 supply_line = state_change['object']
-to_delete_cell_list = [
-  cell for cell in supply_line.getCellIdList(base_id='path')
-  if hasattr(supply_line, cell)
-]
-supply_line.manage_delObjects(ids=to_delete_cell_list)
-if state_change.kwargs['workflow_method_args'][0]:
-  price_parameter = 'slice_base_price'
-else:
-  price_parameter = 'base_price'
-supply_line.updateQuantityPredicate(price_parameter)
+supply_line.updateQuantityPredicate(
+  'slice_base_price'
+  if supply_line.isBasePricePerSlice() else
+  'base_price'
+)
 supply_line.updateCellRange(base_id='path')
+for cell_value in supply_line.getCellValueList(base_id='path'):
+  # XXX: only to trigger supply_cell_interaction_workflow/scripts/SupplyCell_updateSliceBasePrice
+  cell_value.setBasePrice(cell_value.getBasePrice())
