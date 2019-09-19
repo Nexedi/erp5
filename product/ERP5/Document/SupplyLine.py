@@ -197,41 +197,48 @@ class SupplyLine(Path, Amount, XMLMatrix):
         Update the quantity predicate for this price parameter
       """
       quantity_step_list = self.getQuantityStepList(price_parameter=price_parameter)
-      quantity_step_list.sort()
-
-      # remove old predicates
-      for pid in self.getQuantityPredicateIdList(price_parameter):
-        self.deleteContent(pid)
-
+      unused_predicate_id_set = self.getQuantityPredicateIdList(price_parameter)
       if quantity_step_list:
+        quantity_step_list.sort()
         quantity_step_list = [None] + quantity_step_list + [None]
-        # With this script, we can change the title of the predicate
-        script = getattr(self, 'SupplyLine_getTitle', None)
+        getTitle = getattr(
+          self,
+          'SupplyLine_getTitle',
+          lambda min, max: (
+            (
+              '' if min is None else '%s <= ' % (min, )
+            ) + 'quantity' + (
+              '' if max is None else ' < %s' % (max, )
+            )
+          ),
+        )
         predicate_id_start_with = "quantity_range"
         if price_parameter not in ("base_price", "slice_base_price"):
-          predicate_id_start_with = "%s_%s" % \
-              (price_parameter, predicate_id_start_with)
-        for i in range(0, len(quantity_step_list)-1):
+          predicate_id_start_with = "%s_%s" % (
+            price_parameter,
+            predicate_id_start_with,
+          )
+        for i in range(len(quantity_step_list) - 1):
           min_quantity = quantity_step_list[i]
-          max_quantity = quantity_step_list[i+1]
-          # XXX Hardcoded portal type name
-          p = self.newContent(id='%s_%s' % (predicate_id_start_with, str(i)),
-                              portal_type='Predicate', int_index=i+1)
-          p.setCriterionPropertyList(('quantity', ))
-          p.setCriterion(
+          max_quantity = quantity_step_list[i + 1]
+          predicate_id = '%s_%s' % (predicate_id_start_with, i)
+          try:
+            predicate_value = self[predicate_id]
+          except KeyError:
+            # XXX Hardcoded portal type name
+            predicate_value = self.newContent(
+              id='%s_%s' % (predicate_id_start_with, i),
+              portal_type='Predicate',
+              int_index=i + 1,
+            )
+          else:
+            unused_predicate_id_set.remove(predicate_id)
+          predicate_value.setTitle(getTitle(min=min_quantity, max=max_quantity))
+          predicate_value.setCriterionPropertyList(('quantity', ))
+          predicate_value.setCriterion(
             'quantity',
             min=min_quantity,
-            max=(None if price_parameter == 'slice_base_price' else max_quantity)
+            max=(None if price_parameter == 'slice_base_price' else max_quantity),
           )
-          if script is not None:
-            title = script(min=min_quantity, max=max_quantity)
-            p.setTitle(title)
-          else:
-            if min_quantity is None:
-              p.setTitle('quantity < %s' % max_quantity)
-            elif max_quantity is None:
-              p.setTitle('%s <= quantity' % min_quantity)
-            else:
-              p.setTitle('%s <= quantity < %s' % (min_quantity, max_quantity))
-
-
+      if unused_predicate_id_set:
+        self.deleteContent(unused_predicate_id_set)
