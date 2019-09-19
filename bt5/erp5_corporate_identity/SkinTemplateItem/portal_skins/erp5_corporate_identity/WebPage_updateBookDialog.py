@@ -62,6 +62,7 @@ if dialog_id is not None:
       include_reference_table=include_reference_table,
       include_linked_content=include_linked_content,
       include_report_content=include_report_content,
+      margin15mm = margin15mm,
       #**kw
     )
   )

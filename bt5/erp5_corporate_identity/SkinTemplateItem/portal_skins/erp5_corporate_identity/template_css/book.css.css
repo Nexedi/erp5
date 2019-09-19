@@ -1,3 +1,8 @@
+.margin-15mm{
+  margin-left:15mm;
+  margin-right:15mm;
+}
+
 /* === font-size === */
 .ci-book h1 + p::first-letter {
   font-size: 21.1667mm; /* 60pt; */ /* 80px; */
@@ -14,7 +19,7 @@
 .ci-book .ci-book-header .ci-book-header-title
 /*,
 .ci-book table thead tr:first-child:nth-last-child(2) th,
-.ci-book table thead tr:first-child:nth-last-child(2) td 
+.ci-book table thead tr:first-child:nth-last-child(2) td
 */
 {
   font-size: 6.35mm; /* 18pt; */ /* 24px; */
@@ -102,6 +107,10 @@
   font-style: normal;
   font-size: 6.35mm; /* 18pt; */ /* 24px; */
 }
+.ci-book p em,
+.ci-book p i {
+  font-style: italic;
+}
 
 /* === color === */
 /* .ci-book a:not([href*="#"]), */
@@ -143,11 +152,11 @@
 }
 .ci-book .custom-force-page-break,
 .ci-book .custom-resume {
-  page-break-before: always; 
+  page-break-before: always;
 }
-.ci-book h2, 
-.ci-book h3, 
-.ci-book h4, 
+.ci-book h2,
+.ci-book h3,
+.ci-book h4,
 .ci-book h5 {
   page-break-after: avoid;
 }
@@ -158,7 +167,7 @@
 }
 .ci-book table,
 .ci-book table caption,
-.ci-book img, 
+.ci-book img,
 .ci-book tr {
   page-break-inside: avoid;
 }
@@ -403,7 +412,7 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
 
 /* multi-table headers */
 .ci-book table thead {
-  display: table-header-group; 
+  display: table-header-group;
 }
 .ci-book table tfoot {
   display: table-row-group;
@@ -494,7 +503,7 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
   background-color: #ffffff;
   font-weight: normal;
 }
-.ci-book table.ci-document-page-header tbody tr td, 
+.ci-book table.ci-document-page-header tbody tr td,
 .ci-book table.ci-document-page-footer tbody tr td {
   /* background-color: #ffffff !important; */
   /*text-align: center;*/
@@ -520,7 +529,8 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
   list-style: none;
   list-style-position: inside;
 }
-.ci-book ul li {
+.ci-book ul li,
+.ci-book ol li {
   padding-left: 16px;
   text-indent: -24px;
 }
@@ -560,13 +570,13 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
 .ci-book .ci-book-table-of-content + ol li ol li:before {
   content: counters(item, ".") " ";
 }
-.ci-book .ci-book-table-of-content ~ h1 ~ ol > li:before, 
+.ci-book .ci-book-table-of-content ~ h1 ~ ol > li:before,
 .ci-book .ci-book-table-of-content ~ h1 ~ ol ol > li:before,
-.ci-book .ci-book-table-of-content ~ h2 ~ ol > li:before, 
+.ci-book .ci-book-table-of-content ~ h2 ~ ol > li:before,
 .ci-book .ci-book-table-of-content ~ h2 ~ ol ol > li:before,
-.ci-book .ci-book-table-of-content ~ h3 ~ ol > li:before, 
+.ci-book .ci-book-table-of-content ~ h3 ~ ol > li:before,
 .ci-book .ci-book-table-of-content ~ h3 ~ ol ol > li:before,
-.ci-book .ci-book-table-of-content ~ h4 ~ ol > li:before, 
+.ci-book .ci-book-table-of-content ~ h4 ~ ol > li:before,
 .ci-book .ci-book-table-of-content ~ h4 ~ ol ol > li:before {
  counter-increment: initial;
  content: none;

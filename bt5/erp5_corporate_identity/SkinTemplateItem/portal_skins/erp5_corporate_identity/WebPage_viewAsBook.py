@@ -255,6 +255,7 @@ if book_format == "html" or book_format == "mhtml":
     book_full_reference=book_full_reference,
     book_source_organisation_title=book_source.get("organisation_title") or blank,
     book_content=book_content,
+    margin_15mm = margin_15mm,
     book_table_of_content=book_table_of_content
   )
   if book_format == "html":
