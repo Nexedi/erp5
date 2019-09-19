@@ -17,6 +17,7 @@ Creates the Book header.
                        book_reference                    python: options.get('book_reference');
                        book_revision                     python: options.get('book_revision');
                        book_version                      python: options.get('book_version');
+                       margin_15mm                       python: options.get('margin_15mm');
                        book_short_date                   python: options.get('book_short_date');">
   <!DOCTYPE html>
   <html tal:attributes="class python: ''.join(['ci-', book_theme, ' ci-', book_language])">
@@ -50,9 +51,16 @@ Creates the Book header.
       }
     </script>
     </head>
-    	<body class="ci-book" onload="setPlaceholdersWithUrlParameters()">
-    	  <tal:block metal:use-macro="context/WebPage_createBookHeader/macros/book_header" />
-      </body>
+      <tal:block tal:condition="python: margin_15mm">
+    	  <body class="ci-book margin-15mm" onload="setPlaceholdersWithUrlParameters()">
+    	    <tal:block metal:use-macro="context/WebPage_createBookHeader/macros/book_header" />
+        </body>
+      </tal:block>
+      <tal:block tal:condition="python: not margin_15mm">
+    	  <body class="ci-book" onload="setPlaceholdersWithUrlParameters()">
+    	    <tal:block metal:use-macro="context/WebPage_createBookHeader/macros/book_header" />
+        </body>
+      </tal:block>
 	 </html>
 </tal:block>
 

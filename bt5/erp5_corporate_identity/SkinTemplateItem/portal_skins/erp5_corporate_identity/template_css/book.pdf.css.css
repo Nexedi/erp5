@@ -1,3 +1,8 @@
+.margin-15mm{
+  margin-left:15mm;
+  margin-right:15mm;
+}
+
 /* === font-size === */
 .ci-book h1 + p::first-letter {
   font-size: 21.1667mm; /* 60pt; */ /* 80px; */
@@ -91,6 +96,16 @@
 }
 .ci-book .ci-book-cover p.ci-book-cover-author-list span {
   font-size: 6.35mm; /* 18pt; */ /* 24px; */
+}
+
+.ci-book p em,
+.ci-book li em,
+.ci-book p i,
+.ci-book li i {
+  font-style: italic;
+}
+.ci-book table tbody td strong {
+  font-weight: bold;
 }
 
 /* === color === */
@@ -541,7 +556,8 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
   list-style: none;
   list-style-position: inside;
 }
-.ci-book ul li {
+.ci-book ul li,
+.ci-book ol li {
   padding-left: 16px;
   text-indent: -24px;
 }
@@ -705,6 +721,7 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
 .ci-book .ci-book-table-of-content li ol li {
   margin: 0;
 }
+
 .ci-book .ci-book-table-of-content a {
   text-decoration:none;
   color: black;

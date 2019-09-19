@@ -12,6 +12,7 @@ Creates the Book footer.
                        book_theme_css_url                python: options.get('book_theme_css_url');
                        book_template_css_url             python: options.get('book_template_css_url');
                        book_full_reference               python: options.get('book_full_reference');
+                       margin_15mm                       python: options.get('margin_15mm');
                        book_source_organisation_title    python: options.get('book_source_organisation_title');">
   <!DOCTYPE html>
   <html tal:attributes="class python: ''.join(['ci-', book_theme, ' ci-', book_language])">
@@ -25,9 +26,16 @@ Creates the Book footer.
     <link rel="stylesheet" tal:attributes="href book_theme_css_url" />
     <link rel="stylesheet" tal:attributes="href book_template_css_url" />
     </head>
-    	<body class="ci-book" onload="setPlaceholdersWithUrlParameters()">
-    	  <tal:block metal:use-macro="context/WebPage_createBookFooter/macros/book_footer" />
-      </body>
+      <tal:block tal:condition="python: margin_15mm">
+    	  <body class="ci-book margin-15mm" onload="setPlaceholdersWithUrlParameters()">
+    	    <tal:block metal:use-macro="context/WebPage_createBookFooter/macros/book_footer" />
+        </body>
+      </tal:block>
+      <tal:block tal:condition="python: not margin_15mm">
+    	  <body class="ci-book" onload="setPlaceholdersWithUrlParameters()">
+    	    <tal:block metal:use-macro="context/WebPage_createBookFooter/macros/book_footer" />
+        </body>
+      </tal:block>
 	 </html>
 </tal:block>
 

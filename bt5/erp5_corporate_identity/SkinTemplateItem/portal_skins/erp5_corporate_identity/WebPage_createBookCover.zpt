@@ -13,6 +13,7 @@ Creates the Book cover.
                        book_template_css_url             python: options.get('book_template_css_url');
                        book_short_title                  python: options.get('book_short_title');
                        book_description                  python: options.get('book_description');
+                       margin_15mm                       python: options.get('margin_15mm');
                        book_source_person_title          python: options.get('book_source_person_title');">
   <!DOCTYPE html>
   <html tal:attributes="class python: ''.join(['ci-', book_theme, ' ci-', book_language])">
@@ -26,9 +27,16 @@ Creates the Book cover.
     <link rel="stylesheet" tal:attributes="href book_theme_css_url" />
     <link rel="stylesheet" tal:attributes="href book_template_css_url" />
     </head>
-    	<body class="ci-book">
-    	  <tal:block metal:use-macro="context/WebPage_createBookCover/macros/book_cover" />
-      </body>
+      <tal:block tal:condition="python: margin_15mm">
+    	  <body class="ci-book margin-15mm">
+    	    <tal:block metal:use-macro="context/WebPage_createBookCover/macros/book_cover" />
+        </body>
+    </tal:block>
+    <tal:block tal:condition="python: not margin_15mm">
+    	  <body class="ci-book">
+    	    <tal:block metal:use-macro="context/WebPage_createBookCover/macros/book_cover" />
+        </body>
+    </tal:block>
 	 </html>
 </tal:block>
 

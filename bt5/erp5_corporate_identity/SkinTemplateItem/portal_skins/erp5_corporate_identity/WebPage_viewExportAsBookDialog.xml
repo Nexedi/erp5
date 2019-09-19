@@ -85,6 +85,7 @@
                         <string>display_svg</string>
                         <string>document_save</string>
                         <string>portal_skin</string>
+                        <string>margin15mm</string>
                       </list>
                     </value>
                 </item>

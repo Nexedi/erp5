@@ -56,6 +56,7 @@ book_include_history_table = int(kw.get('include_history_table') or 0)
 book_include_reference_table = int(kw.get('include_reference_table') or 0)
 book_include_linked_content = int(kw.get('include_linked_content') or 0)
 book_include_report_content = int(kw.get('include_report_content') or 0)
+margin_15mm = int(kw.get('margin15mm') or 0)
 
 override_source_person_title = kw.get('override_source_person_title')
 override_source_organisation_title = kw.get("override_source_organisation_title")
@@ -90,7 +91,7 @@ if isinstance(book_content, unicode):
   book_content = book_content.encode("UTF-8")
 
 # backcompat
-#book_history_section_list = re.findall('<section*?>.+?</section>', book_content, re.S)
+book_history_section_list = re.findall('<section*?>.+?</section>', book_content, re.S)
 
 # override for tests
 if override_batch_mode:
@@ -194,7 +195,7 @@ if book_include_reference_table:
   #if len(book_history_section_list) > 0:
   #  book_content = book_content.replace(book_history_section_list[-1], (book_history_section_list[-1] + book_references.encode('UTF-8').strip()))
   #else:
-  book_references = book.Base_unescape(book_references)
+  #  book_content = book_content.replace("${WebPage_insertTableOfReferences}", book_references.encode('UTF-8').strip())
   book_content = book_content.replace("${WebPage_insertTableOfReferences}", book_references.encode('UTF-8').strip())
 else:
   book_content = book_content.replace("${WebPage_insertTableOfReferences}", blank)
@@ -205,7 +206,8 @@ if book_include_content_table:
   book_translated_toc_title = translateText("Table of Contents")
   if book_format == "pdf":
     book_table_of_content = book.WebPage_createBookXslTableOfContent(
-      book_toc_title=book_translated_toc_title
+      book_toc_title=book_translated_toc_title,
+      margin_15mm = margin_15mm
     ).encode('UTF-8').strip()
   elif book_format == "html":
     book_content, book_table_of_content = book.WebPage_createTableOfContent(
@@ -284,6 +286,7 @@ if book_format == "pdf":
     book_template_css_url=book_theme.get("template_css_url"),
     book_short_title=book_short_title,
     book_description=book_description,
+    margin_15mm = margin_15mm,
     book_source_person_title=book_source.get("contributor_title_string").split(",")
   )
 
@@ -299,6 +302,7 @@ if book_format == "pdf":
     book_include_history=book_include_history_table,
     book_signature_list=book_signature_list,
     book_version_list=book_version_list,
+    margin_15mm = margin_15mm,
     book_distribution_list=book_distribution_list,
   )
 
@@ -312,10 +316,12 @@ if book_format == "pdf":
     book_theme_css_font_list=book_theme.get("theme_css_font_list"),
     book_theme_css_url=book_theme.get("theme_css_url"),
     book_template_css_url=book_theme.get("template_css_url"),
+    margin_15mm = margin_15mm,
     book_report_css_list=book_report_css_list,
     book_report_js_list=book_report_js_list,
     book_content=book_content,
   )
+
   book_head = book.WebPage_createBookHeader(
     book_theme=book_theme.get("theme"),
     book_title=book_title,
@@ -329,6 +335,7 @@ if book_format == "pdf":
     book_reference=book_reference,
     book_revision=book_revision,
     book_version=book_version,
+    margin_15mm = margin_15mm,
     book_short_date=book_short_date
   )
 
@@ -342,6 +349,7 @@ if book_format == "pdf":
     book_theme_logo_alt=book_theme.get("theme_logo_description"),
     book_template_css_url=book_theme.get("template_css_url"),
     book_full_reference=book_full_reference,
+    margin_15mm = margin_15mm,
     book_source_organisation_title=book_source.get("organisation_title") or blank,
   )
 
@@ -362,11 +370,16 @@ if book_format == "pdf":
   xsl_style_sheet_data = book_table_of_content
   embedded_html_data = book.Base_convertHtmlToSingleFile(book_content, allow_script=True)
   footer_embedded_html_data = book.Base_convertHtmlToSingleFile(book_foot, allow_script=True)
-
+  if margin_15mm:
+    margin_top = 50
+    margin_bottom = 25
+  else:
+    margin_top = 40
+    margin_bottom = 20
   pdf_file = book.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
     encoding="utf8",
-    margin_top=40,
-    margin_bottom=20,
+    margin_top=margin_top,
+    margin_bottom=margin_bottom,
     toc=True if book_include_content_table else False,
     before_toc_data_list=before_toc_data_list,
     xsl_style_sheet_data=b64encode(xsl_style_sheet_data),

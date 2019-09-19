@@ -51,6 +51,7 @@ return context.WebPage_viewAsBook(
   include_reference_table=include_reference_table,
   include_linked_content=include_linked_content,
   include_report_content=include_report_content,
+  margin15mm = margin15mm,
   format=format,
   **kw
 )
