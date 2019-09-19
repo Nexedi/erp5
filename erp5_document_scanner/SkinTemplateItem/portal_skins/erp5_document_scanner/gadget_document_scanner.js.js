@@ -1,16 +1,18 @@
-(function (rJS, RSVP, window, document, navigator, Cropper, console, alert, FileReader, URL, jIO) {
+/*jslint indent: 2 */
+/*global rJS, RSVP, window, document, navigator, Cropper, alert, FileReader, jIO */
+(function (rJS, RSVP, window, document, navigator, Cropper, alert, FileReader, jIO) {
   "use strict";
 
   var imageWidth,
-      imageHeight,
-      cropper,
-      video,
-      canvas,
-      photo,
-      startbutton,
-      photoInput,
-      storage,
-      imageCapture;
+    imageHeight,
+    cropper,
+    video,
+    canvas,
+    photo,
+    startbutton,
+    photoInput,
+    storage,
+    imageCapture;
 
   function gotStream(mediaStream) {
     imageCapture = new window.ImageCapture(mediaStream.getVideoTracks()[0]);
@@ -18,89 +20,12 @@
     return imageCapture.getPhotoCapabilities();
   }
 
-  function contrastImage(input, output, contrast) {
-    var outputContext,
-      inputContext = input.getContext("2d"),
-      imageData = inputContext.getImageData(0, 0, input.width, input.height),
-      data = imageData.data,
-      factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
-
-    for (var i=0;i<data.length;i+=4) {
-      data[i] = factor * (data[i] - 128) + 128;
-      data[i+1] = factor * (data[i+1] - 128) + 128;
-      data[i+2] = factor * (data[i+2] - 128) + 128;
-    }
-    outputContext = output.getContext("2d");
-    outputContext.putImageData(imageData, 0, 0);
-  }
-
-  function grayscale (input, output) {
-    var gray,
-        outputContext,
-        inputContext = input.getContext("2d"),
-        imageData = inputContext.getImageData(0, 0, input.width, input.height),
-        data = imageData.data,
-        arraylength = input.width * input.height * 4;
-
-    //gray = 0.3*R + 0.59*G + 0.11*B
-    // http://www.tannerhelland.com/3643/grayscale-image-algorithm-vb6/
-    for (var i=arraylength-1; i>0;i-=4) {
-     gray = 0.3 * data[i-3] + 0.59 * data[i-2] + 0.11 * data[i-1];
-     data[i-3] = gray;
-     data[i-2] = gray;
-     data[i-1] = gray;
-    }
-    outputContext = output.getContext("2d");
-    outputContext.putImageData(imageData, 0, 0);
-  }
-
-  function startup(gadget, device_id) {
-    var media, mediaList = [];
-    video = gadget.querySelector(".video");
-    canvas = gadget.querySelector(".canvas");
-    photo = gadget.querySelector(".photo");
-    photoInput = gadget.querySelector(".photoInput");
-    startbutton = gadget.querySelector(".startbutton");
-
-    return RSVP.Queue()
-      .push(function() {
-        return navigator.mediaDevices.getUserMedia({video: {deviceId: {exact: device_id}}});
-      })
-      .push(gotStream)
-      .push(function(photoCapabilities) {
-        imageWidth = photoCapabilities.imageWidth.max;
-        imageHeight = photoCapabilities.imageHeight.max;
-        document.querySelector("textarea[name='field_your_description']").value = "Max => " + imageWidth + "x" + imageHeight;
-        video.play();
-      })
-      .push(function(){
-        /*
-          XXX remove addEventListener. Instead, use renderJS declareService / onEvent,
-          which will handle unloading the listener and correctly catching errors
-          Remove soon
-        */
-        startbutton.addEventListener("click", function(evt){
-          evt.preventDefault();
-          takePicture(gadget);
-        }, false);
-    });
-
-  }
-
-  function clearphoto() {
-    var data, context = canvas.getContext("2d");
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    data = canvas.toDataURL("image/png");
-    photo.setAttribute("src", data);
-  }
-
   function takePicture(gadget) {
     imageCapture.takePhoto({imageWidth: imageWidth})
-      .then(function(blob){
+      .then(function (blob) {
         var reader = new FileReader();
         reader.readAsDataURL(blob);
-        reader.onloadend = function() {
+        reader.onloadend = function () {
           photoInput.setAttribute("value", reader.result.split(",")[1]);
           photo.setAttribute("src", reader.result);
           photo.setAttribute("width", imageWidth);
@@ -111,7 +36,7 @@
   }
 
   function drawCanvas(gadget, img) {
-    var ratio, x, y, data;
+    var ratio, x, y;
     canvas.width = imageWidth;
     canvas.height = imageHeight;
     ratio  = Math.min(canvas.width / img.width, canvas.height / img.height);
@@ -131,55 +56,131 @@
       cropper.destroy();
     }
     return RSVP.Queue()
-     .push(function () {
+      .push(function () {
         return storage.get("settings");
-     })
-     .push(function (data) {
-       cropper = new Cropper(gadget.querySelector('.photo'), {data: data});
-       gadget.querySelector(".crop-button").addEventListener("click", function(evt) {
-         var canvasData;
-         evt.preventDefault();
-        canvasData = cropper.getCanvasData();
-        storage.put("settings", cropper.getData());
-        cropper.getCroppedCanvas().toBlob(function(blob){
-          var reader = new window.FileReader(),
-            photo = gadget.querySelector(".photo");
-          reader.readAsDataURL(blob);
-          reader.onloadend = function () {
-            var base64data = reader.result,
-              block = base64data.split(";"),
-              contentType = block[0].split(":")[1],
-              realData = block[1].split(",")[1];
+      })
+      .push(function (data) {
+        cropper = new Cropper(gadget.querySelector('.photo'), {data: data});
+        gadget.querySelector(".crop-button").addEventListener("click", function (evt) {
+          var canvasData;
+          evt.preventDefault();
+          canvasData = cropper.getCanvasData();
+          storage.put("settings", cropper.getData());
+          cropper.getCroppedCanvas().toBlob(function (blob) {
+            var reader = new window.FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = function () {
+              var base64data = reader.result,
+                block = base64data.split(";"),
+                realData = block[1].split(",")[1];
 
-            photo.style.width = canvasData.width + "px";
-            photo.style.height = canvasData.height + "px";
+              photo.style.width = canvasData.width + "px";
+              photo.style.height = canvasData.height + "px";
 
-            photo.src = base64data;
-            photoInput.value = realData;
-            cropper.destroy();
-          };
+              photo.src = base64data;
+              photoInput.value = realData;
+              cropper.destroy();
+            };
+          });
         });
       });
-    });
   }
+
+  function contrastImage(input, output, contrast) {
+    var i,
+      outputContext,
+      inputContext = input.getContext("2d"),
+      imageData = inputContext.getImageData(0, 0, input.width, input.height),
+      data = imageData.data,
+      factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+
+    for (i = 0; i < data.length; i += 4) {
+      data[i] = factor * (data[i] - 128) + 128;
+      data[i + 1] = factor * (data[i + 1] - 128) + 128;
+      data[i + 2] = factor * (data[i + 2] - 128) + 128;
+    }
+    outputContext = output.getContext("2d");
+    outputContext.putImageData(imageData, 0, 0);
+  }
+
+  function grayscale(input, output) {
+    var i,
+      gray,
+      outputContext,
+      inputContext = input.getContext("2d"),
+      imageData = inputContext.getImageData(0, 0, input.width, input.height),
+      data = imageData.data,
+      arraylength = input.width * input.height * 4;
+
+    //gray = 0.3*R + 0.59*G + 0.11*B
+    // http://www.tannerhelland.com/3643/grayscale-image-algorithm-vb6/
+    for (i = arraylength - 1; i > 0; i -= 4) {
+      gray = 0.3 * data[i - 3] + 0.59 * data[i - 2] + 0.11 * data[i - 1];
+      data[i - 3] = gray;
+      data[i - 2] = gray;
+      data[i - 1] = gray;
+    }
+    outputContext = output.getContext("2d");
+    outputContext.putImageData(imageData, 0, 0);
+  }
+
+  function startup(gadget, device_id) {
+    video = gadget.querySelector(".video");
+    canvas = gadget.querySelector(".canvas");
+    photo = gadget.querySelector(".photo");
+    photoInput = gadget.querySelector(".photoInput");
+    startbutton = gadget.querySelector(".startbutton");
+
+    return RSVP.Queue()
+      .push(function () {
+        return navigator.mediaDevices.getUserMedia({video: {deviceId: {exact: device_id}}});
+      })
+      .push(gotStream)
+      .push(function (photoCapabilities) {
+        imageWidth = photoCapabilities.imageWidth.max;
+        imageHeight = photoCapabilities.imageHeight.max;
+        document.querySelector("textarea[name='field_your_description']").value = "Max => " + imageWidth + "x" + imageHeight;
+        video.play();
+      })
+      .push(function () {
+        /*
+          XXX remove addEventListener. Instead, use renderJS declareService / onEvent,
+          which will handle unloading the listener and correctly catching errors
+          Remove soon
+        */
+        startbutton.addEventListener("click", function (evt) {
+          evt.preventDefault();
+          takePicture(gadget);
+        }, false);
+      });
+  }
+
+  function clearphoto() {
+    var data, context = canvas.getContext("2d");
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    data = canvas.toDataURL("image/png");
+    photo.setAttribute("src", data);
+  }
+
   rJS(window)
-    .ready(function (g) {
+    .ready(function () {
       return RSVP.Queue()
-       .push(function () {
-         return jIO.createJIO({
-           "type": "indexeddb",
-           "database": "cropper_settings"
-         });
-       })
-       .push(function (proxy) {
+        .push(function () {
+          return jIO.createJIO({
+            "type": "indexeddb",
+            "database": "cropper_settings"
+          });
+        })
+        .push(function (proxy) {
           storage = proxy;
           return storage.get("settings");
-       })
-       .then(undefined, function (error) {
-         return storage.put("settings");
-       });
+        })
+        .then(undefined, function () {
+          return storage.put("settings");
+        });
     })
-    .declareMethod('render', function (options) {
+    .declareMethod('render', function () {
       var el,
         root,
         selector;
@@ -188,7 +189,7 @@
           root = element;
           selector = element.querySelector("select");
           if (!navigator.mediaDevices) {
-            throw("mediaDevices is not supported");
+            throw ("mediaDevices is not supported");
           }
           return navigator.mediaDevices.enumerateDevices();
         })
@@ -206,8 +207,8 @@
             }
           }
         })
-        .push(function() {
-          selector.addEventListener("change", function(evt) {
+        .push(function () {
+          selector.addEventListener("change", function (evt) {
             if (video) {
               video.pause();
             }
@@ -216,7 +217,7 @@
             }
           });
         })
-        .then(undefined, function(e) {
+        .then(undefined, function (e) {
           alert(e);
         });
     })
@@ -227,4 +228,4 @@
       return result;
     });
 
-}(rJS, RSVP, window, document, navigator, Cropper, console, alert, FileReader, URL, jIO));
+}(rJS, RSVP, window, document, navigator, Cropper, alert, FileReader, jIO));
