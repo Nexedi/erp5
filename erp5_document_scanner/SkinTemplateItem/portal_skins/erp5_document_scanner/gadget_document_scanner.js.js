@@ -62,19 +62,29 @@
     photoInput = gadget.querySelector(".photoInput");
     startbutton = gadget.querySelector(".startbutton");
 
-    navigator.mediaDevices.getUserMedia({video: {deviceId: {exact: device_id}}})
-      .then(gotStream)
-      .then(function(photoCapabilities) {
+    return RSVP.Queue()
+      .push(function() {
+        return navigator.mediaDevices.getUserMedia({video: {deviceId: {exact: device_id}}});
+      })
+      .push(gotStream)
+      .push(function(photoCapabilities) {
         imageWidth = photoCapabilities.imageWidth.max;
         imageHeight = photoCapabilities.imageHeight.max;
         document.querySelector("textarea[name='field_your_description']").value = "Max => " + imageWidth + "x" + imageHeight;
         video.play();
-      });
+      })
+      .push(function(){
+        /*
+          XXX remove addEventListener. Instead, use renderJS declareService / onEvent,
+          which will handle unloading the listener and correctly catching errors
+          Remove soon
+        */
+        startbutton.addEventListener("click", function(evt){
+          evt.preventDefault();
+          takePicture(gadget);
+        }, false);
+    });
 
-    startbutton.addEventListener("click", function(evt){
-      evt.preventDefault();
-      takePicture(gadget);
-    }, false);
   }
 
   function clearphoto() {
