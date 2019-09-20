@@ -100,6 +100,16 @@ def Application_resolveConflict(self, old_state, saved_state, new_state):
   """Solve conflicts in case several nodes register at the same time
   """
   new_state = new_state.copy()
+
+  test_distributing_node_set = {
+      old_state.pop('test_distributing_node', ''),
+      saved_state.pop('test_distributing_node', ''),
+      new_state.pop('test_distributing_node', '')}
+  test_distributing_node_set.discard('')
+  if len(test_distributing_node_set) != 1:
+    raise ConflictError
+  new_state['test_distributing_node'] = test_distributing_node_set.pop()
+
   old, saved, new = [set(state.pop('test_processing_nodes', {}).items())
                      for state in old_state, saved_state, new_state]
   # The value of these attributes don't have proper __eq__ implementation.
