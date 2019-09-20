@@ -87,6 +87,7 @@ class TestERP5(ERP5TypeTestCase):
     return "Conflict Resolution: ERP5"
 
   def afterSetUp(self):
+    self.waitForOtherActivityNodeRegistration(node_count=2)
     other_node = self.getOtherZopeNode()
     self.other_node = self.portal.portal_web_services.connect(
       "http://%s%s" % (other_node, self.portal.getPath()),
@@ -98,7 +99,6 @@ class TestERP5(ERP5TypeTestCase):
     activity_tool = self.portal.portal_activities
     node_list = list(activity_tool.getProcessingNodeList())
     node_list.remove(getCurrentNode())
-    assert node_list, "this unit test must be run with at least 2 Zope nodes"
     return node_list[0]
 
   def testZODBCookie(self):
