@@ -10,6 +10,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
@@ -23,8 +24,26 @@
         app_view,
         gadget_util,
         jio_document,
-        portal_type;
-      return RSVP.Queue()
+        portal_type,
+        current_version,
+        index;
+      current_version = window.location.href.replace(window.location.hash, "");
+      index = current_version.indexOf(window.location.host) +
+        window.location.host.length;
+      current_version = current_version.substr(index);
+      return gadget.getSetting("migration_version")
+        .push(function (migration_version) {
+          if (migration_version !== current_version) {
+            //if app version has changed, force storage sync
+            return gadget.redirect({
+              'command': 'display',
+              'options': {
+                'page': 'ojs_sync',
+                'auto_repair': true
+              }
+            });
+          }
+        })
         .push(function () {
           return RSVP.all([
             gadget.declareGadget("gadget_officejs_common_util.html"),
