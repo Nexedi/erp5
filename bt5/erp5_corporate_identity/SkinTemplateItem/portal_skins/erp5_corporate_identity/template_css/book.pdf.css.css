@@ -185,6 +185,8 @@
 }
 .ci-book :not(.ci-book-header-image-wkhtmltopdf-image-wrapper) > img ~ span {
   margin-left: 3cm;
+  display:inline-block;
+  text-indent: 0mm;
 }
 
 .ci-book section:not(:last-child) {
@@ -822,14 +824,19 @@ html .ci-book table td p {
   margin: 0;
   text-indent: 0;
   display:inline-block;
+  padding-left: 10px;
 }
 
-html .ci-book table td p:first-child {
-  padding: 0;
+html .ci-book table td ul,
+html .ci-book table td ol{
+  padding-left: 10px;
 }
-html .ci-book table td p:not(:first-child){
-  padding-left: 5px;
+
+
+html .ci-book table td p ~ p {
+  margin-bottom: 20px;
 }
+
 /* === code boxes === */
 .ci-book pre {
 	text-align: left;
