@@ -800,10 +800,12 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
 }
 .ci-book .ci-book-img > img ~ span {
   margin-left: 3cm;
+  display:inline-block;
 }
 
 .ci-book .ci-book-img + span {
   margin-left: 3cm;
+  display:inline-block;
 }
 .ci-book table caption,
 .ci-book .ci-book-caption {
@@ -818,8 +820,15 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
 /* editor adding <p>... */
 html .ci-book table td p {
   margin: 0;
-  padding: 0;
   text-indent: 0;
+  display:inline-block;
+}
+
+html .ci-book table td p:first-child {
+  padding: 0;
+}
+html .ci-book table td p:not(:first-child){
+  padding-left: 5px;
 }
 /* === code boxes === */
 .ci-book pre {
