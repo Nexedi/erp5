@@ -3,7 +3,7 @@ request = container.REQUEST
 portal = context.getPortalObject()
 N_ = portal.Base_translateString
 
-# previous_skin_selection = kw.get('previous_skin_selection', request.get('previous_skin_selection', None))
+previous_skin_selection = request['previous_skin_selection']
 
 user = portal.portal_membership.getAuthenticatedMember()
 person_value = user.getUserValue()
