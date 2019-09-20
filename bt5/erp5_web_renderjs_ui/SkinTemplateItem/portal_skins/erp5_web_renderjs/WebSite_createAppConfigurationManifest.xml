@@ -76,7 +76,6 @@
                       <list>
                         <string>my_appcache_manifest</string>
                         <string>my_router_gadget</string>
-                        <string>my_configuration_manifest</string>
                       </list>
                     </value>
                 </item>

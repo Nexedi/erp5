@@ -26,9 +26,6 @@ try:
   appcache_file_reference = context.getLayoutProperty("configuration_manifest_url", default="")
   if appcache_file_reference is "":
     raise ValueError("Manifest URL Layout Property is missing")
-  configuration_file_reference = context.getLayoutProperty("configuration_app_configuration", default="")
-  if configuration_file_reference is "":
-    raise ValueError("Configuration URL Layout Property is missing")
 
   router_file = portal_catalog.getResultValue(
       portal_type = 'Web Page',
@@ -42,6 +39,11 @@ try:
   if appcache_manifest is None:
     raise ValueError("Appcache manifest '%s' not found" % appcache_file_reference)
 
+  router_content = router_file.getTextContent()
+
+  configuration_file_reference = getElementFromContent("configuration_manifest", router_content)
+  if configuration_file_reference is None or configuration_file_reference is "":
+    raise ValueError("configuration_manifest router setting is missing")
   configuration_manifest = portal_catalog.getResultValue(
       portal_type = 'Web Manifest',
       reference = configuration_file_reference)
@@ -50,8 +52,6 @@ try:
     configuration_manifest = module.newContent(portal_type='Web Manifest',
                                                reference=configuration_file_reference)
     configuration_manifest.publish()
-
-  router_content = router_file.getTextContent()
 
   portal_skin = getElementFromContent("portal_skin_folder", router_content)
   if portal_skin is None:
