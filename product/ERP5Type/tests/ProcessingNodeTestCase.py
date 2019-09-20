@@ -314,6 +314,23 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         ZopeTestCase._print(' done (%.3fs)\n' % (time.time() - start))
     self.abort()
 
+  def getOtherZopeNodeList(self, node_count=2):
+    """Wait for at least `node_count` (including the current node) to be
+    registered on portal activities and return the list of their node ids.
+
+    This aborts current transaction.
+    """
+    for i in xrange(30):
+      node_list = list(self.portal.portal_activities.getProcessingNodeList())
+      if len(node_list) >= node_count:
+        node_list.remove(getCurrentNode())
+        return node_list
+      self.abort()
+      time.sleep(i * 0.1)
+    self.fail(
+        "No other activity node registered, make sure you are using"
+        " --activity_node=%s command line flag" % node_count)
+
   def afterSetUp(self):
     """Initialize a node that will only process activities"""
     self.startZServer()
