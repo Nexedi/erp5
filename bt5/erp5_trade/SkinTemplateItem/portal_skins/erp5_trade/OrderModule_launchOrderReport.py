@@ -37,7 +37,7 @@ active_process.postResult(ActiveResult(
       ))
 
 request = context.REQUEST
-previous_skin_selection = portal.portal_skins.getCurrentSkinName()
+# previous_skin_selection = portal.portal_skins.getCurrentSkinName()
 context.getPortalObject().portal_skins.changeSkin("Deferred")
 request.set('portal_skin', "Deferred")
 assert deferred_portal_skin is not None, "No deferred portal skin found in parameters"
