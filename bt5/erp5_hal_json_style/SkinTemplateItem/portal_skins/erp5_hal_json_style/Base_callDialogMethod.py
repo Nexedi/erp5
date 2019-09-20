@@ -214,7 +214,7 @@ if dialog_category == "object_search" :
 # Handle deferred style, unless we are executing the update action
 if dialog_method != update_method and kw.get('deferred_style', 0):
   kw['deferred_portal_skin'] = kw.get('portal_skin', None)
-  kw['previous_skin_selection'] = portal.portal_skins.getCurrentSkinName()
+  # kw['previous_skin_selection'] = portal.portal_skins.getCurrentSkinName()
   # XXX Hardcoded Deferred style name
   kw['portal_skin'] = 'Deferred'
 
@@ -222,7 +222,7 @@ if dialog_method != update_method and kw.get('deferred_style', 0):
 
   if page_template == 'report_view':
     # Limit Reports in Deferred style to known working styles
-    if request_form.get('your_portal_skin', None) not in ("ODT", "ODS"):
+    if kw['deferred_portal_skin'] not in ("ODT", "ODS"):
       # RJS own validation - deferred option works here only with ODS/ODT skins
       return context.Base_renderForm(dialog_id,
         message=translate('Deferred reports are possible only with preference '\
@@ -247,6 +247,7 @@ if True:
     # When we are not executing the update action, we have to change the skin
     # manually,
     if 'portal_skin' in kw:
+      kw['previous_skin_selection'] = portal.portal_skins.getCurrentSkinName()
       new_skin_name = kw['portal_skin']
       portal.portal_skins.changeSkin(new_skin_name)
       request.set('portal_skin', new_skin_name)
