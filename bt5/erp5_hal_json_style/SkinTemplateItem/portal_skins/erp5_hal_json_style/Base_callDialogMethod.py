@@ -210,11 +210,11 @@ kw.update(keep_items=extra_param)  # better backward compatibility
 if dialog_category == "object_search" :
   portal.portal_selections.setSelectionParamsFor(kw['selection_name'], kw)
 
+kw['previous_skin_selection'] = portal.portal_skins.getCurrentSkinName()
 # Finally we will call the Dialog Method
 # Handle deferred style, unless we are executing the update action
 if dialog_method != update_method and kw.get('deferred_style', 0):
   kw['deferred_portal_skin'] = kw.get('portal_skin', None)
-  # kw['previous_skin_selection'] = portal.portal_skins.getCurrentSkinName()
   # XXX Hardcoded Deferred style name
   kw['portal_skin'] = 'Deferred'
 
@@ -234,7 +234,7 @@ if dialog_method != update_method and kw.get('deferred_style', 0):
   if page_template != 'report_view':
     # use simple wrapper
     kw['deferred_style_dialog_method'] = dialog_method
-    kw['deferred_style_dialog_method'] = dialog_method
+    # kw['deferred_style_dialog_method'] = dialog_method
     request.set('deferred_style_dialog_method', dialog_method)
     dialog_method = 'Base_activateSimpleView'
 
@@ -247,7 +247,7 @@ if True:
     # When we are not executing the update action, we have to change the skin
     # manually,
     if 'portal_skin' in kw:
-      kw['previous_skin_selection'] = portal.portal_skins.getCurrentSkinName()
+      # kw['previous_skin_selection'] = portal.portal_skins.getCurrentSkinName()
       new_skin_name = kw['portal_skin']
       portal.portal_skins.changeSkin(new_skin_name)
       request.set('portal_skin', new_skin_name)
