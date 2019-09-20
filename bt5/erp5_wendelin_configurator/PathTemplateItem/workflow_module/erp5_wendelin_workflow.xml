@@ -67,7 +67,7 @@
         </item>
         <item>
             <key> <string>configuration_after_script_id</string> </key>
-            <value> <string>BusinessConfiguration_afterCASConfiguration</string> </value>
+            <value> <string>BusinessConfiguration_afterConfiguration</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
