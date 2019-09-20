@@ -73,7 +73,10 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     prefix = 'testDivergenceTester_'
     new_rule_id = prefix + rule.getId()
     new_rule_reference = prefix + rule.getReference()
-    rule = portal_rules.manage_clone(rule, new_rule_id)
+    rule = portal_rules[portal_rules.manage_pasteObjects(
+      portal_rules.manage_copyObjects([rule.getId()]),
+    )[0]['new_id']]
+    rule.setId(new_rule_id)
     rule.setVersion(str(int(rule.getVersion()) + 1))
     rule.setReference(new_rule_reference)
     tester_list = rule.contentValues(
