@@ -93,14 +93,6 @@ class TestERP5(ERP5TypeTestCase):
       'ERP5TypeTestCase', '', 'xml-rpc')
     self.login()
 
-  def getOtherZopeNode(self):
-    from Products.CMFActivity.ActivityTool import getCurrentNode
-    activity_tool = self.portal.portal_activities
-    node_list = list(activity_tool.getProcessingNodeList())
-    node_list.remove(getCurrentNode())
-    assert node_list, "this unit test must be run with at least 2 Zope nodes"
-    return node_list[0]
-
   def testZODBCookie(self):
     cookie_name = self._testMethodName
     portal = self.portal

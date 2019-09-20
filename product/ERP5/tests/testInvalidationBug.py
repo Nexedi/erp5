@@ -92,6 +92,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
 
   def testLateInvalidationFromZEO(self):
     ### Check unit test is run properly
+    self.waitForOtherActivityNodeRegistration()
     from ZEO.ClientStorage import ClientStorage
     from Products.CMFActivity.ActivityTool import getCurrentNode
     storage = self.portal._p_jar._storage

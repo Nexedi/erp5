@@ -314,6 +314,29 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
         ZopeTestCase._print(' done (%.3fs)\n' % (time.time() - start))
     self.abort()
 
+  def waitForOtherActivityNodeRegistration(self, node_count=2):
+    """Wait for at least `node_count` (including the current node) to be
+    registered on portal activities.
+
+    This aborts current transaction.
+    """
+    for i in xrange(30):
+      if len(self.portal.portal_activities.getProcessingNodeList()) >= node_count:
+        return
+      self.abort()
+      time.sleep(i * 0.1)
+    self.fail(
+        "No other activity node registered, make sure you are using"
+        " --activity_node=%s command line flag" % node_count)
+
+  def getOtherZopeNode(self):
+    self.waitForOtherActivityNodeRegistration()
+    from Products.CMFActivity.ActivityTool import getCurrentNode
+    activity_tool = self.portal.portal_activities
+    node_list = list(activity_tool.getProcessingNodeList())
+    node_list.remove(getCurrentNode())
+    return node_list[0]
+
   def afterSetUp(self):
     """Initialize a node that will only process activities"""
     self.startZServer()
