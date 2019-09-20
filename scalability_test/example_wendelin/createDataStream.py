@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import io
 import datetime
 import random
 import time
@@ -29,7 +29,7 @@ def createDataStream(result, browser):
       browser.mainForm.submitSelectModule(value='/data_stream_module',
                                        sleep=(TMIN_SLEEP, TMAX_SLEEP)))
 
-  # Create a newData Stream (XXX: this will create Data Stream Bucket!) 
+  # Create a newData Stream 
   result('Create',
     browser.mainForm.submitNew(sleep=(TMIN_SLEEP, TMAX_SLEEP)))
 
@@ -40,12 +40,15 @@ def createDataStream(result, browser):
   # Fill the title
   my_title = PREFIX_TITLE + generateString(6)
   browser.mainForm.getControl(name='field_my_title').value = my_title
-
-  # Set some random informations
+  browser.mainForm.getControl(name='field_my_reference').value = generateString(6)
   my_str = generateString(random.randint(1,100))
   browser.mainForm.getControl(name='field_my_description').value = my_str
+  result('Save',
+    browser.mainForm.submitSave(sleep=(TMIN_SLEEP, TMAX_SLEEP)))
   
-  # XXX: how to upload data?
+  # tests upload data from file of 1Mb size
+  ctrl = browser.mainForm.getControl(name='field_my_file')
+  ctrl.add_file(io.BytesIO(generateString(1024)*1024), 'text/plain', 'test.txt')
 
   # Submit the changes, record the time elapsed in seconds
   result('Save',
@@ -53,10 +56,10 @@ def createDataStream(result, browser):
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
-  sale_order_url = my_order_sale_url
 
   # Validate the Data Stream
   #browser.mainForm.submitSelectWorkflow(value='validate_action')
   #result('Validate',
   #    browser.mainForm.submitDialogConfirm(sleep=(TMIN_SLEEP, TMAX_SLEEP)))
   #assert browser.getTransitionMessage() == 'Status changed.'
+
