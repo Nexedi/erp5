@@ -211,6 +211,8 @@ if dialog_category == "object_search" :
   portal.portal_selections.setSelectionParamsFor(kw['selection_name'], kw)
 
 kw['previous_skin_selection'] = portal.portal_skins.getCurrentSkinName()
+request.set('previous_skin_selection', kw['previous_skin_selection'])
+
 # Finally we will call the Dialog Method
 # Handle deferred style, unless we are executing the update action
 if dialog_method != update_method and kw.get('deferred_style', 0):
@@ -218,6 +220,7 @@ if dialog_method != update_method and kw.get('deferred_style', 0):
   # XXX Hardcoded Deferred style name
   kw['portal_skin'] = 'Deferred'
 
+  """
   page_template = getattr(getattr(context, dialog_method), 'pt', None)
 
   if page_template == 'report_view':
@@ -232,11 +235,12 @@ if dialog_method != update_method and kw.get('deferred_style', 0):
 
   # If the action form has report_view as it's method, it
   if page_template != 'report_view':
-    # use simple wrapper
-    kw['deferred_style_dialog_method'] = dialog_method
-    # kw['deferred_style_dialog_method'] = dialog_method
-    request.set('deferred_style_dialog_method', dialog_method)
-    dialog_method = 'Base_activateSimpleView'
+  """
+  # use simple wrapper
+  kw['deferred_style_dialog_method'] = dialog_method
+  # kw['deferred_style_dialog_method'] = dialog_method
+  request.set('deferred_style_dialog_method', dialog_method)
+  dialog_method = 'Base_activateSimpleView'
 
 # Never redirect in JSON style - do as much as possible here.
 # At this point the 'dialog_method' should point to a form (if we are in report)
