@@ -86,7 +86,6 @@
                         <string>my_configuration_view_action_category</string>
                         <string>my_configuration_application_title</string>
                         <string>my_configuration_hateoas_url</string>
-                        <string>my_configuration_hateoas_appcache</string>
                         <string>my_configuration_frontpage_gadget_url</string>
                         <string>my_configuration_default_jio_document_page_gadget_url</string>
                         <string>my_configuration_stylesheet_url</string>
@@ -100,7 +99,6 @@
                       <list>
                         <string>my_configuration_panel_gadget_url</string>
                         <string>my_configuration_manifest_url</string>
-                        <string>my_configuration_app_configuration</string>
                         <string>my_configuration_webapp_manifest_url</string>
                         <string>my_configuration_service_worker_url</string>
                         <string>my_configuration_jio_gadget_url</string>
