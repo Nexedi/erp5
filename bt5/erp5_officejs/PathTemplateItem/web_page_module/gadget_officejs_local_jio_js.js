@@ -63,6 +63,17 @@
       });
   }
 
+  function safeJioRemove(storage, id) {
+    return storage.remove(id)
+      .push(undefined, function (error) {
+        if ((error instanceof jIO.util.jIOError) &&
+            (error.status_code === 404)) {
+          return;
+        }
+        throw error;
+      });
+  }
+
   rJS(window)
 
     .ready(function (gadget) {
@@ -103,19 +114,13 @@
         .push(function (migration_version) {
           if (migration_version !== current_version) {
             for (i = 0; i < document_id_list.length; i += 1) {
-              promise_list = [appcache_storage.remove(document_id_list[i])];
+              promise_list = [safeJioRemove(appcache_storage, document_id_list[i])];
             }
             return RSVP.all(promise_list);
           }
         })
         .push(function () {
           return gadget.setSetting("migration_version", current_version);
-        }, function (error) {
-          if ((error instanceof jIO.util.jIOError) &&
-              (error.status_code === 404)) {
-            return gadget.setSetting("migration_version", current_version);
-          }
-          throw error;
         })
         .push(function () {
           return current_version;
@@ -130,8 +135,7 @@
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
-            gadget.getSetting('app_configuration'),
-            gadget.getSetting('hateoas_appcache'),
+            gadget.getSetting('configuration_manifest'),
             gadget.getSetting('jio_storage_name')
           ]);
         })
@@ -153,7 +157,7 @@
               type: "query",
               sub_storage: {
                 type: "indexeddb",
-                database: result_list[2] + "-configuration-hash"
+                database: result_list[1] + "-configuration-hash"
               }
             },
             local_sub_storage: JSON.parse(JSON.stringify(jio_options)),
@@ -162,7 +166,7 @@
               sub_storage: {
                 type: "configuration",
                 origin_url: origin_url,
-                hateoas_appcache: result_list[1],
+                hateoas_appcache: "hateoas_appcache",
                 manifest: result_list[0],
                 sub_storage: {
                   type: "appcache",
@@ -182,7 +186,8 @@
           } catch (error) {
             gadget.state_parameter_dict.jio_storage = undefined;
           }
-          if (result_list[2] === undefined) { return; }
+          if (result_list[0] === undefined) { return; }
+          if (result_list[1] === undefined) { return; }
           appcache_storage = jIO.createJIO(jio_appchache_options);
         })
         .push(function () {
