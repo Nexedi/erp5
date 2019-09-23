@@ -14,6 +14,11 @@ erp5_officejs_common | Hal
 erp5_officejs_common | RJS
 erp5_officejs_common | RedirectAssist
 erp5_officejs_common | View
+erp5_officejs_pdf_viewer | AppCache
+erp5_officejs_pdf_viewer | Hal
+erp5_officejs_pdf_viewer | RJS
+erp5_officejs_pdf_viewer | RedirectAssist
+erp5_officejs_pdf_viewer | View
 erp5_text_editor | AppCache
 erp5_text_editor | Hal
 erp5_text_editor | RJS
