@@ -9,7 +9,9 @@ portal_types/Document Module/pdf_viewer_view
 portal_types/Image Module/image_editor_view
 portal_types/Image/image_editor_view
 portal_types/PDF/pdf_viewer_view
+portal_types/Web Illustration/svg_editor_view
 portal_types/Web Page Module/codemirror_view
+portal_types/Web Page Module/svg_editor_view
 portal_types/Web Page Module/text_editor_view
 portal_types/Web Page Module/web_table_view
 portal_types/Web Page/text_editor_clone
