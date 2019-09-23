@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -64,9 +64,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -80,16 +78,8 @@
             <value> <string>text/html</string> </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_svg_editor_router.html</string> </value>
+            <value> <string>gadget_officejs_illustration.configuration</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -99,34 +89,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_svg_editor_router_html</string> </value>
+            <value> <string>gadget_officejs_illustration_configuration</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value> <string>en</string> </value>
         </item>
         <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.21</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -135,8 +106,24 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>CONFIGURATION MANIFEST\n
+# generated on Mon Sep 30 14:56:21 2019\n
+CACHE:\n
+\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBJbGx1c3RyYXRpb24=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBJbGx1c3RyYXRpb24vc3ZnX2VkaXRvcl92aWV3\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc3ZnX2VkaXRvci9XZWJQYWdlX3ZpZXdBc1N2Z0RvY3VtZW50Rm9yU3ZnRWRpdG9y\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS9zdmdfZWRpdG9yX3ZpZXc=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc3ZnX2VkaXRvci9XZWJQYWdlTW9kdWxlX3ZpZXdXZWJQYWdlTGlzdEFzSmlvRm9yU3ZnRWRpdG9y\n
+\n
+NETWORK:\n
+*</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS SVG Editor router Gadget</string> </value>
+            <value> <string>OfficeJS Svg Editor Configuration</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -228,7 +215,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481106104.27</float>
+                        <float>1566289834.75</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -273,7 +260,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.62238.19609.14984</string> </value>
+                <value> <string>977.57609.54358.40055</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -291,7 +278,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1568973476.25</float>
+                        <float>1566290532.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -318,7 +305,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -348,7 +335,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1464251921.85</float>
+                        <float>1566289766.34</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
