@@ -299,6 +299,26 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_app_configuration</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_hateoas_appcache</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -318,6 +338,10 @@
             </value>
         </item>
         <item>
+            <key> <string>configuration_app_configuration</string> </key>
+            <value> <string>gadget_officejs_web_table.configuration</string> </value>
+        </item>
+        <item>
             <key> <string>configuration_application_title</string> </key>
             <value> <string>Office Web Table Editor</string> </value>
         </item>
@@ -327,7 +351,7 @@
         </item>
         <item>
             <key> <string>configuration_default_jio_document_page_gadget_url</string> </key>
-            <value> <string>ojs_controller</string> </value>
+            <value> <string>ojs_local_controller</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -335,11 +359,17 @@
         </item>
         <item>
             <key> <string>configuration_frontpage_gadget_url</string> </key>
-            <value> <string>ojs_document_list</string> </value>
+            <value> <string>ojs_local_controller</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_hateoas_appcache</string> </key>
+            <value> <string>hateoas_appcache</string> </value>
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
-            <value> <string>hateoas/</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_header_gadget_url</string> </key>
@@ -347,7 +377,7 @@
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
-            <value> <string>gadget_ojs_jio.html</string> </value>
+            <value> <string>gadget_ojs_local_jio.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
@@ -608,7 +638,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>970.26748.61427.10154</string> </value>
+                <value> <string>975.50809.16912.62464</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -626,7 +656,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1537978814.7</float>
+                        <float>1566473024.03</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
