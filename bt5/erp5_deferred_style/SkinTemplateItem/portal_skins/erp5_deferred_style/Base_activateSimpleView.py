@@ -13,13 +13,15 @@ if person_value is None:
   portal.changeSkin(previous_skin_selection)
   return context.Base_redirect('view', keep_items=dict(
               portal_status_message=translateString(
-                        "No person found for your user")))
+                        "No person found for your user"),
+              portal_status_level='error'))
 
 if person_value.getDefaultEmailText('') in ('', None):
   portal.changeSkin(previous_skin_selection)
   return context.Base_redirect('view', keep_items=dict(
               portal_status_message=translateString(
-                        "You haven't defined your email address")))
+                        "You haven't defined your email address"),
+              portal_status_level='error'))
 
 # save request parameters
 request_form = portal.ERP5Site_filterRequestForDeferredStyle(request)
