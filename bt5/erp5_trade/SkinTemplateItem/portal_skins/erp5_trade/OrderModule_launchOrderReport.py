@@ -4,6 +4,8 @@ from json import dumps
 from Products.CMFActivity.ActiveResult import ActiveResult
 portal = context.getPortalObject()
 N_ = portal.Base_translateString
+request = context.REQUEST
+previous_skin_selection = request.get('previous_skin_selection', None)
 # Check deferred style is present
 if not 'Deferred' in portal.portal_skins.getSkinSelections():
   portal.changeSkin(previous_skin_selection)
@@ -39,7 +41,6 @@ active_process.postResult(ActiveResult(
       })
       ))
 
-request = context.REQUEST
 context.getPortalObject().portal_skins.changeSkin("Deferred")
 request.set('portal_skin', "Deferred")
 assert deferred_portal_skin is not None, "No deferred portal skin found in parameters"
