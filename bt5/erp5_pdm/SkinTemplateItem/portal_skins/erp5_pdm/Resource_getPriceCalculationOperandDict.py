@@ -34,10 +34,7 @@ if result["slice_base_price"]:
       slice_min = 1
     priced_quantity = min(slice_max - 1, quantity) - (slice_min - 1)
     total_price += priced_quantity * slice_price
-  if result.get('base_unit_price', None) is None:
-    result["base_price"] = total_price / quantity
-  else:
-    result["base_price"] = round(total_price / quantity, int(round(- log(result['base_unit_price'], 10),0)))
+  result["base_price"] = total_price / quantity
 
 base_price = result["base_price"]
 if base_price in (None, ""):
