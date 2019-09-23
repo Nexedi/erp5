@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>deferred_style_dialog_method, previous_skin_selection=None, **kw</string> </value>
+            <value> <string>deferred_style_dialog_method, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

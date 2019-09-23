@@ -3,6 +3,7 @@ portal = context.getPortalObject()
 request = portal.REQUEST
 format = request.get('format', '')
 skin_name = request.get('deferred_portal_skin', portal.portal_skins.getDefaultSkin())
+previous_skin_selection = request.get('previous_skin_selection', None)
 
 tag = 'active-report-wrapped-%s' % random.randint(0, 1000)
 priority = 3
