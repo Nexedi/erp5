@@ -1,0 +1,74 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form print Action</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Default Module View</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForDeferredRenderjsUi/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${renderjs_url}/foo_module/1</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Export'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Print'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>click</td>
+  <td>//input[@name="field_your_deferred_style"]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                           'text': 'No person found for your user'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+</tbody></table>
+</body>
+</html>
