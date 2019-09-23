@@ -121,6 +121,17 @@
   <td>//a[@data-i18n='Document']</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Actions']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Actions']</td>
+  <td></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Upload']</td>
@@ -172,6 +183,16 @@
   <td>verifyValue</td>
   <td>//textarea[@title='Description']</td>
   <td>${description}</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Actions']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Actions']</td>
+  <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
