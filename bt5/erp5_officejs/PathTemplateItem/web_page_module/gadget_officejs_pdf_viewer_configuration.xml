@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -41,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -59,6 +62,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -70,7 +81,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_pdf_viewer_router.html</string> </value>
+            <value> <string>gadget_officejs_pdf_viewer.configuration</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -80,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_pdf_viewer_router.html</string> </value>
+            <value> <string>gadget_officejs_pdf_viewer_configuration</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -88,7 +99,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -97,8 +108,34 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>CACHE MANIFEST\n
+# generated on Thu, 14 Jan 2019 11:55:33 +0000\n
+CACHE:\n
+\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Document Module)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Document Module/pdf_viewer_view)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9wZGZfdmlld2VyX3ZpZXc=\n
+#hateoas_appcache/definition_view/BASE64(portal_types/PDF)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1BERg==\n
+#hateoas_appcache/definition_view/BASE64(portal_types/PDF/pdf_viewer_view)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1BERi9wZGZfdmlld2VyX3ZpZXc=\n
+\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_officejs_pdf_viewer/Base_viewNewContentDialogForPdfViewer)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfcGRmX3ZpZXdlci9CYXNlX3ZpZXdOZXdDb250ZW50RGlhbG9nRm9yUGRmVmlld2Vy\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_officejs_pdf_viewer/DocumentModule_viewDocumentListAsJioForPdfViewer)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfcGRmX3ZpZXdlci9Eb2N1bWVudE1vZHVsZV92aWV3RG9jdW1lbnRMaXN0QXNKaW9Gb3JQZGZWaWV3ZXI=\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_officejs_pdf_viewer/Document_viewAsPdfDocumentForPdfViewer)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfcGRmX3ZpZXdlci9Eb2N1bWVudF92aWV3QXNQZGZEb2N1bWVudEZvclBkZlZpZXdlcg==\n
+\n
+\n
+NETWORK:\n
+*</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Web PDF Viewer Router</string> </value>
+            <value> <string>OfficeJS PDF Viewer Configuration</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -164,7 +201,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -190,7 +227,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486721456.73</float>
+                        <float>1566395406.91</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -199,7 +236,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -235,7 +272,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.36795.39696.27238</string> </value>
+                <value> <string>977.59349.5649.19968</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -253,7 +290,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1568973833.9</float>
+                        <float>1566394984.76</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -310,7 +347,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486718983.88</float>
+                        <float>1566392670.2</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
