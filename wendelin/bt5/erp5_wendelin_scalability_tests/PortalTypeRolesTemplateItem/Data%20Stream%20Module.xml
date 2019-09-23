@@ -4,16 +4,4 @@
    <property id='description'>Configured by ERP5 Configurator</property>
    <multi_property id='category'>group/my_group</multi_property>
   </role>
-  <role id='Auditor; Author'>
-   <property id='title'>admin</property>
-   <multi_property id='category'>function/admin</multi_property>
-  </role>
-  <role id='Auditor; Author'>
-   <property id='title'>contributor</property>
-   <multi_property id='category'>function/contributor</multi_property>
-  </role>
-  <role id='Auditor'>
-   <property id='title'>downloader</property>
-   <multi_property id='category'>function/downloader</multi_property>
-  </role>
 </type_roles>
