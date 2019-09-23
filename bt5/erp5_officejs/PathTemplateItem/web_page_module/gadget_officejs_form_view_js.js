@@ -1,9 +1,10 @@
-/*global document, window, rJS, RSVP, ensureArray */
+/*global document, window, rJS, RSVP, Blob, URL, jIO, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
-(function (document, window, rJS, RSVP, ensureArray) {
+(function (document, window, rJS, RSVP, Blob, URL, jIO, ensureArray) {
   "use strict";
 
-  function renderField(field_id, field_definition, context_document) {
+  function renderField(field_id, field_definition,
+                       context_document, data, blob_type) {
     var key, raw_value, override, final_value, item_list, result = {};
     for (key in field_definition.values) {
       if (field_definition.values.hasOwnProperty(key)) {
@@ -42,10 +43,13 @@
         result["default"] = context_document[field_id];
       }
     }
+    if (result.renderjs_extra && blob_type) {
+      result["default"] = data;
+    }
     return result;
   }
 
-  function renderForm(form_definition, context_document) {
+  function renderForm(form_definition, context_document, data, blob_type) {
     var i, j, field_list, field_info, my_element, element_id, rendered_field,
       raw_properties = form_definition.fields_raw_properties,
       form_json = {
@@ -69,7 +73,7 @@
         if (element_id && raw_properties.hasOwnProperty(my_element)) {
           field_info = raw_properties[my_element];
           rendered_field = renderField(element_id, field_info,
-                                       context_document);
+                                       context_document, data, blob_type);
           form_json.erp5_document._embedded._view[my_element] =
             rendered_field;
         }
@@ -86,10 +90,12 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("isDesktopMedia", "isDesktopMedia")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
-    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
+    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
+    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
+    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
 
     // XXX Hardcoded for modification_date rendering
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
@@ -133,56 +139,188 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("triggerSubmit", function (argument_list) {
-      return this.getDeclaredGadget('fg')
-        .push(function (gadget) {
-          if (gadget.state.save_action !== true) {
-            //rely on child gadget to submit (filter, panels, etc.)
-            return gadget.triggerSubmit(argument_list);
-          }
-          var action = gadget.state.erp5_document._embedded._view._actions.put;
-          return gadget.getDeclaredGadget("erp5_form")
-            .push(function (sub_gadget) {
-              return sub_gadget.checkValidity();
-            })
-            .push(function (is_valid) {
-              if (!is_valid) {
-                return null;
+      var gadget = this, data, name_list;
+      return gadget.notifySubmitting()
+        .push(function () {
+          return gadget.getDeclaredGadget('erp5_pt_gadget')
+            .push(function (child_gadget) {
+              if (!child_gadget.state.editable) {
+                return child_gadget.triggerSubmit(argument_list);
               }
-              return gadget.getContent();
-            })
-            .push(function (content_dict) {
-              if (content_dict === null) {
-                return;
-              }
-              return gadget.submitContent(
-                gadget.state.jio_key,
-                action.href,
-                content_dict
-              );
-            }); // page form handles failures well enough
+              return child_gadget.getDeclaredGadget("erp5_form")
+                .push(function (sub_gadget) {
+                  return sub_gadget.checkValidity();
+                })
+                .push(function (is_valid) {
+                  if (!is_valid) {
+                    return null;
+                  }
+                  return child_gadget.getContent();
+                })
+                .push(function (content_dict) {
+                  if (content_dict === null) {
+                    return;
+                  }
+                  if (gadget.state.blob_type) {
+                    data = content_dict.text_content;
+                    delete content_dict.text_content;
+
+                    //ONLY OFFICE
+                    if (gadget.state.only_office) {
+                      name_list = gadget.state.doc.filename.split('.');
+                      if (name_list.pop() !== gadget.state.mime_type) {
+                        name_list.push(gadget.state.mime_type);
+                        content_dict.filename = name_list.join('.');
+                      }
+                      content_dict.content_type = gadget.state.blob_type;
+                    }//
+
+                  }
+                  return child_gadget.submitContent(
+                    child_gadget.state.jio_key,
+                    undefined,
+                    content_dict
+                  )
+                    .push(function () {
+                      if (gadget.state.blob_type) {
+                        return gadget
+                          .jio_putAttachment(child_gadget.state.jio_key,
+                                             'data',
+                                             jIO.util.dataURItoBlob(data))
+
+                          //ONLY OFFICE
+                          .push(function () {
+                            if (gadget.state.only_office) {
+                              return gadget
+                                .declareGadget("gadget_ojs_cloudooo.html");
+                            }
+                          })
+                          .push(function (cloudooo) {
+                            if (gadget.state.only_office) {
+                              return cloudooo
+                                .putAllCloudoooConvertionOperation({
+                                  format: gadget.state.mime_type,
+                                  jio_key: child_gadget.state.jio_key
+                                });
+                            }
+                          });//
+
+                      }
+                    });
+                });
+            });
+        }, function (error) {
+          console.log(error);
+          return gadget.notifySubmitted({
+            message: "Submit failed",
+            status: "error"
+          });
         });
     })
 
     .declareMethod("render", function (options) {
-      var state_dict = {
-        doc: options.doc,
-        form_definition: options.form_definition,
-        child_gadget_url: options.child_gadget_url,
-        options: options
-      };
-      return this.changeState(state_dict);
+      var gadget = this,
+        state_dict = {
+          doc: options.doc,
+          form_definition: options.form_definition,
+          child_gadget_url: options.child_gadget_url,
+          options: options
+        },
+        portal_type_dict = options.form_definition.portal_type_dict,
+        blob;
+
+      //ONLY OFFICE
+      if (portal_type_dict.only_office && options.doc) {
+        //TODO doc should come with filename. for now hardcoded if undefined
+        if (!options.doc.filename) {
+          options.doc.filename = "default.docx";
+        }
+        state_dict.mime_type = portal_type_dict.file_extension;
+        state_dict.only_office = true;
+        if (options.doc.action) {
+          return gadget.changeState(state_dict);
+        }
+        state_dict.content_editable = options.doc.content_type === undefined ||
+          options.doc.content_type.indexOf("application/x-asc") === 0;
+        return new RSVP.Queue()
+          .push(function () {
+            if (!state_dict.content_editable) {
+              return gadget.jio_getAttachment(options.jio_key, "data");
+            }
+            return gadget.declareGadget("gadget_ojs_cloudooo.html")
+              .push(function (ojs_cloudooo) {
+                return ojs_cloudooo.getConvertedBlob({
+                  jio_key: options.jio_key,
+                  format: state_dict.mime_type,
+                  filename: options.doc.filename
+                });
+              });
+          })
+          .push(undefined, function (error) {
+            if (error instanceof jIO.util.jIOError &&
+                error.status_code === 404) {
+              return new Blob();
+            }
+            throw error;
+          })
+          .push(function (blob) {
+            if (state_dict.content_editable) {
+              return jIO.util.readBlobAsDataURL(blob);
+            }
+            return jIO.util.readBlobAsText(blob);
+          })
+          .push(function (result) {
+            state_dict.data = result.target.result;
+            if (portal_type_dict.blob_type) {
+              state_dict.blob_type = portal_type_dict.blob_type;
+            } else {
+              state_dict.blob_type = "ooffice";
+            }
+            return gadget.changeState(state_dict);
+          });
+      }//
+
+      if (portal_type_dict.blob_type) {
+        if (options.jio_key) {
+          return gadget.jio_getAttachment(options.jio_key, "data")
+            .push(undefined, function (error) {
+              if (error.status_code === 404) {
+                return new Blob([''], {type: portal_type_dict.blob_type});
+              }
+              throw new Error(error);
+            })
+            .push(function (result) {
+              blob = result;
+              blob.name = options.jio_key;
+              return jIO.util.readBlobAsDataURL(blob);
+            })
+            .push(function (result) {
+              if (portal_type_dict.blob_create_object_url) {
+                state_dict.data = URL.createObjectURL(blob);
+              } else {
+                state_dict.data = {blob: result.target.result,
+                                   name: options.jio_key};
+              }
+              state_dict.blob_type = portal_type_dict.blob_type;
+              return gadget.changeState(state_dict);
+            });
+        }
+      }
+      return gadget.changeState(state_dict);
     })
 
     .onStateChange(function onStateChange() {
       var fragment = document.createElement('div'),
         gadget = this,
-        form_json = renderForm(gadget.state.form_definition, gadget.state.doc);
+        form_json = renderForm(gadget.state.form_definition, gadget.state.doc,
+                               gadget.state.data, gadget.state.blob_type);
       while (gadget.element.firstChild) {
         gadget.element.removeChild(gadget.element.firstChild);
       }
       gadget.element.appendChild(fragment);
       return gadget.declareGadget(gadget.state.child_gadget_url,
-                                      {element: fragment, scope: 'fg'})
+                                      {element: fragment,
+                                       scope: 'erp5_pt_gadget'})
         .push(function (form_gadget) {
           return gadget.renderSubGadget(gadget.state.options, form_gadget,
                                         form_json);
@@ -190,15 +328,23 @@
     })
 
     .declareMethod("renderSubGadget", function (options, subgadget, form_json) {
-      var this_gadget = this, erp5_document = form_json.erp5_document,
-        page_title = options.portal_type,
-        add_url = false;
+      var gadget = this, erp5_document = form_json.erp5_document,
+        portal_type_dict = form_json.form_definition.portal_type_dict,
+        page_title;
+      if (options.doc && options.doc.title) {
+        page_title = options.doc.title;
+      } else if (options.doc && options.doc.header_title) {
+        page_title = options.doc.header_title;
+      } else {
+        page_title = portal_type_dict.title;
+      }
       return subgadget.render({
         jio_key: options.jio_key,
         doc: options.doc,
         erp5_document: form_json.erp5_document,
         form_definition: form_json.form_definition,
-        editable: options.editable,
+        editable: portal_type_dict.editable,
+        save_action: portal_type_dict.editable,
         view: options.view,
         form_json: form_json
       })
@@ -213,87 +359,68 @@
             {command: 'selection_previous'},
             {command: 'selection_next'},
             {command: 'change', options: {page: "export"}},
-            {command: 'display', options: {}}
+            {command: 'display', options: {}},
+            {command: 'change', options: {page: "create_document",
+                                          jio_key: options.jio_key,
+                                          portal_type:
+                                          options.portal_type,
+                                          new_content_dialog_form:
+                                          form_json.form_definition
+                                            .new_content_dialog_form,
+                                          new_content_category:
+                                          form_json.form_definition
+                                            .new_content_category,
+                                          allowed_sub_types_list:
+                                          form_json.form_definition
+                                            .allowed_sub_types_list
+                                         }}
           ];
-          if (options.doc) {
-            page_title = options.doc.title;
-          }
           erp5_document = form_json.erp5_document;
-          if (form_json.form_definition.allowed_sub_types_list &&
-              form_json.form_definition.allowed_sub_types_list.length > 0 &&
-              !form_json.form_definition.hide_add_button) {
-            url_for_parameter_list.push({command: 'change',
-                                         options: {page: "create_document",
-                                                   jio_key: options.jio_key,
-                                                   portal_type:
-                                                   options.portal_type,
-                                                   allowed_sub_types_list:
-                                                   form_json.form_definition
-                                                   .allowed_sub_types_list
-                                                  }});
-            add_url = true;
-          }
           return RSVP.all([
-            this_gadget.getUrlForList(url_for_parameter_list),
-            this_gadget.isDesktopMedia(),
-            this_gadget.getSetting('document_title_plural'),
-            this_gadget.getSetting('upload_dict', false)
+            gadget.getUrlForList(url_for_parameter_list)
           ]);
         })
         .push(function (result_list) {
-          var url_list = result_list[0], header_dict;
+          var url_list = result_list[0],
+            header_dict = { "page_title": page_title };
           if (options.form_type === 'dialog') {
-            header_dict = {
-              page_title: page_title,
-              //TODO: find correct url
-              cancel_url: url_list[6]
-            };
+            //TODO: find correct url
+            header_dict.cancel_url = url_list[6];
           } else {
-            if (options.form_type === 'list') {
-              header_dict = {
-                panel_action: true,
-                //TODO which header links/buttons will be displayed
-                //should be come from the configuration (form_definition)
-                //jump_url: "",
-                //fast_input_url: "",
-                filter_action: true,
-                page_title: result_list[2]
-              };
-              if (!options.front_page) {
-                header_dict.selection_url = url_list[2];
-                header_dict.front_url = url_list[6];
-              }
-            } else {
-              header_dict = {
-                selection_url: url_list[2],
-                previous_url: url_list[3],
-                next_url: url_list[4],
-                page_title: page_title
-              };
-              if (options.form_definition.has_more_views) {
-                header_dict.tab_url = url_list[0];
-              }
-              if (options.editable === true || options.editable === "true") {
-                header_dict.save_action = true;
-              }
+            header_dict.panel_action = portal_type_dict.panel_action === 1;
+            if (portal_type_dict.filter_action) {
+              header_dict.filter_action = true;
             }
-            if (options.form_definition.has_more_actions ||
-                options.form_definition.has_more_views) {
+            if (portal_type_dict.previous_next_button) {
+              header_dict.previous_url = url_list[3];
+              header_dict.next_url = url_list[4];
+            }
+            if (portal_type_dict.history_previous_link) {
+              header_dict.selection_url = url_list[2];
+            }
+            if (portal_type_dict.has_more_views) {
+              header_dict.tab_url = url_list[0];
+            }
+            header_dict.save_action = portal_type_dict.editable === 1;
+            if (portal_type_dict.has_more_actions ||
+                portal_type_dict.has_more_views) {
               header_dict.actions_url = url_list[1];
             }
-            if (add_url) {
-              header_dict.add_url = url_list[url_list.length - 1];
+            if (form_json.form_definition.allowed_sub_types_list &&
+                form_json.form_definition.allowed_sub_types_list.length > 0 &&
+                !portal_type_dict.hide_add_button) {
+              header_dict.add_url = url_list[7];
             }
-            if (result_list[1]) {
-              header_dict.export_url = (
-                erp5_document._links.action_object_jio_report ||
-                erp5_document._links.action_object_jio_exchange ||
-                erp5_document._links.action_object_jio_print
-              ) ? url_list[5] : '';
+            if (portal_type_dict.export_button) {
+              if (erp5_document._links.action_object_jio_report ||
+                  erp5_document._links.action_object_jio_exchange ||
+                  erp5_document._links.action_object_jio_print) {
+                header_dict.export_url = url_list[5];
+              }
             }
           }
-          return this_gadget.updateHeader(header_dict);
+          return gadget.updateHeader(header_dict);
         });
     });
 
-}(document, window, rJS, RSVP, ensureArray));
+}(document, window, rJS, RSVP, Blob, URL, jIO, ensureArray));

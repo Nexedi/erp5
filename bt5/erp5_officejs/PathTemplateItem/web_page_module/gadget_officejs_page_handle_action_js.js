@@ -34,14 +34,13 @@
     })
 
     .declareMethod("render", function (options) {
-      var gadget = this, action_reference, gadget_util, form_definition;
+      var gadget = this, action_reference;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
             gadget.getUrlParameter('portal_type'),
             gadget.getUrlParameter('parent_relative_url'),
-            gadget.getUrlParameter("action"),
-            gadget.declareGadget("gadget_officejs_common_util.html")
+            gadget.getUrlParameter("action")
           ]);
         })
         .push(function (result) {
@@ -50,18 +49,13 @@
             options.parent_relative_url = result[1];
           }
           action_reference = result[2];
-          gadget_util = result[3];
           return gadget.getActionFormDefinition(action_reference);
         })
-        .push(function (result) {
-          form_definition = result;
-          return gadget_util.getFormInfo(form_definition);
-        })
-        .push(function (form_info) {
+        .push(function (form_definition) {
           var fragment = document.createElement('div'),
             action_gadget_url,
-            form_type = form_info[0],
-            child_gadget_url = form_info[1],
+            form_type = form_definition.form_type,
+            child_gadget_url = form_definition.child_gadget_url,
             //an action form must have a GadgetField called
             //"gadget_field_new_action_js_script"
             //this gadget will point the custom action gadget
@@ -90,16 +84,24 @@
               element: fragment
             })
               .push(function (action_gadget) {
+                options.form_definition = form_definition;
                 return action_gadget.preRenderDocument(options);
               })
               .push(function (doc) {
                 state_options.doc = doc;
                 state_options.action_gadget_url = action_gadget_url;
                 return gadget.changeState(state_options);
+              }, function (error) {
+                if (error.status === 404) {
+                  return gadget.notifySubmitted({
+                    message: "Error in action",
+                    status: "error"
+                  });
+                }
+                throw error;
               });
-          } else {
-            return gadget.changeState(state_options);
           }
+          return gadget.changeState(state_options);
         });
     })
 
@@ -129,38 +131,41 @@
         //target_url = options[1],
         content_dict = options[2],
         fragment = document.createElement('div'),
-        jio_key;
+        submit_dict;
       if (gadget.state.valid_action) {
-        gadget.element.appendChild(fragment);
-        return gadget.declareGadget(gadget.state.action_gadget_url, {
-          scope: "action_field",
-          element: fragment
-        })
+        return gadget.notifySubmitting()
+          .push(function () {
+            gadget.element.appendChild(fragment);
+            return gadget.declareGadget(gadget.state.action_gadget_url, {
+              scope: "action_field",
+              element: fragment
+            });
+          })
           .push(function (action_gadget) {
             return action_gadget.handleSubmit(content_dict, gadget.state);
           })
-          .push(function (id) {
-            jio_key = id;
-            return gadget.notifySubmitting();
+          .push(function (submit_result) {
+            submit_dict = submit_result;
+            //submit_dict must contain:
+            //notify: options_dict for notifySubmitted
+            //redirect: options_dict for redirect
+            return gadget.notifySubmitted(submit_dict.notify);
           })
           .push(function () {
-            return gadget.notifySubmitted({message: 'Data Updated',
-                                           status: 'success'});
-          })
-          .push(function () {
-            return gadget.redirect({
-              command: 'display',
-              options: {
-                jio_key: jio_key,
-                editable: gadget.state.view === "edit"
-              }
-            });
+            return gadget.redirect(submit_dict.redirect);
+          }, function (error) {
+            if (!(error instanceof RSVP.CancellationError)) {
+              return gadget.notifySubmitted({
+                message: "Action Failed",
+                status: "error"
+              });
+            }
+            throw error;
           });
-      } else {
-        return gadget.notifySubmitted(
-          {message: 'Could not perform this action: configuration error',
-           status: 'fail'});
       }
+      return gadget.notifySubmitted(
+        {message: 'Could not perform this action: configuration error',
+         status: 'fail'});
     });
 
 }(window, document, rJS, RSVP));
