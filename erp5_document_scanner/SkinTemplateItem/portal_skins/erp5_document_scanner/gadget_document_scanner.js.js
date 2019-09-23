@@ -1,6 +1,6 @@
 /*jslint indent: 2 */
-/*global rJS, RSVP, window, document, navigator, Cropper, alert, FileReader, jIO */
-(function (rJS, RSVP, window, document, navigator, Cropper, alert, FileReader, jIO) {
+/*global rJS, RSVP, window, document, navigator, Cropper, console, FileReader, jIO */
+(function (rJS, RSVP, window, document, navigator, Cropper, console, FileReader, jIO) {
   "use strict";
 
   var imageWidth,
@@ -141,17 +141,6 @@
         imageHeight = photoCapabilities.imageHeight.max;
         document.querySelector("textarea[name='field_your_description']").value = "Max => " + imageWidth + "x" + imageHeight;
         video.play();
-      })
-      .push(function () {
-        /*
-          XXX remove addEventListener. Instead, use renderJS declareService / onEvent,
-          which will handle unloading the listener and correctly catching errors
-          Remove soon
-        */
-        startbutton.addEventListener("click", function (evt) {
-          evt.preventDefault();
-          takePicture(gadget);
-        }, false);
       });
   }
 
@@ -216,16 +205,22 @@
               return startup(root, evt.target.value);
             }
           });
-        })
-        .then(undefined, function (e) {
-          alert(e);
         });
+
     })
     .declareMethod('getContent', function () {
       var input = this.element.querySelector('.photoInput'),
         result = {};
       result.field_your_document_scanner_gadget = input.value;
       return result;
-    });
+    })
+    .onEvent("click", function (evt) {
+      if (evt.target.className == "startbutton") {
+        return this.getElement()
+          .push(function (gadget) {
+            return takePicture(gadget);
+          });
+      }
+    }, false, true);
 
-}(rJS, RSVP, window, document, navigator, Cropper, alert, FileReader, jIO));
+}(rJS, RSVP, window, document, navigator, Cropper, console, FileReader, jIO));
