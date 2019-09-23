@@ -37,7 +37,9 @@ class TestRenderJSUIDeferredStyle(ERP5TypeFunctionalTestCase):
   def getBusinessTemplateList(self):
     return (
       'erp5_deferred_style',
+      'erp5_ods_style',
       'erp5_accounting',
+      'erp5_simplified_invoicing',
       'erp5_web_renderjs_ui',
       'erp5_web_renderjs_ui_test',
       'erp5_ui_test_core',
