@@ -2559,15 +2559,18 @@ class TestZodbMixinComponent(TestZodbInterfaceComponent):
     """
     Return 42
     """
+  def getTitle(self, **kw):
+    return "Test Mixin"
 ''' % class_name
 
   def testAssignToPortalTypeClass(self):
     """
     Create a new Document Component inheriting from Person Document and try to
-    assign it to Person Portal Type, then create a new Person and check
-    whether it has been successfully added to its Portal Type class bases and
-    that the newly-defined function on ZODB Component can be called as well as
-    methods from Person Document
+    assign it to Person Portal Type, in this Component, define getTitle method,
+    then create a new Person and check whether it has been successfully added
+    to its Portal Type class bases and that the newly-defined function
+    on ZODB Component can be called as well as methods from Person Document,also
+    check getTitle method overwrite the original one
     """
     import erp5.portal_type
     person_type = self.portal.portal_types.Person
@@ -2588,6 +2591,9 @@ class TestZodbMixinComponent(TestZodbInterfaceComponent):
     person_type_class_mro_list = person_type_class.__mro__
     self.assertFalse(TestPortalTypeMixin in person_type_class_mro_list)
     person_original_mixin_type_list = list(person_type.getTypeMixinList())
+    person_module = self.portal.person_module
+    person = person_module.newContent(id='Mixin', portal_type='Person')
+    original_title = person.getTitle()
     try:
       person_type.setTypeMixinList(person_original_mixin_type_list +
                                    ['TestPortalTypeMixin'])
@@ -2598,6 +2604,8 @@ class TestZodbMixinComponent(TestZodbInterfaceComponent):
       person_type_class_mro_list = person_type_class.__mro__
       from erp5.component.mixin.TestPortalTypeMixin import TestPortalTypeMixin
       self.assertTrue(TestPortalTypeMixin in person_type_class_mro_list)
+      self.assertEqual('Test Mixin', person.getTitle())
+      self.assertNotEqual(original_title, person.getTitle())
 
     finally:
       person_type.setTypeMixinList(person_original_mixin_type_list)
