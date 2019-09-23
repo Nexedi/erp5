@@ -220,25 +220,8 @@ if dialog_method != update_method and kw.get('deferred_style', 0):
   # XXX Hardcoded Deferred style name
   kw['portal_skin'] = 'Deferred'
 
-  """
-  page_template = getattr(getattr(context, dialog_method), 'pt', None)
-
-  if page_template == 'report_view':
-    # Limit Reports in Deferred style to known working styles
-    if kw['deferred_portal_skin'] not in ("ODT", "ODS"):
-      # RJS own validation - deferred option works here only with ODS/ODT skins
-      return context.Base_renderForm(dialog_id,
-        message=translate('Deferred reports are possible only with preference '\
-                          '"Report Style" set to "ODT" or "ODS"'),
-        level=WARNING,
-        keep_items=extra_param)
-
-  # If the action form has report_view as it's method, it
-  if page_template != 'report_view':
-  """
   # use simple wrapper
   kw['deferred_style_dialog_method'] = dialog_method
-  # kw['deferred_style_dialog_method'] = dialog_method
   request.set('deferred_style_dialog_method', dialog_method)
   dialog_method = 'Base_activateSimpleView'
 
@@ -251,7 +234,6 @@ if True:
     # When we are not executing the update action, we have to change the skin
     # manually,
     if 'portal_skin' in kw:
-      # kw['previous_skin_selection'] = portal.portal_skins.getCurrentSkinName()
       new_skin_name = kw['portal_skin']
       portal.portal_skins.changeSkin(new_skin_name)
       request.set('portal_skin', new_skin_name)
