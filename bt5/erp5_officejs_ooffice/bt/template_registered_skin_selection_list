@@ -3,6 +3,11 @@ erp5_ooffice_presentation_editor | Hal
 erp5_ooffice_presentation_editor | RJS
 erp5_ooffice_presentation_editor | RedirectAssist
 erp5_ooffice_presentation_editor | View
+erp5_ooffice_spreadsheet_editor | AppCache
+erp5_ooffice_spreadsheet_editor | Hal
+erp5_ooffice_spreadsheet_editor | RJS
+erp5_ooffice_spreadsheet_editor | RedirectAssist
+erp5_ooffice_spreadsheet_editor | View
 erp5_ooffice_text_editor | AppCache
 erp5_ooffice_text_editor | Hal
 erp5_ooffice_text_editor | RJS
