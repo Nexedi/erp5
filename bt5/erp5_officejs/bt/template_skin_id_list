@@ -2,6 +2,7 @@ erp5_image_editor
 erp5_officejs_codemirror
 erp5_officejs_common
 erp5_officejs_pdf_viewer
+erp5_officejs_svg_editor
 erp5_text_editor
 erp5_web_officejs_ui
 erp5_web_table_editor
