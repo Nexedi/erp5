@@ -79,7 +79,18 @@
       <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
       <td></td>
     </tr>
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <!-- due to local storage, loading is faster than display/hide header spinner
+          So icon doesn't appear. Using a pause (and check no-spinner after) instead. -->
+    <tr>
+      <td>pause</td>
+      <td>1000</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
     <tr>
       <td>waitForElementPresent</td>
