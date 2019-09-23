@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -41,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -61,7 +64,9 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -76,7 +81,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_ooffice_spreadsheet_router.html</string> </value>
+            <value> <string>gadget_ooffice_spreadsheet.configuration</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -86,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_ooffice_spreadsheet_router_html</string> </value>
+            <value> <string>gadget_ooffice_spreadsheet_configuration</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -94,7 +99,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -103,8 +108,28 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>CONFIGURATION MANIFEST\n
+# generated on Tue Sep 17 13:40:08 2019\n
+CACHE:\n
+\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3NwcmVhZHNoZWV0X3ZpZXc=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvRG9jdW1lbnRNb2R1bGVfdmlld0RvY3VtZW50TGlzdEFzSmlvRm9yT29mZmljZVNwcmVhZHNoZWV0RWRpdG9y\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3VwbG9hZF9kb2N1bWVudA==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV91cGxvYWREaWFsb2dGb3JPb2ZmaWNlRWRpdG9y\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0L29vZmZpY2Vfc3ByZWFkc2hlZXRfdmlldw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvU3ByZWFkc2hlZXREb2N1bWVudF92aWV3QXNKaW9Gb3JPb2ZmaWNlU3ByZWFkc2hlZXRFZGl0b3I=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0L29vZmZpY2VfZG93bmxvYWRfZG9jdW1lbnQ=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV9kb3dubG9hZERpYWxvZ0Zvck9vZmZpY2VFZGl0b3I=\n
+\n
+NETWORK:\n
+*</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Spreadsheet OnlyOffice Router Gadget</string> </value>
+            <value> <string>Spreadsheet OnlyOffice Configuration</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -170,7 +195,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -196,7 +221,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486990307.95</float>
+                        <float>1567070667.11</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -205,7 +230,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -241,7 +266,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.36906.26142.38092</string> </value>
+                <value> <string>978.5094.40287.8789</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -259,7 +284,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1569594974.27</float>
+                        <float>1567071784.17</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -316,7 +341,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486990001.36</float>
+                        <float>1567070631.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
