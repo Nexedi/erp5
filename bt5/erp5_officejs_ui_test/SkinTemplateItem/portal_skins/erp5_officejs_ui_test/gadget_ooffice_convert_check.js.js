@@ -4,10 +4,11 @@
   "use strict";
 
   function check(gadget, storage, format) {
+    var output_message = "output_message not set - there was an error";
     return new RSVP.Queue()
       .push(function () {
         return RSVP.all([
-          storage.getAttachment('test', format),
+          storage.getAttachment('test', 'data'),
           jIO.util.ajax({
             type: "GET",
             url: new URL('./test_ooo_' + gadget.param.type + '.' + format, window.location.href),
@@ -20,13 +21,16 @@
           jIO.util.readBlobAsText(result[0]),
           jIO.util.readBlobAsText(result[1].target.response)
         ]);
+      }, function (error) {
+        output_message = 'ERROR converting document: ' + error.message;
       })
       .push(function (result) {
         var div = window.document.createElement('div');
-        if (result[0].target.response == result[1].target.response) {
-          div.textContent = 'Converted ' + format + ' OK';
-          gadget.element.appendChild(div);
+        if (result && result[0].target.response == result[1].target.response) {
+          output_message = 'Converted ' + format + ' OK';
         }
+        div.textContent = output_message;
+        gadget.element.appendChild(div);
       });
   }
 
