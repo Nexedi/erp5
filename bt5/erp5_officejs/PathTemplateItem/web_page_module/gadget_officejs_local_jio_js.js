@@ -1,8 +1,55 @@
-/*global window, window, rJS, jIO, RSVP, UriTemplate, atob, console */
-/*jslint indent: 2, maxerr: 10, maxlen: 80 */
-(function (window, rJS, jIO, RSVP, UriTemplate, atob,
-           console) {
+/*global window, window, rJS, jIO, RSVP, UriTemplate, console */
+/*jslint indent: 2, maxerr: 10, maxlen: 95 */
+(function (window, rJS, jIO, RSVP, UriTemplate, console) {
   "use strict";
+
+  function redirectToLogin(gadget, error) {
+    var regexp,
+      site,
+      login_page;
+    if (gadget.state_parameter_dict.jio_storage_name === "ERP5") {
+      regexp = /^X-Delegate uri=\"(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)\"$/;
+      login_page = error.target.getResponseHeader('WWW-Authenticate');
+      if (regexp.test(login_page)) {
+        return gadget.getUrlFor({
+          command: 'login',
+          absolute_url: true
+        })
+          .push(function (came_from) {
+            return gadget.redirect({
+              command: 'raw',
+              options: {
+                url: UriTemplate.parse(regexp.exec(login_page)[1])
+                  .expand({came_from: came_from})
+              }
+            });
+          });
+      }
+    }
+    if (gadget.state_parameter_dict.jio_storage_name === "DAV") {
+      regexp = /^Nayookie login_url=(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)$/;
+      login_page = error.target.getResponseHeader('WWW-Authenticate');
+      if (regexp.test(login_page)) {
+        site = UriTemplate.parse(
+          regexp.exec(login_page)[1]
+        ).expand({
+          back_url: window.location.href,
+          origin: window.location.origin
+        });
+      }
+    }
+    if (site) {
+      return gadget.redirect({ command: "row", url: site});
+    }
+    // User entered wrong password ?
+    // Notify
+    return gadget.notifySubmitted({message: 'Unauthorized storage access',
+                                   status: 'error'})
+      .push(function () {
+        return gadget.redirect({command: 'display',
+                                options: {page: 'ojs_configurator'}});
+      });
+  }
 
   // jIO call wrapper for redirection to authentication page if needed
   function wrapJioCall(gadget, method_name, argument_list) {
@@ -14,94 +61,26 @@
     return storage[method_name].apply(storage, argument_list)
       .push(undefined, function (error) {
         if ((error.target !== undefined) && (error.target.status === 401)) {
-          var regexp,
-            site,
-            login_page;
-          if (gadget.state_parameter_dict.jio_storage_name === "ERP5") {
-            regexp = /^X-Delegate uri=\"(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)\"$/;
-            login_page = error.target.getResponseHeader('WWW-Authenticate');
-            if (regexp.test(login_page)) {
-              return gadget.getUrlFor({
-                command: 'login',
-                absolute_url: true
-              })
-                .push(function (came_from) {
-                  return gadget.redirect({
-                    command: 'raw',
-                    options: {
-                      url: UriTemplate.parse(regexp.exec(login_page)[1])
-                        .expand({came_from: came_from})
-                    }
-                  });
-                });
-            }
-          }
-          if (gadget.state_parameter_dict.jio_storage_name === "DAV") {
-            regexp = /^Nayookie login_url=(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)$/;
-            login_page = error.target.getResponseHeader('WWW-Authenticate');
-            if (regexp.test(login_page)) {
-              site = UriTemplate.parse(
-                regexp.exec(login_page)[1]
-              ).expand({
-                back_url: window.location.href,
-                origin: window.location.origin
-              });
-            }
-          }
-          if (site) {
-            return gadget.redirect({ command: "row", url: site});
-          }
-          // User entered wrong password ?
-          // Notify
-          return gadget.notifySubmitted({message: 'Unauthorized storage access',
-                                         status: 'error'})
-            .push(function () {
-              return gadget.redirect({command: 'display',
-                                      options: {page: 'ojs_configurator'}});
-            });
+          return redirectToLogin(gadget, error);
         }
         throw error;
       });
   }
 
-  function processHateoasDict(raw_dict) {
-    var raw_field_list, type, parent, field_key, field_id, return_dict = {};
-    return_dict.raw_dict = raw_dict;
-    /*jslint nomen: true*/
-    if (raw_dict.hasOwnProperty("_embedded") &&
-        raw_dict._embedded.hasOwnProperty("_view")) {
-      raw_field_list = raw_dict._embedded._view;
-      type = raw_dict._links.type.name;
-      parent = raw_dict._links.parent.name;
-      return_dict.parent_relative_url = "portal_types/" + parent;
-      return_dict.portal_type = type;
-      for (field_key in raw_field_list) {
-        if (raw_field_list.hasOwnProperty(field_key)) {
-          field_id = "";
-          if (raw_field_list[field_key]["default"] !== undefined &&
-              raw_field_list[field_key]["default"] !== "") {
-            if (field_key.startsWith("my_")) {
-              field_id = field_key.replace("my_", "");
-            } else if (field_key.startsWith("your_")) {
-              field_id = field_key.replace("your_", "");
-            } else {
-              field_id = field_key;
-            }
-            return_dict[field_id] = raw_field_list[field_key]["default"];
-          }
+  function safeJioRemove(storage, id) {
+    return storage.remove(id)
+      .push(undefined, function (error) {
+        if ((error instanceof jIO.util.jIOError) &&
+            (error.status_code === 404)) {
+          return;
         }
-      }
-    } else {
-      // ignore non configuration elements
-      return raw_dict;
-    }
-    return return_dict;
+        throw error;
+      });
   }
 
   rJS(window)
 
     .ready(function (gadget) {
-      // Initialize the gadget local parameters
       gadget.state_parameter_dict = {};
     })
 
@@ -111,141 +90,129 @@
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
 
+    .declareMethod('clean', function (appcache_storage, origin_url) {
+      if (!appcache_storage) { return; }
+      var gadget = this,
+        document_id_list = [origin_url,
+                            "appcache-stored",
+                            "portal_skins/erp5_text_editor/" +
+                            "Base_cloneDocumentForTextEditor",
+                            "portal_skins/erp5_text_editor/" +
+                            "Base_viewNewContentDialogForTextEditor",
+                            "portal_skins/erp5_text_editor/" +
+                            "WebPageModule_viewWebPageListAsJioForTextEditor",
+                            "portal_skins/erp5_text_editor/" +
+                            "WebPage_viewAsTextDocumentForTextEditor",
+                            "portal_types/Web Page",
+                            "portal_types/Web Page Module",
+                            "portal_types/Web Page Module/text_editor_view",
+                            "portal_types/Web Page/text_editor_clone"],
+        promise_list = [],
+        i = 0,
+        current_version,
+        index;
+      current_version = window.location.href.replace(window.location.hash, "");
+      index = current_version.indexOf(window.location.host) + window.location.host.length;
+      current_version = current_version.substr(index);
+      return gadget.getSetting("migration_version")
+        .push(function (migration_version) {
+          if (migration_version !== current_version) {
+            for (i = 0; i < document_id_list.length; i += 1) {
+              promise_list = [safeJioRemove(appcache_storage, document_id_list[i])];
+            }
+            return RSVP.all(promise_list);
+          }
+        })
+        .push(function () {
+          return gadget.setSetting("migration_version", current_version);
+        })
+        .push(function () {
+          return current_version;
+        });
+    })
+
     .declareMethod('createJio', function (jio_options) {
+      if (jio_options === undefined) { return; }
       var gadget = this,
         appcache_storage,
-        hateoas_section,
-        hateoas_section_and_view,
-        origin_url = window.location.href,
-        jio_appchache_options = {
-          type: "replicate",
-          parallel_operation_attachment_amount: 10,
-          parallel_operation_amount: 1,
-          conflict_handling: 2,
-          signature_hash_key: 'hash',
-          check_remote_attachment_modification: true,
-          check_remote_attachment_creation: true,
-          check_remote_attachment_deletion: true,
-          check_remote_deletion: true,
-          check_local_creation: false,
-          check_local_deletion: false,
-          check_local_modification: false,
-          signature_sub_storage: {
-            type: "query",
-            sub_storage: {
-              type: "memory"
-            }
-          },
-          local_sub_storage: {},
-          remote_sub_storage: {
-            type: "saferepair",
-            sub_storage: {
-              type: "appcache",
-              manifest: ""
-            }
-          }
-        },
-        sync_flag = "appcache-stored",
-        configuration_ids_list = [];
-      if (jio_options === undefined) {
-        return;
-      }
-      jio_appchache_options.local_sub_storage = JSON.parse(
-        JSON.stringify(jio_options)
-      );
-      jio_options = {
-        type: 'dateupdater',
-        sub_storage: jio_options,
-        property_list: ['modification_date']
-      };
-      try {
-        this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);
-      } catch (error) {
-        this.state_parameter_dict.jio_storage = undefined;
-      }
-      return gadget.getSetting("app_configuration")
-        .push(function (app_configuration) {
-          jio_appchache_options.remote_sub_storage.sub_storage.manifest =
-            app_configuration;
-          return gadget.getSetting("hateoas_appcache");
+        origin_url = window.location.href;
+      return RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.getSetting('configuration_manifest'),
+            gadget.getSetting('jio_storage_name')
+          ]);
         })
-        .push(function (hateoas_appcache) {
-          hateoas_section = "./" + hateoas_appcache + "/";
-          hateoas_section_and_view = hateoas_section + "definition_view/";
-          return gadget.getSetting("jio_storage_name");
-        })
-        .push(function (jio_storage_name) {
-          if (jio_storage_name === undefined) { return; }
-          appcache_storage = jIO.createJIO(jio_appchache_options);
-          // verify if appcache-local sync needs to be done
-          return appcache_storage.get(sync_flag)
-            .push(undefined, function (error) {
-              if (error && String(error.status_code) !== "404") {
-                throw error;
+        .push(function (result_list) {
+          var jio_appchache_options = {
+            type: "replicate",
+            parallel_operation_attachment_amount: 10,
+            parallel_operation_amount: 1,
+            conflict_handling: 2, //keep remote
+            signature_hash_key: 'hash',
+            check_remote_attachment_modification: true,
+            check_remote_attachment_creation: true,
+            check_remote_attachment_deletion: true,
+            check_remote_deletion: true,
+            check_local_creation: false,
+            check_local_deletion: false,
+            check_local_modification: false,
+            signature_sub_storage: {
+              type: "query",
+              sub_storage: {
+                type: "indexeddb",
+                database: result_list[1] + "-configuration-hash"
               }
-              return appcache_storage.repair()
-                .push(function () {
-                  return appcache_storage.allAttachments(origin_url)
-                    .push(function (attachment_dict) {
-                      var id, promise_list = [], i = 0;
-                      for (id in attachment_dict) {
-                        if (attachment_dict.hasOwnProperty(id)) {
-                          if (id.startsWith(hateoas_section)) {
-                            promise_list.push(
-                              appcache_storage
-                                .getAttachment(origin_url, id,
-                                               {"format": "json"}
-                                              )
-                            );
-                          } else {
-                            promise_list.push(
-                              appcache_storage
-                                .getAttachment(origin_url, id)
-                            );
-                          }
-                          configuration_ids_list[i] = id;
-                          i += 1;
-                        }
-                      }
-                      return RSVP.all(promise_list);
-                    })
-                    .push(function (content_list) {
-                      var i, id, content, promise_list = [];
-                      for (i = 0; i < content_list.length; i += 1) {
-                        id = configuration_ids_list[i];
-                        if (id.startsWith(hateoas_section)) {
-                          id = id.replace(hateoas_section_and_view, "");
-                          id = atob(id);
-                          content = processHateoasDict(content_list[i]);
-                          promise_list.push(appcache_storage.put(id, content));
-                        }
-                      }
-                      return RSVP.all(promise_list);
-                    })
-                    .push(function () {
-                      return appcache_storage.put(sync_flag, {})
-                        .push(undefined);
-                    }, function (error) {
-                      console.log("Error while appcache-local " +
-                                  "storage synchronization. Bad " +
-                                  "configuration maybe?");
-                      console.log(error);
-                      throw error;
-                    });
-                }, function (error) {
-                  console.log("Error while appcache-local " +
-                              "storage synchronization");
-                  if (error && error.currentTarget &&
-                      error.currentTarget.status === 401) {
-                    console.log("Unauthorized access to storage," +
-                                "sync cancelled");
-                    gadget.state_parameter_dict.jio_storage_name = "ERP5";
-                    return;
-                  }
-                  console.log(error);
-                  throw error;
-                });
-            });
+            },
+            local_sub_storage: JSON.parse(JSON.stringify(jio_options)),
+            remote_sub_storage: {
+              type: "saferepair",
+              sub_storage: {
+                type: "configuration",
+                origin_url: origin_url,
+                hateoas_appcache: "hateoas_appcache",
+                manifest: result_list[0],
+                sub_storage: {
+                  type: "appcache",
+                  origin_url: origin_url,
+                  manifest: result_list[0]
+                }
+              }
+            }
+          };
+          jio_options = {
+            type: 'dateupdater',
+            sub_storage: jio_options,
+            property_list: ['modification_date']
+          };
+          try {
+            gadget.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);
+          } catch (error) {
+            gadget.state_parameter_dict.jio_storage = undefined;
+          }
+          if (result_list[0] === undefined) { return; }
+          if (result_list[1] === undefined) { return; }
+          gadget.state_parameter_dict.jio_storage_name = result_list[1];
+          appcache_storage = jIO.createJIO(jio_appchache_options);
+        })
+        .push(function () {
+          return gadget.clean(appcache_storage, origin_url);
+        })
+        .push(function (current_version) {
+          if (appcache_storage) {
+            //if the app version has changed, force configuration storage sync
+            return appcache_storage.repair(current_version);
+          }
+        })
+        .push(undefined, function (error) {
+          console.log("Error while appcache-local storage synchronization");
+          if (error && error.currentTarget &&
+              error.currentTarget.status === 401) {
+            console.log("Unauthorized access to storage, sync cancelled");
+            return redirectToLogin(gadget, error);
+          }
+          console.log(error);
+          throw error;
         });
     })
     .declareMethod('allDocs', function () {
@@ -279,5 +246,4 @@
       return wrapJioCall(this, 'repair', arguments);
     });
 
-}(window, rJS, jIO, RSVP, UriTemplate, atob,
-  console));
+}(window, rJS, jIO, RSVP, UriTemplate, console));
