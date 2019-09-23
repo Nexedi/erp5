@@ -23,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -41,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -61,9 +64,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -73,8 +74,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_image_editor.appcache</string> </value>
+            <value> <string>gadget_officejs_image_editor.configuration</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -84,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_image_editor_officejs_appcache</string> </value>
+            <value> <string>gadget_officejs_image_editor_configuration</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -103,161 +108,8 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 01 Feb 2019 10:45:33 +0000\n
-# XXX + fonts\n
-# images/ajax-loader.gif\n
+# generated on Thu, 14 Jan 2019 11:55:33 +0000\n
 CACHE:\n
-font-awesome/font-awesome.css\n
-font-awesome/font-awesome-webfont.eot\n
-font-awesome/font-awesome-webfont.woff\n
-font-awesome/font-awesome-webfont.woff2\n
-font-awesome/font-awesome-webfont.ttf\n
-font-awesome/font-awesome-webfont.svg\n
-gadget_erp5_nojqm.css\n
-jio_ojs_storage.js\n
-gadget_erp5_global.js\n
-URI.js\n
-dygraph.js\n
-handlebars.js\n
-jiodev.js\n
-renderjs.js\n
-rsvp.js\n
-gadget_global.js\n
-erp5_launcher_nojqm.js\n
-gadget_officejs_router.js\n
-gadget_erp5_router.html\n
-gadget_erp5_router.js\n
-gadget_jio.html\n
-gadget_jio.js\n
-gadget_translate.html\n
-gadget_translate.js\n
-gadget_translation.html\n
-gadget_translation.js\n
-gadget_translation_data.js\n
-gadget_erp5_editor_panel.html\n
-gadget_erp5_editor_panel.js\n
-gadget_erp5_ojs_panel.html\n
-gadget_erp5_ojs_panel.js\n
-gadget_erp5_header.html\n
-gadget_erp5_header.js\n
-gadget_ojs_jio.html\n
-gadget_ojs_jio.js\n
-gadget_erp5_page_ojs_controller.html\n
-gadget_erp5_page_ojs_controller.js\n
-gadget_erp5_page_ojs_add_document.html\n
-gadget_erp5_page_ojs_add_document.js\n
-gadget_erp5_page_ojs_configurator.html\n
-gadget_erp5_page_ojs_configurator.js\n
-gadget_erp5_page_ojs_dav_configurator.html\n
-gadget_erp5_page_ojs_dav_configurator.js\n
-gadget_erp5_page_ojs_erp5_configurator.html\n
-gadget_erp5_page_ojs_erp5_configurator.js\n
-gadget_erp5_page_ojs_dropbox_configurator.html\n
-gadget_erp5_page_ojs_dropbox_configurator.js\n
-gadget_erp5_page_ojs_linshare_configurator.html\n
-gadget_erp5_page_ojs_linshare_configurator.js\n
-gadget_erp5_page_ojs_sync.html\n
-gadget_erp5_page_ojs_sync.js\n
-gadget_erp5_page_ojs_document_list.html\n
-gadget_erp5_page_ojs_document_list.js\n
-gadget_ojs_configurator_access.html\n
-gadget_ojs_configurator_access.js\n
-gadget_html5_input.html\n
-gadget_html5_input.js\n
-gadget_erp5_field_multicheckbox.html\n
-gadget_erp5_field_multicheckbox.js\n
-gadget_erp5_searchfield.html\n
-gadget_erp5_searchfield.js\n
-gadget_erp5_pt_form_list.html\n
-gadget_erp5_pt_form_list.js\n
-gadget_erp5_form.html\n
-gadget_erp5_form.js\n
-gadget_erp5_label_field.html\n
-gadget_erp5_label_field.js\n
-gadget_erp5_field_listbox.html\n
-gadget_erp5_field_listbox.js\n
-gadget_erp5_field_datetime.html\n
-gadget_erp5_field_datetime.js\n
-gadget_html5_element.html\n
-gadget_html5_element.js\n
-gadget_erp5_notification.html\n
-gadget_erp5_notification.js\n
-gadget_erp5_field_string.html\n
-gadget_erp5_field_string.js\n
-gadget_erp5_field_editor.html\n
-gadget_erp5_field_editor.js\n
-gadget_erp5_field_gadget.html\n
-gadget_erp5_field_gadget.js\n
-gadget_erp5_search_editor.html\n
-gadget_erp5_search_editor.js\n
-gadget_erp5_sort_editor.html\n
-gadget_erp5_sort_editor.js\n
-gadget_erp5_field_password.html\n
-gadget_erp5_field_password.js\n
-gadget_erp5_field_textarea.html\n
-gadget_erp5_field_textarea.js\n
-gadget_html5_textarea.html\n
-gadget_html5_textarea.js\n
-gadget_erp5_configure_editor.html\n
-gadget_erp5_configure_editor.js\n
-gadget_editor.html\n
-gadget_editor.js\n
-gadget_button_maximize.html\n
-gadget_button_maximize.js\n
-\n
-#setting\n
-gadget_officejs_setting.js\n
-gadget_officejs_setting.html\n
-\n
-#image app\n
-gadget_officejs_image_editor_router.html\n
-gadget_officejs_jio_image_view.html\n
-gadget_officejs_jio_image_view.js\n
-gadget_officejs_image_editor.json\n
-image_editor_app_logo.svg\n
-\n
-#new approach (storage hateoas requests)\n
-gadget_ojs_local_jio.html\n
-gadget_ojs_local_jio.js\n
-gadget_erp5_pt_form_view_editable.html\n
-gadget_erp5_pt_form_view_editable.js\n
-gadget_erp5_pt_form_dialog.html\n
-gadget_erp5_pt_form_dialog.js\n
-gadget_erp5_field_list.html\n
-gadget_erp5_field_list.js\n
-gadget_erp5_field_listbox.html\n
-gadget_erp5_field_listbox.js\n
-gadget_html5_select.html\n
-gadget_html5_select.js\n
-gadget_erp5_page_action_officejs.html\n
-gadget_erp5_page_action_officejs.js\n
-gadget_erp5_page_ojs_local_controller.html\n
-gadget_erp5_page_ojs_local_controller.js\n
-gadget_officejs_form_view.html\n
-gadget_officejs_form_view.js\n
-gadget_erp5_page_handle_action.html\n
-gadget_erp5_page_handle_action.js\n
-gadget_officejs_common_util.html\n
-gadget_officejs_common_util.js\n
-gadget_erp5_page_create_document.html\n
-gadget_erp5_page_create_document.js\n
-\n
-#needed for appcachestorage sync\n
-/\n
-app/\n
-gadget_officejs_image_editor.configuration\n
-gadget_officejs_bootloader.js\n
-gadget_officejs_bootloader_presentation.html\n
-gadget_officejs_bootloader_presentation.js\n
-gadget_officejs_bootloader_presentation.css\n
-gadget_officejs_bootloader_serviceworker.js\n
-officejs_logo.png\n
-jio_appcachestorage.js\n
-jio_configuration_storage.js\n
-\n
-#custom actions\n
-\n
-#configuration resources\n
 \n
 #hateoas_appcache/definition_view/BASE64(portal_types/Image Module)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlIE1vZHVsZQ==\n
@@ -275,69 +127,12 @@ hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfaW1hZ2VfZWRpdG9yL0ltYWd
 #hateoas_appcache/definition_view/BASE64(portal_skins/erp5_image_editor/ImageModule_viewImageListAsJioForImageEditor)\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfaW1hZ2VfZWRpdG9yL0ltYWdlTW9kdWxlX3ZpZXdJbWFnZUxpc3RBc0ppb0ZvckltYWdlRWRpdG9y\n
 \n
-#image editor\n
-minipaint.gadget.html\n
-minipaint.gadget.js\n
-miniPaint/config.js\n
-miniPaint/img/right.png\n
-miniPaint/img/logo.png\n
-miniPaint/img/colorwheel.png\n
-miniPaint/img/favicon.png\n
-miniPaint/img/preview.jpg\n
-miniPaint/img/sprites.png\n
-miniPaint/js/draw_tools.js\n
-miniPaint/js/edit.js\n
-miniPaint/js/effects.js\n
-miniPaint/js/elements.js\n
-miniPaint/js/events.js\n
-miniPaint/js/file.js\n
-miniPaint/js/gui.js\n
-miniPaint/js/help.js\n
-miniPaint/js/image.js\n
-miniPaint/js/layers.js\n
-miniPaint/js/main.js\n
-miniPaint/js/tools.js\n
-miniPaint/languages/de.js\n
-miniPaint/languages/empty.js\n
-miniPaint/languages/es.js\n
-miniPaint/languages/fr.js\n
-miniPaint/languages/it.js\n
-miniPaint/languages/ja.js\n
-miniPaint/languages/ko.js\n
-miniPaint/languages/lt.js\n
-miniPaint/languages/pt.js\n
-miniPaint/languages/ru.js\n
-miniPaint/languages/tr.js\n
-miniPaint/languages/zh.js\n
-miniPaint/libs/helpers.js\n
-miniPaint/libs/popup.js\n
-miniPaint/libs/sift.js\n
-miniPaint/libs/vintage.js\n
-miniPaint/styles/styles.css\n
-miniPaint/vendor/exif/exif.js\n
-miniPaint/vendor/exif/exif.min.js\n
-miniPaint/vendor/file-saver/FileSaver.min.js\n
-miniPaint/vendor/file-saver/canvas-toBlob.js\n
-miniPaint/vendor/glfx/glfx.js\n
-miniPaint/vendor/harmony/harmony.js\n
-miniPaint/vendor/harmony/harmony.min.js\n
-miniPaint/vendor/hermite-resize/hermite.js\n
-miniPaint/vendor/hqx/hqx.js\n
-miniPaint/vendor/hqx/hqx.min.js\n
-miniPaint/vendor/imagefilters/imagefilters.js\n
-miniPaint/vendor/imagefilters/imagefilters.min.js\n
-miniPaint/vendor/jquery/jquery-migrate.js\n
-miniPaint/vendor/jquery/jquery.js\n
-miniPaint/vendor/menu/menu.js\n
-miniPaint/vendor/menu/menu.min.js\n
-miniPaint/vendor/translate/jquery.translate.js\n
-miniPaint/vendor/translate/jquery.translate.min.js\n
 NETWORK:\n
 *</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Image Editor AppCache</string> </value>
+            <value> <string>OfficeJS Image Editor Configuration</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -403,7 +198,7 @@ NETWORK:\n
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -429,7 +224,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486630147.41</float>
+                        <float>1566215472.36</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -438,7 +233,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -474,7 +269,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.56367.56007.61713</string> </value>
+                <value> <string>977.56359.44181.5256</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -492,7 +287,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1567773418.17</float>
+                        <float>1566215677.45</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -549,7 +344,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486568697.11</float>
+                        <float>1566215426.8</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
