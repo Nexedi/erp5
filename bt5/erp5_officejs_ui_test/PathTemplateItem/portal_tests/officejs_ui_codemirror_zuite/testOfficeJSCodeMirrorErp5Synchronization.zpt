@@ -169,6 +169,10 @@
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Document']</td>
@@ -179,12 +183,7 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list_without_header_url" />
 </tal:block>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>link=${title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
+  <td>waitForTextPresent</td>
   <td>${title}</td>
   <td></td>
 </tr>
@@ -309,7 +308,7 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
+  <td>waitForTextPresent</td>
   <td>Done.</td>
   <td></td>
 </tr>
