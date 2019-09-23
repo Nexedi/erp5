@@ -210,8 +210,7 @@ kw.update(keep_items=extra_param)  # better backward compatibility
 if dialog_category == "object_search" :
   portal.portal_selections.setSelectionParamsFor(kw['selection_name'], kw)
 
-kw['previous_skin_selection'] = portal.portal_skins.getCurrentSkinName()
-request.set('previous_skin_selection', kw['previous_skin_selection'])
+request.set('previous_skin_selection', portal.portal_skins.getCurrentSkinName())
 
 # Finally we will call the Dialog Method
 # Handle deferred style, unless we are executing the update action
