@@ -222,10 +222,6 @@ gadget_ojs_cloudooo.html\n
 gadget_ojs_cloudooo.js\n
 gadget_cloudooo.html\n
 gadget_cloudooo.js\n
-gadget_erp5_page_ojs_upload_convert.html\n
-gadget_erp5_page_ojs_upload_convert.js\n
-gadget_erp5_page_ojs_download_convert.html\n
-gadget_erp5_page_ojs_download_convert.js\n
 \n
 #spreadsheet\n
 gadget_ooffice_spreadsheet_router.html\n
@@ -1249,8 +1245,73 @@ onlyoffice/fonts/ttf/ktwsh55ufibg65drjf4gn5djccz8e7dg.ttf\n
 onlyoffice/fonts/ttf/ktwsh55ufijgk35iptozrmuwqtuy.ttf\n
 onlyoffice/fonts/ttf/ktwsh55ufirzeamcpft1h7dwca.ttf\n
 onlyoffice/fonts/ttf/p7agk5uum7xi6muwqtuy.ttf\n
+\n
+only_office_document_view.html\n
+only_office_document_view.js\n
+\n
+#new approach (storage hateoas requests)\n
+gadget_erp5_pt_form_view_editable.html\n
+gadget_erp5_pt_form_view_editable.js\n
+gadget_erp5_pt_form_dialog.html\n
+gadget_erp5_pt_form_dialog.js\n
+gadget_erp5_field_list.html\n
+gadget_erp5_field_list.js\n
+gadget_erp5_field_listbox.html\n
+gadget_erp5_field_listbox.js\n
+gadget_html5_select.html\n
+gadget_html5_select.js\n
+gadget_ojs_local_jio.html\n
+gadget_ojs_local_jio.js\n
+gadget_erp5_page_action_officejs.html\n
+gadget_erp5_page_action_officejs.js\n
+gadget_erp5_page_ojs_local_controller.html\n
+gadget_erp5_page_ojs_local_controller.js\n
+gadget_officejs_form_view.html\n
+gadget_officejs_form_view.js\n
+gadget_erp5_page_handle_action.html\n
+gadget_erp5_page_handle_action.js\n
+gadget_officejs_common_util.html\n
+gadget_officejs_common_util.js\n
+gadget_erp5_page_create_document.html\n
+gadget_erp5_page_create_document.js\n
+\n
+#needed for appcachestorage sync\n
+/\n
+app/\n
+gadget_ooffice_spreadsheet.configuration\n
+gadget_officejs_bootloader.js\n
+gadget_officejs_bootloader_presentation.html\n
+gadget_officejs_bootloader_presentation.js\n
+gadget_officejs_bootloader_presentation.css\n
+gadget_officejs_bootloader_serviceworker.js\n
+officejs_logo.png\n
+jio_appcachestorage.js\n
+jio_configuration_storage.js\n
+\n
+#custom app actions\n
+ooffice_upload_action.html\n
+ooffice_upload_action.js\n
+ooffice_download_action.html\n
+ooffice_download_action.js\n
+\n
+#app_configuration_resources\n
+#CONFIGURATION ELEMENTS generated on Tue Sep 17 13:40:08 2019. Same as in configuration manifest\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3NwcmVhZHNoZWV0X3ZpZXc=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvRG9jdW1lbnRNb2R1bGVfdmlld0RvY3VtZW50TGlzdEFzSmlvRm9yT29mZmljZVNwcmVhZHNoZWV0RWRpdG9y\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9vb2ZmaWNlX3VwbG9hZF9kb2N1bWVudA==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV91cGxvYWREaWFsb2dGb3JPb2ZmaWNlRWRpdG9y\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0L29vZmZpY2Vfc3ByZWFkc2hlZXRfdmlldw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvU3ByZWFkc2hlZXREb2N1bWVudF92aWV3QXNKaW9Gb3JPb2ZmaWNlU3ByZWFkc2hlZXRFZGl0b3I=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1NwcmVhZHNoZWV0L29vZmZpY2VfZG93bmxvYWRfZG9jdW1lbnQ=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV9zcHJlYWRzaGVldF9lZGl0b3IvQmFzZV9kb3dubG9hZERpYWxvZ0Zvck9vZmZpY2VFZGl0b3I=\n
+#/app_configuration_resources\n
+\n
+\n
 NETWORK:\n
-*</string> </value>
+*\n
+</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -1391,7 +1452,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.24552.52528.56814</string> </value>
+                <value> <string>978.32699.16100.53452</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1409,7 +1470,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1549010761.19</float>
+                        <float>1569595016.24</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
