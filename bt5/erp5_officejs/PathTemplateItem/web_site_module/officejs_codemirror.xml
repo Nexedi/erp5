@@ -369,6 +369,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_app_settings</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -406,6 +416,10 @@
                 <string>aggregate/web_page_module/gadget_officejs_bootloader.html</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>configuration_app_settings</string> </key>
+            <value> <string>roque5</string> </value>
         </item>
         <item>
             <key> <string>configuration_application_title</string> </key>
@@ -732,7 +746,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.33482.4166.8669</string> </value>
+                <value> <string>975.50798.33418.15411</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -750,7 +764,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1549644533.99</float>
+                        <float>1566301713.02</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
