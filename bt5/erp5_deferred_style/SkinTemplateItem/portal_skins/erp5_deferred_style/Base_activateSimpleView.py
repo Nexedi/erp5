@@ -3,6 +3,7 @@ portal = context.getPortalObject()
 request = portal.REQUEST
 format = request.get('format', '')
 skin_name = request.get('deferred_portal_skin', portal.portal_skins.getDefaultSkin())
+previous_skin_selection = request.get('previous_skin_selection', None)
 
 tag = 'active-report-wrapped-%s' % random.randint(0, 1000)
 priority = 3
@@ -10,16 +11,18 @@ priority = 3
 user = portal.portal_membership.getAuthenticatedMember()
 person_value = user.getUserValue()
 if person_value is None:
-  portal.changeSkin(None)
+  portal.changeSkin(previous_skin_selection)
   return context.Base_redirect('view', keep_items=dict(
               portal_status_message=translateString(
-                        "No person found for your user")))
+                        "No person found for your user"),
+              portal_status_level='error'))
 
 if person_value.getDefaultEmailText('') in ('', None):
-  portal.changeSkin(None)
+  portal.changeSkin(previous_skin_selection)
   return context.Base_redirect('view', keep_items=dict(
               portal_status_message=translateString(
-                        "You haven't defined your email address")))
+                        "You haven't defined your email address"),
+              portal_status_level='error'))
 
 # save request parameters
 request_form = portal.ERP5Site_filterRequestForDeferredStyle(request)
@@ -54,6 +57,6 @@ activity_context.activate(
 
 context.activate(activity='SQLQueue', after_tag=tag).getTitle()
 
-portal.changeSkin(None)
+portal.changeSkin(previous_skin_selection)
 return context.Base_redirect('view', keep_items=dict(
               portal_status_message=translateString("Report Started")))
