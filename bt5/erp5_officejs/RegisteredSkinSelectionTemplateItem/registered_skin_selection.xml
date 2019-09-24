@@ -8,6 +8,10 @@
   <skin_selection>AppCache,Hal,RJS,RedirectAssist,View</skin_selection>
  </skin_folder_selection>
  <skin_folder_selection>
+  <skin_folder>erp5_officejs_codemirror</skin_folder>
+  <skin_selection>AppCache,Hal,RJS,RedirectAssist,View</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
   <skin_folder>erp5_officejs_common</skin_folder>
   <skin_selection>AppCache,Hal,RJS,RedirectAssist,View</skin_selection>
  </skin_folder_selection>
