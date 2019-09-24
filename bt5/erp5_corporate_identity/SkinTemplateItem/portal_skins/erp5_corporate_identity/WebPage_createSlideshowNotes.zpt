@@ -12,7 +12,8 @@ Creates the Slideshow note section.
                        doc_theme_css_font_list           python: options.get('doc_theme_css_font_list');
                        doc_theme_css_url                 python: options.get('doc_theme_css_url');
                        doc_template_css_url              python: options.get('doc_template_css_url');
-                       doc_notes                         python: options.get('doc_notes');">
+                       doc_notes                         python: options.get('doc_notes');
+                       doc_rendering_fix                 python: options.get('doc_rendering_fix');">
   <!DOCTYPE html>
   <html tal:attributes="class python: ''.join(['ci-', doc_theme, ' ci-', doc_language])">
   <head>
@@ -32,6 +33,9 @@ Creates the Slideshow note section.
     </head>
     	<body class="ci-slideshow-handout">
     	  <tal:block metal:use-macro="context/WebPage_createSlideshowNotes/macros/slide_notes" />
+        <tal:block tal:condition="python: doc_format == 'pdf'">
+          <tal:block tal:content="structure python: doc_rendering_fix"></tal:block>
+        </tal:block>
       </body>
 	 </html>
 </tal:block>
