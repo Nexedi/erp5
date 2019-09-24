@@ -1,6 +1,6 @@
-/*global window, window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, atob, console */
+/*global window, window, rJS, jIO, RSVP, UriTemplate, atob, console */
 /*jslint indent: 2, maxerr: 10, maxlen: 80 */
-(function (window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, atob,
+(function (window, rJS, jIO, RSVP, UriTemplate, atob,
            console) {
   "use strict";
 
@@ -30,7 +30,7 @@
                     command: 'raw',
                     options: {
                       url: UriTemplate.parse(regexp.exec(login_page)[1])
-                      .expand({came_from: came_from})
+                        .expand({came_from: came_from})
                     }
                   });
                 });
@@ -112,13 +112,11 @@
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
 
     .declareMethod('createJio', function (jio_options) {
-      var appcache_storage,
+      var gadget = this,
+        appcache_storage,
+        hateoas_section,
+        hateoas_section_and_view,
         origin_url = window.location.href,
-        hateoas_section = "./hateoas_appcache/",
-        hateoas_section_and_view = hateoas_section + "definition_view/",
-        // TODO manifest should come from gadget.props.cache_file
-        // add script in html body
-        manifest = "gadget_officejs_text_editor.configuration",
         jio_appchache_options = {
           type: "replicate",
           parallel_operation_attachment_amount: 10,
@@ -143,7 +141,7 @@
             type: "saferepair",
             sub_storage: {
               type: "appcache",
-              manifest: manifest
+              manifest: ""
             }
           }
         },
@@ -153,7 +151,8 @@
         return;
       }
       jio_appchache_options.local_sub_storage = JSON.parse(
-        JSON.stringify(jio_options));
+        JSON.stringify(jio_options)
+      );
       jio_options = {
         type: 'dateupdater',
         sub_storage: jio_options,
@@ -164,7 +163,17 @@
       } catch (error) {
         this.state_parameter_dict.jio_storage = undefined;
       }
-      return this.getSetting("jio_storage_name")
+      return gadget.getSetting("app_configuration")
+        .push(function (app_configuration) {
+          jio_appchache_options.remote_sub_storage.sub_storage.manifest =
+            app_configuration;
+          return gadget.getSetting("hateoas_appcache");
+        })
+        .push(function (hateoas_appcache) {
+          hateoas_section = "./" + hateoas_appcache + "/";
+          hateoas_section_and_view = hateoas_section + "definition_view/";
+          return gadget.getSetting("jio_storage_name");
+        })
         .push(function (jio_storage_name) {
           if (jio_storage_name === undefined) { return; }
           appcache_storage = jIO.createJIO(jio_appchache_options);
@@ -178,18 +187,21 @@
                 .push(function () {
                   return appcache_storage.allAttachments(origin_url)
                     .push(function (attachment_dict) {
-                      var id, base64, promise_list = [], i = 0;
+                      var id, promise_list = [], i = 0;
                       for (id in attachment_dict) {
                         if (attachment_dict.hasOwnProperty(id)) {
                           if (id.startsWith(hateoas_section)) {
                             promise_list.push(
                               appcache_storage
-                              .getAttachment(origin_url, id,
-                                             {"format": "json"}));
+                                .getAttachment(origin_url, id,
+                                               {"format": "json"}
+                                              )
+                            );
                           } else {
                             promise_list.push(
                               appcache_storage
-                              .getAttachment(origin_url, id));
+                                .getAttachment(origin_url, id)
+                            );
                           }
                           configuration_ids_list[i] = id;
                           i += 1;
@@ -198,7 +210,7 @@
                       return RSVP.all(promise_list);
                     })
                     .push(function (content_list) {
-                      var i, id, parser, urlParams, content, promise_list = [];
+                      var i, id, content, promise_list = [];
                       for (i = 0; i < content_list.length; i += 1) {
                         id = configuration_ids_list[i];
                         if (id.startsWith(hateoas_section)) {
@@ -224,11 +236,13 @@
                   console.log("Error while appcache-local " +
                               "storage synchronization");
                   if (error && error.currentTarget &&
-                      error.currentTarget.status === "401") {
+                      error.currentTarget.status === 401) {
                     console.log("Unauthorized access to storage," +
                                 "sync cancelled");
+                    gadget.state_parameter_dict.jio_storage_name = "ERP5";
                     return;
                   }
+                  console.log(error);
                   throw error;
                 });
             });
@@ -265,5 +279,5 @@
       return wrapJioCall(this, 'repair', arguments);
     });
 
-}(window, rJS, jIO, RSVP, document, URLSearchParams, UriTemplate, atob,
+}(window, rJS, jIO, RSVP, UriTemplate, atob,
   console));
