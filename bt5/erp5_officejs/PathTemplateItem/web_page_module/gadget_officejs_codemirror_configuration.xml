@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -80,16 +80,8 @@
             <value> <string>text/html</string> </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_codemirror_router.html</string> </value>
+            <value> <string>gadget_officejs_codemirror.configuration</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -99,34 +91,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_codemirror_router</string> </value>
+            <value> <string>gadget_officejs_codemirror_configuration</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value> <string>en</string> </value>
         </item>
         <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.21</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -135,12 +108,34 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
+            <key> <string>text_content</string> </key>
+            <value> <string>CACHE MANIFEST\n
+# generated on Thu, 14 Jan 2019 11:55:33 +0000\n
+CACHE:\n
+\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Page Module)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Page Module/codemirror_view)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS9jb2RlbWlycm9yX3ZpZXc=\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Script)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBTY3JpcHQ=\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Script/codemirror_view)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBTY3JpcHQvY29kZW1pcnJvcl92aWV3\n
+\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_officejs_codemirror/Base_viewNewContentDialogForCodemirror)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfY29kZW1pcnJvci9CYXNlX3ZpZXdOZXdDb250ZW50RGlhbG9nRm9yQ29kZW1pcnJvcg==\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_officejs_codemirror/WebPageModule_viewWebPageListAsJioForCodemirror)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfY29kZW1pcnJvci9XZWJQYWdlTW9kdWxlX3ZpZXdXZWJQYWdlTGlzdEFzSmlvRm9yQ29kZW1pcnJvcg==\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_officejs_codemirror/WebPage_viewAsJioForCodemirror)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfY29kZW1pcnJvci9XZWJQYWdlX3ZpZXdBc0ppb0ZvckNvZGVtaXJyb3I=\n
+\n
+\n
+NETWORK:\n
+*</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Code Mirror router Gadget</string> </value>
+            <value> <string>OfficeJS Codemirror Configuration</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -232,7 +227,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1537284034.02</float>
+                        <float>1566312016.93</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -277,7 +272,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.36799.29647.47735</string> </value>
+                <value> <string>977.57973.57460.43366</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -295,7 +290,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1568974099.83</float>
+                        <float>1566312430.44</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -352,7 +347,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1537283455.72</float>
+                        <float>1566311976.74</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
