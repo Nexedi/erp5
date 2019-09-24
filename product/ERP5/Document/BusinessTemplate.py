@@ -79,7 +79,7 @@ from Products.ERP5Type.patches.ppml import importXML
 customImporters={
     XMLExportImport.magic: importXML,
     }
-from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
+from Products.ERP5Type.Workflow import WorkflowHistoryList
 from zLOG import LOG, WARNING, INFO
 from warnings import warn
 from lxml.etree import parse
