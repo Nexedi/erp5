@@ -10,7 +10,7 @@ contained_gadgets = [x.getSpecialiseValue().getRelativeUrl() \
 if gadget_relative_url not in contained_gadgets:
   # add only if not there
   knowledge_box = active_pad.newContent(portal_type='Knowledge Box')
-  knowledge_box.setSpecialiseValue(gadget_relative_url)
+  knowledge_box.setSpecialise(gadget_relative_url)
   knowledge_box.visible()
 else:
   # reuse gadget
