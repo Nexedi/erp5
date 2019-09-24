@@ -41,6 +41,7 @@ class TestRenderJSUIDeferredStyle(ERP5TypeFunctionalTestCase):
       'erp5_odt_style',
       'erp5_accounting',
       'erp5_simplified_invoicing',
+      'erp5_accounting_ui_test',
       'erp5_web_renderjs_ui_test',
     )
 
