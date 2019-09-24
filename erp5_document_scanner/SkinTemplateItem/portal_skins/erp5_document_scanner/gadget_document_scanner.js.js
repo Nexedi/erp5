@@ -61,28 +61,6 @@
       })
       .push(function (data) {
         cropper = new Cropper(gadget.querySelector('.photo'), {data: data});
-        gadget.querySelector(".crop-button").addEventListener("click", function (evt) {
-          var canvasData;
-          evt.preventDefault();
-          canvasData = cropper.getCanvasData();
-          storage.put("settings", cropper.getData());
-          cropper.getCroppedCanvas().toBlob(function (blob) {
-            var reader = new window.FileReader();
-            reader.readAsDataURL(blob);
-            reader.onloadend = function () {
-              var base64data = reader.result,
-                block = base64data.split(";"),
-                realData = block[1].split(",")[1];
-
-              photo.style.width = canvasData.width + "px";
-              photo.style.height = canvasData.height + "px";
-
-              photo.src = base64data;
-              photoInput.value = realData;
-              cropper.destroy();
-            };
-          });
-        });
       });
   }
 
@@ -215,11 +193,32 @@
       return result;
     })
     .onEvent("click", function (evt) {
+      var canvasData;
       if (evt.target.className == "startbutton") {
         return this.getElement()
           .push(function (gadget) {
             return takePicture(gadget);
           });
+      }
+      if (evt.target.className == "capture-button") {
+        canvasData = cropper.getCanvasData();
+        storage.put("settings", cropper.getData());
+        cropper.getCroppedCanvas().toBlob(function (blob) {
+          var reader = new window.FileReader();
+          reader.readAsDataURL(blob);
+          reader.onloadend = function () {
+            var base64data = reader.result,
+              block = base64data.split(";"),
+              realData = block[1].split(",")[1];
+
+            photo.style.width = canvasData.width + "px";
+            photo.style.height = canvasData.height + "px";
+
+            photo.src = base64data;
+            photoInput.value = realData;
+            cropper.destroy();
+          };
+        });
       }
     }, false, true);
 
