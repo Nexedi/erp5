@@ -27,11 +27,12 @@
 #
 ##############################################################################
 
-from Products.ERP5Type import Permissions
 from App.special_dtml import HTMLFile
 from Acquisition import aq_inner
 from AccessControl.requestmethod import postonly
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
+from . import Permissions
+from .ConflictFree import DoublyLinkList
 
 # ERP5 workflow factory definitions
 _workflow_factories = {}
@@ -206,3 +207,18 @@ addWorkflowFactory(createERP5Workflow,
                    id='erp5_workflow',
                    title='ERP5-style pre-configured DCWorkflow')
 
+class WorkflowHistoryList(DoublyLinkList):
+
+  def __repr__(self):
+    #return '%s' % repr(tuple(self.__iter__()))
+    return '<%s object at 0x%x %r>' % (self.__class__.__name__, id(self), tuple(self))
+
+  def __setstate__(self, state):
+    if type(state) is tuple:
+      # legacy class that will migrate automatically
+      from .patches.WorkflowTool import WorkflowHistoryList
+      self._prev, self._log = state
+    else:
+      super(WorkflowHistoryList, self).__setstate__(state)
+    # make sure we use appropriate class even after changes are invalidated
+    self.__class__ = WorkflowHistoryList
