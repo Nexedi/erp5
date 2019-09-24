@@ -378,7 +378,8 @@ if doc_format == "pdf" or doc_format == "mhtml":
       doc_template_css_url=doc_theme.get("template_css_url"),
       doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
       doc_theme_css_url=doc_theme.get("theme_css_url"),
-      doc_notes=splitMultipleDetails(removeSlidesWithoutDetailsFromNotes(doc_content)),
+      #doc_notes=splitMultipleDetails(removeSlidesWithoutDetailsFromNotes(doc_content)),
+      doc_notes=splitMultipleDetails(doc_content)
     )
   else:
     doc_slideshow_content = doc.WebPage_createSlideshowContent(
