@@ -1,4 +1,9 @@
 erp5_hal_json_style | AppCache
+erp5_image_editor | AppCache
+erp5_image_editor | Hal
+erp5_image_editor | RJS
+erp5_image_editor | RedirectAssist
+erp5_image_editor | View
 erp5_officejs_codemirror | AppCache
 erp5_officejs_codemirror | Hal
 erp5_officejs_codemirror | RJS
@@ -27,4 +32,9 @@ erp5_text_editor | View
 erp5_web_officejs_ui | RJS
 erp5_web_officejs_ui | View
 erp5_web_redirect_assist | AppCache
+erp5_web_table_editor | AppCache
+erp5_web_table_editor | Hal
+erp5_web_table_editor | RJS
+erp5_web_table_editor | RedirectAssist
+erp5_web_table_editor | View
 erp5_xhtml_style | AppCache
