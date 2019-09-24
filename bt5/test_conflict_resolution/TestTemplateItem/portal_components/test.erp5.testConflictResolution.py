@@ -68,7 +68,7 @@ class TestType(unittest.TestCase):
       expected = range(-1, 403)
       self.assertEqual(expected, list(x1))
       self.assertEqual(expected, list(x2))
-      self.assertEqual(expected[::-1], list(x1.reversed()))
+      self.assertEqual(expected[::-1], list(reversed(x1)))
       self.assertEqual(len(expected), len(x1))
       self.assertEqual(len(expected), len(x2))
       x1 += x2

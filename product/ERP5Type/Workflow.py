@@ -27,11 +27,12 @@
 #
 ##############################################################################
 
-from Products.ERP5Type import Permissions
 from App.special_dtml import HTMLFile
 from Acquisition import aq_inner
 from AccessControl.requestmethod import postonly
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
+from . import Permissions
+from .ConflictFree import DoublyLinkList
 
 # ERP5 workflow factory definitions
 _workflow_factories = {}
@@ -206,3 +207,31 @@ addWorkflowFactory(createERP5Workflow,
                    id='erp5_workflow',
                    title='ERP5-style pre-configured DCWorkflow')
 
+class WorkflowHistoryList(DoublyLinkList):
+
+  _bucket_size = 4000
+
+  def __repr__(self):
+    return '<%s object at 0x%x %r>' % (
+      self.__class__.__name__, id(self), tuple(self))
+
+  def __setstate__(self, state):
+    # We implement a polyvalent __setstate__ on the base class because the
+    # class of a ghost object may differ from the actual class and ZODB does
+    # not fix it when it loads the object. 2 possible cases to fix:
+    # - after a migration (self._migrate) that is aborted (transaction.abort)
+    #   or invalidated (self._p_invalidate)
+    # - the persistent reference in the parent (container)
+    #   refers to a different class
+    # If ZODB fixed the class as we would except, __setstate__ would be simpler
+    # and only implemented on the legacy class.
+    if type(state) is tuple:
+      # legacy class that will migrate automatically
+      from .patches import WorkflowTool
+      self.__class__ = WorkflowTool.WorkflowHistoryList
+      # BBB: Only the first 2 because of a production instance that
+      #      used a temporary patch to speed up workflow history lists.
+      self._prev, self._log = state[:2]
+    else:
+      self.__class__ = WorkflowHistoryList
+      super(WorkflowHistoryList, self).__setstate__(state)
