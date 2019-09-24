@@ -1,6 +1,6 @@
 /*jslint indent: 2 */
-/*global rJS, RSVP, window, document, navigator, Cropper, console, FileReader, jIO */
-(function (rJS, RSVP, window, document, navigator, Cropper, console, FileReader, jIO) {
+/*global rJS, RSVP, window, document, navigator, Cropper, console, FileReader, jIO, Promise*/
+(function (rJS, RSVP, window, document, navigator, Cropper, console, FileReader, jIO, Promise) {
   "use strict";
 
   var imageWidth,
@@ -206,11 +206,22 @@
       if (evt.target.className == "capture-button") {
         canvasData = cropper.getCanvasData();
         storage.put("settings", cropper.getData());
-        cropper.getCroppedCanvas().toBlob(function (blob) {
-          var reader = new window.FileReader();
-          reader.readAsDataURL(blob);
-          reader.onloadend = function () {
-            var base64data = reader.result,
+        return RSVP.Queue()
+          .push(function () {
+            return cropper.getCroppedCanvas();
+          })
+          .push(function (canvas) {
+            return new Promise(function (resolve, reject) {
+              canvas.toBlob(function (blob) {
+                resolve(blob);
+              });
+            });
+          })
+          .push(function (blob) {
+            return jIO.util.readBlobAsDataURL(blob);
+          })
+          .push(function (evt) {
+            var base64data = evt.target.result,
               block = base64data.split(";"),
               realData = block[1].split(",")[1];
 
@@ -220,9 +231,8 @@
             photo.src = base64data;
             photoInput.value = realData;
             cropper.destroy();
-          };
-        });
+          });
       }
     }, false, true);
 
-}(rJS, RSVP, window, document, navigator, Cropper, console, FileReader, jIO));
+}(rJS, RSVP, window, document, navigator, Cropper, console, FileReader, jIO, Promise));
