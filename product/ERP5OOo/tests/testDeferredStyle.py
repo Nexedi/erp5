@@ -351,6 +351,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
           part.get_payload(decode=True),
           context=self.portal,
           mimetype=self.content_type).getData())
+    self.tic()
 
 
 
