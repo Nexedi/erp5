@@ -1838,14 +1838,17 @@ class Base( CopyContainer,
     if target is None :
       path = target
     elif isinstance(target, str):
-      # We have been provided a string
-      path = target
+      ## We have been provided a string
+      #path = target
+      # is Base in obj.__class__.__mro__ ?
+      raise TypeError('Only objects should be passed as values')
     elif isinstance(target, (tuple, list, set, frozenset)):
       # We have been provided a list or tuple
       path_list = []
       for target_item in target:
         if isinstance(target_item, str):
-          path = target_item
+          #path = target_item
+          raise TypeError('Only objects should be passed as values')
         else:
           path = getRelativeUrl(target_item)
         path_list.append(cleanupCategory(path))

@@ -378,6 +378,8 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
   """
   XXX: WORK IN PROGRESS
   """
+
+
   def getBusinessTemplateList(self):
     return 'erp5_base',
 
@@ -1312,6 +1314,40 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     except Exception:
       self.fail("Creating a Category Expression with syntax error raises "\
                 "an error")
+
+  def testCategoryRelationRaisesIfWrongValueTypeIsPassedAsParameter(self):
+    person_module = self.portal.person_module
+    person = person_module.newContent()
+
+    # Passing a string to a Value setter should raise
+    with self.assertRaises(TypeError):
+      organisation = self.portal.organisation_module.newContent()
+      person.setSubordinationValue(organisation.getRelativeUrl())
+      person_module.newContent(
+        subordination_value=organisation.getRelativeUrl(),
+      )
+
+    # Passing an ERP5 object to a not-Value setter should raise
+    with self.assertRaises(TypeError):
+      organisation = self.portal.organisation_module.newContent()
+      person.setSubordination(organisation)
+      person_module.newContent(
+        subordination=organisation,
+      )
+
+    # Passing a unicode object to a not-Value setter should raise
+    with self.assertRaises(TypeError):
+      organisation = self.portal.organisation_module.newContent()
+      person.setSubordination(unicode(organisation.getRelativeUrl()))
+
+    # Same tests with a category instead of an object
+    social_title = self.portal.portal_categories.social_title.newContent(id='Mr')
+    with self.assertRaises(TypeError):
+      person.setSocialTitle(social_title)
+
+    social_title = self.portal.portal_categories.social_title.newContent(id='Mme')
+    with self.assertRaises(TypeError):
+      person.setSocialTitleValue(social_title.getRelativeUrl())
 
 from Products.ERP5Type.Tool.ComponentTool import ComponentTool
 ComponentTool._original_reset = ComponentTool.reset
