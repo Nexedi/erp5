@@ -1,6 +1,6 @@
-/*global window, rJS, isEmpty, getFirstNonEmpty, ensureArray */
+/*global window, rJS, isEmpty, getFirstNonEmpty, ensureArray, isEmpty */
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
-(function (window, rJS, getFirstNonEmpty, ensureArray) {
+(function (window, rJS, getFirstNonEmpty, ensureArray, isEmpty) {
   "use strict";
 
   rJS(window)
@@ -63,7 +63,7 @@
             text_content = item_list[i][0];
           }
         }
-        if (text_content === undefined) {
+        if ((text_content === undefined) && !isEmpty(this.state.value)) {
           text_content = '??? (' + this.state.value + ')';
         }
         state.text_content = text_content;
@@ -120,4 +120,4 @@
       return true;
     }, {mutex: 'changestate'});
 
-}(window, rJS, getFirstNonEmpty, ensureArray));
+}(window, rJS, getFirstNonEmpty, ensureArray, isEmpty));
