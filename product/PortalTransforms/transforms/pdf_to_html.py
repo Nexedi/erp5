@@ -7,7 +7,7 @@ from zope.interface import implements
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.commandtransform import popentransform
-from Products.CMFDefault.utils import bodyfinder
+from Products.ERP5Type.Utils import bodyfinder
 import os
 
 class popen_pdf_to_html(popentransform):

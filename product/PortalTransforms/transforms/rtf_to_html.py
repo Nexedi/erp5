@@ -6,7 +6,7 @@ from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from Products.PortalTransforms.libtransforms.utils import bin_search, sansext
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
-from Products.CMFDefault.utils import bodyfinder
+from Products.ERP5Type.Utils import bodyfinder
 import os
 
 class rtf_to_html(commandtransform):

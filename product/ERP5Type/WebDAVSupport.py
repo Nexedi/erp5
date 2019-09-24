@@ -13,67 +13,24 @@
 #
 ##############################################################################
 
+import collections
+import email
 import re
 import transaction
+from lxml import html
+from Products.ERP5Type.Utils import formatRFC822Headers
 from Acquisition import aq_parent, aq_inner, aq_base
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Utils import bodyfinder
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.CMFCore.PortalContent import ResourceLockedError
 from Products.CMFCore.utils import getToolByName
-from Products.CMFDefault.utils import parseHeadersBody
-from Products.CMFDefault.utils import html_headcheck
-from Products.CMFDefault.utils import bodyfinder
-from Products.CMFDefault.utils import SimpleHTMLParser as CMFSimpleHTMLParser
 from zLOG import LOG
 from zExceptions import Forbidden
 
 security = ModuleSecurityInfo( 'Products.ERP5Type.WebDAVSupport' )
 
-class SimpleHTMLParser(CMFSimpleHTMLParser):
-
-  def do_meta( self, attrs ):
-
-    name = ''
-    content = ''
-
-    for attrname, value in attrs:
-      value = value.strip()
-      if attrname == "name":
-          name = value.capitalize()
-      if attrname == "content":
-          content = value
-
-    if name:
-      if not self.metatags.has_key(name):
-        self.metatags[ name ] = content
-      elif type(self.metatags[ name ]) is type([]):
-        self.metatags[ name ].append(content)
-      else:
-        self.metatags[ name ] = [self.metatags[ name ], content]
-
-security.declarePublic('formatRFC822Headers')
-def formatRFC822Headers( headers ):
-
-  """ Convert the key-value pairs in 'headers' to valid RFC822-style
-      headers, including adding leading whitespace to elements which
-      contain newlines in order to preserve continuation-line semantics.
-
-      This code is taken from Products.CMFDefault.utils and modified
-      for ERP5 purpose
-  """
-  munged = []
-  linesplit = re.compile( r'[\n\r]+?' )
-
-  for key, value in headers:
-    if value is not None:
-      if type(value) in (type([]), type(())):
-        vallines = map(lambda x: str(x), value)
-      else:
-        vallines = linesplit.split( str(value) )
-      munged.append( '%s: %s' % ( key, '\r\n  '.join( vallines ) ) )
-
-  return '\r\n'.join( munged )
 
 class TextContent:
   """
@@ -90,27 +47,40 @@ class TextContent:
   security.declarePrivate('guessFormat')
   def guessFormat(self, text):
     """ Simple stab at guessing the inner format of the text """
-    if html_headcheck(text):
-      return 'text/html'
+    try:
+      if html.fromstring(text).tag == 'html':
+        return 'text/html'
+    except Exception:
+      pass
+    return 'text/structured'
+
+  security.declarePrivate('parseHeadersBody')
+  def parseHeadersBody(self, text, format):
+    if format == 'text/html':
+      headers = collections.defaultdict(list)
+      tree = html.fromstring(text)
+      for meta in tree.xpath("//meta"):
+        name, content = meta.get("name", "").capitalize(), meta.get("content")
+        if name:
+          headers[name].append(content)
+      title = tree.xpath("//title")
+      if title:
+        headers["title"] = title[0].text
+      return headers, bodyfinder(text)
     else:
-      return 'text/structured'
+      headers = {}
+      message = email.message_from_string(text)
+      for k in message.keys():
+        headers[k.capitalize()] = '\n'.join(message.get_all(k))
+      return headers, message.get_payload()
 
   security.declarePrivate('handleText')
   def handleText(self, text, format=None):
     """ Handles the raw text, returning headers, body, format """
-    headers = {}
     if not format:
       format = self.guessFormat(text)
-    if format == 'text/html':
-      parser = SimpleHTMLParser()
-      parser.feed(text)
-      headers.update(parser.metatags)
-      if parser.title:
-        headers['title'] = parser.title
-      body = bodyfinder(text)
-    else:
-      headers, body = parseHeadersBody(text, headers)
-    return headers, text, format
+    headers, body = self.parseHeadersBody(text, format)
+    return headers, body, format
 
   ## FTP handlers
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
@@ -123,7 +93,7 @@ class TextContent:
     body = REQUEST.get('BODY', '')
 
     try:
-      headers, body, format = self.handleText(text=body)
+      headers, _, format = self.handleText(text=body)
       content_type = REQUEST.get_header('Content-Type', '')
       headers.setdefault('content_type', content_type)
       headers['file'] = body
@@ -187,7 +157,7 @@ class TextContent:
           'body': self.asStrippedHTML(''),
           }
     else:
-      hdrtext = formatRFC822Headers( hdrlist )
+      hdrtext = formatRFC822Headers(hdrlist)
       bodytext = '%s\r\n\r\n%s' % ( hdrtext, self.getTextContent('') )
 
     return bodytext

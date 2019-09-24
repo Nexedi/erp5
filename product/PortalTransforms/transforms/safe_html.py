@@ -8,10 +8,7 @@ import codecs
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from Products.PortalTransforms.utils import log
-from Products.CMFDefault.utils import IllegalHTML
-from Products.CMFDefault.utils import SimpleHTMLParser
-from Products.CMFDefault.utils import VALID_TAGS
-from Products.CMFDefault.utils import NASTY_TAGS
+from Products.ERP5Type.Utils import IllegalHTML
 from Products.PortalTransforms.utils import safeToInt
 
 from lxml import etree
@@ -24,8 +21,58 @@ except ImportError:
   # Means BeautifulSoup module is not installed
   soupfromstring = None
 # tag mapping: tag -> short or long tag
-VALID_TAGS = VALID_TAGS.copy()
-NASTY_TAGS = NASTY_TAGS.copy()
+VALID_TAGS = {'a': 1,
+              'b': 1,
+              'base': 0,
+              'big': 1,
+              'blockquote': 1,
+              'body': 1,
+              'br': 0,
+              'caption': 1,
+              'cite': 1,
+              'code': 1,
+              'dd': 1,
+              'div': 1,
+              'dl': 1,
+              'dt': 1,
+              'em': 1,
+              'h1': 1,
+              'h2': 1,
+              'h3': 1,
+              'h4': 1,
+              'h5': 1,
+              'h6': 1,
+              'head': 1,
+              'hr': 0,
+              'html': 1,
+              'i': 1,
+              'img': 0,
+              'kbd': 1,
+              'li': 1,
+           #  'link': 1, type="script" hoses us
+              'meta': 0,
+              'ol': 1,
+              'p': 1,
+              'pre': 1,
+              'small': 1,
+              'span': 1,
+              'strong': 1,
+              'sub': 1,
+              'sup': 1,
+              'table': 1,
+              'tbody': 1,
+              'td': 1,
+              'th': 1,
+              'title': 1,
+              'tr': 1,
+              'tt': 1,
+              'u': 1,
+              'ul': 1}
+
+NASTY_TAGS = {'script': 1,
+              'object': 1,
+              'embed': 1,
+              'applet': 1}
 
 # add some tags to allowed types. These should be backported to CMFDefault.
 VALID_TAGS['ins'] = 1

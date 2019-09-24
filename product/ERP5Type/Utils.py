@@ -38,6 +38,7 @@ import sys
 import inspect
 import persistent
 from hashlib import md5 as md5_new, sha1 as sha_new
+from lxml import html
 from Products.ERP5Type.Globals import package_home
 from Products.ERP5Type.Globals import DevelopmentMode
 from Acquisition import aq_base
@@ -1763,3 +1764,38 @@ def reencodeUrlEscapes(url):
       url += [_reencodeUrlEscapes_map[c] for c in part]
   except StopIteration:
     return ''.join(url)
+
+#####################################################
+# Replacement for Products.CMFDefault
+#####################################################
+
+class IllegalHTML(ValueError):
+    """ Illegal HTML error.
+    """
+
+
+def bodyfinder(text):
+  try:
+    return html.tostring(html.fromstring(text).find("body"))
+  except Exception:
+    return text
+
+
+def formatRFC822Headers(headers):
+  """ Convert the key-value pairs in 'headers' to valid RFC822-style
+      headers, including adding leading whitespace to elements which
+      contain newlines in order to preserve continuation-line semantics.
+
+      This code is taken from Products.CMFDefault.utils and modified
+      for ERP5 purpose
+  """
+  munged = []
+  linesplit = re.compile(r'[\n\r]+?')
+  for key, value in headers:
+    if value is not None:
+      if type(value) in (list, tuple):
+        vallines = map(str, value)
+      else:
+        vallines = linesplit.split(str(value))
+      munged.append('%s: %s' % (key, '\r\n  '.join(vallines)))
+  return '\r\n'.join(munged)

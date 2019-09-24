@@ -1,6 +1,6 @@
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
-from Products.CMFDefault.utils import bodyfinder
+from Products.ERP5Type.Utils import bodyfinder
 
 class HTMLBody:
     """Simple transform which extracts the content of the body tag"""
