@@ -1,6 +1,6 @@
 import re
 from HTMLParser import HTMLParser, HTMLParseError
-from Products.CMFDefault.utils import IllegalHTML
+from Products.PortalTransforms.libtransforms.utils import IllegalHTML
 from Products.PortalTransforms.transforms import safe_html
 
 CHARREF_RE = re.compile(r"&(?:amp;)?#([xX]?[0-9a-fA-F]+);?")

@@ -32,8 +32,7 @@ from zExceptions import Forbidden
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Base import Base
-from Products.ERP5Type.Utils import deprecated
-from Products.CMFDefault.utils import formatRFC822Headers
+from Products.ERP5Type.Utils import deprecated, formatRFC822Headers
 import re
 
 _marker = object()

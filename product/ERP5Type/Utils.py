@@ -1767,3 +1767,26 @@ def reencodeUrlEscapes(url):
       url += [_reencodeUrlEscapes_map[c] for c in part]
   except StopIteration:
     return ''.join(url)
+
+#####################################################
+# Replacement for Products.CMFDefault
+#####################################################
+
+def formatRFC822Headers(headers):
+  """ Convert the key-value pairs in 'headers' to valid RFC822-style
+      headers, including adding leading whitespace to elements which
+      contain newlines in order to preserve continuation-line semantics.
+
+      This code is taken from Products.CMFDefault.utils and modified
+      for ERP5 purpose
+  """
+  munged = []
+  linesplit = re.compile(r'[\n\r]+?')
+  for key, value in headers:
+    if value is not None:
+      if type(value) in (list, tuple):
+        vallines = map(str, value)
+      else:
+        vallines = linesplit.split(str(value))
+      munged.append('%s: %s' % (key, '\r\n  '.join(vallines)))
+  return '\r\n'.join(munged)

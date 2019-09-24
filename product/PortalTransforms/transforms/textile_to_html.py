@@ -8,8 +8,6 @@ import os
 
 from zope.interface import implements
 
-from Products.CMFDefault.utils import bodyfinder
-
 from Products.PortalTransforms.interfaces import ITransform
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.libtransforms.utils import bin_search

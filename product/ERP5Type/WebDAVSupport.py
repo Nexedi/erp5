@@ -13,67 +13,23 @@
 #
 ##############################################################################
 
+import collections
+import email
 import re
 import transaction
+from lxml import html
+from Products.ERP5Type.Utils import formatRFC822Headers
 from Acquisition import aq_parent, aq_inner, aq_base
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.CMFCore.PortalContent import ResourceLockedError
 from Products.CMFCore.utils import getToolByName
-from Products.CMFDefault.utils import parseHeadersBody
-from Products.CMFDefault.utils import html_headcheck
-from Products.CMFDefault.utils import bodyfinder
-from Products.CMFDefault.utils import SimpleHTMLParser as CMFSimpleHTMLParser
 from zLOG import LOG
 from zExceptions import Forbidden
 
 security = ModuleSecurityInfo( 'Products.ERP5Type.WebDAVSupport' )
 
-class SimpleHTMLParser(CMFSimpleHTMLParser):
-
-  def do_meta( self, attrs ):
-
-    name = ''
-    content = ''
-
-    for attrname, value in attrs:
-      value = value.strip()
-      if attrname == "name":
-          name = value.capitalize()
-      if attrname == "content":
-          content = value
-
-    if name:
-      if not self.metatags.has_key(name):
-        self.metatags[ name ] = content
-      elif type(self.metatags[ name ]) is type([]):
-        self.metatags[ name ].append(content)
-      else:
-        self.metatags[ name ] = [self.metatags[ name ], content]
-
-security.declarePublic('formatRFC822Headers')
-def formatRFC822Headers( headers ):
-
-  """ Convert the key-value pairs in 'headers' to valid RFC822-style
-      headers, including adding leading whitespace to elements which
-      contain newlines in order to preserve continuation-line semantics.
-
-      This code is taken from Products.CMFDefault.utils and modified
-      for ERP5 purpose
-  """
-  munged = []
-  linesplit = re.compile( r'[\n\r]+?' )
-
-  for key, value in headers:
-    if value is not None:
-      if type(value) in (type([]), type(())):
-        vallines = map(lambda x: str(x), value)
-      else:
-        vallines = linesplit.split( str(value) )
-      munged.append( '%s: %s' % ( key, '\r\n  '.join( vallines ) ) )
-
-  return '\r\n'.join( munged )
 
 class TextContent:
   """
@@ -87,30 +43,28 @@ class TextContent:
 
   security = ClassSecurityInfo()
 
-  security.declarePrivate('guessFormat')
-  def guessFormat(self, text):
-    """ Simple stab at guessing the inner format of the text """
-    if html_headcheck(text):
-      return 'text/html'
-    else:
-      return 'text/structured'
+  security.declarePrivate('parseHeadersFromText')
+  def parseHeadersFromText(self, text):
+    """ Handles the raw text, returning headers """
+    try:
+      tree = html.fromstring(text)
+      if tree.tag != "html":
+        raise Exception
+    except Exception:
+      # this is probably not html code, try rfc822 parsing
+      message = email.message_from_string(text)
+      return {k.capitalize(): '\n'.join(message.get_all(k))
+              for k in message.keys()}
 
-  security.declarePrivate('handleText')
-  def handleText(self, text, format=None):
-    """ Handles the raw text, returning headers, body, format """
-    headers = {}
-    if not format:
-      format = self.guessFormat(text)
-    if format == 'text/html':
-      parser = SimpleHTMLParser()
-      parser.feed(text)
-      headers.update(parser.metatags)
-      if parser.title:
-        headers['title'] = parser.title
-      body = bodyfinder(text)
-    else:
-      headers, body = parseHeadersBody(text, headers)
-    return headers, text, format
+    headers = collections.defaultdict(list)
+    for meta in tree.iterfind(".//meta"):
+      name = meta.get("name")
+      if name:
+        headers[name.capitalize()].append(meta.get("content"))
+    title = tree.find("head/title")
+    if title is not None:
+      headers["title"] = title.text
+    return {k: v if len(v) > 1 else v[0] for k, v in headers.iteritems()}
 
   ## FTP handlers
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
@@ -123,18 +77,11 @@ class TextContent:
     body = REQUEST.get('BODY', '')
 
     try:
-      headers, body, format = self.handleText(text=body)
+      headers = self.parseHeadersFromText(body)
       content_type = REQUEST.get_header('Content-Type', '')
       headers.setdefault('content_type', content_type)
       headers['file'] = body
       self._edit(**headers)
-    except 'EditingConflict', msg:
-      # XXX Can we get an error msg through?  Should we be raising an
-      #     exception, to be handled in the FTP mechanism?  Inquiring
-      #     minds...
-      transaction.abort()
-      RESPONSE.setStatus(450)
-      return RESPONSE
     except ResourceLockedError, msg:
       transaction.abort()
       RESPONSE.setStatus(423)
