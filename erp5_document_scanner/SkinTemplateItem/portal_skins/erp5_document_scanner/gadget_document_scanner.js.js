@@ -173,18 +173,7 @@
               selector.appendChild(el);
             }
           }
-        })
-        .push(function () {
-          selector.addEventListener("change", function (evt) {
-            if (video) {
-              video.pause();
-            }
-            if (evt.target.value) {
-              return startup(root, evt.target.value);
-            }
-          });
         });
-
     })
     .declareMethod('getContent', function () {
       var input = this.element.querySelector('.photoInput'),
@@ -192,6 +181,20 @@
       result.field_your_document_scanner_gadget = input.value;
       return result;
     })
+    .onEvent("change", function (evt) {
+      if (evt.target.type == "select-one") {
+        return this.getElement()
+          .push(function (root) {
+            if (video) {
+              video.pause();
+            }
+            if (evt.target.value) {
+              return startup(root, evt.target.value);
+            }
+          });
+      }
+    }, false, true)
+
     .onEvent("click", function (evt) {
       var canvasData;
       if (evt.target.className == "startbutton") {
