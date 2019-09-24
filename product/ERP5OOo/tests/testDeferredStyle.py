@@ -70,6 +70,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     if not self.skin:
       raise NotImplementedError('Subclasses must define skin')
 
+    self.portal.MailHost.reset()
     person_module = self.portal.person_module
     if person_module._getOb('pers', None) is None:
       person = person_module.newContent(id='pers', portal_type='Person',
@@ -350,6 +351,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
           part.get_payload(decode=True),
           context=self.portal,
           mimetype=self.content_type).getData())
+    self.tic()
 
 
 
