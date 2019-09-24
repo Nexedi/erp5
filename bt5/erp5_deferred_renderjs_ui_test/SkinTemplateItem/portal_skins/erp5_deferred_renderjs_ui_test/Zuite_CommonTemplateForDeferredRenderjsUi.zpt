@@ -1,0 +1,23 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+  <tal:block metal:define-macro="init">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+    <tr>
+      <td>open</td>
+      <td>${base_url}/portal_preferences/DeferredRJSZuite_setPreference</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Set Deferred Preference Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>store</td>
+      <td>${base_url}/web_site_module/renderjs_runner/#</td>
+      <td>renderjs_url</td>
+    </tr>
+  </tal:block>
+
+</tal:block>
