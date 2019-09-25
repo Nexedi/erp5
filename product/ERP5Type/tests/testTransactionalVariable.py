@@ -26,51 +26,37 @@
 #
 ##############################################################################
 
-import unittest
-
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import LogInterceptor
+from Testing.ZopeTestCase import TestCase
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
-class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
-    # Some helper methods
+class TestTransactionalVariable(TestCase):
 
-    def getTitle(self):
-      return "Transactional Variable"
-
-    def getBusinessTemplateList(self):
-      """
-        Return the list of business templates.
-      """
-      return ()
-
-    def afterSetUp(self):
-      self.login()
+    from transaction import abort, commit
 
     def test_01_DictInterface(self):
       """Check if a transaction variable behaves in the same way as a dict.  """
 
       tv = getTransactionalVariable()
-      self.assertNotEqual(tv, None)
 
       # Test frequently used dict methods. This does not cover everything,
       # but should be enough.
       tv.clear()
       self.assertEqual(len(tv), 0)
-      self.assertRaises(KeyError, tv.__getitem__, 'toto')
+      with self.assertRaises(KeyError):
+        tv['toto']
 
       tv['toto'] = 'titi'
       self.assertEqual(len(tv), 1)
       self.assertEqual(tv['toto'], 'titi')
 
-      self.assertEqual(tv.get('foo'), None)
+      self.assertIsNone(tv.get('foo'))
       tv.setdefault('foo', 'bar')
       self.assertEqual(len(tv), 2)
       self.assertEqual(tv['foo'], 'bar')
 
-      self.assertTrue('foo' in tv)
+      self.assertIn('foo', tv)
       del tv['foo']
-      self.assertFalse('foo' in tv)
+      self.assertNotIn('foo', tv)
       self.assertEqual(len(tv), 1)
 
     def test_02_Expiration(self):
@@ -78,8 +64,6 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
       transactions.
       """
       tv = getTransactionalVariable()
-      self.assertNotEqual(tv, None)
-
       tv.clear()
       self.assertEqual(len(tv), 0)
 
@@ -87,21 +71,19 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
       tv['toto'] = 'titi'
       self.assertEqual(tv['toto'], 'titi')
       self.commit()
-      self.assertFalse('toto' in tv)
+      self.assertNotIn('toto', tv)
 
       # Abort and check.
       tv['toto'] = 'titi'
       self.assertEqual(tv['toto'], 'titi')
       self.abort()
-      self.assertFalse('toto' in tv)
+      self.assertNotIn('toto', tv)
 
     def test_03_Durability(self):
       """Check if a transaction variable does not disappear within the same
       transaction.
       """
       tv = getTransactionalVariable()
-      self.assertNotEqual(tv, None)
-
       tv.clear()
       self.assertEqual(len(tv), 0)
 
@@ -109,19 +91,14 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
       # in order to detect the difference between their behaviors.
       tv['toto'] = 'titi'
       self.assertEqual(tv['toto'], 'titi')
-      portal = self.portal
+      app = self.app
       vattr = '_v_erp5type_test_durability'
-      setattr(portal, vattr, 'dummy')
-      self.assertEqual(getattr(portal, vattr), 'dummy')
+      setattr(app, vattr, 'dummy')
+      self.assertEqual(getattr(app, vattr), 'dummy')
 
       # Force to minimize the connection cache so that volatile attributes
       # and unghostified objects are discarded.
-      portal._p_jar.cacheMinimize()
-      self.assertTrue('toto' in tv)
+      app._p_jar.cacheMinimize()
+      self.assertIn('toto', tv)
       self.assertEqual(tv['toto'], 'titi')
-      self.assertEqual(getattr(portal, vattr, None), None)
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestTransactionalVariable))
-  return suite
+      self.assertIsNone(getattr(app, vattr, None))
