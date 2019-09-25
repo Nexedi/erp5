@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zope.interface.verify import verifyClass
 import unittest
 
@@ -50,7 +49,7 @@ implements_tuple_list = [
     'ILocalRoleGenerator'),
 ]
 
-class TestERP5TypeInterfaces(ERP5TypeTestCase):
+class TestERP5TypeInterfaces(unittest.TestCase):
   """Tests implementation of interfaces"""
 
   def testTransactionIDataManager(self):
