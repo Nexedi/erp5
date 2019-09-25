@@ -64,7 +64,8 @@
                     portal_type: result[1],
                     content_type: result[2],
                     parent_relative_url: result[4],
-                    text_content: data_content
+                    text_content: data_content,
+                    filename: "default." + filetype
                   });
                 })
                 .push(function (jio_key) {

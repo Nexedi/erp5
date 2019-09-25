@@ -1,13 +1,17 @@
-/*global window, rJS, RSVP */
+/*global window, jIO, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, jIO, rJS, RSVP) {
+
   "use strict";
 
   rJS(window)
+
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateDocument", "updateDocument")
@@ -19,14 +23,19 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("render", function (options) {
-      return this.changeState({
-        jio_key: options.jio_key,
-        doc: options.doc
+
+      var gadget = this;
+      return new RSVP.Queue()
+      .push(function () {
+        return gadget.changeState({
+          jio_key: options.jio_key,
+          doc: options.doc
+        });
       });
     })
 
     .onEvent('submit', function () {
-      var gadget = this;
+      var gadget = this, data, html;
       return gadget.notifySubmitting()
         .push(function () {
           return gadget.getDeclaredGadget('form_view');
@@ -118,7 +127,7 @@
                   "type": "GadgetField",
                   "url": "gadget_editor.html",
                   "sandbox": "public",
-                  "renderjs_extra": '{"editor": "notebook_editor", "maximize": true}'
+                  "renderjs_extra": '{"editor": "jsmd_editor", "maximize": true}'
                 }
               }},
               "_links": {
@@ -152,7 +161,11 @@
             gadget.getUrlFor({command: 'selection_next'}),
             gadget.getUrlFor({
               command: 'change',
-              options: {'page': "ojs_download"}
+              options: {'page': 'ojs_notebook_export'}
+            }),
+            gadget.getUrlFor({
+              command: 'change',
+              options: {'page': 'ojs_download'}
             })
           ]);
         })
@@ -160,11 +173,12 @@
           return gadget.updateHeader({
             page_title: gadget.state.doc.title,
             save_action: true,
+            export_url: url_list[3],
+            download_url: url_list[4],
             selection_url: url_list[0],
             previous_url: url_list[1],
-            next_url: url_list[2],
-            download_url: url_list[3]
+            next_url: url_list[2]
           });
         });
     });
-}(window, rJS, RSVP));
+}(window, jIO, rJS, RSVP));
