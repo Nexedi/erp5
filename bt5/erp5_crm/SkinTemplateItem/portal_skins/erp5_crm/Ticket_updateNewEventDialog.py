@@ -30,10 +30,10 @@ if notification_message:
   # XXX this relies on formulator internals, we force the variables in request and
   # re-render the form.
   request = container.REQUEST
-  request.set('your_notification_message', '')
-  request.set('your_title', title)
-  request.set('your_text_content', temp_event.getTextContent())
-  request.set('your_content_type', temp_event.getContentType())
-  request.set('your_resource', temp_event.getResource())
+  request.form['your_notification_message'] = ''
+  request.form['your_title'] = temp_event.getTitle()
+  request.form['your_text_content'] = temp_event.getTextContent()
+  request.form['your_content_type'] = temp_event.getContentType()
+  request.form['your_resource'] = temp_event.getResource()
 
-return getattr(context, dialog_id)()
+return context.Base_renderForm(dialog_id)
