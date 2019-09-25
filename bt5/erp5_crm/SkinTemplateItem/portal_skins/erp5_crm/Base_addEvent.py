@@ -85,4 +85,4 @@ if batch_mode:
 
 message = portal.Base_translateString('New event created.')
 
-event.Base_redirect(keep_items={'portal_status_message': message})
+return event.Base_redirect(keep_items={'portal_status_message': message})
