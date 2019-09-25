@@ -60,6 +60,22 @@
 <!-- Go to test form -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_foo_dummy_list_field_view" />
 
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//select[@name='field_your_dummy']//option[1][not(@selected) and @value='a' and text()='A']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//select[@name='field_your_dummy']//option[2][not(@selected) and @value='b' and text()='B']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//select[@name='field_your_dummy']//option[3]</td>
+  <td></td>
+</tr>
+
 <!-- Run test form & check -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
