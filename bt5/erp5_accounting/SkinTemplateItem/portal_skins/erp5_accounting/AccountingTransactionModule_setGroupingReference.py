@@ -42,9 +42,12 @@ if uids:
 request.set('total_selected_amount', total_selected_amount)
 
 if update:
-  request.set('portal_status_message', Base_translateString('Updated'))
-  return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)
-  
+  context.Base_updateDialogForm(update=update)
+  return context.Base_renderForm(
+    'AccountingTransactionModule_viewGroupingFastInputDialog',
+    REQUEST=request,
+    keep_items={'portal_status_message': Base_translateString('Updated')}
+  )
 
 # otherwise, try to group...
 if grouping == 'grouping':
@@ -124,5 +127,8 @@ else:
   # make sure nothing will be checked next time
   portal.portal_selections.setSelectionCheckedUidsFor(list_selection_name, [])
 
-request.set('portal_status_message', psm)
-return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)
+return context.Base_redirect(
+  'AccountingTransactionModule_viewGroupingFastInputDialog',
+  REQUEST=request,
+  keep_items={'portal_status_message': psm}
+)
