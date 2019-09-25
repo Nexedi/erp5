@@ -1,6 +1,6 @@
-/*global document, window, rJS, RSVP, getFirstNonEmpty */
+/*global document, window, rJS, RSVP, getFirstNonEmpty, isEmpty */
 /*jslint indent: 2, maxerr: 3, maxlen: 80, nomen: true */
-(function (document, window, rJS, RSVP, getFirstNonEmpty) {
+(function (document, window, rJS, RSVP, getFirstNonEmpty, isEmpty) {
   "use strict";
 
   // How to change html selected option using JavaScript?
@@ -82,7 +82,7 @@
           fragment.appendChild(option);
         }
 
-        if (!found) {
+        if (!found && !isEmpty(this.state.value)) {
           option = document.createElement('option');
           option.textContent = '??? (' + this.state.value + ')';
           option.setAttribute('value', this.state.value);
@@ -144,4 +144,4 @@
       return this.notifyInvalid(evt.target.validationMessage);
     }, true, false);
 
-}(document, window, rJS, RSVP, getFirstNonEmpty));
+}(document, window, rJS, RSVP, getFirstNonEmpty, isEmpty));
