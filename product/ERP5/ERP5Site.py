@@ -15,6 +15,7 @@
   Portal class
 """
 
+from DateTime import DateTime
 from six.moves import map
 import threading
 from weakref import ref as weakref
@@ -26,7 +27,7 @@ from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
 from ZPublisher import BeforeTraverse
 from ZPublisher.BaseRequest import RequestContainer
 from AccessControl import ClassSecurityInfo
-from Products.CMFDefault.Portal import CMFSite
+from Products.CMFCore.PortalObject import PortalObjectBase
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Core.Folder import FolderMixIn
 from Acquisition import aq_base
@@ -230,7 +231,7 @@ getSite, setSite = _site()
 
 _missing_tools_registered = None
 
-class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
+class ERP5Site(FolderMixIn, PortalObjectBase, CacheCookieMixin):
   """
   The *only* function this class should have is to help in the setup
   of a new ERP5.  It should not assist in the functionality at all.
@@ -270,6 +271,15 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  def __init__(self, id):
+    PortalObjectBase.__init__(self, id)
+    self.creation_date = DateTime()
+
+  security.declarePrivate('reindexObject')
+  def reindexObject(self, idxs=[]):
+    """from Products.CMFDefault.Portal"""
+    pass
 
   security.declarePublic('isSubtreeIndexable')
   def isSubtreeIndexable(self):
@@ -406,7 +416,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     return self.index_html()
 
   def __of__(self, parent):
-    self = CMFSite.__of__(self, parent)
+    self = PortalObjectBase.__of__(self, parent)
     # Use a transactional variable for performance reason,
     # since ERP5Site.__of__ is called quite often.
     tv = getTransactionalVariable()
@@ -476,7 +486,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
                                        path_item_list=path_item_list,
                                        new_id=new_id)
     # Rename the object
-    return CMFSite.manage_renameObject(self, id=id, new_id=new_id,
+    return PortalObjectBase.manage_renameObject(self, id=id, new_id=new_id,
                                        REQUEST=REQUEST)
 
 
@@ -594,7 +604,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
   # _getProperty is missing, but since there are no protected properties
   # on an ERP5 Site, we can just use getProperty instead.
-  _getProperty = CMFSite.getProperty
+  _getProperty = PortalObjectBase.getProperty
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getUid')
   def getUid(self):
@@ -708,7 +718,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
                              email_from_address, email_from_name,
                              validate_email
                              ):
-    CMFSite.setupDefaultProperties(self, p, title, description,
+    PortalObjectBase.setupDefaultProperties(self, p, title, description,
                            email_from_address, email_from_name,
                            validate_email)
 
@@ -1872,7 +1882,7 @@ factory_type_information = () # No original CMF portal_types installed by defaul
 
 class PortalGenerator:
 
-    klass = CMFSite
+    klass = PortalObjectBase
 
     def setupTools(self, p):
         """Set up initial tools"""
