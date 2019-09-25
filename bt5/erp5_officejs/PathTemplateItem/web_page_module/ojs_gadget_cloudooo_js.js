@@ -117,7 +117,7 @@
           ]);
         })
         .push(function (result) {
-          return jio_gadget.putAttachment(options.id, options.name, result[0]);
+          return jio_gadget.putAttachment(options.id, options.name, result[0], options.conversion_kw);
         })
         .push(function () {
           return jio_gadget.getAttachment(options.id, options.name);
