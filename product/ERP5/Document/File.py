@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet
@@ -34,8 +35,7 @@ from Products.ERP5.Document.Document import Document, VALID_TEXT_FORMAT_LIST
 from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
-from Products.CMFDefault.File import File as CMFFile
-from OFS.Image import Pdata
+import OFS.Image
 from cStringIO import StringIO
 from Products.ERP5Type.Utils import deprecated
 
@@ -48,7 +48,7 @@ def _unpackData(data):
 
 _MARKER = object()
 
-class File(Document, CMFFile):
+class File(Document, OFS.Image.File):
   """
       A File can contain raw data which can be uploaded and downloaded.
       It is the root class of Image, OOoDocument (ERP5OOo product),
@@ -93,6 +93,25 @@ class File(Document, CMFFile):
 
   # OFS.File has an overloaded __str__ that returns the file content
   __str__ = object.__str__
+
+  def CreationDate():
+    # Required to not create a regression after dropping the Products.CMFDefault
+    # dependency (cf product.ERP5Type.Base.Base.getCreationDate)
+    pass
+
+  security.declarePrivate('_isNotEmpty')
+  def _isNotEmpty(self, file):
+    """from Products.CMFDefault.File"""
+    if not file:
+      return 0
+    elif type(file) is str or hasattr(file, 'filename'):
+      return 1
+    elif not hasattr(file, 'read'):
+      return 0
+    file.seek(0, 2)
+    t = file.tell()
+    file.seek(0)
+    return 1 if t else 0
 
   ### Special edit method
   security.declarePrivate( '_edit' )
@@ -145,7 +164,12 @@ class File(Document, CMFFile):
       str(data.read()) == str(self.getData()):
       # Same data as previous, no need to change it's content
       return
-    CMFFile._edit(self, precondition=precondition, file=data)
+
+    # from Products.CMFDefault.File
+    if precondition: self.precondition = precondition
+    elif self.precondition: del self.precondition
+    if self._isNotEmpty(data):
+        self.manage_upload(data)
 
   security.declareProtected(Permissions.ModifyPortalContent,'setFile')
   def setFile(self, data, precondition=None):
@@ -193,11 +217,16 @@ class File(Document, CMFFile):
       return str(data)
 
   # DAV Support
-  PUT = CMFFile.PUT
+  security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
+  def PUT(self, REQUEST, RESPONSE):
+    """from Products.CMFDefault.File"""
+    OFS.Image.File.PUT(self, REQUEST, RESPONSE)
+    self.reindexObject()
+
   security.declareProtected(Permissions.FTPAccess, 'manage_FTPstat',
                                                    'manage_FTPlist')
-  manage_FTPlist = CMFFile.manage_FTPlist
-  manage_FTPstat = CMFFile.manage_FTPstat
+  manage_FTPlist = OFS.Image.File.manage_FTPlist
+  manage_FTPstat = OFS.Image.File.manage_FTPstat
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getMimeTypeAndContent')
   def getMimeTypeAndContent(self):
