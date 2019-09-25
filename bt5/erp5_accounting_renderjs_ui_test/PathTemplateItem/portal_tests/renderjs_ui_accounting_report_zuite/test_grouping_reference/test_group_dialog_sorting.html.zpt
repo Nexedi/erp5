@@ -1,0 +1,154 @@
+<html>
+<head><title>Sorting in Grouping Dialog</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Sorting in Grouping Dialog
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&add_related_payments:int=1">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForAccountingRenderjsUi/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- {{{ Select Receivable account and use grouping fast input -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Receivable</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@alt='Grouping Reference Fast Input']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+
+<!-- Sort by date asc {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//tr[@class='listbox-label-line']/th[6]/button[@value="listbox.date:asc"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[7]/a</td>
+  <td>Client 1 Sale Invoice</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[7]/a</td>
+  <td>Client 1 Payment</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[7]/a</td>
+  <td>Client 2 Sale Invoice</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[7]/a</td>
+  <td>Client 2 Payment</td>
+</tr>
+<!-- }}} -->
+
+<!-- Sort by date desc {{{ -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//tr[@class='listbox-label-line']/th[6]/button[@value="listbox.date:desc"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[7]/a</td>
+  <td>Client 1 Sale Invoice</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[7]/a</td>
+  <td>Client 1 Payment</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[7]/a</td>
+  <td>Client 2 Sale Invoice</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[7]/a</td>
+  <td>Client 2 Payment</td>
+</tr>
+<!-- }}} -->
+
+<!-- Sort by grouping reference asc {{{ -->
+<tr>
+  <!-- XXX-Tatuya: For what purpose of this sort? -->
+  <td>clickAndWait</td>
+  <td>//tr[@class='listbox-label-line']/th[2]/button[@value="listbox.grouping_reference:asc"]</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+
+<!-- Sort by Account Name asc {{{ -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class='listbox-label-line']/th[2]/button[@value="listbox.grouping_reference:none"]</td>
+  <td></td>
+</tr>
+<tr>
+  <!-- reset grouping reference sorting -->
+  <td>clickAndWait</td>
+  <td>//tr[@class='listbox-label-line']/th[2]/button[@value="listbox.grouping_reference:none"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//tr[@class='listbox-label-line']/th[9]/button[@value="listbox.node_title:asc"]</td>
+  <td></td>
+</tr>
+<!-- all lines have the same account here. -->
+<!-- }}} -->
+
+<!-- Sort by third party title asc {{{ -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class='listbox-label-line']/th[9]/button[@value="listbox.node_title:none"]</td>
+  <td></td>
+</tr>
+<tr>
+  <!-- reset Account Name sorting -->
+  <td>clickAndWait</td>
+  <td>//tr[@class='listbox-label-line']/th[9]/button[@value="listbox.node_title:none"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//tr[@class='listbox-label-line']/th[10]/button[@value="listbox.Movement_getMirrorSectionTitle:asc"]</td>
+  <td></td>
+</tr>
+<!-- this is not really sorting by title, but by uid just to make sure lines
+for the same party are grouped together.
+-->
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->
