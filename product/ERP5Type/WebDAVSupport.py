@@ -15,6 +15,7 @@
 
 import collections
 import email
+from io import BytesIO
 import re
 import transaction
 from lxml import html
@@ -80,7 +81,7 @@ class TextContent:
       headers = self.parseHeadersFromText(body)
       content_type = REQUEST.get_header('Content-Type', '')
       headers.setdefault('content_type', content_type)
-      headers['file'] = body
+      headers['file'] = BytesIO(body)
       self._edit(**headers)
     except ResourceLockedError, msg:
       transaction.abort()

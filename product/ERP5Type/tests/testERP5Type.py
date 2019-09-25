@@ -38,6 +38,7 @@ import transaction
 from random import randint
 from unittest import expectedFailure
 from Acquisition import aq_base
+from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from zLOG import INFO
@@ -2590,8 +2591,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       portal = self.getPortalObject()
       folder = self.getOrganisationModule()
       object = folder.newContent(portal_type='Organisation')
-      self.assertNotEquals(object.getCreationDate(), portal.CreationDate())
-      self.assertNotEquals(object.getCreationDate(), folder.getCreationDate())
+      self.assertIsInstance(portal.creation_date, DateTime)
+      self.assertLess(portal.creation_date, object.getCreationDate())
+      self.assertIsNone(folder.getCreationDate())
 
     def test_copyWithoutModificationRight(self):
       """
