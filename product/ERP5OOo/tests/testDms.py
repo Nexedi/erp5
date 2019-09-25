@@ -680,10 +680,9 @@ class TestDocument(TestDocumentMixin):
     for document_type in portal.getPortalDocumentTypeList():
       module = portal.getDefaultModule(document_type)
       obj = module.newContent(portal_type=document_type)
-      self.assertNotEquals(obj.getCreationDate(),
-                           module.getCreationDate())
-      self.assertNotEquals(obj.getCreationDate(),
-                           portal.CreationDate())
+      self.assertIsInstance(portal.creation_date, DateTime)
+      self.assertLess(portal.creation_date, obj.getCreationDate())
+      self.assertIsNone(module.getCreationDate())
 
   def test_06_ProcessingStateOfAClonedDocument(self):
     """
@@ -2884,7 +2883,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
                                                reference='Foo_001',
                                                title='Foo_OO1')
     f = makeFileUpload('Foo_001.odt')
-    text_document.edit(file=f.read())
+    text_document.edit(file=f)
     f.close()
     self.tic()
 
