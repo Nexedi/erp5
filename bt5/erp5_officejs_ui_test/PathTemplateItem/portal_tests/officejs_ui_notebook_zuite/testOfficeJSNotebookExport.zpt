@@ -98,7 +98,7 @@
         </tr>
         <tr>
           <td>waitForElementPresent</td>
-          <td>//input[@title='Title']</td>
+          <td>//span[@role="presentation"]</td>
           <td></td>
         </tr>
         <tr>
@@ -136,21 +136,11 @@
           <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
           <td></td>
         </tr>
-        <tal:block metal:define-macro="synchronization_document">
-        <tr>
-          <td colspan="3"><b>Sync Document</b></td>
-        </tr>
         <tr>
           <td>click</td>
           <td>//a[@data-i18n="Synchronize"]</td>
           <td></td>
         </tr>
-        </tal:block>
-        <tr>
-          <td>waitForElementPresent</td>
-          <td>//button[@data-i18n='Filter']</td>
-          <td></td>
-        </tr>
         <tr>
           <td>waitForElementPresent</td>
           <td>link=${title}</td>
@@ -163,35 +153,89 @@
         </tr>
         <tr>
           <td>waitForElementPresent</td>
-          <td>identifier=title</td>
+          <td>//a[@data-i18n='Export']</td>
           <td></td>
         </tr>
         <tr>
-          <td>verifyValue</td>
-          <td>title</td>
-          <td>${title}</td>
+          <td>click</td>
+          <td>//a[@data-i18n='Export']</td>
+          <td></td>
         </tr>
         <tr>
-          <td>verifyValue</td>
-          <td>reference</td>
-          <td>${reference}</td>
+          <td>waitForElementPresent</td>
+          <td>//iframe[@src="${base_url}/web_site_module/officejs_notebook/app/gadget_jsmd_viewer.html"]</td>
+          <td></td>
+        </tr>
+         <tr>
+          <td>setSpeed</td>
+          <td>2000</td>
+          <td></td>
         </tr>
         <tr>
-          <td>verifyValue</td>
-          <td>version</td>
-          <td>${version}</td>
+          <td>click</td>
+          <td>name=submit</td>
+          <td></td>
         </tr>
         <tr>
-          <td>verifyValue</td>
-          <td>language</td>
-          <td>${language}</td>
+          <td>setSpeed</td>
+          <td>0</td>
+          <td></td>
         </tr>
         <tr>
-          <td>verifyValue</td>
-          <td>description</td>
-          <td>${description}</td>
+          <td>waitForElementPresent</td>
+          <td>//select[@id="format"]</td>
+          <td></td>
         </tr>
-        
+        <tr>
+          <td>select</td>
+          <td>//select[@id="format"]</td>
+          <td>value=txt</td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@type="submit"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//select[@id="format"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="format"]</td>
+          <td>value=html</td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@type="submit"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//select[@id="format"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>select</td>
+          <td>//select[@id="format"]</td>
+          <td>value=pdf</td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@type="submit"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n="Cancel"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@data-i18n="Cancel"]</td>
+          <td></td>
+        </tr>
       </tbody>
     </table>
   </body>
