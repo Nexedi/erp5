@@ -38,7 +38,7 @@ class _ERP5(SavedTestSuite):
     for test_path in (
         # glob('%s/product/Formulator/tests/test*.py' % path) +
         # glob('%s/product/ERP5Form/tests/test*.py' % path) +
-        ['%s/product/ERP5OOo/tests/testDeferredStyle.py' % path] +
+        # ['%s/product/ERP5OOo/tests/testDeferredStyle.py' % path] +
         # ['%s/product/ERP5/tests/testXHTML.py' % path] +
         # ['%s/product/ERP5Type/tests/testFunctionalCore.py' % path] +
         # ['%s/product/ERP5Type/tests/testFunctionalAnonymousSelection.py' % path] +
