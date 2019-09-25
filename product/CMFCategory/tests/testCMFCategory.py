@@ -811,8 +811,8 @@ class TestCMFCategory(ERP5TypeTestCase):
       p1.setCareerSubordination(o1)
     except Exception, e:
       self.assertTrue(isinstance(e, TypeError))
-      self.assertEqual(e.args[0], 'Category must be of string, tuple of '
-                                  'string or list of string type.')
+      self.assertEqual(e.args[0], 'CategoryTool.setCategoryMembership '
+                                  'only takes string(s) as value')
 
   def test_23_getCategoryChildValueList(self):
     pc = self.getCategoriesTool()
