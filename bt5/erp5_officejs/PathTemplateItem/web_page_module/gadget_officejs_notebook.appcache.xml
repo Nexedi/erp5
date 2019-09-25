@@ -111,7 +111,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 01 Feb 2019 11:45:33 +0000\n
+# generated on Fri, 30 Sep 2019 15:47:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -122,42 +122,35 @@ nexedi_logo_officejs_iodide.svg\n
 gadget_officejs_notebook_router.html\n
 gadget_officejs_jio_notebook_view.html\n
 gadget_officejs_jio_notebook_view.js\n
-gadget_officejs_jio_notebook.js\n
 gadget_erp5_page_ojs_upload.js\n
 gadget_erp5_page_ojs_upload.html\n
 gadget_erp5_page_ojs_download.js\n
 gadget_erp5_page_ojs_download.html\n
 gadget_erp5_page_ojs_notebook_list.js\n
 gadget_erp5_page_ojs_notebook_list.html\n
-gadget_notebook.html\n
-iodide_master.js\n
-iodide_master.css\n
-pyodide.js\n
-pyodide.asm.data.js\n
-pyodide.asm.js\n
-pyodide.asm.wasm\n
-pyodide.asm.data\n
+gadget_erp5_page_ojs_notebook_export.html\n
+gadget_erp5_page_ojs_notebook_export.js\n
+gadget_jsmd_viewer.css\n
+gadget_jsmd_viewer.html\n
+gadget_jsmd_viewer.js\n
+gadget_jsmd_eval.html\n
+gadget_jsmd_eval.js\n
+gadget_jsmd_eval.css\n
 cycler.data\n
 cycler.js\n
 kiwisolver.data\n
 kiwisolver.js\n
-matplotlib.data\n
 matplotlib.js\n
-numpy.data\n
 numpy.js\n
 packages.json\n
-pandas.data\n
 pandas.js\n
 pyodide.asm.html\n
-pyodide.py\n
 pyparsing.data\n
 pyparsing.js\n
 python-dateutil.data\n
 python-dateutil.js\n
-python.html\n
 pytz.data\n
 pytz.js\n
-renderedhtml.css\n
 xlrd.data\n
 xlrd.js\n
 \n
@@ -408,7 +401,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>973.33482.4166.8669</string> </value>
+                <value> <string>978.51454.20877.38263</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -426,7 +419,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1549888313.28</float>
+                        <float>1569853773.52</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
