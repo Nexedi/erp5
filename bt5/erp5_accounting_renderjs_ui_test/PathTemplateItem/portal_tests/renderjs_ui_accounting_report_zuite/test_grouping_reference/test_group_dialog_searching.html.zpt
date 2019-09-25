@@ -1,0 +1,156 @@
+<html>
+<head><title>Sorting in Grouping Dialog</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Sorting in Grouping Dialog
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&add_related_payments:int=1">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForAccountingRenderjsUi/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- {{{ Select Receivable account and use grouping fast input -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Receivable</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@alt='Grouping Reference Fast Input']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <!-- debit -->
+  <td>//tr[@class='listbox-search-line']/th[3]/input</td>  
+  <td>2200</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <!-- reset debit -->
+  <td>//tr[@class='listbox-search-line']/th[3]/input</td>  
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <!-- credit -->
+  <td>//tr[@class='listbox-search-line']/th[4]/input</td>  
+  <td>2200</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <!-- reset credit -->
+  <td>//tr[@class='listbox-search-line']/th[4]/input</td>  
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <!-- explanation reference. As this is generated, we just use % -->
+  <td>//tr[@class='listbox-search-line']/th[5]/input</td>  
+  <td>%</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td> <!-- in our test data set, only invoices have reference, not payments -->
+</tr>
+
+<tr>
+  <td>type</td>
+  <!-- reset explanation reference -->
+  <td>//tr[@class='listbox-search-line']/th[5]/input</td>  
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <!-- date -->
+  <td>//tr[@class='listbox-search-line']/th[6]/input</td>  
+  <td>2005/01/02</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <!-- reset date -->
+  <td>//tr[@class='listbox-search-line']/th[6]/input</td>  
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <!-- title -->
+  <td>//tr[@class='listbox-search-line']/th[7]/input</td>  
+  <td>Client 1 Payment</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>1 records</td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->
