@@ -638,7 +638,6 @@ class CategoryTool(BaseTool):
         category_list = (category_list, )
       elif category_list is None:
         category_list = ()
-      # Seems never called, category_list seems to always contain a list of string
       elif isinstance(category_list, (tuple, list, set, frozenset)):
         if any([c is not None and not isinstance(c, str) for c in category_list]):
           raise TypeError('CategoryTool.setCategoryMembership only takes string(s) as value', base_category_list, category_list)
