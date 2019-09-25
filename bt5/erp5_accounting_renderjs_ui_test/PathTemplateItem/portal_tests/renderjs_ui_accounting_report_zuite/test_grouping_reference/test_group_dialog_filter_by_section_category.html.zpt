@@ -1,0 +1,169 @@
+<html>
+<head><title>Filtering Grouping Dialog by section category</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Filtering Grouping Dialog by section category
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&add_related_payments:int=1&set_ledger:int=1">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForAccountingRenderjsUi/macros/init"/>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_module_list" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Organisations'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
+
+<tal:block tal:define="search_query python: 'title: &quot;Client 1&quot;'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
+</tal:block>
+
+<!-- {{{ Select Client 1 Organisation and use grouping fast input -->
+<tal:block tal:define="click_configuration python: {'text': 'Client 1'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Grouping Reference Fast Input'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<!-- The mode should be 'grouping' by default -->
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_your_grouping' and @value='grouping']</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>//select[@name='field_your_section_category']</td>
+  <td>Demo Group</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_your_section_category_strict']</td>
+  <td>off</td>
+</tr>
+
+<tr>
+  <td>verifyText</td>
+  <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>
+  <td>0.00</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_your_node</td>
+  <td>value=account_module/receivable</td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<!-- "My Organisation" belongs to Demo Group/Subsidiairy #1, if we select Demo Group we have two transactions. -->
+<tr>
+  <td>select</td>
+  <td>field_your_section_category</td>
+  <td>label=Demo Group/Subsidiairy #1</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+
+<!-- select Demo Group strict we have no transactions. -->
+<tr>
+  <td>select</td>
+  <td>field_your_section_category</td>
+  <td>label=Demo Group</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>field_your_section_category_strict</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': 'No records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<!-- select Demo Group non strict we have two transactions. -->
+<tr>
+  <td>select</td>
+  <td>field_your_section_category</td>
+  <td>label=Demo Group</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_section_category_strict</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>field_your_section_category_strict</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<!-- select Demo Group/Subsidiairy #2 we have no transactions. -->
+<tr>
+  <td>select</td>
+  <td>field_your_section_category</td>
+  <td>label=Demo Group/Subsidiairy #2</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': 'No records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->
