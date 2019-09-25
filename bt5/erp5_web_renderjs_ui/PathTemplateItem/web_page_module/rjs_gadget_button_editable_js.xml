@@ -23,7 +23,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -42,8 +41,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -62,28 +59,18 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_cloudooo.js</string> </value>
+            <value> <string>gadget_button_editable.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,31 +80,12 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ojs_gadget_cloudooo_js</string> </value>
+            <value> <string>rjs_gadget_button_editable_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.18</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
             </value>
         </item>
         <item>
@@ -132,17 +100,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Cloudooo JS</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget Button Editable JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -198,11 +162,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>P1</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -224,7 +188,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1529588922.03</float>
+                        <float>1566393414.35</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -233,7 +197,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -269,7 +233,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.28694.830.42120</string> </value>
+                <value> <string>977.59408.33507.58572</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,7 +251,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1567086325.95</float>
+                        <float>1567594177.15</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -310,11 +274,13 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>P1</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -326,7 +292,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -344,7 +310,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1529585740.03</float>
+                        <float>1566391265.61</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
