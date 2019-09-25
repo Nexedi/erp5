@@ -687,8 +687,9 @@
       <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td>
       <td></td>
     </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
     <tr>
-      <td>waitForElementPresent</td>
+      <td>assertElementPresent</td>
       <td>//ul[@class='document-listview']//a[@data-i18n='Dummy List Field Report']</td>
       <td></td>
     </tr>
@@ -697,8 +698,9 @@
       <td>//ul[@class='document-listview']//a[@data-i18n='Dummy List Field Report']</td>
       <td></td>
     </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
     <tr>
-      <td>waitForElementPresent</td>
+      <td>assertElementPresent</td>
       <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]</td>
       <td></td>
     </tr>
