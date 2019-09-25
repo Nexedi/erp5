@@ -85,7 +85,6 @@ from CopySupport import CopyContainer, CopyError,\
 from Errors import DeferredCatalogError, UnsupportedWorkflowMethod
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.Accessor.Accessor import Accessor as Method
-from Products.ERP5Type.Accessor.TypeDefinition import asDate
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, super_user
@@ -3226,9 +3225,8 @@ class Base( CopyContainer,
             if history)
         except ValueError:
           pass
-    if getattr(aq_base(self), 'CreationDate', None) is not None:
-      return asDate(self.CreationDate())
-    return None # JPS-XXX - try to find a way to return a creation date instead of None
+    if getattr(aq_base(self), 'creation_date', None):
+      return self.creation_date.toZone(DateTime().timezone())
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getModificationDate')
   def getModificationDate(self):
@@ -3257,7 +3255,13 @@ class Base( CopyContainer,
         # Return a copy of history time, to prevent modification
         return DateTime(max_date)
     if self._p_serial:
-      return DateTime(TimeStamp(self._p_serial).timeTime())
+      return DateTime(self._p_mtime)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'modified')
+  def modified(self):
+    warnings.warn('modified is a deprecated alias to getModificationDate.',
+                  DeprecationWarning)
+    return self.getModificationDate()
 
   # Layout management
   security.declareProtected(Permissions.AccessContentsInformation, 'getApplicableLayout')
