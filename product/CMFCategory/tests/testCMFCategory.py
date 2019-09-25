@@ -811,7 +811,7 @@ class TestCMFCategory(ERP5TypeTestCase):
       p1.setCareerSubordination(o1)
       self.assertEqual(
         e.exception.args[0],
-        'CategoryTool.setCategoryMembership only takes string(s) as value'
+        'This method only takes string(s) as parameter',
       )
 
   def test_23_getCategoryChildValueList(self):
