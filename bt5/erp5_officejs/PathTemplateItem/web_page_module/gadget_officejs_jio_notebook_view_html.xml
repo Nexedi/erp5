@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Manifest" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -65,7 +65,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>contributor/person_module/1</string>
+                <string>classification/collaborative/team</string>
               </tuple>
             </value>
         </item>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_pdf_viewer.configuration</string> </value>
+            <value> <string>gadget_officejs_jio_notebook_view.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -91,15 +91,17 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_pdf_viewer_configuration</string> </value>
+            <value> <string>gadget_officejs_jio_notebook_view_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -108,34 +110,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# generated on Thu, 14 Jan 2019 11:55:33 +0000\n
-CACHE:\n
-\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Document Module)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Document Module/pdf_viewer_view)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9wZGZfdmlld2VyX3ZpZXc=\n
-#hateoas_appcache/definition_view/BASE64(portal_types/PDF)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1BERg==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/PDF/pdf_viewer_view)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1BERi9wZGZfdmlld2VyX3ZpZXc=\n
-\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_officejs_pdf_viewer/Base_viewNewContentDialogForPdfViewer)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfcGRmX3ZpZXdlci9CYXNlX3ZpZXdOZXdDb250ZW50RGlhbG9nRm9yUGRmVmlld2Vy\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_officejs_pdf_viewer/DocumentModule_viewDocumentListAsJioForPdfViewer)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfcGRmX3ZpZXdlci9Eb2N1bWVudE1vZHVsZV92aWV3RG9jdW1lbnRMaXN0QXNKaW9Gb3JQZGZWaWV3ZXI=\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_officejs_pdf_viewer/Document_viewAsPdfDocumentForPdfViewer)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfcGRmX3ZpZXdlci9Eb2N1bWVudF92aWV3QXNQZGZEb2N1bWVudEZvclBkZlZpZXdlcg==\n
-\n
-\n
-NETWORK:\n
-*</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS PDF Viewer Configuration</string> </value>
+            <value> <string>OfficeJS Jio Notebook</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -227,7 +203,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1566395406.91</float>
+                        <float>1524555782.74</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -272,7 +248,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.59349.5649.19968</string> </value>
+                <value> <string>978.51175.28075.44014</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -290,7 +266,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1566394984.76</float>
+                        <float>1569848367.78</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -347,7 +323,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1566392670.2</float>
+                        <float>1524555741.62</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -145,6 +145,8 @@ gadget_erp5_ojs_panel.html\n
 gadget_erp5_ojs_panel.js\n
 gadget_erp5_header.html\n
 gadget_erp5_header.js\n
+gadget_ojs_local_jio.html\n
+gadget_ojs_local_jio.js\n
 \n
 gadget_erp5_page_ojs_configurator.html\n
 gadget_erp5_page_ojs_configurator.js\n
@@ -208,6 +210,68 @@ favicon.ico\n
 gadget_officejs_text_editor.json\n
 officejs_logo_text_editor.png\n
 gadget_officejs_text_editor_router.html\n
+\n
+#new approach (storage hateoas requests)\n
+gadget_erp5_pt_form_view_editable.html\n
+gadget_erp5_pt_form_view_editable.js\n
+gadget_erp5_pt_form_dialog.html\n
+gadget_erp5_pt_form_dialog.js\n
+gadget_erp5_field_list.html\n
+gadget_erp5_field_list.js\n
+gadget_erp5_field_listbox.html\n
+gadget_erp5_field_listbox.js\n
+gadget_html5_select.html\n
+gadget_html5_select.js\n
+gadget_erp5_page_action_officejs.html\n
+gadget_erp5_page_action_officejs.js\n
+gadget_erp5_page_ojs_local_controller.html\n
+gadget_erp5_page_ojs_local_controller.js\n
+gadget_officejs_form_view.html\n
+gadget_officejs_form_view.js\n
+gadget_erp5_page_handle_action.html\n
+gadget_erp5_page_handle_action.js\n
+gadget_officejs_common_util.html\n
+gadget_officejs_common_util.js\n
+gadget_erp5_page_create_document.html\n
+gadget_erp5_page_create_document.js\n
+\n
+#needed for appcachestorage sync\n
+/\n
+app/\n
+gadget_officejs_text_editor.configuration\n
+gadget_officejs_bootloader.js\n
+gadget_officejs_bootloader_presentation.html\n
+gadget_officejs_bootloader_presentation.js\n
+gadget_officejs_bootloader_presentation.css\n
+gadget_officejs_bootloader_serviceworker.js\n
+officejs_logo.png\n
+jio_appcachestorage.js\n
+\n
+action_texteditor_clone.html\n
+action_texteditor_clone.js\n
+\n
+#configuration resources\n
+\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Page Module)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Page Module/text_editor_view)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS90ZXh0X2VkaXRvcl92aWV3\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Page)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdl\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Page/text_editor_view)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX3ZpZXc=\n
+#hateoas_appcache/definition_view/BASE64(portal_types/Web Page/text_editor_clone)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX2Nsb25l\n
+\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/Base_viewNewContentDialogForTextEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvQmFzZV92aWV3TmV3Q29udGVudERpYWxvZ0ZvclRleHRFZGl0b3I=\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/WebPageModule_viewWebPageListAsJioForTextEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvV2ViUGFnZU1vZHVsZV92aWV3V2ViUGFnZUxpc3RBc0ppb0ZvclRleHRFZGl0b3I=\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/WebPage_viewAsTextDocumentForTextEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvV2ViUGFnZV92aWV3QXNUZXh0RG9jdW1lbnRGb3JUZXh0RWRpdG9y\n
+#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_text_editor/Base_cloneDocumentForTextEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvQmFzZV9jbG9uZURvY3VtZW50Rm9yVGV4dEVkaXRvcg==\n
+\n
 \n
 #Ckeditor\n
 ckeditor.gadget.html\n
@@ -547,71 +611,8 @@ ckeditor/config.js\n
 ckeditor/ckeditor.js\n
 ckeditor/adapters/jquery.js\n
 \n
-\n
-#new officejs approach\n
-gadget_erp5_pt_form_view_editable.html\n
-gadget_erp5_pt_form_view_editable.js\n
-gadget_erp5_pt_form_dialog.html\n
-gadget_erp5_pt_form_dialog.js\n
-gadget_erp5_field_list.html\n
-gadget_erp5_field_list.js\n
-gadget_erp5_field_listbox.html\n
-gadget_erp5_field_listbox.js\n
-gadget_html5_select.html\n
-gadget_html5_select.js\n
-gadget_ojs_local_jio.html\n
-gadget_ojs_local_jio.js\n
-gadget_erp5_page_action_officejs.html\n
-gadget_erp5_page_action_officejs.js\n
-gadget_erp5_page_ojs_local_controller.html\n
-gadget_erp5_page_ojs_local_controller.js\n
-gadget_officejs_form_view.html\n
-gadget_officejs_form_view.js\n
-gadget_erp5_page_handle_action.html\n
-gadget_erp5_page_handle_action.js\n
-gadget_officejs_common_util.html\n
-gadget_officejs_common_util.js\n
-gadget_erp5_page_create_document.html\n
-gadget_erp5_page_create_document.js\n
-\n
-#needed for appcachestorage sync\n
-/\n
-app/\n
-gadget_officejs_text_editor.configuration\n
-gadget_officejs_bootloader.js\n
-gadget_officejs_bootloader_presentation.html\n
-gadget_officejs_bootloader_presentation.js\n
-gadget_officejs_bootloader_presentation.css\n
-gadget_officejs_bootloader_serviceworker.js\n
-officejs_logo.png\n
-jio_appcachestorage.js\n
-jio_configuration_storage.js\n
-\n
-#app custom actions\n
-action_texteditor_clone.html\n
-action_texteditor_clone.js\n
-\n
-#app_configuration_resources\n
-#CONFIGURATION ELEMENTS generated on Fri Sep 20 09:45:43 2019. Same as in configuration manifest\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS90ZXh0X2VkaXRvcl92aWV3\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvV2ViUGFnZU1vZHVsZV92aWV3V2ViUGFnZUxpc3RBc0ppb0ZvclRleHRFZGl0b3I=\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdl\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX3ZpZXc=\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvV2ViUGFnZV92aWV3QXNUZXh0RG9jdW1lbnRGb3JUZXh0RWRpdG9y\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX2Nsb25l\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvQmFzZV9jbG9uZURvY3VtZW50Rm9yVGV4dEVkaXRvcg==\n
-#/app_configuration_resources\n
-\n
-\n
-\n
 NETWORK:\n
-*\n
-\n
-\n
-\n
-\n
-</string> </value>
+*</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -752,7 +753,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.31397.31451.12492</string> </value>
+                <value> <string>977.40995.25945.24064</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -770,7 +771,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1568707377.29</float>
+                        <float>1565341519.15</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -14,16 +14,21 @@
 
   </head>
   <body>
-    <script data-renderjs-configuration="configuration_manifest" type="text/x-renderjs-configuration">gadget_officejs_text_editor.configuration</script>
     <script data-renderjs-configuration="portal_type" type="text/x-renderjs-configuration">Web Page</script>
+    <script data-renderjs-configuration="document_title" type="text/x-renderjs-configuration">Text Document</script>
+    <script data-renderjs-configuration="document_title_plural" type="text/x-renderjs-configuration">Text Documents</script>
     <script data-renderjs-configuration="parent_portal_type" type="text/x-renderjs-configuration">Web Page Module</script>
     <script data-renderjs-configuration="parent_relative_url" type="text/x-renderjs-configuration">web_page_module</script>
+    <script data-renderjs-configuration="hide_listbox_buttons" type="text/x-renderjs-configuration">1</script>
+    <script data-renderjs-configuration="documents_editable" type="text/x-renderjs-configuration">1</script>
     <script data-renderjs-configuration="portal_skin_folder" type="text/x-renderjs-configuration">erp5_text_editor</script>
+    <!-- TODO: somehow (a generic action?) get the path string:${object_url}/Base_viewNewContentDialogForTextEditor. For now it's in new_content_action -->
+    <script data-renderjs-configuration="new_content_action" type="text/x-renderjs-configuration">portal_skins/erp5_text_editor/Base_viewNewContentDialogForTextEditor</script>
     <script data-renderjs-configuration="app_view_reference" type="text/x-renderjs-configuration">text_editor_view</script>
-    <script data-renderjs-configuration="app_actions" type="text/x-renderjs-configuration">('Web Page | text_editor_view', 'Web Page | text_editor_clone', 'Web Page Module | text_editor_view')</script>
+    <script data-renderjs-configuration="app_actions" type="text/x-renderjs-configuration">('Web Page | text_editor_view', 'Web Page | text_editor_clone')</script>
     <script data-renderjs-configuration="app_allowed_sub_types" type="text/x-renderjs-configuration">('Web Page Module | Web Page',)</script>
-    <script data-renderjs-configuration="web_page_module_dict" type="text/x-renderjs-configuration">{"front_page": 1, "upload_button": 0, "download_button": 0, "editable": 0, "hide_add_button": 0, "jump_button": 0, "fast_input_button": 0, "export_button": 0, "filter_action": 1, "panel_action": 1, "previous_next_button": 0, "history_previous_link": 0, "title": "Text Documents", "hide_listbox_buttons": 1, "blob_type": "", "blob_create_object_url": 0}</script>
-    <script data-renderjs-configuration="web_page_dict" type="text/x-renderjs-configuration"> {"front_page": 0, "upload_button": 0, "download_button": 0, "editable": 1, "hide_add_button": 0, "jump_button": 0, "fast_input_button": 0, "export_button": 0, "filter_action": 0, "panel_action": 1, "previous_next_button": 1, "history_previous_link": 1, "title": "Text Document", "hide_listbox_buttons": 1, "blob_type": "", "blob_create_object_url": 0}</script>
+    <script data-renderjs-configuration="hide_header_add_button" type="text/x-renderjs-configuration">0</script>
+    <script data-renderjs-configuration="header_jump_button" type="text/x-renderjs-configuration">0</script>
     <script data-renderjs-configuration="erp5_attachment_synchro" type="text/x-renderjs-configuration"></script>
     <script data-renderjs-configuration="dropbox_app_key" type="text/x-renderjs-configuration">n692ixxhyg9zhqs</script>
     <div data-gadget-url="gadget_erp5_router.html" data-gadget-scope="erp5_router"></div>
