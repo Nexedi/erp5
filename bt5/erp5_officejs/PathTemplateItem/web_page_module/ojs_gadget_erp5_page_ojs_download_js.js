@@ -2,7 +2,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, Blob) {
   "use strict";
-
   function downloadFromTextContent(gadget, text_content, title) {
     var element = gadget.element,
       a = window.document.createElement("a"),
@@ -16,7 +15,6 @@
     element.removeChild(a);
     window.URL.revokeObjectURL(url);
   }
-
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -27,8 +25,6 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-
-
     .declareMethod("render", function (options) {
       var gadget = this;
       return gadget.jio_get(options.jio_key)
@@ -44,5 +40,4 @@
           });
         });
     });
-
 }(window, rJS, Blob));
