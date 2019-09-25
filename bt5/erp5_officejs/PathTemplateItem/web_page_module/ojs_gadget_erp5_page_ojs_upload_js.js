@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, jIO, DOMParser */
+/*global window, rJS, RSVP, jIO, DOMParser, Blob */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, jIO, DOMParser) {
+(function (window, rJS, RSVP, jIO, DOMParser, Blob) {
   "use strict";
 
   rJS(window)
@@ -13,6 +13,7 @@
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("jio_post", "jio_post")
     .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("redirect", "redirect")
     /////////////////////////////////////////////////////////////////
@@ -35,7 +36,7 @@
           ]);
         })
         .push(function (result) {
-          var file_name_list, data, filename, queue, filetype;
+          var file_name_list, data, filename, queue, filetype, jio_key;
           if (result[0].file !== undefined) {
             file_name_list = result[0].file.file_name.split('.');
             filetype = file_name_list.pop();
@@ -58,16 +59,26 @@
                     parser = new DOMParser();
                     htmlDoc = parser.parseFromString(data_content, "text/html");
                     data_content = htmlDoc.getElementById('jsmd').textContent;
+                    filetype = "txt";
                   }
                   return gadget.jio_post({
                     title: filename,
                     portal_type: result[1],
                     content_type: result[2],
                     parent_relative_url: result[4],
-                    text_content: data_content
+                    text_content: data_content,
+                    filename: "default." + filetype
+                  })
+                  .push(function (result) {
+                    jio_key = result;
+                    return gadget.jio_putAttachment(
+                      jio_key,
+                      "data",
+                      new Blob([data_content], {type: 'text/' + filetype})
+                    );
                   });
                 })
-                .push(function (jio_key) {
+                .push(function () {
                   return gadget.redirect({
                     'command': 'display',
                     'options': {
@@ -164,4 +175,4 @@
           });
         });
     });
-}(window, rJS, RSVP, jIO, DOMParser));
+}(window, rJS, RSVP, jIO, DOMParser, Blob));
