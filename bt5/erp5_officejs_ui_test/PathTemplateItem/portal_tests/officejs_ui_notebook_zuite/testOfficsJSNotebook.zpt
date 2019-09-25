@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title tal:content="template/title">The title</title>
+    <title tal:content="template/title">Test OfficeJS Notebook UI</title>
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
   </head>
   <body>
@@ -28,27 +28,12 @@
         </tr>
         <tr>
           <td>waitForElementPresent</td>
-          <td>link=Erp5</td>
+          <td>link=Local is Enough</td>
           <td></td>
         </tr>
         <tr>
           <td>click</td>
-          <td>link=Erp5</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>waitForElementPresent</td>
-          <td>name=erp5_url</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>type</td>
-          <td>name=erp5_url</td>
-          <td>${base_url}/web_site_module/renderjs_runner/</td>
-        </tr>
-        <tr>
-          <td>click</td>
-          <td>name=submit</td>
+          <td>link=Local is Enough</td>
           <td></td>
         </tr>
         <tr>
@@ -63,12 +48,7 @@
         </tr>
         <tr>
           <td>waitForElementPresent</td>
-          <td>//button[@data-i18n='Save']</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>waitForElementPresent</td>
-          <td>id=title</td>
+          <td>//button[@data-i18n="Save"]</td>
           <td></td>
         </tr>
         <tr>
@@ -136,62 +116,126 @@
           <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
           <td></td>
         </tr>
-        <tal:block metal:define-macro="synchronization_document">
         <tr>
-          <td colspan="3"><b>Sync Document</b></td>
+          <td>click</td>
+          <td>//a[@accesskey="s"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n='Upload']</td>
+          <td></td>
         </tr>
         <tr>
           <td>click</td>
-          <td>//a[@data-i18n="Synchronize"]</td>
+          <td>//a[@data-i18n='Upload']</td>
           <td></td>
         </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//input[@value='Upload']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@data-i18n="Cancel"]</td>
+          <td></td>
+        </tr>
+         <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@accesskey="s"]</td>
+          <td></td>
+        </tr>
+        <tal:block metal:define-macro="open_document_with_title">
+          <tr>
+            <td colspan="3"><b>Open Document</b></td>
+          </tr>
+          <tr>
+            <td>waitForElementPresent</td>
+            <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>type</td>
+            <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
+            <td>${title}</td>
+          </tr>
+          <tr>
+            <td>click</td>
+            <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>waitForElementPresent</td>
+            <td>link=${title}</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>click</td>
+            <td>link=${title}</td>
+            <td></td>
+          </tr>
         </tal:block>
         <tr>
           <td>waitForElementPresent</td>
-          <td>//button[@data-i18n='Filter']</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>waitForElementPresent</td>
-          <td>link=${title}</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>click</td>
-          <td>link=${title}</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>waitForElementPresent</td>
-          <td>identifier=title</td>
+          <td>//textarea[@title='Description']</td>
           <td></td>
         </tr>
         <tr>
           <td>verifyValue</td>
-          <td>title</td>
+          <td>//input[@title='Title']</td>
           <td>${title}</td>
         </tr>
         <tr>
           <td>verifyValue</td>
-          <td>reference</td>
+          <td>//input[@title='Reference']</td>
           <td>${reference}</td>
         </tr>
         <tr>
           <td>verifyValue</td>
-          <td>version</td>
+          <td>//input[@title='Version']</td>
           <td>${version}</td>
         </tr>
         <tr>
           <td>verifyValue</td>
-          <td>language</td>
+          <td>//input[@title='Language']</td>
           <td>${language}</td>
         </tr>
         <tr>
           <td>verifyValue</td>
-          <td>description</td>
+          <td>//textarea[@title='Description']</td>
           <td>${description}</td>
         </tr>
-        
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//div[@data-gadget-scope="editor"]//iframe</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertElementPresent</td>
+          <td>//iframe[@src="${base_url}/web_site_module/officejs_notebook/app/codemirror.gadget.html"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n='Export']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@data-i18n='Export']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//div[@data-gadget-scope="editor"]//iframe[@src="${base_url}/web_site_module/officejs_notebook/app/gadget_jsmd_viewer.html"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertElementPresent</td>
+          <td>//iframe[@src="${base_url}/web_site_module/officejs_notebook/app/gadget_jsmd_viewer.html"]</td>
+          <td></td>
+        </tr>
       </tbody>
     </table>
   </body>
