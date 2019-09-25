@@ -1,12 +1,26 @@
-print '---<br>'
+# delete all persons
+context.portal_catalog.searchAndActivate(
+  portal_type='Person',
+  parent_uid=context.getUid(),
+  method_id='Couscous_deleteIfExpectedId'
+)
+return 'ok'
+
+result = ''# '---<br>'
+i = 0
 for brain in context.getPortalObject().portal_catalog(portal_type='Action Information', sort_on=[['relative_url', 'ASC']]):
   action = brain.getObject()
   action_type = action.getActionType()
-  if ('web' in action_type) or ('jio' in action_type) or (action_type in ['object_view', 'object_list', 'object_jump', 'object_sort', 'object_ui']):
+  if not action.isVisible():
     continue
-  if (action_type in ['object_button', 'object_search']):
+  if ('web' in action_type) or ('jio' in action_type) or (action_type in ['object_view', 'object_list', 'object_jump', 'object_sort', 'object_ui', 'object_search']):
     continue
-  print action.getParentTitle(), '<a href="%s">%s</a>' % (action.getRelativeUrl(), action.getTitle()), action.getActionType(), '<br>'
+
+  i += 1
+  result += '%s %s %s %s' % (action.getParentTitle(), '<a href="%s">%s</a>' % (action.getRelativeUrl(), action.getTitle()), action.getActionType(), '<br>')
+
+result = '--- %i<br>%s' % (i, result)
+print result
 return printed
 
 
@@ -31,12 +45,7 @@ while i < 80000:
 
 return 'couscous'
 
-context.portal_catalog.searchAndActivate(
-  portal_type='Person',
-  parent_uid=context.getUid(),
-  method_id='testromain2'
-)
-return 'ok'
+
 return 'ok'
 
 from DateTime import DateTime
