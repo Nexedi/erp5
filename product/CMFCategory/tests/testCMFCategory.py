@@ -807,12 +807,12 @@ class TestCMFCategory(ERP5TypeTestCase):
     else:
       o1 = organisation_module._getOb(self.id1)
 
-    try:
+    with self.assertRaises(TypeError) as e:
       p1.setCareerSubordination(o1)
-    except Exception, e:
-      self.assertTrue(isinstance(e, TypeError))
-      self.assertEqual(e.args[0], 'CategoryTool.setCategoryMembership '
-                                  'only takes string(s) as value')
+      self.assertEqual(
+        e.exception.args[0],
+        'CategoryTool.setCategoryMembership only takes string(s) as value'
+      )
 
   def test_23_getCategoryChildValueList(self):
     pc = self.getCategoriesTool()
