@@ -57,5 +57,6 @@ if batch_mode:
 
 portal_status_message = translateString("Created and associated ${count} new events to the selected ticket.", 
                                         mapping=dict(count=count))
-context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message,
-                                                 selection_name=selection_name), **kw)
+kw['keep_items'] = dict(portal_status_message=portal_status_message,
+                        selection_name=selection_name)
+return context.Base_redirect(form_id, **kw)
