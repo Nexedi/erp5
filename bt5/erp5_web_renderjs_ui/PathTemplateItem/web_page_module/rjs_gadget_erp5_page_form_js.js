@@ -373,13 +373,16 @@ and handling data send&receive.
             // successful form save returns simple redirect and an answer as JSON
             return new RSVP.Queue()
               .push(function () {
-                return jIO.util.readBlobAsText(attachment.target.response);
+                return RSVP.all([
+                  jIO.util.readBlobAsText(attachment.target.response),
+                  gadget.translate('Action succeeded.')
+                ]);
               })
-              .push(function (response_text) {
-                var response = JSON.parse(response_text.target.result);
+              .push(function (result_list) {
+                var response = JSON.parse(result_list[0].target.result);
 
                 return gadget.notifySubmitted({
-                  "message": response.portal_status_message,
+                  "message": response.portal_status_message || result_list[1],
                   "status": response.portal_status_level || "success"
                 });
               })
