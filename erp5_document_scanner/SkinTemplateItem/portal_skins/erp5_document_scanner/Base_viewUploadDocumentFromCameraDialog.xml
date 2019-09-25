@@ -103,6 +103,7 @@
                         <string>your_language</string>
                         <string>your_version</string>
                         <string>stringfield_validator</string>
+                        <string>your_active_process_url</string>
                       </list>
                     </value>
                 </item>
@@ -145,7 +146,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Attach Document</string> </value>
+            <value> <string>Finish</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -153,11 +154,11 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Base_storeDocumentFromCameraInActiveProcess</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Attach Image</string> </value>
         </item>
       </dictionary>
     </pickle>

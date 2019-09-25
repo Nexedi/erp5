@@ -4,9 +4,10 @@
 }
 
 .video, .photo, .camera-output {
-  width: auto !important;
+  width: 100%;
   height: 360px;
   filter: brightness(1);
+  text-align:center;
 }
 
 .canvas {
@@ -24,10 +25,9 @@
 
 .camera {
   display: inline-block;
-  padding-top: 2em;
 }
 
-.startbutton, .crop-button {
+.startbutton, .capture-button {
   display: block;
   position: relative;
   margin: 0 auto;
@@ -44,4 +44,11 @@
   font-size: 16px;
   font-family: "Lucida Grande", "Arial", sans-serif;
   width: 760px;
+}
+
+@media screen
+  and (min-device-width: 600px) {
+  .camera {
+    margin-top: 1em;
+  }
 }
