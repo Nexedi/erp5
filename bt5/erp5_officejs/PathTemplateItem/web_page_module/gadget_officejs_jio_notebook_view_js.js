@@ -1,13 +1,63 @@
 /*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, document, rJS, RSVP, promiseEventListener, Blob, DOMParser) {
+
   "use strict";
 
+  var ATT_NAME = "data";
+
+
+  function ExportContent(gadget) {
+    var html = (new DOMParser()).parseFromString('<html><head><head><body><p></p></body></html>', 'text/html').documentElement;
+    html.querySelector('p').innerHTML = gadget.state.doc.text_content;
+    if (!gadget.state.editable) {
+      html = document.querySelector('[data-gadget-scope="editor"]').firstChild.contentDocument.body.firstChild.contentDocument.firstChild;
+    }
+    html.firstChild.innerHTML = "";
+    return new RSVP.Queue()
+      .push(function () {
+          return gadget.jio_putAttachment(
+              gadget.state.jio_key,
+              "data",
+              new Blob([html.outerHTML], {type: 'text/html'})
+          )
+          .push(function () {
+            return gadget.jio_putAttachment(
+              gadget.state.jio_key,
+              "options",
+              JSON.stringify({
+                encoding: ["utf8", "string"],
+                page_size: ["A4", "string"],
+                zoom : [1, "double"],
+                dpi : ["300", "string"],
+                header_center : ["document Title", "string"]
+              })
+            );
+          });
+        })
+        .push(function () {
+          return gadget.getDeclaredGadget("ojs_cloudooo");
+        })
+        .push(function (cloudooo) {
+          return gadget.jio_getAttachment(gadget.state.jio_key, "options", {"format": "json"})
+          .push(function (options) {
+            return cloudooo.putAllCloudoooConvertionOperation({
+              format: "html",
+              jio_key: gadget.state.jio_key,
+              conversion_kw : options
+            });
+          });
+        });
+  }
+
   rJS(window)
+
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateDocument", "updateDocument")
@@ -18,10 +68,29 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
+  .declareService(function () {
+    var gadget = this,
+        props = gadget.__sub_gadget_dict.form_view,
+        div = props.element.querySelector("div");
+    return new RSVP.Queue()
+    .push(function () {
+      return promiseEventListener(div, "load", true);
+    })
+    .push(function (my_event) {
+      document.querySelector('[data-i18n="Export"]').addEventListener("click", function () { ExportContent(gadget); }, false);
+    });
+  })
+
     .declareMethod("render", function (options) {
-      return this.changeState({
-        jio_key: options.jio_key,
-        doc: options.doc
+
+      var gadget = this;
+      return new RSVP.Queue()
+      .push(function () {
+        return gadget.changeState({
+          jio_key: options.jio_key,
+          doc: options.doc,
+          editable: options.editable
+        });
       });
     })
 
@@ -118,7 +187,7 @@
                   "type": "GadgetField",
                   "url": "gadget_editor.html",
                   "sandbox": "public",
-                  "renderjs_extra": '{"editor": "notebook_editor", "maximize": true}'
+                  "renderjs_extra": '{"editor": "jsmd_editor", "maximize": true}'
                 }
               }},
               "_links": {
@@ -153,6 +222,10 @@
             gadget.getUrlFor({
               command: 'change',
               options: {'page': "ojs_download"}
+            }),
+            gadget.getUrlFor({
+              command: 'change',
+              options: {'page': 'execute_notebook'}
             })
           ]);
         })
@@ -160,11 +233,15 @@
           return gadget.updateHeader({
             page_title: gadget.state.doc.title,
             save_action: true,
-            selection_url: url_list[0],
-            previous_url: url_list[1],
-            next_url: url_list[2],
-            download_url: url_list[3]
+            //selection_url: url_list[0],
+            //previous_url: url_list[1],
+            //next_url: url_list[2],
+            //edit_url: url_list[4],
+            //view_url: url_list[4],
+            export_url: url_list[3],
+            actions_url: url_list[4]
+            //fast_input_url: url_list[3]
           });
         });
     });
-}(window, rJS, RSVP));
+}(window, document, rJS, RSVP, promiseEventListener, Blob, DOMParser));
