@@ -188,6 +188,7 @@
             if (video) {
               video.pause();
             }
+            root.querySelector(".camera-input").style.display = "";
             if (evt.target.value) {
               return startup(root, evt.target.value);
             }
@@ -196,18 +197,20 @@
     }, false, true)
 
     .onEvent("click", function (evt) {
-      var canvasData;
+      var gadget, canvasData;
       if (evt.target.className == "startbutton") {
         return this.getElement()
-          .push(function (gadget) {
-            return takePicture(gadget);
+          .push(function (el) {
+            el.querySelector(".camera-input").style.display = "none";
+            return takePicture(el);
           });
       }
       if (evt.target.className == "capture-button") {
         canvasData = cropper.getCanvasData();
         storage.put("settings", cropper.getData());
-        return RSVP.Queue()
-          .push(function () {
+        return this.getElement()
+          .push(function (el) {
+            gadget = el;
             return cropper.getCroppedCanvas();
           })
           .push(function (canvas) {
@@ -230,6 +233,7 @@
 
             photo.src = base64data;
             photoInput.value = realData;
+            gadget.querySelector(".capture-button").style.display = "none";
             cropper.destroy();
           });
       }
