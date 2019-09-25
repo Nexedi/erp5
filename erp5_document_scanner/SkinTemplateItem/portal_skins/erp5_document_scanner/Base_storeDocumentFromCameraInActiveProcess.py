@@ -1,10 +1,6 @@
 from base64 import decodestring
-from Products.CMFActivity.ActiveResult import ActiveResult
 
 portal = context.getPortalObject()
-active_result = ActiveResult(
-  detail=decodestring(document_scanner_gadget)
-)
 
 if not active_process_url:
   active_process = portal.portal_activities.newActiveProcess()
@@ -12,6 +8,6 @@ if not active_process_url:
 else:
   active_process = portal.restrictedTraverse(active_process_url)
 
-active_process.postResult(active_result)
+active_process.postActiveResult(detail=decodestring(document_scanner_gadget))
 return context.Base_renderForm('Base_viewUploadDocumentFromCameraDialog',
                                message='Captured')
