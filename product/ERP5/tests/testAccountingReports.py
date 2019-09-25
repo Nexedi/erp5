@@ -3297,7 +3297,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self._makeOne(
               portal_type='Accounting Transaction',
               title='Transaction in EUR (our currency)',
-              resource_value='currency_module/euro',
+              resource='currency_module/euro',
               source_reference='1',
               simulation_state='delivered',
               destination_section_value=self.organisation_module.client_1,

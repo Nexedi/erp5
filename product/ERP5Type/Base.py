@@ -1860,14 +1860,21 @@ class Base( CopyContainer,
     if target is None :
       path = target
     elif isinstance(target, str):
-      # We have been provided a string
       path = target
+      warnings.warn(
+        "Only objects should be passed to value accessors",
+        DeprecationWarning
+      )
     elif isinstance(target, (tuple, list, set, frozenset)):
       # We have been provided a list or tuple
       path_list = []
       for target_item in target:
         if isinstance(target_item, str):
           path = target_item
+          warnings.warn(
+            "Only objects should be passed to value accessors",
+            DeprecationWarning
+          )
         else:
           path = getRelativeUrl(target_item)
         path_list.append(cleanupCategory(path))

@@ -807,12 +807,12 @@ class TestCMFCategory(ERP5TypeTestCase):
     else:
       o1 = organisation_module._getOb(self.id1)
 
-    try:
-      p1.setCareerSubordination(o1)
-    except Exception, e:
-      self.assertTrue(isinstance(e, TypeError))
-      self.assertEqual(e.args[0], 'Category must be of string, tuple of '
-                                  'string or list of string type.')
+    self.assertRaisesRegexp(
+      TypeError,
+      'This method only takes a string or an iterable of strings as parameter.',
+      p1.setCareerSubordination,
+      o1
+    )
 
   def test_23_getCategoryChildValueList(self):
     pc = self.getCategoriesTool()
