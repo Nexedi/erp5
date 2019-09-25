@@ -24,6 +24,13 @@ import tempfile
 import json
 import time
 import re
+from six.moves.configparser import ConfigParser
+try:
+  from unittest import mock
+except ImportError:
+  # BBB python2
+  import mock
+
 
 @contextmanager
 def dummySuiteLog(_):
@@ -69,6 +76,9 @@ class ERP5TestNode(TestCase):
     # XXX how to get property the git path ?
     config = {}
     config["git_binary"] = "git"
+    config["master_url"] = 'http://example.org/'
+    config["proxy_host"] = ''
+    config["proxy_port"] = ''
     config["slapos_directory"] = self.slapos_directory
     config["working_directory"] = self.working_directory
     config["software_directory"] = self.software_directory
@@ -87,8 +97,12 @@ class ERP5TestNode(TestCase):
     config["httpd_software_access_port"] = "9080"
     config["frontend_url"] = "http://frontend/"
     config["software_list"] = ["foo", "bar"]
+    config["partition_reference"] = "part"
+    config["ipv4_address"] = "1.2.3.4"
+    config["ipv6_address"] = "::1"
     config["slapos_binary"] = "/opt/slapgrid/HASH/bin/slapos"
     config["srv_directory"] = "srv_directory"
+    config["shared_part_list"] = "/not/exists\n /not/exists_either"
 
     testnode = TestNode(config)
     # By default, keep suite logs to stdout for easier debugging
@@ -610,39 +624,72 @@ shared = true
     test_node_slapos = SlapOSInstance(self.slapos_directory)
     runner = test_type_registry[my_test_type](test_node)
     node_test_suite = test_node.getNodeTestSuite('foo')
-    status_dict = {"status_code" : 0}
-    global call_list
-    call_list = []
-    class Patch:
-      def __init__(self, method_name, status_code=0):
-        self.method_name = method_name
-        self.status_code = status_code
-      def __call__(self, *args, **kw):
-        global call_list
-        call_list.append({"method_name": self.method_name,
-                         "args": [x for x in args],
-                          "kw": kw})
-        return {"status_code": self.status_code}
 
-    SlapOSControler.initializeSlapOSControler = Patch("initializeSlapOSControler")
-    SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease")
-    SlapOSControler.runComputerPartition = Patch("runComputerPartition")
-    method_list_for_prepareSlapOSForTestNode = ["initializeSlapOSControler",
-                                                   "runSoftwareRelease"]
-    method_list_for_prepareSlapOSForTestSuite = ["initializeSlapOSControler",
-                                 "runSoftwareRelease", "runComputerPartition"]
-    runner.prepareSlapOSForTestNode(test_node_slapos)
-    self.assertEqual(method_list_for_prepareSlapOSForTestNode,
-                      [x["method_name"] for x in call_list])
-    call_list = []
-    runner.prepareSlapOSForTestSuite(node_test_suite)
-    self.assertEqual(method_list_for_prepareSlapOSForTestSuite,
-                      [x["method_name"] for x in call_list])
-    call_list = []
-    SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease", status_code=1)
-    # TODO : write a test for scalability case
-    self.assertRaises(SubprocessError, runner.prepareSlapOSForTestSuite,
-                     node_test_suite)
+    with mock.patch(
+          'erp5.util.testnode.SlapOSControler.SlapOSControler.runSoftwareRelease',
+          return_value={"status_code": 0}
+        ) as runSoftwareRelease,\
+        mock.patch(
+          'erp5.util.testnode.SlapOSControler.SlapOSControler.runComputerPartition',
+          return_value={"status_code": 0}
+        )  as runComputerPartition,\
+        mock.patch('erp5.util.testnode.SlapOSControler.slapos.slap'),\
+        mock.patch('subprocess.Popen'):
+
+      runner.prepareSlapOSForTestNode(test_node_slapos)
+      runSoftwareRelease.assert_called_once()
+      runComputerPartition.assert_not_called()
+
+    with mock.patch(
+          'erp5.util.testnode.SlapOSControler.SlapOSControler.runSoftwareRelease',
+          return_value={"status_code": 0}
+        ) as runSoftwareRelease,\
+        mock.patch(
+          'erp5.util.testnode.SlapOSControler.SlapOSControler.runComputerPartition',
+          return_value={"status_code": 0}
+        )  as runComputerPartition,\
+        mock.patch('erp5.util.testnode.SlapOSControler.slapos.slap'),\
+        mock.patch('subprocess.Popen'):
+
+      runner.prepareSlapOSForTestSuite(node_test_suite)
+      runSoftwareRelease.assert_called_once()
+      runComputerPartition.assert_called_once()
+
+    # test node slapos slapos uses the shared parts defined in config
+    cfg_parser = ConfigParser()
+    with open(os.path.join(test_node_slapos.working_directory, 'slapos.cfg')) as f:
+      cfg_parser.readfp(f)
+    self.assertEqual(
+        '/not/exists\n/not/exists_either',
+        cfg_parser.get('slapos', 'shared_part_list'))
+
+    # test suite slapos uses the shared parts from the config, plus
+    # a "local" folder for used as shared when installing tested
+    # softwares.
+    cfg_parser = ConfigParser()
+    with open(os.path.join(node_test_suite.working_directory, 'slapos.cfg')) as f:
+      cfg_parser.readfp(f)
+    self.assertEqual(
+        '/not/exists\n/not/exists_either\n%s/shared' % node_test_suite.working_directory,
+        cfg_parser.get('slapos', 'shared_part_list'))
+
+    # If running software has status_code 1 we have an error
+    with mock.patch(
+          'erp5.util.testnode.SlapOSControler.SlapOSControler.runSoftwareRelease',
+          return_value={"status_code": 1}
+        ) as runSoftwareRelease,\
+        mock.patch(
+          'erp5.util.testnode.SlapOSControler.SlapOSControler.runComputerPartition',
+          return_value={"status_code": 0}
+        )  as runComputerPartition,\
+        mock.patch('erp5.util.testnode.SlapOSControler.slapos.slap'),\
+        mock.patch('subprocess.Popen'):
+
+      self.assertRaises(
+          SubprocessError,
+          runner.prepareSlapOSForTestSuite,
+          node_test_suite)
+
 
   def test_11_run(self, my_test_type='UnitTest', grade='master'):
     def doNothing(self, *args, **kw):

@@ -42,9 +42,17 @@ MAX_SR_RETRIES = 3
 
 class SlapOSControler(object):
 
-  def __init__(self, working_directory, config):
+  def __init__(self, working_directory, config, use_local_shared_part=False):
     self.config = config
     self.software_root = os.path.join(working_directory, 'soft')
+    self.shared_part_list = [
+        path.strip() for path in config['shared_part_list'].splitlines()
+    ]
+    if use_local_shared_part:
+      shared = os.path.join(working_directory, 'shared')
+      createFolder(shared)
+      self.shared_part_list = self.shared_part_list + [shared]
+
     self.instance_root = os.path.join(working_directory, 'inst')
     self.slapos_config = os.path.join(working_directory, 'slapos.cfg')
     self.proxy_database = os.path.join(working_directory, 'proxy.db')
@@ -217,7 +225,9 @@ class SlapOSControler(object):
     slapos_config_dict = config.copy()
     slapos_config_dict.update(software_root=self.software_root,
                               instance_root=self.instance_root,
-                              proxy_database=self.proxy_database)
+                              proxy_database=self.proxy_database,
+                              shared_part_list='\n  '.join(self.shared_part_list))
+
     with open(self.slapos_config, 'w') as f:
       f.write(pkg_resources.resource_string(
          'erp5.util.testnode', 'template/slapos.cfg.in') %

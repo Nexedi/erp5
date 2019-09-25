@@ -83,6 +83,7 @@ setup(name=name,
         'slapos.core',
         'xml_marshaller',
         'psutil >= 0.5.0',
+        'mock',
       ],
     )
 
