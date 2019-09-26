@@ -10,14 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>portal_type</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_causality_title</string> </value>
+            <value> <string>my_destination_section_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -62,17 +61,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -84,22 +73,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_sale_causality_title</string> </value>
+                    <value> <string>my_view_mode_destination_section_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewTradeFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Ticket</string>
-                          <string>Ticket</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -107,23 +85,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Campaign</string> </value>
+                    <value> <string>Supplier</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: zip(here.getPortalObject().getPortalTicketTypeList(), here.getPortalObject().getPortalTicketTypeList())</string> </value>
         </item>
       </dictionary>
     </pickle>
