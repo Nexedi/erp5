@@ -807,12 +807,12 @@ class TestCMFCategory(ERP5TypeTestCase):
     else:
       o1 = organisation_module._getOb(self.id1)
 
-    with self.assertRaises(TypeError) as e:
-      p1.setCareerSubordination(o1)
-      self.assertEqual(
-        e.exception.args[0],
-        'This method only takes string(s) as parameter',
-      )
+    self.assertRaisesRegexp(
+      TypeError,
+      'This method only takes a string or an iterable of strings as parameter.',
+      p1.setCareerSubordination,
+      o1
+    )
 
   def test_23_getCategoryChildValueList(self):
     pc = self.getCategoriesTool()
