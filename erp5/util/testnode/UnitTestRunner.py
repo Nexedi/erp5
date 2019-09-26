@@ -44,16 +44,17 @@ class UnitTestRunner(object):
   def __init__(self, testnode):
     self.testnode = testnode
 
-  def _getSlapOSControler(self, working_directory):
+  def _getSlapOSControler(self, working_directory, use_local_shared_part):
     """
     Create a SlapOSControler
     """
     return SlapOSControler(
                working_directory,
-               self.testnode.config)
- 
+               self.testnode.config,
+               use_local_shared_part=use_local_shared_part)
+
   def _prepareSlapOS(self, working_directory, slapos_instance,
-          create_partition=1, software_path_list=None,**kw):
+          create_partition=1, software_path_list=None, use_local_shared_part=False, **kw):
     """
     Launch slapos to build software and partitions
     """
@@ -67,8 +68,10 @@ class UnitTestRunner(object):
              slapos_instance.retry_software_count)
 
     # XXX Create a new controler because working_directory can be
-    #     Diferent depending of the preparation
-    slapos_controler = self._getSlapOSControler(working_directory)
+    #     Different depending of the preparation
+    slapos_controler = self._getSlapOSControler(
+        working_directory,
+        use_local_shared_part)
 
     slapos_controler.initializeSlapOSControler(slapproxy_log=slapproxy_log,
        process_manager=self.testnode.process_manager, reset_software=reset_software,
@@ -113,16 +116,17 @@ class UnitTestRunner(object):
 
   def prepareSlapOSForTestSuite(self, node_test_suite):
     """
-    Build softwares needed by testsuites
+    Build softwares needed by testsuites.
     """
     return self._prepareSlapOS(node_test_suite.working_directory,
               node_test_suite,
               software_path_list=[node_test_suite.custom_profile_path],
-              cluster_configuration={'_': json.dumps(node_test_suite.cluster_configuration)})
+              cluster_configuration={'_': json.dumps(node_test_suite.cluster_configuration)},
+              use_local_shared_part=True)
 
   def getInstanceRoot(self, node_test_suite):
     return self._getSlapOSControler(
-      node_test_suite.working_directory).instance_root
+      node_test_suite.working_directory, True).instance_root
 
   def runTestSuite(self, node_test_suite, portal_url):
     config = self.testnode.config
@@ -156,6 +160,11 @@ class UnitTestRunner(object):
         ('--node_quantity', lambda: config['node_quantity']),
         ('--xvfb_bin', lambda: path('xvfb', 'xserver/bin/Xvfb')),
         ('--project_title', lambda: node_test_suite.project_title),
+        ('--shared_part_list', lambda: os.pathsep.join(
+            self._getSlapOSControler(
+                node_test_suite.working_directory,
+                True
+            ).shared_part_list)),
         ):
       if option in supported_parameter_set:
         invocation_list += option, value()
