@@ -3,6 +3,54 @@
 (function (window, rJS, jIO, RSVP, UriTemplate, console) {
   "use strict";
 
+  function redirectToLogin(gadget, error) {
+    var regexp,
+      site,
+      login_page;
+    if (gadget.state_parameter_dict.jio_storage_name === "ERP5") {
+      regexp = /^X-Delegate uri=\"(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)\"$/;
+      login_page = error.target.getResponseHeader('WWW-Authenticate');
+      if (regexp.test(login_page)) {
+        return gadget.getUrlFor({
+          command: 'login',
+          absolute_url: true
+        })
+          .push(function (came_from) {
+            return gadget.redirect({
+              command: 'raw',
+              options: {
+                url: UriTemplate.parse(regexp.exec(login_page)[1])
+                  .expand({came_from: came_from})
+              }
+            });
+          });
+      }
+    }
+    if (gadget.state_parameter_dict.jio_storage_name === "DAV") {
+      regexp = /^Nayookie login_url=(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)$/;
+      login_page = error.target.getResponseHeader('WWW-Authenticate');
+      if (regexp.test(login_page)) {
+        site = UriTemplate.parse(
+          regexp.exec(login_page)[1]
+        ).expand({
+          back_url: window.location.href,
+          origin: window.location.origin
+        });
+      }
+    }
+    if (site) {
+      return gadget.redirect({ command: "row", url: site});
+    }
+    // User entered wrong password ?
+    // Notify
+    return gadget.notifySubmitted({message: 'Unauthorized storage access',
+                                   status: 'error'})
+      .push(function () {
+        return gadget.redirect({command: 'display',
+                                options: {page: 'ojs_configurator'}});
+      });
+  }
+
   // jIO call wrapper for redirection to authentication page if needed
   function wrapJioCall(gadget, method_name, argument_list) {
     var storage = gadget.state_parameter_dict.jio_storage;
@@ -13,51 +61,7 @@
     return storage[method_name].apply(storage, argument_list)
       .push(undefined, function (error) {
         if ((error.target !== undefined) && (error.target.status === 401)) {
-          var regexp,
-            site,
-            login_page;
-          if (gadget.state_parameter_dict.jio_storage_name === "ERP5") {
-            regexp = /^X-Delegate uri=\"(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)\"$/;
-            login_page = error.target.getResponseHeader('WWW-Authenticate');
-            if (regexp.test(login_page)) {
-              return gadget.getUrlFor({
-                command: 'login',
-                absolute_url: true
-              })
-                .push(function (came_from) {
-                  return gadget.redirect({
-                    command: 'raw',
-                    options: {
-                      url: UriTemplate.parse(regexp.exec(login_page)[1])
-                        .expand({came_from: came_from})
-                    }
-                  });
-                });
-            }
-          }
-          if (gadget.state_parameter_dict.jio_storage_name === "DAV") {
-            regexp = /^Nayookie login_url=(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)$/;
-            login_page = error.target.getResponseHeader('WWW-Authenticate');
-            if (regexp.test(login_page)) {
-              site = UriTemplate.parse(
-                regexp.exec(login_page)[1]
-              ).expand({
-                back_url: window.location.href,
-                origin: window.location.origin
-              });
-            }
-          }
-          if (site) {
-            return gadget.redirect({ command: "row", url: site});
-          }
-          // User entered wrong password ?
-          // Notify
-          return gadget.notifySubmitted({message: 'Unauthorized storage access',
-                                         status: 'error'})
-            .push(function () {
-              return gadget.redirect({command: 'display',
-                                      options: {page: 'ojs_configurator'}});
-            });
+          return redirectToLogin(gadget, error);
         }
         throw error;
       });
@@ -188,6 +192,7 @@
           }
           if (result_list[0] === undefined) { return; }
           if (result_list[1] === undefined) { return; }
+          gadget.state_parameter_dict.jio_storage_name = result_list[1];
           appcache_storage = jIO.createJIO(jio_appchache_options);
         })
         .push(function () {
@@ -200,14 +205,11 @@
           }
         })
         .push(undefined, function (error) {
-          console.log("Error while appcache-local " +
-                      "storage synchronization");
+          console.log("Error while appcache-local storage synchronization");
           if (error && error.currentTarget &&
               error.currentTarget.status === 401) {
-            console.log("Unauthorized access to storage," +
-                        "sync cancelled");
-            gadget.state_parameter_dict.jio_storage_name = "ERP5";
-            return;
+            console.log("Unauthorized access to storage, sync cancelled");
+            return redirectToLogin(gadget, error);
           }
           console.log(error);
           throw error;
