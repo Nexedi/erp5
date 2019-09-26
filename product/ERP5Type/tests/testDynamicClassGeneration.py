@@ -33,6 +33,7 @@ import os
 import shutil
 import tempfile
 import unittest
+import warnings
 
 import transaction
 from persistent import Persistent
@@ -1315,17 +1316,41 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       self.fail("Creating a Category Expression with syntax error raises "\
                 "an error")
 
-  def testCategoryRelationRaisesIfWrongValueTypeIsPassedAsParameter(self):
+  def testCategoryValueRelationShowsWarningIfStringIsPassedAsParameter(self):
     person_module = self.portal.person_module
     person = person_module.newContent()
 
+    def _testDeprecationWarning(method, *args, **kw):
+      with warnings.catch_warnings(record=True) as warning_list:
+       method(*args, **kw)
+      for warning in warning_list:
+        self.assertTrue(issubclass(warning.category, DeprecationWarning))
+        self.assertEqual(
+          str(warning.message),
+          "Only objects should be passed to value accessors",
+        )
+
     # Passing a string to a Value setter should raise
-    with self.assertRaises(TypeError):
-      organisation = self.portal.organisation_module.newContent()
-      person.setSubordinationValue(organisation.getRelativeUrl())
-      person_module.newContent(
-        subordination_value=organisation.getRelativeUrl(),
-      )
+    organisation = self.portal.organisation_module.newContent()
+    _testDeprecationWarning(
+      person.setSubordinationValue,
+      organisation.getRelativeUrl(),
+    )
+    _testDeprecationWarning(
+      person_module.newContent,
+      subordination_value=organisation.getRelativeUrl(),
+    )
+
+    # Same test but with a category instead of an object
+    social_title_value = self.portal.portal_categories.social_title.newContent(id='Mme')
+    _testDeprecationWarning(
+      person.setSocialTitleValue,
+      social_title_value.getRelativeUrl(),
+    )
+
+  def testCategoryRelationRaisesIfValueisPassedAsParameter(self):
+    person_module = self.portal.person_module
+    person = person_module.newContent()
 
     # Passing an ERP5 object to a not-Value setter should raise
     with self.assertRaises(TypeError):
@@ -1335,19 +1360,16 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
         subordination=organisation,
       )
 
+    # Same test with a category instead of an object
+    social_title_value = self.portal.portal_categories.social_title.newContent(id='Mr')
+    with self.assertRaises(TypeError):
+      person.setSocialTitle(social_title_value)
+
     # Passing a unicode object to a not-Value setter should raise
     with self.assertRaises(TypeError):
       organisation = self.portal.organisation_module.newContent()
       person.setSubordination(unicode(organisation.getRelativeUrl()))
 
-    # Same tests with a category instead of an object
-    social_title = self.portal.portal_categories.social_title.newContent(id='Mr')
-    with self.assertRaises(TypeError):
-      person.setSocialTitle(social_title)
-
-    social_title = self.portal.portal_categories.social_title.newContent(id='Mme')
-    with self.assertRaises(TypeError):
-      person.setSocialTitleValue(social_title.getRelativeUrl())
 
 from Products.ERP5Type.Tool.ComponentTool import ComponentTool
 ComponentTool._original_reset = ComponentTool.reset
