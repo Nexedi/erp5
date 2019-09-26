@@ -1838,10 +1838,11 @@ class Base( CopyContainer,
     if target is None :
       path = target
     elif isinstance(target, str):
-      ## We have been provided a string
-      #path = target
-      # is Base in obj.__class__.__mro__ ?
-      raise TypeError('Only objects should be passed as values')
+      path = target
+      warnings.warn(
+        "Only objects should be passed to value accessors",
+        DeprecationWarning
+      )
     elif isinstance(target, (tuple, list, set, frozenset)):
       # We have been provided a list or tuple
       path_list = []
