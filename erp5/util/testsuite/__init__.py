@@ -245,8 +245,10 @@ class EggTestSuite(TestSuite):
   def run(self, test):
     print(test)
     try:
-      status_dict = self.spawn(self.python_interpreter, 'setup.py', 'test',
-                               cwd=self.egg_test_path_dict[test])
+      status_dict = self.spawn(
+          self.python_interpreter, 'setup.py', 'test',
+          cwd=self.egg_test_path_dict[test],
+          SLAPOS_SHARED_PART_LIST=self.shared_part_list)
     except SubprocessError as e:
       status_dict = e.status_dict
     test_log = status_dict['stderr']
@@ -302,6 +304,9 @@ def runTestSuite():
   parser.add_argument('--source_code_path_list',
                       help='Coma separated list of Eggs folders to test',
                       default='.')
+  parser.add_argument('--shared_part_list',
+                      help='Shared parts for recursive slapos',
+                      default='')
 
   args = parser.parse_args()
   master = taskdistribution.TaskDistributor(args.master_url)
@@ -324,6 +329,7 @@ def runTestSuite():
                     revision=revision,
                     python_interpreter=args.python_interpreter,
                     egg_test_path_dict=egg_test_path_dict,
+                    shared_part_list=args.shared_part_list
                     )
 
   test_result = master.createTestResult(revision, suite.getTestList(),
