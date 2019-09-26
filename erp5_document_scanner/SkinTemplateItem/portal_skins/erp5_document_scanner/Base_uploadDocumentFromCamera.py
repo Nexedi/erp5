@@ -19,6 +19,9 @@ extra_document_kw = {
     kw.get("title") or DateTime().strftime('%d-%m-%Y_%Hh%M'))
 }
 
-return context.Base_contribute(file=file_object,
-                               extra_document_kw=extra_document_kw,
-                               **kw)
+context.Base_contribute(file=file_object,
+                        batch_mode=True,
+                        extra_document_kw=extra_document_kw,
+                        **kw)
+
+portal.portal_activities.manage_delObjects(ids=[active_process.getId(),])
