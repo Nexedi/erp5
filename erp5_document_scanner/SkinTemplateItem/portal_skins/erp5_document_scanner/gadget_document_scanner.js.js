@@ -155,6 +155,14 @@
         .push(function (element) {
           root = element;
           selector = element.querySelector("select");
+          if (!selector.value && video) {
+            video.pause();
+          }
+          if (selector.value) {
+            root.querySelector(".camera-input").style.display = "";
+            root.querySelector(".capture-button").style.display = "";
+            root.querySelector(".camera-output").style.display = "none";
+          }
           if (!navigator.mediaDevices) {
             throw ("mediaDevices is not supported");
           }
@@ -185,7 +193,7 @@
       if (evt.target.type == "select-one") {
         return this.getElement()
           .push(function (root) {
-            if (video) {
+            if (!evt.target.value && video) {
               video.pause();
             }
             root.querySelector(".camera-input").style.display = "";
