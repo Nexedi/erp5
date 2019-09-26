@@ -1848,8 +1848,11 @@ class Base( CopyContainer,
       path_list = []
       for target_item in target:
         if isinstance(target_item, str):
-          #path = target_item
-          raise TypeError('Only objects should be passed as values')
+          path = target_item
+          warnings.warn(
+            "Only objects should be passed to value accessors",
+            DeprecationWarning
+          )
         else:
           path = getRelativeUrl(target_item)
         path_list.append(cleanupCategory(path))
