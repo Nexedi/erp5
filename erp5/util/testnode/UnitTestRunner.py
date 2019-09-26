@@ -160,6 +160,11 @@ class UnitTestRunner(object):
         ('--node_quantity', lambda: config['node_quantity']),
         ('--xvfb_bin', lambda: path('xvfb', 'xserver/bin/Xvfb')),
         ('--project_title', lambda: node_test_suite.project_title),
+        ('--shared_part_list', lambda: os.pathsep.join(
+            self._getSlapOSControler(
+                node_test_suite.working_directory,
+                True
+            ).shared_part_list)),
         ):
       if option in supported_parameter_set:
         invocation_list += option, value()
