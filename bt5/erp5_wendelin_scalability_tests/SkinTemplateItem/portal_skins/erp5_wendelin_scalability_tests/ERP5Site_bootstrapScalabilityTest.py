@@ -21,7 +21,7 @@ if user_quantity is None:
 password = ''.join(random.choice(string.digits + string.letters) for i in xrange(10))
 
 # check erp5_scalability_test business template is present
-configurator = portal.business_configuration_module.default_standard_configuration
+configurator = portal.business_configuration_module.default_wendelin_configuration
 if configurator == None or not configurator.contentValues(portal_type='Configuration Save'):
   error_message = "Could not find the scalability business configuration object. Be sure to have erp5_scalability_test business template installed."
   return json.dumps({"status_code" : 1, 
