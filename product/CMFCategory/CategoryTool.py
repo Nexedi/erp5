@@ -640,9 +640,15 @@ class CategoryTool(BaseTool):
         category_list = ()
       elif isinstance(category_list, (tuple, list, set, frozenset)):
         if any([c is not None and not isinstance(c, str) for c in category_list]):
-          raise TypeError('This method only takes string(s) as parameter', base_category_list, category_list)
+          raise TypeError(
+            'This method only takes a string or an iterable of strings as parameter.',
+             base_category_list, category_list
+          )
       else:
-        raise TypeError('This method only takes string(s) as parameter', base_category_list, category_list)
+        raise TypeError(
+          'This method only takes a string or an iterable of strings as parameter.',
+           base_category_list, category_list
+        )
 
 
       if isinstance(base_category_list, str):
