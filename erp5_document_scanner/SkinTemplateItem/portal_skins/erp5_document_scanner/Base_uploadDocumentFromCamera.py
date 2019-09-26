@@ -1,15 +1,11 @@
 """
   Use to contribute file to ERP5.
 """
-from base64 import decodestring
-
-
 portal = context.getPortalObject()
 translateString = portal.Base_translateString
 
 MARKER = ['', None]
 portal_contributions = portal.portal_contributions
-context_url = context.getRelativeUrl()
 
 if synchronous_metadata_discovery is None:
   synchronous_metadata_discovery = portal.portal_preferences.isPreferredSynchronousMetadataDiscovery(False)
@@ -32,11 +28,22 @@ for key in ('title', 'short_title', 'reference', 'language', 'version', 'descrip
 
 document_kw.update({'discover_metadata': not synchronous_metadata_discovery})
 
+pdf_data_list = []
+image_module = context.getPortalObject().image_module
+active_process = portal.restrictedTraverse(active_process_url)
+
+for result in active_process.getResultList():
+  pdf_data_list.append(
+    image_module.newContent(data=result.detail,
+                            temp=True).convert(format="pdf")[1])
+
+pdf_data = context.ERP5Site_mergePDFList(pdf_data_list=pdf_data_list)
+
 # contribute file
 document_kw.update({
-  'data': decodestring(document_scanner_gadget),
-  "filename": "{}.png".format(
-    document_kw.get("title") or document_scanner_gadget[:10])
+  'data': pdf_data,
+  "filename": "{}.pdf".format(
+    document_kw.get("title") or DateTime().strftime('%d-%m-%Y_%Hh%M'))
 })
 document = portal_contributions.newContent(**document_kw)
 
