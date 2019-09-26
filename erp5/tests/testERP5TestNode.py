@@ -613,6 +613,7 @@ shared = true
         ('--frontend_url', 'http://frontend/'),
         ('--node_quantity', '3'),
         ('--xvfb_bin', part('xserver/bin/Xvfb')),
+        ('--shared_part_list', "/not/exists:/not/exists_either:%s/shared" % node_test_suite.working_directory),
       ):
       parser.add_argument(option[0])
       expected_parameter_list += option
