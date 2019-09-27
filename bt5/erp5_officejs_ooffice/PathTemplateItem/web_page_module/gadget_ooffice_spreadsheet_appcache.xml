@@ -1246,6 +1246,8 @@ onlyoffice/fonts/ttf/ktwsh55ufijgk35iptozrmuwqtuy.ttf\n
 onlyoffice/fonts/ttf/ktwsh55ufirzeamcpft1h7dwca.ttf\n
 onlyoffice/fonts/ttf/p7agk5uum7xi6muwqtuy.ttf\n
 \n
+only_office_document_view.html\n
+only_office_document_view.js\n
 \n
 #new approach (storage hateoas requests)\n
 gadget_erp5_pt_form_view_editable.html\n
@@ -1450,7 +1452,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.32692.9728.38877</string> </value>
+                <value> <string>978.32699.16100.53452</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1468,7 +1470,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1568728034.72</float>
+                        <float>1569595016.24</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
