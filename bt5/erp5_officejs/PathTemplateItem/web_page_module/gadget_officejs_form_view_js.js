@@ -85,6 +85,120 @@
     return form_json;
   }
 
+  //TODO this should be in a custom view
+  //use: portal_type_dict.custom_view_gadget (handled by controller gadget)
+  function renderOnlyOffice(gadget, options, portal_type_dict, state_dict) {
+    //TODO doc should come with filename. for now hardcoded if undefined
+    //get format extension from portal_type_dict
+    if (!options.doc.filename) {
+      options.doc.filename = "default.docx";
+    }
+    state_dict.mime_type = portal_type_dict.file_extension;
+    state_dict.only_office = true;
+    if (options.doc.action) {
+      return gadget.changeState(state_dict);
+    }
+    state_dict.content_editable = options.doc.content_type === undefined ||
+      options.doc.content_type.indexOf("application/x-asc") === 0;
+    return new RSVP.Queue()
+      .push(function () {
+        if (!state_dict.content_editable) {
+          return gadget.jio_getAttachment(options.jio_key, "data");
+        }
+        return gadget.declareGadget("gadget_ojs_cloudooo.html")
+          .push(function (ojs_cloudooo) {
+            return ojs_cloudooo.getConvertedBlob({
+              jio_key: options.jio_key,
+              format: state_dict.mime_type,
+              filename: options.doc.filename
+            });
+          });
+      })
+      .push(undefined, function (error) {
+        if (error instanceof jIO.util.jIOError &&
+            error.status_code === 404) {
+          return new Blob();
+        }
+        throw error;
+      })
+      .push(function (blob) {
+        if (state_dict.content_editable) {
+          return jIO.util.readBlobAsDataURL(blob);
+        }
+        return jIO.util.readBlobAsText(blob);
+      })
+      .push(function (result) {
+        state_dict.data = result.target.result;
+        if (portal_type_dict.blob_type) {
+          state_dict.blob_type = portal_type_dict.blob_type;
+        } else {
+          state_dict.blob_type = "ooffice";
+        }
+        return gadget.changeState(state_dict);
+      });
+  }
+
+  function handleSubmit(gadget, child_gadget, content_dict) {
+    var data, name_list;
+    return gadget.notifySubmitting()
+      .push(function () {
+        if (gadget.state.blob_type) {
+          //submit doc metadata
+          data = content_dict.text_content;
+          delete content_dict.text_content;
+
+          //TODO this should be in a custom view
+          //use: portal_type_dict.custom_view_gadget
+          //ONLY OFFICE
+          if (gadget.state.only_office) {
+            name_list = gadget.state.doc.filename.split('.');
+            if (name_list.pop() !== gadget.state.mime_type) {
+              name_list.push(gadget.state.mime_type);
+              content_dict.filename = name_list.join('.');
+            }
+            content_dict.content_type = gadget.state.blob_type;
+          }//
+
+        }
+        return child_gadget.submitContent(
+          child_gadget.state.jio_key, undefined, content_dict
+        );
+      })
+      .push(function () {
+        if (gadget.state.blob_type) {
+          //submit doc blob data
+          return gadget
+            .jio_putAttachment(child_gadget.state.jio_key, 'data',
+                               jIO.util.dataURItoBlob(data))
+
+            //TODO this should be in a custom view
+            //use: portal_type_dict.custom_view_gadget
+            //ONLY OFFICE
+            .push(function () {
+              if (gadget.state.only_office) {
+                return gadget.declareGadget("gadget_ojs_cloudooo.html");
+              }
+            })
+            .push(function (cloudooo) {
+              if (gadget.state.only_office) {
+                return cloudooo
+                  .putAllCloudoooConvertionOperation({
+                    format: gadget.state.mime_type,
+                    jio_key: child_gadget.state.jio_key
+                  });
+              }
+            });//
+
+        }
+      }, function (error) {
+        console.log(error);
+        return gadget.notifySubmitted({
+          message: "Submit failed",
+          status: "error"
+        });
+      });
+  }
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -139,82 +253,19 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("triggerSubmit", function (argument_list) {
-      var gadget = this, data, name_list;
-      return gadget.notifySubmitting()
-        .push(function () {
-          return gadget.getDeclaredGadget('erp5_pt_gadget')
-            .push(function (child_gadget) {
-              if (!child_gadget.state.editable) {
-                return child_gadget.triggerSubmit(argument_list);
-              }
-              return child_gadget.getDeclaredGadget("erp5_form")
-                .push(function (sub_gadget) {
-                  return sub_gadget.checkValidity();
-                })
-                .push(function (is_valid) {
-                  if (!is_valid) {
-                    return null;
-                  }
-                  return child_gadget.getContent();
-                })
-                .push(function (content_dict) {
-                  if (content_dict === null) {
-                    return;
-                  }
-                  if (gadget.state.blob_type) {
-                    data = content_dict.text_content;
-                    delete content_dict.text_content;
-
-                    //ONLY OFFICE
-                    if (gadget.state.only_office) {
-                      name_list = gadget.state.doc.filename.split('.');
-                      if (name_list.pop() !== gadget.state.mime_type) {
-                        name_list.push(gadget.state.mime_type);
-                        content_dict.filename = name_list.join('.');
-                      }
-                      content_dict.content_type = gadget.state.blob_type;
-                    }//
-
-                  }
-                  return child_gadget.submitContent(
-                    child_gadget.state.jio_key,
-                    undefined,
-                    content_dict
-                  )
-                    .push(function () {
-                      if (gadget.state.blob_type) {
-                        return gadget
-                          .jio_putAttachment(child_gadget.state.jio_key,
-                                             'data',
-                                             jIO.util.dataURItoBlob(data))
-
-                          //ONLY OFFICE
-                          .push(function () {
-                            if (gadget.state.only_office) {
-                              return gadget
-                                .declareGadget("gadget_ojs_cloudooo.html");
-                            }
-                          })
-                          .push(function (cloudooo) {
-                            if (gadget.state.only_office) {
-                              return cloudooo
-                                .putAllCloudoooConvertionOperation({
-                                  format: gadget.state.mime_type,
-                                  jio_key: child_gadget.state.jio_key
-                                });
-                            }
-                          });//
-
-                      }
-                    });
-                });
-            });
-        }, function (error) {
-          console.log(error);
-          return gadget.notifySubmitted({
-            message: "Submit failed",
-            status: "error"
-          });
+      var gadget = this, child_gadget, content_dict;
+      return gadget.getDeclaredGadget('erp5_pt_gadget')
+        .push(function (result) {
+          child_gadget = result;
+          if (!child_gadget.state.editable) {
+            return child_gadget.triggerSubmit(argument_list);
+          }
+          return child_gadget.getContent();
+        })
+        .push(function (result) {
+          content_dict = result;
+          if (!content_dict) { return; }
+          return handleSubmit(gadget, child_gadget, content_dict);
         });
     })
 
@@ -229,56 +280,9 @@
         portal_type_dict = options.form_definition.portal_type_dict,
         blob;
 
-      //ONLY OFFICE
       if (portal_type_dict.only_office && options.doc) {
-        //TODO doc should come with filename. for now hardcoded if undefined
-        if (!options.doc.filename) {
-          options.doc.filename = "default.docx";
-        }
-        state_dict.mime_type = portal_type_dict.file_extension;
-        state_dict.only_office = true;
-        if (options.doc.action) {
-          return gadget.changeState(state_dict);
-        }
-        state_dict.content_editable = options.doc.content_type === undefined ||
-          options.doc.content_type.indexOf("application/x-asc") === 0;
-        return new RSVP.Queue()
-          .push(function () {
-            if (!state_dict.content_editable) {
-              return gadget.jio_getAttachment(options.jio_key, "data");
-            }
-            return gadget.declareGadget("gadget_ojs_cloudooo.html")
-              .push(function (ojs_cloudooo) {
-                return ojs_cloudooo.getConvertedBlob({
-                  jio_key: options.jio_key,
-                  format: state_dict.mime_type,
-                  filename: options.doc.filename
-                });
-              });
-          })
-          .push(undefined, function (error) {
-            if (error instanceof jIO.util.jIOError &&
-                error.status_code === 404) {
-              return new Blob();
-            }
-            throw error;
-          })
-          .push(function (blob) {
-            if (state_dict.content_editable) {
-              return jIO.util.readBlobAsDataURL(blob);
-            }
-            return jIO.util.readBlobAsText(blob);
-          })
-          .push(function (result) {
-            state_dict.data = result.target.result;
-            if (portal_type_dict.blob_type) {
-              state_dict.blob_type = portal_type_dict.blob_type;
-            } else {
-              state_dict.blob_type = "ooffice";
-            }
-            return gadget.changeState(state_dict);
-          });
-      }//
+        return renderOnlyOffice(gadget, options, portal_type_dict, state_dict);
+      }
 
       if (portal_type_dict.blob_type) {
         if (options.jio_key) {
