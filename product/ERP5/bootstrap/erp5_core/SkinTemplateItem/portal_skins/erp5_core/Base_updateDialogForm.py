@@ -1,5 +1,6 @@
 from string import zfill
 request = context.REQUEST
+request.RESPONSE.setStatus(400)
 
 from string import zfill
 
