@@ -11,7 +11,7 @@
 </thead><tbody>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeRenderjsUi/macros/init" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeRenderjsUi/macros/prepare_data" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeRenderjsUi/macros/prepare_packing_list_data" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeRenderjsUi/macros/view_solve_divergence_dialog" />
 
 <tr>

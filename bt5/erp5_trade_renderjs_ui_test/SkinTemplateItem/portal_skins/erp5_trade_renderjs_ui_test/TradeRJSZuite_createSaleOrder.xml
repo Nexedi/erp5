@@ -50,19 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>use_selection=False, selection_name=None, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Folder_generateWorkflowReport</string> </value>
+            <value> <string>TradeRJSZuite_createSaleOrder</string> </value>
         </item>
       </dictionary>
     </pickle>

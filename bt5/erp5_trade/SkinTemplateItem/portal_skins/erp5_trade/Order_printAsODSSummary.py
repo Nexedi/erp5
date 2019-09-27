@@ -118,9 +118,10 @@ if error is None:
 
 
 if error is not None:
-  return context.REQUEST.RESPONSE.redirect(
-                "%s/view?portal_status_message=%s" % (
-                 context.absolute_url(), context.Base_translateString(error, mapping=error_kw )))
+  previous_skin_selection = container.REQUEST.get('previous_skin_selection', None)
+  context.getPortalObject().changeSkin(previous_skin_selection)
+  return context.Base_redirect('view', keep_items={'portal_status_message': context.Base_translateString(error, mapping=error_kw)})
+
 # Add a line for unit titles
 for source_trade in source_trade_dict:
   unit_title_dict[source_trade] = default_quantity_unit_title

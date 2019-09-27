@@ -40,5 +40,4 @@ if section_uid is None:
   return context.Base_redirect('view', keep_items=dict(
     portal_status_message=translateString('Section must be defined.')))
 
-
-return context.Delivery_viewDeliveryFastInputDialog(*args, **kw)
+return context.Base_renderForm('Delivery_viewDeliveryFastInputDialog', *args, **kw)
