@@ -21,6 +21,7 @@ extra_document_kw = {
 
 context.Base_contribute(file=file_object,
                         batch_mode=True,
+                        follow_up_list=[context.getRelativeUrl(),],
                         extra_document_kw=extra_document_kw,
                         **kw)
 
