@@ -9,7 +9,7 @@ active_process = portal.restrictedTraverse(active_process_url)
 for result in active_process.getResultList():
   pdf_data_list.append(
     image_module.newContent(data=result.detail,
-                            temp=True).convert(format="pdf")[1])
+                            temp_object=True).convert(format="pdf")[1])
 
 pdf_data = context.ERP5Site_mergePDFList(pdf_data_list=pdf_data_list)
 file_object = StringIO(pdf_data)
