@@ -1,5 +1,9 @@
 from base64 import decodestring
 
+if not document_scanner_gadget:
+  return context.Base_renderForm('Base_viewUploadDocumentFromCameraDialog',
+                               message='Nothing to capture')
+
 portal = context.getPortalObject()
 
 if not active_process_url:
