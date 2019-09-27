@@ -50,6 +50,11 @@ if attach_document_to_context:
   document_kw['follow_up_list'] = follow_up_list
 
 document_kw.update({'discover_metadata': not synchronous_metadata_discovery})
+
+# With extra_document_kw you can pass properties
+# used to create a new document in ERP5, like filename
+document_kw.update(extra_document_kw)
+
 if url is not None:
   # we contribute and URL, this happens entirely asynchronous
   document = portal_contributions.newContentFromURL(url = url, \
