@@ -176,4 +176,3 @@ return context.Base_renderForm(
   request.form['dialog_id'],
   message=portal_status_message
 )
-# return getattr(context, request.form['dialog_id'])(listbox=listbox, kw=kw)
