@@ -153,6 +153,7 @@ for line in listbox:
           status_message_dict.setdefault(product.getRelativeUrl(), []).append(line['listbox_key'])
 
 status_message_list = []
+portal_status_message = None
 if status_message_dict:
   for product_relative_url, line_id_list in status_message_dict.items():
     product = portal.restrictedTraverse(product_relative_url)
@@ -166,8 +167,12 @@ if status_message_dict:
       message = 'Asked quantity of "${product_title} - ${product_reference}" is not available in inventory for line ${line_id}'
       mapping['line_id'] = line_id_list[0]
     status_message_list.append(Base_translateString(message, mapping=mapping))
-  request.set('portal_status_message', ' -- '.join(status_message_list))
+  portal_status_message = ' -- '.join(status_message_list)
 
 request.form["field_my_total_price"] = total_price
 context.Base_updateDialogForm(listbox=listbox,update=1,kw=kw)
-return getattr(context, request.form['dialog_id'])(listbox=listbox, kw=kw)
+return context.Base_renderForm(
+  request.form['dialog_id'],
+  message=portal_status_message
+)
+# return getattr(context, request.form['dialog_id'])(listbox=listbox, kw=kw)
