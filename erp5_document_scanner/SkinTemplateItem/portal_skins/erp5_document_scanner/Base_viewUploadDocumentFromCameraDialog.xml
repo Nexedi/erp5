@@ -158,7 +158,7 @@
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
-            <value> <string>Attach Image</string> </value>
+            <value> <string>Capture</string> </value>
         </item>
       </dictionary>
     </pickle>
