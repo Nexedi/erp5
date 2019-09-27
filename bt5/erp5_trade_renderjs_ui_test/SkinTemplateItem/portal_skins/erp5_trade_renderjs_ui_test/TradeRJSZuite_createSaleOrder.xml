@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'\', **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Ticket_cloneTicketAndEventList</string> </value>
+            <value> <string>TradeRJSZuite_createSaleOrder</string> </value>
         </item>
       </dictionary>
     </pickle>
