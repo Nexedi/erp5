@@ -170,6 +170,7 @@ if status_message_dict:
   portal_status_message = ' -- '.join(status_message_list)
 
 request.form["field_my_total_price"] = total_price
+
 context.Base_updateDialogForm(listbox=listbox,update=1,kw=kw)
 return context.Base_renderForm(
   request.form['dialog_id'],
