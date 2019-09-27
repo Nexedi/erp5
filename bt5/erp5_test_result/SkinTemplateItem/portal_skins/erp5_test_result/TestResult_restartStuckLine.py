@@ -19,6 +19,9 @@ for test_result_node in context.contentValues(portal_type='Test Result Node'):
 # it should mean testnode is dead, this test should be restarted
 if timeout is None:
   timeout = 1.0/24*3
+else:
+  # transform it has number of days (instead of seconds)
+  timeout = float(timeout) / 3600 / 24
 
 old_date = now-timeout
 if context.getSimulationState() == "started":
