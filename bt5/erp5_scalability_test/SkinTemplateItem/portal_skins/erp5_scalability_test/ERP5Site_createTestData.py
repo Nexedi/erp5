@@ -4,6 +4,7 @@
 # creates user (login credentials)
 # random password is given by parameter
 from DateTime import DateTime
+import json
 now = DateTime()
 
 portal = context.getPortalObject()
