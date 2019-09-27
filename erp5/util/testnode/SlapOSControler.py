@@ -220,7 +220,7 @@ class SlapOSControler(object):
                               proxy_database=self.proxy_database)
     with open(self.slapos_config, 'w') as f:
       f.write(pkg_resources.resource_string(
-         'erp5.util.testnode', 'template/slapos.cfg.in') %
+         'erp5.util.testnode', 'template/slapos.cfg.in').decode() %
            slapos_config_dict)
     # By erasing everything, we make sure that we are able to "update"
     # existing profiles. This is quite dirty way to do updates...
