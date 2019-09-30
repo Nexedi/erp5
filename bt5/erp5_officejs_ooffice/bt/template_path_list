@@ -1,4 +1,14 @@
 image_module/ooo_logo_*
+portal_types/Document Module/ooffice_presentation_view
+portal_types/Document Module/ooffice_spreadsheet_view
+portal_types/Document Module/ooffice_text_view
+portal_types/Document Module/ooffice_upload_document
+portal_types/Presentation/ooffice_download_document
+portal_types/Presentation/ooffice_presentation_view
+portal_types/Spreadsheet/ooffice_download_document
+portal_types/Spreadsheet/ooffice_spreadsheet_view
+portal_types/Text/ooffice_download_document
+portal_types/Text/ooffice_text_view
 web_page_module/gadget_ooffice_*
 web_site_module/ooffice_presentation
 web_site_module/ooffice_presentation/**

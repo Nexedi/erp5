@@ -1,9 +1,4 @@
 erp5_hal_json_style | AppCache
-erp5_text_editor | AppCache
-erp5_text_editor | Hal
-erp5_text_editor | RJS
-erp5_text_editor | RedirectAssist
-erp5_text_editor | View
 erp5_web_officejs_ui | RJS
 erp5_web_officejs_ui | View
 erp5_web_redirect_assist | AppCache

@@ -1,0 +1,384 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OfficeJS UI</title>
+  <script src="../../web_site_module/officejs_text_editor/rsvp.js"></script>
+  <script src="../../web_site_module/officejs_text_editor/jiodev.js"></script>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OfficeJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<tal:block tal:define="web_site_name python: 'officejs_text_editor'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/install_offline_and_redirect" />
+</tal:block>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Storages']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td></td>
+</tr>
+<tr>
+ <td>click</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td></td>
+</tr>
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before perform an action -->
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Titre %s' % DateTime()">Titre</td>
+  <td>title</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Reference %s' % DateTime()">Reference</td>
+  <td>reference</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Language %s' % DateTime()">Language</td>
+  <td>language</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Version %s' % DateTime()">Version</td>
+  <td>version</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Description %s' % DateTime()">Description</td>
+  <td>description</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@title='Title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Title']</td>
+  <td>${title}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Reference']</td>
+  <td>${reference}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Version']</td>
+  <td>${version}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Language']</td>
+  <td>${language}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//textarea[@title='Description']</td>
+  <td>${description}</td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before continue -->
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Document']</td>
+  <td></td>
+</tr>
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//textarea[@title='Description']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Title']</td>
+  <td>${title}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Reference']</td>
+  <td>${reference}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Version']</td>
+  <td>${version}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Language']</td>
+  <td>${language}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//textarea[@title='Description']</td>
+  <td>${description}</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>identifier=cke_1_contents</td>
+  <td></td>
+</tr>
+<!-- Clone action -->
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Actions"]</td>
+ <td></td>
+</tr>
+<tr>
+ <td>click</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Actions"]</td>
+ <td></td>
+</tr>
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_action_officejs.html')]//a[@data-i18n="Clone"]</td>
+ <td></td>
+</tr>
+<tr>
+ <td>click</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_page_action_officejs.html')]//a[@data-i18n="Clone"]</td>
+ <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@class, 'dialog_button_container')]//input[@value="Clone"]</td>
+  <td></td>
+<tr>
+<tr>
+  <td>click</td>
+  <td>//div[contains(@class, 'dialog_button_container')]//input[@value="Clone"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//textarea[@title='Description']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Title']</td>
+  <td>${title}</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python:'Cloned document'">Titre</td>
+  <td>cloned_title</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Title']</td>
+  <td>${cloned_title}</td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<!-- As all resources are now in indexedDB, is faster than before and sometimes the header spinner icon doesn't apprear
+     Wait for spinner was removed, but a minimum pause is needed before continue -->
+<tr>
+  <td>pause</td>
+  <td>100</td>
+  <td></td>
+</tr>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Document']</td>
+  <td></td>
+</tr>
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td></td>
+</tr>
+<!-- check that previous document still exists -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<!-- check new cloned document -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=${cloned_title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=${cloned_title}</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//textarea[@title='Description']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Title']</td>
+  <td>${cloned_title}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Reference']</td>
+  <td>${reference}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Version']</td>
+  <td>${version}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Language']</td>
+  <td>${language}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//textarea[@title='Description']</td>
+  <td>${description}</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>identifier=cke_1_contents</td>
+  <td></td>
+</tr>
+<!-- change storage -->
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[@data-i18n="Menu"]</td>
+ <td></td>
+</tr>
+<tr>
+ <td>click</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[@data-i18n="Menu"]</td>
+ <td></td>
+</tr>
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_ojs_panel.html')]//a[@data-i18n="Storages"]</td>
+ <td></td>
+</tr>
+<tr>
+ <td>click</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_ojs_panel.html')]//a[@data-i18n="Storages"]</td>
+ <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Erp5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Erp5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>name=erp5_url</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=erp5_url</td>
+  <td>${base_url}/web_site_module/</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//a[@data-i18n="Add"]</td>
+ <td></td>
+</tr>
+<tr>
