@@ -4,7 +4,8 @@
 }
 
 .video, .photo, .camera-output {
-  width: 100%;
+  max-width: 100%;
+  width: auto;
   height: 360px;
   filter: brightness(1);
   text-align:center;
@@ -20,10 +21,10 @@
 }
 
 .camera-input, .camera-output {
-  display: inline-block;
+  text-align: center;
 }
 
-.camera {
+.camera, .camera-input, .camera-output {
   display: inline-block;
 }
 
