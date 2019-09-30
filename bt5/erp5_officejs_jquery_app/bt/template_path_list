@@ -1,6 +1,12 @@
 image_module/image_editor_app_logo_svg
 image_module/web_table_app_logo_svg
+portal_types/Image Module/image_editor_view
+portal_types/Image/image_editor_view
+portal_types/Web Page Module/web_table_view
+portal_types/Web Table/web_table_view
 web_page_module/gadget_image_editor*
+web_page_module/gadget_officejs_image_editor*
+web_page_module/gadget_officejs_web_table*
 web_page_module/gadget_web_table*
 web_site_module/officejs_image_editor
 web_site_module/officejs_image_editor/**
