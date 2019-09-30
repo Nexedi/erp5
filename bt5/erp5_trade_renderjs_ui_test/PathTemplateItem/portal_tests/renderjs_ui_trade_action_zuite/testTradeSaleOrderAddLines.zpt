@@ -84,7 +84,7 @@
   <td>field_listbox_reference_new_3</td>
   <td>NOTEXISTINGPRODUCT</td>
 </tr>
-<tr>
+<!--tr>
   <td>waitForElementPresent</td>
   <td>//div[contains(@data-gadget-scope, 'field_listbox_quantity_new_3')]//span[text()='Input is required but no input given.']</td>
   <td></td>
@@ -93,7 +93,7 @@
   <td>assertElementPresent</td>
   <td>//div[contains(@data-gadget-scope, 'field_listbox_quantity_new_3')]//span[text()='Input is required but no input given.']</td>
   <td></td>
-</tr>
+</tr-->
 
 <tr>
   <td colspan="3"><b>Select a product and a quantity, price is updated</b></td>
