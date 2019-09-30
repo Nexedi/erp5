@@ -9,9 +9,7 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>css_class</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -63,10 +61,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string>hidden</string> </value>
-                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_title</string> </value>
