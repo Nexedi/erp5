@@ -1322,13 +1322,14 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
     def _testDeprecationWarning(method, *args, **kw):
       with warnings.catch_warnings(record=True) as warning_list:
+       warnings.simplefilter("always")
        method(*args, **kw)
-      for warning in warning_list:
-        self.assertTrue(issubclass(warning.category, DeprecationWarning))
-        self.assertEqual(
-          str(warning.message),
-          "Only objects should be passed to value accessors",
-        )
+      warning, = warning_list
+      self.assertTrue(issubclass(warning.category, DeprecationWarning))
+      self.assertEqual(
+        str(warning.message),
+        "Only objects should be passed to value accessors",
+      )
 
     # Passing a string to a Value setter should raise
     organisation = self.portal.organisation_module.newContent()
