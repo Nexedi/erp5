@@ -1,0 +1,162 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form View Editable Save Action</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Default Module View</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeRenderjsUi/macros/init" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeRenderjsUi/macros/prepare_sale_order_data" />
+
+<tr>
+  <td colspan="3"><b>Display the add lines fast input</b></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${renderjs_url}/sale_order_module/sale_order_module/erp5_trade_renderjs_ui_test_order</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Add Lines'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(10)', 'footer': '10 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+
+<tr>
+  <td colspan="3"><b>Ensure that dialog update is rejected by default</b></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                           'text': 'Input data has errors.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block tal:define="pagination_configuration python: {'header': '(10)', 'footer': '10 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Input is required but no input given.</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td colspan="3"><b>Ensure that a quantity is required when a product is entered</b></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_listbox_reference_new_3</td>
+  <td>NOTEXISTINGPRODUCT</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                           'text': 'Input data has errors.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block tal:define="pagination_configuration python: {'header': '(11)', 'footer': '11 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<!-- Value is kept -->
+<tr>
+  <td>assertValue</td>
+  <td>field_listbox_reference_new_3</td>
+  <td>NOTEXISTINGPRODUCT</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(@data-gadget-scope, 'field_listbox_quantity_new_3')]//span[text()='Input is required but no input given.']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Select a project and a quantity, price is updated</b></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_listbox_reference_new_3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_listbox_title_new_3</td>
+  <td>erp5_trade_renderjs_ui_test_product_title</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_listbox_quantity_new_3</td>
+  <td>2</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Asked quantity of &quot;erp5_trade_renderjs_ui_test_product_title - &quot; is not available in inventory for line 3'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<!-- Value is kept -->
+<tr>
+  <td>assertValue</td>
+  <td>field_listbox_reference_new_3</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_listbox_title_new_3</td>
+  <td>erp5_trade_renderjs_ui_test_product_title</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_listbox_resource_relative_url_new_3</td>
+  <td>product_module/erp5_trade_renderjs_ui_test_product</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_listbox_quantity_new_3</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_listbox_price_new_3</td>
+  <td>10.00</td>
+</tr>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Sale Order Line Created.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tr>
+
+<tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+
+</tbody></table>
+</body>
+</html>
