@@ -34,7 +34,29 @@
     </tr>
   </tal:block>
 
-  <tal:block metal:define-macro="prepare_data">
+  <tal:block metal:define-macro="prepare_sale_order_data">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeRenderjsUi/macros/delete_data" />
+    <tr>
+      <td colspan="3"><b>Create Trade Test Data</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/TradeRJSZuite_createSaleOrder</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Sale Order Created.</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="prepare_packing_list_data">
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForTradeRenderjsUi/macros/delete_data" />
     <tr>
       <td colspan="3"><b>Create Trade Test Data</b></td>
