@@ -48,7 +48,7 @@ def createDataStream(result, browser):
   
   # tests upload data from file of 1Mb size
   ctrl = browser.mainForm.getControl(name='field_my_file')
-  ctrl.add_file(io.BytesIO(generateString(1024)*1024), 'text/plain', 'test.txt')
+  ctrl.add_file(io.BytesIO(generateString(1024)*1024*10), 'text/plain', 'test.txt')
 
   # Submit the changes, record the time elapsed in seconds
   result('Save',
