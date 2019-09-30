@@ -16,11 +16,10 @@
       <td>${base_url}/web_site_module/${install_url}/</td>
       <td></td>
     </tr>
-    <!-- Huge timout for onlyoffice_presentation ( includes configuration elements ) -->
     <tr>
       <td>waitForCondition</td>
       <td>selenium.browserbot.currentWindow.navigator.serviceWorker.controller !== null</td>
-      <td>180000</td>
+      <td>150000</td>
     </tr>
     <tr>
       <td>setTimeout</td>

@@ -1,7 +1,5 @@
 web_page_module/gadget_image_editor*
 web_page_module/gadget_web_table*
-web_page_module/gadget_officejs_web_table*
-web_page_module/gadget_officejs_image_editor*
 image_module/image_editor_app_logo_svg
 image_module/web_table_app_logo_svg
 web_site_module/officejs_image_editor
