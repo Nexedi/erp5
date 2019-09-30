@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>use_selection=False, selection_name=None</string> </value>
+            <value> <string>use_selection=False, selection_name=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
