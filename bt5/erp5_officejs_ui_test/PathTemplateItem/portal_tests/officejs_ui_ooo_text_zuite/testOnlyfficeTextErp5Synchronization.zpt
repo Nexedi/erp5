@@ -125,11 +125,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<tr>
   <td>click</td>
   <td>link=Document</td>
   <td></td>
@@ -196,11 +191,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<tr>
   <td>waitForElementPresent</td>
   <td>//button[@data-i18n='Filter']</td>
   <td></td>
@@ -257,7 +247,7 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>Done.</td>
   <td></td>
 </tr>

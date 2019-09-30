@@ -24,19 +24,7 @@
     })
 
     .declareMethod('handleSubmit', function (content_dict, parent_options) {
-      //must return a dict with:
-      //notify: options_dict for notifySubmitted
-      //redirect: options_dict for redirect
-      var return_submit_dict = {
-        notify: {
-          message: "",
-          status: ""
-        },
-        redirect: {
-          command: 'display',
-          options: {}
-        }
-      }, gadget = this,
+      var gadget = this,
         document = parent_options.doc,
         property;
       delete content_dict.dialog_method;
@@ -45,23 +33,7 @@
           document[property] = content_dict[property];
         }
       }
-      return gadget.jio_post(document)
-        .push(function (jio_key) {
-          return_submit_dict.notify.message = "Data Updated";
-          return_submit_dict.notify.status = "success";
-          return_submit_dict.redirect.options = {
-            jio_key: jio_key,
-            editable: true
-          };
-          return return_submit_dict;
-        }, function (error) {
-          if (error instanceof jIO.util.jIOError) {
-            return_submit_dict.notify.message = "Failure cloning document";
-            return_submit_dict.notify.status = "error";
-            return return_submit_dict;
-          }
-          throw error;
-        });
+      return gadget.jio_post(document);
     });
 
 }(window, rJS, RSVP));
