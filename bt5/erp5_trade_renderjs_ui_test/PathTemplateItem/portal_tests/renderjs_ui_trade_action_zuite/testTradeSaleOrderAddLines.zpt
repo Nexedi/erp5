@@ -156,6 +156,11 @@
 <tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(@data-gadget-scope, 'field_my_total_price')]//p[text()='20.00']</td>
+  <td></td>
+</tr>
 
 </tbody></table>
 </body>
