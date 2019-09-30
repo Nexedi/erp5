@@ -128,7 +128,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>[WARNING] The router configuration_manifest will be overwritten</string> </value>
+                    <value> <string>[WARNING] The configuration gadget set in router \'configuration_manifest\' will be overwritten</string> </value>
                 </item>
               </dictionary>
             </value>
