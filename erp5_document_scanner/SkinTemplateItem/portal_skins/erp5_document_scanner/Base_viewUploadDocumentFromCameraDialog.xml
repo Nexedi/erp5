@@ -90,7 +90,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>stringfield_validator</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -102,7 +104,6 @@
                         <string>your_reference</string>
                         <string>your_language</string>
                         <string>your_version</string>
-                        <string>stringfield_validator</string>
                         <string>your_active_process_url</string>
                       </list>
                     </value>
