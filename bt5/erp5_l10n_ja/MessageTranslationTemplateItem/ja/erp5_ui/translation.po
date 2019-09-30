@@ -919,7 +919,7 @@ msgid "Career End Date"
 msgstr "経歴終了日"
 
 msgid "Career Function"
-msgstr "役割名"
+msgstr "経歴の機能"
 
 msgid "Career Start Date"
 msgstr "経歴開始日"
@@ -988,7 +988,7 @@ msgid "Cell Level Divergences"
 msgstr "セルレベルの不整合"
 
 msgid "Change Function"
-msgstr "役割を変更する"
+msgstr "機能を変更する"
 
 msgid "Change Log"
 msgstr "変更履歴"
@@ -1264,13 +1264,13 @@ msgid "Contact"
 msgstr "連絡先"
 
 msgid "Contact Function"
-msgstr "連絡先の役割"
+msgstr "連絡先の機能"
 
 msgid "Contact Type"
 msgstr "連絡先種別"
 
 msgid "Contact function of the data"
-msgstr "連絡先の役割"
+msgstr "連絡先の機能"
 
 msgid "Contact us"
 msgstr "問い合わせる"
@@ -1531,7 +1531,7 @@ msgid "Current"
 msgstr "現在"
 
 msgid "Current Function"
-msgstr "現在の役割"
+msgstr "現在の機能"
 
 msgid "Current Period"
 msgstr "現在の期間"
@@ -2491,7 +2491,7 @@ msgid "Full Sized Signature"
 msgstr "フルサイズの印鑑・署名"
 
 msgid "Function"
-msgstr "役割"
+msgstr "機能"
 
 msgid "Future"
 msgstr "将来"
