@@ -128,7 +128,6 @@
         .push(undefined, function (error) {
           if (!(error instanceof RSVP.CancellationError)) {
             canceller();
-            reject(error);
           }
         });
     }
@@ -155,7 +154,6 @@
     canvas = gadget.querySelector(".canvas");
     photo = gadget.querySelector(".photo");
     photoInput = gadget.querySelector(".photoInput");
-
     return handleUserMedia(device_id, gotStream);
   }
 
@@ -203,9 +201,12 @@
             if (device.kind === 'videoinput') {
               el = document.createElement("option");
               el.value = device.deviceId;
-              el.innerText = device.label;
+              el.innerText = device.label || device.kind + " " + device.deviceId;
               selector.appendChild(el);
             }
+          }
+          if (len === 1 && selector.options.length === 2) {
+            selector.options[1].selected = true;
           }
         });
     })
