@@ -142,7 +142,7 @@ try:
   appcache_manifest.setTextContent(appcache_content)
 
 
-except Exception as e:
+except (ValueError, KeyError, SyntaxError) as e:
   if batch_mode:
     return 'ERROR: ' + str(e)
   return context.Base_redirect('view', keep_items=dict(portal_status_message='ERROR creating configuration manifest: ' + str(e)))

@@ -1,6 +1,6 @@
-/*global document, window, rJS, RSVP */
+/*global document, window, rJS, RSVP, jIO, console */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
-(function (document, window, rJS, RSVP) {
+(function (document, window, rJS, RSVP, jIO, console) {
   "use strict";
 
   rJS(window)
@@ -34,11 +34,11 @@
       return gadget.getSetting("migration_version")
         .push(function (migration_version) {
           if (migration_version !== current_version) {
-            //if app version has changed, force storage sync
+            //if app version has changed, force storage selection
             return gadget.redirect({
               'command': 'display',
               'options': {
-                'page': 'ojs_sync',
+                'page': 'ojs_configurator',
                 'auto_repair': true
               }
             });
@@ -90,6 +90,17 @@
             form_type: form_definition.form_type,
             view: options.view || app_view
           });
+        }, function (error) {
+          // jio not found error
+          if ((error instanceof jIO.util.jIOError) &&
+              (error.status_code === 404)) {
+            console.log(error);
+            return gadget.notifySubmitted({
+              message: error.message + ". Maybe syncronize?",
+              status: "error"
+            });
+          }
+          throw error;
         });
     })
 
@@ -153,4 +164,4 @@
         });
     });
 
-}(document, window, rJS, RSVP));
+}(document, window, rJS, RSVP, jIO, console));
