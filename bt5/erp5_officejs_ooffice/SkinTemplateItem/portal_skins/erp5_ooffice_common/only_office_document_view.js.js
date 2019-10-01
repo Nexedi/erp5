@@ -81,7 +81,13 @@
             .push(function (result) {
               state_dict.data = result.target.result;
               state_dict.blob_type = portal_type_dict.blob_type;
+              if (!state_dict.blob_type) {
+                state_dict.blob_type = "application/x-asc-ooffice";
+              }
               return form_view_gadget.changeState(state_dict);
+            }, function (error) {
+              console.log("ERROR rendering custom view");
+              throw error;
             });
         });
     })
