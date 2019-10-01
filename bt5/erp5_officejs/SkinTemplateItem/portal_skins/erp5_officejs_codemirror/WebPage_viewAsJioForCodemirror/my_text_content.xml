@@ -224,8 +224,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>{"editor": "codemirror", "maximize": true}</string>
-                          <string>{"editor": "codemirror", "maximize": true}</string>
+                          <string>{"editor": "codemirror", "maximize": true, "portal_type": "Web Script"}</string>
+                          <string>{"editor": "codemirror", "maximize": true, "portal_type": "Web Script"}</string>
                         </tuple>
                       </list>
                     </value>
