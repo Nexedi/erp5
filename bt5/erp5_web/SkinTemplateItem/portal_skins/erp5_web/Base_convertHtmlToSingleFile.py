@@ -63,7 +63,9 @@ def handleHtmlTag(tag, attrs):
   else:
     for i in range(len(attrs)):
       if attrs[i][0] == "href" or attrs[i][0] == "src":
-        attrs[i] = attrs[i][0], makeHrefAbsolute(attrs[i][1])
+        # do not make page anchors absolute
+        if attrs[i][1] != "" and attrs[i][1][0] != "#":
+          attrs[i] = attrs[i][0], makeHrefAbsolute(attrs[i][1])
   for i in range(len(attrs)):
     if attrs[i][0] == "style":
       attrs[i] = attrs[i][0], replaceCssUrl(attrs[i][1])
