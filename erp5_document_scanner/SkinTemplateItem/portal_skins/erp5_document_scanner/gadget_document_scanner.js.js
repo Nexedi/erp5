@@ -176,6 +176,8 @@
           selector = element.querySelector("select");
           preferredCroppedCanvasData = preferredCroppedCanvasData || JSON.parse(
             options.preferred_cropped_canvas_data);
+          // Clear photo input
+          element.querySelector('.photoInput').value = "";
           if (!selector.value && video) {
             video.pause();
           }
