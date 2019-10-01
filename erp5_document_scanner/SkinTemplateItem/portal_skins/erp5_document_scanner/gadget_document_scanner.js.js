@@ -1,18 +1,30 @@
 /*jslint indent: 2 */
-/*global rJS, RSVP, window, document, navigator, Cropper, console, FileReader, jIO, Promise*/
-(function (rJS, RSVP, window, document, navigator, Cropper, console, FileReader, jIO, Promise) {
+/*global rJS, RSVP, window, document, navigator, Cropper, console, FileReader, Promise, JSON*/
+(function (rJS, RSVP, window, document, navigator, Cropper, console, FileReader, Promise, JSON) {
   "use strict";
 
   var imageWidth,
+    preferredCroppedCanvasData,
     imageHeight,
     cropper,
     video,
     canvas,
     photo,
-    startbutton,
     photoInput,
-    storage,
     imageCapture;
+
+  function readBlobAsDataURL(blob) {
+    var fr = new FileReader();
+    return new RSVP.Promise(function waitFormDataURLRead(resolve, reject) {
+      fr.addEventListener("load", function handleDataURLRead(evt) {
+        resolve(evt.target.result);
+      });
+      fr.addEventListener("error", reject);
+      fr.readAsDataURL(blob);
+    }, function cancelReadBlobAsDataURL() {
+      fr.abort();
+    });
+  }
 
   function gotStream(mediaStream) {
     imageCapture = new window.ImageCapture(mediaStream.getVideoTracks()[0]);
@@ -56,11 +68,9 @@
       cropper.destroy();
     }
     return RSVP.Queue()
-      .push(function () {
-        return storage.get("settings");
-      })
       .push(function (data) {
-        cropper = new Cropper(gadget.querySelector('.photo'), {data: data});
+        cropper = new Cropper(
+          gadget.querySelector('.photo'), {data: preferredCroppedCanvasData});
       });
   }
 
@@ -107,7 +117,6 @@
     canvas = gadget.querySelector(".canvas");
     photo = gadget.querySelector(".photo");
     photoInput = gadget.querySelector(".photoInput");
-    startbutton = gadget.querySelector(".startbutton");
 
     return RSVP.Queue()
       .push(function () {
@@ -117,6 +126,7 @@
       .push(function (photoCapabilities) {
         imageWidth = photoCapabilities.imageWidth.max;
         imageHeight = photoCapabilities.imageHeight.max;
+        // Hack used to debug. Use document.querySelector is forbidden
         document.querySelector("textarea[name='field_your_description']").value = "Max => " + imageWidth + "x" + imageHeight;
         video.play();
       });
@@ -131,23 +141,7 @@
   }
 
   rJS(window)
-    .ready(function () {
-      return RSVP.Queue()
-        .push(function () {
-          return jIO.createJIO({
-            "type": "indexeddb",
-            "database": "cropper_settings"
-          });
-        })
-        .push(function (proxy) {
-          storage = proxy;
-          return storage.get("settings");
-        })
-        .then(undefined, function () {
-          return storage.put("settings");
-        });
-    })
-    .declareMethod('render', function () {
+    .declareMethod('render', function (options) {
       var el,
         root,
         selector;
@@ -155,6 +149,8 @@
         .push(function (element) {
           root = element;
           selector = element.querySelector("select");
+          preferredCroppedCanvasData = preferredCroppedCanvasData || JSON.parse(
+            options.preferred_cropped_canvas_data);
           if (!selector.value && video) {
             video.pause();
           }
@@ -172,6 +168,9 @@
           var j,
             device,
             len = info_list.length;
+          if (root.querySelector("select").length > 1) {
+            return;
+          }
           for (j = 0; j < len; j += 1) {
             device = info_list[j];
             if (device.kind === 'videoinput') {
@@ -186,11 +185,14 @@
     .declareMethod('getContent', function () {
       var input = this.element.querySelector('.photoInput'),
         result = {};
-      result.field_your_document_scanner_gadget = input.value;
+      result.field_your_document_scanner_gadget = JSON.stringify({
+        "input_value": input.value,
+        "preferred_cropped_canvas_data": preferredCroppedCanvasData
+      });
       return result;
     })
     .onEvent("change", function (evt) {
-      if (evt.target.type == "select-one") {
+      if (evt.target.type === "select-one") {
         return this.getElement()
           .push(function (root) {
             if (!evt.target.value && video) {
@@ -206,16 +208,16 @@
 
     .onEvent("click", function (evt) {
       var gadget, canvasData;
-      if (evt.target.className == "startbutton") {
+      if (evt.target.className === "startbutton") {
         return this.getElement()
           .push(function (el) {
             el.querySelector(".camera-input").style.display = "none";
             return takePicture(el);
           });
       }
-      if (evt.target.className == "capture-button") {
+      if (evt.target.className === "capture-button") {
+        preferredCroppedCanvasData = cropper.getData();
         canvasData = cropper.getCanvasData();
-        storage.put("settings", cropper.getData());
         return this.getElement()
           .push(function (el) {
             gadget = el;
@@ -229,10 +231,10 @@
             });
           })
           .push(function (blob) {
-            return jIO.util.readBlobAsDataURL(blob);
+            return readBlobAsDataURL(blob);
           })
-          .push(function (evt) {
-            var base64data = evt.target.result,
+          .push(function (data_url) {
+            var base64data = data_url,
               block = base64data.split(";"),
               realData = block[1].split(",")[1];
 
@@ -247,4 +249,4 @@
       }
     }, false, true);
 
-}(rJS, RSVP, window, document, navigator, Cropper, console, FileReader, jIO, Promise));
+}(rJS, RSVP, window, document, navigator, Cropper, console, FileReader, Promise, JSON));
