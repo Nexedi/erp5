@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.62 (2019-10-01)
+-------------------
+
+  * erp5.util:
+
+    - testnode: Fix scalability test runner logic for importing a test suite class
+
 0.4.61 (2019-09-18)
 -------------------
 
