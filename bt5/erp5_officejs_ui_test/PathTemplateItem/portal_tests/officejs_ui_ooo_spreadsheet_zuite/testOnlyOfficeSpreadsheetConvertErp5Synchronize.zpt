@@ -29,7 +29,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_skins/erp5_officejs_ui_test/gadget_ooffice_upload_erp5.html</td>
+  <td>${base_url}/portal_skins/erp5_officejs_ui_test/gadget_ooffice_spreadsheet_upload.html</td>
   <td></td>
 </tr>
 <tr>
@@ -43,7 +43,28 @@
   <td>install_url</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_install" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/choice_erp5_storage"/>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Storages"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Storages"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='Local is Enough']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text()='Local is Enough']</td>
+  <td></td>
+</tr>
+  
+  
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/open_document_with_title"/>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load_spreadsheet"/>
