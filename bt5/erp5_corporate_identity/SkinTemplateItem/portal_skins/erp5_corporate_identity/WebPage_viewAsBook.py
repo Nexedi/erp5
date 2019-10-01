@@ -194,7 +194,7 @@ if book_include_reference_table:
   #if len(book_history_section_list) > 0:
   #  book_content = book_content.replace(book_history_section_list[-1], (book_history_section_list[-1] + book_references.encode('UTF-8').strip()))
   #else:
-  #  book_content = book_content.replace("${WebPage_insertTableOfReferences}", book_references.encode('UTF-8').strip())
+  book_references = book.Base_unescape(book_references)
   book_content = book_content.replace("${WebPage_insertTableOfReferences}", book_references.encode('UTF-8').strip())
 else:
   book_content = book_content.replace("${WebPage_insertTableOfReferences}", blank)

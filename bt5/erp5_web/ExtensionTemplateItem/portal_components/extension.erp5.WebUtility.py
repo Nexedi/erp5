@@ -130,3 +130,6 @@ def parseCssForUrl(text):
           data = ")"
       result.append(("data", data))
   return result
+
+def unescape(self, html):
+  return HTMLParser().unescape(html)
