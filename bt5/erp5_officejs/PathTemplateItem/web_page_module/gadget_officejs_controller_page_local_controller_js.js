@@ -1,6 +1,6 @@
-/*global document, window, rJS, RSVP */
+/*global document, window, rJS, RSVP, console */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
-(function (document, window, rJS, RSVP) {
+(function (document, window, rJS, RSVP, console) {
   "use strict";
 
   rJS(window)
@@ -34,11 +34,11 @@
       return gadget.getSetting("migration_version")
         .push(function (migration_version) {
           if (migration_version !== current_version) {
-            //if app version has changed, force storage sync
+            //if app version has changed, force storage selection
             return gadget.redirect({
               'command': 'display',
               'options': {
-                'page': 'ojs_sync',
+                'page': 'ojs_configurator',
                 'auto_repair': true
               }
             });
@@ -153,4 +153,4 @@
         });
     });
 
-}(document, window, rJS, RSVP));
+}(document, window, rJS, RSVP, console));
