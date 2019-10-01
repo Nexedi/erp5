@@ -13,7 +13,7 @@ else:
              + portal.portal_preferences.getPreferredInternalUseList()
 
 if not use_list:
-  return []
+  return [('No use list', '')]
 
 sql_kw = {}
 try:
