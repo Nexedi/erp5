@@ -85,7 +85,6 @@ for line in listbox:
 
     # Resource part
     line["resource_relative_url"] = product.getRelativeUrl() #cell.getResource()
-    # request.set("field_listbox_resource_relative_url_new_%s"%line_id,product.getRelativeUrl())
     request.form["field_listbox_resource_relative_url_new_%s"%line_id] = product.getRelativeUrl()
 
     request.form["field_listbox_quantity_unit_new_%s"%line_id] = product.getQuantityUnit()

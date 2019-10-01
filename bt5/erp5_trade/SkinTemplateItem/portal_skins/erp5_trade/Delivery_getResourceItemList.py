@@ -13,7 +13,7 @@ else:
              + portal.portal_preferences.getPreferredInternalUseList()
 
 if not use_list:
-  return [('No use list', '')]
+  return []
 
 sql_kw = {}
 try:
@@ -37,7 +37,7 @@ if len(sql_kw) == 0:
       sql_kw['reference'] = cell.getResourceReference()
       sql_kw['title'] = cell.getResourceTitle()
     else:
-      return [('None getResourceValue %s' % cell.getResourceTitle(), '')]
+      return [('', '')]
   except AttributeError:
     pass
 
@@ -55,5 +55,5 @@ for resource in portal.portal_catalog.searchResults(sort_on=(('portal_type', 'as
     (resource.getTitle(),
      resource.getRelativeUrl()))
 
-result.append(('Not SQL found %s' % str(sql_kw), ''))
+result.append(('', ''))
 return result
