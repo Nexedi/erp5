@@ -35,11 +35,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_uploadDocumentFromCameraByActivity</string> </value>
+            <value> <string>Base_storeDocumentFromCameraInActiveProcess</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Use this dialog to create a new file and associate it to the current document.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -74,16 +74,14 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>your_document_scanner_gadget</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>your_description</string>
+                        <string>your_document_scanner_gadget</string>
                       </list>
                     </value>
                 </item>
@@ -99,11 +97,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_title</string>
-                        <string>your_short_title</string>
-                        <string>your_reference</string>
-                        <string>your_language</string>
-                        <string>your_version</string>
                         <string>your_active_process_url</string>
                       </list>
                     </value>
@@ -111,11 +104,7 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>your_portal_type</string>
-                        <string>your_group</string>
-                        <string>your_publication_section</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -123,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewUploadDocumentFromCameraDialog</string> </value>
+            <value> <string>Base_viewUploadDocumentFromCameraStep1Dialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -147,7 +136,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Finish</string> </value>
+            <value> <string>Capture</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -155,11 +144,11 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>Base_storeDocumentFromCameraInActiveProcess</string> </value>
+            <value> <string>Base_viewUploadDocumentFromCameraStep2Dialog</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
-            <value> <string>Capture</string> </value>
+            <value> <string>Finish</string> </value>
         </item>
       </dictionary>
     </pickle>

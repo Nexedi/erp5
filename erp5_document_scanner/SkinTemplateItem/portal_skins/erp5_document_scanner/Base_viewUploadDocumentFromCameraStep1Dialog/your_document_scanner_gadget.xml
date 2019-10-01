@@ -158,7 +158,9 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>validator_field_id</string> </key>
@@ -255,7 +257,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.restrictedTraverse(\'gadget_document_scanner.html\').absolute_url() + "?v=0.10"</string> </value>
+            <value> <string>python: field.restrictedTraverse(\'gadget_document_scanner.html\').absolute_url() + "?v=0.13"</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -269,6 +271,19 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: [(\'preferred_cropped_canvas_data\', context.Base_getPreferredCropperSettingsFromPreference()),]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>string:</string> </value>
         </item>
       </dictionary>
     </pickle>
