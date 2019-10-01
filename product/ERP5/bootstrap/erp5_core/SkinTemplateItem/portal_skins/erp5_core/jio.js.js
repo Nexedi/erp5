@@ -15886,26 +15886,60 @@ return new Parser;
  */
 
 /*jslint nomen: true*/
-/*global jIO, RSVP, DOMParser, XMLSerializer*/
-(function (jIO, RSVP, DOMParser, XMLSerializer) {
+/*global jIO, RSVP, DOMParser, XMLSerializer, navigator*/
+(function (jIO, RSVP, DOMParser, XMLSerializer, navigator) {
   "use strict";
+
+  if (window.document === undefined) {
+    window.document = {
+      createElementNS: function () {
+        throw new Error(
+          'document.createElementNS is not supported by ' + navigator.userAgent
+        );
+      }
+    };
+  }
 
   var parser = new DOMParser(),
     serializer = new XMLSerializer();
 
-  function makeXmlRpcRequest(file, from, to) {
+  function makeXmlRpcRequest(file, from, to, conversion_kw) {
     var xml = parser.parseFromString(
       '<?xml version="1.0" encoding="UTF-8"?><methodCall>' +
         '<methodName>convertFile</methodName><params>' +
         '<param><value><string></string></value></param>' +
         '<param><value><string></string></value></param>' +
-        '<param><value><string></string></value></param></params></methodCall>',
+        '<param><value><string></string></value></param>' +
+        '<param><struct></struct></param>' +
+        '</params></methodCall>',
       'text/xml'
     ),
+      elt,
+      member,
+      name,
+      value,
+      key,
+      struct = xml.getElementsByTagName('struct'),
       string_list = xml.getElementsByTagName('string');
     string_list[0].textContent = file;
     string_list[1].textContent = from;
     string_list[2].textContent = to;
+    if (conversion_kw) {
+      for (key in conversion_kw) {
+        if (conversion_kw.hasOwnProperty(key)) {
+          elt = window.document.createElementNS(null, conversion_kw[key][1]);
+          elt.textContent = conversion_kw[key][0];
+          value = window.document.createElementNS(null, "value");
+          value.appendChild(elt);
+          name = window.document.createElementNS(null, "name");
+          name.textContent = key;
+          member = window.document.createElementNS(null, "member");
+          member.appendChild(name);
+          member.appendChild(value);
+          struct[0].appendChild(member);
+        }
+      }
+    }
     return serializer.serializeToString(xml);
   }
 
@@ -15914,7 +15948,7 @@ return new Parser;
    * from a format to another
    * return converted blob.
    **/
-  function convert(url, blob, from, to) {
+  function convert(url, blob, from, to, conversion_kw) {
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.readBlobAsDataURL(blob);
@@ -15926,7 +15960,8 @@ return new Parser;
           data: makeXmlRpcRequest(
             result.target.result.split('base64,')[1],
             from,
-            to
+            to,
+            conversion_kw
           )
         });
       })
@@ -15976,11 +16011,13 @@ return new Parser;
     return this._sub_storage.getAttachment.apply(this._sub_storage, arguments);
   };
 
-  CloudoooStorage.prototype.putAttachment = function (id, name, blob) {
+  CloudoooStorage.prototype.putAttachment = function (id, name, blob,
+    conversion_kw
+    ) {
     var storage = this;
     return storage.get(id)
       .push(function (doc) {
-        return convert(storage._url, blob, doc.from, doc.to);
+        return convert(storage._url, blob, doc.from, doc.to, conversion_kw);
       })
       .push(function (converted_blob) {
         return storage._sub_storage.putAttachment(id, name, converted_blob);
@@ -16005,4 +16042,4 @@ return new Parser;
 
   jIO.addStorage('cloudooo', CloudoooStorage);
 
-}(jIO, RSVP, DOMParser, XMLSerializer));
+}(jIO, RSVP, DOMParser, XMLSerializer, navigator));
