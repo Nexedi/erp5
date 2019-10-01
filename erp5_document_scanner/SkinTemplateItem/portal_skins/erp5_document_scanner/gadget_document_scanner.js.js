@@ -26,12 +26,6 @@
     });
   }
 
-  function gotStream(mediaStream) {
-    imageCapture = new window.ImageCapture(mediaStream.getVideoTracks()[0]);
-    video.srcObject = mediaStream;
-    return imageCapture.getPhotoCapabilities();
-  }
-
   function takePicture(gadget) {
     imageCapture.takePhoto({imageWidth: imageWidth})
       .then(function (blob) {
@@ -54,8 +48,6 @@
     ratio  = Math.min(canvas.width / img.width, canvas.height / img.height);
     x = (canvas.width - img.width * ratio) / 2;
     y = (canvas.height - img.height * ratio) / 2;
-
-    document.querySelector("textarea[name='field_your_description']").value += "\nImage size " + img.width + "x" + img.height;
 
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height, x, y, img.width * ratio, img.height * ratio);
@@ -112,24 +104,59 @@
     outputContext.putImageData(imageData, 0, 0);
   }
 
+  function handleUserMedia(device_id, callback) {
+    var stream;
+
+    function canceller() {
+      if (stream !== undefined) {
+        // Stop the streams
+        stream.getTracks().forEach(function (track) {
+          track.stop();
+        });
+      }
+    }
+
+    function waitForStream(resolve, reject) {
+      new RSVP.Queue()
+        .push(function () {
+          return navigator.mediaDevices.getUserMedia({video: {deviceId: {exact: device_id}}});
+        })
+        .push(function (result) {
+          stream = result;
+          return callback(stream);
+        })
+        .push(undefined, function (error) {
+          if (!(error instanceof RSVP.CancellationError)) {
+            canceller();
+            reject(error);
+          }
+        });
+    }
+
+    return new RSVP.Promise(waitForStream, canceller);
+  }
+
+  function gotStream(mediaStream) {
+    return RSVP.Queue()
+      .push(function () {
+        imageCapture = new window.ImageCapture(mediaStream.getVideoTracks()[0]);
+        video.srcObject = mediaStream;
+        return imageCapture.getPhotoCapabilities();
+      })
+      .push(function (photoCapabilities) {
+        imageWidth = photoCapabilities.imageWidth.max;
+        imageHeight = photoCapabilities.imageHeight.max;
+        video.play();
+      });
+  }
+
   function startup(gadget, device_id) {
     video = gadget.querySelector(".video");
     canvas = gadget.querySelector(".canvas");
     photo = gadget.querySelector(".photo");
     photoInput = gadget.querySelector(".photoInput");
 
-    return RSVP.Queue()
-      .push(function () {
-        return navigator.mediaDevices.getUserMedia({video: {deviceId: {exact: device_id}}});
-      })
-      .push(gotStream)
-      .push(function (photoCapabilities) {
-        imageWidth = photoCapabilities.imageWidth.max;
-        imageHeight = photoCapabilities.imageHeight.max;
-        // Hack used to debug. Use document.querySelector is forbidden
-        document.querySelector("textarea[name='field_your_description']").value = "Max => " + imageWidth + "x" + imageHeight;
-        video.play();
-      });
+    return handleUserMedia(device_id, gotStream);
   }
 
   function clearphoto() {
