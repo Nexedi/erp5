@@ -1712,15 +1712,16 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           """Turn JSON serialized array into a tuple (col_name, order)."""
           sort_col, sort_order = json.loads(raw_string)
           sort_col, sort_order = byteify(sort_col), byteify(sort_order)
-          # JIO keeps sort order as whole word 'ascending' resp. 'descending'
-          if sort_order.lower().startswith("asc"):
-            sort_order = "ASC"
-          elif sort_order.lower().startswith("desc"):
+          # The sort_order value comes from the listbox's definition. But for historical reason,
+          # it often contains values like "Type | Type", instead of "Type | ASC".
+          # In reality, "Type | Type" will be interpreted as "Type | ASC", because of the
+          # catalog implementation :
+          # https://lab.nexedi.com/nexedi/erp5/blob/3978dba1cfc3b68d85b5ebddebfdd3ff3177854d/product/ZSQLCatalog/SQLCatalog.py#L2115-2118
+          # For consistency reasons, the code here should mirror this behavior
+          if sort_order.lower() in ('desc', 'descending', 'reverse'):
             sort_order = "DESC"
           else:
-            # should raise a ValueError instead
-            log('Wrong sort order "{}" in {}! It must start with "asc" or "desc"'.format(sort_order, form_relative_url),
-                        level=200)  # error
+            sort_order = "ASC"
           return (sort_col, sort_order)
 
         if isinstance(sort_on, list):
