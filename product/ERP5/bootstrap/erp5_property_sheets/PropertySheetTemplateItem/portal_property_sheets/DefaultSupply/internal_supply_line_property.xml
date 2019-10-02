@@ -77,6 +77,7 @@
                 <string>start_date_range_max</string>
                 <string>start_date_range_min</string>
                 <string>comment</string>
+                <string>description</string>
                 <string>source_reference</string>
                 <string>destination_reference</string>
                 <string>p_variation_base_category_list</string>

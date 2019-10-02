@@ -24,6 +24,24 @@
             </value>
         </item>
         <item>
+            <key> <string>acquisition_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_object_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>alt_accessor_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
@@ -49,6 +67,7 @@
                 <string>start_date_range_max</string>
                 <string>start_date_range_min</string>
                 <string>comment</string>
+                <string>description</string>
                 <string>source_reference</string>
                 <string>destination_reference</string>
                 <string>p_variation_base_category_list</string>
@@ -58,6 +77,12 @@
         <item>
             <key> <string>content_portal_type</string> </key>
             <value> <string>python: (\'Supply Line\',)</string> </value>
+        </item>
+        <item>
+            <key> <string>content_translation_acquired_property_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
