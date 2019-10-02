@@ -11,30 +11,56 @@
  *  </tr>
  */
 Selenium.prototype.doSetFile = function(locator, url_and_filename) {
-    var tmpArray = url_and_filename.split(' ', 2);
-    var url = tmpArray[0];
-    var fileName = tmpArray[1];
+  var tmpArray = url_and_filename.split(' ', 2);
+  var url = tmpArray[0];
+  var fileName = tmpArray[1];
+  var rejectionValue,
+    promiseState;
+  // same technique as doVerifyImageMatchSnapshot below
+  var assertFileSet = () => {
+    if (promiseState === 'pending') {
+      return false;
+    }
+    if (promiseState === 'resolved') {
+      return true;
+    }
+    if (promiseState === 'rejected') {
+      Assert.fail(rejectionValue);
+    }
+    promiseState = 'pending';
+
     if (!fileName) {
-        throw new Error('file name must not be empty.');
+      throw new Error('file name must not be empty.');
     }
     var fileField = this.page().findElement(locator);
     fetch(url)
-    .then(function (response){
+      .then(function(response) {
         if (!response.ok) {
-            throw new Error('HTTP error, status = ' + response.status);
+          throw new Error('HTTP error, status = ' + response.status);
         }
         return response.blob();
-    })
-    .then(function (blob){
-        var dT = new ClipboardEvent('').clipboardData || // Firefox < 62 workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655
-                 new DataTransfer(); // specs compliant (as of March 2018 only Chrome)
+      })
+      .then(function(blob) {
+        var dT =
+          /* Firefox < 62 workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655 */
+          new ClipboardEvent('').clipboardData ||
+          /* specs compliant (as of March 2018 only Chrome) */
+          new DataTransfer();
         dT.items.add(new File([blob], fileName));
         fileField.files = dT.files;
-    });
-    return Selenium.decorateFunctionWithTimeout(function () {
-        var window = selenium.browserbot.getCurrentWindow();
-        return (fileField.value || "").endsWith(fileName);
-    }, 60000);
+      })
+      .then(
+        function() {
+          promiseState = 'resolved';
+        },
+        function(error) {
+          console.error(error);
+          promiseState = 'rejected';
+          rejectionValue = 'Error setting file ' + error;
+        }
+      );
+  }
+  return assertFileSet;
 };
 
 
