@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>all_columns</string>
                 <string>columns</string>
                 <string>selection_name</string>
                 <string>title</string>
@@ -73,6 +74,29 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>follow_up_title</string>
+                          <string>Follow Up</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
