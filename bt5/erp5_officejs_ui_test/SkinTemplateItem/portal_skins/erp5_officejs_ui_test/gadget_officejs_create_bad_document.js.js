@@ -11,12 +11,15 @@
       }),
         gadget = this;
       return storage.put('bad_document', {
+        'content_type': "application/x-asc-spreadsheet",
+        'description': '',
+        'filename': 'test.xlsx',
+        'language': '',
         'reference': 'bad_document_ooffice_upload',
         'title': 'Bad Document',
-        'filename': 'test.xlsx',
         'portal_type': 'Spreadsheet',
         'parent_relative_url': "document_module",
-        'content_type': "application/x-asc-spreadsheet",
+        'version': '',
         'modification_date': 'Fri, 17 Aug 2018 11:21:22 +0000'
       })
       .push(function (id) {
