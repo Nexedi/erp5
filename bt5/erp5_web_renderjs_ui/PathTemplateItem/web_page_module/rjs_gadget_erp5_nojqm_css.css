@@ -1386,6 +1386,9 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
     text-indent: 0;
   }
 }
+div.no_header .document_table .ui-table-header {
+  display: none;
+}
 .document_table table {
   width: 100%;
   text-align: left;
@@ -1556,6 +1559,9 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
     float: left;
     text-indent: 6pt;
   }
+}
+div.no_footer .document_table nav {
+  display: none;
 }
 .document_table tbody tr td:first-child input.hide_element[type="checkbox"] {
   display: none;

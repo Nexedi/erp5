@@ -1623,6 +1623,10 @@ div[data-gadget-scope='erp5_searchfield'] {
         }
       }
     }
+
+    div.no_header & {
+      display: none;
+    }
   }
 
   table {
@@ -1805,6 +1809,10 @@ div[data-gadget-scope='erp5_searchfield'] {
           text-indent: @margin-size;
         }
       }
+    }
+
+    div.no_footer & {
+      display: none;
     }
   }
 
