@@ -24,9 +24,6 @@
     <td>Bad Document</td>
     <td>title</td>
   </tr>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_install" />
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/choice_erp5_storage"/>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
   <tr>
     <td>open</td>
     <td>${base_url}/portal_skins/erp5_officejs_ui_test/gadget_officejs_create_bad_document.html</td>
@@ -37,6 +34,10 @@
     <td>//div[text()='Document Created']</td>
     <td></td>
   </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_install" />
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/choice_erp5_storage"/>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
+    
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_install" />
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/synchronize"/>
