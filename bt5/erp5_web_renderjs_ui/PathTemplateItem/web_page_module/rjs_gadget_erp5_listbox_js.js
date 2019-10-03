@@ -90,7 +90,7 @@
         cell = row.cell_list[j];
         td_element = document.createElement('td');
 
-        if (options.show_line_selector || (options.form_id === 'form_dialog' && options.show_select)) {
+        if (options.show_line_selector) {
           if (j === 0) {
             // If first cell, show a checkbox to select the line
             sub_element = document.createElement('input');
@@ -279,8 +279,6 @@
     container = template({
       "row_list": row_list,
       "show_anchor": gadget.state.show_anchor,
-      "show_select": gadget.state.show_select,
-      "form_id": gadget.state.form_id,
       "column_list": column_list,
       "show_line_selector": gadget.state.show_line_selector,
       "show_select_action": gadget.state.show_select_action,
@@ -344,7 +342,6 @@
                            "triggerListboxSelectAction")
     .declareAcquiredMethod("triggerListboxClipboardAction",
                            "triggerListboxClipboardAction")
-    .declareAcquiredMethod("getFormDefinition", "getFormDefinition")
 
     //////////////////////////////////////////////
     // initialize the gadget content
@@ -409,8 +406,7 @@
           return RSVP.all([
             gadget.getUrlParameter(field_json.key + '_begin_from'),
             gadget.getUrlParameter(field_json.key + '_sort_list:json'),
-            gadget.getUrlParameter(field_json.key + '_column_list:json'),
-            gadget.getFormDefinition()
+            gadget.getUrlParameter(field_json.key + '_column_list:json')
           ]);
         })
         .push(function (result_list) {
@@ -463,8 +459,6 @@
             show_anchor: field_json.show_anchor,
             show_stat: field_json.show_stat,
             show_count: field_json.show_count,
-            show_select: field_json.show_select,
-            form_id: result_list[3].pt,
 
             line_icon: field_json.line_icon,
             query: field_json.query,

@@ -742,7 +742,6 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
       "sort_column_list": sort_column_list,
       "editable_column_list": editable_column_list,
       "show_anchor": field.get_value("anchor"),
-      "show_select": field.get_value("select"),
       "portal_type": portal_type_list,
       "lines": field.get_value('lines'),
       "default_params": ensureSerializable(default_params),
