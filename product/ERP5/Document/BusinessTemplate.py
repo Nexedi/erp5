@@ -5238,18 +5238,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_local_role_key_item = \
           CatalogLocalRoleKeyTemplateItem(
                self.getTemplateCatalogLocalRoleKeyList())
-      try:
-        self._catalog_security_uid_column_item = \
+      # The following properties have been introduced later on. See
+      # PropertySheetTool to handle smoothly instances not upgraded yet.
+      self._catalog_security_uid_column_item = \
           CatalogSecurityUidColumnTemplateItem(
                self.getTemplateCatalogSecurityUidColumnList())
-        self._interface_item = \
+      self._interface_item = \
           InterfaceTemplateItem(self.getTemplateInterfaceIdList())
-        self._mixin_item = \
+      self._mixin_item = \
           MixinTemplateItem(self.getTemplateMixinIdList())
-      except AttributeError:
-        # be backwards compatible with old zope instances which
-        # do not contain recent version of erp5_property_sheets
-        pass
 
     security.declareProtected(Permissions.ManagePortal, 'build')
     def build(self, no_action=0, update_revision=True):
