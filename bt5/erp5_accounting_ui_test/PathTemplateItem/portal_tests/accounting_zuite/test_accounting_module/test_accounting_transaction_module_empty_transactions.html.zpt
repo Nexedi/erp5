@@ -80,60 +80,65 @@ Accounting Transaction Module Displays empty Transactions
   <td>//span[@class="listbox-current-page-total-number"]</td>
   <td>5 records</td>
 </tr>
+<!--
+  The sort order of this list is node defined, so we use this XPATH to select the line,
+  then we'll check each listbox cell by paths relative to this one.
+ -->
+<tr>
+  <td>verifyElementPresent</td>
+  <td>
+//tr[contains(@class, 'listbox-data-line')]/td[8]/a[text()="Draft"]
+  </td>
+  <td></td>
+</tr>
+
 <!-- column properties -->
 <tr>
   <td>verifyText</td>
   <td>
-//tr[@class='listbox-data-line-0 DataA']/td[3]
+//tr[contains(@class, 'listbox-data-line')]/td[8]/a[text()="Draft"]/../../td[3]
   </td>
   <td></td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>
-//tr[@class='listbox-data-line-0 DataA']/td[4]
+//tr[contains(@class, 'listbox-data-line')]/td[8]/a[text()="Draft"]/../../td[4]
   </td>
   <td>Accounting Transaction</td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>
-//tr[@class='listbox-data-line-0 DataA']/td[5]
+//tr[contains(@class, 'listbox-data-line')]/td[8]/a[text()="Draft"]/../../td[5]
   </td>
   <td></td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>
-//tr[@class='listbox-data-line-0 DataA']/td[6]
+//tr[contains(@class, 'listbox-data-line')]/td[8]/a[text()="Draft"]/../../td[6]
   </td>
   <td></td>
 </tr>
 <tr>
   <td>verifyText</td>
   <td>
-//tr[@class='listbox-data-line-0 DataA']/td[7]
+//tr[contains(@class, 'listbox-data-line')]/td[8]/a[text()="Draft"]/../../td[7]
   </td>
   <td></td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>
-//tr[@class='listbox-data-line-0 DataA']/td[8]
-  </td>
-  <td>Draft</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
   <td>
-//tr[@class='listbox-data-line-0 DataA']/td[9]
+//tr[contains(@class, 'listbox-data-line')]/td[8]/a[text()="Draft"]/../../td[9]
   </td>
   <td>0.0</td>
 </tr>
 <tr>
   <td>verifyFloat</td>
   <td>
-//tr[@class='listbox-data-line-0 DataA']/td[10]
+//tr[contains(@class, 'listbox-data-line')]/td[8]/a[text()="Draft"]/../../td[10]
   </td>
   <td>0.0</td>
 </tr>
@@ -232,119 +237,21 @@ Accounting Transaction Module Displays empty Transactions
   <td>//span[@class="listbox-current-page-total-number"]</td>
   <td>6 records</td>
 </tr>
-<!-- column properties line 0 -->
+<!--
+  At this point, we have two draft lines that should have quantity 0.00
+  for debit and credit columns. The sort order is not defined, so we
+  cannot assert which cell has the value, we just check that we have two
+  lines for 0.00
+-->
 <tr>
-  <td>verifyText</td>
-  <td>
-//tr[@class='listbox-data-line-0 DataA']/td[3]
-  </td>
+  <td>verifyElementPresent</td>
+  <td>//tr[contains(@class, 'listbox-data-line')][td[9]/a/span[text()="0.00"]][2]</td>
   <td></td>
 </tr>
 <tr>
-  <td>verifyText</td>
-  <td>
-//tr[@class='listbox-data-line-0 DataA']/td[4]
-  </td>
-  <td>Accounting Transaction</td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>
-//tr[@class='listbox-data-line-0 DataA']/td[5]
-  </td>
+  <td>verifyElementPresent</td>
+  <td>//tr[contains(@class, 'listbox-data-line')][td[10]/a/span[text()="0.00"]][2]</td>
   <td></td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>
-//tr[@class='listbox-data-line-0 DataA']/td[6]
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>
-//tr[@class='listbox-data-line-0 DataA']/td[7]
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>
-//tr[@class='listbox-data-line-0 DataA']/td[8]
-  </td>
-  <td>Draft</td>
-</tr>
-<tr>
-  <td>verifyFloat</td>
-  <td>
-//tr[@class='listbox-data-line-0 DataA']/td[9]
-  </td>
-  <td>0.0</td>
-</tr>
-<tr>
-  <td>verifyFloat</td>
-  <td>
-//tr[@class='listbox-data-line-0 DataA']/td[10]
-  </td>
-  <td>0.0</td>
-</tr>
-<!-- column properties line 1 (order for lines 0 and 1 is unknown as we sort on date) -->
-<tr>
-  <td>verifyText</td>
-  <td>
-//tr[@class='listbox-data-line-1 DataB']/td[3]
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>
-//tr[@class='listbox-data-line-1 DataB']/td[4]
-  </td>
-  <td>Accounting Transaction</td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>
-//tr[@class='listbox-data-line-1 DataB']/td[5]
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>
-//tr[@class='listbox-data-line-1 DataB']/td[6]
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>
-//tr[@class='listbox-data-line-1 DataB']/td[7]
-  </td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>
-//tr[@class='listbox-data-line-1 DataB']/td[8]
-  </td>
-  <td>Draft</td>
-</tr>
-<tr>
-  <td>verifyFloat</td>
-  <td>
-//tr[@class='listbox-data-line-1 DataB']/td[9]
-  </td>
-  <td>0.0</td>
-</tr>
-<tr>
-  <td>verifyFloat</td>
-  <td>
-//tr[@class='listbox-data-line-1 DataB']/td[10]
-  </td>
-  <td>0.0</td>
 </tr>
 <!-- }}} -->
 
