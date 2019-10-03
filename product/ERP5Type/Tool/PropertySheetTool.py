@@ -56,13 +56,30 @@ class PropertySheetTool(BaseTool):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  # Business Template properties introduced later on have to be there as
+  # _importFile a bt will look at propertyMap() to set properties
+  _bootstrap_business_template_property_tuple = (
+    'template_catalog_security_uid_column_property',
+    'template_module_component_id_property',
+    'template_interface_id_property',
+    'template_mixin_id_property',
+    'template_tool_component_id_property')
+
   def _isBootstrapRequired(self):
-    return not self.has_key('BaseType')
+    if not self.has_key('BaseType'):
+      return True
+
+    bt_has_key = self.BusinessTemplate.has_key
+    for bt_property in self._bootstrap_business_template_property_tuple:
+      if not bt_has_key(bt_property):
+        return True
+
+    return False
 
   def _bootstrap(self):
     bt_name = 'erp5_property_sheets'
     from Products.ERP5.ERP5Site import ERP5Generator
-    ERP5Generator.bootstrap(self, bt_name, 'PropertySheetTemplateItem', (
+    content_path_list = [
       'BaseType',
       'BusinessTemplate',
       'Folder',
@@ -72,8 +89,12 @@ class PropertySheetTool(BaseTool):
       # the following ones are required to upgrade an existing site
       'Reference',
       'BaseCategory',
-      'SQLIdGenerator',
-    ))
+      'SQLIdGenerator']
+    content_path_list.extend([
+      'BusinessTemplate/' + bt_property
+      for bt_property in self._bootstrap_business_template_property_tuple])
+    ERP5Generator.bootstrap(self, bt_name, 'PropertySheetTemplateItem',
+                            content_path_list)
     def install():
       from ZPublisher.BaseRequest import RequestContainer
       from Products.ERP5Type.Globals import get_request

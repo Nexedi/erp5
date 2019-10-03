@@ -2009,7 +2009,7 @@ class ERP5Generator(PortalGenerator):
     return p
 
   @classmethod
-  def bootstrap(cls, context, bt_name, item_name, content_id_list):
+  def bootstrap(cls, context, bt_name, item_name, content_path_list):
     bt_path = getBootstrapBusinessTemplateUrl(bt_name)
     from Products.ERP5.Document.BusinessTemplate import quote
     traverse = context.unrestrictedTraverse
@@ -2017,16 +2017,22 @@ class ERP5Generator(PortalGenerator):
     prefix_len = len(os.path.join(top, ''))
     for root, dirs, files in os.walk(top):
       container_path = root[prefix_len:]
-      load = traverse(container_path)._importObjectFromFile
+      container_obj = traverse(container_path)
+      load = container_obj._importObjectFromFile
       if container_path:
         id_set = {x[:-4] for x in files if x[-4:] == '.xml'}
       else:
-        id_set = {quote(x) for x in content_id_list
-                           if not context.hasObject(x)}
+        id_set = set()
+        for content_path in content_path_list:
+          try:
+            traverse(content_path)
+          except AttributeError:
+            id_set.add(quote(content_path.split('/', 1)[0]))
       dirs[:] = id_set.intersection(dirs)
-      for file in id_set:
-        load(os.path.join(root, file + '.xml'),
-             verify=False, set_owner=False, suppress_events=True)
+      for id_ in id_set:
+        if not container_obj.hasObject(id_):
+          load(os.path.join(root, id_ + '.xml'),
+               verify=False, set_owner=False, suppress_events=True)
 
   @staticmethod
   def bootstrap_allow_type(types_tool, portal_type):

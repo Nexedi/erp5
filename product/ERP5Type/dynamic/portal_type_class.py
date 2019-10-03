@@ -238,7 +238,14 @@ def generatePortalTypeClass(site, portal_type_name):
                              % (type_class, portal_type_name))
 
   if klass is None:
-    klass = _importClass(type_class_path)
+    try:
+      klass = _importClass(type_class_path)
+    except ImportError:
+      error_msg = 'Could not import %s of Portal Type %s' % (type_class,
+                                                             portal_type_name)
+
+      LOG("ERP5Type.Dynamic", WARNING, error_msg, error=True)
+      raise AttributeError(error_msg)
 
   global property_sheet_generating_portal_type_set
 
