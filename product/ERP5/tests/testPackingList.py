@@ -1012,7 +1012,8 @@ class TestPackingListMixin(TestOrderMixin):
     cloned_packing_list = packing_list1.Base_createCloneDocument(batch_mode=True)
     cloned_packing_list.setStartDate(cloned_packing_list.getStartDate() + 1)
     cloned_packing_list.setStopDate(cloned_packing_list.getStopDate() + 1)
-    cloned_line, = cloned_packing_list.objectValues()
+    cloned_line, = cloned_packing_list.objectValues(
+          portal_type= self.packing_list_line_portal_type)
     cloned_line.setQuantity(self.default_quantity+1)
     self.portal.portal_workflow.doActionFor(cloned_packing_list, "confirm_action")
     self.tic()
