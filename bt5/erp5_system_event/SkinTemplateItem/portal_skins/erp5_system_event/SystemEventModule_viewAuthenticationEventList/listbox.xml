@@ -80,7 +80,7 @@
                       <list>
                         <tuple>
                           <string>follow_up_title</string>
-                          <string>Follow Up</string>
+                          <string>Follow-up</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
