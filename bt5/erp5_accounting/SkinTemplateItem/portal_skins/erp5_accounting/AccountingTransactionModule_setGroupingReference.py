@@ -42,7 +42,7 @@ if uids:
 request.set('total_selected_amount', total_selected_amount)
 
 if update:
-  context.Base_updateDialogForm()
+  context.Base_updateDialogForm(update=update)
   return context.Base_renderForm(
     'AccountingTransactionModule_viewGroupingFastInputDialog',
     REQUEST=request,
