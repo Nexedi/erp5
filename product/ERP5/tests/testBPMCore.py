@@ -430,13 +430,13 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEqual([path_node.getRelativeUrl()],
                       business_path.getArrowCategoryDict(context=context_movement)['source'])
 
-  def test_BusinessPathDynamicCategoryAccessProviderEmptyMovement(self):
+  def test_BusinessPathDynamicCategoryAccessProviderNoEmptyMovement(self):
     business_path = self.createTradeModelPath()
     business_path.setSourceMethodId('TradeModelPath_getDefaultSourceList')
 
     context_movement = self.createMovement()
     self.assertEqual(None, business_path.getSourceValue())
-    self.assertFalse(business_path.getArrowCategoryDict(context=context_movement).has_key('source'))
+    self.assertTrue(business_path.getArrowCategoryDict(context=context_movement).has_key('source'))
 
   def test_BusinessState_getRemainingTradePhaseList(self):
     """
