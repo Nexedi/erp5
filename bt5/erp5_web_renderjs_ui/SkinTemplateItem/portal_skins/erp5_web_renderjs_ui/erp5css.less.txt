@@ -1623,6 +1623,11 @@ div[data-gadget-scope='erp5_searchfield'] {
         }
       }
     }
+
+    // Used to hide Listbox header
+    div.invisible_header & {
+      display: none;
+    }
   }
 
   table {
@@ -1805,6 +1810,11 @@ div[data-gadget-scope='erp5_searchfield'] {
           text-indent: @margin-size;
         }
       }
+    }
+
+    // Used to hide Listbox footer
+    div.invisible_footer & {
+      display: none;
     }
   }
 
