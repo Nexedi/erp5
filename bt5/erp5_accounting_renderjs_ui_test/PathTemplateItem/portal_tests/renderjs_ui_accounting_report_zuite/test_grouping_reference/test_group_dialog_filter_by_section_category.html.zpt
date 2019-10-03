@@ -1,0 +1,198 @@
+<html>
+<head><title>Filtering Grouping Dialog by section category</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Filtering Grouping Dialog by section category
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&add_related_payments:int=1&set_ledger:int=1">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForAccountingRenderjsUi/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Organisations</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <!-- title -->
+  <td>//tr[@class='listbox-search-line']/th[2]/input</td>
+  <td>Client 1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@class="listbox-select-action"]</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- {{{ Select Client 1 Organisation and use grouping fast input -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Client 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@alt='Grouping Reference Fast Input']</td>
+  <td></td>
+</tr>
+
+<!-- The mode should be 'grouping' by default -->
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_your_grouping' and @value='grouping']</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifySelected</td>
+  <td>//select[@name='field_your_section_category']</td>
+  <td>Demo Group</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_your_section_category_strict']</td>
+  <td>off</td>
+</tr>
+
+<tr>
+  <td>verifyText</td>
+  <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>
+  <td>0.00</td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>field_your_node</td>
+  <td>label=41 - Receivable</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_update_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Updated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+
+<!-- "My Organisation" belongs to Demo Group/Subsidiairy #1, if we select Demo Group we have two transactions. -->
+<tr>
+  <td>select</td>
+  <td>field_your_section_category</td>
+  <td>label=Demo Group/Subsidiairy #1</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_update_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Updated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+
+
+<!-- select Demo Group strict we have no transactions. -->
+<tr>
+  <td>select</td>
+  <td>field_your_section_category</td>
+  <td>label=Demo Group</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>field_your_section_category_strict</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_update_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Updated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>0 records</td>
+</tr>
+
+<!-- select Demo Group non strict we have two transactions. -->
+<tr>
+  <td>select</td>
+  <td>field_your_section_category</td>
+  <td>label=Demo Group</td>
+</tr>
+<tr>
+  <td>assertValue</td>
+  <td>field_your_section_category_strict</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>field_your_section_category_strict</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_update_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Updated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+
+<!-- select Demo Group/Subsidiairy #2 we have no transactions. -->
+<tr>
+  <td>select</td>
+  <td>field_your_section_category</td>
+  <td>label=Demo Group/Subsidiairy #2</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_update_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Updated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>0 records</td>
+</tr>
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->
