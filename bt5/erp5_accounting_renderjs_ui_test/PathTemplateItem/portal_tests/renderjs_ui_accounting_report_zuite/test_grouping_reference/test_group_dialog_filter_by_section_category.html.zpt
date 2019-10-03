@@ -10,40 +10,35 @@ Filtering Grouping Dialog by section category
 
 <!-- Setup {{{ -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForAccountingRenderjsUi/macros/init"/>
-<tr>
-  <td>selectAndWait</td>
-  <td>select_module</td>
-  <td>Organisations</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>Folder_show:method</td>
-  <td></td>
-</tr>
-<tr>
-  <td>type</td>
-  <!-- title -->
-  <td>//tr[@class='listbox-search-line']/th[2]/input</td>
-  <td>Client 1</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//input[@class="listbox-select-action"]</td>
-  <td></td>
-</tr>
-<!-- }}} -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_module_list" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Organisations'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
+
+<tal:block tal:define="search_query python: 'title: &quot;Client 1&quot;'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
+</tal:block>
 
 <!-- {{{ Select Client 1 Organisation and use grouping fast input -->
-<tr>
-  <td>clickAndWait</td>
-  <td>link=Client 1</td>
-  <td></td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//img[@alt='Grouping Reference Fast Input']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Client 1'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Grouping Reference Fast Input'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <!-- The mode should be 'grouping' by default -->
 <tr>
@@ -72,21 +67,17 @@ Filtering Grouping Dialog by section category
   <td>field_your_node</td>
   <td>label=41 - Receivable</td>
 </tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_update_button"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>Updated</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>2 records</td>
-</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 <!-- "My Organisation" belongs to Demo Group/Subsidiairy #1, if we select Demo Group we have two transactions. -->
 <tr>
@@ -94,21 +85,16 @@ Filtering Grouping Dialog by section category
   <td>field_your_section_category</td>
   <td>label=Demo Group/Subsidiairy #1</td>
 </tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_update_button"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>Updated</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>2 records</td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 
 <!-- select Demo Group strict we have no transactions. -->
@@ -122,21 +108,16 @@ Filtering Grouping Dialog by section category
   <td>field_your_section_category_strict</td>
   <td></td>
 </tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_update_button"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>Updated</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>0 records</td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': '0 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 <!-- select Demo Group non strict we have two transactions. -->
 <tr>
@@ -154,21 +135,16 @@ Filtering Grouping Dialog by section category
   <td>field_your_section_category_strict</td>
   <td></td>
 </tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_update_button"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>Updated</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>2 records</td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 <!-- select Demo Group/Subsidiairy #2 we have no transactions. -->
 <tr>
@@ -176,21 +152,16 @@ Filtering Grouping Dialog by section category
   <td>field_your_section_category</td>
   <td>label=Demo Group/Subsidiairy #2</td>
 </tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_update_button"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>Updated</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>0 records</td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': '0 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 </tbody></table>
 </body>
