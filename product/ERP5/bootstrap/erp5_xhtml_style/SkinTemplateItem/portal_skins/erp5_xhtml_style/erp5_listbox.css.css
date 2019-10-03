@@ -141,6 +141,11 @@ th.listbox-table-report-tree-selection-cell{
 }
 
 /* Listbox header */
+
+div.invisible_header div.listbox-head {
+  display: none;
+}
+
 div.listbox-header-box{
   width: auto;
   float:left;
