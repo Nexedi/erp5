@@ -1,0 +1,331 @@
+<html>
+<head><title>Grouping from account transactions view</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Grouping from account transaction view
+</td></tr>
+</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&add_related_payments:int=1">
+
+<!-- Setup {{{ -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForAccountingRenderjsUi/macros/init"/>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Folder_show:method</td>
+  <td></td>
+</tr>
+<!-- }}} -->
+
+<!-- {{{ Select Receivable account and use grouping fast input -->
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Receivable</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@alt='Grouping Reference Fast Input']</td>
+  <td></td>
+</tr>
+
+<!-- The mode should be 'grouping' by default -->
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_your_grouping' and @value='grouping']</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>
+  <td>0.00</td>
+</tr>
+<tr>
+  <td>verifySelectedLabel</td>
+  <td>field_your_node</td>
+  <td>41 - Receivable</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[1]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_update_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Updated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>
+  <td>-3 300.00</td>
+</tr>
+
+<!-- Not possible to group for now -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_submit_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Nothing matches.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>
+  <td>-3 300.00</td>
+</tr>
+
+<!-- select one more -->
+<tr>
+  <td>click</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[1]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_update_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Updated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>
+  <td>0.00</td>
+</tr>
+
+<!-- selected amount is 0, so it will be possible to validate -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_submit_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>2 lines grouped.</td>
+  <td></td>
+</tr>
+
+<!-- mark the module as changed, reindex and come back to the account -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/AccountingZuite_markChanged</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Receivable</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@alt='Grouping Reference Fast Input']</td>
+  <td></td>
+</tr>
+
+<!-- Swith to 'ungrouping' mode to see grouped lines, and ungroup them -->
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_your_grouping' and @value='grouping']</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='field_your_grouping' and @value='ungrouping']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_update_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Updated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_your_grouping' and @value='grouping']</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_your_grouping' and @value='ungrouping']</td>
+  <td>on</td>
+</tr>
+
+<tr>
+  <td>verifySelectedLabel</td>
+  <td>field_your_node</td>
+  <td>41 - Receivable</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>2 records</td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]/a/text()</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[2]/a/text()</td>
+  <td></td>
+</tr>
+
+<!-- now try to ungroup with only one, it will ungroup all related lines -->
+<tr>
+  <td>click</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[1]/input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_submit_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>2 lines ungrouped.</td>
+  <td></td>
+</tr>
+
+<!-- Wait for indexing and go back to this fast input to check everything is OK
+-->
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_module</td>
+  <td>Accounts</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>link=Receivable</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//img[@alt='Grouping Reference Fast Input']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_your_grouping' and @value='grouping']</td>
+  <td>off</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='field_your_grouping' and @value='grouping']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@id="dialog_update_button"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertPortalStatusMessage</td>
+  <td>Updated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_your_grouping' and @value='grouping']</td>
+  <td>on</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//span[@class="listbox-current-page-total-number"]</td>
+  <td>4 records</td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]/a/text()</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//tr[@class='listbox-data-line-1 DataB']/td[2]/a/text()</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//tr[@class='listbox-data-line-2 DataA']/td[2]/a/text()</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//tr[@class='listbox-data-line-3 DataB']/td[2]/a/text()</td>
+  <td></td>
+</tr>
+
+<!-- }}} -->
+
+</tbody></table>
+</body>
+</html> <!-- vim: syntax=html foldmethod=marker
+-->
