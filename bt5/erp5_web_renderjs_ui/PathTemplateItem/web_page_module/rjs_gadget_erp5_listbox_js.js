@@ -22,7 +22,7 @@
     } else {
       field_gadget_param = {
         'editable': 0,
-        'default': value
+        'default': value || ''
       };
     }
 
@@ -372,6 +372,7 @@
     // initialize the gadget content
     //////////////////////////////////////////////
     .declareMethod('render', function render(options) {
+      console.log('options', options);
       var gadget = this,
         field_json = options.field_json,
         sort_column_list = [],
@@ -482,6 +483,7 @@
             // sorting is either specified in URL per listbox or we take default sorting from JSON's 'sort' attribute
             sort_list_json: JSON.stringify(result_list[1] || field_json.sort.map(jioize_sort)),
 
+            selection_name: field_json.selection_name,
             show_anchor: field_json.show_anchor,
             show_stat: field_json.show_stat,
             show_count: field_json.show_count,
@@ -1269,6 +1271,10 @@
           if (checked_uid_list.length) {
             data['uids:list'] = checked_uid_list;
           }
+          // XXX ARGH!
+          data['list_selection_name'] = form_gadget.state.selection_name
+          // XXX Check where this listbox prefix comes from (hardcoded or id)?
+          data['listbox_list_selection_name'] = form_gadget.state.selection_name
 
           if (form_gadget.props.listbox_query_param_json !== undefined) {
             // JSON query parameters are only sent when rendering an ERP5 Form
