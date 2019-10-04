@@ -1,2 +1,5 @@
 erp5_accounting_ui_test
 erp5_web_renderjs_ui_test
+erp5_simulation_test
+erp5_simplified_invoicing
+erp5_configurator_standard_accounting_template
