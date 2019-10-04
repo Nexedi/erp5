@@ -58,6 +58,8 @@ def manage_addERP5SiteForm(*args, **kw):
   kw['getCatalogStorageList'] = getCatalogStorageList
   return manage_addERP5SiteFormDtml(*args, **kw)
 
+default_sql_connection_string = 'test test'
+
 # ERP5Site Constructor
 def manage_addERP5Site(self,
                        id,
@@ -69,8 +71,8 @@ def manage_addERP5Site(self,
                        email_from_name='Portal Administrator',
                        validate_email=0,
                        erp5_catalog_storage='erp5_mysql_innodb_catalog',
-                       erp5_sql_connection_string='test test',
-                       cmf_activity_sql_connection_string='test test',
+                       erp5_sql_connection_string=default_sql_connection_string,
+                       cmf_activity_sql_connection_string=default_sql_connection_string,
                        bt5_repository_url='',
                        bt5='',
                        id_store_interval='',
