@@ -10,40 +10,36 @@ Using Ledger in Grouping Dialog
 
 <!-- Setup {{{ -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForAccountingRenderjsUi/macros/init"/>
-<tr>
-  <td>selectAndWait</td>
-  <td>select_module</td>
-  <td>Organisations</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>Folder_show:method</td>
-  <td></td>
-</tr>
-<tr>
-  <td>type</td>
-  <!-- title -->
-  <td>//tr[@class='listbox-search-line']/th[2]/input</td>
-  <td>Client 1</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//input[@class="listbox-select-action"]</td>
-  <td></td>
-</tr>
-<!-- }}} -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_module_list" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Organisations'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
+
+<tal:block tal:define="search_query python: 'title: &quot;Client 1&quot;'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
+</tal:block>
 
 <!-- {{{ Select Client 1 Organisation and use grouping fast input -->
-<tr>
-  <td>clickAndWait</td>
-  <td>link=Client 1</td>
-  <td></td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//img[@alt='Grouping Reference Fast Input']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Client 1'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Grouping Reference Fast Input'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<!-- }}} -->
 
 <!-- The mode should be 'grouping' by default -->
 <tr>
@@ -59,67 +55,53 @@ Using Ledger in Grouping Dialog
 <tr>
   <td>select</td>
   <td>field_your_node</td>
-  <td>label=41 - Receivable</td>
+  <td>value=account_module/receivable</td>
 </tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_update_button"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>Updated</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>2 records</td>
-</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 <!-- in test ledger 2, we have no transactions. -->
 <tr>
   <td>select</td>
-  <td>field_your_ledger</td>
+  <td>sub</td>
   <td>label=Test Accounting/Test Ledger 2</td>
 </tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_update_button"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>Updated</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>0 records</td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': 'No records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 <!-- in test ledger 1, we have 2 transactions. -->
 <tr>
   <td>select</td>
-  <td>field_your_ledger</td>
+  <td>sub</td>
   <td>label=Test Accounting/Test Ledger 1</td>
 </tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_update_button"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>Updated</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>2 records</td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 <!-- in test ledger 1 and 2, we have 2 transactions. -->
 <tr>
@@ -132,21 +114,16 @@ Using Ledger in Grouping Dialog
   <td>field_your_ledger</td>
   <td>label=Test Accounting/Test Ledger 2</td>
 </tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_update_button"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>Updated</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>2 records</td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 <!-- }}} -->
 
