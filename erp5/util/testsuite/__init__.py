@@ -227,7 +227,7 @@ class TestSuite(object):
       raise SubprocessError(result)
     return result
 
-# (XXX) The code bellow is an generic extension to run a test for any egg. 
+# (XXX) The code bellow is an generic extension to run a test for any egg.
 #       The code above was moved from ERP5 code base, because it is generic
 #       Enough to be used by others.
 
@@ -248,7 +248,8 @@ class EggTestSuite(TestSuite):
       status_dict = self.spawn(
           self.python_interpreter, 'setup.py', 'test',
           cwd=self.egg_test_path_dict[test],
-          SLAPOS_TEST_SHARED_PART_LIST=self.shared_part_list)
+          SLAPOS_TEST_SHARED_PART_LIST=self.shared_part_list,
+          SLAPOS_TEST_LOG_DIRECTORY=self.log_directory)
     except SubprocessError as e:
       status_dict = e.status_dict
     test_log = status_dict['stderr']
@@ -298,6 +299,9 @@ def runTestSuite():
   parser.add_argument('--frontend_url',
                       help='The url of the frontend of this test node',
                       default=None)
+  parser.add_argument('--log_directory',
+                      help='Directory to store logs',
+                      default=None)
   parser.add_argument('--python_interpreter',
                       help='Path to python interpreter used to run the test suite',
                       default='python')
@@ -329,7 +333,8 @@ def runTestSuite():
                     revision=revision,
                     python_interpreter=args.python_interpreter,
                     egg_test_path_dict=egg_test_path_dict,
-                    shared_part_list=args.shared_part_list
+                    shared_part_list=args.shared_part_list,
+                    log_directory=args.log_directory,
                     )
 
   test_result = master.createTestResult(revision, suite.getTestList(),
