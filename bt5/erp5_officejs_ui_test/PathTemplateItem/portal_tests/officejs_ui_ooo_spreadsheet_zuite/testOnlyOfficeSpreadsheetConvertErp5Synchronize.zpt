@@ -43,10 +43,6 @@
   <td>install_url</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_install" />
-<!--
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/choice_erp5_storage"/>
--->
-  
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n="Storages"]</td>

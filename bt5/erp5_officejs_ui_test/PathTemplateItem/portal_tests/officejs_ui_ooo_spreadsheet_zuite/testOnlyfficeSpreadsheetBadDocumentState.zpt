@@ -13,9 +13,6 @@
   </thead>
   <tbody>
   <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init"/>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_install" />
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/choice_erp5_storage"/>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
 
   <tr>
     <td>store</td>
@@ -27,6 +24,28 @@
     <td>Bad Document</td>
     <td>title</td>
   </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_install" />
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Storages"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Storages"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='Local is Enough']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text()='Local is Enough']</td>
+  <td></td>
+</tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
   <tr>
     <td>open</td>
     <td>${base_url}/portal_skins/erp5_officejs_ui_test/gadget_officejs_create_bad_document.html</td>
@@ -42,8 +61,11 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/synchronize"/>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/open_document_with_title"/>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load_spreadsheet"/>
-
+  <tr>
+    <td>waitForTextPresent</td>
+    <td>not supported format of document</td>
+    <td></td>
+  </tr>
   </tbody>
 </table>
 </body>
