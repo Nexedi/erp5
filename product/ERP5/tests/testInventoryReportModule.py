@@ -456,9 +456,10 @@ class TestInventoryReportModule(TestOrderMixin, SecurityTestCase):
                                  sequence_list=None, **kw):
     resource_list = sequence.get('resource_list')
     resource = resource_list[-1]
+    """
     resource.edit(
       quantity_unit = ['unit/piece'])
-
+    """
   def stepTestCalculateProduct(self, sequence=None, sequence_list=None, **kw):
     inventory_report = self.getInventoryReportModule().newContent(portal_type='Inventory Report')
     inventory_report.edit(
