@@ -131,6 +131,10 @@
       return this.getContent(param_list[0]);
     })
 
+    .allowPublicAcquisition("getFormDefinition", function getFormDefinition() {
+      return JSON.parse(JSON.stringify(this.state.form_definition));
+    })
+
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
