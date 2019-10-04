@@ -149,8 +149,8 @@ class ProcessingNodeTestCase(ZopeTestCase.TestCase):
     """Start HTTP ZServer in background"""
     utils = ZopeTestCase.utils
     if utils._Z2HOST is None:
-      from Products.ERP5Type.tests.runUnitTest import tests_home
-      log = os.path.join(tests_home, "Z2.log")
+      from Products.ERP5Type.tests.runUnitTest import log_directory
+      log = os.path.join(log_directory, "Z2.log")
       message = "Running %s server at %s:%s\n"
       if int(os.environ.get('erp5_wsgi', 0)):
         from Products.ERP5.bin.zopewsgi import app_wrapper, createServer

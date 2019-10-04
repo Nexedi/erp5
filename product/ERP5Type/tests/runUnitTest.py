@@ -158,6 +158,7 @@ Options:
   --sys_path=path,path       Comma-separated list of paths which will be used to
                              extend sys.path
   --instance_home=PATH       Create/use test instance in given path
+  --log_directory=PATH       Create log files in given path
 
 When no unit test is specified, only activities are processed.
 """
@@ -486,7 +487,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
     _print("conflicting options: --zeo_client and --zeo_server")
     sys.exit(1)
   instance_home =  os.environ['INSTANCE_HOME']
-  os.environ.setdefault('EVENT_LOG_FILE', os.path.join(tests_home, 'zLOG.log'))
+  os.environ.setdefault('EVENT_LOG_FILE', os.path.join(log_directory, 'zLOG.log'))
   os.environ.setdefault('EVENT_LOG_SEVERITY', '-300')
   # For numpy parallel-primitives such as numpy.dot() that is used in
   # testReceiptRecognition for example.
@@ -742,6 +743,7 @@ def main(argument_list=None):
         "products_path=",
         "sys_path=",
         "instance_home=",
+        "log_directory="
         ])
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
@@ -752,6 +754,7 @@ def main(argument_list=None):
   debug = 0
   run_only = None
   instance_home = os.path.join(real_instance_home, 'unit_test')
+  _log_directory = instance_home
 
   bt5_path_list = []
 
@@ -860,6 +863,8 @@ def main(argument_list=None):
       sys.path.extend(arg.split(','))
     elif opt == "--instance_home":
       instance_home = os.path.abspath(arg)
+    elif opt == "--log_directory":
+      _log_directory = os.path.abspath(arg)
 
   bt5_path_list += filter(None,
     os.environ.get("erp5_tests_bt5_path", "").split(','))
@@ -878,6 +883,8 @@ def main(argument_list=None):
   initializeInstanceHome(tests_framework_home,
                          real_instance_home,
                          instance_home)
+  global log_directory
+  log_directory = _log_directory or test_home
 
   result = runUnitTestList(test_list=args,
                            verbosity=verbosity,
