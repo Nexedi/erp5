@@ -20,7 +20,13 @@ class ERP5TypeTestSuite(TestSuite):
 
   def runUnitTest(self, *args, **kw):
     if self.instance:
-      args = ('--instance_home=unit_test.%u' % self.instance,) + args
+      instance_home = 'unit_test.%u' % self.instance
+      args = ('--instance_home', instance_home,) + args
+      if self.log_directory:
+        log_directory = os.path.join(self.log_directory, self.instance)
+        os.mkdir(log_directory)
+        args = ('--log_directory', log_directory, ) + args
+
     if self.__dict__.has_key("bt5_path"):
       args = ("--bt5_path=%s" % self.bt5_path,) + args
     instance_number = self.instance or 1
