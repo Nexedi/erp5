@@ -482,6 +482,7 @@
             // sorting is either specified in URL per listbox or we take default sorting from JSON's 'sort' attribute
             sort_list_json: JSON.stringify(result_list[1] || field_json.sort.map(jioize_sort)),
 
+            selection_name: field_json.selection_name,
             show_anchor: field_json.show_anchor,
             show_stat: field_json.show_stat,
             show_count: field_json.show_count,
@@ -1268,6 +1269,11 @@
           }
           if (checked_uid_list.length) {
             data['uids:list'] = checked_uid_list;
+          }
+
+          if (form_gadget.state.selection_name !== undefined) {
+            // ERP5 expect to receive the selection name from hidden fields
+            data.list_selection_name = form_gadget.state.selection_name;
           }
 
           if (form_gadget.props.listbox_query_param_json !== undefined) {
