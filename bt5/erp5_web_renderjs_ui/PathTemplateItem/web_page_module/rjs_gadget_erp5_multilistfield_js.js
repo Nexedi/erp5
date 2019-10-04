@@ -19,7 +19,7 @@
             // Single listfield is never mandatory.
             // Check requirement globally instead
             required: 0,
-            key: 'sub',
+            key: gadget.state.key,
             title: gadget.state.title,
             hidden: gadget.state.hidden
           };
@@ -105,7 +105,7 @@
                   return result.getContent();
                 })
                 .push(function (result) {
-                  result_list.push(result.sub);
+                  result_list.push(result[gadget.state.key]);
                 });
             }
           });
@@ -151,7 +151,7 @@
           return sub_gadget.getContent();
         })
         .push(function (result) {
-          var value = result.sub;
+          var value = result[gadget.state.key];
           if (sub_gadget.element === gadget.element.lastChild) {
             if (value) {
               return appendListField(gadget, "",
