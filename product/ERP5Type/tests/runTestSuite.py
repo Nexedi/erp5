@@ -103,6 +103,7 @@ def main():
                       default=None)
   testnode_group.add_argument("--xvfb_bin", default=None)
   testnode_group.add_argument("--firefox_bin", default=None)
+  testnode_group.add_argument("--log_directory", default=None)
 
   args = parser.parse_args()
   if args.bt5_path is not None:
@@ -132,7 +133,8 @@ def main():
                     zserver_frontend_url_list=args.zserver_frontend_url_list,
                     bt5_path=args.bt5_path,
                     firefox_bin=args.firefox_bin,
-                    xvfb_bin=args.xvfb_bin)
+                    xvfb_bin=args.xvfb_bin,
+                    log_directory=args.log_directory)
   test_result = master.createTestResult(revision, suite.getTestList(),
     args.test_node_title, suite.allow_restart, test_suite_title,
     args.project_title)
