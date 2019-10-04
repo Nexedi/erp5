@@ -165,6 +165,7 @@ class UnitTestRunner(object):
                 node_test_suite.working_directory,
                 True
             ).shared_part_list)),
+        ('--log_directory', lambda: node_test_suite.log_folder_path),
         ):
       if option in supported_parameter_set:
         invocation_list += option, value()
