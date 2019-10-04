@@ -65,7 +65,7 @@ Filtering Grouping Dialog by section category
 <tr>
   <td>select</td>
   <td>field_your_node</td>
-  <td>label=41 - Receivable</td>
+  <td>value=account_module/receivable</td>
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
