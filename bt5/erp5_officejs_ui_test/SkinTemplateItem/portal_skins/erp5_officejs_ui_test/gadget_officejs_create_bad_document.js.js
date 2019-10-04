@@ -7,7 +7,7 @@
     .declareService(function () {
       var storage = jIO.createJIO({
         type: "indexeddb",
-        database: "officejs-erp5"
+        database: "local_default"
       }),
         gadget = this;
       return storage.put('bad_document', {

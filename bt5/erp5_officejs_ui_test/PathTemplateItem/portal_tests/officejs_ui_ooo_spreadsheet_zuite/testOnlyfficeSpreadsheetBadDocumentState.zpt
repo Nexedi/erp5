@@ -13,6 +13,9 @@
   </thead>
   <tbody>
   <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init"/>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_install" />
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/choice_erp5_storage"/>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
 
   <tr>
     <td>store</td>
@@ -34,10 +37,6 @@
     <td>//div[text()='Document Created']</td>
     <td></td>
   </tr>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_install" />
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/choice_erp5_storage"/>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
-    
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/wait_install" />
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded"/>
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/synchronize"/>
