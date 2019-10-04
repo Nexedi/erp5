@@ -7,6 +7,28 @@
     loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
     disabled_class = 'ui-disabled';
 
+  function buildFieldGadgetParam(value) {
+    var field_gadget_param;
+
+    if ((value !== undefined) && (value !== null) && (value.constructor === Object)) {
+      if (value.field_gadget_param) {
+        field_gadget_param = value.field_gadget_param;
+      } else {
+        field_gadget_param = {
+          'editable': 0,
+          'default': value.default
+        };
+      }
+    } else {
+      field_gadget_param = {
+        'editable': 0,
+        'default': value
+      };
+    }
+
+    return field_gadget_param;
+  }
+
   function listbox_tbody_template(options) {
 /*
        <tbody>
@@ -897,7 +919,7 @@
                 command: gadget.state.command,
                 options: {
                   jio_key: allDocs_result.data.rows[i].id,
-                  uid: allDocs_result.data.rows[i].value.uid,
+                  uid: buildFieldGadgetParam(allDocs_result.data.rows[i].value.uid).default,
                   selection_index: gadget.state.begin_from + i,
                   query: gadget.state.query_string,
                   list_method_template: gadget.state.list_method_template,
@@ -953,22 +975,8 @@
                     // value accordingly. value can be simply just a value in
                     // case of non-editable field thus we construct "field_json"
                     // manually and insert the value in "default"
+                    value = buildFieldGadgetParam(value);
 
-                    if (value.constructor === Object) {
-                      if (value.field_gadget_param) {
-                        value = value.field_gadget_param;
-                      } else {
-                        value = {
-                          'editable': 0,
-                          'default': value.default
-                        };
-                      }
-                    } else {
-                      value = {
-                        'editable': 0,
-                        'default': value
-                      };
-                    }
                     value.href = url_value;
                     value.editable = value.editable && gadget.state.editable;
                     value.line = i;
@@ -986,7 +994,7 @@
                     cell_list.forEach(setNonEditable);
                   }
                   row_list.push({
-                    "uid": allDocs_result.data.rows[i].value.uid,
+                    "uid": buildFieldGadgetParam(allDocs_result.data.rows[i].value.uid).default,
                     "jump": line_link_list[i],
                     "cell_list": cell_list,
                     "line_icon": gadget.state.line_icon
