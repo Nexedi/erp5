@@ -3212,20 +3212,20 @@ class Base( CopyContainer,
     """
       Returns the creation date of the document based on workflow information
     """
-    # Check if edit_workflow defined
-    portal_workflow = self.getPortalObject().portal_workflow
-    wf = portal_workflow.getWorkflowById('edit_workflow')
-    wf_list = portal_workflow.getWorkflowsFor(self)
-    if wf is not None:
-      wf_list = [wf] + wf_list
-    for wf in wf_list:
+    try:
+      history_list = aq_base(self).workflow_history
+    except AttributeError:
+      pass
+    else:
       try:
-        history = wf.getInfoFor(self, 'history', None)
-      except KeyError:
-        history = None
-      if history is not None and len(history):
-        # Then get the first line of edit_workflow
-        return history[0].get('time', None)
+        return history_list['edit_workflow'][0]['time']
+      except LookupError:
+        try:
+          return min(history[0]['time']
+            for history in history_list.itervalues()
+            if history)
+        except ValueError:
+          pass
     if getattr(aq_base(self), 'CreationDate', None) is not None:
       return asDate(self.CreationDate())
     return None # JPS-XXX - try to find a way to return a creation date instead of None
