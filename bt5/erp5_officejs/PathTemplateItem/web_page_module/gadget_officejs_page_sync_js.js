@@ -26,7 +26,9 @@
             }
           })
           .push(function () {
-            return gadget.repair();
+            if (!gadget.state.cloudooo_only) {
+              return gadget.repair();
+            }
           })
           .push(function () {
             if (gadget.state.redirect) {
@@ -47,7 +49,8 @@
           return gadget.changeState({
             auto_repair: options.auto_repair,
             redirect: options.redirect,
-            cloudooo: result && true
+            cloudooo: result && true,
+            cloudooo_only: options.cloudooo_only
           });
         });
     })
