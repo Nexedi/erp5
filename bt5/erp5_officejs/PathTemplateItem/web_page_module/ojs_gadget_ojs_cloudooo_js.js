@@ -49,6 +49,7 @@
                   'options': {
                     'page': 'ojs_sync',
                     'auto_repair': true,
+                    'cloudooo_only': true,
                     'redirect': options.redirect
                   }
                 });
@@ -67,6 +68,7 @@
                       'options': {
                         'page': 'ojs_sync',
                         'auto_repair': true,
+                        'cloudooo_only': true,
                         'redirect': options.redirect
                       }
                     });
