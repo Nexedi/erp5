@@ -25,7 +25,7 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("getConvertedBlob", function (options) {
-      var gadget = this;
+      var gadget = this, redirect;
       return gadget.getSetting('file_extension')
         .push(function (file_extension) {
           if (file_extension === options.format) {
@@ -49,6 +49,7 @@
                   'options': {
                     'page': 'ojs_sync',
                     'auto_repair': true,
+                    'cloudooo_only': true,
                     'redirect': options.redirect
                   }
                 });
@@ -67,6 +68,7 @@
                       'options': {
                         'page': 'ojs_sync',
                         'auto_repair': true,
+                        'cloudooo_only': true,
                         'redirect': options.redirect
                       }
                     });

@@ -23,14 +23,10 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("render", function (options) {
-
       var gadget = this;
-      return new RSVP.Queue()
-      .push(function () {
-        return gadget.changeState({
-          jio_key: options.jio_key,
-          doc: options.doc
-        });
+      return gadget.changeState({
+        jio_key: options.jio_key,
+        doc: options.doc
       });
     })
 
