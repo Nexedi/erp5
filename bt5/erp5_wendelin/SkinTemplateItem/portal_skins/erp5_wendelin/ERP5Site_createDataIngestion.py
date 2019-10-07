@@ -35,7 +35,7 @@ for supply_line in composed.objectValues(
   current_line = data_ingestion.newContent(
     portal_type = "Data Ingestion Line",
     title = supply_line.getTitle(),
-    aggregate = supply_line.getAggregateList(),
+    aggregate = supply_line.getAggregateDeviceList(),
     int_index = supply_line.getIntIndex(),
     quantity = supply_line.getQuantity(),
     reference = supply_line.getReference(),
