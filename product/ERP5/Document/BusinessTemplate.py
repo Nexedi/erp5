@@ -95,6 +95,7 @@ import threading
 from ZODB.broken import Broken, BrokenModified
 from Products.ERP5.genbt5list import BusinessTemplateRevision, \
   item_name_list, item_set
+from OFS.Image import File as OFSFile
 
 CACHE_DATABASE_PATH = None
 try:
@@ -898,6 +899,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       obj.__class__.__name__][1:]
     if unicode_data:
       data = data.decode(obj.output_encoding)
+    if isinstance(obj, OFSFile) and property_name == "data":
+      data = obj._read_data(data)[0]
     try:
       setattr(obj, property_name, data)
     except BrokenModified:
