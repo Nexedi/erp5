@@ -85,6 +85,8 @@
   <td>//a[text()="Relation Fields"]</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//input[@name="field_my_bar_category_title_list"]</td>
