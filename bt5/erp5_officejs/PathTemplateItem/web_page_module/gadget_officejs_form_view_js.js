@@ -235,9 +235,15 @@
     .onStateChange(function onStateChange() {
       var fragment = document.createElement('div'),
         gadget = this,
-        form_json = renderForm(gadget.state.form_definition, gadget.state.doc,
+        content_editable = gadget.state.content_editable,
+        form_json;
+      if (content_editable === undefined) {
+        content_editable = gadget.state.form_definition
+          .portal_type_dict.editable;
+      }
+      form_json = renderForm(gadget.state.form_definition, gadget.state.doc,
                                gadget.state.data, gadget.state.blob_type,
-                               gadget.state.content_editable);
+                               content_editable);
       while (gadget.element.firstChild) {
         gadget.element.removeChild(gadget.element.firstChild);
       }
