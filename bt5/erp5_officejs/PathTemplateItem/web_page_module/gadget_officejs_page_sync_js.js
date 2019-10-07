@@ -72,19 +72,27 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("reload", "reload")
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
 
     .declareService(function () {
       var gadget = this;
 
-      if (gadget.state.auto_repair) {
-        return repair_and_redirect(gadget)
-          .push(undefined, function (e) {
-            if (e.name === "ReplicateReport") {
-              throw new Error(e.toString());
-            }
-            throw e;
-          });
-      }
+      return RSVP.Queue()
+        .push(function () {
+          if (gadget.state.auto_repair) {
+            return repair_and_redirect(gadget);
+          }
+        })
+        .push(undefined, function (error) {
+          console.log(error);
+          if (error && error.target && error.target.status === 0) {
+            return gadget.notifySubmitted({
+              message: "Error: cant't sync while offline",
+              status: "error"
+            });
+          }
+          throw error;
+        });
     });
 
 }(window, RSVP, rJS));
