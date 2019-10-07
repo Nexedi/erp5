@@ -50,6 +50,7 @@ import string
 import tempfile
 import glob
 import sys
+from OFS.Image import Pdata
 
 WORKFLOW_TYPE = 'erp5_workflow'
 
@@ -3400,6 +3401,11 @@ class TestBusinessTemplate(BusinessTemplateMixin):
   def test_Title(self):
     """Tests the Title of the Template Tool."""
     self.assertEqual('Template Tool', self.getTemplateTool().Title())
+
+  def test_00_checkFileisPDataInstance(self):
+    self.assertIsInstance(self.portal.portal_templates
+      .getInstalledBusinessTemplate('erp5_xhtml_style')._skin_item._objects
+      ['portal_skins/erp5_ckeditor/ckeditor/LICENSE.md'].data, Pdata)
 
   def test_01_checkNewSite(self):
     """Test Check New Site"""

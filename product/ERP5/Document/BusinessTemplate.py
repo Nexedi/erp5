@@ -94,6 +94,7 @@ import threading
 from ZODB.broken import Broken, BrokenModified
 from Products.ERP5.genbt5list import BusinessTemplateRevision, \
   item_name_list, item_set
+from OFS.Image import File as OFSFile
 
 CACHE_DATABASE_PATH = None
 try:
@@ -895,6 +896,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       obj.__class__.__name__][1:]
     if unicode_data:
       data = data.decode(obj.output_encoding)
+    if isinstance(obj, OFSFile) and property_name == "data"
+      data = obj._read_data(data)[0]
     try:
       setattr(obj, property_name, data)
     except BrokenModified:
@@ -1507,9 +1510,6 @@ class ObjectTemplateItem(BaseTemplateItem):
           assert container.meta_type in ('ERP5 Cache Factory',
                                          'ERP5 Cache Bag')
           container.getParentValue().updateCache()
-        elif obj.__class__.__name__ in ('File', 'Image'):
-          if "data" in obj.__dict__:
-            File._setData.__func__(obj, obj.data)
         elif (container.meta_type == 'CMF Skins Tool') and \
             (old_obj is not None):
           # Keep compatibility with previous export format of
