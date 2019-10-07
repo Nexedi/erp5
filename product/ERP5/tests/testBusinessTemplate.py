@@ -50,6 +50,7 @@ import string
 import tempfile
 import glob
 import sys
+from OFS.Image import Pdata
 
 WORKFLOW_TYPE = 'erp5_workflow'
 
@@ -7075,8 +7076,14 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     self.assertEqual(file_content, expected_file_content)
     self.assertEqual(len(file_content), len(expected_file_content))
 
+  def stepCheckFileisImportedAsPdata(self, sequence=None, **kw):
+    self.assertIsInstance(self.portal.portal_templates
+      .getInstalledBusinessTemplate('erp5_xhtml_style')._skin_item._objects
+      ['portal_skins/erp5_ckeditor/ckeditor/LICENSE.md'].data, Pdata)
+
   def test_text_file_import_export(self):
     """
+    First Check if file is imported as Pdata, then check the following case:
     When importing back ace.js containing a last line with whitespaces only,
     the last line was not imported, and thus the file could never been
     downloaded completely as its really size was less than the one on the File
@@ -7084,6 +7091,8 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """
     sequence_list = SequenceList()
     sequence_string = """
+       CheckFileisImportedAsPdata
+
        CreateSkinFolder
        CreateTextFile
        CheckTextFileContent
