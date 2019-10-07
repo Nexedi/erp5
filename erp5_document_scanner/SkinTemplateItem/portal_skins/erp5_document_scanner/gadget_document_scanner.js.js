@@ -26,18 +26,21 @@
     });
   }
 
-  function takePicture(gadget) {
-    imageCapture.takePhoto({imageWidth: imageWidth})
-      .then(function (blob) {
-        var reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onloadend = function () {
-          photoInput.setAttribute("value", reader.result.split(",")[1]);
-          photo.setAttribute("src", reader.result);
-          photo.setAttribute("width", imageWidth);
-          photo.setAttribute("height", imageHeight);
-          return drawCanvas(gadget, photo);
-        };
+  function takePicture(el) {
+    return RSVP.Queue()
+      .push(function () {
+        return imageCapture.takePhoto({imageWidth: imageWidth});
+      })
+      .push(function (blob) {
+        return readBlobAsDataURL(blob);
+      })
+      .push(function (result) {
+        photoInput.setAttribute("value", result.split(",")[1]);
+        photo.setAttribute("src", result);
+        photo.setAttribute("width", imageWidth);
+        photo.setAttribute("height", imageHeight);
+        el.querySelector(".capture-button").style.display = "";
+        return drawCanvas(el, photo);
       });
   }
 
@@ -52,7 +55,6 @@
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height, x, y, img.width * ratio, img.height * ratio);
 
-    //grayscale(canvas, canvas);
     //contrastImage(canvas, canvas, 10);
 
     gadget.querySelector(".camera-output").style.display = "";
@@ -83,10 +85,11 @@
     outputContext.putImageData(imageData, 0, 0);
   }
 
-  function grayscale(input, output) {
+  function grayscale(gadget, input, output) {
     var i,
       gray,
       outputContext,
+      outputCanvas = document.createElement("canvas"),
       inputContext = input.getContext("2d"),
       imageData = inputContext.getImageData(0, 0, input.width, input.height),
       data = imageData.data,
@@ -100,8 +103,21 @@
       data[i - 2] = gray;
       data[i - 1] = gray;
     }
-    outputContext = output.getContext("2d");
+    outputContext = outputCanvas.getContext("2d");
     outputContext.putImageData(imageData, 0, 0);
+
+
+    data = canvas.toDataURL("image/png");
+    output.setAttribute("src", data);
+    if (cropper) {
+      cropper.destroy();
+    }
+    return RSVP.Queue()
+      .push(function (data) {
+        cropper = new Cropper(
+          output, {data: preferredCroppedCanvasData});
+      });
+
   }
 
   function handleUserMedia(device_id, callback) {
@@ -195,7 +211,7 @@
           var j,
             device,
             len = info_list.length;
-          if (root.querySelector("select").length > 1) {
+          if (selector.length > 1) {
             return;
           }
           for (j = 0; j < len; j += 1) {
@@ -209,6 +225,11 @@
           }
           if (len === 1 && selector.options.length === 2) {
             selector.options[1].selected = true;
+          }
+        })
+        .push(function () {
+          if (selector.value) {
+            return startup(root, selector.value);
           }
         });
     })
@@ -238,14 +259,31 @@
 
     .onEvent("click", function (evt) {
       var gadget, canvasData;
+      if (evt.target.name === "grayscale") {
+        return this.getElement()
+          .push(function (el) {
+            return grayscale(el, canvas, photo);
+          });
+      }
       if (evt.target.className === "startbutton") {
+        evt.preventDefault();
         return this.getElement()
           .push(function (el) {
             el.querySelector(".camera-input").style.display = "none";
             return takePicture(el);
           });
       }
+      if (evt.target.className === "reset-button") {
+        evt.preventDefault();
+        return this.getElement()
+          .push(function (el) {
+            el.querySelector(".camera-input").style.display = "";
+            el.querySelector(".camera-output").style.display = "none";
+            return startup(el, el.querySelector("select"));
+          });
+      }
       if (evt.target.className === "capture-button") {
+        evt.preventDefault();
         preferredCroppedCanvasData = cropper.getData();
         canvasData = cropper.getCanvasData();
         return this.getElement()
@@ -270,13 +308,12 @@
 
             photo.style.width = canvasData.width + "px";
             photo.style.height = canvasData.height + "px";
-
             photo.src = base64data;
             photoInput.value = realData;
             gadget.querySelector(".capture-button").style.display = "none";
             cropper.destroy();
           });
       }
-    }, false, true);
+    }, false, false);
 
 }(rJS, RSVP, window, document, navigator, Cropper, console, FileReader, Promise, JSON));

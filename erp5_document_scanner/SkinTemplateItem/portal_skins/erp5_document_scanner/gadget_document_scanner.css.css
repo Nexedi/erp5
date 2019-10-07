@@ -8,16 +8,12 @@
   width: auto;
   height: 360px;
   filter: brightness(1);
-  text-align:center;
+  text-align: center;
 }
 
 .canvas {
   display: none;
   filter: brightness(1);
-}
-
-.camera-output {
-  float: right;
 }
 
 .camera-input, .camera-output {
@@ -28,10 +24,18 @@
   display: inline-block;
 }
 
-.startbutton, .capture-button {
+.capture-button, .reset-button {
+  display: inline;
+  margin: 0 2em 0 2em;
+}
+
+.startbutton {
   display: block;
-  position: relative;
   margin: 0 auto;
+}
+
+.startbutton, .capture-button, .reset-button {
+  position: relative;
   bottom: 3em;
   background-color: rgba(0, 150, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.7);
@@ -47,9 +51,6 @@
   width: 760px;
 }
 
-@media screen
-  and (min-device-width: 600px) {
-  .camera {
-    margin-top: 1em;
-  }
+.camera {
+  margin-top: 1em;
 }
