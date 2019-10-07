@@ -1,10 +1,10 @@
-/*global document, window, rJS, RSVP, Blob, URL, jIO, ensureArray */
+/*global document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 80 */
-(function (document, window, rJS, RSVP, Blob, URL, jIO, ensureArray) {
+(function (document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console) {
   "use strict";
 
   function renderField(field_id, field_definition,
-                       context_document, data, blob_type) {
+                       context_document, data, blob_type, content_editable) {
     var key, raw_value, override, final_value, item_list, result = {};
     for (key in field_definition.values) {
       if (field_definition.values.hasOwnProperty(key)) {
@@ -45,11 +45,16 @@
     }
     if (result.renderjs_extra && blob_type) {
       result["default"] = data;
+      result.editable = content_editable;
+      if (!content_editable) {
+        result.type = "EditorField";
+      }
     }
     return result;
   }
 
-  function renderForm(form_definition, context_document, data, blob_type) {
+  function renderForm(form_definition, context_document, data, blob_type,
+                      content_editable) {
     var i, j, field_list, field_info, my_element, element_id, rendered_field,
       raw_properties = form_definition.fields_raw_properties,
       form_json = {
@@ -73,7 +78,8 @@
         if (element_id && raw_properties.hasOwnProperty(my_element)) {
           field_info = raw_properties[my_element];
           rendered_field = renderField(element_id, field_info,
-                                       context_document, data, blob_type);
+                                       context_document, data, blob_type,
+                                       content_editable);
           form_json.erp5_document._embedded._view[my_element] =
             rendered_field;
         }
@@ -86,7 +92,7 @@
   }
 
   function handleSubmit(gadget, child_gadget, content_dict) {
-    var data, name_list;
+    var data;
     return gadget.notifySubmitting()
       .push(function () {
         if (gadget.state.blob_type) {
@@ -95,7 +101,9 @@
           delete content_dict.text_content;
         }
         return child_gadget.submitContent(
-          child_gadget.state.jio_key, undefined, content_dict
+          child_gadget.state.jio_key,
+          undefined,
+          content_dict
         );
       })
       .push(function () {
@@ -228,7 +236,8 @@
       var fragment = document.createElement('div'),
         gadget = this,
         form_json = renderForm(gadget.state.form_definition, gadget.state.doc,
-                               gadget.state.data, gadget.state.blob_type);
+                               gadget.state.data, gadget.state.blob_type,
+                               gadget.state.content_editable);
       while (gadget.element.firstChild) {
         gadget.element.removeChild(gadget.element.firstChild);
       }
@@ -338,4 +347,4 @@
         });
     });
 
-}(document, window, rJS, RSVP, Blob, URL, jIO, ensureArray));
+}(document, window, rJS, RSVP, Blob, URL, jIO, ensureArray, console));
