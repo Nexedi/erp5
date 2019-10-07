@@ -110,10 +110,10 @@ def killCommand(pid):
   try:
     process = psutil.Process(pid)
     process.suspend()
+    process_list = [process]
+    new_list = process.children(recursive=True)
   except psutil.Error as e:
     return
-  process_list = [process]
-  new_list = process.children(recursive=True)
   while new_list:
     process_list += new_list
     for child in new_list:
@@ -122,7 +122,10 @@ def killCommand(pid):
       except psutil.Error as e:
         logger.debug("killCommand/suspend: %s", e)
     time.sleep(1)
-    new_list = set(process.children(recursive=True)).difference(process_list)
+    try:
+      new_list = set(process.children(recursive=True)).difference(process_list)
+    except psutil.Error as e:
+      new_list = []
   for process in process_list:
     try:
       process.kill()
