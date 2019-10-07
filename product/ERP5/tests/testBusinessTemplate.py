@@ -50,6 +50,7 @@ import string
 import tempfile
 import glob
 import sys
+from OFS.Image import Pdata
 
 WORKFLOW_TYPE = 'erp5_workflow'
 
@@ -420,6 +421,12 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
         self.assertNotIn('erp5_xhtml_style', selection)
         self.assertIn('erp5_core', selection)
         self.assertIn('erp5_csv_style', selection)
+
+  def stepCheckFileIsImportedAsPData(self, sequence=None, **kw):
+    """
+     Check File type
+    """
+    self.assertIsInstance(self.portal.portal_skins.erp5_ckeditor.ckeditor['LICENSE.md'].data, Pdata)
 
   def stepCheckNoTrashBin(self, sequence=None, **kw):
     """
@@ -3400,6 +3407,15 @@ class TestBusinessTemplate(BusinessTemplateMixin):
   def test_Title(self):
     """Tests the Title of the Template Tool."""
     self.assertEqual('Template Tool', self.getTemplateTool().Title())
+
+  def test_00_checkFileisPDataInstance(self):
+    """Test Check File Class"""
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CheckFileIsImportedAsPData \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
   def test_01_checkNewSite(self):
     """Test Check New Site"""
