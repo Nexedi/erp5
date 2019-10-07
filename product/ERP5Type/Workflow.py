@@ -27,9 +27,11 @@
 #
 ##############################################################################
 
+from six.moves import map
 from App.special_dtml import HTMLFile
 from Acquisition import aq_inner
 from AccessControl.requestmethod import postonly
+from DateTime import DateTime
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from . import Permissions
 from .ConflictFree import DoublyLinkList
@@ -235,3 +237,44 @@ class WorkflowHistoryList(DoublyLinkList):
     else:
       self.__class__ = WorkflowHistoryList
       super(WorkflowHistoryList, self).__setstate__(state)
+
+  def __getstate__(self):
+    bucket = self._next
+    if getattr(bucket, '_p_changed', None) is not None and \
+       self._tail_count < bucket._tail_count:
+      # This bucket won't be modified anymore so optimize this last change,
+      # which is even more useful that there are often very few items added
+      # within a transaction and many identical strings are rarely deduplicated.
+      self._log = dedupStrings(self._log)
+    return super(WorkflowHistoryList, self).__getstate__()
+
+
+def dedupStrings(obj):
+  _sequence_type_list = frozenset, list, set, tuple
+  _by_id = {} # usually useless for workflow history lists
+  # BBB: With Python 3, a single dict will be enough and it will even be
+  #      possible to dedup hashable tuples/frozensets (workflow history
+  #      lists usually don't contain these 2 types).
+  _bytes = {}
+  _str = {}
+  def dedup(obj):
+    id_ = id(obj)
+    try:
+      return _by_id[id_]
+    except KeyError:
+      t = getattr(obj, '__class__', None)
+    if t is DateTime:
+      obj._tz = dedup(obj._tz)
+    elif t is bytes:
+      obj = _bytes.setdefault(obj, obj)
+    elif t is unicode:
+      obj = _str.setdefault(obj, obj)
+    elif t in _sequence_type_list:
+      obj = t(map(dedup, obj))
+    elif t is dict:
+      obj = {dedup(k): dedup(v) for k, v in obj.iteritems()}
+    else:
+      return obj
+    _by_id[id_] = obj
+    return obj
+  return dedup(obj)

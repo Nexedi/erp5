@@ -33,6 +33,7 @@ from Products.ERP5Type.ConflictFree import DoublyLinkList
 from Products.ERP5Type.Workflow import WorkflowHistoryList
 from Products.ERP5Type.patches.WorkflowTool import \
   WorkflowHistoryList as LegacyWorkflowHistoryList
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 orig_maybe_rotate = DoublyLinkList._maybe_rotate.__func__
 
@@ -191,3 +192,32 @@ class TestWorkflowHistoryList(TestCase):
     self.assertEqual(6, ddl._tail_count)
     self.assertEqual(3, ddl._prev._tail_count)
     self.assertEqual(0, ddl._prev._prev._tail_count)
+
+
+class TestDedup(ERP5TypeTestCase):
+
+  def getBusinessTemplateList(self):
+    return ('erp5_base',)
+
+  def test(self):
+    self.login()
+    deduped = []
+    def dedupStrings(obj):
+      new = orig_dedupStrings(obj)
+      self.assertEqual(new, obj)
+      deduped.append(len(new))
+      return new
+    from Products.ERP5Type import Workflow
+    orig_dedupStrings = Workflow.dedupStrings
+    try:
+      Workflow.dedupStrings = dedupStrings
+      ob = self.portal.person_module.newContent()
+      whl = ob.workflow_history["edit_workflow"]
+      while whl._prev is None:
+        ob.edit()
+        self.commit()
+        whl._p_deactivate()
+    finally:
+      Workflow.dedupStrings = orig_dedupStrings
+    self.assertEqual(deduped, [24])
+    self.assertEqual(len(list(whl)), 25)
