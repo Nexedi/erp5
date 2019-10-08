@@ -27,7 +27,13 @@
     .declareMethod("render", function () {
       var gadget = this,
         kpi_data;
-      return gadget.updateHeader({page_title: "Financial Data"})
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.updateHeader({page_title: "Financial Data"}),
+            gadget.getUrlParameter("extended_search")
+          ]);
+        })
         .push(function () {
           return RSVP.all([
             gadget.getDeclaredGadget("dygraph"),

@@ -386,7 +386,44 @@ div[data-gadget-scope='header'] .ui-header {
   padding: 0;
   margin: 0;
 }
-
+@media (max-width: 45em) {
+  .financial_listbox .document_table tbody tr td:not(:first-of-type) a {
+    display: block;
+  }
+  .financial_listbox .document_table table tbody tr {
+    height: auto;
+  }
+  .document_table table tbody tr td:first-child ~ th:not(:last-child) a:not(:empty):after, .document_table table tbody tr th:first-child ~ th:not(:last-child) a:not(:empty):after, .document_table 
+table tbody tr td:first-child ~ td:not(:last-child) a:not(:empty):after, .document_table table tbody tr th:first-child ~ td:not(:last-child) a:not(:empty):after, .document_table table tbody tr td:first-child ~ th:not(:last-child) label:not(:empty):after, .document_table table tbody tr th:first-child ~ th:not(:last-child) label:not(:empty):after, .document_table table tbody tr td:first-child ~ td:not(:last-child) label:not(:empty):after, .document_table table tbody tr th:first-child ~ td:not(:last-child) label:not(:empty):after {
+    content: none;
+  }
+  .document_table table tbody tr td:first-child ~ th, .document_table table tbody tr th:first-child ~ th, .document_table table tbody tr td:first-child ~ td, .document_table table tbody tr th:first-child ~ td {
+    display: inherit;
+  }
+  .financial_listbox tbody tr td:not(:first-child) {
+     margin-left: 5em;
+   }
+  .financial_listbox tbody tr td:nth-child(2):before {
+    content: "Staff";
+    position: absolute;
+    left: .5em;
+  }
+  .financial_listbox tbody tr td:nth-child(3):before {
+    content: "Assets";
+    position: absolute;
+    left: .5em;
+  }
+  .financial_listbox tbody tr td:nth-child(4):before {
+    content: "Revenues";
+    position: absolute;
+    left: .5em;
+  }
+  .financial_listbox tbody tr td:nth-child(5):before {
+    content: "Earnings";
+    position: absolute;
+    left: .5em;
+  }
+}
 /* align header and background colors */
 div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button, div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a,
 div[data-gadget-scope='header'] .ui-header h1 {

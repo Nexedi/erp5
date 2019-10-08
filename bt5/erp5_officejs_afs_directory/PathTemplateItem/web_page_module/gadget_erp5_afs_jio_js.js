@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, jIO, DOMParser, Object */
+/*global window, rJS, RSVP, jIO, DOMParser, Object, Intl */
 /*jslint indent: 2, maxerr: 3, nomen: true */
 (function (window, rJS, RSVP, Object) {
   "use strict";
@@ -11,6 +11,7 @@
     ENTRIES = "entries",
     VALUE = "value",
     STR = "",
+    STAFF = "staff",
     GLOBAL_KPI_DICT = {
       2016: getEmptyKpiDict(),
       2017: getEmptyKpiDict(),
@@ -125,7 +126,15 @@
       return "";
     }
     return Object.keys(data).map(function (year) {
-      return year + DOUBLE_POINT + (data[year][kpi] || NA);
+      var value = data[year][kpi];
+      if (value && kpi !== STAFF) {
+        value = new Intl.NumberFormat('en-EN', {
+          style: 'currency',
+          currency: 'EUR',
+          minimumFractionDigits: "0"
+        }).format(value);
+      }
+      return year + DOUBLE_POINT + (value || NA);
     }).join(SPACE);
   }
 
@@ -421,4 +430,4 @@
     .declareMethod('repair', function () {
       return this.state_parameter_dict.jio_storage.repair();
     });
-}(window, rJS, RSVP, Object));
+}(window, rJS, RSVP, Object, Intl));

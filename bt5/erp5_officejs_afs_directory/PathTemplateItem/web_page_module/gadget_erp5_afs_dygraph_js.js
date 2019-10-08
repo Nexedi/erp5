@@ -1,7 +1,7 @@
-/*globals window, RSVP, rJS, Dygraph, Date, Object*/
+/*globals window, RSVP, rJS, Dygraph, Date, Object, Intl*/
 /*jslint indent: 2, nomen: true, maxlen: 80*/
 
-(function (window, RSVP, rJS, Dygraph, Date, Object) {
+(function (window, RSVP, rJS, Dygraph, Date, Object, Intl) {
   "use strict";
 
   // Darken a color
@@ -127,6 +127,58 @@
       return dict.deferred.resolve(options.data);
     })
 
+    .declareMethod("renderGraph", function (my_data) {
+      var gadget = this;
+      var dict = gadget.property_dict;
+
+      dict.graph = new Dygraph(
+        dict.graph_wrapper,
+        prepDataSet(my_data),
+        {
+          dateWindow: [ Date.parse("2016/01/01"), Date.parse("2019/01/01")],
+          legend: 'always',
+          drawPoints: true,
+          title: 'Aggregate Financial Performance',
+          width: "auto",
+          height: 720,
+          maxNumberWidth: 20,
+          includeZero: true,
+          plotter: multiColumnBarPlotter,
+          axes : {
+            x : {
+              axisLabelFormatter: function (d) {
+                return d.getFullYear();
+              },
+              valueFormatter: function (ms) {
+                return new Date(ms).getFullYear();
+              }
+            },
+            y: {
+              axisLabelWidth: 100,
+              valueFormatter: function (value) {
+                return new Intl.NumberFormat('en-EN', {
+                  style: 'currency',
+                  currency: 'EUR',
+                  minimumFractionDigits: "0"
+                }).format(value);
+              }
+            },
+            y2: {
+              labelsKMB: true,
+              axisLabelWidth: 100,
+              independentTicks: true
+            }
+          },
+          labels: ["Year", "Total Assets", "Revenues", "Earnings", "Staff"],
+          series: {
+            "Staff": {
+              axis: "y2"
+            }
+          }
+        }
+      );
+    })
+
     .declareService(function () {
       var gadget = this,
         dict = gadget.property_dict;
@@ -136,47 +188,8 @@
           return dict.deferred.promise;
         })
         .push(function (my_data) {
-          dict.graph = new Dygraph(
-            dict.graph_wrapper,
-            prepDataSet(my_data),
-            {
-              dateWindow: [ Date.parse("2016/01/01"), Date.parse("2019/01/01")],
-              legend: 'always',
-              drawPoints: true,
-              title: 'Aggregate Financial Performance',
-              width: "auto",
-              height: 720,
-              maxNumberWidth: 20,
-              includeZero: true,
-              plotter: multiColumnBarPlotter,
-              axes : {
-                x : {
-                  axisLabelFormatter: function (d) {
-                    return d.getFullYear();
-                  },
-                  valueFormatter: function (ms) {
-                    return new Date(ms).getFullYear();
-                  }
-                },
-                y: {
-                  axisLabelWidth: 100
-                },
-                y2: {
-                  labelsKMB: true,
-                  axisLabelWidth: 100,
-                  independentTicks: true
-                }
-              },
-              labels: ["Year", "Total Assets", "Revenues", "Earnings", "Staff"],
-              series: {
-                "Staff": {
-                  axis: "y2"
-                }
-              }
-            }
-          );
-          return;
+          return gadget.renderGraph(my_data);
         });
     });
 
-}(window, RSVP, rJS, Dygraph, Date, Object));
+}(window, RSVP, rJS, Dygraph, Date, Object, Intl));
