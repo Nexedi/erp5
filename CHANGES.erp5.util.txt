@@ -1,6 +1,15 @@
 Changes
 =======
 
+0.4.63 (2019-10-08)
+-------------------
+
+  * erp5.util:
+
+    - testnode: avoid testnode crash when trying to kill a process already dead
+    - testnode: testnode: import xml2dict from its new place (Compatibility with slapos.core 1.5.0)
+
+
 0.4.62 (2019-10-01)
 -------------------
 
