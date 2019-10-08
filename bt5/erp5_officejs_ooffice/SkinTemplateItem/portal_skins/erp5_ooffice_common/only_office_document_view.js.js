@@ -119,28 +119,26 @@
             name_list.push(view_gadget.state.mime_type);
             content_dict.filename = name_list.join('.');
           }
-          return gadget.getSetting("content_type");
-        })
-        .push(function (content_type) {
-          content_dict.content_type = content_type;
           return child_gadget.submitContent(
             child_gadget.state.jio_key, undefined, content_dict
           );
         })
         .push(function () {
-          return gadget
-            .jio_putAttachment(child_gadget.state.jio_key, 'data',
-                               jIO.util.dataURItoBlob(data))
-            .push(function () {
-              return gadget.declareGadget("gadget_ojs_cloudooo.html");
-            })
-            .push(function (cloudooo) {
-              return cloudooo
-                .putAllCloudoooConvertionOperation({
-                  format: view_gadget.state.mime_type,
-                  jio_key: child_gadget.state.jio_key
-                });
-            });
+          if (view_gadget.state.content_editable) {
+            return gadget
+              .jio_putAttachment(child_gadget.state.jio_key, 'data',
+                                 jIO.util.dataURItoBlob(data))
+              .push(function () {
+                return gadget.declareGadget("gadget_ojs_cloudooo.html");
+              })
+              .push(function (cloudooo) {
+                return cloudooo
+                  .putAllCloudoooConvertionOperation({
+                    format: view_gadget.state.mime_type,
+                    jio_key: child_gadget.state.jio_key
+                  });
+              });
+          }
         }, function (error) {
           console.log(error);
           return gadget.notifySubmitted({
