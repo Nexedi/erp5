@@ -90,7 +90,9 @@
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
 
-    .declareMethod('clean', function (appcache_storage, origin_url) {
+    .declareMethod('updateConfiguration', function (appcache_storage, origin_url,
+                                                    migration_version, current_version,
+                                                    storage_name) {
       if (!appcache_storage) { return; }
       var gadget = this,
         document_id_list = [origin_url,
@@ -108,26 +110,25 @@
                             "portal_types/Web Page Module/text_editor_view",
                             "portal_types/Web Page/text_editor_clone"],
         promise_list = [],
-        i = 0,
-        current_version,
-        index;
-      current_version = window.location.href.replace(window.location.hash, "");
-      index = current_version.indexOf(window.location.host) + window.location.host.length;
-      current_version = current_version.substr(index);
-      return gadget.getSetting("migration_version")
-        .push(function (migration_version) {
-          if (migration_version !== current_version) {
-            for (i = 0; i < document_id_list.length; i += 1) {
-              promise_list = [safeJioRemove(appcache_storage, document_id_list[i])];
-            }
-            return RSVP.all(promise_list);
-          }
+        i = 0;
+      if (migration_version !== current_version) {
+        //clean storage if app version changed
+        for (i = 0; i < document_id_list.length; i += 1) {
+          promise_list = [safeJioRemove(appcache_storage, document_id_list[i])];
+        }
+      }
+      return RSVP.Queue()
+        .push(function () {
+          return RSVP.all(promise_list);
         })
         .push(function () {
           return gadget.setSetting("migration_version", current_version);
         })
         .push(function () {
-          return current_version;
+          return gadget.setSetting("previous_storage_name", storage_name);
+        })
+        .push(function () {
+          return appcache_storage.repair(current_version);
         });
     })
 
@@ -135,15 +136,25 @@
       if (jio_options === undefined) { return; }
       var gadget = this,
         appcache_storage,
+        current_version,
+        migration_version,
+        selected_storage_name,
+        previous_storage_name,
+        index,
         origin_url = window.location.href;
       return RSVP.Queue()
         .push(function () {
           return RSVP.all([
             gadget.getSetting('configuration_manifest'),
-            gadget.getSetting('jio_storage_name')
+            gadget.getSetting('jio_storage_name'),
+            gadget.getSetting('previous_storage_name'),
+            gadget.getSetting('migration_version')
           ]);
         })
         .push(function (result_list) {
+          selected_storage_name = result_list[1];
+          previous_storage_name = result_list[2];
+          migration_version = result_list[3];
           var jio_appchache_options = {
             type: "replicate",
             parallel_operation_attachment_amount: 10,
@@ -161,7 +172,7 @@
               type: "query",
               sub_storage: {
                 type: "indexeddb",
-                database: result_list[1] + "-configuration-hash"
+                database: selected_storage_name + "-configuration-hash"
               }
             },
             local_sub_storage: JSON.parse(JSON.stringify(jio_options)),
@@ -191,17 +202,16 @@
             gadget.state_parameter_dict.jio_storage = undefined;
           }
           if (result_list[0] === undefined) { return; }
-          if (result_list[1] === undefined) { return; }
-          gadget.state_parameter_dict.jio_storage_name = result_list[1];
+          if (selected_storage_name === undefined) { return; }
+          gadget.state_parameter_dict.jio_storage_name = selected_storage_name;
           appcache_storage = jIO.createJIO(jio_appchache_options);
-        })
-        .push(function () {
-          return gadget.clean(appcache_storage, origin_url);
-        })
-        .push(function (current_version) {
-          if (appcache_storage) {
-            //if the app version has changed, force configuration storage sync
-            return appcache_storage.repair(current_version);
+          current_version = window.location.href.replace(window.location.hash, "");
+          index = current_version.indexOf(window.location.host) + window.location.host.length;
+          current_version = current_version.substr(index);
+          if (migration_version !== current_version ||
+              previous_storage_name !== selected_storage_name) {
+            return gadget.updateConfiguration(appcache_storage, origin_url, migration_version,
+                                              current_version, selected_storage_name);
           }
         })
         .push(undefined, function (error) {
