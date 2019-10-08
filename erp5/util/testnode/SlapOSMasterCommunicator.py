@@ -11,7 +11,7 @@ from uritemplate import expand
 import slapos.slap
 from slapos.slap import SoftwareProductCollection
 from slapos.client import SOFTWARE_PRODUCT_NAMESPACE
-from slapos.slap.util import xml2dict
+from slapos.util import xml2dict
 from requests.exceptions import HTTPError
 from ..taskdistribution import SAFE_RPC_EXCEPTION_LIST
 from . import logger
