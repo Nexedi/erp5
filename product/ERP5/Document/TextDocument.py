@@ -159,7 +159,9 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
           if mime_type == 'text/html':
             mime_type = 'text/x-html-safe'
           if src_mimetype != "image/svg+xml":
-            result = portal_transforms.convertToData(mime_type, text_content,
+            # For Big File, text_content is a PData AcquisitionWrapper
+            # convertToData require a string
+            result = portal_transforms.convertToData(mime_type, str(text_content),
                                                    object=self, context=self,
                                                    filename=filename,
                                                    mimetype=src_mimetype,
