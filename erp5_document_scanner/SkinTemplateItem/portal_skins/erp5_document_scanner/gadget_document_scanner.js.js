@@ -314,8 +314,6 @@
               block = base64data.split(";"),
               realData = block[1].split(",")[1];
 
-            photo.style.width = canvasData.width + "px";
-            photo.style.height = canvasData.height + "px";
             photo.src = base64data;
             photoInput.value = realData;
             gadget.querySelector(".camera-input").style.display = "none";
