@@ -75,7 +75,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_viewUploadDocumentFromCameraStep1Dialog</string> </value>
+            <value> <string>string:${object_url}/Base_viewUploadDocumentFromCameraDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_storeDocumentFromCameraInActiveProcess</string> </value>
+            <value> <string>Base_uploadDocumentFromCameraByActivity</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -80,9 +80,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>your_document_scanner_gadget</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -98,13 +96,22 @@
                     <value>
                       <list>
                         <string>your_active_process_url</string>
+                        <string>your_document_scanner_gadget</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_title</string>
+                        <string>your_reference</string>
+                        <string>your_language</string>
+                        <string>your_version</string>
+                        <string>your_group</string>
+                        <string>your_publication_section</string>
+                        <string>your_description</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -112,7 +119,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewUploadDocumentFromCameraStep1Dialog</string> </value>
+            <value> <string>Base_viewUploadDocumentFromCameraDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -136,7 +143,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Capture</string> </value>
+            <value> <string>Create PDF</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -144,11 +151,11 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>Base_redirectToUploadDocumentFromCameraStep2Dialog</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
-            <value> <string>Next Step</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
