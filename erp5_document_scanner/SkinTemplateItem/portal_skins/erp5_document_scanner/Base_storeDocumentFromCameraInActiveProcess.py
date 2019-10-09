@@ -14,7 +14,7 @@ if not active_preference:
 if active_preference and preferred_cropped_canvas_data:
   active_preference.setPreferredCroppedCanvasData(preferred_cropped_canvas_data)
 
-if not document_scanner_gadget:
+if not image_str:
   return context.Base_renderForm('Base_viewUploadDocumentFromCameraStep1Dialog',
                                message='Nothing to capture')
 
