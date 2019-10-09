@@ -357,11 +357,15 @@ and handling data send&receive.
         Returns: on success it returns a Promise with {string} JIO key
                  on failure it throws an error with the invalid response
     */
-    .allowPublicAcquisition("submitContentXXX", function submitContent(param_list) {
+    .allowPublicAcquisition("submitContent", function submitContent(param_list) {
       var gadget = this,
         jio_key = param_list[0],
         target_url = param_list[1],
-        content_dict = param_list[2];
+        content_dict = param_list[2],
+        result = {
+          jio_key: undefined,
+          view: undefined
+        };
 
       return gadget.notifySubmitting()
         .push(function () {
@@ -394,8 +398,8 @@ and handling data send&receive.
                 ),
                   redirect_jio_key = uri.segment(2);
                 console.log(uri.segment(3), uri.segment(4));
-
-                return redirect_jio_key;
+                result.jio_key = redirect_jio_key;
+                return result;
               });
           }
 
@@ -451,7 +455,7 @@ and handling data send&receive.
                     // Make sure to return nothing (previous render can return
                     // something) so the successfull handler does not receive
                     // anything which it could consider as redirect jio key.
-                    return;
+                    return result;
                   });
               });
           }
@@ -470,7 +474,8 @@ and handling data send&receive.
                 });
               })
               .push(function () {
-                return jio_key;
+                result.jio_key = jio_key;
+                return result;
               });
           }
 
@@ -490,7 +495,8 @@ and handling data send&receive.
             // in the old UI but it will be a change of behaviour
             // Nicolas required this feature to be allowed
             .push(function () {
-              return jio_key;
+              result.jio_key = jio_key;
+              return result;
             });
         })
 
@@ -513,7 +519,8 @@ and handling data send&receive.
                 });
               })
               .push(function () {
-                return; // error was handled
+                // error was handled
+                return result;
               });
           }
 
@@ -578,7 +585,8 @@ and handling data send&receive.
                 }
               })
               .push(function () {
-                return; // error was handled
+                // error was handled
+                return result;
               });
           }
 
@@ -595,7 +603,8 @@ and handling data send&receive.
               });
             })
             .push(function () {
-              return; // error was handled
+              // error was handled
+              return result;
             });
         });
     })
@@ -613,10 +622,10 @@ and handling data send&receive.
           attachment.target.getResponseHeader("Content-Disposition") || ""
         ),
         a_tag = document.createElement("a");
-        if (filename_utf8_quoted) {
-          filename = filename_utf8_quoted;
-          filename[1] = decodeURI(filename[1]);
-        }
+      if (filename_utf8_quoted) {
+        filename = filename_utf8_quoted;
+        filename[1] = decodeURI(filename[1]);
+      }
       /*jslint regexp: false */
 
       if (attachment.target.responseType !== "blob") {
