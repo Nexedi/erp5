@@ -75,6 +75,10 @@ result_dict = {
     }
   }
 }
+
+if (form_id is None):
+  del result_dict['_links']['location']
+
 result = json.dumps(result_dict, indent=2)
 if abort_transaction:
   response.write(result)
