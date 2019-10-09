@@ -110,6 +110,7 @@
                         <string>your_version</string>
                         <string>your_group</string>
                         <string>your_publication_section</string>
+                        <string>your_publication_state</string>
                         <string>your_description</string>
                       </list>
                     </value>

@@ -12,7 +12,9 @@
     canvas,
     photo,
     photoInput,
-    imageCapture;
+    cameraSelected,
+    imageCapture,
+    cameraList = [];
 
   function readBlobAsDataURL(blob) {
     var fr = new FileReader();
@@ -193,21 +195,19 @@
   rJS(window)
     .declareMethod('render', function (options) {
       var el,
-        root,
-        selector;
+        root;
       return this.getElement()
         .push(function (element) {
           root = element;
-          selector = element.querySelector("select");
           preferredCroppedCanvasData = preferredCroppedCanvasData || JSON.parse(
             options.preferred_cropped_canvas_data
           );
           // Clear photo input
           element.querySelector('.photoInput').value = "";
-          if (!selector.value && video) {
+          if (video) {
             video.pause();
           }
-          if (selector.value) {
+          if (cameraSelected) {
             root.querySelector(".camera-input").style.display = "";
             root.querySelector(".capture-button").style.display = "";
             root.querySelector(".camera-output").style.display = "none";
@@ -221,21 +221,15 @@
           var j,
             device,
             len = info_list.length;
-          if (selector.length > 1) {
-            return;
-          }
           for (j = 0; j < len; j += 1) {
             device = info_list[j];
             if (device.kind === 'videoinput') {
-              el = document.createElement("option");
-              el.value = device.deviceId;
-              el.innerText = device.label || device.kind + " " + device.deviceId;
-              selector.appendChild(el);
+              cameraList.push(device);
             }
           }
-          if (selector.options.length === 2) {
-            selector.options[selector.options.length - 1].selected = true;
-            return startup(root, selector.value);
+          if (cameraList.length >= 1) {
+            // trick to select back camera in mobile
+            return startup(root, cameraList[cameraList.length - 1].deviceId);
           }
         });
     })
@@ -248,7 +242,7 @@
       });
       return result;
     })
-    .onEvent("change", function (evt) {
+    /*.onEvent("change", function (evt) {
       if (evt.target.type === "select-one") {
         return this.getElement()
           .push(function (root) {
@@ -270,7 +264,7 @@
             }
           });
       }
-    }, false, true)
+    }, false, true)*/
 
     .onEvent("click", function (evt) {
       var gadget, canvasData;

@@ -16,6 +16,10 @@
   filter: brightness(1);
 }
 
+.camera {
+  min-height: 390px;
+}
+
 .camera-input, .camera-output {
   text-align: center;
 }
