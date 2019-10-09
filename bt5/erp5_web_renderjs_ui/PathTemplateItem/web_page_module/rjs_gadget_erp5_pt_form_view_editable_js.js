@@ -163,7 +163,7 @@
         })
         .push(function (content_dict) {
           if (content_dict === null) {
-            return;
+            return {};
           }
           return gadget.submitContent(
             gadget.state.jio_key,
@@ -171,8 +171,8 @@
             content_dict
           );
         })
-        .push(function (jio_key) {
-          if (jio_key) {
+        .push(function (result) {
+          if (result.jio_key) {
             // success redirect callback receives jio_key
             return gadget.redirect({command: 'reload'});
           }
