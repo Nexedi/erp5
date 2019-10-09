@@ -31,23 +31,23 @@
           data
         );
       })
-      .push(function (jio_key) {  // success redirect handler
+      .push(function (result) {  // success redirect handler
         var splitted_jio_key_list,
           splitted_current_jio_key_list,
           command,
           i;
 
-        if (!jio_key) {
+        if (!result.jio_key) {
           return;
         }
-        if (gadget.state.jio_key === jio_key) {
+        if (gadget.state.jio_key === result.jio_key) {
           // don't update navigation history when not really redirecting
           return gadget.redirect({command: 'cancel_dialog_with_history'});
         }
         // Check if the redirection goes to a same parent's subdocument.
         // In this case, do not add current document to the history
         // example: when cloning, do not keep the original document in history
-        splitted_jio_key_list = jio_key.split('/');
+        splitted_jio_key_list = result.jio_key.split('/');
         splitted_current_jio_key_list = gadget.state.jio_key.split('/');
         command = 'display_with_history';
         if (splitted_jio_key_list.length === splitted_current_jio_key_list.length) {
@@ -64,7 +64,7 @@
         return gadget.redirect({
           command: command,
           options: {
-            "jio_key": jio_key
+            "jio_key": result.jio_key
             // do not mingle with editable because it isn't necessary
           }
         });
