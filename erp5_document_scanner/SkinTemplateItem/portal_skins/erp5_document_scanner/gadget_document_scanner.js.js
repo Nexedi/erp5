@@ -194,8 +194,7 @@
 
   rJS(window)
     .declareMethod('render', function (options) {
-      var el,
-        root;
+      var root;
       return this.getElement()
         .push(function (element) {
           root = element;
@@ -267,7 +266,7 @@
     }, false, true)*/
 
     .onEvent("click", function (evt) {
-      var gadget, canvasData;
+      var gadget;
       if (evt.target.name === "grayscale") {
         return this.getElement()
           .push(function () {
@@ -295,7 +294,6 @@
       if (evt.target.className === "capture-button") {
         evt.preventDefault();
         preferredCroppedCanvasData = cropper.getData();
-        canvasData = cropper.getCanvasData();
         return this.getElement()
           .push(function (el) {
             gadget = el;
