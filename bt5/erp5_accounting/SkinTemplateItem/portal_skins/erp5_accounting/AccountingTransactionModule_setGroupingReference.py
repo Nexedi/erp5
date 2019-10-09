@@ -127,7 +127,7 @@ else:
   # make sure nothing will be checked next time
   portal.portal_selections.setSelectionCheckedUidsFor(list_selection_name, [])
 
-return context.Base_redirect(
+return context.Base_renderForm(
   'AccountingTransactionModule_viewGroupingFastInputDialog',
   REQUEST=request,
   keep_items={'portal_status_message': psm}
