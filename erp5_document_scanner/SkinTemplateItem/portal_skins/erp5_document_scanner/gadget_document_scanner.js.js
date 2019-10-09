@@ -8,6 +8,7 @@
     imageHeight,
     cropper,
     video,
+    stream,
     canvas,
     photo,
     photoInput,
@@ -110,7 +111,6 @@
     outputContext = outputCanvas.getContext("2d");
     outputContext.putImageData(imageData, 0, 0);
 
-
     data = canvas.toDataURL("image/png");
     output.setAttribute("src", data);
     if (cropper) {
@@ -128,7 +128,6 @@
   }
 
   function handleUserMedia(root, device_id, callback) {
-    var stream;
 
     function canceller() {
       if (stream !== undefined) {
@@ -253,10 +252,19 @@
       if (evt.target.type === "select-one") {
         return this.getElement()
           .push(function (root) {
-            if (!evt.target.value && video) {
-              video.pause();
+            var display;
+            if (stream !== undefined) {
+              // Stop the streams
+              stream.getTracks().forEach(function (track) {
+                track.stop();
+              });
             }
-            root.querySelector(".camera-input").style.display = "";
+            if (!evt.target.value) {
+              display = "none";
+            } else {
+              display = "";
+            }
+            root.querySelector(".camera-input").style.display = display;
             if (evt.target.value) {
               return startup(root, evt.target.value);
             }
