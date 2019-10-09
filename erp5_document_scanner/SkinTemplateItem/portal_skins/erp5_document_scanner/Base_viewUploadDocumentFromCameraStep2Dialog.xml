@@ -143,7 +143,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Upload</string> </value>
+            <value> <string>Create PDF</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -155,7 +155,7 @@
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
-            <value> <string>Back</string> </value>
+            <value> <string>Scan Again</string> </value>
         </item>
       </dictionary>
     </pickle>

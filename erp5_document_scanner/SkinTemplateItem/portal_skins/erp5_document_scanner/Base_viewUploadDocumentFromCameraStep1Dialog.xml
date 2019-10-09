@@ -144,11 +144,11 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>Base_viewUploadDocumentFromCameraStep2Dialog</string> </value>
+            <value> <string>Base_redirectToUploadDocumentFromCameraStep2Dialog</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
-            <value> <string>Finish</string> </value>
+            <value> <string>Next Step</string> </value>
         </item>
       </dictionary>
     </pickle>
