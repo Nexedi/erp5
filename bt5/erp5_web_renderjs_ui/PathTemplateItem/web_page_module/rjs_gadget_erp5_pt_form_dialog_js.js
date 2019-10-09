@@ -106,7 +106,8 @@
             return gadget.redirect({
               command: command,
               options: {
-                "jio_key": result.jio_key
+                "jio_key": result.jio_key,
+                "view": result.view
                 // do not mingle with editable because it isn't necessary
               }
             });
