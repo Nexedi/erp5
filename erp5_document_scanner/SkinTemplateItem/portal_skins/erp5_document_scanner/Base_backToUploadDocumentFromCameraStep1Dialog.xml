@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>active_process_url=None, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_redirectToUploadDocumentFromCameraStep2Dialog</string> </value>
+            <value> <string>Base_backToUploadDocumentFromCameraStep1Dialog</string> </value>
         </item>
       </dictionary>
     </pickle>

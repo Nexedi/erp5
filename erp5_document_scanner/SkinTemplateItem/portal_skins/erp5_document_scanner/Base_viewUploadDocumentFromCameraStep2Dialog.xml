@@ -151,7 +151,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>Base_viewUploadDocumentFromCameraStep1Dialog</string> </value>
+            <value> <string>Base_backToUploadDocumentFromCameraStep1Dialog</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
