@@ -357,7 +357,7 @@ and handling data send&receive.
         Returns: on success it returns a Promise with {string} JIO key
                  on failure it throws an error with the invalid response
     */
-    .allowPublicAcquisition("submitContent", function submitContent(param_list) {
+    .allowPublicAcquisition("submitContentXXX", function submitContent(param_list) {
       var gadget = this,
         jio_key = param_list[0],
         target_url = param_list[1],
@@ -389,9 +389,11 @@ and handling data send&receive.
               .push(function () {
                 // here we figure out where to go after form submit - indicated
                 // by X-Location HTTP header placed by Base_redirect script
-                var redirect_jio_key = new URI(
+                var uri = new URI(
                   attachment.target.getResponseHeader("X-Location")
-                ).segment(2);
+                ),
+                  redirect_jio_key = uri.segment(2);
+                console.log(uri.segment(3), uri.segment(4));
 
                 return redirect_jio_key;
               });
