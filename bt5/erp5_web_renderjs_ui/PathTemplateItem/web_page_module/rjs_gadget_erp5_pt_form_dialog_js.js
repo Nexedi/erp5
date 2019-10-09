@@ -71,25 +71,25 @@
               data
             );
           })
-          .push(function (jio_key) {  // success redirect handler
+          .push(function (result) {  // success redirect handler
             var splitted_jio_key_list,
               splitted_current_jio_key_list,
               command,
               i;
-            if (is_updating || !jio_key) {
+            if (is_updating || !result.jio_key) {
               return;
             }
             if (gadget.state.redirect_to_parent) {
               return gadget.redirect({command: 'history_previous'});
             }
-            if (gadget.state.jio_key === jio_key) {
+            if (gadget.state.jio_key === result.jio_key) {
               // don't update navigation history when not really redirecting
               return gadget.redirect({command: 'cancel_dialog_with_history'});
             }
             // Check if the redirection goes to a same parent's subdocument.
             // In this case, do not add current document to the history
             // example: when cloning, do not keep the original document in history
-            splitted_jio_key_list = jio_key.split('/');
+            splitted_jio_key_list = result.jio_key.split('/');
             splitted_current_jio_key_list = gadget.state.jio_key.split('/');
             command = 'display_with_history';
             if (splitted_jio_key_list.length === splitted_current_jio_key_list.length) {
@@ -106,7 +106,8 @@
             return gadget.redirect({
               command: command,
               options: {
-                "jio_key": jio_key
+                "jio_key": result.jio_key,
+                "view": result.view
                 // do not mingle with editable because it isn't necessary
               }
             });
@@ -255,7 +256,7 @@
           ]);
         })
         .push(function (translated_title_list) {
-          var action_confirm = form_gadget.element.querySelector('input.dialogconfirm')
+          var action_confirm = form_gadget.element.querySelector('input.dialogconfirm');
           if (form_gadget.state.action_title) {
             action_confirm.value = form_gadget.state.action_title;
           } else {
