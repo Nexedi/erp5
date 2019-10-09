@@ -81,6 +81,12 @@ else:
         get_imported_module = _get_imported_module
 
     ImportsChecker.get_imported_module = get_imported_module
+
+    # All arguments are passed as arguments and this needlessly outputs a 'No
+    # config file found, using default configuration' message on stderr.
+    from logilab.common.configuration import OptionsManagerMixIn
+    OptionsManagerMixIn.read_config_file = lambda *args, **kw: None
+
 finally:
     if sys.modules['isort'] is None:
         del sys.modules['isort']
