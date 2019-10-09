@@ -372,6 +372,7 @@ and handling data send&receive.
           return gadget.jio_putAttachment(jio_key, target_url, content_dict);
         })
         .push(function (attachment) {
+          var response;
 
           if (attachment.target.response.type === "application/json") {
             // successful form save returns simple redirect and an answer as JSON
@@ -383,7 +384,7 @@ and handling data send&receive.
                 ]);
               })
               .push(function (result_list) {
-                var response = JSON.parse(result_list[0].target.result);
+                response = JSON.parse(result_list[0].target.result);
 
                 return gadget.notifySubmitted({
                   "message": response.portal_status_message || result_list[1],
@@ -397,8 +398,10 @@ and handling data send&receive.
                   attachment.target.getResponseHeader("X-Location")
                 ),
                   redirect_jio_key = uri.segment(2);
-                console.log(uri.segment(3), uri.segment(4));
                 result.jio_key = redirect_jio_key;
+                if (response._links.hasOwnProperty('location')) {
+                  result.view = response._links.location.href;
+                }
                 return result;
               });
           }
