@@ -183,6 +183,8 @@ class SlapOSMasterCommunicator(object):
     message_list = []
     try:
       for instance in self.getInstanceUrlList():
+        # we need to explicitly encode as utf-8 the unicode string we get
+        instance["text_content"] = instance["text_content"].encode('utf8')
         news = instance['SoftwareInstance_getNewsDict']
         state = INSTANCE_STATE_UNKNOWN
         monitor_information_dict = {}
