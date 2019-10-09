@@ -361,13 +361,18 @@ and handling data send&receive.
       var gadget = this,
         jio_key = param_list[0],
         target_url = param_list[1],
-        content_dict = param_list[2];
+        content_dict = param_list[2],
+        result = {
+          jio_key: undefined,
+          view: undefined
+        };
 
       return gadget.notifySubmitting()
         .push(function () {
           return gadget.jio_putAttachment(jio_key, target_url, content_dict);
         })
         .push(function (attachment) {
+          var response;
 
           if (attachment.target.response.type === "application/json") {
             // successful form save returns simple redirect and an answer as JSON
@@ -379,7 +384,7 @@ and handling data send&receive.
                 ]);
               })
               .push(function (result_list) {
-                var response = JSON.parse(result_list[0].target.result);
+                response = JSON.parse(result_list[0].target.result);
 
                 return gadget.notifySubmitted({
                   "message": response.portal_status_message || result_list[1],
@@ -389,11 +394,15 @@ and handling data send&receive.
               .push(function () {
                 // here we figure out where to go after form submit - indicated
                 // by X-Location HTTP header placed by Base_redirect script
-                var redirect_jio_key = new URI(
+                var uri = new URI(
                   attachment.target.getResponseHeader("X-Location")
-                ).segment(2);
-
-                return redirect_jio_key;
+                ),
+                  redirect_jio_key = uri.segment(2);
+                result.jio_key = redirect_jio_key;
+                if (response._links.hasOwnProperty('location')) {
+                  result.view = response._links.location.href;
+                }
+                return result;
               });
           }
 
@@ -449,7 +458,7 @@ and handling data send&receive.
                     // Make sure to return nothing (previous render can return
                     // something) so the successfull handler does not receive
                     // anything which it could consider as redirect jio key.
-                    return;
+                    return result;
                   });
               });
           }
@@ -468,7 +477,8 @@ and handling data send&receive.
                 });
               })
               .push(function () {
-                return jio_key;
+                result.jio_key = jio_key;
+                return result;
               });
           }
 
@@ -488,7 +498,8 @@ and handling data send&receive.
             // in the old UI but it will be a change of behaviour
             // Nicolas required this feature to be allowed
             .push(function () {
-              return jio_key;
+              result.jio_key = jio_key;
+              return result;
             });
         })
 
@@ -511,7 +522,8 @@ and handling data send&receive.
                 });
               })
               .push(function () {
-                return; // error was handled
+                // error was handled
+                return result;
               });
           }
 
@@ -572,11 +584,15 @@ and handling data send&receive.
                       erp5_document._now = Date.now();
                       return gadget.changeState({erp5_document: JSON.stringify(erp5_document),
                                                  is_refresh: true});
+                    })
+                    .push(function () {
+                      return result;
                     });
                 }
               })
               .push(function () {
-                return; // error was handled
+                // error was handled
+                return result;
               });
           }
 
@@ -593,7 +609,8 @@ and handling data send&receive.
               });
             })
             .push(function () {
-              return; // error was handled
+              // error was handled
+              return result;
             });
         });
     })
@@ -611,10 +628,10 @@ and handling data send&receive.
           attachment.target.getResponseHeader("Content-Disposition") || ""
         ),
         a_tag = document.createElement("a");
-        if (filename_utf8_quoted) {
-          filename = filename_utf8_quoted;
-          filename[1] = decodeURI(filename[1]);
-        }
+      if (filename_utf8_quoted) {
+        filename = filename_utf8_quoted;
+        filename[1] = decodeURI(filename[1]);
+      }
       /*jslint regexp: false */
 
       if (attachment.target.responseType !== "blob") {
