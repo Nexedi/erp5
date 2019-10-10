@@ -64,10 +64,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-                <string>classification/collaborative/team</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -81,16 +78,8 @@
             <value> <string>text/html</string> </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_notebook_router.html</string> </value>
+            <value> <string>gadget_erp5_page_ojs_notebook_export.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -100,29 +89,12 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_notebook_router.html</string> </value>
+            <value> <string>ojs_gadget_erp5_page_ojs_notebook_export_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
             <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.21</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
+              <none/>
             </value>
         </item>
         <item>
@@ -136,12 +108,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Notebook router Gadget</string> </value>
+            <value> <string>OfficeJS Notebook Export</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -233,7 +201,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1524555037.27</float>
+                        <float>1569506819.84</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -278,7 +246,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.54044.24924.10990</string> </value>
+                <value> <string>978.51415.10.49937</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -296,7 +264,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1569942688.43</float>
+                        <float>1569854517.54</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -353,7 +321,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1524555002.7</float>
+                        <float>1569506369.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

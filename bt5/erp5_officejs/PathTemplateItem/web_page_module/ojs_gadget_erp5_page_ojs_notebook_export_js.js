@@ -1,6 +1,6 @@
-/*global window, jIO, rJS, RSVP, Blob */
+/*global window, document, jIO, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, jIO, rJS, RSVP, Blob) {
+(function (window, document, jIO, rJS, RSVP, Blob) {
 
   "use strict";
 
@@ -10,51 +10,93 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
-    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("updateDocument", "updateDocument")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
+    .declareAcquiredMethod("redirect", 'redirect')
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("render", function (options) {
-      return this.changeState({
-        jio_key: options.jio_key,
-        doc: options.doc
-      });
+
+      var gadget = this;
+      return gadget.jio_get(options.jio_key)
+        .push(function (result) {
+          return gadget.changeState({
+            jio_key: options.jio_key,
+            doc: result
+          });
+        });
     })
 
-    .onEvent('submit', function () {
-      var gadget = this, data;
+    .onEvent('submit', function (event) {
+      var gadget = this, html, content, cloudooo;
       return gadget.notifySubmitting()
         .push(function () {
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
-          return form_gadget.getContent();
-        })
-        .push(function (content) {
-          data = content.text_content;
-          delete content.text_content;
           return RSVP.all([
-            gadget.getSetting("content_type"),
-            gadget.updateDocument(content)
+            form_gadget.getContent(),
+            gadget.getDeclaredGadget("ojs_cloudooo"),
+            form_gadget.getDeclaredGadget("text_content")
           ]);
         })
         .push(function (result_list) {
+          content = result_list[0];
+          cloudooo = result_list[1];
+          html = result_list[2].element
+            .querySelector('[data-gadget-scope="editor"]').firstChild
+            .contentDocument.body.firstChild.contentDocument.firstChild;
+          html.firstChild.innerHTML = "";
+          return RSVP.all([
+            cloudooo.putCloudoooConvertOperation({
+              "status": "converted",
+              "from": "txt",
+              "to": "html",
+              "id": gadget.state.jio_key,
+              "name": "data"
+            }),
+            cloudooo.putCloudoooConvertOperation({
+              "status": "convert",
+              "from": "html",
+              "to": "pdf",
+              "id": gadget.state.jio_key,
+              "name": "html",
+              "to_name": "pdf",
+              "conversion_kw": {
+                "encoding": ["utf8", "string"],
+                "page_size": ["A4", "string"],
+                "zoom" : [1, "double"],
+                "dpi" : ["300", "string"],
+                "header_center" : ["document Title", "string"]
+              }
+            })
+          ]);
+        })
+        .push(function () {
           return gadget.jio_putAttachment(
             gadget.state.jio_key,
-            "data",
-            new Blob([data], {type: result_list[0]})
+            'html',
+            new Blob([html.outerHTML], {type: 'text/html'})
           );
         })
         .push(function () {
-          return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
+          return gadget.notifySubmitted();
+        })
+        .push(function () {
+          return gadget.redirect({
+            'command': 'display',
+            'options': {
+              'page': 'ojs_download_convert',
+              'jio_key': gadget.state.jio_key
+            }
+          });
         });
     })
 
@@ -82,66 +124,11 @@
           return form_gadget.render({
             erp5_document: {
               "_embedded": {"_view": {
-                "my_title": {
-                  "description": "",
-                  "title": "Title",
-                  "default": gadget.state.doc.title,
-                  "css_class": "",
-                  "required": 1,
-                  "editable": 1,
-                  "key": "title",
-                  "hidden": 0,
-                  "type": "StringField"
-                },
-                "my_reference": {
-                  "description": "",
-                  "title": "Reference",
-                  "default": gadget.state.doc.reference,
-                  "css_class": "",
-                  "required": 0,
-                  "editable": 1,
-                  "key": "reference",
-                  "hidden": 0,
-                  "type": "StringField"
-                },
-                "my_version": {
-                  "description": "",
-                  "title": "Version",
-                  "default": gadget.state.doc.version,
-                  "css_class": "",
-                  "required": 0,
-                  "editable": 1,
-                  "key": "version",
-                  "hidden": 0,
-                  "type": "StringField"
-                },
-                "my_language": {
-                  "description": "",
-                  "title": "Language",
-                  "default": gadget.state.doc.language,
-                  "css_class": "",
-                  "required": 0,
-                  "editable": 1,
-                  "key": "language",
-                  "hidden": 0,
-                  "type": "StringField"
-                },
-                "my_description": {
-                  "description": "",
-                  "title": "Description",
-                  "default": gadget.state.doc.description,
-                  "css_class": "",
-                  "required": 0,
-                  "editable": 1,
-                  "key": "description",
-                  "hidden": 0,
-                  "type": "TextAreaField"
-                },
                 "my_content": {
                   "default": data,
                   "css_class": "",
                   "required": 0,
-                  "editable": 1,
+                  "editable": 0,
                   "key": "text_content",
                   "hidden": 0,
                   "type": "GadgetField",
@@ -160,13 +147,13 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_title"], ["my_reference"]]
+                []
               ], [
                 "right",
-                [["my_version"], ["my_language"]]
+                []
               ], [
                 "center",
-                [["my_description"]]
+                []
               ], [
                 "bottom",
                 [["my_content"]]
@@ -176,24 +163,22 @@
         })
         .push(function () {
           return RSVP.all([
-            gadget.getUrlFor({command: 'history_previous'}),
-            gadget.getUrlFor({command: 'selection_previous'}),
-            gadget.getUrlFor({command: 'selection_next'}),
             gadget.getUrlFor({
-              command: 'change',
-              options: {'page': 'ojs_notebook_export'}
-            })
+              command: 'display',
+              options: {'jio_key': gadget.state.jio_key}
+            }),
+            gadget.getUrlFor({command: 'selection_previous'}),
+            gadget.getUrlFor({command: 'selection_next'})
           ]);
         })
         .push(function (url_list) {
           return gadget.updateHeader({
-            page_title: gadget.state.doc.title,
-            save_action: true,
-            export_url: url_list[3],
+            page_title: "Export",
+            submit_action: true,
             selection_url: url_list[0],
             previous_url: url_list[1],
             next_url: url_list[2]
           });
         });
     });
-}(window, jIO, rJS, RSVP, Blob));
+}(window, document, jIO, rJS, RSVP, Blob));
