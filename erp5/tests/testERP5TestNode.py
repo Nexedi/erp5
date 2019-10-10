@@ -72,7 +72,6 @@ class ERP5TestNode(TestCase):
     logging.getLogger().removeHandler(self._handler)
 
   def getTestNode(self):
-    # XXX how to get property the git path ?
     config = {}
     config["git_binary"] = "git"
     config["master_url"] = 'http://example.org/'
