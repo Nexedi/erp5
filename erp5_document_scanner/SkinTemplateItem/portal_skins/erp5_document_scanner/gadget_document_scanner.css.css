@@ -20,7 +20,16 @@
   min-height: 390px;
 }
 
-.camera-input, .camera-output {
+.page-number {
+  display: inline;
+}
+
+.camera-header {
+  font-size: 12pt;
+  font-weight: 400;
+}
+
+.camera-input, .camera-output, .camera-header {
   text-align: center;
 }
 
@@ -53,8 +62,4 @@
   font-size: 16px;
   font-family: "Lucida Grande", "Arial", sans-serif;
   width: 760px;
-}
-
-.camera {
-  margin-top: 1em;
 }

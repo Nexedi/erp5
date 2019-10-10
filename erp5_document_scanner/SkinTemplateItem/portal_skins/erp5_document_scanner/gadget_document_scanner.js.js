@@ -47,6 +47,14 @@
       });
   }
 
+  function setPageOne(root) {
+    root.querySelector(".page-number").innerText = "1";
+  }
+
+  function setPageTwo(root) {
+    root.querySelector(".page-number").innerText = "2";
+  }
+
   function drawCanvas(gadget, img) {
     var ratio, x, y;
     canvas.width = imageWidth;
@@ -263,7 +271,7 @@
     }, false, true)*/
 
     .onEvent("click", function (evt) {
-      var gadget;
+      var root;
       if (evt.target.name === "grayscale") {
         return this.getElement()
           .push(function () {
@@ -274,8 +282,12 @@
         evt.preventDefault();
         return this.getElement()
           .push(function (el) {
+            root = el;
             el.querySelector(".camera-input").style.display = "none";
             return takePicture(el);
+          })
+          .push(function () {
+            return setPageTwo(root);
           });
       }
       if (evt.target.className === "reset-button") {
@@ -285,6 +297,7 @@
             el.querySelector(".camera-input").style.display = "";
             el.querySelector(".camera-output").style.display = "none";
             cropper.destroy();
+            return setPageOne(el);
           });
       }
       if (evt.target.className === "capture-button") {
@@ -292,7 +305,7 @@
         preferredCroppedCanvasData = cropper.getData();
         return this.getElement()
           .push(function (el) {
-            gadget = el;
+            root = el;
             return cropper.getCroppedCanvas();
           })
           .push(function (canvas) {
@@ -312,10 +325,11 @@
 
             photo.src = base64data;
             photoInput.value = realData;
-            gadget.querySelector(".camera-input").style.display = "none";
-            gadget.querySelector(".camera-output").style.display = "";
-            gadget.querySelector(".capture-button").style.display = "none";
+            root.querySelector(".camera-input").style.display = "none";
+            root.querySelector(".camera-output").style.display = "";
+            root.querySelector(".capture-button").style.display = "none";
             cropper.destroy();
+            return setPageTwo(root);
           });
       }
     }, false, false);
