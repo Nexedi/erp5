@@ -2224,35 +2224,14 @@ class ERP5Generator(PortalGenerator):
     """
     pass
 
-  # this lists only the skin layers of Products.CMFDefault we are actually
-  # interested in.
-  CMFDEFAULT_FOLDER_LIST = ['Images']
-  def addCMFDefaultDirectoryViews(self, p):
-    """Semi-manually create DirectoryViews since CMFDefault 2.X no longer
-    registers the "skins" directory, only its subdirectories, making it
-    unusable with Products.CMFCore.DirectoryView.addDirectoryViews."""
-    from Products.CMFCore.DirectoryView import createDirectoryView, _generateKey
-    import Products.CMFDefault
-
-    ps = p.portal_skins
-    # get the layer directories actually present
-    for cmfdefault_skin_layer in self.CMFDEFAULT_FOLDER_LIST:
-      reg_key = _generateKey(Products.CMFDefault.__name__,
-                             'skins/' + cmfdefault_skin_layer)
-      createDirectoryView(ps, reg_key)
-
   def setupDefaultSkins(self, p):
     ps = p.portal_skins
-    self.addCMFDefaultDirectoryViews(p)
     ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
     ps.manage_addProduct['OFSP'].manage_addFolder(id='custom')
     # Set the 'custom' layer a high priority, so it remains the first
     #   layer when installing new business templates.
     ps['custom'].manage_addProperty("business_template_skin_layer_priority", 100.0, "float")
-    skin_folder_list = [ 'custom'
-                       , 'external_method'
-                       ] + self.CMFDEFAULT_FOLDER_LIST
-    skin_folders = ', '.join(skin_folder_list)
+    skin_folders = ', '.join(['custom', 'external_method'])
     ps.addSkinSelection( 'View'
                        , skin_folders
                        , make_default = 1
