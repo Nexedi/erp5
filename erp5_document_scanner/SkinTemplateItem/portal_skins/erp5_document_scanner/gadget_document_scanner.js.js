@@ -12,7 +12,7 @@
     canvas,
     photo,
     photoInput,
-    cameraSelected,
+    deviceId,
     imageCapture,
     cameraList = [];
 
@@ -139,7 +139,6 @@
         });
       }
     }
-
     function waitForStream() {
       new RSVP.Queue()
         .push(function () {
@@ -203,10 +202,7 @@
           );
           // Clear photo input
           element.querySelector('.photoInput').value = "";
-          if (video) {
-            video.pause();
-          }
-          if (cameraSelected) {
+          if (deviceId) {
             root.querySelector(".camera-input").style.display = "";
             root.querySelector(".capture-button").style.display = "";
             root.querySelector(".camera-output").style.display = "none";
@@ -228,7 +224,8 @@
           }
           if (cameraList.length >= 1) {
             // trick to select back camera in mobile
-            return startup(root, cameraList[cameraList.length - 1].deviceId);
+            deviceId = cameraList[cameraList.length - 1].deviceId;
+            return startup(root, deviceId);
           }
         });
     })
@@ -288,7 +285,6 @@
             el.querySelector(".camera-input").style.display = "";
             el.querySelector(".camera-output").style.display = "none";
             cropper.destroy();
-            return startup(el, el.querySelector("select"));
           });
       }
       if (evt.target.className === "capture-button") {
