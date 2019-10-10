@@ -624,25 +624,33 @@ shared = true
                           "kw": kw})
         return {"status_code": self.status_code}
 
-    SlapOSControler.initializeSlapOSControler = Patch("initializeSlapOSControler")
-    SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease")
-    SlapOSControler.runComputerPartition = Patch("runComputerPartition")
-    method_list_for_prepareSlapOSForTestNode = ["initializeSlapOSControler",
-                                                   "runSoftwareRelease"]
-    method_list_for_prepareSlapOSForTestSuite = ["initializeSlapOSControler",
-                                 "runSoftwareRelease", "runComputerPartition"]
-    runner.prepareSlapOSForTestNode(test_node_slapos)
-    self.assertEqual(method_list_for_prepareSlapOSForTestNode,
-                      [x["method_name"] for x in call_list])
-    call_list = []
-    runner.prepareSlapOSForTestSuite(node_test_suite)
-    self.assertEqual(method_list_for_prepareSlapOSForTestSuite,
-                      [x["method_name"] for x in call_list])
-    call_list = []
-    SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease", status_code=1)
-    # TODO : write a test for scalability case
-    self.assertRaises(SubprocessError, runner.prepareSlapOSForTestSuite,
-                     node_test_suite)
+    original_SlapOSControler_initializeSlapOSControler = SlapOSControler.initializeSlapOSControler
+    original_SlapOSControler_runSoftwareRelease = SlapOSControler.runSoftwareRelease
+    original_SlapOSControler_runComputerPartition = SlapOSControler.runComputerPartition
+    try:
+      SlapOSControler.initializeSlapOSControler = Patch("initializeSlapOSControler")
+      SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease")
+      SlapOSControler.runComputerPartition = Patch("runComputerPartition")
+      method_list_for_prepareSlapOSForTestNode = ["initializeSlapOSControler",
+                                                    "runSoftwareRelease"]
+      method_list_for_prepareSlapOSForTestSuite = ["initializeSlapOSControler",
+                                  "runSoftwareRelease", "runComputerPartition"]
+      runner.prepareSlapOSForTestNode(test_node_slapos)
+      self.assertEqual(method_list_for_prepareSlapOSForTestNode,
+                        [x["method_name"] for x in call_list])
+      call_list = []
+      runner.prepareSlapOSForTestSuite(node_test_suite)
+      self.assertEqual(method_list_for_prepareSlapOSForTestSuite,
+                        [x["method_name"] for x in call_list])
+      call_list = []
+      SlapOSControler.runSoftwareRelease = Patch("runSoftwareRelease", status_code=1)
+      # TODO : write a test for scalability case
+      self.assertRaises(SubprocessError, runner.prepareSlapOSForTestSuite,
+                      node_test_suite)
+    finally:
+      SlapOSControler.initializeSlapOSControler = original_SlapOSControler_initializeSlapOSControler
+      SlapOSControler.runSoftwareRelease = original_SlapOSControler_runSoftwareRelease
+      SlapOSControler.runComputerPartition = original_SlapOSControler_runComputerPartition
 
   def test_11_run(self, my_test_type='UnitTest', grade='master'):
     def doNothing(self, *args, **kw):
@@ -738,6 +746,8 @@ shared = true
       RunnerClass._updateInstanceXML = doNothing
       SlapOSMasterCommunicator.__init__ = doNothing
     original_generateConfiguration = TaskDistributor.generateConfiguration
+    original_initializeSlapOSControler = SlapOSControler.initializeSlapOSControler
+
     TaskDistributor.generateConfiguration = patch_generateConfiguration
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
@@ -778,6 +788,7 @@ shared = true
     TaskDistributor.getTestType = original_getTestType
     RunnerClass._prepareSlapOS = original_prepareSlapOS
     RunnerClass.runTestSuite = original_runTestSuite
+    SlapOSControler.initializeSlapOSControler = original_initializeSlapOSControler
 
   def test_12_spawn(self):
     def _checkCorrectStatus(expected_status,*args):
@@ -911,8 +922,8 @@ shared = true
     del test_node.suiteLog
     # Change UnitTestRunner class methods
     original_prepareSlapOS = RunnerClass._prepareSlapOS
-
     original_runTestSuite = RunnerClass.runTestSuite
+    original_initializeSlapOSControler = SlapOSControler.initializeSlapOSControler
 
     if my_test_type == "ScalabilityTest":
       RunnerClass.runTestSuite = patch_runTestSuite
@@ -945,6 +956,7 @@ shared = true
     TaskDistributor.getTestType = original_getTestType
     RunnerClass._prepareSlapOS = original_prepareSlapOS
     RunnerClass.runTestSuite = original_runTestSuite
+    SlapOSControler.initializeSlapOSControler = original_initializeSlapOSControler
 
   def test_16_cleanupLogDirectory(self):
     # Make sure that we are able to cleanup old log folders
