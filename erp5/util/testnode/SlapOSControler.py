@@ -272,6 +272,7 @@ class SlapOSControler(object):
     # MySQL DB content) from previous runs. To support changes of partition
     # naming scheme (which already happened), do this at instance_root level.
     createFolder(instance_root, True)
+    partition_list = []
     for i in range(MAX_PARTITIONS):
       # create partition and configure computer
       # XXX: at the moment all partitions do share same virtual interface address
@@ -281,18 +282,20 @@ class SlapOSControler(object):
       if not(os.path.exists(partition_path)):
         os.mkdir(partition_path)
       os.chmod(partition_path, 0o750)
-      computer.updateConfiguration(xml_marshaller.xml_marshaller.dumps({
+      partition_list.append(
+          {'address_list': [{'addr': config['ipv4_address'],
+                            'netmask': '255.255.255.255'},
+                          {'addr': config['ipv6_address'],
+                            'netmask': 'ffff:ffff:ffff::'},],
+          'path': partition_path,
+          'reference': partition_reference,
+          'tap': {'name': partition_reference},})
+
+    computer.updateConfiguration(xml_marshaller.xml_marshaller.dumps({
            'address': config['ipv4_address'],
            'instance_root': instance_root,
            'netmask': '255.255.255.255',
-           'partition_list': [
-             {'address_list': [{'addr': config['ipv4_address'],
-                               'netmask': '255.255.255.255'},
-                              {'addr': config['ipv6_address'],
-                               'netmask': 'ffff:ffff:ffff::'},],
-              'path': partition_path,
-              'reference': partition_reference,
-              'tap': {'name': partition_reference},}],
+           'partition_list': partition_list,
            'reference': config['computer_id'],
            'software_root': self.software_root}))
 

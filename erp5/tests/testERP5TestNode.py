@@ -2,6 +2,7 @@ import unittest
 from unittest import TestCase
 from contextlib import contextmanager
 
+from xml_marshaller import xml_marshaller
 from erp5.util.testnode import logger
 from erp5.util.testnode.testnode import TestNode, test_type_registry
 from erp5.util.testnode.NodeTestSuite import SlapOSInstance, NodeTestSuite
@@ -24,6 +25,11 @@ import tempfile
 import json
 import time
 import re
+try:
+  from unittest import mock
+except ImportError:
+  # BBB python2
+  import mock
 
 @contextmanager
 def dummySuiteLog(_):
@@ -67,8 +73,12 @@ class ERP5TestNode(TestCase):
 
   def getTestNode(self):
     # XXX how to get property the git path ?
+    # XXX how to get property the git path ?
     config = {}
     config["git_binary"] = "git"
+    config["master_url"] = 'http://example.org/'
+    config["proxy_host"] = ''
+    config["proxy_port"] = ''
     config["slapos_directory"] = self.slapos_directory
     config["working_directory"] = self.working_directory
     config["software_directory"] = self.software_directory
@@ -87,6 +97,9 @@ class ERP5TestNode(TestCase):
     config["httpd_software_access_port"] = "9080"
     config["frontend_url"] = "http://frontend/"
     config["software_list"] = ["foo", "bar"]
+    config["partition_reference"] = "part"
+    config["ipv4_address"] = "1.2.3.4"
+    config["ipv6_address"] = "::1"
     config["slapos_binary"] = "/opt/slapgrid/HASH/bin/slapos"
     config["srv_directory"] = "srv_directory"
 
@@ -1187,3 +1200,25 @@ shared = true
     RunnerClass.updateDictionaryFile = original_updateDictionaryFile
     RunnerClass._createInstance = original__createInstance
     RunnerClass._waitInstanceCreation = original__waitInstanceCreation
+
+  def test_initializeSlapOSControler(self):
+    test_node = self.getTestNode()
+    test_node_slapos = SlapOSInstance(self.slapos_directory)
+    runner = test_type_registry['UnitTest'](test_node)
+
+    import slapos.slap
+    Computer = mock.create_autospec(slapos.slap.Computer)
+    with mock.patch(
+          'erp5.util.testnode.SlapOSControler.SlapOSControler.runSoftwareRelease',
+          return_value={"status_code": 0}
+        ),\
+        mock.patch('erp5.util.testnode.SlapOSControler.slapos.slap.slap.registerComputer', return_value=Computer),\
+        mock.patch('erp5.util.testnode.SlapOSControler.slapos.slap.slap.initializeConnection'),\
+        mock.patch('erp5.util.testnode.SlapOSControler.slapos.slap.slap.registerSupply'),\
+        mock.patch('subprocess.Popen'):
+      runner.prepareSlapOSForTestNode(test_node_slapos)
+
+    # update configuration is called only once to set all partitions
+    self.assertEqual(1, Computer.updateConfiguration.call_count)
+    computer_config = xml_marshaller.loads(Computer.updateConfiguration.call_args[0][0])
+    self.assertEqual(10, len(computer_config['partition_list']))
