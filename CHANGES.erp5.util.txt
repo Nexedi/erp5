@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.64 (2019-10-10)
+-------------------
+
+  * erp5.util:
+
+    - testnode: fix Computer.updateConfiguration call (Compatibility with slapos.core 1.5.0)
+
 0.4.63 (2019-10-08)
 -------------------
 
