@@ -8,7 +8,7 @@ param = '?ignore_layout:int=1' if int(portal.REQUEST.get('ignore_layout', 0)) el
 if include_root:
     result = [{
         'id'    : 'root',
-        'title' : portal.portal_properties.title(),
+        'title' : portal.title,
         'url'   : '%s/view%s' % (portal_url, param),
     }]
 else:
