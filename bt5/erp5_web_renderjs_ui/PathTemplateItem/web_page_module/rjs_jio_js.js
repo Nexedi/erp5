@@ -8121,25 +8121,14 @@ return new Parser;
  * See https://www.nexedi.com/licensing for rationale and options.
  */
 /*global window, RSVP, Blob, XMLHttpRequest, QueryFactory, Query, atob,
-  FileReader, ArrayBuffer, Uint8Array, navigator */
+  FileReader, ArrayBuffer, Uint8Array */
 (function (window, RSVP, Blob, QueryFactory, Query, atob,
-           FileReader, ArrayBuffer, Uint8Array, navigator) {
+           FileReader, ArrayBuffer, Uint8Array) {
   "use strict";
 
   /* Safari does not define DOMError */
   if (window.DOMError === undefined) {
     window.DOMError = {};
-  }
-
-  /* Document is not defined in ServiceWorkser */
-  if (window.document === undefined) {
-    window.document = {
-      createElementNS: function () {
-        throw new Error(
-          'document.createElementNS is not supported by ' + navigator.userAgent
-        );
-      }
-    };
   }
 
   var util = {},
@@ -8669,7 +8658,7 @@ return new Parser;
   window.jIO = jIO;
 
 }(window, RSVP, Blob, QueryFactory, Query, atob,
-  FileReader, ArrayBuffer, Uint8Array, navigator));
+  FileReader, ArrayBuffer, Uint8Array));
 /*
  * Rusha, a JavaScript implementation of the Secure Hash Algorithm, SHA-1,
  * as defined in FIPS PUB 180-1, tuned for high performance with large inputs.
@@ -15897,9 +15886,20 @@ return new Parser;
  */
 
 /*jslint nomen: true*/
-/*global document, jIO, RSVP, DOMParser, XMLSerializer*/
-(function (document, jIO, RSVP, DOMParser, XMLSerializer) {
+/*global window, jIO, RSVP, DOMParser, XMLSerializer, navigator*/
+(function (window, jIO, RSVP, DOMParser, XMLSerializer, navigator) {
   "use strict";
+
+  /* Document is not defined in ServiceWorker */
+  if (window.document === undefined) {
+    window.document = {
+      createElementNS: function () {
+        throw new Error(
+          'document.createElementNS is not supported by ' + navigator.userAgent
+        );
+      }
+    };
+  }
 
   var parser = new DOMParser(),
     serializer = new XMLSerializer();
@@ -15928,13 +15928,13 @@ return new Parser;
     if (conversion_kw) {
       for (key in conversion_kw) {
         if (conversion_kw.hasOwnProperty(key)) {
-          elt = document.createElementNS(null, conversion_kw[key][1]);
+          elt = window.document.createElementNS(null, conversion_kw[key][1]);
           elt.textContent = conversion_kw[key][0];
-          value = document.createElementNS(null, "value");
+          value = window.document.createElementNS(null, "value");
           value.appendChild(elt);
-          name = document.createElementNS(null, "name");
+          name = window.document.createElementNS(null, "name");
           name.textContent = key;
-          member = document.createElementNS(null, "member");
+          member = window.document.createElementNS(null, "member");
           member.appendChild(name);
           member.appendChild(value);
           struct[0].appendChild(member);
@@ -16043,4 +16043,4 @@ return new Parser;
 
   jIO.addStorage('cloudooo', CloudoooStorage);
 
-}(document, jIO, RSVP, DOMParser, XMLSerializer));
+}(window, jIO, RSVP, DOMParser, XMLSerializer, navigator));
