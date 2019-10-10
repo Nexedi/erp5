@@ -102,6 +102,7 @@
               from: options.format,
               to: format_list[i],
               id: options.jio_key,
+              conversion_kw: options.conversion_kw ? options.conversion_kw : {},
               name: options.format === result[1] ? ATT_NAME : options.format
             }));
           }
