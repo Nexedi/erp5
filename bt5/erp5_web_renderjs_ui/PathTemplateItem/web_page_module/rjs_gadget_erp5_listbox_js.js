@@ -10,7 +10,7 @@
   function buildFieldGadgetParam(value) {
     var field_gadget_param;
 
-    if ((value !== undefined) && (value.constructor === Object)) {
+    if ((value !== undefined) && (value !== null) && (value.constructor === Object)) {
       if (value.field_gadget_param) {
         field_gadget_param = value.field_gadget_param;
       } else {
