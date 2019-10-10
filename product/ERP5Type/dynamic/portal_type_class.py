@@ -457,6 +457,14 @@ def synchronizeDynamicModules(context, force=False):
         except AttributeError:
           pass # no Activity Tool yet
 
+        from Products.CMFCore.MembershipTool import MembershipTool
+        tool = getattr(portal, "portal_membership", None)
+        if tool and tool.__class__ is not MembershipTool:
+          assert not tool._p_changed
+          tool.__class__ = MembershipTool
+          assert tool._p_changed
+          migrate = True
+
         if migrate:
           portal.migrateToPortalTypeClass()
           portal.portal_skins.changeSkin(None)
