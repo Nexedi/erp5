@@ -45,23 +45,6 @@ if portal_status_level in ("warning", "error", "fatal"):
 if portal_status_level in ("info", "debug", "success"):
   portal_status_level = "success"
 
-# XXX COPY PASTED (and buggy)
-# Move to ze big script instead
-site_root = context.getWebSectionValue()
-
-def getRealRelativeUrl(document):
-  return '/'.join(document.getPortalObject().portal_url.getRelativeContentPath(document))
-
-traverse_generator = "%(root_url)s/%(script_id)s?mode=traverse" + \
-                      "&relative_url=%(relative_url)s&view=%(view)s"
-link_url = traverse_generator % {
-        "root_url": site_root.absolute_url(),
-        "script_id": 'ERP5Document_getHateoas',
-        "relative_url": getRealRelativeUrl(context).replace("/", "%2F"),
-        "view": form_id,
-}
-
-
 result_dict = {
   'portal_status_message': "%s" % keep_items.pop("portal_status_message", ""),
   'portal_status_level': "%s" % portal_status_level,
@@ -69,15 +52,30 @@ result_dict = {
     "self": {
       # XXX Include query parameters
       "href": context.Base_getRequestUrl()
-    },
-    "location": {
-      "href": link_url
     }
   }
 }
 
-if (form_id is None):
-  del result_dict['_links']['location']
+# XXX COPY PASTED (and buggy)
+# Move to ze big script instead
+site_root = context.getWebSectionValue()
+
+if site_root is not None:
+
+  def getRealRelativeUrl(document):
+    return '/'.join(document.getPortalObject().portal_url.getRelativeContentPath(document))
+
+  traverse_generator = "%(root_url)s/%(script_id)s?mode=traverse" + \
+                        "&relative_url=%(relative_url)s&view=%(view)s"
+
+  if (form_id is not None):
+    link_url = traverse_generator % {
+            "root_url": site_root.absolute_url(),
+            "script_id": 'ERP5Document_getHateoas',
+            "relative_url": getRealRelativeUrl(context).replace("/", "%2F"),
+            "view": form_id,
+    }
+    result_dict['_links']['location'] = {'href': link_url}
 
 result = json.dumps(result_dict, indent=2)
 if abort_transaction:
