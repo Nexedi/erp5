@@ -584,6 +584,9 @@ and handling data send&receive.
                       erp5_document._now = Date.now();
                       return gadget.changeState({erp5_document: JSON.stringify(erp5_document),
                                                  is_refresh: true});
+                    })
+                    .push(function () {
+                      return result;
                     });
                 }
               })
