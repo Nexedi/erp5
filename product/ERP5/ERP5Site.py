@@ -1895,18 +1895,12 @@ class PortalGenerator:
         addCMFCoreTool('CMF Actions Tool', None)
         addCMFCoreTool('CMF Catalog', None)
         addCMFCoreTool('CMF Member Data Tool', None)
+        addCMFCoreTool('CMF Membership Tool', None)
+        addCMFCoreTool('CMF Registration Tool', None)
         addCMFCoreTool('CMF Skins Tool', None)
         addCMFCoreTool('CMF Undo Tool', None)
         addCMFCoreTool('CMF URL Tool', None)
         addCMFCoreTool('CMF Workflow Tool', None)
-
-        addCMFDefaultTool = p.manage_addProduct['CMFDefault'].manage_addTool
-        addCMFDefaultTool('Default Discussion Tool', None)
-        addCMFDefaultTool('Default Membership Tool', None)
-        addCMFDefaultTool('Default Registration Tool', None)
-        addCMFDefaultTool('Default Properties Tool', None)
-        addCMFDefaultTool('Default Metadata Tool', None)
-        addCMFDefaultTool('Default Syndication Tool', None)
 
         # try to install CMFUid without raising exceptions if not available
         try:
@@ -2232,8 +2226,6 @@ class ERP5Generator(PortalGenerator):
                            'manage_members'))
     # actions tool
     removeActionsFromTool(p.portal_actions, ('folderContents',))
-    # properties tool
-    removeActionsFromTool(p.portal_properties, ('configPortal',))
     # remove unused action providers
     for i in ('portal_registration', 'portal_discussion', 'portal_syndication'):
       p.portal_actions.deleteActionProvider(i)
