@@ -147,24 +147,24 @@ class subprocesstransform:
 
     def convert(self, data, cache, **kwargs):
         command = "%s %s" % (self.binary, self.binaryArgs)
+        stdin_file = PIPE
+        try:
+            if not self.useStdin:
+              stdin_file = tempfile.NamedTemporaryFile()
+              stdin_file.write( data)
+              stdin_file.seek(0)
+              command = command % {'infile': stdin_file.name} # apply tmp name to command
+              data = None
 
-        if not self.useStdin:
-          tempfile_object = tempfile.NamedTemporaryFile()
-          tmpname = tempfile_object.name
-          tempfile_object.write( data)
-          tempfile_object.seek(0)
-          command = command % {'infile': tmpname} # apply tmp name to command
-        argument_list = shlex.split(command)
-        if self.useStdin:
-          process = Popen(argument_list, stdin=tempfile_object, stdout=PIPE,
-                          stderr=PIPE, close_fds=True)
-          data_out, data_err = process.communicate()
-          tempfile_object.close()
-        else:
-          process = Popen(argument_list, stdin=PIPE, stdout=PIPE,
-                          stderr=PIPE, close_fds=True)
-          data_out, data_err = process.communicate(input=data)
-        if process.returncode:
-          raise OSError, data_err
-        cache.setData(data_out)
-        return cache
+            argument_list = shlex.split(command)
+            process = Popen(argument_list, stdin=stdin_file, stdout=PIPE,
+                            stderr=PIPE, close_fds=True)
+            data_out, data_err = process.communicate(input=data)
+            if process.returncode:
+              raise OSError, data_err
+            cache.setData(data_out)
+            return cache
+
+        finally:
+            if isinstance(stdin_file, file):
+                stdin_file.close()
