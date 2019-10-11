@@ -27,13 +27,10 @@
 #
 ##############################################################################
 
-import xmlrpclib, base64, re, zipfile, cStringIO
+import re, zipfile, cStringIO
 from warnings import warn
-from xmlrpclib import Fault, ServerProxy, ProtocolError
 from AccessControl import ClassSecurityInfo
-from AccessControl import Unauthorized
 from OFS.Image import Pdata
-from OFS.Image import File as OFSFile
 from zope.contenttype import guess_content_type
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
@@ -41,140 +38,22 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import Document, \
        VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
-from Products.ERP5.Document.Image import getDefaultImageQuality
 from Products.ERP5Type.Utils import fill_args_from_request
-from zLOG import LOG, WARNING, ERROR
-from functools import partial
+
 # Mixin Import
 from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 from Products.ERP5.mixin.extensible_traversable import OOoDocumentExtensibleTraversableMixin
-from DateTime import DateTime
-
-# connection plugins
-from Products.ERP5Type.ConnectionPlugin.TimeoutTransport import TimeoutTransport
-from socket import error as SocketError
-
-enc=base64.encodestring
-dec=base64.decodestring
 
 EMBEDDED_FORMAT = '_embedded'
-OOO_SERVER_PROXY_TIMEOUT = 360
-OOO_SERVER_RETRY = 0
 
-# store time (as int) where we had last failure in order
-# to try using proxy server that worked the most recently
-global_server_proxy_uri_failure_time = {}
-
-class OOoServerProxy():
-  """
-  xmlrpc-like ServerProxy object adapted for OOo conversion server
-  """
-  def __init__(self, context):
-    self._serverproxy_list = []
-    preference_tool = getToolByName(context, 'portal_preferences')
-    self._ooo_server_retry = preference_tool.getPreferredDocumentConversionServerRetry() or OOO_SERVER_RETRY
-    uri_list = preference_tool.getPreferredDocumentConversionServerUrlList()
-    if not uri_list:
-      address = preference_tool.getPreferredOoodocServerAddress()
-      port = preference_tool.getPreferredOoodocServerPortNumber()
-      if not (address and port):
-        raise ConversionError('OOoDocument: cannot proceed with conversion:'
-              ' conversion server url is not defined in preferences')
-
-      LOG('OOoDocument', WARNING, 'PreferredOoodocServer{Address,PortNumber}' + \
-          ' are DEPRECATED please use PreferredDocumentServerUrl instead', error=True)
-       
-      uri_list =  ['%s://%s:%s' % ('http', address, port)]
-
-    timeout = preference_tool.getPreferredOoodocServerTimeout() \
-                    or OOO_SERVER_PROXY_TIMEOUT
-    for uri in uri_list:
-      if uri.startswith("http://"):
-        scheme = "http"
-      elif uri.startswith("https://"):
-        scheme = "https"
-      else:
-        raise ConversionError('OOoDocument: cannot proceed with conversion:'
-              ' preferred conversion server url is invalid')
-
-      transport = TimeoutTransport(timeout=timeout, scheme=scheme)
-      
-      self._serverproxy_list.append((uri, ServerProxy(uri, allow_none=True, transport=transport)))
-
-  def _proxy_function(self, func_name, *args, **kw):
-    result_error_set_list = []
-    protocol_error_list = []
-    socket_error_list = []
-    fault_error_list = []
-    count = 0
-    serverproxy_list = self._serverproxy_list
-    # we have list of tuple (uri, ServerProxy()). Sort by uri having oldest failure
-    serverproxy_list.sort(key=lambda x: global_server_proxy_uri_failure_time.get(x[0], 0))
-    while True:
-      retry_server_list = []
-      for uri, server_proxy in serverproxy_list:
-        func = getattr(server_proxy, func_name)
-        failure = True
-        try:
-          # Cloudooo return result in (200 or 402, dict(), '') format or just based type
-          # 402 for error and 200 for ok
-          result_set =  func(*args, **kw)
-        except SocketError, e:
-          message = 'Socket Error: %s' % (repr(e) or 'undefined.')
-          socket_error_list.append(message)
-          retry_server_list.append((uri, server_proxy))
-        except ProtocolError, e:
-          # Network issue
-          message = "%s: %s %s" % (e.url, e.errcode, e.errmsg)
-          if e.errcode == -1:
-            message = "%s: Connection refused" % (e.url)
-          protocol_error_list.append(message)
-          retry_server_list.append((uri, server_proxy))
-        except Fault, e:
-          # Return not supported data types
-          fault_error_list.append(e)
-        else:
-          failure = False
-
-        if not(failure):
-          try:
-            response_code, response_dict, response_message = result_set
-          except ValueError:
-            # Compatibility for old oood, result is based type, like string
-             response_code = 200
-
-          if response_code == 200:
-            return result_set
-          else:
-            # If error, try next one
-            result_error_set_list.append(result_set)
-
-        # Still there ? this means we had no result,
-        # avoid using same server again
-        global_server_proxy_uri_failure_time[uri] = int(DateTime())
-
-      # All servers are failed
-      if count == self._ooo_server_retry or len(retry_server_list) == 0:
-        break
-      count += 1
-      serverproxy_list = retry_server_list
-
-    # Check error type
-    # Return only one error result for compability
-    if len(result_error_set_list):
-      return result_error_set_list[0]
-
-    if len(protocol_error_list):
-      raise ConversionError("Protocol error while contacting OOo conversion: "
-                          "%s" % (','.join(protocol_error_list)))
-    if len(socket_error_list):
-      raise SocketError("%s" % (','.join(socket_error_list)))
-    if len(fault_error_list):
-      raise fault_error_list[0]
-   
-  def __getattr__(self, attr):
-    return partial(self._proxy_function, attr)
+from Products.ERP5.Document.Document import DocumentConversionServerProxy
+# Backward compatibility only
+from Products.ERP5.Document.Document import DOCUMENT_CONVERSION_SERVER_PROXY_TIMEOUT as OOO_SERVER_PROXY_TIMEOUT
+from Products.ERP5.Document.Document import DOCUMENT_CONVERSION_SERVER_RETRY as OOO_SERVER_RETRY
+from Products.ERP5.Document.Document import global_server_proxy_uri_failure_time
+from Products.ERP5.Document.Document import enc, dec
+OOoServerProxy = DocumentConversionServerProxy
 
 class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixin, File,
                   TextConvertableMixin, Document):
@@ -270,7 +149,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       return []
 
     def cached_getTargetFormatItemList(content_type):
-      server_proxy = OOoServerProxy(self)
+      server_proxy = DocumentConversionServerProxy(self)
       try:
         allowed_target_item_list = server_proxy.getAllowedTargetItemList(
                                                       content_type)

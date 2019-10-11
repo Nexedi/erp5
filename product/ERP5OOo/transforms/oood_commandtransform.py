@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
-from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
-from Products.PortalTransforms.interfaces import idatastream
 from Products.ERP5Type.Document import newTempOOoDocument
-from Products.ERP5.Document.Document import ConversionError
 from Acquisition import aq_base
-from zope.interface import implements
 from OFS.Image import Image as OFSImage
 from zLOG import LOG
 
@@ -17,11 +13,6 @@ from lxml.etree import SubElement
 
 from urllib import unquote
 from urlparse import parse_qsl, urlparse
-
-# XXX Must be replaced by portal_data_adapters soon
-from Products.ERP5OOo.Document.OOoDocument import OOoServerProxy
-from Products.ERP5OOo.Document.OOoDocument import enc
-from Products.ERP5OOo.Document.OOoDocument import dec
 
 def includeMetaContentType(html_node):
   """XXX Temp workaround time to fix issue
@@ -41,53 +32,20 @@ def includeMetaContentType(html_node):
 
 CLEAN_RELATIVE_PATH = re.compile('^../')
 
-class OOoDocumentDataStream:
+from erp5.component.module.TransformLib import DocumentDataStream
+class OOoDocumentDataStream(DocumentDataStream):
   """Handle OOoDocument in Portal Transforms"""
-  implements(idatastream)
+  pass
 
-  def setData(self, value):
-    """set the main"""
-    self.value = value
-
-  def getData(self):
-    return self.value
-
-  def setSubObjects(self, objects):
-    pass
-
-  def getSubObjects(self):
-    return {}
-
-  def getMetadata(self):
-    """return a dict-like object with any optional metadata from
-    the transform
-    You can modify the returned dictionnary to add/change metadata
-    """
-    return {}
-
-  def isCacheable(self):
-    """
-     True by Default
-    """
-    return getattr(self, '_is_cacheable', True)
-
-  def setCachable(self, value):
-    self._is_cacheable = value
-
-class OOOdCommandTransform(commandtransform):
+from erp5.component.module.TransformLib import DocumentTransform
+class OOOdCommandTransform(DocumentTransform):
   """Transformer using oood"""
 
   def __init__(self, context, name, data, mimetype):
-    commandtransform.__init__(self, name)
-    self.__name__ = name
-    self.mimetype = mimetype
-    self.context = context
+    DocumentTransform.__init__(self, context, name, data, mimetype)
     if self.mimetype == 'text/html':
       data = self.includeExternalCssList(data)
     self.data = data
-
-  def name(self):
-    return self.__name__
 
   def includeImageList(self, data):
     """Include Images in ODF archive
@@ -219,22 +177,3 @@ class OOOdCommandTransform(commandtransform):
                                include_meta_content_type=True)
 
     return xml_output
-
-  def convertTo(self, format):
-    server_proxy = OOoServerProxy(self.context)
-    response_code, response_dict, message = \
-                           server_proxy.getAllowedTargetItemList(self.mimetype)
-    allowed_extension_list = response_dict['response_data']
-    if format in dict(allowed_extension_list):
-      response_code, response_dict, message = server_proxy.run_generate(
-                                                                '',
-                                                                enc(self.data),
-                                                                None,
-                                                                format,
-                                                                self.mimetype)
-      data = dec(response_dict['data'])
-      if self.mimetype == 'text/html':
-        data = self.includeImageList(data)
-      return data
-    else:
-      raise ConversionError('Format not allowed %s' % format)
