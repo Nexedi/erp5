@@ -148,7 +148,7 @@ class subprocesstransform:
     def convert(self, data, cache, **kwargs):
         command = "%s %s" % (self.binary, self.binaryArgs)
 
-        if self.useStdin:
+        if not self.useStdin:
           tempfile_object = tempfile.NamedTemporaryFile()
           tmpname = tempfile_object.name
           tempfile_object.write( data)

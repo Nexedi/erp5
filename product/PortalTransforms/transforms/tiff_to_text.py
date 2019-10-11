@@ -20,6 +20,7 @@ class tiff_to_text(commandtransform):
 
     binaryName = "tesseract"
     binaryArgs = "%(infile)s "
+    useStdin = False
 
     def __init__(self):
         commandtransform.__init__(self, binary=self.binaryName)

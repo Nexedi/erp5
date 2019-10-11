@@ -23,7 +23,7 @@ class pdf_to_text(subprocesstransform):
 
     binaryName = "pdftotext"
     binaryArgs = "-enc UTF-8 -layout -nopgbrk %(infile)s -"
-    useStdin = True
+    useStdin = False
 
 class old_pdf_to_text(commandtransform):
     implements(ITransform)
