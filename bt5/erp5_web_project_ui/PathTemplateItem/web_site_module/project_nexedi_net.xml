@@ -335,7 +335,7 @@
         </item>
         <item>
             <key> <string>configuration_frontpage_gadget_url</string> </key>
-            <value> <string>worklist</string> </value>
+            <value> <string>project_controller</string> </value>
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
@@ -353,7 +353,7 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_erp5.appcache</string> </value>
+            <value> <string>gadget_erp5_project.appcache</string> </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
