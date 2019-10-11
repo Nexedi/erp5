@@ -1,0 +1,77 @@
+#generate-rss {
+  padding: 5.5pt;
+  margin-right: 12pt;
+  background-color: #FF6600;
+  border-color: #FF6600;
+  color: #FFFFFF;
+  border-radius: 0.325em;
+  border-width: 0.5px;
+  border-style: solid;
+  min-width: 6em;
+  line-height: 1.5;
+  display: none;
+  text-align: center;
+  width: fit-content;
+}
+
+.restore-button {
+  padding: 6pt;
+  margin-right: 12pt;
+  background-color: #FF6600;
+  color: #FFFFFF;
+  border-radius: 0.325em;
+  border-width: 0.5px;
+  border-style: solid;
+  min-width: 8em;
+  line-height: 1.5;
+}
+
+#wrap1 iframe {
+  height: 100%;
+}
+
+#wrap2 iframe {
+  height: 100%;
+}
+
+.gadget-content .ui-field-contain .graph-spinner {
+  position: relative;
+  top: 100px;
+  width: 120px;
+}
+
+.gadget-content .ui-field-contain .count-spinner {
+  top: 20px;
+  width: 120px;
+}
+
+.gadget-content .ui-field-contain .bottom .first-line-buttons {
+  -webkit-appearance: none;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+button:disabled{
+  background-color:#FFC9A4;
+}
+
+input[type="submit"] {
+  -webkit-appearance: none;
+}
+
+.gadget-content a.first-line-buttons {
+  padding: 6pt;
+  margin-top: 30pt;
+  margin-right: 6pt;
+  background-color: #FF6600;
+  color: #FFFFFF;
+  border-radius: 0.325em;
+  border-width: 1px;
+  border-style: solid;
+  min-width: 8em;
+}
+
+.worklist-title {
+  color: #777777;
+  margin-top: 10px;
+}
