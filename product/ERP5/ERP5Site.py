@@ -363,6 +363,10 @@ class ERP5Site(FolderMixIn, PortalObjectBase, CacheCookieMixin):
         # - updated
         # - registered again after being unregistered
         sm.registerUtility(aq_base(tool), tool_interface)
+
+    # "Symlink" for migration purposes (drop Products.CMFDefault)
+    self.portal_properties = self.portal_actions
+
     return True
 
   # backward compatibility auto-migration
