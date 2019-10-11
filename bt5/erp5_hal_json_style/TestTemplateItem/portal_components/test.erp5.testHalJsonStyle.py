@@ -650,6 +650,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['key'], 'field_listbox')
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['title'], 'Foo Lines')
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['selection_name'], 'foo_selection')
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['checked_uid_list'], [])
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['lines'], 3)
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['editable'], 1)
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['show_anchor'], 0)
@@ -1177,6 +1178,7 @@ class TestERP5Document_getHateoas_mode_traverse(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['key'], 'x1_listbox')
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['title'], 'Workflow History')
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['selection_name'], 'base_workflow_history_selection')
+    self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['checked_uid_list'], [])
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['lines'], 15)
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['editable'], 1)
     self.assertEqual(result_dict['_embedded']['_view']['report_section_list'][1]['listbox']['show_anchor'], 0)
@@ -2188,6 +2190,34 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     self.assertEquals(selection.domain.domain_dict,
                       {'foo_category': ('portal_categories', 'foo_category/a/a2'),
                        'foo_domain': ('portal_domains', 'foo_domain/a/a1')})
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoas_selection_checked_uid_compatibility(self):
+    document = self._makeDocument()
+
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_count_method = '')
+
+    selection_tool = self.portal.portal_selections
+    selection_name = self.portal.foo_module.FooModule_viewFooList.listbox.get_value('selection_name')
+    selection_tool.setSelectionFor(selection_name, Selection(selection_name))
+    selection_tool.setSelectionCheckedUidsFor(selection_name, [9876, 1234])
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['selection_name'], selection_name)
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['checked_uid_list'], [9876, 1234])
 
 
 class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
