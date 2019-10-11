@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html tal:define="data_dict here/Invoice_getODTDataDict;
+                  quantity_renderer nocall:here/portal_skins/erp5_trade/Base_viewTradeFieldLibrary/my_view_mode_quantity/render_pdf;
+                  price_renderer nocall:here/portal_skins/erp5_trade/Base_viewTradeFieldLibrary/my_view_mode_total_price/render_pdf"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Invoice</title>
+    <link rel="license" href="http://www.opensource.org/licenses/mit-license/">
+    <style>
+/* Based on http://www.jonathantneal.com/examples/invoice/style.css */
+* {
+  border: 0;
+  box-sizing: content-box;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+  vertical-align: top;
+}
+html {
+  font: 14px/1 'Open Sans', sans-serif;
+  overflow: auto;
+  cursor: default;
+}
+body {
+  box-sizing: border-box;
+  min-height: 11in;
+  width: 100%;
+}
+/* To have a print-like appearance for @media screen. UNUSED: Not used as cloudooo does not use --print-media-type and
+   this is not needed anyway as only print is used */
+/*
+html {
+  padding: 0.5in;
+  background: #999;
+}
+body {
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 0.4in;
+  width: 8.5in;
+  background: #FFF;
+  border-radius: 1px;
+  box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
+}
+*/
+
+table {
+  font-size: 75%;
+  table-layout: auto;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+th, td {
+  padding: 0.7em;
+  position: relative;
+  text-align: left;
+  border-bottom: 1px solid black;
+}
+th {
+  background: #DDD;
+}
+
+header {
+  margin: 0 0 3em;
+}
+header:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+header td {
+  border: 0;
+}
+header td.invoice {
+  text-align: right;
+}
+header td.invoice h1 {
+  padding: 0;
+  margin: 0;
+  font-size: 260%;
+}
+header address {
+  font-size: 100%;
+  line-height: 1.25;
+  margin: 0 1em 1em 0;
+}
+header address p {
+  margin: 0 0 0.25em;
+}
+header img {
+  max-height: 100%;
+  max-width: 100%;
+  display: block;
+}
+
+article:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+article address {
+  float: left;
+}
+article address p {
+  margin-bottom: 5px;
+}
+
+table.meta {
+  margin: 0 0 3em;
+}
+table.meta th {
+  vertical-align: middle;
+  text-align: right;
+  font-size: 75%;
+  width: 8%;
+}
+table.meta td {
+  vertical-align: middle;
+}
+table.meta th, table.meta td {
+  border-left: 1px solid black;
+}
+table.meta tr:first-child th, table.meta tr:first-child td {
+  border-top: 1px solid black;
+}
+table.meta td:last-child {
+  border-right: 1px solid black;
+}
+table.meta td.address {
+  width: 30%;
+}
+table.meta:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+table.resource {
+  clear: both;
+  width: 100%;
+  margin: 0 0 1em;
+}
+table.resource tr {
+  page-break-inside: avoid;
+}
+table.resource th {
+  text-align: center;
+  page-break-inside: avoid;
+}
+table.resource td {
+  padding: 0.97em .7em;
+  text-align: right;
+  height: 1em;
+  page-break-inside: avoid;
+}
+/* 60% */
+table.resource th:nth-child(1), table.resource td:nth-child(1) {
+  width: 4%;
+  text-align: left;
+}
+table.resource th:nth-child(2), table.resource td:nth-child(2) {
+  width: 14%;
+  text-align: left;
+}
+table.resource th:nth-child(3), table.resource td:nth-child(3) {
+  width: 14%;
+  text-align: left;
+}
+table.resource th:nth-child(4), table.resource td:nth-child(4) {
+  width: 28%;
+  text-align: left;
+}
+/* 40% */
+table.resource th:nth-child(5), table.resource td:nth-child(5) {
+  width: 5%;
+}
+table.resource th:nth-child(6), table.resource td:nth-child(6) {
+  width: 4%;
+}
+table.resource th:nth-child(7), table.resource td:nth-child(7) {
+  width: 7%;
+}
+table.resource th:nth-child(8), table.resource td:nth-child(8) {
+  width: 12%;
+}
+table.resource th:nth-child(9), table.resource td:nth-child(9) {
+  width: 12%;
+}
+table.resource th, table.resource td {
+  border-bottom: 1px solid black;
+}
+
+table.balance {
+  clear: both;
+  float: right;
+  width: 40%;
+}
+table.balance th {
+  width: 63%;
+  text-align: right;
+}
+table.balance td {
+  width: 34%;
+  text-align: right;
+}
+table.balance th, table.balance td {
+  border-left: 1px solid black;
+}
+table.balance tr:first-child th, table.balance tr:first-child td {
+  border-top: 1px solid black;
+}
+table.balance td:last-child {
+  border-right: 1px solid black;
+}
+
+table.tax {
+  margin: 1em 0 1em 0;
+  clear: both;
+  float: right;
+  width: 40%;
+}
+table.tax th, table.tax td {
+  text-align: right;
+}
+table.tax th.code {
+  text-align: center;
+}
+
+.notes {
+  margin: 1em 0 1em 0;
+  display: block;
+  padding: .5em;
+  border: 1px solid black;
+  font-size: 75%;
+}
+.notes h1 {
+  margin-bottom: 0.5em;
+}
+
+footer {
+  font-size: 75%;
+  width: 100%;
+  clear: both;
+  text-align: left;
+  margin-top: 3em;
+}
+
+@page {
+  margin: 0;
+}
+
+/* UNUSED: See comment above
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+  }
+  html {
+    background: none;
+    padding: 0;
+  }
+  body {
+    box-shadow: none;
+    margin: 0;
+    width: 27cm; // XXX: Already specified a4 width/height above but this leaves big margins on the right
+    height: 29.7cm;
+  }
+  span:empty {
+    display: none;
+  }
+
+  .page-break {
+    page-break-before: always;
+    padding-top: 80px;
+  }
+  tr.page-break td {
+    border-top: 1px solid #DDD;
+  }
+  table.resource tr {
+    page-break-inside: avoid;
+    display:block;
+    position: relative;
+    width: 100%;
+    height: 26px;
+  }
+  table.resource tr:after {
+    content:'';
+    display:block;
+    clear: both;
+  }
+  table.resource td, table.resource th {
+    page-break-inside: avoid;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    float: left;
+    white-space: nowrap;
+  }
+
+  table.resource th:nth-child(1), table.resource td:nth-child(1) {
+    width: 0.84cm; // 4%
+  }
+  table.resource th:nth-child(2), table.resource td:nth-child(2) {
+    width: 2.94cm; // 14%
+  }
+  table.resource th:nth-child(3), table.resource td:nth-child(3) {
+    width: 2.94cm; // 14%
+  }
+  table.resource th:nth-child(4), table.resource td:nth-child(4) {
+    width: 5.88cm; // 28%
+  }
+  table.resource th:nth-child(5), table.resource td:nth-child(5) {
+    width: 1.05cm; // 5%
+  }
+  table.resource th:nth-child(6), table.resource td:nth-child(6) {
+    width: 0.84cm; // 4%
+  }
+  table.resource th:nth-child(7), table.resource td:nth-child(7) {
+    width: 1.47cm; // 7%
+  }
+  table.resource th:nth-child(8), table.resource td:nth-child(8) {
+    width: 2.7cm; // until it fits nicely
+  }
+  table.resource th:nth-child(9), table.resource td:nth-child(9) {
+    width: 2.7cm; // until it fits nicely
+  }
+}
+*/
+  </style>
+  </head>
+  <body>
+
+    <header tal:define="default_language python:test(request.get('international_form'), 'en', here.Localizer.get_selected_language());
+                        image_path python: here.getPortalType().startswith('Purchase') and data_dict['destination_section_image_path'] or (data_dict['source_decision_image_path'] or data_dict['source_section_image_path']);
+                        image_obj python: here.restrictedTraverse(image_path.encode('utf-8'));
+                        image_width python: here.getPortalType().startswith('Purchase') and data_dict['destination_section_image_width'] or (data_dict['source_decision_image_width'] or data_dict['source_section_image_width']);
+                        image_height python: here.getPortalType().startswith('Purchase') and data_dict['destination_section_image_height'] or (data_dict['source_decision_image_height'] or data_dict['source_section_image_height'])">
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <img tal:attributes="src python: 'data:%s;;base64,%s' % (image_obj.getContentType(), modules['base64'].b64encode(image_obj.getData()));
+                                   style python: 'height: %scm;; width: %scm;;' % (image_height, image_width);">
+            </td>
+            <td>
+              <address>
+                <h1 class="company"
+                    tal:content="python: here.getPortalType().startswith('Purchase') and data_dict['destination_administration_title'] or data_dict['source_administration_title']">
+                  株式会社 Nexedi
+                </h1>
+                <p tal:define="administration_address python: here.getPortalType().startswith('Purchase') and data_dict['destination_administration_address'] or data_dict['source_administration_address']">
+                  <tal:block tal:repeat="line python: administration_address.split('\n')">
+                    <span style="display:block" tal:content="line">101-0025 東京都千代田区神田佐久間町3-20-5 秋葉原Y'sビル3F</span>
+                  </tal:block>
+                </p>
+                <p tal:content="python: here.getPortalType().startswith('Purchase') and data_dict['destination_administration_telfax'] or data_dict['source_administration_telfax']">
+                  Tel: +81(0)-3-5829-9433
+                </p>
+                <p tal:content="python: here.getPortalType().startswith('Purchase') and data_dict['destination_administration_email'] or data_dict['source_administration_email']">
+                  Eメール:yusei@nexedi.com
+                </p>
+                <p tal:content="python: here.getPortalType().startswith('Purchase') and data_dict['destination_administration_vatid'] or data_dict['source_administration_vatid']">
+                  VAT ID
+                </p>
+              </address>
+            </td>
+            <td class="invoice">
+              <h1 i18n:translate="" i18n:domain="ui">Invoice</h1>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </header>
+
+    <article>
+      <table class="meta">
+        <tbody>
+          <tr>
+            <th rowspan="3">
+              <span i18n:translate="" i18n:domain="ui">
+                Supplier
+              </span>:
+            </th>
+            <td rowspan="3" class="address">
+              <address>
+                <h1 class="company" 
+                    tal:content="python:data_dict['source_section_title']">
+                  株式会社 Nexedi
+                </h1>
+                <p>
+                  <tal:block tal:repeat="line python: data_dict['source_section_address'].split('\n')">
+                    <span style="display:block" tal:content="line">101-0025 東京都千代田区神田佐久間町3-20-5 秋葉原Y'sビル3F</span>
+                  </tal:block>
+                </p>
+                <p tal:content="python: data_dict['source_section_telfax']">
+                  Tel: +81(0)-3-5829-9433
+                </p>
+                <p tal:content="python: data_dict['source_section_email']">
+                  Eメール:yusei@nexedi.com
+                </p>
+                <p tal:content="python: data_dict['source_section_vatid']">
+                  VAT ID
+                </p>
+              </address>
+            </td>
+
+            <th rowspan="3">
+              <span i18n:translate="" i18n:domain="ui">
+                Client
+              </span>:
+            </th>
+            <td rowspan="3" class="address">
+              <address>
+                <h1 class="company" 
+                    tal:content="python:data_dict['destination_section_title']">
+                  株式会社 Nexedi
+                </h1>
+                <p>
+                  <tal:block tal:repeat="line python: data_dict['destination_section_address'].split('\n')">
+                    <span style="display:block" tal:content="line">101-0025 東京都千代田区神田佐久間町3-20-5 秋葉原Y'sビル3F</span>
+                  </tal:block>
+                </p>
+                <p tal:content="python: data_dict['destination_section_telfax']">
+                  Tel: +81(0)-3-5829-9433
+                </p>
+                <p tal:content="python: data_dict['destination_section_email']">
+                  Eメール:yusei@nexedi.com
+                </p>
+                <p tal:content="python: data_dict['destination_section_vatid']">
+                  VAT ID
+                </p>
+              </address>
+            </td>
+
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Invoice Number
+              </span>:
+            </th>
+            <td>
+              <span tal:replace='python:data_dict["reference"]'>42</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Document Date
+              </span>:
+            </th>
+            <td>
+              <span tal:replace="data_dict/start_date">2012/07/18</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Currency
+              </span>:
+            </th>
+            <td>
+              <span tal:replace="python: data_dict['currency']">JPY</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th rowspan="3">
+              <span i18n:translate="" i18n:domain="ui">
+                Ship From
+              </span>:
+            </th>
+            <td rowspan="3" class="address">
+              <address>
+                <h1 class="company" 
+                    tal:content="python:data_dict['source_title']">
+                  株式会社 Nexedi
+                </h1>
+                <p>
+                  <tal:block tal:repeat="line python: data_dict['source_address'].split('\n')">
+                    <span style="display:block" tal:content="line">101-0025 東京都千代田区神田佐久間町3-20-5 秋葉原Y'sビル3F</span>
+                  </tal:block>
+                </p>
+                <p tal:content="python: data_dict['source_telfax']">
+                  Tel: +81(0)-3-5829-9433
+                </p>
+                <p tal:content="python: data_dict['source_email']">
+                  Eメール:yusei@nexedi.com
+                </p>
+                <p tal:content="python: data_dict['source_vatid']">
+                  VAT ID
+                </p>
+              </address>
+            </td>
+
+            <th rowspan="3">
+              <span i18n:translate="" i18n:domain="ui">
+                Ship To
+              </span>:
+            </th>
+            <td rowspan="3" class="address">
+              <address>
+                <h1 class="company" 
+                    tal:content="python: data_dict['destination_title']">
+                  株式会社 Nexedi
+                </h1>
+                <p>
+                  <tal:block tal:repeat="line python: data_dict['destination_address'].split('\n')">
+                    <span style="display:block" tal:content="line">101-0025 東京都千代田区神田佐久間町3-20-5 秋葉原Y'sビル3F</span>
+                  </tal:block>
+                </p>
+                <p tal:content="python: data_dict['destination_telfax']">
+                  Tel: +81(0)-3-5829-9433
+                </p>
+                <p tal:content="python: data_dict['destination_email']">
+                  Eメール:yusei@nexedi.com
+                </p>
+                <p tal:content="python: data_dict['destination_vatid']">
+                  VAT ID
+                </p>
+              </address>
+            </td>
+
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Payment
+              </span>:
+            </th>
+            <td>
+              <span tal:replace="python:data_dict['payment_condition']">42 days</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Delivery Mode
+              </span>:
+            </th>
+            <td>
+              <span tal:replace='python:data_dict["delivery_mode"]'>del mode</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Incoterm
+              </span>:
+            </th>
+            <td>
+              <span tal:replace='python:data_dict["incoterm"]'>incoterm</span>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+      <table class="resource">
+        <thead>
+          <tr>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Line
+              </span>
+            </th>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Your Item No.
+              </span>
+            </th>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Our Item No.
+              </span>
+            </th>
+            <th class="description">
+              <span i18n:translate="" i18n:domain="ui">
+                Description
+              </span>
+            </th>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Quantity
+              </span>
+            </th>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Unit
+              </span>
+            </th>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Tax Code
+              </span>
+            </th>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Unit Price
+              </span>
+            </th>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Total Price
+              </span>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr tal:repeat='line_dict python: data_dict["line_not_tax"]'>
+            <td>
+              <span tal:content='python: line_dict["number_not_tax_line"]'>
+                420
+              </span>
+            </td>
+            <td>
+              <span tal:content='python: line_dict["source_reference"]'>
+                source_reference
+              </span>
+            </td>
+            <td>
+              <span tal:content='python: line_dict["reference"]'>
+                reference
+              </span>
+            </td>
+            <td class="description">
+              <p>
+                <tal:block tal:repeat="line python: line_dict['description']">
+                  <span style="display:block" tal:content="line">description</span>
+                </tal:block>
+              </p>
+            </td>
+            <td>
+              <span tal:content='python: quantity_renderer(line_dict["total_quantity"])'>
+                42
+              </span>
+            </td>
+            <td>
+              <span tal:content='python: line_dict["quantity_unit"]'>
+                畳
+              </span>
+            </td>
+            <td>
+              <span tal:content='python: line_dict["tax_number"]'>
+                tax_n
+              </span>
+            </td>
+            <td>
+              <span tal:content='python: price_renderer(line_dict["base_price"])'>
+                1,024
+              </span>
+            </td>
+            <td>
+              <span tal:content='python: price_renderer(line_dict["total_price"])'>
+                43,008
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="balance">
+        <tbody>
+          <tr>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Total Excluding Tax
+              </span>:
+            </th>
+            <td>
+              <span tal:content='python: price_renderer(data_dict["total_price_exclude_tax"])'>
+                800.000,00
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="tax">
+        <thead>
+          <tr>
+            <th class="code">
+              <span i18n:translate="" i18n:domain="ui">
+                Tax Code
+              </span>
+            </th>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Amount
+              </span>
+            </th>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Rate
+              </span>
+            </th>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Tax Price
+              </span>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr tal:repeat='line_tax_dict python:data_dict["line_tax"]'>
+            <td>
+              <span tal:content='python: line_tax_dict["number_tax_line"]'>
+                tax_code
+              </span>
+            </td>
+            <td>
+              <span tal:content='python: price_renderer(line_tax_dict["total_quantity"])'>
+                11,422
+              </span>
+            </td>
+            <td>
+              <span tal:content='python: quantity_renderer(line_tax_dict["base_price"]*100*1.00)+"%"'>
+                10%
+              </span>
+            </td>
+            <td>
+              <span tal:content='python: price_renderer(line_tax_dict["total_price"])'>
+                1234
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="balance">
+        <tbody>
+          <tr>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Total Including Tax
+              </span>:
+            </th>
+            <td>
+              <span tal:content="python: price_renderer(data_dict['total_price'])">
+                4800.000,00
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="clear: both"></div>
+      <div class="notes">
+        <h1>
+          <span i18n:translate="" i18n:domain="ui">
+            Notes
+          </span>:
+        </h1>
+        <p>
+          <tal:block tal:repeat="line python: data_dict['description']">
+            <span style="display: block" tal:content="line">Anything</span>
+          </tal:block>
+        </p>
+      </div>
+
+    </article>
+
+    <footer>
+      Generated with ERP5 - Open Source ERP suite (www.erp5.org)
+    </footer>
+
+  </body>
+</html>
