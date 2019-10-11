@@ -896,7 +896,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       obj.__class__.__name__][1:]
     if unicode_data:
       data = data.decode(obj.output_encoding)
-    if isinstance(obj, OFSFile) and property_name == "data"
+    if isinstance(obj, OFSFile) and property_name == "data":
       data = obj._read_data(data)[0]
     try:
       setattr(obj, property_name, data)
