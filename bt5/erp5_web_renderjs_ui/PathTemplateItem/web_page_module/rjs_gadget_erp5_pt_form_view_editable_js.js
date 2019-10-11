@@ -163,7 +163,7 @@
         })
         .push(function (content_dict) {
           if (content_dict === null) {
-            return;
+            return {};
           }
           return gadget.submitContent(
             gadget.state.jio_key,
