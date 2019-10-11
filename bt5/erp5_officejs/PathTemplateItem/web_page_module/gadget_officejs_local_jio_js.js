@@ -122,13 +122,13 @@
           return RSVP.all(promise_list);
         })
         .push(function () {
+          return appcache_storage.repair(current_version);
+        })
+        .push(function () {
           return gadget.setSetting("migration_version", current_version);
         })
         .push(function () {
           return gadget.setSetting("previous_storage_name", storage_name);
-        })
-        .push(function () {
-          return appcache_storage.repair(current_version);
         });
     })
 
