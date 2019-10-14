@@ -86,13 +86,14 @@
 
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
 
-    .declareMethod('updateConfiguration', function (appcache_storage, origin_url,
+    .declareMethod('updateConfiguration', function (jio_appchache_options, origin_url,
                                                     migration_version, current_version,
                                                     storage_name) {
+      var appcache_storage = jIO.createJIO(jio_appchache_options);
       if (!appcache_storage) { return; }
       var gadget = this,
         document_id_list = [origin_url,
@@ -142,15 +143,10 @@
         previous_storage_name,
         index,
         origin_url = window.location.href;
-      return RSVP.Queue()
-        .push(function () {
-          return RSVP.all([
-            gadget.getSetting('configuration_manifest'),
-            gadget.getSetting('jio_storage_name'),
-            gadget.getSetting('previous_storage_name'),
-            gadget.getSetting('migration_version')
-          ]);
-        })
+      return gadget.getSettingList(['configuration_manifest',
+                                    'jio_storage_name',
+                                    'previous_storage_name',
+                                    'migration_version'])
         .push(function (result_list) {
           selected_storage_name = result_list[1];
           previous_storage_name = result_list[2];
@@ -204,14 +200,14 @@
           if (result_list[0] === undefined) { return; }
           if (selected_storage_name === undefined) { return; }
           gadget.state_parameter_dict.jio_storage_name = selected_storage_name;
-          appcache_storage = jIO.createJIO(jio_appchache_options);
           current_version = window.location.href.replace(window.location.hash, "");
           index = current_version.indexOf(window.location.host) + window.location.host.length;
           current_version = current_version.substr(index);
           if (migration_version !== current_version ||
               previous_storage_name !== selected_storage_name) {
-            return gadget.updateConfiguration(appcache_storage, origin_url, migration_version,
-                                              current_version, selected_storage_name);
+            return gadget.updateConfiguration(jio_appchache_options, origin_url,
+                                              migration_version, current_version,
+                                              selected_storage_name);
           }
         })
         .push(undefined, function (error) {

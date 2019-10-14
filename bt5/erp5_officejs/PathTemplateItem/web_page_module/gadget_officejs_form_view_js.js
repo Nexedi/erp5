@@ -175,6 +175,13 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
+    .declareMethod("getContent", function (argument_list) {
+      return this.getDeclaredGadget('erp5_pt_gadget')
+        .push(function (child_gadget) {
+          return child_gadget.getContent();
+        });
+    })
+
     .declareMethod("triggerSubmit", function (argument_list) {
       var gadget = this, child_gadget, content_dict;
       return gadget.getDeclaredGadget('erp5_pt_gadget')
@@ -306,13 +313,10 @@
                                          }}
           ];
           erp5_document = form_json.erp5_document;
-          return RSVP.all([
-            gadget.getUrlForList(url_for_parameter_list)
-          ]);
+          return gadget.getUrlForList(url_for_parameter_list);
         })
-        .push(function (result_list) {
-          var url_list = result_list[0],
-            header_dict = { "page_title": page_title };
+        .push(function (url_list) {
+          var header_dict = { "page_title": page_title };
           if (options.form_type === 'dialog') {
             //TODO: find correct url
             header_dict.cancel_url = url_list[6];
