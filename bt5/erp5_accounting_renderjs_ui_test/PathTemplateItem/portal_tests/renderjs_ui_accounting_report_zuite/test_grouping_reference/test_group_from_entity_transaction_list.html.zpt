@@ -64,7 +64,7 @@ Grouping from entity transaction view
 <tr>
   <td>select</td>
   <td>field_your_node</td>
-  <td>label=41 - Receivable</td>
+  <td>value=account_module/receivable</td>
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
@@ -183,9 +183,9 @@ Grouping from entity transaction view
 </tr>
 
 <tr>
-  <td>verifySelectedLabel</td>
+  <td>verifyValue</td>
   <td>field_your_node</td>
-  <td>41 - Receivable</td>
+  <td>account_module/receivable</td>
 </tr>
 
 <tr>
