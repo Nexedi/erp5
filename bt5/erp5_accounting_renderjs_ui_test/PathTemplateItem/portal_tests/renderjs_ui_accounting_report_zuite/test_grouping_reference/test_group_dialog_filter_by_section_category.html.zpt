@@ -42,23 +42,23 @@ Filtering Grouping Dialog by section category
 
 <!-- The mode should be 'grouping' by default -->
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name='field_your_grouping' and @value='grouping']</td>
   <td>on</td>
 </tr>
 <tr>
-  <td>verifySelected</td>
+  <td>assertSelected</td>
   <td>//select[@name='field_your_section_category']</td>
   <td>Demo Group</td>
 </tr>
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name='field_your_section_category_strict']</td>
   <td>off</td>
 </tr>
 
 <tr>
-  <td>verifyText</td>
+  <td>assertText</td>
   <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>
   <td>0.00</td>
 </tr>
