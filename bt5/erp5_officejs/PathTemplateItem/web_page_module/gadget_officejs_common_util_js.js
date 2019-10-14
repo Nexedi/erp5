@@ -120,6 +120,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
@@ -134,14 +135,9 @@
         app_actions,
         app_view,
         default_view;
-      return RSVP.Queue()
-        .push(function () {
-          return RSVP.all([
-            gadget.getSetting('app_view_reference'),
-            gadget.getSetting('default_view_reference'),
-            gadget.getSetting('app_actions')
-          ]);
-        })
+      return gadget.getSettingList(['app_view_reference',
+                                    'default_view_reference',
+                                    'app_actions'])
         .push(function (result_list) {
           app_view = result_list[0];
           default_view = result_list[1];
@@ -240,14 +236,9 @@
         app_allowed_sub_types,
         form_info,
         error;
-      return RSVP.Queue()
-        .push(function () {
-          return RSVP.all([
-            gadget.getSetting(portal_type_dict_setting),
-            gadget.getSetting("portal_skin_folder"),
-            gadget.getSetting("app_allowed_sub_types")
-          ]);
-        })
+      return gadget.getSettingList([portal_type_dict_setting,
+                                    'portal_skin_folder',
+                                    'app_allowed_sub_types'])
         .push(function (result_list) {
           app_allowed_sub_types = result_list[2];
           if (!result_list[1]) {

@@ -3,6 +3,46 @@
 (function (document, window, rJS, RSVP, jIO, console) {
   "use strict";
 
+  var warmup_gadget_done = false,
+    warmup_list = [
+      //officejs gadgets
+      'gadget_officejs_form_view.html',
+      'gadget_officejs_common_util.html',
+      'gadget_erp5_label_field.html',
+      'gadget_html5_element.html',
+      'gadget_erp5_field_datetime.html',
+      'gadget_erp5_field_string.html',
+      'gadget_erp5_form.html',
+      'gadget_erp5_field_float.html',
+      'gadget_erp5_field_listbox.html',
+      // Used in panel
+      'gadget_translation.html',
+      'gadget_erp5_panel.html',
+      'gadget_erp5_header.html',
+      'gadget_erp5_searchfield.html',
+      'gadget_erp5_field_multicheckbox.html',
+      'gadget_html5_input.html',
+      //following elements should be split in at list 2 groups (doclist and doc)
+      'gadget_erp5_pt_form_list',
+      'gadget_erp5_pt_form_view.html',
+      //
+      'gadget_erp5_pt_form_view_editable.html',
+      'gadget_erp5_field_textarea.html',
+      'gadget_erp5_field_gadget.html',
+      'gadget_html5_textarea.html',
+      'gadget_editor.html'
+    ];
+
+  function warmupGadgetList(gadget, url_list) {
+    var i;
+    for (i = 0; i < url_list.length; i += 1) {
+      // No need to check the result, as it will fail later
+      // when rJS will try to instanciate one of this gadget
+      rJS.declareGadgetKlass(rJS.getAbsoluteURL(url_list[i],
+                                                gadget.__path));
+    }
+  }
+
   rJS(window)
 
     /////////////////////////////////////////////////////////////////
@@ -11,7 +51,7 @@
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
 
@@ -25,15 +65,20 @@
         gadget_util,
         jio_document,
         portal_type,
+        parent_portal_type,
         current_version,
         index;
       current_version = window.location.href.replace(window.location.hash, "");
       index = current_version.indexOf(window.location.host) +
         window.location.host.length;
       current_version = current_version.substr(index);
-      return gadget.getSetting("migration_version")
-        .push(function (migration_version) {
-          if (migration_version !== current_version) {
+      return gadget.getSettingList(["migration_version",
+                                    "app_view_reference",
+                                    "parent_portal_type"])
+        .push(function (setting_list) {
+          app_view = options.action || setting_list[1];
+          parent_portal_type = setting_list[2];
+          if (setting_list[0] !== current_version) {
             //if app version has changed, force storage selection
             return gadget.redirect({
               'command': 'display',
@@ -45,14 +90,14 @@
           }
         })
         .push(function () {
-          return RSVP.all([
-            gadget.declareGadget("gadget_officejs_common_util.html"),
-            gadget.getSetting('app_view_reference')
-          ]);
+          if (!warmup_gadget_done) {
+            warmupGadgetList(gadget, warmup_list);
+            warmup_gadget_done = true;
+          }
+          return gadget.getDeclaredGadget("common_util");
         })
-        .push(function (result_list) {
-          gadget_util = result_list[0];
-          app_view = options.action || result_list[1];
+        .push(function (result) {
+          gadget_util = result;
           return gadget.jio_get(options.jio_key);
         })
         .push(function (result) {
@@ -63,7 +108,7 @@
         }, function (error) {
           // instaceof error is Object, so use status_code and undefined jio_key
           if (error.status_code === 400 && !options.jio_key) {
-            return gadget.getSetting('parent_portal_type');
+            return parent_portal_type;
           }
           throw error;
         })
