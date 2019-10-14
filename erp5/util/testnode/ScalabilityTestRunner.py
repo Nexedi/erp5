@@ -452,11 +452,12 @@ Require valid-user
     for location in location_list:
       try:
         module = imp.load_source(SCALABILITY_TEST, "%s/%s/%s" %(location, SCALABILITY_TEST, TEST_SUITE_INIT))
-        suite_class = getattr(module, test_suite)
-        suite = suite_class(**kwargs)
-        if suite is not None:
-          repo_location = "%s/%s/" % (location, SCALABILITY_TEST)
-          return suite, repo_location
+        suite_class = getattr(module, test_suite, None)
+        if suite_class is not None:
+          suite = suite_class(**kwargs)
+          if suite is not None:
+            repo_location = "%s/%s/" % (location, SCALABILITY_TEST)
+            return suite, repo_location
       except Exception:
         pass
     return suite, repo_location
