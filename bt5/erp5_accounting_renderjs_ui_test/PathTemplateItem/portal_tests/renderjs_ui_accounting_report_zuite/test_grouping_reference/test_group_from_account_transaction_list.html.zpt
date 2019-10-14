@@ -85,16 +85,12 @@ Grouping from account transaction view
 </tr>
 
 <!-- Not possible to group for now -->
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_submit_button"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>Nothing matches.</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Nothing matches.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 <tr>
   <td>verifyText</td>
   <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>
@@ -102,21 +98,20 @@ Grouping from account transaction view
 </tr>
 
 <!-- select one more -->
-<tr>
-  <td>click</td>
-  <td>//tr[@class='listbox-data-line-2 DataA']/td[1]/input</td>
-  <td></td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_update_button"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>Updated</td>
-  <td></td>
-</tr>
+<tal:block tal:define="line_configuration python: {'line': 2}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/select_listbox_line" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(4)', 'footer': '4 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
 <tr>
   <td>verifyText</td>
   <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>
@@ -124,16 +119,11 @@ Grouping from account transaction view
 </tr>
 
 <!-- selected amount is 0, so it will be possible to validate -->
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_submit_button"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>2 lines grouped.</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': '2 lines grouped.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 <!-- mark the module as changed, reindex and come back to the account -->
 <tr>
@@ -159,24 +149,34 @@ Grouping from account transaction view
 
 <tr>
   <td>open</td>
-  <td>${base_url}</td>
+  <td>${base_url}/web_site_module/renderjs_runner/</td>
   <td></td>
 </tr>
-<tr>
-  <td>selectAndWait</td>
-  <td>select_module</td>
-  <td>Accounts</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>link=Receivable</td>
-  <td></td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//img[@alt='Grouping Reference Fast Input']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_module_list" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Accounts'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Receivable'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Grouping Reference Fast Input'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
 
 <!-- Swith to 'ungrouping' mode to see grouped lines, and ungroup them -->
 <tr>
@@ -189,16 +189,24 @@ Grouping from account transaction view
   <td>//input[@name='field_your_grouping' and @value='ungrouping']</td>
   <td></td>
 </tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
 <tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_update_button"]</td>
-  <td></td>
+  <td>verifyText</td>
+  <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>
+  <td>0.00</td>
 </tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>Updated</td>
-  <td></td>
-</tr>
+
 <tr>
   <td>verifyValue</td>
   <td>//input[@name='field_your_grouping' and @value='grouping']</td>
@@ -215,38 +223,29 @@ Grouping from account transaction view
   <td>field_your_node</td>
   <td>41 - Receivable</td>
 </tr>
-<tr>
-  <td>verifyText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>2 records</td>
-</tr>
+
 <tr>
   <td>assertElementPresent</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]/a/text()</td>
+  <td>//tbody//tr[1]/td[1]/label/text()</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[2]/a/text()</td>
+  <td>//tbody//tr[2]/td[1]/label/text()</td>
   <td></td>
 </tr>
 
 <!-- now try to ungroup with only one, it will ungroup all related lines -->
-<tr>
-  <td>click</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[1]/input</td>
-  <td></td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_submit_button"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>2 lines ungrouped.</td>
-  <td></td>
-</tr>
+<tal:block tal:define="line_configuration python: {'line': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/select_listbox_line" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': '2 lines ungrouped.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
 
 <!-- Wait for indexing and go back to this fast input to check everything is OK
 -->
@@ -260,26 +259,38 @@ Grouping from account transaction view
   <td>Done.</td>
   <td></td>
 </tr>
+
 <tr>
   <td>open</td>
-  <td>${base_url}</td>
+  <td>${base_url}/web_site_module/renderjs_runner/</td>
   <td></td>
 </tr>
-<tr>
-  <td>selectAndWait</td>
-  <td>select_module</td>
-  <td>Accounts</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>link=Receivable</td>
-  <td></td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//img[@alt='Grouping Reference Fast Input']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_module_list" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Accounts'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Receivable'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Grouping Reference Fast Input'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+
 <tr>
   <td>verifyValue</td>
   <td>//input[@name='field_your_grouping' and @value='grouping']</td>
@@ -290,44 +301,42 @@ Grouping from account transaction view
   <td>//input[@name='field_your_grouping' and @value='grouping']</td>
   <td></td>
 </tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//button[@id="dialog_update_button"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertPortalStatusMessage</td>
-  <td>Updated</td>
-  <td></td>
-</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="pagination_configuration python: {'header': '(4)', 'footer': '4 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Updated'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
 <tr>
   <td>verifyValue</td>
   <td>//input[@name='field_your_grouping' and @value='grouping']</td>
   <td>on</td>
 </tr>
-<tr>
-  <td>verifyText</td>
-  <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>4 records</td>
-</tr>
+
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//tr[@class='listbox-data-line-0 DataA']/td[2]/a/text()</td>
+  <td>//tbody//tr[1]/td[1]/label/text()</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//tr[@class='listbox-data-line-1 DataB']/td[2]/a/text()</td>
+  <td>//tbody//tr[2]/td[1]/label/text()</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//tr[@class='listbox-data-line-2 DataA']/td[2]/a/text()</td>
+  <td>//tbody//tr[3]/td[1]/label/text()</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//tr[@class='listbox-data-line-3 DataB']/td[2]/a/text()</td>
+  <td>//tbody//tr[4]/td[1]/label/text()</td>
   <td></td>
 </tr>
 
