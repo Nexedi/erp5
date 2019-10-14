@@ -43,12 +43,12 @@ Using Ledger in Grouping Dialog
 
 <!-- The mode should be 'grouping' by default -->
 <tr>
-  <td>verifyValue</td>
+  <td>assertValue</td>
   <td>//input[@name='field_your_grouping' and @value='grouping']</td>
   <td>on</td>
 </tr>
 <tr>
-  <td>verifyText</td>
+  <td>assertText</td>
   <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>
   <td>0.00</td>
 </tr>
