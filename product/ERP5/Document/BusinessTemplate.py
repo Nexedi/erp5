@@ -1510,6 +1510,9 @@ class ObjectTemplateItem(BaseTemplateItem):
           assert container.meta_type in ('ERP5 Cache Factory',
                                          'ERP5 Cache Bag')
           container.getParentValue().updateCache()
+        elif obj.__class__.__name__ in ('File', 'Image'):
+          if "data" in obj.__dict__:
+            File._setData.__func__(obj, obj.data)
         elif (container.meta_type == 'CMF Skins Tool') and \
             (old_obj is not None):
           # Keep compatibility with previous export format of
