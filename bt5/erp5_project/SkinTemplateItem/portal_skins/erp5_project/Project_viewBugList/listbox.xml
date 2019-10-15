@@ -10,14 +10,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>sort_columns</string>
-                <string>sort</string>
-                <string>list_method</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
                 <string>default_params</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
+                <string>list_method</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>sort_columns</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -180,6 +182,21 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>state_bug_domain</string>
+                          <string>Bug Status</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_listbox</string> </value>
                 </item>
@@ -246,10 +263,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
