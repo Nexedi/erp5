@@ -208,6 +208,10 @@
                           <string>ledger</string>
                           <string>Ledger</string>
                         </tuple>
+                        <tuple>
+                          <string>state_task_report_domain</string>
+                          <string>Task Report Status</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
