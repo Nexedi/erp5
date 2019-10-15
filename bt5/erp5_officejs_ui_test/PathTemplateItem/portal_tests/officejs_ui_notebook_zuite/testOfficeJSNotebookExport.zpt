@@ -135,22 +135,6 @@
           <td>waitForElementPresent</td>
           <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
           <td></td>
-        </tr>
-        <tr>
-          <td>click</td>
-          <td>//a[@data-i18n="Synchronize"]</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>waitForElementPresent</td>
-          <td>link=${title}</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>click</td>
-          <td>link=${title}</td>
-          <td></td>
-        </tr>
         <tr>
           <td>waitForElementPresent</td>
           <td>//a[@data-i18n='Export']</td>
@@ -166,49 +150,14 @@
           <td>//iframe[@src="${base_url}/web_site_module/officejs_notebook/app/gadget_jsmd_viewer.html"]</td>
           <td></td>
         </tr>
-         <tr>
-          <td>setSpeed</td>
-          <td>2000</td>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//script[@id="jsmd-source"]</td>
           <td></td>
         </tr>
         <tr>
           <td>click</td>
           <td>name=submit</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>setSpeed</td>
-          <td>0</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>waitForElementPresent</td>
-          <td>//select[@id="format"]</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>select</td>
-          <td>//select[@id="format"]</td>
-          <td>value=txt</td>
-        </tr>
-        <tr>
-          <td>click</td>
-          <td>//input[@type="submit"]</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>waitForElementPresent</td>
-          <td>//select[@id="format"]</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>select</td>
-          <td>//select[@id="format"]</td>
-          <td>value=html</td>
-        </tr>
-        <tr>
-          <td>click</td>
-          <td>//input[@type="submit"]</td>
           <td></td>
         </tr>
         <tr>
@@ -223,7 +172,12 @@
         </tr>
         <tr>
           <td>click</td>
-          <td>//input[@type="submit"]</td>
+          <td>//input[@name="action_confirm"]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>pause</td>
+          <td>3000</td>
           <td></td>
         </tr>
         <tr>
