@@ -12,11 +12,14 @@
               <list>
                 <string>all_columns</string>
                 <string>columns</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
                 <string>editable_columns</string>
                 <string>portal_types</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
                 <string>title</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -133,6 +136,21 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>state_project_domain</string>
+                          <string>Project Status</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
@@ -216,6 +234,12 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Projects</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
               </dictionary>
             </value>
