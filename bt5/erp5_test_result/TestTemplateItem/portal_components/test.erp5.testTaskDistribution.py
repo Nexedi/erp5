@@ -362,6 +362,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     This avoid affecting all test nodes to a test suite having medium priority
     while a test suite with high priority is waiting for more nodes to speed up.
     """
+    self._cleanupTestResult()
     for x in range(10):
       json.loads(self.distributor.startTestSuite(title="COMP%s-Node1" % x))
     test_suite_list = self._createTestSuite(quantity=3)
