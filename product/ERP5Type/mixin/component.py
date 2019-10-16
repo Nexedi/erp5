@@ -345,13 +345,6 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     """
     return self.getTextContent()
 
-
-  # Whether ZODB Components is going to be validated or not should depend on
-  # its types because it is fine to validate '{Test,Extension} Component' as
-  # it not going to break anything but not for {Document,Interface,Mixin,Tool}
-  # Components...
-  do_validate_on_import_from_filesystem = False
-
   security.declareProtected(Permissions.ModifyPortalContent,
                             'importFromFilesystem')
   @classmethod
@@ -402,22 +395,6 @@ class ComponentMixin(PropertyRecordableMixin, Base):
                                        version=version,
                                        text_content=source_code,
                                        portal_type=cls.portal_type)
-
-    # XXX-ARNAU: checkConsistency() is also called before commit in
-    # Component_checkSourceCodeAndValidateAfterModified. Also, everything
-    # should be done in checkConsistency()...
-    error_message_list = [ m for m in new_component.checkSourceCode()
-                           if m['type'] in ('F', 'E') ]
-    if error_message_list:
-      raise SyntaxError(error_message_list)
-
-    consistency_message_list = new_component.checkConsistency()
-    if consistency_message_list:
-      from Products.DCWorkflow.DCWorkflow import ValidationFailed
-      raise ValidationFailed(consistency_message_list)
-
-    if cls.do_validate_on_import_from_filesystem:
-      new_component.validate()
 
     return new_component
 

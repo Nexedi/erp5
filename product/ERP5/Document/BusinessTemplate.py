@@ -6737,7 +6737,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
                                     keep_items={'portal_status_message': message},
                                     abort_transaction=True)
 
-        transaction.abort()
         raise RuntimeError(message)
 
       self.setTemplateModuleComponentIdList(sorted(template_module_component_id_set))
@@ -6748,45 +6747,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self.setTemplateExtensionIdList(sorted(template_extension_id_set))
       self.setTemplateTestIdList(sorted(template_test_id_set))
 
-      # This will trigger a reset so that Portal Types mro() can be checked
-      # after migration for filesystem Products modules still being used
-      #
-      # TODO-arnau: checkPythonSource code done twice (importFromFilesystem()
-      # and newContent() through Interaction Workflow)
-      transaction.commit()
-
-      still_used_list_dict = {}
-      for _, cls_module, _ in self._getAllFilesystemModuleFromPortalTypeIdList(
-          portal.portal_types.objectIds()):
-        if cls_module in migrated_product_module_set:
-          package, module = cls_module.rsplit('.', 1)
-          still_used_list_dict.setdefault(package, []).append(module)
-
-      if still_used_list_dict:
-        module_still_used_message = ', '.join(
-            [ "%s.{%s}" % (package, ','.join(sorted(module_list)))
-              for package, module_list in still_used_list_dict.iteritems() ])
-
-        LOG('BusinessTemplate',
-            WARNING,
-            "The following Documents are still being imported so code need to "
-            "be updated: " + module_still_used_message)
-
       if list_selection_name is not None:
-        message = (
-          "All components were successfully imported from filesystem to ZODB. "
-          "Please note that imported {Document,Interfaces,Mixin,Tool Components} "
-          "have not been validated automatically as imports must probably be "
-          "adjusted before deleting them from the filesystem.")
-
-        if still_used_list_dict:
-          message = (
-            message +
-            " WARNING: Some migrated Documents have their filesystem Document "
-            "still being imported so code need to be updated (see log file).")
-
-        return self.Base_redirect('view',
-                                  keep_items={'portal_status_message': message})
+        return self.Base_redirect(
+          'view',
+          keep_items={'portal_status_message': (
+            "All components were successfully imported from filesystem to ZODB. "
+            "Please note that they have not been validated automatically and "
+            "imports must probably be adjusted before deleting them from the "
+            "filesystem.")})
 
 # Block acquisition on all _item_name_list properties by setting
 # a default class value to None
