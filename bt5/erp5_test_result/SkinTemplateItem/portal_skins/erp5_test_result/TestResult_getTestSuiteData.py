@@ -27,8 +27,8 @@ test_suite = sorted(
 repository_dict = {}
 if context.getReference() and '-' in context.getReference(): # tolerate invalid references, especially for tests
   for repository_string in context.getReference().split(','):
-    buildout_section_id_and_commits_count, revision = repository_string.split('-')
-    buildout_section_id, commits_count = buildout_section_id_and_commits_count.split('=')
+    buildout_section_id, commits_count_and_revision = repository_string.split('=')
+    commits_count, revision = commits_count_and_revision.split('-')
     repository_dict[buildout_section_id] = {
         'revision': revision,
         'commits_count': int(commits_count),

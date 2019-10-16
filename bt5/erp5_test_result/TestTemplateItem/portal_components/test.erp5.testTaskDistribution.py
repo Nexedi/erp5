@@ -1575,3 +1575,16 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
     self.test_result.setReference('foo=1-dc7b6e2e85e9434a97694a698884b057b7d30286,test=10-cc4c79c003f7cfe0bfcbc7b302eac988110c96ae')
     test_suite_data = self.test_result.TestResult_getTestSuiteData()
     self.assertEqual(set(['foo', 'test']), set(test_suite_data['repository_dict']))
+
+    # another edge case is when in test suite repository we have a buildout_section_id
+    # containing a -
+    self.test_suite.erp5_repo.setBuildoutSectionId('foo-bar')
+    self.test_result.setReference('foo-bar=1-dc7b6e2e85e9434a97694a698884b057b7d30286,test=10-cc4c79c003f7cfe0bfcbc7b302eac988110c96ae')
+    test_suite_data = self.test_result.TestResult_getTestSuiteData()
+    self.assertEqual({
+        "commits_count": 1,
+        "connector_relative_url": None,
+        "repository_url": "https://lab.nexedi.com/nexedi/erp5.git",
+        "revision": "dc7b6e2e85e9434a97694a698884b057b7d30286",
+    },
+    test_suite_data['repository_dict']['foo-bar'])
