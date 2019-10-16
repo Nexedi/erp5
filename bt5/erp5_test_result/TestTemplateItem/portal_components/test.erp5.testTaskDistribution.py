@@ -1545,6 +1545,34 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.test_result.stop()
       self.tic()
 
+  def test_project_with_dot_in_name(self):
+    # gitlab API doc[1] explain that repository name needs to be URL-encoded
+    # so that user/repo becomes user%2Frepo, but what they don't say is that
+    # if repo name contain dot, this dot also needs to be encoded, so user/re.po
+    # must become user%2Fre%2Epo
+    # This is not compliant with how RFC 3986 says . is "unreserved", but it's
+    # the way gitlab (seen on 8.17.8) works.
+    # Anyway requests does not let us GET with %2E in URL, it turns them back
+    # into .
+    # So when we have a project name or user name with a dot, we make a first
+    # API call to get the numerical project ID
+    # 1: https://docs.gitlab.com/ce/api/README.html#namespaced-path-encoding
+    self.test_suite.test_repo.setGitUrl('https://lab.example.com/nexedi/test.repo.git',)
+    self.post_commit_status_url = \
+        'https://lab.example.com/api/v4/projects/1234/statuses/cc4c79c003f7cfe0bfcbc7b302eac988110c96ae'
+
+    with responses.RequestsMock() as rsps:
+      rsps.add(
+          responses.GET,
+          'https://lab.example.com/api/v4/projects/nexedi%2Ftest.repo',
+          json={'id': 1234})
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('running'))
+      self.test_result.start()
+      self.tic()
+
   def test_TestResult_getTestSuiteData(self):
     """test for TestResult_getTestSuiteData helper script
     """
