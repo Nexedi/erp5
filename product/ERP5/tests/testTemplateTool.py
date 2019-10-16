@@ -34,7 +34,6 @@ import random
 import tempfile
 from xml.dom.minidom import getDOMImplementation
 from App.config import getConfiguration
-from Products.ERP5VCS.WorkingCopy import getVcsTool
 
 from Products.ERP5.Document.BusinessTemplate import \
     BusinessTemplateMissingDependency
@@ -53,7 +52,9 @@ class TestTemplateTool(ERP5TypeTestCase):
             'erp5_full_text_mroonga_catalog',
             'erp5_base',
             'erp5_stock_cache',
-            'erp5_csv_style')
+            'erp5_csv_style',
+            'erp5_crm',
+            'erp5_forge')
 
   def getTitle(self):
     return "Template Tool"
@@ -109,6 +110,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     """
       Function used to trust in svn.erp5.org.
     """
+    from erp5.component.module.WorkingCopy import getVcsTool
     for trust_dict in [
       # for subversion 1.6
       {'failures': 8,

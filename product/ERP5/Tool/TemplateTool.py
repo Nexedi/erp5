@@ -343,10 +343,14 @@ class TemplateTool (BaseTool):
         os.remove(temppath)
 
     def _download_svn(self, url, bt_id):
+      try:
+        from erp5.component.module.WorkingCopy import getVcsTool
+      except ImportError:
+        raise RuntimeError("VCS features require 'erp5_forge' bt5")
+
       svn_checkout_tmp_dir = mkdtemp()
       svn_checkout_dir = os.path.join(svn_checkout_tmp_dir, 'bt')
       try:
-        from Products.ERP5VCS.WorkingCopy import getVcsTool
         getVcsTool('svn').__of__(self).export(url, svn_checkout_dir)
         return self._download_local(svn_checkout_dir, bt_id)
       finally:

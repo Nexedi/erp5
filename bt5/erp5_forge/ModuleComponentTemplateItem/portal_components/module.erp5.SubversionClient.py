@@ -39,7 +39,6 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import ModuleSecurityInfo
-from Products.PythonScripts.Utility import allow_class
 from tempfile import mkdtemp
 import shutil
 
@@ -179,7 +178,7 @@ try:
 
     def __call__(self, instance):
       value = getattr(instance._obj, self._key)
-      if type(value) == type(u''):
+      if isinstance(value, unicode):
         value = value.encode('utf-8')
       #elif isinstance(value, pysvn.Entry):
       elif str(type(value)) == "<type 'entry'>":
@@ -275,7 +274,7 @@ try:
       except pysvn.ClientError, error:
         excep = self.getException()
         if excep:
-          raise excep
+          raise excep # pylint: disable=raising-bad-type
         else:
           raise error
 
@@ -285,7 +284,7 @@ try:
       except pysvn.ClientError, error:
         excep = self.getException()
         if excep:
-          raise excep
+          raise excep # pylint: disable=raising-bad-type
         else:
           raise error
 
@@ -297,7 +296,7 @@ try:
       except pysvn.ClientError, error:
         excep = self.getException()
         if excep:
-          raise excep
+          raise excep # pylint: disable=raising-bad-type
         else:
           raise error
       # XXX: seems that pysvn return a list that is
@@ -334,7 +333,7 @@ try:
           return
         excep = self.getException()
         if excep:
-          raise excep
+          raise excep # pylint: disable=raising-bad-type
         else:
           raise error
       # Edit list to make it more usable in zope
@@ -365,7 +364,7 @@ try:
       except pysvn.ClientError, error:
         excep = self.getException()
         if excep:
-          raise excep
+          raise excep # pylint: disable=raising-bad-type
         else:
           raise error
       if entry is None:
@@ -387,7 +386,7 @@ try:
           return
         excep = self.getException()
         if excep:
-          raise excep
+          raise excep # pylint: disable=raising-bad-type
         else:
           raise error
        #Modify the list to make it more usable in zope

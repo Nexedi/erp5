@@ -64,7 +64,7 @@ def findMessageListFromPythonInProduct(function_name_list):
   product_dir = os.path.dirname(Products.ERP5.__path__[0])
   erp5_product_list = ('CMFActivity', 'CMFCategory',
                        'ERP5', 'ERP5Banking', 'ERP5Catalog', 'ERP5Configurator',
-                       'ERP5Form', 'ERP5OOo', 'ERP5Security', 'ERP5VCS',
+                       'ERP5Form', 'ERP5OOo', 'ERP5Security',
                        'ERP5SyncML', 'ERP5Type', 'ERP5Wizard', 'ERP5Workflow',
                        'HBTreeFolder2', 'MailTemplates', 'TimerService',
                        'ZMySQLDA', 'ZSQLCatalog',
