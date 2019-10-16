@@ -1,5 +1,5 @@
 # try to get the repository URL, else redirect to the dialog for creating a working copy in one of the configured repositories
-from Products.ERP5VCS.WorkingCopy import NotAWorkingCopyError
+from erp5.component.module.WorkingCopy import NotAWorkingCopyError
 try:
   return context.getVcsTool().getRemoteUrl()
 except NotAWorkingCopyError:
