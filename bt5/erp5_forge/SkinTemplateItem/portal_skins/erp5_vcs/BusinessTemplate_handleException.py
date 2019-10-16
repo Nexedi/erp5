@@ -1,5 +1,5 @@
-from Products.ERP5VCS.Git import GitLoginError
-from Products.ERP5VCS.SubversionClient import SubversionSSLTrustError, SubversionLoginError
+from erp5.component.module.Git import GitLoginError
+from erp5.component.module.SubversionClient import SubversionSSLTrustError, SubversionLoginError
 
 try:
   raise exception
