@@ -1619,3 +1619,24 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.test_result.start()
       self.tic()
 
+  def test_test_result_url(self):
+    # We can define on the gitlab connector the pattern of URLs to use.
+    # This is useful for example to integrate with ERP5JS or erp5_web URLs
+    # that are not simply the relative URL.
+    self.connector.setTestResultUrlTemplate(
+        'https://erp5js.example.com/#{test_result_relative_url}')
+    def _callback(request):
+      body = json.loads(request.body)
+      self.assertEqual(
+          'https://erp5js.example.com/#%s' % self.test_result.getRelativeUrl(),
+          body['target_url'])
+      return (httplib.CREATED, {'content-type': 'application/json'}, '{}')
+
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          _callback)
+      self.test_result.start()
+      self.tic()
+
