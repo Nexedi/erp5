@@ -107,6 +107,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_source_reference</string>
                         <string>my_description</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
