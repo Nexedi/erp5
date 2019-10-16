@@ -1419,7 +1419,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
   """Tests for Gitlab commits annotations.
   """
   def afterSetUp(self):
-    connector = self.portal.portal_web_services.newContent(
+    self.connector = connector = self.portal.portal_web_services.newContent(
         portal_type='Gitlab REST Connector',
         reference='lab.example.com',
         url_string='https://lab.example.com/api/v4/',
@@ -1437,6 +1437,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
         source_project_value=self.project,
     )
     self.test_suite.newContent(
+        id='test_repo',
         portal_type='Test Suite Repository',
         branch='master',
         git_url='https://lab.example.com/nexedi/test.git',
@@ -1446,6 +1447,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
     # another unrelated repository, without connector, this
     # should not cause any API call.
     self.test_suite.newContent(
+        id='erp5_repo',
         portal_type='Test Suite Repository',
         branch='master',
         git_url='https://lab.nexedi.com/nexedi/erp5.git',
@@ -1542,3 +1544,34 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
           self._response_callback('failed'))
       self.test_result.stop()
       self.tic()
+
+  def test_TestResult_getTestSuiteData(self):
+    """test for TestResult_getTestSuiteData helper script
+    """
+    self.assertEqual({
+        "repository_dict": {
+            "erp5": {
+                "commits_count": 1,
+                "connector_relative_url": None,
+                "repository_url": "https://lab.nexedi.com/nexedi/erp5.git",
+                "revision": "dc7b6e2e85e9434a97694a698884b057b7d30286",
+            },
+            "test": {
+                "commits_count": 10,
+                "connector_relative_url": self.connector.getRelativeUrl(),
+                "repository_url": "https://lab.example.com/nexedi/test.git",
+                "revision": "cc4c79c003f7cfe0bfcbc7b302eac988110c96ae",
+            },
+        },
+        "test_suite_relative_url": self.test_suite.getRelativeUrl()
+      },
+      self.test_result.TestResult_getTestSuiteData())
+
+    # the repositories on test suite can also have -repository suffix for
+    # buildout id. This is ignored in the keys of repository_dict from
+    # TestResult_getTestSuiteData, because this also ignored when generating
+    # the test result reference.
+    self.test_suite.erp5_repo.setBuildoutSectionId('foo-repository')
+    self.test_result.setReference('foo=1-dc7b6e2e85e9434a97694a698884b057b7d30286,test=10-cc4c79c003f7cfe0bfcbc7b302eac988110c96ae')
+    test_suite_data = self.test_result.TestResult_getTestSuiteData()
+    self.assertEqual(set(['foo', 'test']), set(test_suite_data['repository_dict']))
