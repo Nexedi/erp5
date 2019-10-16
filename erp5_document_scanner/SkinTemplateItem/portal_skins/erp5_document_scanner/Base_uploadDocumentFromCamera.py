@@ -1,7 +1,6 @@
 from cStringIO import StringIO
 
 portal = context.getPortalObject()
-
 pdf_data_list = []
 image_module = portal.image_module
 active_process = portal.restrictedTraverse(active_process_url)
@@ -32,7 +31,7 @@ if publication_section == "shared":
   action_list = ["share",]
 elif publication_section == "relased":
   action_list = ["share", "release"]
-elif publication_section == "released":
+elif publication_section == "relased":
   action_list = ["share", "release"]
 elif publication_section == "published":
   action_list = ["share", "release", "publish"]
