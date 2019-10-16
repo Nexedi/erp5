@@ -36,11 +36,10 @@ from ZTUtils import make_query
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Utils import simple_decorator
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder
-from Products.ERP5VCS.WorkingCopy import \
+from erp5.component.module.WorkingCopy import \
   WorkingCopy, Dir, File, selfcached, \
   NotAWorkingCopyError, NotVersionedError, VcsConflictError
-from Products.ERP5VCS.SubversionClient import \
-  newSubversionClient, SubversionLoginError, SubversionSSLTrustError
+from erp5.component.module.SubversionClient import newSubversionClient
 
 # XXX Still not thread safe !!! Proper fix is to never use 'os.chdir'
 #     Using a RLock is a temporary quick change that only protects against
@@ -119,7 +118,7 @@ class Subversion(WorkingCopy):
     return newSubversionClient(self, **kw)
 
   def createBusinessTemplateWorkingCopy(self):
-    super(Subversion, self).createBusinessTemplateWorkingCopy()
+    WorkingCopy.createBusinessTemplateWorkingCopy(self)
     self._getClient().add(self.working_copy)
 
   @chdir_working_copy
@@ -346,17 +345,17 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
     try:
       if path in self.svn_file_set:
         self.svn_file_set.remove(path)
-        file = open(path, 'r+b')
-        old_size = os.fstat(file.fileno()).st_size
-        if len(obj) == old_size and obj == file.read():
+        file_obj = open(path, 'r+b')
+        old_size = os.fstat(file_obj.fileno()).st_size
+        if len(obj) == old_size and obj == file_obj.read():
           return
-        file.seek(0)
+        file_obj.seek(0)
       else:
-        file = open(path, 'wb')
-      file.write(obj)
-      file.truncate()
+        file_obj = open(path, 'wb')
+      file_obj.write(obj)
+      file_obj.truncate()
     finally:
-      file.close()
+      file_obj.close()
 
   def _makeParent(self, path):
     path = os.path.dirname(path)
