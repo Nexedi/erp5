@@ -85,8 +85,8 @@ class WorkingCopy(Implicit):
 
   class __metaclass__(ImplicitType):
 
-    def __init__(cls, name, bases, d):
-      ImplicitType.__init__(cls, name, bases, d)
+    def __init__(cls, name, bases, d): # pylint: disable=no-self-argument,super-init-not-called
+      ImplicitType.__init__(cls, name, bases, d) # pylint: disable=non-parent-init-called
       if cls.reference:
         cls._registry.append((cls.reference, cls))
 
@@ -334,6 +334,14 @@ class WorkingCopy(Implicit):
 
 
 def getVcsTool(vcs=None, path=None, restricted=False):
+  ## Initialization of WorkingCopy._registry (used to be done in Products.ERP5VCS __init__)
+  # Register Subversion before Git
+  try:
+    from erp5.component.module import Subversion as _
+  except ImportError:
+    pass
+  from erp5.component.module import Git as _
+
   if vcs:
     for x in WorkingCopy._registry:
       if x[0] == vcs:
@@ -357,26 +365,26 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
     self._makeParent(path)
     path = os.path.join(self.path, path)
     # write file unless unchanged
-    file = None
+    file_obj = None
     try:
       try:
-        file = open(path, 'r+b')
+        file_obj = open(path, 'r+b')
       except IOError, e:
         if e.errno == errno.EISDIR:
           shutil.rmtree(path, ignore_errors=True)
         elif e.errno != errno.ENOENT:
           raise
-        file = open(path, 'wb')
+        file_obj = open(path, 'wb')
       else:
-        old_size = os.fstat(file.fileno()).st_size
-        if len(obj) == old_size and obj == file.read():
+        old_size = os.fstat(file_obj.fileno()).st_size
+        if len(obj) == old_size and obj == file_obj.read():
           return
-        file.seek(0)
-      file.write(obj)
-      file.truncate()
+        file_obj.seek(0)
+      file_obj.write(obj)
+      file_obj.truncate()
     finally:
-      if file is not None:
-        file.close()
+      if file_obj is not None:
+        file_obj.close()
 
   def _makeParent(self, path):
     path = os.path.dirname(path)
