@@ -536,6 +536,14 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>simulation_state</string>
+                          <string>descending</string>
+                        </tuple>
+                        <tuple>
+                          <string>string_index</string>
+                          <string>ascending</string>
+                        </tuple>
+                        <tuple>
                           <string>errors</string>
                           <string>descending</string>
                         </tuple>
