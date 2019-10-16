@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Standard Property" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>elementary_type/string</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Template of URL for the test results, using python\'s str.format.\n
+\n
+The following keys are available:\n
+  * portal_url url of the portal, as returned by portal.ERP5Site_getAbsoluteUrl()\n
+  * test_result_relative_url relative url of the test result, as returned by test_result.getRelativeUrl()\n
+  * test_result_reference reference of the test result, as returned by test_result.getReference()\n
+  * test_result_id id of the test result, as returned by test_result.getId()</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test_result_url_template_property</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>property_default</string> </key>
+            <value> <string>string:{portal_url}/{test_result_relative_url}</string> </value>
+        </item>
+        <item>
+            <key> <string>read_permission</string> </key>
+            <value> <string>Access contents information</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
