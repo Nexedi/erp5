@@ -10,10 +10,12 @@
     video,
     stream,
     canvas,
+    dialogMethod,
     photo,
     photoInput,
     deviceId,
     imageCapture,
+    pageNumber = 1,
     cameraList = [];
 
   function readBlobAsDataURL(blob) {
@@ -30,6 +32,7 @@
   }
 
   function takePicture(el) {
+    var start, end;
     return RSVP.Queue()
       .push(function () {
         return imageCapture.takePhoto({imageWidth: imageWidth});
@@ -38,21 +41,46 @@
         return readBlobAsDataURL(blob);
       })
       .push(function (result) {
-        photoInput.setAttribute("value", result.split(",")[1]);
         photo.setAttribute("src", result);
         photo.setAttribute("width", imageWidth);
         photo.setAttribute("height", imageHeight);
-        el.querySelector(".capture-button").style.display = "";
+        photoInput.setAttribute("value", result.split(",")[1]);
         return drawCanvas(el, photo);
       });
   }
 
   function setPageOne(root) {
-    root.querySelector(".page-number").innerText = "1";
+    root.querySelector(".page-number").innerText = pageNumber;
+    root.querySelector(".reset-btn").style.display = "none";
+    root.querySelector(".take-picture-btn").style.display = "inline-block";
+    root.querySelector(".confirm-btn").style.display = "none";
+    root.querySelector(".camera-input").style.display = "";
+    if (cameraList.length > 1) {
+      root.querySelector(".change-camera-btn").style.display = "inline-block";
+    }
   }
 
   function setPageTwo(root) {
-    root.querySelector(".page-number").innerText = "2";
+    root.querySelector(".reset-btn").style.display = "inline-block";
+    root.querySelector(".confirm-btn").style.display = "inline-block";
+    root.querySelector(".take-picture-btn").style.display = "none";
+    root.querySelector(".camera-input").style.display = "none";
+    root.querySelector(".camera-output").style.display = "";
+    root.querySelector(".change-camera-btn").style.display = "none";
+  }
+
+  function disableButton(root) {
+    [".reset-btn", ".take-picture-btn",
+     ".confirm-btn", ".change-camera-btn"].forEach(function (e) {
+        root.querySelector(e).disabled = true;
+      });
+  }
+
+  function enableButton(root) {
+    [".reset-btn", ".take-picture-btn",
+     ".confirm-btn", ".change-camera-btn"].forEach(function (e) {
+        root.querySelector(e).disabled = false;
+      });
   }
 
   function drawCanvas(gadget, img) {
@@ -176,43 +204,40 @@
       .push(function (photoCapabilities) {
         imageWidth = photoCapabilities.imageWidth.max;
         imageHeight = photoCapabilities.imageHeight.max;
+        root.querySelector(".camera-output").style.maxWidth = imageWidth;
+        root.querySelector(".camera-output").style.maxHeight = imageHeight;
         return video.play();
       })
       .push(function () {
-        root.querySelector(".camera-input").style.display = "";
+        return setPageOne(root);
       });
   }
 
   function startup(root, device_id) {
     video = root.querySelector(".video");
     canvas = root.querySelector(".canvas");
-    photo = root.querySelector(".photo");
+    photo = root.querySelector("img");
     photoInput = root.querySelector(".photoInput");
     return handleUserMedia(root, device_id, gotStream);
   }
 
-  function clearphoto() {
-    var data, context = canvas.getContext("2d");
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    data = canvas.toDataURL("image/png");
-    photo.setAttribute("src", data);
-  }
-
   rJS(window)
+    .declareAcquiredMethod("customSubmitDialog", "customSubmitDialog")
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareMethod('render', function (options) {
       var root;
       return this.getElement()
         .push(function (element) {
           root = element;
+          pageNumber = 1;
           preferredCroppedCanvasData = preferredCroppedCanvasData || JSON.parse(
             options.preferred_cropped_canvas_data
           );
+          dialogMethod = preferredCroppedCanvasData.dialog_method;
           // Clear photo input
           element.querySelector('.photoInput').value = "";
           if (deviceId) {
             root.querySelector(".camera-input").style.display = "";
-            root.querySelector(".capture-button").style.display = "";
             root.querySelector(".camera-output").style.display = "none";
           }
           if (!navigator.mediaDevices) {
@@ -224,15 +249,21 @@
           var j,
             device,
             len = info_list.length;
-          for (j = 0; j < len; j += 1) {
-            device = info_list[j];
-            if (device.kind === 'videoinput') {
-              cameraList.push(device);
+
+          if (cameraList.length === 0) {
+            for (j = 0; j < len; j += 1) {
+              device = info_list[j];
+              if (device.kind === 'videoinput') {
+                cameraList.push(device);
+              }
             }
           }
           if (cameraList.length >= 1) {
             // trick to select back camera in mobile
             deviceId = cameraList[cameraList.length - 1].deviceId;
+          }
+
+          if (deviceId) {
             return startup(root, deviceId);
           }
         });
@@ -240,45 +271,37 @@
     .declareMethod('getContent', function () {
       var input = this.element.querySelector('.photoInput'),
         result = {};
+
       result.field_your_document_scanner_gadget = JSON.stringify({
         "input_value": input.value,
         "preferred_cropped_canvas_data": preferredCroppedCanvasData
       });
       return result;
     })
-    /*.onEvent("change", function (evt) {
-      if (evt.target.type === "select-one") {
-        return this.getElement()
-          .push(function (root) {
-            var display;
-            if (stream !== undefined) {
-              // Stop the streams
-              stream.getTracks().forEach(function (track) {
-                track.stop();
-              });
-            }
-            if (!evt.target.value) {
-              display = "none";
-            } else {
-              display = "";
-            }
-            root.querySelector(".camera-input").style.display = display;
-            if (evt.target.value) {
-              return startup(root, evt.target.value);
-            }
-          });
-      }
-    }, false, true)*/
-
     .onEvent("click", function (evt) {
-      var root;
+      var root,
+        newPreferredCroppedCanvasData,
+        gadget = this;
       if (evt.target.name === "grayscale") {
         return this.getElement()
           .push(function () {
             return grayscale(canvas, photo);
           });
       }
-      if (evt.target.className === "startbutton") {
+      if (evt.target.className.indexOf("change-camera-btn") !== -1) {
+        evt.preventDefault();
+        for (var e in cameraList) {
+          if (cameraList[e].deviceId !== deviceId) {
+            deviceId = cameraList[e].deviceId;
+            break;
+          }
+        }
+        return gadget.getElement()
+          .push(function (root) {
+            return startup(root, deviceId);
+          });
+      }
+      if (evt.target.className.indexOf("take-picture-btn") !== -1) {
         evt.preventDefault();
         return this.getElement()
           .push(function (el) {
@@ -290,7 +313,7 @@
             return setPageTwo(root);
           });
       }
-      if (evt.target.className === "reset-button") {
+      if (evt.target.className.indexOf("reset-btn") !== -1) {
         evt.preventDefault();
         return this.getElement()
           .push(function (el) {
@@ -300,19 +323,25 @@
             return setPageOne(el);
           });
       }
-      if (evt.target.className === "capture-button") {
+      if (evt.target.className.indexOf("confirm-btn") !== -1) {
         evt.preventDefault();
-        preferredCroppedCanvasData = cropper.getData();
+        newPreferredCroppedCanvasData = cropper.getData();
+        for (var p in newPreferredCroppedCanvasData) {
+          if (newPreferredCroppedCanvasData.hasOwnProperty(p)) {
+            preferredCroppedCanvasData[p] = newPreferredCroppedCanvasData[p];
+          }
+        }
         return this.getElement()
           .push(function (el) {
             root = el;
+            disableButton(root);
             return cropper.getCroppedCanvas();
           })
           .push(function (canvas) {
             return new Promise(function (resolve, reject) {
               canvas.toBlob(function (blob) {
                 resolve(blob);
-              });
+              }, 'image/jpeg', 0.85);
             });
           })
           .push(function (blob) {
@@ -325,11 +354,15 @@
 
             photo.src = base64data;
             photoInput.value = realData;
-            root.querySelector(".camera-input").style.display = "none";
-            root.querySelector(".camera-output").style.display = "";
-            root.querySelector(".capture-button").style.display = "none";
             cropper.destroy();
-            return setPageTwo(root);
+          })
+          .push(function () {
+            return gadget.customSubmitDialog(dialogMethod);
+          })
+          .push(function () {
+            enableButton(root);
+            pageNumber = pageNumber + 1;
+            return setPageOne(root);
           });
       }
     }, false, false);
