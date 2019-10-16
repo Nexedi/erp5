@@ -3,21 +3,25 @@
   font-size: 19px;
 }
 
+div[data-gadget-scope="field_your_document_scanner_gadget"] {
+  text-align: center;
+}
+
 .video, .photo, .camera-output {
   max-width: 100%;
   width: auto;
-  height: 360px;
+  max-height: 360px;
   filter: brightness(1);
   text-align: center;
+}
+
+.camera-input, .camera-output {
+  min-height: 360px;
 }
 
 .canvas {
   display: none;
   filter: brightness(1);
-}
-
-.camera {
-  min-height: 390px;
 }
 
 .page-number {

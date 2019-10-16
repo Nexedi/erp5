@@ -204,8 +204,6 @@
       .push(function (photoCapabilities) {
         imageWidth = photoCapabilities.imageWidth.max;
         imageHeight = photoCapabilities.imageHeight.max;
-        root.querySelector(".camera-output").style.maxWidth = imageWidth;
-        root.querySelector(".camera-output").style.maxHeight = imageHeight;
         return video.play();
       })
       .push(function () {
@@ -306,6 +304,7 @@
         return this.getElement()
           .push(function (el) {
             root = el;
+            el.querySelector(".camera").style.maxWidth = video.offsetWidth + "px";
             el.querySelector(".camera-input").style.display = "none";
             return takePicture(el);
           })
