@@ -36,7 +36,10 @@ if context.getReference() and '-' in context.getReference(): # tolerate invalid 
 
 # add information about test suite repositories
 for test_result_repository in test_suite.contentValues(portal_type='Test Suite Repository'):
-  repository_data = repository_dict.setdefault(test_result_repository.getBuildoutSectionId(), {})
+  buildout_section_id = test_result_repository.getBuildoutSectionId()
+  # NodeTestSuite.revision strip trailing -repository
+  buildout_section_id = buildout_section_id[:-11] if buildout_section_id.endswith('-repository') else buildout_section_id
+  repository_data = repository_dict.setdefault(buildout_section_id, {})
   repository_data['repository_url'] = test_result_repository.getGitUrl()
   repository_data['connector_relative_url'] = test_result_repository.getDestination()
 
