@@ -536,6 +536,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>string_index</string>
+                          <string>ascending</string>
+                        </tuple>
+                        <tuple>
                           <string>errors</string>
                           <string>descending</string>
                         </tuple>
