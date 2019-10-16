@@ -64,10 +64,23 @@ class GitlabRESTConnector(XMLObject):
 
     https://docs.gitlab.com/ce/api/commits.html#post-the-build-status-to-a-commit
     """
+    project_id = self._getRepositoryIdFromRepositoryUrl(repository_url)
+    if '.' in project_id:
+      url = urljoin(self.getUrlString(), "projects/{id}".format(id=project_id))
+      self.logger.debug(
+          "Project id encoded as %s has a dot in the name,"
+          " we need to lookup id at %s",
+          project_id,
+          url)
+      project_id = requests.get(
+          url,
+          headers={"PRIVATE-TOKEN": self.getToken()},
+          timeout=5).json()['id']
+
     url = urljoin(
         self.getUrlString(),
         "projects/{id}/statuses/{sha}".format(
-            id=self._getRepositoryIdFromRepositoryUrl(repository_url),
+            id=project_id,
             sha=commit_sha
         )
     )
