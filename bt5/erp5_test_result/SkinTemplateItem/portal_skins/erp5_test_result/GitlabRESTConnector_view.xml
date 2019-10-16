@@ -76,6 +76,7 @@
                       <list>
                         <string>my_reference</string>
                         <string>my_url_string</string>
+                        <string>my_test_result_url_template</string>
                       </list>
                     </value>
                 </item>
