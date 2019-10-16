@@ -33,11 +33,12 @@ from Acquisition import aq_base
 from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
 from ZTUtils import make_query
-from Products.ERP5VCS.WorkingCopy import \
+from erp5.component.module.WorkingCopy import \
   WorkingCopy, NotAWorkingCopyError, NotVersionedError, Dir, File, selfcached
 
 # TODO: write a similar helper for 'nt' platform
-GIT_ASKPASS = os.path.join(os.path.dirname(__file__), 'bin', 'git_askpass')
+import Products.ERP5
+GIT_ASKPASS = os.path.join(Products.ERP5.product_path, 'bin', 'git_askpass')
 
 class GitInstallationError(EnvironmentError):
   """Raised when an installation is broken"""

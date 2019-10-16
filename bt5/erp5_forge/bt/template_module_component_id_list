@@ -1,0 +1,4 @@
+module.erp5.Git
+module.erp5.Subversion
+module.erp5.SubversionClient
+module.erp5.WorkingCopy

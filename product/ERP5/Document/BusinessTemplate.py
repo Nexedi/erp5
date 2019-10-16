@@ -5801,7 +5801,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
     @transactional_cached(lambda self, vcs=None, path=None, restricted=False:
                           (self, vcs, path, restricted))
     def _getVcsTool(self, vcs=None, path=None, restricted=False):
-      from Products.ERP5VCS.WorkingCopy import getVcsTool
+      try:
+        from erp5.component.module.WorkingCopy import getVcsTool
+      except ImportError:
+        raise RuntimeError("VCS features require 'erp5_forge' bt5")
       if not (path or vcs):
         path = self.getExportPath()
       return getVcsTool(vcs, path, restricted).__of__(self)
@@ -5811,10 +5814,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     def isVcsType(self, *vcs):
       # could be moved to Products.ERP5.Base.Base
-      from Products.ERP5VCS.WorkingCopy import NotAWorkingCopyError
       try:
+        from erp5.component.module.WorkingCopy import NotAWorkingCopyError
         return self.getVcsTool().reference in vcs
-      except NotAWorkingCopyError:
+      except (ImportError, NotAWorkingCopyError):
         return None in vcs
 
     security.declareProtected(Permissions.ManagePortal, 'export')
@@ -5885,19 +5888,24 @@ Business Template is a set of definitions, such as skins, portal types and categ
             prop_dict[pid[:-5]] = (value or '').splitlines()
       self._edit(**prop_dict)
 
-      from Products.ERP5VCS.WorkingCopy import NotAWorkingCopyError
       try:
-        vcs_tool = self._getVcsTool(path=path)
-      except NotAWorkingCopyError:
+        from erp5.component.module.WorkingCopy import NotAWorkingCopyError
+      # bootstrap (setupERP5Core()) or erp5_forge not installed
+      except ImportError:
         pass
       else:
-        comment = translateString(
-          'Downloaded from ${type} repository at revision ${revision}',
-          mapping={'type': vcs_tool.title,
-                   'revision': vcs_tool.getRevision(True)})
-        workflow_tool = self.getPortalObject().portal_workflow
-        workflow_tool.business_template_building_workflow.notifyWorkflowMethod(
-          self, 'edit', kw={'comment': comment})
+        try:
+          vcs_tool = self._getVcsTool(path=path)
+        except NotAWorkingCopyError:
+          pass
+        else:
+          comment = translateString(
+            'Downloaded from ${type} repository at revision ${revision}',
+            mapping={'type': vcs_tool.title,
+                     'revision': vcs_tool.getRevision(True)})
+          workflow_tool = self.getPortalObject().portal_workflow
+          workflow_tool.business_template_building_workflow.notifyWorkflowMethod(
+            self, 'edit', kw={'comment': comment})
 
       self.storeTemplateItemData()
 

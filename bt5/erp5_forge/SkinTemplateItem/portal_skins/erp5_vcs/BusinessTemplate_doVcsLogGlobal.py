@@ -1,4 +1,4 @@
-from Products.ERP5VCS.SubversionClient import SubversionSSLTrustError, SubversionLoginError
+from erp5.component.module.SubversionClient import SubversionSSLTrustError, SubversionLoginError
 from Products.ERP5Type.Document import newTempBase
 
 # get selected business templates
