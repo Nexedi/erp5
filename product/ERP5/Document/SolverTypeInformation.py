@@ -81,12 +81,16 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     # Default Implementation (use categories and trivial case)
     #  this default implementation should be applicable to most
     #  solvers so that use of Type Based methods is very rare
+    message_list = []
     for solver, configuration_list in movement_dict[movement].items():
-      if solver is not self and solver.getTestedProperty() == self.getTestedProperty():
-        return AppropriateUIMessage(whatever) # XXX-TODO
+      if solver is not self and configuration_mapping in configuration_list:
+        # TODO: Use Message() class and avoid duplicate (this method will be
+        # called for the other solver and add the same message again...)
+        message_list.append(
+          "%s: Solver conflict on %r between '%s' and '%s'" % \
+          (movement.getRelativeUrl(), configuration_mapping, self, solver))
 
-    # Return emtpty message list
-    return ()
+    return message_list
 
   def getSolverProcessGroupingKey(self, movement, configuration_mapping, solver_dict, movement_dict):
     """
