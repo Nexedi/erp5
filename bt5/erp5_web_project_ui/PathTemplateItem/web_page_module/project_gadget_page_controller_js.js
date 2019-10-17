@@ -18,16 +18,16 @@
     .declareMethod("render", function (options) {
       var gadget = this;
       return gadget.redirect({
-        'command': 'display',
+        'command': 'display_with_history',
         'options': {
           'page': 'form',
-          'editable': 1,
+          'editable': 0,
           'jio_key': 'project_module',
           'view': 'view',
           'field_listbox_sort_list:json': [["title", "ascending"]],
           'field_listbox_column_list:json': ["title",
                                              "default_destination_section_title"],
-          'extended_search': 'translated_validation_state_title:  "Started"'
+          'extended_search': 'selection_domain_state_project_domain:  "started"'
         }
       });
     });
