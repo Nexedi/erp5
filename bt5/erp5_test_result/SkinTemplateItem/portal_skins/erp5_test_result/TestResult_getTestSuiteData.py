@@ -27,8 +27,8 @@ test_suite = sorted(
 repository_dict = {}
 if context.getReference() and '-' in context.getReference(): # tolerate invalid references, especially for tests
   for repository_string in context.getReference().split(','):
-    buildout_section_id_and_commits_count, revision = repository_string.split('-')
-    buildout_section_id, commits_count = buildout_section_id_and_commits_count.split('=')
+    buildout_section_id, commits_count_and_revision = repository_string.split('=')
+    commits_count, revision = commits_count_and_revision.split('-')
     repository_dict[buildout_section_id] = {
         'revision': revision,
         'commits_count': int(commits_count),
@@ -36,7 +36,10 @@ if context.getReference() and '-' in context.getReference(): # tolerate invalid 
 
 # add information about test suite repositories
 for test_result_repository in test_suite.contentValues(portal_type='Test Suite Repository'):
-  repository_data = repository_dict.setdefault(test_result_repository.getBuildoutSectionId(), {})
+  buildout_section_id = test_result_repository.getBuildoutSectionId()
+  # NodeTestSuite.revision strip trailing -repository
+  buildout_section_id = buildout_section_id[:-11] if buildout_section_id.endswith('-repository') else buildout_section_id
+  repository_data = repository_dict.setdefault(buildout_section_id, {})
   repository_data['repository_url'] = test_result_repository.getGitUrl()
   repository_data['connector_relative_url'] = test_result_repository.getDestination()
 
