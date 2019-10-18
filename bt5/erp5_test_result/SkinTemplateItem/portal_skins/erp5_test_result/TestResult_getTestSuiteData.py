@@ -5,6 +5,9 @@
      revision: commit sha
      repository_url: git url of the repository
      commits_count: number of commits
+     connector_relative_url: URL of the gitlab connector
+     test_result_line_pattern: pattern of test result lines titles that needs
+                               to be considered to assess the result of this test.
 
 returns None if test suite cannot be found.
 """
@@ -42,6 +45,8 @@ for test_result_repository in test_suite.contentValues(portal_type='Test Suite R
   repository_data = repository_dict.setdefault(buildout_section_id, {})
   repository_data['repository_url'] = test_result_repository.getGitUrl()
   repository_data['connector_relative_url'] = test_result_repository.getDestination()
+  repository_data['test_result_line_pattern'] = test_result_repository.getSourceReference()
+
 
 if REQUEST:
   REQUEST.RESPONSE.setHeader('content-type', 'application/json; charset=utf-8')
