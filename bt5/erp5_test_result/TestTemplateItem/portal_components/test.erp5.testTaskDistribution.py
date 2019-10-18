@@ -1419,7 +1419,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
   """Tests for Gitlab commits annotations.
   """
   def afterSetUp(self):
-    connector = self.portal.portal_web_services.newContent(
+    self.connector = connector = self.portal.portal_web_services.newContent(
         portal_type='Gitlab REST Connector',
         reference='lab.example.com',
         url_string='https://lab.example.com/api/v4/',
@@ -1437,6 +1437,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
         source_project_value=self.project,
     )
     self.test_suite.newContent(
+        id='test_repo',
         portal_type='Test Suite Repository',
         branch='master',
         git_url='https://lab.example.com/nexedi/test.git',
@@ -1535,6 +1536,62 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
   def test_stop_test_failure(self):
     self._start_test_result()
     self.test_result.setStringIndex('FAILED')
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('failed'))
+      self.test_result.stop()
+      self.tic()
+
+  def test_status_per_test_result_line(self):
+    self.test_suite.test_repo.setSourceReference(
+        'test_result_line')
+    self.test_result.newContent(
+        portal_type='Test Result Line',
+        title='this test_result_line is OK',
+        all_tests=1,
+        string_index='PASSED'
+    )
+    self.test_result.newContent(
+        portal_type='Test Result Line',
+        title='another unrelated line',
+        all_tests=1,
+        string_index='FAILED'
+    )
+    self._start_test_result()
+    self.test_result.setStringIndex('FAILED')
+
+    # this test failed, but we are only interested in lines matching `test_result_line`
+    # because that line was successful, the test is OK.
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('success'))
+      self.test_result.stop()
+      self.tic()
+
+  def test_status_per_test_result_line_multiple_matches(self):
+    self.test_suite.test_repo.setSourceReference(
+        'test_result_line')
+    self.test_result.newContent(
+        portal_type='Test Result Line',
+        title='this test_result_line is OK',
+        all_tests=1,
+        string_index='PASSED'
+    )
+    self.test_result.newContent(
+        portal_type='Test Result Line',
+        title='also test_result_line but failed',
+        all_tests=1,
+        string_index='FAILED'
+    )
+    self._start_test_result()
+    self.test_result.setStringIndex('PASSED')
+
+    # this test is marked as passed, but we are  interested in all
+    # lines matching `test_result_line` and one of them is failed.
     with responses.RequestsMock() as rsps:
       rsps.add_callback(
           responses.POST,
