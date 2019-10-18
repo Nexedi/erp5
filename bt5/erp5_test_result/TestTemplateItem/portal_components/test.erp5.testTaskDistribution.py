@@ -1640,6 +1640,62 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.test_result.start()
       self.tic()
 
+  def test_status_per_test_result_line(self):
+    self.test_suite.test_repo.setSourceReference(
+        'test_result_line')
+    self.test_result.newContent(
+        portal_type='Test Result Line',
+        title='this test_result_line is OK',
+        all_tests=1,
+        string_index='PASSED'
+    )
+    self.test_result.newContent(
+        portal_type='Test Result Line',
+        title='another unrelated line',
+        all_tests=1,
+        string_index='FAILED'
+    )
+    self._start_test_result()
+    self.test_result.setStringIndex('FAILED')
+
+    # this test failed, but we are only interested in lines matching `test_result_line`
+    # because that line was successful, the test is OK.
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('success'))
+      self.test_result.stop()
+      self.tic()
+
+  def test_status_per_test_result_line_multiple_matches(self):
+    self.test_suite.test_repo.setSourceReference(
+        'test_result_line')
+    self.test_result.newContent(
+        portal_type='Test Result Line',
+        title='this test_result_line is OK',
+        all_tests=1,
+        string_index='PASSED'
+    )
+    self.test_result.newContent(
+        portal_type='Test Result Line',
+        title='also test_result_line but failed',
+        all_tests=1,
+        string_index='FAILED'
+    )
+    self._start_test_result()
+    self.test_result.setStringIndex('PASSED')
+
+    # this test is marked as passed, but we are  interested in all
+    # lines matching `test_result_line` and one of them is failed.
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('failed'))
+      self.test_result.stop()
+      self.tic()
+
   def test_commit_not_found(self):
     with responses.RequestsMock() as rsps:
       rsps.add(

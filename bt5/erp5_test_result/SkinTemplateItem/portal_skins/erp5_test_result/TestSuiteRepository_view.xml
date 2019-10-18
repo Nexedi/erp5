@@ -105,6 +105,7 @@
                     <value>
                       <list>
                         <string>my_destination_title</string>
+                        <string>my_source_reference</string>
                       </list>
                     </value>
                 </item>
