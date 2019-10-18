@@ -1557,12 +1557,14 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
                 "connector_relative_url": None,
                 "repository_url": "https://lab.nexedi.com/nexedi/erp5.git",
                 "revision": "dc7b6e2e85e9434a97694a698884b057b7d30286",
+                "test_result_line_pattern": None,
             },
             "test": {
                 "commits_count": 10,
                 "connector_relative_url": self.connector.getRelativeUrl(),
                 "repository_url": "https://lab.example.com/nexedi/test.git",
                 "revision": "cc4c79c003f7cfe0bfcbc7b302eac988110c96ae",
+                "test_result_line_pattern": None,
             },
         },
         "test_suite_relative_url": self.test_suite.getRelativeUrl()
@@ -1588,6 +1590,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
         "connector_relative_url": None,
         "repository_url": "https://lab.nexedi.com/nexedi/erp5.git",
         "revision": "dc7b6e2e85e9434a97694a698884b057b7d30286",
+        "test_result_line_pattern": None,
     },
     test_suite_data['repository_dict']['foo-bar'])
 
@@ -1638,6 +1641,62 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
           self.post_commit_status_url,
           _callback)
       self.test_result.start()
+      self.tic()
+
+  def test_status_per_test_result_line(self):
+    self.test_suite.test_repo.setSourceReference(
+        'test_result_line')
+    self.test_result.newContent(
+        portal_type='Test Result Line',
+        title='this test_result_line is OK',
+        all_tests=1,
+        string_index='PASSED'
+    )
+    self.test_result.newContent(
+        portal_type='Test Result Line',
+        title='another unrelated line',
+        all_tests=1,
+        string_index='FAILED'
+    )
+    self._start_test_result()
+    self.test_result.setStringIndex('FAILED')
+
+    # this test failed, but we are only interested in lines matching `test_result_line`
+    # because that line was successful, the test is OK.
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('success'))
+      self.test_result.stop()
+      self.tic()
+
+  def test_status_per_test_result_line_multiple_matches(self):
+    self.test_suite.test_repo.setSourceReference(
+        'test_result_line')
+    self.test_result.newContent(
+        portal_type='Test Result Line',
+        title='this test_result_line is OK',
+        all_tests=1,
+        string_index='PASSED'
+    )
+    self.test_result.newContent(
+        portal_type='Test Result Line',
+        title='also test_result_line but failed',
+        all_tests=1,
+        string_index='FAILED'
+    )
+    self._start_test_result()
+    self.test_result.setStringIndex('PASSED')
+
+    # this test is marked as passed, but we are  interested in all
+    # lines matching `test_result_line` and one of them is failed.
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('failed'))
+      self.test_result.stop()
       self.tic()
 
   def test_commit_not_found(self):
