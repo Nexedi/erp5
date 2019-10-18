@@ -7,7 +7,7 @@ if url_dict:
     'command': 'display',
     'options': {
       'jio_key': jio_key,
-      'editable': False
+      'editable': True
     },
     'view_kw': {
       'view': 'Project_viewQuickOverview',

@@ -18,10 +18,10 @@
     .declareMethod("render", function (options) {
       var gadget = this;
       return gadget.redirect({
-        'command': 'display',
+        'command': 'display_with_history',
         'options': {
           'page': 'form',
-          'editable': 1,
+          'editable': 0,
           'jio_key': 'project_module',
           'view': 'view',
           'field_listbox_sort_list:json': [["title", "ascending"]],
