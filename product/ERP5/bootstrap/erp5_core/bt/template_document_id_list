@@ -6,6 +6,7 @@ document.erp5.TransformDocToDocx
 document.erp5.TransformDocxToDocy
 document.erp5.TransformDocyToDocx
 document.erp5.TransformDocxToOdt
+document.erp5.TransformHtmlToPdf
 document.erp5.TransformXlsxToOds
 document.erp5.TransformXlsxToXlsy
 document.erp5.TransformXlsyToXlsx
