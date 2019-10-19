@@ -19,9 +19,9 @@ from urllib import unquote
 from urlparse import parse_qsl, urlparse
 
 # XXX Must be replaced by portal_data_adapters soon
-from Products.ERP5OOo.Document.OOoDocument import OOoServerProxy
-from Products.ERP5OOo.Document.OOoDocument import enc
-from Products.ERP5OOo.Document.OOoDocument import dec
+from Products.ERP5.Document.Document import DocumentConversionServerProxy
+from Products.ERP5.Document.Document import enc
+from Products.ERP5.Document.Document import dec
 
 def includeMetaContentType(html_node):
   """XXX Temp workaround time to fix issue
@@ -221,7 +221,7 @@ class OOOdCommandTransform(commandtransform):
     return xml_output
 
   def convertTo(self, format):
-    server_proxy = OOoServerProxy(self.context)
+    server_proxy = DocumentConversionServerProxy(self.context)
     response_code, response_dict, message = \
                            server_proxy.getAllowedTargetItemList(self.mimetype)
     allowed_extension_list = response_dict['response_data']

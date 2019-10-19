@@ -27,13 +27,10 @@
 #
 ##############################################################################
 
-import xmlrpclib, base64, re, zipfile, cStringIO
+import re, zipfile, cStringIO
 from warnings import warn
-from xmlrpclib import Fault, ServerProxy, ProtocolError
 from AccessControl import ClassSecurityInfo
-from AccessControl import Unauthorized
 from OFS.Image import Pdata
-from OFS.Image import File as OFSFile
 from zope.contenttype import guess_content_type
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
@@ -41,69 +38,22 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import Document, \
        VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
-from Products.ERP5.Document.Image import getDefaultImageQuality
 from Products.ERP5Type.Utils import fill_args_from_request
-from zLOG import LOG, ERROR
 
 # Mixin Import
 from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 from Products.ERP5.mixin.extensible_traversable import OOoDocumentExtensibleTraversableMixin
 
-# connection plugins
-from Products.ERP5Type.ConnectionPlugin.TimeoutTransport import TimeoutTransport
-
-enc=base64.encodestring
-dec=base64.decodestring
-
 EMBEDDED_FORMAT = '_embedded'
-OOO_SERVER_PROXY_TIMEOUT = 360
 
-class _ProtocolErrorCatcher(object):
-  def __init__(self, orig_callable):
-    self.__callable = orig_callable
-  def __call__(self, *args, **kw):
-    """
-    Catch Protocol Errors (transport layer) and specifically
-    identify them as OOo server network/communication error
-
-    xml-rpc application level errors still go through: if a wrong method
-    is called, or with wrong parameters, xmlrpclib.Fault will be raised.
-    """
-    try:
-      return self.__callable(*args, **kw)
-    except ProtocolError, e:
-      message = "%s %s" % (e.errcode, e.errmsg)
-      if e.errcode == -1:
-        message = "Connection refused"
-      raise ConversionError("Protocol error while contacting OOo conversion"
-                            " server: %s" % (message))
-
-class OOoServerProxy(ServerProxy):
-  """
-  xmlrpc-like ServerProxy object adapted for OOo conversion server
-  """
-  def __init__(self, context):
-    preference_tool = getToolByName(context, 'portal_preferences')
-
-    address = preference_tool.getPreferredOoodocServerAddress()
-    port = preference_tool.getPreferredOoodocServerPortNumber()
-    if address in ('', None) or port in ('', None) :
-      raise ConversionError('OOoDocument: cannot proceed with conversion:'
-            ' conversion server host and port is not defined in preferences')
-
-    uri = 'http://%s:%d' % (address, port)
-    timeout = preference_tool.getPreferredOoodocServerTimeout() \
-                    or OOO_SERVER_PROXY_TIMEOUT
-    transport = TimeoutTransport(timeout=timeout, scheme='http')
-
-    ServerProxy.__init__(self, uri, allow_none=True, transport=transport)
-
-  def __getattr__(self, attr):
-    obj = ServerProxy.__getattr__(self, attr)
-    if callable(obj):
-      obj.__call__ = _ProtocolErrorCatcher(obj.__call__)
-    return obj
+from Products.ERP5.Document.Document import DocumentConversionServerProxy
+# Backward compatibility only
+from Products.ERP5.Document.Document import DOCUMENT_CONVERSION_SERVER_PROXY_TIMEOUT as OOO_SERVER_PROXY_TIMEOUT
+from Products.ERP5.Document.Document import DOCUMENT_CONVERSION_SERVER_RETRY as OOO_SERVER_RETRY
+from Products.ERP5.Document.Document import global_server_proxy_uri_failure_time
+from Products.ERP5.Document.Document import enc, dec
+OOoServerProxy = DocumentConversionServerProxy
 
 class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixin, File,
                   TextConvertableMixin, Document):
@@ -199,7 +149,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       return []
 
     def cached_getTargetFormatItemList(content_type):
-      server_proxy = OOoServerProxy(self)
+      server_proxy = DocumentConversionServerProxy(self)
       try:
         allowed_target_item_list = server_proxy.getAllowedTargetItemList(
                                                       content_type)
@@ -256,7 +206,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       cs.close()
       z.close()
       return 'text/plain', s
-    server_proxy = OOoServerProxy(self)
+    server_proxy = DocumentConversionServerProxy(self)
     orig_format = self.getBaseContentType()
     generate_result = server_proxy.run_generate(self.getId(),
                                        enc(str(self.getBaseData())),
@@ -431,7 +381,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       by invoking the conversion server. Store the result
       on the object. Update metadata information.
     """
-    server_proxy = OOoServerProxy(self)
+    server_proxy = DocumentConversionServerProxy(self)
     response_code, response_dict, response_message = server_proxy.run_convert(
                                       self.getFilename() or self.getId(),
                                       enc(str(self.getData())),
@@ -470,7 +420,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       # XXX please pass a meaningful description of error as argument
       raise NotConvertedError()
 
-    server_proxy = OOoServerProxy(self)
+    server_proxy = DocumentConversionServerProxy(self)
     response_code, response_dict, response_message = \
           server_proxy.run_setmetadata(self.getId(),
                                        enc(str(self.getBaseData())),
