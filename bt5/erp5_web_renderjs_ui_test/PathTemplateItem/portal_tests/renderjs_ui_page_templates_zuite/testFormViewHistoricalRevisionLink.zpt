@@ -208,23 +208,36 @@ Bar
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1000</td>
+  <td>selectFrame</td>
+  <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[2]//iframe</td>
   <td></td>
 </tr>
 <!-- Check for the value of diff in IFrame -->
 <tr>
-  <td>storeEval</td>
-  <td>document.querySelector('#selenium_myiframe').contentWindow.document.evaluate("//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[2]//iframe", document.querySelector('#selenium_myiframe').contentWindow.document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.contentWindow.document.body.textContent</td>
-  <td>diff_content</td>
+  <td>waitForText</td>
+  <td>//div[contains(@class, " d2h-del ")]</td>
+  <td>-</td>
 </tr>
 <tr>
-  <td>verifyEval</td>
-  <!-- Verify the value after removing the spaces and line breaks -->
-  <td>storedVars['diff_content'].replace(/(\r\n\t|\n|\r\t)/gm,"").replace(/\s+/g, '')</td>
-  <td>1-1+('FooBar',)</td>
+  <td>waitForText</td>
+  <td>//div[contains(@class, " d2h-ins ")]/span[@class="d2h-code-line-prefix"]</td>
+  <td>+</td>
 </tr>
-
+<tr>
+  <td>verifyText</td>
+  <td>//div[contains(@class, " d2h-ins ")]/span[@class="d2h-code-line-ctn"]/ins[1]</td>
+  <td>('Foo',</td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//div[contains(@class, " d2h-ins ")]/span[@class="d2h-code-line-ctn"]/ins[2]</td>
+  <td>'Bar')</td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
 </tbody></table>
 </body>
 </html>
