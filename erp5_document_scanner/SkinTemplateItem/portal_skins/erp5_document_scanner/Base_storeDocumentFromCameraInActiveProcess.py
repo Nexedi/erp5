@@ -14,6 +14,9 @@ if active_preference and preferred_cropped_canvas_data:
   active_preference.setPreferredCroppedCanvasData(preferred_cropped_canvas_data)
 
 if not image_str:
+  if batch_mode:
+    return None
+
   return context.Base_renderForm('Base_viewUploadDocumentFromCameraDialog',
                                message='Nothing to capture')
 
@@ -26,5 +29,9 @@ else:
 active_process.postActiveResult(detail=image_str)
 context.REQUEST.form.pop("field_your_document_scanner_gadget")
 context.REQUEST.form.pop('document_scanner_gadget')
+
+if batch_mode:
+  return active_process
+
 return context.Base_renderForm('Base_viewUploadDocumentFromCameraDialog',
                                message='Captured')

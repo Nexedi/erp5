@@ -9,13 +9,10 @@
     cropper,
     video,
     stream,
-    canvas,
     dialogMethod,
-    photo,
-    photoInput,
-    deviceId,
+    currentDeviceId,
     imageCapture,
-    pageNumber = 1,
+    pageNumber,
     cameraList = [];
 
   function readBlobAsDataURL(blob) {
@@ -32,7 +29,6 @@
   }
 
   function takePicture(el) {
-    var start, end;
     return RSVP.Queue()
       .push(function () {
         return imageCapture.takePhoto({imageWidth: imageWidth});
@@ -41,12 +37,21 @@
         return readBlobAsDataURL(blob);
       })
       .push(function (result) {
+        var photoInput = el.querySelector(".photoInput"),
+          photo = el.querySelector("img");
         photo.setAttribute("src", result);
         photo.setAttribute("width", imageWidth);
         photo.setAttribute("height", imageHeight);
         photoInput.setAttribute("value", result.split(",")[1]);
         return drawCanvas(el, photo);
       });
+  }
+
+  function enableButton(root) {
+    [".reset-btn", ".take-picture-btn",
+      ".confirm-btn", ".change-camera-btn"].forEach(function (e) {
+      root.querySelector(e).disabled = false;
+    });
   }
 
   function setPageOne(root) {
@@ -58,6 +63,7 @@
     if (cameraList.length > 1) {
       root.querySelector(".change-camera-btn").style.display = "inline-block";
     }
+    return enableButton(root);
   }
 
   function setPageTwo(root) {
@@ -71,20 +77,14 @@
 
   function disableButton(root) {
     [".reset-btn", ".take-picture-btn",
-     ".confirm-btn", ".change-camera-btn"].forEach(function (e) {
-        root.querySelector(e).disabled = true;
-      });
-  }
-
-  function enableButton(root) {
-    [".reset-btn", ".take-picture-btn",
-     ".confirm-btn", ".change-camera-btn"].forEach(function (e) {
-        root.querySelector(e).disabled = false;
-      });
+       ".confirm-btn", ".change-camera-btn"].forEach(function (e) {
+      root.querySelector(e).disabled = true;
+    });
   }
 
   function drawCanvas(gadget, img) {
-    var ratio, x, y;
+    var ratio, x, y,
+      canvas = gadget.querySelector("canvas");
     canvas.width = imageWidth;
     canvas.height = imageHeight;
     ratio  = Math.min(canvas.width / img.width, canvas.height / img.height);
@@ -211,33 +211,37 @@
       });
   }
 
-  function startup(root, device_id) {
+  function startStream(root, device_id) {
     video = root.querySelector(".video");
-    canvas = root.querySelector(".canvas");
-    photo = root.querySelector("img");
-    photoInput = root.querySelector(".photoInput");
+    currentDeviceId = device_id;
     return handleUserMedia(root, device_id, gotStream);
   }
 
   rJS(window)
     .declareAcquiredMethod("customSubmitDialog", "customSubmitDialog")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
+    .declareJob("startStream", function (deviceId) {
+      return this.getElement()
+        .push(function (element) {
+          return startStream(element, deviceId);
+        });
+    })
     .declareMethod('render', function (options) {
-      var root;
+      var root,
+        gadget = this;
       return this.getElement()
         .push(function (element) {
           root = element;
-          pageNumber = 1;
           preferredCroppedCanvasData = preferredCroppedCanvasData || JSON.parse(
             options.preferred_cropped_canvas_data
           );
           dialogMethod = preferredCroppedCanvasData.dialog_method;
           // Clear photo input
-          element.querySelector('.photoInput').value = "";
-          if (deviceId) {
-            root.querySelector(".camera-input").style.display = "";
-            root.querySelector(".camera-output").style.display = "none";
-          }
+          //element.querySelector('.photoInput').value = "";
+          pageNumber = parseInt(element.querySelector('input[name="page-number"]').value, 10);
+          root.querySelector(".camera-input").style.display = "";
+          root.querySelector(".camera-output").style.display = "none";
+
           if (!navigator.mediaDevices) {
             throw ("mediaDevices is not supported");
           }
@@ -246,6 +250,7 @@
         .push(function (info_list) {
           var j,
             device,
+            deviceId,
             len = info_list.length;
 
           if (cameraList.length === 0) {
@@ -260,10 +265,7 @@
             // trick to select back camera in mobile
             deviceId = cameraList[cameraList.length - 1].deviceId;
           }
-
-          if (deviceId) {
-            return startup(root, deviceId);
-          }
+          gadget.startStream(deviceId);
         });
     })
     .declareMethod('getContent', function () {
@@ -277,27 +279,30 @@
       return result;
     })
     .onEvent("click", function (evt) {
-      var root,
+      var e,
+        root,
+        deviceId,
         newPreferredCroppedCanvasData,
         gadget = this;
+
       if (evt.target.name === "grayscale") {
         return this.getElement()
-          .push(function () {
-            return grayscale(canvas, photo);
+          .push(function (el) {
+            return grayscale(el.querySelector(".canvas"), el.querySelector('.photo'));
           });
       }
       if (evt.target.className.indexOf("change-camera-btn") !== -1) {
         evt.preventDefault();
-        for (var e in cameraList) {
-          if (cameraList[e].deviceId !== deviceId) {
-            deviceId = cameraList[e].deviceId;
-            break;
+
+        for (e in cameraList) {
+          if (cameraList.hasOwnProperty(e)) {
+            if (cameraList[e].deviceId !== currentDeviceId) {
+              deviceId = cameraList[e].deviceId;
+              break;
+            }
           }
         }
-        return gadget.getElement()
-          .push(function (root) {
-            return startup(root, deviceId);
-          });
+        gadget.startStream(deviceId);
       }
       if (evt.target.className.indexOf("take-picture-btn") !== -1) {
         evt.preventDefault();
@@ -305,10 +310,10 @@
           .push(function (el) {
             root = el;
             el.querySelector(".camera").style.maxWidth = video.offsetWidth + "px";
-            el.querySelector(".camera-input").style.display = "none";
             return takePicture(el);
           })
           .push(function () {
+            root.querySelector(".camera-input").style.display = "none";
             return setPageTwo(root);
           });
       }
@@ -325,9 +330,9 @@
       if (evt.target.className.indexOf("confirm-btn") !== -1) {
         evt.preventDefault();
         newPreferredCroppedCanvasData = cropper.getData();
-        for (var p in newPreferredCroppedCanvasData) {
-          if (newPreferredCroppedCanvasData.hasOwnProperty(p)) {
-            preferredCroppedCanvasData[p] = newPreferredCroppedCanvasData[p];
+        for (e in newPreferredCroppedCanvasData) {
+          if (newPreferredCroppedCanvasData.hasOwnProperty(e)) {
+            preferredCroppedCanvasData[e] = newPreferredCroppedCanvasData[e];
           }
         }
         return this.getElement()
@@ -351,16 +356,16 @@
               block = base64data.split(";"),
               realData = block[1].split(",")[1];
 
-            photo.src = base64data;
-            photoInput.value = realData;
+            root.querySelector(".photo").src = base64data;
+            root.querySelector(".photoInput").value = realData;
             cropper.destroy();
           })
           .push(function () {
             return gadget.customSubmitDialog(dialogMethod);
           })
           .push(function () {
-            enableButton(root);
             pageNumber = pageNumber + 1;
+            root.querySelector('input[name="page-number"]').value = pageNumber;
             return setPageOne(root);
           });
       }
