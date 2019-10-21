@@ -366,9 +366,13 @@ class ERP5Site(FolderMixIn, PortalObjectBase, CacheCookieMixin):
         sm.registerUtility(aq_base(tool), tool_interface)
 
     # "Symlink" for migration purposes (drop Products.CMFDefault)
-    self.portal_properties = self.portal_actions
+    #self.portal_properties = self.portal_actions
 
     return True
+
+  @property
+  def portal_properties(self):
+    return self.portal_actions
 
   # backward compatibility auto-migration
   def getSiteManager(self):

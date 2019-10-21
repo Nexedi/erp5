@@ -99,20 +99,6 @@ class File(Document, OFS.Image.File):
     # dependency (cf product.ERP5Type.Base.Base.getCreationDate)
     pass
 
-  security.declarePrivate('_isNotEmpty')
-  def _isNotEmpty(self, file):
-    """from Products.CMFDefault.File"""
-    if not file:
-      return 0
-    elif type(file) is str or hasattr(file, 'filename'):
-      return 1
-    elif not hasattr(file, 'read'):
-      return 0
-    file.seek(0, 2)
-    t = file.tell()
-    file.seek(0)
-    return 1 if t else 0
-
   ### Special edit method
   security.declarePrivate( '_edit' )
   def _edit(self, **kw):
@@ -132,8 +118,14 @@ class File(Document, OFS.Image.File):
         filename = kw.get('filename')
       if filename:
         self._setFilename(filename)
-      if self._isNotEmpty(file_object):
-        self._setFile(file_object, precondition=precondition)
+      if file_object is not None:
+        # XXX: Rather than doing nothing if empty, consider changing:
+        #      - _update_image_info to clear metadata
+        #      - interactions to do nothing (or else?)
+        file_object.seek(0, 2)
+        if file_object.tell():
+          file_object.seek(0)
+          self._setFile(file_object, precondition=precondition)
     Base._edit(self, **kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
@@ -162,13 +154,14 @@ class File(Document, OFS.Image.File):
   def _setFile(self, data, precondition=None):
     if data is not None and self.hasData() and \
       str(data.read()) == str(self.getData()):
-      # Same data as previous, no need to change it's content
+      # Same data as previous, no need to change its content
       return
 
     # from Products.CMFDefault.File
     if precondition: self.precondition = precondition
     elif self.precondition: del self.precondition
-    if self._isNotEmpty(data):
+    if data is not None and data.tell():
+        data.seek(0)
         self.manage_upload(data)
 
   security.declareProtected(Permissions.ModifyPortalContent,'setFile')
