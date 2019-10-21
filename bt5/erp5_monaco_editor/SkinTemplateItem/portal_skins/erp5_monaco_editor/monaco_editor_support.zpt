@@ -117,6 +117,35 @@ $script.onload = function() {
     monaco.languages.html.htmlDefaults.options.format.tabSize = 2;
     monaco.languages.html.htmlDefaults.options.format.insertSpaces = true;
   }
+  if (mode === "javascript") {
+    // load an external library in namespace of the edited .js
+    function addExtraLibrary(script_name, lib_name) {
+      return fetch(script_name)
+        .then(function(resp) {
+          return resp.text();
+        })
+        .then(function(script_code) {
+          monaco.languages.typescript.javascriptDefaults.addExtraLib(
+            script_code,
+            lib_name
+          );
+        });
+    }
+    let lines = $textarea.value.split('\n');
+    // type mapping for nexedi libraries, plus external references from current document.
+    let extra_libraries = [
+        addExtraLibrary('../monaco-rsvp.d.ts', 'rsvp'),
+        addExtraLibrary('../monaco-renderjs.d.ts', 'renderjs'),
+        addExtraLibrary('../monaco-jio.d.ts', 'jio')]
+
+    for(let i = 0; i < lines.length; i++){
+      let match = lines[i].match(/erp5_monaco_editor_include\:\s*([^\s]+)\s+([a-zA-Z0-9]+)/);
+      if (match){
+        addExtraLibrary(match[1], match[2]);
+      }
+    }
+    Promise.all(extra_libraries);
+  }
   monaco.languages.registerDocumentFormattingEditProvider('javascript', {
     provideDocumentFormattingEdits(model, options, token) {
       const text = prettier.format(model.getValue(), {
@@ -148,25 +177,6 @@ $script.onload = function() {
     allowJs: true,
     module: monaco.languages.typescript.ModuleKind.UMD
   });
-
-  // Type mapping for Nexedi libraries
-  function addExtraLibrary(script_name, lib_name) {
-    return fetch(script_name)
-      .then(function(resp) {
-        return resp.text();
-      })
-      .then(function(script_code) {
-        monaco.languages.typescript.javascriptDefaults.addExtraLib(
-          script_code,
-          lib_name
-        );
-      });
-  }
-  Promise.all([
-      addExtraLibrary('../monaco-rsvp.d.ts', 'rsvp'),
-      addExtraLibrary('../monaco-renderjs.d.ts', 'renderjs'),
-      addExtraLibrary('../monaco-jio.d.ts', 'jio')]);
-
 
   var timeout = null;
 
