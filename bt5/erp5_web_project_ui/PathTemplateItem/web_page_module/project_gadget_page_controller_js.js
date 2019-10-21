@@ -27,7 +27,7 @@
           'field_listbox_sort_list:json': [["title", "ascending"]],
           'field_listbox_column_list:json': ["title",
                                              "default_destination_section_title"],
-          'extended_search': 'translated_validation_state_title:  "Started"'
+          'extended_search': 'selection_domain_state_project_domain:  "started"'
         }
       });
     });
