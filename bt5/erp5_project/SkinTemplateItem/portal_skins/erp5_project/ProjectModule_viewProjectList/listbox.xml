@@ -140,12 +140,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>started_project_domain</string>
-                          <string>Open Projects</string>
-                        </tuple>
-                        <tuple>
-                          <string>closed_project_domain</string>
-                          <string>Closed Projects</string>
+                          <string>state_project_domain</string>
+                          <string>Project State</string>
                         </tuple>
                       </list>
                     </value>
