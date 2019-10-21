@@ -30,6 +30,8 @@
 import unittest
 import os
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 from subprocess import Popen, PIPE
 from Testing import ZopeTestCase
@@ -45,7 +47,6 @@ from zLOG import LOG
 #     return (...)
 
 class TestXHTMLMixin(ERP5TypeTestCase):
-
   # some forms have intentionally empty listbox selections like RSS generators
   FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS',
                                             'erp5_core/Base_viewHistoricalComparisonDiff',
@@ -516,11 +517,23 @@ class TestXHTML(TestXHTMLMixin):
 
 class NuValidator(object):
 
-  def __init__(self, show_warnings):
+  def __init__(self, show_warnings, validator_url='https://validator.erp5.net/'):
     self.show_warnings = show_warnings
     self.name = 'nu'
+    self.validator_url = validator_url
+    self.validator_session = requests.Session()
+    # retries HTTP 502 errors which sometimes happen with validator.erp5.net
+    self.validator_session.mount(
+        self.validator_url,
+        requests.adapters.HTTPAdapter(
+            max_retries=Retry(
+                total=3,
+                read=3,
+                connect=3,
+                backoff_factor=.5,
+                status_forcelist=(502, ))))
 
-  def _parse_validation_results(self, validator_url, response):
+  def _parse_validation_results(self, response):
     """
     parses the validation results, returns a list of tuples:
     line_number, col_number, error description
@@ -529,7 +542,7 @@ class NuValidator(object):
       return [
         [(None, None,
           'Contacting the external validator %s failed with status: %i' %
-            (validator_url, response.status_code))],
+            (self.validator_url, response.status_code))],
         []
       ]
 
@@ -557,14 +570,13 @@ class NuValidator(object):
     '''
       retrun two list : a list of errors and an other for warnings
     '''
-    validator_url = 'https://validator.erp5.net/'
-    response = requests.post(validator_url,
+    response = self.validator_session.post(self.validator_url,
                              data=page_source.encode('UTF-8'),
                              params={'out': 'json'},
                              headers={
                                'Content-Type': 'text/html; charset=UTF-8'
                              })
-    return self._parse_validation_results(validator_url, response)
+    return self._parse_validation_results(response)
 
 
 class TidyValidator(object):
