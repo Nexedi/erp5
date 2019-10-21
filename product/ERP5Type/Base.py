@@ -3200,7 +3200,7 @@ class Base( CopyContainer,
           pass
 
       if candidate is not None:
-        return candate
+        return candidate
     if getattr(aq_base(self), 'CreationDate', None) is not None:
       return asDate(self.CreationDate())
     return None # JPS-XXX - try to find a way to return a creation date instead of None
