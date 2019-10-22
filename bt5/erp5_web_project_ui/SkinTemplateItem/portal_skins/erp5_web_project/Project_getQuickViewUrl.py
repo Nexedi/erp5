@@ -15,5 +15,5 @@ if url_dict:
     }
   }
 
-elif url_dict:
+else:
   return {}

@@ -70,7 +70,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
 
       return gadget.jio_getAttachment(modification_dict.jio_key, "links")
         .push(function (erp5_document) {
-          var view_list = ensureArray(erp5_document._links.view), i,
+          var view_list = ensureArray(erp5_document._links.view),
             task_view = view_list.filter(d => d.name === "task_list")[0].href,
             bug_view = view_list.filter(d => d.name === "bug_list")[0].href,
             milestone_view = view_list.filter(d => d.name === "milestone")[0].href,
@@ -81,36 +81,36 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
           enableLink(document.getElementById("forum_link"), modification_dict.forum_link);
           enableLink(document.getElementById("description_link"), modification_dict.description_link);
 
-          generateLink(gadget, document.getElementById("bug_link"), 'display_with_history', {
-            'jio_key': 'bug_module',
-            'page': 'form',
-            'view': bug_view,
+          generateLink(gadget, document.getElementById("milestone_link"), 'display_with_history', {
+            'jio_key': 'milestone_module', 'page': 'form', 'view': milestone_view,
+            'field_listbox_sort_list:json': [["stop_date", "ascending"]]
+          }, {});
+
+          generateLink(gadget, document.getElementById("bug_link"), 'display', {
+            'jio_key': 'bug_module', 'page': 'form', 'view': bug_view,
             'field_listbox_sort_list:json': [["start_date", "descending"]],
             'field_listbox_column_list:json': ["title", "description", "start_date"],
-            //TODO: this should use a domain tree
-            'extended_search': 'translated_simulation_state_title:  "Open"'
+            'extended_search': ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_bug_domain:  "started"')
           });
           generateInfo(gadget, document.getElementById("bug_count"), project_url + "/Project_bugs");
           generateInfo(gadget, document.getElementById("closed_bug_count"), project_url + "/Project_bugs?closed=1");
 
           generateLink(gadget, document.getElementById("task_link"), 'display_with_history', {
-            'jio_key': 'task_module',
-            'page': 'form',
-            'view': task_view,
+            'jio_key': 'task_module', 'page': 'form', 'view': 'view',
             'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
-            //TODO: this should use a domain tree
-            'extended_search': 'translated_simulation_state_title:  "Open"'
+            'field_listbox_column_list:json': ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
+                                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+            'extended_search': ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_domain:  "started"')
           });
           generateInfo(gadget, document.getElementById("task_count"), project_url + "/Project_tasks");
           generateInfo(gadget, document.getElementById("unassigned_task_count"), project_url + "/Project_tasksToAssigne");
 
           generateLink(gadget, document.getElementById("report_link"), 'display_with_history', {
-            'jio_key': 'task_report_module',
-            'page': 'form',
-            'view': task_report_view,
-            'field_listbox_sort_list:json': [["delivery.start_date", "descending"]]
-            //TODO: this should use a domain tree
-            //'extended_search': 'translated_simulation_state_title:  "Open"'
+            'jio_key': 'task_report_module', 'page': 'form', 'view': 'view',
+            'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
+            'field_listbox_column_list:json': ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
+                                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+            'extended_search': ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_report_domain:  "started"')
           });
           generateInfo(gadget, document.getElementById("report_count"), project_url + "/Project_taskReports");
           generateInfo(gadget, document.getElementById("closed_report_count"), project_url + "/Project_taskReports?closed=1");
@@ -119,7 +119,8 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
             'jio_key': 'test_result_module',
             'page': 'form',
             'view': 'view',
-            'field_listbox_sort_list:json': [["delivery.start_date", "descending"]]
+            'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
+            'extended_search': ('source_project_title:  "' + modification_dict.project_title + '"')
           });
           generateInfo(gadget, document.getElementById("last_test_result"), project_url + "/Project_lastTestResult");
 
@@ -127,7 +128,8 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
             'jio_key': 'test_suite_module',
             'page': 'form',
             'view': 'view',
-            'field_listbox_sort_list:json': [["delivery.start_date", "descending"]]
+            'field_listbox_sort_list:json': [["creation_date", "descending"]],
+            'extended_search': ('source_project_title:  "' + modification_dict.project_title + '"')
           });
 
         });
