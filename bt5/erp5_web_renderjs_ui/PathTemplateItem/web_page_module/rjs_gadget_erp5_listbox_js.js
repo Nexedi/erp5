@@ -120,6 +120,9 @@
             sub_element.setAttribute('type', 'checkbox');
             sub_element.setAttribute('class', 'hide_element');
             sub_element.setAttribute('id', 'listbox_line_' + row.uid);
+            if (row.checked) {
+              sub_element.setAttribute('checked', 'checked');
+            }
             td_element.appendChild(sub_element);
           }
 
@@ -483,6 +486,8 @@
             sort_list_json: JSON.stringify(result_list[1] || field_json.sort.map(jioize_sort)),
 
             selection_name: field_json.selection_name,
+            checked_uid_list: field_json.checked_uid_list || [],
+
             show_anchor: field_json.show_anchor,
             show_stat: field_json.show_stat,
             show_count: field_json.show_count,
@@ -944,6 +949,7 @@
                   cell_list,
                   url_value,
                   index = 0,
+                  uid,
                   setNonEditable = function (cell) {cell.editable = false; };
                 // reset list of UIDs of editable sub-documents
                 gadget.props.listbox_uid_dict = {
@@ -994,8 +1000,10 @@
                     // if the document does not have listbox_uid:list then no gadget should be editable
                     cell_list.forEach(setNonEditable);
                   }
+                  uid = buildFieldGadgetParam(allDocs_result.data.rows[i].value.uid).default;
                   row_list.push({
-                    "uid": buildFieldGadgetParam(allDocs_result.data.rows[i].value.uid).default,
+                    "uid": uid,
+                    "checked": (gadget.state.checked_uid_list.indexOf(uid) !== -1),
                     "jump": line_link_list[i],
                     "cell_list": cell_list,
                     "line_icon": gadget.state.line_icon
