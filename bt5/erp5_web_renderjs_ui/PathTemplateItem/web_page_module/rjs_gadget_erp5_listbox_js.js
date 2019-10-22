@@ -1256,6 +1256,20 @@
       return queue
         .push(function () {
           data[form_gadget.props.listbox_uid_dict.key] = form_gadget.props.listbox_uid_dict.value;
+
+          // Send the list of checked uids
+          var checked_uid_list = [],
+            all_hide_element_list = form_gadget.element.querySelectorAll(".hide_element"),
+            i;
+          for (i = 0; i < all_hide_element_list.length; i += 1) {
+            if (all_hide_element_list[i].checked) {
+              checked_uid_list.push(all_hide_element_list[i].getAttribute("data-uid"));
+            }
+          }
+          if (checked_uid_list.length) {
+            data['uids:list'] = checked_uid_list;
+          }
+
           if (form_gadget.props.listbox_query_param_json !== undefined) {
             // JSON query parameters are only sent when rendering an ERP5 Form
             data[form_gadget.props.listbox_query_param_json.key] =
