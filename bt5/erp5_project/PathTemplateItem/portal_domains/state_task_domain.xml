@@ -108,11 +108,11 @@
         </item>
         <item>
             <key> <string>domain_generator_method_id</string> </key>
-            <value> <string>Base_generateStartedProjectDomain</string> </value>
+            <value> <string>Base_generateStateTaskDomain</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>started_project_domain</string> </value>
+            <value> <string>state_task_domain</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -120,7 +120,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Started Project Domain</string> </value>
+            <value> <string>State Task Domain</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -141,7 +141,7 @@
                       <list>
                         <tuple>
                           <string>state_project_domain</string>
-                          <string>Project State</string>
+                          <string>Project Status</string>
                         </tuple>
                       </list>
                     </value>
