@@ -346,9 +346,9 @@ class PDFDocument(Image):
     self._content_information = result
     return result.copy()
 
-  def _setFile(self, data, precondition=None):
+  def _setFile(self, data):
     try:
       del self._content_information
     except (AttributeError, KeyError):
       pass
-    Image._setFile(self, data, precondition=precondition)
+    Image._setFile(self, data)
