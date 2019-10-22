@@ -67,7 +67,7 @@ class TestOoodResponse(ERP5TypeTestCase):
     custom = portal_skins.custom
     addStyleSheet = custom.manage_addProduct['OFSP'].manage_addFile
     addStyleSheet(id='Base_getODTStyleSheet', file=import_file, title='',
-      precondition='', content_type='application/vnd.oasis.opendocument.text')
+      content_type='application/vnd.oasis.opendocument.text')
     addOOoTemplate = custom.manage_addProduct['ERP5OOo'].addOOoTemplate
     addOOoTemplate(id='ERP5Site_viewNothingAsOdt', title='')
     portal_skins.changeSkin(skinname=None)

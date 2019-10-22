@@ -102,7 +102,6 @@ class File(Document, OFS.Image.File):
     """
     if 'file' in kw:
       file_object = kw.pop('file')
-      precondition = kw.get('precondition')
       filename = getattr(file_object, 'filename', None)
       # if file field is empty(no file is uploaded),
       # filename is empty string.
@@ -120,7 +119,7 @@ class File(Document, OFS.Image.File):
         file_object.seek(0, 2)
         if file_object.tell():
           file_object.seek(0)
-          self._setFile(file_object, precondition=precondition)
+          self._setFile(file_object)
     Base._edit(self, **kw)
 
   security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
@@ -146,22 +145,20 @@ class File(Document, OFS.Image.File):
     """
     return None
 
-  def _setFile(self, data, precondition=None):
-    if data is not None and \
-       str(data.read()) == (self.hasData() and str(self.getData())):
+  def _setFile(self, data):
+    if data is None:
+      return
+    if str(data.read()) == (self.hasData() and str(self.getData())):
       # Same data as previous, no need to change its content
       return
 
-    # from Products.CMFDefault.File
-    if precondition: self.precondition = precondition
-    elif self.precondition: del self.precondition
-    if data is not None and data.tell():
+    if data.tell():
       data.seek(0)
       self.manage_upload(data)
 
   security.declareProtected(Permissions.ModifyPortalContent,'setFile')
-  def setFile(self, data, precondition=None):
-    self._setFile(data, precondition=precondition)
+  def setFile(self, data):
+    self._setFile(data)
     self.reindexObject()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'hasFile')
