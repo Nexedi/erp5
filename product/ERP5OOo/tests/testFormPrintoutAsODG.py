@@ -69,7 +69,6 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     addStyleSheet = custom.manage_addProduct['OFSP'].manage_addFile
     if custom._getOb('Foo_getODGStyleSheet', None) is None:
       addStyleSheet(id='Foo_getODGStyleSheet', file=foo_file, title='',
-                    precondition='',
                     content_type='application/vnd.oasis.opendocument.graphics')
     erp5OOo = custom.manage_addProduct['ERP5OOo']
 
