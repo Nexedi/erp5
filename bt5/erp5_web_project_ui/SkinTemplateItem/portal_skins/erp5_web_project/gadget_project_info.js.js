@@ -86,12 +86,26 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
             'field_listbox_sort_list:json': [["stop_date", "ascending"]]
           }, {});
 
-          generateLink(gadget, document.getElementById("bug_link"), 'display', {
+          generateLink(gadget, document.getElementById("support_request_link"), 'display_with_history', {
+            'jio_key': 'support_request_module',
+            'page': 'form',
+            'view': 'view',
+            'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
+            //TODO use a domain for state
+            'extended_search': ('destination_project_title:  "' + modification_dict.project_title + '" AND translated_simulation_state_title:  "Submitted"')
+          });
+
+          var bug_options = {
             'jio_key': 'bug_module', 'page': 'form', 'view': bug_view,
             'field_listbox_sort_list:json': [["start_date", "descending"]],
             'field_listbox_column_list:json': ["title", "description", "start_date"],
-            'extended_search': ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_bug_domain:  "started"')
-          });
+            //'extended_search': ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_bug_domain:  "started"')
+            'extended_search': ('source_project_title:  "' + modification_dict.project_title + '" AND translated_simulation_state_title:  "Open"')
+          }, closed_bug_options = {};
+          generateLink(gadget, document.getElementById("bug_link"), 'display', bug_options);
+          Object.assign(closed_bug_options, bug_options);
+          closed_bug_options.extended_search = ('source_project_title:  "' + modification_dict.project_title + '" AND translated_simulation_state_title:  "Resolved"');
+          generateLink(gadget, document.getElementById("closed_bug_link"), 'display', closed_bug_options);
           generateInfo(gadget, document.getElementById("bug_count"), project_url + "/Project_bugs");
           generateInfo(gadget, document.getElementById("closed_bug_count"), project_url + "/Project_bugs?closed=1");
 
@@ -105,13 +119,17 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
           generateInfo(gadget, document.getElementById("task_count"), project_url + "/Project_tasks");
           generateInfo(gadget, document.getElementById("unassigned_task_count"), project_url + "/Project_tasksToAssigne");
 
-          generateLink(gadget, document.getElementById("report_link"), 'display_with_history', {
+          var task_report_options = {
             'jio_key': 'task_report_module', 'page': 'form', 'view': 'view',
             'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
             'field_listbox_column_list:json': ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                                                "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
             'extended_search': ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_report_domain:  "started"')
-          });
+          }, closed_task_report_options = {};
+          generateLink(gadget, document.getElementById("report_link"), 'display_with_history', task_report_options);
+          Object.assign(closed_task_report_options, task_report_options);
+          closed_task_report_options.extended_search = ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_report_domain:  "closed"');
+          generateLink(gadget, document.getElementById("closed_report_link"), 'display_with_history', closed_task_report_options);
           generateInfo(gadget, document.getElementById("report_count"), project_url + "/Project_taskReports");
           generateInfo(gadget, document.getElementById("closed_report_count"), project_url + "/Project_taskReports?closed=1");
 
