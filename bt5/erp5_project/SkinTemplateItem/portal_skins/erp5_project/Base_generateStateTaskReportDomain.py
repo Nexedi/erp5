@@ -11,8 +11,17 @@ not_started_domain = parent.generateTempDomain(id='not_started')
 
 not_started_domain.edit(title="Not Confirmed",
                        criterion_property_list=['simulation_state'])
-not_started_domain.setCriterion('simulation_state', identity=['delivered', 'stopped', 'draft'])
+not_started_domain.setCriterion('simulation_state', identity=['draft'])
 
 domain_list.append(not_started_domain)
+
+
+closed_domain = parent.generateTempDomain(id='closed')
+
+closed_domain.edit(title="Closed",
+                       criterion_property_list=['simulation_state'])
+closed_domain.setCriterion('simulation_state', identity=['delivered', 'stopped'])
+
+domain_list.append(closed_domain)
 
 return domain_list
