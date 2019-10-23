@@ -222,10 +222,6 @@
                           <string>causality_event_portal_type_domain</string>
                           <string>Channel</string>
                         </tuple>
-                        <tuple>
-                          <string>state_support_domain</string>
-                          <string>Request Status</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>

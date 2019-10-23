@@ -2,4 +2,3 @@ portal_alarms/upgrader_migrate_event_workflow_history
 portal_contribution_registry/crm_ingestion
 portal_domains/causality_event_portal_type_domain
 portal_domains/communication_plan_domain
-portal_domains/state_support_domain
