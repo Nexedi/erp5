@@ -13,7 +13,7 @@ kw = {
 }
 
 
-if mode == "reconcile":
+if reconciliation_mode == "reconcile":
   if context.getStopDate():
     kw['at_date'] = context.getStopDate().latestTime()
   kw.update({
@@ -22,7 +22,7 @@ if mode == "reconcile":
   'left_join_list': ['aggregate_bank_reconciliation_date'],
   'implicit_join': False, })
 else:
-  assert mode == "unreconcile"
+  assert reconciliation_mode == "unreconcile"
   kw['aggregate_bank_reconciliation_uid'] = context.getUid()
 
 # Handle search params
