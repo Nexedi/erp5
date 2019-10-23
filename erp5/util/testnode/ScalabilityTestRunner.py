@@ -187,7 +187,8 @@ class ScalabilityTestRunner():
       file.write(pickle.dumps(dictionary))
 
   def _createInstance(self, software_path, software_configuration,
-                      test_result, test_suite, frontend_software, frontend_instance_guid=None):
+                      test_result, test_suite, frontend_software, 
+                      frontend_instance_guid=None, purge_previous_instance = True):
     """
     Create scalability instance. If there is an old instance for this testsuite, it destroys it.
     """
@@ -195,7 +196,7 @@ class ScalabilityTestRunner():
       slappart_directory = self.testnode.config['srv_directory'].rsplit("srv", 1)[0]
       instance_dict_file = slappart_directory + "var/" + INSTANCE_DICT
       instance_dict = self.getDictionaryFromFile(instance_dict_file)
-      if test_suite in instance_dict:
+      if test_suite in instance_dict and purge_previous_instance:
         self.slapos_communicator.requestInstanceDestroy(instance_dict[test_suite])
       self.updateDictionaryFile(instance_dict_file, instance_dict, test_suite, self.instance_title)
       logger.info("testnode, request : %s", self.instance_title)
@@ -391,43 +392,67 @@ Require valid-user
         return {'status_code' : 1}
 
       configuration_list = test_configuration['configuration_list']
+      configuration = configuration_list[0]
+      self.instance_name = configuration.get('instance-name')
+      self.frontend_address = configuration.get("frontend-address")
+      self.instance_software_release = configuration.get('instance-software-release')
+      self.use_existing_setup = self.instance_name is not None and self.frontend_address is not None
+ 
       node_test_suite.edit(configuration_list=configuration_list)
       self.launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
-      self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
+       
+      if self.instance_name is not None:
+        # use existing already setup instance
+        logger.info("Overide instance name: %s" %self.instance_name)
+        self.instance_title = self.instance_name
+      else:
+        self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
 
-      self.createSoftwareReachableProfilePath(node_test_suite)
+      # allow to override the software release
+      if self.instance_software_release is not None:
+        logger.info("Overide instance software release: %s" %self.instance_software_release)
+        self.reachable_profile = self.instance_software_release
+      else:
+        # generate a dynamic release for current revisions
+        self.createSoftwareReachableProfilePath(node_test_suite)
+
       logger.info("Software reachable profile path is: %s", self.reachable_profile)
 
       # Initialize SlapOS Master Communicator
       self.slapos_communicator = SlapOSMasterCommunicator.SlapOSTester(
-					self.instance_title,
-					slap, 
-					order, 
-					supply, 
-					self.reachable_profile, 
-					computer_guid=self.launcher_nodes_computer_guid[0])
-      # Ask for SR installation
-      for computer_guid in self.involved_nodes_computer_guid:
-        self._prepareSlapOS(self.reachable_profile, computer_guid) 
-      # From the line below we would not supply any more softwares
-      self.authorize_supply = False
-      # TODO : remove the line below wich simulate an answer from slapos master
-      self._prepareDummySlapOSAnswer()
-      # Waiting until all softwares are installed
-      while (self.remainSoftwareToInstall() 
-             and (max_time > (time.time()-start_time))):
-        logger.info("Master testnode is waiting for the end of "
-                    "all software installation (for %ss) PID=%s.",
-                    int(time.time()-start_time), os.getpid())
-        time.sleep(interval_time)
-      # TODO : remove the line below wich simulate an answer from slapos master
-      self._comeBackFromDummySlapOS()
-      if self.remainSoftwareToInstall() :
-        # All softwares are not installed, however maxtime is elapsed, that's a failure.
-        logger.error("All softwares are not installed.")
-        return {'status_code' : 1}
+                                        self.instance_title,
+                                        slap,
+                                        order,
+                                        supply,
+                                        self.reachable_profile,
+                                        computer_guid=self.launcher_nodes_computer_guid[0])
+
+      if not self.use_existing_setup:
+        # Ask for SR installation
+        for computer_guid in self.involved_nodes_computer_guid:
+          self._prepareSlapOS(self.reachable_profile, computer_guid) 
+        # From the line below we would not supply any more softwares
+        self.authorize_supply = False
+        # TODO : remove the line below wich simulate an answer from slapos master
+        self._prepareDummySlapOSAnswer()
+        # Waiting until all softwares are installed
+        while (self.remainSoftwareToInstall() 
+               and (max_time > (time.time()-start_time))):
+          logger.info("Master testnode is waiting for the end of "
+                      "all software installation (for %ss) PID=%s.",
+                      int(time.time()-start_time), os.getpid())
+          time.sleep(interval_time)
+        # TODO : remove the line below wich simulate an answer from slapos master
+        self._comeBackFromDummySlapOS()
+        if self.remainSoftwareToInstall() :
+          # All softwares are not installed, however maxtime is elapsed, that's a failure.
+          logger.error("All softwares are not installed.")
+          return {'status_code' : 1}
+        logger.debug("All software installed.")
+
+      # even if we re-use existing setup we need proper configuration applied
       self.authorize_request = True
-      logger.debug("All software installed.")
+
       # Launch instance
       try:
         self._createInstance(self.reachable_profile, 
@@ -435,7 +460,8 @@ Require valid-user
                              node_test_suite.test_result,
                              node_test_suite.test_suite,
                              self.frontend_software,
-                             self.frontend_instance_guid)
+                             self.frontend_instance_guid,
+                             purge_previous_instance = not self.use_existing_setup)
         logger.debug("Scalability instance requested.")
         self._waitInstanceCreation(self.instance_title)
       except Exception as e:
@@ -462,23 +488,29 @@ Require valid-user
         pass
     return suite, repo_location
 
-  def getInstanceInformation(self, suite, count):
+  def getInstanceInformation(self, suite, count, node_test_suite=None):
     logger.info("Getting instance information:")
     instance_information_time = time.time()
     instance_information = self.slapos_communicator.getInstanceUrlDict()
     while (time.time() - instance_information_time < MAX_FRONTEND_TIME):
-      logger.info("getInstanceInformation=%s" %instance_information)
       # loop until frontend is instanciated
       if instance_information['frontend-url-list'] and \
          instance_information['user'] and \
          instance_information['password']:
         break
+      logger.info("Wait for frontend instanciation.")
       time.sleep(60)
       instance_information = self.slapos_communicator.getInstanceUrlDict()
     
-    logger.info(instance_information)
     if not instance_information['frontend-url-list']:
       raise ValueError("Error getting instance information: frontend url not available")
+
+    # support case of already preconfigured frontend which should be used
+    # instead of instance's default frontends
+    if self.frontend_address is not None:
+      logger.info("Overide frontend: %s" %self.frontend_address)
+      instance_information['frontend-url-list'] = [["user", self.frontend_address]]
+
     instance_url = suite.getScalabilityTestUrl(instance_information)
     bootstrap_url = suite.getBootstrapScalabilityTestUrl(instance_information, count)
     metric_url = suite.getScalabilityTestMetricUrl(instance_information)
@@ -582,7 +614,7 @@ Require valid-user
       logger.info("Test case for count : %d is in a running state." % count)
 
       try:
-        instance_url, bootstrap_url, metric_url, site_availability_url = self.getInstanceInformation(suite, count)
+        instance_url, bootstrap_url, metric_url, site_availability_url = self.getInstanceInformation(suite, count, node_test_suite)
       except Exception as e:
         error_message = "Error getting testsuite information: " + str(e)
         break
@@ -649,11 +681,12 @@ Require valid-user
         error_message = "Error in communication with master: " + str(e)
         break
 
-    # Remove installed software
-    self.authorize_supply = True
-    logger.info("Removing installed software")
-    for computer_guid in self.involved_nodes_computer_guid:
-      self._prepareSlapOS(self.reachable_profile, computer_guid, state="destroyed")
+    # Remove installed software, only if it's a fresh software release and new instance
+    if not self.use_existing_setup and self.instance_software_release is None:
+      self.authorize_supply = True
+      logger.info("Removing installed software")
+      for computer_guid in self.involved_nodes_computer_guid:
+        self._prepareSlapOS(self.reachable_profile, computer_guid, state="destroyed")
 
     # If error appears then that's a test failure.    
     if error_message:

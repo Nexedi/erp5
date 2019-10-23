@@ -232,8 +232,8 @@ class SlapOSMasterCommunicator(object):
     except slapos.slap.ServerError:
       logger.error('Got an error requesting partition for its state')
       return INSTANCE_STATE_UNKNOWN
-    except Exception:
-      logger.error("ERROR getting instance state")
+    except Exception, err:
+      logger.error("ERROR getting instance state: %s" %err)
       return INSTANCE_STATE_UNKNOWN
 
     started = 0
