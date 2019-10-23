@@ -100,7 +100,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_mode</string>
+                        <string>your_reconciliation_mode</string>
                         <string>my_stop_date</string>
                       </list>
                     </value>
