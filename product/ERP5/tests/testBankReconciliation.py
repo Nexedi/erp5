@@ -136,7 +136,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     # This listbox can also be used to unreconcile some previously reconciled
     # transactions.
     line_list = bank_reconciliation.BankReconciliation_getAccountingTransactionLineList(
-        mode="unreconcile",
+       reconciliation_mode="unreconcile",
     )
     self.assertEqual([payment1.bank, ],
                      [line.getObject() for line in line_list])
@@ -258,7 +258,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     bank_reconciliation.BankReconciliation_reconcileTransactionList(
         list_selection_name=list_selection_name,
         uids=(payment1.bank.getUid(),),
-        mode='reconcile')
+        reconciliation_mode='reconcile')
     self.tic()
 
     self.assertEqual(bank_reconciliation, payment1.bank.getAggregateValue())
@@ -274,7 +274,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     bank_reconciliation.BankReconciliation_reconcileTransactionList(
         list_selection_name=list_selection_name,
         uids=(payment1.bank.getUid(),),
-        mode='unreconcile')
+        reconciliation_mode='unreconcile')
     self.tic()
 
     self.assertEqual(None, payment1.bank.getAggregateValue())
@@ -444,7 +444,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual('BankReconciliation_view', report_section_list[0].form_id)
 
     # Then we have the reconciled lines
-    self.assertEqual({'mode': 'unreconcile',
+    self.assertEqual({'reconciliation_mode': 'unreconcile',
                       'title': 'Reconciled Transactions'},
                       report_section_list[1].selection_params)
     line_list = self.getListBoxLineList(report_section_list[1])
@@ -455,7 +455,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
 
     # And finally the non reconciled lines
     line_list = self.getListBoxLineList(report_section_list[2])
-    self.assertEqual({'mode': 'reconcile',
+    self.assertEqual({'reconciliation_mode': 'reconcile',
                       'title': 'Not Reconciled Transactions'},
                       report_section_list[2].selection_params)
     data_line_list = [l for l in line_list if l.isDataLine()]
@@ -552,7 +552,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     bank_reconciliation.BankReconciliation_reconcileTransactionList(
         list_selection_name=list_selection_name,
         uids=(payment1.bank.getUid(), ),
-        mode='reconcile')
+        reconciliation_mode='reconcile')
     self.tic()
     self.assertEqual(100, bank_reconciliation.BankReconciliation_getReconciledAccountBalance())
 
@@ -631,7 +631,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     bank_reconciliation_for_section.BankReconciliation_reconcileTransactionList(
         list_selection_name=list_selection_name,
         uids=(internal_transaction.bank.getUid(), ),
-        mode='reconcile')
+        reconciliation_mode='reconcile')
     self.tic()
     # reconciled for `section`
     self.assertEqual(100, bank_reconciliation_for_section.BankReconciliation_getReconciledAccountBalance())
@@ -657,7 +657,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     bank_reconciliation_for_main_section.BankReconciliation_reconcileTransactionList(
         list_selection_name=list_selection_name,
         uids=(internal_transaction.bank.getUid(), ),
-        mode='reconcile')
+        reconciliation_mode='reconcile')
     self.tic()
     # Reconciled for `main_section`
     self.assertEqual(-100, bank_reconciliation_for_main_section.BankReconciliation_getReconciledAccountBalance())
@@ -684,7 +684,7 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
     bank_reconciliation_for_section.BankReconciliation_reconcileTransactionList(
         list_selection_name=list_selection_name,
         uids=(internal_transaction.bank.getUid(), ),
-        mode='unreconcile')
+        reconciliation_mode='unreconcile')
     self.tic()
     # no longer reconciled for `section`
     self.assertEqual(0, bank_reconciliation_for_section.BankReconciliation_getReconciledAccountBalance())
