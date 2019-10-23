@@ -34,6 +34,7 @@ Project | project_monthly_report
 Project | project_task_report
 Project | project_view_gantt
 Project | report
+Project | request_list
 Project | task_fast_input_dialog
 Project | task_list
 Project | task_report_list
