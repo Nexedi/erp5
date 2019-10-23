@@ -111,6 +111,7 @@ if ((first_path is None and second_path is None) and
 if first_object and second_object:
   diff_list = portal_diff.diffPortalObject(first_object, second_object).asBeautifiedJSONDiff()
   # Return a list of TempBase objects which can be displayed in a listbox
+  import pprint; raise ValueError("diff_list: %s" % pprint.pformat(diff_list))
   uid = 1
   tempbase_list = []
   for diff_unit in diff_list:
