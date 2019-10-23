@@ -52,7 +52,7 @@
             } else {
               software.success_case_list = software.success_case_list
                 .filter(function (entry) {
-                  if (!!EMPTY.includes(entry.title)) {
+                  if (!EMPTY.includes(entry.title)) {
                     return entry;
                   }
                 });
@@ -80,7 +80,6 @@
               );
             }
           });
-
           return new RSVP.Queue()
             .push(function () {
               return RSVP.all(wiki_list);

@@ -70,19 +70,19 @@
                 }
               }
               },
-            form_definition: {
-              group_list: [
-                [
-                  "bottom",
-                  [["listbox"]]
-                ],
-                [
-                  "hidden",
-                  ["listbox_modification_date"]
+              form_definition: {
+                group_list: [
+                  [
+                    "bottom",
+                    [["listbox"]]
+                  ],
+                  [
+                    "hidden",
+                    ["listbox_modification_date"]
+                  ]
                 ]
-              ]
-            }
-          });
+              }
+            });
         });
     });
 }(window, RSVP, rJS));

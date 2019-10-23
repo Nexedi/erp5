@@ -473,7 +473,10 @@ div[data-gadget-scope='panel'] {
    padding: 0 1em;
     display: block;
 }
-
+.ui-custom-content a {
+  text-decoration: underline;
+  color: lightblue;
+}
 
 
 
