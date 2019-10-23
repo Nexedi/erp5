@@ -40,7 +40,7 @@ class _ERP5(SavedTestSuite):
         # glob('%s/product/ERP5Form/tests/test*.py' % path) +
         # ['%s/product/ERP5OOo/tests/testDeferredStyle.py' % path] +
         # ['%s/product/ERP5/tests/testXHTML.py' % path] +
-        ['%s/product/ERP5/tests/testBankingReconciliation.py' % path] +
+        ['%s/product/ERP5/tests/testBankReconciliation.py' % path] +
         # ['%s/product/ERP5Type/tests/testFunctionalCore.py' % path] +
         # ['%s/product/ERP5Type/tests/testFunctionalAnonymousSelection.py' % path] +
         # glob('%s/bt5/erp5_web/TestTemplateItem/portal_components/test.*.test*.py' % path) +
