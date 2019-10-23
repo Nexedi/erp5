@@ -7,7 +7,7 @@ selection_uid_list = portal.portal_selections.getSelectionCheckedUidsFor(list_se
 
 reconciled_bank_account = context.getSourcePayment()
 
-if mode == 'reconcile':
+if reconciliation_mode == 'reconcile':
   for line in portal.portal_catalog(uid=selection_uid_list or -1):
     line = line.getObject()
     # Sanity check: line should not already be reconciled.
@@ -29,8 +29,8 @@ if mode == 'reconcile':
                 'portal_status_message': translateString("Line Already Reconciled"),
                 'reset': 1,
                 'cancel_url': cancel_url,
-                'mode': mode,
-                'field_your_mode': mode})
+                'reconciliation_mode': reconciliation_mode,
+                'field_your_reconciliation_mode': reconciliation_mode})
     line.AccountingTransactionLine_addBankReconciliation(
         context.getRelativeUrl(),
         message=translateString("Reconciling Bank Line"))
@@ -38,11 +38,11 @@ if mode == 'reconcile':
       'portal_status_message': translateString("Lines Reconciled"),
       'reset': 1,
       'cancel_url': cancel_url,
-      'field_your_mode': mode,
-      'mode': mode,
+      'field_your_reconciliation_mode': reconciliation_mode,
+      'reconciliation_mode': reconciliation_mode,
       'reconciled_uid_list': selection_uid_list})
 
-assert mode == 'unreconcile'
+assert reconciliation_mode == 'unreconcile'
 for line in portal.portal_catalog(uid=selection_uid_list or -1):
   line = line.getObject()
   line.AccountingTransactionLine_removeBankReconciliation(
@@ -53,6 +53,6 @@ return context.Base_redirect(dialog_id, keep_items={
     'portal_status_message': translateString("Lines Unreconciled"),
     'reset': 1,
     'cancel_url': cancel_url,
-    'field_your_mode': mode,
-    'mode': mode,
+    'field_your_reconciliation_mode': reconciliation_mode,
+    'reconciliation_mode': reconciliation_mode,
     'reconciled_uid_list': selection_uid_list})
