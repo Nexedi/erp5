@@ -56,9 +56,9 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_setTextContent*</string>
-                <string>_setReference*</string>
-                <string>_setVersion*</string>
+                <string>_setTextContent</string>
+                <string>_setReference</string>
+                <string>_setVersion</string>
               </list>
             </value>
         </item>
