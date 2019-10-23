@@ -58,7 +58,8 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
           //HACK
           forum_link: options.forum_link || "https://www.erp5.com/group_section/forum",
           description_link: options.description_link || "https://www.erp5.com/project_section/nexedi-erp5",
-          project_title: options.project_title
+          project_title: options.project_title,
+          home_page_content: options.home_page_content
         };
       return this.changeState(state_dict);
     })
@@ -68,6 +69,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         base_site = window.location.origin + window.location.pathname,
         project_url = base_site + modification_dict.jio_key;
 
+      document.getElementById("home_page_content").innerHTML = modification_dict.home_page_content;
       return gadget.jio_getAttachment(modification_dict.jio_key, "links")
         .push(function (erp5_document) {
           var view_list = ensureArray(erp5_document._links.view),
@@ -91,20 +93,21 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
             'page': 'form',
             'view': 'view',
             'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
-            //TODO use a domain for state
-            'extended_search': ('destination_project_title:  "' + modification_dict.project_title + '" AND translated_simulation_state_title:  "Submitted"')
+            'extended_search': ('destination_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_support_domain:  "validated"')
+            //'extended_search': ('destination_project_title:  "' + modification_dict.project_title + '" AND translated_simulation_state_title:  "Submitted"')
           });
 
           var bug_options = {
-            'jio_key': 'bug_module', 'page': 'form', 'view': bug_view,
-            'field_listbox_sort_list:json': [["start_date", "descending"]],
-            'field_listbox_column_list:json': ["title", "description", "start_date"],
-            //'extended_search': ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_bug_domain:  "started"')
-            'extended_search': ('source_project_title:  "' + modification_dict.project_title + '" AND translated_simulation_state_title:  "Open"')
+            'jio_key': 'bug_module', 'page': 'form', 'view': 'view',//bug_view,
+            'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
+            'field_listbox_column_list:json': ["title", "description", "delivery.start_date"],
+            'extended_search': ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_bug_domain:  "started"')
+            //'extended_search': ('source_project_title:  "' + modification_dict.project_title + '" AND translated_simulation_state_title:  "Open"')
           }, closed_bug_options = {};
           generateLink(gadget, document.getElementById("bug_link"), 'display', bug_options);
           Object.assign(closed_bug_options, bug_options);
-          closed_bug_options.extended_search = ('source_project_title:  "' + modification_dict.project_title + '" AND translated_simulation_state_title:  "Resolved"');
+          //closed_bug_options.extended_search = ('source_project_title:  "' + modification_dict.project_title + '" AND translated_simulation_state_title:  "Resolved"');
+          closed_bug_options.extended_search = ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_bug_domain:  "closed"');
           generateLink(gadget, document.getElementById("closed_bug_link"), 'display', closed_bug_options);
           generateInfo(gadget, document.getElementById("bug_count"), project_url + "/Project_bugs");
           generateInfo(gadget, document.getElementById("closed_bug_count"), project_url + "/Project_bugs?closed=1");
@@ -114,7 +117,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
             'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
             'field_listbox_column_list:json': ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                                                "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-            'extended_search': ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_domain:  "started"')
+            'extended_search': ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_domain:  "confirmed"')
           });
           generateInfo(gadget, document.getElementById("task_count"), project_url + "/Project_tasks");
           generateInfo(gadget, document.getElementById("unassigned_task_count"), project_url + "/Project_tasksToAssigne");
