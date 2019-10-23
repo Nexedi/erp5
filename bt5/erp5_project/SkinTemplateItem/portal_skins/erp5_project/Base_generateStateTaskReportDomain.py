@@ -1,3 +1,5 @@
+from Products.ERP5Type.Log import log
+
 domain_list = []
 
 started_domain = parent.generateTempDomain(id='started')
