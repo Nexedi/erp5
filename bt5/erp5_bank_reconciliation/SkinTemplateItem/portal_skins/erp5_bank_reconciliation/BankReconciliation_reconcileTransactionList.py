@@ -8,6 +8,7 @@ selection_uid_list = portal.portal_selections.getSelectionCheckedUidsFor(list_se
 reconciled_bank_account = context.getSourcePayment()
 
 if reconciliation_mode == 'reconcile':
+  line_list = []
   for line in portal.portal_catalog(uid=selection_uid_list or -1):
     line = line.getObject()
     # Sanity check: line should not already be reconciled.
@@ -28,11 +29,17 @@ if reconciliation_mode == 'reconcile':
         request.form['cancel_url'] = cancel_url
         request.form['field_your_reconciliation_mode'] = reconciliation_mode
         request.form['reconciliation_mode'] = reconciliation_mode
-        # abort_transaction=True,
         return context.Base_renderForm(dialog_id, keep_items={
           'portal_status_message': translateString("Line Already Reconciled")})
 
-  context.Base_updateDialogForm()
+    line_list.append(line)
+
+  for line in line_list:
+    line.AccountingTransactionLine_addBankReconciliation(
+          context.getRelativeUrl(),
+          message=translateString("Reconciling Bank Line"))
+
+  context.Base_updateDialogForm(update=1)
   request = container.REQUEST
   request.form['reset'] = 1
   request.form['cancel_url'] = cancel_url
@@ -49,7 +56,7 @@ for line in portal.portal_catalog(uid=selection_uid_list or -1):
       context.getRelativeUrl(),
       message=translateString("Reconciling Bank Line"))
 
-context.Base_updateDialogForm()
+context.Base_updateDialogForm(update=1)
 request = container.REQUEST
 request.form['reset'] = 1
 request.form['cancel_url'] = cancel_url
