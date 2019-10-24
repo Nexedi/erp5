@@ -62,9 +62,11 @@ if (form_id is not None) and (form_id != 'Base_viewFakePythonScriptActionForm'):
     'href': context.ERP5Document_getHateoas(
       mode='url_generator',
       relative_url=context.getRelativeUrl(),
-      view=form_id
+      view=form_id,
+      keep_items=keep_items
     )
   }
+
 
 result = json.dumps(result_dict, indent=2)
 if abort_transaction:
