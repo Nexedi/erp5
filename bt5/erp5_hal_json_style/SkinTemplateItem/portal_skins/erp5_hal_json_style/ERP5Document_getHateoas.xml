@@ -56,7 +56,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, local_roles=None, form=None, form_data=None, relative_url=None, restricted=0, list_method=None, default_param_json=None, form_relative_url=None, bulk_list="[]", group_by=None, sort_on=None, selection_domain=None, extra_param_json=None, portal_status_message=\'\', portal_status_level=None</string> </value>
+            <value> <string>REQUEST=None, response=None, view=None, mode=\'root\', query=None, select_list=None, limit=10, local_roles=None, form=None, form_data=None, relative_url=None, restricted=0, list_method=None, default_param_json=None, form_relative_url=None, bulk_list="[]", group_by=None, sort_on=None, selection_domain=None, extra_param_json=None, portal_status_message=\'\', portal_status_level=None, keep_items=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
