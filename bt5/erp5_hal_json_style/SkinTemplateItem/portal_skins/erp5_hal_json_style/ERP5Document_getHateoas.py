@@ -1293,6 +1293,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
     for k, v in byteify(extra_param_json.items()):
       REQUEST.set(k, v)
+      REQUEST.form[k] = v
 
     # Add a link to the portal type if possible
     if not is_portal:
