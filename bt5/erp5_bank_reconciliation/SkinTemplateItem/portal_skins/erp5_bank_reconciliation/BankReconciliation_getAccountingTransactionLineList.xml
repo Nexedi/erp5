@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reconciliation_mode="reconcile", *args, **listbox_kw</string> </value>
+            <value> <string>reconciliation_mode="reconcile", reconciled_uid_list=None, *args, **listbox_kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
