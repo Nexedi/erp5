@@ -312,7 +312,9 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
     return_dict = {}
     # Get test_suite informations from his title given in parameter
     try:
-      test_suite = portal.test_suite_module.searchFolder(title=test_suite_title)[0]
+      test_suite = portal.test_suite_module.searchFolder(
+                                              title=test_suite_title,
+                                              validation_state="validated")[0]
       cluster_configuration = test_suite.getClusterConfiguration()
       number_configuration_list = test_suite.getGraphCoordinate()
       randomized_path = test_suite.getRandomizedPath()
