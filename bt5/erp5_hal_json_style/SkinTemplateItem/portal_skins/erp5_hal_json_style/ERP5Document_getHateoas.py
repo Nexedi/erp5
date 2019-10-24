@@ -2253,6 +2253,26 @@ else:
   site_root = portal
   view_action_type = "object_view"
 
+# Calculate view url
+if mode == 'url_generator':
+  #################################################
+  # Allow to generator URL from other python scripts
+  #################################################
+  if (keep_items is None):
+    generator_key = 'traverse_generator'
+    keep_items_json = None
+  else:
+    generator_key = 'traverse_generator_action'
+    keep_items_json = urlsafe_b64encode(
+      json.dumps(ensureSerializable(keep_items)))
+  return url_template_dict[generator_key] % {
+    "root_url": site_root.absolute_url(),
+    "script_id": 'ERP5Document_getHateoas',
+    "relative_url": relative_url.replace("/", "%2F"),
+    "view": view,
+    "extra_param_json": keep_items_json
+  }
+
 context.Base_prepareCorsResponse(RESPONSE=response)
 
 response.setHeader('Content-Type', mime_type)
