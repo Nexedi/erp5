@@ -29,5 +29,6 @@ return context.ERP5Document_getHateoas(
   restricted=1,
   extra_param_json=extra_param_json,
   portal_status_message=portal_status_message,
-  portal_status_level=portal_status_level
+  portal_status_level=portal_status_level,
+  keep_items=keep_items
 )
