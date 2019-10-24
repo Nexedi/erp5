@@ -2,7 +2,7 @@ portal = context.getPortalObject()
 translateString = portal.Base_translateString
 
 active_process = context.Base_storeDocumentFromCameraInActiveProcess(
-  active_process_url,
+  active_process_url=active_process_url,
   batch_mode=True,
   **kw)
 

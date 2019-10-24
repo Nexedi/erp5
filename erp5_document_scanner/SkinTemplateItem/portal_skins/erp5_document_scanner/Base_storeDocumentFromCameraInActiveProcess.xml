@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type=None, classification=None, synchronous_metadata_discovery=None, cancel_url=None, batch_mode=False, editable_mode=1, group=None, publication_section=None, document_scanner_gadget=None, active_process_url=None, **kw</string> </value>
+            <value> <string>classification=None, synchronous_metadata_discovery=None, cancel_url=None, batch_mode=False, editable_mode=1, group=None, publication_section=None, document_scanner_gadget=None, active_process_url=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

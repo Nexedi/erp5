@@ -237,7 +237,7 @@
           );
           dialogMethod = preferredCroppedCanvasData.dialog_method;
           // Clear photo input
-          //element.querySelector('.photoInput').value = "";
+          element.querySelector('.photoInput').value = "";
           pageNumber = parseInt(element.querySelector('input[name="page-number"]').value, 10);
           root.querySelector(".camera-input").style.display = "";
           root.querySelector(".camera-output").style.display = "none";
