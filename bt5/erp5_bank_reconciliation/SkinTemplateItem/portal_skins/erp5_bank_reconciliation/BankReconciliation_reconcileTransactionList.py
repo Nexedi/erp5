@@ -8,7 +8,6 @@ selection_uid_list = portal.portal_selections.getSelectionCheckedUidsFor(list_se
 reconciled_bank_account = context.getSourcePayment()
 
 if reconciliation_mode == 'reconcile':
-  line_list = []
   for line in portal.portal_catalog(uid=selection_uid_list or -1):
     line = line.getObject()
     # Sanity check: line should not already be reconciled.
@@ -23,31 +22,25 @@ if reconciliation_mode == 'reconcile':
           portal_type='Bank Reconciliation',
           checked_permission='Access contents information'):
       if existing_bank_reconciliation.getSourcePayment() == reconciled_bank_account:
-        context.Base_updateDialogForm()
-        request = container.REQUEST
-        request.form['reset'] = 1
-        request.form['cancel_url'] = cancel_url
-        request.form['field_your_reconciliation_mode'] = reconciliation_mode
-        request.form['reconciliation_mode'] = reconciliation_mode
-        return context.Base_renderForm(dialog_id, keep_items={
-          'portal_status_message': translateString("Line Already Reconciled")})
-
-    line_list.append(line)
-
-  for line in line_list:
+        return context.Base_redirect(
+            dialog_id,
+            abort_transaction=True,
+            keep_items={
+                'portal_status_message': translateString("Line Already Reconciled"),
+                'reset': 1,
+                'cancel_url': cancel_url,
+                'reconciliation_mode': reconciliation_mode,
+                'field_your_reconciliation_mode': reconciliation_mode})
     line.AccountingTransactionLine_addBankReconciliation(
-          context.getRelativeUrl(),
-          message=translateString("Reconciling Bank Line"))
-
-  context.Base_updateDialogForm(update=1)
-  request = container.REQUEST
-  request.form['reset'] = 1
-  request.form['cancel_url'] = cancel_url
-  request.form['field_your_reconciliation_mode'] = reconciliation_mode
-  request.form['reconciliation_mode'] = reconciliation_mode
-  request.form['reconciled_uid_list'] = selection_uid_list
-  return context.Base_renderForm(dialog_id, keep_items={
-      'portal_status_message': translateString("Lines Reconciled")})
+        context.getRelativeUrl(),
+        message=translateString("Reconciling Bank Line"))
+  return context.Base_redirect(dialog_id, keep_items={
+      'portal_status_message': translateString("Lines Reconciled"),
+      'reset': 1,
+      'cancel_url': cancel_url,
+      'field_your_reconciliation_mode': reconciliation_mode,
+      'reconciliation_mode': reconciliation_mode,
+      'reconciled_uid_list': selection_uid_list})
 
 assert reconciliation_mode == 'unreconcile'
 for line in portal.portal_catalog(uid=selection_uid_list or -1):
@@ -56,12 +49,10 @@ for line in portal.portal_catalog(uid=selection_uid_list or -1):
       context.getRelativeUrl(),
       message=translateString("Reconciling Bank Line"))
 
-context.Base_updateDialogForm(update=1)
-request = container.REQUEST
-request.form['reset'] = 1
-request.form['cancel_url'] = cancel_url
-request.form['field_your_reconciliation_mode'] = reconciliation_mode
-request.form['reconciliation_mode'] = reconciliation_mode
-request.form['reconciled_uid_list'] = selection_uid_list
-return context.Base_renderForm(dialog_id, keep_items={
-    'portal_status_message': translateString("Lines Unreconciled")})
+return context.Base_redirect(dialog_id, keep_items={
+    'portal_status_message': translateString("Lines Unreconciled"),
+    'reset': 1,
+    'cancel_url': cancel_url,
+    'field_your_reconciliation_mode': reconciliation_mode,
+    'reconciliation_mode': reconciliation_mode,
+    'reconciled_uid_list': selection_uid_list})
