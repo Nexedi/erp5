@@ -16,7 +16,6 @@
                 <string>domain_tree</string>
                 <string>list_method</string>
                 <string>portal_types</string>
-                <string>selection_name</string>
                 <string>sort</string>
                 <string>sort_columns</string>
                 <string>title</string>
@@ -86,10 +85,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>sort</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -144,24 +139,40 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>description</string>
-                          <string>Description</string>
+                          <string>source_trade_title</string>
+                          <string>Reporter</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
-                          <string>Start Date</string>
+                          <string>source_person_title</string>
+                          <string>Assignee</string>
                         </tuple>
                         <tuple>
-                          <string>destination_project_title</string>
-                          <string>Requested Project</string>
+                          <string>delivery.start_date</string>
+                          <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>source_project_title</string>
-                          <string>Handled Project</string>
+                          <string>resource_title</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>bug_priority_title</string>
+                          <string>Priority</string>
+                        </tuple>
+                        <tuple>
+                          <string>bug_severity_title</string>
+                          <string>Severity</string>
+                        </tuple>
+                        <tuple>
+                          <string>bug_difficulty_title</string>
+                          <string>Difficulty</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
@@ -220,10 +231,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>project_bug_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

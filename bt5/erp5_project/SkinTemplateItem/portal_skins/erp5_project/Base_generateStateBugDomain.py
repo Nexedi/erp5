@@ -1,7 +1,3 @@
-#list of new open bugs
-#list of recently closed bugs
-
-
 domain_list = []
 
 started_domain = parent.generateTempDomain(id='started')

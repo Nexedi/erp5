@@ -12,6 +12,8 @@
               <list>
                 <string>all_columns</string>
                 <string>columns</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
                 <string>editable_columns</string>
                 <string>list_method</string>
                 <string>portal_types</string>
@@ -184,6 +186,21 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>state_task_domain</string>
+                          <string>Task Status</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>editable_columns</string> </key>
