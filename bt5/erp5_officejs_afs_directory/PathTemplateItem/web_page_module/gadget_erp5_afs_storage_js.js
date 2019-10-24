@@ -8,13 +8,15 @@
     // NOTE: requires Website Layout Configuration CSP modification
     // => connect-src 'self' https://raw.githubusercontent.com https://api.github.com data:;
 
+    // NOTE: moved repo
+    //https://api.github.com/repos/Fonds-de-Dotation-du-Libre/awesome-free-software
     //https://api.github.com/repos/Nexedi/awesome-free-software
     //https://api.github.com/repos/Nexedi/awesome-free-software/contents/?ref=master
     //https://api.github.com/repos/Nexedi/awesome-free-software/contents/alfresco.json
     //https://raw.githubusercontent.com/Nexedi/awesome-free-software/master/alfresco.json
 
     this._href = spec.href || 'https://api.github.com/repos/';
-    this._user = spec.user || 'Nexedi';
+    this._user = spec.user || 'Fonds-de-Dotation-du-Libre';
     this._repo = spec.repo || 'awesome-free-software';
   }
 
