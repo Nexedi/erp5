@@ -256,7 +256,6 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         .BankReconciliation_viewBankReconciliationFastInputDialog.listbox.get_value(
             'selection_name')
     bank_reconciliation.BankReconciliation_reconcileTransactionList(
-        dialog_id='BankReconciliation_viewBankReconciliationFastInputDialog',
         list_selection_name=list_selection_name,
         uids=(payment1.bank.getUid(),),
         reconciliation_mode='reconcile')
@@ -273,7 +272,6 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         .BankReconciliation_viewBankReconciliationFastInputDialog.listbox.get_value(
             'selection_name')
     bank_reconciliation.BankReconciliation_reconcileTransactionList(
-        dialog_id='BankReconciliation_viewBankReconciliationFastInputDialog',
         list_selection_name=list_selection_name,
         uids=(payment1.bank.getUid(),),
         reconciliation_mode='unreconcile')
@@ -552,7 +550,6 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         .BankReconciliation_viewBankReconciliationFastInputDialog.listbox.get_value(
             'selection_name')
     bank_reconciliation.BankReconciliation_reconcileTransactionList(
-        dialog_id='BankReconciliation_viewBankReconciliationFastInputDialog',
         list_selection_name=list_selection_name,
         uids=(payment1.bank.getUid(), ),
         reconciliation_mode='reconcile')
@@ -632,7 +629,6 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         .BankReconciliation_viewBankReconciliationFastInputDialog.listbox.get_value(
             'selection_name')
     bank_reconciliation_for_section.BankReconciliation_reconcileTransactionList(
-        dialog_id='BankReconciliation_viewBankReconciliationFastInputDialog',
         list_selection_name=list_selection_name,
         uids=(internal_transaction.bank.getUid(), ),
         reconciliation_mode='reconcile')
@@ -659,7 +655,6 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         .BankReconciliation_viewBankReconciliationFastInputDialog.listbox.get_value(
             'selection_name')
     bank_reconciliation_for_main_section.BankReconciliation_reconcileTransactionList(
-        dialog_id='BankReconciliation_viewBankReconciliationFastInputDialog',
         list_selection_name=list_selection_name,
         uids=(internal_transaction.bank.getUid(), ),
         reconciliation_mode='reconcile')
@@ -687,7 +682,6 @@ class TestBankReconciliation(AccountingTestCase, ERP5ReportTestCase):
         .BankReconciliation_viewBankReconciliationFastInputDialog.listbox.get_value(
             'selection_name')
     bank_reconciliation_for_section.BankReconciliation_reconcileTransactionList(
-        dialog_id='BankReconciliation_viewBankReconciliationFastInputDialog',
         list_selection_name=list_selection_name,
         uids=(internal_transaction.bank.getUid(), ),
         reconciliation_mode='unreconcile')
