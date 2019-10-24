@@ -2253,6 +2253,15 @@ else:
   site_root = portal
   view_action_type = "object_view"
 
+# Calculate view url
+if mode == 'url_generator':
+  return url_template_dict['traverse_generator'] % {
+    "root_url": site_root.absolute_url(),
+    "script_id": 'ERP5Document_getHateoas',
+    "relative_url": relative_url.replace("/", "%2F"),
+    "view": view,
+  }
+
 context.Base_prepareCorsResponse(RESPONSE=response)
 
 response.setHeader('Content-Type', mime_type)

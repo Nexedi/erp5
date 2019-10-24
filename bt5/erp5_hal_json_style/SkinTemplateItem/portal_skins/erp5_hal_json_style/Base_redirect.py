@@ -55,6 +55,17 @@ result_dict = {
     }
   }
 }
+
+if (form_id is not None) and (form_id != 'Base_viewFakePythonScriptActionForm'):
+  # Calculate the new view URL
+  result_dict['_links']['location'] = {
+    'href': context.ERP5Document_getHateoas(
+      mode='url_generator',
+      relative_url=context.getRelativeUrl(),
+      view=form_id
+    )
+  }
+
 result = json.dumps(result_dict, indent=2)
 if abort_transaction:
   response.write(result)
