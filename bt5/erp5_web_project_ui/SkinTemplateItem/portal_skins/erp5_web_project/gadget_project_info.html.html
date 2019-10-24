@@ -8,8 +8,21 @@
     <script src="renderjs.js"></script>
     <!-- <script src="handlebars.js" type="text/javascript"></script>
     <script id="panel-template-body-list" type="text/x-handlebars-template"></script>-->
+    <script src="handlebars.js" type="text/javascript"></script>
     <script src="gadget_project_info.js"></script>
     <link rel="stylesheet" type="text/css" href="gadget_project_info.css">
+    <!-- worklist -->
+    <script id="table-template" type="text/x-handlebars-template">
+      {{#if document_list }}
+      <ul data-role="listview" data-theme="c" class="document-listview ui-listview-inset ui-corner-all">
+        {{#each document_list}}
+          <li class="ui-li-has-count" data-icon="false" ><a class="ui-body-inherit" href="{{link}}">{{title}} <span id="{{id}}" class="ui-li-count">{{count}}</span></a></li>
+        {{/each}}
+      </ul>
+      {{else}}
+        <p>All work caught up!</p>
+      {{/if}}
+    </script>
 
   </head>
   <body>
@@ -17,7 +30,7 @@
     <div class="ui-field-contain" style="top:50px;">
       <div class="bottom">
         <a id="forum_link" target="_blank" class="first-line-buttons ui-disabled" data-i18n="[value]Forum" disabled >Forum</a>
-        <a id="description_link" target="_blank" class="first-line-buttons ui-disabled" data-i18n="[value]Project Description" disabled >Project Description</a>
+        <!-- <a id="description_link" target="_blank" class="first-line-buttons ui-disabled" data-i18n="[value]Project Description" disabled >Project Description</a> -->
         <a id="rss_link" target="_blank" class="first-line-buttons ui-disabled" data-i18n="[value]Generate RSS" disabled >Generate RSS</a>
       </div>
     </div>
@@ -56,6 +69,12 @@
         <span id="last_test_result" style="margin-right:10px;">...</span>
         <a id="test_suite_link" class="first-line-buttons ui-disabled" data-i18n="[value]Test suite" disabled >Test suite</a>
       </p>
+    </div>
+    <div class="ui-field-contain" style="top:320px;">
+      <h1 data-i18n="[value]Project WorkList" class="ui-title ui-override-theme worklist-title">Project WorkList</h1>
+    </div>
+    <div class="ui-field-contain" style="top:325px;">
+      <section class="document_list" style="width: 100%;"></section>
     </div>
     <div class="ui-field-contain" style="top:350px;">
       <div id="home_page_content"></div>

@@ -11,7 +11,7 @@ from Products.ERP5Type.Log import log
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
 
-reference = context.getReference() + "-Home.Page"
+reference = str(context.getReference()) + "-Home.Page"
 home_page = portal_catalog.getResultValue(
               portal_type = 'Web Page',
               reference = reference)
