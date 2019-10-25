@@ -1,20 +1,20 @@
 project_title = context.getTitle()
-portal_type='Person'
+portal_type='Assignment'
 
+n_persons = 0
+person_dict = {}
 
-person_list = [x for x in context.portal_catalog(portal_type=portal_type,
-                                              destination_project_title=project_title)]
+for assignment in context.portal_catalog(portal_type=portal_type,
+                                         destination_project_title=project_title):
+  person_url = assignment.getParentRelativeUrl()
+  if not person_url in person_dict:
+    if getCount:
+      person_dict[person_url] = person_url
+      n_persons += 1
+    else:
+      person_dict[person_url] = context.restrictedTraverse(person_url)
 
-person_list = [line for line in context.objectValues(portal_type="Person")]
+if getCount:
+  return n_persons
 
-'''
-print person_list
-for x in person_list:
-  print x.getTitle()
-
-return printed
-'''
-if not person_list:
-  return "0"
-count = len(person_list)
-return count
+return person_dict

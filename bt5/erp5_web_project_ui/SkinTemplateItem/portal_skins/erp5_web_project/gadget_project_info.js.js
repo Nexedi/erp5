@@ -18,29 +18,6 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
     link_element.classList.remove("ui-disabled");
   }
 
-  function generateLink(gadget, link_element, command, options) {
-    return gadget.getUrlFor({command: command, options: options})
-      .push(function (result) {
-        enableLink(link_element, result);
-      });
-  }
-
-  function generateInfo(gadget, span_element, info_url) {
-    return new RSVP.Queue()
-      .push(function () {
-        return jIO.util.ajax({
-          url: info_url,
-          dataType: 'text'
-        });
-      })
-      .push(function (evt) {
-        return evt.target.responseText.split('\n');
-      })
-      .push(function (result) {
-        span_element.innerHTML = result;
-      });
-  }
-
   function generateAjaxPromise(url) {
     return new RSVP.Queue()
       .push(function () {
@@ -54,7 +31,7 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
       });
   }
 
-  function setHTMLelementWithPromise(span_element, promise) {
+  function setHTMLWithPromiseResult(span_element, promise) {
     return new RSVP.Queue()
       .push(function () {
         return promise;
@@ -68,18 +45,29 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
     return view_list.filter(d => d.name === name)[0].href;
   }
 
-  //rJS(window)
+  function getUrlParameters(jio_key, view, sort_list, column_list, extended_search) {
+    return {
+      command: 'display_with_history',
+      options: {
+        'jio_key': jio_key,
+        'page': 'form',
+        'view': view,
+        'field_listbox_sort_list:json': sort_list,
+        'field_listbox_column_list:json': column_list,
+        'extended_search': extended_search
+      }
+    };
+  }
+
   gadget_klass
 
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
 
     .declareMethod('render', function (options) {
-      //console.log("info gadget render options:");
-      //console.log(options);
       var state_dict = {
           jio_key: options.jio_key || "",
-          //HACK
+          //TODO remove this hack
           forum_link: options.forum_link || "https://www.erp5.com/group_section/forum",
           //description_link: options.description_link || "https://www.erp5.com/project_section/nexedi-erp5",
           project_title: options.project_title,
@@ -93,10 +81,28 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
         base_site = window.location.origin + window.location.pathname,
         project_url = base_site + modification_dict.jio_key,
         work_item_list = [],
+        //execute ajax request asap and keep them as promises
         task_count_promise = generateAjaxPromise(project_url + "/Project_tasks"),
-        bug_count_promise = generateAjaxPromise(project_url + "/Project_bugs");
+        bug_count_promise = generateAjaxPromise(project_url + "/Project_bugs"),
+        closed_bug_count_promise = generateAjaxPromise(project_url + "/Project_bugs?closed=1"),
+        unassigned_task_count_promise = generateAjaxPromise(project_url + "/Project_tasksToAssigne"),
+        report_count_promise = generateAjaxPromise(project_url + "/Project_taskReports"),
+        closed_report_count_promise = generateAjaxPromise(project_url + "/Project_taskReports?closed=1"),
+        last_test_result_promise = generateAjaxPromise(project_url + "/Project_lastTestResult");
 
+      //set html elements with promises result
+      setHTMLWithPromiseResult(document.getElementById("task_count"), task_count_promise);
+      setHTMLWithPromiseResult(document.getElementById("bug_count"), bug_count_promise);
+      setHTMLWithPromiseResult(document.getElementById("closed_bug_count"), closed_bug_count_promise);
+      setHTMLWithPromiseResult(document.getElementById("unassigned_task_count"), unassigned_task_count_promise);
+      setHTMLWithPromiseResult(document.getElementById("report_count"), report_count_promise);
+      setHTMLWithPromiseResult(document.getElementById("closed_report_count"), closed_report_count_promise);
+      setHTMLWithPromiseResult(document.getElementById("last_test_result"), last_test_result_promise);
+
+      gadget.element.querySelectorAll("h1")[0].innerHTML = modification_dict.project_title;
       document.getElementById("home_page_content").innerHTML = modification_dict.home_page_content;
+      enableLink(document.getElementById("forum_link"), modification_dict.forum_link);
+      //enableLink(document.getElementById("description_link"), modification_dict.description_link);
 
       return new RSVP.Queue()
         .push(function () {
@@ -110,142 +116,95 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
             bug_view = getActionListByName(view_list, "bug_list"),
             milestone_view = getActionListByName(view_list, "milestone"),
             task_report_view = getActionListByName(view_list, "task_report_list"),
-            request_view = getActionListByName(view_list, "request_list");
+            request_view = getActionListByName(view_list, "request_list"),
+            url_promise_list = [];
 
-          gadget.element.querySelectorAll("h1")[0].innerHTML = modification_dict.project_title;
+          return gadget.getUrlForList([getUrlParameters('milestone_module', milestone_view, [["stop_date", "ascending"]]),
+            getUrlParameters('task_module', task_view, [["delivery.start_date", "descending"]],
+                             ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
+                              "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+                             ('selection_domain_state_task_domain:  "confirmed"')),
+            getUrlParameters('support_request_module', request_view, [["delivery.start_date", "descending"]],
+                             null, ('selection_domain_state_support_domain:  "validated"')),
+            getUrlParameters('bug_module', bug_view, [["delivery.start_date", "descending"]],
+                             ["title", "description", "delivery.start_date"],
+                             ('selection_domain_state_bug_domain:  "started"')),
+            getUrlParameters('bug_module', bug_view, [["delivery.start_date", "descending"]],
+                             ["title", "description", "delivery.start_date"],
+                             ('selection_domain_state_bug_domain:  "closed"')),
+            getUrlParameters('task_report_module', 'view', [["delivery.start_date", "descending"]],
+                             ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
+                              "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+                             ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_report_domain:  "started"')),
+            getUrlParameters('task_report_module', 'view', [["delivery.start_date", "descending"]],
+                             ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
+                              "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+                             ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_report_domain:  "closed"')),
+            getUrlParameters('test_result_module', 'view', [["delivery.start_date", "descending"]],
+                             null, ('source_project_title:  "' + modification_dict.project_title + '"')),
+            getUrlParameters('test_suite_module', 'view', [["creation_date", "descending"]],
+                             null, ('source_project_title:  "' + modification_dict.project_title + '"')) ]);
+        })
+        .push(function (url_list) {
 
-          enableLink(document.getElementById("forum_link"), modification_dict.forum_link);
-          //enableLink(document.getElementById("description_link"), modification_dict.description_link);
+          enableLink(document.getElementById("milestone_link"), url_list[0]);
+          enableLink(document.getElementById("closed_bug_link"), url_list[4]);
+          enableLink(document.getElementById("closed_report_link"), url_list[6]);
+          enableLink(document.getElementById("test_result_link"), url_list[7]);
+          enableLink(document.getElementById("test_suite_link"), url_list[8]);
 
-          generateLink(gadget, document.getElementById("milestone_link"), 'display_with_history', {
-            'jio_key': 'milestone_module', 'page': 'form', 'view': milestone_view,
-            'field_listbox_sort_list:json': [["stop_date", "ascending"]]
-          }, {});
-
-          generateLink(gadget, document.getElementById("support_request_link"), 'display_with_history', {
-            'jio_key': 'support_request_module',
-            'page': 'form',
-            'view': request_view,
-            'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
-            'extended_search': ('selection_domain_state_support_domain:  "validated"')
-          });
-
-          var bug_options = {
-            'jio_key': 'bug_module', 'page': 'form', 'view': bug_view,
-            'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
-            'field_listbox_column_list:json': ["title", "description", "delivery.start_date"],
-            'extended_search': ('selection_domain_state_bug_domain:  "started"')
-          }, closed_bug_options = {};
-          generateLink(gadget, document.getElementById("bug_link"), 'display', bug_options);
-          Object.assign(closed_bug_options, bug_options);
-          closed_bug_options.extended_search = ('selection_domain_state_bug_domain:  "closed"');
-          generateLink(gadget, document.getElementById("closed_bug_link"), 'display', closed_bug_options);
-          //generateInfo(gadget, document.getElementById("bug_count"), project_url + "/Project_bugs");
-          setHTMLelementWithPromise(document.getElementById("bug_count"), bug_count_promise);
-          generateInfo(gadget, document.getElementById("closed_bug_count"), project_url + "/Project_bugs?closed=1");
-
-          generateLink(gadget, document.getElementById("task_link"), 'display_with_history', {
-            'jio_key': 'task_module', 'page': 'form', 'view': task_view,
-            'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
-            'field_listbox_column_list:json': ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
-                                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-            'extended_search': ('selection_domain_state_task_domain:  "confirmed"')
-          });
-          //generateInfo(gadget, document.getElementById("task_count"), project_url + "/Project_tasks");
-          setHTMLelementWithPromise(document.getElementById("task_count"), task_count_promise);
-          generateInfo(gadget, document.getElementById("unassigned_task_count"), project_url + "/Project_tasksToAssigne");
-
-          var task_report_options = {
-            'jio_key': 'task_report_module', 'page': 'form', 'view': 'view',
-            'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
-            'field_listbox_column_list:json': ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
-                                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-            'extended_search': ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_report_domain:  "started"')
-          }, closed_task_report_options = {};
-          generateLink(gadget, document.getElementById("report_link"), 'display_with_history', task_report_options);
-          Object.assign(closed_task_report_options, task_report_options);
-          closed_task_report_options.extended_search = ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_report_domain:  "closed"');
-          generateLink(gadget, document.getElementById("closed_report_link"), 'display_with_history', closed_task_report_options);
-          generateInfo(gadget, document.getElementById("report_count"), project_url + "/Project_taskReports");
-          generateInfo(gadget, document.getElementById("closed_report_count"), project_url + "/Project_taskReports?closed=1");
-
-          generateLink(gadget, document.getElementById("test_result_link"), 'display_with_history', {
-            'jio_key': 'test_result_module',
-            'page': 'form',
-            'view': 'view',
-            'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
-            'extended_search': ('source_project_title:  "' + modification_dict.project_title + '"')
-          });
-          generateInfo(gadget, document.getElementById("last_test_result"), project_url + "/Project_lastTestResult");
-
-          generateLink(gadget, document.getElementById("test_suite_link"), 'display_with_history', {
-            'jio_key': 'test_suite_module',
-            'page': 'form',
-            'view': 'view',
-            'field_listbox_sort_list:json': [["creation_date", "descending"]],
-            'extended_search': ('source_project_title:  "' + modification_dict.project_title + '"')
-          });
-
-          var i, promise_list = [];
           work_item_list.push({
-            display_options: {
-              'jio_key': 'bug_module', 'page': 'form', 'view': bug_view,
-              'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
-              'field_listbox_column_list:json': ["title", "description", "delivery.start_date"],
-              'extended_search': ('selection_domain_state_bug_domain:  "started"')
-            },
-            action_name: "Open bugs",
-            action_count: "......",
-            span_id: "open_bug_id",
+            url: url_list[1],
+            element_name: "Open tasks",
+            element_count: "...",
+            element_id: "task_span",
+            link_id: "task_link",
+            count_promise: task_count_promise
+          });
+          work_item_list.push({
+            url: url_list[5],
+            element_name: "Open task reports",
+            element_count: "...",
+            element_id: "open_report_span",
+            link_id: "report_link",
+            count_promise: report_count_promise
+          });
+          work_item_list.push({
+            url: url_list[3],
+            element_name: "Open bugs",
+            element_count: "...",
+            element_id: "open_bug_span",
+            link_id: "bug_link",
             count_promise: bug_count_promise
           });
           work_item_list.push({
-            display_options: {
-              'jio_key': 'task_module', 'page': 'form', 'view': task_view,
-              'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
-              'field_listbox_column_list:json': ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
-                                                 "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-              'extended_search': ('selection_domain_state_task_domain:  "confirmed"')
-            },
-            action_name: "Tasks",
-            action_count: "......",
-            span_id: "task_id",
+            url: url_list[2],
+            element_name: "Support requests",
+            element_count: "...",
+            element_id: "support_span",
+            link_id: "support_request_link",
             count_promise: task_count_promise
           });
-          work_item_list.push({
-            display_options: {
-              'jio_key': 'support_request_module',
-              'page': 'form',
-              'view': request_view,//'view',
-              'field_listbox_sort_list:json': [["delivery.start_date", "descending"]],
-              'extended_search': ('selection_domain_state_support_domain:  "validated"')
-            },
-            action_name: "Support Requests",
-            action_count: "......",
-            span_id: "support_id",
-            count_promise: task_count_promise
-          });
-          for (i = 0; i < work_item_list.length; i += 1) {
-            promise_list.push(gadget.getUrlFor({command: 'display', options: work_item_list[i].display_options}));
-          }
-          return RSVP.all(promise_list);
-        })
-        .push(function (link_list) {
+
           var i, line_list = [];
           for (i = 0; i < work_item_list.length; i += 1) {
             line_list.push({
-              link: link_list[i],
-              title: work_item_list[i].action_name,
-              count: work_item_list[i].action_count,
-              id: work_item_list[i].span_id
+              link: work_item_list[i].url,
+              title: work_item_list[i].element_name,
+              count: work_item_list[i].element_count,
+              id: work_item_list[i].element_id
             });
           }
           gadget.element.querySelector('.document_list').innerHTML = table_template({
             document_list: line_list
           });
           for (i = 0; i < work_item_list.length; i += 1) {
-            setHTMLelementWithPromise(document.getElementById(work_item_list[i].span_id), work_item_list[i].count_promise);
-            //generateInfo(gadget, document.getElementById(work_item_list[i].span_id), project_url + work_item_list[i].count_script);
+            if (work_item_list[i].link_id) {
+              enableLink(document.getElementById(work_item_list[i].link_id), work_item_list[i].url);
+            }
+            if (work_item_list[i].element_id) {
+              setHTMLWithPromiseResult(document.getElementById(work_item_list[i].element_id), work_item_list[i].count_promise);
+            }
           }
         });
     })
