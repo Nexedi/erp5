@@ -40,6 +40,7 @@ class TestRenderJSUIBankReconciliationAction(ERP5TypeFunctionalTestCase):
       'erp5_bank_reconciliation',
       'erp5_web_renderjs_ui',
       'erp5_web_renderjs_ui_test',
+      'erp5_accounting_ui_test',
       'erp5_ui_test_core',
       'erp5_test_result',
     )
