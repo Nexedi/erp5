@@ -56,7 +56,7 @@ result_dict = {
   }
 }
 
-if (form_id is not None) and (form_id != 'Base_viewFakePythonScriptActionForm'):
+if (form_id is not None) and (form_id not in ['view', 'Base_viewFakePythonScriptActionForm']):
   # Calculate the new view URL
   result_dict['_links']['location'] = {
     'href': context.ERP5Document_getHateoas(
