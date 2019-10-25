@@ -63,4 +63,4 @@ for image_url in image_url_list:
           if format not in MARKER and quality not in MARKER:
             # format is mandatory if it's missing then anyway URL request will fail so
             # don't bother create an activity
-            document.activate(priority=4, tag="conversion").Base_callPreConvert(**convert_kw)
+            document.activate(priority=4, tag="conversion", activity="SQLQueue").Base_callPreConvert(**convert_kw)
