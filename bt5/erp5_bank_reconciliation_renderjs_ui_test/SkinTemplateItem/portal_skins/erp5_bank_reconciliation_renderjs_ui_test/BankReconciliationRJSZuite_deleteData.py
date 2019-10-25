@@ -1,28 +1,24 @@
 portal = context.getPortalObject()
 
-event_portal_type = "Note"
-event_id = "erp5_crm_renderjs_ui_test_event"
+bank_reconciliation_portal_type = "Bank Reconciliation"
+bank_reconciliation_id = "erp5_bank_reconciliation_renderjs_ui_test"
 
-# Delete event
-module = portal.getDefaultModule(event_portal_type)
-if getattr(module, event_id, None) is not None:
-  module.manage_delObjects([event_id])
+# Delete bank reconciliation
+module = portal.getDefaultModule(bank_reconciliation_portal_type)
+if getattr(module, bank_reconciliation_id, None) is not None:
+  module.manage_delObjects([bank_reconciliation_id])
 
-notification_message_portal_type = "Notification Message"
-notification_message_id = "erp5_crm_renderjs_ui_test_notification"
-# Delete Notification Message
-module = portal.getDefaultModule(notification_message_portal_type)
-if getattr(module, notification_message_id, None) is not None:
-  module.manage_delObjects([notification_message_id])
+payment_portal_type = "Payment Transaction"
+payment_id = "erp5_bank_reconciliation_renderjs_ui_test"
+# Delete Payment
+module = portal.getDefaultModule(payment_portal_type)
+if getattr(module, payment_id, None) is not None:
+  module.manage_delObjects([payment_id])
 
-person_portal_type = "Person"
-customer_id = "erp5_crm_renderjs_ui_test_customer"
-agent_id = "erp5_crm_renderjs_ui_test_agent"
-
-# Delete person
-module = portal.getDefaultModule(person_portal_type)
-for person_id in (customer_id, agent_id):
-  if getattr(module, person_id, None) is not None:
-    module.manage_delObjects([person_id])
+organisation_portal_type = "Organisation"
+organisation_id = "erp5_bank_reconciliation_renderjs_ui_test"
+module = portal.getDefaultModule(organisation_portal_type)
+if getattr(module, organisation_id, None) is not None:
+  module.manage_delObjects([organisation_id])
 
 return "Deleted Successfully."

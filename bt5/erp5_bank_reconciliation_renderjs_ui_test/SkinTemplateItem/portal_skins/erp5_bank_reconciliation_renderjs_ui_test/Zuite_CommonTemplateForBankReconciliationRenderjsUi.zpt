@@ -46,7 +46,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/BankReconciliationRJSZuite_createEvent</td>
+      <td>${base_url}/BankReconciliationRJSZuite_createData</td>
       <td></td>
     </tr>
     <tr>
@@ -66,14 +66,14 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${renderjs_url}/event_module/erp5_crm_renderjs_ui_test_event?editable=1</td>
+      <td>${renderjs_url}/bank_reconciliation_module/erp5_bank_reconciliation_renderjs_ui_test</td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
     <!-- Wait for gadget to be loaded -->
     <tr>
       <td>assertElementPresent</td>
-      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
       <td></td>
     </tr>
     <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
@@ -87,11 +87,11 @@
     </tr>
     <tr>
       <td>assertTextPresent</td>
-      <td>Create Response</td>
+      <td>Bank Reconciliation</td>
       <td></td>
     </tr>
 
-    <tal:block tal:define="click_configuration python: {'text': 'Create Response'}">
+    <tal:block tal:define="click_configuration python: {'text': 'Bank Reconciliation'}">
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
     </tal:block>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
@@ -103,7 +103,7 @@
     </tr>
     <tr>
       <td>assertTextPresent</td>
-      <td>Create Response</td>
+      <td>Bank Reconciliation</td>
       <td></td>
     </tr>
     <tr>

@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BankReconciliationRJSZuite_createEvent</string> </value>
+            <value> <string>BankReconciliationRJSZuite_createData</string> </value>
         </item>
       </dictionary>
     </pickle>
