@@ -1,0 +1,97 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form View Editable Save Action</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Default Module View</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForBankReconciliationRenderjsUi/macros/init" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForBankReconciliationRenderjsUi/macros/prepare_data" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForBankReconciliationRenderjsUi/macros/view_fast_input" />
+
+<!-- reconciliate the payment -->
+<tr>
+  <td>assertValue</td>
+  <td>//input[@name='field_your_reconciliation_mode' and @value='reconcile']</td>
+  <td>on</td>
+</tr>
+<tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="line_configuration python: {'line': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/select_listbox_line" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Lines Reconciled'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tr>
+  <td>assertValue</td>
+  <td>//input[@name='field_your_reconciliation_mode' and @value='reconcile']</td>
+  <td>on</td>
+</tr>
+<tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': 'No records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+
+
+<!-- stay on reconciliate mode
+  As payment is not indexed, it should be visible
+-->
+<tr>
+  <td>click</td>
+  <td>//input[@name='field_your_reconciliation_mode' and @value='reconcile']</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data received.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tr>
+  <td>assertValue</td>
+  <td>//input[@name='field_your_reconciliation_mode' and @value='reconcile']</td>
+  <td>on</td>
+</tr>
+<tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+
+<!-- Reconcile again -->
+<tal:block tal:define="line_configuration python: {'line': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/select_listbox_line" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Line Already Reconciled'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tr>
+  <td>assertValue</td>
+  <td>//input[@name='field_your_reconciliation_mode' and @value='reconcile']</td>
+  <td>on</td>
+</tr>
+<tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="line_configuration python: {'value': 'on', 'line': 0}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_line_selection" />
+</tal:block>
+
+</tbody></table>
+</body>
+</html>
