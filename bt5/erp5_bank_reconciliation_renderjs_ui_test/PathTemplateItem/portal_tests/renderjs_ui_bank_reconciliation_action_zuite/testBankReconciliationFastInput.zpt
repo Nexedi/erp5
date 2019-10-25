@@ -1,0 +1,60 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form View Editable Save Action</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Default Module View</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForBankReconciliationRenderjsUi/macros/init" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForBankReconciliationRenderjsUi/macros/prepare_data" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForBankReconciliationRenderjsUi/macros/view_fast_input" />
+
+<tal:block tal:define="dialog_content_configuration python: {'field_your_response_event_title': 'Re: erp5_crm_renderjs_ui_test_event_title',
+                                                             'field_your_response_event_portal_type': 'Note',
+                                                             'field_your_response_event_resource': '',
+                                                             'field_your_response_event_notification_message': '',
+                                                             'field_your_response_workflow_action': 'send',
+                                                             'field_my_default_destination': 'person_module/erp5_crm_renderjs_ui_test_agent',
+                                                             'field_your_response_event_text_content': '<p><br></p>'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/check_create_response_dialog_content" />
+</tal:block>
+
+<tal:block tal:define="dialog_content_configuration python: {'field_your_response_event_title': 'erp5_crm_renderjs_ui_test_response_title',
+                                                             'field_your_response_event_portal_type': 'Letter',
+                                                             'field_your_response_event_resource': '',
+                                                             'field_your_response_event_start_date': '2010-01-01T00:00:00',
+                                                             'field_your_response_event_notification_message': '',
+                                                             'field_your_response_workflow_action': 'draft',
+                                                             'field_my_default_destination': 'person_module/erp5_crm_renderjs_ui_test_agent',
+                                                             'field_your_response_event_text_content': '<p>Foo<br>Bar</p>'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/fill_create_response_dialog_content" />
+</tal:block>
+
+<!-- Header has a save button -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Data received.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<tal:block tal:define="dialog_content_configuration python: {'field_your_response_event_title': 'erp5_crm_renderjs_ui_test_response_title',
+                                                             'field_your_response_event_portal_type': 'Letter',
+                                                             'field_your_response_event_resource': '',
+                                                             'field_your_response_event_start_date': '2010-01-01T00:00:00',
+                                                             'field_your_response_event_notification_message': '',
+                                                             'field_your_response_workflow_action': 'draft',
+                                                             'field_my_default_destination': 'person_module/erp5_crm_renderjs_ui_test_agent',
+                                                             'field_your_response_event_text_content': '<p>Foo<br>Bar</p>'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForCRMRenderjsUi/macros/check_create_response_dialog_content" />
+</tal:block>
+
+</tbody></table>
+</body>
+</html>
