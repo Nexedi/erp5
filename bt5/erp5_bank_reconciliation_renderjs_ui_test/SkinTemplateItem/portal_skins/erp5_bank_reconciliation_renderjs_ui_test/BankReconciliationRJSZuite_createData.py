@@ -8,7 +8,8 @@ module = portal.getDefaultModule(organisation_portal_type)
 organisation = module.newContent(
   portal_type=organisation_portal_type,
   id=organisation_id,
-  title=organisation_id
+  title=organisation_id,
+  group_value=portal.portal_categories.group.demo_group
 )
 bank_account_portal_type = "Bank Account"
 bank_account_id = "erp5_bank_reconciliation_bank"
@@ -43,7 +44,11 @@ payment = module.newContent(
   source_section_value=organisation,
   destination_section_value=organisation,
   source_payment_value=bank_account,
-  start_date=DateTime('2019/10/20')
+  start_date=DateTime('2019/10/20'),
+  resource_value=portal.restrictedTraverse('currency_module/euro')
+)
+payment.bank.edit(
+  source_value=portal.restrictedTraverse('account_module/bank')
 )
 payment.stop()
 
