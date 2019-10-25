@@ -1640,3 +1640,13 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.test_result.start()
       self.tic()
 
+  def test_commit_not_found(self):
+    with responses.RequestsMock() as rsps:
+      rsps.add(
+          responses.POST,
+          self.post_commit_status_url,
+          json={"message": "404 References for commit Not Found"},
+          status=404)
+      self.test_result.start()
+      self.tic()
+
