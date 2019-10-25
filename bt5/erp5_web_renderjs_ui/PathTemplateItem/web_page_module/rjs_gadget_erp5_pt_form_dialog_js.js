@@ -84,11 +84,10 @@
             }
             console.log('COSUCOUS', result);
             if ((gadget.state.jio_key === result.jio_key) &&
-                (!result.hasOwnProperty('view'))) {
+                (!result.view)) {
               // don't update navigation history when not really redirecting
               return gadget.redirect({command: 'cancel_dialog_with_history'});
-            } else if ((gadget.state.jio_key === result.jio_key) &&
-                (result.hasOwnProperty('view'))) {
+            } else if (gadget.state.jio_key === result.jio_key) {
               command = 'display_with_history_and_cancel';
             } else {
               // Check if the redirection goes to a same parent's subdocument.
