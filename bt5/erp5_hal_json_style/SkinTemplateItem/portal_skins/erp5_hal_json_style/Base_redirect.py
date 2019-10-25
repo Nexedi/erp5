@@ -8,6 +8,7 @@ from ZTUtils import make_query
 import json
 
 request_form = context.REQUEST.form
+previous_form_id = request_form.get('form_id', '')
 request_form.update(kw)
 request_form = context.ERP5Site_filterParameterList(request_form)
 request_form.update(keep_items)
@@ -56,7 +57,11 @@ result_dict = {
   }
 }
 
-if (form_id is not None) and (form_id not in ['view', 'Base_viewFakePythonScriptActionForm']):
+# form_id = 'view' means use default document view. Let the JS handle it
+# In case of dialog submit, if redirecting to the original form, let the JS handle the navigation history
+if (form_id is not None) and \
+   (form_id not in ['view', 'Base_viewFakePythonScriptActionForm']) and \
+   (form_id != previous_form_id):
   # Calculate the new view URL
   result_dict['_links']['location'] = {
     'href': context.ERP5Document_getHateoas(
