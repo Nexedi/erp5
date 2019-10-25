@@ -1,6 +1,6 @@
 /*jslint indent: 2 */
-/*global rJS, RSVP, window, document, navigator, Cropper, console, FileReader, Promise, JSON*/
-(function (rJS, RSVP, window, document, navigator, Cropper, console, FileReader, Promise, JSON) {
+/*global rJS, RSVP, window, document, navigator, Cropper, FileReader, Promise, JSON*/
+(function (rJS, RSVP, window, document, navigator, Cropper, FileReader, Promise, JSON) {
   "use strict";
 
   var imageWidth,
@@ -8,7 +8,6 @@
     imageHeight,
     cropper,
     video,
-    stream,
     dialogMethod,
     currentDeviceId,
     imageCapture,
@@ -166,6 +165,9 @@
   }
 
   function handleUserMedia(root, device_id, callback) {
+    var stream;
+
+    video.autoplay = "autoplay";
 
     function canceller() {
       if (stream !== undefined) {
@@ -175,13 +177,15 @@
         });
       }
     }
+
     function waitForStream() {
       new RSVP.Queue()
         .push(function () {
           return navigator.mediaDevices.getUserMedia({video: {deviceId: {exact: device_id}}});
         })
-        .push(function (result) {
-          stream = result;
+        .push(function (mediaStream) {
+          stream = mediaStream;
+          video.srcObject = mediaStream;
           return callback(root, stream);
         })
         .push(undefined, function (error) {
@@ -198,7 +202,6 @@
     return RSVP.Queue()
       .push(function () {
         imageCapture = new window.ImageCapture(mediaStream.getVideoTracks()[0]);
-        video.srcObject = mediaStream;
         return imageCapture.getPhotoCapabilities();
       })
       .push(function (photoCapabilities) {
@@ -288,7 +291,8 @@
       if (evt.target.name === "grayscale") {
         return this.getElement()
           .push(function (el) {
-            return grayscale(el.querySelector(".canvas"), el.querySelector('.photo'));
+            return grayscale(el.querySelector(".canvas"),
+                             el.querySelector('.photo'));
           });
       }
       if (evt.target.className.indexOf("change-camera-btn") !== -1) {
@@ -309,12 +313,15 @@
         return this.getElement()
           .push(function (el) {
             root = el;
-            el.querySelector(".camera").style.maxWidth = video.offsetWidth + "px";
-            return takePicture(el);
+            return disableButton(root);
+          })
+          .push(function () {
+            root.querySelector(".camera").style.maxWidth = video.offsetWidth + "px";
+            return takePicture(root);
           })
           .push(function () {
             root.querySelector(".camera-input").style.display = "none";
-            return setPageTwo(root);
+            return RSVP.all([setPageTwo(root), enableButton(root)]);
           });
       }
       if (evt.target.className.indexOf("reset-btn") !== -1) {
@@ -366,9 +373,8 @@
           .push(function () {
             pageNumber = pageNumber + 1;
             root.querySelector('input[name="page-number"]').value = pageNumber;
-            return setPageOne(root);
           });
       }
     }, false, false);
 
-}(rJS, RSVP, window, document, navigator, Cropper, console, FileReader, Promise, JSON));
+}(rJS, RSVP, window, document, navigator, Cropper, FileReader, Promise, JSON));
