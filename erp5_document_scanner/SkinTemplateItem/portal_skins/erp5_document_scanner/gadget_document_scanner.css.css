@@ -68,3 +68,8 @@ div[data-gadget-scope="field_your_document_scanner_gadget"] {
   font-family: "Lucida Grande", "Arial", sans-serif;
   width: 760px;
 }
+
+button:disabled,
+button[disabled]{
+  color: #999999;
+}
