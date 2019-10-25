@@ -81,6 +81,14 @@ class GitlabRESTConnector(XMLObject):
           "name": name
       },
       timeout=5)
+
+    if response.status_code == requests.codes.not_found and\
+       response.json()['message'] == "404 References for commit Not Found":
+      # It can happen that commit is not found, for example when test start
+      # on a commit and later this commit is no longer reachable from any
+      # branch. This typically happen after a new commit was push-forced to
+      # the tested branch.
+      return
     response.raise_for_status()
 
 
