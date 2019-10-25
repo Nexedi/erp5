@@ -41,7 +41,7 @@ if listbox_kw.get('Movement_getMirrorSectionTitle'):
 if listbox_kw.get('date'):
   kw['stock.date'] = listbox_kw['date']
 
-if reconciled_uid_list is not None:
+if reconciled_uid_list:
   # This is to prevent showing again the lines that we just reconciled
   kw['workaround_catalog_lag_query'] = NegatedQuery(SimpleQuery(uid=reconciled_uid_list))
   
