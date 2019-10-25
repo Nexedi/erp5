@@ -1293,10 +1293,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     if isinstance(extra_param_json, str):
       extra_param_json = ensureDeserialized(byteify(json.loads(urlsafe_b64decode(extra_param_json))))
 
-    for k, v in byteify(extra_param_json.items()):
-      REQUEST.set(k, v)
-      # if (k not in REQUEST.form):
-      #   REQUEST.form[k] = v
+    # Use extra param as request param
+    if (REQUEST is not None):
+      for k, v in byteify(extra_param_json.items()):
+        REQUEST.set(k, v)
+        REQUEST.form[k] = v
 
     # Add a link to the portal type if possible
     if not is_portal:
