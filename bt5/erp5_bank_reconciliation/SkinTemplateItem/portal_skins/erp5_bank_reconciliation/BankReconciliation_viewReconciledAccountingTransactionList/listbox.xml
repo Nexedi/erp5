@@ -180,7 +180,7 @@
                           <string>View</string>
                         </tuple>
                         <tuple>
-                          <string>reconciliation_mode</string>
+                          <string>mode</string>
                           <string>unreconcile</string>
                         </tuple>
                       </list>

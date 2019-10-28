@@ -19,13 +19,13 @@ if request.get('show_reconcilied', True):
                   path=context.getPhysicalPath(),
                   selection_name="bank_reconciliation_report_selection",
                   selection_params={'title': 'Reconciled Transactions',
-                                    'reconciliation_mode': 'unreconcile'}))
+                                    'mode': 'unreconcile'}))
 if request.get('show_non_reconcilied', True):
   report_section_list.append(
     ReportSection(form_id='BankReconciliation_viewBankReconciliationReportSection',
                   selection_name="bank_reconciliation_report_selection",
                   path=context.getPhysicalPath(),
                   selection_params={'title': 'Not Reconciled Transactions',
-                                    'reconciliation_mode': 'reconcile'}))
+                                    'mode': 'reconcile'}))
 
 return report_section_list

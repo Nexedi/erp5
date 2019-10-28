@@ -18,7 +18,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_reconciliation_mode</string> </value>
+            <value> <string>your_mode</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
