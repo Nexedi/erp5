@@ -1650,6 +1650,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
     for key, value in byteify(extra_param_json.items()):
       REQUEST.set(key, value)
+      REQUEST.form[key] = value
 
     # in case we have custom list method
     catalog_kw = {}
