@@ -1650,7 +1650,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
     for key, value in byteify(extra_param_json.items()):
       REQUEST.set(key, value)
-      REQUEST.form[key] = value
 
     # in case we have custom list method
     catalog_kw = {}
@@ -1799,8 +1798,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # specified input parameters). In case some list_method does not work
       # this is the first place to try to uncomment.
       #
-      # for k, v in catalog_kw.items():
-      #   REQUEST.set(k, v)
+      for k, v in catalog_kw.items():
+        REQUEST.set(k, v)
       search_result_iterable = callable_list_method(**catalog_kw)
 
     # Cast to list if only one element is provided
