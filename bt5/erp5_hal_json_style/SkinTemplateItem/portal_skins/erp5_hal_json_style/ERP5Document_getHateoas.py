@@ -1286,8 +1286,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     if isinstance(extra_param_json, str):
       extra_param_json = ensureDeserialized(byteify(json.loads(urlsafe_b64decode(extra_param_json))))
 
+    # Use extra param as request param
     for k, v in byteify(extra_param_json.items()):
       REQUEST.set(k, v)
+      REQUEST.form[k] = v
 
     # Add a link to the portal type if possible
     if not is_portal:
@@ -1788,8 +1790,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       # specified input parameters). In case some list_method does not work
       # this is the first place to try to uncomment.
       #
-      # for k, v in catalog_kw.items():
-      #   REQUEST.set(k, v)
+      for k, v in catalog_kw.items():
+        REQUEST.set(k, v)
       search_result_iterable = callable_list_method(**catalog_kw)
 
     # Cast to list if only one element is provided
