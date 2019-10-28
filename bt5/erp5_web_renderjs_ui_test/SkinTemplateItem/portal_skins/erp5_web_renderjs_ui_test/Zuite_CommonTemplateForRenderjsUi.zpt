@@ -1810,4 +1810,21 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="go_to_module_list">
+    <tr>
+      <td colspan="3"><b>Go to the module list</b></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/open_menu_panel" />
+    <tr>
+     <td>click</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//a[text()='Modules' and contains(@href, '#!display') and contains(@href, 'n.page=front')]</td>
+     <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+
+
 </tal:block>
