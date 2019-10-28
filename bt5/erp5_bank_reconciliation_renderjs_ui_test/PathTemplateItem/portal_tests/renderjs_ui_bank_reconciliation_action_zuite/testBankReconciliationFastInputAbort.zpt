@@ -17,7 +17,7 @@
 <!-- reconciliate the payment -->
 <tr>
   <td>assertValue</td>
-  <td>//input[@name='field_your_reconciliation_mode' and @value='reconcile']</td>
+  <td>//input[@name='field_your_mode' and @value='reconcile']</td>
   <td>on</td>
 </tr>
 <tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
@@ -36,7 +36,7 @@
 </tal:block>
 <tr>
   <td>assertValue</td>
-  <td>//input[@name='field_your_reconciliation_mode' and @value='reconcile']</td>
+  <td>//input[@name='field_your_mode' and @value='reconcile']</td>
   <td>on</td>
 </tr>
 <tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': 'No records'}">
@@ -49,7 +49,7 @@
 -->
 <tr>
   <td>click</td>
-  <td>//input[@name='field_your_reconciliation_mode' and @value='reconcile']</td>
+  <td>//input[@name='field_your_mode' and @value='reconcile']</td>
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/update_dialog" />
@@ -61,7 +61,7 @@
 </tal:block>
 <tr>
   <td>assertValue</td>
-  <td>//input[@name='field_your_reconciliation_mode' and @value='reconcile']</td>
+  <td>//input[@name='field_your_mode' and @value='reconcile']</td>
   <td>on</td>
 </tr>
 <tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
@@ -82,7 +82,7 @@
 </tal:block>
 <tr>
   <td>assertValue</td>
-  <td>//input[@name='field_your_reconciliation_mode' and @value='reconcile']</td>
+  <td>//input[@name='field_your_mode' and @value='reconcile']</td>
   <td>on</td>
 </tr>
 <tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
