@@ -26,10 +26,10 @@ for column in portal.portal_selections.getSelectionSortOrder(
       continue
     sort_on.append((column_id, column[1]))
 
-section_category = kw.get(
+section_category = request.get(
   'section_category',
   portal.portal_preferences.getPreferredAccountingTransactionSectionCategory())
-section_category_strict = kw.get(
+section_category_strict = request.get(
   'section_category_strict',
   portal.portal_preferences.getPreferredAccountingSectionCategoryStrict())
 
