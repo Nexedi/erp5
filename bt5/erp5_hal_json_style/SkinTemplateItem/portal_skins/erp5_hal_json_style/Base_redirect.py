@@ -61,7 +61,8 @@ result_dict = {
 # In case of dialog submit, if redirecting to the original form, let the JS handle the navigation history
 if (form_id is not None) and \
    (form_id not in ['view', 'Base_viewFakePythonScriptActionForm']) and \
-   (form_id != previous_form_id):
+   (form_id != previous_form_id) and \
+   (context.isWebMode()):
   # Calculate the new view URL
   result_dict['_links']['location'] = {
     'href': context.ERP5Document_getHateoas(
