@@ -1111,11 +1111,6 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     response_dict['report_section_list'] = report_result_list
   # end-if report_section
 
-  if form.pt == "form_dialog":
-    # extra_param_json is a special field in forms (just like form_id). extra_param_json field holds JSON
-    # metadata about the form (its hash and dynamic fields)
-    renderHiddenField(response_dict, 'extra_param_json', json.dumps(extra_param_json))
-
   for key, value in byteify(previous_request_other.items()):
     if value is not None:
       REQUEST.set(key, value)
