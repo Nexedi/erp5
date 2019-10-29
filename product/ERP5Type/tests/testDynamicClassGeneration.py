@@ -2149,7 +2149,8 @@ def function_foo(*args, **kwargs):
     from astroid.builder import MANAGER
     should_not_be_in_cache_list = []
     for modname in MANAGER.astroid_cache:
-      if modname in must_not_be_in_cache_set:
+      if (modname.startswith('checkPythonSourceCode') or
+          modname in must_not_be_in_cache_set):
         should_not_be_in_cache_list.append(modname)
 
       if modname in must_be_in_cache_set:

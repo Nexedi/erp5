@@ -468,7 +468,8 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
   message_list = []
   output_file = cStringIO.StringIO()
   try:
-    with tempfile.NamedTemporaryFile(suffix='.py') as input_file:
+    with tempfile.NamedTemporaryFile(prefix='checkPythonSourceCode',
+                                     suffix='.py') as input_file:
       input_file.write(source_code_str)
       input_file.flush()
 
@@ -522,7 +523,13 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
         args.append('--load-plugins=' + ext)
       except ImportError:
         pass
-      Run(args, reporter=TextReporter(output_file), exit=False)
+      try:
+        Run(args, reporter=TextReporter(output_file), exit=False)
+      finally:
+        from astroid.builder import MANAGER
+        MANAGER.astroid_cache.pop(
+          os.path.splitext(os.path.basename(input_file.name))[0],
+          None)
 
     output_file.reset()
     for line in output_file:
