@@ -2191,6 +2191,34 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
                       {'foo_category': ('portal_categories', 'foo_category/a/a2'),
                        'foo_domain': ('portal_domains', 'foo_domain/a/a1')})
 
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoas_selection_checked_uid_compatibility(self):
+    document = self._makeDocument()
+
+    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
+      field_count_method = '')
+
+    selection_tool = self.portal.portal_selections
+    selection_name = self.portal.foo_module.FooModule_viewFooList.listbox.get_value('selection_name')
+    selection_tool.setSelectionFor(selection_name, Selection(selection_name))
+    selection_tool.setSelectionCheckedUidsFor(selection_name, [9876, 1234])
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url=document.getRelativeUrl(), view="view")
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['selection_name'], 'foo_selection')
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['checked_uid_list'], [9876, 1234])
+
 
 class TestERP5Person_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   """Test HAL_JSON operations on cataloged Persons and other allowed content types of Person Module."""
