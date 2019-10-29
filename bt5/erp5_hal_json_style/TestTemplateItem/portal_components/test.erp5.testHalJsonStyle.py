@@ -2199,11 +2199,8 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
   def test_getHateoas_selection_checked_uid_compatibility(self):
     document = self._makeDocument()
 
-    self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
-      field_count_method = '')
-
     selection_tool = self.portal.portal_selections
-    selection_name = self.portal.foo_module.FooModule_viewFooList.listbox.get_value('selection_name')
+    selection_name = self.portal.foo_module.Foo_view.listbox.get_value('selection_name')
     selection_tool.setSelectionFor(selection_name, Selection(selection_name))
     selection_tool.setSelectionCheckedUidsFor(selection_name, [9876, 1234])
 
