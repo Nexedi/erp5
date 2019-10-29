@@ -257,7 +257,7 @@ $script.onload = function() {
       function makeTimeoutFunction(ac){
         return () => checkPythonSourceCode(ac)
       }
-      timeout = setTimeout(makeTimeoutFunction(controller), 300);
+      timeout = setTimeout(makeTimeoutFunction(controller), 3000);
     }
   });
 
