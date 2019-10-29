@@ -26,6 +26,7 @@
                 <string>invalidate_action</string>
                 <string>modify</string>
                 <string>validate</string>
+                <string>validate_action</string>
               </tuple>
             </value>
         </item>

@@ -498,8 +498,6 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
            # TODO-arnau: Enable it properly would require inspection API
            # '%s %r has no %r member'
            '--disable=E1101,E1103',
-           # 'No name %r in module %r'
-           '--disable=E0611',
            # map and filter should not be considered bad as in some cases
            # map is faster than its recommended replacement (list
            # comprehension)

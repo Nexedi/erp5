@@ -414,6 +414,14 @@ class ComponentDynamicPackage(ModuleType):
 
       delattr(package, name)
 
+      # Clear pylint cache
+      try:
+        from astroid.builder import MANAGER
+      except ImportError:
+        pass
+      else:
+        MANAGER.astroid_cache.pop(module_name, None)
+
 class ToolComponentDynamicPackage(ComponentDynamicPackage):
   def reset(self, *args, **kw):
     """

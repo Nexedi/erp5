@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SARL and Contributors. All Rights Reserved.
@@ -1454,8 +1455,13 @@ class _TestZodbComponent(SecurityTestCase):
       text_content=text_content,
       portal_type=self._portal_type)
 
-  def _getComponentFullModuleName(self, module_name):
-    return self._document_class._getDynamicModuleNamespace() + '.' + module_name
+  def _getComponentFullModuleName(self, module_name, version=None):
+    if version is None:
+      return (self._document_class._getDynamicModuleNamespace() + '.' +
+              module_name)
+    else:
+      return (self._document_class._getDynamicModuleNamespace() + '.' +
+              version + '_version' + '.' + module_name)
 
   def failIfModuleImportable(self, module_name):
     """
@@ -2136,6 +2142,170 @@ def function_foo(*args, **kwargs):
     self.assertUserCanChangeLocalRoles(user_id, component)
     self.assertUserCanModifyDocument(user_id, component)
     self.assertUserCanDeleteDocument(user_id, component)
+
+  def _assertAstroidCacheContent(self,
+                                 must_be_in_cache_set,
+                                 must_not_be_in_cache_set):
+    from astroid.builder import MANAGER
+    should_not_be_in_cache_list = []
+    for modname in MANAGER.astroid_cache:
+      if modname in must_not_be_in_cache_set:
+        should_not_be_in_cache_list.append(modname)
+
+      if modname in must_be_in_cache_set:
+        must_be_in_cache_set.remove(modname)
+
+    self.assertEqual(should_not_be_in_cache_list, [])
+    self.assertEqual(must_be_in_cache_set, set())
+
+  def testPylint(self):
+    # One 'imported' Component for each use case:
+    #   from erp5.component.module import M1
+    #   from erp5.component.module.M1 import hoge
+    imported_reference1 = self._generateReference('TestPylintImported1')
+    imported_component1 = self._newComponent(imported_reference1)
+    imported_component1.setTextContent(imported_component1.getTextContent() + """
+def hoge():
+  return 'OK'
+""")
+
+    imported_reference2 = self._generateReference('TestPylintImported2')
+    imported_component2 = self._newComponent(imported_reference2)
+    imported_component2.setTextContent(imported_component2.getTextContent() + """
+def hoge():
+  return 'OK'
+""")
+
+    reference = self._generateReference('TestPylint')
+    component = self._newComponent(reference)
+    self.portal.portal_workflow.doActionFor(component, 'validate_action')
+    self.tic()
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
+    self.assertModuleImportable(reference)
+
+    namespace = self._document_class._getDynamicModuleNamespace()
+
+    imported_module1 = self._getComponentFullModuleName(
+      imported_reference1)
+    imported_module1_with_version = self._getComponentFullModuleName(
+      imported_reference1, version='erp5')
+
+    imported_module2 = self._getComponentFullModuleName(
+      imported_reference2)
+    imported_module2_with_version = self._getComponentFullModuleName(
+      imported_reference2, version='erp5')
+
+    component.setTextContent(
+      """# -*- coding: utf-8 -*-
+# Source code with non-ASCII character should not fail: éàホゲ
+from %(namespace)s import %(reference1)s
+from %(namespace)s.erp5_version import %(reference1)s
+
+from %(module2)s import hoge
+from %(module2_with_version)s import hoge
+
+import %(module2)s
+import %(module2_with_version)s
+
+# To avoid 'unused-import' warnings...
+%(reference1)s.hoge()
+hoge()
+%(module2)s.hoge()
+%(module2_with_version)s.hoge()
+
+# Attributes added through Products.XXX.patches: Must not raise error
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
+# To avoid 'unused-import' warnings...
+ValidationFailed('anything')
+
+""" % (dict(namespace=namespace,
+            reference1=imported_reference1,
+            module2=imported_module2,
+            module2_with_version=imported_module2_with_version)) +
+      component.getTextContent())
+    self.tic()
+    self._assertAstroidCacheContent(
+      must_be_in_cache_set={'%s' % namespace,
+                            '%s.erp5_version' % namespace},
+      must_not_be_in_cache_set={imported_module1,
+                                imported_module1_with_version,
+                                imported_module2,
+                                imported_module2_with_version})
+    self.assertEqual(component.getValidationState(), 'modified')
+    self.assertEqual(
+      component.getTextContentErrorMessageList(),
+      ["E:  3,  0: No name '%s' in module '%s' (no-name-in-module)" %
+       (imported_reference1, namespace),
+       "E:  4,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+       (imported_reference1, namespace),
+       # Spurious message but same as filesystem modules: 2 errors raised
+       # (no-name-in-module and import-error)
+       "E:  6,  0: No name '%s' in module '%s' (no-name-in-module)" %
+       (imported_reference2, namespace),
+       "F:  6,  0: Unable to import '%s' (import-error)" %
+       imported_module2,
+       # Spurious message (see above comment)
+       "E:  7,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+       (imported_reference2, namespace),
+       "F:  7,  0: Unable to import '%s' (import-error)" %
+       imported_module2_with_version,
+       # Spurious message (see above comment)
+       "E:  9,  0: No name '%s' in module '%s' (no-name-in-module)" %
+       (imported_reference2, namespace),
+       "F:  9,  0: Unable to import '%s' (import-error)" %
+       imported_module2,
+       # Spurious message (see above comment)
+       "E: 10,  0: No name '%s' in module '%s.erp5_version' (no-name-in-module)" %
+       (imported_reference2, namespace),
+       "F: 10,  0: Unable to import '%s' (import-error)" %
+       imported_module2_with_version])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
+
+    ## Simulate user:
+    # 1) First check and validate 'imported' Components
+    self.portal.portal_workflow.doActionFor(imported_component1, 'validate_action')
+    self.portal.portal_workflow.doActionFor(imported_component2, 'validate_action')
+    self.tic()
+    self.assertEqual(imported_component1.getValidationState(), 'validated')
+    self.assertEqual(imported_component2.getValidationState(), 'validated')
+
+    # 2) Then validate again the main one
+    self.portal.portal_workflow.doActionFor(component, 'validate_action')
+    self.tic()
+    self._assertAstroidCacheContent(
+      must_be_in_cache_set={'%s' % namespace,
+                            '%s.erp5_version' % namespace,
+                            imported_module1,
+                            imported_module1_with_version,
+                            imported_module2,
+                            imported_module2_with_version},
+      must_not_be_in_cache_set=set())
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
+
+    component.setTextContent(
+      """# -*- coding: utf-8 -*-
+from %(module)s import undefined
+from %(module_with_version)s import undefined
+
+# To avoid 'unused-import' warning...
+undefined()
+
+""" % (dict(module=imported_module2,
+            module_with_version=imported_module2_with_version)) +
+      component.getTextContent())
+    self.tic()
+    self.assertEqual(component.getValidationState(), 'modified')
+    self.assertEqual(
+      component.getTextContentErrorMessageList(),
+      ["E:  2,  0: No name 'undefined' in module '%s' (no-name-in-module)" %
+       imported_module2,
+       "E:  3,  0: No name 'undefined' in module '%s' (no-name-in-module)" %
+       imported_module2_with_version])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
 
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
