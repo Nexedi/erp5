@@ -19,6 +19,7 @@ import sys
 import time
 import traceback
 import urllib
+import unittest
 import ConfigParser
 from contextlib import contextmanager
 from cStringIO import StringIO
@@ -214,7 +215,14 @@ def _parse_args(self, *args, **kw):
 _parse_args._original = DateTime._original_parse_args
 DateTime._parse_args = _parse_args
 
-class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
+
+try:
+    from erp5.portal_type import ERP5Site as erp5_portal_type_ERP5Site
+except ImportError:
+    pass
+
+
+class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, unittest.TestCase, object):
     """Mixin class for ERP5 based tests.
     """
     def __init__(self, *args, **kw):
@@ -990,6 +998,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       return portal_name + '_' + m.hexdigest()
 
     def getPortal(self):
+      # type: () -> erp5_portal_type_ERP5Site
       """Returns the portal object, i.e. the "fixture root".
 
       It also does some initialization, as if the portal was accessed for the

@@ -431,14 +431,35 @@ def fill_args_from_request(*optional_args):
 _pylint_message_re = re.compile(
   '^(?P<type>[CRWEF]):\s*(?P<row>\d+),\s*(?P<column>\d+):\s*(?P<message>.*)$')
 
+zope_startup_time = time.time()
 def checkPythonSourceCode(source_code_str, portal_type=None):
   """
   Check source code with pylint or compile() builtin if not available.
+
+  `portal_type` argument can be passed to the checker, to adapt the checks
+  based on the portal type.
+
+  This function is cached, so checkin the same code several times is instant.
 
   TODO-arnau: Get rid of NamedTemporaryFile (require a patch on pylint to
               allow passing a string) and this should probably return a proper
               ERP5 object rather than a dict...
   """
+  # late imports because we have a circular import dependency here.
+  from Products.ERP5Type.Cache import CachingMethod
+  from Products.ERP5.ERP5Site import getSite
+  checkPythonSourceCode = CachingMethod(
+      _checkPythonSourceCode,
+      '_checkPythonSourceCode.{}.{}.{}'.format(
+          zope_startup_time,
+          md5_new(source_code_str).hexdigest(),
+          getSite().getCacheCookie('component_packages')))
+  # normalize type of portal_type argument to maximize cache hits.
+  if isinstance(portal_type, unicode):
+    portal_type = portal_type.encode()
+  return checkPythonSourceCode(source_code_str, portal_type)
+
+def _checkPythonSourceCode(source_code_str, portal_type):
   if not source_code_str:
     return []
 

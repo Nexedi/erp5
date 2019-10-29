@@ -47,6 +47,7 @@
 <script tal:content='python: "var textarea_selector=" + modules["json"].dumps(options.get("textarea_selector"))'>
 </script>
 <script tal:content='python: "var bound_names=" + modules["json"].dumps(options.get("bound_names"))'></script>
+<script tal:content='python: "var script_name=" + modules["json"].dumps(options.get("script_name"))'></script>
 
 <script
   tal:content='python: "window.monacoEditorWebPackResourceBaseUrl = " + modules["json"].dumps(options["portal_url"]) + " + \"/monaco-editor/\""'>
@@ -254,9 +255,204 @@ $script.onload = function() {
       function makeTimeoutFunction(ac){
         return () => checkPythonSourceCode(ac)
       }
-      timeout = setTimeout(makeTimeoutFunction(controller), 300);
+      timeout = setTimeout(makeTimeoutFunction(controller), 3000);
     }
   });
+
+  yapfDocumentFormattingProvider = {
+    _provideFormattingEdits: function(model, range, options, token) {
+      const controller = new AbortController();
+      token.onCancellationRequested(() => {controller.abort()})
+      const data = new FormData();
+      data.append("data", JSON.stringify({code: model.getValue(), range:range}));
+      return fetch(portal_url + "/ERP5Site_formatPythonSourceCode", {
+        method: "POST",
+        body: data,
+        signal: controller.signal
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error){
+            editor.revealLine(data.error_line);
+            return;
+          }
+          if (data.changed) {
+            return [
+              {
+                range: model.getFullModelRange(),
+                text: data.formatted_code,
+              },
+            ];
+          };
+        }, e => {
+          if (!e instanceof DOMException /* AbortError */ ) {
+            throw e;
+          }
+          /* ignore aborted requests */
+      });
+    },
+    provideDocumentRangeFormattingEdits: function(model, range, options, token){
+      return this._provideFormattingEdits(model, range, options, token);
+    },
+    provideDocumentFormattingEdits: function(model, options, token) {
+      return this._provideFormattingEdits(model, null, options, token);
+    }
+  }
+
+  monaco.languages.registerDocumentFormattingEditProvider(
+      'python',
+      yapfDocumentFormattingProvider)
+  monaco.languages.registerDocumentRangeFormattingEditProvider(
+      'python',
+      yapfDocumentFormattingProvider)
+
+  monaco.languages.registerDefinitionProvider('python', {
+      provideDefinition: async function(model, position, token) {
+        const controller = new AbortController();
+        token.onCancellationRequested(() => {controller.abort()})
+        const data = new FormData();
+        const complete_parameters = {
+            code: model.getValue(),
+            position: {line: position.lineNumber, column: position.column}
+        };
+        // ZMI python scripts pass extra parameters to linter
+        if (bound_names) {
+          complete_parameters["script_name"] = script_name;
+          complete_parameters["bound_names"] = JSON.parse(bound_names);
+          complete_parameters["params"] = document.querySelector(
+            'input[name="params"]'
+          ).value;
+        }
+
+        complete_parameters['xxx_definition'] = true;
+        data.append("data", JSON.stringify(complete_parameters));
+
+        return fetch(portal_url + "/ERP5Site_getPythonSourceCodeCompletionList", {
+          method: "POST",
+          body: data,
+          signal: controller.signal
+        })
+          .then(response => response.json())
+          .then(data => {
+            var definitions = [];
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].code) {
+                // TODO: these models are not refreshed, if the file they refefer is modified,
+                // they show outdated content.
+                let definition_uri = monaco.Uri.from({
+                  scheme: 'file',
+                  path: data[i].uri,
+                });
+                let definition_model = monaco.editor.getModel(
+                  definition_uri
+                );
+
+                if (!definition_model) {
+                  definition_model = monaco.editor.createModel(
+                    data[i].code,
+                    'python',
+                    definition_uri
+                  );
+                }
+                data[i].uri = definition_model.uri;
+              }
+              definitions.push({
+                range: data[i].range,
+                uri: data[i].uri ? data[i].uri : model.uri,
+              });
+            }
+            return definitions;
+          }, e => {
+            if (!(e instanceof DOMException) /* AbortError */ ) {
+              throw e;
+            }
+            /* ignore aborted requests */
+        });
+        
+      }
+  });
+
+  monaco.languages.registerCompletionItemProvider('python', {
+    provideCompletionItems: async function(model, position, context, token) {
+      const controller = new AbortController();
+      token.onCancellationRequested(() => {controller.abort()})
+      const data = new FormData();
+      const complete_parameters = {
+        code: model.getValue(),
+        position: {line: position.lineNumber, column: position.column}
+      };
+      // ZMI python scripts pass extra parameters to linter
+      if (bound_names) {
+        complete_parameters["script_name"] = script_name;
+        complete_parameters["bound_names"] = JSON.parse(bound_names);
+        complete_parameters["params"] = document.querySelector(
+          'input[name="params"]'
+        ).value;
+      }
+
+      data.append("data", JSON.stringify(complete_parameters));
+      return fetch(portal_url + "/ERP5Site_getPythonSourceCodeCompletionList", {
+        method: "POST",
+        body: data,
+        signal: controller.signal
+      })
+        .then(response => response.json())
+        .then(data => {
+          return {suggestions: data.map(c => {
+            c.kind = monaco.languages.CompletionItemKind[c._kind];
+            // this makes monaco render documentation as markdown.
+            c.documentation = {value: c.documentation};
+            return c
+          })};
+        }, e => {
+          if (!e instanceof DOMException /* AbortError */ ) {
+            throw e;
+          }
+          /* ignore aborted requests */
+      });
+    }
+  });
+  monaco.languages.registerHoverProvider('python', {
+    provideHover: function (model, position, token) {
+      const controller = new AbortController();
+      token.onCancellationRequested(() => {controller.abort()})
+      const data = new FormData();
+      const complete_parameters = {
+        code: model.getValue(),
+        position: {line: position.lineNumber, column: position.column}
+      };
+      // ZMI python scripts pass extra parameters to linter
+      if (bound_names) {
+        complete_parameters["script_name"] = script_name;
+        complete_parameters["bound_names"] = JSON.parse(bound_names);
+        complete_parameters["params"] = document.querySelector(
+          'input[name="params"]'
+        ).value;
+      }
+      complete_parameters['xxx_hover'] = true;
+      data.append("data", JSON.stringify(complete_parameters));
+      return fetch(portal_url + "/ERP5Site_getPythonSourceCodeCompletionList", {
+        method: "POST",
+        body: data,
+        signal: controller.signal
+      })
+        .then(response => response.json())
+        .then(data => {
+          return {
+            range: new monaco.Range(position.lineNumber, position.column, position.lineNumber, 0),
+            contents: [
+              { value: data }, // XXX
+            ]
+		    	}
+        }, e => {
+          if (!e instanceof DOMException /* AbortError */ ) {
+            throw e;
+          }
+          /* ignore aborted requests */
+      });
+    }
+  });
+
 
   if (mode === "python") {
     // Perform a first check when loading document.
