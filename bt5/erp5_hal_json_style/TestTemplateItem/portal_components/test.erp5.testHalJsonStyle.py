@@ -2216,7 +2216,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
     result_dict = json.loads(result)
     self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
 
-    self.assertEqual(result_dict['_embedded']['_view']['listbox']['selection_name'], 'foo_selection')
+    self.assertEqual(result_dict['_embedded']['_view']['listbox']['selection_name'], selection_name)
     self.assertEqual(result_dict['_embedded']['_view']['listbox']['checked_uid_list'], [9876, 1234])
 
 
