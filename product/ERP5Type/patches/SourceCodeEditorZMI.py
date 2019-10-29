@@ -112,6 +112,7 @@ def manage_page_footer(self):
       textarea_selector=textarea_selector,
       portal_url=portal_url,
       bound_names=bound_names,
+      script_name=document.getId(),
       mode=mode)
     if six.PY2:
       monaco_editor_support = unicode2str(monaco_editor_support)
