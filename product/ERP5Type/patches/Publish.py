@@ -26,13 +26,26 @@
 ##############################################################################
 from Products.ERP5Type.Timeout import wrap_call_object
 from ZPublisher import Publish
+from .WSGIPublisher import Success
 
 call_object_orig = Publish.call_object
 call_object = wrap_call_object(call_object_orig)
 Publish.call_object = call_object
 
-publish = Publish.__dict__['publish']
+publish = Publish.publish
 assert publish.__module__ == 'ZPublisher.Publish', repr(publish.__module__)
 if publish.__name__ == 'new_publish': # already patched by Localizer/patches.py
   publish = publish.__defaults__[1]
-publish.__defaults__ = tuple(call_object if x is call_object_orig else x for x in publish.__defaults__)
+
+mapply_orig = Publish.mapply
+def mapply(*args, **kw):
+    try:
+        return mapply_orig(*args, **kw)
+    except Success as exc:
+        result, = exc.args or ('',)
+        return result
+
+publish.__defaults__ = tuple(
+    call_object if x is call_object_orig else
+    mapply if x is mapply_orig else
+    x for x in publish.__defaults__)

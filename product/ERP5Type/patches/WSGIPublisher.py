@@ -28,6 +28,7 @@ from six import text_type
 from six.moves._thread import allocate_lock
 
 import transaction
+import zExceptions
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from Acquisition import aq_acquire
@@ -48,6 +49,7 @@ from zope.security.management import newInteraction
 from Zope2.App.startup import validated_hook
 from ZPublisher import pubevents, Retry
 from ZPublisher.HTTPRequest import HTTPRequest
+from ZPublisher.HTTPResponse import HTTPResponse
 from ZPublisher.Iterators import IUnboundStreamIterator
 from ZPublisher.mapply import mapply
 from ZPublisher.WSGIPublisher import call_object as call_object_orig
@@ -70,47 +72,40 @@ AC_LOGGER = logging.getLogger('event.AccessControl')
 
 if 1: # upstream moved WSGIResponse to HTTPResponse.py
 
-    # According to PEP 333, WSGI applications and middleware are forbidden from
-    # using HTTP/1.1 "hop-by-hop" features or headers. This patch prevents Zope
-    # from sending 'Connection' and 'Transfer-Encoding' headers.
     def finalize(self):
-
         headers = self.headers
-        body = self.body
-
-        # <patch>
-
-        # There's a bug in 'App.ImageFile.index_html': when it returns a 304 status
-        # code, 'Content-Length' is equal to a nonzero value.
-        if self.status == 304:
-          headers.pop('content-length', None)
-
-        # Force the removal of "hop-by-hop" headers
+        # According to PEP 333, WSGI applications and middleware are forbidden
+        # from using HTTP/1.1 "hop-by-hop" features or headers.
         headers.pop('Connection', None)
 
-        # </patch>
-
-        # set 204 (no content) status if 200 and response is empty
-        # and not streaming
-        if ('content-type' not in headers and
-            'content-length' not in headers and
-            not self._streaming and self.status == 200):
-            self.setStatus('nocontent')
-
-        # add content length if not streaming
-        content_length = headers.get('content-length')
-
-        if content_length is None and not self._streaming:
-            self.setHeader('content-length', len(body))
-
-        # <patch>
-        # backport from Zope 4.0b1
-        # (see commit be5b14bd858da787c41a39e2533b0aabcd246fd5)
-        # </patch>
+        if 'content-length' in headers:
+            # There's a bug in 'App.ImageFile.index_html': when it returns a 304
+            # status code, 'Content-Length' is equal to a nonzero value.
+            if self.status == 304:
+                del headers['content-length']
+        # set 204 (no content) status if 200 and response is empty and not
+        # streaming
+        elif ('content-type' not in headers and self.status == 200
+              and not self._streaming):
+            self.status = 204
 
         return '%s %s' % (self.status, self.errmsg), self.listHeaders()
 
     WSGIResponse.finalize = finalize
+
+    class Success(Exception):
+        """
+        """
+    zExceptions.Success = Success
+
+    def write(self, data):
+        raise AttributeError(
+            "This method must not be used anymore and will be removed in the"
+            " future. Either return a stream iterator or raise"
+            " zExceptions.Success")
+
+    HTTPResponse.write = write
+    WSGIResponse.write = write
 
 
 # From ZPublisher.utils
@@ -335,15 +330,18 @@ def publish(request, module_info):
     notify(pubevents.PubAfterTraversal(request))
     recordMetaData(obj, request)
 
-    result = mapply(obj,
-                    request.args,
-                    request,
-                    call_object,
-                    1,
-                    missing_name,
-                    dont_publish_class,
-                    request,
-                    bind=1)
+    try:
+        result = mapply(obj,
+                        request.args,
+                        request,
+                        call_object,
+                        1,
+                        missing_name,
+                        dont_publish_class,
+                        request,
+                        bind=1)
+    except Success as exc:
+        result, = exc.args or ('',)
     if result is not response:
         response.setBody(result)
 
@@ -388,11 +386,11 @@ def publish_module(environ, start_response,
         path_info = path_info.decode('utf-8')
 
         environ['PATH_INFO'] = path_info
-    with closing(BytesIO()) as stdout, closing(BytesIO()) as stderr:
+    if 1:
         new_response = (
             _response
             if _response is not None
-            else _response_factory(stdout=stdout, stderr=stderr))
+            else _response_factory(stdout=None, stderr=None))
         new_response._http_version = environ['SERVER_PROTOCOL'].split('/')[1]
         new_response._server_version = environ.get('SERVER_SOFTWARE')
 
@@ -430,9 +428,7 @@ def publish_module(environ, start_response,
            IUnboundStreamIterator.providedBy(response.body):
             result = response.body
         else:
-            # If somebody used response.write, that data will be in the
-            # response.stdout BytesIO, so we put that before the body.
-            result = (response.stdout.getvalue(), response.body)
+            result = response.body,
 
         for func in response.after_list:
             func()
