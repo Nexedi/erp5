@@ -215,6 +215,11 @@ class ERP5TypeTestCaseRequestConnection(object):
     setRequest(self._current_request)
 
 
+try:
+    from erp5.portal_type import ERP5Site as erp5_portal_type_ERP5Site
+except ImportError:
+    pass
+
 class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, functional.Functional):
     """Mixin class for ERP5 based tests.
     """
@@ -967,6 +972,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       return portal_name + '_' + m.hexdigest()
 
     def getPortal(self):
+      # type: () -> erp5_portal_type_ERP5Site
       """Returns the portal object, i.e. the "fixture root".
 
       It also does some initialization, as if the portal was accessed for the

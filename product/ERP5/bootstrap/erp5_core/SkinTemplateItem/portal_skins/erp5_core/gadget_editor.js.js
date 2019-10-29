@@ -15,6 +15,8 @@
  * @property {string} language the user language, if the editor supports
  *  localisation it will be displayed in this language
  * @property {string} password a password to decrypt the content
+ * @property {string} language_support_url URL of language support endpoint
+ *  for completion, diagnostics etc in the editor
  * @property {boolean} run a hack for jsmd editor
  * @property {string} key Key for ERP5 form
  * @property {string} schema_url Schema's URL for json editor
@@ -96,6 +98,7 @@
           key: options.key,
           password: options.password,
           schema_url: options.schema_url,
+          language_support_url: options.language_support_url || "",
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()

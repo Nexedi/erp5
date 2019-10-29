@@ -80,6 +80,72 @@
           }
         });
     })
+    .declareJob('runPyLint', function () {
+      var context = this;
+      return (function (controller) {
+        return new RSVP.Queue()
+          .push(function () {
+            return RSVP.delay(2000);
+          })
+          .push(function () {
+            if (
+              context.state.model_language === 'python' &&
+              context.state.language_support_url
+            ) {
+              const data = new FormData();
+              const checker_parameters = {
+                code: context.editor.getValue(),
+                portal_type: context.state.portal_type,
+              };
+
+              data.append('data', JSON.stringify(checker_parameters));
+              fetch(
+                context.state.language_support_url +
+                  '/ERP5Site_checkPythonSourceCodeAsJSON',
+                {
+                  method: 'POST',
+                  body: data,
+                  signal: controller.signal,
+                }
+              )
+                .then((response) => response.json())
+                .then(
+                  (data) => {
+                    monaco.editor.setModelMarkers(
+                      context.editor.getModel(),
+                      'pylint',
+                      data['annotations'].map((annotation) => {
+                        return {
+                          startLineNumber: annotation.row + 1,
+                          endLineNumber: annotation.row + 1,
+                          startColumn: annotation.col,
+                          endColumn: Infinity,
+                          message: annotation.text,
+                          severity:
+                            annotation.type === 'error'
+                              ? monaco.MarkerSeverity.Error
+                              : monaco.MarkerSeverity.Warning,
+                        };
+                      })
+                    );
+                  },
+                  (e) => {
+                    if (!(e instanceof DOMException) /* AbortError */) {
+                      throw e;
+                    }
+                    /* ignore aborted requests */
+                  }
+                );
+            }
+          })
+          .push(undefined, function (e) {
+            if (e instanceof RSVP.CancellationError) {
+              controller.abort();
+            }
+            throw e;
+          });
+      })(new AbortController());
+    })
     .declareMethod('render', function (options) {
       var model_language,
         state_dict = {
@@ -117,7 +183,9 @@
         state_dict.schema_url = options.schema_url;
       }
       state_dict.model_language = model_language;
+      state_dict.portal_type = options.portal_type;
       state_dict.value = options.value || '';
+      state_dict.language_support_url = options.language_support_url || '';
       return this.changeState(state_dict);
     })
 
@@ -304,6 +372,128 @@
             yapfDocumentFormattingProvider
           );
 
+
+          monaco.languages.registerCompletionItemProvider('python', {
+            provideCompletionItems: async function (
+              model,
+              position,
+              context,
+              token
+            ) {
+              const controller = new AbortController();
+              token.onCancellationRequested(() => {
+                controller.abort();
+              });
+              const data = new FormData();
+              const complete_parameters = {
+                code: model.getValue(),
+                position: {
+                  line: position.lineNumber,
+                  column: position.column,
+                },
+              };
+
+              data.append('data', JSON.stringify(complete_parameters));
+              return fetch(
+                gadget.state.language_support_url +
+                  '/ERP5Site_getPythonSourceCodeCompletionList',
+                {
+                  method: 'POST',
+                  body: data,
+                  signal: controller.signal,
+                }
+              )
+                .then((response) => response.json())
+                .then(
+                  (data) => {
+                    return {
+                      suggestions: data.map((c) => {
+                        c.kind = monaco.languages.CompletionItemKind[c._kind];
+                        // this makes monaco render documentation as markdown.
+                        c.documentation = { value: c.documentation };
+                        return c;
+                      }),
+                    };
+                  },
+                  (e) => {
+                    if (!(e instanceof DOMException) /* AbortError */) {
+                      throw e;
+                    }
+                    /* ignore aborted requests */
+                  }
+                );
+            },
+          });
+
+          monaco.languages.registerDefinitionProvider('python', {
+            provideDefinition: async function (model, position, token) {
+              const controller = new AbortController();
+              token.onCancellationRequested(() => {
+                controller.abort();
+              });
+              const data = new FormData();
+              const complete_parameters = {
+                code: model.getValue(),
+                position: {
+                  line: position.lineNumber,
+                  column: position.column,
+                },
+              };
+              complete_parameters['xxx_definition'] = true;
+              data.append('data', JSON.stringify(complete_parameters));
+              // TODO: this should use a proper endpoint ...
+              return fetch(
+                gadget.state.language_support_url +
+                  '/ERP5Site_getPythonSourceCodeCompletionList',
+                {
+                  method: 'POST',
+                  body: data,
+                  signal: controller.signal,
+                }
+              )
+                .then((response) => response.json())
+                .then(
+                  (data) => {
+                    var definitions = [];
+                    for (let i = 0; i < data.length; i++) {
+                      if (data[i].code) {
+                        // TODO: these models are not refreshed, if the file they refer is modified,
+                        // they show outdated content.
+                        let definition_uri = monaco.Uri.from({
+                          scheme: 'file',
+                          path: data[i].uri,
+                        });
+                        let definition_model = monaco.editor.getModel(
+                          definition_uri
+                        );
+
+                        if (!definition_model) {
+                          definition_model = monaco.editor.createModel(
+                            data[i].code,
+                            'python',
+                            definition_uri
+                          );
+                        }
+                        data[i].uri = definition_model.uri;
+                      }
+                      definitions.push({
+                        range: data[i].range,
+                        uri: data[i].uri ? data[i].uri : model.uri,
+                      });
+                    }
+                    return definitions;
+                  },
+                  (e) => {
+                    if (!(e instanceof DOMException) /* AbortError */) {
+                      throw e;
+                    }
+                    /* ignore aborted requests */
+                  }
+                );
+            },
+          });
+
+          // diagnostics with ruff
           queue.push(
             () => {
               // https://raw.githubusercontent.com/charliermarsh/ruff/main/ruff.schema.json

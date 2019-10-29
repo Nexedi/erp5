@@ -58,6 +58,11 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Accessor import Base as BaseAccessor
 from Products.ERP5Type import IS_ZOPE2
 try:
+  from typing import List
+except ImportError:
+  pass
+
+try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
 except ImportError:
   from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
@@ -207,6 +212,7 @@ class FolderMixIn(ExtensionClass.Base):
   security.declarePublic('newContent')
   def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, container=None, temp_object=0, **kw):
+    # type: (...) -> Folder
     """Creates a new content.
     This method is public, since TypeInformation.constructInstance will perform
     the security check.
@@ -422,6 +428,7 @@ class FolderMixIn(ExtensionClass.Base):
   # Get the content
   security.declareProtected(Permissions.AccessContentsInformation, 'searchFolder')
   def searchFolder(self, **kw):
+    # type: (str) -> List[Folder]
     """
       Search the content of a folder by calling
       the portal_catalog.
@@ -1531,6 +1538,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
   def objectValues(self, spec=None, meta_type=None, portal_type=None,
                    sort_on=None, sort_order=None, checked_permission=None,
                    **kw):
+    # type: () -> List[Folder]
     # Returns list of objects contained in this folder.
     #  (no docstring to prevent publishing)
     if meta_type is not None:
@@ -1562,6 +1570,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
   security.declareProtected( Permissions.AccessContentsInformation,
                              'contentValues' )
   def contentValues(self, *args, **kw):
+    # type: () -> List[Folder]
     # Returns a list of documents contained in this folder.
     # ( no docstring to prevent publishing )
     portal_type_id_list = self._getTypesTool().listContentTypes()
