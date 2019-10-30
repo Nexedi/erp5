@@ -259,10 +259,9 @@ class Zuite( OrderedFolder ):
             return bits
 
         RESPONSE.setHeader('Content-type', 'application/zip')
-        RESPONSE.setHeader('Content-length', str( len( bits ) ) )
         RESPONSE.setHeader('Content-disposition',
                             'inline;filename=%s' % archive_name )
-        RESPONSE.write(bits)
+        return bits
 
 
     security.declareProtected(ManageSeleniumTestCases, 'manage_createSnapshot')
