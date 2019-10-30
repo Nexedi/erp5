@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>display_width</string>
+                <string>editable</string>
                 <string>title</string>
               </list>
             </value>
@@ -67,6 +68,10 @@
                 <item>
                     <key> <string>display_width</string> </key>
                     <value> <int>20</int> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
