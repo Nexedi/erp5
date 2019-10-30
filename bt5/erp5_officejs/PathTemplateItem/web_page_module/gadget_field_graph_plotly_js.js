@@ -30,6 +30,9 @@
     console.log("getGraphDataAndParameterFromConfiguration 1 configuration_dict", configuration_dict);
     graph_data_and_parameter.data_list = [];
     graph_data_and_parameter.layout = {modeBarButtonsToRemove: ['sendDataToCloud']};
+    if (configuration_dict.title !== undefined) {
+      graph_data_and_parameter.layout.title = configuration_dict.title;
+    }
 
     function setCurrentData(axis_data) {
       console.log("setCurrentData, axis_data", axis_data);
