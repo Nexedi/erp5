@@ -369,7 +369,6 @@ class PDFForm(File):
     if RESPONSE :
       RESPONSE.setHeader('Content-Type', 'application/x-erp5-pdfform')
       RESPONSE.setHeader('Content-Length', len(content))
-      RESPONSE.write(content)
     return content
   manage_DAVget = manage_FTPget
 
