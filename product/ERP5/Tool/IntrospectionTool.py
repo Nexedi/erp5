@@ -39,7 +39,8 @@ from Products.ERP5Type import Permissions
 from AccessControl.SecurityManagement import setSecurityManager
 from Products.ERP5 import _dtmldir
 from Products.ERP5.Tool.LogMixin import LogMixin
-from Products.ERP5Type.Utils import _setSuperSecurityManager
+from Products.ERP5Type.Utils import \
+  _setSuperSecurityManager, FileAsStreamIterator
 from App.config import getConfiguration
 from AccessControl import Unauthorized
 from Products.ERP5Type.Cache import CachingMethod
@@ -155,16 +156,9 @@ class IntrospectionTool(LogMixin, BaseTool):
 
       tmp_file_path = file_path
 
-
-    with open(tmp_file_path) as f:
-      RESPONSE.setHeader('Content-Length', os.stat(tmp_file_path).st_size)
-      for data in f:
-        RESPONSE.write(data)
-
-    if compressed:
-      os.remove(tmp_file_path)
-
-    return ''
+    r = FileAsStreamIterator(tmp_file_path, remove_file=compressed)
+    RESPONSE.setHeader('Content-Length', str(len(r)))
+    return r
 
   def __getEventLogPath(self):
     """

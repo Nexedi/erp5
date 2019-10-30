@@ -1819,3 +1819,25 @@ class IterableAsStreamIterator:
     for chunk in self.iterable:
       return chunk
     raise StopIteration
+
+
+@implementer(IStreamIterator)
+class FileAsStreamIterator:
+  def __init__(self, file_path, remove_file=False):
+    self.file = open(file_path)
+    self.size = os.stat(tmp_file_path).st_size
+    self.remove_file = remove_file
+
+  def __iter__(self):
+    return self
+
+  def __len__(self):
+    return self.size
+
+  def next(self):
+    for data in self.file:
+      return data
+    self.file.close()
+    if self.remove_file:
+      os.remove(self.file)
+    raise StopIteration
