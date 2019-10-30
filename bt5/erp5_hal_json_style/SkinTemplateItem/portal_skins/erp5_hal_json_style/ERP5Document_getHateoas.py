@@ -1934,6 +1934,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       for select in select_list:
         contents_item[select] = {}
         editable_field = editable_field_dict.get(select, None)
+        if (editable_field is not None) and (not editable_field.get_value('enabled', REQUEST=REQUEST)):
+          # The editable field could be disabled with a TALES expression, depending on the cell context
+          editable_field = None
         default_field_value = Listbox_getBrainValue(
           brain,
           brain_document,
