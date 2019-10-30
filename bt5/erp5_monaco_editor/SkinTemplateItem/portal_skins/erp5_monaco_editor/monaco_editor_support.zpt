@@ -47,6 +47,7 @@
 <script tal:content='python: "var textarea_selector=" + modules["json"].dumps(options.get("textarea_selector"))'>
 </script>
 <script tal:content='python: "var bound_names=" + modules["json"].dumps(options.get("bound_names"))'></script>
+<script tal:content='python: "var script_name=" + modules["json"].dumps(options.get("script_name"))'></script>
 
 <script
   tal:content='python: "window.monacoEditorWebPackResourceBaseUrl = " + modules["json"].dumps(options["portal_url"]) + " + \"/monaco-editor/\""'>
@@ -272,6 +273,7 @@ $script.onload = function() {
       };
       // ZMI python scripts pass extra parameters to linter
       if (bound_names) {
+        complete_parameters["script_name"] = script_name;
         complete_parameters["bound_names"] = JSON.parse(bound_names);
         complete_parameters["params"] = document.querySelector(
           'input[name="params"]'
