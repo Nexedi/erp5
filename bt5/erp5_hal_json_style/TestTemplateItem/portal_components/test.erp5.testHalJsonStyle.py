@@ -2578,6 +2578,52 @@ class TestERP5Document_getHateoas_mode_url_generator(ERP5HALJSONStyleSkinsMixin)
       '&extra_param_json=eyJmb28iOiAiYSIsICJiYXIiOiAiYiJ9' % self.portal.absolute_url()
     )
 
+  @simulate('Base_checkOnContextDocument', '*args, **kwargs',
+      'return context.ERP5Document_getHateoas(relative_url=context.getRelativeUrl(), **kwargs)')
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @createIndexedDocument()
+  @changeSkin('Hal')
+  def test_getHateoasUrlGenerator_web_mode_context(self, document):
+    document = self._makeDocument()
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.restrictedTraverse(document.getRelativeUrl()).Base_checkOnContextDocument(
+      REQUEST=fake_request,
+      mode="url_generator",
+      view="Foo_viewBar"
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEqual(
+      result,
+      '%s/web_site_module/hateoas/ERP5Document_getHateoas?'
+      'mode=traverse&relative_url=%s&view=Foo_viewBar' % (self.portal.absolute_url(), document.getRelativeUrl().replace('/', '%2F'))
+    )
+
+  @simulate('Base_checkOnNotContextDocument', '*args, **kwargs',
+      'return context.getPortalObject().restrictedTraverse(context.getRelativeUrl()).ERP5Document_getHateoas(relative_url=context.getRelativeUrl(), **kwargs)')
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @createIndexedDocument()
+  @changeSkin('Hal')
+  def test_getHateoasUrlGenerator_not_web_mode_context(self, document):
+    document = self._makeDocument()
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.restrictedTraverse(document.getRelativeUrl()).Base_checkOnNotContextDocument(
+      REQUEST=fake_request,
+      mode="url_generator",
+      view="Foo_viewBar"
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEqual(
+      result,
+      '%s/ERP5Document_getHateoas?'
+      'mode=traverse&relative_url=%s&view=Foo_viewBar' % (self.portal.absolute_url(), document.getRelativeUrl().replace('/', '%2F'))
+    )
+
 
 class TestERP5Document_getHateoas_translation(ERP5HALJSONStyleSkinsMixin):
   code_string = "\
