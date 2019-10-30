@@ -18,6 +18,7 @@ from cStringIO import StringIO
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import removeIContentishInterface
+from Products.ERP5Type.Utils import IterableAsStreamIterator
 from Products.ERP5.Document.File import File, _MARKER
 from Products.ERP5Type.BTreeData import BTreeData
 from ZPublisher.HTTPRequest import FileUpload
@@ -214,7 +215,7 @@ class BigFile(File):
           RESPONSE.setHeader('Content-Type', self.content_type)
           RESPONSE.setHeader('Content-Length', self.getSize())
           RESPONSE.setStatus(416)
-          return True
+          return ''
 
         ranges = HTTPRangeSupport.expandRanges(ranges, self.getSize())
 
@@ -233,11 +234,8 @@ class BigFile(File):
 
           # NOTE data cannot be None here (if it is - ranges are not satisfiable)
           if isinstance(data, str):
-            RESPONSE.write(data[start:end])
-            return True
-          for chunk in data.iterate(start, end-start):
-            RESPONSE.write(chunk)
-          return True
+            return data[start:end]
+          return IterableAsStreamIterator(data.iterate(start, size), size)
 
         else:
           boundary = choose_boundary()
@@ -266,33 +264,35 @@ class BigFile(File):
                   draftprefix, boundary))
           RESPONSE.setStatus(206) # Partial content
 
-          for start, end in ranges:
-            RESPONSE.write('\r\n--%s\r\n' % boundary)
-            RESPONSE.write('Content-Type: %s\r\n' %
-                self.content_type)
-            RESPONSE.write(
-                'Content-Range: bytes %d-%d/%d\r\n\r\n' % (
-                    start, end - 1, self.getSize()))
+          self_content_type = self.content_type
+          self_getSize = self.getSize()
+          def generator():
+            for start, end in ranges:
+              yield '\r\n--%s\r\n' % boundary
+              yield 'Content-Type: %s\r\n' % self.content_type
+              yield 'Content-Range: bytes %d-%d/%d\r\n\r\n' % (
+                start, end - 1, self_getSize)
 
-            # NOTE data cannot be None here (if it is - ranges are not satisfiable)
-            if isinstance(data, str):
-              RESPONSE.write(data[start:end])
+              # NOTE data cannot be None here (if it is - ranges are not satisfiable)
+              if isinstance(data, str):
+                yield data[start:end]
+              else:
+                for chunk in data.iterate(start, end - start):
+                  # BBB: Python 3.3+ yield from
+                  yield chunk
 
-            else:
-              for chunk in data.iterate(start, end-start):
-                RESPONSE.write(chunk)
-
-          RESPONSE.write('\r\n--%s--\r\n' % boundary)
-          return True
+            yield '\r\n--%s--\r\n' % boundary
+          return IterableAsStreamIterator(generator(), size)
 
   security.declareProtected(Permissions.View, 'index_html')
   def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw):
     """
       Support streaming
     """
-    if self._range_request_handler(REQUEST, RESPONSE):
-      # we served a chunk of content in response to a range request.
-      return ''
+    response_iterable = self._range_request_handler(REQUEST, RESPONSE)
+    if response_iterable is not None:
+      # we serve a chunk of content in response to a range request.
+      return response_iterable
 
     web_cache_kw = kw.copy()
     if format is not _MARKER:
@@ -327,9 +327,7 @@ class BigFile(File):
     if isinstance(data, str):
       RESPONSE.setBase(None)
       return data
-    for chunk in data.iterate():
-      RESPONSE.write(chunk)
-    return ''
+    return IterableAsStreamIterator(data.iterate(), len(data))
 
   security.declareProtected(Permissions.ModifyPortalContent,'PUT')
   def PUT(self, REQUEST, RESPONSE):

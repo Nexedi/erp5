@@ -28,6 +28,7 @@ from cStringIO import StringIO
 
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
+from ZPublisher.Iterators import IUnboundStreamIterator
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.BTreeData import BTreeData
 
@@ -102,6 +103,13 @@ class TestBigFile(ERP5TypeTestCase):
   # check that object (document) method corresponding to request returns
   # result, with expected response body, status and headers
   def checkRequest(self, document, request, kw, result, body, status, header_dict):
+    assert type(result) is str
+    assert type(body) is str
+    # - result corresponds to the content returned as a string;
+    # - body corresponds to the content returned inside a stream iterator.
+    # We can't have both at the same time.
+    assert not(bool(result) == bool(body) == True)
+
     # request -> method to call
     method_name = request['REQUEST_METHOD']
     if method_name == 'GET':
@@ -112,18 +120,18 @@ class TestBigFile(ERP5TypeTestCase):
     # like in ZPublisher - returned RESPONSE means empty
     if ret is request.RESPONSE:
       ret = ''
-    self.assertEqual(ret,       result)
-    self.assertEqual(status,    request.RESPONSE.getStatus())
+    elif IUnboundStreamIterator.providedBy(ret):
+      ret = ''.join(ret)
+    self.assertEqual(status, request.RESPONSE.getStatus())
     for h,v in header_dict.items():
       rv = request.RESPONSE.getHeader(h)
       self.assertEqual(v, rv, '%s: %r != %r' % (h, v, rv))
-
-    # force response flush to its stdout
-    request.RESPONSE.write('')
-    # body and headers are delimited by empty line (RFC 2616, 4.1)
-    response_body = request.RESPONSE.stdout.getvalue().split('\r\n\r\n', 1)[1]
-    self.assertEqual(body, response_body)
-
+    if result:
+      self.assertEqual(ret, result)
+    elif body:
+      self.assertEqual(ret, body)
+    else:
+      self.assertEqual(ret, '')
 
   # basic tests for working with BigFile via its public interface
   def testBigFile_01_Basic(self):
@@ -356,4 +364,3 @@ class TestBigFile(ERP5TypeTestCase):
 
 
   # TODO write big data to file and ensure it still works
-  # TODO test streaming works in chunks

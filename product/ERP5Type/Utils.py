@@ -58,6 +58,9 @@ from Products.PageTemplates.Expressions import getEngine
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.ZCatalog.Lazy import LazyMap
 
+from zope.interface import implementer
+from ZPublisher.Iterators import IStreamIterator
+
 try:
   import chardet
 except ImportError:
@@ -1795,3 +1798,24 @@ def formatRFC822Headers(headers):
         vallines = linesplit.split(str(value))
       munged.append('%s: %s' % (key, '\r\n  '.join(vallines)))
   return '\r\n'.join(munged)
+
+#####################################################
+# WSGI/Medusa compatibility
+#####################################################
+
+@implementer(IStreamIterator)
+class IterableAsStreamIterator:
+  def __init__(self, iterable, content_length):
+    self.iterable = iterable
+    self.content_length = content_length
+
+  def __iter__(self):
+    return self
+
+  def __len__(self):
+    return self.content_length
+
+  def next(self):
+    for chunk in self.iterable:
+      return chunk
+    raise StopIteration
