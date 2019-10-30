@@ -13,10 +13,10 @@ try:
 except Exception, e:
   response.setStatus(500)
   try:
-    response.write(str(e[1]))
-  except Exception:
-    response.write(str(e))
-  return
+    data = e[1]
+  except IndexError:
+    data = e
+  return str(data)
 
 # handle non JSON serializable data
 new_data = [data[0]]
