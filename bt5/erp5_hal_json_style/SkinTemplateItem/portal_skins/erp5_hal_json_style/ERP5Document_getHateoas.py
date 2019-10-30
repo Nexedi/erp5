@@ -2255,6 +2255,12 @@ else:
 
 # Calculate view url
 if mode == 'url_generator':
+  #################################################
+  # Allow to generator URL from other python scripts
+  #################################################
+  if REQUEST.other['method'] != "GET":
+    response.setStatus(405)
+    return ""
   if (keep_items is None):
     generator_key = 'traverse_generator'
     keep_items_json = None
