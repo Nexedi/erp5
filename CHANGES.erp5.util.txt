@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.65 (2019-10-30)
+-------------------
+
+  * erp5.util:
+
+    - testnode: Allow to run scalability tests against already existing instance
+
+
 0.4.64 (2019-10-10)
 -------------------
 
