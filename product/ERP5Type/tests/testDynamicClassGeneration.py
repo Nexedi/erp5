@@ -2272,8 +2272,8 @@ ValidationFailed('anything')
     self.assertEqual(imported_component1.getValidationState(), 'validated')
     self.assertEqual(imported_component2.getValidationState(), 'validated')
 
-    # 2) Then validate again the main one
-    self.portal.portal_workflow.doActionFor(component, 'validate_action')
+    # 2) Then modify the main one so that it automatically 'validate'
+    component.setTextContent(component.getTextContent() + '\n')
     self.tic()
     self._assertAstroidCacheContent(
       must_be_in_cache_set={'%s' % namespace,

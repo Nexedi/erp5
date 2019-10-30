@@ -309,22 +309,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     Check Component source code through Pylint or compile() builtin if not
     available
     """
-    error_list = []
-    warning_list = []
-    for message_dict in checkPythonSourceCode(self.getTextContent(),
-                                              self.getPortalType()):
-      message = '%s:%3d,%3d: %s' % (message_dict['type'],
-                                    message_dict['row'],
-                                    message_dict['column'],
-                                    message_dict['text'])
-
-      if message_dict['type'] in ('F', 'E'):
-        error_list.append(message)
-      else:
-        warning_list.append(message)
-
-    self.setTextContentWarningMessageList(warning_list)
-    self.setTextContentErrorMessageList(error_list)
+    return checkPythonSourceCode(self.getTextContent(), self.getPortalType())
 
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
   def PUT(self, REQUEST, RESPONSE):
