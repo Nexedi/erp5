@@ -3,7 +3,8 @@
 :param keep_items: is used mainly to pass "portal_status_message" to be showed to the user
                    the new UI supports "portal_status_level" with values "success" or "error"
 """
-from zExceptions import Redirect
+from transaction import doom
+from zExceptions import Success
 from ZTUtils import make_query
 import json
 
@@ -57,6 +58,6 @@ result_dict = {
 }
 result = json.dumps(result_dict, indent=2)
 if abort_transaction:
-  response.write(result)
-  raise Redirect
+  doom()
+  raise Success(result)
 return result
