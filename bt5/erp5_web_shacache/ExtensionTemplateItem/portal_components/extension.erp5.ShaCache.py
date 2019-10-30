@@ -29,6 +29,8 @@
 
 import hashlib, httplib
 from Products.ERP5Type.UnrestrictedMethod import super_user
+from Products.ERP5Type.Utils import IterableAsStreamIterator
+from zExceptions import Success
 
 
 def WebSection_getDocumentValue(self, key, portal=None, language=None,\
@@ -71,7 +73,8 @@ def File_viewAsWeb(self):
   """
   RESPONSE = self.REQUEST.RESPONSE
   RESPONSE.setHeader('Content-Type', self.getContentType())
-  RESPONSE.setHeader('Content-Length', self.getSize())
+  size = self.getSize()
+  RESPONSE.setHeader('Content-Length', size)
   RESPONSE.setHeader('Cache-Control', 'public,max-age=31556926')
   RESPONSE.setHeader('Accept-Ranges', 'bytes')
 
@@ -80,18 +83,19 @@ def File_viewAsWeb(self):
   if isinstance(data, str):
     # Do this way instead of 'return data'
     # to bypass default caching policy manager.
-    RESPONSE.write(data)
-    return
+    raise Success(data)
 
   # For Pdata type, we must iterate and send chunk by chunk.
-  # And no need to continue if the client closed the connection.
-  while data and not RESPONSE.stdout._channel.closed:
-    # Send data to the client.
-    RESPONSE.write(data.data)
-    # Load next object without keeping previous chunks in memory.
-    deactivate = data._p_deactivate
-    data = data.next
-    deactivate()
+  def generator():
+    while data:
+      # Send data to the client.
+      yield data.data
+      # Load next object without keeping previous chunks in memory.
+      deactivate = data._p_deactivate
+      data = data.next
+      deactivate()
+  return IterableAsStreamIterator(generator(), size)
+
 
 def WebSite_viewAsWebPost(self, *args, **kwargs):
   portal = self.getPortalObject()
