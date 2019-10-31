@@ -37,7 +37,11 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
         return promise;
       })
       .push(function (result) {
-        span_element.innerHTML = result;
+        if (result[0] === "1") {
+          span_element.classList.add("pass");
+        } else {
+          span_element.classList.add("fail");
+        }
       });
   }
 
@@ -81,46 +85,40 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
         project_url = base_site + modification_dict.jio_key,
         // REPLACE THIS AJAX REQUEST WITH JIO
         last_test_result_promise = generateAjaxPromise(project_url + "/Project_lastTestResult");
-      setHTMLWithPromiseResult(document.getElementById("last_test_result"), last_test_result_promise);
-
-      document.getElementById("home_page_content").innerHTML = modification_dict.home_page_content;
+      setHTMLWithPromiseResult(document.getElementById("test_result_span"), last_test_result_promise);
 
       return gadget.jio_getAttachment(modification_dict.jio_key, "links")
         .push(function (erp5_document) {
           var milestone_view = getActionListByName(ensureArray(erp5_document._links.view), "milestone");
           return gadget.getUrlForList([getUrlParameters('milestone_module', milestone_view, [["stop_date", "ascending"]]),
-                                       
             getUrlParameters('task_module', "view", [["delivery.start_date", "descending"]],
                              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
                              ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_domain:  "confirmed"')),
-                                       
             getUrlParameters('support_request_module', "view", [["delivery.start_date", "descending"]],
                              null, ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_support_domain:  "validated"')),
-                                       
             getUrlParameters('bug_module', "view", [["delivery.start_date", "descending"]],
                              ["title", "description", "delivery.start_date"],
                              ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_bug_domain:  "started"')),
-                                       
             getUrlParameters('bug_module', "view", [["delivery.start_date", "descending"]],
                              ["title", "description", "delivery.start_date"],
                              ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_bug_domain:  "closed"')),
-                                       
             getUrlParameters('task_report_module', 'view', [["delivery.start_date", "descending"]],
                              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
                              ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_report_domain:  "started"')),
-                                       
             getUrlParameters('task_report_module', 'view', [["delivery.start_date", "descending"]],
                              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
                              ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_report_domain:  "closed"')),
-                                       
             getUrlParameters('test_result_module', 'view', [["delivery.start_date", "descending"]],
                              null, ('source_project_title:  "' + modification_dict.project_title + '"')),
-                                       
             getUrlParameters('test_suite_module', 'view', [["creation_date", "descending"]],
-                             null, ('source_project_title:  "' + modification_dict.project_title + '"')) ]);
+                             null, ('source_project_title:  "' + modification_dict.project_title + '"')),
+            getUrlParameters('task_module', "view", [["delivery.start_date", "descending"]],
+                             ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
+                              "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+                             ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_domain:  "not_confirmed"')) ]);
         })
         .push(function (url_list) {
           enableLink(document.getElementById("milestone_link"), url_list[0]);
@@ -132,6 +130,12 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
           enableLink(document.getElementById("closed_report_link"), url_list[6]);
           enableLink(document.getElementById("test_result_link"), url_list[7]);
           enableLink(document.getElementById("test_suite_link"), url_list[8]);
+          enableLink(document.getElementById("not_confirmed_task_link"), url_list[9]);
+
+          return gadget.getDeclaredGadget("editor");
+        })
+        .push(function (editor) {
+          editor.render({"editor": "fck_editor", "editable": false, "value": modification_dict.home_page_content});
         });
     })
 

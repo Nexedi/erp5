@@ -40,7 +40,8 @@
     </div>
     <div class="ui-field-contain" style="top:150px;">
       <p>
-        <a id="task_link" class="first-line-buttons ui-disabled" data-i18n="[value]Tasks" disabled >Tasks</a>
+        <a id="task_link" class="first-line-buttons ui-disabled" data-i18n="[value]Confirmed Tasks" disabled >Confirmed Tasks</a>
+        <a id="not_confirmed_task_link" class="first-line-buttons ui-disabled" data-i18n="[value]Not Confirmed Tasks" disabled >Not Confirmed Tasks</a>
       </p>
     </div>
     <div class="ui-field-contain" style="top:200px;">
@@ -57,13 +58,14 @@
     </div>
     <div class="ui-field-contain" style="top:300px;">
       <p>
-        <a id="test_result_link" class="first-line-buttons ui-disabled" data-i18n="[value]Last test result" disabled >Last test result:</a>
-        <span id="last_test_result" class="test-result" style="margin-right:10px;">...</span>
+        <span id="test_result_span" class="test-result" style="margin-right:10px;">
+          <a id="test_result_link" data-i18n="[value]Last test result" disabled >Last test result</a>
+        </span>
         <a id="test_suite_link" class="first-line-buttons ui-disabled" data-i18n="[value]Test suite" disabled >Test suite</a>
       </p>
     </div>
     <div class="ui-field-contain" style="top:350px;">
-      <div id="home_page_content"></div>
+      <div data-gadget-url="gadget_editor.html" data-gadget-scope="editor"></div>
     </div>
 
   </body>
