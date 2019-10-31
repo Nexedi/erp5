@@ -41,20 +41,16 @@ from erp5.component.module.WorkingCopy import \
   NotAWorkingCopyError, NotVersionedError, VcsConflictError
 from erp5.component.module.SubversionClient import newSubversionClient
 
-# XXX Still not thread safe !!! Proper fix is to never use 'os.chdir'
-#     Using a RLock is a temporary quick change that only protects against
-#     concurrent uses of ERP5 Subversion.
-_chdir_lock = threading.RLock()
+# XXX This does not work with concurrent processes/threads...
 @simple_decorator
 def chdir_working_copy(func):
   def decorator(self, *args, **kw):
-    with _chdir_lock:
-      cwd = os.getcwd()
-      try:
-        os.chdir(self.working_copy)
-        return func(self, *args, **kw)
-      finally:
-        os.chdir(cwd)
+    cwd = os.getcwd()
+    try:
+      os.chdir(self.working_copy)
+      return func(self, *args, **kw)
+    finally:
+      os.chdir(cwd)
   return decorator
 
 class Subversion(WorkingCopy):
