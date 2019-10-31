@@ -34,6 +34,7 @@ import random
 import tempfile
 from xml.dom.minidom import getDOMImplementation
 from App.config import getConfiguration
+from Products.CMFCore.ActionsTool import ActionsTool
 from Products.ERP5VCS.WorkingCopy import getVcsTool
 
 from Products.ERP5.Document.BusinessTemplate import \
@@ -53,7 +54,7 @@ class TestTemplateTool(ERP5TypeTestCase):
             'erp5_full_text_mroonga_catalog',
             'erp5_base',
             'erp5_stock_cache',
-            'erp5_csv_style')
+           )
 
   def getTitle(self):
     return "Template Tool"
@@ -147,13 +148,43 @@ class TestTemplateTool(ERP5TypeTestCase):
      the new bt5 is not installed, only imported.
     """
     self._svn_setup_ssl()
+
+    global PropertiesTool
+    class PropertiesTool(ActionsTool):
+      id = 'portal_properties'
+    cls = PropertiesTool
+
+    # Assign a fake properties tool to the portal
+    tool = PropertiesTool()
+    self.portal._setObject(tool.id, tool, set_owner=False, suppress_events=True)
+    del tool
+    self.commit()
+
     template_tool = self.portal.portal_templates
+
+    url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_csv_style'
+    template_tool.updateBusinessTemplateFromUrl(url)
     old_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
     # fake different revision
     old_bt.setRevision('')
-    url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_csv_style'
-    template_tool.updateBusinessTemplateFromUrl(url)
-    new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
+
+    # Break the properties tool
+    self.assertIs(self.portal.portal_properties.__class__, cls)
+    self.commit()
+    self.portal._p_jar.cacheMinimize()
+    del PropertiesTool
+    self.assertIsNot(self.portal.portal_properties.__class__, cls)
+
+    # Remove portal.portal_properties
+    from Products.ERP5Type.dynamic.portal_type_class import \
+      _bootstrapped, synchronizeDynamicModules
+    _bootstrapped.remove(self.portal.id)
+    synchronizeDynamicModules(self.portal, force=True)
+
+    # The bt from this repo
+    url = self._getBTPathAndIdList(('erp5_csv_style',))[0][0]
+
+    new_bt = template_tool.updateBusinessTemplateFromUrl(url)
     self.assertNotEquals(old_bt, new_bt)
     self.assertEqual('erp5_csv_style', new_bt.getTitle())
 
