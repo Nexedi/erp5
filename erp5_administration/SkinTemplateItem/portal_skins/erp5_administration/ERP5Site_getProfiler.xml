@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ExternalMethod" module="Products.ExternalMethod.ExternalMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_function</string> </key>
+            <value> <string>getProfiler</string> </value>
+        </item>
+        <item>
+            <key> <string>_module</string> </key>
+            <value> <string>pprofile</string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_getProfiler</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
