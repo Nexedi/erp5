@@ -348,11 +348,11 @@ select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-image: none;
   background-color: #FFFFFF;
   padding-right: 24pt;
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50px' height='50px'><polyline fill-opacity='0.5' points='46.139,15.518 25.166,36.49 4.193,15.519'/></svg>") right no-repeat;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50px' height='50px'><polyline fill-opacity='0.5' points='46.139,15.518 25.166,36.49 4.193,15.519'/></svg>");
   background-position: right 6pt top 50%;
+  background-repeat: no-repeat;
   background-size: 12pt 12pt;
 }
 select:-moz-focusring {
