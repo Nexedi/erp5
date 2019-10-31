@@ -47,8 +47,9 @@ from zope.security.management import endInteraction
 from zope.security.management import newInteraction
 from Zope2.App.startup import validated_hook
 from ZPublisher import pubevents, Retry
+from ZPublisher.HTTPResponse import HTTPResponse
 from ZPublisher.HTTPRequest import HTTPRequest
-from ZPublisher.Iterators import IUnboundStreamIterator
+from ZPublisher.Iterators import IStreamIterator, IUnboundStreamIterator
 from ZPublisher.mapply import mapply
 from ZPublisher.WSGIPublisher import call_object as call_object_orig
 from ZPublisher.WSGIPublisher import missing_name, WSGIResponse
@@ -69,6 +70,34 @@ call_object = wrap_call_object(call_object_orig)
 AC_LOGGER = logging.getLogger('event.AccessControl')
 
 if 1: # upstream moved WSGIResponse to HTTPResponse.py
+
+    def setBody(self, body, title='', is_error=False, lock=None):
+        # allow locking of the body in the same way as the status
+        if self._locked_body:
+            return
+
+        if isinstance(body, IOBase):
+            body.seek(0, 2)
+            length = body.tell()
+            body.seek(0)
+            self.setHeader('Content-Length', '%d' % length)
+            self.body = body
+        elif IStreamIterator.providedBy(body):
+            self.body = body
+            HTTPResponse.setBody(self, b'', title, is_error)
+        elif IUnboundStreamIterator.providedBy(body):
+            self.body = body
+            self._streaming = 1
+            HTTPResponse.setBody(self, b'', title, is_error)
+        else:
+            HTTPResponse.setBody(self, body, title, is_error)
+
+        # Have to apply the lock at the end in case the super class setBody
+        # is called, which will observe the lock and do nothing
+        if lock:
+            self._locked_body = 1
+
+    WSGIResponse.setBody = setBody
 
     # According to PEP 333, WSGI applications and middleware are forbidden from
     # using HTTP/1.1 "hop-by-hop" features or headers. This patch prevents Zope
