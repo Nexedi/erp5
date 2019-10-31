@@ -57,8 +57,9 @@ category_list_spreadsheet_dict = context.Base_getCategoriesSpreadSheetMapping(
 if detailed_report_result:
   REQUEST.other['portal_status_message'] = translateString('Spreasheet contains errors')
   REQUEST.other['category_import_report'] = detailed_report_result
-  REQUEST.RESPONSE.write(portal_categories.CategoryTool_viewImportReport().encode('utf-8'))
-  raise Exception('Spreadsheet contains errors')
+  REQUEST.RESPONSE.setBody(portal_categories.CategoryTool_viewImportReport().encode('utf-8'), lock=True)
+  # Spreadsheet contains errors
+  raise Exception
 
 for base_category, category_list in category_list_spreadsheet_dict.iteritems():
   total_category_counter += len(category_list)
@@ -211,8 +212,9 @@ if detailed_report:
   REQUEST.other['category_import_report'] = detailed_report_result
   result = portal_categories.CategoryTool_viewImportReport().encode('utf-8')
   if simulation_mode:
-    REQUEST.RESPONSE.write(result)
-    raise Exception('Dry run')  
+    REQUEST.RESPONSE.setBody(result, lock=True)
+    # Dry run
+    raise Exception
   return result
 portal_categories.Base_redirect(
   keep_items={
