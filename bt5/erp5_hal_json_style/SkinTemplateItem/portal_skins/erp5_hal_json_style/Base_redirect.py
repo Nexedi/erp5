@@ -76,6 +76,6 @@ if (form_id is not None) and \
 
 result = json.dumps(result_dict, indent=2)
 if abort_transaction:
-  response.write(result)
+  response.setBody(result, lock=True)
   raise Redirect
 return result
