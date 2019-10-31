@@ -446,6 +446,7 @@ def synchronizeDynamicModules(context, force=False):
             migrate = True
           else:
             continue
+          transaction.get().note('Bootstraping %s' % tool_class)
           tool._bootstrap()
           tool.__class__ = getattr(erp5.portal_type, tool.portal_type)
         # TODO: Create portal_activities here, and even before portal_types:
