@@ -26,14 +26,12 @@
 
   </head>
   <body>
-    <h1></h1>
     <div class="ui-field-contain" style="top:50px;">
       <div class="bottom">
-        <a id="forum_link" target="_blank" class="first-line-buttons ui-disabled" data-i18n="[value]Forum" disabled >Forum</a>
-        <!-- <a id="description_link" target="_blank" class="first-line-buttons ui-disabled" data-i18n="[value]Project Description" disabled >Project Description</a> -->
         <a id="rss_link" target="_blank" class="first-line-buttons ui-disabled" data-i18n="[value]Generate RSS" disabled >Generate RSS</a>
       </div>
     </div>
+
     <div class="ui-field-contain" style="top:100px;">
       <p>
         <a id="milestone_link" class="first-line-buttons ui-disabled" data-i18n="[value]Milestones" disabled >Milestones</a>
@@ -42,55 +40,31 @@
     </div>
     <div class="ui-field-contain" style="top:150px;">
       <p>
-        <a id="task_link" class="first-line-buttons ui-disabled" data-i18n="[value]Tasks" disabled >Tasks:</a>
-        <span id="task_count">...</span><span> confirmed / </span>
-        <span id="unassigned_task_count">...</span><span style="margin-right:50px;"> unassigend </span>
+        <a id="task_link" class="first-line-buttons ui-disabled" data-i18n="[value]Tasks" disabled >Tasks</a>
       </p>
     </div>
     <div class="ui-field-contain" style="top:200px;">
       <p>
-        <a id="report_link" class="first-line-buttons ui-disabled" data-i18n="[value]Task Reports" disabled >Task Reports:</a>
-        <span id="report_count">...</span><span> opened </span>
-        <a id="closed_report_link" class="first-line-buttons ui-disabled" data-i18n="[value]Closed Task Reports" disabled >Task Reports:</a>
-        <span id="closed_report_count">...</span><span> recently closed </span>
+        <a id="report_link" class="first-line-buttons ui-disabled" data-i18n="[value]Task Reports" disabled >Opened Task Reports</a>
+        <a id="closed_report_link" class="first-line-buttons ui-disabled" data-i18n="[value]Closed Task Reports" disabled >Closed Task Reports</a>
       </p>
     </div>
     <div class="ui-field-contain" style="top:250px;">
       <p>
-        <a id="bug_link" class="first-line-buttons ui-disabled" data-i18n="[value]Bugs" disabled >Bugs:</a>
-        <span id="bug_count">...</span><span> opened </span>
-        <a id="closed_bug_link" class="first-line-buttons ui-disabled" data-i18n="[value]Closed Bugs" disabled >Bugs:</a>
-        <span id="closed_bug_count">...</span><span> recently closed </span>
+        <a id="bug_link" class="first-line-buttons ui-disabled" data-i18n="[value]Bugs" disabled >Opened Bugs</a>
+        <a id="closed_bug_link" class="first-line-buttons ui-disabled" data-i18n="[value]Closed Bugs" disabled >Closed Bugs</a>
       </p>
     </div>
     <div class="ui-field-contain" style="top:300px;">
       <p>
         <a id="test_result_link" class="first-line-buttons ui-disabled" data-i18n="[value]Last test result" disabled >Last test result:</a>
-        <span id="last_test_result" style="margin-right:10px;">...</span>
+        <span id="last_test_result" class="test-result" style="margin-right:10px;">...</span>
         <a id="test_suite_link" class="first-line-buttons ui-disabled" data-i18n="[value]Test suite" disabled >Test suite</a>
       </p>
-    </div>
-    <div class="ui-field-contain" style="top:320px;">
-      <h1 data-i18n="[value]Project WorkList" class="ui-title ui-override-theme worklist-title">Project WorkList</h1>
-    </div>
-    <div class="ui-field-contain" style="top:325px;">
-      <section class="document_list" style="width: 100%;"></section>
     </div>
     <div class="ui-field-contain" style="top:350px;">
       <div id="home_page_content"></div>
     </div>
 
-    <!--
-    <div class="ui-field-contain">
-      <div class="left" style="height:50%; width:100%">
-        <div class="ui-icon-spinner ui-btn-icon-notext first-loader graph-spinner"></div>
-        <div id="wrap1" style="height:300px;"></div>
-      </div>
-      <div class="right" style="height:50%; width:100%">
-        <div class="ui-icon-spinner ui-btn-icon-notext first-loader graph-spinner"></div>
-        <div id="wrap2" style="height:300px;"></div>
-      </div>
-    </div>
-    -->
   </body>
 </html>

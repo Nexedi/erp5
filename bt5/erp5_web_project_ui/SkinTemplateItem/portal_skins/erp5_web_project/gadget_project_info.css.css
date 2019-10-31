@@ -71,6 +71,18 @@ input[type="submit"] {
   min-width: 8em;
 }
 
+.gadget-content span.test-result {
+  padding: 6pt;
+  margin-top: 30pt;
+  margin-right: 6pt;
+  background-color: #00a616;
+  color: #FFFFFF;
+  border-radius: 0.325em;
+  border-width: 1px;
+  border-style: solid;
+  min-width: 8em;
+}
+
 .worklist-title {
   color: #777777;
   margin-top: 10px;

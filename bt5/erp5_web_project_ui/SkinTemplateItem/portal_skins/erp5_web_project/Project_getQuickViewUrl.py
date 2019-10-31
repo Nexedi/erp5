@@ -4,7 +4,7 @@ request = context.REQUEST
 if url_dict:
   jio_key = context.getRelativeUrl()
   return {
-    'command': 'display',
+    'command': 'index',
     'options': {
       'jio_key': jio_key,
       'editable': True
