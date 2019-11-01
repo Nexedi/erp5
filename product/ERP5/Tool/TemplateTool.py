@@ -1181,6 +1181,8 @@ class TemplateTool (BaseTool):
                 break
             if provider_title is None and len(provider_list) == 1:
               provider_title = provider_list[0]
+            elif 'erp5_full_text_myisam_catalog' in provider_list:
+              provider_title = 'erp5_full_text_myisam_catalog'
             LOG('resolveBT, provider_title', 0, provider_title)
             if provider_title:
               for candidate in available_bt5_list:
