@@ -6,32 +6,16 @@
     <title>Project info gadget</title>
     <script src="rsvp.js"></script>
     <script src="renderjs.js"></script>
-    <!-- <script src="handlebars.js" type="text/javascript"></script>
-    <script id="panel-template-body-list" type="text/x-handlebars-template"></script>-->
-    <script src="handlebars.js" type="text/javascript"></script>
     <script src="gadget_project_info.js"></script>
     <link rel="stylesheet" type="text/css" href="gadget_project_info.css">
-    <!-- worklist -->
-    <script id="table-template" type="text/x-handlebars-template">
-      {{#if document_list }}
-      <ul data-role="listview" data-theme="c" class="document-listview ui-listview-inset ui-corner-all">
-        {{#each document_list}}
-          <li class="ui-li-has-count" data-icon="false" ><a class="ui-body-inherit" href="{{link}}">{{title}} <span id="{{id}}" class="ui-li-count">{{count}}</span></a></li>
-        {{/each}}
-      </ul>
-      {{else}}
-        <p>All work caught up!</p>
-      {{/if}}
-    </script>
-
   </head>
+
   <body>
     <div class="ui-field-contain" style="top:50px;">
       <div class="bottom">
         <a id="rss_link" target="_blank" class="first-line-buttons ui-disabled" data-i18n="[value]Generate RSS" disabled >Generate RSS</a>
       </div>
     </div>
-
     <div class="ui-field-contain" style="top:100px;">
       <p>
         <a id="milestone_link" class="first-line-buttons ui-disabled" data-i18n="[value]Milestones" disabled >Milestones</a>
@@ -72,6 +56,5 @@
     <div class="ui-field-contain" style="top:350px;">
       <div data-gadget-url="gadget_editor.html" data-gadget-scope="editor"></div>
     </div>
-
   </body>
 </html>

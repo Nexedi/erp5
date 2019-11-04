@@ -1,16 +1,9 @@
 /*jslint nomen: true, indent: 2 */
 /*global window, rJS, RSVP, document, FileReader, Blob, jIO, ensureArray,
-lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
+lockGadgetInQueue, unlockGadgetInQueue*/
 (function (window, rJS, RSVP, document, FileReader, Blob, jIO, ensureArray,
-           lockGadgetInQueue, unlockGadgetInQueue, Handlebars) {
+           lockGadgetInQueue, unlockGadgetInQueue) {
   "use strict";
-
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    source = gadget_klass.__template_element
-                         .getElementById("table-template")
-                         .innerHTML,
-    table_template = Handlebars.compile(source);
 
   function enableLink(link_element, url) {
     link_element.href = url;
@@ -46,13 +39,13 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
     });
   }
 
-  function getWebPage(gadget, project_reference) {
+  function getWebPageInfo(gadget, project_reference) {
     var query = 'portal_type:="Web Page" AND reference:"' + project_reference + '-Home.Page" AND validation_state:"published_alive"',
         id, content, edit_view;
     return gadget.jio_allDocs({
       query: query,
       limit: 1,
-      select_list: ['id', 'text_content']
+      select_list: ['text_content']
     })
     .push(function (result_list) {
       if (result_list.data.rows) {
@@ -82,11 +75,9 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
     };
   }
 
-  gadget_klass
+  rJS(window)
 
-    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
-    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
 
@@ -101,18 +92,23 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
 
     .onStateChange(function (modification_dict) {
       var gadget = this,
-        base_site = window.location.origin + window.location.pathname,
-        project_url = base_site + modification_dict.jio_key,
-        web_page_info;
-      setLastTestResult(gadget, modification_dict.project_title, document.getElementById("test_result_span"));
-      return getWebPage(gadget, modification_dict.project_reference)
-        .push(function (result) {
-          web_page_info = result;
-          return gadget.jio_getAttachment(modification_dict.jio_key, "links");
+        web_page_info,
+        editor;
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            getWebPageInfo(gadget, modification_dict.project_reference),
+            gadget.jio_getAttachment(modification_dict.jio_key, "links"),
+            gadget.getDeclaredGadget("editor")
+          ]);
         })
-        .push(function (erp5_document) {
-          var milestone_view = getActionListByName(ensureArray(erp5_document._links.view), "milestone");
-          return gadget.getUrlForList([getUrlParameters('milestone_module', milestone_view, [["stop_date", "ascending"]]),
+        .push(function (result_list) {
+          var milestone_view = getActionListByName(ensureArray(result_list[1]._links.view), "milestone");
+          web_page_info = result_list[0];
+          editor = result_list[2];
+          editor.render({"editor": "fck_editor", "editable": false, "value": web_page_info.content});
+          return gadget.getUrlForList([
+            getUrlParameters('milestone_module', milestone_view, [["stop_date", "ascending"]]),
             getUrlParameters('task_module', "view", [["delivery.start_date", "descending"]],
                              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
@@ -141,7 +137,8 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
                              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
                              ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_domain:  "not_confirmed"')),
-            getUrlParameters(web_page_info.id, web_page_info.edit_view) ]);
+            getUrlParameters(web_page_info.id, web_page_info.edit_view)
+          ]);
         })
         .push(function (url_list) {
           enableLink(document.getElementById("milestone_link"), url_list[0]);
@@ -157,10 +154,7 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
           if (web_page_info.id) {
             enableLink(document.getElementById("web_page_link"), url_list[10]);
           }
-          return gadget.getDeclaredGadget("editor");
-        })
-        .push(function (editor) {
-          editor.render({"editor": "fck_editor", "editable": false, "value": web_page_info.content});
+          setLastTestResult(gadget, modification_dict.project_title, document.getElementById("test_result_span"));
         });
     })
 
@@ -173,4 +167,4 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
     });
 
 }(window, rJS, RSVP, document, FileReader, Blob, jIO, ensureArray,
-  lockGadgetInQueue, unlockGadgetInQueue, Handlebars));
+  lockGadgetInQueue, unlockGadgetInQueue));
