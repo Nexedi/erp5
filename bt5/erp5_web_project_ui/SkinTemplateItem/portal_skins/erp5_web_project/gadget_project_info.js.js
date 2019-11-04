@@ -46,6 +46,23 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
     });
   }
 
+  function getWebPage(gadget, project_reference) {
+    var query = 'portal_type:="Web Page" AND reference:"' + project_reference + '-Home.Page" AND validation_state:"published_alive"',
+        id, content;
+    return gadget.jio_allDocs({
+      query: query,
+      limit: 1,
+      select_list: ['id', 'text_content']
+    })
+    .push(function (result_list) {
+      if (result_list.data.rows) {
+        id = result_list.data.rows[0].id;
+        content = result_list.data.rows[0].value.text_content;
+      }
+      return {"id": id, "content": content};
+    });
+  }
+
   function getUrlParameters(jio_key, view, sort_list, column_list, extended_search) {
     return {
       command: 'push_history',
@@ -72,8 +89,7 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
       var state_dict = {
           jio_key: options.jio_key || "",
           project_title: options.project_title,
-          home_page_content: options.home_page_content,
-          home_page_jio_key: options.home_page_jio_key
+          project_reference: options.project_reference
         };
       return this.changeState(state_dict);
     })
@@ -81,9 +97,14 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
     .onStateChange(function (modification_dict) {
       var gadget = this,
         base_site = window.location.origin + window.location.pathname,
-        project_url = base_site + modification_dict.jio_key;
+        project_url = base_site + modification_dict.jio_key,
+        web_page_info;
       setLastTestResult(gadget, modification_dict.project_title, document.getElementById("test_result_span"));
-      return gadget.jio_getAttachment(modification_dict.jio_key, "links")
+      return getWebPage(gadget, modification_dict.project_reference)
+        .push(function (result) {
+          web_page_info = result;
+          return gadget.jio_getAttachment(modification_dict.jio_key, "links");
+        })
         .push(function (erp5_document) {
           var milestone_view = getActionListByName(ensureArray(erp5_document._links.view), "milestone");
           return gadget.getUrlForList([getUrlParameters('milestone_module', milestone_view, [["stop_date", "ascending"]]),
@@ -115,7 +136,7 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
                              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
                              ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_domain:  "not_confirmed"')),
-            getUrlParameters(modification_dict.home_page_jio_key, "view") ]);
+            getUrlParameters(web_page_info.id, "view") ]);
         })
         .push(function (url_list) {
           enableLink(document.getElementById("milestone_link"), url_list[0]);
@@ -132,7 +153,7 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
           return gadget.getDeclaredGadget("editor");
         })
         .push(function (editor) {
-          editor.render({"editor": "fck_editor", "editable": false, "value": modification_dict.home_page_content});
+          editor.render({"editor": "fck_editor", "editable": false, "value": web_page_info.content});
         });
     })
 
