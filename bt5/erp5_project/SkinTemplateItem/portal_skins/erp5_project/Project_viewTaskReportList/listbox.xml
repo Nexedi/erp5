@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>all_columns</string>
                 <string>columns</string>
                 <string>editable_columns</string>
                 <string>list_method</string>
@@ -17,7 +18,6 @@
                 <string>report_root_list</string>
                 <string>report_tree</string>
                 <string>selection_name</string>
-                <string>sort</string>
                 <string>sort_columns</string>
                 <string>stat_method</string>
                 <string>title</string>
@@ -84,6 +84,12 @@
                 <item>
                     <key> <string>Base_viewSearchResultList</string> </key>
                     <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>all_editable_columns</string> </key>
@@ -223,25 +229,9 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>id</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>title</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

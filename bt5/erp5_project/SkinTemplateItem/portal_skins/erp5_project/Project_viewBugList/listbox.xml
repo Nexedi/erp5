@@ -10,15 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>default_params</string>
-                <string>domain_root_list</string>
-                <string>domain_tree</string>
-                <string>list_method</string>
-                <string>portal_types</string>
-                <string>sort</string>
-                <string>sort_columns</string>
                 <string>title</string>
+                <string>columns</string>
+                <string>sort_columns</string>
+                <string>sort</string>
+                <string>list_method</string>
+                <string>selection_name</string>
+                <string>portal_types</string>
+                <string>default_params</string>
               </list>
             </value>
         </item>
@@ -85,6 +84,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>sort</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -139,40 +142,24 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>source_trade_title</string>
-                          <string>Reporter</string>
+                          <string>description</string>
+                          <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>source_person_title</string>
-                          <string>Assignee</string>
+                          <string>start_date</string>
+                          <string>Start Date</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.start_date</string>
-                          <string>Date</string>
+                          <string>destination_project_title</string>
+                          <string>Requested Project</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>bug_priority_title</string>
-                          <string>Priority</string>
-                        </tuple>
-                        <tuple>
-                          <string>bug_severity_title</string>
-                          <string>Severity</string>
-                        </tuple>
-                        <tuple>
-                          <string>bug_difficulty_title</string>
-                          <string>Difficulty</string>
+                          <string>source_project_title</string>
+                          <string>Handled Project</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
@@ -191,21 +178,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>domain_root_list</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>state_bug_domain</string>
-                          <string>Bug Status</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>domain_tree</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -231,6 +203,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>project_bug_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -270,7 +246,10 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
     </pickle>
     <pickle>
       <dictionary>
