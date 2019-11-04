@@ -16,6 +16,7 @@ lockGadgetInQueue, unlockGadgetInQueue*/
   }
 
   function setLastTestResult(gadget, project_title, span_element) {
+    span_element.classList.remove("ui-disabled");
     var query = 'portal_type:="Benchmark Result" AND source_project_title:"' + project_title + '"';
     return gadget.jio_allDocs({
       query: query,
