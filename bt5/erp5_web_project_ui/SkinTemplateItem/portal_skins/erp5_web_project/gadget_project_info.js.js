@@ -49,7 +49,7 @@ lockGadgetInQueue, unlockGadgetInQueue*/
       select_list: ['text_content']
     })
     .push(function (result_list) {
-      if (result_list.data.rows) {
+      if (result_list.data.rows[0]) {
         id = result_list.data.rows[0].id;
         content = result_list.data.rows[0].value.text_content;
         return gadget.jio_getAttachment(id, "links")
