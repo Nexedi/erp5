@@ -18,35 +18,32 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
     link_element.classList.remove("ui-disabled");
   }
 
-  function generateAjaxPromise(url) {
-    return new RSVP.Queue()
-      .push(function () {
-        return jIO.util.ajax({
-          url: url,
-          dataType: 'text'
-        });
-      })
-      .push(function (evt) {
-        return evt.target.responseText.split('\n');
-      });
-  }
-
-  function setHTMLWithPromiseResult(span_element, promise) {
-    return new RSVP.Queue()
-      .push(function () {
-        return promise;
-      })
-      .push(function (result) {
-        if (result[0] === "1") {
-          span_element.classList.add("pass");
-        } else {
-          span_element.classList.add("fail");
-        }
-      });
-  }
-
   function getActionListByName(view_list, name) {
     return view_list.filter(d => d.name === name)[0].href;
+  }
+
+  function setLastTestResult(gadget, project_title, span_element) {
+    var query = 'portal_type:="Benchmark Result" AND source_project_title:"' + project_title + '"';
+    return gadget.jio_allDocs({
+      query: query,
+      limit: 2, //first result could be the running test
+      sort_on: [['creation_date', 'descending']],
+      select_list: ['simulation_state']
+    })
+    .push(function (result_list) {
+      var i, state;
+      result_list = result_list.data.rows;
+      for (i = 0; i < result_list.length; i = i + 1) {
+        state = result_list[i].value.simulation_state;
+        if (state === "stopped" || state === "public_stopped") {
+          span_element.classList.add("pass");
+          break;
+        } else if (state === "failed") {
+          span_element.classList.add("fail");
+          break;
+        }
+      }
+    });
   }
 
   function getUrlParameters(jio_key, view, sort_list, column_list, extended_search) {
@@ -68,13 +65,15 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
 
     .declareMethod('render', function (options) {
       var state_dict = {
           jio_key: options.jio_key || "",
           project_title: options.project_title,
-          home_page_content: options.home_page_content
+          home_page_content: options.home_page_content,
+          home_page_jio_key: options.home_page_jio_key
         };
       return this.changeState(state_dict);
     })
@@ -82,11 +81,8 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
     .onStateChange(function (modification_dict) {
       var gadget = this,
         base_site = window.location.origin + window.location.pathname,
-        project_url = base_site + modification_dict.jio_key,
-        // REPLACE THIS AJAX REQUEST WITH JIO
-        last_test_result_promise = generateAjaxPromise(project_url + "/Project_lastTestResult");
-      setHTMLWithPromiseResult(document.getElementById("test_result_span"), last_test_result_promise);
-
+        project_url = base_site + modification_dict.jio_key;
+      setLastTestResult(gadget, modification_dict.project_title, document.getElementById("test_result_span"));
       return gadget.jio_getAttachment(modification_dict.jio_key, "links")
         .push(function (erp5_document) {
           var milestone_view = getActionListByName(ensureArray(erp5_document._links.view), "milestone");
@@ -118,7 +114,8 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
             getUrlParameters('task_module', "view", [["delivery.start_date", "descending"]],
                              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-                             ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_domain:  "not_confirmed"')) ]);
+                             ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_domain:  "not_confirmed"')),
+            getUrlParameters(modification_dict.home_page_jio_key, "view") ]);
         })
         .push(function (url_list) {
           enableLink(document.getElementById("milestone_link"), url_list[0]);
