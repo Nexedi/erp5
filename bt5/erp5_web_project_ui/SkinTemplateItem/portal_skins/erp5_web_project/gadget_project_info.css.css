@@ -63,8 +63,8 @@ input[type="submit"] {
   padding: 6pt;
   margin-top: 30pt;
   margin-right: 6pt;
-  background-color: #FF6600;
-  color: #FFFFFF;
+  background-color: #FFF;
+  color: #111;
   border-radius: 0.325em;
   border-width: 1px;
   border-style: solid;
@@ -75,8 +75,8 @@ input[type="submit"] {
   padding: 6pt;
   margin-top: 30pt;
   margin-right: 6pt;
-  background-color: #aaabbb;
-  color: #FFFFFF;
+  background-color: #FFF;
+  color: #111;
   border-radius: 0.325em;
   border-width: 1px;
   border-style: solid;
@@ -92,7 +92,7 @@ input[type="submit"] {
 }
 
 .gadget-content span.test-result a {
-  color: #FFFFFF;
+  color: #111;
 }
 
 .worklist-title {
