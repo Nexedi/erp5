@@ -10,16 +10,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
                 <string>all_columns</string>
-                <string>search_columns</string>
-                <string>sort_columns</string>
-                <string>sort</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
-                <string>domain_tree</string>
+                <string>columns</string>
                 <string>domain_root_list</string>
+                <string>domain_tree</string>
+                <string>portal_types</string>
+                <string>search_columns</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>sort_columns</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -199,6 +199,10 @@
                         <tuple>
                           <string>bug_type</string>
                           <string>Bug Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>state_bug_domain</string>
+                          <string>Bug Status</string>
                         </tuple>
                       </list>
                     </value>
