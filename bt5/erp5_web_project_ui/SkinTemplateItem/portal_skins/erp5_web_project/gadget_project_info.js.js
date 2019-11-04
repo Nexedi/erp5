@@ -48,7 +48,7 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
 
   function getWebPage(gadget, project_reference) {
     var query = 'portal_type:="Web Page" AND reference:"' + project_reference + '-Home.Page" AND validation_state:"published_alive"',
-        id, content;
+        id, content, edit_view;
     return gadget.jio_allDocs({
       query: query,
       limit: 1,
@@ -58,8 +58,13 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
       if (result_list.data.rows) {
         id = result_list.data.rows[0].id;
         content = result_list.data.rows[0].value.text_content;
+        return gadget.jio_getAttachment(id, "links")
+        .push(function (web_page_document) {
+          edit_view = getActionListByName(ensureArray(web_page_document._links.view), "view_editor");
+          return {"id": id, "content": content, "edit_view": edit_view};
+        });
       }
-      return {"id": id, "content": content};
+      return {"id": id, "content": content, "edit_view": edit_view};
     });
   }
 
@@ -136,7 +141,7 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
                              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
                              ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_domain:  "not_confirmed"')),
-            getUrlParameters(web_page_info.id, "view") ]);
+            getUrlParameters(web_page_info.id, web_page_info.edit_view) ]);
         })
         .push(function (url_list) {
           enableLink(document.getElementById("milestone_link"), url_list[0]);
@@ -149,7 +154,9 @@ lockGadgetInQueue, unlockGadgetInQueue, Handlebars*/
           enableLink(document.getElementById("test_result_link"), url_list[7]);
           enableLink(document.getElementById("test_suite_link"), url_list[8]);
           enableLink(document.getElementById("not_confirmed_task_link"), url_list[9]);
-
+          if (web_page_info.id) {
+            enableLink(document.getElementById("web_page_link"), url_list[10]);
+          }
           return gadget.getDeclaredGadget("editor");
         })
         .push(function (editor) {
