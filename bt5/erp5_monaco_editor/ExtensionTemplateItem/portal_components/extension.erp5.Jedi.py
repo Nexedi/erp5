@@ -3,13 +3,11 @@ import json
 import sys
 from threading import RLock
 import logging
-import inspect
 
 logger = logging.getLogger("erp5.extension.Jedi")
 
 import os
 import jedi
-import zope.dottedname.resolve
 import time
 
 last_reload_time = time.time()
@@ -22,11 +20,11 @@ jedi.settings.call_signatures_validity = 30
 # rdiff-backup seem to trigger a bug, but it's generally super slow and not correct for us.
 try:
   # in jedi 0.15.1 it's here
-  from jedi.evaluate import sys_path as jedi_inference_sys_path  # pylint: disable=import-error
+  from jedi.evaluate import sys_path as jedi_inference_sys_path # pylint: disable=import-error,unused-import,no-name-in-module
 except ImportError:
   # but it's beeing moved. Next release will be here
   # https://github.com/davidhalter/jedi/commit/3b4f2924648eafb9660caac9030b20beb50a83bb
-  from jedi.inference import sys_path as jedi_inference_sys_path  # pylint: disable=import-error
+  from jedi.inference import sys_path as jedi_inference_sys_path  # pylint: disable=import-error,unused-import,no-name-in-module
 _ = jedi_inference_sys_path.discover_buildout_paths  # make sure it's here
 
 
@@ -40,7 +38,7 @@ jedi_api_project.discover_buildout_paths = dont_discover_buildout_paths
 
 try:
   # for local types annotations in this component
-  from erp5.portal_type import ERP5Site  # pylint: disable=unused-import
+  from erp5.portal_type import ERP5Site  # pylint: disable=unused-import,no-name-in-module
 except ImportError:
   pass
 
@@ -69,22 +67,14 @@ def executeJediXXX(callback, context, arguments):
         return True
       if isinstance(val, ContextSet):
         return val.filter(filter_func) != NO_CONTEXTS
-      if isinstance(val, InstanceWrapper): 
+      if isinstance(val, InstanceWrapper):
         for wrapped in val.iterate():
           if filter_func(wrapped):
             return True
         annotation_classes = val.gather_annotation_classes()
         #import pdb; pdb.set_trace()
         return val.gather_annotation_classes().filter(filter_func)
-        
-        # XXX
-        if str(val).count('<LazyGenericClass:') == 1:
-          logger.info(
-              "I don't know ... %s because %s in %s",
-              "{}@".format(class_from_portal_type) in str(val),
-              "{}@".format(class_from_portal_type),
-              val)
-          return "{}@".format(class_from_portal_type) in str(val)
+
       logger.info("not found in %s", val)
       return False
 
@@ -199,145 +189,6 @@ def makeERP5Plugin():
         # methods returning List of portal types
         # methods returning List of Brain of portal types
         return call()
-
-      return wrapper
-
-    def not_used_import_module(self, callback):  # TODO: remove, not used
-      """
-      Handle ERP5 dynamic modules import.
-      """
-      from jedi.evaluate.context import ModuleContext, StubModuleContext
-      logger.info("JediERP5Plugin registering import_module")
-
-      def wrapper(evaluator, import_names, module_context, *args, **kwargs):
-        if len(import_names) > 1 and import_names[:2] in (
-            ('erp5', 'portal_type'), ('erp5', 'accessor_holder'),
-            ('erp5', 'skins_tool'), ('erp5', 'component')):
-          try:
-            if 1:
-              erp5_code = '''   
-from . import portal_type
-from . import skins_tool
-from . import accessor_holder
-from . import component
-                  '''
-              portal = self._getPortalObject()
-
-              module_to_component_portal_type_mapping = {
-                  'test': 'Test Component',
-                  'document': 'Document Component',
-                  'extension': 'Extension Component',
-                  'tool': 'Tool Component',
-                  'module': 'Module Component',
-                  'interface': 'Interface Component',
-              }
-              if import_names == ('erp5', 'portal_type'):
-                source_code = self._cache.get('portal_type')
-                if not source_code:
-                  source_code = portal.portal_types.TypesTool_getStub()
-                  self._cache['portal_type'] = source_code
-                source_path = "erp5/portal_type.pyi"
-              elif import_names == ('erp5', 'accessor_holder'):
-                source_code = self._cache.get('accessor_holder')
-                if not source_code:
-                  source_code = portal.portal_types.PropertySheetTool_getStub()
-                  self._cache['accessor_holder'] = source_code
-                source_path = "erp5/accessor_holder.pyi"
-              elif import_names == ('erp5', 'skins_tool'):
-                source_code = self._cache.get('skins_tool')
-                if not source_code:
-                  source_code = portal.portal_skins.SkinsTool_getStub()
-                  self._cache['skins_tool'] = source_code
-                source_path = "erp5/skins_tool.pyi"
-              elif import_names[1] in ('portal_types',
-                                       'accessor_holder',
-                                       'skins_tool'):
-                # fallback
-                return callback(
-                    evaluator, import_names, module_context, *args, **kwargs)
-              else:  # if import_name[-1] == 'component':
-                dotted_name = '.'.join(import_names)
-                logger.info('looking up code for %s', dotted_name)
-                # we don't have source for some modules
-                if dotted_name == 'erp5.component':
-                  source_code = textwrap.dedent(
-                      '''\
-                    from . import document
-                    from . import test
-                    from . import extension
-                    from . import tool
-                    from . import interface
-                    from . import module
-                  ''')
-                elif len(import_names) == 3 and import_names[:2] == (
-                    'erp5', 'component') and import_names[
-                        2] in module_to_component_portal_type_mapping:
-                  line_list = []
-                  for brain in portal.portal_catalog.searchResults(
-                      portal_type=module_to_component_portal_type_mapping[
-                          import_names[2]],
-                      validation_state='validated',
-                      select_dict={'reference': None}):
-                    line_list.append('from . import {}'.format(brain.reference))
-                  source_code = '\n'.join(line_list)
-                else:
-                  source_code = inspect.getsource(
-                      zope.dottedname.resolve.resolve(dotted_name))
-                source_path = "{}.pyi".format('/'.join(import_names))
-                logger.info('got code for %s', source_path)
-#                logger.error('unsupported import %s', import_names)
-#                raise NotImplementedError()
-
-#logger.info('got code for %s', source_path)
-              source = StringIO(source_code)
-              # XXX make this StringIO look like a jedi FileIO
-              source.get_last_modified = lambda: last_reload_time  # os.path.getmtime(file_path) # TODO
-              source.path = source_path
-              source.get_parent_folder = lambda: None
-              # TODO bug with using StringIO
-              # AttributeError: StringIO instance has no attribute 'get_parent_folder'
-              #   email = pers.newContent(portal_type='Email')
-
-              module = evaluator.parse(
-                  file_io=source, cache=True, use_latest_grammar=True)
-
-              # XXX needed ?
-              erp5_source = StringIO(erp5_code)
-              erp5_source.path = "erp5.py"
-              erp5_source.get_last_modified = lambda: 13
-              erp5_module = evaluator.parse(
-                  file_io=erp5_source, cache=True, use_latest_grammar=True)
-
-              non_stub_context = ModuleContext(
-                  evaluator,
-                  erp5_module,
-                  file_io=erp5_source,
-                  string_names=None,
-                  code_lines=get_cached_code_lines(
-                      evaluator.latest_grammar, erp5_source.path),
-                  is_package=True)
-              non_stub_context.is_builtins_module = lambda: False
-
-              parent_context = StubModuleContext(
-                  ContextSet([non_stub_context]),
-                  evaluator,
-                  module,
-                  file_io=source,
-                  string_names=None,  #('erp5', 'portal_type'),
-                  code_lines=get_cached_code_lines(evaluator.latest_grammar,
-                                                   source.path),
-                  # is_package=True
-              )
-              parent_context.is_builtins_module = lambda: False
-              #logger.info('got context %s', parent_context)
-              #import pdb; pdb.set_trace()
-              return ContextSet([non_stub_context, parent_context])
-          except Exception:
-            logger.exception("merde")
-        return callback(
-            evaluator, import_names, module_context, *args, **kwargs)
-
-      logger.info('returning %s', wrapper)
       return wrapper
 
   return JediERP5Plugin()
@@ -530,6 +381,10 @@ def ERP5Site_getPythonSourceCodeCompletionList(self, data, REQUEST=None):
         "jedi got %d completions in %.2fs",
         len(completions), (time.time() - start))
 
+    if data.get('xxx_hover'):
+      completions = ''  # XXX this is not "completions" ...
+      for definition in script.goto_definitions():
+        completions = definition.docstring()
     if REQUEST is not None:
       REQUEST.RESPONSE.setHeader('content-type', 'application/json')
     return json.dumps(completions)
