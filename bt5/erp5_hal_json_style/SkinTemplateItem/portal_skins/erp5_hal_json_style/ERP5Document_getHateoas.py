@@ -1647,7 +1647,13 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     catalog_kw = {}
 
     # form field issuing this search
-    source_field = portal.restrictedTraverse(form_relative_url) if form_relative_url else None
+    if form_relative_url:
+      source_field = portal.restrictedTraverse(form_relative_url)
+      # The traversed document must be in the acquisition path
+      # in order to keep compatibility with `context.getxxx` TALES expression
+      source_field = getattr(traversed_document, source_field.Base_aqInner().aq_parent.id)[source_field.id]
+    else:
+      source_field = None
     source_field_meta_type = source_field.meta_type if source_field is not None else ""
     if source_field_meta_type == "ProxyField":
       source_field_meta_type = source_field.getRecursiveTemplateField().meta_type
