@@ -1,0 +1,6 @@
+<property_sheet_list>
+ <portal_type id="Wechat Service">
+  <item>PaymentService</item>
+  <item>WechatService</item>
+ </portal_type>
+</property_sheet_list>
