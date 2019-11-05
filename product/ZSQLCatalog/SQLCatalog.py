@@ -40,6 +40,7 @@ from ZODB.POSException import ConflictError
 from Products.CMFCore import permissions
 from Products.PythonScripts.Utility import allow_class
 
+from compiler.consts import CO_VARKEYWORDS
 from functools import wraps
 import time
 import urllib
@@ -2564,14 +2565,47 @@ class SearchKeyWrapperForScriptableKey(SearchKey.SearchKey.SearchKey):
     This SearchKey is a simple wrapper around a ScriptableKey, so such script
     can be used in place of a regular SearchKey.
   """
+  security = ClassSecurityInfo()
   def __init__(self, column, script):
     self.script = script
+    func_code = script.func_code
+    self.buildQuery = self.__buildQueryWithFiveArgumentsAPI if (
+      # 5: search_value (under any name), "search_key", "group",
+      # "logical_operator", "comparison_operator". The last 4 are possible in
+      # any order.
+      func_code.co_argcount == 5 or
+      getattr(func_code, 'co_flags', 0) & CO_VARKEYWORDS
+    ) else self.__buildQueryWithOldAPI
     super(SearchKeyWrapperForScriptableKey, self).__init__(column)
 
-  def buildQuery(self, search_value, group=None, logical_operator=None,
-                 comparison_operator=None):
-    # XXX: It would be better to extend ScriptableKey API to support other
-    # parameters.
+  security.declarePublic('processSearchValue')
+  def processSearchValue(self, *args, **kw):
+    """
+    Expose _processSearchValue to self.script.
+    Only callable from full-API scripts, as others do not get access to our
+    instance.
+    """
+    return self._processSearchValue(*args, **kw)
+
+  def __buildQueryWithFiveArgumentsAPI(self, search_value, group=None,
+                            logical_operator=None, comparison_operator=None):
+    """
+    Becomes buildQuery if self.script supports extra parameters.
+    """
+    assert logical_operator in (None, 'and', 'or'), repr(logical_operator)
+    return self.script(
+      search_value,
+      search_key=self,
+      group=group,
+      logical_operator=logical_operator,
+      comparison_operator=comparison_operator,
+    )
+
+  def __buildQueryWithOldAPI(self, search_value, group=None,
+                             logical_operator=None, comparison_operator=None):
+    """
+    Becomes buildQuery if self.script does not support extra parameters.
+    """
     if group is not None:
       raise ValueError(
         'ScriptableKey cannot be used inside a group (%r given).' % (group, ),
@@ -2585,6 +2619,7 @@ class SearchKeyWrapperForScriptableKey(SearchKey.SearchKey.SearchKey):
         'ScriptableKey ignores comparison operators (%r given).' % (comparison_operator, ),
       )
     return self.script(search_value)
+InitializeClass(SearchKeyWrapperForScriptableKey)
 
 from Operator import operator_dict
 def getComparisonOperatorInstance(operator):
