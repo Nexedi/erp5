@@ -2545,9 +2545,6 @@ class SearchKeyWrapperForScriptableKey(SearchKey.SearchKey.SearchKey):
     This SearchKey is a simple wrapper around a ScriptableKey, so such script
     can be used in place of a regular SearchKey.
   """
-  default_comparison_operator = None
-  get_operator_from_value = False
-
   def __init__(self, column, script):
     self.script = script
     super(SearchKeyWrapperForScriptableKey, self).__init__(column)
