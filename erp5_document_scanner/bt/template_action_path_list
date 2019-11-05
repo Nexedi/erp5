@@ -1,1 +1,5 @@
+Accounting Transaction | scan_document
+Internal Invoice Transaction | scan_document
+Payment Transaction | scan_document
+Purchase Invoice Transaction | scan_document
 Sale Invoice Transaction | scan_document
