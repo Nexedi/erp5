@@ -2,6 +2,8 @@ import json
 from base64 import decodestring
 portal = context.getPortalObject()
 
+translateString = portal.Base_translateString
+
 gadget_data = json.loads(document_scanner_gadget)
 image_str = decodestring(gadget_data.pop("input_value"))
 preferred_cropped_canvas_data = json.dumps(gadget_data["preferred_cropped_canvas_data"])
@@ -21,7 +23,7 @@ if not image_str:
     return active_process
 
   return context.Base_renderForm('Base_viewUploadDocumentFromCameraDialog',
-                               message='Nothing to capture')
+                               message=translateString('Nothing to capture'))
 
 if not active_process_url:
   active_process = portal.portal_activities.newActiveProcess()
@@ -35,4 +37,4 @@ if batch_mode:
   return active_process
 
 return context.Base_renderForm('Base_viewUploadDocumentFromCameraDialog',
-                               message='Captured')
+                               message=translateString('Captured'))
