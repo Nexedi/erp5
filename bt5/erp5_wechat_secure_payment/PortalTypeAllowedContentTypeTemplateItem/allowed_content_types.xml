@@ -1,0 +1,5 @@
+<allowed_content_type_list>
+ <portal_type id="Secure Payment Tool">
+  <item>Wechat Service</item>
+ </portal_type>
+</allowed_content_type_list>
