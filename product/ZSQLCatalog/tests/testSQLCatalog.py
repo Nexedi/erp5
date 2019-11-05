@@ -170,7 +170,10 @@ class DummyCatalog(SQLCatalog):
   sql_catalog_keyword_search_keys = ('keyword', )
   sql_catalog_datetime_search_keys = ('date', )
   sql_catalog_full_text_search_keys = ('old_fulltext', )
-  sql_catalog_scriptable_keys = ('scriptable_keyword | scriptableKeyScript', )
+  sql_catalog_scriptable_keys = (
+    'scriptable_keyword | scriptableKeyScript',
+    'scriptable_keyword_5args | scriptableKeyScriptFiveArguments',
+  )
   sql_catalog_search_keys = ('fulltext | MroongaFullTextKey',
                              'fulltext_boolean | MroongaBooleanFullTextKey',)
 
@@ -217,6 +220,39 @@ class DummyCatalog(SQLCatalog):
       Mimics a scriptable key (PythonScript) subobject.
     """
     return SimpleQuery(comparison_operator='=', keyword=value)
+
+  @staticmethod
+  def scriptableKeyScriptFiveArguments(
+    value,
+    search_key,
+    group,
+    logical_operator,
+    comparison_operator,
+  ):
+    """
+      Mimics a scriptable key (PythonScript) subobject, using the SearchKey API.
+    """
+    operator_value_dict, logical_operator, _ = search_key.processSearchValue(
+      search_value=value,
+      default_logical_operator=logical_operator,
+      comparison_operator=comparison_operator,
+    )
+    query_list = [
+      SimpleQuery(
+        keyword=value_list[0], # XXX: Fine for tests, bad in general.
+        comparison_operator=comparison_operator,
+        group=group,
+      )
+      for comparison_operator, value_list in operator_value_dict.iteritems()
+    ]
+    if len(query_list) == 1:
+      return query_list[0]
+    if query_list:
+      return ComplexQuery(
+        query_list,
+        logical_operator=logical_operator,
+      )
+    return SimpleQuery(uid=-1)
 
 class TestSQLCatalog(ERP5TypeTestCase):
   def setUp(self):
@@ -535,6 +571,8 @@ class TestSQLCatalog(ERP5TypeTestCase):
                  {'scriptable_keyword': '%a%'})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', keyword='%a%'), operator='and'),
                  {'default': 'scriptable_keyword:%a%'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='!=', keyword='a'), operator='and'),
+                 {'scriptable_keyword_5args': '!=a'})
 
   def test_008_testRawKey(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='%a%'), operator='and'),
