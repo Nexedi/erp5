@@ -1770,7 +1770,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         if select_list:
           column_list = [(name, title) for name, title in source_field.get_value("columns") if name in select_list]
           all_column_list = [(name, title) for name, title in source_field.get_value("all_columns") if name in select_list]
-          selection_kw['columns'] = [(name, Base_translateString(title))
+          selection_kw['columns'] = [(name, title)
                                      for name, title in OrderedDict(column_list + all_column_list).items()]
         else:
           selection_kw['columns'] = []
