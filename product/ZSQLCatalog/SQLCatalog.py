@@ -1819,15 +1819,20 @@ class Catalog(Folder,
       If both a related key and a real column are found, the related key
       is used.
     """
-    # Is key a related key or a "real" column ?
-    related_key_definition = self.getRelatedKeyDefinition(key)
-    if related_key_definition is None:
-      if key in self.getColumnMap():
-        search_key = self.getSearchKey(key, search_key_name)
+    # Is key a scriptable key, a related key or a "real" column ?
+    script = self.getScriptableKeyScript(key)
+    if script is None:
+      related_key_definition = self.getRelatedKeyDefinition(key)
+      if related_key_definition is None:
+        if key in self.getColumnMap():
+          search_key = self.getSearchKey(key, search_key_name)
+        else:
+          search_key = None
       else:
-        search_key = None
+        search_key = self.getSearchKey(key, 'RelatedKey')
     else:
-      search_key = self.getSearchKey(key, 'RelatedKey')
+      search_key = SearchKeyWrapperForScriptableKey(key, script)
+      related_key_definition = None
     return search_key, related_key_definition
 
   security.declarePrivate('hasColumn')
@@ -1960,12 +1965,7 @@ class Catalog(Folder,
     """
       Determine the SearchKey to use to generate a Query, and call buildQueryFromSearchKey with it.
     """
-    script = self.getScriptableKeyScript(key)
-    if script is None:
-      search_key, related_key_definition = self.getColumnSearchKey(key, search_key_name)
-    else:
-      search_key = SearchKeyWrapperForScriptableKey(key, script)
-      related_key_definition = None
+    search_key, related_key_definition = self.getColumnSearchKey(key, search_key_name)
     if search_key is None:
       message = 'Unknown column ' + repr(key)
       if not ignore_unknown_columns:
