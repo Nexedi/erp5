@@ -115,7 +115,10 @@ lockGadgetInQueue, unlockGadgetInQueue*/
                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
                              ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_domain:  "confirmed"')),
             getUrlParameters('support_request_module', "view", [["delivery.start_date", "descending"]],
-                             null, ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_support_domain:  "validated"')),
+                             //null, ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_support_domain:  "validated"')),
+                             null, ('source_project_title:  "' + modification_dict.project_title +
+                                    '" AND destination_project_title:  "' + modification_dict.project_title +
+                                    '" AND selection_domain_state_support_domain:  "validated"')),
             getUrlParameters('bug_module', "view", [["delivery.start_date", "descending"]],
                              ["title", "description", "delivery.start_date"],
                              ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_bug_domain:  "started"')),
