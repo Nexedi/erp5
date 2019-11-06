@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [("", ""), ("Draft", "draft"), ("Shared", "shared"), ("Released", "released"), ("Published", "published")]</string> </value>
+            <value> <string>python: [("", ""), ("Draft", "draft"), ("Shared", "shared"), ("Released", "released"),]</string> </value>
         </item>
       </dictionary>
     </pickle>

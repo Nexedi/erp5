@@ -24,16 +24,12 @@ doc = context.Base_contribute(file=file_object,
                               follow_up_list=[context.getRelativeUrl(),],
                               **kw)
 
-publication_section = kw.get("field_your_publication_state")
+publication_state = kw.get("field_your_publication_state")
 
-if publication_section == "shared":
+if publication_state == "shared":
   action_list = ["share",]
-elif publication_section == "relased":
+elif publication_state == "relased":
   action_list = ["share", "release"]
-elif publication_section == "relased":
-  action_list = ["share", "release"]
-elif publication_section == "published":
-  action_list = ["share", "release", "publish"]
 else:
   action_list = []
 
