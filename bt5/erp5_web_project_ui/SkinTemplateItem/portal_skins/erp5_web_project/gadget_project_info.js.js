@@ -1,8 +1,6 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, RSVP, document, FileReader, Blob, jIO, ensureArray,
-lockGadgetInQueue, unlockGadgetInQueue*/
-(function (window, rJS, RSVP, document, FileReader, Blob, jIO, ensureArray,
-           lockGadgetInQueue, unlockGadgetInQueue) {
+/*global window, rJS, RSVP, document, ensureArray*/
+(function (window, rJS, RSVP, document, ensureArray) {
   "use strict";
 
   function enableLink(link_element, url) {
@@ -24,42 +22,46 @@ lockGadgetInQueue, unlockGadgetInQueue*/
       sort_on: [['creation_date', 'descending']],
       select_list: ['simulation_state']
     })
-    .push(function (result_list) {
-      var i, state;
-      result_list = result_list.data.rows;
-      for (i = 0; i < result_list.length; i = i + 1) {
-        state = result_list[i].value.simulation_state;
-        if (state === "stopped" || state === "public_stopped") {
-          span_element.classList.add("pass");
-          break;
-        } else if (state === "failed") {
-          span_element.classList.add("fail");
-          break;
+      .push(function (result_list) {
+        var i, state;
+        result_list = result_list.data.rows;
+        for (i = 0; i < result_list.length; i = i + 1) {
+          state = result_list[i].value.simulation_state;
+          if (state === "stopped" || state === "public_stopped") {
+            span_element.classList.add("pass");
+            break;
+          } else if (state === "failed") {
+            span_element.classList.add("fail");
+            break;
+          }
         }
-      }
-    });
+      });
   }
 
   function getWebPageInfo(gadget, project_reference) {
-    var query = 'portal_type:="Web Page" AND reference:"' + project_reference + '-Home.Page" AND validation_state:"published_alive"',
-        id, content, edit_view;
+    var query = 'portal_type:="Web Page" AND reference:"' + project_reference +
+                '-Home.Page" AND validation_state:"published_alive"',
+      id,
+      content,
+      edit_view;
     return gadget.jio_allDocs({
       query: query,
       limit: 1,
       select_list: ['text_content']
     })
-    .push(function (result_list) {
-      if (result_list.data.rows[0]) {
-        id = result_list.data.rows[0].id;
-        content = result_list.data.rows[0].value.text_content;
-        return gadget.jio_getAttachment(id, "links")
-        .push(function (web_page_document) {
-          edit_view = getActionListByName(ensureArray(web_page_document._links.view), "view_editor");
-          return {"id": id, "content": content, "edit_view": edit_view};
-        });
-      }
-      return {"id": id, "content": content, "edit_view": edit_view};
-    });
+      .push(function (result_list) {
+        if (result_list.data.rows[0]) {
+          id = result_list.data.rows[0].id;
+          content = result_list.data.rows[0].value.text_content;
+          return gadget.jio_getAttachment(id, "links")
+            .push(function (web_page_document) {
+              edit_view = getActionListByName(
+                ensureArray(web_page_document._links.view), "view_editor");
+              return {"id": id, "content": content, "edit_view": edit_view};
+            });
+        }
+        return {"id": id, "content": content, "edit_view": edit_view};
+      });
   }
 
   function getUrlParameters(jio_key, view, sort_list, column_list, extended_search) {
@@ -104,35 +106,41 @@ lockGadgetInQueue, unlockGadgetInQueue*/
           ]);
         })
         .push(function (result_list) {
-          var milestone_view = getActionListByName(ensureArray(result_list[1]._links.view), "milestone");
+          var milestone_view = getActionListByName(
+            ensureArray(result_list[1]._links.view), "milestone");
           web_page_info = result_list[0];
           editor = result_list[2];
-          editor.render({"editor": "fck_editor", "editable": false, "value": web_page_info.content});
+          editor.render({"editor": "fck_editor", "editable": false,
+                         "value": web_page_info.content});
           return gadget.getUrlForList([
             getUrlParameters('milestone_module', milestone_view, [["stop_date", "ascending"]]),
             getUrlParameters('task_module', "view", [["delivery.start_date", "descending"]],
                              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-                             ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_domain:  "confirmed"')),
+                             ('source_project_title:  "' + modification_dict.project_title +
+                              '" AND selection_domain_state_task_domain:  "confirmed"')),
             getUrlParameters('support_request_module', "view", [["delivery.start_date", "descending"]],
-                             //null, ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_support_domain:  "validated"')),
                              null, ('source_project_title:  "' + modification_dict.project_title +
                                     '" AND destination_project_title:  "' + modification_dict.project_title +
                                     '" AND selection_domain_state_support_domain:  "validated"')),
             getUrlParameters('bug_module', "view", [["delivery.start_date", "descending"]],
                              ["title", "description", "delivery.start_date"],
-                             ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_bug_domain:  "started"')),
+                             ('source_project_title:  "' + modification_dict.project_title +
+                              '" AND selection_domain_state_bug_domain:  "started"')),
             getUrlParameters('bug_module', "view", [["delivery.start_date", "descending"]],
                              ["title", "description", "delivery.start_date"],
-                             ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_bug_domain:  "closed"')),
+                             ('source_project_title:  "' + modification_dict.project_title +
+                              '" AND selection_domain_state_bug_domain:  "closed"')),
             getUrlParameters('task_report_module', 'view', [["delivery.start_date", "descending"]],
                              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-                             ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_report_domain:  "started"')),
+                             ('source_project_title:  "' + modification_dict.project_title +
+                              '" AND selection_domain_state_task_report_domain:  "started"')),
             getUrlParameters('task_report_module', 'view', [["delivery.start_date", "descending"]],
                              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-                             ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_report_domain:  "closed"')),
+                             ('source_project_title:  "' + modification_dict.project_title +
+                              '" AND selection_domain_state_task_report_domain:  "closed"')),
             getUrlParameters('test_result_module', 'view', [["delivery.start_date", "descending"]],
                              null, ('source_project_title:  "' + modification_dict.project_title + '"')),
             getUrlParameters('test_suite_module', 'view', [["creation_date", "descending"]],
@@ -140,7 +148,8 @@ lockGadgetInQueue, unlockGadgetInQueue*/
             getUrlParameters('task_module', "view", [["delivery.start_date", "descending"]],
                              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-                             ('source_project_title:  "' + modification_dict.project_title + '" AND selection_domain_state_task_domain:  "not_confirmed"')),
+                             ('source_project_title:  "' + modification_dict.project_title +
+                              '" AND selection_domain_state_task_domain:  "not_confirmed"')),
             getUrlParameters(web_page_info.id, web_page_info.edit_view)
           ]);
         })
@@ -158,7 +167,8 @@ lockGadgetInQueue, unlockGadgetInQueue*/
           if (web_page_info.id) {
             enableLink(document.getElementById("web_page_link"), url_list[10]);
           }
-          setLastTestResult(gadget, modification_dict.project_title, document.getElementById("test_result_span"));
+          setLastTestResult(gadget, modification_dict.project_title,
+                            document.getElementById("test_result_span"));
         });
     })
 
@@ -170,5 +180,4 @@ lockGadgetInQueue, unlockGadgetInQueue*/
       return true;
     });
 
-}(window, rJS, RSVP, document, FileReader, Blob, jIO, ensureArray,
-  lockGadgetInQueue, unlockGadgetInQueue));
+}(window, rJS, RSVP, document, ensureArray));
