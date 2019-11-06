@@ -2034,7 +2034,6 @@ class Catalog(Folder,
         # We have an empty value, do not create a query from it
         empty_value_dict[key] = value
       else:
-        script = self.getScriptableKeyScript(key)
         if isinstance(value, dict):
           # Dictionnary: might contain the search key to use.
           search_key_name = value.get('key')
@@ -2049,8 +2048,6 @@ class Catalog(Folder,
         if isinstance(value, BaseQuery):
           # Query instance: use as such, ignore key.
           result = value
-        elif script is not None:
-          result = script(value)
         elif isinstance(value, (basestring, dict)):
           # String: parse using key's default search key.
           raw_value = value
