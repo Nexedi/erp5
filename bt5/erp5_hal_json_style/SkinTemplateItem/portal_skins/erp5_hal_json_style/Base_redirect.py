@@ -62,6 +62,7 @@ result_dict = {
 if (form_id is not None) and \
    (form_id not in ['view', 'Base_viewFakePythonScriptActionForm']) and \
    (form_id != previous_form_id) and \
+   (not form_id.startswith('http')) and \
    (context.isWebMode()):
   # Calculate the new view URL
   result_dict['_links']['location'] = {
