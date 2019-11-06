@@ -51,6 +51,14 @@
   margin-bottom: 20px;
 }
 
+.gadget-content div.project_links {
+  margin-top: 40px;
+}
+
+.gadget-content div.project_links.top {
+  margin-top: 20px;
+}
+
 button:disabled{
   background-color:#FFC9A4;
 }
@@ -74,7 +82,7 @@ input[type="submit"] {
 .gadget-content span.test-result {
   padding: 6pt;
   margin-top: 30pt;
-  margin-right: 6pt;
+  margin-right: 10px;
   background-color: #FFF;
   color: #111;
   border-radius: 0.325em;
