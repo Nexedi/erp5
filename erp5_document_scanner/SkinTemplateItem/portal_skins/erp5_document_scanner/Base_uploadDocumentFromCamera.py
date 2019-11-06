@@ -1,4 +1,9 @@
-from cStringIO import StringIO
+from StringIO import StringIO
+
+class StringIOWithFileName(StringIO):
+  filename =  "{}.pdf".format(
+    kw.get("title") or DateTime().strftime('%d-%m-%Y_%Hh%M'))
+
 
 portal = context.getPortalObject()
 pdf_data_list = []
@@ -12,17 +17,11 @@ for result in active_process.getResultList():
                             temp_object=True).convert(format="pdf")[1])
 
 pdf_data = context.ERP5Site_mergePDFList(pdf_data_list=pdf_data_list)
-file_object = StringIO(pdf_data)
-
-extra_document_kw = {
-  "filename": "{}.pdf".format(
-    kw.get("title") or DateTime().strftime('%d-%m-%Y_%Hh%M'))
-}
+file_object = StringIOWithFileName(pdf_data)
 
 doc = context.Base_contribute(file=file_object,
                               batch_mode=True,
                               follow_up_list=[context.getRelativeUrl(),],
-                              extra_document_kw=extra_document_kw,
                               **kw)
 
 publication_section = kw.get("field_your_publication_state")
