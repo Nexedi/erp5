@@ -2564,7 +2564,7 @@ class SearchKeyWrapperForScriptableKey(SearchKey.SearchKey.SearchKey):
       raise ValueError(
         'ScriptableKey ignores logical operators (%r given).' % (logical_operator, ),
       )
-    if comparison_operator != '':
+    if comparison_operator:
       raise ValueError(
         'ScriptableKey ignores comparison operators (%r given).' % (comparison_operator, ),
       )
