@@ -133,7 +133,7 @@
                     <key>
                       <tuple>
                         <int>99</int>
-                        <string>ERP5 Web Site/project_nexedi_net</string>
+                        <string>ERP5 Web Site/project_management</string>
                       </tuple>
                     </key>
                     <value>
@@ -389,7 +389,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>project_nexedi_net</string> </value>
+            <value> <string>project_management</string> </value>
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
@@ -415,7 +415,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>PROJECT nexedi NET</string> </value>
+            <value> <string>PROJECT management</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
