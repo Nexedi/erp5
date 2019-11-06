@@ -17,6 +17,8 @@ if active_preference and preferred_cropped_canvas_data:
 
 if not image_str:
   if batch_mode:
+    if active_process_url:
+      return portal.restrictedTraverse(active_process_url)
     return None
 
   return context.Base_renderForm('Base_viewUploadDocumentFromCameraDialog',
