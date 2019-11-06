@@ -1851,32 +1851,29 @@ class Catalog(Folder,
     return search_key
 
   security.declareProtected(access_contents_information, 'buildSingleQuery')
-  def buildSingleQuery(self, key, value, search_key_name=None, logical_operator=None, comparison_operator=None):
+  def buildSingleQuery(
+    self,
+    key,
+    value,
+    search_key_name=None,
+    logical_operator=None,
+    comparison_operator=None,
+    ignore_unknown_columns=False,
+  ):
     """
       From key and value, determine the SearchKey to use and generate a Query
       from it.
     """
-    script = self.getScriptableKeyScript(key)
-    if script is None:
-      search_key, related_key_definition = self.getColumnSearchKey(key, search_key_name)
-      if search_key is None:
-        result = None
-      else:
-        if related_key_definition is None:
-          build_key = search_key
-        else:
-          build_key = search_key.getSearchKey(sql_catalog=self,
-            related_key_definition=related_key_definition,
-            search_key_name=search_key_name)
-        result = build_key.buildQuery(value, logical_operator=logical_operator,
-                                      comparison_operator=comparison_operator)
-        if related_key_definition is not None:
-          result = search_key.buildQuery(sql_catalog=self,
-            related_key_definition=related_key_definition,
-            search_value=result)
-    else:
-      result = script(value)
-    return result
+    return self._buildQuery(
+      buildQueryFromSearchKey=lambda search_key: search_key.buildQuery(
+        value,
+        logical_operator=logical_operator,
+        comparison_operator=comparison_operator,
+      ),
+      key=key,
+      search_key_name=search_key_name,
+      ignore_unknown_columns=ignore_unknown_columns,
+    )
 
   def _buildQueryFromAbstractSyntaxTreeNode(self, node, search_key, wrap, ignore_unknown_columns):
     """
@@ -1948,9 +1945,24 @@ class Catalog(Folder,
 
       Expected node API is described in interfaces/abstract_syntax_node.py .
     """
+    return self._buildQuery(
+      buildQueryFromSearchKey=lambda search_key: self._buildQueryFromAbstractSyntaxTreeNode(
+        node,
+        search_key,
+        wrap,
+        ignore_unknown_columns,
+      ),
+      key=key,
+      ignore_unknown_columns=ignore_unknown_columns,
+    )
+
+  def _buildQuery(self, buildQueryFromSearchKey, key, search_key_name=None, ignore_unknown_columns=False):
+    """
+      Determine the SearchKey to use to generate a Query, and call buildQueryFromSearchKey with it.
+    """
     script = self.getScriptableKeyScript(key)
     if script is None:
-      search_key, related_key_definition = self.getColumnSearchKey(key)
+      search_key, related_key_definition = self.getColumnSearchKey(key, search_key_name)
     else:
       search_key = SearchKeyWrapperForScriptableKey(key, script)
       related_key_definition = None
@@ -1966,9 +1978,10 @@ class Catalog(Folder,
         build_key = search_key
       else:
         build_key = search_key.getSearchKey(sql_catalog=self,
-          related_key_definition=related_key_definition)
-      result = self._buildQueryFromAbstractSyntaxTreeNode(node, build_key,
-        wrap, ignore_unknown_columns)
+          related_key_definition=related_key_definition,
+          search_key_name=search_key_name,
+        )
+      result = buildQueryFromSearchKey(search_key=build_key)
       if related_key_definition is not None:
         result = search_key.buildQuery(sql_catalog=self,
           related_key_definition=related_key_definition,
@@ -2060,7 +2073,12 @@ class Catalog(Folder,
               abstract_syntax_tree = None
             if abstract_syntax_tree is None:
               # Parsing failed, create a query from the bare string.
-              result = self.buildSingleQuery(key, raw_value, search_key_name)
+              result = self.buildSingleQuery(
+                key=key,
+                value=raw_value,
+                search_key_name=search_key_name,
+                ignore_unknown_columns=ignore_unknown_columns,
+              )
             else:
               result = self.buildQueryFromAbstractSyntaxTreeNode(
                 abstract_syntax_tree, key, wrap,
@@ -2068,7 +2086,11 @@ class Catalog(Folder,
               )
         else:
           # Any other type, just create a query. (can be a DateTime, ...)
-          result = self.buildSingleQuery(key, value)
+          result = self.buildSingleQuery(
+            key=key,
+            value=value,
+            ignore_unknown_columns=ignore_unknown_columns,
+          )
         if result is None:
           # No query could be created, emit a log, add to unknown column dict.
           unknown_column_dict[key] = value
