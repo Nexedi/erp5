@@ -6,9 +6,6 @@ active_process = context.Base_storeDocumentFromCameraInActiveProcess(
   batch_mode=True,
   **kw)
 
-if active_process is None and active_process_url:
-  active_process = portal.restrictedTraverse(active_process_url)
-
 # Avoid to pass huge images to the activity
 kw.pop("your_document_scanner_gadget", None)
 
