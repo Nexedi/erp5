@@ -611,12 +611,9 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     # column definition from Selection for specific Report ListBoxes; the same for editable_columns
     column_list = [(name, _translate(title)) for name, title in (selection_params.get('selection_columns', [])
                                                                  or field.get_value("columns"))]
-    context.log('FETCHED columns %s' % str(column_list))
     editable_column_list = [(name, _translate(title)) for name, title in (selection_params.get('editable_columns', [])
                                                                           or field.get_value("editable_columns"))]
-    context.log('FETCHED editable_columns %s' % str(editable_column_list))
     all_column_list = [(name, _translate(title)) for name, title in field.get_value("all_columns")]
-
     catalog_column_list = [(name, title)
                            for name, title in OrderedDict(column_list + all_column_list).items()
                            if sql_catalog.isValidColumn(name)]
@@ -1652,6 +1649,8 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     # form field issuing this search
     if form_relative_url:
       source_field = portal.restrictedTraverse(form_relative_url)
+      # The traversed document must be in the acquisition path
+      # in order to keep compatibility with `context.getxxx` TALES expression
       source_field = getattr(traversed_document, source_field.Base_aqInner().aq_parent.id)[source_field.id]
     else:
       source_field = None
@@ -1776,7 +1775,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
         if select_list:
           column_list = [(name, title) for name, title in source_field.get_value("columns") if name in select_list]
-          context.log('FETCHED XXX columns %s' % str(column_list))
           all_column_list = [(name, title) for name, title in source_field.get_value("all_columns") if name in select_list]
           selection_kw['columns'] = [(name, title)
                                      for name, title in OrderedDict(column_list + all_column_list).items()]
@@ -2070,8 +2068,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     # which is done on frontend side, so we overwrite result's own editability
     if is_rendering_listbox:
       editable_column_set = set(name for name, _ in source_field.get_value("editable_columns"))
-      context.log('FETCHED XXX editable_columns %s' % str(editable_column_set))
-
       for line in result_dict['_embedded']['contents']:
         for select in line:
           # forbid editability only for fields not specified in editable_columns
