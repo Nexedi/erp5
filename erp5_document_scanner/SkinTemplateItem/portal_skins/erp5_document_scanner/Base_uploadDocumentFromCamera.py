@@ -28,7 +28,7 @@ publication_state = kw.get("field_your_publication_state")
 
 if publication_state == "shared":
   action_list = ["share",]
-elif publication_state == "relased":
+elif publication_state == "released":
   action_list = ["share", "release"]
 else:
   action_list = []
