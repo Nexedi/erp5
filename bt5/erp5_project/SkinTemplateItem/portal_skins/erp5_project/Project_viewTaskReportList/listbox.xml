@@ -19,7 +19,6 @@
                 <string>report_tree</string>
                 <string>selection_name</string>
                 <string>sort_columns</string>
-                <string>stat_method</string>
                 <string>title</string>
               </list>
             </value>
@@ -235,12 +234,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>stat_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
@@ -263,19 +256,6 @@
         <item>
             <key> <string>method_name</string> </key>
             <value> <string>Project_getSourceProjectRelatedTaskReportList</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
         </item>
       </dictionary>
     </pickle>
