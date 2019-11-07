@@ -53,13 +53,4 @@
  <key>stock_section_category_strict_membership_uid | category/category_uid/z_related_strict_membership_section_uid_from_stock</key>
  <key>stock_section_category_uid | category/category_uid/z_related_section_uid_from_stock</key>
  <key>subject | versioning,subject/subject/z_related_subject</key>
- <key>translated_causality_state | translation/translated_message/z_related_translated_causality_state</key>
- <key>translated_causality_state_title | translation/translated_message/z_related_translated_causality_state_title</key>
- <key>translated_opportunity_state | translation/translated_message/z_related_translated_opportunity_state</key>
- <key>translated_opportunity_state_title | translation/translated_message/z_related_translated_opportunity_state_title</key>
- <key>translated_portal_type | translation/translated_message/z_related_translated_portal_type</key>
- <key>translated_simulation_state | translation/translated_message/z_related_translated_simulation_state</key>
- <key>translated_simulation_state_title | translation/translated_message/z_related_translated_simulation_state_title</key>
- <key>translated_validation_state | translation/translated_message/z_related_translated_validation_state</key>
- <key>translated_validation_state_title | translation/translated_message/z_related_translated_validation_state_title</key>
 </key_list>

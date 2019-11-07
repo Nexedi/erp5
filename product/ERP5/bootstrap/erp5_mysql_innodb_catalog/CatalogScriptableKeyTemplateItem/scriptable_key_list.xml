@@ -3,5 +3,14 @@
  <key>full_text | SQLCatalog_makeFullTextQuery</key>
  <key>quick_search_text | SQLCatalog_makeQuickSearchQuery</key>
  <key>search_text | SQLCatalog_makeSearchTextQuery</key>
+ <key>translated_causality_state | SQLCatalog_makeTranslatedCausalityStateQuery</key>
+ <key>translated_causality_state_title | SQLCatalog_makeTranslatedCausalityStateTitleQuery</key>
+ <key>translated_opportunity_state | SQLCatalog_makeTranslatedOpportunityStateQuery</key>
+ <key>translated_opportunity_state_title | SQLCatalog_makeTranslatedOpportunityStateTitleQuery</key>
+ <key>translated_portal_type | SQLCatalog_makeTranslatedPortalTypeQuery</key>
+ <key>translated_simulation_state | SQLCatalog_makeTranslatedSimulationStateQuery</key>
+ <key>translated_simulation_state_title | SQLCatalog_makeTranslatedSimulationStateTitleQuery</key>
  <key>translated_title | SQLCatalog_makeTranslatedTitleQuery</key>
+ <key>translated_validation_state | SQLCatalog_makeTranslatedValidationStateQuery</key>
+ <key>translated_validation_state_title | SQLCatalog_makeTranslatedValidationStateTitleQuery</key>
 </key_list>
