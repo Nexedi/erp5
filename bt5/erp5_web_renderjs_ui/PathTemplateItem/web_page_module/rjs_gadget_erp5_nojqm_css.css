@@ -522,7 +522,7 @@ div[data-gadget-scope='panel'] div[data-gadget-scope='erp5_searchfield'] button 
 }
 div[data-gadget-scope='panel'] div[data-gadget-scope='erp5_searchfield'] input[type="search"] {
   color: #FFFFFF !important;
-  background-color: #767676 !important;
+  background-color: hsl(0, 0%, 42%) !important;
 }
 div[data-gadget-scope='panel'] img {
   text-align: left;
@@ -566,7 +566,7 @@ div[data-gadget-scope='panel'] ul li a::before {
   width: 24pt;
 }
 div[data-gadget-scope='panel'] dl {
-  background-color: #767676;
+  background-color: hsl(0, 0%, 42%);
   color: #1F1F1F;
   transform-origin: 50% 0;
   transform: scaleY(0);
@@ -704,6 +704,7 @@ div[data-gadget-scope='editor_panel'] section button {
   padding: 3pt 6pt;
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   margin-right: 6pt;
   width: 2em;
   overflow: hidden;
@@ -731,6 +732,7 @@ div[data-gadget-scope='header'] .ui-header {
   display: flex;
   flex-flow: row wrap;
   width: 100%;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   color: #FFFFFF;
   background-color: #0E81C2;
 }
@@ -1008,9 +1010,11 @@ div[data-gadget-scope='header'] .ui-header ul {
   margin-right: 12pt;
   background-color: #FF6600;
   color: #FFFFFF;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   border-radius: 0.325em;
   border-width: 1px;
   border-style: solid;
+  border-color: #FF6600;
   min-width: 8em;
 }
 .gadget-content input[type='submit']:hover,
@@ -1024,19 +1028,21 @@ div[data-gadget-scope='header'] .ui-header ul {
   padding: 6pt;
   margin-top: 30pt;
   margin-right: 12pt;
-  background-color: #767676;
+  background-color: hsl(0, 0%, 42%);
   color: #FFFFFF;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   border-radius: 0.325em;
   border-width: 1px;
   border-style: solid;
+  border-color: hsl(0, 0%, 42%);
   min-width: 8em;
 }
 .gadget-content button[name='action_update']:hover,
 .gadget-content button[name='action_update']:focus {
-  background-color: #909090;
+  background-color: hsl(0, 0%, 52%);
 }
 .gadget-content button[name='action_update']:active {
-  background-color: #a9a9a9;
+  background-color: hsl(0, 0%, 62%);
 }
 @media not screen and (max-width: 85em) {
   div[data-role='page']:not(.desktop-panel-hidden) .gadget-content {
@@ -1154,7 +1160,7 @@ div[data-gadget-scope='header'] .ui-header ul {
   }
 }
 .gadget-content .ui-field-contain > label {
-  color: #767676;
+  color: hsl(0, 0%, 42%);
 }
 .gadget-content .required > .ui-field-contain > label {
   font-weight: bold;
@@ -1202,6 +1208,8 @@ div[data-gadget-scope='header'] .ui-header ul {
     border-radius: 0.325em;
     width: auto;
     z-index: 1001;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
   .gadget-content form .ui-field-contain > span:before {
     position: absolute;
@@ -1329,6 +1337,7 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value {
 div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   margin-right: 6pt;
   max-width: 6em;
   white-space: nowrap;
@@ -1348,7 +1357,7 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
   }
 }
 .document_table .ui-table-header h1 {
-  color: #767676;
+  color: hsl(0, 0%, 42%);
   flex: 2;
   align-self: flex-end;
 }
@@ -1364,6 +1373,7 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
   padding: 3pt;
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   margin-right: 6pt;
 }
 .document_table .ui-table-header button:last-of-type {
@@ -1503,7 +1513,7 @@ div.invisible_header .document_table .ui-table-header {
   .document_table table tbody tr td:first-child ~ td label,
   .document_table table tbody tr th:first-child ~ td label {
     pointer-events: none;
-    color: #767676;
+    color: hsl(0, 0%, 42%);
   }
   .document_table table tbody tr td:first-child ~ th:not(:last-child) a:not(:empty):after,
   .document_table table tbody tr th:first-child ~ th:not(:last-child) a:not(:empty):after,
@@ -1591,6 +1601,7 @@ div[data-gadget-scope='notification'] {
   right: -192pt;
   transition: transform 200ms ease-out;
   transform: translate3d(0, 0, 0);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 div[data-gadget-scope='notification'].visible {
   transform: translate3d(-216pt, 0, 0);
@@ -1614,6 +1625,7 @@ div[data-gadget-scope='notification'] button {
   padding: 12pt;
   color: #f8fff3;
   border-radius: 0.325em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 div[data-gadget-scope='notification'] button.success {
   background-color: #37A419;
