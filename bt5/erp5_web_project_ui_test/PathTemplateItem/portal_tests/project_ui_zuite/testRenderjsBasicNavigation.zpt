@@ -26,7 +26,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/project_nexedi_net/</td>
+  <td>${base_url}/web_site_module/project_management/</td>
   <td></td>
 </tr>
 
@@ -37,7 +37,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_nexedi_net/gadget_erp5_field_listbox.html']</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_field_listbox.html']</td>
   <td></td>
 </tr>
 <tr>
