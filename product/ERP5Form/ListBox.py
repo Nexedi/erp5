@@ -1094,33 +1094,32 @@ class ListBoxRenderer:
   def getSelectedColumnList(self):
     """Return the list of selected columns.
     """
-    column_list = []
-    default_listbox_display_style = self.getDefaultDisplayStyle()
     listbox_display_style = self.getListboxDisplayStyle()
-    dynamic_column_list_override = (self.getDisplayedColumnIdList() != None)
-    list_style_column_change_required = listbox_display_style not in ('', DEFAULT_LISTBOX_DISPLAY_STYLE,)
-    if dynamic_column_list_override:
+    displayed_column_id_list = self.getDisplayedColumnIdList()
+    if displayed_column_id_list is not None:
       # dynamically setting columns is supported
-      #Create a dict to make a easy search
       available_column_dict = {x[0]: x for x in self.getAllColumnList()}
-      # We check columns are present
-      for id in self.getDisplayedColumnIdList():
+      column_list = []
+      for id in displayed_column_id_list:
         try:
           column_list.append(available_column_dict[id])
         except KeyError:
-          raise AttributeError, "Column %s is not avaible" % id
-    elif list_style_column_change_required and not dynamic_column_list_override:
+          raise AttributeError("Column %s is not avaible" % (id, ))
+      return column_list
+    elif listbox_display_style not in ('', DEFAULT_LISTBOX_DISPLAY_STYLE):
       # no dynamically setting of columns happens , still we have different than default
       # listbox list style so try to get columns from 'More columns'
-      list_style_prefix = "%s_" %listbox_display_style
-      for column in  self.getStyleColumnList():
-        if column[1].startswith(list_style_prefix):
-          column_list.append((column[0],column[1].replace(list_style_prefix, '',)))
-    else:
-      column_list = self.getSelectionTool().getSelectionColumns(self.getSelectionName(),
-                                                       columns = self.getColumnList(),
-                                                       REQUEST = self.request)
-    return column_list
+      list_style_prefix = "%s_" % listbox_display_style
+      return [
+        (x[0], x[1].replace(list_style_prefix, ''))
+        for x in self.getStyleColumnList()
+        if x[1].startswith(list_style_prefix)
+      ]
+    return self.getSelectionTool().getSelectionColumns(
+      self.getSelectionName(),
+      columns=self.getColumnList(),
+      REQUEST=self.request,
+    )
 
   @lazyMethod
   def getColumnAliasList(self):
