@@ -54,18 +54,17 @@ def getDatePeriodList(start_date):
 
 start_date = context.getStartDate()
 if start_date is None:
-  return context.REQUEST.RESPONSE.redirect(
-    '%s?portal_status_message=%s' % (
-    context.absolute_url(),
-    Base_translateString('Tasks can not be created, start date is empty.')
-    ))
+  return context.Base_redirect(
+    'view',
+    keep_items={'portal_status_message': Base_translateString(
+      'Tasks can not be created, start date is empty.'
+    )})
 else:
   date_list = getDatePeriodList(start_date)
   for next_date in date_list:
     context.activate(activity="SQLQueue").Task_duplicate(next_date)
-  return context.REQUEST.RESPONSE.redirect(
-    '%s?portal_status_message=%s' % (
-    context.absolute_url(),
-    Base_translateString('${count} tasks created.',
-                         mapping={'count':len(date_list)})
-    ))
+  return context.Base_redirect(
+    'view',
+    keep_items={'portal_status_message': Base_translateString(
+      '${count} tasks created.', mapping={'count':len(date_list)}
+    )})
