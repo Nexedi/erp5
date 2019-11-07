@@ -2308,6 +2308,20 @@ undefined()
        imported_module2_with_version])
     self.assertEqual(component.getTextContentWarningMessageList(), [])
 
+  def testPylintNamedtupleUnicodeLiteralsRegression(self):
+    # regression for a bug with our pylint patches on guess encoding
+    # a named tuple with unicode_literals enabled cause UnicodeDecodeError
+    component = self._newComponent(
+        self._generateReference('TestPylintNamedtupleUnicodeLiteralsRegression'))
+    component.setTextContent("""
+from __future__ import unicode_literals
+from collections import namedtuple
+namedtuple('NamedTuple', 'foo bar')(1, 2)
+""")
+    self.tic()
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
 class TestZodbExtensionComponent(_TestZodbComponent):
