@@ -1,6 +1,6 @@
-/*global window, rJS, isEmpty, getFirstNonEmpty, ensureArray */
+/*global window, rJS, isEmpty, getFirstNonEmpty, ensureArray, isEmpty */
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
-(function (window, rJS, getFirstNonEmpty, ensureArray) {
+(function (window, rJS, getFirstNonEmpty, ensureArray, isEmpty) {
   "use strict";
 
   rJS(window)
@@ -63,7 +63,7 @@
             text_content = item_list[i][0];
           }
         }
-        if (text_content === undefined) {
+        if ((text_content === undefined) && !isEmpty(this.state.value)) {
           text_content = '??? (' + this.state.value + ')';
         }
         state.text_content = text_content;
@@ -90,6 +90,7 @@
     })
 
     .declareMethod('getContent', function () {
+      var context = this;
       if (this.state.editable) {
         return this.getDeclaredGadget('sub')
           .push(function (gadget) {
@@ -100,10 +101,7 @@
             // Automatically add default_%s:int:0
             //   https://lab.nexedi.com/nexedi/erp5/blob/8ae0706177/product/Formulator/Widget.py#L1147
             /*jslint maxlen: 80 */
-            var key_list = Object.keys(result), i;
-            for (i = 0; i < key_list.length; i += 1) {
-              result["default_" + key_list[i] + ":int"] = 0;
-            }
+            result["default_" + context.state.name + ":int"] = 0;
             return result;
           });
       }
@@ -120,4 +118,4 @@
       return true;
     }, {mutex: 'changestate'});
 
-}(window, rJS, getFirstNonEmpty, ensureArray));
+}(window, rJS, getFirstNonEmpty, ensureArray, isEmpty));
