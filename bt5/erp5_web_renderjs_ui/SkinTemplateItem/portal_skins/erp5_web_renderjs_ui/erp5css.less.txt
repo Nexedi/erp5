@@ -7,7 +7,7 @@
 @white: #FFFFFF;
 @txtgreen: #22CC22;
 @txtsubgrey: #575757;
-@grey: #767676;
+@grey: hsl(0, 0%, 42%);
 @backgroundgreen: #37A419;
 
 
@@ -841,6 +841,7 @@ div[data-gadget-scope='editor_panel'] {
       padding: @half-margin-size @margin-size;
       border: 1px solid rgba(0, 0, 0, 0.14);
       border-radius: @radius;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.20);
 
       margin-right: @margin-size;
       &:last-of-type {
@@ -925,6 +926,7 @@ div[data-gadget-scope='header'] .ui-header {
   flex-flow: row wrap;
   // Prevent the header to have a width higher than the screen
   width: 100%;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.20);
 
   @media @desktop {
     transition: transform 200ms ease-out;
@@ -1159,10 +1161,12 @@ div[data-gadget-scope='header'] .ui-header {
 
   background-color: @backgroundcolor;
   color: @white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.20);
 
   border-radius: @radius;
   border-width: 1px;
   border-style: solid;
+  border-color: @backgroundcolor;
 
   min-width: 8em;
 
@@ -1413,6 +1417,9 @@ div[data-gadget-scope='header'] .ui-header {
         border-radius: @border-radius;
         width: auto;
         z-index: 1001;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.20);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.20);
+
 
         &:before {
           position: absolute;
@@ -1559,6 +1566,7 @@ div[data-gadget-scope='erp5_searchfield'] {
       // padding: @half-margin-size;
       border: 1px solid rgba(0, 0, 0, 0.14);
       border-radius: @radius;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.20);
 
       margin-right: @margin-size;
       max-width: 6em;
@@ -1604,6 +1612,7 @@ div[data-gadget-scope='erp5_searchfield'] {
       padding: @half-margin-size;
       border: 1px solid rgba(0, 0, 0, 0.14);
       border-radius: @radius;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.20);
 
       margin-right: @margin-size;
       &:last-of-type {
@@ -1867,6 +1876,8 @@ div[data-gadget-scope='notification'] {
   right: -@panelwidth - @double-margin-size;
   transition: transform 200ms ease-out;
   transform: translate3d(0, 0, 0);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.20);
+
   &.visible {
     transform: translate3d(-@panelwidth - @double-margin-size - @main-margin-size-desktop, 0, 0);
     .error {
@@ -1886,6 +1897,8 @@ div[data-gadget-scope='notification'] {
     padding: @double-margin-size;
     color: @colorsubheaderlink;
     border-radius: @border-radius;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.20);
+
     &.success {
       background-color: @backgroundgreen;
     }
