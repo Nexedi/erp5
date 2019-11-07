@@ -1312,6 +1312,7 @@ div[data-gadget-scope='header'] .ui-header ul {
 **********************************************/
 div[data-gadget-scope='erp5_searchfield'] {
   padding-top: 6pt;
+  padding-bottom: 6pt;
 }
 div[data-gadget-scope='erp5_searchfield'] .ui-input-text {
   display: flex;
