@@ -70,6 +70,11 @@ def string_build(self, data, modname='', path=None):
       module.file_bytes = data.encode('utf-8')
       return self._post_build(module, 'utf-8')
     """
+    if isinstance(data, unicode):
+	# When called internally by pylint/astroid and if the source code imports
+	# `unicode_literals`, the source code may end up being an unicode object
+	# (example: `infer_named_tuple()`)
+        data = data.encode('utf-8')
     encoding = _guess_encoding(data)
     if encoding is None:
         # Encoding not defined in the source file, assuming utf-8...
