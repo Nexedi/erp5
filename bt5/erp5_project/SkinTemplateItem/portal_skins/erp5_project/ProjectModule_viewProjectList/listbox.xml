@@ -238,16 +238,7 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Project_getQuickViewUrl</string>
-                        </tuple>
-                        <tuple>
-                          <string>default_destination_section_title</string>
-                          <string>Project_getQuickViewUrl</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
