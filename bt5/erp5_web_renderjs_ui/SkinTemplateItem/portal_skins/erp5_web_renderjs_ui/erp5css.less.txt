@@ -1542,6 +1542,7 @@ div[data-gadget-scope='header'] .ui-header {
 **********************************************/
 div[data-gadget-scope='erp5_searchfield'] {
   padding-top: @margin-size;
+  padding-bottom: @margin-size;
 
   .ui-input-text {
     display: flex;
