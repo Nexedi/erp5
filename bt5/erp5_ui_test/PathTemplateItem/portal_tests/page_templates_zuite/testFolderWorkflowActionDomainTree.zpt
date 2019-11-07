@@ -102,36 +102,58 @@
   <td>Change State</td>
 </tr>
 
-<!-- we have a listbox with 1 line for 2 Draft Foos -->
+<!-- we have a listbox with 2 lines, one for all documents by validation state, and one for 2 Draft Foos -->
 <tr>
   <td>assertText</td>
   <td>//span[@class="listbox-current-page-total-number workflow_action_listbox-current-page-total-number"]</td>
-  <td>1 records</td>
+  <td>2 records</td>
 </tr>
-<!-- It's the number of element which will be validate -->
+
 <tr>
   <td>assertText</td>
-  <td>//tr[@class='workflow_action_listbox-data-line-0 DataA']/td[1]/a</td>
+  <td>//tr[contains(concat(' ',normalize-space(@class),' '),' workflow_action_listbox-data-line-0 ')]/td[1]/a</td>
   <td>2</td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tr[@class='workflow_action_listbox-data-line-0 DataA']/td[2]/a</td>
+  <td>//tr[contains(concat(' ',normalize-space(@class),' '),' workflow_action_listbox-data-line-0 ')]/td[2]/a</td>
   <td>Foo</td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tr[@class='workflow_action_listbox-data-line-0 DataA']/td[3]/a</td>
+  <td>//tr[contains(concat(' ',normalize-space(@class),' '),' workflow_action_listbox-data-line-0 ')]/td[3]/a</td>
   <td>Draft</td>
 </tr>
 <tr>
   <td>assertText</td>
-  <td>//tr[@class='workflow_action_listbox-data-line-0 DataA']/td[4]/a</td>
+  <td>//tr[contains(concat(' ',normalize-space(@class),' '),' workflow_action_listbox-data-line-0 ')]/td[4]/a</td>
+  <td>Foo Validation Workflow</td>
+</tr>
+
+<!-- It's the number of element which will be validate -->
+<tr>
+  <td>assertText</td>
+  <td>//tr[contains(concat(' ',normalize-space(@class),' '),' workflow_action_listbox-data-line-1 ')]/td[1]/a</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[contains(concat(' ',normalize-space(@class),' '),' workflow_action_listbox-data-line-1 ')]/td[2]/a</td>
+  <td>Foo</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[contains(concat(' ',normalize-space(@class),' '),' workflow_action_listbox-data-line-1 ')]/td[3]/a</td>
+  <td>Draft</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>//tr[contains(concat(' ',normalize-space(@class),' '),' workflow_action_listbox-data-line-1 ')]/td[4]/a</td>
   <td>Foo Workflow</td>
 </tr>
 <tr>
   <td>select</td>
-  <td>//tr[@class='workflow_action_listbox-data-line-0 DataA']/td[5]/select</td>
+  <td>//tr[contains(concat(' ',normalize-space(@class),' '),' workflow_action_listbox-data-line-1 ')]/td[5]/select</td>
   <td>label=Validate Action</td>
 </tr>
 <tr>

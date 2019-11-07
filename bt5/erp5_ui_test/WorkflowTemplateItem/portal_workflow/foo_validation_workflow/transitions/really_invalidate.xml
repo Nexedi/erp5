@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>actbox_category</string> </key>
+            <value> <string>workflow</string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>actbox_url</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>after_script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>action that will mark the document as invalidated</string> </value>
+        </item>
+        <item>
+            <key> <string>guard</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>really_invalidate</string> </value>
+        </item>
+        <item>
+            <key> <string>new_state_id</string> </key>
+            <value> <string>invalidated</string> </value>
+        </item>
+        <item>
+            <key> <string>script_name</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Invalidate</string> </value>
+        </item>
+        <item>
+            <key> <string>trigger_type</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>Modify portal content</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

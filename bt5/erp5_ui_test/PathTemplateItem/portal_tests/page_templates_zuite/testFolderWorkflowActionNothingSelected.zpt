@@ -77,12 +77,12 @@
 
 <tr>
   <td>select</td>
-  <td>//tr[@class='workflow_action_listbox-data-line-0 DataA']/td[5]/select</td>
+  <td>//tr[contains(concat(' ',normalize-space(@class),' '),' workflow_action_listbox-data-line-1 ')]/td[5]/select</td>
   <td>label=Validate Action</td>
 </tr>
 <tr>
   <td>select</td>
-  <td>//tr[@class='workflow_action_listbox-data-line-1 DataB']/td[5]/select</td>
+  <td>//tr[contains(concat(' ',normalize-space(@class),' '),' workflow_action_listbox-data-line-2 ')]/td[5]/select</td>
   <td>label=Invalidate Action</td>
 </tr>
 

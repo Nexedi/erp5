@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Purposedly using the wrong title for translation testing !</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>invalidated</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Validated</string> </value>
+        </item>
+        <item>
+            <key> <string>transitions</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

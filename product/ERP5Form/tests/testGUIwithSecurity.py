@@ -162,3 +162,59 @@ class TestGUISecurity(ERP5TypeTestCase):
     self.loginAs() # user without permission to access protected property
     self.assertNotIn(protected_property_markup, self.portal.foo_module.foo.Foo_viewSecurity())
 
+  def test_translated_state_title_lookup(self):
+    """
+    Tests that looking up document which have the same translated state title
+    but different states are found, and conversely same state document but with
+    different title are not found.
+
+    Note: not testing security, but here because this is one of the rare unit
+    tests which install erp5_ui_test.
+    """
+    self.login()
+    portal = self.portal
+    newContent = portal.foo_bar_module.newContent
+    foo_1 = newContent(portal_type='Foo')
+    foo_1.reallyValidate()
+    foo_2 = newContent(portal_type='Foo')
+    foo_2.reallyValidate()
+    foo_2.reallyInvalidate()
+    bar_1 = newContent(portal_type='Bar')
+    bar_1.reallyValidate()
+    bar_2 = newContent(portal_type='Bar')
+    bar_2.reallyValidate()
+    bar_2.reallyInvalidate()
+    # Test sanity checks:
+    # - Foo: "correct" title
+    self.assertEqual(foo_1.getTranslatedValidationStateTitle(), 'Validated')
+    self.assertEqual(foo_2.getTranslatedValidationStateTitle(), 'Invalidated')
+    # - Bar: reversed title
+    self.assertEqual(bar_1.getTranslatedValidationStateTitle(), 'Invalidated')
+    self.assertEqual(bar_2.getTranslatedValidationStateTitle(), 'Validated')
+    self.tic()
+    self.assertItemsEqual(
+      portal.portal_catalog(
+        select_list=['translated_validation_state_title'],
+        uid=[
+          foo_1.getUid(),
+          foo_2.getUid(),
+          bar_1.getUid(),
+          bar_2.getUid(),
+        ],
+        translated_validation_state_title='Validat%',
+        # Note: not actually tested, just checking nothing raises when this is
+        # provided.
+        sort_on=(('translated_validation_state_title', 'ASC'), ),
+      ).dictionaries(),
+      [
+        {
+          'path': foo_1.getPath(),
+          'uid': foo_1.getUid(),
+          'translated_validation_state_title': 'Validated',
+        }, {
+          'path': bar_2.getPath(),
+          'uid': bar_2.getUid(),
+          'translated_validation_state_title': 'Validated',
+        }
+      ],
+    )

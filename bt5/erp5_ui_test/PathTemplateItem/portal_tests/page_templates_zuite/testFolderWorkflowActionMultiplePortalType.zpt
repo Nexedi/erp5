@@ -41,16 +41,16 @@
   <td>Change State</td>
 </tr>
 
-<!-- we have a listbox with too lines, one for bars one for foos -->
+<!-- we have a listbox with 4 lines, two for all documents by validation state, one for bars one for foos -->
 <tr>
   <td>assertText</td>
   <td>//span[@class="listbox-current-page-total-number workflow_action_listbox-current-page-total-number"]</td>
-  <td>2 records</td>
+  <td>4 records</td>
 </tr>
 
 <tr>
   <td>select</td>
-  <td>//tr[@class='workflow_action_listbox-data-line-0 DataA']/td[5]/select</td>
+  <td>//tr[contains(concat(' ',normalize-space(@class),' '),' workflow_action_listbox-data-line-2 ')]/td[5]/select</td>
   <td>label=Validate Action</td>
 </tr>
 
