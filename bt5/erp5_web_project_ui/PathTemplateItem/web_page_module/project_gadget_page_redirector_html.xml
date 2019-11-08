@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Manifest" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -62,20 +62,18 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_project.appcache</string> </value>
+            <value> <string>gadget_erp5_page_project_redirector.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>project_gadget_erp5_appcache</string> </value>
+            <value> <string>project_gadget_page_redirector_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -93,7 +91,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -102,171 +100,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# generated on Thu, 19 Sep 2019 00:00:00 GMT+0100\n
-# XXX + fonts\n
-# images/ajax-loader.gif\n
-CACHE:\n
-\n
-gadget_erp5_page_project_controller.html\n
-gadget_erp5_page_project_controller.js\n
-gadget_project_info.html\n
-gadget_project_info.js\n
-gadget_erp5_page_project_redirector.html\n
-gadget_erp5_page_project_redirector.js\n
-\n
-favicon.ico\n
-font-awesome/font-awesome-webfont.eot\n
-font-awesome/font-awesome-webfont.woff\n
-font-awesome/font-awesome-webfont.woff2\n
-font-awesome/font-awesome-webfont.ttf\n
-font-awesome/font-awesome-webfont.svg\n
-gadget_erp5_worklist_empty.svg?format=svg\n
-erp5_launcher_nojqm.js\n
-gadget_erp5_nojqm.css\n
-gadget_erp5_configure_editor.html\n
-gadget_erp5_configure_editor.js\n
-gadget_erp5_editor_panel.html\n
-gadget_erp5_editor_panel.js\n
-gadget_erp5_field_checkbox.html\n
-gadget_erp5_field_checkbox.js\n
-gadget_erp5_field_datetime.html\n
-gadget_erp5_field_datetime.js\n
-gadget_erp5_field_editor.html\n
-gadget_erp5_field_editor.js\n
-gadget_erp5_field_email.html\n
-gadget_erp5_field_email.js\n
-gadget_erp5_field_file.html\n
-gadget_erp5_field_file.js\n
-gadget_erp5_field_float.html\n
-gadget_erp5_field_float.js\n
-gadget_erp5_field_formbox.html\n
-gadget_erp5_field_formbox.js\n
-gadget_erp5_field_gadget.html\n
-gadget_erp5_field_gadget.js\n
-gadget_erp5_field_image.html\n
-gadget_erp5_field_image.js\n
-gadget_erp5_field_integer.html\n
-gadget_erp5_field_integer.js\n
-gadget_erp5_field_list.html\n
-gadget_erp5_field_list.js\n
-gadget_erp5_field_lines.html\n
-gadget_erp5_field_lines.js\n
-gadget_erp5_field_listbox.html\n
-gadget_erp5_field_listbox.js\n
-gadget_erp5_field_matrixbox.html\n
-gadget_erp5_field_matrixbox.js\n
-gadget_erp5_field_multicheckbox.html\n
-gadget_erp5_field_multicheckbox.js\n
-gadget_erp5_field_multilist.html\n
-gadget_erp5_field_multilist.js\n
-gadget_erp5_field_multirelationstring.html\n
-gadget_erp5_field_multirelationstring.js\n
-gadget_erp5_field_radio.html\n
-gadget_erp5_field_radio.js\n
-gadget_erp5_field_readonly.html\n
-gadget_erp5_field_readonly.js\n
-gadget_erp5_field_relationstring.html\n
-gadget_erp5_field_relationstring.js\n
-gadget_erp5_field_string.html\n
-gadget_erp5_field_string.js\n
-gadget_erp5_field_password.html\n
-gadget_erp5_field_password.js\n
-gadget_erp5_field_textarea.html\n
-gadget_erp5_field_textarea.js\n
-gadget_erp5_form.html\n
-gadget_erp5_form.js\n
-gadget_erp5_header.html\n
-gadget_erp5_header.js\n
-gadget_erp5_jio.html\n
-gadget_erp5_jio.js\n
-gadget_erp5_label_field.html\n
-gadget_erp5_label_field.js\n
-gadget_erp5_notification.html\n
-gadget_erp5_notification.js\n
-gadget_erp5_page_action.html\n
-gadget_erp5_page_action.js\n
-gadget_erp5_page_export.html\n
-gadget_erp5_page_export.js\n
-gadget_erp5_page_form.html\n
-gadget_erp5_page_form.js\n
-gadget_erp5_page_front.html\n
-gadget_erp5_page_front.js\n
-gadget_erp5_page_history.html\n
-gadget_erp5_page_history.js\n
-gadget_erp5_page_jump.html\n
-gadget_erp5_page_jump.js\n
-gadget_erp5_page_language.html\n
-gadget_erp5_page_language.js\n
-gadget_erp5_page_logout.html\n
-gadget_erp5_page_logout.js\n
-gadget_erp5_page_preference.html\n
-gadget_erp5_page_preference.js\n
-gadget_erp5_page_relation_search.html\n
-gadget_erp5_page_relation_search.js\n
-gadget_erp5_page_search.html\n
-gadget_erp5_page_search.js\n
-gadget_erp5_page_tab.html\n
-gadget_erp5_page_tab.js\n
-gadget_erp5_page_worklist.html\n
-gadget_erp5_page_worklist.js\n
-gadget_erp5_panel.html\n
-gadget_erp5_panel.js\n
-gadget_erp5_panel.png?format=png\n
-gadget_erp5_pt_embedded_form_render.html\n
-gadget_erp5_pt_embedded_form_render.js\n
-gadget_erp5_pt_form_dialog.html\n
-gadget_erp5_pt_form_dialog.js\n
-gadget_erp5_pt_form_python_action.html\n
-gadget_erp5_pt_form_python_action.js\n
-gadget_erp5_pt_form_list.html\n
-gadget_erp5_pt_form_list.js\n
-gadget_erp5_pt_form_view.html\n
-gadget_erp5_pt_form_view.js\n
-gadget_erp5_pt_form_view_editable.html\n
-gadget_erp5_pt_form_view_editable.js\n
-gadget_erp5_pt_report_view.html\n
-gadget_erp5_pt_report_view.js\n
-gadget_erp5_router.html\n
-gadget_erp5_router.js\n
-gadget_erp5_relation_input.html\n
-gadget_erp5_relation_input.js\n
-gadget_erp5_search_editor.html\n
-gadget_erp5_search_editor.js\n
-gadget_erp5_searchfield.html\n
-gadget_erp5_searchfield.js\n
-gadget_erp5_sort_editor.html\n
-gadget_erp5_sort_editor.js\n
-gadget_global.js\n
-gadget_html5_element.html\n
-gadget_html5_element.js\n
-gadget_html5_input.html\n
-gadget_html5_input.js\n
-gadget_html5_textarea.html\n
-gadget_html5_textarea.js\n
-gadget_html5_select.html\n
-gadget_html5_select.js\n
-gadget_erp5_global.js\n
-gadget_jio.html\n
-gadget_jio.js\n
-gadget_translation.html\n
-gadget_translation.js\n
-gadget_translation_data.js\n
-gadget_editor.html\n
-gadget_editor.js\n
-gadget_button_maximize.html\n
-gadget_button_maximize.js\n
-handlebars.js\n
-jiodev.js\n
-renderjs.js\n
-rsvp.js\n
-NETWORK:\n
-*</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>Project Gadget AppCache</string> </value>
+            <value> <string>Gadget Project Redirector</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -354,7 +189,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1570792350.31</float>
+                              <float>1573473049.84</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -403,7 +238,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>979.47842.59522.17561</string> </value>
+                      <value> <string>979.47685.23740.12236</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -421,7 +256,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1573482418.03</float>
+                              <float>1573472973.73</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -482,7 +317,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1570792302.6</float>
+                              <float>1573472940.22</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
