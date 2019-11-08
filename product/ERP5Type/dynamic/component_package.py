@@ -35,6 +35,7 @@ import imp
 import collections
 
 from Products.ERP5.ERP5Site import getSite
+from AccessControl.SecurityInfo import _moduleSecurity
 from . import aq_method_lock
 from types import ModuleType
 from zLOG import LOG, BLATHER, WARNING
@@ -314,6 +315,9 @@ class ComponentDynamicPackage(ModuleType):
       setattr(version_package, name, module)
       if module_fullname_alias:
         setattr(self, name, module)
+        modsec = _moduleSecurity.get(module_fullname)
+        if modsec is not None:
+          _moduleSecurity[module_fullname_alias] = modsec
 
       import erp5.component
       erp5.component.ref_manager.add_module(module)
