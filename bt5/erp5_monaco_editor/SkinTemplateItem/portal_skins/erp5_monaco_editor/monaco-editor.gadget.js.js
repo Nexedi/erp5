@@ -20,14 +20,14 @@
       return this.notifyChange();
     })
     .ready(function(context) {
-      let editor;
+      var editor;
       function deferNotifyChange() {
         if (!context.state.ignoredChangeDuringInitialization) {
           return context.deferNotifyChange();
         }
       }
       context.editor = editor = monaco.editor.create(
-        this.element.querySelector('.monaco-container'),
+        context.element.querySelector('.monaco-container'),
         {
           /* because Alt+Click is LeftClick on ChromeOS */
           multiCursorModifier: 'ctrlCmd',
