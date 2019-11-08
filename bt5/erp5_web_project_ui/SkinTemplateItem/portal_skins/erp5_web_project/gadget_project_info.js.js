@@ -83,6 +83,7 @@
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
+    .declareAcquiredMethod("getSetting", "getSetting")
 
     .declareMethod('render', function (options) {
       var state_dict = {
@@ -102,12 +103,16 @@
           return RSVP.all([
             getWebPageInfo(gadget, modification_dict.project_reference),
             gadget.jio_getAttachment(modification_dict.jio_key, "links"),
-            gadget.getDeclaredGadget("editor")
+            gadget.getDeclaredGadget("editor"),
+            gadget.getSetting("hateoas_url")
           ]);
         })
         .push(function (result_list) {
           var milestone_view = getActionListByName(
-            ensureArray(result_list[1]._links.view), "milestone");
+            ensureArray(result_list[1]._links.view), "milestone"),
+            document_view = result_list[3] +
+              '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
+              modification_dict.jio_key + '&view=Project_viewDocumentList';
           web_page_info = result_list[0];
           editor = result_list[2];
           editor.render({"editor": "fck_editor", "editable": false,
@@ -115,42 +120,44 @@
           return gadget.getUrlForList([
             getUrlParameterDict('milestone_module', milestone_view, [["stop_date", "ascending"]]),
             getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
-                             ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
-                              "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-                             ('source_project_title:  "' + modification_dict.project_title +
-                              '" AND selection_domain_state_task_domain:  "confirmed"')),
+              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
+               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+              ('source_project_title:  "' + modification_dict.project_title +
+               '" AND selection_domain_state_task_domain:  "confirmed"')),
             getUrlParameterDict('support_request_module', "view", [["delivery.start_date", "descending"]],
-                             null, ('source_project_title:  "' + modification_dict.project_title +
-                                    '" AND destination_project_title:  "' + modification_dict.project_title +
-                                    '" AND selection_domain_state_support_domain:  "validated"')),
+              null, ('source_project_title:  "' + modification_dict.project_title +
+                     '" AND destination_project_title:  "' + modification_dict.project_title +
+                     '" AND selection_domain_state_support_domain:  "validated"')),
             getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
-                             ["title", "description", "delivery.start_date"],
-                             ('source_project_title:  "' + modification_dict.project_title +
-                              '" AND selection_domain_state_bug_domain:  "started"')),
+              ["title", "description", "delivery.start_date"],
+              ('source_project_title:  "' + modification_dict.project_title +
+               '" AND selection_domain_state_bug_domain:  "started"')),
             getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
-                             ["title", "description", "delivery.start_date"],
-                             ('source_project_title:  "' + modification_dict.project_title +
-                              '" AND selection_domain_state_bug_domain:  "closed"')),
+              ["title", "description", "delivery.start_date"],
+              ('source_project_title:  "' + modification_dict.project_title +
+               '" AND selection_domain_state_bug_domain:  "closed"')),
             getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
-                             ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
-                              "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-                             ('source_project_title:  "' + modification_dict.project_title +
-                              '" AND selection_domain_state_task_report_domain:  "started"')),
+              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
+               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+              ('source_project_title:  "' + modification_dict.project_title +
+               '" AND selection_domain_state_task_report_domain:  "started"')),
             getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
-                             ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
-                              "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-                             ('source_project_title:  "' + modification_dict.project_title +
-                              '" AND selection_domain_state_task_report_domain:  "closed"')),
+              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
+               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+              ('source_project_title:  "' + modification_dict.project_title +
+               '" AND selection_domain_state_task_report_domain:  "closed"')),
             getUrlParameterDict('test_result_module', 'view', [["delivery.start_date", "descending"]],
-                             null, ('source_project_title:  "' + modification_dict.project_title + '"')),
+              null, ('source_project_title:  "' + modification_dict.project_title + '"')),
             getUrlParameterDict('test_suite_module', 'view', [["creation_date", "descending"]],
-                             null, ('source_project_title:  "' + modification_dict.project_title + '"')),
+              null, ('source_project_title:  "' + modification_dict.project_title + '"')),
             getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
-                             ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
-                              "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-                             ('source_project_title:  "' + modification_dict.project_title +
-                              '" AND selection_domain_state_task_domain:  "not_confirmed"')),
-            getUrlParameterDict(web_page_info.id, web_page_info.edit_view)
+              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
+               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+              ('source_project_title:  "' + modification_dict.project_title +
+               '" AND selection_domain_state_task_domain:  "not_confirmed"')),
+            getUrlParameterDict(web_page_info.id, web_page_info.edit_view),
+            getUrlParameterDict(modification_dict.jio_key, document_view, [["modification_date", "descending"]],
+                                null, ('selection_domain_state_document_domain:  "confirmed"'))
           ]);
         })
         .push(function (url_list) {
@@ -167,6 +174,7 @@
           if (web_page_info.id) {
             enableLink(document.getElementById("web_page_link"), url_list[10]);
           }
+          enableLink(document.getElementById("document_link"), url_list[11]);
           setLastTestResult(gadget, modification_dict.project_title,
                             document.getElementById("test_result_span"));
         });
