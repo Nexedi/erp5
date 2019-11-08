@@ -87,6 +87,71 @@
           }
         });
     })
+    .declareJob('runPyLint', function () {
+      var context = this;
+      return (function (controller) {
+        return new RSVP.Queue()
+          .push(function () {
+            return RSVP.delay(2000);
+          })
+          .push(function () {
+            if (
+              context.state.model_language === 'python' &&
+              context.state.language_support_url
+            ) {
+              const data = new FormData();
+              const checker_parameters = {
+                code: context.editor.getValue(),
+              };
+
+              data.append('data', JSON.stringify(checker_parameters));
+              fetch(
+                context.state.language_support_url +
+                  '/ERP5Site_checkPythonSourceCodeAsJSON',
+                {
+                  method: 'POST',
+                  body: data,
+                  signal: controller.signal,
+                }
+              )
+                .then((response) => response.json())
+                .then(
+                  (data) => {
+                    monaco.editor.setModelMarkers(
+                      context.editor.getModel(),
+                      'pylint',
+                      data['annotations'].map((annotation) => {
+                        return {
+                          startLineNumber: annotation.row + 1,
+                          endLineNumber: annotation.row + 1,
+                          startColumn: annotation.col,
+                          endColumn: Infinity,
+                          message: annotation.text,
+                          severity:
+                            annotation.type === 'error'
+                              ? monaco.MarkerSeverity.Error
+                              : monaco.MarkerSeverity.Warning,
+                        };
+                      })
+                    );
+                  },
+                  (e) => {
+                    if (!(e instanceof DOMException) /* AbortError */) {
+                      throw e;
+                    }
+                    /* ignore aborted requests */
+                  }
+                );
+            }
+          })
+          .push(undefined, function (e) {
+            if (e instanceof RSVP.CancellationError) {
+              controller.abort();
+            }
+            throw e;
+          });
+      })(new AbortController());
+    })
     .declareMethod('render', function (options) {
       var model_language,
         state_dict = {
@@ -116,6 +181,7 @@
       }
       state_dict.model_language = model_language;
       state_dict.value = options.value || '';
+      state_dict.language_support_url = options.language_support_url || '';
       return this.changeState(state_dict);
     })
 
@@ -202,6 +268,10 @@
         }
         if (modification_dict.hasOwnProperty('editable')) {
           this.editor.updateOptions({ readOnly: !this.state.editable });
+        }
+        if (this.state.model_language === 'python') {
+          this.editor.getModel().onDidChangeContent(this.runPyLint.bind(this));
+          this.runPyLint();
         }
       }
       return queue;
