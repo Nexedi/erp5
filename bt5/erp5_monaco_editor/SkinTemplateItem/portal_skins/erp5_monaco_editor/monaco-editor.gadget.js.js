@@ -172,7 +172,7 @@
     })
 
     .onStateChange(function(modification_dict) {
-      var queue = new RSVP.Queue();
+      var queue = new RSVP.Queue(), gadget = this;
       if (modification_dict.hasOwnProperty('value')) {
         // Do not notify the UI when initializing the value
         this.state.ignoredChangeDuringInitialization = true;
@@ -257,6 +257,73 @@
         }
         if (this.state.model_language === 'python') {
           this.editor.getModel().onDidChangeContent(this.runPyLint.bind(this));
+
+          const yapfDocumentFormattingProvider = {
+            _provideFormattingEdits: function(model, range, options, token) {
+              const controller = new AbortController();
+              token.onCancellationRequested(() => {
+                controller.abort();
+              });
+              const data = new FormData();
+              data.append(
+                'data',
+                JSON.stringify({ code: model.getValue(), range: range })
+              );
+              return fetch(
+                gadget.state.language_support_url +
+                  '/ERP5Site_formatPythonSourceCode',
+                {
+                  method: 'POST',
+                  body: data,
+                  signal: controller.signal
+                }
+              )
+                .then(response => response.json())
+                .then(
+                  data => {
+                    if (data.error) {
+                      this.editor.revealLine(data.error_line);
+                      return;
+                    }
+                    if (data.changed) {
+                      return [
+                        {
+                          range: model.getFullModelRange(),
+                          text: data.formatted_code
+                        }
+                      ];
+                    }
+                  },
+                  e => {
+                    if (!(e instanceof DOMException) /* AbortError */) {
+                      throw e;
+                    }
+                    /* ignore aborted requests */
+                  }
+                );
+            },
+            provideDocumentRangeFormattingEdits: function(
+              model,
+              range,
+              options,
+              token
+            ) {
+              return this._provideFormattingEdits(model, range, options, token);
+            },
+            provideDocumentFormattingEdits: function(model, options, token) {
+              return this._provideFormattingEdits(model, null, options, token);
+            }
+          };
+
+          monaco.languages.registerDocumentFormattingEditProvider(
+            'python',
+            yapfDocumentFormattingProvider
+          );
+          monaco.languages.registerDocumentRangeFormattingEditProvider(
+            'python',
+            yapfDocumentFormattingProvider
+          );
+
           this.runPyLint();
         }
       }
