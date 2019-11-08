@@ -100,8 +100,10 @@
             constructor(
                 executor: (
                     resolve: (value?: RSVP.Arg<T>) => void,
-                    reject: (reason?: any) => void
+                    reject: (reason?: any) => void,
+                    notify: (value?: any) => void
                 ) => void,
+                canceller: () => void,
                 label?: string
             );
 
@@ -611,12 +613,14 @@
         // nexedi additions begin
         class Queue<R> extends Promise<R> {
             constructor();
-            push<U>(
-                onFulfilled?: (value: R) => U | Promise<U>,
-                onRejected?: (error: Error) => void
-            ): Queue<U>;
+            push<TResult1 = R, TResult2 = never>(
+                onFulfilled?: ((value: R) => TResult1 | PromiseLike<TResult1>) | undefined | null,
+                onRejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null,
+                label?: string
+            ): Queue<TResult1 | TResult2>;
         }
         class CancellationError extends Error {}
+        const delay: (delay: number) => Promise<void>;
         // nexedi additions end
     }
 
