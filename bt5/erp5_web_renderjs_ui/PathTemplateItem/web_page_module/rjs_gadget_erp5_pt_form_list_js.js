@@ -158,7 +158,7 @@
                 page: "action",
                 view: form_gadget.state.view
               }},
-              {command: 'history_previous', options: {}},
+              {command: 'display', options: {}},
               {command: 'display_dialog_with_history', options: {
                 jio_key: form_gadget.state.jio_key,
                 page: "export",
