@@ -27,7 +27,7 @@
               'jio_key': 'project_module',
               'view': hateoas_url +
               '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-              'project_module&view=ProjectManagement_viewProjectList',
+              'project_module&view=ProjectModule_viewProjectManagementList',
               'field_listbox_sort_list:json': [["title", "ascending"]],
               'field_listbox_column_list:json': ["title",
                                                  "default_destination_section_title"],
