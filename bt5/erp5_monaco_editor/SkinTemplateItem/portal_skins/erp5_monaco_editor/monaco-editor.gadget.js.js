@@ -324,6 +324,55 @@
             yapfDocumentFormattingProvider
           );
 
+          monaco.languages.registerCompletionItemProvider('python', {
+            provideCompletionItems: async function(
+              model,
+              position,
+              context,
+              token
+            ) {
+              const controller = new AbortController();
+              token.onCancellationRequested(() => {
+                controller.abort();
+              });
+              const data = new FormData();
+              const complete_parameters = {
+                code: model.getValue(),
+                position: { line: position.lineNumber, column: position.column }
+              };
+
+              data.append('data', JSON.stringify(complete_parameters));
+              return fetch(
+                gadget.state.language_support_url +
+                  '/ERP5Site_getPythonSourceCodeCompletionList',
+                {
+                  method: 'POST',
+                  body: data,
+                  signal: controller.signal
+                }
+              )
+                .then(response => response.json())
+                .then(
+                  data => {
+                    return {
+                      suggestions: data.map(c => {
+                        c.kind = monaco.languages.CompletionItemKind[c._kind];
+                        // this makes monaco render documentation as markdown.
+                        c.documentation = { value: c.documentation };
+                        return c;
+                      })
+                    };
+                  },
+                  e => {
+                    if (!(e instanceof DOMException) /* AbortError */) {
+                      throw e;
+                    }
+                    /* ignore aborted requests */
+                  }
+                );
+            }
+          });
+
           this.runPyLint();
         }
       }
