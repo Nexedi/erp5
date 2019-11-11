@@ -120,43 +120,44 @@
           return gadget.getUrlForList([
             getUrlParameterDict('milestone_module', milestone_view, [["stop_date", "ascending"]]),
             getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
-                             ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
-                              "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-                             ('source_project_title:  "' + modification_dict.project_title +
-                              '" AND selection_domain_state_task_domain:  "confirmed"')),
+              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
+               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+              ('source_project_title:  "' + modification_dict.project_title +
+               '" AND selection_domain_state_task_domain:  "confirmed"')),
             getUrlParameterDict('support_request_module', "view", [["delivery.start_date", "descending"]],
-                             null, ('source_project_title:  "' + modification_dict.project_title +
-                                    '" AND destination_project_title:  "' + modification_dict.project_title +
-                                    '" AND selection_domain_state_support_domain:  "validated"')),
+              null, ('source_project_title:  "' + modification_dict.project_title +
+                     '" AND destination_project_title:  "' + modification_dict.project_title +
+                     '" AND selection_domain_state_support_domain:  "validated"')),
             getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
-                             ["title", "description", "delivery.start_date"],
-                             ('source_project_title:  "' + modification_dict.project_title +
-                              '" AND selection_domain_state_bug_domain:  "started"')),
+              ["title", "description", "delivery.start_date"],
+              ('source_project_title:  "' + modification_dict.project_title +
+               '" AND selection_domain_state_bug_domain:  "started"')),
             getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
-                             ["title", "description", "delivery.start_date"],
-                             ('source_project_title:  "' + modification_dict.project_title +
-                              '" AND selection_domain_state_bug_domain:  "closed"')),
+              ["title", "description", "delivery.start_date"],
+              ('source_project_title:  "' + modification_dict.project_title +
+               '" AND selection_domain_state_bug_domain:  "closed"')),
             getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
-                             ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
-                              "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-                             ('source_project_title:  "' + modification_dict.project_title +
-                              '" AND selection_domain_state_task_report_domain:  "started"')),
+              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
+               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+              ('source_project_title:  "' + modification_dict.project_title +
+               '" AND selection_domain_state_task_report_domain:  "started"')),
             getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
-                             ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
-                              "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-                             ('source_project_title:  "' + modification_dict.project_title +
-                              '" AND selection_domain_state_task_report_domain:  "closed"')),
+              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
+               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+              ('source_project_title:  "' + modification_dict.project_title +
+               '" AND selection_domain_state_task_report_domain:  "closed"')),
             getUrlParameterDict('test_result_module', 'view', [["delivery.start_date", "descending"]],
-                             null, ('source_project_title:  "' + modification_dict.project_title + '"')),
+              null, ('source_project_title:  "' + modification_dict.project_title + '"')),
             getUrlParameterDict('test_suite_module', 'view', [["creation_date", "descending"]],
-                             null, ('source_project_title:  "' + modification_dict.project_title + '"')),
+              null, ('source_project_title:  "' + modification_dict.project_title + '"')),
             getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
-                             ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
-                              "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-                             ('source_project_title:  "' + modification_dict.project_title +
-                              '" AND selection_domain_state_task_domain:  "not_confirmed"')),
+              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
+               "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+              ('source_project_title:  "' + modification_dict.project_title +
+               '" AND selection_domain_state_task_domain:  "not_confirmed"')),
             getUrlParameterDict(web_page_info.id, web_page_info.edit_view),
-            getUrlParameterDict(modification_dict.jio_key, document_view)
+            getUrlParameterDict(modification_dict.jio_key, document_view, [["modification_date", "descending"]],
+                                null, ('selection_domain_state_document_domain:  "confirmed"'))
           ]);
         })
         .push(function (url_list) {
