@@ -3,46 +3,6 @@
 (function (document, window, rJS, RSVP, jIO, console) {
   "use strict";
 
-  var warmup_gadget_done = false,
-    warmup_list = [
-      //officejs gadgets
-      'gadget_officejs_form_view.html',
-      'gadget_officejs_common_util.html',
-      'gadget_erp5_label_field.html',
-      'gadget_html5_element.html',
-      'gadget_erp5_field_datetime.html',
-      'gadget_erp5_field_string.html',
-      'gadget_erp5_form.html',
-      'gadget_erp5_field_float.html',
-      'gadget_erp5_field_listbox.html',
-      // Used in panel
-      'gadget_translation.html',
-      'gadget_erp5_panel.html',
-      'gadget_erp5_header.html',
-      'gadget_erp5_searchfield.html',
-      'gadget_erp5_field_multicheckbox.html',
-      'gadget_html5_input.html',
-      //following elements should be split in at list 2 groups (doclist and doc)
-      'gadget_erp5_pt_form_list',
-      'gadget_erp5_pt_form_view.html',
-      //
-      'gadget_erp5_pt_form_view_editable.html',
-      'gadget_erp5_field_textarea.html',
-      'gadget_erp5_field_gadget.html',
-      'gadget_html5_textarea.html',
-      'gadget_editor.html'
-    ];
-
-  function warmupGadgetList(gadget, url_list) {
-    var i;
-    for (i = 0; i < url_list.length; i += 1) {
-      // No need to check the result, as it will fail later
-      // when rJS will try to instanciate one of this gadget
-      rJS.declareGadgetKlass(rJS.getAbsoluteURL(url_list[i],
-                                                gadget.__path));
-    }
-  }
-
   rJS(window)
 
     /////////////////////////////////////////////////////////////////
@@ -90,10 +50,6 @@
           }
         })
         .push(function () {
-          if (!warmup_gadget_done) {
-            warmupGadgetList(gadget, warmup_list);
-            warmup_gadget_done = true;
-          }
           return gadget.getDeclaredGadget("common_util");
         })
         .push(function (result) {

@@ -90,10 +90,9 @@
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
 
-    .declareMethod('updateConfiguration', function (jio_appchache_options, origin_url,
+    .declareMethod('updateConfiguration', function (appcache_storage, origin_url,
                                                     migration_version, current_version,
                                                     storage_name) {
-      var appcache_storage = jIO.createJIO(jio_appchache_options);
       if (!appcache_storage) { return; }
       var gadget = this,
         document_id_list = [origin_url,
@@ -200,14 +199,14 @@
           if (result_list[0] === undefined) { return; }
           if (selected_storage_name === undefined) { return; }
           gadget.state_parameter_dict.jio_storage_name = selected_storage_name;
+          appcache_storage = jIO.createJIO(jio_appchache_options);
           current_version = window.location.href.replace(window.location.hash, "");
           index = current_version.indexOf(window.location.host) + window.location.host.length;
           current_version = current_version.substr(index);
           if (migration_version !== current_version ||
               previous_storage_name !== selected_storage_name) {
-            return gadget.updateConfiguration(jio_appchache_options, origin_url,
-                                              migration_version, current_version,
-                                              selected_storage_name);
+            return gadget.updateConfiguration(appcache_storage, origin_url, migration_version,
+                                              current_version, selected_storage_name);
           }
         })
         .push(undefined, function (error) {
