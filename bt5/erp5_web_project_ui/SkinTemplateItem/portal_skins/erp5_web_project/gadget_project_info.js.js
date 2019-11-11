@@ -3,6 +3,21 @@
 (function (window, rJS, RSVP, document, ensureArray) {
   "use strict";
 
+  function parseHTMLLinks(html, url) {
+    var content = document.createElement('html'),
+      regex = /href="(.*?)"/g,
+      link;
+    while ((link = regex.exec(html)) !== null) {
+      if (! link[1].startsWith("https") && ! link[1].startsWith("http") &&
+          ! link[1].startsWith("ftp") && ! link[1].includes("/")
+         ) {
+        // TODO pass current jio_key so redirector can come back if doc not found
+        html = html.replace(link[1], url + "&n.reference=" + link[1]);
+      }
+    }
+    return html;
+  }
+
   function enableLink(link_element, url) {
     link_element.href = url;
     link_element.disabled = false;
@@ -41,18 +56,20 @@
   function getWebPageInfo(gadget, project_reference) {
     var query = 'portal_type:="Web Page" AND reference:"' + project_reference +
                 '-Home.Page" AND validation_state:"published_alive"',
-      id,
-      content,
-      edit_view;
-    return gadget.jio_allDocs({
-      query: query,
-      limit: 1,
-      select_list: ['text_content']
-    })
+      id, content, edit_view, redirector_ulr;
+    return gadget.getUrlFor({command: 'push_history', options: {page: "project_redirector", editable: false}})
+      .push(function (url) {
+        redirector_ulr = url;
+        return gadget.jio_allDocs({
+          query: query,
+          limit: 1,
+          select_list: ['text_content']
+        });
+      })
       .push(function (result_list) {
         if (result_list.data.rows[0]) {
           id = result_list.data.rows[0].id;
-          content = result_list.data.rows[0].value.text_content;
+          content = parseHTMLLinks(result_list.data.rows[0].value.text_content, redirector_ulr);
           return gadget.jio_getAttachment(id, "links")
             .push(function (web_page_document) {
               edit_view = getActionListByName(
@@ -81,6 +98,7 @@
   rJS(window)
 
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("getSetting", "getSetting")
