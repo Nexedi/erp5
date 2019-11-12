@@ -35,6 +35,7 @@ import shutil
 import tempfile
 import unittest
 import warnings
+import sys
 
 import transaction
 from persistent import Persistent
@@ -1524,9 +1525,13 @@ class _TestZodbComponent(SecurityTestCase):
                                  reset_portal_type_at_transaction_boundary=False)
 
   def _importModule(self, module_name):
-    return __import__(self._getComponentFullModuleName(module_name),
-                      fromlist=[self._document_class._getDynamicModuleNamespace()],
-                      level=0)
+    module_name = self._getComponentFullModuleName(module_name)
+    module = __import__(
+      module_name,
+      fromlist=[self._document_class._getDynamicModuleNamespace()],
+      level=0)
+    self.assertTrue(module_name in sys.modules)
+    return module
 
   def testValidateInvalidateDelete(self):
     """
@@ -1996,6 +2001,10 @@ def bar(*args, **kwargs):
     module = getattr(top_module, reference)
     self.assertHasAttribute(module, 'bar')
     self.assertEqual(module.bar(), 'BarTestImportedVersionedComponentOnly')
+
+    # Now check that the alias module on the top-level package is properly
+    # created when importing it
+    self._importModule(imported_reference)
 
   def testVersionPriority(self):
     """

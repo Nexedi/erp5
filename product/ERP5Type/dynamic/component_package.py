@@ -254,6 +254,8 @@ class ComponentDynamicPackage(ModuleType):
         raise ImportError("%s: no version of Component %s in Site priority" % \
                             (fullname, name))
 
+      module_fullname_alias = self._namespace + '.' + name
+
       # Check whether this module has already been loaded before for a
       # specific version, if so, just add it to the upper level
       try:
@@ -262,9 +264,8 @@ class ComponentDynamicPackage(ModuleType):
         pass
       else:
         setattr(self, name, module)
+        sys.modules[module_fullname_alias] = module
         return module
-
-      module_fullname_alias = self._namespace + '.' + name
 
     component = getattr(site.portal_components, component_id)
     relative_url = component.getRelativeUrl()
