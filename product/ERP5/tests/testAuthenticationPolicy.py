@@ -100,8 +100,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
 
   def _clearCache(self):
     self.portal.portal_caches.clearCache(
-      cache_factory_list=('erp5_ui_short', # for preference cache
-                          'erp5_content_short', # for authentication cache
+      cache_factory_list=('erp5_content_short', # for authentication cache
                           ))
 
   def _getPasswordEventList(self, login):

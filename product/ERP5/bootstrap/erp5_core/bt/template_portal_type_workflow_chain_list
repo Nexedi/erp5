@@ -45,6 +45,7 @@ Module Component | dynamic_class_generation_interaction_workflow
 Module Component | edit_workflow
 Predicate | edit_workflow
 Preference | edit_workflow
+Preference | preference_interaction_workflow
 Preference | preference_workflow
 Property Existence Constraint | dynamic_class_generation_interaction_workflow
 Property Sheet Tool | dynamic_class_generation_interaction_workflow
@@ -55,6 +56,7 @@ SQL Method | edit_workflow
 Standard Property | dynamic_class_generation_interaction_workflow
 String Attribute Match Constraint | dynamic_class_generation_interaction_workflow
 System Preference | edit_workflow
+System Preference | preference_interaction_workflow
 System Preference | preference_workflow
 TALES Constraint | dynamic_class_generation_interaction_workflow
 Test Component | component_validation_workflow
