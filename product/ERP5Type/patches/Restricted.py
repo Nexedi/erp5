@@ -297,6 +297,22 @@ def guarded_import(mname, globals=None, locals=None, fromlist=None,
   for fromname in fromlist or ():
     if fromname[:1] == '_':
       raise Unauthorized(fromname)
+  # ZODB Components must be imported beforehand as ModuleSecurityInfo() may be
+  # called there and AccessControl secureModule() expects to find the module
+  # in _moduleSecurity dict. Also, import loader will fill MNAME_MAP.
+  if mname.startswith('erp5.component.'):
+      # Call find_load_module() to log errors as this will always raise
+      # Unauthorized error without details
+      #
+      # XXX: pkgutil.get_loader() only works with '__path__'
+      import erp5.component
+      _, _, package_name, module_name = mname.split('.', 3)
+      try:
+          component_package = getattr(erp5.component, package_name)
+      except AttributeError:
+          raise Unauthorized(mname)
+      if component_package.find_load_module(module_name) is None:
+          raise Unauthorized(mname)
   if mname in MNAME_MAP:
     mname = MNAME_MAP[mname]
     if not fromlist:

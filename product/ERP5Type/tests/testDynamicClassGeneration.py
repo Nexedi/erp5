@@ -2331,6 +2331,120 @@ namedtuple('NamedTuple', 'foo bar')(1, 2)
     self.assertEqual(component.getTextContentWarningMessageList(), [])
     self.assertEqual(component.getTextContentErrorMessageList(), [])
 
+  def testModuleSecurityInfo(self):
+    """
+    AccessControl.SecurityInfo.ModuleSecurityInfo() function allows to declare
+    public/private classes and functions at Module level.
+
+    When called, an entry is added to AccessControl.SecurityInfo._moduleSecurity
+    dict (mapping module name to _ModuleSecurityInfo class instance). Later on,
+    when this module is imported from 'Restricted Code', securities will be
+    applied to the Module and then be moved to from _moduleSecurity to
+    AccessControl.SecurityInfo._appliedModuleSecurity dict.
+
+    For ZODB Components, we have the versioned Module and its alias. This test
+    ensures that securities are also properly defined for the alias to be
+    importable (and not raising an 'Unauthorized' exception).
+    """
+    from AccessControl.SecurityInfo import (_moduleSecurity,
+                                            _appliedModuleSecurity)
+    from Products.ERP5Type.patches.Restricted import MNAME_MAP
+
+    reference = self._generateReference('TestModuleSecurityInfo')
+    component = self._newComponent(reference)
+    version_package = (self._document_class._getDynamicModuleNamespace() +
+                       '.erp5_version')
+    module = self._getComponentFullModuleName(reference)
+    module_versioned = self._getComponentFullModuleName(reference,
+                                                        version='erp5')
+    # __name__ == erp5.component.XXX.erp5_version.TestModuleSecurityInfo
+    # (erp5.component.XXX.TestModuleSecurityInfo is just an alias)
+    component.setTextContent("""
+class TestModuleSecurityInfoException(Exception):
+  pass
+from AccessControl.SecurityInfo import ModuleSecurityInfo
+ModuleSecurityInfo(__name__).declarePublic('TestModuleSecurityInfoException')
+""" + component.getTextContent())
+    self.portal.portal_workflow.doActionFor(component, 'validate_action')
+    self.tic()
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
+    self.assertModuleImportable(reference,
+                                expected_default_version='erp5_version',
+                                reset=True)
+    self.assertFalse(module_versioned in _moduleSecurity)
+    self.assertFalse(module_versioned in _appliedModuleSecurity)
+
+    # Define another ZODB Component to check that not importing the module
+    # beforehand works
+    reference2 = self._generateReference('TestModuleSecurityInfo2')
+    component2 = self._newComponent(reference2)
+    module2 = self._getComponentFullModuleName(reference2)
+    module_versioned2 = self._getComponentFullModuleName(reference2,
+                                                        version='erp5')
+    # __name__ == erp5.component.XXX.erp5_version.TestModuleSecurityInfo2
+    # (erp5.component.XXX.TestModuleSecurityInfo2 is just an alias)
+    component2.setTextContent("""
+class TestModuleSecurityInfoException2(Exception):
+  pass
+from AccessControl.SecurityInfo import ModuleSecurityInfo
+ModuleSecurityInfo(__name__).declarePublic('TestModuleSecurityInfoException2')
+""" + component2.getTextContent())
+    self.portal.portal_workflow.doActionFor(component2, 'validate_action')
+    self.tic()
+    self.assertEqual(component2.getValidationState(), 'validated')
+    self.assertEqual(component2.getTextContentErrorMessageList(), [])
+    self.assertEqual(component2.getTextContentWarningMessageList(), [])
+    self.assertModuleImportable(reference2,
+                                expected_default_version='erp5_version',
+                                reset=True)
+
+    ## Import module from non-'Restricted Code': it must be only in
+    ## _moduleSecurity
+    self._importModule('erp5_version.%s' % reference)
+    self.assertFalse(module in MNAME_MAP)
+    self.assertTrue(module_versioned in _moduleSecurity)
+    self.assertFalse(module in _appliedModuleSecurity)
+    self.assertFalse(module2 in MNAME_MAP)
+    self.assertFalse(module2 in _moduleSecurity)
+    self.assertFalse(module2 in _appliedModuleSecurity)
+
+    ## Import module from 'Restricted Code': it must be in
+    ## _appliedModuleSecurity and no longer in _moduleSecurity
+    createZODBPythonScript(self.portal.portal_skins.custom,
+      'TestModuleSecurityInfoPythonScript', '',
+      """
+from %s import TestModuleSecurityInfoException
+from %s import TestModuleSecurityInfoException
+
+from %s import TestModuleSecurityInfoException2
+from %s import TestModuleSecurityInfoException2
+return 'OK'
+""" % (module_versioned, module,
+       module_versioned2, module2))
+    self.assertEqual(self.portal.TestModuleSecurityInfoPythonScript(), 'OK')
+    self.assertEqual(MNAME_MAP.get(module), module_versioned)
+    self.assertFalse(module_versioned in _moduleSecurity)
+    self.assertTrue(module_versioned in _appliedModuleSecurity)
+    self.assertEqual(MNAME_MAP.get(module2), module_versioned2)
+    self.assertFalse(module_versioned2 in _moduleSecurity)
+    self.assertTrue(module_versioned2 in _appliedModuleSecurity)
+
+    ## Reset must clear everything including the version package as this is
+    ## dynamic (no need to clear erp5.component.XXX though)...
+    self._component_tool.reset(force=True,
+                               reset_portal_type_at_transaction_boundary=True)
+    self.tic()
+    self.assertFalse(version_package in _moduleSecurity)
+    self.assertFalse(version_package in _appliedModuleSecurity)
+    self.assertFalse(module in MNAME_MAP)
+    self.assertFalse(module_versioned in _moduleSecurity)
+    self.assertFalse(module_versioned in _appliedModuleSecurity)
+    self.assertFalse(module2 in MNAME_MAP)
+    self.assertFalse(module_versioned2 in _moduleSecurity)
+    self.assertFalse(module_versioned2 in _appliedModuleSecurity)
+
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
 class TestZodbExtensionComponent(_TestZodbComponent):

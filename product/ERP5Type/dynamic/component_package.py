@@ -40,6 +40,8 @@ from types import ModuleType
 from zLOG import LOG, BLATHER, WARNING
 from Acquisition import aq_base
 from importlib import import_module
+from Products.ERP5Type.patches.Restricted import MNAME_MAP
+from AccessControl.SecurityInfo import _moduleSecurity, _appliedModuleSecurity
 
 class ComponentVersionPackage(ModuleType):
   """
@@ -265,6 +267,7 @@ class ComponentDynamicPackage(ModuleType):
       else:
         setattr(self, name, module)
         sys.modules[module_fullname_alias] = module
+        MNAME_MAP[module_fullname_alias] = module.__name__
         return module
 
     component = getattr(site.portal_components, component_id)
@@ -315,6 +318,7 @@ class ComponentDynamicPackage(ModuleType):
       setattr(version_package, name, module)
       if module_fullname_alias:
         setattr(self, name, module)
+        MNAME_MAP[module_fullname_alias] = module_fullname
 
       import erp5.component
       erp5.component.ref_manager.add_module(module)
@@ -397,6 +401,16 @@ class ComponentDynamicPackage(ModuleType):
       # Clear the source code dict only once
       self.__fullname_source_code_dict.clear()
       package = self
+
+      # Force reload of ModuleSecurityInfo() as it may have been changed in
+      # the source code
+      for modsec_dict in _moduleSecurity, _appliedModuleSecurity:
+        for k in modsec_dict.keys():
+          if k.startswith(self._namespace):
+            del modsec_dict[k]
+      for k in MNAME_MAP.keys():
+        if k.startswith(self._namespace):
+          del MNAME_MAP[k]
 
     for name, module in package.__dict__.items():
       if name[0] == '_' or not isinstance(module, ModuleType):
