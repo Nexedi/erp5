@@ -217,6 +217,12 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')),
       list(person1.getPreferredAccountingTransactionSimulationStateList()))
+    # edits can also be made with setters
+    person1.setPreferredAccountingTransactionSimulationStateList(['planned'])
+    self.assertEqual(list(pref_tool.getPreference(
+      'preferred_accounting_transaction_simulation_state_list')),
+      list(person1.getPreferredAccountingTransactionSimulationStateList()))
+
     # disable person -> group is selected
     self.getWorkflowTool().doActionFor(person1,
             'disable_action', wf_id='preference_workflow')
@@ -526,6 +532,8 @@ class TestPreferences(PropertySheetTestCase):
     # But they can see others
     system_pref.view()
     # check accessors works
+    self.assertEqual(['http://127.0.0.1'],
+                     preference_tool.getPreferredDocumentConversionServerUrlList())
     system_pref.setPreferredDocumentConversionServerUrlList(['http://1.2.3.4'])
     self.tic()
     self.assertEqual(['http://1.2.3.4'],
@@ -706,8 +714,7 @@ class TestPreferences(PropertySheetTestCase):
 
     # simulate situation when _clearCache does nothing, for example in case
     # if memcached or any other non-deleteable cache is used
-    from Products.ERP5Form.Document.Preference import Preference
-    Preference._clearCache = lambda *args,**kwargs: None
+    raise NotImplementedError("do something to simulate cache disabled")
     system_preference = portal_preferences.newContent(portal_type='System Preference',
                                                dummystring=system_preference_string)
     system_preference.enable()
