@@ -133,7 +133,7 @@
  </chain>
  <chain>
   <type>Preference</type>
-  <workflow>edit_workflow, preference_workflow</workflow>
+  <workflow>edit_workflow, preference_interaction_workflow, preference_workflow</workflow>
  </chain>
  <chain>
   <type>Property Existence Constraint</type>
@@ -169,7 +169,7 @@
  </chain>
  <chain>
   <type>System Preference</type>
-  <workflow>edit_workflow, preference_workflow</workflow>
+  <workflow>edit_workflow, preference_interaction_workflow, preference_workflow</workflow>
  </chain>
  <chain>
   <type>TALES Constraint</type>

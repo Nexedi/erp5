@@ -232,8 +232,8 @@ class TestUpgrader(ERP5TypeTestCase):
     alarm = getattr(self.portal.portal_alarms, 'upgrader_check_post_upgrade')
     active_process = alarm.getLastActiveProcess()
     detail_list = active_process.getResultList()[0].detail
-    message = 'Preference - Expected: edit_workflow, preference_workflow <> Found: (Default)'
-    self.assertTrue(message in detail_list, detail_list)
+    message = 'Preference - Expected: edit_workflow, preference_interaction_workflow, preference_workflow <> Found: (Default)'
+    self.assertIn(message, detail_list)
     self.assertTrue(detail_list.count(message), 1)
 
   def stepSetConstraintInPersonModulePortalType(self, sequence=None):
