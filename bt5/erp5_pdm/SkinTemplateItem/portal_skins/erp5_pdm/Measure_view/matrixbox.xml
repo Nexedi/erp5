@@ -209,6 +209,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>as_cell_range_script_id</string> </key>
+                    <value> <string>Measure_asCellRange</string> </value>
+                </item>
+                <item>
                     <key> <string>cell_base_id</string> </key>
                     <value> <string>cell</string> </value>
                 </item>
