@@ -1096,9 +1096,9 @@ class ListBoxRenderer:
     """
     listbox_display_style = self.getListboxDisplayStyle()
     displayed_column_id_list = self.getDisplayedColumnIdList()
+    available_column_dict = {x[0]: x for x in self.getAllColumnList()}
     if displayed_column_id_list is not None:
       # dynamically setting columns is supported
-      available_column_dict = {x[0]: x for x in self.getAllColumnList()}
       column_list = []
       for id in displayed_column_id_list:
         try:
@@ -1115,11 +1115,14 @@ class ListBoxRenderer:
         for x in self.getStyleColumnList()
         if x[1].startswith(list_style_prefix)
       ]
-    return self.getSelectionTool().getSelectionColumns(
-      self.getSelectionName(),
-      columns=self.getColumnList(),
-      REQUEST=self.request,
-    )
+    return [
+      (x[0], available_column_dict.get(x[0], x)[1])
+      for x in self.getSelectionTool().getSelectionColumns(
+        self.getSelectionName(),
+        columns=self.getColumnList(),
+        REQUEST=self.request,
+      )
+    ]
 
   @lazyMethod
   def getColumnAliasList(self):
