@@ -16,13 +16,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_fast_input</string>
+                <string>action_type/object_jio_fast_input</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_fast_input</string> </value>
+            <value> <string>object_jio_fast_input</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -75,7 +75,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/DeliveryLine_viewItemCreationDialog</string> </value>
+            <value> <string>string:${object_url}/DeliveryLine_viewItemCreationDialog?reset:int=1</string> </value>
         </item>
       </dictionary>
     </pickle>
