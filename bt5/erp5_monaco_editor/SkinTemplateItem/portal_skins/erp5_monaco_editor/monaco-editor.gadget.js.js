@@ -94,6 +94,7 @@
               const data = new FormData();
               const checker_parameters = {
                 code: context.editor.getValue(),
+                portal_type: context.state.portal_type,
               };
 
               data.append('data', JSON.stringify(checker_parameters));
@@ -175,6 +176,7 @@
         model_language = 'python';
       }
       state_dict.model_language = model_language;
+      state_dict.portal_type = options.portal_type;
       state_dict.value = options.value || '';
       state_dict.language_support_url = options.language_support_url || '';
       return this.changeState(state_dict);
@@ -335,7 +337,7 @@
           );
 
           monaco.languages.registerCompletionItemProvider('python', {
-            provideCompletionItems: async function(
+            provideCompletionItems: async function (
               model,
               position,
               context,
@@ -348,7 +350,10 @@
               const data = new FormData();
               const complete_parameters = {
                 code: model.getValue(),
-                position: { line: position.lineNumber, column: position.column }
+                position: {
+                  line: position.lineNumber,
+                  column: position.column,
+                },
               };
 
               data.append('data', JSON.stringify(complete_parameters));
@@ -358,29 +363,29 @@
                 {
                   method: 'POST',
                   body: data,
-                  signal: controller.signal
+                  signal: controller.signal,
                 }
               )
-                .then(response => response.json())
+                .then((response) => response.json())
                 .then(
-                  data => {
+                  (data) => {
                     return {
-                      suggestions: data.map(c => {
+                      suggestions: data.map((c) => {
                         c.kind = monaco.languages.CompletionItemKind[c._kind];
                         // this makes monaco render documentation as markdown.
                         c.documentation = { value: c.documentation };
                         return c;
-                      })
+                      }),
                     };
                   },
-                  e => {
+                  (e) => {
                     if (!(e instanceof DOMException) /* AbortError */) {
                       throw e;
                     }
                     /* ignore aborted requests */
                   }
                 );
-            }
+            },
           });
 
           this.runPyLint();
