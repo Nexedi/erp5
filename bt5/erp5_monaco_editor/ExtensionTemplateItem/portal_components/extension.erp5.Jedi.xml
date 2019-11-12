@@ -45,14 +45,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W: 61,  2: Reimport \'ContextSet\' (imported line 52) (reimported)</string>
-                <string>W: 79,  8: Unused variable \'annotation_classes\' (unused-variable)</string>
-                <string>W:156,  8: Unreachable code (unreachable)</string>
-                <string>W:184, 16: Unused variable \'filtered\' (unused-variable)</string>
-                <string>W:132,  2: Unused variable \'get_cached_code_lines\' (unused-variable)</string>
-                <string>W:133,  2: Unused variable \'StringIO\' (unused-variable)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
