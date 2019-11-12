@@ -1,8 +1,9 @@
 from __future__ import unicode_literals
 import json
 import sys
-from threading import RLock
+import typing
 import logging
+from threading import RLock
 
 logger = logging.getLogger("erp5.extension.Jedi")
 
@@ -16,44 +17,39 @@ last_reload_time = time.time()
 # XXX I'm really not sure this is needed, jedi seems fast enough.
 jedi.settings.call_signatures_validity = 30
 
-# monkey patch to disable buggy sys.path addition based on buildout.
-# rdiff-backup seem to trigger a bug, but it's generally super slow and not correct for us.
-try:
-  # in jedi 0.15.1 it's here
-  from jedi.evaluate import sys_path as jedi_inference_sys_path # pylint: disable=import-error,unused-import,no-name-in-module
-except ImportError:
-  # but it's beeing moved. Next release will be here
-  # https://github.com/davidhalter/jedi/commit/3b4f2924648eafb9660caac9030b20beb50a83bb
-  from jedi.inference import sys_path as jedi_inference_sys_path  # pylint: disable=import-error,unused-import,no-name-in-module
-_ = jedi_inference_sys_path.discover_buildout_paths  # make sure it's here
+if True:
+  # monkey patch to disable buggy sys.path addition based on buildout.
+  # https://github.com/davidhalter/jedi/issues/1325
+  # rdiff-backup seem to trigger a bug, but it's generally super slow and not correct for us.
+  try:
+    # in jedi 0.15.1 it's here
+    from jedi.evaluate import sys_path as jedi_inference_sys_path  # pylint: disable=import-error,unused-import,no-name-in-module
+  except ImportError:
+    # but it's beeing moved. Next release (0.15.2) will be here
+    # https://github.com/davidhalter/jedi/commit/3b4f2924648eafb9660caac9030b20beb50a83bb
+    from jedi.inference import sys_path as jedi_inference_sys_path  # pylint: disable=import-error,unused-import,no-name-in-module
+  _ = jedi_inference_sys_path.discover_buildout_paths  # make sure it's here
 
+  def dont_discover_buildout_paths(*args, **kw):
+    return set()
 
-def dont_discover_buildout_paths(*args, **kw):
-  return set()
+  jedi_inference_sys_path.discover_buildout_paths = dont_discover_buildout_paths
+  from jedi.api import project as jedi_api_project
+  jedi_api_project.discover_buildout_paths = dont_discover_buildout_paths
 
+from jedi.evaluate.context.instance import TreeInstance
+from jedi.evaluate.gradual.typing import InstanceWrapper
+from jedi.evaluate.lazy_context import LazyKnownContexts
+from jedi.evaluate.base_context import ContextSet, NO_CONTEXTS
 
-jedi_inference_sys_path.discover_buildout_paths = dont_discover_buildout_paths
-from jedi.api import project as jedi_api_project
-jedi_api_project.discover_buildout_paths = dont_discover_buildout_paths
-
-try:
-  # for local types annotations in this component
-  from erp5.portal_type import ERP5Site  # pylint: disable=unused-import,no-name-in-module
-except ImportError:
-  pass
+if typing.TYPE_CHECKING:
+  import erp5.portal_type.ERP5Site  # pylint: disable=unused-import,no-name-in-module,import-error
 
 
 def executeJediXXX(callback, context, arguments):
-  from jedi.evaluate.base_context import ContextSet
-
   # XXX function for relaodability
   def call():
     return callback(context, arguments=arguments)
-
-  from jedi.evaluate.context.instance import TreeInstance
-  from jedi.evaluate.gradual.typing import InstanceWrapper
-  from jedi.evaluate.lazy_context import LazyKnownContexts
-  from jedi.evaluate.base_context import ContextSet, NO_CONTEXTS
 
   def makeFilterFunc(class_from_portal_type, arguments):
     def filter_func(val):
@@ -71,6 +67,7 @@ def executeJediXXX(callback, context, arguments):
         for wrapped in val.iterate():
           if filter_func(wrapped):
             return True
+        return False
         annotation_classes = val.gather_annotation_classes()
         #import pdb; pdb.set_trace()
         return val.gather_annotation_classes().filter(filter_func)
@@ -86,6 +83,9 @@ def executeJediXXX(callback, context, arguments):
     #).function_context.name.string_name == 'newContent':
     if not arguments.argument_node:
       return call()  # no portal_type, we'll use what's defined in the stub
+
+    original = call()
+    #logger.info('re-evaluating %s ...', original)
 
     # look for a "portal_type=" argument
     for arg_name, arg_value in arguments.unpack():
@@ -120,15 +120,11 @@ def executeJediXXX(callback, context, arguments):
 def makeERP5Plugin():
   logger.info('making erp5 plugin')
 
-  from jedi.evaluate.base_context import ContextSet
-  from jedi.parser_utils import get_cached_code_lines
-  from StringIO import StringIO
-
   class JediERP5Plugin(object):
     _cache = {}
 
     def _getPortalObject(self):  # XXX needed ?
-      # type: () -> ERP5Site
+      # type: () -> erp5.portal_type.ERP5Site
       from Products.ERP5.ERP5Site import getSite
       from Products.ERP5Type.Globals import get_request
       from ZPublisher.BaseRequest import RequestContainer
@@ -142,53 +138,10 @@ def makeERP5Plugin():
       logger.info("JediERP5Plugin registering execute")
 
       def wrapper(context, arguments):
+        # XXX call an external function that will be reloaded
         from erp5.component.extension.Jedi import executeJediXXX as _execute
         return _execute(callback, context, arguments)
 
-        def call():
-          return callback(context, arguments=arguments)
-
-        # methods returning portal types
-        if context.is_function():
-          # and 1 or context.get_function_execution(
-          #).function_context.name.string_name == 'newContent':
-          if not arguments.argument_node:
-            return call(
-            )  # no portal_type, we'll use what's defined in the stub
-
-          # look for a "portal_type=" argument
-          for arg_name, arg_value in arguments.unpack():
-            if arg_name == 'portal_type':
-              try:
-                portal_type = iter(arg_value.infer()).next().get_safe_value()
-              except Exception:
-                logger.exception("error infering")
-                continue
-              if not isinstance(portal_type, str):
-                continue
-              logger.info(
-                  'ahah portal_type based method with portal type=%s ...',
-                  portal_type)
-              # XXX this is really horrible
-              class_from_portal_type = portal_type.replace(' ', '') + '@'
-              original = call()
-              if 0:
-                filtered = ContextSet.from_sets({s for s in original})
-              import pdb
-              pdb.set_trace()
-              original._set = frozenset({
-                  x for x in original._set if class_from_portal_type in str(x)
-              })
-              logger.info(
-                  'portal_type based method, returning\n   %s instead of\n   %s',
-                  original,
-                  call())
-              #import pdb; pdb.set_trace()
-              return original
-
-        # methods returning List of portal types
-        # methods returning List of Brain of portal types
-        return call()
       return wrapper
 
   return JediERP5Plugin()
@@ -236,12 +189,20 @@ _TYPE_MAP = {
 
 
 def _label(definition):
+  # type: (jedi.api.classes.Completion,) -> str
+  if definition.type == 'param':
+    return '{}='.format(definition.name)
   if definition.type in ('function', 'method') and hasattr(definition,
                                                            'params'):
     params = ', '.join([param.name for param in definition.params])
     return '{}({})'.format(definition.name, params)
   return definition.name
 
+def _insertText(definition):
+  # type: (jedi.api.classes.Completion,) -> str
+  if definition.type == 'param':
+    return '{}='.format(definition.name)
+  return definition.name
 
 def _detail(definition):
   try:
@@ -264,21 +225,22 @@ def _format_docstring(docstring):
 
 
 def _format_completion(d):
+  # type: (jedi.api.classes.Completion,) -> typing.Dict[str, str]
   completion = {
       'label': _label(d),
       '_kind': _TYPE_MAP.get(d.type),
       'detail': _detail(d),
       'documentation': _format_docstring(d.docstring()),
       'sortText': _sort_text(d),
-      'insertText': d.name
+      'insertText': _insertText(d),
   }
   return completion
 
 
 def _guessType(name, context_type=None):
   """guess the type of python script parameters based on naming conventions.
-
   """
+  # TODO: `state_change` arguments for workflow scripts
   name = name.split('=')[
       0]  # support also assigned names ( like REQUEST=None in params)
   if name == 'context' and context_type:
@@ -286,7 +248,7 @@ def _guessType(name, context_type=None):
   if name in (
       'context',
       'container',):
-    return 'ERP5Site'
+    return 'erp5.portal_type.ERP5Site'
   if name == 'script':
     return 'Products.PythonScripts.PythonScript'
   if name == 'REQUEST':
@@ -298,7 +260,7 @@ def _guessType(name, context_type=None):
 
 # Jedi is not thread safe
 import Products.ERP5Type.Utils
-jedi_lock = getattr(Products.ERP5Type.Utils, 'jedi_lock', None)
+jedi_lock = getattr(Products.ERP5Type.Utils, 'jedi_lock', None) # type: RLock
 if jedi_lock is None:
   logger.critical("There was no lock, making a new one")
   jedi_lock = Products.ERP5Type.Utils.jedi_lock = RLock()
@@ -310,6 +272,8 @@ def ERP5Site_getPythonSourceCodeCompletionList(self, data, REQUEST=None):
   """
   portal = self.getPortalObject()
   logger.debug('jedi get lock %s (%s)', jedi_lock, id(jedi_lock))
+  if not jedi_lock.acquire(False):
+    raise RuntimeError('jedi is locked')
   with jedi_lock:
 
     # register our erp5 plugin
@@ -323,6 +287,7 @@ def ERP5Site_getPythonSourceCodeCompletionList(self, data, REQUEST=None):
 
     # data contains the code, the bound names and the script params. From this
     # we reconstruct a function that can be checked
+
     def indent(text):
       return ''.join(("  " + line) for line in text.splitlines(True))
 
@@ -347,9 +312,10 @@ def ERP5Site_getPythonSourceCodeCompletionList(self, data, REQUEST=None):
               "context_type %s has no portal type, using ERP5Site",
               context_type)
           context_type = None
+        else:
+          context_type = 'erp5.portal_type.{}'.format(context_type)
 
-      imports = "from erp5.portal_type import {}; import Products.ERP5Type.Core.Folder; import ZPublisher.HTTPRequest; import Products.PythonScripts".format(
-          context_type or 'ERP5Site')
+      imports = "import erp5.portal_type; import Products.ERP5Type.Core.Folder; import ZPublisher.HTTPRequest; import Products.PythonScripts"
       type_annotation = "  #  type: ({}) -> None".format(
           ', '.join(
               [_guessType(part, context_type) for part in signature_parts]))
@@ -771,7 +737,6 @@ def TypeInformation_getStub(self):
   # everything can use ERP5Site_ skins
   imports.add('from erp5.skins_tool import ERP5Site as skins_tool_ERP5Site')
   base_classes.append('skins_tool_ERP5Site')
-
   base_classes.append(prefixed_class_name)
 
   class_template = textwrap.dedent(
@@ -865,7 +830,7 @@ def PropertySheet_getStub(self):
           docstring=safe_docstring("ahaha cool :)")))
 
   def _getPythonTypeFromPropertySheetType(prop):
-    # type: (erp5.portal_type.StandardProperty) -> str
+    # type: (erp5.portal_type.StandardProperty,) -> str
     property_sheet_type = prop.getElementaryType()
     if property_sheet_type in ('content', 'object'):
       # TODO
@@ -883,9 +848,19 @@ def PropertySheet_getStub(self):
         'float': 'float',
         'text': 'str',
     }.get(property_sheet_type, 'Any')
-    if prop.isMultivalued():
+    if prop.isMultivalued() \
+          and property_sheet_type not in ('lines', 'token'):
+       # XXX see Resource/p_variation_base_category_property, we can have multivalued lines properties
       return 'List[{}]'.format(mapped_type)
     return mapped_type
+
+  def _isMultiValuedProperty(prop):
+    # type: (erp5.portal_type.StandardProperty,) -> str
+    """If this is a multi valued property, we have to generate list accessor.
+    """
+    if prop.isMultivalued():
+      return True
+    return prop.getElementaryType() in ('lines', 'tokens')
 
   from Products.ERP5Type.Utils import convertToUpperCase
   from Products.ERP5Type.Utils import evaluateExpressionFromString
@@ -908,8 +883,10 @@ def PropertySheet_getStub(self):
                   property_url=prop.absolute_url()))
       methods.append(
           method_template_template.format(
-              method_name='get{}'.format(
-                  convertToUpperCase(prop.getReference())),
+              method_name='get{}{}'.format(
+                  convertToUpperCase(prop.getReference()),
+                  'List' if _isMultiValuedProperty(prop) else '',
+              ),
               method_args='self',
               return_type=_getPythonTypeFromPropertySheetType(prop),
               docstring=docstring))
@@ -923,8 +900,10 @@ def PropertySheet_getStub(self):
                 docstring=docstring))
       methods.append(
           method_template_template.format(
-              method_name='set{}'.format(
-                  convertToUpperCase(prop.getReference())),
+              method_name='set{}{}'.format(
+                  convertToUpperCase(prop.getReference()),
+                  'List' if _isMultiValuedProperty(prop) else '',
+              ),
               method_args='self, value:{}'.format(
                   _getPythonTypeFromPropertySheetType(prop)),
               return_type='None',
@@ -1029,11 +1008,8 @@ def PropertySheet_getStub(self):
   )
 
 
-from Products.ERP5.ERP5Site import ERP5Site  # pylint: disable=unused-import
-
-
 def ERP5Site_getPortalStub(self):
-  # type: (ERP5Site) -> str
+  # type: (erp5.portal_type.ERP5Site,) -> erp5.portal_type.ERP5Site
 
   module_stub_template = textwrap.dedent(
       '''
@@ -1078,9 +1054,10 @@ def ERP5Site_getPortalStub(self):
 
   return textwrap.dedent(
       '''
-      from Products.ERP5Site.ERP5Site import ERP5Site as ERP5Site_parent_ERP5Site
+      from Products.ERP5.ERP5Site import ERP5Site as ERP5Site_parent_ERP5Site
       from erp5.skins_tool import ERP5Site as skins_tool_ERP5Site
       from erp5.skins_tool import Base as skins_tool_Base
+      
       class ERP5Site(ERP5Site_parent_ERP5Site, skins_tool_ERP5Site, skins_tool_Base):
         {}
         def getPortalObject(self):
@@ -1089,6 +1066,7 @@ def ERP5Site_getPortalStub(self):
 
 
 def ERP5Site_dumpModuleCode(self, component_or_script=None):
+  # type: (erp5.portal_type.ERP5Site,) -> None
   """Save code in filesystem for jedi to use it.
 
   Generate stubs for erp5.* dynamic modules and copy the in-ZODB modules
@@ -1098,10 +1076,7 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
     if not os.path.exists(path):
       os.mkdir(path, 0o700)
 
-  # this import is for type annotation, but pylint does not understand this.
-  import erp5.portal_type  # pylint: disable=unused-variable
-
-  portal = self.getPortalObject()  # type: erp5.portal_type.ERP5Site
+  portal = self.getPortalObject()
   module_dir = '/tmp/ahaha/erp5/'  # TODO
   mkdir_p(module_dir)
 
@@ -1139,8 +1114,19 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
                 ),
                 'w',
             ) as type_information_f:
-              type_information_f.write(
-                  ti.TypeInformation_getStub().encode('utf-8'))
+              try:
+                stub_code = ti.TypeInformation_getStub().encode('utf-8')
+              except Exception as e:
+                logger.exception("Could not generate code for %s", ti.getId())
+                stub_code = """class {class_name}:\n  {error}""".format(
+                    class_name=class_name,
+                    error=safe_docstring("Error trying to create {}: {} {}".format(
+                        ti.getId(),
+                        e.__class__,
+                        e
+                    ))
+                )
+              type_information_f.write(stub_code)
 
           # portal type groups ( useful ? used in Simulation Tool only )
           portal_types_by_group = defaultdict(list)
