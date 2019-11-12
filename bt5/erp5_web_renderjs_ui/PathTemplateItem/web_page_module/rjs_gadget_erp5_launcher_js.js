@@ -151,14 +151,16 @@
           statusText: error.statusText,
           response: error.response,
           responseUrl: error.responseUrl,
-          response_headers: error.getAllResponseHeaders()
+          response_headers: (error.getAllResponseHeaders()
+                             ? error.getAllResponseHeaders().split('\r\n')
+                             : null)
         };
       }
       if (error.constructor === Array ||
           error.constructor === String ||
           error.constructor === Object) {
         try {
-          error = JSON.stringify(error);
+          error = JSON.stringify(error, null, '  ');
         } catch (ignore) {
         }
       }
