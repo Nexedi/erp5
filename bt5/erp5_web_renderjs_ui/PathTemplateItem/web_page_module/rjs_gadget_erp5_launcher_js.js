@@ -120,8 +120,8 @@
     var error_list = [original_error],
       i,
       error,
+      error_response,
       error_text = "";
-
 
     // Do not break the application in case of errors.
     // Display it to the user for now,
@@ -144,6 +144,9 @@
         }
       }
       if (error instanceof XMLHttpRequest) {
+        if (error.getResponseHeader('Content-Type').indexOf('text/') === 0) {
+          error_response = error.response;
+        }
         error = {
           message: error.toString(),
           readyState: error.readyState,
@@ -151,14 +154,16 @@
           statusText: error.statusText,
           response: error.response,
           responseUrl: error.responseUrl,
-          response_headers: error.getAllResponseHeaders()
+          response_headers: (error.getAllResponseHeaders()
+                             ? error.getAllResponseHeaders().split('\r\n')
+                             : null)
         };
       }
       if (error.constructor === Array ||
           error.constructor === String ||
           error.constructor === Object) {
         try {
-          error = JSON.stringify(error);
+          error = JSON.stringify(error, null, '  ');
         } catch (ignore) {
         }
       }
@@ -185,9 +190,20 @@
       // Gadget has not yet been correctly initialized
       throw error;
     }
-
+    if (error_response && error_response.text) {
+      return error_response.text().then(
+        function (request_error_text) {
+          return gadget.changeState({
+            error_text: error_text,
+            request_error_text: request_error_text,
+            url: undefined
+          });
+        }
+      );
+    }
     return gadget.changeState({
       error_text: error_text,
+      request_error_text: error_response,
       url: undefined
     });
 
@@ -664,6 +680,7 @@
             var element = gadget.props.content_element,
               container = document.createElement("section"),
               paragraph,
+              iframe,
               link;
 
             paragraph = document.createElement("p");
@@ -711,6 +728,13 @@
               element.removeChild(element.firstChild);
             }
             element.appendChild(container);
+
+            // make an iframe to display error page from XMLHttpRequest.
+            if (gadget.state.request_error_text) {
+              iframe = document.createElement('iframe');
+              container.appendChild(iframe);
+              iframe.srcdoc = gadget.state.request_error_text;
+            }
 
             // reset gadget state
             gadget.state = JSON.parse(default_state_json_string);
