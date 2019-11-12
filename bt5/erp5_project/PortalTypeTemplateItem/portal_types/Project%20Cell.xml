@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>BudgetCell</string> </value>
+            <value> <string>OrderCell</string> </value>
         </item>
       </dictionary>
     </pickle>
