@@ -462,6 +462,7 @@ def synchronizeDynamicModules(context, force=False):
           portal.portal_skins.changeSkin(None)
           TransactionalResource(tpc_finish=lambda txn:
               _bootstrapped.add(portal.id))
+          transaction.get().note('Site migrated')
           LOG('ERP5Site', INFO, 'Transition successful, please update your'
               ' business templates')
         else:
