@@ -201,7 +201,6 @@ def editMatrixBox(matrixbox_field, matrixbox):
 edit_kwargs = {}  # keyword arguments for `edit` function on context
 encapsulated_editor_list = []  # editors placed inside REQUEST object
 MARKER = []  # placeholder for an empty value
-message = Base_translateString("Data updated.")
 
 try:
   # extract all listbox's object form fields from the request and `edit` the object
@@ -235,6 +234,9 @@ try:
   context.edit(REQUEST=request, edit_order=edit_order, **edit_kwargs)
   for encapsulated_editor in encapsulated_editor_list:
     encapsulated_editor.edit(context)
+
+  message = request.get('portal_status_message') or Base_translateString("Data updated.")
+  level = request.get('portal_status_level')
 except ActivityPendingError as e:
   message = Base_translateString(str(e))
 
@@ -261,4 +263,4 @@ if context.REQUEST.get('is_web_mode', False) and \
 for key in list(context.REQUEST.keys()):
   if str(key).startswith('field') or str(key).startswith('subfield'):
     context.REQUEST.form.pop(key, None)
-return context.Base_renderForm(form_id, message=message)
+return context.Base_renderForm(form_id, message=message, level=level)

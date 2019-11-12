@@ -213,8 +213,6 @@ def parseField(field):
 kw = {}
 encapsulated_editor_list = []
 MARKER = []
-message = Base_translateString("Data updated.")
-
 
 # We process all the field in form and
 # we check if they are in the request,
@@ -240,6 +238,8 @@ if silent_mode: return (kw, encapsulated_editor_list), 'edit'
 context.edit(REQUEST=request, edit_order=edit_order, **kw)
 for encapsulated_editor in encapsulated_editor_list:
   encapsulated_editor.edit(context)
+
+message = request.get('portal_status_message') or Base_translateString("Data updated.")
 
 if message_only:
   return message
