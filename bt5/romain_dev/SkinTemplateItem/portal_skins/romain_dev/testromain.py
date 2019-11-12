@@ -1,14 +1,3 @@
-portal = context.getPortalObject()
-print '---'
-for selection_id in ('bar_selection', 'foo_selection'):
-  print selection_id
-  params = portal.portal_selections.getSelectionParamsFor(selection_id)
-  print '%s' % str(params)
-  print portal.portal_selections.getSelectionColumns(selection_id)
-
-print 'ok'
-return printed
-
 result = ''# '---<br>'
 i = 0
 for brain in context.getPortalObject().portal_catalog(portal_type='Action Information', sort_on=[['relative_url', 'ASC']]):
@@ -17,6 +6,8 @@ for brain in context.getPortalObject().portal_catalog(portal_type='Action Inform
   if not action.isVisible():
     continue
   if ('Template' in action.getParentTitle()):
+    continue
+  if (action_type in ['object_button']):
     continue
   # if (action_type in ['object_report', 'object_exchange']):
   #   continue
@@ -30,6 +21,17 @@ result = '--- %i<br>%s' % (i, result)
 print result
 return printed
 
+# check selection content
+portal = context.getPortalObject()
+print '---'
+for selection_id in ('bar_selection', 'foo_selection'):
+  print selection_id
+  params = portal.portal_selections.getSelectionParamsFor(selection_id)
+  print '%s' % str(params)
+  print portal.portal_selections.getSelectionColumns(selection_id)
+
+print 'ok'
+return printed
 
 # delete all persons
 context.portal_catalog.searchAndActivate(
