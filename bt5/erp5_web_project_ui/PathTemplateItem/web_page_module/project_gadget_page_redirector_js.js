@@ -10,6 +10,7 @@
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -23,23 +24,23 @@
           '"shared_alive", "published_alive", "released_alive")',
         query = 'portal_type:' + types +
           'AND reference:"' + options.reference +
-          '" AND validation_state:' + states,
-        redirect_dict = {
-          'command': 'display',
-          'options': {
-            'history': options.history
-          }
-        };
+          '" AND validation_state:' + states;
       return gadget.jio_allDocs({
         query: query,
         limit: 1
       })
         .push(function (result_list) {
           if (result_list.data.rows[0]) {
-            redirect_dict.options.jio_key = result_list.data.rows[0].id;
+            return gadget.redirect({
+              'command': 'display',
+              'options': {
+                'jio_key': result_list.data.rows[0].id,
+                'history': options.history
+              }
+            });
+          } else {
+            return gadget.redirect({command: 'history_previous', options: {}});
           }
-          //TODO else: redirect to previous and show not found error
-          return gadget.redirect(redirect_dict);
         });
     });
 

@@ -11,7 +11,6 @@
       if (! link[1].startsWith("https") && ! link[1].startsWith("http") &&
           ! link[1].startsWith("ftp") && ! link[1].includes("/")
          ) {
-        // TODO pass current jio_key so redirector can come back if doc not found
         html = html.replace(link[1], url + "&n.reference=" + link[1]);
       }
     }
@@ -57,7 +56,7 @@
     var query = 'portal_type:="Web Page" AND reference:"' + project_reference +
                 '-Home.Page" AND validation_state:"published_alive"',
       id, content, edit_view, redirector_ulr;
-    return gadget.getUrlFor({command: 'push_history', options: {page: "project_redirector", editable: false}})
+    return gadget.getUrlFor({command: 'push_history', options: {page: "project_redirector"}})
       .push(function (url) {
         redirector_ulr = url;
         return gadget.jio_allDocs({
