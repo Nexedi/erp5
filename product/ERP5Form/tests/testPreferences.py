@@ -29,7 +29,7 @@
 ##############################################################################
 
 import unittest
-from unittest import expectedFailure
+import mock
 
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
@@ -217,6 +217,12 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')),
       list(person1.getPreferredAccountingTransactionSimulationStateList()))
+    # edits can also be made with setters
+    person1.setPreferredAccountingTransactionSimulationStateList(['planned'])
+    self.assertEqual(list(pref_tool.getPreference(
+      'preferred_accounting_transaction_simulation_state_list')),
+      list(person1.getPreferredAccountingTransactionSimulationStateList()))
+
     # disable person -> group is selected
     self.getWorkflowTool().doActionFor(person1,
             'disable_action', wf_id='preference_workflow')
@@ -526,6 +532,8 @@ class TestPreferences(PropertySheetTestCase):
     # But they can see others
     system_pref.view()
     # check accessors works
+    self.assertEqual(['http://127.0.0.1'],
+                     preference_tool.getPreferredDocumentConversionServerUrlList())
     system_pref.setPreferredDocumentConversionServerUrlList(['http://1.2.3.4'])
     self.tic()
     self.assertEqual(['http://1.2.3.4'],
@@ -679,7 +687,6 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(system_preference_string,
         portal_preferences.getDummystring())
 
-  @expectedFailure
   def test_system_preference_value_prefererred_clear_cache_disabled(self):
     default_preference_string = 'Default Name'
     normal_preference_string = 'Normal Preference'
@@ -687,36 +694,50 @@ class TestPreferences(PropertySheetTestCase):
     self._addProperty('Preference',
         'test_system_preference_value_prefererred_clear_cache_disabled Preference',
         portal_type='Standard Property',
-        property_id='dummystring',
+        property_id='dummystring_cache_disabled',
         property_default='python: "%s"' % default_preference_string,
         preference=True,
         elementary_type='string')
     portal_preferences = self.portal.portal_preferences
-    self.assertEqual(default_preference_string,
-        portal_preferences.getDummystring())
+    self.assertEqual(
+        default_preference_string,
+        portal_preferences.getDummystringCacheDisabled())
 
-    preference = portal_preferences.newContent(portal_type='Preference',
-                                               dummystring=normal_preference_string,
-                                               priority=Priority.SITE)
+    preference = portal_preferences.newContent(
+        portal_type='Preference',
+        dummystring_cache_disabled=normal_preference_string,
+        priority=Priority.SITE)
     preference.enable()
     self.tic()
 
-    self.assertEqual(normal_preference_string,
-        portal_preferences.getDummystring())
+    self.assertEqual(
+        normal_preference_string,
+        portal_preferences.getDummystringCacheDisabled())
 
     # simulate situation when _clearCache does nothing, for example in case
     # if memcached or any other non-deleteable cache is used
-    from Products.ERP5Form.Document.Preference import Preference
-    Preference._clearCache = lambda *args,**kwargs: None
-    system_preference = portal_preferences.newContent(portal_type='System Preference',
-                                               dummystring=system_preference_string)
-    system_preference.enable()
-    self.tic()
+    with mock.patch.object(
+        self.portal.portal_caches.__class__,
+        'clearAllCache') as clearAllCache,\
+      mock.patch.object(
+        self.portal.portal_caches.__class__,
+        'clearCacheFactory') as clearCacheFactory:
 
-    self.assertEqual(system_preference_string,
-        portal_preferences.getDummystring())
+      system_preference = portal_preferences.newContent(
+          portal_type='System Preference',
+          dummystring_cache_disabled=system_preference_string)
+      system_preference.enable()
+      self.tic()
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPreferences))
-  return suite
+      self.assertEqual(
+          system_preference_string,
+          portal_preferences.getDummystringCacheDisabled())
+
+      system_preference.setDummystringCacheDisabled("changed")
+      self.tic()
+      self.assertEqual(
+          "changed",
+          portal_preferences.getDummystringCacheDisabled())
+
+    clearAllCache.assert_not_called()
+    clearCacheFactory.assert_not_called()

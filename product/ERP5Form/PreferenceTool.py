@@ -41,6 +41,7 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Form import _dtmldir
+from BTrees.OIBTree import OIBTree
 
 _marker = object()
 
@@ -83,9 +84,10 @@ class PreferenceMethod(Method):
       return default
     _getPreference = CachingMethod(_getPreference,
             id='%s.%s' % (self._preference_cache_id,
-                          getSecurityManager().getUser().getId()),
-            cache_factory='erp5_ui_short')
+                          instance.getPortalObject().portal_preferences._getCacheId()),
+            cache_factory='erp5_ui_long')
     return _getPreference(default, *args, **kw)
+
 
 class PreferenceTool(BaseTool):
   """
@@ -199,6 +201,35 @@ class PreferenceTool(BaseTool):
        Note that this preference may be read only. """
     return self._getActivePreferenceByPortalType('Preference')
 
+  security.declareProtected(Permissions.View, 'clearCache')
+  def clearCache(self, preference):
+    """ clear cache when a preference is modified.
+    This is called by an interaction workflow on preferences.
+    """
+    self._getCacheId() # initialize _preference_cache if needed.
+    if preference.getPriority() == Priority.USER:
+      user_id = getSecurityManager().getUser().getId()
+      self._preference_cache[user_id] = \
+          self._preference_cache.get(user_id, 0) + 1
+    self._preference_cache[None] = self._preference_cache.get(None, 0) + 1
+
+  def _getCacheId(self):
+    """Return a cache id for preferences.
+
+    We use:
+     - user_id: because preferences are always different by user
+     - self._preference_cache[user_id] which is increased everytime a user
+       preference is modified
+     - self._preference_cache[None] which is increased everytime a global
+       preference is modified
+    """
+    user_id = getSecurityManager().getUser().getId()
+    try:
+      self._preference_cache
+    except AttributeError:
+      self._preference_cache = OIBTree()
+    return self._preference_cache.get(None), self._preference_cache.get(user_id), user_id
+
   security.declareProtected(Permissions.View, 'getActiveUserPreference')
   def getActiveUserPreference(self) :
     """ returns the current user preference for the user.
@@ -244,9 +275,10 @@ class PreferenceTool(BaseTool):
         for doc in pref.contentValues(portal_type=portal_type) :
           acceptable_template_list.append(doc.getRelativeUrl())
       return acceptable_template_list
-    _getDocumentTemplateList = CachingMethod(_getDocumentTemplateList,
-                          'portal_preferences.getDocumentTemplateList',
-                                             cache_factory='erp5_ui_short')
+    _getDocumentTemplateList = CachingMethod(
+        _getDocumentTemplateList,
+        'portal_preferences.getDocumentTemplateList.{}'.format(self._getCacheId()),
+        cache_factory='erp5_ui_long')
 
     allowed_content_types = map(lambda pti: pti.id,
                                 folder.allowedContentTypes())
@@ -297,24 +329,12 @@ class PreferenceTool(BaseTool):
     This method exists here due to bootstrap issues.
     It should work even if erp5_authentication_policy bt5 is not installed.
     """
-    # XXX: define an interface
-    def _isAuthenticationPolicyEnabled():
-      portal_preferences = self.getPortalObject().portal_preferences
-      method_id = 'isPreferredAuthenticationPolicyEnabled'
-      method = getattr(self, method_id, None)
-      if method is not None and method():
-        return True
-      return False
-
-    tv = getTransactionalVariable()
-    tv_key = 'PreferenceTool._isAuthenticationPolicyEnabled.%s' % getSecurityManager().getUser().getId()
-    if tv.get(tv_key, None) is None:
-      _isAuthenticationPolicyEnabled = CachingMethod(_isAuthenticationPolicyEnabled,
-                                                     id='PortalPreferences_isAuthenticationPolicyEnabled',
-                                                     cache_factory='erp5_content_short')
-      tv[tv_key] = _isAuthenticationPolicyEnabled()
-    return tv[tv_key]
-
+    # isPreferredAuthenticationPolicyEnabled exisss if property sheets from
+    # erp5_authentication_policy are installed.
+    method = getattr(self, 'isPreferredAuthenticationPolicyEnabled', None)
+    if method is not None and method():
+      return True
+    # if it does not exist, for sure authentication policy is not enabled.
+    return False
 
 InitializeClass(PreferenceTool)
-

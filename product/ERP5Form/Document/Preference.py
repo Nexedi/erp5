@@ -66,32 +66,3 @@ class Preference( Folder ):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def _clearCache(self):
-    """Clear caches used by methods of this preference
-
-    # TODO: clear different caches according to the preference priority
-    # TODO: (XXX) currently, if one use enables / disables a cache, caches
-            for all other users are reset. This is not good for a system
-            in which users do a lot of preference validation. A better solution
-            is needed for this. But it is not easy because the concept of
-            "per user cache" has been proven to be ambiguous or useless.
-            In theory, a solution could consist in using more keys to
-            select caches or to delete "manually" certain cache keys.
-    """
-    portal_caches = getToolByName(self.getPortalObject(), 'portal_caches')
-    portal_caches.clearCache(cache_factory_list=('erp5_ui_short',))
-
-  def _edit(self, **kw):
-    """edit and clear all caches"""
-    self._clearCache()
-    Folder._edit(self, **kw)
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'enable')
-  def enable(self, **kw):
-    """Workflow method"""
-    self._clearCache()
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'disable')
-  def disable(self, **kw):
-    """Workflow method"""
-    self._clearCache()
