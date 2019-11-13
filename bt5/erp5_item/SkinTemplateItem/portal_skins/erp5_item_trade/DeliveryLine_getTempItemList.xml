@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string>item_count=10, *args, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
