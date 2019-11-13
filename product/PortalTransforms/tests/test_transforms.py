@@ -12,10 +12,10 @@ from Products.PortalTransforms.libtransforms.utils import MissingBinary
 from Products.PortalTransforms.transforms.image_to_gif import image_to_gif
 from Products.PortalTransforms.transforms.image_to_png import image_to_png
 from Products.PortalTransforms.transforms.image_to_jpeg import image_to_jpeg
-from Products.PortalTransforms.transforms.image_to_bmp import image_to_bmp
+from erp5.component.document.TransformImageToBmp import image_to_bmp
 from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
 from Products.PortalTransforms.transforms.image_to_ppm  import image_to_ppm
-from Products.PortalTransforms.transforms.image_to_pcx  import image_to_pcx
+from erp5.component.document.TransformImageToPcx  import image_to_pcx
 
 from Products.PortalTransforms.transforms.textile_to_html import HAS_TEXTILE
 from Products.PortalTransforms.transforms.markdown_to_html import HAS_MARKDOWN
@@ -165,7 +165,7 @@ TRANSFORMS_TESTINFO = (
     ('Products.PortalTransforms.transforms.safe_html',
      "test_safehtml.html", "test_safe.html", None, 0
      ),
-    ('Products.PortalTransforms.transforms.image_to_bmp',
+    ('erp5.component.document.TransformImageToBmp',
      "logo.jpg", "logo.bmp", None, 0
      ),
     ('Products.PortalTransforms.transforms.image_to_gif',
@@ -183,7 +183,7 @@ TRANSFORMS_TESTINFO = (
     ('Products.PortalTransforms.transforms.image_to_tiff',
      "logo.png", "logo.tiff", None, 0
      ),
-    ('Products.PortalTransforms.transforms.image_to_pcx',
+    ('erp5.component.document.TransformImageToPcx',
      "logo.png", "logo.pcx", None, 0
      ),
    )

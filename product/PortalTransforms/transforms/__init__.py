@@ -33,10 +33,8 @@ modules = [
     'image_to_png',   # transforms any image to a PNG image
     'image_to_gif',   # transforms any image to a GIF image
     'image_to_jpeg',  # transforms any image to a JPEG image
-    'image_to_pcx',   # transforms any image to a PCX image
     'image_to_ppm',   # transforms any image to a PPM image
     'image_to_tiff',  # transforms any image to a TIFF image
-    'image_to_bmp',   # transforms any image to a BMP image
     'lynx_dump',      # lynx -dump
     'w3m_dump',
     'python',         # python source files, no dependancies

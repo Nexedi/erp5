@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>module</string> </key>
-            <value> <string>Products.PortalTransforms.transforms.image_to_pcx</string> </value>
+            <value> <string>erp5.component.document.TransformImageToPcx</string> </value>
         </item>
         <item>
             <key> <string>output</string> </key>
