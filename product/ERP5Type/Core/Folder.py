@@ -1665,7 +1665,26 @@ class Folder(OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
         pass
     return '%s/%s' % (url, icon)
 
-from Products.CMFActivity.ActivityTool import getCurrentNode
+# from Products.CMFActivity.ActivityTool import getCurrentNode
+def getCurrentNode():
+  """ Return current node identifier """
+  global currentNode
+  if currentNode is None:
+    currentNode = getattr(
+      getConfiguration(),
+      'product_config',
+      {},
+    ).get('cmfactivity', {}).get('node-id')
+  if currentNode is None:
+    warnings.warn('Node name auto-generation is deprecated, please add a'
+      '\n'
+      '<product-config CMFActivity>\n'
+      '  node-id = ...\n'
+      '</product-config>\n'
+      'section in your zope.conf, replacing "..." with a cluster-unique '
+      'node identifier.', DeprecationWarning)
+    currentNode = getServerAddress()
+  return currentNode
 
 # We browse all used class from btree and hbtree and set not implemented
 # class if one method defined on a class is not defined on other, thus if

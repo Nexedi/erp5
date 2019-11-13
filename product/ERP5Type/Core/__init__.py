@@ -2,4 +2,8 @@
 # because Folder needs PropertySheet.CategoryCore
 # This is important for ZEO server which may need to import conflict-resolution
 # classes from products that depend (at 'import' time) directly on Folder.
-import Products.CMFCategory
+# import Products.CMFCategory
+try:
+  import Products.CMFCategory
+except ImportError:
+  pass
