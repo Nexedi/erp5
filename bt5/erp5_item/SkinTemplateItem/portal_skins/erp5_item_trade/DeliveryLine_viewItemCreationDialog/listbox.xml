@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>columns</string>
+                <string>default_params</string>
                 <string>editable_columns</string>
                 <string>lines</string>
                 <string>list_method</string>
@@ -63,6 +64,12 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>default_params</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>editable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -77,7 +84,7 @@
                 <item>
                     <key> <string>lines</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -131,6 +138,17 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>default_params</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>checked_permission</string>
+                          <string>View</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
@@ -176,7 +194,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -214,12 +232,25 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: 0</string> </value>
+            <value> <string>python: [(\'checked_permission\', \'View\'), (\'item_count\', int(context.REQUEST.get(\'field_your_item_count\', \'10\')))]</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: 0</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
