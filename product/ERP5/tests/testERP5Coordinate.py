@@ -49,6 +49,13 @@ class TestERP5Coordinate(ERP5TypeTestCase):
             'erp5_full_text_mroonga_catalog',
             'erp5_base',)
 
+  def afterSetUp(self):
+    ERP5TypeTestCase.afterSetUp(self)
+    self.default_site_preference = self.portal.portal_preferences.default_site_preference
+    if self.default_site_preference.getPreferenceState() != 'global':
+      self.default_site_preference.enable()
+      self.tic()
+
   def beforeTearDown(self):
     self.abort()
     for module in ( self.portal.person_module,
@@ -109,20 +116,20 @@ class TestERP5Coordinate(ERP5TypeTestCase):
   def test_TelephonePreference(self):
     pers = self.getPersonModule().newContent(portal_type='Person')
     tel = pers.newContent(portal_type='Telephone')
-    pref = self.portal.portal_preferences.default_site_preference
-    pref.setPreferredTelephoneDefaultCountryNumber('33')
-    pref.setPreferredTelephoneDefaultAreaNumber('2')
-    pref.enable()
+    self.default_site_preference.setPreferredTelephoneDefaultCountryNumber('33')
+    self.default_site_preference.setPreferredTelephoneDefaultAreaNumber('2')
+    self.tic()
+
     tel.fromText(coordinate_text='11111111')
     self.assertEqual('+33(0)2-11111111',tel.asText())
 
   def test_TelephoneCountryAndAreaCodeRemains(self):
     pers = self.getPersonModule().newContent(portal_type='Person')
     tel = pers.newContent(portal_type='Telephone')
-    pref = self.portal.portal_preferences.default_site_preference
-    pref.setPreferredTelephoneDefaultCountryNumber('')
-    pref.setPreferredTelephoneDefaultAreaNumber('')
-    pref.enable()
+    self.default_site_preference.setPreferredTelephoneDefaultCountryNumber('')
+    self.default_site_preference.setPreferredTelephoneDefaultAreaNumber('')
+    self.tic()
+
     tel.fromText(coordinate_text='+11 1 11111111')
     tel.fromText(coordinate_text='+22333445555')
     self.assertEqual('+(0)-22333445555',tel.asText())
@@ -312,10 +319,9 @@ class TestERP5Coordinate(ERP5TypeTestCase):
   def test_TelephoneWhenTheDefaultCountryAndAreaPreferenceIsBlank(self):
     pers = self.getPersonModule().newContent(portal_type='Person')
     tel = pers.newContent(portal_type='Telephone')
-    pref = self.portal.portal_preferences.default_site_preference
-    pref.setPreferredTelephoneDefaultCountryNumber('')
-    pref.setPreferredTelephoneDefaultAreaNumber('')
-    pref.enable()
+    self.default_site_preference.setPreferredTelephoneDefaultCountryNumber('')
+    self.default_site_preference.setPreferredTelephoneDefaultAreaNumber('')
+    self.tic()
     tel.fromText(coordinate_text='12345678')
     self.assertEqual('+(0)-12345678',tel.asText())
 
