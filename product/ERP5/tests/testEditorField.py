@@ -99,11 +99,10 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
       is using appropriate editor (editor) as defined
       in preferences
     """
-    self.getDefaultSitePreference().setPreferredTextEditor(preferred_editor)
-    if self.getDefaultSitePreference().getPreferenceState() == 'global':
-      self.getDefaultSitePreference()._clearCache()
-    else:
-      self.getDefaultSitePreference().enable()
+    site_preference = self.getDefaultSitePreference()
+    site_preference.setPreferredTextEditor(preferred_editor)
+    if site_preference.getPreferenceState() != 'global':
+      site_preference.enable()
     # commit transaction, are preferences are in transaction cache
     self.commit()
 
