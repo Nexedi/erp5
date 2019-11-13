@@ -10,7 +10,6 @@
 @grey: hsl(0, 0%, 42%);
 @backgroundgreen: #37A419;
 
-
 // Default background for pages and other controls
 @colorbackground: @white;
 // Default foreground and border color
@@ -22,7 +21,7 @@
 
 @colortextboxforeground: @colorforeground;
 @colortextboxplaceholder: @txtsubgrey;
-@colortextboxbackground: @colorbackground;
+@colortextboxbackground: #FFFFEE;
 
 @colorheaderbackground: #085078;
 @colorsubheaderbackground: #0E81C2;
