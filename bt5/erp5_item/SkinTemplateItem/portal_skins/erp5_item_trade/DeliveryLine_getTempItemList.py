@@ -1,14 +1,9 @@
 from Products.ERP5Type.Document import newTempDeliveryLine
 portal = context.getPortalObject()
 
-try:
-  count = int(context.REQUEST.get('field_your_item_count', ''))
-except ValueError:
-  count = 10
-
 result = []
 
-for i in range(count):
+for i in range(item_count):
   obj = newTempDeliveryLine(portal, id="tmp_item_%s" % i, uid="new_item_%s" % i)
   result.append(obj)
 
