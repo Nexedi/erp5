@@ -34,7 +34,6 @@ from types import StringType
 from collections import defaultdict
 from cPickle import dumps, loads
 from Products.CMFCore import permissions as CMFCorePermissions
-from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.CMFActivity.ActiveObject import DEFAULT_ACTIVITY
 from Products.CMFActivity.ActivityConnection import ActivityConnection
@@ -86,11 +85,6 @@ currentNode = None
 _server_address = None
 ROLE_IDLE = 0
 ROLE_PROCESSING = 1
-
-# Activating a path means we tried to avoid loading useless
-# data in cache so there would be no gain to expect.
-# And all nodes are likely to have tools already loaded.
-NO_DEFAULT_NODE_PREFERENCE = str, BaseTool
 
 # Logging channel definitions
 import logging
@@ -608,6 +602,12 @@ def cancelProcessShutdown():
   global has_processed_shutdown
   is_running_lock.release()
   has_processed_shutdown = False
+
+from Products.ERP5Type.Tool.BaseTool import BaseTool
+# Activating a path means we tried to avoid loading useless
+# data in cache so there would be no gain to expect.
+# And all nodes are likely to have tools already loaded.
+NO_DEFAULT_NODE_PREFERENCE = str, BaseTool
 
 class ActivityTool (BaseTool):
     """
