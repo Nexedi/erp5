@@ -41,6 +41,7 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Form import _dtmldir
+from BTrees.OIBTree import OIBTree
 
 _marker = object()
 
@@ -83,9 +84,10 @@ class PreferenceMethod(Method):
       return default
     _getPreference = CachingMethod(_getPreference,
             id='%s.%s' % (self._preference_cache_id,
-                          getSecurityManager().getUser().getId()),
-            cache_factory='erp5_ui_short')
+                          instance.getPortalObject().portal_preferences._getCacheId()),
+            cache_factory='erp5_ui_long')
     return _getPreference(default, *args, **kw)
+
 
 class PreferenceTool(BaseTool):
   """
@@ -199,6 +201,35 @@ class PreferenceTool(BaseTool):
        Note that this preference may be read only. """
     return self._getActivePreferenceByPortalType('Preference')
 
+  security.declareProtected(Permissions.View, 'clearCache')
+  def clearCache(self, preference):
+    """ clear cache when a preference is modified.
+    This is called by an interaction workflow on preferences.
+    """
+    self._getCacheId() # initialize _preference_cache if needed.
+    if preference.getPriority() == Priority.USER:
+      user_id = getSecurityManager().getUser().getId()
+      self._preference_cache[user_id] = \
+          self._preference_cache.get(user_id, 0) + 1
+    self._preference_cache[None] = self._preference_cache.get(None, 0) + 1
+
+  def _getCacheId(self):
+    """Return a cache id for preferences.
+
+    We use:
+     - user_id: because preferences are always different by user
+     - self._preference_cache[user_id] which is increased everytime a user
+       preference is modified
+     - self._preference_cache[None] which is increased everytime a global
+       preference is modified
+    """
+    user_id = getSecurityManager().getUser().getId()
+    try:
+      self._preference_cache
+    except AttributeError:
+      self._preference_cache = OIBTree()
+    return self._preference_cache.get(None), self._preference_cache.get(user_id), user_id
+
   security.declareProtected(Permissions.View, 'getActiveUserPreference')
   def getActiveUserPreference(self) :
     """ returns the current user preference for the user.
@@ -244,9 +275,10 @@ class PreferenceTool(BaseTool):
         for doc in pref.contentValues(portal_type=portal_type) :
           acceptable_template_list.append(doc.getRelativeUrl())
       return acceptable_template_list
-    _getDocumentTemplateList = CachingMethod(_getDocumentTemplateList,
-                          'portal_preferences.getDocumentTemplateList',
-                                             cache_factory='erp5_ui_short')
+    _getDocumentTemplateList = CachingMethod(
+        _getDocumentTemplateList,
+        'portal_preferences.getDocumentTemplateList.{}'.format(self._getCacheId()),
+        cache_factory='erp5_ui_long')
 
     allowed_content_types = map(lambda pti: pti.id,
                                 folder.allowedContentTypes())
