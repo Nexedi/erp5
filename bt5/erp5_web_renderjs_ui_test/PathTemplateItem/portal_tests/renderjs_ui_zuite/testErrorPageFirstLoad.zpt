@@ -50,7 +50,7 @@
 
 <tr>
   <td>assertTextPresent</td>
-  <td>"status":404</td>
+  <td>"status": 404</td>
   <td></td>
 </tr>
 
