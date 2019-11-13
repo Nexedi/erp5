@@ -29,7 +29,7 @@
 ##############################################################################
 
 import unittest
-from unittest import expectedFailure
+import mock
 
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
@@ -687,7 +687,6 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(system_preference_string,
         portal_preferences.getDummystring())
 
-  @expectedFailure
   def test_system_preference_value_prefererred_clear_cache_disabled(self):
     default_preference_string = 'Default Name'
     normal_preference_string = 'Normal Preference'
@@ -714,16 +713,21 @@ class TestPreferences(PropertySheetTestCase):
 
     # simulate situation when _clearCache does nothing, for example in case
     # if memcached or any other non-deleteable cache is used
-    raise NotImplementedError("do something to simulate cache disabled")
-    system_preference = portal_preferences.newContent(portal_type='System Preference',
-                                               dummystring=system_preference_string)
-    system_preference.enable()
-    self.tic()
+    with mock.patch.object(
+        self.portal.portal_caches.__class__,
+        'clearAllCache') as clearAllCache,\
+      mock.patch.object(
+        self.portal.portal_caches.__class__,
+        'clearCacheFactory') as clearCacheFactory:
+
+      system_preference = portal_preferences.newContent(
+          portal_type='System Preference',
+          dummystring=system_preference_string)
+      system_preference.enable()
+      self.tic()
 
     self.assertEqual(system_preference_string,
         portal_preferences.getDummystring())
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPreferences))
-  return suite
+    clearAllCache.assert_not_called()
+    clearCacheFactory.assert_not_called()
