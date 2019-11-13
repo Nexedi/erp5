@@ -55,8 +55,10 @@ if message:
   # Script stop here
   context.Base_updateDialogForm(listbox=listbox,update=1, kw=kw)
   REQUEST = portal.REQUEST
-  REQUEST.set('portal_status_message', message)
-  return getattr(context, REQUEST.form['dialog_id'])(listbox=listbox, kw=kw)
+  return context.Base_renderForm(
+    REQUEST.form['dialog_id'],
+    keep_items={'portal_status_message': message}
+  )
 
 for item_uid in uids:
   item = getObject(item_uid)
