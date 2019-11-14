@@ -19,14 +19,11 @@
       });
   }
 
-  function submitDialog(param_list) {
+  function submitDialog(is_updating, param_list) {
     var gadget = this,
-      is_updating = param_list[0],
-      // If you want to handle the submitDialog manually,
-      // you can pass a custom dialog_method.
-      custom_dialog_method = param_list.length > 1 ? param_list[1] : null,
       button_container =
           gadget.element.querySelector('.dialog_button_container'),
+      custom_dialog_method = param_list ? param_list[1] : null,
       update_button = button_container.querySelector('button'),
       submit_input = button_container.querySelector('input');
     submit_input.disabled = true;
@@ -110,7 +107,6 @@
               }
             }
 
-            console.log('lets redirect', command, result.jio_key, result.view);
             // forced document change thus we update history
             return gadget.redirect({
               command: command,
@@ -134,6 +130,10 @@
   }
 
 
+  function submitDialogWithCustomDialogMethod(custom_dialog_method) {
+    return submitDialog.apply(this, [false, custom_dialog_method]);
+  }
+
   var gadget_klass = rJS(window),
     dialog_button_source = gadget_klass.__template_element
                          .getElementById("dialog-button-template")
@@ -156,7 +156,8 @@
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("submitContent", "submitContent")
-    .allowPublicAcquisition("submitDialog", submitDialog)
+    .allowPublicAcquisition("submitDialogWithCustomDialogMethod",
+                            submitDialogWithCustomDialogMethod)
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
