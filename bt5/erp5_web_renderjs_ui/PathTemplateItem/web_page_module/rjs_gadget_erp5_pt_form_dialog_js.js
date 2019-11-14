@@ -19,7 +19,7 @@
       });
   }
 
-  function submitDialog(is_updating) {
+  function submitDialog(is_updating, custom_dialog_method) {
     var gadget = this,
       button_container =
           gadget.element.querySelector('.dialog_button_container'),
@@ -55,7 +55,7 @@
               }
             }
             // ERP5 expects target Script name in dialog_method field
-            data.dialog_method = gadget.state.form_definition.action;
+            data.dialog_method = custom_dialog_method || gadget.state.form_definition.action;
             // For Update Action - override the default value from "action"
             if (is_updating) {
               data.dialog_method = gadget.state.form_definition.update_action;
@@ -82,7 +82,6 @@
             if (gadget.state.redirect_to_parent) {
               return gadget.redirect({command: 'history_previous'});
             }
-            console.log('COSUCOUS', result);
             if ((gadget.state.jio_key === result.jio_key) &&
                 (!result.view)) {
               // don't update navigation history when not really redirecting
@@ -107,7 +106,6 @@
               }
             }
 
-            console.log('lets redirect', command, result.jio_key, result.view);
             // forced document change thus we update history
             return gadget.redirect({
               command: command,
@@ -131,6 +129,10 @@
   }
 
 
+  function submitDialogWithCustomDialogMethod(param_list) {
+    return submitDialog.apply(this, [false, param_list[0]]);
+  }
+
   var gadget_klass = rJS(window),
     dialog_button_source = gadget_klass.__template_element
                          .getElementById("dialog-button-template")
@@ -153,6 +155,8 @@
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("submitContent", "submitContent")
+    .allowPublicAcquisition("submitDialogWithCustomDialogMethod",
+                            submitDialogWithCustomDialogMethod)
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
