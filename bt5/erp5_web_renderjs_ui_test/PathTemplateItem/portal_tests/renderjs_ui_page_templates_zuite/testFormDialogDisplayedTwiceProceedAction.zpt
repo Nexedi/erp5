@@ -1,0 +1,93 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Command Display With History</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Command Display With History</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<!-- Wait for gadget to be loaded -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Duration Quantity</td>
+  <td></td>
+</tr>
+
+<!-- Go to a non default view -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Duration Field' and contains(@href, '#!display_with_history')]</td>
+  <td></td>
+</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Duration Field'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>assertTextPresent</td>
+  <td>Duration Quantity</td>
+  <td></td>
+</tr>
+
+<!-- Trigger the dialog display on the panel link a first time. No cancel url present yet -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Validate Action' and contains(@href, '#!display_dialog_with_history') and not(contains(@href, 'p.cancel='))]</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'Validate Action'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<!-- Trigger the dialog display on the panel link a second time. A existing cancel url exists -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Validate Action' and contains(@href, '#!display_dialog_with_history') and contains(@href, 'p.cancel=')]</td>
+  <td></td>
+</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Validate Action'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<!-- Cancel the dialog. Ensure its goes to the Duration view -->
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Duration Quantity</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Status changed.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Duration Quantity</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
