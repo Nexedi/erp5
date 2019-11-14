@@ -275,39 +275,42 @@
         }
       }
 
-      queue
-        .push(function () {
-          return gadget.declareGadget("gadget_officejs_common_util.html");
-        })
-        .push(function (gadget_utils) {
-          return gadget_utils.getViewAndActionDict(modification_dict.portal_type,
-                                                   modification_dict.jio_key);
-        })
-        .push(function (view_action_dict) {
-          return RSVP.all([
-            getElementList(gadget, view_action_dict.view_list),
-            getElementList(gadget, view_action_dict.action_list)
-          ]);
-        })
-        .push(function (view_action_list) {
-          var dl_element,
-            dl_fragment = document.createDocumentFragment();
-          dl_element = gadget.element.querySelector("dl");
-          while (dl_element.firstChild) {
-            dl_element.removeChild(dl_element.firstChild);
-          }
-          if (view_action_list[0].length > 0) {
-            appendDt(dl_fragment, "VIEWS", 'eye',
-                     view_action_list[0]);
-            dl_element.appendChild(dl_fragment);
-          }
-          if (view_action_list[1].length > 0) {
-            appendDt(dl_fragment, "ACTIONS", 'cogs',
-                     view_action_list[1]);
-            dl_element.appendChild(dl_fragment);
-          }
-          return queue;
-        });
+      if (modification_dict.hasOwnProperty("portal_type")) {
+        queue
+          .push(function () {
+            return gadget.getDeclaredGadget("common_util");
+          })
+          .push(function (gadget_utils) {
+            return gadget_utils.getViewAndActionDict(modification_dict.portal_type,
+                                                     modification_dict.jio_key);
+          })
+          .push(function (view_action_dict) {
+            return RSVP.all([
+              getElementList(gadget, view_action_dict.view_list),
+              getElementList(gadget, view_action_dict.action_list)
+            ]);
+          })
+          .push(function (view_action_list) {
+            var dl_element,
+              dl_fragment = document.createDocumentFragment();
+            dl_element = gadget.element.querySelector("dl");
+            while (dl_element.firstChild) {
+              dl_element.removeChild(dl_element.firstChild);
+            }
+            if (view_action_list[0].length > 0) {
+              appendDt(dl_fragment, "VIEWS", 'eye',
+                       view_action_list[0]);
+              dl_element.appendChild(dl_fragment);
+            }
+            if (view_action_list[1].length > 0) {
+              appendDt(dl_fragment, "ACTIONS", 'cogs',
+                       view_action_list[1]);
+              dl_element.appendChild(dl_fragment);
+            }
+          });
+      }
+
+      return queue;
     })
 
     /////////////////////////////////////////////////////////////////
