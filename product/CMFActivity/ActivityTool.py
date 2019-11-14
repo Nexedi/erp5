@@ -603,6 +603,9 @@ def cancelProcessShutdown():
   is_running_lock.release()
   has_processed_shutdown = False
 
+# Due to a circular import dependency between this module and
+# Products.ERP5Type.Core.Folder, both modules must import after the definitions
+# of getCurrentNode and Folder (the later is a base class of BaseTool).
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 # Activating a path means we tried to avoid loading useless
 # data in cache so there would be no gain to expect.

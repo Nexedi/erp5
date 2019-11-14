@@ -1665,6 +1665,7 @@ class Folder(OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
         pass
     return '%s/%s' % (url, icon)
 
+# See comment in Products.CMFActivity.ActivityTool about the import of BaseTool.
 from Products.CMFActivity.ActivityTool import getCurrentNode
 
 # We browse all used class from btree and hbtree and set not implemented
