@@ -221,7 +221,8 @@
   }
 
   rJS(window)
-    .declareAcquiredMethod("submitDialog", "submitDialog")
+    .declareAcquiredMethod(
+      "submitDialogWithCustomDialogMethod", "submitDialogWithCustomDialogMethod")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareJob("startStream", function (deviceId) {
       return this.getElement()
@@ -368,7 +369,7 @@
             cropper.destroy();
           })
           .push(function () {
-            return gadget.submitDialog(false, dialogMethod);
+            return gadget.submitDialogWithCustomDialogMethod(false, dialogMethod);
           })
           .push(function () {
             pageNumber = pageNumber + 1;
