@@ -369,7 +369,7 @@
             cropper.destroy();
           })
           .push(function () {
-            return gadget.submitDialogWithCustomDialogMethod(false, dialogMethod);
+            return gadget.submitDialogWithCustomDialogMethod(dialogMethod);
           })
           .push(function () {
             pageNumber = pageNumber + 1;
