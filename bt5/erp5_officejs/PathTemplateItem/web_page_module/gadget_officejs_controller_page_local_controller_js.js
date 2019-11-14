@@ -14,6 +14,7 @@
     .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
+    .declareAcquiredMethod("updatePanel", "updatePanel")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -127,6 +128,12 @@
           return gadget.notifySubmitted({
             message: "Error rendering view",
             status: "error"
+          });
+        })
+        .push(function () {
+          return gadget.updatePanel({
+            portal_type: gadget.state.portal_type,
+            jio_key: gadget.state.jio_key
           });
         });
     })

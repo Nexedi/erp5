@@ -22,6 +22,56 @@
                                   .getElementById("panel-template-body-desktop")
                                   .innerHTML);
 
+  function getElementList(gadget, element_list) {
+    var i = 0,
+      element_info_list = [],
+      url_for_parameter_list = [],
+      element_info,
+      key;
+    for (key in element_list) {
+      if (element_list.hasOwnProperty(key)) {
+        element_info = element_list[key];
+        url_for_parameter_list.push({ command: 'change',
+                                      options: element_info });
+        element_info_list[i] = { reference: element_info.reference,
+                                 title: element_info.title};
+        i += 1;
+      }
+    }
+    return gadget.getUrlForList(url_for_parameter_list)
+      .push(function (url_list) {
+        var action_list = [], j, element;
+        for (j = 0; j < url_list.length; j += 1) {
+          element = { href: url_list[j],
+            icon: null,
+            name: element_info_list[j].reference,
+            title: element_info_list[j].title };
+          action_list.push(element);
+        }
+        return action_list;
+      });
+  }
+
+  function appendDt(fragment, dt_title, dt_icon, action_list) {
+    var dt_element = document.createElement('dt'),
+      dd_element,
+      a_element,
+      i;
+    dt_element.textContent = dt_title;
+    dt_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + dt_icon);
+    fragment.appendChild(dt_element);
+    for (i = 0; i < action_list.length; i += 1) {
+      dd_element = document.createElement('dd');
+      dd_element.setAttribute('class', 'document-listview');
+      a_element = document.createElement('a');
+      a_element.setAttribute('class', action_list[i].class_name);
+      a_element.href = action_list[i].href;
+      a_element.textContent = action_list[i].title;
+      dd_element.appendChild(a_element);
+      fragment.appendChild(dd_element);
+    }
+  }
+
   gadget_klass
     .setState({
       visible: false,
@@ -35,6 +85,7 @@
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -75,6 +126,8 @@
             workflow_list: workflow_list,
             view_list: view_list,
             global: true,
+            portal_type: options.portal_type,
+            jio_key: options.jio_key,
             editable: options.editable || editable || false
           });
         });
@@ -220,6 +273,41 @@
               });
             });
         }
+      }
+
+      if (modification_dict.hasOwnProperty("portal_type")) {
+        queue
+          .push(function () {
+            return gadget.getDeclaredGadget("common_util");
+          })
+          .push(function (gadget_utils) {
+            return gadget_utils.getViewAndActionDict(modification_dict.portal_type,
+                                                     modification_dict.jio_key);
+          })
+          .push(function (view_action_dict) {
+            return RSVP.all([
+              getElementList(gadget, view_action_dict.view_list),
+              getElementList(gadget, view_action_dict.action_list)
+            ]);
+          })
+          .push(function (view_action_list) {
+            var dl_element,
+              dl_fragment = document.createDocumentFragment();
+            dl_element = gadget.element.querySelector("dl");
+            while (dl_element.firstChild) {
+              dl_element.removeChild(dl_element.firstChild);
+            }
+            if (view_action_list[0].length > 0) {
+              appendDt(dl_fragment, "VIEWS", 'eye',
+                       view_action_list[0]);
+              dl_element.appendChild(dl_fragment);
+            }
+            if (view_action_list[1].length > 0) {
+              appendDt(dl_fragment, "ACTIONS", 'cogs',
+                       view_action_list[1]);
+              dl_element.appendChild(dl_fragment);
+            }
+          });
       }
 
       return queue;
