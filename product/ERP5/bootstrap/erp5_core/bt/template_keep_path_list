@@ -13,6 +13,7 @@ portal_contribution_registry/webpage_mimetype.xml
 portal_memcached/default_memcached_plugin
 portal_property_sheets
 portal_components
+portal_transforms/**
 portal_types/Applied Rule/view
 portal_types/Simulation Movement/view
 portal_types/Simulation Tool/view

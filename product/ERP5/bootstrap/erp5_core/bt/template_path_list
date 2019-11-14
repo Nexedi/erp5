@@ -31,4 +31,3 @@ portal_domains/parent_domain
 portal_ids/**
 portal_memcached/default_memcached_plugin
 portal_preferences/default_site_preference
-portal_transforms/**

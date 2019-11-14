@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Transform" module="Products.PortalTransforms.Transform"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_config</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global id="1.1" name="UserDict" module="UserDict"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__allow_access_to_unprotected_subobjects__</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>inputs</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>output</string> </key>
+                                <value> <string>text/plain</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_config_metadata</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>inputs</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>output</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>rest_to_text</string> </value>
+        </item>
+        <item>
+            <key> <string>inputs</string> </key>
+            <value>
+              <list>
+                <string>text/x-rst</string>
+                <string>text/javascript</string>
+                <string>text/css</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>module</string> </key>
+            <value> <string>Products.PortalTransforms.transforms.identity</string> </value>
+        </item>
+        <item>
+            <key> <string>output</string> </key>
+            <value> <string>text/plain</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentList" module="persistent.list"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <list>
+                <string>text/x-rst</string>
+                <string>text/javascript</string>
+                <string>text/css</string>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="PersistentList" module="persistent.list"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <list>
+                <string>list</string>
+                <string>Inputs</string>
+                <string>Input(s) MIME type. Change with care.</string>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="PersistentList" module="persistent.list"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <list>
+                <string>string</string>
+                <string>Output</string>
+                <string>Output MIME type. Change with care.</string>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
