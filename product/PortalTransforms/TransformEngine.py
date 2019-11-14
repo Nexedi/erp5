@@ -319,11 +319,17 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         for i in transform.inputs:
             for mti in registry.lookup(i):
                 for mt in mti.mimetypes:
-                    mt_in = self._mtmap.get(mt, {})
+                    try:
+                        mt_in = self._mtmap[mt]
+                    except KeyError:
+                        continue
                     output = transform.output
                     mto = registry.lookup(output)
                     for mt2 in mto[0].mimetypes:
-                        l = mt_in[mt2]
+                        try:
+                            l = mt_in[mt2]
+                        except KeyError:
+                            continue
                         for i in range(len(l)):
                             if transform.name() == l[i].name():
                                 l.pop(i)
