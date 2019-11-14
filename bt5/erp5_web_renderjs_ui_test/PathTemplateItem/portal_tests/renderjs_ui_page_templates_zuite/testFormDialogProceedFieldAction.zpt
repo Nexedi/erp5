@@ -1,0 +1,88 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Command Display With History</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Command Display With History</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<!-- Wait for gadget to be loaded -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
+  <td></td>
+</tr>
+
+<!-- Trigger the dialog display on the panel link -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Field Submit Action' and contains(@href, '#!display_dialog_with_history')]</td>
+  <td></td>
+</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'Field Submit Action'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>assertValue</td>
+  <td>field_your_integer_1</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>field_your_integer_1</td>
+  <td>2</td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Submit with the field button</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//button[@name='action_custom' and @type='button']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//button[@name='action_custom' and @type='button']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//button[@name='action_custom' and @type='button']</td>
+  <td></td>
+</tr>
+<tr>
+  <td colspan="3"><p></p></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Field Action Submitted'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+
+<tr>
+  <td>assertValue</td>
+  <td>field_your_integer_1</td>
+  <td>2</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
