@@ -19,8 +19,12 @@
       });
   }
 
-  function submitDialog(is_updating) {
+  function submitDialog(param_list) {
     var gadget = this,
+      is_updating = param_list[0],
+      // If you want to handle the submitDialog manually,
+      // you can pass a custom dialog_method.
+      custom_dialog_method = param_list.length > 1 ? param_list[1] : null,
       button_container =
           gadget.element.querySelector('.dialog_button_container'),
       update_button = button_container.querySelector('button'),
@@ -55,7 +59,7 @@
               }
             }
             // ERP5 expects target Script name in dialog_method field
-            data.dialog_method = gadget.state.form_definition.action;
+            data.dialog_method = custom_dialog_method || gadget.state.form_definition.action;
             // For Update Action - override the default value from "action"
             if (is_updating) {
               data.dialog_method = gadget.state.form_definition.update_action;
@@ -82,7 +86,6 @@
             if (gadget.state.redirect_to_parent) {
               return gadget.redirect({command: 'history_previous'});
             }
-            console.log('COSUCOUS', result);
             if ((gadget.state.jio_key === result.jio_key) &&
                 (!result.view)) {
               // don't update navigation history when not really redirecting
@@ -153,6 +156,7 @@
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("submitContent", "submitContent")
+    .allowPublicAcquisition("submitDialog", submitDialog)
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
