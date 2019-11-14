@@ -136,12 +136,7 @@
 <tr>
   <td>select</td>
   <td>field_your_publication_state</td>
-  <td>Published</td>
-</tr>
-<tr>
-  <td>select</td>
-  <td>field_your_publication_state</td>
-  <td>Published</td>
+  <td>Released</td>
 </tr>
 <tr>
   <td>type</td>
@@ -199,13 +194,18 @@
   <td>30000</td>
 </tr>
 <tr>
-  <td>store</td>
-  <td>id=field_your_active_process_url</td>
+  <td>storeValue</td>
+  <td>//input[@id="field_your_active_process_url"]</td>
   <td>active_process_url</td>
 </tr>
 <tr>
   <td>open</td>
   <td>${base_url}/erp5/Base_assertActiveProcessHasOneImage?active_process_url=${active_process_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>OK</td>
   <td></td>
 </tr>
 </tbody></table>
