@@ -1,6 +1,6 @@
 /*jslint indent: 2 */
-/*global rJS, RSVP, window, document, navigator, Cropper, FileReader, Promise, JSON*/
-(function (rJS, RSVP, window, document, navigator, Cropper, FileReader, Promise, JSON) {
+/*global rJS, RSVP, window, navigator, Cropper, FileReader, Promise, JSON*/
+(function (rJS, RSVP, window, navigator, Cropper, FileReader, Promise, JSON) {
   "use strict";
 
   var imageWidth,
@@ -25,6 +25,35 @@
     }, function cancelReadBlobAsDataURL() {
       fr.abort();
     });
+  }
+
+  function drawCanvas(gadget, img) {
+    var ratio, x, y,
+      canvas = gadget.querySelector("canvas");
+    canvas.width = imageWidth;
+    canvas.height = imageHeight;
+    ratio  = Math.min(canvas.width / img.width, canvas.height / img.height);
+    x = (canvas.width - img.width * ratio) / 2;
+    y = (canvas.height - img.height * ratio) / 2;
+
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+    canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height, x, y, img.width * ratio, img.height * ratio);
+
+    //contrastImage(canvas, canvas, 10);
+
+    gadget.querySelector(".camera-output").style.display = "";
+    if (cropper) {
+      cropper.destroy();
+    }
+    return RSVP.Queue()
+      .push(function () {
+        cropper = new Cropper(
+          gadget.querySelector('.photo'),
+          {
+            data: preferredCroppedCanvasData
+          }
+        );
+      });
   }
 
   function takePicture(el) {
@@ -81,36 +110,7 @@
     });
   }
 
-  function drawCanvas(gadget, img) {
-    var ratio, x, y,
-      canvas = gadget.querySelector("canvas");
-    canvas.width = imageWidth;
-    canvas.height = imageHeight;
-    ratio  = Math.min(canvas.width / img.width, canvas.height / img.height);
-    x = (canvas.width - img.width * ratio) / 2;
-    y = (canvas.height - img.height * ratio) / 2;
-
-    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-    canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height, x, y, img.width * ratio, img.height * ratio);
-
-    //contrastImage(canvas, canvas, 10);
-
-    gadget.querySelector(".camera-output").style.display = "";
-    if (cropper) {
-      cropper.destroy();
-    }
-    return RSVP.Queue()
-      .push(function () {
-        cropper = new Cropper(
-          gadget.querySelector('.photo'),
-          {
-            data: preferredCroppedCanvasData
-          }
-        );
-      });
-  }
-
-  function contrastImage(input, output, contrast) {
+  /*function contrastImage(input, output, contrast) {
     var i,
       outputContext,
       inputContext = input.getContext("2d"),
@@ -125,9 +125,9 @@
     }
     outputContext = output.getContext("2d");
     outputContext.putImageData(imageData, 0, 0);
-  }
+  }*/
 
-  function grayscale(input, output) {
+  /*function grayscale(input, output) {
     var i,
       gray,
       outputContext,
@@ -162,7 +162,7 @@
           }
         );
       });
-  }
+  }*/
 
   function handleUserMedia(root, device_id, callback) {
     var stream;
@@ -221,7 +221,7 @@
   }
 
   rJS(window)
-    .declareAcquiredMethod("customSubmitDialog", "customSubmitDialog")
+    .declareAcquiredMethod("submitDialog", "submitDialog")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareJob("startStream", function (deviceId) {
       return this.getElement()
@@ -288,13 +288,13 @@
         newPreferredCroppedCanvasData,
         gadget = this;
 
-      if (evt.target.name === "grayscale") {
+      /*if (evt.target.name === "grayscale") {
         return this.getElement()
           .push(function (el) {
             return grayscale(el.querySelector(".canvas"),
                              el.querySelector('.photo'));
           });
-      }
+      }*/
       if (evt.target.className.indexOf("change-camera-btn") !== -1) {
         evt.preventDefault();
 
@@ -349,7 +349,7 @@
             return cropper.getCroppedCanvas();
           })
           .push(function (canvas) {
-            return new Promise(function (resolve, reject) {
+            return new Promise(function (resolve) {
               canvas.toBlob(function (blob) {
                 resolve(blob);
               }, 'image/jpeg', 0.85);
@@ -368,7 +368,7 @@
             cropper.destroy();
           })
           .push(function () {
-            return gadget.customSubmitDialog(dialogMethod);
+            return gadget.submitDialog(false, dialogMethod);
           })
           .push(function () {
             pageNumber = pageNumber + 1;
@@ -377,4 +377,4 @@
       }
     }, false, false);
 
-}(rJS, RSVP, window, document, navigator, Cropper, FileReader, Promise, JSON));
+}(rJS, RSVP, window, navigator, Cropper, FileReader, Promise, JSON));
