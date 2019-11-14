@@ -196,6 +196,17 @@
   <td>identifier=cke_1_contents</td>
   <td></td>
 </tr>
+<!-- check panel actions -->
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_ojs_panel.html')]//dt[text()='ACTIONS']</td>
+ <td></td>
+</tr>
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_ojs_panel.html')]//dd//a[text()='Clone' and contains(@href, '#!change') and contains(@href, 'n.page=handle_action')]</td>
+ <td></td>
+</tr>
 <!-- Clone action -->
 <tr>
  <td>waitForElementPresent</td>
