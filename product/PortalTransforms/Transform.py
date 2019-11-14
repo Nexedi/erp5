@@ -264,8 +264,8 @@ class Transform(SimpleItem):
     def reload(self):
         """ reload the module where the transformation class is defined """
         log('Reloading transform %s' % self.module)
-        m = import_from_name(self.module)
-        reload(m)
+        if not self.module.startswith('erp5.'):
+            reload(import_from_name(self.module))
         self._tr_init()
 
     security.declarePrivate('preprocess_param')
