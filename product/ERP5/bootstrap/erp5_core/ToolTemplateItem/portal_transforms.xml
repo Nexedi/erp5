@@ -18641,7 +18641,7 @@
         </item>
         <item>
             <key> <string>module</string> </key>
-            <value> <string>erp5.component.document.TransformImageToPcx</string> </value>
+            <value> <string>erp5.component.module.TransformImageToPcx</string> </value>
         </item>
         <item>
             <key> <string>output</string> </key>
@@ -18953,7 +18953,7 @@
         </item>
         <item>
             <key> <string>module</string> </key>
-            <value> <string>erp5.component.document.TransformImageToBmp</string> </value>
+            <value> <string>erp5.component.module.TransformImageToBmp</string> </value>
         </item>
         <item>
             <key> <string>output</string> </key>

@@ -3,6 +3,7 @@ portal_categories/caching_policy/**
 portal_contribution_registry/web_page_by_content
 portal_contribution_registry/webpage_extension
 portal_contribution_registry/webpage_mimetype
+portal_transforms/html_to_pdf
 web_section_ram_cache
 web_section_user_ram_cache
 web_site_ram_cache

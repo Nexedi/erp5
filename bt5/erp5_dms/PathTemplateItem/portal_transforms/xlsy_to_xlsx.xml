@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Transform" module="Products.PortalTransforms.Transform"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_config</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global id="1.1" name="UserDict" module="UserDict"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__allow_access_to_unprotected_subobjects__</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>data</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_config_metadata</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>data</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>xlsy_to_xlsx</string> </value>
+        </item>
+        <item>
+            <key> <string>inputs</string> </key>
+            <value>
+              <tuple>
+                <string>application/x-asc-spreadsheet</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>module</string> </key>
+            <value> <string>erp5.component.module.TransformXlsyToXlsx</string> </value>
+        </item>
+        <item>
+            <key> <string>output</string> </key>
+            <value> <string>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
