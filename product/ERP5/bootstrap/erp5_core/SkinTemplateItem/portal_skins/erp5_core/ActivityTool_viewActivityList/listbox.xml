@@ -14,7 +14,7 @@
                 <string>columns</string>
                 <string>count_method</string>
                 <string>editable_columns</string>
-                <string>lines</string>
+                <string>hide_rows_on_no_search_criterion</string>
                 <string>list_method</string>
                 <string>portal_types</string>
                 <string>search_columns</string>
@@ -173,8 +173,8 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
-                    <value> <int>30</int> </value>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
