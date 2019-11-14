@@ -297,24 +297,12 @@ class PreferenceTool(BaseTool):
     This method exists here due to bootstrap issues.
     It should work even if erp5_authentication_policy bt5 is not installed.
     """
-    # XXX: define an interface
-    def _isAuthenticationPolicyEnabled():
-      portal_preferences = self.getPortalObject().portal_preferences
-      method_id = 'isPreferredAuthenticationPolicyEnabled'
-      method = getattr(self, method_id, None)
-      if method is not None and method():
-        return True
-      return False
-
-    tv = getTransactionalVariable()
-    tv_key = 'PreferenceTool._isAuthenticationPolicyEnabled.%s' % getSecurityManager().getUser().getId()
-    if tv.get(tv_key, None) is None:
-      _isAuthenticationPolicyEnabled = CachingMethod(_isAuthenticationPolicyEnabled,
-                                                     id='PortalPreferences_isAuthenticationPolicyEnabled',
-                                                     cache_factory='erp5_content_short')
-      tv[tv_key] = _isAuthenticationPolicyEnabled()
-    return tv[tv_key]
-
+    # isPreferredAuthenticationPolicyEnabled exisss if property sheets from
+    # erp5_authentication_policy are installed.
+    method = getattr(self, 'isPreferredAuthenticationPolicyEnabled', None)
+    if method is not None and method():
+      return True
+    # if it does not exist, for sure authentication policy is not enabled.
+    return False
 
 InitializeClass(PreferenceTool)
-
