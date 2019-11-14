@@ -14,6 +14,7 @@
     .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
+    .declareAcquiredMethod("updatePanel", "updatePanel")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -26,6 +27,7 @@
         jio_document,
         portal_type,
         parent_portal_type,
+        form_definition,
         current_version,
         index;
       current_version = window.location.href.replace(window.location.hash, "");
@@ -79,9 +81,11 @@
           return gadget_util.getFormDefinition(portal_type, app_view);
         })
         .push(function (result) {
-          return result;
+          form_definition = result;
+          return gadget_util.getViewAndActionDict(portal_type,
+                                                   options.jio_key);
         })
-        .push(function (form_definition) {
+        .push(function (view_action_dict) {
           return gadget.changeState({
             jio_key: options.jio_key,
             doc: jio_document,
@@ -89,7 +93,8 @@
             child_gadget_url: form_definition.child_gadget_url,
             form_definition: form_definition,
             form_type: form_definition.form_type,
-            view: options.view || app_view
+            view: options.view || app_view,
+            view_action_dict: view_action_dict
           });
         }, function (error) {
           // jio not found error
@@ -127,6 +132,11 @@
           return gadget.notifySubmitted({
             message: "Error rendering view",
             status: "error"
+          });
+        })
+        .push(function () {
+          return gadget.updatePanel({
+            view_action_dict: gadget.state.view_action_dict
           });
         });
     })
