@@ -19,11 +19,10 @@
       });
   }
 
-  function submitDialog(is_updating, param_list) {
+  function submitDialog(is_updating, custom_dialog_method) {
     var gadget = this,
       button_container =
           gadget.element.querySelector('.dialog_button_container'),
-      custom_dialog_method = param_list ? param_list[1] : null,
       update_button = button_container.querySelector('button'),
       submit_input = button_container.querySelector('input');
     submit_input.disabled = true;
@@ -130,8 +129,8 @@
   }
 
 
-  function submitDialogWithCustomDialogMethod(custom_dialog_method) {
-    return submitDialog.apply(this, [false, custom_dialog_method]);
+  function submitDialogWithCustomDialogMethod(param_list) {
+    return submitDialog.apply(this, [false, param_list[0]]);
   }
 
   var gadget_klass = rJS(window),
