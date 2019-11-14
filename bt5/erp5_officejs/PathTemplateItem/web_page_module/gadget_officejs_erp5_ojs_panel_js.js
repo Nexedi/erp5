@@ -127,6 +127,7 @@
             view_list: view_list,
             global: true,
             portal_type: options.portal_type,
+            jio_key: options.jio_key,
             editable: options.editable || editable || false
           });
         });
@@ -279,8 +280,8 @@
           return gadget.declareGadget("gadget_officejs_common_util.html");
         })
         .push(function (gadget_utils) {
-          var portal_type = modification_dict.portal_type;
-          return gadget_utils.getViewAndActionDict(portal_type);
+          return gadget_utils.getViewAndActionDict(modification_dict.portal_type,
+                                                   modification_dict.jio_key);
         })
         .push(function (view_action_dict) {
           return RSVP.all([

@@ -132,7 +132,8 @@
         })
         .push(function () {
           return gadget.updatePanel({
-            portal_type: gadget.state.portal_type
+            portal_type: gadget.state.portal_type,
+            jio_key: gadget.state.jio_key
           });
         });
     })
