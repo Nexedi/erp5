@@ -6,10 +6,10 @@ from Products.PortalTransforms.tests.utils import input_file_path, normalize_htm
 from Products.PortalTransforms.transforms.image_to_gif import image_to_gif
 from Products.PortalTransforms.transforms.image_to_png import image_to_png
 from Products.PortalTransforms.transforms.image_to_jpeg import image_to_jpeg
-from erp5.component.document.TransformImageToBmp import image_to_bmp
+from erp5.component.module.TransformImageToBmp import image_to_bmp
 from Products.PortalTransforms.transforms.image_to_tiff import image_to_tiff
 from Products.PortalTransforms.transforms.image_to_ppm  import image_to_ppm
-from erp5.component.document.TransformImageToPcx  import image_to_pcx
+from erp5.component.module.TransformImageToPcx  import image_to_pcx
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 # we have to set locale because lynx output is locale sensitive !
