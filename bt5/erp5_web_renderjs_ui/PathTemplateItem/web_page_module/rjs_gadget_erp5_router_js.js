@@ -508,12 +508,17 @@
     next_options.selection_index = previous_options.selection_index;
     copyStickyParameterDict(previous_options, next_options);
     if (create_cancel_url) {
-      // Keep cancel parameters as small as possible to prevent huge url
-      previous_options = dropStickyParameterEntry(previous_options);
-      delete previous_options.selection;
-      delete previous_options.history;
-      delete previous_options.selection_index;
-      next_options.cancel = JSON.stringify(previous_options);
+      if (previous_options.hasOwnProperty('cancel')) {
+        // Propagate existing cancel url when going from one dialog to another
+        next_options.cancel = previous_options.cancel;
+      } else {
+        // Keep cancel parameters as small as possible to prevent huge url
+        previous_options = dropStickyParameterEntry(previous_options);
+        delete previous_options.selection;
+        delete previous_options.history;
+        delete previous_options.selection_index;
+        next_options.cancel = JSON.stringify(previous_options);
+      }
     }
     return execDisplayCommand(gadget, next_options);
   }
