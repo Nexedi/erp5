@@ -28,7 +28,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
 <tr><td>waitForElementPresent</td>
     <td>//a[@data-i18n="Journal"]</td><td></td></tr>
 <tr><td>click</td>
-    <td>//a[@data-i18n="Journal"]</td><td></td></tr>
+    <td>//a[@data-i18n="Journal" and contains(@href, 'journal_report')]</td><td></td></tr>
 
 <tr><td>waitForElementPresent</td>
     <td>//select[@name="field_your_section_category"]</td><td></td></tr>

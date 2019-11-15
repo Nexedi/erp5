@@ -45,3 +45,4 @@ Foo | view_print_dialog
 Foo | view_printout_form
 Foo | view_proxy_field
 Foo | view_relation_field
+Foo | view_url_parameter_dialog

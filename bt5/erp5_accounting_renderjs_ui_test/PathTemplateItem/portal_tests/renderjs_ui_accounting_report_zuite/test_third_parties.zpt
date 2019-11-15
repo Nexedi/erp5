@@ -38,7 +38,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>waitForElementPresent</td>
     <td>//a[@data-i18n="Third Parties"]</td><td></td></tr>
 <tr><td>click</td>
-    <td>//a[@data-i18n="Third Parties"]</td><td></td></tr>
+    <td>//a[@data-i18n="Third Parties" and contains(@href, 'third_parties_report')]</td><td></td></tr>
 
 <tr><td>waitForElementPresent</td>
     <td>//select[@name="field_your_section_category"]</td><td></td></tr>

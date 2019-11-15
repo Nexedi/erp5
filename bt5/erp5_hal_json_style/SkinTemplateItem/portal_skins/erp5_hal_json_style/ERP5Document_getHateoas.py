@@ -1353,6 +1353,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # Request is later used for method's arguments discovery so set URL params into REQUEST (just like it was sent by form)
         for query_key, query_value in byteify(current_action['params'].items()):
           REQUEST.set(query_key, query_value)
+          REQUEST.form[query_key] = query_value
 
         # If our "form" is actually a Script (nothing is sure in ERP5) or anything else than Form
         # (e.g. function or bound class method will) not have .meta_type thus be considered a Script
