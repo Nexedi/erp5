@@ -41,7 +41,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>assertElementPresent</td>
     <td>//a[@data-i18n="Account Statement"]</td><td></td></tr>
 <tr><td>click</td>
-    <td>//a[@data-i18n="Account Statement"]</td><td></td></tr>
+    <td>//a[@data-i18n="Account Statement" and contains(@href, 'account_statement_report')]</td><td></td></tr>
 
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_node"]/div/div[1]//select</td><td></td></tr>

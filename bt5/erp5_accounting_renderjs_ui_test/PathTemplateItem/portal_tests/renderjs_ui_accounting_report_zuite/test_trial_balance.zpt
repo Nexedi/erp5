@@ -28,7 +28,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>waitForElementPresent</td>
     <td>//a[@data-i18n="Trial Balance"]</td><td></td></tr>
 <tr><td>click</td>
-    <td>//a[@data-i18n="Trial Balance"]</td><td></td></tr>
+    <td>//a[@data-i18n="Trial Balance" and contains(@href, 'trial_balance_report')]</td><td></td></tr>
 
 <tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.day())"></td><td>day</td></tr>
 <tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.month())"></td><td>month</td></tr>

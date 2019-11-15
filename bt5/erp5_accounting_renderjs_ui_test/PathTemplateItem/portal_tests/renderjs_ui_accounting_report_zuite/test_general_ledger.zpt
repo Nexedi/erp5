@@ -42,7 +42,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>waitForElementPresent</td>
     <td>//a[@data-i18n="General Ledger"]</td><td></td></tr>
 <tr><td>click</td>
-    <td>//a[@data-i18n="General Ledger"]</td><td></td></tr>
+    <td>//a[@data-i18n="General Ledger" and contains(@href, 'general_ledger_report')]</td><td></td></tr>
 
 <tr><td>waitForElementPresent</td><td>//input[@name="field_your_from_date"]</td><td></td></tr>
 <tr><td>type</td>
