@@ -5,7 +5,8 @@ parameter_dict = {}
 
 context.checkConsistency(fixit=True)
 initial_product = context.getSpecialiseValue(portal_type="Data Transformation").getResourceValue()
-for analysis_line in context.objectValues(portal_type="Data Analysis Line"):
+for analysis_line in sorted(context.objectValues(portal_type="Data Analysis Line"),
+                           key=lambda x: x.getIntIndex()):
   resource = analysis_line.getResourceValue()
   if resource == initial_product:
     use = analysis_line.getUse()

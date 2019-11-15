@@ -162,9 +162,7 @@ for movement in portal_catalog(query = query):
             if data_analysis.getDestinationProjectValue() is not None:
               item_query_dict["item_project_relative_url"] = data_analysis.getDestinationProject()
             item = portal.portal_catalog.getResultValue(**item_query_dict)
-          
-          #if transformation_line.getRelativeUrl() == "data_transformation_module/woelfel_r0331_statistic_raw":
-          #  raise TypeError("JUST STOP")
+
           if item is None:
             module = portal.getDefaultModule(item_type)
             item = module.newContent(portal_type = item_type,
