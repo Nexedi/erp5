@@ -58,7 +58,7 @@
   function takePicture(el) {
     return RSVP.Queue()
       .push(function () {
-        return imageCapture.takePhoto({imageWidth: image_width});
+        return image_capture.takePhoto({imageWidth: image_width});
       })
       .push(function (blob) {
         return readBlobAsDataURL(blob);
