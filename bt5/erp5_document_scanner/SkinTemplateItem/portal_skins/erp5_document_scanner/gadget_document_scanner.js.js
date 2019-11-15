@@ -3,16 +3,6 @@
 (function (rJS, RSVP, window, navigator, Cropper, FileReader, Promise, JSON) {
   "use strict";
 
-  var image_width,
-    preferred_cropped_canvas_data,
-    image_height,
-    cropper,
-    video,
-    current_device_id,
-    image_capture,
-    page_number,
-    camera_list = [];
-
   function readBlobAsDataURL(blob) {
     var fr = new FileReader();
     return new RSVP.Promise(function waitFormDataURLRead(resolve, reject) {
@@ -28,9 +18,10 @@
 
   function drawCanvas(gadget, img) {
     var ratio, x, y,
-      canvas = gadget.querySelector("canvas");
-    canvas.width = image_width;
-    canvas.height = image_height;
+      root = gadget.element,
+      canvas = root.querySelector("canvas");
+    canvas.width = gadget.props.image_width;
+    canvas.height = gadget.props.image_height;
     ratio  = Math.min(canvas.width / img.width, canvas.height / img.height);
     x = (canvas.width - img.width * ratio) / 2;
     y = (canvas.height - img.height * ratio) / 2;
@@ -40,25 +31,27 @@
 
     //contrastImage(canvas, canvas, 10);
 
-    gadget.querySelector(".camera-output").style.display = "";
-    if (cropper) {
-      cropper.destroy();
+    root.querySelector(".camera-output").style.display = "";
+    if (gadget.props.cropper) {
+      gadget.props.cropper.destroy();
     }
     return RSVP.Queue()
       .push(function () {
-        cropper = new Cropper(
-          gadget.querySelector('.photo'),
+        gadget.props.cropper = new Cropper(
+          root.querySelector('.photo'),
           {
-            data: preferred_cropped_canvas_data
+            data: gadget.props.preferred_cropped_canvas_data
           }
         );
       });
   }
 
-  function takePicture(el) {
+  function takePicture(gadget) {
+    var el = gadget.element,
+      image_capture = gadget.props.image_capture;
     return RSVP.Queue()
       .push(function () {
-        return image_capture.takePhoto({imageWidth: image_width});
+        return image_capture.takePhoto({imageWidth: gadget.props.image_width});
       })
       .push(function (blob) {
         return readBlobAsDataURL(blob);
@@ -67,10 +60,10 @@
         var photoInput = el.querySelector(".photoInput"),
           photo = el.querySelector("img");
         photo.setAttribute("src", result);
-        photo.setAttribute("width", image_width);
-        photo.setAttribute("height", image_height);
+        photo.setAttribute("width", gadget.props.image_width);
+        photo.setAttribute("height", gadget.props.image_height);
         photoInput.setAttribute("value", result.split(",")[1]);
-        return drawCanvas(el, photo);
+        return drawCanvas(gadget, photo);
       });
   }
 
@@ -81,13 +74,14 @@
     });
   }
 
-  function setPageOne(root) {
-    root.querySelector(".page-number").innerText = page_number;
+  function setPageOne(gadget) {
+    var root = gadget.element;
+    root.querySelector(".page-number").innerText = gadget.props.page_number;
     root.querySelector(".reset-btn").style.display = "none";
     root.querySelector(".take-picture-btn").style.display = "inline-block";
     root.querySelector(".confirm-btn").style.display = "none";
     root.querySelector(".camera-input").style.display = "";
-    if (camera_list.length > 1) {
+    if (gadget.props.camera_list.length > 1) {
       root.querySelector(".change-camera-btn").style.display = "inline-block";
     }
     return enableButton(root);
@@ -163,8 +157,9 @@
       });
   }*/
 
-  function handleUserMedia(root, device_id, callback) {
-    var stream;
+  function handleUserMedia(gadget, callback) {
+    var stream,
+      video = gadget.props.video;
 
     video.autoplay = "autoplay";
 
@@ -180,12 +175,18 @@
     function waitForStream() {
       new RSVP.Queue()
         .push(function () {
-          return navigator.mediaDevices.getUserMedia({video: {deviceId: {exact: device_id}}});
+          return navigator.mediaDevices.getUserMedia({
+            video: {
+              deviceId: {
+                exact: gadget.props.device_id
+              }
+            }
+          });
         })
         .push(function (mediaStream) {
           stream = mediaStream;
           video.srcObject = mediaStream;
-          return callback(root, stream);
+          return callback(gadget, stream);
         })
         .push(undefined, function (error) {
           if (!(error instanceof RSVP.CancellationError)) {
@@ -197,65 +198,68 @@
     return new RSVP.Promise(waitForStream, canceller);
   }
 
-  function gotStream(root, mediaStream) {
+  function gotStream(gadget, mediaStream) {
     return RSVP.Queue()
       .push(function () {
+        var image_capture;
         image_capture = new window.ImageCapture(mediaStream.getVideoTracks()[0]);
+        gadget.props.image_capture = image_capture;
         return image_capture.getPhotoCapabilities();
       })
       .push(function (photoCapabilities) {
-        image_width = photoCapabilities.imageWidth.max;
-        image_height = photoCapabilities.imageHeight.max;
-        return video.play();
+        gadget.props.image_width = photoCapabilities.imageWidth.max;
+        gadget.props.image_height = photoCapabilities.imageHeight.max;
+        return gadget.props.video.play();
       })
       .push(function () {
-        return setPageOne(root);
+        return setPageOne(gadget);
       });
   }
 
-  function startStream(root, device_id) {
-    video = root.querySelector(".video");
-    current_device_id = device_id;
-    return handleUserMedia(root, device_id, gotStream);
+  function startStream(gadget) {
+    return handleUserMedia(gadget, gotStream);
   }
 
   rJS(window)
     .declareAcquiredMethod(
       "submitDialogWithCustomDialogMethod", "submitDialogWithCustomDialogMethod")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
-    .declareJob("startStream", function (deviceId) {
-      return this.getElement()
-        .push(function (element) {
-          return startStream(element, deviceId);
-        });
+    .declareJob("startStream", function () {
+      return startStream(this);
+    })
+    .ready(function () {
+      this.props = {
+        video: this.element.querySelector(".video")
+      };
     })
     .declareMethod('render', function (options) {
-      var root,
+      var root = this.element,
+        camera_list = [],
         gadget = this;
 
-      gadget.props = {};
-      return this.getElement()
-        .push(function (element) {
-          root = element;
+      return RSVP.Queue()
+        .push(function () {
+          var preferred_cropped_canvas_data = gadget.props.preferred_cropped_canvas_data;
           preferred_cropped_canvas_data = preferred_cropped_canvas_data || JSON.parse(
             options.preferred_cropped_canvas_data
           );
           gadget.props.dialog_method = preferred_cropped_canvas_data.dialog_method;
           // Clear photo input
-          element.querySelector('.photoInput').value = "";
-          page_number = parseInt(element.querySelector('input[name="page-number"]').value, 10);
+          root.querySelector('.photoInput').value = "";
+          gadget.props.page_number = parseInt(root.querySelector('input[name="page-number"]').value, 10);
           root.querySelector(".camera-input").style.display = "";
           root.querySelector(".camera-output").style.display = "none";
 
           if (!navigator.mediaDevices) {
             throw ("mediaDevices is not supported");
           }
+          gadget.props.preferred_cropped_canvas_data = preferred_cropped_canvas_data;
           return navigator.mediaDevices.enumerateDevices();
         })
         .push(function (info_list) {
           var j,
             device,
-            deviceId,
+            device_id,
             len = info_list.length;
 
           if (camera_list.length === 0) {
@@ -268,9 +272,10 @@
           }
           if (camera_list.length >= 1) {
             // trick to select back camera in mobile
-            deviceId = camera_list[camera_list.length - 1].deviceId;
+            gadget.props.device_id = camera_list[camera_list.length - 1].deviceId;
           }
-          gadget.startStream(deviceId);
+          gadget.props.camera_list = camera_list;
+          return gadget.startStream();
         });
     })
     .declareMethod('getContent', function () {
@@ -279,78 +284,68 @@
 
       result.field_your_document_scanner_gadget = JSON.stringify({
         "input_value": input.value,
-        "preferred_cropped_canvas_data": preferred_cropped_canvas_data
+        "preferred_cropped_canvas_data": this.props.preferred_cropped_canvas_data
       });
       return result;
     })
     .onEvent("click", function (evt) {
       var e,
-        root,
-        deviceId,
-        newPreferredCroppedCanvasData,
-        gadget = this;
+        new_preferred_cropped_canvas_data,
+        gadget = this,
+        camera_list = this.props.camera_list,
+        root = this.element;
 
       /*if (evt.target.name === "grayscale") {
-        return this.getElement()
-          .push(function (el) {
-            return grayscale(el.querySelector(".canvas"),
-                             el.querySelector('.photo'));
-          });
+        return grayscale(root.querySelector(".canvas"),
+                         root.querySelector('.photo'));
       }*/
       if (evt.target.className.indexOf("change-camera-btn") !== -1) {
         evt.preventDefault();
 
         for (e in camera_list) {
           if (camera_list.hasOwnProperty(e)) {
-            if (camera_list[e].deviceId !== current_device_id) {
-              deviceId = camera_list[e].deviceId;
+            if (camera_list[e].deviceId !== gadget.props.device_id) {
+              gadget.props.device_id = camera_list[e].deviceId;
               break;
             }
           }
         }
-        gadget.startStream(deviceId);
+        gadget.startStream();
       }
       if (evt.target.className.indexOf("take-picture-btn") !== -1) {
         evt.preventDefault();
-        return this.getElement()
-          .push(function (el) {
-            root = el;
-            return disableButton(root);
-          })
+        return RSVP.Queue()
           .push(function () {
-            root.querySelector(".camera").style.maxWidth = video.offsetWidth + "px";
-            return takePicture(root);
+            disableButton(root);
+            root.querySelector(".camera").style.maxWidth = gadget.props.video.offsetWidth + "px";
+            return takePicture(gadget);
           })
           .push(function () {
             root.querySelector(".camera-input").style.display = "none";
-            return RSVP.all([setPageTwo(root), enableButton(root)]);
+            setPageTwo(root);
+            enableButton(root);
           });
       }
       if (evt.target.className.indexOf("reset-btn") !== -1) {
         evt.preventDefault();
-        return this.getElement()
-          .push(function (el) {
-            el.querySelector(".camera-input").style.display = "";
-            el.querySelector(".camera-output").style.display = "none";
-            cropper.destroy();
-            return setPageOne(el);
-          });
+        root.querySelector(".camera-input").style.display = "";
+        root.querySelector(".camera-output").style.display = "none";
+        root.querySelector('.photoInput').value = "";
+        gadget.props.cropper.destroy();
+        return setPageOne(gadget);
       }
       if (evt.target.className.indexOf("confirm-btn") !== -1) {
         evt.preventDefault();
-        newPreferredCroppedCanvasData = cropper.getData();
-        for (e in newPreferredCroppedCanvasData) {
-          if (newPreferredCroppedCanvasData.hasOwnProperty(e)) {
-            preferred_cropped_canvas_data[e] = newPreferredCroppedCanvasData[e];
+        new_preferred_cropped_canvas_data = gadget.props.cropper.getData();
+        for (e in new_preferred_cropped_canvas_data) {
+          if (new_preferred_cropped_canvas_data.hasOwnProperty(e)) {
+            gadget.props.preferred_cropped_canvas_data[e] = new_preferred_cropped_canvas_data[e];
           }
         }
-        return this.getElement()
-          .push(function (el) {
-            root = el;
-            disableButton(root);
-            return cropper.getCroppedCanvas();
-          })
-          .push(function (canvas) {
+        return RSVP.Queue()
+          .push(function () {
+            var canvas = gadget.props.cropper.getCroppedCanvas();
+            disableButton(gadget.element);
             return new Promise(function (resolve) {
               canvas.toBlob(function (blob) {
                 resolve(blob);
@@ -364,17 +359,16 @@
             var base64data = data_url,
               block = base64data.split(";"),
               realData = block[1].split(",")[1];
-
             root.querySelector(".photo").src = base64data;
             root.querySelector(".photoInput").value = realData;
-            cropper.destroy();
+            gadget.props.cropper.destroy();
           })
           .push(function () {
             return gadget.submitDialogWithCustomDialogMethod(gadget.props.dialog_method);
           })
           .push(function () {
-            page_number = page_number + 1;
-            root.querySelector('input[name="page-number"]').value = page_number;
+            gadget.props.page_number = gadget.props.page_number + 1;
+            root.querySelector('input[name="page-number"]').value = gadget.props.page_number;
           });
       }
     }, false, false);
