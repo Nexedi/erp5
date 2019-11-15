@@ -31,7 +31,7 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctiona
 
 class TestRenderJSDocumentScanner(ERP5TypeFunctionalTestCase):
   foreground = 0
-  run_only = "erp5_document_scanner_ui_test"
+  run_only = "renderjs_erp5_document_scanner_zuite"
 
   def getBusinessTemplateList(self):
     return (
