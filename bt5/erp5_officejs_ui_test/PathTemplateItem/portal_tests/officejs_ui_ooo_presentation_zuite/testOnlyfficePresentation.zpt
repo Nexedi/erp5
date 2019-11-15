@@ -127,6 +127,17 @@
   <td>//a[@data-i18n='Actions']</td>
   <td></td>
 </tr>
+<!-- check panel actions -->
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_ojs_panel.html')]//dt[text()='ACTIONS']</td>
+ <td></td>
+</tr>
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_ojs_panel.html')]//dd//a[text()='Upload' and contains(@href, '#!change') and contains(@href, 'n.page=handle_action')]</td>
+ <td></td>
+</tr>
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Actions']</td>
@@ -188,6 +199,17 @@
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Actions']</td>
   <td></td>
+</tr>
+<!-- check panel actions -->
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_ojs_panel.html')]//dt[text()='ACTIONS']</td>
+ <td></td>
+</tr>
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[contains(@data-gadget-url, 'gadget_erp5_ojs_panel.html')]//dd//a[text()='Download' and contains(@href, '#!change') and contains(@href, 'n.page=handle_action')]</td>
+ <td></td>
 </tr>
 <tr>
   <td>click</td>
