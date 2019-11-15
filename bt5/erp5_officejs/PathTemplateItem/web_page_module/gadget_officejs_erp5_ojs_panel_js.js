@@ -126,8 +126,7 @@
             workflow_list: workflow_list,
             view_list: view_list,
             global: true,
-            portal_type: options.portal_type,
-            jio_key: options.jio_key,
+            view_action_dict: options.view_action_dict || false,
             editable: options.editable || editable || false
           });
         });
@@ -275,19 +274,12 @@
         }
       }
 
-      if (modification_dict.hasOwnProperty("portal_type")) {
+      if (modification_dict.view_action_dict) {
         queue
           .push(function () {
-            return gadget.getDeclaredGadget("common_util");
-          })
-          .push(function (gadget_utils) {
-            return gadget_utils.getViewAndActionDict(modification_dict.portal_type,
-                                                     modification_dict.jio_key);
-          })
-          .push(function (view_action_dict) {
             return RSVP.all([
-              getElementList(gadget, view_action_dict.view_list),
-              getElementList(gadget, view_action_dict.action_list)
+              getElementList(gadget, modification_dict.view_action_dict.view_list),
+              getElementList(gadget, modification_dict.view_action_dict.action_list)
             ]);
           })
           .push(function (view_action_list) {
