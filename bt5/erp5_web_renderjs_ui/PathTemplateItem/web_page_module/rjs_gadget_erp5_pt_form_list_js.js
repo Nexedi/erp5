@@ -1,8 +1,10 @@
-/*global window, rJS, renderFormListHeader, SimpleQuery, ComplexQuery,
+/*global window, rJS, renderFormViewHeader, renderFormListHeader,
+         SimpleQuery, ComplexQuery,
          Query, QueryFactory, ensureArray, triggerListboxClipboardAction,
          declareGadgetClassCanHandleListboxClipboardAction*/
 /*jslint nomen: true, indent: 2, maxerr: 3, continue: true */
-(function (window, rJS, renderFormListHeader, SimpleQuery, ComplexQuery,
+(function (window, rJS, renderFormViewHeader, renderFormListHeader,
+           SimpleQuery, ComplexQuery,
            Query, QueryFactory, ensureArray, triggerListboxClipboardAction,
            declareGadgetClassCanHandleListboxClipboardAction) {
   "use strict";
@@ -74,6 +76,7 @@
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod("isDesktopMedia", "isDesktopMedia")
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
@@ -151,7 +154,17 @@
 
         // render the header
         .push(function () {
-          return renderFormListHeader(form_gadget, form_gadget.state.jio_key, form_gadget.state.view, form_gadget.state.erp5_document);
+          var renderHeader;
+          if (form_gadget.state.jio_key.indexOf('/') !== -1) {
+            // If form list is used on a non module/tool document, display header
+            // list form_view
+            renderHeader = renderFormViewHeader;
+          } else {
+            renderHeader = renderFormListHeader;
+          }
+          return renderHeader(form_gadget, form_gadget.state.jio_key,
+                              form_gadget.state.view,
+                              form_gadget.state.erp5_document);
         });
 
     })
@@ -294,6 +307,7 @@
 
   declareGadgetClassCanHandleListboxClipboardAction(rJS(window));
 
-}(window, rJS, renderFormListHeader, SimpleQuery, ComplexQuery, Query,
+}(window, rJS, renderFormViewHeader, renderFormListHeader, SimpleQuery,
+  ComplexQuery, Query,
   QueryFactory, ensureArray, triggerListboxClipboardAction,
   declareGadgetClassCanHandleListboxClipboardAction));
