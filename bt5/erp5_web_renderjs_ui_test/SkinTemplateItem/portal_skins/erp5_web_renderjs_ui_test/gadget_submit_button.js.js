@@ -28,7 +28,7 @@
     .onEvent('click', function click(evt) {
       if (evt.target.type === "button") {
         evt.preventDefault();
-        return this.submitDialogWithCustomDialogMethod(false, this.state.python_script_id);
+        return this.submitDialogWithCustomDialogMethod(this.state.python_script_id);
       }
     }, false, false);
 
