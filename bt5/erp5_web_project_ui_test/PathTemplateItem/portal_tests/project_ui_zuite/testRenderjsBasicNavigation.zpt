@@ -26,14 +26,22 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
+  <td>${base_url}/portal_skins/erp5_web_project_test/ERP5Site_createTestStartedProject/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Project Created</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
   <td>${base_url}/web_site_module/project_management/</td>
   <td></td>
 </tr>
-
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
-
 
 <tr>
   <td>assertElementPresent</td>
@@ -43,6 +51,17 @@
 <tr>
   <td>assertTextPresent</td>
   <td>Projects</td>
+  <td></td>
+</tr>
+<!-- Check filter -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_searchfield.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_searchfield.html']//button[text()="started"]</td>
   <td></td>
 </tr>
 <!-- Check sort -->
@@ -87,7 +106,95 @@
   <td>//div[@class='document_table']//th//a[text()="Location"]</td>
   <td></td>
 </tr>
-
+<!-- Check project present -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='document_table']//table//tbody//tr//a[text()="test-project"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@class='document_table']//table//tbody//tr//a[text()="test-project"]</td>
+  <td></td>
+</tr>
+<!-- check project quick view page elements -->
+<tr>
+ <td>waitForElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[@id='milestone_link' and @class='first-line-buttons']</td>
+ <td></td>
+</tr>
+<tr>
+ <td>assertElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Milestones' and contains(@href, '#!push_history') and contains(@href, 'n.jio_key=milestone_module') and contains(@href, 'view%3Dmilestone')]</td>
+ <td></td>
+</tr>
+  
+<tr>
+ <td>assertElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Support requests']</td>
+ <td></td>
+</tr>
+  
+<tr>
+ <td>assertElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Documents']</td>
+ <td></td>
+</tr>
+  
+<tr>
+ <td>assertElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Opened Bugs']</td>
+ <td></td>
+</tr>
+  
+<tr>
+ <td>assertElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Closed Bugs']</td>
+ <td></td>
+</tr>
+  
+<tr>
+ <td>assertElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Confirmed Tasks']</td>
+ <td></td>
+</tr>
+  
+<tr>
+ <td>assertElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Not Confirmed Tasks']</td>
+ <td></td>
+</tr>
+  
+<tr>
+ <td>assertElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Opened Task Reports']</td>
+ <td></td>
+</tr>
+  
+<tr>
+ <td>assertElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Closed Task Reports']</td>
+ <td></td>
+</tr>
+  
+<tr>
+ <td>assertElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Last test result']</td>
+ <td></td>
+</tr>
+  
+<tr>
+ <td>assertElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Test suite']</td>
+ <td></td>
+</tr>
+  
+<tr>
+ <td>assertElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Edit Project Page']</td>
+ <td></td>
+</tr>
+  
 </tbody></table>
 </body>
 </html>
