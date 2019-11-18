@@ -36,7 +36,8 @@
   ///////////////////////////////
   // Form list navigation
   ///////////////////////////////
-  window.renderFormViewHeader = function (gadget, jio_key, view, erp5_document) {
+  window.renderFormViewHeader = function (gadget, jio_key, view, erp5_document,
+                                          filter_action) {
     return new RSVP.Queue()
       .push(function () {
         var url_for_parameter_list = [
@@ -91,8 +92,11 @@
             next_url: result_list[1] ? url_list[3] : '',
             page_title: calculateSynchronousPageTitle(gadget, erp5_document)
           };
-        if (result_list[1]) {
+        if (result_list[0]) {
           header_dict.add_url = url_list[7] || '';
+        }
+        if (filter_action === true) {
+          header_dict.filter_action = true;
         }
         return gadget.updateHeader(header_dict);
       });

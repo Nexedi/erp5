@@ -164,7 +164,7 @@
           }
           return renderHeader(form_gadget, form_gadget.state.jio_key,
                               form_gadget.state.view,
-                              form_gadget.state.erp5_document);
+                              form_gadget.state.erp5_document, true);
         });
 
     })
