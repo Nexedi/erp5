@@ -92,7 +92,8 @@
           var i,
             promise_list = [];
           erp5_document = result;
-          view_list = ensureArray(erp5_document._links.view);
+          view_list = ensureArray(erp5_document._links.view)
+            .concat(ensureArray(erp5_document._links.action_object_jio_view));
           jump_list = ensureArray(erp5_document._links.action_object_jump);
 
           for (i = 0; i < view_list.length; i += 1) {
