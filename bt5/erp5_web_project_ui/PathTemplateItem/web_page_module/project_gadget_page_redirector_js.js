@@ -1,7 +1,27 @@
-/*global document, window, rJS */
+/*global window, rJS, SimpleQuery, ComplexQuery, Query */
 /*jslint nomen: true, indent: 2, maxerr: 10, maxlen: 90 */
-(function (document, window, rJS) {
+(function (window, rJS, SimpleQuery, ComplexQuery, Query) {
   "use strict";
+
+  function createMultipleSimpleOrQuery(key, value_list) {
+    var i,
+      search_query,
+      query_list = [];
+    for (i = 0; i < value_list.length; i += 1) {
+      query_list.push(new SimpleQuery({
+        key: key,
+        operator: "",
+        type: "simple",
+        value: value_list[i]
+      }));
+    }
+    search_query = new ComplexQuery({
+      operator: "OR",
+      query_list: query_list,
+      type: "complex"
+    });
+    return Query.objectToSearchText(search_query);
+  }
 
   rJS(window)
 
@@ -17,14 +37,25 @@
     /////////////////////////////////////////////////////////////////
 
     .declareMethod("render", function (options) {
-      var gadget = this, id,
-        types = '("Text", "File", "PDF", "Drawing", ' +
-          '"Presentation", "Spreadsheet")',
-        states = '("shared", "published", "released", ' +
-          '"shared_alive", "published_alive", "released_alive")',
-        query = 'portal_type:' + types +
-          'AND reference:"' + options.reference +
-          '" AND validation_state:' + states;
+      var gadget = this,
+        type_list = ["Text", "File", "PDF", "Drawing",
+          "Presentation", "Spreadsheet"],
+        state_list = ["shared", "published", "released", "shared_alive",
+          "published_alive", "released_alive"],
+        portal_type_query = createMultipleSimpleOrQuery('portal_type', type_list),
+        state_query = createMultipleSimpleOrQuery('validation_state', state_list),
+        reference_query = new SimpleQuery({
+          key: "reference",
+          operator: "=",
+          type: "simple",
+          value: options.reference
+        }),
+        query = new ComplexQuery({
+          operator: "AND",
+          query_list: [portal_type_query, state_query, reference_query],
+          type: "complex"
+        });
+      query = Query.objectToSearchText(query);
       return gadget.jio_allDocs({
         query: query,
         limit: 1
@@ -38,10 +69,9 @@
                 'history': options.history
               }
             });
-          } else {
-            return gadget.redirect({command: 'history_previous', options: {}});
           }
+          return gadget.redirect({command: 'history_previous', options: {}});
         });
     });
 
-}(document, window, rJS));
+}(window, rJS, SimpleQuery, ComplexQuery, Query));
