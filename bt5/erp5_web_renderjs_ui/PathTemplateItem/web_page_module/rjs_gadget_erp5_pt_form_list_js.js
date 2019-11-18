@@ -1,8 +1,10 @@
-/*global window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
+/*global window, rJS, renderFormViewHeader, renderFormListHeader,
+         SimpleQuery, ComplexQuery,
          Query, QueryFactory, ensureArray, triggerListboxClipboardAction,
          declareGadgetClassCanHandleListboxClipboardAction*/
 /*jslint nomen: true, indent: 2, maxerr: 3, continue: true */
-(function (window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
+(function (window, rJS, renderFormViewHeader, renderFormListHeader,
+           SimpleQuery, ComplexQuery,
            Query, QueryFactory, ensureArray, triggerListboxClipboardAction,
            declareGadgetClassCanHandleListboxClipboardAction) {
   "use strict";
@@ -74,6 +76,7 @@
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod("isDesktopMedia", "isDesktopMedia")
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
@@ -151,51 +154,18 @@
 
         // render the header
         .push(function () {
-          var new_content_action = form_gadget.state.erp5_document._links.action_object_new_content_action,
-            url_for_parameter_list = [
-              {command: 'display_dialog_with_history', options: {
-                jio_key: form_gadget.state.jio_key,
-                page: "action",
-                view: form_gadget.state.view
-              }},
-              {command: 'display', options: {}},
-              {command: 'display_dialog_with_history', options: {
-                jio_key: form_gadget.state.jio_key,
-                page: "export",
-                view: form_gadget.state.view
-              }}
-            ];
-
-          if (new_content_action !== undefined) {
-            url_for_parameter_list.push({command: 'display_dialog_with_history', options: {
-              jio_key: form_gadget.state.jio_key,
-              view: new_content_action.href,
-              editable: true
-            }});
+          var renderHeader;
+          if ((form_gadget.state.jio_key !== undefined) &&
+              (form_gadget.state.jio_key.indexOf('/') !== -1)) {
+            // If form list is used on a non module/tool document, display header
+            // list form_view
+            renderHeader = renderFormViewHeader;
+          } else {
+            renderHeader = renderFormListHeader;
           }
-
-          return RSVP.all([
-            calculatePageTitle(form_gadget, form_gadget.state.erp5_document),
-            form_gadget.getUrlForList(url_for_parameter_list)
-          ]);
-        })
-        .push(function (result_list) {
-          var url_list = result_list[1];
-          return form_gadget.updateHeader({
-            panel_action: true,
-            jump_url: "",
-            fast_input_url: "",
-            add_url: url_list[3] || '',
-            actions_url: url_list[0],
-            export_url: (
-              form_gadget.state.erp5_document._links.action_object_jio_report ||
-              form_gadget.state.erp5_document._links.action_object_jio_print ||
-              form_gadget.state.erp5_document._links.action_object_jio_exchange
-            ) ? url_list[2] : '',
-            page_title: result_list[0],
-            front_url: url_list[1],
-            filter_action: true
-          });
+          return renderHeader(form_gadget, form_gadget.state.jio_key,
+                              form_gadget.state.view,
+                              form_gadget.state.erp5_document, true);
         });
 
     })
@@ -338,6 +308,7 @@
 
   declareGadgetClassCanHandleListboxClipboardAction(rJS(window));
 
-}(window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery, Query,
+}(window, rJS, renderFormViewHeader, renderFormListHeader, SimpleQuery,
+  ComplexQuery, Query,
   QueryFactory, ensureArray, triggerListboxClipboardAction,
   declareGadgetClassCanHandleListboxClipboardAction));
