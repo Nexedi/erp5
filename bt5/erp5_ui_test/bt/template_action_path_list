@@ -26,6 +26,7 @@ Foo | dummy_multilistfield_report
 Foo | dummy_radiofield_report
 Foo | dummy_report
 Foo | list
+Foo | list_tab
 Foo | python_action_jio
 Foo | python_error_action_jio
 Foo | python_failing_action_jio
