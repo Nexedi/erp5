@@ -19,13 +19,18 @@ def filterActions(actions):
   for action_category_name, action_list in actions.items():
     # action category _onlyjio_ contains actions shown only in RenderJS interface
     # we hide this detail from templates because they should not contain any logic
-    if "_onlyjio_" in action_category_name:
+    if action_category_name == "object_onlyjio_view":
+      # Do not merge the object_jio_view, which is used in officejs only
+      # to generate the JSON export
+      action_category_name = "object_view"
+    elif "_onlyjio_" in action_category_name:
       action_category_name = action_category_name.replace("_onlyjio_", "_jio_")
     if action_category_name in filtered_actions:
       filtered_actions[action_category_name].extend(action_list)
     else:
       filtered_actions[action_category_name] = action_list
-  return filtered_actions
+  return {action_category_name: sorted(action_list, key=lambda x: x.get('priority', 1.0))
+          for action_category_name, action_list in filtered_actions.items()}
 
 
 def filterDuplicateActions(actions):
