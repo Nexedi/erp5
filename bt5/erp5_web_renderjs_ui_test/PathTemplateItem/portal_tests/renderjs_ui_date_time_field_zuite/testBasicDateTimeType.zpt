@@ -14,7 +14,7 @@
 
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/test_suite_module/</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/test_suite_module</td>
   <td></td>
 </tr>
 

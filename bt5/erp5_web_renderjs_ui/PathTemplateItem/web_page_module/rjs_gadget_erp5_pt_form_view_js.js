@@ -1,7 +1,7 @@
-/*global window, rJS, RSVP, calculatePageTitle, isEmpty,
+/*global window, rJS, renderFormViewHeader, isEmpty,
          declareGadgetClassCanHandleListboxClipboardAction */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, calculatePageTitle, isEmpty,
+(function (window, rJS, renderFormViewHeader, isEmpty,
            declareGadgetClassCanHandleListboxClipboardAction) {
   "use strict";
 
@@ -106,67 +106,13 @@
 
         // render the header
         .push(function () {
-          var url_for_parameter_list = [
-            {command: 'display_dialog_with_history', options: {
-              jio_key: gadget.state.jio_key,
-              page: "tab",
-              view: gadget.state.view
-            }},
-            {command: 'display_dialog_with_history', options: {
-              jio_key: gadget.state.jio_key,
-              page: "action",
-              view: gadget.state.view
-            }},
-            {command: 'history_previous'},
-            {command: 'selection_previous'},
-            {command: 'selection_next'},
-            {command: 'display_dialog_with_history', options: {
-              jio_key: gadget.state.jio_key,
-              page: "export",
-              view: gadget.state.view
-            }},
-            {command: 'change', options: {editable: true}}
-          ];
-          if (gadget.state.erp5_document._links.action_object_new_content_action) {
-            url_for_parameter_list.push({command: 'display_dialog_with_history', options: {
-              jio_key: gadget.state.jio_key,
-              view: gadget.state.erp5_document._links.action_object_new_content_action.href,
-              editable: true
-            }});
-          }
-          return RSVP.all([
-            calculatePageTitle(gadget, gadget.state.erp5_document),
-            gadget.isDesktopMedia(),
-            gadget.getUrlParameter('selection_index'),
-            gadget.getUrlForList(url_for_parameter_list)
-          ]);
-        })
-        .push(function (result_list) {
-          var url_list = result_list[3],
-            header_dict = {
-              edit_url: url_list[6],
-              tab_url: url_list[0],
-              actions_url: url_list[1],
-              export_url: (
-                gadget.state.erp5_document._links.action_object_jio_report ||
-                gadget.state.erp5_document._links.action_object_jio_exchange ||
-                gadget.state.erp5_document._links.action_object_jio_print
-              ) ? url_list[5] : '',
-              selection_url: url_list[2],
-              // Only display previous/next links if url has a selection_index,
-              // ie, if we can paginate the result list of the search
-              previous_url: result_list[2] ? url_list[3] : '',
-              next_url: result_list[2] ? url_list[4] : '',
-              page_title: result_list[0]
-            };
-          if (result_list[1]) {
-            header_dict.add_url = url_list[7] || '';
-          }
-          return gadget.updateHeader(header_dict);
+          return renderFormViewHeader(gadget, gadget.state.jio_key,
+                                      gadget.state.view,
+                                      gadget.state.erp5_document);
         });
     });
 
   declareGadgetClassCanHandleListboxClipboardAction(rJS(window));
 
-}(window, rJS, RSVP, calculatePageTitle, isEmpty,
+}(window, rJS, renderFormViewHeader, isEmpty,
   declareGadgetClassCanHandleListboxClipboardAction));
