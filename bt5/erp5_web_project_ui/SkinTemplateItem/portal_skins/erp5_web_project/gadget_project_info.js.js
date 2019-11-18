@@ -1,20 +1,26 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, RSVP, document, ensureArray*/
-(function (window, rJS, RSVP, document, ensureArray) {
+/*global window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer*/
+(function (window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer) {
   "use strict";
 
-  function parseHTMLLinks(html, url) {
-    var content = document.createElement('html'),
-      regex = /href="(.*?)"/g,
-      link;
-    while ((link = regex.exec(html)) !== null) {
-      if (! link[1].startsWith("https") && ! link[1].startsWith("http") &&
-          ! link[1].startsWith("ftp") && ! link[1].includes("/")
-         ) {
-        html = html.replace(link[1], url + "&n.reference=" + link[1]);
-      }
+  function addRedirectionToReference(href, url) {
+    if (!href.startsWith("https") && !href.startsWith("http") &&
+        !href.startsWith("ftp") && !href.includes("/")
+        ) {
+      href = url + "&n.reference=" + href;
     }
-    return html;
+    return href;
+  }
+
+  function parseHTMLLinks(html, url) {
+    var parser = new DOMParser(), i,
+      oSerializer = new XMLSerializer(),
+      doc = parser.parseFromString(html, "text/html"),
+      link_list = doc.getElementsByTagName("a");
+    for (i = 0; i < link_list.length; i++) {
+      link_list[i].setAttribute('href', addRedirectionToReference(link_list[i].getAttribute('href'), url));
+    }
+    return oSerializer.serializeToString(doc);
   }
 
   function enableLink(link_element, url) {
@@ -205,4 +211,4 @@
       return true;
     });
 
-}(window, rJS, RSVP, document, ensureArray));
+}(window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer));
