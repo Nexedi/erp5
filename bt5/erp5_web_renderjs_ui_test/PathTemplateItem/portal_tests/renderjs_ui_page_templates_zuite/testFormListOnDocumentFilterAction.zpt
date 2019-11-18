@@ -1,0 +1,94 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form View Edit Link</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Default Module View</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block tal:define="view_configuration python: {'action_title': 'Form List'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_selected_view" />
+</tal:block>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Title 1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Filter' and @type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='editor_panel' and contains(@class, 'visible')]</td>
+  <td></td>
+</tr>
+<!-- Open editor_panel -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Filter' and @type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='editor_panel' and contains(@class, 'visible')]</td>
+  <td></td>
+</tr>
+
+<!-- Check panel content -->
+<tr>
+  <td colspan="3"><b>Check that a default filter section is displayed</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//div[@class='filter_item_container']/div[1]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//div[@class='filter_item_container']/div[1]//select</td>
+  <td>COLUMN_id</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//div[@class='filter_item_container']/div[1]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td colspan="3"><b></b></td>
+</tr>
+
+<!-- Close editor_panel -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Filter' and @type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='editor_panel' and contains(@class, 'visible')]</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
