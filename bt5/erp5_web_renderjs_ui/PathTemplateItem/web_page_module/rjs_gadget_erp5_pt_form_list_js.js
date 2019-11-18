@@ -1,8 +1,8 @@
-/*global window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
+/*global window, rJS, renderFormListHeader, SimpleQuery, ComplexQuery,
          Query, QueryFactory, ensureArray, triggerListboxClipboardAction,
          declareGadgetClassCanHandleListboxClipboardAction*/
 /*jslint nomen: true, indent: 2, maxerr: 3, continue: true */
-(function (window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery,
+(function (window, rJS, renderFormListHeader, SimpleQuery, ComplexQuery,
            Query, QueryFactory, ensureArray, triggerListboxClipboardAction,
            declareGadgetClassCanHandleListboxClipboardAction) {
   "use strict";
@@ -294,6 +294,6 @@
 
   declareGadgetClassCanHandleListboxClipboardAction(rJS(window));
 
-}(window, rJS, RSVP, calculatePageTitle, SimpleQuery, ComplexQuery, Query,
+}(window, rJS, renderFormListHeader, SimpleQuery, ComplexQuery, Query,
   QueryFactory, ensureArray, triggerListboxClipboardAction,
   declareGadgetClassCanHandleListboxClipboardAction));
