@@ -12,7 +12,7 @@
 </thead><tbody>
 <tr>
   <td>open</td>
-  <td>${base_url}/erp5/Zuite_waitForActivities</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
