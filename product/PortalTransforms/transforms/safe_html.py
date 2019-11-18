@@ -37,6 +37,7 @@ VALID_TAGS = {
   'dl': 1,
   'dt': 1,
   'em': 1,
+  'font': 1,
   'h1': 1,
   'h2': 1,
   'h3': 1,
@@ -120,8 +121,12 @@ VALID_TAGS['rt'] = 1
 VALID_TAGS['ruby'] = 1
 VALID_TAGS['section'] = 1
 VALID_TAGS['source'] = 1
+VALID_TAGS['summary'] = 1
 VALID_TAGS['time'] = 1
 VALID_TAGS['video'] = 1
+
+# Selenium tests
+VALID_TAGS['test'] = 1
 
 # add some tags to nasty.
 NASTY_TAGS['style'] = 1  # this helps improve Word HTML cleanup.
