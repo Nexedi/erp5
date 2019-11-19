@@ -88,8 +88,8 @@
             selection_url: url_list[2],
             // Only display previous/next links if url has a selection_index,
             // ie, if we can paginate the result list of the search
-            previous_url: result_list[1] ? url_list[2] : '',
-            next_url: result_list[1] ? url_list[3] : '',
+            previous_url: result_list[1] ? url_list[3] : '',
+            next_url: result_list[1] ? url_list[4] : '',
             page_title: calculateSynchronousPageTitle(gadget, erp5_document)
           };
         if (result_list[0]) {
