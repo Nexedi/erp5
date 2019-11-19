@@ -35,7 +35,8 @@
 
   function setLastTestResult(gadget, project_title, span_element) {
     span_element.classList.remove("ui-disabled");
-    var query = 'portal_type:="Benchmark Result" AND source_project_title:"' + project_title + '"';
+    var query = createProjectQuery(project_title,
+                 [["portal_type", "Benchmark Result"]]);
     return gadget.jio_allDocs({
       query: query,
       limit: 2, //first result could be the running test
@@ -57,6 +58,31 @@
           }
         }
       });
+  }
+
+  function createProjectQuery(project_title, key_value_list) {
+    var i, query_list = [];
+    if (project_title) {
+      query_list.push(new SimpleQuery({
+        key: "source_project_title",
+        operator: "",
+        type: "simple",
+        value: project_title
+      }));
+    }
+    for (i = 0; i < key_value_list.length; i += 1) {
+      query_list.push(new SimpleQuery({
+        key: key_value_list[i][0],
+        operator: "",
+        type: "simple",
+        value: key_value_list[i][1]
+      }));
+    }
+    return Query.objectToSearchText(new ComplexQuery({
+      operator: "AND",
+      query_list: query_list,
+      type: "complex"
+    }));
   }
 
   function getWebPageInfo(gadget, project_reference) {
@@ -176,42 +202,42 @@
             getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
               ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                 "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-              ('source_project_title:  "' + modification_dict.project_title +
-                '" AND selection_domain_state_task_domain:  "confirmed"')),
+              createProjectQuery(modification_dict.project_title,
+                [["selection_domain_state_task_domain", "confirmed"]])),
             getUrlParameterDict('support_request_module', "view", [["delivery.start_date", "descending"]],
-              null, ('source_project_title:  "' + modification_dict.project_title +
-                     '" AND destination_project_title:  "' + modification_dict.project_title +
-                     '" AND selection_domain_state_support_domain:  "validated"')),
+              null, createProjectQuery(modification_dict.project_title,
+                [["destination_project_title", modification_dict.project_title],
+                 ["selection_domain_state_support_domain", "validated"]])),
             getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
               ["title", "description", "delivery.start_date"],
-              ('source_project_title:  "' + modification_dict.project_title +
-               '" AND selection_domain_state_bug_domain:  "started"')),
+              createProjectQuery(modification_dict.project_title,
+                [["selection_domain_state_bug_domain", "started"]])),
             getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
               ["title", "description", "delivery.start_date"],
-              ('source_project_title:  "' + modification_dict.project_title +
-               '" AND selection_domain_state_bug_domain:  "closed"')),
+              createProjectQuery(modification_dict.project_title,
+                [["selection_domain_state_bug_domain", "closed"]])),
             getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
               ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                 "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-              ('source_project_title:  "' + modification_dict.project_title +
-               '" AND selection_domain_state_task_report_domain:  "started"')),
+              createProjectQuery(modification_dict.project_title,
+                [["selection_domain_state_task_report_domain", "started"]])),
             getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
               ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                 "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-              ('source_project_title:  "' + modification_dict.project_title +
-               '" AND selection_domain_state_task_report_domain:  "closed"')),
+              createProjectQuery(modification_dict.project_title,
+                [["selection_domain_state_task_report_domain", "closed"]])),
             getUrlParameterDict('test_result_module', 'view', [["delivery.start_date", "descending"]],
-              null, ('source_project_title:  "' + modification_dict.project_title + '"')),
+              null, createProjectQuery(modification_dict.project_title, [])),
             getUrlParameterDict('test_suite_module', 'view', [["creation_date", "descending"]],
-              null, ('source_project_title:  "' + modification_dict.project_title + '"')),
+              null, createProjectQuery(modification_dict.project_title, [])),
             getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
               ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
                 "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
-              ('source_project_title:  "' + modification_dict.project_title +
-               '" AND selection_domain_state_task_domain:  "not_confirmed"')),
+              createProjectQuery(modification_dict.project_title,
+                [["selection_domain_state_task_domain", "not_confirmed"]])),
             getUrlParameterDict(web_page_info.id, web_page_info.edit_view),
             getUrlParameterDict(modification_dict.jio_key, document_view, [["modification_date", "descending"]],
-                                null, ('selection_domain_state_document_domain:  "confirmed"'))
+              null, createProjectQuery(null, [["selection_domain_state_document_domain", "confirmed"]]))
           ]);
         })
         .push(function (url_list) {
