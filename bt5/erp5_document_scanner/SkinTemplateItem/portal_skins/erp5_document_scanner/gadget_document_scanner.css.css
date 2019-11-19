@@ -53,9 +53,10 @@ div[data-gadget-scope="field_your_document_scanner_gadget"] {
 
 .reset-btn, .confirm-btn, .edit-btn, .take-picture-btn,
     .capture-btn, .change-camera-btn, .confirm-btn {
-  font-size: 44px;
   color: #212529;
-  padding: 0 16px 0 16px;
+  padding: 3pt;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 0.325em;
 }
 
 .take-picture-btn, .capture-btn, .confirm-btn,
