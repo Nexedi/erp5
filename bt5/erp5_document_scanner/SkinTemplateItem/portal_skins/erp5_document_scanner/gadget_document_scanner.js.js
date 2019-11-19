@@ -1,20 +1,7 @@
 /*jslint indent: 2 */
 /*global rJS, RSVP, window, navigator, Cropper, FileReader, Promise, JSON*/
-(function (rJS, RSVP, window, navigator, Cropper, FileReader, Promise, JSON) {
+(function (rJS, RSVP, window, navigator, Cropper, FileReader, Promise, JSON, jIO) {
   "use strict";
-
-  function readBlobAsDataURL(blob) {
-    var fr = new FileReader();
-    return new RSVP.Promise(function waitFormDataURLRead(resolve, reject) {
-      fr.addEventListener("load", function handleDataURLRead(evt) {
-        resolve(evt.target.result);
-      });
-      fr.addEventListener("error", reject);
-      fr.readAsDataURL(blob);
-    }, function cancelReadBlobAsDataURL() {
-      fr.abort();
-    });
-  }
 
   function drawCanvas(gadget, img) {
     var ratio, x, y,
@@ -54,15 +41,17 @@
         return image_capture.takePhoto({imageWidth: gadget.props.image_width});
       })
       .push(function (blob) {
-        return readBlobAsDataURL(blob);
+        return jIO.util.readBlobAsDataURL(blob);
       })
       .push(function (result) {
         var photoInput = el.querySelector(".photoInput"),
-          photo = el.querySelector("img");
-        photo.setAttribute("src", result);
+          photo = el.querySelector("img"),
+          data_str = result.target.result;
+
+        photo.setAttribute("src", data_str);
         photo.setAttribute("width", gadget.props.image_width);
         photo.setAttribute("height", gadget.props.image_height);
-        photoInput.setAttribute("value", result.split(",")[1]);
+        photoInput.setAttribute("value", data_str.split(",")[1]);
         return drawCanvas(gadget, photo);
       });
   }
@@ -352,10 +341,10 @@
             });
           })
           .push(function (blob) {
-            return readBlobAsDataURL(blob);
+            return jIO.util.readBlobAsDataURL(blob);
           })
-          .push(function (data_url) {
-            var base64data = data_url,
+          .push(function (result) {
+            var base64data = result.target.result,
               block = base64data.split(";"),
               realData = block[1].split(",")[1];
             root.querySelector(".photo").src = base64data;
@@ -372,4 +361,4 @@
       }
     }, false, false);
 
-}(rJS, RSVP, window, navigator, Cropper, FileReader, Promise, JSON));
+}(rJS, RSVP, window, navigator, Cropper, FileReader, Promise, JSON, jIO));
