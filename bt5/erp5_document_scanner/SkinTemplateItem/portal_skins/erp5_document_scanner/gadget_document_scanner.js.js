@@ -222,7 +222,9 @@
 
   rJS(window)
     .declareAcquiredMethod(
-      "submitDialogWithCustomDialogMethod", "submitDialogWithCustomDialogMethod")
+      "submitDialogWithCustomDialogMethod",
+      "submitDialogWithCustomDialogMethod"
+    )
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareJob("startStream", function () {
       return startStream(this);
@@ -240,9 +242,7 @@
       return RSVP.Queue()
         .push(function () {
           var preferred_cropped_canvas_data = gadget.props.preferred_cropped_canvas_data;
-          preferred_cropped_canvas_data = preferred_cropped_canvas_data || JSON.parse(
-            options.preferred_cropped_canvas_data
-          );
+          preferred_cropped_canvas_data = preferred_cropped_canvas_data || JSON.parse(options.preferred_cropped_canvas_data);
           gadget.props.dialog_method = preferred_cropped_canvas_data.dialog_method;
           // Clear photo input
           root.querySelector('.photoInput').value = "";
@@ -259,7 +259,6 @@
         .push(function (info_list) {
           var j,
             device,
-            device_id,
             len = info_list.length;
 
           if (camera_list.length === 0) {
