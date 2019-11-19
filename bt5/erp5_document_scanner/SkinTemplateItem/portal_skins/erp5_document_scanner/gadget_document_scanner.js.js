@@ -22,15 +22,11 @@
     if (gadget.props.cropper) {
       gadget.props.cropper.destroy();
     }
-    return RSVP.Queue()
-      .push(function () {
-        gadget.props.cropper = new Cropper(
-          root.querySelector('.photo'),
-          {
-            data: gadget.props.preferred_cropped_canvas_data
-          }
-        );
-      });
+    gadget.props.cropper = new Cropper(
+      root.querySelector('.photo'), {
+        data: gadget.props.preferred_cropped_canvas_data
+      }
+    );
   }
 
   function takePicture(gadget) {
