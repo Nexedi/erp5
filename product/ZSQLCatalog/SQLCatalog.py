@@ -1832,7 +1832,16 @@ class Catalog(Folder,
       else:
         search_key = self.getSearchKey(key, 'RelatedKey')
     else:
-      search_key = SearchKeyWrapperForScriptableKey(key, script)
+      func_code = script.func_code
+      search_key = (
+        AdvancedSearchKeyWrapperForScriptableKey if (
+          # 5: search_value (under any name), "search_key", "group",
+          # "logical_operator", "comparison_operator". The last 4 are possible
+          # in any order.
+          func_code.co_argcount == 5 or
+          getattr(func_code, 'co_flags', 0) & CO_VARKEYWORDS
+        ) else SearchKeyWrapperForScriptableKey
+      )(key, script)
       related_key_definition = None
     return search_key, related_key_definition
 
@@ -2565,44 +2574,12 @@ class SearchKeyWrapperForScriptableKey(SearchKey.SearchKey.SearchKey):
     This SearchKey is a simple wrapper around a ScriptableKey, so such script
     can be used in place of a regular SearchKey.
   """
-  security = ClassSecurityInfo()
   def __init__(self, column, script):
     self.script = script
-    func_code = script.func_code
-    self.buildQuery = self.__buildQueryWithFiveArgumentsAPI if (
-      # 5: search_value (under any name), "search_key", "group",
-      # "logical_operator", "comparison_operator". The last 4 are possible in
-      # any order.
-      func_code.co_argcount == 5 or
-      getattr(func_code, 'co_flags', 0) & CO_VARKEYWORDS
-    ) else self.__buildQueryWithOldAPI
     super(SearchKeyWrapperForScriptableKey, self).__init__(column)
 
-  security.declarePublic('processSearchValue')
-  def processSearchValue(self, *args, **kw):
-    """
-    Expose _processSearchValue to self.script.
-    Only callable from full-API scripts, as others do not get access to our
-    instance.
-    """
-    return self._processSearchValue(*args, **kw)
-
-  def __buildQueryWithFiveArgumentsAPI(self, search_value, group=None,
-                            logical_operator=None, comparison_operator=None):
-    """
-    Becomes buildQuery if self.script supports extra parameters.
-    """
-    assert logical_operator in (None, 'and', 'or'), repr(logical_operator)
-    return self.script(
-      search_value,
-      search_key=self,
-      group=group,
-      logical_operator=logical_operator,
-      comparison_operator=comparison_operator,
-    )
-
-  def __buildQueryWithOldAPI(self, search_value, group=None,
-                             logical_operator=None, comparison_operator=None):
+  def buildQuery(self, search_value, group=None,
+                 logical_operator=None, comparison_operator=None):
     """
     Becomes buildQuery if self.script does not support extra parameters.
     """
@@ -2619,7 +2596,66 @@ class SearchKeyWrapperForScriptableKey(SearchKey.SearchKey.SearchKey):
         'ScriptableKey ignores comparison operators (%r given).' % (comparison_operator, ),
       )
     return self.script(search_value)
-InitializeClass(SearchKeyWrapperForScriptableKey)
+
+class AdvancedSearchKeyWrapperForScriptableKey(SearchKey.DefaultKey.DefaultKey):
+  """
+    Similar to SearchKeyWrapperForScriptableKey, but exposes more of the SearchKey API.
+  """
+  security = ClassSecurityInfo()
+
+  def __init__(self, column, script):
+    self.script = script
+    super(AdvancedSearchKeyWrapperForScriptableKey, self).__init__(column)
+
+  security.declarePublic('processSearchValue')
+  def processSearchValue(
+    self,
+    default_comparison_operator='=',
+    detect_like=False,
+    *args,
+    **kw
+  ):
+    """
+    Expose _processSearchValue to self.script.
+    Only callable from full-API scripts, as others do not get access to our
+    instance.
+    """
+    # Note about patching self: this method is not reentrant, so (un)patching
+    # is fine.
+    if not detect_like:
+      self._guessComparisonOperator = super(
+        # Note: not AdvancedSearchKeyWrapperForScriptableKey, trying to get
+        # above it.
+        SearchKey.DefaultKey.DefaultKey,
+        self,
+      )._guessComparisonOperator
+    # Note: No need to clean this up, it will be overwritten on next call.
+    self.default_comparison_operator = default_comparison_operator
+    try:
+      return self._processSearchValue(*args, **kw)
+    finally:
+      if not detect_like:
+        del self._guessComparisonOperator
+
+  def buildQuery(
+    self,
+    search_value,
+    group=None,
+    logical_operator=None,
+    comparison_operator=None,
+  ):
+    """
+    Becomes buildQuery if self.script supports extra parameters.
+    """
+    assert logical_operator in (None, 'and', 'or'), repr(logical_operator)
+    return self.script(
+      search_value,
+      search_key=self,
+      group=group,
+      logical_operator=logical_operator,
+      comparison_operator=comparison_operator,
+    )
+InitializeClass(AdvancedSearchKeyWrapperForScriptableKey)
 
 from Operator import operator_dict
 def getComparisonOperatorInstance(operator):
