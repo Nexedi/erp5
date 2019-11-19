@@ -465,9 +465,11 @@ def synchronizeDynamicModules(context, force=False):
           assert tool._p_changed
           migrate = True
 
-        if portal.hasObject("portal_properties"):
-          portal._delObject("portal_properties", suppress_events=True)
-          migrate = True
+        for tool_id in ("portal_properties", "portal_uidannotation",
+                        "portal_uidgenerator", "portal_uidhandler"):
+          if portal.hasObject(tool_id):
+            portal._delObject(tool_id, suppress_events=True)
+            migrate = True
 
         if migrate:
           portal.migrateToPortalTypeClass()
