@@ -1,6 +1,6 @@
 /*jslint indent: 2 */
-/*global rJS, RSVP, window, navigator, Cropper, FileReader, Promise, JSON*/
-(function (rJS, RSVP, window, navigator, Cropper, FileReader, Promise, JSON, jIO) {
+/*global rJS, RSVP, window, navigator, Cropper, Promise, JSON, jIO*/
+(function (rJS, RSVP, window, navigator, Cropper, Promise, JSON, jIO) {
   "use strict";
 
   function drawCanvas(gadget, img) {
@@ -22,17 +22,15 @@
     if (gadget.props.cropper) {
       gadget.props.cropper.destroy();
     }
-    gadget.props.cropper = new Cropper(
-      root.querySelector('.photo'), {
-        data: gadget.props.preferred_cropped_canvas_data
-      }
-    );
+    gadget.props.cropper = new Cropper(root.querySelector('.photo'), {
+      data: gadget.props.preferred_cropped_canvas_data
+    });
   }
 
   function takePicture(gadget) {
     var el = gadget.element,
       image_capture = gadget.props.image_capture;
-    return RSVP.Queue()
+    return new RSVP.Queue()
       .push(function () {
         return image_capture.takePhoto({imageWidth: gadget.props.image_width});
       })
@@ -131,7 +129,7 @@
     if (cropper) {
       cropper.destroy();
     }
-    return RSVP.Queue()
+    return new RSVP.Queue()
       .push(function () {
         cropper = new Cropper(
           output,
@@ -158,7 +156,7 @@
     }
 
     function waitForStream() {
-      new RSVP.Queue()
+      return new RSVP.Queue()
         .push(function () {
           return navigator.mediaDevices.getUserMedia({
             video: {
@@ -184,7 +182,7 @@
   }
 
   function gotStream(gadget, mediaStream) {
-    return RSVP.Queue()
+    return new RSVP.Queue()
       .push(function () {
         var image_capture;
         image_capture = new window.ImageCapture(mediaStream.getVideoTracks()[0]);
@@ -224,7 +222,7 @@
         camera_list = [],
         gadget = this;
 
-      return RSVP.Queue()
+      return new RSVP.Queue()
         .push(function () {
           var preferred_cropped_canvas_data = gadget.props.preferred_cropped_canvas_data;
           preferred_cropped_canvas_data = preferred_cropped_canvas_data || JSON.parse(options.preferred_cropped_canvas_data);
@@ -298,7 +296,7 @@
       }
       if (evt.target.className.indexOf("take-picture-btn") !== -1) {
         evt.preventDefault();
-        return RSVP.Queue()
+        return new RSVP.Queue()
           .push(function () {
             disableButton(root);
             root.querySelector(".camera").style.maxWidth = gadget.props.video.offsetWidth + "px";
@@ -326,7 +324,7 @@
             gadget.props.preferred_cropped_canvas_data[e] = new_preferred_cropped_canvas_data[e];
           }
         }
-        return RSVP.Queue()
+        return new RSVP.Queue()
           .push(function () {
             var canvas = gadget.props.cropper.getCroppedCanvas();
             disableButton(gadget.element);
@@ -357,4 +355,4 @@
       }
     }, false, false);
 
-}(rJS, RSVP, window, navigator, Cropper, FileReader, Promise, JSON, jIO));
+}(rJS, RSVP, window, navigator, Cropper, Promise, JSON, jIO));
