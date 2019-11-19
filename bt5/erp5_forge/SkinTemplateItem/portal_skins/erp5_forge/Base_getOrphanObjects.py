@@ -9,7 +9,7 @@ from Products.ERP5Type.Document import newTempBase
 #- 'portal_catalog/erp5_mysql' & 'portal_catalog/cps3_mysql' & 'portal_types/Business Template'
 ##
 
-portals_scanned = ['portal_actions', 'portal_memberdata', 'portal_skins', 'portal_types', 'portal_undo', 'portal_url', 'portal_workflow', 'portal_discussion', 'portal_membership', 'portal_registration', 'portal_properties', 'portal_metadata', 'portal_syndication', 'portal_uidannotation', 'portal_uidgenerator', 'portal_uidhandler', 'portal_report', 'portal_rules', 'portal_ids', 'portal_simulation', 'portal_alarms', 'portal_domains', 'portal_deliveries', 'portal_orders', 'portal_catalog', 'portal_selections', 'portal_synchronizations', 'portal_activities']
+portals_scanned = ['portal_actions', 'portal_memberdata', 'portal_skins', 'portal_types', 'portal_undo', 'portal_url', 'portal_workflow',  'portal_membership', 'portal_registration', 'portal_report', 'portal_rules', 'portal_ids', 'portal_simulation', 'portal_alarms', 'portal_domains', 'portal_deliveries', 'portal_orders', 'portal_catalog', 'portal_selections', 'portal_synchronizations', 'portal_activities']
 orphans_list = []
 if object is None:
   object = context
