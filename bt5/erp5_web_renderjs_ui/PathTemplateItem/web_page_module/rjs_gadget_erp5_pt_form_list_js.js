@@ -155,7 +155,8 @@
         // render the header
         .push(function () {
           var renderHeader;
-          if (form_gadget.state.jio_key.indexOf('/') !== -1) {
+          if ((form_gadget.state.jio_key !== undefined) &&
+              (form_gadget.state.jio_key.indexOf('/') !== -1)) {
             // If form list is used on a non module/tool document, display header
             // list form_view
             renderHeader = renderFormViewHeader;
