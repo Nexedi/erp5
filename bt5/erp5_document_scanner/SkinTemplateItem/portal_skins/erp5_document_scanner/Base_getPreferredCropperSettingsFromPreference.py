@@ -7,7 +7,7 @@ if not active_preference:
   active_preference = portal.portal_preferences.getActivePreference()
 
 canvas_data = active_preference and \
-  json.loads(active_preference.getPreferredCroppedCanvasData()) or {}
+  json.loads(active_preference.getPreferredCroppedCanvasData("{}")) or {}
 
 canvas_data["dialog_method"] = context.Base_storeDocumentFromCameraInActiveProcess.getId()
 
