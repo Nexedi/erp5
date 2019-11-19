@@ -17,8 +17,6 @@ doc = context.Base_contribute(file=file_object,
                               follow_up_list=[context.getRelativeUrl(),],
                               **kw)
 
-publication_state = kw.get("field_your_publication_state")
-
 if publication_state == "shared":
   action_list = ["share",]
 elif publication_state == "released":
