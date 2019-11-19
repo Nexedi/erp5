@@ -28,7 +28,9 @@ active_process = context.Base_postDataToActiveResult(
   active_process_url,
   image_str)
 
+# We need it to fill the form rendered by renderjs
 context.REQUEST.form["your_active_process_url"] = active_process.getRelativeUrl()
+# We remove it to reduce the size of the response
 context.REQUEST.form.pop("field_your_document_scanner_gadget")
 context.REQUEST.form.pop('document_scanner_gadget')
 
