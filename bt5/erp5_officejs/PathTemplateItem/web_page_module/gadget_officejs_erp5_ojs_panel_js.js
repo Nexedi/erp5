@@ -176,7 +176,9 @@
 
           .push(function () {
             context.element.querySelector("div").appendChild(tmp_element);
-            return context.listenResize();
+            if (!modification_dict.view_action_dict) {
+              return context.listenResize();
+            }
           });
       }
 
