@@ -10,7 +10,7 @@ div[data-gadget-scope="field_your_document_scanner_gadget"] {
 .video, .photo, .camera-output {
   max-width: 100%;
   width: auto;
-  max-height: 360px;
+  max-height: 500px;
   filter: brightness(1);
   text-align: center;
 }
@@ -53,10 +53,9 @@ div[data-gadget-scope="field_your_document_scanner_gadget"] {
 
 .reset-btn, .confirm-btn, .edit-btn, .take-picture-btn,
     .capture-btn, .change-camera-btn, .confirm-btn {
+  font-size: 44px;
   color: #212529;
-  padding: 3pt;
-  border: 1px solid rgba(0, 0, 0, 0.14);
-  border-radius: 0.325em;
+  padding: 0 16px 0 16px;
 }
 
 .take-picture-btn, .capture-btn, .confirm-btn,
@@ -73,4 +72,10 @@ div[data-gadget-scope="field_your_document_scanner_gadget"] {
 button:disabled,
 button[disabled]{
   color: #999999;
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    max-height: 360px;
+  }
 }
