@@ -44,40 +44,6 @@
       "https://www.openhub.net/p/xwiki/analyses/latest/languages_summary": 7909332
     };
 
-  // XXX... lord have mercy
-  function mockupQueryParam(param, select_list) {
-    var wild_param = param.replace(/[()]/g, "%").replace(/ /g, ''),
-      return_list = [],
-      len,
-      i;
-    for (i = 0, len = select_list.length; i < len; i += 1) {
-      return_list.push(select_list[i] + ':"' + wild_param + '"');
-    }
-    return ' (' + return_list.join(' OR ') + ')';
-  }
-
-  // XXX... lord, I need more mercy
-  function updateQuery(query, select_list) {
-    var query_param_list = query.split("AND"),
-      param,
-      len,
-      i;
-    for (i = 0, len = query_param_list.length; i < len; i += 1) {
-      param = query_param_list[i];
-
-      // search
-      if (param.split(":").length !== 2) {
-        return query.replace(param, mockupQueryParam(param, select_list));
-      }
-
-      // hide rows
-      if (param.indexOf("catalog.uid") > 0) {
-        return query.replace("catalog.", "");
-      }
-    }
-    return query;
-  }
-
   function getEmptyKpiDict() {
     return {
       "staff": {"value": 0, "entries": 0, "total": 0},
@@ -413,9 +379,6 @@
     })
 
     .declareMethod('allDocs', function (options) {
-      if (options !== undefined) {
-        options.query = updateQuery(options.query, options.select_list);
-      }
       return this.state_parameter_dict.jio_storage.allDocs(options);
     })
     .declareMethod('getAttachment', function (id, view) {
