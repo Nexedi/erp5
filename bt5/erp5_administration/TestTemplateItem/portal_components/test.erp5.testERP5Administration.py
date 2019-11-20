@@ -156,9 +156,24 @@ class TestERP5Administration(InventoryAPITestCase):
       portal_type='Missing Category Document Constraint',
       temp_object=True,
     ).checkConsistency(person)
-    self.assertEquals(
+    self.assertEqual(
       'Category group/not/exist on object %s is missing.' % person.getRelativeUrl(),
       str(consistency_error.getTranslatedMessage()))
+
+  def test_missing_category_document_constraint_acquisition(self):
+    person = self.portal.person_module.newContent(portal_type='Person')
+    # This constraint is not confused by acquisition. group/group could be traversed,
+    # but category API does not use simple traversal
+    person.setCategoryList(['group/level1/test_group'])
+
+    consistency_error, = self.portal.portal_trash.newContent(
+      portal_type='Missing Category Document Constraint',
+      temp_object=True,
+    ).checkConsistency(person)
+    self.assertEqual(
+      'Category group/level1/test_group on object %s is missing.' % person.getRelativeUrl(),
+      str(consistency_error.getTranslatedMessage()))
+
 
 def test_suite():
   suite = unittest.TestSuite()

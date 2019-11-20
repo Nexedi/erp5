@@ -37,7 +37,7 @@ class MissingCategoryDocumentConstraint(ConstraintMixin):
     error_list = []
     category_tool = obj.getPortalObject().portal_categories
     for category in obj.getCategoryList():
-      if category_tool.unrestrictedTraverse(category, None) is None:
+      if category_tool.resolveCategory(category) is None:
         error_list.append(
           self._generateError(
             obj,
