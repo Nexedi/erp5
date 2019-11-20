@@ -257,7 +257,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.restrictedTraverse(\'gadget_document_scanner.html\').absolute_url() + "?v=0.1"</string> </value>
+            <value> <string>string: gadget_document_scanner.html</string> </value>
         </item>
       </dictionary>
     </pickle>
