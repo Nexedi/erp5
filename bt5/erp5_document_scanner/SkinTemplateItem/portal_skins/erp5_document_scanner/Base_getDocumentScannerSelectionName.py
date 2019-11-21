@@ -1,1 +1,1 @@
-return "document_scanner_selection_%s" % context.REQUEST["HTTP_USER_AGENT"]
+return "document_scanner_selection"

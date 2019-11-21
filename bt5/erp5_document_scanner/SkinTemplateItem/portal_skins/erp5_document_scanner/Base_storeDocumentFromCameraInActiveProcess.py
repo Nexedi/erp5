@@ -8,9 +8,16 @@ gadget_data = json.loads(document_scanner_gadget)
 image_str = decodestring(gadget_data.pop("input_value"))
 preferred_cropped_canvas_data = gadget_data["preferred_cropped_canvas_data"] or {}
 
+selection_mapping = portal.portal_selections.getSelectionParamsFor(
+  context.Base_getDocumentScannerSelectionName(),
+  REQUEST=context.REQUEST) or {}
+
+http_user_agent = context.REQUEST["HTTP_USER_AGENT"]
+selection_mapping[http_user_agent] = preferred_cropped_canvas_data
+
 portal.portal_selections.setSelectionParamsFor(
-  context.Base_getDocumentScannerSelectionName(context.REQUEST),
-  preferred_cropped_canvas_data,
+  context.Base_getDocumentScannerSelectionName(),
+  selection_mapping,
   context.REQUEST
 )
 
