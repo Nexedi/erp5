@@ -200,6 +200,7 @@ shared = true
         node_test_suite.revision, test_result.revision)
     updater_kw = dict(git_binary=self.config['git_binary'],
                       process_manager=self.process_manager)
+    updater_list = []
     revision_list = []
     for i, revision in enumerate(test_result.revision.split(',')):
       vcs_repository = node_test_suite.vcs_repository_list[i]
@@ -213,7 +214,12 @@ shared = true
       updater.checkout()
       updater.git_update_server_info()
       updater.git_create_repository_link()
+      updater_list.append(updater)
     node_test_suite.revision_list = revision_list
+    def git_gc_auto():
+      for updater in updater_list:
+        updater.git_gc_auto()
+    return git_gc_auto
 
   def _cleanupLog(self):
     log_directory = self.config['log_directory']
@@ -340,7 +346,7 @@ shared = true
             with self.suiteLog(node_test_suite) as suite_log_folder_name:
               test_result.reportStatus('LOG url', "%s/%s" % (
                 config.get('httpd_url'), suite_log_folder_name), '')
-              self.checkRevision(test_result,node_test_suite)
+              git_gc_auto = self.checkRevision(test_result, node_test_suite)
               node_test_suite.edit(test_result=test_result)
               # get cluster configuration for this test suite, this is needed to
               # know slapos parameters to user for creating instances
@@ -355,6 +361,10 @@ shared = true
               self.constructProfile(node_test_suite, my_test_type,
                                     runner.getRelativePathUsage())
               status_dict = runner.prepareSlapOSForTestSuite(node_test_suite)
+              # SR built successfully. Any cloned repository (with --shared)
+              # should be at the same revision, so it is safe to prune orphan
+              # objects now.
+              git_gc_auto()
               # Give some time so computer partitions may start
               # as partitions can be of any kind we have and likely will never have
               # a reliable way to check if they are up or not ...

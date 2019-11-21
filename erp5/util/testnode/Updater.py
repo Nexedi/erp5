@@ -103,7 +103,7 @@ class Updater(object):
     return self._git('update-server-info', '-f')
 
   def git_create_repository_link(self):
-    """ Create a link in depository to the ".git" directory.
+    """ Create a link in repository to the ".git" directory.
         ex:
         for "../erp5/.git"
         "../erp5/erp5.git"->"../erp5/.git" will be created.
@@ -122,7 +122,10 @@ class Updater(object):
       except OSError:
         logger.error("Cannot create link from %s -> %s",
           git_repository_link_path, git_repository_path)
-  
+
+  def git_gc_auto(self):
+    self._git("gc", "--auto")
+
   def _git_find_rev(self, ref):
     try:
       return self._git_cache[ref]
@@ -168,9 +171,12 @@ class Updater(object):
       if not os.path.exists(self.repository_path):
         parameter_list = ['clone', self.url]
         if self.branch is not None:
-          parameter_list.extend(['-b', self.branch])
+          parameter_list += '-b', self.branch
         parameter_list.append(self.repository_path)
         self._git(*parameter_list, cwd=self.working_directory)
+        # Disable automatic GC because we're usually cloned in shared mode.
+        # We call 'gc auto' explicitly, when it's safe.
+        self._git("config", "gc.auto" , "0")
 
   def checkout(self, *path_list):
     self.checkRepository()
