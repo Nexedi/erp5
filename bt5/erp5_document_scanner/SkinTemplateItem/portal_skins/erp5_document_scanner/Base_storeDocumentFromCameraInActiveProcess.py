@@ -9,7 +9,7 @@ image_str = decodestring(gadget_data.pop("input_value"))
 preferred_cropped_canvas_data = gadget_data["preferred_cropped_canvas_data"] or {}
 
 portal.portal_selections.setSelectionParamsFor(
-  context.Base_getDocumentScannerSelectionName(),
+  context.Base_getDocumentScannerSelectionName(context.REQUEST),
   preferred_cropped_canvas_data,
   context.REQUEST
 )
