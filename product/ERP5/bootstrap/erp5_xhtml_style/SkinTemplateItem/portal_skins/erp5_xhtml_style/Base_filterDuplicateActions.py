@@ -10,6 +10,10 @@ def filterDuplicateActions(actions):
   new_actions = {}
 
   for action_category, action_list in actions.items():
+    if action_category == 'object_view':
+      action_category = 'couscous'
+    elif action_category == 'object_onlyxhtml_view':
+      action_category = 'object_view'
     existing_actions = set()
     new_actions[action_category] = []
     keep_action = new_actions[action_category].append
