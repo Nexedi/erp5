@@ -224,7 +224,7 @@
       return this.getTranslationList(["Webcam is not available", "Reset", "Take Picture", "Confirm", "Edit", "Change Camera"])
         .push(function (result_list) {
           var i,
-              button_list = root.querySelectorAll("button");
+            button_list = root.querySelectorAll("button");
           for (i = 0; i < button_list.length; i += 1) {
             button_list[i].innerText = " " + result_list[i + 1];
           }
