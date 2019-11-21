@@ -228,7 +228,7 @@
           var i,
               button_list = root.querySelectorAll("button");
           for (i = 0; i < button_list.length; i += 1) {
-            button_list[i].innerText = result_list[i + 1];
+            button_list[i].innerText = " " + result_list[i + 1];
           }
           root.querySelector("video").innerText = result_list[0];
         })
