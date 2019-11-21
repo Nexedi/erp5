@@ -170,13 +170,14 @@ class ERP5ScalabilityDistributor(ERP5ProjectUnitTestDistributor, object):
          revision, test_name_list, allow_restart,
          test_title=test_title, node_title=node_title,
          project_title=project_title)
-    # set int_index which is used for sorting to the title of the test case
-    # in created_test_result_tuple we have test result relative url and revision
-    test_result = portal.restrictedTraverse(created_test_result_tuple[0])
-    for test_result_line in test_result.objectValues(portal_type = "Test Result Line"):
-      test_result_line.setIntIndex(int(test_result_line.getTitle()))
+    if created_test_result_tuple is not None:
+      # set int_index which is used for sorting to the title of the test case
+      # in created_test_result_tuple we have test result relative url and revision
+      test_result = portal.restrictedTraverse(created_test_result_tuple[0])
+      for test_result_line in test_result.objectValues(portal_type = "Test Result Line"):
+        test_result_line.setIntIndex(int(test_result_line.getTitle()))
 
-    return created_test_result_tuple
+      return created_test_result_tuple
 
   security.declarePublic("startTestSuite")
   def startTestSuite(self,title, computer_guid='unknown', batch_mode=0):
