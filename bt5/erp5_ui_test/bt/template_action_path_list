@@ -41,6 +41,7 @@ Foo | view_hidden_positive_only_quantity
 Foo | view_listbox
 Foo | view_multiple_listbox
 Foo | view_onlyjio
+Foo | view_onlyxhtml
 Foo | view_planning
 Foo | view_print_dialog
 Foo | view_printout_form
