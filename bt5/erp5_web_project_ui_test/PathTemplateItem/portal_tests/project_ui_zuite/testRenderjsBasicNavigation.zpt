@@ -26,7 +26,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/portal_skins/erp5_web_project_test/gadget_create_project/</td>
+  <td>${base_url}/portal_skins/erp5_web_project_test/Base_createStartedProject/</td>
   <td></td>
 </tr>
 <tr>
