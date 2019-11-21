@@ -1,6 +1,3 @@
-from Products.ERP5Type.Log import log
-request = context.REQUEST
-
 if url_dict:
   jio_key = context.getRelativeUrl()
   return {
