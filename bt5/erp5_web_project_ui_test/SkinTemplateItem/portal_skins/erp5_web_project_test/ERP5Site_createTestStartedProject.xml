@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_createStartedProject</string> </value>
+            <value> <string>ERP5Site_createTestStartedProject</string> </value>
         </item>
       </dictionary>
     </pickle>
