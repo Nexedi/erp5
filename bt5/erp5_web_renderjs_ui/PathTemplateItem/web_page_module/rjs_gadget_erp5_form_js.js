@@ -31,7 +31,7 @@
     suboptions = {
       hide_enabled: form_definition.hide_enabled, // listbox specific
       configure_enabled: form_definition.configure_enabled, // listbox specific
-      extended_search: form_definition.extended_search, // searchfield specific
+      extended_search: ((group_name === "bottom") && (form_definition.extended_search)), // searchfield specific
       field_type: rendered_document[field_name].type,
       label: ((group_name !== "bottom") && (rendered_document[field_name].title.length > 0)), // no label for bottom group and field without title
       field_json: rendered_document[field_name] // pass
