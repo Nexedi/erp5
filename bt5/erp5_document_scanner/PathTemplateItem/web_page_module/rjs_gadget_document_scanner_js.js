@@ -43,8 +43,6 @@
           data_str = result.target.result;
 
         photo.setAttribute("src", data_str);
-        photo.setAttribute("width", gadget.props.image_width);
-        photo.setAttribute("height", gadget.props.image_height);
         photoInput.setAttribute("value", data_str.split(",")[1]);
         return drawCanvas(gadget, photo);
       });
