@@ -1,4 +1,3 @@
-from zExceptions import Unauthorized
 import json
 
 absolute_url = context.absolute_url()

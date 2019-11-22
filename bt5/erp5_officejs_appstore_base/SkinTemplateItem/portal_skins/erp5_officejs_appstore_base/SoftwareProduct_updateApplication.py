@@ -38,7 +38,7 @@ software_release = portal.software_release_module.newContent(
 )
 
 # Create Software Publication Line
-software_publication_line = software_publication.newContent(
+software_publication.newContent(
   portal_type="Software Publication Line",
   title=software_publication.getTitle() + " Publication",
   aggregate_list=[software_release.getRelativeUrl(), software_product.getSaleSupplyLineAggregate()],
@@ -46,7 +46,7 @@ software_publication_line = software_publication.newContent(
   activate_kw={"tag": tag}
 )
 
-zip_file = software_publication.Base_contribute(
+software_publication.Base_contribute(
   file=file,
   attach_document_to_context=True,
   portal_type="File",

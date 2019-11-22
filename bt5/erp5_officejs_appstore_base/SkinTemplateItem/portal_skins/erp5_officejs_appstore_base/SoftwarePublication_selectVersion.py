@@ -1,6 +1,3 @@
-REQUEST = context.REQUEST
-RESPONSE = REQUEST.RESPONSE
-
 software_release = context.SoftwarePublication_getRelatedSoftwareRelease()
 software_release.SoftwareRelease_publishRelatedWebDocument()
 message = context.getTitle() + " Published"
