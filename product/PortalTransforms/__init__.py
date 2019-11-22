@@ -1,4 +1,4 @@
-from Products.PortalTransforms.TransformEngine import TransformTool
+from Products.PortalTransforms.Tool.TransformTool import TransformTool
 
 PKG_NAME = 'PortalTransforms'
 

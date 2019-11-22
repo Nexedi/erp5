@@ -1,5 +1,0 @@
-## Testing Markdown 
-
-`code` and _italic_ and *bold* and even a [link](http://plone.org).
-
-Fööbär
