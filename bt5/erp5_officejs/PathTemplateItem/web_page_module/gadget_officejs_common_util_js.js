@@ -128,70 +128,57 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    .declareMethod("getViewAndActionDict", function (portal_type, jio_key) {
+    .declareMethod("getViewAndActionDict", function (portal_type, app_view,
+      default_view, app_actions_string, jio_key) {
       var gadget = this,
         action_info_dict = {view_list: {}, action_list: {}},
         query = buildSearchQuery(portal_type),
         app_actions,
-        app_view,
-        default_view;
-      return gadget.getSettingList(['app_view_reference',
-                                    'default_view_reference',
-                                    'app_actions'])
-        .push(function (result_list) {
-          app_view = result_list[0];
-          default_view = result_list[1];
-          return formatSettingList(result_list[2], portal_type);
+        app_actions_result = formatSettingList(app_actions_string, portal_type);
+      app_actions = app_actions_result.map(function (pair) {
+        return pair[1];
+      });
+      return gadget.jio_allDocs({query: query})
+        .push(function (action_list) {
+          var path_for_jio_get_list = [], row;
+          for (row in action_list.data.rows) {
+            if (action_list.data.rows.hasOwnProperty(row)) {
+              path_for_jio_get_list.push(gadget.jio_get(action_list
+                                                        .data.rows[row].id));
+            }
+          }
+          return RSVP.all(path_for_jio_get_list);
         })
-        .push(function (app_actions_result) {
-          app_actions = app_actions_result.map(function (pair) {
-            return pair[1];
-          });
-          return gadget.jio_allDocs({query: query})
-            .push(function (action_list) {
-              var path_for_jio_get_list = [], row;
-              for (row in action_list.data.rows) {
-                if (action_list.data.rows.hasOwnProperty(row)) {
-                  path_for_jio_get_list.push(gadget.jio_get(action_list
-                                                            .data.rows[row]
-                                                            .id));
+        .push(function (action_document_list) {
+          var action_key, action_doc, action_settings;
+          for (action_key in action_document_list) {
+            if (action_document_list.hasOwnProperty(action_key)) {
+              action_doc = action_document_list[action_key];
+              if (app_actions.includes(action_doc.reference)) {
+                action_settings = {
+                  page: undefined,
+                  jio_key: jio_key,
+                  title: action_doc.title,
+                  action: action_doc.reference,
+                  reference: action_doc.reference,
+                  action_type: action_doc.action_type,
+                  parent_portal_type: portal_type
+                };
+                if (view_categorie_list.includes(action_settings.action_type)) {
+                  action_settings.page = "ojs_local_controller";
+                  action_info_dict.view_list[action_settings.action] =
+                    action_settings;
+                } else {
+                  action_settings.page = "handle_action";
+                  action_info_dict.action_list[action_settings.action] =
+                    action_settings;
                 }
               }
-              return RSVP.all(path_for_jio_get_list);
-            })
-            .push(function (action_document_list) {
-              var action_key, action_doc, action_settings;
-              for (action_key in action_document_list) {
-                if (action_document_list.hasOwnProperty(action_key)) {
-                  action_doc = action_document_list[action_key];
-                  if (app_actions.includes(action_doc.reference)) {
-                    action_settings = {
-                      page: undefined,
-                      jio_key: jio_key,
-                      title: action_doc.title,
-                      action: action_doc.reference,
-                      reference: action_doc.reference,
-                      action_type: action_doc.action_type,
-                      parent_portal_type: portal_type
-                    };
-                    if (view_categorie_list.includes(action_settings
-                                                     .action_type)) {
-                      action_settings.page = "ojs_local_controller";
-                      action_info_dict.view_list[action_settings.action] =
-                        action_settings;
-                    } else {
-                      action_settings.page = "handle_action";
-                      action_info_dict.action_list[action_settings.action] =
-                        action_settings;
-                    }
-                  }
-                }
-              }
-              action_info_dict.view_list =
-                filterViewList(action_info_dict.view_list,
-                               app_view, default_view);
-              return action_info_dict;
-            });
+            }
+          }
+          action_info_dict.view_list =
+            filterViewList(action_info_dict.view_list, app_view, default_view);
+          return action_info_dict;
         });
     })
 
@@ -234,13 +221,22 @@
         form_definition,
         portal_skin_folder,
         app_allowed_sub_types,
+        app_view,
+        default_view,
+        app_actions_string,
         form_info,
         error;
       return gadget.getSettingList([portal_type_dict_setting,
                                     'portal_skin_folder',
-                                    'app_allowed_sub_types'])
+                                    'app_allowed_sub_types',
+                                    'app_view_reference',
+                                    'default_view_reference',
+                                    'app_actions'])
         .push(function (result_list) {
           app_allowed_sub_types = result_list[2];
+          app_view = result_list[3];
+          default_view = result_list[4];
+          app_actions_string = result_list[5];
           if (!result_list[1]) {
             throw new Error("Missing site configuration 'portal_skin_folder'");
           }
@@ -312,7 +308,8 @@
             .new_content_dialog_form;
           form_definition.new_content_category = portal_type_dict
             .new_content_category;
-          return gadget.getViewAndActionDict(portal_type);
+          return gadget.getViewAndActionDict(portal_type, app_view,
+                                             default_view, app_actions_string);
         })
         .push(function (action_view_dict) {
           form_definition.portal_type_dict.has_more_views =
