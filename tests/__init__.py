@@ -209,8 +209,11 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
   def getTestList(self):
     test_list = []
     for business_template_path in (
-            glob('%s/../bt5/*' % HERE)
-            + glob('%s/../product/ERP5/bootstrap/*' % HERE)):
+        glob('%s/bt5/erp5_*hal*' % HERE) +
+        glob('%s/bt5/erp5_*renderjs*' % HERE) +
+        glob('%s/bt5/erp5_*officejs*' % HERE) +
+        []
+      ):
       # we skip coding style check for business templates having this marker
       # property. Since the property is not exported (on purpose), modified business templates
       # will be candidate for coding style test again.
