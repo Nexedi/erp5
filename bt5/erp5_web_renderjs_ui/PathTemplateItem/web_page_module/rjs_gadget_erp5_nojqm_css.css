@@ -1338,6 +1338,7 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value {
 div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
+  background-color: #FFFFFF;
   margin-right: 6pt;
   max-width: 6em;
   white-space: nowrap;
@@ -1373,6 +1374,7 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
   padding: 3pt;
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
+  background-color: #FFFFFF;
   margin-right: 6pt;
 }
 .document_table .ui-table-header button:last-of-type {
@@ -1540,6 +1542,7 @@ div.invisible_header .document_table .ui-table-header {
   padding: 6pt;
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
+  background-color: #FFFFFF;
   margin-right: 6pt;
 }
 .document_table nav a::before {
@@ -1765,6 +1768,7 @@ div[data-gadget-scope='maximize'] button {
   padding: 6pt;
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
+  background-color: #FFFFFF;
 }
 div[data-gadget-scope='maximize'] button::before {
   margin-right: 6pt;
