@@ -76,7 +76,7 @@
               splitted_current_jio_key_list,
               command,
               i;
-            if (is_updating || !result.jio_key) {
+            if (is_updating || !result || !result.jio_key) {
               return;
             }
             if (gadget.state.redirect_to_parent) {
