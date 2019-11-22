@@ -247,8 +247,6 @@ spp = context.getPhysicalPath()
 spp =list(spp)
 s_url = request["SERVER_URL"]
 spp.insert(0,s_url)
-#calculate direct the url instead of using absolute_url
-new_url = '/'.join(spp)
 
 # for web mode, we should use 'view' instead of passed form_id
 # after 'Save & View'.
