@@ -1013,7 +1013,9 @@ div[data-gadget-scope='header'] .ui-header ul {
   border-radius: 0.325em;
   border-width: 1px;
   border-style: solid;
+  border-color: #FF6600;
   min-width: 8em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 .gadget-content input[type='submit']:hover,
@@ -1032,7 +1034,9 @@ div[data-gadget-scope='header'] .ui-header ul {
   border-radius: 0.325em;
   border-width: 1px;
   border-style: solid;
+  border-color: #767676;
   min-width: 8em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 .gadget-content button[name='action_update']:hover,
 .gadget-content button[name='action_update']:focus {
