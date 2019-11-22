@@ -1,5 +1,5 @@
 alpha = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-new_password = ''.join([random.choice(alpha) for i in range(10)])
+new_password = ''.join(map(lambda x: random.choice(alpha), range(10)))
 
 person_module = context.getPortalObject().person_module
 user_id = "user_a_test"

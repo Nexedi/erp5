@@ -2,7 +2,6 @@ from Acquisition import aq_self, aq_base, aq_inner
 from Products.ERP5Type.Utils import UpperCase
 from ZODB.POSException import ConflictError
 from AccessControl import Unauthorized
-from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 
 
 def Base_aqSelf(self):
@@ -68,7 +67,7 @@ def Listbox_getBrainValue(self, brain, obj, select, can_check_local_property, ed
         default_field_value = default_field_value()
     except (ConflictError, RuntimeError):
       raise
-    except:
+    except Exception:
       default_field_value = None
 
   # Listbox.py forces result to be an empty string

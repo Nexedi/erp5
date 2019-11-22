@@ -57,10 +57,8 @@ import time
 from email.Utils import formatdate
 import re
 from zExceptions import Unauthorized
-from Products.ERP5Type.Log import log, DEBUG, INFO, WARNING, ERROR
+from Products.ERP5Type.Log import log, WARNING, ERROR
 from Products.ERP5Type.Message import Message
-from Products.ERP5Type.Utils import UpperCase
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from collections import OrderedDict
 from Products.ERP5Form.Selection import Selection
 
@@ -77,12 +75,6 @@ if response is None:
   response = REQUEST.RESPONSE
 
 
-def isFieldType(field, type_name):
-  if field.meta_type == 'ProxyField':
-    field = field.getRecursiveTemplateField()
-  return field.meta_type == type_name
-
-
 def toBasicTypes(obj):
   """Ensure that  obj contains only basic types."""
   if obj is None:
@@ -97,7 +89,7 @@ def toBasicTypes(obj):
     return obj.translate()
   try:
     return {toBasicTypes(key): toBasicTypes(obj[key]) for key in obj}
-  except:
+  except Exception:
     log('Cannot convert {!s} to basic types {!s}'.format(type(obj), obj), level=100)
   return obj
 
@@ -940,7 +932,6 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       proxy_form_id_list = [('Base_viewRelatedObjectListBase/listbox', 'default')]
 
     # Create the possible choices
-    root_url = site_root.absolute_url()
     renderHiddenField(response_dict, "proxy_form_id_list", '')
     response_dict["proxy_form_id_list"].update({
       "items": [(Base_translateString(y), url_template_dict['traverse_generator_action'] % {
@@ -1403,7 +1394,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           'href': '%s' % view_action['url'],
           'name': view_action['id'],
           'icon': view_action['icon'],
-          'title': Base_translateString(view_action['title'])
+          'title': Base_translateString(view_action['title']),
         })
 
         global_action_type = ("view", "workflow", "object_new_content_action",
@@ -1549,7 +1540,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         }
 
       elif relative_url == 'portal_preferences':
-        preference_tool = portal.portal_preferences
         preference = traversed_document.getActiveUserPreference()
         if preference:
           result_dict['_links']['active_preference'] = {
@@ -2019,7 +2009,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 )
               except (ConflictError, RuntimeError):
                 raise
-              except:
+              except Exception:
                 log('could not evaluate the url method getListItemUrlDict with %r' % brain,
                     level=800)
 
