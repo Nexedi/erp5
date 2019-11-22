@@ -155,16 +155,6 @@
   <td>30000</td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@class="photoInput"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertValue</td>
-  <td>//input[@class="photoInput"]</td>
-  <td></td>
-</tr>
-<tr>
   <td>click</td>
   <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
   <td></td>
@@ -185,24 +175,9 @@
   <td>30000</td>
 </tr>
 <tr>
-  <td>waitForCondition</td>
-  <td>selenium.browserbot.getCurrentWindow().document.querySelector(".photoInput").value == ""</td>
-  <td>30000</td>
-</tr>
-<tr>
-  <td>assertValue</td>
-  <td>//input[@class="photoInput"]</td>
-  <td></td>
-</tr>
-<tr>
   <td>click</td>
   <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
   <td></td>
-</tr>
-<tr>
-  <td>waitForCondition</td>
-  <td>selenium.browserbot.getCurrentWindow().document.querySelector(".photoInput").value != ""</td>
-  <td>30000</td>
 </tr>
 <tr>
   <td>waitForCondition</td>
@@ -213,11 +188,6 @@
   <td>click</td>
   <td>//button[@class="confirm-btn ui-btn-icon-left ui-icon-check"]</td>
   <td></td>
-</tr>
-<tr>
-  <td>waitForCondition</td>
-  <td>selenium.browserbot.getCurrentWindow().document.querySelector(".photoInput").value == ""</td>
-  <td>30000</td>
 </tr>
 <tr>
   <td>waitForCondition</td>
