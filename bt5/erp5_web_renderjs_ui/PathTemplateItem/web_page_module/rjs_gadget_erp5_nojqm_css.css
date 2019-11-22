@@ -732,6 +732,7 @@ div[data-gadget-scope='header'] .ui-header {
   flex-flow: row wrap;
   width: 100%;
   color: #FFFFFF;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   background-color: #0E81C2;
 }
 @media not screen and (max-width: 85em) {
@@ -743,6 +744,7 @@ div[data-gadget-scope='header'] .ui-header {
 div[data-gadget-scope='header'] .ui-header button,
 div[data-gadget-scope='header'] .ui-header a {
   color: #FFFFFF;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   transition: background-color 0.2s ease-out;
 }
 div[data-gadget-scope='header'] .ui-header button:hover,
@@ -1194,6 +1196,7 @@ div[data-gadget-scope='header'] .ui-header ul {
   .gadget-content form .ui-field-contain > span {
     background-color: #FF6600;
     color: #f8fff3;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     left: 25%;
     position: absolute;
     bottom: 110%;
@@ -1614,6 +1617,7 @@ div[data-gadget-scope='notification'] button {
   width: 180pt;
   padding: 12pt;
   color: #f8fff3;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   border-radius: 0.325em;
 }
 div[data-gadget-scope='notification'] button.success {
