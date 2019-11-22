@@ -75,6 +75,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("getSettingList", "getSettingList")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -83,7 +84,8 @@
     .declareMethod("render", function (options) {
       var gadget = this,
         portal_type,
-        document_title;
+        document_title,
+        gadget_utils;
       return gadget.jio_get(options.jio_key)
         .push(function (document) {
           document_title = document.title;
@@ -96,11 +98,17 @@
           portal_type = result;
           return gadget.declareGadget("gadget_officejs_common_util.html");
         })
-        .push(function (gadget_utils) {
+        .push(function (result) {
+          gadget_utils = result;
+          return gadget.getSettingList(['app_view_reference',
+                                        'default_view_reference',
+                                        'app_actions']);
+        })
+        .push(function (setting_list) {
           // TODO views are also listed here
           // should views be handled in another gadget like "..tab_office.js" ?
-          return gadget_utils.getViewAndActionDict(portal_type,
-                                                   options.jio_key);
+          return gadget_utils.getViewAndActionDict(portal_type, setting_list[0],
+            setting_list[1], setting_list[2], options.jio_key);
         })
         .push(function (action_info_dict) {
           return RSVP.all([
