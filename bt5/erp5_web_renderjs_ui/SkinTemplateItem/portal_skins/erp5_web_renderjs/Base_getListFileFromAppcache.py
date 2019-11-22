@@ -1,21 +1,20 @@
-appcache_file = context.getLayoutProperty("configuration_manifest_url", default="gadget_erp5.appcache")
+appcache_reference = context.getLayoutProperty("configuration_manifest_url", default="gadget_erp5.appcache")
 
+text_content = context.getPortalObject().portal_catalog.getResultValue(
+  portal_type='Web Manifest',
+  reference=appcache_reference).getTextContent()
 
-text_content = context.web_page_module.searchFolder(
-  portal_type= 'Web Manifest',
-  reference = appcache_file)[0].getTextContent()
-
-translation_data_file = []
-file_list = []
-for file in text_content.split('\n'):
-  file = file.split('/')[-1]
-  if file.endswith('.html'):
-    file_list.append(file)
+translation_data_url_list = []
+url_list = []
+for text_line in text_content.split('\n'):
+  text_line = text_line.split('/')[-1]
+  if text_line.endswith('.html'):
+    url_list.append(text_line)
     continue
 
-  if file.endswith('.js') and not only_html:
-    if file.endswith('translation_data.js'):
-      translation_data_file = [file]
+  if text_line.endswith('.js') and not only_html:
+    if text_line.endswith('translation_data.js'):
+      translation_data_url_list = [text_line]
       continue
-    file_list.append(file)
-return translation_data_file + file_list
+    url_list.append(text_line)
+return translation_data_url_list + url_list

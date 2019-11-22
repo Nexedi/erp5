@@ -89,6 +89,6 @@ else:
     background-attachment: fixed;
     background-image: url("%s");
   }
-  """ % wallpaper_url);
+  """ % wallpaper_url)
 
 return view_as_web_method(mapping_dict=mapping_dict)
