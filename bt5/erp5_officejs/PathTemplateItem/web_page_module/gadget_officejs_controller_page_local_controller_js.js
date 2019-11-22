@@ -27,6 +27,8 @@
         jio_document,
         portal_type,
         parent_portal_type,
+        default_view,
+        app_action_list,
         form_definition,
         current_version,
         index;
@@ -36,10 +38,14 @@
       current_version = current_version.substr(index);
       return gadget.getSettingList(["migration_version",
                                     "app_view_reference",
-                                    "parent_portal_type"])
+                                    "parent_portal_type",
+                                    'default_view_reference',
+                                    'app_actions'])
         .push(function (setting_list) {
           app_view = options.action || setting_list[1];
           parent_portal_type = setting_list[2];
+          default_view = setting_list[3];
+          app_action_list = setting_list[4];
           if (setting_list[0] !== current_version) {
             //if app version has changed, force storage selection
             return gadget.redirect({
@@ -82,8 +88,9 @@
         })
         .push(function (result) {
           form_definition = result;
-          return gadget_util.getViewAndActionDict(portal_type,
-                                                   options.jio_key);
+          return gadget_util.getViewAndActionDict(portal_type, app_view,
+                                                  default_view, app_action_list,
+                                                  options.jio_key);
         })
         .push(function (view_action_dict) {
           return gadget.changeState({
