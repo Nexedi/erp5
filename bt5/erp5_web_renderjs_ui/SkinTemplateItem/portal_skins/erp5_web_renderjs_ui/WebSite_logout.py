@@ -1,7 +1,6 @@
 """
   Default logout handler, overwritten to give website specific portal status message.
 """
-website = context.getWebSiteValue()
 REQUEST = context.REQUEST
 if REQUEST.has_key('portal_skin'):
   context.portal_skins.clearSkinCookie()
