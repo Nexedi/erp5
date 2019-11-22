@@ -5816,8 +5816,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # could be moved to Products.ERP5.Base.Base
       try:
         from erp5.component.module.WorkingCopy import NotAWorkingCopyError
+      except ImportError:
+        return False
+      try:
         return self.getVcsTool().reference in vcs
-      except (ImportError, NotAWorkingCopyError):
+      except NotAWorkingCopyError:
         return None in vcs
 
     security.declareProtected(Permissions.ManagePortal, 'export')
