@@ -1109,6 +1109,7 @@ div[data-gadget-scope='header'] .ui-header ul {
   border-style: solid;
   border-bottom-style: none;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  background-color: #FFFFFF;
 }
 .gadget-content ul.document-listview li:not(.ui-li-has-count) a:after {
   font-family: FontAwesome;
@@ -1439,6 +1440,7 @@ div.invisible_header .document_table .ui-table-header {
 }
 .document_table table tbody {
   animation: fadein 0.2s ease-out;
+  background-color: #FFFFFF;
 }
 .document_table table tbody tr:nth-child(even) {
   background-color: rgba(230, 230, 230, 0.65);
@@ -1803,6 +1805,7 @@ div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li {
   border: 1px solid rgba(0, 0, 0, 0.3);
   border-radius: 0.325em;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
+  background-color: #FFFFFF;
 }
 @media not screen and (min-width: 45em) {
   div[data-gadget-url$="gadget_erp5_page_front.html"] > ul > li {
