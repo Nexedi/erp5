@@ -1161,7 +1161,7 @@ div[data-gadget-scope='header'] .ui-header ul {
   }
 }
 .gadget-content .ui-field-contain > label {
-  color: #767676;
+  color: hsl(0, 0%, 42%);
 }
 .gadget-content .required > .ui-field-contain > label {
   font-weight: bold;
@@ -1357,7 +1357,7 @@ div[data-gadget-scope='erp5_searchfield'] div.search_parsed_value button {
   }
 }
 .document_table .ui-table-header h1 {
-  color: #767676;
+  color: hsl(0, 0%, 42%);
   flex: 2;
   align-self: flex-end;
 }
@@ -1512,7 +1512,7 @@ div.invisible_header .document_table .ui-table-header {
   .document_table table tbody tr td:first-child ~ td label,
   .document_table table tbody tr th:first-child ~ td label {
     pointer-events: none;
-    color: #767676;
+    color: hsl(0, 0%, 42%);
   }
   .document_table table tbody tr td:first-child ~ th:not(:last-child) a:not(:empty):after,
   .document_table table tbody tr th:first-child ~ th:not(:last-child) a:not(:empty):after,

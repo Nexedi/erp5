@@ -19,6 +19,7 @@
 // Foreground color to single-out items of interest
 @coloraccent: @txtorange;
 @colorlink: @txtblue;
+@colorlabel: hsl(0, 0%, 42%);
 
 @colortextboxforeground: @colorforeground;
 @colortextboxplaceholder: @txtsubgrey;
@@ -1342,7 +1343,7 @@ div[data-gadget-scope='header'] .ui-header {
   //Label
   .ui-field-contain {
     & > label {
-      color: @grey;
+      color: @colorlabel;
 
     }
   }
@@ -1596,7 +1597,7 @@ div[data-gadget-scope='erp5_searchfield'] {
 
     h1 {
       // XXX TODO Same color than label
-      color: @grey;
+      color: @colorlabel;
       flex: 2;
       align-self: flex-end;
 
@@ -1769,7 +1770,7 @@ div[data-gadget-scope='erp5_searchfield'] {
                 a, label {
                   pointer-events: none;
                   // Add contrast with the first column content
-                  color: @grey;
+                  color: @colorlabel;
                 }
 
                 &:not(:last-child) {
