@@ -23,7 +23,7 @@
 
 @colortextboxforeground: @colorforeground;
 @colortextboxplaceholder: @txtsubgrey;
-@colortextboxbackground: @colorbackground;
+@colortextboxbackground: #FFFFEE;
 
 @colorheaderbackground: #085078;
 @colorsubheaderbackground: #0E81C2;
