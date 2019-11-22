@@ -1186,6 +1186,7 @@ div[data-gadget-scope='header'] .ui-header {
   // Dialog page template main submit button 
   input[type='submit'] {
     .renderPageSubmitButton(@coloraccent);
+    text-shadow: @foreground-text-shadow;
   }
   // Dialog page template update button 
   button[name='action_update'] {

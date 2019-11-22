@@ -1014,6 +1014,7 @@ div[data-gadget-scope='header'] .ui-header ul {
   border-width: 1px;
   border-style: solid;
   min-width: 8em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 .gadget-content input[type='submit']:hover,
 .gadget-content input[type='submit']:focus {
