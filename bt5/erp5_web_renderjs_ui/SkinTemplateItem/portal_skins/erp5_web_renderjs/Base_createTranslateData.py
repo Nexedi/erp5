@@ -3,14 +3,9 @@ import json
 
 portal = context.getPortalObject()
 
-
-
 Base_translateString = context.Base_translateString
 #(data-i18n)=["']{{((?:.(?!["']?(?:\S+)=|[>"']))+.)}}["']
 attribute_filter_re = re.compile(r"""(data-i18n)=["']?((?:.(?!["']?\s+(?:\S+)=|[>"']))+.)["']?""")
-
-tmp_re = re.compile(r"""/[{}]/g, """"")
-
 
 translate_word = []
 
