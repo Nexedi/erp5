@@ -131,8 +131,8 @@
             {
               provideDocumentFormattingEdits(model, options, token) {
                 const text = prettier.format(model.getValue(), {
-                  parser: 'babylon',
-                  plugins: [prettierPlugins.babylon],
+                  parser: 'babel',
+                  plugins: [prettierPlugins.babel],
                   // see http://json.schemastore.org/prettierrc for supported options.
                   singleQuote: true,
                   tabWidth: 2
