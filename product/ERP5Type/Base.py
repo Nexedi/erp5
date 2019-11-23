@@ -3223,7 +3223,7 @@ class Base( CopyContainer,
           return min(history[0]['time']
             for history in history_list.itervalues()
             if history)
-        except ValueError:
+        except (KeyError, ValueError):
           pass
     if getattr(aq_base(self), 'creation_date', None):
       return self.creation_date.toZone(DateTime().timezone())

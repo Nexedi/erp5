@@ -28,6 +28,7 @@
 ##############################################################################
 
 from DateTime import DateTime
+from io import BytesIO
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet
@@ -102,6 +103,8 @@ class File(Document, OFS_File):
     """
     if 'file' in kw:
       file_object = kw.pop('file')
+      if type(file_object) is bytes:
+        file_object = BytesIO(file_object)
       filename = getattr(file_object, 'filename', None)
       # if file field is empty(no file is uploaded),
       # filename is empty string.
