@@ -17,6 +17,8 @@ Save, download or return generated PDF Document
 # doc_pdf_file                        pdf content to store
 # doc_aggregate_list                  not applicable (only used for events)
 
+from io import BytesIO
+
 if doc_save:
   dms_module = getattr(context, 'document_module', None)
   if dms_module is not None:
@@ -31,7 +33,7 @@ if doc_save:
     )
     document.edit(
       source_reference=''.join([doc_reference, '.pdf']),
-      file=doc_pdf_file
+      file=BytesIO(doc_pdf_file)
     )
     document.setContentType("application/pdf")
 
