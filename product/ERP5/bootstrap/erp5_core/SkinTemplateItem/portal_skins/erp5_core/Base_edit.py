@@ -57,7 +57,7 @@ def editListBox(listbox_field, listbox):
   if listbox is not None:
     global_property_dict = {}
     if listbox_field.has_value('global_attributes'):
-      hidden_attribute_list = map(lambda x:x[0], listbox_field.get_value('global_attributes'))
+      hidden_attribute_list = [x[0] for x in listbox_field.get_value('global_attributes')]
       for hidden_attribute in hidden_attribute_list:
         global_property_dict[hidden_attribute] = getattr(request, hidden_attribute, None)
     for item_url, listbox_item_dict in listbox.items():
@@ -129,10 +129,10 @@ def editMatrixBox(matrixbox_field, matrixbox):
           columns = matrixbox_field.get_value('columns')
           tabs = matrixbox_field.get_value('tabs')
 
-        column_ids = map(lambda x: x[0], columns)
-        line_ids = map(lambda x: x[0], lines)
-        tab_ids = map(lambda x: x[0], tabs)
-        extra_dimension_category_list_list = [[category for category, label in dimension_list] for dimension_list in extra_dimension_list_list]
+        column_ids = [x[0] for x in columns]
+        line_ids = [x[0] for x in lines]
+        tab_ids = [x[0] for x in tabs]
+        extra_dimension_category_list_list = [[category for category, _ in dimension_list] for dimension_list in extra_dimension_list_list]
 
         # There are 3 cases
         # Case 1: we do 1 dimensional matrix
@@ -250,8 +250,6 @@ server_physical_path = context.getPhysicalPath()
 server_physical_path = list(server_physical_path)
 server_url = request["SERVER_URL"]
 server_physical_path.insert(0, server_url)
-#calculate direct the url instead of using absolute_url
-new_url = '/'.join(server_physical_path)
 
 # for web mode, we should use 'view' instead of passed form_id
 # after 'Save & View'.

@@ -10,10 +10,10 @@ If unsure, you should use ERP5Type_getSecurityCategoryFromContent.
 """
 category_list = []
 
-if object is None:
+if obj is None:
   return []
 
 for base_category in base_category_list:
-  category_list.append({base_category: object.getAcquiredCategoryMembershipList(base_category)})
+  category_list.append({base_category: obj.getAcquiredCategoryMembershipList(base_category)})
 
 return category_list

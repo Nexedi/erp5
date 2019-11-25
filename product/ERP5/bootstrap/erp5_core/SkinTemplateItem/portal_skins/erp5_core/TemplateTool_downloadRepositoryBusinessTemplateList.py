@@ -12,8 +12,8 @@ if len(uids) == 0:
 
 id_list = []
 for uid in uids:
-  repository, id = context.decodeRepositoryBusinessTemplateUid(uid)
-  bt = context.download('/'.join([repository, id]))
+  repository, id_ = context.decodeRepositoryBusinessTemplateUid(uid)
+  bt = context.download('/'.join([repository, id_]))
   id_list.append(bt.getId())
 
 RESPONSE.redirect("%s?portal_status_message=Business+Templates+Downloaded+As:+%s" % (ret_url, ',+'.join(id_list)))

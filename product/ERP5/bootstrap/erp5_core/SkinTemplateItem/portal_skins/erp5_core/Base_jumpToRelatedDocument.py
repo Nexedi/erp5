@@ -1,11 +1,9 @@
-from ZTUtils import make_query
-
 request=context.REQUEST
 
 form = getattr(context,form_id)
 field = form.get_field(field_id)
 base_category = field.get_value('base_category')
-portal_type = map(lambda x:x[0],field.get_value('portal_type'))
+portal_type = [x[0] for x in field.get_value('portal_type')]
 kw = {}
 for k, v in field.get_value('parameter_list') :
   kw[k] = v
@@ -16,7 +14,7 @@ if len(jump_reference_list)==1:
   jump_reference = jump_reference_list[0]
   return jump_reference.Base_redirect()
 else:
-  selection_uid_list = map(lambda x:x.getUid(),jump_reference_list) or None
+  selection_uid_list = [x.getUid() for x in jump_reference_list] or None
   kw = {'uid': selection_uid_list}
   # We need to reset the selection. Indeed, some sort columns done in another 
   # jump could be meaningless for this particular jump. The consequence could 
