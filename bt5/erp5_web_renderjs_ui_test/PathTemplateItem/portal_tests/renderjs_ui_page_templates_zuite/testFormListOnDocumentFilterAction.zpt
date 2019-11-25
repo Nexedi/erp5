@@ -53,6 +53,30 @@
   <td>//div[@data-gadget-scope='editor_panel' and contains(@class, 'visible')]</td>
   <td></td>
 </tr>
+
+<!-- Check panel content -->
+<tr>
+  <td colspan="3"><b>Check that a default filter section is displayed</b></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//div[@class='filter_item_container']/div[1]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//div[@class='filter_item_container']/div[1]//select</td>
+  <td>COLUMN_id</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_search_editor.html')]//div[@class='filter_item_container']/div[1]//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td colspan="3"><b></b></td>
+</tr>
+
 <!-- Close editor_panel -->
 <tr>
   <td>click</td>
