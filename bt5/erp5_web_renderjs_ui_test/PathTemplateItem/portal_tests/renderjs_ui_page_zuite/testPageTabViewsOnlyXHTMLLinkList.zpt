@@ -1,0 +1,39 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Page Front</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Page Tab Link List</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?page=tab</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<!-- Wait for gadget to be loaded -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_tab.html']</td>
+  <td></td>
+</tr>
+
+<!-- Generate links to parents -->
+
+
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='View Only XHTML' and contains(@href, '#!display_with_history') and contains(@href, 'u.page=')]</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
