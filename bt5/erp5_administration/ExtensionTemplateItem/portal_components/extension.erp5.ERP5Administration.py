@@ -102,8 +102,8 @@ def MessageCatalog_getNotTranslatedMessageDict(self):
   """
   not_translated_message_dict = {}
   messages = MessageCatalog_getMessageDict(self)
-  for k,v in messages.iteritems():
-    if not len(v) or not len(filter(lambda x:x, v.values())):
+  for k, v in messages.iteritems():
+    if not [x for x in v.values() if x]:
       not_translated_message_dict[k] = v
   return not_translated_message_dict
 
@@ -153,7 +153,7 @@ def checkConversionToolAvailability(self):
     _, html_result = temp_document.convert(format='html')
   except ConflictError:
     raise
-  except: #Which Errors should we catch ?
+  except Exception:
     #Transformation failed
     message = 'Conversion tool got unexpected error:\n%s' % ''.join(ExceptionFormatter.format_exception(*sys.exc_info()))
   else:
