@@ -55,8 +55,10 @@
   <td></td>
 </tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
   <td></td>
 </tr>
