@@ -36,6 +36,7 @@ from requests.packages.urllib3.util.retry import Retry
 from subprocess import Popen, PIPE
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.CMFCore.utils import getToolByName
 from zLOG import LOG
 # You can invoke same tests in your favourite collection of business templates
@@ -507,6 +508,7 @@ class TestXHTML(TestXHTMLMixin):
     uf._doAddUser('seb', '', ['Manager'], [])
 
     self.loginByUserName('seb')
+    addUserToDeveloperRole('seb') # required to create content in portal_components
     self.enableDefaultSitePreference()
 
   def enableDefaultSitePreference(self):
@@ -653,7 +655,7 @@ def validate_xhtml(validator, source, view_name, bt_name):
   return len(message) == 1, '\n'.join(message)
 
 
-def makeTestMethod(validator, module_id, portal_type, view_name, bt_name):
+def makeTestMethod(validator, portal_type, view_name, bt_name):
 
   def createSubContent(content, portal_type_list):
     if not portal_type_list:
@@ -664,102 +666,65 @@ def makeTestMethod(validator, module_id, portal_type, view_name, bt_name):
                content.newContent(portal_type=portal_type_list[0]),
                portal_type_list[1:])
 
-  def testMethod(self):
-    module = getattr(self.portal, module_id)
-    portal_type_list = portal_type.split('/')
 
-    object = createSubContent(module, portal_type_list)
-    view = getattr(object, view_name)
+  def findContentChain(portal, target_portal_type):
+    # type: (erp5.portal_type.ERP5Site,str) -> Tuple[erp5.portal_type.Folder, Tuple[str, ...]]
+    """Returns the module and the chain of portal types to create a document of target_portal_type.
+    """
+    # first look modules and their content to find a real container chain.
+    for module in portal.contentValues():
+      module_type = module.getTypeInfo()
+      if module_type is not None:
+        if module_type.getId() == target_portal_type:
+          return module, ()
+        if module_type.isTypeFilterContentType():
+          for allowed_type in module.allowedContentTypes():
+            if target_portal_type == allowed_type.getId():
+              return module, (target_portal_type,)
+            for sub_allowed_type in allowed_type.getTypeAllowedContentTypeList(
+            ):
+              if target_portal_type == sub_allowed_type:
+                return module, (allowed_type.getId(), target_portal_type)
+              if sub_allowed_type in portal.portal_types:
+                for sub_sub_allowed_type in portal.portal_types[
+                    sub_allowed_type].getTypeAllowedContentTypeList():
+                  if target_portal_type == sub_sub_allowed_type:
+                    return module, (
+                        allowed_type.getId(),
+                        sub_allowed_type,
+                        target_portal_type,
+                    )
+    # fallback, find a module or a tool which allow anything.
+    for module in portal.contentValues():
+      if module.getId() == 'portal_sessions':
+        # portal_sessions looks valid, but its' newContent does not follow interface.
+        continue
+      for allowed_type in module.allowedContentTypes():
+        if target_portal_type == allowed_type.getId():
+          ZopeTestCase._print(
+              "Could not find container for %s, creating in %s\n",
+              target_portal_type, module)
+          return module, (target_portal_type,)
+    return None, ()
+
+  def testMethod(self):
+    module, portal_type_list = findContentChain(
+          self.portal,
+          portal_type)
+    document = createSubContent(module, portal_type_list)
+    view = getattr(document, view_name)
     self.assert_(*validate_xhtml( validator=validator,
                                   source=view(),
                                   view_name=view_name,
                                   bt_name=bt_name))
   return testMethod
 
-def testPortalTypeViewRecursivly(test_class, validator, module_id,
-    business_template_info, business_template_info_list, portal_type_list,
-    portal_type_path_dict, base_path, tested_portal_type_list):
-  '''
-  This function go on all portal_type recursivly if the portal_type could
-  contain other portal_types and make a test for all view that have action
-  '''
-  # iteration over all allowed portal_types inside the module/portal_type
-  for portal_type in portal_type_list:
-    portal_path = portal_type_path_dict[portal_type]
-    if portal_type not in tested_portal_type_list:
-      # this portal type haven't been tested yet
 
-      backuped_module_id = module_id
-      backuped_business_template_info = business_template_info
-
-      if not business_template_info.actions.has_key(portal_type):
-        # search in other bt :
-        business_template_info = None
-        for bt_info in business_template_info_list:
-          if bt_info.actions.has_key(portal_type):
-            business_template_info = bt_info
-            break
-        if not business_template_info:
-          LOG("Can't find the action :", 0, portal_type)
-          break
-        # create the object in portal_trash module
-        module_id = 'portal_trash'
-      for business_template_info in business_template_info_list:
-        if portal_type not in business_template_info.actions:
-          continue
-        for action_information in business_template_info.actions[portal_type]:
-          if (action_information['category'] in ('object_view', 'object_list') and
-              action_information['visible']==1 and
-              action_information['action'].startswith('string:${object_url}/') and
-              len(action_information['action'].split('/'))==2):
-            view_name = action_information['action'].split('/')[-1].split('?')[0]
-            method = makeTestMethod(validator,
-                                    module_id,
-                                    portal_path,
-                                    view_name,
-                                    business_template_info.title)
-            method_name = ('test_%s_%s_%s' %
-                          (business_template_info.title,
-                            str(portal_type).replace(' ','_'), # can be unicode
-                            view_name))
-            method.__name__ = method_name
-            setattr(test_class, method_name, method)
-            module_id = backuped_module_id
-
-      # add the portal_type to the tested portal_types. This avoid to test many
-      # times a Portal Type wich is many bt.
-      tested_portal_type_list.append(portal_type)
-
-      new_portal_type_list = []
-      for tmp_business_template_info in business_template_info_list:
-        new_portal_type_list.extend(tmp_business_template_info.allowed_content_types.get(portal_type, ()))
-      new_portal_type_path_dict = {}
-
-      if base_path != '':
-        next_base_path = '%s/%s' % (base_path, portal_type)
-      # Module portal_type not to have been added to the path because
-      # this portal type object already existing
-      elif 'Module' not in portal_type:
-        next_base_path = portal_type
-      else:
-        next_base_path = ''
-
-      for pt in new_portal_type_list:
-        if next_base_path != '' and 'Module' not in pt:
-          new_portal_type_path_dict[pt] = '%s/%s' % (next_base_path, pt)
-        else:
-          new_portal_type_path_dict[pt] = pt
-      testPortalTypeViewRecursivly(test_class=test_class,
-                       validator=validator,
-                       module_id=module_id,
-                       business_template_info=backuped_business_template_info,
-                       business_template_info_list=business_template_info_list,
-                       portal_type_list=new_portal_type_list,
-                       portal_type_path_dict=new_portal_type_path_dict,
-                       base_path=next_base_path,
-                       tested_portal_type_list=tested_portal_type_list)
-
-def addTestMethodDynamically(test_class, validator, target_business_templates):
+def addTestMethodDynamically(
+    test_class,
+    validator,
+    target_business_templates,
+    expected_failure_list=()):
   from Products.ERP5.tests.utils import BusinessTemplateInfoTar
   from Products.ERP5.tests.utils import BusinessTemplateInfoDir
   business_template_info_list = []
@@ -771,21 +736,27 @@ def addTestMethodDynamically(test_class, validator, target_business_templates):
       business_template_info = BusinessTemplateInfoTar(url)
     business_template_info_list.append(business_template_info)
 
-  tested_portal_type_list = []
   for business_template_info in business_template_info_list:
-    for module_id, module_portal_type in business_template_info.modules.items():
-      portal_type_list = [module_portal_type, ] + \
-            business_template_info.allowed_content_types.get(module_portal_type, [])
-      portal_type_path_dict = dict(zip(portal_type_list, portal_type_list))
-      testPortalTypeViewRecursivly(test_class=test_class,
-                       validator=validator,
-                       module_id=module_id,
-                       business_template_info=business_template_info,
-                       business_template_info_list=business_template_info_list,
-                       portal_type_list=portal_type_list,
-                       portal_type_path_dict=portal_type_path_dict,
-                       base_path = '',
-                       tested_portal_type_list=tested_portal_type_list)
+    for portal_type, action_information_list in business_template_info.actions.items():
+      for action_information in action_information_list:
+        if (action_information['category'] in ('object_view', 'object_list') and
+            action_information['visible']==1 and
+            action_information['action'].startswith('string:${object_url}/') and
+            len(action_information['action'].split('/'))==2):
+          view_name = action_information['action'].split('/')[-1].split('?')[0]
+          method = makeTestMethod(
+              validator,
+              portal_type,
+              view_name,
+              business_template_info.title)
+          method_name = ('test_%s_%s_%s' %
+                        (business_template_info.title,
+                        str(portal_type).replace(' ','_'), # can be unicode
+                        view_name))
+          method.__name__ = method_name
+          if method_name in expected_failure_list:
+            method = unittest.expectedFailure(method)
+          setattr(test_class, method_name, method)
 
 
 # Two validators are available : nu and tidy
@@ -815,7 +786,12 @@ def test_suite():
     # add erp5_core to the list here to not return it
     # on getBusinessTemplateList call
     addTestMethodDynamically(TestXHTML, validator,
-      ('erp5_core',) + TestXHTML.getBusinessTemplateList())
+      ('erp5_core',) + TestXHTML.getBusinessTemplateList(),
+      expected_failure_list=(
+          # this view needs VCS preference set (this test suite does not support
+          # setting preferences, but this might be a way to fix this)
+          'test_erp5_forge_Business_Template_BusinessTemplate_viewVcsStatus',
+      ))
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestXHTML))
   return suite
