@@ -540,7 +540,7 @@
                 </item>
                 <item>
                     <key> <string>round_script</string> </key>
-                    <value> <string>Planning_roundBoundToDay</string> </value>
+                    <value> <string>Base_roundPlanningBoxBoundToDay</string> </value>
                 </item>
                 <item>
                     <key> <string>sec_axis_script</string> </key>
