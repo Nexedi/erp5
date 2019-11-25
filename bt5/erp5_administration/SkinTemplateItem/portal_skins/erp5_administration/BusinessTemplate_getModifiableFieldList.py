@@ -21,11 +21,11 @@ field_library_id_dict = {
 
 modified_object_dict = {}
 
-def calculateFieldLibraryID(id):
+def calculateFieldLibraryID(bt_title):
   # The field library name could be automatically calculated or hardcoded in
   # the script
-  return field_library_id_dict.get(id) or 'Base_view%sFieldLibrary' % \
-      ''.join([x.capitalize() for x in id.split('_')[1:]])
+  return field_library_id_dict.get(bt_title) or 'Base_view%sFieldLibrary' % \
+      ''.join([x.capitalize() for x in bt_title.split('_')[1:]])
 
 def getForm(skin_folder, form_id):
   try:
