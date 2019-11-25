@@ -27,15 +27,19 @@ def filterDuplicateActions(actions):
 
 
 def hasDuplicateActions(portal_type, user_name):
+  # Compare the count of action categories and actions
+  # Give every category a amount of 1000, as
+  # 'object_onlyxhtml_view' is transformed into 'object_view'
   len_actions = 0
   len_filtered_actions = 0
   for cat in actions.values():
-    len_actions += len(cat)
+    len_actions += 1000 + len(cat)
   filtered_actions = filterDuplicateActions(actions)
   for cat in filtered_actions.values():
-    len_filtered_actions += len(cat)
+    len_filtered_actions += 1000 + len(cat)
   return len_actions != len_filtered_actions
 
+return filterDuplicateActions(actions)
 
 hasDuplicateActions = CachingMethod(
                           hasDuplicateActions,
