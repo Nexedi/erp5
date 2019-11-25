@@ -11,9 +11,9 @@ z_catalog_translation_list = sql_catalog.z_catalog_translation_list
 def catalog_translation_list(object_list):
   parameter_dict = {}
   for i in object_list:
-    for property in ('language', 'message_context', 'portal_type',
+    for property_ in ('language', 'message_context', 'portal_type',
                      'original_message', 'translated_message'):
-      parameter_dict.setdefault(property, []).append(i[property])
+      parameter_dict.setdefault(property_, []).append(i[property_])
   z_catalog_translation_list(**parameter_dict)
 
 # Translate every workflow state in the context of the state variable

@@ -1,6 +1,9 @@
 """
   Get search text from REQUEST or selection.
 """
+if argument_name_list is None:
+  argument_name_list = []
+
 request = context.REQUEST
 
 if not argument_name_list:

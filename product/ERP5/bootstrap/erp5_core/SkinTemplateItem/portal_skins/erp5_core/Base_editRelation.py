@@ -1,11 +1,9 @@
 # Updates relation of an ERP5 document
-from Products.ERP5Type.Message import Message
-from Products.Formulator.Errors import ValidationError
 from Products.ERP5Form.MultiRelationField import SUB_FIELD_ID
 
 if listbox_uid is not None:
   selection_tool = context.getPortalObject().portal_selections
-  selected_uids = selection_tool.updateSelectionCheckedUidList(
+  selection_tool.updateSelectionCheckedUidList(
               selection_name, listbox_uid, uids)
   uids = selection_tool.getSelectionCheckedUidsFor(selection_name)
 

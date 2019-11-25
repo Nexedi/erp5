@@ -104,7 +104,6 @@ except FormValidationError, validation_errors:
 can_redirect = 1
 MARKER = [] # A recognisable default value. Use with 'is', not '=='.
 listbox_id_list = [] # There should not be more than one listbox - but this give us a way to check.
-file_id_list = [] # For uploaded files.
 for field in form.get_fields():
   k = field.id
   v = request.get(k, MARKER)
@@ -151,7 +150,7 @@ if len(listbox_id_list):
 if hasattr(kw, 'previous_md5_object_uid_list'):
   selection_list = context.portal_selections.callSelectionFor(kw['list_selection_name'], context=context)
   if selection_list is not None:
-    object_uid_list = map(lambda x:x.getObject().getUid(), selection_list)
+    object_uid_list = [x.getObject().getUid() for x in selection_list]
     error = context.portal_selections.selectionHasChanged(kw['previous_md5_object_uid_list'], object_uid_list)
     if error:
       error_message = context.Base_translateString("Sorry, your selection has changed.")
@@ -167,7 +166,7 @@ listbox_uid = kw.get('listbox_uid', None)
 # In such cases, we must not try to update a non-existing selection.
 if listbox_uid is not None and kw.has_key('list_selection_name'):
   uids = kw.get('uids')
-  selected_uids = context.portal_selections.updateSelectionCheckedUidList(
+  context.portal_selections.updateSelectionCheckedUidList(
     kw['list_selection_name'],
     listbox_uid, uids)
 # Remove values which doesn't work with make_query.

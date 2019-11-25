@@ -1,8 +1,4 @@
-# Updates attributes of an Zope document
-# which is in a class inheriting from ERP5 Base
-
-
-from Products.Formulator.Errors import ValidationError, FormValidationError
+from Products.Formulator.Errors import FormValidationError
 
 request = context.REQUEST
 field_sort_type = request.form.get('field_sort_type', None)

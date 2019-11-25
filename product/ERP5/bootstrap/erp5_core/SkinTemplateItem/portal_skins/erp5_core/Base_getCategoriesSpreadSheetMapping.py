@@ -88,13 +88,12 @@ if not (content_type.startswith('application/vnd.sun.xml')
   tmp_ooo.edit(data=import_file.read(),
                content_type=content_type)
   tmp_ooo.convertToBaseFormat()
-  ignored, import_file_content = tmp_ooo.convert('ods')
+  _, import_file_content = tmp_ooo.convert('ods')
   parser.openFromString(str(import_file_content))
 else:
   parser.openFile(import_file)
 
 # Extract tables from the speadsheet file
-filename = parser.getFilename()
 spreadsheet_list = parser.getSpreadsheetsMapping(no_empty_lines=True)
 
 
@@ -128,8 +127,6 @@ for table_name in spreadsheet_list.keys():
     else:
       # If there is a new column with a header and the path definition has
       # started, that seems the path definition has ended
-      if 'path_0' in property_map.values():
-        path_index == None # FIXME: useless statement, but what was the original intention ??
       property_map[column_index] = column_id.encode('utf8')
     column_index += 1
 
