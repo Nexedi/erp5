@@ -45,10 +45,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W:106, 29: map/filter on lambda could be replaced by comprehension (deprecated-lambda)</string>
-                <string>W:156,  2: No exception type(s) specified (bare-except)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
