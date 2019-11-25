@@ -32,26 +32,36 @@
   <td></td>
 </tr>
 
-<!-- Header has a link to the edit page -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Editable' and contains(@href, '#!change') and contains(@href, 'n.editable=true')]</td>
-  <td></td>
-</tr>
-
-<tal:block tal:define="click_configuration python: {'text': 'Editable'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
-</tal:block>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Filter' and @type='submit']</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>Title 1</td>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='editor_panel' and contains(@class, 'visible')]</td>
+  <td></td>
+</tr>
+<!-- Open editor_panel -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Filter' and @type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='editor_panel' and contains(@class, 'visible')]</td>
+  <td></td>
+</tr>
+<!-- Close editor_panel -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Filter' and @type='submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='editor_panel' and contains(@class, 'visible')]</td>
   <td></td>
 </tr>
 
