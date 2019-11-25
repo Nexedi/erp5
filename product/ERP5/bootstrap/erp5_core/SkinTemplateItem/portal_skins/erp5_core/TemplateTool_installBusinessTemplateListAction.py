@@ -3,7 +3,6 @@ update_catalog = update_translation = 0
 
 bt_id_list = getattr(context.REQUEST, 'bt_list', ())
 bt_dict = {}
-object_to_update = {}
 for item in listbox:
   # backward compatibility
   if not same_type(item['choice'], []):

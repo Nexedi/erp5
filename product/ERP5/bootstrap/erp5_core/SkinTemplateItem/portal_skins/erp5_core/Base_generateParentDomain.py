@@ -1,7 +1,6 @@
-from Products.ERP5Type.Document import newTempDomain
 domain_list=[]
 request = context.REQUEST
-filter = {}
+filter_ = {}
 
 try:
   # first, try to get form_id from the request
@@ -12,7 +11,7 @@ except KeyError:
 
 if listbox is not None:
   portal_type_list = [x[0] for x in listbox.get_value('portal_types')]
-  filter['portal_type'] = portal_type_list
+  filter_['portal_type'] = portal_type_list
 
 if depth == 0:
   parent_obj = request['here']
@@ -22,7 +21,7 @@ else:
   parent_url = parent.getProperty('parent_url')
   parent_obj = context.restrictedTraverse(parent_url)
 
-for obj in parent_obj.contentValues(filter=filter):
+for obj in parent_obj.contentValues(filter=filter_):
   domain = parent.generateTempDomain(id='%s_%s' % (depth, obj.getId()))
   domain.edit(title=obj.getTitle(),
               parent_url=obj.getRelativeUrl(),

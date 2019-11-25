@@ -42,7 +42,7 @@ class FoundWord(str):
 
 class Part:
 
-  def __init__(self,tags,trail):
+  def __init__(self, tags, trail): #  pylint: disable=redefined-outer-name
     self.chain=[]
     self.limit=trail
     self.trail=trail
@@ -67,7 +67,7 @@ class Part:
 
 
 
-def generateParts(_,text,sw,tags,trail,maxlines):
+def generateParts(_, text, sw, tags, trail, maxlines): #  pylint: disable=redefined-outer-name
   par=Part(tags,trail)
   sw=sw.translate(tr).strip().lower().split()
   test=lambda w:w.translate(tr).strip().lower() in sw
@@ -91,7 +91,7 @@ def generateParts(_,text,sw,tags,trail,maxlines):
           yield par # return the last marked part
 
 
-def getExcerptText(context, txt, sw, tags, trail, maxlines):
+def getExcerptText(context, txt, sw, tags, trail, maxlines): #  pylint: disable=redefined-outer-name
   """
   Returns an excerpt of text found in the txt string
   """
@@ -107,10 +107,10 @@ def getExcerptText(context, txt, sw, tags, trail, maxlines):
   txt = txt.replace('-',' - ') # to find hyphenated occurrences
   txt = txt.replace(',',', ')
   txt = txt.replace(';','; ')
-  r = re.compile('\s+')
+  r = re.compile(r'\s+')
   txt = re.sub(r,' ',txt)
   text = ' '.join(txt.split('\n')).split(' ') # very rough tokenization
-  return [p for p in generateParts(context,text,sw,tags,trail,maxlines)]
+  return [x for x in generateParts(context, text, sw, tags, trail, maxlines)]
 
 
 if __name__=='__main__':

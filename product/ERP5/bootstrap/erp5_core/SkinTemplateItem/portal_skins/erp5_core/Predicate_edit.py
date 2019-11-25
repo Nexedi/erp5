@@ -5,7 +5,7 @@
 #   - Implement validation of matrix fields
 #   - Implement validation of list fields
 #
-from Products.Formulator.Errors import ValidationError, FormValidationError
+from Products.Formulator.Errors import FormValidationError
 from ZTUtils import make_query
 
 request=context.REQUEST
@@ -34,12 +34,12 @@ try:
     listbox_field = form.get_field('listbox')
     gv = {}
     if listbox_field.has_value('global_attributes'):
-      hidden_attributes = map(lambda x:x[0], listbox_field.get_value('global_attributes'))
+      hidden_attributes = [x[0] for x in listbox_field.get_value('global_attributes')]
       for k in hidden_attributes:
         gv[k] = getattr(request, k,None)
-    for property, v in listbox.items():
+    for property_, v in listbox.items():
       v.update(gv)
-      context.setCriterion(property, **v)
+      context.setCriterion(property_, **v)
   # Update basic attributes
   context.edit(REQUEST=request, edit_order=edit_order, **kw)
   context.reindexObject()

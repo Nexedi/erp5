@@ -1,12 +1,17 @@
+if uids is None:
+  uids = []
+if listbox_uid is None:
+  uids = []
+
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
 
-def Object_hasRelation(object):
+def Object_hasRelation(obj):
   # Check if there is some related objets.
   result = 0
-  for o in object.getIndexableChildValueList():
-    for related in object.portal_categories.getRelatedValueList(object):
-      if related.getRelativeUrl().startswith(object.getRelativeUrl()):
+  for o in obj.getIndexableChildValueList():
+    for related in obj.portal_categories.getRelatedValueList(obj):
+      if related.getRelativeUrl().startswith(obj.getRelativeUrl()):
         continue
       elif related.getRelativeUrl().startswith('portal_simulation') :
         continue
@@ -15,7 +20,7 @@ def Object_hasRelation(object):
         break
   return result
 
-selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)
+context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)
 uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)
 # make sure nothing is checked after
 context.portal_selections.setSelectionCheckedUidsFor(selection_name, [])
@@ -36,7 +41,6 @@ if uids != []:
     else:
       message = Base_translateString("Sorry, ${count} items are in use.",
                                      mapping={'count': repr(object_used)})
-    qs = '?portal_status_message=%s' % message  
   else:
     context.manage_cutObjects(uids=uids, REQUEST=request)
     message = Base_translateString("Items cut.")

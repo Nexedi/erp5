@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection_name, uids=[], listbox_uid=[]</string> </value>
+            <value> <string>selection_name, uids=None, listbox_uid=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

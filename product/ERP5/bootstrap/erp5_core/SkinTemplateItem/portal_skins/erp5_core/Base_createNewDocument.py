@@ -2,7 +2,6 @@
 this type cannot be added in the container.
 """
 Base_translateString = context.Base_translateString
-REQUEST=context.REQUEST
 parent = context.getParentValue()
 allowed_type_list = parent.getVisibleAllowedContentTypeList()
 

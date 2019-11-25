@@ -8,14 +8,14 @@ translation_map = { "a": ['\xe0']
                   }
 
 clean_id = ''
-if string == None:
+if s is None:
   return None
-string = string.lower()
-string = string.strip()
+s = s.lower()
+s = s.strip()
 # oocalc inserts some strange chars when you press - key in a text cell.
 # Following line is a workaround for this, because \u2013 does not exist in latin1
-string = string.replace(u'\u2013', '-')
-for char in string.encode('iso8859_1'):
+s = s.replace(u'\u2013', '-')
+for char in s.encode('iso8859_1'):
   if char == '_' or char.isalnum():
     clean_id += char
   elif char.isspace() or char in ('+', '-'):

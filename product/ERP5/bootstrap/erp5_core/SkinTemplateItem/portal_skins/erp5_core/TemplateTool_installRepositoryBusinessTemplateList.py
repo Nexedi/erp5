@@ -46,13 +46,13 @@ for uid in uids:
         if len([x for x in provider_list if x in title_list]) == 0:
           # No provider installed
           if len(provider_list) == 1:
-              # When only one provider is possible, use it
-              provider = provider_list[0]
-              for candidate in available_bt5_list:
-                if candidate.title == provider:
-                  current_uid_list.append(candidate.uid)
-                  break
-              portal_status_message+='\'%s\' added because \'%s\' depends on it.'%(provider, bt5_title)
+            # When only one provider is possible, use it
+            provider = provider_list[0]
+            for candidate in available_bt5_list:
+              if candidate.title == provider:
+                current_uid_list.append(candidate.uid)
+                break
+            portal_status_message+='\'%s\' added because \'%s\' depends on it.'%(provider, bt5_title)
           else:
             portal_status_message+='\'%s\' requires you to select one of the following business templates: %s'%(bt5_title, provider_list)
 
@@ -73,8 +73,8 @@ tuple_list = context.sortBusinessTemplateList(tuple_list)
 
 
 bt_list = []
-for repository, id in tuple_list:
-  bt = context.download('/'.join([repository, id]))
+for repository, id_ in tuple_list:
+  bt = context.download('/'.join([repository, id_]))
   bt_list.append(bt.getId())
 
 RESPONSE.redirect(
