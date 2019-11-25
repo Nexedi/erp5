@@ -1,7 +1,12 @@
+if uids is None:
+  uids = []
+if listbox_uid is None:
+  uids = []
+
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
 
-selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)
+context.portal_selections.updateSelectionCheckedUidList(selection_name, listbox_uid,uids)
 uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)
 # make sure nothing is checked after
 context.portal_selections.setSelectionCheckedUidsFor(selection_name, [])

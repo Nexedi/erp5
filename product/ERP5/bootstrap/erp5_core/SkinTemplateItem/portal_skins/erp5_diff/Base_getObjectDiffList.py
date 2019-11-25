@@ -12,7 +12,6 @@ from zExceptions import Unauthorized
 portal =  context.getPortalObject()
 portal_diff = portal.portal_diff
 request = context.REQUEST
-object_revision_list = []
 history_size = portal.portal_preferences.getPreferredHtmlStyleZodbHistorySize()
 
 first_object = None
@@ -105,7 +104,7 @@ if ((first_path is None and second_path is None) and
     first_object = selected_object_list[0]
     second_object = selected_object_list[1]
 
-# Use DiffTool to get the diff between the 2 objects in object_revision_list List.
+# Use DiffTool to get the diff between the 2 objects.
 # These 2 objects can be revisions of same object, 2 different revisions of
 # different objects or 2 current ERP5 object.
 if first_object and second_object:

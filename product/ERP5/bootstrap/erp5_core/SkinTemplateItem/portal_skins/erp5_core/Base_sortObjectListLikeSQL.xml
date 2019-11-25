@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>unordered_list=[], sort_order=()</string> </value>
+            <value> <string>unordered_list=None, sort_order=()</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
