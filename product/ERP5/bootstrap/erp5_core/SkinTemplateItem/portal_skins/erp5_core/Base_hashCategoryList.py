@@ -5,6 +5,8 @@
   in such way that it is possible to select multiple
   categories for the same document )
 """
+if default_sub_field_property_dict is None:
+  default_sub_field_property_dict = {}
 # Initialise result
 sub_field_list = []
 

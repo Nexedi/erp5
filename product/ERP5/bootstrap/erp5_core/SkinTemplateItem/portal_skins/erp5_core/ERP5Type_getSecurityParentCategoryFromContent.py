@@ -19,7 +19,7 @@ The parameters are
 
   base_category_list -- list of category values we need to retrieve
   user_name          -- string obtained from getSecurityManager().getUser().getId()
-  object             -- object which we want to assign roles to
+  ob                 -- object which we want to assign roles to
   portal_type        -- portal type of object
 
 NOTE: for now, this script requires proxy manager
@@ -27,13 +27,13 @@ NOTE: for now, this script requires proxy manager
 
 category_list = []
 
-if object is None:
+if ob is None:
   return []
 
 # Consider all parents of all categories
 for base_category in base_category_list:
   member_list = []
-  for category in object.getAcquiredValueList(base_category):
+  for category in ob.getAcquiredValueList(base_category):
     if category.getPortalType() == 'Category':
       while category.getPortalType() == 'Category':
         member_list.append(category.getRelativeUrl())

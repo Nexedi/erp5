@@ -45,9 +45,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W: 17,  0: Unused getToolByName imported from Products.CMFCore.utils (unused-import)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

@@ -1,6 +1,4 @@
-request = context.REQUEST
 from Products.ERP5Type.Document import newTempBase
-from Products.ERP5Type.Document import newTempMappedValue
 from Products.ERP5Type.Utils import getTranslationStringWithContext
 
 from AccessControl import getSecurityManager
@@ -12,7 +10,7 @@ result = []
 i = 1
 portal_object = context.getPortalObject()
 portal_workflow = portal_object.portal_workflow
-workflow_id_list = [x for x, y in context.getWorkflowStateItemList()]
+workflow_id_list = [x[0] for x in context.getWorkflowStateItemList()]
 if not workflow_id in workflow_id_list:
   return []
 
@@ -31,12 +29,8 @@ def getActorName(actor):
 
 
 # Get history
-# XXX Compatibility
-for history_name in ['history', 'building_history', 'installation_history']:
-  workflow_item_list = portal_workflow.getInfoFor(ob=context, 
-                                          name='history', wf_id=workflow_id)
-  if workflow_item_list != []:
-    break
+workflow_item_list = portal_workflow.getInfoFor(
+    ob=context, name='history', wf_id=workflow_id)
 
 wf_state_var = portal_workflow[workflow_id].variables.getStateVar()
 wf_states = portal_workflow[workflow_id].states

@@ -10,4 +10,4 @@ if include_letters:
   character_set = '%s%s' %(character_set, letters)
 if include_digits:
   character_set = '%s%s' %(character_set, digits)
-return ''.join([choice(character_set) for i in range(int(string_length))])
+return ''.join([choice(character_set) for _ in range(int(string_length))])

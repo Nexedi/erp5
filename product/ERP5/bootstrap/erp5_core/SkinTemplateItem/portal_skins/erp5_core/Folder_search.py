@@ -2,11 +2,6 @@ request = container.REQUEST
 
 from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery, ComplexQuery
 
-def sorted(seq):
-  seq = [x for x in seq]
-  seq.sort()
-  return seq
-
 # Convert mapping from request.form into something the catalog can understand
 # This script uses ad-hoc values that are understood by
 # Folder_viewSearchDialog: x_value_ and x_usage_ are used to remember what was

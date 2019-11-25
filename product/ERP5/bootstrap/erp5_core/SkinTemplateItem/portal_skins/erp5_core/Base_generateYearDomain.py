@@ -21,12 +21,6 @@ current_date = DateTime(year, 1, 1)
 default_link_url ='setLanePath?form_id=%s&list_selection_name=%s' %(
                                  form_id, selection_name)
 
-# Define date format using user Preferences
-date_order = portal.portal_preferences.getPreferredDateOrder()
-date_format = dict(ymd='%m/%d',
-                   dmy='%d/%m',
-                   mdy='%m/%d').get(date_order, '%m/%d')
-
 category_list = []
 if depth == 0:
   # getting list of months
@@ -45,7 +39,7 @@ if depth == 0:
     if current_date.month() != 12:
       stop_date = DateTime(current_date.year(),current_date.month() +1,1)
     else:
-       stop_date = DateTime(year+1, 1, 1)
+      stop_date = DateTime(year+1, 1, 1)
     o.setProperty('stop', stop_date)
     
     o.setProperty('relative_position', int(current_date))

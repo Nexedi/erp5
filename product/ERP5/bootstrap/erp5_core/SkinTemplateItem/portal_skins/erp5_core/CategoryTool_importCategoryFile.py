@@ -72,12 +72,10 @@ for base_category, category_list in category_list_spreadsheet_dict.iteritems():
     except ValueError:
       category_id = category_path
       container = portal_categories
-      is_base_category = True
       category_type = 'Base Category'
       category_type_property_id_set = base_category_property_id_set
     else:
       container = resolveCategory(container_path)
-      is_base_category = False
       category_type = 'Category'
       category_type_property_id_set = category_property_id_set
     try:
