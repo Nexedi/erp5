@@ -18,6 +18,7 @@
 </tr>
 
 <!-- Wait for gadget to be loaded -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tal:block tal:define="view_configuration python: {'action_title': 'Form List'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_selected_view" />
 </tal:block>
