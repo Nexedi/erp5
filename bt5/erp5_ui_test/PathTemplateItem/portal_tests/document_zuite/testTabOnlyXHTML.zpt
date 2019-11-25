@@ -1,0 +1,33 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Add Object</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test View Tab only for ERP5JS</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<!-- First, create the document -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects?portal_type=Foo&amp;num:int=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/0</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//*[@class="actions"]//ul/li[2]//span[text()="View Only XHTML"]</td>
+  <td></td>
+</tr>
+
+</table>
+</body>
+</html>
