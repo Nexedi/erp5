@@ -31,9 +31,12 @@ import os
 import unittest
 from glob import glob
 
+from Products.ERP5 import ERP5Site
+from Products.ERP5.tests import testXHTML
 from Products.ERP5Type.tests.CodingStyleTestCase import CodingStyleTestCase
 
-class CodingStyleTest(CodingStyleTestCase):
+
+class CodingStyleTest(CodingStyleTestCase, testXHTML.TestXHTML):
   """Run a coding style test for business template defined by
   TESTED_BUSINESS_TEMPLATE environment variable, that is set by
   ERP5BusinessTemplateCodingStyleTestSuite in test/__init__.py
@@ -90,6 +93,15 @@ def test_suite():
       (CodingStyleTest, ),
       {'tested_business_template': tested_business_template})
 
+  # Add testXHTML dynamic methods.
+  portal_templates = ERP5Site.getSite().portal_templates
+  bt5 = portal_templates.getInstalledBusinessTemplate(tested_business_template)
+  dependency_list = set(bt5.getTestDependencyList() + bt5.getDependencyList())
+  bt5_list = [
+      p[1] for p in portal_templates.resolveBusinessTemplateListDependency(
+          dependency_list)
+  ]
+  testXHTML.addTestMethodDynamically(testclass, testXHTML.validator, bt5_list)
+
   suite.addTest(unittest.makeSuite(testclass))
   return suite
-
