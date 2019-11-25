@@ -77,17 +77,29 @@ def getSkinPrefixList(self):
   # Add other prefix
   skin_prefix_list.extend((
     'ERP5Type',
+    'Module',
+    'DCWorkflow', # some workflow script use this, not sure it's correct.
+    'Brain', # Catalog brains
 
     'Entity', # A base class for Person / Organisation
     'Zuite', # Products.Zelenium test suites
-    'Form', # Acceptable for ERP5 Forms which will soon become portal types too
+
+    # ERP5Form
+    'Form',
     'ListBox',
-    'DCWorkflow', # some workflow script use this, not sure it's correct.
-    'Zuite', # from Zelenium
-    'Brain', # Catalog brains
+    'PlanningBox',
+    'OOoChart',
   ))
 
   return set(skin_prefix_list)
+
+
+# Some skin names that does not respect our conventions but are ignored, for example
+# when this naming is used by zope.
+ignored_skin_id_set = {
+  'twiddleAuthCookie',
+  'setAuthCookie',
+}
 
 # Generic method to check consistency of a skin item
 def checkConsistency(self, fixit=0, source_code=None):
@@ -103,7 +115,7 @@ def checkConsistency(self, fixit=0, source_code=None):
 
   # Make sure id is acceptable
   document_id = self.id
-  if document_id != document_id.lower():
+  if document_id != document_id.lower() and document_id not in ignored_skin_id_set:
     # Only test prefix with big caps
     prefix = document_id.split('_')[0]
     if prefix not in getSkinPrefixList(self):
