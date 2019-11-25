@@ -1,4 +1,4 @@
-from Products.Formulator.Errors import ValidationError, FormValidationError
+from Products.Formulator.Errors import FormValidationError
 from ZTUtils import make_query
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
@@ -46,8 +46,6 @@ def getOrderedUids(uids, values, catalog_index):
     uids.append(value_to_uid[value])
   return uids
 
-  field.get_value('base_category')
-
 try:
   # Validate the form
   form = getattr(context,form_id)
@@ -58,20 +56,19 @@ try:
   # Find out which field defines the relation
   for f in form.get_fields():
     if f.has_value( 'base_category'):
-        #if f.get_value('base_category') == base_category:
-        k = f.id
-        v = getattr(request,k,None)
-        if v in (None, '', 'None', [], ()) and context.getProperty(k[3:]) in (None, '', 'None', [], ()):
-          # The old value is None and the new value is not significant
-          # This bug fix is probably temporary since '' means None
-          pass
-        elif v != context.getProperty(k[3:]):
-          old_value = context.getProperty(k[3:])
-          my_field = f
-          new_value = v
-          base_category = f.get_value( 'base_category')
+      #if f.get_value('base_category') == base_category:
+      k = f.id
+      v = getattr(request,k,None)
+      if v in (None, '', 'None', [], ()) and context.getProperty(k[3:]) in (None, '', 'None', [], ()):
+        # The old value is None and the new value is not significant
+        # This bug fix is probably temporary since '' means None
+        pass
+      elif v != context.getProperty(k[3:]):
+        old_value = context.getProperty(k[3:])
+        my_field = f
+        new_value = v
+        base_category = f.get_value( 'base_category')
   if my_field and base_category is not None:
-    empty_list = 0
     if new_value == '':
       new_value = []
     if same_type(new_value,'a'):
@@ -90,7 +87,7 @@ try:
       if checkSameKeys(new_value, old_value):
         # Reorder keys
         same_keys = 1
-    portal_type = map(lambda x:x[0],my_field.get_value('portal_type'))
+    portal_type = [x[0] for x in my_field.get_value('portal_type')]
     # We work with strings - ie. single values
     kw ={}
     kw[my_field.get_value('catalog_index')] = new_value
@@ -103,7 +100,7 @@ try:
     request.set('field_id', my_field.id)
     previous_uids = o.getValueUidList(base_category, portal_type=portal_type)
     relation_list = context.portal_catalog(**kw)
-    relation_uid_list = map(lambda x: x.uid, relation_list)
+    relation_uid_list = [x.uid for x in relation_list]
     uids = []
     for uid in previous_uids:
       if uid in relation_uid_list:
@@ -125,9 +122,9 @@ try:
       # If we have only one in the list, we don't want to lose our time by
       # selecting it. So we directly do the update
       if len(relation_list) == 1:
-          selection_index=None
-          uids = [relation_list[0].uid]
-          return o.Base_editRelation( form_id = form_id,
+        selection_index=None
+        uids = [relation_list[0].uid]
+        return o.Base_editRelation( form_id = form_id,
                                     field_id = my_field.id,
                                     selection_index = selection_index,
                                     selection_name = selection_name,

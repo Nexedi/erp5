@@ -45,7 +45,7 @@ if listbox:
 # the listbox is there.
 for group in ('bottom', 'center', 'left', 'right'):
   for field in form.get_fields_in_group(group):
-     if (isListBox(field) and
-         not field.get_value('hidden') and
-         field.get_value('enabled')):
-        return field
+    if (isListBox(field) and
+        not field.get_value('hidden') and
+        field.get_value('enabled')):
+      return field

@@ -1,3 +1,5 @@
+if unordered_list is None:
+  unordered_list = []
 def generic_sort(a,b):
   result = 0
   for k,v in sort_order:
@@ -11,6 +13,6 @@ def generic_sort(a,b):
         return result
   return result 
 
-unordered_list = map(lambda x: x.getObject(), unordered_list)
+unordered_list = [x.getObject() for x in unordered_list]
 unordered_list.sort(generic_sort)
 return unordered_list

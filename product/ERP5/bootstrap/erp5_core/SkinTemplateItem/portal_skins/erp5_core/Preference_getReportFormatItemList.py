@@ -1,5 +1,3 @@
-portal = context.getPortalObject()
-N_ = portal.Base_translateString
 request = container.REQUEST
 
 style = request.get('your_portal_skin',
