@@ -36,6 +36,7 @@ from requests.packages.urllib3.util.retry import Retry
 from subprocess import Popen, PIPE
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import addUserToDeveloperRole
 from Products.CMFCore.utils import getToolByName
 from zLOG import LOG
 # You can invoke same tests in your favourite collection of business templates
@@ -507,6 +508,7 @@ class TestXHTML(TestXHTMLMixin):
     uf._doAddUser('seb', '', ['Manager'], [])
 
     self.loginByUserName('seb')
+    addUserToDeveloperRole('seb') # required to create content in portal_components
     self.enableDefaultSitePreference()
 
   def enableDefaultSitePreference(self):
@@ -739,13 +741,13 @@ def testPortalTypeViewRecursivly(test_class, validator, module_id,
         next_base_path = '%s/%s' % (base_path, portal_type)
       # Module portal_type not to have been added to the path because
       # this portal type object already existing
-      elif 'Module' not in portal_type:
+      elif 'Module' not in portal_type and 'Tool' not in portal_type:
         next_base_path = portal_type
       else:
         next_base_path = ''
 
       for pt in new_portal_type_list:
-        if next_base_path != '' and 'Module' not in pt:
+        if next_base_path != '' and 'Module' not in pt and 'Tool' not in pt:
           new_portal_type_path_dict[pt] = '%s/%s' % (next_base_path, pt)
         else:
           new_portal_type_path_dict[pt] = pt
@@ -771,7 +773,18 @@ def addTestMethodDynamically(test_class, validator, target_business_templates):
       business_template_info = BusinessTemplateInfoTar(url)
     business_template_info_list.append(business_template_info)
 
+  # The portal types from this set of business template
+  business_template_portal_type_set = set([])
+  for business_template_info in business_template_info_list:
+    business_template_portal_type_set.update(business_template_info.allowed_content_types.keys())
+    for allowed_content_type_list in business_template_info.allowed_content_types.values():
+      business_template_portal_type_set.update(allowed_content_type_list)
+
+  # The already tested portal types
   tested_portal_type_list = []
+
+  # Documents can be contained in modules or in tools.
+  # First try all portal types in modules context.
   for business_template_info in business_template_info_list:
     for module_id, module_portal_type in business_template_info.modules.items():
       portal_type_list = [module_portal_type, ] + \
@@ -787,6 +800,53 @@ def addTestMethodDynamically(test_class, validator, target_business_templates):
                        base_path = '',
                        tested_portal_type_list=tested_portal_type_list)
 
+  # Then, the remaining portal types might be in tools.
+  # For tools, we cannot introspect as easily, because at this stage the portal
+  # is not created and the id of tool is unknown in business templates, so use
+  # a statically defined mapping for now.
+  tool_id_mapping = {
+      'Activity Tool': 'portal_activities',
+      'Alarm Tool': 'portal_alarms',
+      'Cache Tool': 'portal_caches',
+      'Callable Tool': 'portal_callables',
+      'Catalog Tool': 'portal_catalog',
+      'Category Tool': 'portal_categories',
+      'Component Tool': 'portal_components',
+      'Contribution Registry Tool': 'portal_contribution_registry',
+      'Domain Tool': 'portal_domains',
+      'Id Tool': 'portal_ids',
+      'Memcached Tool': 'portal_memcached',
+      'Preference Tool': 'portal_preferences',
+      'Property Sheet Tool': 'portal_property_sheets',
+      'Simulation Tool': 'portal_simulation',
+      'Template Tool': 'portal_templates',
+      'Trash Tool': 'portal_trash',
+      'Types Tool': 'portal_types',
+  }
+  business_template_portal_type_set = business_template_portal_type_set.difference(tested_portal_type_list)
+  for business_template_info in business_template_info_list:
+    for portal_type in business_template_portal_type_set:
+      if portal_type in tool_id_mapping:
+        portal_type_list = [portal_type, ] + \
+              business_template_info.allowed_content_types.get(portal_type, [])
+        portal_type_path_dict = dict(zip(portal_type_list, portal_type_list))
+        testPortalTypeViewRecursivly(test_class=test_class,
+                        validator=validator,
+                        module_id=tool_id_mapping[portal_type],
+                        business_template_info=business_template_info,
+                        business_template_info_list=business_template_info_list,
+                        portal_type_list=portal_type_list,
+                        portal_type_path_dict=portal_type_path_dict,
+                        base_path = '',
+                        tested_portal_type_list=tested_portal_type_list)
+
+  # Still not found, issue a warning.
+  not_tested_portal_type = business_template_portal_type_set.difference(tested_portal_type_list)
+  if not_tested_portal_type:
+    # this may happen when some portal types does not have views (like Simulation Movement for example)
+    ZopeTestCase._print(
+        "Could not generate test methods for the following portal types: %s\n"
+        % (', '.join(not_tested_portal_type)))
 
 # Two validators are available : nu and tidy
 # It's hightly recommanded to use the nu validator which validates html5
