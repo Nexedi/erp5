@@ -94,7 +94,7 @@ class VideoWidget(Widget.TextWidget):
       if field.get_value('video_loop'):
         extra_kw['loop']='loop'
       if field.get_value('video_preload'):
-        extra_kw['preload']='preload'
+        extra_kw['preload']='auto'
       return Widget.render_element("video",
                         src=value,
                         extra=field.get_value('extra'),
