@@ -12,5 +12,5 @@ if form.meta_type != 'ERP5 Form':
 # the listbox is there.
 for group in ('bottom', 'center', 'left', 'right'):
   for field in form.get_fields_in_group(group):
-     if field.meta_type == 'PlanningBox' and not(field['hidden']) and field['enabled']:
-       return field
+    if field.meta_type == 'PlanningBox' and not(field['hidden']) and field['enabled']:
+      return field

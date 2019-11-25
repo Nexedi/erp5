@@ -42,8 +42,8 @@ if depth == maximum_depth and id_list:
     if recursive:
       for subdocument in document.objectValues():
         recurse(subdocument)
-  for id in id_list:
-    recurse(document[id])
+  for id_ in id_list:
+    recurse(document[id_])
   if active_process is None:
     return error_list
   if error_list:
@@ -84,8 +84,8 @@ else:
   active_script = getattr(activate(priority=4), script.id)
   if depth < maximum_depth:
     relative_url = relative_url and relative_url + '/' or ''
-    for id in id_list:
-      active_script(relative_url=relative_url + id, **kw)
+    for id_ in id_list:
+      active_script(relative_url=relative_url + id_, **kw)
   else:
     kw['relative_url'] = relative_url
     for i in xrange(0, len(id_list), packet):

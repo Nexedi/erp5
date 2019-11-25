@@ -14,7 +14,6 @@
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from ZTUtils import make_query
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Message import translateString
 from ComputedAttribute import ComputedAttribute
 

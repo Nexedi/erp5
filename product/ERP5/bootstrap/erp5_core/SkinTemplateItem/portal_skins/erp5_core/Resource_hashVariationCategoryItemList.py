@@ -1,6 +1,9 @@
+if default_sub_field_property_dict is None:
+  default_sub_field_property_dict = {}
+
+
 # Remove empty items
-item_list = filter(lambda x: x not in [('',''), ['','']], 
-                   item_list)
+item_list = [x for x in item_list if x not in (('',''), ['',''])]
 
 sub_field_dict = {}
 split_depth = 1
