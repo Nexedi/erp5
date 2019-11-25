@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, argument_name_list=[]</string> </value>
+            <value> <string>selection=None, argument_name_list=()</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
