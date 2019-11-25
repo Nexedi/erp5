@@ -5,7 +5,7 @@ history_name_list = ['building_history', ' installation_history', 'history']
 history = {}
 
 portal_workflow = context.getPortalObject().portal_workflow
-workflow_id_list = [workflow_id for workflow_id, workflow_state in context.getWorkflowStateItemList()]
+workflow_id_list = [x[0] for x in context.getWorkflowStateItemList()]
 
 for history_name in history_name_list:
   
@@ -16,7 +16,7 @@ for history_name in history_name_list:
       list_history_item = portal_workflow.getInfoFor(ob=context, name=history_name, wf_id=wf_id)
     except ConflictError:
       raise
-    except:
+    except Exception:
       pass
 
     if list_history_item not in ((), None):

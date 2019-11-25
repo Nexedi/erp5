@@ -4,7 +4,6 @@ Content will be created in the appropriate module. It is
 intended to be called from the user interface only.
 """
 translateString = context.Base_translateString
-request = context.REQUEST
 
 # Create the new content in appropriate module
 portal_object = context.getPortalObject()

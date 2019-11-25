@@ -9,7 +9,7 @@ if context.cb_dataValid:
   else:
     if portal_type_set.issubset(context.getVisibleAllowedContentTypeList()):
       try:
-        new_item_list = context.manage_pasteObjects(portal.REQUEST['__cp'])
+        context.manage_pasteObjects(portal.REQUEST['__cp'])
       except KeyError:
         error_message = 'Nothing to paste.'
       else:
