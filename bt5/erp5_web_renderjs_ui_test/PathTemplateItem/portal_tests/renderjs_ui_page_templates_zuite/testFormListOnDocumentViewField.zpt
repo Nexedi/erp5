@@ -34,54 +34,26 @@
   <td></td>
 </tr>
 
-<!-- Field without value are not displayed -->
-<!-- We used to have "my_quantity" field here but it DOES have a default value of 0 thus will be visible -->
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//label[@for='field_my_short_title']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//input[@name='field_my_short_title']</td>
-  <td></td>
-</tr>
-
-<!-- Empty relation field are not displayed -->
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//label[@for='field_my_foo_category_title']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
-  <td></td>
-</tr>
-
-<!-- string Field with value are displayed in read only -->
+<!-- Search bar -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//label[@for='field_my_id' and text()='ID']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_id']//div[@data-gadget-scope='field' and @data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_field_string.html']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_id']</td>
+  <td>//div[@data-gadget-scope='m']//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']//*[2][@data-gadget-scope='erp5_searchfield']//input[@type='search' and @name='search']</td>
   <td></td>
 </tr>
 
+<!-- And the form after -->
 <tr>
-  <td>verifyText</td>
-  <td>//div[@data-gadget-scope='field_my_id']//div[@data-gadget-scope='field']</td>
-  <td>1</td>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='m']//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']//*[3][@data-gadget-scope='erp5_form']</td>
+  <td></td>
 </tr>
 
+<!-- string Field with value are displayed -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//label[@for='field_my_title' and text()='Title']</td>
+  <td></td>
+</tr>
 
 <!-- Listbox are always displayed without label -->
 <tr>
