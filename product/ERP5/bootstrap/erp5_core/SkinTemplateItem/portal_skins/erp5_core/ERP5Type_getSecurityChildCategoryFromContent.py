@@ -19,7 +19,7 @@ The parameters are
 
   base_category_list -- list of category values we need to retrieve
   user_name          -- string obtained from getSecurityManager().getUser().getId()
-  object             -- object which we want to assign roles to
+  obj                -- object which we want to assign roles to
   portal_type        -- portal type of object
 
 NOTE: for now, this script requires proxy manager
@@ -27,11 +27,11 @@ NOTE: for now, this script requires proxy manager
 
 category_list = []
 
-if object is None:
+if obj is None:
   return []
 
 for base_category in base_category_list:
-  membership_list = map(lambda x: '%s*' % x, object.getAcquiredCategoryMembershipList(base_category))
+  membership_list = ['%s*' % x for x in obj.getAcquiredCategoryMembershipList(base_category)]
   category_list.append({base_category: membership_list})
 
 return category_list

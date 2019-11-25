@@ -1,8 +1,6 @@
 from string import zfill
 request = context.REQUEST
 
-from string import zfill
-
 if kw.get('update', False):
   # Ensure ERP5JS correctly refresh the page
   request.RESPONSE.setStatus(400)

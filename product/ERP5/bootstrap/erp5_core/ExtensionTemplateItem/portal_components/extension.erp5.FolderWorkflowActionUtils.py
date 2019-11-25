@@ -52,7 +52,6 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
             doc.getPortalTypeName())
     return get_url
 
-  request = self.REQUEST
   portal = self.getPortalObject()
   Base_translateString = portal.Base_translateString
   wf_tool = portal.portal_workflow
