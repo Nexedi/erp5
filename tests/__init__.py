@@ -209,9 +209,9 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
   def getTestList(self):
     test_list = []
     for business_template_path in (
-        glob('%s/bt5/erp5_*hal*' % HERE) +
-        glob('%s/bt5/erp5_*renderjs*' % HERE) +
-        glob('%s/bt5/erp5_*officejs*' % HERE) +
+        glob('%s/../bt5/erp5_*hal*' % HERE) +
+        glob('%s/../bt5/erp5_*renderjs*' % HERE) +
+        glob('%s/../bt5/erp5_*officejs*' % HERE) +
         []
       ):
       # we skip coding style check for business templates having this marker
