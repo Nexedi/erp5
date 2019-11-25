@@ -25,6 +25,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
@@ -33,16 +34,6 @@ class TestRenderJSDocumentScanner(ERP5TypeFunctionalTestCase):
   foreground = 0
   run_only = "renderjs_erp5_document_scanner_zuite"
 
-  def getBusinessTemplateList(self):
-    return (
-      'erp5_web_renderjs_ui',
-      'erp5_web_renderjs_ui_test',
-      'erp5_ui_test_core',
-      'erp5_dms',
-      'erp5_accounting',
-      'erp5_pdf_merge',
-      'erp5_document_scanner'
-    )
 
 def test_suite():
   suite = unittest.TestSuite()

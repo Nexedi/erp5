@@ -2,13 +2,13 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test Page Front</title>
+<title>Test Scan Document (expected failure)</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-<tr><td rowspan="1" colspan="3">Test Page Action Breadcrumb List</td></tr>
+<tr><td rowspan="1" colspan="3">Test Scan Document (expected failure)</td></tr>
 </thead><tbody>
 <tr>
   <td>open</td>
@@ -93,12 +93,6 @@
   <td>//a[text()="Scan Document"]</td>
   <td></td>
 </tr>
-<tr tal:condition="not:here/Base_enableDocumentScannerTest">
-  <td>assertEval</td>
-  <td>true == false</td>
-  <td>This test is disabled to run automatically. You need to run manually and enable it in Base_enableDocumentScannerTest</td>
-</tr>
-<tal:block tal:condition="here/Base_enableDocumentScannerTest">
 <tr>
   <td>click</td>
   <td>//a[text()="Scan Document"]</td>
@@ -133,11 +127,6 @@
   <td>type</td>
   <td>field_your_version</td>
   <td>001</td>
-</tr>
-<tr>
-  <td>select</td>
-  <td>field_your_publication_section</td>
-  <td>Financial Reports</td>
 </tr>
 <tr>
   <td>select</td>
@@ -224,7 +213,6 @@
   <td>Done</td>
   <td></td>
 </tr>
-</tal:block>
 </tbody></table>
 </body>
 </html>
