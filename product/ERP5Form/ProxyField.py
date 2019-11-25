@@ -546,7 +546,7 @@ class ProxyField(ZMIField):
     else:
       proxied_field = self.getTemplateField()
       if proxied_field is None:
-        raise AttributeError('The proxy field %r cannot find a template field' % self)
+        raise AttributeError('The proxy field %s cannot find a template field' % self)
       if proxied_field.__class__ == ProxyField:
         return proxied_field.get_recursive_tales(id)
       else:
