@@ -54,7 +54,7 @@ if catalog_uid_list is None:
       'tag': tag,
       'fixit': fixit,
     }
-    for activity in xrange(activity_count):
+    for _ in xrange(activity_count):
       if len(catalog_uid_list) == 0:
         result_list.append('No more uids to check, stop spawning activities.')
         break
