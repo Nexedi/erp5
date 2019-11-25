@@ -67,7 +67,7 @@ class Part:
 
 
 
-def generateParts(_,text,sw,tags,trail,maxlines):
+def generateParts(_, text, sw, tags, trail, maxlines): #  pylint: disable=redefined-outer-name
   par=Part(tags,trail)
   sw=sw.translate(tr).strip().lower().split()
   test=lambda w:w.translate(tr).strip().lower() in sw
@@ -91,7 +91,7 @@ def generateParts(_,text,sw,tags,trail,maxlines):
           yield par # return the last marked part
 
 
-def getExcerptText(context, txt, sw, tags, trail, maxlines):
+def getExcerptText(context, txt, sw, tags, trail, maxlines): #  pylint: disable=redefined-outer-name
   """
   Returns an excerpt of text found in the txt string
   """
@@ -107,23 +107,8 @@ def getExcerptText(context, txt, sw, tags, trail, maxlines):
   txt = txt.replace('-',' - ') # to find hyphenated occurrences
   txt = txt.replace(',',', ')
   txt = txt.replace(';','; ')
-  r = re.compile('\s+')
+  r = re.compile(r'\s+')
   txt = re.sub(r,' ',txt)
   text = ' '.join(txt.split('\n')).split(' ') # very rough tokenization
   return [p for p in generateParts(context,text,sw,tags,trail,maxlines)]
 
-
-if __name__=='__main__':
-  sw='pricing priority right acting proportion'
-  txt=' '.join([l.strip() for l in open('offer.txt').readlines()])
-
-  # configuration
-
-  tags=('<b>','</b>')
-  trail=5
-  maxlines=5
-  for p in getExcerptText(None,txt,sw,tags,trail,maxlines):
-    print p
-
-
-# vim: filetype=python syntax=python shiftwidth=2

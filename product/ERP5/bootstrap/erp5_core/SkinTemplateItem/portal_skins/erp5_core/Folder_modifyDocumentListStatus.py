@@ -6,7 +6,6 @@ This script is intended as a dialog target.
 :param listbox_uid: {list[int]} marks that this script takes objects from previous listbox as its input
 :param mass_workflow_action: {str} the ID of (worflow) action to execute on each object
 """
-MARKER = []
 
 portal = context.getPortalObject()
 request = kwargs.get("REQUEST", None) or context.REQUEST
