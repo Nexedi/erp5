@@ -4,8 +4,8 @@ Base_translateString = portal.Base_translateString
 def Object_hasRelation(obj):
   # Check if there is some related objets.
   result = 0
-  for o in obj.getIndexableChildValueList():
-    for related in obj.portal_categories.getRelatedValueList(obj):
+  for sub_obj in obj.getIndexableChildValueList():
+    for related in obj.portal_categories.getRelatedValueList(sub_obj):
       if related.getRelativeUrl().startswith(obj.getRelativeUrl()):
         continue
       elif related.getRelativeUrl().startswith('portal_simulation') :
