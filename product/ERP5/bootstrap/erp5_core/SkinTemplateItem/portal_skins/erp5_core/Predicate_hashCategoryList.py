@@ -1,6 +1,8 @@
 """
   This script is used in parallel list fields in Predicate_view
 """
+if default_sub_field_property_dict is None:
+  default_sub_field_property_dict = {}
 # Initialise result
 sub_field_list = []
 
@@ -27,7 +29,5 @@ for category in category_list:
     continue
   z += 1
   sub_field_list.append(new_dict)
-
-request = context.REQUEST
 
 return sub_field_list

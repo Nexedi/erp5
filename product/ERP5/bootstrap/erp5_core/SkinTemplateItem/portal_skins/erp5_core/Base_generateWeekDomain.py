@@ -20,7 +20,7 @@ bound_start = DateTime(bound_start.year() , bound_start.month() , bound_start.da
 
 # Normalize Week. XXX this should be in preferences as well
 while bound_start.Day() is not 'Sunday':
-   bound_start =  bound_start - 1
+  bound_start =  bound_start - 1
 current_date =  bound_start + 7 * bound_variation
 bound_stop  = current_date + 7
 current_date =  DateTime(current_date.year() , current_date.month() , current_date.day())

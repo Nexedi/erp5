@@ -53,18 +53,18 @@ if True:
     object_to_remove_list = []
     object_to_delete_list = []
 
-    for object in object_list:
+    for obj in object_list:
 
-      history_dict = object.Base_getWorkflowHistory()
+      history_dict = obj.Base_getWorkflowHistory()
       history_dict.pop('edit_workflow', None)
-      if history_dict == {} or object.aq_parent.portal_type=='Preference':
+      if history_dict == {} or obj.aq_parent.portal_type=='Preference':
         # templates inside preference will be unconditionnaly physically
         # deleted
-        object_to_remove_list.append(object)
+        object_to_remove_list.append(obj)
       else:
         # If a workflow manage a history, 
         # object should not be removed, but only put in state deleted
-        object_to_delete_list.append(object)
+        object_to_delete_list.append(obj)
 
     # Remove some objects
     try:
@@ -100,16 +100,15 @@ if True:
 
       # Try to call "delete_action" workflow transition on documents which defined it
       # Failure of such a call is not a failure globally. The document was deleted anyway
-      not_deleted_count = 0
-      for object in object_to_delete_list:
+      for obj in object_to_delete_list:
         # Hidden transition (without a message displayed)
         # are not returned by getActionsFor
         try:
-          portal.portal_workflow.doActionFor(object, 'delete_action')
+          portal.portal_workflow.doActionFor(obj, 'delete_action')
         except ConflictError:
           raise
-        except:
-          not_deleted_count += 1
+        except Exception:
+          pass
 
     # make sure nothing is checked after
     if selection_name:

@@ -9,9 +9,7 @@ if context.getPortalType() == 'Preference':
       result.append(i)
   return result
 else:
-  return list(
-           filter(lambda x: x.getRelationCountForDeletion() == 0,  # only docs WITHOUT relations can be deleted
-                  map(lambda x: x.getObject(),
-                      context.portal_catalog(uid=uid, **kw))  # kw can contain limit, sort_on and similar runtime information
-           )
-         )
+  # kw can contain limit, sort_on and similar runtime information
+  object_list = [x.getObject() for x in context.portal_catalog(uid=uid, **kw)]
+  # only docs WITHOUT relations can be deleted
+  return [x for x in object_list if x.getRelationCountForDeletion() == 0]

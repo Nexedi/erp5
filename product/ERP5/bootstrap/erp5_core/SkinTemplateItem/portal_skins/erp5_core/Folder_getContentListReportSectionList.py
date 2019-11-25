@@ -1,7 +1,5 @@
 from Products.ERP5Form.Report import ReportSection
-from Products.ERP5Type.Message import Message
 
-form = context
 request = context.REQUEST
 report_section_list = []
 portal = context.getPortalObject()
