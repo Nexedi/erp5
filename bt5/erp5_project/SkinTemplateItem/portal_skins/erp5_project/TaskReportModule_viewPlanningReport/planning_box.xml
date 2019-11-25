@@ -131,7 +131,7 @@
                 </item>
                 <item>
                     <key> <string>round_script</string> </key>
-                    <value> <string>Planning_roundBoundToMinute</string> </value>
+                    <value> <string>Base_roundPlanningBoxBoundToMinute</string> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>

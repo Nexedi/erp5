@@ -849,7 +849,7 @@ class PlanningBoxWidget(Widget.Widget):
 
   round_script = fields.StringField('round_script',
       title='Name of script rounding blocks during validation (ex. ' \
-            'Planning_roundBoundToDay)',
+            'Base_roundPlanningBoxBoundToDay)',
       description='script for block bounds rounding when validating',
       default='',
       required=0)
