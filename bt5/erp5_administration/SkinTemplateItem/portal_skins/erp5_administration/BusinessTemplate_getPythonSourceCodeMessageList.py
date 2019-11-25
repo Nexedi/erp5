@@ -71,9 +71,13 @@ for script_container in script_container_list:
 
 # Check components
 for component_id in (
-    context.getTemplateExtensionIdList() +
-    context.getTemplateDocumentIdList() +
-    context.getTemplateTestIdList()):
+    context.getTemplateExtensionIdList()
+    + context.getTemplateDocumentIdList()
+    + context.getTemplateMixinIdList()
+    + context.getTemplateTestIdList()
+    + context.getTemplateModuleComponentIdList()
+    + context.getTemplateToolComponentIdList()
+  ):
   checkComponent(portal.portal_components[component_id])
 
 return line_list
