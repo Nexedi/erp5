@@ -1,20 +1,6 @@
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
 
-def Object_hasRelation(obj):
-  # Check if there is some related objets.
-  result = 0
-  for o in obj.getIndexableChildValueList():
-    for related in obj.portal_categories.getRelatedValueList(obj):
-      if related.getRelativeUrl().startswith(obj.getRelativeUrl()):
-        continue
-      elif related.getRelativeUrl().startswith('portal_simulation') :
-        continue
-      else:
-        result = 1
-        break
-  return result
-
 context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)
 uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)
 # make sure nothing is checked after
@@ -28,7 +14,7 @@ if uids != []:
   object_used = 0
 
   object_list = [x.getObject() for x in context.portal_catalog(uid=uids)]
-  object_used = sum([Object_hasRelation(x) for x in object_list])
+  object_used = sum([x.getRelationCountForDeletion() for x in object_list])
 
   if object_used > 0:
     if object_used == 1:
