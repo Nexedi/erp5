@@ -26,7 +26,6 @@ Foo | dummy_multilistfield_report
 Foo | dummy_radiofield_report
 Foo | dummy_report
 Foo | list
-Foo | list_tab
 Foo | python_action_jio
 Foo | python_error_action_jio
 Foo | python_failing_action_jio
@@ -41,6 +40,7 @@ Foo | view_formbox_fooline
 Foo | view_hidden_positive_only_quantity
 Foo | view_listbox
 Foo | view_multiple_listbox
+Foo | view_onlyjio
 Foo | view_planning
 Foo | view_print_dialog
 Foo | view_printout_form

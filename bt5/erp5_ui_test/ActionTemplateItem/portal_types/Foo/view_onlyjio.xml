@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Display the list of sub objects</string> </value>
+            <value> <string>Visible only in ERP5JS</string> </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>list_tab</string> </value>
+            <value> <string>view_onlyjio</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>List</string> </value>
+            <value> <string>View Only ERP5JS</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -71,7 +71,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Folder_viewContentList</string> </value>
+            <value> <string>string:${object_url}/Base_viewMetadata</string> </value>
         </item>
       </dictionary>
     </pickle>
