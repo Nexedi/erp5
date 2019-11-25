@@ -195,7 +195,7 @@ shared = true
 
   def checkRevision(self, test_result, node_test_suite):
     if node_test_suite.revision == test_result.revision:
-      return
+      return lambda: None
     logger.info('Disagreement on tested revision, checking out: %r != %r',
         node_test_suite.revision, test_result.revision)
     updater_kw = dict(git_binary=self.config['git_binary'],
