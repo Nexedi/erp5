@@ -17,6 +17,7 @@ div[data-gadget-scope="field_your_document_scanner_gadget"] {
 
 .camera-input, .camera-output {
   min-height: 360px;
+  display: none;
 }
 
 .canvas {
