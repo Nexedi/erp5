@@ -116,7 +116,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>PropertySheetChild_validateIDField</string> </value>
+            <value> <string>Base_validateIDAsReferenceSuffix</string> </value>
         </item>
       </dictionary>
     </pickle>
