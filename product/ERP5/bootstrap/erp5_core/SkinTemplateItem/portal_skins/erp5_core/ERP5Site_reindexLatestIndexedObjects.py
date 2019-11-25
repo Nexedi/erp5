@@ -13,7 +13,7 @@ unindex_count = 0
 for candidate in candidate_list:
   path = candidate['path']
   try:
-    object = portal.restrictedTraverse(path)
+    obj = portal.restrictedTraverse(path)
   except KeyError:
     # Object is unreachable, remove it from catalog
     # Use SQLQueue because all activities are triggered on the same object,
@@ -21,7 +21,7 @@ for candidate in candidate_list:
     catalog.activate(activity="SQLQueue").unindexObject(uid=candidate['uid'])
     unindex_count += 1
   else:
-    object.reindexObject()
+    obj.reindexObject()
     reindex_count += 1
 
 print '%s object reindexed, %s object unindexed' % (reindex_count, unindex_count)

@@ -1,9 +1,13 @@
+if uids is None:
+  uids = []
+if listbox_uid is None:
+  listbox_uid = []
 request=context.REQUEST
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
 
-selected_uids = context.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)
-uids = context.portal_selections.getSelectionCheckedUidsFor(selection_name)
+portal.portal_selections.updateSelectionCheckedUidList(selection_name,listbox_uid,uids)
+uids = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)
 
 if uids == []:
   message = Base_translateString("Please select one or more items to delete first.")
@@ -27,5 +31,5 @@ request.set('proxy_field_id', field_id)
 request.set('proxy_field_selection_name', field_selection_name)
 request.set('ignore_hide_rows', 1)
 
-context.portal_selections.setSelectionParamsFor('folder_delete_selection', kw)
+portal.portal_selections.setSelectionParamsFor('folder_delete_selection', kw)
 return context.Folder_viewDeleteDialog(uids=uids, REQUEST=request)
