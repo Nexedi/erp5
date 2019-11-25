@@ -189,7 +189,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>FieldValidator_requireIfDialogConfirmed</string> </value>
+            <value> <string>Base_validateDialogConfirmation</string> </value>
         </item>
       </dictionary>
     </pickle>

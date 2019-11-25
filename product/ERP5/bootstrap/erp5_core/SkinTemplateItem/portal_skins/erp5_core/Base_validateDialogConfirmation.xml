@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>FieldValidator_requireIfDialogConfirmed</string> </value>
+            <value> <string>Base_validateDialogConfirmation</string> </value>
         </item>
       </dictionary>
     </pickle>
