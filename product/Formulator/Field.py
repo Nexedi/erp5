@@ -464,9 +464,9 @@ class Field:
 InitializeClass(Field)
 
 class ZMIField(
+    OFS.SimpleItem.Item,
     Acquisition.Implicit,
     Persistent,
-    OFS.SimpleItem.Item,
     Field,
     ):
     """Base class for a field implemented as a Python (file) product.
