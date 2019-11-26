@@ -3286,6 +3286,16 @@ return [
       # but this did not affect the other role
       self.assertTrue(hasRole(role2))
 
+    def test_repr(self):
+      document = self.portal.organisation_module.newContent(
+          portal_type='Organisation',
+          id='organisation_id'
+      )
+      self.assertEqual(
+          '<Organisation at /%s/organisation_module/organisation_id>' % self.portal.getId(),
+          repr(document))
+
+
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
   # when this one fails.
