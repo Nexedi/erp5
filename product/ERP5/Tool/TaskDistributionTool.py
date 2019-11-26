@@ -59,6 +59,7 @@ class TaskDistributionTool(BaseTool):
     test_node_list = portal.portal_catalog(
         portal_type="Test Node",
         title=SimpleQuery(comparison_operator='=', title=node_title),
+        limit=2
     )
     if len(test_node_list) == 1:
       return test_node_list[0].getRelativeUrl()
@@ -88,7 +89,7 @@ class TaskDistributionTool(BaseTool):
 
       -> (test_result_path, revision) or None if already completed
     """
-    LOG('createTestResult', 0, (name, revision, test_title, project_title))
+    # LOG('createTestResult', 0, (name, revision, test_title, project_title))
     portal = self.getPortalObject()
     if test_title is None:
       test_title = name
@@ -230,18 +231,56 @@ class TaskDistributionTool(BaseTool):
     if test_result.getSimulationState() != 'started':
       return
     started_list = []
-    for line in test_result.objectValues(portal_type="Test Result Line",
-                                         sort_on=[("int_index","ascending")]):
+
+
+    import random
+#     line_list = test_result.searchFolder(portal_type="Test Result Line",
+#                                          simulation_state="draft")
+#     # Randomize to prevent all bot to generate DB conflict
+#     random.shuffle(line_list)
+#     for sql_line in line_list:
+#       line = sql_line.getObject()
+#       test = line.getTitle()
+#       if test not in exclude_list:
+#         state = line.getSimulationState()
+#         if state == 'draft':
+#           if node_title:
+#             node = self._getTestNodeRelativeUrl(node_title)
+#             line.setSource(node)
+#           line.start()
+#           return line.getRelativeUrl(), test
+
+
+    line_id_list = [x for x in test_result.objectIds()]
+    # Randomize to prevent all bot to generate DB conflict
+    random.shuffle(line_id_list)
+    for line_id in line_id_list:
+      line = test_result[line_id]
+      if (line.getPortalType() != 'Test Result Line'):
+        continue
       test = line.getTitle()
       if test not in exclude_list:
-        state = line.getSimulationState()
-        test = line.getRelativeUrl(), test
-        if state == 'draft':
+        if line.getSimulationState() == 'draft':
           if node_title:
             node = self._getTestNodeRelativeUrl(node_title)
             line.setSource(node)
           line.start()
-          return test
+          return line.getRelativeUrl(), test
+
+
+
+#     for line in test_result.objectValues(portal_type="Test Result Line",
+#                                          sort_on=[("int_index","ascending")]):
+#       test = line.getTitle()
+#       if test not in exclude_list:
+#         state = line.getSimulationState()
+#         test = line.getRelativeUrl(), test
+#         if state == 'draft':
+#           if node_title:
+#             node = self._getTestNodeRelativeUrl(node_title)
+#             line.setSource(node)
+#           line.start()
+#           return test
 
   security.declarePublic('stopUnitTest')
   def stopUnitTest(self, test_path, status_dict, node_title=None):
@@ -250,7 +289,7 @@ class TaskDistributionTool(BaseTool):
       - status_dict (dict)
     """
     status_dict = self._extractXMLRPCDict(status_dict)
-    LOG("TaskDistributionTool.stopUnitTest", 0, repr((test_path,status_dict)))
+    # LOG("TaskDistributionTool.stopUnitTest", 0, repr((test_path,status_dict)))
     portal = self.getPortalObject()
     line = portal.restrictedTraverse(test_path)
     test_result = line.getParentValue()
@@ -273,8 +312,8 @@ class TaskDistributionTool(BaseTool):
     """report failure when a node can not handle task
     """
     status_dict = self._extractXMLRPCDict(status_dict)
-    LOG("TaskDistributionTool.reportTaskFailure", 0, repr((test_result_path,
-                                                          status_dict)))
+    # LOG("TaskDistributionTool.reportTaskFailure", 0, repr((test_result_path,
+    #                                                      status_dict)))
     portal = self.getPortalObject()
     test_result = portal.restrictedTraverse(test_result_path)
     test_result_node = self._getTestResultNode(test_result, node_title)
@@ -316,8 +355,8 @@ class TaskDistributionTool(BaseTool):
     """report status of node
     """
     status_dict = self._extractXMLRPCDict(status_dict)
-    LOG("TaskDistributionTool.reportTaskStatus", 0, repr((test_result_path,
-                                                          status_dict)))
+    # LOG("TaskDistributionTool.reportTaskStatus", 0, repr((test_result_path,
+    #                                                       status_dict)))
     portal = self.getPortalObject()
     test_result = portal.restrictedTraverse(test_result_path)
     node = self._getTestResultNode(test_result, node_title)
@@ -329,7 +368,7 @@ class TaskDistributionTool(BaseTool):
   def isTaskAlive(self, test_result_path):
     """check status of a test suite
     """
-    LOG("TaskDistributionTool.checkTaskStatus", 0, repr(test_result_path))
+    # LOG("TaskDistributionTool.checkTaskStatus", 0, repr(test_result_path))
     portal = self.getPortalObject()
     test_result = portal.restrictedTraverse(test_result_path)
     return test_result.getSimulationState() == "started" and 1 or 0
