@@ -9,7 +9,24 @@
 <thead>
 <tr><td rowspan="1" colspan="3">Test Default Module View</td></tr>
 </thead><tbody>
-<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr><td>open</td>
+    <td>${base_url}/foo_module/ListBoxZuite_reset</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Reset Successfully.</td><td></td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?start:int=1&amp;num:int=1&amp;create_line:int=0</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+<tr><td>open</td>
+    <td>${base_url}/foo_module/1/Foo_createObjects?start:int=1&amp;num:int=1&amp;</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
 <tr>
   <td>open</td>
@@ -43,6 +60,12 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
 </tal:block>
 
+<tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': 'No records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
 
 </tbody></table>
 </body>
