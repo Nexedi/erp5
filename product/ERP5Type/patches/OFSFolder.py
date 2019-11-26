@@ -15,6 +15,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from OFS.Folder import Folder
+from OFS.SimpleItem import Item
 from Products.ERP5Type import Permissions
 
 """
@@ -63,3 +64,7 @@ security = ClassSecurityInfo()
 security.declareProtected(Permissions.ManagePortal, 'isERP5SitePresent')
 Folder.security = security
 InitializeClass(Folder)
+
+# restore __repr__ after persistent > 4.4
+# https://github.com/zopefoundation/Zope/issues/379
+Folder.__repr__ = Item.__repr__
