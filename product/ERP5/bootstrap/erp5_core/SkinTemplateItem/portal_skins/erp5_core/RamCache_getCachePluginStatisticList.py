@@ -5,9 +5,14 @@ format it so it can be used in a listbox field.
 from Products.ERP5Type.Document import newTempBase
 
 # get all cache statistics 
-cache_stats = context.getPortalObject().portal_caches.getCacheTotalMemorySize()
+portal = context.getPortalObject()
+cache_stats = portal.portal_caches.getCacheTotalMemorySize()
 cache_factory_list_stats = cache_stats['stats']
 cache_factory_id = context.getParentValue().getId()
+if cache_factory_id not in cache_factory_list_stats:
+  # If this cache factory is not in the stats, it means we have to
+  # update cache structure. XXX Probably an interaction should do this instead.
+  portal.portal_caches.updateCache()
 cache_plugin_stats = cache_factory_list_stats[cache_factory_id]
 cache_plugin_stats_data = cache_plugin_stats['cp_cache_keys_total_size']
 
