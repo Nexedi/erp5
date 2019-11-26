@@ -9,7 +9,10 @@ cache_stats = context.getPortalObject().portal_caches.getCacheTotalMemorySize()
 cache_factory_list_stats = cache_stats['stats']
 cache_plugin_id = context.getId()
 cache_factory_id = context.getParentValue().getId()
-cache_plugin_stats = cache_factory_list_stats[cache_factory_id]
+cache_plugin_stats = cache_factory_list_stats.get(
+    cache_factory_id,
+    {'cp_cache_keys_total_size': {},
+     'total': None})
 cache_plugin_stats_data = cache_plugin_stats['cp_cache_keys_total_size']
 
 if statistics_criteria == 'total':
