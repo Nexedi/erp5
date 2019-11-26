@@ -391,7 +391,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
         to_delete_key_list = [x for x,y in config.items() if y==None]
         [config.pop(x) for x in to_delete_key_list]
         config_list.append(config)
-    LOG('ERP5ProjectUnitTestDistributor.startTestSuite, config_list',INFO,config_list)
+    # LOG('ERP5ProjectUnitTestDistributor.startTestSuite, config_list',INFO,config_list)
     if batch_mode:
       return config_list
     return json.dumps(config_list)
@@ -402,7 +402,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     """
     Here this is only a proxy to the task distribution tool
     """
-    LOG('ERP5ProjectUnitTestDistributor.createTestResult', 0, (node_title, test_title))
+    # LOG('ERP5ProjectUnitTestDistributor.createTestResult', 0, (node_title, test_title))
     portal = self.getPortalObject()
     if node_title:
       test_node = self._getTestNodeFromTitle(node_title)
@@ -429,6 +429,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     test_node_list = self._getTestNodeModule().searchFolder(
       portal_type="Test Node",
       title=SimpleQuery(comparison_operator='=', title=node_title),
+      limit=2
     )
     assert len(test_node_list) == 1, "We found %i test nodes for %s" % (
                                       len(test_node_list), node_title)
@@ -439,7 +440,8 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     test_suite_list = self._getTestSuiteModule().searchFolder(
       portal_type='Test Suite',
       title=SimpleQuery(comparison_operator='=', title=suite_title),
-      validation_state='validated')
+      validation_state='validated',
+      limit=2)
     assert len(test_suite_list) <= 1, "We found %i test suite for %s" % (
                                       len(test_suite_list), suite_title)
     test_suite = None
@@ -452,7 +454,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     """
     Here this is only a proxy to the task distribution tool
     """
-    LOG('ERP5ProjectUnitTestDistributor.startUnitTest', 0, test_result_path)
+    # LOG('ERP5ProjectUnitTestDistributor.startUnitTest', 0, test_result_path)
     portal = self.getPortalObject()
     return portal.portal_task_distribution.startUnitTest(test_result_path,exclude_list,
                   node_title=node_title)
@@ -462,7 +464,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     """
     Here this is only a proxy to the task distribution tool
     """
-    LOG('ERP5ProjectUnitTestDistributor.stop_unit_test', 0, test_path)
+    # LOG('ERP5ProjectUnitTestDistributor.stop_unit_test', 0, test_path)
     portal = self.getPortalObject()
     return portal.portal_task_distribution.stopUnitTest(test_path, status_dict,
                   node_title=node_title)
