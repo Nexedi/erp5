@@ -33,6 +33,8 @@ Glossary Module | update_workflows_by_english_glossary
 Glossary Module | view
 Glossary Term | view
 Preference | vcs
+PyData Script | repository_history_view
+Python Script | repository_history_view
 Template Tool | bt_vcs_history
 Template Tool | migrate_business_template_list
 Template Tool | search_portal_type
