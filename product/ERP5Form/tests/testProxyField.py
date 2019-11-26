@@ -385,3 +385,26 @@ return printed
     form_1_html = form_1.my_field.render(REQUEST=self.app.REQUEST).replace('\n', '')
     form_2_html = form_2.my_field.render(REQUEST=self.app.REQUEST).replace('\n', '')
     self.assertEqual(form_1_html, form_2_html)
+
+  def test_broken_proxy_field(self):
+    portal_skins = self.getSkinsTool()
+    portal_skins.manage_addProduct['OFSP'].manage_addFolder('erp5_geek')
+    skin_folder = portal_skins._getOb('erp5_geek')
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form(
+        'Base_viewGeek',
+        'View')
+    form = skin_folder._getOb('Base_viewGeek', None)
+    form.manage_addField('my_title', 'Title', 'ProxyField')
+
+    field = getattr(form, 'my_title')
+
+    self.assertIsNone(field.getTemplateField())
+    self.assertEqual('', field.render())
+    self.assertEqual('', field.get_tales('default'))
+    self.assertIsNone(field.get_value('default'))
+
+    with self.assertRaisesRegexp(
+        AttributeError,
+        'The proxy field <ProxyField at /%s/portal_skins/erp5_geek/Base_viewGeek/my_title> cannot find a template field'
+        % self.portal.getId()):
+      field.get_recursive_tales('default')
