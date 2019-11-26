@@ -9,8 +9,7 @@ folder_id = context.getParentValue().getId() # replace aq_parent by getParentVal
 
 history_list = []
 business_template = None
-for bt in portal.portal_templates.searchFolder(installation_state='installed'):
-  # if installation_state not in catalog, we have to check manually
+for bt in portal.portal_templates.contentValues():
   if bt.getInstallationState() != 'installed':
     continue
   if folder_id in bt.getTemplateSkinIdList():
