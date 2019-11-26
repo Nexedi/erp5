@@ -5,7 +5,6 @@ from Products.ERP5Type.Utils import checkPythonSourceCode
 
 logger = logging.getLogger('extension.erp5.PythonCodeUtils')
 
-
 def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
   """
   Check Python source suitable for Source Code Editor and return a JSON object
@@ -106,7 +105,7 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
 
 #  import pdb; pdb.set_trace()
   pylint_message_list = []
-  if 0:
+  if 1:
     start = time.time()
     pylint_message_list = checkPythonSourceCode(code, data.get('portal_type'))
     logger.info(
@@ -114,6 +113,7 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
       len(code.splitlines()),
       time.time() - start
     )
+    message_list = pylint_message_list
 
   for message_dict in message_list:
     if is_python_script:
@@ -129,3 +129,4 @@ def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
   if REQUEST is not None:
     REQUEST.RESPONSE.setHeader('content-type', 'application/json')
   return json.dumps(dict(annotations=message_list))
+  
