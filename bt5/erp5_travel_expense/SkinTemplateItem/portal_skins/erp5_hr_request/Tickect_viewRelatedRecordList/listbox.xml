@@ -197,7 +197,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>ticket_view_selection</string> </value>
+                    <value> <string>ticket_view_related_record_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
