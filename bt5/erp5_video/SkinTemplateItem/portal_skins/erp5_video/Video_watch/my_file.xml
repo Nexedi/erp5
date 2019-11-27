@@ -301,7 +301,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: \'<video autoplay="true" controls="controls" src="\'+here.absolute_url()+\'?inline=True&format="></video>\'
+python: \'<video autoplay="autoplay" controls="controls" src="\'+here.absolute_url()+\'?inline=True&format="></video>\'
 
 ]]></string> </value>
         </item>
