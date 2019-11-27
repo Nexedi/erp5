@@ -59,6 +59,7 @@ class TaskDistributionTool(BaseTool):
     test_node_list = portal.portal_catalog(
         portal_type="Test Node",
         title=SimpleQuery(comparison_operator='=', title=node_title),
+        limit=2
     )
     if len(test_node_list) == 1:
       return test_node_list[0].getRelativeUrl()

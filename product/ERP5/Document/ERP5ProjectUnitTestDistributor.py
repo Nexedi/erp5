@@ -429,6 +429,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     test_node_list = self._getTestNodeModule().searchFolder(
       portal_type="Test Node",
       title=SimpleQuery(comparison_operator='=', title=node_title),
+      limit=2
     )
     assert len(test_node_list) == 1, "We found %i test nodes for %s" % (
                                       len(test_node_list), node_title)
@@ -439,7 +440,8 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     test_suite_list = self._getTestSuiteModule().searchFolder(
       portal_type='Test Suite',
       title=SimpleQuery(comparison_operator='=', title=suite_title),
-      validation_state='validated')
+      validation_state='validated',
+      limit=2)
     assert len(test_suite_list) <= 1, "We found %i test suite for %s" % (
                                       len(test_suite_list), suite_title)
     test_suite = None
