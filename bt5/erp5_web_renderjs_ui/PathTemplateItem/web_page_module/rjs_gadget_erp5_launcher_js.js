@@ -848,7 +848,8 @@
       if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
         for (index = 0; index < document.styleSheets.length; index += 1) {
           styleSheet = document.styleSheets[index];
-          if (styleSheet.href.startsWith('data:text/css;')) {
+          if ((styleSheet.href !== null) &&
+              (styleSheet.href.startsWith('data:text/css;'))) {
             wallpaper_url = styleSheet.cssRules[0].style
               .backgroundImage.slice(4, -1).replace(/["']/g, '');
             wallpaper_absolute_url = new URL(
