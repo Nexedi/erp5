@@ -80,8 +80,7 @@ class ERP5(_ERP5):
                    or full_test_case)
 
       # skip some tests
-      if test_case.startswith('testLive') or test_case.startswith('testVifib') \
-         or test_case.find('Performance') > 0 \
+      if test_case.find('Performance') > 0 \
          or test_case in ('testERP5LdapCatalog', # XXX (Ivan), until LDAP server is available this test will alway fail
                           # tests reading selenium tables from erp5.com
                           # not maintained
