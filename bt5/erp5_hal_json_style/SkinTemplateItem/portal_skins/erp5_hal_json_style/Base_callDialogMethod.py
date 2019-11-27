@@ -12,12 +12,9 @@ There are runtime values hidden in every dialog form (injected by getHateoas Scr
   extra_param_json - JSON serialized extra parameters for the dialog script
 """
 
-from Products.ERP5Type.Log import log, DEBUG, INFO, WARNING, ERROR
-from Products.Formulator.Errors import FormValidationError, ValidationError
-from ZTUtils import make_query
+from Products.ERP5Type.Log import log, WARNING
+from Products.Formulator.Errors import FormValidationError
 import json
-
-DOCUMENT_COUNT_LIMIT = 50
 
 # http://stackoverflow.com/a/13105359
 def byteify(value):
@@ -53,7 +50,6 @@ else:
 # request.form holds POST data thus containing 'field_' + field.id items
 # such as 'field_your_some_field'
 request_form = request.form
-error_message = ''
 translate = context.Base_translateString
 portal = context.getPortalObject()
 
@@ -161,7 +157,6 @@ except FormValidationError as validation_errors:
 
 MARKER = [] # A recognisable default value. Use with 'is', not '=='.
 listbox_id_list = [] # There should not be more than one listbox - but this give us a way to check.
-file_id_list = [] # For uploaded files.
 for field in form.get_fields():
   field_id = field.id
   field_value = request.get(field_id, MARKER)
