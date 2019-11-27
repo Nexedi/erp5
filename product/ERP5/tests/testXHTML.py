@@ -771,7 +771,11 @@ def testPortalTypeViewRecursivly(test_class, validator, module_id,
                        base_path=next_base_path,
                        tested_portal_type_list=tested_portal_type_list)
 
-def addTestMethodDynamically(test_class, validator, target_business_templates):
+def addTestMethodDynamically(
+    test_class,
+    validator,
+    target_business_templates,
+    expected_failure_list):
   from Products.ERP5.tests.utils import BusinessTemplateInfoTar
   from Products.ERP5.tests.utils import BusinessTemplateInfoDir
   business_template_info_list = []
@@ -828,12 +832,21 @@ def addTestMethodDynamically(test_class, validator, target_business_templates):
                       tested_portal_type_list=tested_portal_type_list)
 
   # Still not found, issue a warning.
-  not_tested_portal_type = business_template_portal_type_set.difference(tested_portal_type_list)
+  not_tested_portal_type = business_template_portal_type_set.difference(
+      tested_portal_type_list)
   if not_tested_portal_type:
-    # this may happen when some portal types does not have views (like Simulation Movement for example)
+    # this may happen when some portal types does not have views (like Simulation Movement
+    # in erp5_core for example)
     ZopeTestCase._print(
         "Could not generate test methods for the following portal types: %s\n"
         % (', '.join(not_tested_portal_type)))
+
+  for expected_failure_method in expected_failure_list:
+    setattr(
+        test_class,
+        expected_failure_method,
+        unittest.expectedFailure(getattr(test_class, expected_failure_method)))
+
 
 # Two validators are available : nu and tidy
 # It's hightly recommanded to use the nu validator which validates html5
@@ -862,7 +875,12 @@ def test_suite():
     # add erp5_core to the list here to not return it
     # on getBusinessTemplateList call
     addTestMethodDynamically(TestXHTML, validator,
-      ('erp5_core',) + TestXHTML.getBusinessTemplateList())
+      ('erp5_core',) + TestXHTML.getBusinessTemplateList(),
+      expected_failure_list=(
+          # this view needs VCS preference set (this test suite does not support
+          # setting preferences, but this might be a way to fix this)
+          'test_erp5_forge_Business_Template_BusinessTemplate_viewVcsStatus',
+      ))
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestXHTML))
   return suite
