@@ -231,18 +231,26 @@ class TaskDistributionTool(BaseTool):
     if test_result.getSimulationState() != 'started':
       return
     started_list = []
-    for line in test_result.objectValues(portal_type="Test Result Line",
-                                         sort_on=[("int_index","ascending")]):
+
+    # Look for a test to run
+    # As many nodes may call this function at the same time,
+    # fetching all lines will create read/write DB conflicts
+    # To prevent this, randomize the list of documents to check
+    # and stop as soon as one test to run is found
+    line_id_list = [x for x in test_result.objectIds()]
+    random.shuffle(line_id_list)
+    for line_id in line_id_list:
+      line = test_result[line_id]
+      if (line.getPortalType() != 'Test Result Line'):
+        continue
       test = line.getTitle()
       if test not in exclude_list:
-        state = line.getSimulationState()
-        test = line.getRelativeUrl(), test
-        if state == 'draft':
+        if line.getSimulationState() == 'draft':
           if node_title:
             node = self._getTestNodeRelativeUrl(node_title)
             line.setSource(node)
           line.start()
-          return test
+          return line.getRelativeUrl(), test
 
   security.declarePublic('stopUnitTest')
   def stopUnitTest(self, test_path, status_dict, node_title=None):
