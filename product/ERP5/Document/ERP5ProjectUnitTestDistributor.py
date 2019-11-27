@@ -34,7 +34,7 @@ import itertools
 from copy import deepcopy
 import random
 import string
-from zLOG import LOG,INFO,ERROR
+from zLOG import LOG,DEBUG,ERROR
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
@@ -391,7 +391,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
         to_delete_key_list = [x for x,y in config.items() if y==None]
         [config.pop(x) for x in to_delete_key_list]
         config_list.append(config)
-    LOG('ERP5ProjectUnitTestDistributor.startTestSuite, config_list',INFO,config_list)
+    LOG('ERP5ProjectUnitTestDistributor.startTestSuite, config_list',DEBUG,config_list)
     if batch_mode:
       return config_list
     return json.dumps(config_list)
@@ -402,7 +402,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     """
     Here this is only a proxy to the task distribution tool
     """
-    LOG('ERP5ProjectUnitTestDistributor.createTestResult', 0, (node_title, test_title))
+    LOG('ERP5ProjectUnitTestDistributor.createTestResult', DEBUG, (node_title, test_title))
     portal = self.getPortalObject()
     if node_title:
       test_node = self._getTestNodeFromTitle(node_title)
@@ -452,7 +452,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     """
     Here this is only a proxy to the task distribution tool
     """
-    LOG('ERP5ProjectUnitTestDistributor.startUnitTest', 0, test_result_path)
+    LOG('ERP5ProjectUnitTestDistributor.startUnitTest', DEBUG, test_result_path)
     portal = self.getPortalObject()
     return portal.portal_task_distribution.startUnitTest(test_result_path,exclude_list,
                   node_title=node_title)
@@ -462,7 +462,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     """
     Here this is only a proxy to the task distribution tool
     """
-    LOG('ERP5ProjectUnitTestDistributor.stop_unit_test', 0, test_path)
+    LOG('ERP5ProjectUnitTestDistributor.stop_unit_test', DEBUG, test_path)
     portal = self.getPortalObject()
     return portal.portal_task_distribution.stopUnitTest(test_path, status_dict,
                   node_title=node_title)

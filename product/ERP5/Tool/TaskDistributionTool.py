@@ -32,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery
-from zLOG import LOG
+from zLOG import LOG, DEBUG
 from xmlrpclib import Binary
 
 class TaskDistributionTool(BaseTool):
@@ -88,7 +88,7 @@ class TaskDistributionTool(BaseTool):
 
       -> (test_result_path, revision) or None if already completed
     """
-    LOG('createTestResult', 0, (name, revision, test_title, project_title))
+    LOG('createTestResult', DEBUG, (name, revision, test_title, project_title))
     portal = self.getPortalObject()
     if test_title is None:
       test_title = name
@@ -250,7 +250,7 @@ class TaskDistributionTool(BaseTool):
       - status_dict (dict)
     """
     status_dict = self._extractXMLRPCDict(status_dict)
-    LOG("TaskDistributionTool.stopUnitTest", 0, repr((test_path,status_dict)))
+    LOG("TaskDistributionTool.stopUnitTest", DEBUG, repr((test_path,status_dict)))
     portal = self.getPortalObject()
     line = portal.restrictedTraverse(test_path)
     test_result = line.getParentValue()
@@ -273,8 +273,8 @@ class TaskDistributionTool(BaseTool):
     """report failure when a node can not handle task
     """
     status_dict = self._extractXMLRPCDict(status_dict)
-    LOG("TaskDistributionTool.reportTaskFailure", 0, repr((test_result_path,
-                                                          status_dict)))
+    LOG("TaskDistributionTool.reportTaskFailure", DEBUG, repr((test_result_path,
+                                                               status_dict)))
     portal = self.getPortalObject()
     test_result = portal.restrictedTraverse(test_result_path)
     test_result_node = self._getTestResultNode(test_result, node_title)
@@ -316,8 +316,8 @@ class TaskDistributionTool(BaseTool):
     """report status of node
     """
     status_dict = self._extractXMLRPCDict(status_dict)
-    LOG("TaskDistributionTool.reportTaskStatus", 0, repr((test_result_path,
-                                                          status_dict)))
+    LOG("TaskDistributionTool.reportTaskStatus", DEBUG, repr((test_result_path,
+                                                              status_dict)))
     portal = self.getPortalObject()
     test_result = portal.restrictedTraverse(test_result_path)
     node = self._getTestResultNode(test_result, node_title)
@@ -329,7 +329,7 @@ class TaskDistributionTool(BaseTool):
   def isTaskAlive(self, test_result_path):
     """check status of a test suite
     """
-    LOG("TaskDistributionTool.checkTaskStatus", 0, repr(test_result_path))
+    LOG("TaskDistributionTool.checkTaskStatus", DEBUG, repr(test_result_path))
     portal = self.getPortalObject()
     test_result = portal.restrictedTraverse(test_result_path)
     return test_result.getSimulationState() == "started" and 1 or 0
