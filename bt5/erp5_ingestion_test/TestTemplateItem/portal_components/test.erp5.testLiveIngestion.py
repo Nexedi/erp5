@@ -34,7 +34,7 @@ import random
 import string
 
 # test files' home
-FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
+FILENAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
 class TestIngestion(ERP5TypeLiveTestCase):
@@ -82,7 +82,7 @@ class TestIngestion(ERP5TypeLiveTestCase):
     portal = self.portal
     contribution_tool = getToolByName(portal, 'portal_contributions')
     # seed parameter is here to ensure entropy for document id generation
-    seed = ''.join([random.choice(string.ascii_letters) for i in xrange(20)])
+    seed = ''.join([random.choice(string.ascii_letters) for _ in xrange(20)])
     url = portal.absolute_url()
     url += '/%s?seed=%s' % (script_id, seed)
     if filename:
