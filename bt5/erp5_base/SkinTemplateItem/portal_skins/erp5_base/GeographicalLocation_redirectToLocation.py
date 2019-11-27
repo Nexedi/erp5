@@ -4,5 +4,5 @@
   a simple basic implementation
 """
 context.REQUEST.RESPONSE.redirect( \
-  'http://www.openstreetmap.org/?lat=%s&lon=%s&zoom=17&layers=M' \
+  'https://www.openstreetmap.org/?lat=%s&lon=%s&zoom=17&layers=M' \
     %(context.getLatitude(), context.getLongitude()))
