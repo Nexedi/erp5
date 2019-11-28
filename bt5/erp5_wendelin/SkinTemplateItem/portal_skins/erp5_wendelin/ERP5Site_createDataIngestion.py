@@ -29,9 +29,11 @@ property_dict["stop_date"] = composed.getExpirationDate()
 
 data_ingestion.edit(**property_dict)
 
+
 # create ingestion lines from specialise lines
 for supply_line in composed.objectValues(
     portal_type = 'Data Supply Line'):
+
   current_line = data_ingestion.newContent(
     portal_type = "Data Ingestion Line",
     title = supply_line.getTitle(),
@@ -46,6 +48,14 @@ for supply_line in composed.objectValues(
     # we set quantity=0 for the data product lines
     current_line.setQuantity(0)
 
-data_ingestion.start()
+# start ingestion only if data supply is validated
+data_supply_validated = True
+for specialise_path in specialise_list:
+  specialise = portal.restrictedTraverse(specialise_path)
+  if specialise.getPortalType() == "Data Supply":
+    if specialise.getValidationState() != "validated":
+      data_supply_validated = False
+if data_supply_validated:
+  data_ingestion.start()
 
 return data_ingestion
