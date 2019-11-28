@@ -31,29 +31,32 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.Document.Invoice import Invoice
+
+
 class AccountingRuleCell(Predicate, Invoice):
-    """
+  """
 An AccountingRuleCell object allows to add SaleInvoiceTransactionLines into a Matrix
     """
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Delivery
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Movement
-                      , PropertySheet.Amount
-                      , PropertySheet.Reference
-                      , PropertySheet.PaymentCondition
-                      , PropertySheet.Predicate
-                      , PropertySheet.MappedValue
-                      )
-    # CMF Type Definition
-    meta_type = 'ERP5 Accounting Rule Cell'
-    portal_type = 'Accounting Rule Cell'
-    add_permission = Permissions.AddPortalContent
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Default Properties
+  property_sheets = (
+      PropertySheet.Base,
+      PropertySheet.XMLObject,
+      PropertySheet.CategoryCore,
+      PropertySheet.DublinCore,
+      PropertySheet.Delivery,
+      PropertySheet.Task,
+      PropertySheet.Arrow,
+      PropertySheet.Movement,
+      PropertySheet.Amount,
+      PropertySheet.Reference,
+      PropertySheet.PaymentCondition,
+      PropertySheet.Predicate,
+      PropertySheet.MappedValue,
+  )
+  # CMF Type Definition
+  meta_type = 'ERP5 Accounting Rule Cell'
+  portal_type = 'Accounting Rule Cell'
+  add_permission = Permissions.AddPortalContent
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
