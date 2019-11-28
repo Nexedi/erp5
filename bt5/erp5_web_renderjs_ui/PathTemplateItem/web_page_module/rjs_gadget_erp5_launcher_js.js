@@ -445,35 +445,36 @@
     })
     .allowPublicAcquisition("setSettingList",
                             function setSettingList(argument_list) {
-      var jio_gadget,
-        gadget = this,
-        update_setting,
-        setting_dict = argument_list[0];
-      return gadget.getDeclaredGadget("setting_gadget")
-        .push(function (result) {
-          jio_gadget = result;
-          return jio_gadget.get(gadget.state.setting_id);
-        })
-        .push(undefined, function (error) {
-          if (error.status_code === 404) {
-            return {};
-          }
-          throw error;
-        })
-        .push(function (doc) {
-          for (var key in setting_dict) {
-            if (setting_dict.hasOwnProperty(key)) {
-              if (!doc.hasOwnProperty(key) || doc[key] !== setting_dict[key]) {
-                doc[key] = setting_dict[key];
-                update_setting = true;
+        var jio_gadget,
+          gadget = this,
+          update_setting,
+          setting_dict = argument_list[0];
+        return gadget.getDeclaredGadget("setting_gadget")
+          .push(function (result) {
+            jio_gadget = result;
+            return jio_gadget.get(gadget.state.setting_id);
+          })
+          .push(undefined, function (error) {
+            if (error.status_code === 404) {
+              return {};
+            }
+            throw error;
+          })
+          .push(function (doc) {
+            for (var key in setting_dict) {
+              if (setting_dict.hasOwnProperty(key)) {
+                if (!doc.hasOwnProperty(key) ||
+                    doc[key] !== setting_dict[key]) {
+                  doc[key] = setting_dict[key];
+                  update_setting = true;
+                }
               }
             }
-          }
-          if (update_setting) {
-            jio_gadget.put(gadget.state.setting_id, doc);
-          }
-        });
-    })
+            if (update_setting) {
+              jio_gadget.put(gadget.state.setting_id, doc);
+            }
+          });
+      })
     .allowPublicAcquisition("translateHtml", function translateHtml(
       argument_list
     ) {
