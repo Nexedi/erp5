@@ -5,7 +5,7 @@
 
   var gadget_klass = rJS(window)
 
-    .declareAcquiredMethod('setSetting', 'setSetting')
+    .declareAcquiredMethod('setSettingList', 'setSettingList')
 
     .declareMethod('redirect', function (param_list) {
       return this.getDeclaredGadget('erp5_router')
@@ -50,21 +50,19 @@
         key,
         value,
         i,
+        setting_dict = {},
         queue = new RSVP.Queue();
-
-      function setSetting(key, value) {
-        queue.push(function () {
-          return gadget.setSetting(key, value);
-        });
-      }
 
       for (i = 0; i < len; i += 1) {
         key = element_list[i].getAttribute('data-renderjs-configuration');
         value = element_list[i].textContent;
-        setSetting(key, value);
+        setting_dict[key] = value;
       }
 
       return queue
+        .push(function () {
+          return gadget.setSettingList(setting_dict);
+        })
         .push(function () {
           return gadget.getDeclaredGadget('erp5_router');
         })
