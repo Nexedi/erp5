@@ -32,13 +32,9 @@
             }
           }
         };
-        return gadget.setSetting('jio_storage_description', configuration)
-          .push(function () {
-            return gadget.setSetting('jio_storage_name', "LOCAL");
-          })
-          .push(function () {
-            return gadget.setSetting('sync_reload', true);
-          })
+        return gadget.setSettingList({'jio_storage_description': configuration,
+                                      'jio_storage_name': 'LOCAL',
+                                      'sync_reload': true})
           .push(function () {
             return gadget.redirect({command: "display", options: {page: 'ojs_sync', auto_repair: 'true'}});
           });
@@ -97,8 +93,8 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("reload", "reload")
-    .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("setSettingList", "setSettingList")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareMethod("render", function (options) {
       var gadget = this;
