@@ -93,6 +93,11 @@ class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
 
     return self._checkConsistency(obj, fixit, **kw)
 
+  def _checkConsistency(self, obj, fixit=0, **kw):
+    """Implementation of constraint logic.
+    """
+    raise NotImplementedError()
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'fixConsistency')
   def fixConsistency(self, obj, **kw):
