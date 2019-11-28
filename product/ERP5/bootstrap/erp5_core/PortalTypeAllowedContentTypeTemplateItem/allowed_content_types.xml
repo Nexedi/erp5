@@ -126,5 +126,7 @@
  </portal_type>
  <portal_type id="Types Tool">
   <item>Base Type</item>
+  <item>Preference Tool Type</item>
+  <item>Preference Type</item>
  </portal_type>
 </allowed_content_type_list>

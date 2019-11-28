@@ -50,6 +50,7 @@ class IdGenerator(Base):
 
   # Declarative property
   property_sheets = ( PropertySheet.Base,
+                      PropertySheet.DublinCore,
                       PropertySheet.Version,
                       PropertySheet.Reference)
 
