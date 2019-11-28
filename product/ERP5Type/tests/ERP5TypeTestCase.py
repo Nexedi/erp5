@@ -1138,6 +1138,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       if email_from_address is not None:
         kw['email_from_address'] = email_from_address
       kw['sql_reset'] = 1
+      kw["bt5_repository_url"] = " ".join(os.environ['erp5_tests_bt5_path'].split(','))
       return kw
 
     def setUpERP5Site(self,
