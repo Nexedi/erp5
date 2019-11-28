@@ -87,7 +87,7 @@
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSettingList", "getSettingList")
-    .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("setSettingList", "setSettingList")
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
 
     .declareMethod('updateConfiguration', function (appcache_storage, origin_url,
@@ -125,10 +125,8 @@
           return appcache_storage.repair(current_version);
         })
         .push(function () {
-          return gadget.setSetting("migration_version", current_version);
-        })
-        .push(function () {
-          return gadget.setSetting("previous_storage_name", storage_name);
+          return gadget.setSettingList({"migration_version": current_version,
+                                        "previous_storage_name": storage_name});
         });
     })
 
