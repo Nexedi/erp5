@@ -274,26 +274,6 @@
       });
   }
 
-  function handleSetSetting(gadget, argument_list, putSettingFunction) {
-    var jio_gadget, doc;
-    return gadget.getDeclaredGadget("setting_gadget")
-      .push(function (result) {
-        jio_gadget = result;
-        return jio_gadget.get(gadget.state.setting_id);
-      })
-      .push(function (result) {
-        doc = result;
-      }, function (error) {
-        if (error.status_code === 404) {
-          doc = {};
-        }
-        throw error;
-      })
-      .push(function () {
-        return putSettingFunction(gadget, jio_gadget, doc, argument_list);
-      });
-  }
-
   rJS(window)
 
     // Add mutex protected defered gadget loader.
@@ -443,34 +423,57 @@
         });
     })
     .allowPublicAcquisition("setSetting", function setSetting(argument_list) {
-      var gadget = this;
-      function putSingleSetting(gadget, jio_gadget, doc, argument_list) {
-        var key = argument_list[0],
-          value = argument_list[1];
-        doc[key] = value;
-        return jio_gadget.put(gadget.state.setting_id, doc);
-      }
-      return handleSetSetting(gadget, argument_list, putSingleSetting);
+      var jio_gadget,
+        gadget = this,
+        key = argument_list[0],
+        value = argument_list[1];
+      return gadget.getDeclaredGadget("setting_gadget")
+        .push(function (result) {
+          jio_gadget = result;
+          return jio_gadget.get(gadget.state.setting_id);
+        })
+        .push(undefined, function (error) {
+          if (error.status_code === 404) {
+            return {};
+          }
+          throw error;
+        })
+        .push(function (doc) {
+          doc[key] = value;
+          return jio_gadget.put(gadget.state.setting_id, doc);
+        });
     })
     .allowPublicAcquisition("setSettingList",
                             function setSettingList(argument_list) {
-        var gadget = this;
-        function putMultipleSetting(gadget, jio_gadget, doc, argument_list) {
-          var setting_dict = argument_list[0], update_setting;
-          for (var key in setting_dict) {
-            if (setting_dict.hasOwnProperty(key)) {
-              if (!doc.hasOwnProperty(key) ||
-                  doc[key] !== setting_dict[key]) {
-                doc[key] = setting_dict[key];
-                update_setting = true;
+        var jio_gadget,
+          gadget = this,
+          update_setting,
+          setting_dict = argument_list[0];
+        return gadget.getDeclaredGadget("setting_gadget")
+          .push(function (result) {
+            jio_gadget = result;
+            return jio_gadget.get(gadget.state.setting_id);
+          })
+          .push(undefined, function (error) {
+            if (error.status_code === 404) {
+              return {};
+            }
+            throw error;
+          })
+          .push(function (doc) {
+            for (var key in setting_dict) {
+              if (setting_dict.hasOwnProperty(key)) {
+                if (!doc.hasOwnProperty(key) ||
+                    doc[key] !== setting_dict[key]) {
+                  doc[key] = setting_dict[key];
+                  update_setting = true;
+                }
               }
             }
-          }
-          if (update_setting) {
-            jio_gadget.put(gadget.state.setting_id, doc);
-          }
-        }
-        return handleSetSetting(gadget, argument_list, putMultipleSetting);
+            if (update_setting) {
+              jio_gadget.put(gadget.state.setting_id, doc);
+            }
+          });
       })
     .allowPublicAcquisition("translateHtml", function translateHtml(
       argument_list
