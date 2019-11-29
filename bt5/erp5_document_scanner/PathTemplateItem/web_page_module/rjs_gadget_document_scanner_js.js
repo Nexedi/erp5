@@ -1,50 +1,74 @@
 /*jslint indent: 2 */
-/*global rJS, RSVP, window, navigator, Cropper, Promise, JSON, jIO*/
-(function (rJS, RSVP, window, navigator, Cropper, Promise, JSON, jIO) {
+/*global rJS, RSVP, window, navigator, Cropper, Promise, JSON, jIO, alert, console, Caman, document*/
+(function (rJS, RSVP, window, navigator, Promise, Cropper, JSON, jIO, Caman) {
   "use strict";
 
-  function drawCanvas(gadget, img) {
-    var ratio, x, y,
+  function startCropper(gadget, img) {
+    var queue,
+      settings = gadget.props.preferred_image_settings_data,
       root = gadget.element,
-      canvas = root.querySelector("canvas");
-    canvas.width = gadget.props.image_width;
-    canvas.height = gadget.props.image_height;
-    ratio  = Math.min(canvas.width / img.width, canvas.height / img.height);
-    x = (canvas.width - img.width * ratio) / 2;
-    y = (canvas.height - img.height * ratio) / 2;
+      canvas = document.createElement("canvas");
 
-    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-    canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height, x, y, img.width * ratio, img.height * ratio);
-
-    //contrastImage(canvas, canvas, 10);
-
-    root.querySelector(".camera-output").style.display = "";
-    if (gadget.props.cropper) {
-      gadget.props.cropper.destroy();
+    queue = new RSVP.Queue();
+    if (settings.brightness || settings.contrast || settings.enable_greyscale || settings.compression) {
+      queue.push(function () {
+        return new Promise(function (resolve) {
+          Caman(canvas, img.src, function () {
+            if (settings.brightness !== 0) {
+              this.brightness(settings.brightness);
+            }
+            if (settings.contrast !== 0) {
+              this.contrast(settings.contrast);
+            }
+            if (settings.enable_greyscale) {
+              this.greyscale();
+            }
+            this.render(function () {
+              resolve(canvas.toDataURL("image/jpeg", settings.compression));
+            });
+          });
+        });
+      });
     }
-    gadget.props.cropper = new Cropper(root.querySelector('.photo'), {
-      data: gadget.props.preferred_cropped_canvas_data
+
+    queue.push(function (data_str) {
+      if (data_str) {
+        img.setAttribute("src", data_str);
+      }
+
+      root.querySelector(".camera-output").style.display = "";
+      if (gadget.props.cropper) {
+        gadget.props.cropper.destroy();
+      }
+      gadget.props.cropper = new Cropper(root.querySelector(".photo"), {
+        data: gadget.props.preferred_cropped_canvas_data
+      });
     });
+    return queue;
   }
 
   function takePicture(gadget) {
     var el = gadget.element,
       image_capture = gadget.props.image_capture;
+
     return new RSVP.Queue()
       .push(function () {
-        return image_capture.takePhoto({imageWidth: gadget.props.image_width});
+        return image_capture.takePhoto({
+          imageWidth: gadget.props.image_width,
+          imageHeight: gadget.props.image_height
+        });
       })
       .push(function (blob) {
         return jIO.util.readBlobAsDataURL(blob);
       })
       .push(function (result) {
         var photoInput = el.querySelector(".photoInput"),
-          photo = el.querySelector("img"),
+          photo = el.querySelector(".photo"),
           data_str = result.target.result;
 
         photo.setAttribute("src", data_str);
         photoInput.setAttribute("value", data_str.split(",")[1]);
-        return drawCanvas(gadget, photo);
+        return startCropper(gadget, photo);
       });
   }
 
@@ -83,60 +107,6 @@
       root.querySelector(e).disabled = true;
     });
   }
-
-  /*function contrastImage(input, output, contrast) {
-    var i,
-      outputContext,
-      inputContext = input.getContext("2d"),
-      imageData = inputContext.getImageData(0, 0, input.width, input.height),
-      data = imageData.data,
-      factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
-
-    for (i = 0; i < data.length; i += 4) {
-      data[i] = factor * (data[i] - 128) + 128;
-      data[i + 1] = factor * (data[i + 1] - 128) + 128;
-      data[i + 2] = factor * (data[i + 2] - 128) + 128;
-    }
-    outputContext = output.getContext("2d");
-    outputContext.putImageData(imageData, 0, 0);
-  }*/
-
-  /*function grayscale(input, output) {
-    var i,
-      gray,
-      outputContext,
-      outputCanvas = document.createElement("canvas"),
-      inputContext = input.getContext("2d"),
-      imageData = inputContext.getImageData(0, 0, input.width, input.height),
-      data = imageData.data,
-      arraylength = input.width * input.height * 4;
-
-    //gray = 0.3*R + 0.59*G + 0.11*B
-    // http://www.tannerhelland.com/3643/grayscale-image-algorithm-vb6/
-    for (i = arraylength - 1; i > 0; i -= 4) {
-      gray = 0.3 * data[i - 3] + 0.59 * data[i - 2] + 0.11 * data[i - 1];
-      data[i - 3] = gray;
-      data[i - 2] = gray;
-      data[i - 1] = gray;
-    }
-    outputContext = outputCanvas.getContext("2d");
-    outputContext.putImageData(imageData, 0, 0);
-
-    data = canvas.toDataURL("image/png");
-    output.setAttribute("src", data);
-    if (cropper) {
-      cropper.destroy();
-    }
-    return new RSVP.Queue()
-      .push(function () {
-        cropper = new Cropper(
-          output,
-          {
-            data: preferred_cropped_canvas_data
-          }
-        );
-      });
-  }*/
 
   function handleUserMedia(gadget, callback) {
     var stream,
@@ -231,9 +201,9 @@
           root.querySelector("video").innerText = result_list[0];
         })
         .push(function () {
-          var preferred_cropped_canvas_data = gadget.props.preferred_cropped_canvas_data;
-          preferred_cropped_canvas_data = preferred_cropped_canvas_data || JSON.parse(options.preferred_cropped_canvas_data);
-          gadget.props.dialog_method = preferred_cropped_canvas_data.dialog_method;
+          gadget.props.preferred_cropped_canvas_data = gadget.props.preferred_cropped_canvas_data || JSON.parse(options.preferred_cropped_canvas_data);
+          gadget.props.preferred_image_settings_data = JSON.parse(options.preferred_image_settings_data);
+          gadget.props.dialog_method = options.dialog_method;
           // Clear photo input
           root.querySelector('.photoInput').value = "";
           gadget.props.page_number = parseInt(root.querySelector('input[name="page-number"]').value, 10);
@@ -243,7 +213,6 @@
           if (!navigator.mediaDevices) {
             throw ("mediaDevices is not supported");
           }
-          gadget.props.preferred_cropped_canvas_data = preferred_cropped_canvas_data;
           return navigator.mediaDevices.enumerateDevices();
         })
         .push(function (info_list) {
@@ -284,10 +253,6 @@
         camera_list = this.props.camera_list,
         root = this.element;
 
-      /*if (evt.target.name === "grayscale") {
-        return grayscale(root.querySelector(".canvas"),
-                         root.querySelector('.photo'));
-      }*/
       if (evt.target.className.indexOf("change-camera-btn") !== -1) {
         evt.preventDefault();
 
@@ -320,7 +285,9 @@
         root.querySelector(".camera-input").style.display = "";
         root.querySelector(".camera-output").style.display = "none";
         root.querySelector('.photoInput').value = "";
-        gadget.props.cropper.destroy();
+        if (gadget.props.cropper) {
+          gadget.props.cropper.destroy();
+        }
         return setPageOne(gadget);
       }
       if (evt.target.className.indexOf("confirm-btn") !== -1) {
@@ -338,7 +305,7 @@
             return new Promise(function (resolve) {
               canvas.toBlob(function (blob) {
                 resolve(blob);
-              }, 'image/jpeg', 0.85);
+              }, 'image/jpeg', 1);
             });
           })
           .push(function (blob) {
@@ -350,7 +317,9 @@
               realData = block[1].split(",")[1];
             root.querySelector(".photo").src = base64data;
             root.querySelector(".photoInput").value = realData;
-            gadget.props.cropper.destroy();
+            if (gadget.props.proper) {
+              gadget.props.cropper.destroy();
+            }
           })
           .push(function () {
             return gadget.submitDialogWithCustomDialogMethod(gadget.props.dialog_method);
@@ -362,4 +331,4 @@
       }
     }, false, false);
 
-}(rJS, RSVP, window, navigator, Cropper, Promise, JSON, jIO));
+}(rJS, RSVP, window, navigator, Promise, Cropper, JSON, jIO, Caman));
