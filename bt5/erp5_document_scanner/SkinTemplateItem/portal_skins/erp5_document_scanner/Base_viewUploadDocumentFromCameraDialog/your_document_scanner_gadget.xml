@@ -152,7 +152,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>string: gadget_document_scanner.html</string> </value>
+            <value> <string>python: [(\'preferred_cropped_canvas_data\', context.Base_getPreferredCropperSettingsFromSelection()), (\'preferred_image_settings_data\', context.Base_getPreferredImageSettingsFromPreference()), ("dialog_method", context.Base_storeDocumentFromCameraInActiveProcess.getId())]</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -7,5 +7,4 @@ selection_mapping = portal.portal_selections.getSelectionParamsFor(
   REQUEST=context.REQUEST) or {}
 
 canvas_data = selection_mapping.get(context.REQUEST["HTTP_USER_AGENT"]) or {}
-
 return json.dumps(canvas_data)
