@@ -23,7 +23,7 @@
 </tr>
 
 <tr>
-  <td>assertElementPresent</td>
+  <td>assertElementNotPresent</td>
   <td>//*[text()="View Only ERP5JS"]</td>
   <td></td>
 </tr>
