@@ -3,7 +3,17 @@
 (function (window, rJS, RSVP) {
   "use strict";
 
-  var gadget_klass = rJS(window)
+  var warmup_gadget_done = false,
+    warmup_list = [
+      'gadget_erp5_label_field.html',
+      'gadget_translation.html',
+      'gadget_erp5_header.html',
+      'gadget_erp5_ojs_panel.html',
+      'gadget_html5_input.html',
+      'gadget_erp5_page_ojs_local_controller.html',
+      'gadget_officejs_common_util.html'
+    ],
+    gadget_klass = rJS(window)
 
     .declareAcquiredMethod('setSettingList', 'setSettingList')
 
@@ -52,13 +62,17 @@
         i,
         setting_dict = {},
         queue = new RSVP.Queue();
-
+      if (!warmup_gadget_done) {
+        for (i = 0; i < warmup_list.length; i += 1) {
+          rJS.declareGadgetKlass(rJS.getAbsoluteURL(warmup_list[i],
+                                                    gadget.__path));
+        }
+      }
       for (i = 0; i < len; i += 1) {
         key = element_list[i].getAttribute('data-renderjs-configuration');
         value = element_list[i].textContent;
         setting_dict[key] = value;
       }
-
       return queue
         .push(function () {
           return gadget.setSettingList(setting_dict);
