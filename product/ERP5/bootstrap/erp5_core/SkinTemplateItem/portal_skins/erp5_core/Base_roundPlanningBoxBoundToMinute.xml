@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>id_value, REQUEST</string> </value>
+            <value> <string>full_date, axis=\'begin\'</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PropertySheetChild_validateIDField</string> </value>
+            <value> <string>Base_roundPlanningBoxBoundToMinute</string> </value>
         </item>
       </dictionary>
     </pickle>

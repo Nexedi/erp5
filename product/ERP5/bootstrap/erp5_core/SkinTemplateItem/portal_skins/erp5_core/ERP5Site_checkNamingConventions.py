@@ -85,13 +85,13 @@ def checkField(folder, form, field):
       a = template_field.getListMethodName()
       path += '/listbox'
       for x in 'columns', 'all_columns':
-        for id, title in field.get_value(x):
+        for id_, title in field.get_value(x):
           error_message += checkTitle(path, x, title, field, form)
       if a not in (None, "portal_catalog", "searchFolder", "objectValues",
                    "contentValues", "ListBox_initializeFastInput"):
         if not a.endswith('List'):
           if 0:
-            error_message += "%s : %s : %r Bad Naming Convention\n" % (path, id, a)
+            error_message += "%s : %s : %r Bad Naming Convention\n" % (path, id_, a)
   return error_message
 
 def isListBox(field):
@@ -107,7 +107,7 @@ titlecase_sub = re.compile(r"[A-Za-z]+('[A-Za-z]+)?").sub
 titlecase_repl = lambda mo: mo.group(0)[0].upper() + mo.group(0)[1:].lower()
 titlecase = lambda s: titlecase_sub(titlecase_repl, s)
 
-def checkTitle(path, id, title, field=None, form=None):
+def checkTitle(path, id_, title, field=None, form=None):
   """
     Generic function that test the validity of a title.
   """
@@ -115,11 +115,11 @@ def checkTitle(path, id, title, field=None, form=None):
   if (form is not None and form.pt not in ('form_dialog', 'folder_workflow_action_dialog')) or form is None:
     if (field is not None and not field.get_value('hidden') and \
      (title is None or len(title.strip()) == 0)) or (field is None and (title is None or len(title.strip()) == 0)):
-      return "%s : %s : can't be empty\n" % (path, id)
+      return "%s : %s : can't be empty\n" % (path, id_)
 
   for c in title:
     if c.lower() not in ALLOWED_CHARS:
-      return "%s : %s : %r character not allowed\n" % (path, id, c)
+      return "%s : %s : %r character not allowed\n" % (path, id_, c)
 
   title = re.sub(re.compile(r"\b(" + "|".join(re.escape(x) for x in SENTENCE_PART_SET) + r")\b"), "", title)
 
@@ -132,22 +132,22 @@ def checkTitle(path, id, title, field=None, form=None):
 
     if word.upper() in ABBREVIATION_WORD_SET:
       if not word.isupper():
-        error_message += '%s : %s : %r is not upper case even though it is an abbriviation\n' % (path, id, word)
+        error_message += '%s : %s : %r is not upper case even though it is an abbriviation\n' % (path, id_, word)
     elif word.endswith('s') and word[:-1].upper() in ABBREVIATION_WORD_SET:
       if not word[:-1].isupper():
-        error_message += '%s : %s : %r is not upper case even though it is an abbriviation\n' % (path, id, word)
+        error_message += '%s : %s : %r is not upper case even though it is an abbriviation\n' % (path, id_, word)
     elif "-" in word and word.split("-")[0].upper() in ABBREVIATION_WORD_SET:
       if not word.split("-")[0].isupper():
-        error_message += '%s : %s : %r is not upper case even though it is an abbriviation\n' % (path, id, word)
+        error_message += '%s : %s : %r is not upper case even though it is an abbriviation\n' % (path, id_, word)
     else:
       if word.lower() in CLOSED_CLASS_WORD_SET and word != word_list[0] :
         if (word.capitalize()== word or titlecase(word)== word):
-          error_message += '%s : %s : %r is a closed-class word and should not be titlecased\n' % (path, id, word)
+          error_message += '%s : %s : %r is a closed-class word and should not be titlecased\n' % (path, id_, word)
       elif (word.capitalize()!= word and titlecase(word)!= word) and \
          word not in LOWERCASE_WORD_SET and word not in SPECIALCASE_WORD_SET and word not in CLOSED_CLASS_WORD_SET :
-          error_message += '%s : %s : %r is not titlecased\n' % (path, id, word)
+        error_message += '%s : %s : %r is not titlecased\n' % (path, id_, word)
   if len(word_list) > 1 and word_list[-1].upper() == 'LIST' and word_list[-2].upper() != 'PACKING':
-    error_message += '%s : %s : %r is a jargon\n' % (path, id, title)
+    error_message += '%s : %s : %r is a jargon\n' % (path, id_, title)
   return error_message
 
 

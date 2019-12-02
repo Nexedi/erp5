@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, selection_name=\'\', uids=[], listbox_uid=[]</string> </value>
+            <value> <string>form_id, selection_name=\'\', uids=(), listbox_uid=()</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

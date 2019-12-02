@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>string=None</string> </value>
+            <value> <string>s=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>list=[],initial_quantity=[]</string> </value>
+            <value> <string>id_value, REQUEST</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_convertVariationListToQuantityList</string> </value>
+            <value> <string>Base_validateIDAsReferenceSuffix</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -1,19 +1,19 @@
-request = context.REQUEST
-stool = context.portal_selections
+request = container.REQUEST
+selection_tool = context.portal_selections
 
-if stool.getSelectionInvertModeFor(selection_name):
+if selection_tool.getSelectionInvertModeFor(selection_name):
   # if already in invert mode, toggle invert mode
-  stool.setSelectionInvertModeFor(selection_name, invert_mode=0)
+  selection_tool.setSelectionInvertModeFor(selection_name, invert_mode=0)
 else:
   # Set selection to currently checked items, taking into consideration changes
   # in uids
-  selection_uids = stool.getSelectionCheckedUidsFor(
+  selection_uids = selection_tool.getSelectionCheckedUidsFor(
                                   selection_name, REQUEST=request)
   filtered_uid_dict = {}
-  listbox_uid = map(lambda x:int(x), listbox_uid)
-  uids = map (lambda x:int(x), uids)
+  listbox_uid = [int(x) for x in listbox_uid]
+  uids = [int(x) for x in uids]
   for uid in uids:
-     filtered_uid_dict[uid] = 1
+    filtered_uid_dict[uid] = 1
   for uid in selection_uids:
     if uid in listbox_uid:
       if uid in uids:
@@ -22,10 +22,10 @@ else:
       filtered_uid_dict[uid] = 1
 
   if len(filtered_uid_dict.keys()) > 0 :
-    stool.checkAll(selection_name, uids, REQUEST=None)
-    stool.setSelectionToIds(selection_name,
+    selection_tool.checkAll(selection_name, uids, REQUEST=None)
+    selection_tool.setSelectionToIds(selection_name,
                               filtered_uid_dict.keys(), REQUEST=request)
 
-url = stool.getSelectionListUrlFor(
+url = selection_tool.getSelectionListUrlFor(
                         selection_name, REQUEST=request)
 request.RESPONSE.redirect(url)
