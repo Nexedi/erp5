@@ -214,12 +214,14 @@ allow_type(type(re.compile('')))
 allow_type(type(re.match('x','x')))
 allow_type(type(re.finditer('x','x')))
 
-import cStringIO, StringIO
+import cStringIO, io, StringIO
 f_cStringIO = cStringIO.StringIO()
 f_StringIO = StringIO.StringIO()
 allow_module('cStringIO')
+allow_module('io')
 allow_module('StringIO')
 allow_type(type(f_cStringIO))
+allow_type(io.BytesIO)
 allow_type(type(f_StringIO))
 
 ModuleSecurityInfo('cgi').declarePublic('escape', 'parse_header')
