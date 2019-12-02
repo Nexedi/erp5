@@ -132,15 +132,17 @@ Selenium.prototype.assertElementPositionRangeTop = function(locator, range){
 };
 
 // a memo test pathname => image counter
-// TODO: reset this on testSuite.reset(), because we cannot re-run a test.
-imageMatchReference = new Map();
+var imageMatchReference = new Map();
+// reset this when starting a new test.
+var HtmlTestRunnerControlPanel_reset = window['HtmlTestRunnerControlPanel'].prototype.reset;
+window['HtmlTestRunnerControlPanel'].prototype.reset = function() {
+  imageMatchReference.clear();
+  return HtmlTestRunnerControlPanel_reset.call(this);
+}
 
 function getReferenceImageCounter(testPathName) {
-  var counter = imageMatchReference.get(testPathName);
-  if (counter !== undefined) {
-    return counter;
-  }
-  counter = imageMatchReference.size + 1;
+  var counter = imageMatchReference.get(testPathName) || 0;
+  counter = counter + 1;
   imageMatchReference.set(testPathName, counter);
   return counter;
 }
@@ -180,7 +182,6 @@ function generateElement(tagName, childList, attributeDict, textContent) {
  *
  * @param {string} referenceImageURL relative URL of the reference image
  * @param {string} newImageData the new image data, base64 encoded
- * @param {Map<string,any>?} attributeDict attributes
  * @return {Promise<string>} the base64 encoded html form
  */
 function generateUpdateForm(referenceImageURL, newImageData) {
@@ -316,6 +317,7 @@ Selenium.prototype.doVerifyImageMatchSnapshot = (
             },
             e => {
               // fetching reference was not found, return empty image instead, it will be different
+              // (unless the tolerance is too high)
               return document.createElement('canvas').toDataURL();
             }
           )
