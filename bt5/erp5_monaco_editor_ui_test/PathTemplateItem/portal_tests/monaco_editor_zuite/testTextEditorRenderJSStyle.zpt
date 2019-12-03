@@ -27,7 +27,7 @@
 <tr><td colspan="3"><b>Switch to renderjs UI and edit a web page</b></td></tr>
 
 <tr><td>open</td>
-    <td>${base_url}/web_site_module/renderjs_runner/#/web_page_module/?editable=true</td><td></td></tr>
+    <td>${base_url}/web_site_module/renderjs_runner/#/web_page_module?editable=true</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <tr><td>waitForElementPresent</td>
