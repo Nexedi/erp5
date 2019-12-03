@@ -64,6 +64,7 @@
  </portal_type>
  <portal_type id="Test Suite Repository">
   <item>Arrow</item>
+  <item>Reference</item>
   <item>TestSuiteRepository</item>
   <item>TestSuiteRepositoryConstraint</item>
  </portal_type>
