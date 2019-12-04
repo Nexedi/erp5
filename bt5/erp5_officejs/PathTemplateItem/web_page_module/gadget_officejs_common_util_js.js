@@ -6,7 +6,7 @@
   // TODO: check if there are other categories that are 'views'
   // and find a less hardcoded way to get this
   var view_categorie_list = ["object_view", "object_jio_view",
-                             "object_web_view", "object_list"];
+                             "object_web_view", "object_jio_search"];
 
   function filterViewList(views_dict, app_view, default_view) {
     // there must be only one "View" action (title = "View")
@@ -96,7 +96,7 @@
       form_type,
       action_category = form_definition.action_type;
     switch (action_category) {
-    case 'object_list':
+    case 'object_jio_search':
       form_type = 'list';
       child_gadget_url = 'gadget_erp5_pt_form_list.html';
       break;
