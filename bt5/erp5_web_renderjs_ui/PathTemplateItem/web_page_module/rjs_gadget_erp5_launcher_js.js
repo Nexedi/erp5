@@ -299,7 +299,7 @@
           }
         }
         if (update_setting) {
-          jio_gadget.put(gadget.state.setting_id, doc);
+          return jio_gadget.put(gadget.state.setting_id, doc);
         }
       });
   }
