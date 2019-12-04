@@ -16,7 +16,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_list</string>
+                <string>action_type/object_jio_search</string>
               </tuple>
             </value>
         </item>
