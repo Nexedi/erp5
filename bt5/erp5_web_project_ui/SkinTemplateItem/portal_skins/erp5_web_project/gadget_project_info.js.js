@@ -33,28 +33,42 @@
     return view_list.filter(d => d.name === name)[0].href;
   }
 
-  function setLastTestResult(gadget, project_title, span_element) {
+  function setLastTestResult(gadget, project_title, span_element, svg_element) {
     span_element.classList.remove("ui-disabled");
     var query = createProjectQuery(project_title,
                  [["portal_type", "Benchmark Result"]]);
     return gadget.jio_allDocs({
       query: query,
-      limit: 2, //first result could be the running test
+      limit: 1,
       sort_on: [['creation_date', 'descending']],
       select_list: ['simulation_state']
     })
       .push(function (result_list) {
-        var i, state;
+        var state;
         result_list = result_list.data.rows;
-        for (i = 0; i < result_list.length; i = i + 1) {
-          state = result_list[i].value.simulation_state;
-          if (state === "stopped" || state === "public_stopped") {
-            span_element.classList.add("pass");
+        if (result_list.length > 0) {
+          svg_element.classList.remove("ui-hidden");
+          state = result_list[0].value.simulation_state;
+          switch (state) {
+          case 'started':
+            svg_element.classList.add("running");
+            document.getElementById("test_result_running").classList.remove("ui-hidden");
             break;
-          }
-          if (state === "failed") {
-            span_element.classList.add("fail");
+          case 'failed':
+            svg_element.classList.add("fail");
+            document.getElementById("test_result_fail").classList.remove("ui-hidden");
             break;
+          case 'cancelled':
+            svg_element.classList.add("cancelled");
+            document.getElementById("test_result_running").classList.remove("ui-hidden");
+            break;
+          case 'stopped':
+          case 'public_stopped':
+            svg_element.classList.add("pass");
+            document.getElementById("test_result_pass").classList.remove("ui-hidden");
+            break;
+          default:
+            svg_element.classList.add("ui-hidden");
           }
         }
       });
@@ -91,7 +105,8 @@
       edit_view,
       redirector_ulr,
       query,
-      query_list = [];
+      query_list = [],
+      valid_state_list = ["shared_alive", "released_alive", "published_alive"];
     query_list.push(new SimpleQuery({
       key: "portal_type",
       operator: "=",
@@ -104,12 +119,6 @@
       type: "simple",
       value: project_reference + '-Home.Page'
     }));
-    query_list.push(new SimpleQuery({
-      key: "validation_state",
-      operator: "=",
-      type: "simple",
-      value: "published_alive"
-    }));
     query = new ComplexQuery({
       operator: "AND",
       query_list: query_list,
@@ -121,21 +130,31 @@
         return gadget.jio_allDocs({
           query: Query.objectToSearchText(query),
           limit: 1,
-          select_list: ['text_content']
+          select_list: ['validation_state', 'text_content']
         });
       })
       .push(function (result_list) {
         if (result_list.data.rows[0]) {
-          id = result_list.data.rows[0].id;
-          content = parseHTMLLinks(result_list.data.rows[0].value.text_content, redirector_ulr);
-          return gadget.jio_getAttachment(id, "links")
-            .push(function (web_page_document) {
-              edit_view = getActionListByName(
-                ensureArray(web_page_document._links.view),
-                "view_editor"
-              );
-              return {"id": id, "content": content, "edit_view": edit_view};
-            });
+          var i, state, web_page;
+          for (i = 0; i < result_list.data.rows.length; i = i + 1) {
+            state = result_list.data.rows[i].value.validation_state;
+            if (valid_state_list.includes(state)) {
+              web_page = result_list.data.rows[i];
+              break;
+            }
+          }
+          if (web_page) {
+            id = web_page.id;
+            content = parseHTMLLinks(web_page.value.text_content, redirector_ulr);
+            return gadget.jio_getAttachment(id, "links")
+              .push(function (web_page_document) {
+                edit_view = getActionListByName(
+                  ensureArray(web_page_document._links.view),
+                  "view_editor"
+                );
+                return {"id": id, "content": content, "edit_view": edit_view};
+              });
+          }
         }
         return {"id": id, "content": content, "edit_view": edit_view};
       });
@@ -206,8 +225,7 @@
                 [["selection_domain_state_task_domain", "confirmed"]])),
             getUrlParameterDict('support_request_module', "view", [["delivery.start_date", "descending"]],
               null, createProjectQuery(modification_dict.project_title,
-                [["destination_project_title", modification_dict.project_title],
-                 ["selection_domain_state_support_domain", "validated"]])),
+                [["selection_domain_state_support_domain", "validated"]])),
             getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
               ["title", "description", "delivery.start_date"],
               createProjectQuery(modification_dict.project_title,
@@ -256,7 +274,8 @@
           }
           enableLink(document.getElementById("document_link"), url_list[11]);
           setLastTestResult(gadget, modification_dict.project_title,
-                            document.getElementById("test_result_span"));
+                            document.getElementById("test_result_span"),
+                            document.getElementById("test_result_svg"));
         });
     })
 
