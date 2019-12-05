@@ -91,7 +91,8 @@
       edit_view,
       redirector_ulr,
       query,
-      query_list = [];
+      query_list = [],
+      valid_state_list = ["shared_alive", "released_alive", "published_alive"];
     query_list.push(new SimpleQuery({
       key: "portal_type",
       operator: "=",
@@ -104,12 +105,6 @@
       type: "simple",
       value: project_reference + '-Home.Page'
     }));
-    query_list.push(new SimpleQuery({
-      key: "validation_state",
-      operator: "=",
-      type: "simple",
-      value: "published_alive"
-    }));
     query = new ComplexQuery({
       operator: "AND",
       query_list: query_list,
@@ -121,21 +116,31 @@
         return gadget.jio_allDocs({
           query: Query.objectToSearchText(query),
           limit: 1,
-          select_list: ['text_content']
+          select_list: ['validation_state', 'text_content']
         });
       })
       .push(function (result_list) {
         if (result_list.data.rows[0]) {
-          id = result_list.data.rows[0].id;
-          content = parseHTMLLinks(result_list.data.rows[0].value.text_content, redirector_ulr);
-          return gadget.jio_getAttachment(id, "links")
-            .push(function (web_page_document) {
-              edit_view = getActionListByName(
-                ensureArray(web_page_document._links.view),
-                "view_editor"
-              );
-              return {"id": id, "content": content, "edit_view": edit_view};
-            });
+          var i, state, web_page;
+          for (i = 0; i < result_list.data.rows.length; i = i + 1) {
+            state = result_list.data.rows[i].value.validation_state;
+            if (valid_state_list.includes(state)) {
+              web_page = result_list.data.rows[i];
+              break;
+            }
+          }
+          if (web_page) {
+            id = web_page.id;
+            content = parseHTMLLinks(web_page.value.text_content, redirector_ulr);
+            return gadget.jio_getAttachment(id, "links")
+              .push(function (web_page_document) {
+                edit_view = getActionListByName(
+                  ensureArray(web_page_document._links.view),
+                  "view_editor"
+                );
+                return {"id": id, "content": content, "edit_view": edit_view};
+              });
+          }
         }
         return {"id": id, "content": content, "edit_view": edit_view};
       });
