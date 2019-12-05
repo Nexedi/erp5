@@ -33,28 +33,42 @@
     return view_list.filter(d => d.name === name)[0].href;
   }
 
-  function setLastTestResult(gadget, project_title, span_element) {
+  function setLastTestResult(gadget, project_title, span_element, svg_element) {
     span_element.classList.remove("ui-disabled");
     var query = createProjectQuery(project_title,
                  [["portal_type", "Benchmark Result"]]);
     return gadget.jio_allDocs({
       query: query,
-      limit: 2, //first result could be the running test
+      limit: 1,
       sort_on: [['creation_date', 'descending']],
       select_list: ['simulation_state']
     })
       .push(function (result_list) {
-        var i, state;
+        var state;
         result_list = result_list.data.rows;
-        for (i = 0; i < result_list.length; i = i + 1) {
-          state = result_list[i].value.simulation_state;
-          if (state === "stopped" || state === "public_stopped") {
-            span_element.classList.add("pass");
+        if (result_list.length > 0) {
+          svg_element.classList.remove("ui-hidden");
+          state = result_list[0].value.simulation_state;
+          switch (state) {
+          case 'started':
+            svg_element.classList.add("running");
+            document.getElementById("test_result_running").classList.remove("ui-hidden");
             break;
-          }
-          if (state === "failed") {
-            span_element.classList.add("fail");
+          case 'failed':
+            svg_element.classList.add("fail");
+            document.getElementById("test_result_fail").classList.remove("ui-hidden");
             break;
+          case 'cancelled':
+            svg_element.classList.add("cancelled");
+            document.getElementById("test_result_running").classList.remove("ui-hidden");
+            break;
+          case 'stopped':
+          case 'public_stopped':
+            svg_element.classList.add("pass");
+            document.getElementById("test_result_pass").classList.remove("ui-hidden");
+            break;
+          default:
+            svg_element.classList.add("ui-hidden");
           }
         }
       });
@@ -261,7 +275,8 @@
           }
           enableLink(document.getElementById("document_link"), url_list[11]);
           setLastTestResult(gadget, modification_dict.project_title,
-                            document.getElementById("test_result_span"));
+                            document.getElementById("test_result_span"),
+                            document.getElementById("test_result_svg"));
         });
     })
 
