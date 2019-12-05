@@ -91,12 +91,28 @@ input[type="submit"] {
   min-width: 8em;
 }
 
-.gadget-content span.pass {
-  background-color: #00a616;
+.gadget-content svg.test-result.ui-hidden {
+  visibility: hidden;
 }
 
-.gadget-content span.fail {
-  background-color: #ff0400;
+.gadget-content svg.test-result path.ui-hidden {
+  visibility: hidden;
+}
+
+.gadget-content svg.test-result.fail {
+  fill: red;
+}
+
+.gadget-content svg.test-result.pass {
+  fill: green;
+}
+
+.gadget-content svg.test-result.running {
+  fill: blue;
+}
+
+.gadget-content svg.test-result.cancelled {
+  fill: grey;
 }
 
 .gadget-content span.test-result a {
