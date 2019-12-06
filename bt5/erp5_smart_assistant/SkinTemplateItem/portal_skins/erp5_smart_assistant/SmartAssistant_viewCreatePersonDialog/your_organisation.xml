@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ImageField" module="Products.ERP5Form.ImageField"/>
+      <global name="StringField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>image</string> </value>
+            <value> <string>your_organisation</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -78,22 +78,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>image_display</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>image_format</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>image_pre_converted_only</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>image_quality</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -138,9 +122,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -172,22 +154,6 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>image_display</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>image_format</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>image_pre_converted_only</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>image_quality</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -270,22 +236,6 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>image_display</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>image_format</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>image_pre_converted_only</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>image_quality</string> </key>
-                    <value> <int>75</int> </value>
-                </item>
-                <item>
                     <key> <string>input_type</string> </key>
                     <value> <string>text</string> </value>
                 </item>
@@ -299,7 +249,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Image</string> </value>
+                    <value> <string>Organisation</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -315,19 +265,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>here/absolute_url</string> </value>
         </item>
       </dictionary>
     </pickle>
