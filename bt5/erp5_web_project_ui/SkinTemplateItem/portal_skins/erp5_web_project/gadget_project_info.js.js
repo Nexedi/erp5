@@ -216,6 +216,7 @@
           editor.render({"editor": "fck_editor", "editable": false,
                          "value": web_page_info.content});
           return gadget.getUrlForList([
+            //TODO drop 4, 6 and 9 calls when closed links removal is confirmed
             getUrlParameterDict('milestone_module', milestone_view, [["stop_date", "ascending"]]),
             getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
               ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
@@ -258,16 +259,17 @@
           ]);
         })
         .push(function (url_list) {
+          //TODO update url_list index when closed links removal is confirmed
           enableLink(document.getElementById("milestone_link"), url_list[0]);
           enableLink(document.getElementById("task_link"), url_list[1]);
           enableLink(document.getElementById("support_request_link"), url_list[2]);
           enableLink(document.getElementById("bug_link"), url_list[3]);
-          enableLink(document.getElementById("closed_bug_link"), url_list[4]);
+          //enableLink(document.getElementById("closed_bug_link"), url_list[4]);
           enableLink(document.getElementById("report_link"), url_list[5]);
-          enableLink(document.getElementById("closed_report_link"), url_list[6]);
+          //enableLink(document.getElementById("closed_report_link"), url_list[6]);
           enableLink(document.getElementById("test_result_link"), url_list[7]);
           enableLink(document.getElementById("test_suite_link"), url_list[8]);
-          enableLink(document.getElementById("not_confirmed_task_link"), url_list[9]);
+          //enableLink(document.getElementById("not_confirmed_task_link"), url_list[9]);
           if (web_page_info.id) {
             enableLink(document.getElementById("web_page_link"), url_list[10]);
           }
