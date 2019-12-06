@@ -494,11 +494,10 @@ and handling data send&receive.
             .push(function () {
               return gadget.forceDownload(attachment);
             })
-            // we could redirect back after download which was not possible
-            // in the old UI but it will be a change of behaviour
-            // Nicolas required this feature to be allowed
+            // do not redirect after the download
+            // it allows user to modify report parameter and regenerate it
+            // otherwise, the back button from the browser does not fill the form
             .push(function () {
-              result.jio_key = jio_key;
               return result;
             });
         })
