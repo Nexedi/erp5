@@ -216,17 +216,17 @@
           editor.render({"editor": "fck_editor", "editable": false,
                          "value": web_page_info.content});
           return gadget.getUrlForList([
+            //TODO drop 4, 6 and 9 calls when closed links removal is confirmed
             getUrlParameterDict('milestone_module', milestone_view, [["stop_date", "ascending"]]),
             getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
-              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
-                "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+              ["title", "delivery.start_date", "source_title"],
               createProjectQuery(modification_dict.project_title,
                 [["selection_domain_state_task_domain", "confirmed"]])),
             getUrlParameterDict('support_request_module', "view", [["delivery.start_date", "descending"]],
               null, createProjectQuery(modification_dict.project_title,
                 [["selection_domain_state_support_domain", "validated"]])),
             getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
-              ["title", "description", "delivery.start_date"],
+              ["title", "description", "source_person_title", "destination_person_title", "delivery.start_date"],
               createProjectQuery(modification_dict.project_title,
                 [["selection_domain_state_bug_domain", "started"]])),
             getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
@@ -234,8 +234,7 @@
               createProjectQuery(modification_dict.project_title,
                 [["selection_domain_state_bug_domain", "closed"]])),
             getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
-              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
-                "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+              ["title", "delivery.start_date", "source_title"],
               createProjectQuery(modification_dict.project_title,
                 [["selection_domain_state_task_report_domain", "started"]])),
             getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
@@ -254,20 +253,21 @@
                 [["selection_domain_state_task_domain", "not_confirmed"]])),
             getUrlParameterDict(web_page_info.id, web_page_info.edit_view),
             getUrlParameterDict(modification_dict.jio_key, document_view, [["modification_date", "descending"]],
-              null, createProjectQuery(null, [["selection_domain_state_document_domain", "confirmed"]]))
+              ["download", "title", "reference", "modification_date"], createProjectQuery(null, [["selection_domain_state_document_domain", "confirmed"]]))
           ]);
         })
         .push(function (url_list) {
+          //TODO update url_list index when closed links removal is confirmed
           enableLink(document.getElementById("milestone_link"), url_list[0]);
           enableLink(document.getElementById("task_link"), url_list[1]);
           enableLink(document.getElementById("support_request_link"), url_list[2]);
           enableLink(document.getElementById("bug_link"), url_list[3]);
-          enableLink(document.getElementById("closed_bug_link"), url_list[4]);
+          //enableLink(document.getElementById("closed_bug_link"), url_list[4]);
           enableLink(document.getElementById("report_link"), url_list[5]);
-          enableLink(document.getElementById("closed_report_link"), url_list[6]);
+          //enableLink(document.getElementById("closed_report_link"), url_list[6]);
           enableLink(document.getElementById("test_result_link"), url_list[7]);
           enableLink(document.getElementById("test_suite_link"), url_list[8]);
-          enableLink(document.getElementById("not_confirmed_task_link"), url_list[9]);
+          //enableLink(document.getElementById("not_confirmed_task_link"), url_list[9]);
           if (web_page_info.id) {
             enableLink(document.getElementById("web_page_link"), url_list[10]);
           }
