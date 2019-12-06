@@ -2,7 +2,6 @@
 /*jslint indent:2, maxlen: 80, nomen: true */
 (function (window, rJS, jIO, RSVP, SimpleQuery, ComplexQuery, Query) {
   "use strict";
-
   rJS(window)
 
     /////////////////////////////////////////////////////////////////
@@ -93,7 +92,8 @@
                 return gadget.jio_post({
                   "title": name,
                   portal_type: portal_type,
-                  parent_relative_url: parent_relative_url
+                  parent_relative_url: parent_relative_url,
+                  validation_state: 'draft'
                 });
               })
               .push(function (id) {
@@ -156,7 +156,8 @@
           return RSVP.all([
             gadget.getDeclaredGadget('form_view_upload_audio'),
             gadget.getDeclaredGadget('form_view_image_text'),
-            gadget.getDeclaredGadget('form_list'),//added
+            gadget.getDeclaredGadget('form_list'),
+            gadget.getDeclaredGadget('worklist'),
             gadget.getSetting("portal_type")
           ]);
         })
@@ -168,6 +169,7 @@
             ['validation_state', 'Validation State']
           ],
 
+            worklist_gadget = result[3],
             portal_type = ["Query"],
             query = "urn:jio:allDocs?query=",
             i,
@@ -189,6 +191,8 @@
           }));
 
           return RSVP.all([
+            worklist_gadget.render(),
+
             result[0].render({
               erp5_document: {"_embedded": {"_view": {
                 "upload": {
@@ -286,7 +290,8 @@
                     "portal_type": [],
                     "search_column_list": column_list,
                     "sort_column_list": column_list,
-                    "sort": [['modification_date', 'descending']],
+                    "sort": [['validation_state', 'descending'],
+                             ['modification_date', 'descending']],
                     "title": "Notification",
                     "type": "ListBox"
                   }

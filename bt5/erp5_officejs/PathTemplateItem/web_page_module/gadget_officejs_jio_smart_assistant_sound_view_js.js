@@ -1,6 +1,6 @@
 /*global window, rJS, RSVP, jIO, URL, Blob*/
 /*jslint indent:2, maxlen: 80, nomen: true */
-(function (window, jIO, rJS, RSVP) {
+(function (window, jIO, rJS, RSVP, SimpleQuery, ComplexQuery, Query) {
   "use strict";
 
   rJS(window)
@@ -23,6 +23,7 @@
       var gadget = this,
         state = {
           title: options.doc.title,
+          validation_state: options.doc.validation_state,
           jio_key: options.jio_key
         };
 
@@ -92,7 +93,35 @@
     })
 
     .onStateChange(function () {
-      var gadget = this;
+      var gadget = this,
+        column_list = [
+          ['agent_title', 'Title'],
+          ['description', 'Reply'],
+          ['modification_date', 'Modification Date'],
+          ['validation_state', 'Validation State']
+        ],
+        jio_key = gadget.state.jio_key,
+        portal_type = ["Query"],
+        agent_relative_url = jio_key,
+        query = "urn:jio:allDocs?query=",
+        jio_query_list = [];
+      jio_query_list.push(new SimpleQuery({
+        key: "portal_type",
+        operator: "",
+        type: "simple",
+        value: portal_type
+      }));
+      jio_query_list.push(new SimpleQuery({
+        key: "agent_relative_url",
+        operater: "",
+        type: "simple",
+        value: agent_relative_url
+      }));
+      query += Query.objectToSearchText(new ComplexQuery({
+          operator: "AND",
+          query_list: jio_query_list,
+          type: "complex"
+        }));
 
       return gadget.getDeclaredGadget('form_view')
         .push(function (form_gadget) {
@@ -118,7 +147,7 @@
                     "editable": 0,
                     "key": "player_content",
                     "hidden": 0,
-                    "title": "Listen actual content",
+                    "title": "Play",
                     "type": "GadgetField",
                     "renderjs_extra": '{"name": "data"}',
                     "url": "gadget_custom_player.html",
@@ -136,6 +165,34 @@
                     "accept": "audio/*",
                     "capture": "microphone",
                     "type": "FileField"
+                  },
+                  "my_validation_state": {
+                    "description": "",
+                    "title": "State",
+                    "default": gadget.state.validation_state,
+                    "css_class": "",
+                    "required": 1,
+                    "editable": 0,
+                    "key": "validation_state",
+                    "hidden": 0,
+                    "type": "StringField"
+                  },
+                  "listbox": {
+                    "column_list": column_list,
+                    "show_anchor": 0,
+                    "default_params": {},
+                    "editable": 0,
+                    "editable_column_list": [],
+                    "key": "field_listbox",
+                    "lines": 5,
+                    "list_method": "portal_catalog",
+                    "query": query,
+                    "portal_type": [],
+                    "search_column_list": column_list,
+                    "sort_column_list": column_list,
+                    "sort": [['modification_date', 'descending']],
+                    "title": "Related Queries",
+                    "type": "ListBox"
                   }
                 }
               },
@@ -149,10 +206,14 @@
             form_definition: {
               group_list: [[
                 "left",
-                [["my_title"], ["my_actual_audio"], ["my_audio"]]
+                [["my_title"], ["my_actual_audio"],
+                  ["my_audio"], ["my_validation_state"]]
+              ], [
+                "bottom",
+                [['listbox']]
               ]]
             }
           });
         });
     });
-}(window, jIO, rJS, RSVP));
+}(window, jIO, rJS, RSVP, SimpleQuery, ComplexQuery, Query));

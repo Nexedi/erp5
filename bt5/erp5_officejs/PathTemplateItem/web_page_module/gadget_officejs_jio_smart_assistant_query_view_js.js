@@ -31,6 +31,7 @@
           description: options.doc.description,
           modification_date: options.doc.modification_date,
           relative_url: options.doc.agent_relative_url,
+          link: options.doc.link,
 
           jio_key: options.jio_key
         };
@@ -68,8 +69,8 @@
           return form_gadget.getContent();
         })
         .push(function (result) {
-          return gadget.updateDocument({text_content: result.text_content});
-        })
+            return gadget.updateDocument({text_content: result.text_content});
+          })
         .push(function () {
           return gadget.notifySubmitted({
             "message": "Data updated",
@@ -106,7 +107,7 @@
                   },
                   "my_owner": {
                     "description": "",
-                    "title": "Owner",
+                    "title": "From: ",
                     "default": gadget.state.owner,
                     "css_class": "",
                     "required": 1,
@@ -176,6 +177,21 @@
                     "hidden": 0,
                     "type": "TextAreaField"
                   },
+                  "my_link": {
+                    "editable": 1,
+                    "required": 0,
+                    "default": {"direct_url": gadget.state.link,
+                                "target_type": "display",
+                                "textContent": gadget.state.link},
+                    "url": "gadget_erp5_page_ojs_link_field.html",
+                    "type": "GadgetField",
+                    "description": "",
+                    "title": "Url",
+                    "css_class": "",
+                    "key": "link",
+                    "hidden": 0,
+                    "allow_jump": 1
+                  },
                   "my_text_content": {
                     "description": "",
                     "title": "Answer",
@@ -207,7 +223,7 @@
                   ["my_owner"]
                 ]], [
                 "center",
-                [["my_description"],
+                [["my_description"], ["my_link"],
                   ["my_text_content"]]
               ]]
             }

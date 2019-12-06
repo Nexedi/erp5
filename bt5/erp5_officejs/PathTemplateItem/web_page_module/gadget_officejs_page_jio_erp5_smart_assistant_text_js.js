@@ -60,7 +60,8 @@
               "title": title,
               "text_content": content.text_content,
               portal_type: portal_type,
-              parent_relative_url: parent_relative_url
+              parent_relative_url: parent_relative_url,
+              validation_state: 'draft'
             })
               .push(function () {
                 return gadget.notifySubmitted({"message": "Data created",
