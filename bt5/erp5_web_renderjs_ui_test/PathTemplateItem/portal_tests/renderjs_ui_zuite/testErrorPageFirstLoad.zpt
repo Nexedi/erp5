@@ -50,7 +50,7 @@
 
 <tr>
   <td>assertTextPresent</td>
-  <td>"status":404</td>
+  <td>"status": 404</td>
   <td></td>
 </tr>
 
@@ -59,6 +59,35 @@
   <td>Please report this unhandled error to the support team, and go back to the homepage</td>
   <td></td>
 </tr>
+
+<!-- when an action failed server side, the server side error is displayed in an ifame of the error page -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@role="main"]//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>//div[@role="main"]//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Not Found</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>gadget_erp5_page_foobar.html was not found on this server.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
+
+
 
 <tr>
   <td>assertTextPresent</td>
