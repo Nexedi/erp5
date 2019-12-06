@@ -3,8 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Test OfficeJS UI</title>
-  <script src="../../web_site_module/officejs_smart_assistant/app/rsvp.js"></script>
-  <script src="../../web_site_module/officejs_smart_assistant/app/jiodev.js"></script>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
@@ -13,19 +11,12 @@
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <!-- Clean Up -->
+<!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/smart_assistant_text_module/ListBoxZuite_reset</td>
+  <td>${base_url}/web_site_module/officejs_smart_assistant/</td>
   <td></td>
 </tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Reset Successfully.</td>
-  <td></td>
-</tr>
-<tal:block tal:define="web_site_name python: 'officejs_smart_assistant'">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOfficejsUi/macros/install_offline_and_redirect" />
-</tal:block>
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Storages']</td>
@@ -294,6 +285,7 @@
   <td>//pre[contains(text(), "This is a test too simple")]</td>
   <td></td>
 </tr>
+<!-- Check in ERP5: Query -->
   <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
   </tal:block>
@@ -321,6 +313,87 @@
 <tr>
   <td>waitForElementPresent</td>
   <td>//label[@for='field_my_title']</td>
+  <td></td>
+</tr>
+<!-- Check in ERP5: New Person -->
+  <tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+  </tal:block>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text() = 'New Person']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text() = 'New Person']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='action_confirm' and @value='Create Person']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='action_confirm' and @value='Create Person']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[text()="Action succeeded."]</td>
+  <td></td>
+</tr>
+<!-- Check in ERP5: New Expense -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text() = 'New Expense']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text() = 'New Expense']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='action_confirm' and @value='Create Expense']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='action_confirm' and @value='Create Expense']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[text()="Action succeeded."]</td>
+  <td></td>
+</tr>
+<!-- Check in ERP5: New Event-->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text() = 'New Event']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text() = 'New Event']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='action_confirm' and @value='Create Event']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='action_confirm' and @value='Create Event']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[text()="Action succeeded."]</td>
   <td></td>
 </tr>
 <tr>
