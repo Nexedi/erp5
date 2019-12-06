@@ -1644,8 +1644,8 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.tic()
 
   def test_status_per_test_result_line(self):
-    self.test_suite.test_repo.setSourceReference(
-        'test_result_line')
+    self.test_suite.test_repo.edit(
+        source_reference='test_result_line')
     self.test_result.newContent(
         portal_type='Test Result Line',
         title='this test_result_line is OK',
@@ -1672,8 +1672,8 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.tic()
 
   def test_status_per_test_result_line_multiple_matches(self):
-    self.test_suite.test_repo.setSourceReference(
-        'test_result_line')
+    self.test_suite.test_repo.edit(
+        source_reference='test_result_line')
     self.test_result.newContent(
         portal_type='Test Result Line',
         title='this test_result_line is OK',
