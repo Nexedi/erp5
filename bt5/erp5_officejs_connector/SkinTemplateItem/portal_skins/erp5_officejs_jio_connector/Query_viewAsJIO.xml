@@ -91,6 +91,7 @@
                         <string>my_title</string>
                         <string>my_agent_title</string>
                         <string>my_agent_relative_url</string>
+                        <string>my_link</string>
                       </list>
                     </value>
                 </item>
