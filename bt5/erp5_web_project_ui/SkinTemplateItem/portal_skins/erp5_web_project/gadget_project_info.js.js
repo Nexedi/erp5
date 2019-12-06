@@ -36,7 +36,7 @@
   function setLastTestResult(gadget, project_title, span_element, svg_element) {
     span_element.classList.remove("ui-disabled");
     var query = createProjectQuery(project_title,
-                 [["portal_type", "Benchmark Result"]]);
+                 [["portal_type", "Test Result"]]);
     return gadget.jio_allDocs({
       query: query,
       limit: 1,
@@ -129,7 +129,6 @@
         redirector_ulr = url;
         return gadget.jio_allDocs({
           query: Query.objectToSearchText(query),
-          limit: 1,
           select_list: ['validation_state', 'text_content']
         });
       })
