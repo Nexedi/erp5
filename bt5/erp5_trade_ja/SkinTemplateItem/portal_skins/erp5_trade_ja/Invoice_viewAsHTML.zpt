@@ -736,6 +736,28 @@ footer {
         </thead>
 
         <tbody>
+          <tr>
+            <td>
+              <span>
+                0
+              </span>
+            </td>
+            <td>
+              <span>
+                0
+              </span>
+            </td>
+            <td>
+              <span>
+                8%
+              </span>
+            </td>
+            <td>
+              <span>
+                0
+              </span>
+            </td>
+          </tr>
           <tr tal:repeat='line_tax_dict python:data_dict["line_tax"]'>
             <td>
               <span tal:content='python: line_tax_dict["number_tax_line"]'>
