@@ -94,12 +94,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -139,16 +133,12 @@
                           <string>Short Title</string>
                         </tuple>
                         <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
+                          <string>version</string>
+                          <string>Version</string>
                         </tuple>
                         <tuple>
-                          <string>source_reference</string>
-                          <string>File Name</string>
-                        </tuple>
-                        <tuple>
-                          <string>thumbnail</string>
-                          <string>Thumbnail</string>
+                          <string>description</string>
+                          <string>Description</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
@@ -176,10 +166,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>download</string>
-                          <string>Download</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -192,16 +178,8 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>version</string>
-                          <string>Version</string>
-                        </tuple>
-                        <tuple>
-                          <string>description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>State</string>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -209,12 +187,7 @@
                 <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>state_document_domain</string>
-                          <string>Document Status</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -224,16 +197,7 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>thumbnail</string>
-                          <string>Thumbnail</string>
-                        </tuple>
-                        <tuple>
-                          <string>download</string>
-                          <string>Download</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -247,13 +211,98 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>Bug</string>
+                          <string>Bug</string>
+                        </tuple>
+                        <tuple>
+                          <string>Task</string>
+                          <string>Task</string>
+                        </tuple>
+                        <tuple>
+                          <string>Task Report</string>
+                          <string>Task Report</string>
+                        </tuple>
+                        <tuple>
+                          <string>Support Request</string>
+                          <string>Support Request</string>
+                        </tuple>
+                        <tuple>
+                          <string>Drawing</string>
+                          <string>Drawing</string>
+                        </tuple>
+                        <tuple>
+                          <string>File</string>
+                          <string>File</string>
+                        </tuple>
+                        <tuple>
+                          <string>Image</string>
+                          <string>Image</string>
+                        </tuple>
+                        <tuple>
+                          <string>PDF</string>
+                          <string>PDF</string>
+                        </tuple>
+                        <tuple>
+                          <string>Presentation</string>
+                          <string>Presentation</string>
+                        </tuple>
+                        <tuple>
+                          <string>Sound</string>
+                          <string>Sound</string>
+                        </tuple>
+                        <tuple>
+                          <string>Spreadsheet</string>
+                          <string>Spreadsheet</string>
+                        </tuple>
+                        <tuple>
+                          <string>Text</string>
+                          <string>Text</string>
+                        </tuple>
+                        <tuple>
+                          <string>Video</string>
+                          <string>Video</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Illustration</string>
+                          <string>Web Illustration</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Manifest</string>
+                          <string>Web Manifest</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Page</string>
+                          <string>Web Page</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Script</string>
+                          <string>Web Script</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Style</string>
+                          <string>Web Style</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Table</string>
+                          <string>Web Table</string>
+                        </tuple>
+                        <tuple>
+                          <string>Embedded File</string>
+                          <string>Embedded File</string>
+                        </tuple>
+                        <tuple>
+                          <string>Test Suite</string>
+                          <string>Test Suite</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -266,17 +315,12 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Documents</string> </value>
+                    <value> <string>Activities</string> </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>download</string>
-                          <string>File_getDownloadUrl</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -287,26 +331,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [[t, t] for t in list(context.getPortalDocumentTypeList())+list(context.getPortalEmbeddedDocumentTypeList()) if t != \'Discussion Thread\']</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Base_getRelatedDocumentList</string> </value>
+            <value> <string>Project_getRelatedObjectList</string> </value>
         </item>
       </dictionary>
     </pickle>
