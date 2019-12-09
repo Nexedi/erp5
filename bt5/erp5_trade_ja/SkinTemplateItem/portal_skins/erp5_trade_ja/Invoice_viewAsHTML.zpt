@@ -338,15 +338,16 @@ footer {
   <body>
 
     <header tal:define="default_language python:test(request.get('international_form'), 'en', here.Localizer.get_selected_language());
-                        image_path python: here.getPortalType().startswith('Purchase') and data_dict['destination_section_image_path'] or (data_dict['source_decision_image_path'] or data_dict['source_section_image_path']);
-                        image_obj python: here.restrictedTraverse(image_path.encode('utf-8'));
+                        image_path python: here.getPortalType().startswith('Purchase') and data_dict['destination_section_image_path'] or (data_dict['source_decision_image_path'] or data_dict['source_section_image_path']) or None;
+                        image_obj python: image_path and here.restrictedTraverse(image_path.encode('utf-8'));
                         image_width python: here.getPortalType().startswith('Purchase') and data_dict['destination_section_image_width'] or (data_dict['source_decision_image_width'] or data_dict['source_section_image_width']);
                         image_height python: here.getPortalType().startswith('Purchase') and data_dict['destination_section_image_height'] or (data_dict['source_decision_image_height'] or data_dict['source_section_image_height'])">
       <table>
         <tbody>
           <tr>
             <td>
-              <img tal:attributes="src python: 'data:%s;;base64,%s' % (image_obj.getContentType(), modules['base64'].b64encode(image_obj.getData()));
+                <img tal:condition="python: image_obj is not None"
+                     tal:attributes="src python: 'data:%s;;base64,%s' % (image_obj.getContentType(), modules['base64'].b64encode(image_obj.getData()));
                                    style python: 'height: %scm;; width: %scm;;' % (image_height, image_width);">
             </td>
             <td>
