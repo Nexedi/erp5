@@ -52,11 +52,7 @@
 }
 
 .gadget-content div.project_links {
-  margin-top: 40px;
-}
-
-.gadget-content div.project_links.top {
-  margin-top: 20px;
+  margin-top: 12px;
 }
 
 button:disabled{
@@ -69,14 +65,15 @@ input[type="submit"] {
 
 .gadget-content a.first-line-buttons {
   padding: 6pt;
-  margin-top: 30pt;
+  margin-top: 12px;
   margin-right: 6pt;
   background-color: #FFF;
   color: #111;
   border-radius: 0.325em;
   border-width: 1px;
   border-style: solid;
-  min-width: 8em;
+  text-align: center;
+  display: inline-block;
 }
 
 .gadget-content span.test-result {
@@ -97,6 +94,10 @@ input[type="submit"] {
 
 .gadget-content svg.test-result path.ui-hidden {
   visibility: hidden;
+}
+
+.gadget-content svg.test-result {
+  margin-right: 7px;
 }
 
 .gadget-content svg.test-result.fail {
