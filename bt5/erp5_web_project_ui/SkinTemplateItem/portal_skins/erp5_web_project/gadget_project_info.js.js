@@ -208,7 +208,10 @@
             modification_dict.jio_key + '&view=Project_viewDocumentList',
             milestone_view = result_list[2] +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.jio_key + '&view=Project_viewMilestoneList';
+            modification_dict.jio_key + '&view=Project_viewMilestoneList',
+            activity_view = result_list[2] +
+            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
+            modification_dict.jio_key + '&view=Project_viewActivityList';
           web_page_info = result_list[0];
           editor = result_list[1];
           editor.render({"editor": "fck_editor", "editable": false, "maximize": true,
@@ -237,7 +240,8 @@
               null, createProjectQuery(modification_dict.project_title, [])),
             getUrlParameterDict(web_page_info.id, web_page_info.edit_view),
             getUrlParameterDict(modification_dict.jio_key, document_view, [["modification_date", "descending"]],
-              ["download", "title", "reference", "modification_date"], createProjectQuery(null, [["selection_domain_state_document_domain", "confirmed"]]))
+              ["download", "title", "reference", "modification_date"], createProjectQuery(null, [["selection_domain_state_document_domain", "confirmed"]])),
+            getUrlParameterDict(modification_dict.jio_key, activity_view, [["stop_date", "ascending"]])
           ]);
         })
         .push(function (url_list) {
@@ -252,6 +256,7 @@
             enableLink(document.getElementById("web_page_link"), url_list[7]);
           }
           enableLink(document.getElementById("document_link"), url_list[8]);
+          enableLink(document.getElementById("activity_link"), url_list[9]);
           setLastTestResult(gadget, modification_dict.project_title,
                             document.getElementById("test_result_span"),
                             document.getElementById("test_result_svg"));
