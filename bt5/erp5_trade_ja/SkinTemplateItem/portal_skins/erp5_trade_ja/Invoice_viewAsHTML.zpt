@@ -755,6 +755,9 @@ footer {
       </table>
 
       <div style="clear: both"></div>
+      <div class="notes" style="text-align: right">※は軽減税率対象であることを示します。</div>
+
+      <div style="clear: both"></div>
       <div class="notes">
         <h1>
           <span i18n:translate="" i18n:domain="ui">
