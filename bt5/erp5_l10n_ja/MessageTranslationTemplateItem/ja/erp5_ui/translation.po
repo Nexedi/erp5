@@ -4269,6 +4269,9 @@ msgstr "地域"
 msgid "Registered Capital"
 msgstr "登記資本金"
 
+msgid "Registration Number"
+msgstr "登録番号"
+
 msgid "Reject Offer"
 msgstr "却下する"
 

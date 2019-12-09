@@ -202,6 +202,7 @@ table.balance {
   clear: both;
   float: right;
   width: 40%;
+  margin: 0 0 1em;
 }
 table.balance th {
   width: 63%;
@@ -218,6 +219,29 @@ table.balance tr:first-child th, table.balance tr:first-child td {
   border-top: 1px solid black;
 }
 table.balance td:last-child {
+  border-right: 1px solid black;
+}
+
+table.registration_number {
+  clear: both;
+  float: right;
+  width: 14%;
+}
+table.registration_number th {
+  width: 70%;
+  text-align: right;
+}
+table.registration_number td {
+  width: 30%;
+  text-align: right;
+}
+table.registration_number th, table.registration_number td {
+  border-left: 1px solid black;
+}
+table.registration_number tr:first-child th, table.registration_number tr:first-child td {
+  border-top: 1px solid black;
+}
+table.registration_number td:last-child {
   border-right: 1px solid black;
 }
 
@@ -749,6 +773,22 @@ footer {
               <span tal:content="python: price_renderer(data_dict['total_price'])">
                 4800.000,00
               </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="clear: both"></div>
+      <table class="registration_number">
+        <tbody>
+          <tr>
+            <th>
+              <span i18n:translate="" i18n:domain="ui">
+                Registration Number
+              </span>
+            </th>
+            <td>
+              <span></span>
             </td>
           </tr>
         </tbody>
