@@ -198,26 +198,25 @@
         .push(function () {
           return RSVP.all([
             getWebPageInfo(gadget, modification_dict.project_reference),
-            gadget.jio_getAttachment(modification_dict.jio_key, "links"),
             gadget.getDeclaredGadget("editor"),
             gadget.getSetting("hateoas_url")
           ]);
         })
         .push(function (result_list) {
-          var milestone_view = getActionListByName(
-            ensureArray(result_list[1]._links.view),
-            "milestone"
-          ),
-            document_view = result_list[3] +
+          var document_view = result_list[2] +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-            modification_dict.jio_key + '&view=Project_viewDocumentList';
+            modification_dict.jio_key + '&view=Project_viewDocumentList',
+            milestone_view = result_list[2] +
+            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
+            modification_dict.jio_key + '&view=Project_viewMilestoneList';
           web_page_info = result_list[0];
-          editor = result_list[2];
+          editor = result_list[1];
           editor.render({"editor": "fck_editor", "editable": false,
                          "value": web_page_info.content});
           return gadget.getUrlForList([
             //TODO drop 4, 6 and 9 calls when closed links removal is confirmed
-            getUrlParameterDict('milestone_module', milestone_view, [["stop_date", "ascending"]]),
+            getUrlParameterDict('milestone_module', milestone_view, [["stop_date", "ascending"]],
+              null, createProjectQuery(null, [["selection_domain_date_milestone_domain", "future"]])),
             getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
               ["title", "delivery.start_date", "source_title"],
               createProjectQuery(modification_dict.project_title,
