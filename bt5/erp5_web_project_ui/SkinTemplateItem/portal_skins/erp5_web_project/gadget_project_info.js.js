@@ -235,8 +235,7 @@
               createProjectQuery(modification_dict.project_title,
                 [["selection_domain_state_bug_domain", "closed"]])),
             getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
-              ["title", "delivery.start_date", "delivery.stop_date", "destination_decision_title",
-                "source_title", "destination_title", "total_quantity", "task_line_quantity_unit_title"],
+              ["title", "delivery.start_date", "source_title"],
               createProjectQuery(modification_dict.project_title,
                 [["selection_domain_state_task_report_domain", "started"]])),
             getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
@@ -255,7 +254,7 @@
                 [["selection_domain_state_task_domain", "not_confirmed"]])),
             getUrlParameterDict(web_page_info.id, web_page_info.edit_view),
             getUrlParameterDict(modification_dict.jio_key, document_view, [["modification_date", "descending"]],
-              null, createProjectQuery(null, [["selection_domain_state_document_domain", "confirmed"]]))
+              ["download", "title", "reference", "modification_date"], createProjectQuery(null, [["selection_domain_state_document_domain", "confirmed"]]))
           ]);
         })
         .push(function (url_list) {
