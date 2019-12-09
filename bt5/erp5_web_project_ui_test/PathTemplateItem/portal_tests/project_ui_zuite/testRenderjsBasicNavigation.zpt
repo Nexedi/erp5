@@ -125,7 +125,7 @@
 </tr>
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Milestones' and contains(@href, '#!push_history') and contains(@href, 'n.jio_key=milestone_module') and contains(@href, 'view%3Dmilestone')]</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Milestones' and contains(@href, '#!push_history') and contains(@href, 'n.jio_key=milestone_module')]</td>
  <td></td>
 </tr>
   
@@ -143,13 +143,13 @@
   
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Opened Bugs']</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Activities']</td>
  <td></td>
 </tr>
   
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Closed Bugs']</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Opened Bugs']</td>
  <td></td>
 </tr>
   
@@ -161,19 +161,7 @@
   
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Not Confirmed Tasks']</td>
- <td></td>
-</tr>
-  
-<tr>
- <td>assertElementPresent</td>
  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Opened Task Reports']</td>
- <td></td>
-</tr>
-  
-<tr>
- <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Closed Task Reports']</td>
  <td></td>
 </tr>
   
@@ -195,6 +183,11 @@
  <td></td>
 </tr>
   
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//button[text()="Maximize"]</td>
+  <td></td>
+</tr>
 </tbody></table>
 </body>
 </html>
