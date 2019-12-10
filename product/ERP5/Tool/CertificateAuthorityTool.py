@@ -188,6 +188,14 @@ class CertificateAuthorityTool(BaseTool):
       raise ValueError("Invalid common name: %r" % common_name)
     self._checkCertificateAuthority()
     self._lockCertificateAuthority()
+
+    index = open(self.index).read().splitlines()
+    valid_line_list = [q for q in index if q.startswith('V') and
+      ('CN=%s/' % common_name in q)]
+    if len(valid_line_list) >= 1:
+      self._unlockCertificateAuthority()
+      raise ValueError('The common name %r already has a certificate'
+                       'please revoke it before request a new one..' % common_name)
     try:
       new_id = open(self.serial, 'r').read().strip().lower()
       key = os.path.join(self.certificate_authority_path, 'private',
