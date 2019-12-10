@@ -33,8 +33,7 @@
     return view_list.filter(d => d.name === name)[0].href;
   }
 
-  function setLastTestResult(gadget, project_title, span_element, svg_element) {
-    span_element.classList.remove("ui-disabled");
+  function setLastTestResult(gadget, project_title, svg_element) {
     var query = createProjectQuery(project_title,
                  [["portal_type", "Test Result"]]);
     return gadget.jio_allDocs({
@@ -241,7 +240,7 @@
             getUrlParameterDict(web_page_info.id, web_page_info.edit_view),
             getUrlParameterDict(modification_dict.jio_key, document_view, [["modification_date", "descending"]],
               ["download", "title", "reference", "modification_date"], createProjectQuery(null, [["selection_domain_state_document_domain", "confirmed"]])),
-            getUrlParameterDict(modification_dict.jio_key, activity_view, [["stop_date", "ascending"]])
+            getUrlParameterDict(modification_dict.jio_key, activity_view, [["modification_date", "descending"]])
           ]);
         })
         .push(function (url_list) {
@@ -258,7 +257,6 @@
           enableLink(document.getElementById("document_link"), url_list[8]);
           enableLink(document.getElementById("activity_link"), url_list[9]);
           setLastTestResult(gadget, modification_dict.project_title,
-                            document.getElementById("test_result_span"),
                             document.getElementById("test_result_svg"));
         });
     })
