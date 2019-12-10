@@ -36,21 +36,21 @@
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'Data received.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_view.html')]</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>gadget_erp5_worklist_empty.svg</td>
+  <td>Download Converted File</td>
   <td></td>
 </tr>
 
