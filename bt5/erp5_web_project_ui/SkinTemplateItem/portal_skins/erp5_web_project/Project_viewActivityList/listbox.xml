@@ -11,17 +11,15 @@
             <value>
               <list>
                 <string>all_columns</string>
-                <string>anchor</string>
                 <string>columns</string>
                 <string>domain_root_list</string>
                 <string>domain_tree</string>
                 <string>editable_columns</string>
+                <string>list_method</string>
                 <string>portal_types</string>
-                <string>report_root_list</string>
-                <string>report_tree</string>
                 <string>selection_name</string>
-                <string>sort</string>
                 <string>title</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -64,6 +62,26 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -72,7 +90,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -83,24 +117,40 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Base_viewSearchResultList</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>quantity</string>
-                          <string>Estimated Time</string>
+                          <string>language</string>
+                          <string>Language</string>
+                        </tuple>
+                        <tuple>
+                          <string>revision</string>
+                          <string>Revision</string>
+                        </tuple>
+                        <tuple>
+                          <string>short_title</string>
+                          <string>Short Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string>Version</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>outcome_description</string>
-                          <string>Outcome</string>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
                         </tuple>
                       </list>
                     </value>
@@ -108,45 +158,28 @@
                 <item>
                     <key> <string>all_editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Estimated Time</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Begin</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>End</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
-                </item>
-                <item>
-                    <key> <string>anchor</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
-                          <string>End Date</string>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -154,12 +187,7 @@
                 <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>date_milestone_domain</string>
-                          <string>Milestone Date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -169,24 +197,7 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Estimated Time</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>End Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -198,53 +209,37 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>Task</string>
-                          <string>Task</string>
-                        </tuple>
-                        <tuple>
                           <string>Bug</string>
                           <string>Bug</string>
                         </tuple>
                         <tuple>
-                          <string>File</string>
-                          <string>File</string>
+                          <string>Task</string>
+                          <string>Task</string>
                         </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>report_root_list</string> </key>
-                    <value>
-                      <list>
                         <tuple>
-                          <string>parent</string>
-                          <string>Object Tree</string>
+                          <string>Task Report</string>
+                          <string>Task Report</string>
+                        </tuple>
+                        <tuple>
+                          <string>Support Request</string>
+                          <string>Support Request</string>
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>report_tree</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>project_milestone_selection</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>id</string>
-                          <string>id</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>base_view_document_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -252,10 +247,29 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Project Activities</string> </value>
+                    <value> <string>Activities</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>Project_getRelatedObjectList</string> </value>
         </item>
       </dictionary>
     </pickle>
