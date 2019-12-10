@@ -75,8 +75,6 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     self.assertTrue('CN=%s' % user_id in certificate['certificate'])
     person.revokeCertificate()
 
-  @unittest.skip(
-    """Will be fixed when we rewrite certificate autority to use caucase.""")
   def test_person_request_certificate_twice(self):
     user_id, login = self._createPerson()
     self.loginByUserName(login)
