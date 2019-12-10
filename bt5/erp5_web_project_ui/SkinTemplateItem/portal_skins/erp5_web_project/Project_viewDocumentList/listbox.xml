@@ -70,6 +70,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>editable_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -285,7 +293,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [[t, t] for t in list(context.getPortalDocumentTypeList())+list(context.getPortalEmbeddedDocumentTypeList())]</string> </value>
+            <value> <string>python: [[t, t] for t in list(context.getPortalDocumentTypeList())+list(context.getPortalEmbeddedDocumentTypeList()) if t != \'Discussion Thread\']</string> </value>
         </item>
       </dictionary>
     </pickle>
