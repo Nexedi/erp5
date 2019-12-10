@@ -11,12 +11,6 @@
             <value> <int>3</int> </value>
         </item>
         <item>
-            <key> <string>_Cacheable__manager_id</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -56,19 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>filter_portal_type_list=None</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>field</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Module_listWorkflowTransitionItemList</string> </value>
+            <value> <string>Folder_getDeletableDocumentListParameterList</string> </value>
         </item>
       </dictionary>
     </pickle>

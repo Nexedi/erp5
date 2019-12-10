@@ -65,6 +65,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -78,6 +82,14 @@
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -145,7 +157,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.getTemplateField().get_value(\'default_params\') + here.Module_listWorkflowTransitionItemList()[\'listbox_parameter_dict\'][\'delete_action\']</string> </value>
+            <value> <string>python: here.Folder_getDeletableDocumentListParameterList(field)</string> </value>
         </item>
       </dictionary>
     </pickle>
