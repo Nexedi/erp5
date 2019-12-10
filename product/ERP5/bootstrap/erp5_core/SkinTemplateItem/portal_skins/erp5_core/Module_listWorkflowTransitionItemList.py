@@ -19,6 +19,8 @@ module_portal_type = type_tool.getTypeInfo(module)
 
 checked_workflow_id_dict = {}
 for document_portal_type_id in module_portal_type.getTypeAllowedContentTypeList():
+  if (filter_portal_type_list is not None) and (filter_portal_type_list not in portal_type_list):
+    continue
   for workflow in workflow_tool.getWorkflowsFor(document_portal_type_id):
     if workflow.id not in checked_workflow_id_dict:
       # Do not check the same workflow twice
