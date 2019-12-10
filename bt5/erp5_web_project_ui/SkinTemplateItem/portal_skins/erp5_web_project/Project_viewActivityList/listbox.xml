@@ -234,6 +234,74 @@
                           <string>Support Request</string>
                           <string>Support Request</string>
                         </tuple>
+                        <tuple>
+                          <string>Drawing</string>
+                          <string>Drawing</string>
+                        </tuple>
+                        <tuple>
+                          <string>File</string>
+                          <string>File</string>
+                        </tuple>
+                        <tuple>
+                          <string>Image</string>
+                          <string>Image</string>
+                        </tuple>
+                        <tuple>
+                          <string>PDF</string>
+                          <string>PDF</string>
+                        </tuple>
+                        <tuple>
+                          <string>Presentation</string>
+                          <string>Presentation</string>
+                        </tuple>
+                        <tuple>
+                          <string>Sound</string>
+                          <string>Sound</string>
+                        </tuple>
+                        <tuple>
+                          <string>Spreadsheet</string>
+                          <string>Spreadsheet</string>
+                        </tuple>
+                        <tuple>
+                          <string>Text</string>
+                          <string>Text</string>
+                        </tuple>
+                        <tuple>
+                          <string>Video</string>
+                          <string>Video</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Illustration</string>
+                          <string>Web Illustration</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Manifest</string>
+                          <string>Web Manifest</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Page</string>
+                          <string>Web Page</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Script</string>
+                          <string>Web Script</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Style</string>
+                          <string>Web Style</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Table</string>
+                          <string>Web Table</string>
+                        </tuple>
+                        <tuple>
+                          <string>Embedded File</string>
+                          <string>Embedded File</string>
+                        </tuple>
+                        <tuple>
+                          <string>Test Suite</string>
+                          <string>Test Suite</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
