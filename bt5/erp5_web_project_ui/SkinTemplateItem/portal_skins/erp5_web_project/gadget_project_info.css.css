@@ -99,6 +99,10 @@ input[type="submit"] {
   visibility: hidden;
 }
 
+.gadget-content svg.test-result {
+  margin-right: 6px;
+}
+
 .gadget-content svg.test-result.fail {
   fill: red;
 }
