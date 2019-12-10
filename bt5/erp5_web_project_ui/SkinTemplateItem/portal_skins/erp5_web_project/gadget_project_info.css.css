@@ -97,7 +97,7 @@ input[type="submit"] {
 }
 
 .gadget-content svg.test-result {
-  margin-right: 6px;
+  margin-right: 7px;
 }
 
 .gadget-content svg.test-result.fail {
