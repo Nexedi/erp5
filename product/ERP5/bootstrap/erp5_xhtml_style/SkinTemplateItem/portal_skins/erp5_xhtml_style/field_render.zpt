@@ -30,8 +30,7 @@
           <div class="input" tal:content="structure python: html_tuple[1]" />
           <span tal:condition="field_has_error"
                 class="error"
-                tal:content="python: field_errors[field_id].error_text"
-                i18n:translate="" i18n:domain="ui" />
+                tal:content="python: field_errors[field_id].getMessage(here.Base_translateString)" />
           <p class="clear" tal:condition="not:is_web_mode"></p>
         </tal:block>
       </div>
