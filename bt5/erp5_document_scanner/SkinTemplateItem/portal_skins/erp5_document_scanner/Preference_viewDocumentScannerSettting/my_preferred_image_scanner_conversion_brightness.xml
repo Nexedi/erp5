@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_preferred_image_conversion_brightness</string> </value>
+            <value> <string>my_preferred_image_scanner_conversion_brightness</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

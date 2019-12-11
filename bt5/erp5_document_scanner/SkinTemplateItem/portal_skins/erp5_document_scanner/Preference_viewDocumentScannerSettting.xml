@@ -83,7 +83,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_preferred_image_conversion_enable_greyscale</string>
+                        <string>my_preferred_image_scanner_conversion_enable_greyscale</string>
                       </list>
                     </value>
                 </item>
@@ -91,9 +91,9 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_preferred_image_conversion_compression</string>
-                        <string>my_preferred_image_conversion_brightness</string>
-                        <string>my_preferred_image_conversion_contrast</string>
+                        <string>my_preferred_image_scanner_conversion_compression</string>
+                        <string>my_preferred_image_scanner_conversion_brightness</string>
+                        <string>my_preferred_image_scanner_conversion_contrast</string>
                       </list>
                     </value>
                 </item>
