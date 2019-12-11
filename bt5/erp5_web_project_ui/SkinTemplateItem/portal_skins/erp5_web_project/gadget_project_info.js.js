@@ -212,9 +212,11 @@
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
             modification_dict.jio_key + '&view=Project_viewActivityList';
           web_page_info = result_list[0];
-          editor = result_list[1];
-          editor.render({"editor": "fck_editor", "editable": false, "maximize": true,
-                         "value": web_page_info.content});
+          if (web_page_info.id) {
+            editor = result_list[1];
+            editor.render({"editor": "fck_editor", "editable": false, "maximize": true,
+                           "value": web_page_info.content});
+          }
           return gadget.getUrlForList([
             getUrlParameterDict('milestone_module', milestone_view, [["stop_date", "ascending"]],
               null, createProjectQuery(null, [["selection_domain_date_milestone_domain", "future"]])),
