@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_preferred_image_conversion_compression</string> </value>
+            <value> <string>my_preferred_image_scanner_conversion_contrast</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,7 +73,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_float_field</string> </value>
+                    <value> <string>my_integer_value</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -85,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Image compression [0 .. 1]</string> </value>
+                    <value> <string>Contrast [-100 .. 100]</string> </value>
                 </item>
               </dictionary>
             </value>
