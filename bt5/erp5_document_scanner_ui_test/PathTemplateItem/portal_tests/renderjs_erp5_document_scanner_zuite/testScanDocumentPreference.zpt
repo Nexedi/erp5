@@ -1,0 +1,85 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Scan Document (expected failure)</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr><td rowspan="1" colspan="3">Test Scan Document (expected failure)</td></tr>
+</thead><tbody>
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Preferences</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text()="Preferences"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//dd/a[text()="Document Scanner"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//dd/a[text()="Document Scanner"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Document Scanner</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@id="field_my_preferred_image_scanner_conversion_brightness"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@id="field_my_preferred_image_scanner_conversion_enable_greyscale"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@id="field_my_preferred_image_scanner_conversion_brightness"]</td>
+  <td>20</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@id="field_my_preferred_image_scanner_conversion_contrast"]</td>
+  <td>20</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@name="submit"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="visible"]/button[text()="Data updated."]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
