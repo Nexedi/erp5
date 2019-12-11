@@ -991,7 +991,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       try:
         response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix, selection_params=selection_params, request_field=not use_relation_form_page_template)
         if field_errors.has_key(field.id):
-          response_dict[field.id]["error_text"] = field_errors[field.id].error_text
+          response_dict[field.id]["error_text"] = field_errors[field.id].getMessage(Base_translateString)
       except AttributeError as error:
         # Do not crash if field configuration is wrong.
         log("Field {} rendering failed because of {!s}".format(field.id, error), level=800)
