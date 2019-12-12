@@ -27,7 +27,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/int</string>
+                <string>elementary_type/boolean</string>
               </tuple>
             </value>
         </item>
@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>preferred_image_conversion_contrast_property</string> </value>
+            <value> <string>preferred_image_scanner_conversion_enable_greyscale_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>
