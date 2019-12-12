@@ -102,6 +102,10 @@
                           <string>destination_title</string>
                           <string>Gitlab Connector</string>
                         </tuple>
+                        <tuple>
+                          <string>source_reference</string>
+                          <string>Test Result Line Pattern</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
