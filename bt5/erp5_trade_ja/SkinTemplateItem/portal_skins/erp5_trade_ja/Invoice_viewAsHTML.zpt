@@ -760,8 +760,8 @@ footer {
           </tr>
           <tr tal:repeat='line_tax_dict python:data_dict["line_tax"]'>
             <td>
-              <span tal:content='python: line_tax_dict["number_tax_line"]'>
-                tax_code
+              <span>
+                1
               </span>
             </td>
             <td>
