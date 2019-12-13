@@ -23,6 +23,14 @@ organisation_module/supplier
 organisation_module/supplier/**
 person_module/john_smith
 person_module/john_smith/**
+portal_categories/financial_section/asset/cash
+portal_categories/financial_section/asset/fixed_assets
+portal_categories/financial_section/asset/inventory
+portal_categories/financial_section/asset/receivables
+portal_categories/financial_section/equity/common_stock
+portal_categories/financial_section/expense/cogs
+portal_categories/financial_section/income/sales
+portal_categories/financial_section/liability/payable
 portal_categories/gap/another_country
 portal_categories/gap/another_country/**
 portal_categories/gap/my_country
