@@ -60,14 +60,6 @@ def getCurrencyByReference(reference):
   return document_list[0]
 euro_resource = getCurrencyByReference('EUR')
 
-def getBankAccountByTitle(title):
-  document_list = [x.getObject().getRelativeUrl() for x in
-    portal.portal_catalog(portal_type='Bank Account',
-                          title=SimpleQuery(title=title, comparison_operator='='))]
-  assert len(document_list) == 1, \
-      '%d Bank Account with title "%s"' % (len(document_list), title)
-  return document_list[0]
-
 for month in range(1, month_count + 1):
   day = 1
   vat_rate = .1
