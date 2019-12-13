@@ -78,6 +78,7 @@
               <tuple>
                 <string>account_type/equity</string>
                 <string>gap/my_country/my_accounting_standards/1</string>
+                <string>financial_section/equity/common_stock</string>
               </tuple>
             </value>
         </item>

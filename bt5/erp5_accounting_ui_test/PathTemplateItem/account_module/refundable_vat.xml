@@ -78,6 +78,7 @@
               <tuple>
                 <string>account_type/asset/receivable/refundable_vat</string>
                 <string>gap/my_country/my_accounting_standards/4/44/445/4456</string>
+                <string>financial_section/asset/receivables</string>
               </tuple>
             </value>
         </item>

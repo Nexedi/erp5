@@ -78,6 +78,7 @@
               <tuple>
                 <string>account_type/expense</string>
                 <string>gap/my_country/my_accounting_standards/6</string>
+                <string>financial_section/expense/cogs</string>
               </tuple>
             </value>
         </item>
