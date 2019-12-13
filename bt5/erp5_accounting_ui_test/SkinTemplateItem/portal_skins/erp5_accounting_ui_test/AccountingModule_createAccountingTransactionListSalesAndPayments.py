@@ -8,8 +8,6 @@ portal = context.getPortalObject()
 accounting_module = portal.accounting_module
 year = 2005
 
-total_receivable_quantity = 0
-
 # if the previous test didn't change input data, no need to recreate content
 current_script_data_id = '%s_month_count_%s' % (
                                  month_count, script.getId())
@@ -75,7 +73,6 @@ for month in range(1, month_count + 1):
             specialise=business_process,
         )
       receivable_qty = -(amount * (1 + vat_rate))
-      total_receivable_quantity += receivable_qty
       tr.newContent(portal_type='Sale Invoice Transaction Line',
                     source=getAccountByTitle('Receivable'),
                     destination=getAccountByTitle('Payable'),
@@ -123,7 +120,7 @@ for month in range(1, month_count + 1):
         for line in ptr.getMovementList(
                           portal_type=ptr.getPortalAccountingMovementTypeList()):
           if line.getGroupingReference():
-             line.activate(after_tag=tag).AccountingTransactionLine_resetGroupingReference()
+            line.activate(after_tag=tag).AccountingTransactionLine_resetGroupingReference()
 
 
 accounting_module.setProperty('current_content_script',

@@ -1,7 +1,6 @@
 from DateTime import DateTime
 
 portal = context.getPortalObject()
-accounting_module = portal.accounting_module
 account_module = portal.account_module
 
 one_hour = 1.0 / 24.0

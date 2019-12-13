@@ -41,10 +41,9 @@ for accounting_type_id in portal.getPortalAccountingTransactionTypeList():
     ledger_value_list=list(portal.portal_categories.ledger.test_accounting.contentValues())
     if set_ledger else ())
 
-test_ledger_1 = test_ledger_2 = None
+test_ledger_1 = None
 if set_ledger:
   test_ledger_1 = portal.portal_categories.ledger.test_accounting.test_ledger_1
-  test_ledger_2 = portal.portal_categories.ledger.test_accounting.test_ledger_2
 
 def getAccountByTitle(title):
   account_list = [x.getObject().getRelativeUrl() for x in
@@ -65,13 +64,6 @@ section = getOrganisationByTitle(section_title)
 
 euro_resource = 'currency_module/euro'
 
-def getBankAccountByTitle(title):
-  document_list = [x.getObject().getRelativeUrl() for x in
-    portal.portal_catalog(portal_type='Bank Account',
-                          title=SimpleQuery(title=title, comparison_operator='='))]
-  assert len(document_list) == 1, \
-      '%d Bank Account with title "%s"' % (len(document_list), title)
-  return document_list[0]
 
 product_list = [o.getObject() for o in portal.portal_catalog(
                                   portal_type='Product',
@@ -82,7 +74,7 @@ else:
   product = portal.product_module.newContent(portal_type='Product',
                               title='Dummy Product for testing')
 
-for i in range(random.randint(5, 10)):
+for _ in range(random.randint(5, 10)):
   pl = portal.sale_packing_list_module.newContent(
         portal_type='Sale Packing List',
         title='Dummy Packing List for testing',
@@ -211,7 +203,7 @@ for month in range(1, month_count + 1):
           for line in payment.getMovementList(
                           portal_type=payment.getPortalAccountingMovementTypeList()):
             if line.getGroupingReference():
-               line.activate(after_tag=tag).AccountingTransactionLine_resetGroupingReference()
+              line.activate(after_tag=tag).AccountingTransactionLine_resetGroupingReference()
 
       else:
         # other cases not supported for now
