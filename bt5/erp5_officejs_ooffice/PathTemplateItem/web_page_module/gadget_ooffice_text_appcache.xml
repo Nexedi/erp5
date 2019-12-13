@@ -1293,9 +1293,11 @@ ooffice_upload_action.html\n
 ooffice_upload_action.js\n
 ooffice_download_action.html\n
 ooffice_download_action.js\n
+gadget_erp5_page_ojs_download_convert.html\n
+gadget_erp5_page_ojs_download_convert.js\n
 \n
 #app_configuration_resources\n
-#CONFIGURATION ELEMENTS generated on Tue Sep 17 14:54:17 2019. Same as in configuration manifest\n
+#CONFIGURATION ELEMENTS generated on Fri Dec 13 14:45:53 2019. Same as in configuration manifest\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQ=\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1RleHQvb29mZmljZV90ZXh0X3ZpZXc=\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb29mZmljZV90ZXh0X2VkaXRvci9UZXh0RG9jdW1lbnRfdmlld0FzSmlvRm9yT29mZmljZVRleHRFZGl0b3I=\n
@@ -1453,7 +1455,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.46959.46449.51712</string> </value>
+                <value> <string>980.30113.36813.4437</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1471,7 +1473,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1569592159.32</float>
+                        <float>1576265412.12</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
