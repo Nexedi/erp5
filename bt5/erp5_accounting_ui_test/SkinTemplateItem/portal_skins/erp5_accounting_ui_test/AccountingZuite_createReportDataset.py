@@ -8,7 +8,6 @@ from DateTime import DateTime
 
 portal = context.getPortalObject()
 person_module = portal.person_module
-accounting_module = portal.accounting_module
 account_module = portal.account_module
 organisation_module = portal.organisation_module
 
