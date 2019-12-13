@@ -78,6 +78,7 @@
               <tuple>
                 <string>account_type/asset/cash/bank</string>
                 <string>gap/my_country/my_accounting_standards/5</string>
+                <string>financial_section/asset/cash</string>
               </tuple>
             </value>
         </item>
