@@ -78,6 +78,7 @@
               <tuple>
                 <string>account_type/liability/payable</string>
                 <string>gap/my_country/my_accounting_standards/4/40</string>
+                <string>financial_section/liability/payable</string>
               </tuple>
             </value>
         </item>

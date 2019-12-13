@@ -1,6 +1,7 @@
 return (
   ('Movement_getNodeGapId', 'Account Code'),
   ('node_translated_title', 'Account Name'),
+  ('Movement_getNodeFinancialSectionTitle', 'Financial Section'),
   ('section_title', 'Section'),
   ('mirror_section_title', 'Third Party'),
   ('date', 'Operation Date'),

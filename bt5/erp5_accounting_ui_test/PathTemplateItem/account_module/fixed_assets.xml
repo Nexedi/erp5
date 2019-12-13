@@ -78,6 +78,7 @@
               <tuple>
                 <string>account_type/asset</string>
                 <string>gap/my_country/my_accounting_standards/2</string>
+                <string>financial_section/asset/fixed_assets</string>
               </tuple>
             </value>
         </item>
