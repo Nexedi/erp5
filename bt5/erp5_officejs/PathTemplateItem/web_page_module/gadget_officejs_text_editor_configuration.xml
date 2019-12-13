@@ -110,7 +110,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CONFIGURATION MANIFEST\n
-# generated on Fri Sep 20 09:45:43 2019\n
+# generated on Fri Dec 13 14:45:53 2019\n
 CACHE:\n
 \n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
@@ -264,7 +264,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.56362.16233.35328</string> </value>
+                <value> <string>978.51189.12566.39185</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -282,7 +282,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1566219739.99</float>
+                        <float>1576252242.53</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
