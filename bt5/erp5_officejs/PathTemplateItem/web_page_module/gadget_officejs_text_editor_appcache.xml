@@ -107,7 +107,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 25 Jun 2016 11:45:33 +0000\n
+# generated on Fri - 13 Dec 2019 14:45:53 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -594,7 +594,7 @@ action_texteditor_clone.html\n
 action_texteditor_clone.js\n
 \n
 #app_configuration_resources\n
-#CONFIGURATION ELEMENTS generated on Fri Dec 13 09:57:11 2019. Same as in configuration manifest\n
+#CONFIGURATION ELEMENTS generated on Fri Dec 13 14:45:53 2019. Same as in configuration manifest\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS90ZXh0X2VkaXRvcl92aWV3\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvV2ViUGFnZU1vZHVsZV92aWV3V2ViUGFnZUxpc3RBc0ppb0ZvclRleHRFZGl0b3I=\n
@@ -756,7 +756,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>980.29796.64064.18124</string> </value>
+                <value> <string>980.29909.44006.43144</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -774,7 +774,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1576245498.76</float>
+                        <float>1576252198.81</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

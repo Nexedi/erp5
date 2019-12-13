@@ -109,26 +109,16 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# generated on Thu, 14 Jan 2019 11:55:33 +0000\n
+            <value> <string>CONFIGURATION MANIFEST\n
+# generated on Mon Dec 16 12:11:34 2019\n
 CACHE:\n
 \n
-#hateoas_appcache/definition_view/BASE64(portal_types/Document Module)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Document Module/pdf_viewer_view)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9wZGZfdmlld2VyX3ZpZXc=\n
-#hateoas_appcache/definition_view/BASE64(portal_types/PDF)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1BERg==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/PDF/pdf_viewer_view)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1BERi9wZGZfdmlld2VyX3ZpZXc=\n
-\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_officejs_pdf_viewer/Base_viewNewContentDialogForPdfViewer)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfcGRmX3ZpZXdlci9CYXNlX3ZpZXdOZXdDb250ZW50RGlhbG9nRm9yUGRmVmlld2Vy\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_officejs_pdf_viewer/DocumentModule_viewDocumentListAsJioForPdfViewer)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfcGRmX3ZpZXdlci9Eb2N1bWVudE1vZHVsZV92aWV3RG9jdW1lbnRMaXN0QXNKaW9Gb3JQZGZWaWV3ZXI=\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_officejs_pdf_viewer/Document_viewAsPdfDocumentForPdfViewer)\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfcGRmX3ZpZXdlci9Eb2N1bWVudF92aWV3QXNQZGZEb2N1bWVudEZvclBkZlZpZXdlcg==\n
-\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9wZGZfdmlld2VyX3ZpZXc=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfcGRmX3ZpZXdlci9Eb2N1bWVudE1vZHVsZV92aWV3RG9jdW1lbnRMaXN0QXNKaW9Gb3JQZGZWaWV3ZXI=\n
 \n
 NETWORK:\n
 *</string> </value>
