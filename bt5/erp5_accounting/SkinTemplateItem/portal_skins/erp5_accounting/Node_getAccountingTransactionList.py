@@ -190,7 +190,8 @@ if from_date or is_pl_account:
         if params.get('node_uid'):
           previous_balance.edit(
             Movement_getNodeGapId=node.Account_getGapId(),
-            node_translated_title=node.getTranslatedTitle()
+            node_translated_title=node.getTranslatedTitle(),
+            Movement_getNodeFinancialSectionTitle=node.getFinancialSectionTranslatedTitle(),
           )
         if params.get('mirror_section_uid'):
           brain_list = portal.portal_catalog(uid=params['mirror_section_uid'], limit=2)
