@@ -519,7 +519,7 @@ method-draw/src/method-draw.js\n
 method-draw/src/svgcanvas.js\n
 \n
 #app_configuration_resources\n
-#CONFIGURATION ELEMENTS generated on Mon Sep 30 14:56:21 2019. Same as in configuration manifest\n
+#CONFIGURATION ELEMENTS generated on Fri Dec 13 20:29:31 2019. Same as in configuration manifest\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBJbGx1c3RyYXRpb24=\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBJbGx1c3RyYXRpb24vc3ZnX2VkaXRvcl92aWV3\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc3ZnX2VkaXRvci9XZWJQYWdlX3ZpZXdBc1N2Z0RvY3VtZW50Rm9yU3ZnRWRpdG9y\n
@@ -671,7 +671,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.51488.23397.48588</string> </value>
+                <value> <string>980.30189.34879.10222</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -689,7 +689,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1569855661.06</float>
+                        <float>1576497584.64</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

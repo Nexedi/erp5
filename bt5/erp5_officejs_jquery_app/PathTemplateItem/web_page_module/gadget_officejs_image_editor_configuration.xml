@@ -107,24 +107,15 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# generated on Thu, 14 Jan 2019 11:55:33 +0000\n
+            <value> <string>CONFIGURATION MANIFEST\n
+# generated on Mon Dec 16 12:49:04 2019\n
 CACHE:\n
 \n
-#hateoas_appcache/definition_view/BASE64(portal_types/Image Module)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlIE1vZHVsZQ==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Image Module/image_editor_view)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlIE1vZHVsZS9pbWFnZV9lZGl0b3Jfdmlldw==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Image)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdl\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Image/image_editor_view)\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlL2ltYWdlX2VkaXRvcl92aWV3\n
-\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_image_editor/Base_viewNewContentDialogForImageEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfaW1hZ2VfZWRpdG9yL0Jhc2Vfdmlld05ld0NvbnRlbnREaWFsb2dGb3JJbWFnZUVkaXRvcg==\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_image_editor/Image_viewAsJioForImageEditor)\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfaW1hZ2VfZWRpdG9yL0ltYWdlX3ZpZXdBc0ppb0ZvckltYWdlRWRpdG9y\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_image_editor/ImageModule_viewImageListAsJioForImageEditor)\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlIE1vZHVsZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlIE1vZHVsZS9pbWFnZV9lZGl0b3Jfdmlldw==\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfaW1hZ2VfZWRpdG9yL0ltYWdlTW9kdWxlX3ZpZXdJbWFnZUxpc3RBc0ppb0ZvckltYWdlRWRpdG9y\n
 \n
 NETWORK:\n
