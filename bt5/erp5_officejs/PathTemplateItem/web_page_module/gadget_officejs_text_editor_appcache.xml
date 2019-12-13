@@ -156,6 +156,8 @@ gadget_erp5_page_ojs_dropbox_configurator.html\n
 gadget_erp5_page_ojs_dropbox_configurator.js\n
 gadget_erp5_page_ojs_sync.html\n
 gadget_erp5_page_ojs_sync.js\n
+gadget_erp5_page_ojs_linshare_configurator.html\n
+gadget_erp5_page_ojs_linshare_configurator.js\n
 \n
 gadget_ojs_configurator_access.html\n
 gadget_ojs_configurator_access.js\n
@@ -592,7 +594,7 @@ action_texteditor_clone.html\n
 action_texteditor_clone.js\n
 \n
 #app_configuration_resources\n
-#CONFIGURATION ELEMENTS generated on Fri Sep 20 09:45:43 2019. Same as in configuration manifest\n
+#CONFIGURATION ELEMENTS generated on Fri Dec 13 09:57:11 2019. Same as in configuration manifest\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS90ZXh0X2VkaXRvcl92aWV3\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvV2ViUGFnZU1vZHVsZV92aWV3V2ViUGFnZUxpc3RBc0ppb0ZvclRleHRFZGl0b3I=\n
@@ -605,8 +607,10 @@ hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvQmFzZV9
 \n
 \n
 \n
+\n
 NETWORK:\n
 *\n
+\n
 \n
 \n
 \n
@@ -752,7 +756,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.31397.31451.12492</string> </value>
+                <value> <string>980.29796.64064.18124</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -770,7 +774,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1568707377.29</float>
+                        <float>1576245498.76</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
