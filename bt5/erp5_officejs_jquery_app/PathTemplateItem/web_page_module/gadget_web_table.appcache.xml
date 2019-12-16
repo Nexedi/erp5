@@ -116,22 +116,6 @@ officejs_logo.png\n
 jio_appcachestorage.js\n
 jio_configuration_storage.js\n
 \n
-#configuration resources\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Web Page Module)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Web Page Module/web_table_view)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS93ZWJfdGFibGVfdmlldw==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Web Table)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZQ==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Web Table/web_table_view)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZS93ZWJfdGFibGVfdmlldw==\n
-\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_web_table_editor/Base_viewNewContentDialogForWebTableEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9CYXNlX3ZpZXdOZXdDb250ZW50RGlhbG9nRm9yV2ViVGFibGVFZGl0b3I=\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_web_table_editor/WebPageModule_viewWebTableListAsJioForWebTableEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9XZWJQYWdlTW9kdWxlX3ZpZXdXZWJUYWJsZUxpc3RBc0ppb0ZvcldlYlRhYmxlRWRpdG9y\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_web_table_editor/WebTable_viewAsJioForWebTableEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9XZWJUYWJsZV92aWV3QXNKaW9Gb3JXZWJUYWJsZUVkaXRvcg==\n
 CACHE MANIFEST\n
 # generated on Fri, 01 Feb 2019 10:45:33 +0000\n
 # XXX + fonts\n
@@ -278,24 +262,6 @@ officejs_logo.png\n
 jio_appcachestorage.js\n
 jio_configuration_storage.js\n
 \n
-#configuration resources\n
-\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Web Page Module)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Web Page Module/web_table_view)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS93ZWJfdGFibGVfdmlldw==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Web Table)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZQ==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Web Table/web_table_view)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZS93ZWJfdGFibGVfdmlldw==\n
-\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_web_table_editor/Base_viewNewContentDialogForWebTableEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9CYXNlX3ZpZXdOZXdDb250ZW50RGlhbG9nRm9yV2ViVGFibGVFZGl0b3I=\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_web_table_editor/WebPageModule_viewWebTableListAsJioForWebTableEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9XZWJQYWdlTW9kdWxlX3ZpZXdXZWJUYWJsZUxpc3RBc0ppb0ZvcldlYlRhYmxlRWRpdG9y\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_web_table_editor/WebTable_viewAsJioForWebTableEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9XZWJUYWJsZV92aWV3QXNKaW9Gb3JXZWJUYWJsZUVkaXRvcg==\n
-\n
 #web table\n
 gadget_officejs_web_table_router.html\n
 gadget_officejs_jio_web_table_view.html\n
@@ -337,8 +303,21 @@ jquery-sheets/images/centered5.svg\n
 jquery-sheets/images/italic3.svg\n
 jquery-sheets/images/bold13.svg\n
 jquery-sheets/bootstrap.css\n
+#app_configuration_resources\n
+#CONFIGURATION ELEMENTS generated on Fri Dec 13 20:31:13 2019. Same as in configuration manifest\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS93ZWJfdGFibGVfdmlldw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9XZWJQYWdlTW9kdWxlX3ZpZXdXZWJUYWJsZUxpc3RBc0ppb0ZvcldlYlRhYmxlRWRpdG9y\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZS93ZWJfdGFibGVfdmlldw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9XZWJUYWJsZV92aWV3QXNKaW9Gb3JXZWJUYWJsZUVkaXRvcg==\n
+#/app_configuration_resources\n
+\n
+\n
 NETWORK:\n
-*</string> </value>
+*\n
+\n
+</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -473,7 +452,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.21272.50554.63249</string> </value>
+                <value> <string>980.34037.37658.9250</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -491,7 +470,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1568042462.17</float>
+                        <float>1576500144.8</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
