@@ -27,26 +27,22 @@
 #
 ##############################################################################
 
-from zLOG import LOG
-from Acquisition import aq_base
-from Products.ERP5Type.Globals import get_request
-from AccessControl import Unauthorized
-from Products.ERP5Type.ExtensibleTraversable import ExtensibleTraversableMixIn
-from Products.ERP5Type.Cache import getReadOnlyTransactionCache
-from AccessControl import ClassSecurityInfo, getSecurityManager
-from AccessControl.SecurityManagement import newSecurityManager, setSecurityManager
-from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type import Permissions
-from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCacheHeaders, _ViewEmulator
-from OFS.Image import File as OFSFile
 from warnings import warn
 from base64 import decodestring
-from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
-from Products.ERP5.Document.Document import ConversionError, NotConvertedError
+
+from zLOG import LOG
+from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager, setSecurityManager
+from Products.CMFCore.utils import getToolByName
+
+from Products.ERP5Type.ExtensibleTraversable import ExtensibleTraversableMixIn
+from Products.ERP5Type.Cache import getReadOnlyTransactionCache
+from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type import Permissions
+from Products.ERP5Type.Globals import get_request
 
 # XXX: these duplicate ones in ERP5.Document
 _MARKER = []
-EMBEDDED_FORMAT = '_embedded'
 
 class BaseExtensibleTraversableMixin(ExtensibleTraversableMixIn):
   """
@@ -170,61 +166,3 @@ class BaseExtensibleTraversableMixin(ExtensibleTraversableMixIn):
       return document.__of__(self)
 
 InitializeClass(BaseExtensibleTraversableMixin)
-
-class DocumentExtensibleTraversableMixin(BaseExtensibleTraversableMixin):
-  """
-  This class provides a implementation of IExtensibleTraversable for Document classed based documents.
-  """
-
-  def getExtensibleContent(self, request, name):
-    old_manager, user = self._forceIdentification(request)
-    # Next get the document per name
-    portal = self.getPortalObject()
-    document = self.getDocumentValue(name=name, portal=portal)
-    # restore original security context if there's a logged in user
-    if user is not None:
-      setSecurityManager(old_manager)
-    if document is not None:
-      document = aq_base(document.asContext(id=name, # Hide some properties to permit locating the original
-                                            original_container=document.getParentValue(),
-                                            original_id=document.getId(),
-                                            editable_absolute_url=document.absolute_url()))
-      return document.__of__(self)
-
-    # no document found for current user, still such document may exists
-    # in some cases user (like Anonymous) can not view document according to portal catalog
-    # but we may ask him to login if such a document exists
-    isAuthorizationForced = getattr(self, 'isAuthorizationForced', None)
-    if isAuthorizationForced is not None and isAuthorizationForced():
-      if unrestricted_apply(self.getDocumentValue, (name, portal)) is not None:
-        # force user to login as specified in Web Section
-        raise Unauthorized
-
-class OOoDocumentExtensibleTraversableMixin(BaseExtensibleTraversableMixin):
-  """
-  This class provides a implementation of IExtensibleTraversable for OOoDocument classed based documents.
-  """
-
-  def getExtensibleContent(self, request, name):
-    # Be sure that html conversion is done,
-    # as it is required to extract extensible content
-    old_manager, user = self._forceIdentification(request)
-    web_cache_kw = {'name': name,
-                    'format': EMBEDDED_FORMAT}
-    try:
-      self._convert(format='html')
-      view = _ViewEmulator().__of__(self)
-      # If we have a conditional get, set status 304 and return
-      # no content
-      if _checkConditionalGET(view, web_cache_kw):
-        return ''
-      # call caching policy manager.
-      _setCacheHeaders(view, web_cache_kw)
-      mime, data = self.getConversion(format=EMBEDDED_FORMAT, filename=name)
-      document = OFSFile(name, name, data, content_type=mime).__of__(self.aq_parent)
-    except (NotConvertedError, ConversionError, KeyError):
-      document = DocumentExtensibleTraversableMixin.getExtensibleContent(self, request, name)
-    # restore original security context if there's a logged in user
-    if user is not None:
-      setSecurityManager(old_manager)
-    return document

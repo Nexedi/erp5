@@ -41,7 +41,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
-from Products.ERP5.mixin.rule import SimulableMixin
+from Products.ERP5.mixin.simulable import SimulableMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, \
     unrestricted_apply
 from zLOG import LOG, PROBLEM

@@ -29,7 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5.mixin.solver import ConfigurablePropertySolverMixin
+from Products.ERP5.mixin.configurable_property_solver import ConfigurablePropertySolverMixin
 
 class AdoptSolver(ConfigurablePropertySolverMixin):
   """Target solver that adopts the values from the prevision on the decision.

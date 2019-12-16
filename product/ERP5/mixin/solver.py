@@ -30,10 +30,8 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.UnrestrictedMethod import super_user
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.mixin.configurable import ConfigurableMixin
 
 class SolverMixin(object):
   """
@@ -73,53 +71,3 @@ class SolverMixin(object):
     return solver_list
 
 InitializeClass(SolverMixin)
-
-class ConfigurablePropertySolverMixin(SolverMixin,
-                                      ConfigurableMixin,
-                                      XMLObject):
-  """
-  Base class for Target Solvers that can be applied to many
-  solver-decisions of a solver process, and need to accumulate the
-  tested_property_list configuration among all solver-decisions
-  """
-
-  add_permission = Permissions.AddPortalContent
-  isIndexable = 0 # We do not want to fill the catalog with objects on which we need no reporting
-
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  zope.interface.implements(interfaces.ISolver,
-                            interfaces.IConfigurable,)
-
-  # Default Properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.DublinCore
-                    , PropertySheet.TargetSolver
-                    )
-
-  def updateConfiguration(self, **kw):
-    # This method is called once for each 'Solver Decision' of a
-    # 'Solver Process' that maps into this solver for the same
-    # Simulation Movement, so we need to take care not to lose
-    # information by overwriting.
-    configuration = self._getConfigurationPropertyDict()
-    tested_property_list = configuration.get('tested_property_list')
-    if tested_property_list is not None:
-      tested_property_set = set(tested_property_list)
-      tested_property_set.update(kw.get('tested_property_list', ()))
-      kw['tested_property_list'] = list(tested_property_set)
-    super(ConfigurablePropertySolverMixin, self).updateConfiguration(**kw)
-
-  def getTestedPropertyList(self):
-    configuration_dict = self.getConfigurationPropertyDict()
-    tested_property_list = configuration_dict.get('tested_property_list')
-    if tested_property_list is None:
-      portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
-      tested_property_list = portal_type.getTestedPropertyList()
-    return tested_property_list
-
-InitializeClass(ConfigurablePropertySolverMixin)
