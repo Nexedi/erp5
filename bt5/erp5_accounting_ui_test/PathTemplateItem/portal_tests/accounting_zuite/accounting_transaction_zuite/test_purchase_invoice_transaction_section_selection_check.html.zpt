@@ -67,7 +67,7 @@ Test Section Selection for Purchase Invoice Transaction.
 <!-- Modify Preference -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingZuite_unsetDocumentSectionPreference</td>
+  <td>${base_url}/PreferenceTool_resetAccountingTestDocumentSectionPreference</td>
   <td></td>
 </tr>
 <tr>
