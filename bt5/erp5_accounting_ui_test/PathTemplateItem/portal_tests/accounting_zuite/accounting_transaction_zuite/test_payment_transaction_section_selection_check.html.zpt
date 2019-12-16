@@ -13,7 +13,7 @@ Test Section Selection for Payment Transaction.
 <!-- Setup {{{ -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingZuite_setDocumentSectionPreference</td>
+  <td>${base_url}/PreferenceTool_setAccountingTestDocumentSectionPreference</td>
   <td></td>
 </tr>
 <tr>
@@ -111,7 +111,7 @@ Test Section Selection for Payment Transaction.
 <!-- Reset Preference -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingZuite_setDocumentSectionPreference</td>
+  <td>${base_url}/PreferenceTool_setAccountingTestDocumentSectionPreference</td>
   <td></td>
 </tr>
 <tr>

@@ -14,7 +14,7 @@ Test Section Selection for Accounting Transaction.
 <!-- Reset Preference -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingZuite_setDocumentSectionPreference</td>
+  <td>${base_url}/PreferenceTool_setAccountingTestDocumentSectionPreference</td>
   <td></td>
 </tr>
 <tr>
@@ -112,7 +112,7 @@ Test Section Selection for Accounting Transaction.
 <!-- Reset Preference -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingZuite_setDocumentSectionPreference</td>
+  <td>${base_url}/PreferenceTool_setAccountingTestDocumentSectionPreference</td>
   <td></td>
 </tr>
 <tr>

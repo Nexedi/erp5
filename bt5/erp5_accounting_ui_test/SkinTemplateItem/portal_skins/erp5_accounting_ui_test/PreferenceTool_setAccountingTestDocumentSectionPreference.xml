@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingZuite_setDocumentSectionPreference</string> </value>
+            <value> <string>PreferenceTool_setAccountingTestDocumentSectionPreference</string> </value>
         </item>
       </dictionary>
     </pickle>
