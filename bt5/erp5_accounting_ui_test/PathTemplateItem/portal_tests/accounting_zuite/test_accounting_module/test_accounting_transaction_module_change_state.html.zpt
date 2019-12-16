@@ -92,7 +92,7 @@ Test changing state in accounting module (with custom search)
 
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingZuite_markChanged</td>
+  <td>${base_url}/AccountingModule_markAccountingTestDataChanged</td>
   <td></td>
 </tr>
 <tr>

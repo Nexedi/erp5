@@ -130,7 +130,7 @@ Grouping from account transaction view
 <!-- mark the module as changed, reindex and come back to the account -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingZuite_markChanged</td>
+  <td>${base_url}/AccountingModule_markAccountingTestDataChanged</td>
   <td></td>
 </tr>
 <tr>

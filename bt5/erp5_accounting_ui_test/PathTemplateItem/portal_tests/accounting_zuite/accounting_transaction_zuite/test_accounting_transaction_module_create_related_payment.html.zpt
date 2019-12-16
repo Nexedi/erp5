@@ -13,7 +13,7 @@ Test for Creating Payment Transactions related to some Invoices
 <!-- Setup {{{ -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingZuite_markChanged</td>
+  <td>${base_url}/AccountingModule_markAccountingTestDataChanged</td>
   <td></td>
 </tr>
 <tr>

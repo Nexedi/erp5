@@ -13,7 +13,7 @@ Test for Creating Reversal Transaction for a Purchase Invoice Transaction
 <!-- Setup {{{ -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingZuite_markChanged</td>
+  <td>${base_url}/AccountingModule_markAccountingTestDataChanged</td>
   <td></td>
 </tr>
 <tr>

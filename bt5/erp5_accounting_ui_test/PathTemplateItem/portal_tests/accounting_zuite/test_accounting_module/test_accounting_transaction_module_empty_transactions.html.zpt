@@ -44,7 +44,7 @@ Accounting Transaction Module Displays empty Transactions
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingZuite_markChanged</td>
+  <td>${base_url}/AccountingModule_markAccountingTestDataChanged</td>
   <td></td>
 </tr>
 <tr>
