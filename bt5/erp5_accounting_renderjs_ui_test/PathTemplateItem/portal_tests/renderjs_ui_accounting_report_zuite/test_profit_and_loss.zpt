@@ -13,7 +13,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
               offset python:0;
               now python:DateTime()">
 
-<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 
 <tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.day())"></td><td>day</td></tr>
 <tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.month())"></td><td>month</td></tr>

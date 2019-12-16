@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingZuite_CommonTemplate</string> </value>
+            <value> <string>ERP5Site_viewAccountingZuiteCommonTemplate</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

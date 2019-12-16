@@ -8,7 +8,7 @@ Invalidated accounts are not proposed in the drop down where you select
 accounts.
 </td></tr>
 </thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
-<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 
 <!-- Setup {{{ -->
 <tr>

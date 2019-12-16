@@ -8,7 +8,7 @@ Test for Creating Reversal Transaction for a Purchase Invoice Transaction
 </td></tr>
 <!-- XXX we do not need init method here ! -->
 </thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
-<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 
 <!-- Setup {{{ -->
 <tr>

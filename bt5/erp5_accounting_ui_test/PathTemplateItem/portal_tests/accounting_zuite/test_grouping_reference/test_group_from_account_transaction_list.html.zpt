@@ -9,7 +9,7 @@ Grouping from account transaction view
 </thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&add_related_payments:int=1">
 
 <!-- Setup {{{ -->
-<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 <tr>
   <td>selectAndWait</td>
   <td>select_module</td>

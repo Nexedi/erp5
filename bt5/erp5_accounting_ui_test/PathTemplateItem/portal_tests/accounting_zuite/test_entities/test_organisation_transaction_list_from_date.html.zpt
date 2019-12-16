@@ -9,7 +9,7 @@ Test Transactions related to an Organisation, with start date
 </thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionListSalesAndPayments">
 
 <!-- Setup {{{ -->
-<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 <tr>
   <td>selectAndWait</td>
   <td>select_module</td>

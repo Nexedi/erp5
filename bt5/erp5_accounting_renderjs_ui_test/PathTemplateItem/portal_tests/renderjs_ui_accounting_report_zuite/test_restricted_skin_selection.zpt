@@ -12,7 +12,7 @@ Check that use gets notified if they are using wrong 'Report Style' (UI) Prefere
 <tbody
   tal:define="init_method string:AccountingZuite_initializeAccountingTransactionReportTest?report_name=journal&report_style=View;">
 
-<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 <tr><td>store</td>
     <td>${base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
