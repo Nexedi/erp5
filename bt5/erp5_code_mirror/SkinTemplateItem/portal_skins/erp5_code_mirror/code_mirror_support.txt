@@ -1,15 +1,11 @@
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/lib/codemirror.js"></script>
 <link rel="stylesheet" href="&dtml-portal_url;/codemirror/lib/codemirror.css">
+<link rel="stylesheet" href="&dtml-portal_url;/erp5-codemirror.css">
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/mode/&dtml-mode;/&dtml-mode;.js"></script>
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/cm_edit/matchbrackets.js"></script>
 
 <!-- Trailing spaces -->
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/addon/cm_edit/trailingspace.js"></script>
-<style type="text/css">
-  .cm-trailingspace {
-    background-color: gray;
-  }
-</style>
 
 <!-- Search addons -->
 <link rel="stylesheet" href="&dtml-portal_url;/codemirror/addon/dialog/dialog.css">
@@ -63,72 +59,6 @@
 <script type="text/javascript" src="&dtml-portal_url;/codemirror/mode/css/css.js"></script>
 </dtml-if>
 
-<style type="text/css">
- .maximize_fullscreen_message {
-   display: table;
-   position: absolute;
-   bottom: 0;
-   right: 20px;
-   max-width: 40%;
-   z-index: 424242;
-   padding: 10px;
-   background-color: #DAE6F6;
-   border: 1px solid #97B0D1;
-   opacity: 0.3;
-   cursor: pointer;
-   font-weight: bold;
- }
-
- .maximize_fullscreen_error_message {
-   background-color: red;
- }
-
- .maximize_fullscreen_message > div {
-   font-size: 14px;
-   display: table-cell;
-   vertical-align: middle;
- }
-
- #maximize_message {
-   display: block !important;
-   position: absolute !important;
-   bottom: 0 !important;
-   right: 0px !important;
-   z-index: 4243 !important;
-   padding: 10px;
-   font-size: 16px;
-   font-weight: bold;
-   background-color: black;
-   color: white;
- }
-
- .maximize {
-   position: fixed;
-   right: 0;
-   bottom: 0;
-   top: 0 !important;
-   left: 0 !important;
-   z-index: 2 !important;
-   overflow: hidden !important;
- }
-
- .CodeMirror pre, .CodeMirror span {
-   font-family: monospace !important;
- }
-
- /* Workaround for lint icons "multiple" icons hiding "warning/errors" icons
-    because of "background-color: inherit" defined by erp5, and also to fix
-    background color of the gutter (cosmetic) */
- .CodeMirror-lint-marker-multiple,
- .CodeMirror-lint-marker-error,
- .CodeMirror-lint-marker-warning,
- .CodeMirror-gutters,
- .CodeMirror-gutter-elt,
- .CodeMirror-sizer,
- .CodeMirror-line {
-   background-color: transparent !important;
- }
-</style>
 
 <!-- TODO: Only supported for ZODB Components -->
 <dtml-unless bound_names>
