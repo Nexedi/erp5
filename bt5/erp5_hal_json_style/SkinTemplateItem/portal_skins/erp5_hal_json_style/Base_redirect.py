@@ -7,6 +7,9 @@ from zExceptions import Redirect
 from ZTUtils import make_query
 import json
 
+if keep_items is None:
+  keep_items = {}
+
 request_form = context.REQUEST.form
 previous_form_id = request_form.get('form_id', '')
 request_form.update(kw)

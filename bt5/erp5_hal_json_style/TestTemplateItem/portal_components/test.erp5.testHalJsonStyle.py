@@ -140,20 +140,20 @@ def do_fake_request(request_method, headers=None, data=()):
 
 
 def replace_request(new_request, context):
-    base_chain = [aq_base(x) for x in context.aq_chain]
-    # Grab existig request (last chain item) and create a copy.
-    request_container = base_chain.pop()
-    # request = request_container.REQUEST
+  base_chain = [aq_base(x) for x in context.aq_chain]
+  # Grab existig request (last chain item) and create a copy.
+  request_container = base_chain.pop()
+  # request = request_container.REQUEST
 
-    setRequest(new_request)
+  setRequest(new_request)
 
-    new_request_container = request_container.__class__(REQUEST=new_request)
-    # Recreate acquisition chain.
-    my_self = new_request_container
-    base_chain.reverse()
-    for item in base_chain:
-      my_self = item.__of__(my_self)
-    return my_self
+  new_request_container = request_container.__class__(REQUEST=new_request)
+  # Recreate acquisition chain.
+  my_self = new_request_container
+  base_chain.reverse()
+  for item in base_chain:
+    my_self = item.__of__(my_self)
+  return my_self
 
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -2151,7 +2151,7 @@ return context.getPortalObject().portal_catalog(portal_type='Foo', sort_on=[('id
 
     # Create the listbox selection
     fake_request = do_fake_request("GET")
-    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+    self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
       REQUEST=fake_request,
       mode="search",
       local_roles=["Manager"],

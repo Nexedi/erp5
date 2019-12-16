@@ -1,4 +1,3 @@
-portal = context.getPortalObject()
 software_release = context
 
 software_product = context.getFollowUpValue(portal_type="Software Product")

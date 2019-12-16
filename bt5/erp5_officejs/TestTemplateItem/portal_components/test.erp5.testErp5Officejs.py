@@ -1,5 +1,4 @@
 # Copyright (c) 2002-2017 Nexedi SA and Contributors. All Rights Reserved.
-from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from base64 import b64decode
 
