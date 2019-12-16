@@ -45,20 +45,20 @@ import os
 # specific testing environment. We must always try to stay below max
 # historical values.
                                     # Historical values
-MIN_OBJECT_VIEW=0.160               # 0.020, 0.112
-MAX_OBJECT_VIEW=0.174               # 0.050, 0.120
-MIN_OBJECT_MANY_LINES_VIEW=0.040    # 0.040, 0.274
-MAX_OBJECT_MANY_LINES_VIEW=0.090    # 0.090, 0.294
-MIN_OBJECT_PROXYFIELD_VIEW=0.242    # 0.020, 0.199
-MAX_OBJECT_PROXYFIELD_VIEW=0.257    # 0.090, 0.220
+MIN_OBJECT_VIEW=0.043               # 0.160 0.020, 0.112
+MAX_OBJECT_VIEW=0.057               # 0.174 0.050, 0.120
+MIN_OBJECT_MANY_LINES_VIEW=0.165    # 0.040, 0.274
+MAX_OBJECT_MANY_LINES_VIEW=0.215    # 0.090, 0.294
+MIN_OBJECT_PROXYFIELD_VIEW=0.176    # 0.242 0.020, 0.199
+MAX_OBJECT_PROXYFIELD_VIEW=0.191    # 0.257 0.090, 0.220
 #CURRENT_MIN_OBJECT_VIEW=0.1220
 #CURRENT_MAX_OBJECT_VIEW=0.1280
-MIN_MODULE_VIEW=0.160               # 0.020, 0.125
-MAX_MODULE_VIEW=0.174               # 0.070, 0.175
-MIN_TIC=0.0333                      # 0.0020, 0.260
-MAX_TIC=0.0354                      # 0.0090, 0.343
-MIN_OBJECT_CREATION=0.0130          # 0.0010, 0.0070
-MAX_OBJECT_CREATION=0.0145          # 0.0040, 0.0082
+MIN_MODULE_VIEW=0.050               # 0.050 0.160 0.020, 0.125
+MAX_MODULE_VIEW=0.065               # 0.065 0.174 0.070, 0.175
+MIN_TIC=0.0073                      # 0.0333 0.0020, 0.260
+MAX_TIC=0.0150                      # 0.0354 0.0090, 0.343
+MIN_OBJECT_CREATION=0.0053          # 0.0130  0.0010, 0.0070
+MAX_OBJECT_CREATION=0.0068          # 0.0145  0.0040, 0.0082
 LISTBOX_COEF=0.00173                # 0.02472
 # Change history
 # 2016-08-11
