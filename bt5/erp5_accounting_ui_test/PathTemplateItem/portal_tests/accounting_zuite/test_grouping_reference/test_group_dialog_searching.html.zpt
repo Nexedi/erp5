@@ -6,7 +6,7 @@
 <tr><td rowspan="1" colspan="4">
 Sorting in Grouping Dialog
 </td></tr>
-</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&add_related_payments:int=1">
+</thead><tbody tal:define="init_method string:AccountingModule_createAccountingTransactionList?add_draft_transactions:int=0&add_related_payments:int=1">
 
 <!-- Setup {{{ -->
 <tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>

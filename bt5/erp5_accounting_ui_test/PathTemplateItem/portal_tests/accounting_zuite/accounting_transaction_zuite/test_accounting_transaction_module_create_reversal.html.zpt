@@ -6,7 +6,7 @@
 <tr><td rowspan="1" colspan="4">
 Test for Creating reversal of multiple transactions
 </td></tr>
-</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&amp;transaction_state=delivered">
+</thead><tbody tal:define="init_method string:AccountingModule_createAccountingTransactionList?add_draft_transactions:int=0&amp;transaction_state=delivered">
 <tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 
 <!-- Setup {{{ -->

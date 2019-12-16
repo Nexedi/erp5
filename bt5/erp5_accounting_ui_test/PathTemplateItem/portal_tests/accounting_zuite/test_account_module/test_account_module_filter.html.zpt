@@ -6,7 +6,7 @@
 <tr><td rowspan="1" colspan="4">
 Test filter in Account Module
 </td></tr>
-</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList">
+</thead><tbody tal:define="init_method string:AccountingModule_createAccountingTransactionList">
 <tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 
 <tr>

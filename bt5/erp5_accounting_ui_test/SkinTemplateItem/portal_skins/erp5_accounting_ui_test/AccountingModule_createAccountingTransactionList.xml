@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingZuite_createAccountingTransactionList</string> </value>
+            <value> <string>AccountingModule_createAccountingTransactionList</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

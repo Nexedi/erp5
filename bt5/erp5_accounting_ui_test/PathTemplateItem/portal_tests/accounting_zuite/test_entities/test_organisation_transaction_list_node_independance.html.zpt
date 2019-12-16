@@ -7,7 +7,7 @@
 Test Transactions related to an Organisation shows transactions for this
 organisation and no bogus parameters are kept in the selection.
 </td></tr>
-</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">
+</thead><tbody tal:define="init_method string:AccountingModule_createAccountingTransactionList?add_draft_transactions:int=0">
 
 <!-- Setup {{{ -->
 <tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>

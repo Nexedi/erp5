@@ -6,7 +6,7 @@
 <tr><td rowspan="1" colspan="4">
 Test Accounting module listbox supports deleting
 </td></tr>
-</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&transaction_state=draft">
+</thead><tbody tal:define="init_method string:AccountingModule_createAccountingTransactionList?add_draft_transactions:int=0&transaction_state=draft">
 <tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 
 <!-- Setup {{{ -->
