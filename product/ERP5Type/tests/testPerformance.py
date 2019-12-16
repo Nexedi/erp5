@@ -57,8 +57,8 @@ MIN_MODULE_VIEW=0.160               # 0.020, 0.125
 MAX_MODULE_VIEW=0.174               # 0.070, 0.175
 MIN_TIC=0.0333                      # 0.0020, 0.260
 MAX_TIC=0.0354                      # 0.0090, 0.343
-MIN_OBJECT_CREATION=0.0130          # 0.0010, 0.0070
-MAX_OBJECT_CREATION=0.0145          # 0.0040, 0.0082
+MIN_OBJECT_CREATION=0.0053          # 0.0130  0.0010, 0.0070
+MAX_OBJECT_CREATION=0.0068          # 0.0145  0.0040, 0.0082
 LISTBOX_COEF=0.00173                # 0.02472
 # Change history
 # 2016-08-11
