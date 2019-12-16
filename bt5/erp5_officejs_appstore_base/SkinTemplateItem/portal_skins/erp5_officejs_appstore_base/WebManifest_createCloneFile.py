@@ -1,5 +1,3 @@
-from random import randint
-
 portal = context.getPortalObject()
 
 # Get Software Product Object

@@ -2,7 +2,7 @@ from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.Formulator.Errors import FormValidationError
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type.Message import translateString
-from Products.ERP5Type.Log import log, WARNING
+from Products.ERP5Type.Log import WARNING
 
 portal = context.getPortalObject()
 request = REQUEST or context.REQUEST
