@@ -12,7 +12,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 </thead>
 
 <tbody
-  tal:define="init_method string:AccountingZuite_initializeAccountingTransactionReportTest?report_name=general-ledger&report_style=Hal;
+  tal:define="init_method string:AccountingModule_initializeAccountingTransactionReportTest?report_name=general-ledger&report_style=Hal;
               now python:DateTime();
               today python:DateTime(now.year(), now.month(), now.day());
               tomorrow python:today + 1;
