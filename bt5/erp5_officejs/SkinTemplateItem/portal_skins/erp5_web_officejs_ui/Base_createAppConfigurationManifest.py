@@ -1,4 +1,3 @@
-import re
 import json
 import base64
 from datetime import datetime
@@ -65,7 +64,7 @@ try:
   app_action_string = app_action_string.replace('(', '[').replace(')', ']').replace(',]', ']').replace("'", '"')
   app_action_raw_list = json.loads(app_action_string)
   for app_action in app_action_raw_list:
-    pair = app_action.split(" | ");
+    pair = app_action.split(" | ")
     if len(pair) != 2:
       raise SyntaxError("Syntax error in app_action router setting")
     app_action_list.append(pair)
