@@ -6633,6 +6633,32 @@ Business Template is a set of definitions, such as skins, portal types and categ
                 continue
 
               subsubmodule_name = interface_class_name
+            elif component_portal_type == 'Mixin Component':
+              try:
+                mixin_module = __import__(source_reference, {}, {}, source_reference)
+              except ImportError, e:
+                LOG("BusinessTemplate", WARNING,
+                    "Skipping %s: Cannot be imported (%s)" % (filepath, e))
+                continue
+
+              mixin_class_name = None
+              for _, m in inspect.getmembers(mixin_module, inspect.isclass):
+                if (m.__name__.endswith('Mixin') and
+                    # Local definition only
+                    m.__module__ == mixin_module.__name__):
+                  if mixin_class_name is not None:
+                    # Do not try to be clever, just let the developer fix the problem
+                    LOG("BusinessTemplate", WARNING,
+                        "Skipping %s: More than one Mixin defined" % filepath)
+                    mixin_class_name = None
+                    break
+                  else:
+                    mixin_class_name = m.__name__
+
+              if mixin_class_name is None:
+                continue
+
+              subsubmodule_name = mixin_class_name
 
             obj = __newTempComponent(portal_type=subsubmodule_portal_type,
                                      reference=subsubmodule_name,
