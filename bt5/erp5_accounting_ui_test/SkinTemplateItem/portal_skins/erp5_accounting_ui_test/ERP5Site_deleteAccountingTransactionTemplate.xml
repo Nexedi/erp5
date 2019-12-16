@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingZuite_deleteAccountingTransactionTemplate</string> </value>
+            <value> <string>ERP5Site_deleteAccountingTransactionTemplate</string> </value>
         </item>
       </dictionary>
     </pickle>
