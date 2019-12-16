@@ -6496,10 +6496,27 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Inspect Portal Types classes mro() of this Business Template to find
       # Products Documents to migrate by default
+      #
+      # erp5_core related Documents are never going to be migrated as they are
+      # needed for bootstrap...
+      erp5_core_bt = None
+      for bt in self.getPortalObject().portal_templates.objectValues():
+        if (bt.getTitle() == 'erp5_core' and
+            bt.getInstallationState() == 'installed'):
+          erp5_core_bt = bt
+          break
+      else:
+        raise RuntimeError("No installed erp5_core found.")
+      erp5_core_portal_type_module_filepath_set = set([
+        filepath for _, _, filepath in
+        erp5_core_bt._getAllFilesystemModuleFromPortalTypeIdList(
+          erp5_core_bt.getTemplatePortalTypeIdList())])
+
       portal_type_module_filepath_set = set([
-        filepath for _, _, filepath in 
+        filepath for _, _, filepath in
         self._getAllFilesystemModuleFromPortalTypeIdList(
-          self.getTemplatePortalTypeIdList())])
+          self.getTemplatePortalTypeIdList())
+          if filepath not in erp5_core_portal_type_module_filepath_set])
 
       working_copy_path_list = self._getWorkingCopyPathList()
       import Products
@@ -6509,8 +6526,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
             # Returned by inspect.getmembers()
             product_name == 'this_module' or
             product_name in (
-              # Never going to be migrated (bootstrap)
-              'ERP5Type',
               # Probably going to be migrated but at the end and should not be
               # done for now (especially ActiveObject and HBTreeFolder2
               # classes found in the MRO of most classes)
