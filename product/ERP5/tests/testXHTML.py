@@ -140,7 +140,10 @@ class TestXHTMLMixin(ERP5TypeTestCase):
         for field_path, field in skins_tool[skin_folder_id].ZopeFind(
                   skins_tool[skin_folder_id],
                   obj_metatypes=['ProxyField'], search_sub=1):
-          template_field = field.getTemplateField(cache=False)
+          try:
+            template_field = field.getTemplateField(cache=False)
+          except AttributeError:
+            template_field = None
           if template_field is None:
             # Base_viewRelatedObjectList (used for proxy listbox ids on
             # relation fields) is an exception, the proxy field has no target
