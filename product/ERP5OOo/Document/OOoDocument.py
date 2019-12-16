@@ -43,7 +43,7 @@ from Products.ERP5Type.Utils import fill_args_from_request
 # Mixin Import
 from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
-from Products.ERP5.mixin.extensible_traversable import OOoDocumentExtensibleTraversableMixin
+from Products.ERP5.mixin.ooo_document_extensible_traversable import OOoDocumentExtensibleTraversableMixin
 
 EMBEDDED_FORMAT = '_embedded'
 
