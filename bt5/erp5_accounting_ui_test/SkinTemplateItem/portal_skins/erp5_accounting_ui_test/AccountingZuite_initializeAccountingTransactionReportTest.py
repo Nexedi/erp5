@@ -16,9 +16,9 @@ module.manage_delObjects(list(module.objectIds()))
 if report_name == "journal":
   module.AccountingZuite_createReportJournalDataset()
 elif report_name in ("trial-balance", "general-ledger"):
-  module.AccountingZuite_createReportDataset()
+  module.AccountingModule_createAccountingTestReportDataset()
 elif report_name in ("account-statement", "balance-sheet", "profit-and-loss"):
-  module.AccountingZuite_createReportDataset(two_banks=True)
+  module.AccountingModule_createAccountingTestReportDataset(two_banks=True)
 elif report_name == "other-parties":
   module.AccountingZuite_createReportOtherPartiesDataset(with_ledger=False)
 elif report_name == "other-parties-ledger":
