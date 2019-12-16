@@ -65,6 +65,7 @@ from Products.PythonScripts.standard import Object
 
 
 MARKER = Object()
+
 COUNT_LIMIT = 1000
 
 if REQUEST is None:
