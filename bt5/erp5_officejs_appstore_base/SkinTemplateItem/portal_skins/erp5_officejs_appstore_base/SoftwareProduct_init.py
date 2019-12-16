@@ -1,6 +1,5 @@
 # Define Reference from ID provided by portal_ids
 portal = context.getPortalObject()
-type_definition = context.getTypeInfo()
 
 # XXX Hardcoded
 short_portal_type = "OSP"

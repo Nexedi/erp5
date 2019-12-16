@@ -54,17 +54,18 @@ from DateTime import DateTime
 from ZODB.POSException import ConflictError
 import datetime
 import time
-from email.Utils import formatdate
+from email.utils import formatdate
 import re
 from zExceptions import Unauthorized
-from Products.ERP5Type.Log import log, DEBUG, INFO, WARNING, ERROR
+from Products.ERP5Type.Log import log, WARNING, ERROR
 from Products.ERP5Type.Message import Message
-from Products.ERP5Type.Utils import UpperCase
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from collections import OrderedDict
 from Products.ERP5Form.Selection import Selection
+from Products.PythonScripts.standard import Object
 
-MARKER = []
+
+MARKER = Object()
+
 COUNT_LIMIT = 1000
 
 if REQUEST is None:
@@ -75,12 +76,6 @@ else:
 
 if response is None:
   response = REQUEST.RESPONSE
-
-
-def isFieldType(field, type_name):
-  if field.meta_type == 'ProxyField':
-    field = field.getRecursiveTemplateField()
-  return field.meta_type == type_name
 
 
 def toBasicTypes(obj):
@@ -97,7 +92,7 @@ def toBasicTypes(obj):
     return obj.translate()
   try:
     return {toBasicTypes(key): toBasicTypes(obj[key]) for key in obj}
-  except:
+  except Exception:
     log('Cannot convert {!s} to basic types {!s}'.format(type(obj), obj), level=100)
   return obj
 
@@ -246,7 +241,7 @@ def selectKwargsForCallable(func, initial_kwargs, kwargs_dict):
 
   if script_params is not None:
     # In case the func is actualy Script (Python) or ERP5 Python Script
-    func_param_list = [tuple(map(lambda x: x.strip(), func_param.split('=')))
+    func_param_list = [tuple([x.strip() for x in func_param.split('=')])
                        for func_param in script_params.split(",")
                        if func_param.strip()]
   elif hasattr(func, "func_args"):
@@ -414,7 +409,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
   # this listbox expects field_id to point to the "parent" relation field
   # thus setting the field_id is optional and controlled by `request_field` argument
   if request_field:
-    previous_request_field = REQUEST.other.pop('field_id', None)
+    # previous_request_field = REQUEST.other.pop('field_id', None)
     REQUEST.other['field_id'] = field.id
 
   if meta_type is None:
@@ -940,7 +935,6 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       proxy_form_id_list = [('Base_viewRelatedObjectListBase/listbox', 'default')]
 
     # Create the possible choices
-    root_url = site_root.absolute_url()
     renderHiddenField(response_dict, "proxy_form_id_list", '')
     response_dict["proxy_form_id_list"].update({
       "items": [(Base_translateString(y), url_template_dict['traverse_generator_action'] % {
@@ -1403,7 +1397,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           'href': '%s' % view_action['url'],
           'name': view_action['id'],
           'icon': view_action['icon'],
-          'title': Base_translateString(view_action['title'])
+          'title': Base_translateString(view_action['title']),
         })
 
         global_action_type = ("view", "workflow", "object_new_content_action",
@@ -1549,7 +1543,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         }
 
       elif relative_url == 'portal_preferences':
-        preference_tool = portal.portal_preferences
         preference = traversed_document.getActiveUserPreference()
         if preference:
           result_dict['_links']['active_preference'] = {
@@ -1998,7 +1991,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                                                      selection=catalog_kw['selection'],
                                                      selection_name=catalog_kw['selection_name'],
                                                      column_id=select)
-            except AttributeError as e:
+            except AttributeError:
               # In case the URL method is invalid or empty, we expect to have no link
               # for the column to maintain compatibility with old UI, hence we create
               # an empty url_parameter_dict for these cases.
@@ -2019,7 +2012,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 )
               except (ConflictError, RuntimeError):
                 raise
-              except:
+              except Exception:
                 log('could not evaluate the url method getListItemUrlDict with %r' % brain,
                     level=800)
 

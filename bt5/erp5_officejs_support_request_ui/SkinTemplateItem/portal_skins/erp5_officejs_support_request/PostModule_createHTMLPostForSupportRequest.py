@@ -1,4 +1,3 @@
-from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
 follow_up_value = portal.restrictedTraverse(follow_up)
 assert follow_up_value.getPortalType() == "Support Request"

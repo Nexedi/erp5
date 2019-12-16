@@ -19,11 +19,11 @@ except KeyError:
   return result_dict
 
 try:
-    encoded = name.replace("definition_view/", "", 1)
-    name = base64.decodestring(encoded)
-    base_64 = True
+  encoded = name.replace("definition_view/", "", 1)
+  name = base64.decodestring(encoded)
+  base_64 = True
 except binascii.Error:
-    pass
+  pass
 
 if name.startswith("definition_view/") or name.startswith("portal_types/") or base_64:
   relative_url = name.replace("%2F", "/").replace("%20", " ")
