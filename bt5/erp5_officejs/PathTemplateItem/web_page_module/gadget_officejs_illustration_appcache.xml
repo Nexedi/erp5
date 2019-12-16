@@ -528,18 +528,8 @@ hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS9zdmdfZWR
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc3ZnX2VkaXRvci9XZWJQYWdlTW9kdWxlX3ZpZXdXZWJQYWdlTGlzdEFzSmlvRm9yU3ZnRWRpdG9y\n
 #/app_configuration_resources\n
 \n
-\n
-\n
-\n
-\n
-\n
 NETWORK:\n
 *\n
-\n
-\n
-\n
-\n
-\n
 </string> </value>
         </item>
         <item>
@@ -681,7 +671,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>978.51488.23397.48588</string> </value>
+                <value> <string>980.30189.34879.10222</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -699,7 +689,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1569855661.06</float>
+                        <float>1576497584.64</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
