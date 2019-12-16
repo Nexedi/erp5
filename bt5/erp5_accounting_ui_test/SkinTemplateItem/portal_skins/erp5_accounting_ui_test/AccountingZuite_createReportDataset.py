@@ -19,7 +19,7 @@ today = DateTime(now.year(), now.month(), now.day()) + 8 * one_hour
 yesterday = today - one_day
 tomorrow = today + one_day
 
-bank1 = context.AccountingZuite_createDocument(
+bank1 = context.AccountingModule_createAccountingTestDocument(
   parent=organisation_module.my_organisation,
   portal_type='Bank Account',
   title='Bank1',
@@ -28,7 +28,7 @@ bank1 = context.AccountingZuite_createDocument(
 bank2 = bank1
 
 if two_banks:
-  bank2 = context.AccountingZuite_createDocument(
+  bank2 = context.AccountingModule_createAccountingTestDocument(
     parent=organisation_module.my_organisation,
     portal_type='Bank Account',
     title='Bank2',
@@ -36,7 +36,7 @@ if two_banks:
   )
 
 
-context.AccountingZuite_createDocument(
+context.AccountingModule_createAccountingTestDocument(
   portal_type='Accounting Transaction',
   title='Transaction 1',
   source_reference='1',
@@ -52,7 +52,7 @@ context.AccountingZuite_createDocument(
             source_credit=100.0)),
   )
 
-context.AccountingZuite_createDocument(
+context.AccountingModule_createAccountingTestDocument(
   portal_type='Accounting Transaction',
   title='Transaction 2',
   source_reference='2',
@@ -70,7 +70,7 @@ context.AccountingZuite_createDocument(
 
 # in the period
 
-context.AccountingZuite_createDocument(
+context.AccountingModule_createAccountingTestDocument(
   portal_type='Payment Transaction',
   title='Transaction 3',
   source_reference='3',
@@ -87,7 +87,7 @@ context.AccountingZuite_createDocument(
             source_credit=300.0)),
   )
 
-context.AccountingZuite_createDocument(
+context.AccountingModule_createAccountingTestDocument(
   portal_type='Payment Transaction',
   title='Transaction 4',
   destination_reference='4',
@@ -106,7 +106,7 @@ context.AccountingZuite_createDocument(
             destination_credit=400.0)),
   )
 
-context.AccountingZuite_createDocument(
+context.AccountingModule_createAccountingTestDocument(
   portal_type='Accounting Transaction',
   title='Transaction 5',
   source_reference='5',
@@ -123,7 +123,7 @@ context.AccountingZuite_createDocument(
             source_credit=500.0)),
   )
 
-context.AccountingZuite_createDocument(
+context.AccountingModule_createAccountingTestDocument(
   portal_type='Purchase Invoice Transaction',
   title='Transaction 6',
   destination_reference='6',
@@ -143,7 +143,7 @@ context.AccountingZuite_createDocument(
 
 # another simulation state
 
-context.AccountingZuite_createDocument(
+context.AccountingModule_createAccountingTestDocument(
   portal_type='Accounting Transaction',
   title='Transaction 7',
   source_reference='7',
@@ -162,7 +162,7 @@ context.AccountingZuite_createDocument(
 
 # after the period
 
-context.AccountingZuite_createDocument(
+context.AccountingModule_createAccountingTestDocument(
   portal_type='Accounting Transaction',
   title='Transaction 8',
   source_reference='8',

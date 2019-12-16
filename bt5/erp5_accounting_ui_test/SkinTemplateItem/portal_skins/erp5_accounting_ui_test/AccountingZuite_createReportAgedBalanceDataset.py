@@ -29,11 +29,11 @@ def get_object_by_title(portal_type, title):
 
 bank1 = get_object_by_title(portal_type='Bank Account', title='Bank1')
 if bank1 is None:
-  bank1 = portal.AccountingZuite_createDocument(
+  bank1 = portal.AccountingModule_createAccountingTestDocument(
     portal_type='Bank Account', title='Bank1', simulation_state='validated', 
     parent=organisation_module.my_organisation)
 
-purchase1 = portal.AccountingZuite_createDocument(
+purchase1 = portal.AccountingModule_createAccountingTestDocument(
     portal_type='Purchase Invoice Transaction',
     title='Purchase invoice 1',
     destination_reference='1',
@@ -51,7 +51,7 @@ purchase1 = portal.AccountingZuite_createDocument(
               destination_credit=500.0)),
     )
 
-sale2 = portal.AccountingZuite_createDocument(
+sale2 = portal.AccountingModule_createAccountingTestDocument(
     portal_type='Sale Invoice Transaction',
     title='Sale invoice 2',
     source_reference='2',
@@ -71,7 +71,7 @@ sale2 = portal.AccountingZuite_createDocument(
 
 portal.Zuite_waitForActivities()
 
-payment3 = portal.AccountingZuite_createDocument(
+payment3 = portal.AccountingModule_createAccountingTestDocument(
     portal_type='Payment Transaction',
     title='Payment 1',
     source_reference='3',
@@ -90,7 +90,7 @@ payment3 = portal.AccountingZuite_createDocument(
               source_credit=500.0)),
     )
 
-payment4 = portal.AccountingZuite_createDocument(
+payment4 = portal.AccountingModule_createAccountingTestDocument(
     portal_type='Payment Transaction',
     title='Payment 2',
     source_reference='4',
