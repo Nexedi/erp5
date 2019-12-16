@@ -6,7 +6,7 @@
 <tr><td rowspan="1" colspan="4">
 Test Accounting Transaction Template
 </td></tr>
-</thead><tbody tal:define="init_method string:AccountingZuite_initializeAccountingTransactionTemplateTest">
+</thead><tbody tal:define="init_method string:AccountingModule_initializeAccountingTransactionTemplateTest">
 <tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 <!-- Delete existing accounting transaction templates -->
 <tr>
@@ -131,7 +131,7 @@ Test Accounting Transaction Template
 <!-- Remove Accounting Transactions -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingZuite_initializeAccountingTransactionTemplateTest</td>
+  <td>${base_url}/AccountingModule_initializeAccountingTransactionTemplateTest</td>
   <td></td>
 </tr>
 <tr>
