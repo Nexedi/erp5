@@ -255,26 +255,6 @@ officejs_logo.png\n
 jio_appcachestorage.js\n
 jio_configuration_storage.js\n
 \n
-#custom actions\n
-\n
-#configuration resources\n
-\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Image Module)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlIE1vZHVsZQ==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Image Module/image_editor_view)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlIE1vZHVsZS9pbWFnZV9lZGl0b3Jfdmlldw==\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Image)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdl\n
-#hateoas_appcache/definition_view/BASE64(portal_types/Image/image_editor_view)\n
-hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlL2ltYWdlX2VkaXRvcl92aWV3\n
-\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_image_editor/Base_viewNewContentDialogForImageEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfaW1hZ2VfZWRpdG9yL0Jhc2Vfdmlld05ld0NvbnRlbnREaWFsb2dGb3JJbWFnZUVkaXRvcg==\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_image_editor/Image_viewAsJioForImageEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfaW1hZ2VfZWRpdG9yL0ltYWdlX3ZpZXdBc0ppb0ZvckltYWdlRWRpdG9y\n
-#hateoas_appcache/definition_view/BASE64(portal_skins/erp5_image_editor/ImageModule_viewImageListAsJioForImageEditor)\n
-hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfaW1hZ2VfZWRpdG9yL0ltYWdlTW9kdWxlX3ZpZXdJbWFnZUxpc3RBc0ppb0ZvckltYWdlRWRpdG9y\n
-\n
 #image editor\n
 minipaint.gadget.html\n
 minipaint.gadget.js\n
@@ -332,8 +312,21 @@ miniPaint/vendor/menu/menu.js\n
 miniPaint/vendor/menu/menu.min.js\n
 miniPaint/vendor/translate/jquery.translate.js\n
 miniPaint/vendor/translate/jquery.translate.min.js\n
+#app_configuration_resources\n
+#CONFIGURATION ELEMENTS generated on Mon Dec 16 12:49:04 2019. Same as in configuration manifest\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdl\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlL2ltYWdlX2VkaXRvcl92aWV3\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfaW1hZ2VfZWRpdG9yL0ltYWdlX3ZpZXdBc0ppb0ZvckltYWdlRWRpdG9y\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlIE1vZHVsZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlIE1vZHVsZS9pbWFnZV9lZGl0b3Jfdmlldw==\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfaW1hZ2VfZWRpdG9yL0ltYWdlTW9kdWxlX3ZpZXdJbWFnZUxpc3RBc0ppb0ZvckltYWdlRWRpdG9y\n
+#/app_configuration_resources\n
+\n
+\n
 NETWORK:\n
-*</string> </value>
+*\n
+\n
+</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -474,7 +467,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>977.56367.56007.61713</string> </value>
+                <value> <string>980.34049.4719.29952</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -492,7 +485,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1567773418.17</float>
+                        <float>1576500584.82</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
