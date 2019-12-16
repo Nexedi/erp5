@@ -94,7 +94,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
                        debit_price string:100;
                        credit_price string:0;
                        running_total_price string:100">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_ledger_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_ledger_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[2];
@@ -108,13 +108,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
                        debit_price string:200;
                        credit_price string:0;
                        running_total_price string:300">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_ledger_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_ledger_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tfoot/tr[1];
                        debit_price string:300;
                        credit_price string:0">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_ledger_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_ledger_table" />
 </tal:block>
 
 </tbody>

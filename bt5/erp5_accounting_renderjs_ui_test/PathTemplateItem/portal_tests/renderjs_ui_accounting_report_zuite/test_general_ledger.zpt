@@ -98,7 +98,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     debit_price string:0;
     credit_price string:300;
     running_total_price string:-300">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[2];
@@ -109,7 +109,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     debit_price string:0;
     credit_price string:400;
     running_total_price string:-700">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[3];
@@ -119,7 +119,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     debit_price string:0;
     credit_price string:500;
     running_total_price string:-1200">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[4];
@@ -129,7 +129,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     debit_price string:0;
     credit_price string:600;
     running_total_price string:-1800">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[5];
@@ -139,13 +139,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     debit_price string:0;
     credit_price string:800;
     running_total_price string:-2600">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tfoot/tr[1];
     debit_price string:0;
     credit_price string:2600">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <!-- 2. report section is Payable - Client 1  -->
@@ -169,7 +169,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
    debit_price string:0;
    credit_price string:100;
    running_total_price string:-100">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[2];
@@ -179,13 +179,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
    debit_price string:200;
    credit_price string:0;
    running_total_price string:100">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tfoot/tr[1];
    debit_price string:200;
    credit_price string:100">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <!-- 3. report section is A-REC - Receivable (Client 1)  -->
@@ -208,7 +208,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
           debit_price string:100;
           credit_price string:0;
           running_total_price string:100">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[2];
@@ -218,7 +218,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
           debit_price string:0;
           credit_price string:200;
           running_total_price string:-100">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[3];
@@ -228,7 +228,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
           debit_price string:300;
           credit_price string:0;
           running_total_price string:200">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[4];
@@ -238,7 +238,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
           debit_price string:600;
           credit_price string:0;
           running_total_price string:800">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[5];
@@ -248,13 +248,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
           debit_price string:800;
           credit_price string:0;
           running_total_price string:1600">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tfoot/tr[1];
           debit_price string:1800;
           credit_price string:200">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <!-- 4. report section is A-REC - Receivable (Client 2)  -->
@@ -277,13 +277,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
    debit_price string:400;
    credit_price string:0;
    running_total_price string:400">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tfoot/tr[1];
    debit_price string:400;
    credit_price string:0">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <!-- 5. report section is A-REC - Receivable (John Smith)  -->
@@ -306,13 +306,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
    debit_price string:500;
    credit_price string:0;
    running_total_price string:500">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tfoot/tr[1];
    debit_price string:500;
    credit_price string:0">
-<tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_accounts_table" />
+<tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_accounts_table" />
 </tal:block>
 
 <!-- 5. report section is Total  -->
