@@ -14,6 +14,10 @@
     <!-- "local" jquery noty -->
     <script type="text/javascript" src="sql_browser/jquery.noty.packaged.js"></script>
 
+    <!-- build from  https://lab.nexedi.com/jerome/monaco-editor-sql-completion-provider/ -->
+    <script type="text/javascript" src="sql_browser/monaco-editor-sql-completion-provider.bundle.js"></script>
+
+
     <!-- "local" c3.js (0.4.10) and d3.js (3.5.5) -->
     <link rel="stylesheet" type="text/css" href="sql_browser/c3.min.css">
     <script type="text/javascript" src="sql_browser/d3.min.js"></script>
@@ -25,25 +29,17 @@
     <script type="text/javascript" src="pivottable/gchart_renderers.js"></script>
     <script type="text/javascript" src="pivottable/c3_renderers.js"></script>
 
-
-    <!-- code mirror from erp5_code_mirror bt5 -->
-    <script type="text/javascript" src="codemirror/lib/codemirror.js"></script>
-    <link rel="stylesheet" href="codemirror/lib/codemirror.css">
-    <script type="text/javascript" src="codemirror/mode/sql/sql.js"></script>
-    <script type="text/javascript" src="codemirror/addon/cm_edit/matchbrackets.js"></script>
-    <link rel="stylesheet" href="codemirror/addon/dialog/dialog.css">
-    <script type="text/javascript" src="codemirror/addon/dialog/dialog.js"></script>
-    <script type="text/javascript" src="codemirror/addon/search/searchcursor.js"></script>
-    <script type="text/javascript" src="codemirror/addon/search/search.js"></script>
-    <link rel="stylesheet" href="codemirror/addon/hint/show-hint.css">
-    <script src="codemirror/addon/hint/show-hint.js"></script>
-    <script src="codemirror/addon/hint/anyword-hint.js"></script>
-    <script src="codemirror/addon/hint/sql-hint.js"></script>
-
+    <!-- monaco editor from erp5_monaco_editor bt -->
+    <script>
+      /*
+       This is understood by our build of monaco-editor
+       https://lab.nexedi.com/jerome/monaco-editor-erp5/blob/master/public-path.js
+      */
+      window.monacoEditorWebPackResourceBaseUrl = "monaco-editor/";
+    </script>
+    <script src="monaco-editor/app.bundle.min.js"></script>
 
     <style>
-      .CodeMirror {height: 80px;}
-      .CodeMirror-hints {z-index: 100;} /* above handsontable header */
       body {font-family: Verdana;}
       .c3-line {stroke-width: 3px;}
       .c3 circle {stroke: white;}
@@ -53,9 +49,11 @@
     </style>
   </head>
 
+  </head>
+
   <body>
     <script type="text/javascript">
-      $(function() {
+    $(function() {
         var editor,
             ht = new Handsontable(document.getElementById('table_container'), { data: [[0]], rowHeaders: true, colHeaders: true}),
             redraw = function(){
@@ -110,30 +108,68 @@
             };
 
         $(function() {
-          editor = CodeMirror.fromTextArea(document.getElementById("query"), {
-            lineNumbers: true,
-            matchBrackets: true,
-            viewportMargin: Infinity,
-            extraKeys: {"Ctrl-Space": "autocomplete", "Ctrl-Enter": redraw, "Alt-Space": redraw},
-            mode: "text/x-mariadb"
-          });
-          $(editor.getWrapperElement()).resizable();
           
+          editor = monaco.editor.create(
+            document.querySelector('#query'),
+            {
+              automaticLayout: true,
+              autoIndent: true
+            }
+          );
+          monaco.editor.setModelLanguage(
+            editor.getModel(),
+            "sql"
+          );
+          editor.addAction({
+            id: 'execute-query',
+            label: 'Execute Query',
+            keybindings: [
+              monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter,
+            ],
+            contextMenuGroupId: "sql",
+            run: function() {
+              redraw()
+              return null;
+            }
+          });
+
+          $("#query").resizable();
+
           $.getJSON("ZMySQLDAConnection_getSchemaAsJSON").then(
             function(schema) {
-              CodeMirror.commands.autocomplete = function(cm) {
-                CodeMirror.showHint(cm, CodeMirror.hint.sql, {
-                  tables: schema
-                } );
-              }
+              monaco.languages.registerCompletionItemProvider('sql', new SQLCompletionProvider(schema));
             });
 
           $('button[name="Query"]').click(redraw);
+          $('button[name="Copy"]').click(e => {
+            const tableAsMarkdown = (([
+              `|${ht.getColHeader().map(h=> ` ${h} |`).join('') }`,
+              `|${ht.getColHeader().map(_=> ` ------ |`).join('') }`] ).concat(
+              ht.getData().map(line => `|${line.map(d => ` ${d === null ? '' : d} |`).join('') }`)
+            )).join('\n');
+            const tableAsHTML = (([
+              `<table><thead><tr>${ht.getColHeader().map(h=> `<th>${h}</th>`).join('') }</tr></thead><tbody><tr>`,
+              ]).concat([
+              ht.getData().map(line => `${line.map(d => `<td>${d === null ? '' : d}</td>`).join('') }`).join('</tr><tr>')]
+              ).concat([`</tr></tbody></table>`])
+            ).join('\n');
+            const copyFunc = (event) => {
+                event.preventDefault();
+                event.clipboardData.setData('text/plain', tableAsMarkdown);
+                event.clipboardData.setData('text/html', tableAsHTML);
+            };
+            document.addEventListener('copy', copyFunc);
+            try {
+              document.execCommand('copy');
+            } finally {
+              document.removeEventListener('copy', copyFunc)
+            }
+          });
 
           // TODO: save presets in JIO
           // ( also include pivot table config in preset )
           $('button[name="Save"]').click(function(){alert("TODO");});
-
+          // TODO: now that we use monaco, this could be snippets
           $('#presets')
           .append($('<option>', {
             value: "select * from message_queue where processing_node = -2",
@@ -153,12 +189,14 @@
     <button name="Save">Save Preset</button>
     <br/>
 -->
-<textarea name="query" id="query"></textarea>
+
+    <div style="width: 100%; height: 300px" id="query"> </div>
     <button name="Query">Run Query</button>
+    <button name="Copy">Copy Results</button>
 
 
     <div id="table_container" style="margin: 10px; height: 300px; overflow: hidden; z-index: 1;"></div>
-    <div id="output" style="margin: 10px;"></div>
+    <div id="output" style="margin: 10px; overflow: scroll"></div>
 
     <!-- TODO: debug saved configuration -->
     <div style="display: none">
