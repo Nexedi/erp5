@@ -54,8 +54,8 @@ if base:
   base += "/"
 base_length = len(base)
 
-def extractWebManifest(file):
-  html = context.Base_parseHtml(file)
+def extractWebManifest(html_file):
+  html = context.Base_parseHtml(html_file)
   for tag in html:
     if tag[0] == 'starttag' and tag[1] == 'link' and ('rel', 'manifest') in tag[2]:
       for attribute in tag[2]:
