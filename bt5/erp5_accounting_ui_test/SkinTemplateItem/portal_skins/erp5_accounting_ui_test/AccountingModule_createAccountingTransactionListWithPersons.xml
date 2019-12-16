@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingZuite_createAccountingTransactionListWithPersons</string> </value>
+            <value> <string>AccountingModule_createAccountingTransactionListWithPersons</string> </value>
         </item>
       </dictionary>
     </pickle>

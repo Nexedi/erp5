@@ -6,7 +6,7 @@
 <tr><td rowspan="1" colspan="4">
 Test default display of Account Module With Employees.
 </td></tr>
-</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionListWithPersons">
+</thead><tbody tal:define="init_method string:AccountingModule_createAccountingTransactionListWithPersons">
 
 <!-- Setup {{{ -->
 <tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>

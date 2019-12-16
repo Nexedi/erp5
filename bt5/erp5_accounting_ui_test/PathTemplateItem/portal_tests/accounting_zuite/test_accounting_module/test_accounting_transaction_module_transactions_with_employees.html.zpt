@@ -7,7 +7,7 @@
 Accounting Transaction Module and transactions with employees, which acquire
 the group category from their subordination
 </td></tr>
-</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionListWithPersons">
+</thead><tbody tal:define="init_method string:AccountingModule_createAccountingTransactionListWithPersons">
 
 <!-- setup {{{ -->
 <tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
