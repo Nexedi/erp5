@@ -1,16 +1,23 @@
 from json import dumps
-table_dict = {}
 
 connection = context
-
 # make sure connection is open
 connection()
 
+tables = []
 for table in connection.manage_test("SHOW TABLES"):
-  table_dict[table[0]] = []
-  for column in connection.manage_test("SHOW COLUMNS FROM `%s`" % table[0]):
-    table_dict[table[0]].append(column[0])
-    table_dict[table[0]].append("`%s`" % column[0])
+  columns = []
+  for column in connection.manage_test("SHOW FULL COLUMNS FROM `%s`" % table[0]):
+    columns.append({
+      'columnName': column.field,
+      'description': column.comment,
+    })
+  tables.append(
+    {
+      'tableName': table[0],
+      'columns': columns
+    }
+  )
 
 container.REQUEST.RESPONSE.setHeader('content-type', 'application/json')
-return dumps(table_dict)
+return dumps(tables)
