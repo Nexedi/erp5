@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingZuite_createReportJournalDataset</string> </value>
+            <value> <string>AccountingModule_createAccountingTestReportJournalDataset</string> </value>
         </item>
       </dictionary>
     </pickle>

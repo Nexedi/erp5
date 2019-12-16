@@ -14,7 +14,7 @@ module.manage_delObjects(list(module.objectIds()))
 
 # Create datasets
 if report_name == "journal":
-  module.AccountingZuite_createReportJournalDataset()
+  module.AccountingModule_createAccountingTestReportJournalDataset()
 elif report_name in ("trial-balance", "general-ledger"):
   module.AccountingModule_createAccountingTestReportDataset()
 elif report_name in ("account-statement", "balance-sheet", "profit-and-loss"):
