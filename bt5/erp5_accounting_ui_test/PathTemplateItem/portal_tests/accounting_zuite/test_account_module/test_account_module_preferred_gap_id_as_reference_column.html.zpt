@@ -12,7 +12,7 @@ Test `preferred_gap_id` column of Account Module
 <!-- Setup {{{ -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingZuite_setAccountReferencePreference</td>
+  <td>${base_url}/PreferenceTool_setAccountingTestAccountReferencePreference</td>
   <td></td>
 </tr>
 <tr>

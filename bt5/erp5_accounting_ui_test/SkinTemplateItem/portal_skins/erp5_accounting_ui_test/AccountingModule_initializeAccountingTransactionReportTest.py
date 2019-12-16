@@ -7,7 +7,7 @@ module = portal.accounting_module
 # This option is necessary for RJS interface to render Reports
 # If you'd keep XHTML value "View" the RJS will not crash it will
 # only refuse to validate Report Form View
-portal.AccountingZuite_setAccountReferencePreference(report_style=report_style)
+portal.PreferenceTool_setAccountingTestAccountReferencePreference(report_style=report_style)
 
 # First, clean up the module
 module.manage_delObjects(list(module.objectIds()))
