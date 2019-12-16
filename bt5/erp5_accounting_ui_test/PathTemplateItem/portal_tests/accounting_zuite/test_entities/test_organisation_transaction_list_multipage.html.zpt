@@ -6,7 +6,7 @@
 <tr><td rowspan="1" colspan="4">
 Test Transactions related to an Organisation, with multiple pages and date range
 </td></tr>
-</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionListSalesAndPayments">
+</thead><tbody tal:define="init_method string:AccountingModule_createAccountingTransactionListSalesAndPayments">
 
 <!-- Setup {{{ -->
 <tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
