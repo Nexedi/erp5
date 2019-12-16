@@ -32,6 +32,6 @@ for line in data[1:]:
     new_line.append(v)
   new_data.append(new_line)
 
-response.setHeader("Server-Timing", "db=%s;" % (time.time() - start))
+response.setHeader("Server-Timing", 'db;dur=%s;desc="SQL query"' % (time.time() - start))
 response.setHeader('Content-Type', 'application/json')
 return json.dumps(new_data, indent=2)
