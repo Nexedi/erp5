@@ -33,7 +33,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Item import Item
 from Products.ERP5.mixin.composition import CompositionMixin
-from Products.ERP5.mixin.rule import MovementGeneratorMixin, SimulableMixin
+from Products.ERP5.mixin.simulable import SimulableMixin
+from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Base import Base

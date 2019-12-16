@@ -30,7 +30,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Configurator.mixin.configurator_item import \
+from Products.ERP5Configurator.mixin.skin_configurator_item import \
                                        SkinConfiguratorItemMixin
 
 class SecurityCategoryMappingConfiguratorItem(SkinConfiguratorItemMixin,

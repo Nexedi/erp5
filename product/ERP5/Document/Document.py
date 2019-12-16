@@ -206,7 +206,7 @@ class DocumentConversionServerProxy():
   def __getattr__(self, attr):
     return partial(self._proxy_function, attr)
 
-from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixin
+from Products.ERP5.mixin.document_extensible_traversable import DocumentExtensibleTraversableMixin
 
 class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
                CachedConvertableMixin, CrawlableMixin, TextConvertableMixin,

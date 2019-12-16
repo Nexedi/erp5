@@ -29,7 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5.mixin.solver import ConfigurablePropertySolverMixin
+from Products.ERP5.mixin.configurable_property_solver import ConfigurablePropertySolverMixin
 
 class AcceptSolver(ConfigurablePropertySolverMixin):
   """Target solver that accepts the values from the decision on the prevision.
