@@ -30,7 +30,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Domain import Domain
-from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixin
+from Products.ERP5.mixin.document_extensible_traversable import DocumentExtensibleTraversableMixin
 from Acquisition import aq_base, aq_inner
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from AccessControl import Unauthorized

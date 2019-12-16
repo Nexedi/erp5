@@ -30,7 +30,8 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.mixin.rule import RuleMixin, MovementGeneratorMixin
+from Products.ERP5.mixin.rule import RuleMixin
+from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
 from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin
 

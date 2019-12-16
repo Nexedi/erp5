@@ -28,25 +28,17 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from zLOG import LOG, INFO
+from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
 
-class ConfiguratorItemMixin:
-  """ This is the base class for all configurator item. """
+class SkinConfiguratorItemMixin(ConfiguratorItemMixin):
+  """ Mixin which allows to create python scripts and/or skin
+      elements during the configuration.
+  """
 
-  def getBusinessConfigurationValue(self):
-    item = self
-    while item.getPortalType() != 'Business Configuration':
-      item = item.getParentValue()
-    return item
-
-  def _createConstraintMessage(self, message):
-    return ConsistencyMessage(self,
-        object_relative_url=self.getRelativeUrl(),
-        message=message)
-
-  def install(self, document, business_configuration, prefix=''):
-    """ Add object to customer customization template. """
+  def install(self, skinfolder, business_configuration):
+    """
+    """
     bt5_obj = business_configuration.getSpecialiseValue()
     if bt5_obj is None:
       LOG('ConfiguratorItem', INFO,
@@ -54,11 +46,36 @@ class ConfiguratorItemMixin:
             business_configuration.getRelativeUrl())
       return
 
-    if document.getPortalType() in ['Category', 'Base Category']:
-      prefix = "portal_categories/"
-    template_path_list = ['%s%s' % (prefix, document.getRelativeUrl()),
-                          '%s%s/**' % (prefix, document.getRelativeUrl())]
+    template_skin_id_list = list(bt5_obj.getTemplateSkinIdList())
+    if skinfolder.getId() not in template_skin_id_list:
+      template_skin_id_list.append(skinfolder.getId())
+    bt5_obj.edit(template_skin_id_list=template_skin_id_list)
 
-    current_template_path_list = list(bt5_obj.getTemplatePathList())
-    current_template_path_list.extend(template_path_list)
-    bt5_obj.edit(template_path_list=current_template_path_list)
+  def _createSkinFolder(self, folder_id="custom"):
+    """ Creates a new skin folder id if it do not exists and
+        update Skin information """
+    folder = getattr(self.portal_skins, folder_id, None)
+    if folder is not None:
+      return folder
+
+    folder = self.portal_skins.manage_addProduct['OFSP'].manage_addFolder(folder_id)
+    # Register on all skin selections.
+    raise NotImplementedError
+
+  def _createZODBPythonScript(self, container, script_id, script_params,
+                            script_content):
+    """Creates a Python script `script_id` in the given `container`, with
+    `script_params` and `script_content`.
+
+    If the container already contains an object with id `script_id`, this
+    object is removed first.
+    """
+    if script_id in container.objectIds():
+       container.manage_delObjects([script_id])
+
+    container.manage_addProduct['PythonScripts']\
+                  .manage_addPythonScript(id = script_id)
+    script = container._getOb(script_id)
+    script.ZPythonScript_edit(script_params, script_content)
+    container.portal_url.getPortalObject().changeSkin(None)
+    return script
