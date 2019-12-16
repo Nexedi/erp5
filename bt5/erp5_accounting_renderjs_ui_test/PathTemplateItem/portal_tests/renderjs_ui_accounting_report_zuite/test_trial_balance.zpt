@@ -9,10 +9,10 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 </thead>
 
 <tbody
-  tal:define="init_method string:AccountingZuite_initializeAccountingTransactionReportTest?report_name=trial-balance&report_style=Hal;
+  tal:define="init_method string:AccountingTransactionModule_initializeAccountingTransactionReportTest?report_name=trial-balance&report_style=Hal;
               now python: DateTime()">
 
-<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 <tr><td>store</td>
     <td>${base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
@@ -93,37 +93,37 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
                         final_balance string:-3300;
                         final_credit_balance string:3300;
                         final_balance_if_credit string:3300">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_balance_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[2];
                         node_id string:A-COLLECTED-VAT;
                         node_title string:Collected VAT 10%">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_balance_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[3];
                         node_id string:A-EQUITY;
                         node_title string:Equity">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_balance_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[4];
                         node_id string:A-FIX-ASSETS;
                         node_title string:Fixed Assets">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_balance_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[5];
                         node_id string:A-GP;
                         node_title string:Goods Purchase">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_balance_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[6];
                         node_id string:A-GS;
                         node_title string:Goods Sales">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_balance_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[7];
@@ -135,7 +135,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
                         final_debit_balance string:200;
                         final_credit_balance string:100;
                         final_balance_if_debit string:100">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_balance_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[8];
@@ -147,19 +147,19 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
                         final_debit_balance string:3400;
                         final_credit_balance string:200;
                         final_balance_if_debit string:3200">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_balance_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[9];
                        node_title string:Refundable VAT 10%;
                        node_id string:A-REF-VAT">
-  <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table"></tal:block>
+  <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_balance_table"></tal:block>
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[10];
                        node_title string:Stocks;
                        node_id string:A-STOCK">
-  <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table"></tal:block>
+  <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_balance_table"></tal:block>
 </tal:block>
 
 <!-- Stats line -->
@@ -170,7 +170,7 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
                        final_credit_balance string:3600;
                        final_balance_if_debit string:3300;
                        final_balance_if_credit string:3300">
-  <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_balance_table"></tal:block>
+  <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_balance_table"></tal:block>
 </tal:block>
 
 </tbody>

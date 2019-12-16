@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>month_count=1, no_creation_need=0, keep_grouping_reference=0</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingZuite_createAccountingTransactionListSalesAndPayments</string> </value>
+            <value> <string>PreferenceTool_setAccountingTestDocumentSectionPreference</string> </value>
         </item>
       </dictionary>
     </pickle>

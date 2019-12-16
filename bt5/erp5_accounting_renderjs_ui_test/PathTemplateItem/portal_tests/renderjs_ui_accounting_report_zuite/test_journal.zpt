@@ -9,10 +9,10 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
 </thead>
 
 <tbody
-  tal:define="init_method string:AccountingZuite_initializeAccountingTransactionReportTest?report_name=journal&report_style=Hal;
+  tal:define="init_method string:AccountingTransactionModule_initializeAccountingTransactionReportTest?report_name=journal&report_style=Hal;
               now python: DateTime()">
 
-<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+<tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 <tr><td>store</td>
     <td>${base_url}/web_site_module/renderjs_runner</td>
     <td>renderjs_url</td></tr>
@@ -93,7 +93,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         mirror_section_title string:Client 1;
                         debit string:119.60;
                         credit string:0">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_transactions_table" />
 </tal:block>
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[2];
                         specific_reference string:;
@@ -103,7 +103,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         mirror_section_title string:Client 1;
                         debit string:0,
                         credit string:19.60">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_transactions_table" />
 </tal:block>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[3];
@@ -114,7 +114,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         mirror_section_title string:Client 1;
                         debit string:0;
                         credit string:100">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_transactions_table" />
 </tal:block>
 
 <!-- Second Transaction -->
@@ -126,7 +126,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         mirror_section_title string:Client 2;
                         debit string:239.20;
                         credit string:0">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_transactions_table" />
 </tal:block>
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[5];
                         specific_reference string:;
@@ -136,7 +136,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         mirror_section_title string:Client 2;
                         debit string:0;
                         credit string:39.20">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_transactions_table" />
 </tal:block>
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[6];
                         specific_reference string:;
@@ -146,7 +146,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         mirror_section_title string:Client 2;
                         debit string:0;
                         credit string:200">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_transactions_table" />
 </tal:block>
 
 <!-- Third Transaction -->
@@ -158,7 +158,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         mirror_section_title string:John Smith;
                         debit string:358.80;
                         credit string:0">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_transactions_table" />
 </tal:block>
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[8];
                         specific_reference string:;
@@ -168,7 +168,7 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         mirror_section_title string:John Smith;
                         debit string:0;
                         credit string:58.80">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_transactions_table" />
 </tal:block>
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[9];
                         specific_reference string:;
@@ -178,13 +178,13 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
                         mirror_section_title string:John Smith;
                         debit string:0;
                         credit string:300">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_transactions_table" />
 </tal:block>
 <!-- Stats line -->
 <tal:block tal:define="row_selector string:$${table}/tfoot/tr[1];
                         debit string:717.60;
                         credit string:717.60">
-    <tal:block metal:use-macro="here/AccountingZuite_reportMacros/macros/check_row_in_transactions_table" />
+    <tal:block metal:use-macro="here/Zuite_viewAccountingTestReportMacros/macros/check_row_in_transactions_table" />
 </tal:block>
 </tbody>
 </table>
