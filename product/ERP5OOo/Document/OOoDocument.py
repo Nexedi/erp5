@@ -117,8 +117,8 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                     )
 
   # regular expressions for stripping xml from ODF documents
-  rx_strip = re.compile('<[^>]*?>', re.DOTALL|re.MULTILINE)
-  rx_compr = re.compile('\s+')
+  rx_strip = re.compile(r'<[^>]*?>', re.DOTALL|re.MULTILINE)
+  rx_compr = re.compile(r'\s+')
 
   security.declareProtected(Permissions.View, 'index_html')
   @fill_args_from_request('display', 'quality', 'resolution')
