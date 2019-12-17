@@ -379,10 +379,10 @@ define("rsvp/events",
     __exports__.EventTarget = EventTarget;
   });
 define("rsvp/hash",
-  ["rsvp/defer","exports"],
+  ["rsvp/promise","exports"],
   function(__dependency1__, __exports__) {
     "use strict";
-    var defer = __dependency1__.defer;
+    var Promise = __dependency1__.Promise;
 
     function size(object) {
       var s = 0;
@@ -395,38 +395,61 @@ define("rsvp/hash",
     }
 
     function hash(promises) {
-      var results = {}, deferred = defer(), remaining = size(promises);
 
-      if (remaining === 0) {
-        deferred.resolve({});
-      }
+      function canceller() {
+        var promise,
+          key;
+        for (key in promises) {
+          if (promises.hasOwnProperty(key)) {
+            promise = promises[key];
 
-      var resolver = function(prop) {
-        return function(value) {
-          resolveAll(prop, value);
-        };
-      };
-
-      var resolveAll = function(prop, value) {
-        results[prop] = value;
-        if (--remaining === 0) {
-          deferred.resolve(results);
-        }
-      };
-
-      var rejectAll = function(error) {
-        deferred.reject(error);
-      };
-
-      for (var prop in promises) {
-        if (promises[prop] && typeof promises[prop].then === 'function') {
-          promises[prop].then(resolver(prop), rejectAll);
-        } else {
-          resolveAll(prop, promises[prop]);
+            if (promise && typeof promise.then === 'function' &&
+                typeof promise.cancel === 'function') {
+              promise.cancel();
+            }
+          }
         }
       }
 
-      return deferred.promise;
+      return new Promise(function(resolve, reject) {
+        var results = {}, remaining = size(promises),
+          promise;
+
+        if (remaining === 0) {
+          resolve(results);
+        }
+
+        function resolver(key) {
+          return function(value) {
+            resolveAll(key, value);
+          };
+        }
+
+        function resolveAll(key, value) {
+          results[key] = value;
+          if (--remaining === 0) {
+            resolve(results);
+          }
+        }
+
+        function cancelAll(rejectionValue) {
+          reject(rejectionValue);
+          canceller();
+        }
+
+        for (var prop in promises) {
+          promise = promises[prop];
+
+          if (promise && typeof promise.then === 'function') {
+            promise.then(resolver(prop), cancelAll);
+          } else {
+            resolveAll(prop, promise);
+          }
+        }
+
+      }, canceller
+      );
+
     }
 
 
