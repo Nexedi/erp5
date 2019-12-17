@@ -189,9 +189,9 @@ class Image(TextConvertableMixin, File, OFSImage):
     id_list = list(DEFAULT_DISPLAY_ID_LIST)
     # Exclude specified displays
     if exclude:
-      for id in exclude:
-        if id in id_list:
-          id_list.remove(id)
+      for id_ in exclude:
+        if id_ in id_list:
+          id_list.remove(id_)
     # Sort by desired photo surface area
     def getSurfaceArea(img):
       x, y = self.getSizeFromImageDisplay(img)
@@ -214,22 +214,22 @@ class Image(TextConvertableMixin, File, OFSImage):
     displays = []
     if quality is _MARKER:
       quality = self.getDefaultImageQuality(format)
-    for id in self.displayIds(exclude):
-      if self._isGenerated(id, format=format, quality=quality,\
+    for id_ in self.displayIds(exclude):
+      if self._isGenerated(id_, format=format, quality=quality,\
                                                         resolution=resolution):
-        photo_width = self._photos[(id,format)].width
-        photo_height = self._photos[(id,format)].height
-        bytes = self._photos[(id,format)]._size()
-        age = self._photos[(id,format)]._age()
+        photo_width = self._photos[(id_,format)].width
+        photo_height = self._photos[(id_,format)].height
+        bytes_ = self._photos[(id_,format)]._size()
+        age = self._photos[(id_,format)]._age()
       else:
-        (photo_width, photo_height, bytes, age) = (None, None, None, None)
-      image_size = self.getSizeFromImageDisplay(id)
-      displays.append({'id': id,
+        (photo_width, photo_height, bytes_, age) = (None, None, None, None)
+      image_size = self.getSizeFromImageDisplay(id_)
+      displays.append({'id': id_,
                         'width': image_size[0],
                         'height': image_size[1],
                         'photo_width': photo_width,
                         'photo_height': photo_height,
-                        'bytes': bytes,
+                        'bytes': bytes_,
                         'age': age
                         })
     return displays
@@ -397,8 +397,8 @@ class Image(TextConvertableMixin, File, OFSImage):
       quality = self.getDefaultImageQuality(format)
     width, height = image_size
     base, ext = splitext(self.id)
-    id = '%s_%s_%s.%s'% (base, width, height, ext,)
-    image = OFSImage(id, self.getTitle(),
+    id_ = '%s_%s_%s.%s'% (base, width, height, ext,)
+    image = OFSImage(id_, self.getTitle(),
                      self._getDisplayData(format, quality, resolution,
                                                             frame, image_size,
                                                             crop))
