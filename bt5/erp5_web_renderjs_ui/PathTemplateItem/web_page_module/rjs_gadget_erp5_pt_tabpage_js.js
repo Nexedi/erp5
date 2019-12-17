@@ -20,7 +20,7 @@
    */
   function modifyBreadcrumbList(gadget, parent_link, breadcrumb_action_list) {
     if (parent_link === undefined) {
-      return;
+      return breadcrumb_action_list;
     }
     var uri = new URI(parent_link.href),
       jio_key = uri.segment(2);
@@ -31,7 +31,7 @@
         title: "ERP5",
         link: "#"
       });
-      return;
+      return breadcrumb_action_list;
     }
 
     // Parent is an ERP5 document
@@ -78,77 +78,66 @@
 
     .onStateChange(function () {
       var gadget = this,
-        view_list = [],
-        tab_list = [],
-        jump_action_list = [],
-        breadcrumb_action_list = [],
-        erp5_document,
-        tab_title = "Views",
-        tab_icon = "eye",
-        jump_list;
+        erp5_document;
 
       return gadget.jio_getAttachment(gadget.state.jio_key, "links")
         .push(function (result) {
-          var i,
-            promise_list = [];
           erp5_document = result;
-          view_list = ensureArray(erp5_document._links.view);
-          jump_list = ensureArray(erp5_document._links.action_object_jump);
+
+          var i,
+            tab_promise_list = [],
+            jump_action_promise_list = [],
+            view_list = ensureArray(erp5_document._links.view)
+              .concat(ensureArray(erp5_document._links.action_object_jio_view)),
+            jump_list = ensureArray(erp5_document._links.action_object_jump);
 
           for (i = 0; i < view_list.length; i += 1) {
-            promise_list.push(gadget.getUrlFor({command: 'display_with_history', options: {
-              jio_key: gadget.state.jio_key,
-              view: view_list[i].href,
-              page: undefined  // Views in ERP5 must be forms but because of
-                               // OfficeJS we keep it empty for different default
-            }}));
-          }
-          for (i = 0; i < jump_list.length; i += 1) {
-            promise_list.push(gadget.getUrlFor({command: 'push_history', options: {
-              extended_search: new URI(jump_list[i].href).query(true).query,
-              page: 'search'
-            }}));
-          }
-          promise_list.push(
-            modifyBreadcrumbList(gadget,
-                                 erp5_document._links.parent || "#",
-                                 breadcrumb_action_list)
-          );
-          return RSVP.all(promise_list);
-        })
-        .push(function (all_result) {
-          var i, j;
-          j = 0;
-          for (i = 0; i < view_list.length; i += 1) {
-            tab_list.push({
+            tab_promise_list.push(RSVP.hash({
               title: view_list[i].title,
               i18n: view_list[i].title,
-              link: all_result[j]
-            });
-            j += 1;
-          }
-          for (i = 0; i < jump_list.length; i += 1) {
-            jump_action_list.push({
-              title: jump_list[i].title,
-              link: all_result[j],
-              i18n: jump_list[i].title
-            });
-            j += 1;
+              link: gadget.getUrlFor({command: 'display_with_history', options: {
+                jio_key: gadget.state.jio_key,
+                view: view_list[i].href,
+                page: undefined  // Views in ERP5 must be forms but because of
+                                 // OfficeJS we keep it empty for different default
+              }})
+            }));
           }
 
+          for (i = 0; i < jump_list.length; i += 1) {
+            jump_action_promise_list.push(RSVP.hash({
+              title: jump_list[i].title,
+              i18n: jump_list[i].title,
+              link: gadget.getUrlFor({command: 'push_history', options: {
+                extended_search: new URI(jump_list[i].href).query(true).query,
+                page: 'search'
+              }})
+            }));
+          }
+
+          return RSVP.hash({
+            tab_list: RSVP.all(tab_promise_list),
+            jump_action_list: RSVP.all(jump_action_promise_list),
+            breadcrumb_action_list: modifyBreadcrumbList(gadget,
+                                    erp5_document._links.parent || "#",
+                                    [])
+          });
+        })
+        .push(function (result_dict) {
+
           return gadget.translateHtml(table_template({
-            definition_title: tab_title,
-            definition_i18n: tab_title,
-            definition_icon: tab_icon,
-            documentlist: tab_list
+            definition_title: "Views",
+            definition_i18n: "Views",
+            definition_icon: "eye",
+            documentlist: result_dict.tab_list
           }) + table_template({
             definition_title: "Jumps",
-            documentlist: jump_action_list,
+            documentlist: result_dict.jump_action_list,
             definition_icon: "plane",
             definition_i18n: "Jumps"
           }) + table_template({
             definition_title: "Breadcrumb",
-            documentlist: breadcrumb_action_list,
+            documentlist: result_dict.breadcrumb_action_list,
             definition_icon: "ellipsis-v",
             definition_i18n: "Breadcrumb"
           }));
@@ -156,18 +145,12 @@
         .push(function (my_translated_html) {
           gadget.element.innerHTML = my_translated_html;
 
-          return RSVP.all([
-            gadget.getUrlFor({command: 'cancel_dialog_with_history'}),
-            calculatePageTitle(gadget, erp5_document)
-          ]);
+          return RSVP.hash({
+            back_url: gadget.getUrlFor({command: 'cancel_dialog_with_history'}),
+            page_title: calculatePageTitle(gadget, erp5_document)
+          });
         })
-        .push(function (url_list) {
-          var dict = {
-            back_url: url_list[0],
-            page_title: url_list[1]
-          };
-          return gadget.updateHeader(dict);
-        });
+        .push(gadget.updateHeader.bind(gadget));
     })
     .declareMethod("triggerSubmit", function () {
       return;
