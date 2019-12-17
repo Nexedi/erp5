@@ -20,7 +20,7 @@
    */
   function modifyBreadcrumbList(gadget, parent_link, breadcrumb_action_list) {
     if (parent_link === undefined) {
-      return;
+      return breadcrumb_action_list;
     }
     var uri = new URI(parent_link.href),
       jio_key = uri.segment(2);
@@ -31,7 +31,7 @@
         title: "ERP5",
         link: "#"
       });
-      return;
+      return breadcrumb_action_list;
     }
 
     // Parent is an ERP5 document
@@ -78,7 +78,6 @@
 
     .onStateChange(function () {
       var gadget = this,
-        breadcrumb_action_list = [],
         erp5_document;
 
       return gadget.jio_getAttachment(gadget.state.jio_key, "links")
@@ -119,9 +118,9 @@
           return RSVP.hash({
             tab_list: RSVP.all(tab_promise_list),
             jump_action_list: RSVP.all(jump_action_promise_list),
-            _: modifyBreadcrumbList(gadget,
+            breadcrumb_action_list: modifyBreadcrumbList(gadget,
                                     erp5_document._links.parent || "#",
-                                    breadcrumb_action_list)
+                                    [])
           });
         })
         .push(function (result_dict) {
@@ -138,7 +137,7 @@
             definition_i18n: "Jumps"
           }) + table_template({
             definition_title: "Breadcrumb",
-            documentlist: breadcrumb_action_list,
+            documentlist: result_dict.breadcrumb_action_list,
             definition_icon: "ellipsis-v",
             definition_i18n: "Breadcrumb"
           }));
