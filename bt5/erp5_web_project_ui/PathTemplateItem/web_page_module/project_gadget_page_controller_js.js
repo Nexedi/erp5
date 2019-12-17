@@ -20,7 +20,7 @@
       return gadget.getSetting("hateoas_url")
         .push(function (hateoas_url) {
           return gadget.redirect({
-            'command': 'display_stored_state',
+            'command': 'display',
             'options': {
               'page': 'form',
               'editable': 0,
