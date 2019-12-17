@@ -26,7 +26,7 @@ appendNewTempDomain(
 appendNewTempDomain(
   id="past",
   title="Past",
-  criterion_dict={criterion_property: {"min": DateTime('2000/01/01 00:00'), "max": now}},
+  criterion_dict={criterion_property: {"min": DateTime('1000/01/01 00:00'), "max": now}},
 )
 
 return domain_list
