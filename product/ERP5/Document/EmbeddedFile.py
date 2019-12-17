@@ -30,7 +30,6 @@
 #
 ##############################################################################
 
-from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Image import Image
 
 class EmbeddedFile(Image):

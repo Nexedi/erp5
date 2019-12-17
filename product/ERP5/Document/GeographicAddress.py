@@ -33,8 +33,6 @@ from Products.ERP5Type.Utils import deprecated
 
 from Products.ERP5.Document.Coordinate import Coordinate
 
-import string
-
 class GeographicAddress(Coordinate):
   """
       A geographic address holds a complete set of

@@ -85,7 +85,6 @@ class MovementGroup(XMLObject):
     # By default, we separate movements by _getPropertyDict() values.
     # You can override this method in each MovementGroup class.
     tmp_dict = {}
-    first_property_dict = None
     collect_order_group_id = self.getCollectOrderGroupId()
     for movement in movement_list:
       # We are in the case of merging of deliveries, thus if the movement

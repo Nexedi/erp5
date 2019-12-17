@@ -29,15 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Core.Predicate import Predicate
-from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.MovementGroup import MovementGroupNode
-from Products.ERP5.mixin.builder import BuilderMixin, SelectMethodError
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from DateTime import DateTime
-from Acquisition import aq_parent, aq_inner
+from Products.ERP5.mixin.builder import BuilderMixin
 
 class GeneratedDeliveryBuilder(BuilderMixin):
   """

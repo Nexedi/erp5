@@ -32,8 +32,8 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import deprecated
 from Products.ERP5.Document.Coordinate import Coordinate
-from Products.ERP5.mixin.url import UrlMixin, no_crawl_protocol_list,\
-                            no_host_protocol_list, default_protocol_dict
+from Products.ERP5.mixin.url import UrlMixin
+
 from zLOG import LOG
 
 _marker = object()

@@ -29,7 +29,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-from zLOG import LOG
 
 class DeliveryTypeInformation(ERP5TypeInformation):
   """

@@ -34,9 +34,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Tool.TypesTool import TypeProvider
-from Products.ERP5 import DeliverySolver
 from Products.ERP5Type.Message import translateString
-from Products.CMFCore.utils import getToolByName
 
 class SolverTool(TypeProvider):
   """ The SolverTool provides API to find out which solver can be applied in

@@ -42,7 +42,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import reencodeUrlEscapes
 from Products.ERP5 import _dtmldir
-from Products.ERP5.Document.Url import no_crawl_protocol_list
+from Products.ERP5.mixin.url import no_crawl_protocol_list
 from Products.ERP5Type.Utils import fill_args_from_request
 from AccessControl import Unauthorized
 

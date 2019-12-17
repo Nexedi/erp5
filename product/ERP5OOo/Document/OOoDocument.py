@@ -49,9 +49,9 @@ EMBEDDED_FORMAT = '_embedded'
 
 from Products.ERP5.Document.Document import DocumentConversionServerProxy
 # Backward compatibility only
-from Products.ERP5.Document.Document import DOCUMENT_CONVERSION_SERVER_PROXY_TIMEOUT as OOO_SERVER_PROXY_TIMEOUT
-from Products.ERP5.Document.Document import DOCUMENT_CONVERSION_SERVER_RETRY as OOO_SERVER_RETRY
-from Products.ERP5.Document.Document import global_server_proxy_uri_failure_time
+from Products.ERP5.Document.Document import DOCUMENT_CONVERSION_SERVER_PROXY_TIMEOUT as OOO_SERVER_PROXY_TIMEOUT # pylint: disable=unused-import
+from Products.ERP5.Document.Document import DOCUMENT_CONVERSION_SERVER_RETRY as OOO_SERVER_RETRY # pylint: disable=unused-import
+from Products.ERP5.Document.Document import global_server_proxy_uri_failure_time # pylint: disable=unused-import
 from Products.ERP5.Document.Document import enc, dec
 OOoServerProxy = DocumentConversionServerProxy
 
@@ -172,7 +172,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                                 " formats for conversion (Code %s: %s)" % (
                                       response_code, response_message))
 
-      except Fault, f:
+      except Fault:
         allowed = server_proxy.getAllowedTargets(content_type)
         warn('Your oood version is too old, using old method '
             'getAllowedTargets instead of getAllowedTargetList',
@@ -215,7 +215,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                                        format,
                                        orig_format)
     try:
-      response_code, response_dict, response_message = generate_result
+      _, response_dict, _ = generate_result
     except ValueError:
       # This is for backward compatibility with older oood version returning
       # only response_dict

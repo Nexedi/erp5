@@ -30,8 +30,7 @@
 from zLOG import LOG, BLATHER
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.mixin.builder import BuilderMixin, SelectMethodError
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5.mixin.builder import BuilderMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.CopySupport import CopyError, tryMethodCallWithTemporaryPermission
 

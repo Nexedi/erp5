@@ -204,7 +204,6 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     def newMovement(inventory_item, resource):
       # Create temporary movement
       movement = newTempMovement(self.getPortalObject(), "temp")
-      dumb_movement = inventory_item.getObject()
       resource_portal_type = resource.getPortalType()
       assert resource_portal_type in resource_portal_type_list, \
         "Builder %r does not support resource of type : %r" % (
