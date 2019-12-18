@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, console */
+/*global window, rJS, RSVP, document, console */
 /*jslint nomen: true, indent: 2 */
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, document) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -47,6 +47,7 @@
     })
     .declareJob("renderGantt", function () {
       var gadget = this,
+          empty_gantt_element = gadget.element.querySelector(".empty-gantt"),
           option_dict = gadget.property_dict.option_dict;
       return gadget.declareGadget(
         "unsafe/gadget_officejs_widget_gantt_dhtmlx.html",
@@ -99,54 +100,66 @@
             tree_list = [],
             data_list = [],
             sale_order_uid,
-            delivery_data, tree_data;
+            delivery_data, tree_data, start_date,
+            gantt_spinner = document.getElementById("gantt_spinner"),
+            now = new Date();
         task_list = task_list.data.rows;
-        console.log("task_list", task_list);
-        for (i = 0; i < task_list.length; i = i + 1) {
-          task = task_list[i].value;
-          if (task.source_project_uid !== undefined) {
-            if (source_project_uid_list.indexOf(task.source_project_uid) === -1) {
-              source_project_uid_list.push(task.source_project_uid);
+        console.log("task_list:", task_list);
+        if (task_list.length) {
+          gadget.element.querySelector(".gantt-content").classList.remove("ui-hidden");
+          for (i = 0; i < task_list.length; i = i + 1) {
+            task = task_list[i].value;
+            if (task.source_project_uid !== undefined) {
+              if (source_project_uid_list.indexOf(task.source_project_uid) === -1) {
+                source_project_uid_list.push(task.source_project_uid);
+              }
+              if (!task.start_date) {
+                start_date = new Date();
+              } else {
+                start_date = task.start_date;
+              }
+              source_project_data = source_project_dict[task.source_project_uid] || {'start_date': new Date(start_date),
+                                                                          'stop_date': new Date(task.stop_date),
+                                                                          'title': task.source_project_title,
+                                                                          'type': 'project',
+                                                                          'id': task.source_project_uid};
+              source_project_data.start_date = new Date(Math.min.apply(
+                  null, [source_project_data.start_date, new Date(start_date)]));
+              source_project_data.stop_date = new Date(Math.max.apply(
+                  null, [source_project_data.stop_date, new Date(task.stop_date)]));
+              source_project_dict[task.source_project_uid] = source_project_data;
             }
-            source_project_data = source_project_dict[task.source_project_uid] || {'start_date': new Date(task.start_date),
-                                                                        'stop_date': new Date(task.stop_date),
-                                                                        'title': task.source_project_title,
-                                                                        'type': 'project',
-                                                                        'id': task.source_project_uid};
-            source_project_data.start_date = new Date(Math.min.apply(
-                null, [source_project_data.start_date, new Date(task.start_date)]));
-            source_project_data.stop_date = new Date(Math.max.apply(
-                null, [source_project_data.stop_date, new Date(task.stop_date)]));
-            source_project_dict[task.source_project_uid] = source_project_data;
-          }
-          if (i === 0) {
-            // We assume that by the sort on order_reference that the first line is a level 1 line
-            sale_order_uid = task.parent_uid;
-          }
-          if (task.start_date !== undefined && task.stop_date !== undefined) {
-            delivery_data = {'title': task.title,
-                         'id': task.uid,
-                         'tree_id': task.uid,
-                         'parent_id': task.source_project_uid,
-                         'start_date': task.start_date,
-                         'stop_date': task.stop_date};
-            if (task.parent_uid !== sale_order_uid) {
-              delivery_data.parent_id = task.parent_uid;
+            if (i === 0) {
+              // We assume that by the sort on order_reference that the first line is a level 1 line
+              sale_order_uid = task.parent_uid;
             }
-            data_list.push(delivery_data);
+            if (task.start_date && task.stop_date) {
+              delivery_data = {'title': task.title,
+                           'id': task.uid,
+                           'tree_id': task.uid,
+                           'parent_id': task.source_project_uid,
+                           'start_date': task.start_date,
+                           'stop_date': task.stop_date};
+              if (task.parent_uid !== sale_order_uid) {
+                delivery_data.parent_id = task.parent_uid;
+              }
+              data_list.push(delivery_data);
+            }
           }
-        }
-        for (i = 0; i < source_project_uid_list.length; i = i + 1) {
-          source_project_data = source_project_dict[source_project_uid_list[i]];
-          data_list.push(source_project_data);
-        }
+          for (i = 0; i < source_project_uid_list.length; i = i + 1) {
+            source_project_data = source_project_dict[source_project_uid_list[i]];
+            data_list.push(source_project_data);
+          }
 
-        gantt_data.data_list = data_list;
-        console.log("gantt_data", gantt_data);
-        return gadget.property_dict.gantt_widget.render(gantt_data);
-
+          gantt_data.data_list = data_list;
+          gantt_spinner.classList.add("hidden");
+          return gadget.property_dict.gantt_widget.render(gantt_data);
+        } else {
+          gantt_spinner.classList.add("hidden");
+          empty_gantt_element.classList.remove("ui-hidden");
+        }
       });
     });
 
 
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, document));
