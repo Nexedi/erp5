@@ -81,7 +81,9 @@ class TestWorkflowPerformance(TestPerformanceMixin):
     # some checking to make sure we tested something relevant
     self.assertEqual('validated', foo.getSimulationState())
     expected_action_id_list = ['custom_action_no_dialog', 'custom_dialog_action',
+                               'custom_dialog_required_action',
                                'display_status_action', 'dummy_action',
+                               'dummy_crashing_action',
                                'dummy_failing_action', 'validate_action']
     expected_action_id_list.sort()
     found_action_id_list = [x['id'] for x in action_list if x['category'] == 'workflow']
