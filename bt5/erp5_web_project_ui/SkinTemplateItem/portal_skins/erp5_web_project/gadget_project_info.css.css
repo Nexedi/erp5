@@ -120,6 +120,10 @@ input[type="submit"] {
   color: #111;
 }
 
+.gadget-gantt .ui-hidden {
+  visibility: hidden;
+}
+
 .worklist-title {
   color: #777777;
   margin-top: 10px;
