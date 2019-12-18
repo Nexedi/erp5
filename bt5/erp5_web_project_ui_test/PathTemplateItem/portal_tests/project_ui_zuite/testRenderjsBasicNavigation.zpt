@@ -131,7 +131,7 @@
   
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Support requests']</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Support Requests']</td>
  <td></td>
 </tr>
   
@@ -155,7 +155,7 @@
   
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Confirmed Tasks']</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Ongoing Tasks']</td>
  <td></td>
 </tr>
   
@@ -167,13 +167,13 @@
   
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Last test result']</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Latest Test Result']</td>
  <td></td>
 </tr>
   
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Test suite']</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Test Suite']</td>
  <td></td>
 </tr>
   
