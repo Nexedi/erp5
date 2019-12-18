@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Style" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -62,14 +62,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>classification/collaborative/team</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -77,11 +69,13 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_project_gantt.html</string> </value>
+            <value> <string>gadget_officejs_project_gantt.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -91,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_project_gantt_html</string> </value>
+            <value> <string>gadget_officejs_project_gantt_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -99,7 +93,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Style</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -109,7 +103,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Project Gantt HTML</string> </value>
+            <value> <string>OfficeJS Project Gantt CSS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -175,7 +169,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>superseb</string> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -197,8 +191,8 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1511349867.08</float>
-                              <string>GMT+1</string>
+                              <float>1577107980.38</float>
+                              <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
@@ -246,7 +240,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>980.38723.24484.50073</string> </value>
+                      <value> <string>980.44201.5610.11349</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -264,7 +258,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1577107598.2</float>
+                              <float>1577109800.86</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -291,11 +285,13 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>superseb</string> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -307,7 +303,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -325,8 +321,8 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1511349822.73</float>
-                              <string>GMT+1</string>
+                              <float>1577107813.98</float>
+                              <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
