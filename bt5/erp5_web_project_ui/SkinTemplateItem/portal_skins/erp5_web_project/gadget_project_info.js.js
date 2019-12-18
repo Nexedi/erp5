@@ -33,7 +33,7 @@
     return view_list.filter(d => d.name === name)[0].href;
   }
 
-  function setLastTestResult(gadget, project_title, svg_element) {
+  function setLatestTestResult(gadget, project_title, svg_element) {
     var query = createProjectQuery(project_title,
                  [["portal_type", "Test Result"]]);
     return gadget.jio_allDocs({
@@ -230,11 +230,11 @@
             getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
               ["title", "description", "source_person_title", "destination_person_title", "delivery.start_date"],
               createProjectQuery(modification_dict.project_title,
-                [["selection_domain_state_bug_domain", "started"]])),
+                [["selection_domain_state_bug_domain", "open"]])),
             getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
               ["title", "delivery.start_date", "source_title"],
               createProjectQuery(modification_dict.project_title,
-                [["selection_domain_state_task_report_domain", "started"]])),
+                [["selection_domain_state_task_report_domain", "confirmed"]])),
             getUrlParameterDict('test_result_module', 'view', [["delivery.start_date", "descending"]],
               null, createProjectQuery(modification_dict.project_title, [])),
             getUrlParameterDict('test_suite_module', 'view', [["creation_date", "descending"]],
@@ -258,7 +258,7 @@
           }
           enableLink(document.getElementById("document_link"), url_list[8]);
           enableLink(document.getElementById("activity_link"), url_list[9]);
-          setLastTestResult(gadget, modification_dict.project_title,
+          setLatestTestResult(gadget, modification_dict.project_title,
                             document.getElementById("test_result_svg"));
         });
     })
