@@ -3,6 +3,8 @@ portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
 checkPerm = portal.portal_membership.checkPermission
 
+redirect_context = context
+
 if jump_from_relative_url is None:
   relation = context
 else:
@@ -39,7 +41,6 @@ related_list = search_method(portal_type = portal_type)
 
 relation_found = 0
 if len(related_list) == 0:
-  url = context.absolute_url()
   message = Base_translateString(
     'No %s Related' % portal_type[0],
     default=Base_translateString('No ${portal_type} related.',
@@ -58,7 +59,7 @@ elif len(related_list) == 1:
       form_id = target_form_id
     else:
       form_id = 'view'
-    url = related_object.absolute_url()
+    redirect_context = related_object
     message = Base_translateString(
       # first, try to get a full translated message with portal types
       "%s related to %s." % (related_object.getPortalType(), context.getPortalType()),
@@ -68,7 +69,6 @@ elif len(related_list) == 1:
                  "that_portal_type": context.getTranslatedPortalType(),
                  "that_title": context.getTitleOrId() }),)
   else :
-    url = context.absolute_url()
     message = Base_translateString("You are not authorised to view the related document.")
     relation_found = 0
 
@@ -105,25 +105,18 @@ else:
     if obj is not None and checkPerm("View", obj):
       related_object_list.append(obj)
   if len(related_object_list) == 0 :
-    url = context.absolute_url()
     message = Base_translateString("You are not authorised to view any related document.")
     relation_found = 0
   else :
-    request=portal.REQUEST
     selection_uid_list = [x.getUid() for x in related_object_list]
-    kw = {'uid': selection_uid_list}
-    portal.portal_selections.setSelectionParamsFor(
-                          'Base_jumpToRelatedObjectList', kw)
-    request.set('object_uid', context.getUid())
-    request.set('uids', selection_uid_list)
-    return getattr(context, relation_form_id)(
-                      uids=selection_uid_list, REQUEST=request)
+    return context.Base_redirect(relation_form_id,
+                keep_items=dict(reset=1,
+                                uid=selection_uid_list))
 
 query_params = dict(portal_status_message=message)
 if selection_name and not relation_found:
   query_params['selection_name'] = selection_name
   query_params['selection_index'] = selection_index
 
-
-redirect_url = '%s/%s?%s' % (url, form_id, make_query(query_params))
-return context.REQUEST[ 'RESPONSE' ].redirect(redirect_url)
+return redirect_context.Base_redirect(
+         form_id, keep_items=query_params)
