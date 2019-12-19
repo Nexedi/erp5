@@ -60,10 +60,23 @@ result_dict = {
   }
 }
 
+# web_section_value = context.getWebSectionValue()
+# web_section_value = context.REQUEST.get('current_web_section', None)
+# web_section_url = web_section_value.absolute_url()
+# raise NotImplementedError(web_section_url)
+
+# Drop the automatically added VirtualHostMonster object ID
+if (not context.isWebMode()) and (context.REQUEST.get('web_section_value', None) is not None):
+  portal = context.getPortalObject()
+  # raise NotImplementedError(context.REQUEST['web_section_value'])
+  web_section = portal.restrictedTraverse("/".join(context.REQUEST['web_section_value']))
+  context = getattr(web_section, context.getRelativeUrl())
+  # raise NotImplementedError(context)
+
 # form_id = 'view' means use default document view. Let the JS handle it
 # In case of dialog submit, if redirecting to the original form, let the JS handle the navigation history
-if (form_id is not None) and \
-   (form_id not in ['view', 'Base_viewFakePythonScriptActionForm']) and \
+if (form_id not in [None, 'Base_viewFakePythonScriptActionForm']) and \
+   ((form_id != 'view') or (keep_items is not None)) and \
    (form_id != previous_form_id) and \
    (not form_id.startswith('http')) and \
    (context.isWebMode()):
