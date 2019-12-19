@@ -75,7 +75,7 @@ if (not context.isWebMode()) and (context.REQUEST.get('web_section_value', None)
 
 # form_id = 'view' means use default document view. Let the JS handle it
 # In case of dialog submit, if redirecting to the original form, let the JS handle the navigation history
-if (form_id not in [None, 'Base_viewFakePythonScriptActionForm']) and \
+if (form_id not in [None, 'Base_viewFakePythonScriptActionForm', 'Base_viewFakeJumpForm']) and \
    ((form_id != 'view') or (keep_items is not None)) and \
    (form_id != previous_form_id) and \
    (not form_id.startswith('http')) and \
