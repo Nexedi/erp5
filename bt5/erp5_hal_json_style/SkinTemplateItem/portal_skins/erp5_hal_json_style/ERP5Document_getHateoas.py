@@ -1327,6 +1327,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # Try to embed the form in the result
         if (view == view_action['id']):
           current_action = parseActionUrl('%s' % view_action['url'])  # current action/view being rendered
+          current_action['category_type'] = erp5_action_key
 
     if view and (view != 'view') and (current_action.get('view_id', None) is None):
       # XXX Allow to directly render a form
@@ -1356,8 +1357,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # If our "form" is actually a Script (nothing is sure in ERP5) or anything else than Form
         # (e.g. function or bound class method will) not have .meta_type thus be considered a Script
         # then we execute it directly
-        if ("Script" in getattr(view_instance, "meta_type", "Script")) or ():
-          view_instance = getattr(traversed_document, 'Base_viewFakePythonScriptActionForm')
+        if "Script" in getattr(view_instance, "meta_type", "Script"):
+          if current_action.get('category_type', None) == 'object_jump':
+            view_instance = getattr(traversed_document, 'Base_viewFakeJumpForm')
+          else:
+            view_instance = getattr(traversed_document, 'Base_viewFakePythonScriptActionForm')
 
         if view_instance.pt == "form_dialog":
           # If there is a "form_id" in the REQUEST then it means that last view was actually a form
@@ -1371,7 +1375,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         renderForm(traversed_document, view_instance, embedded_dict,
                    selection_params=extra_param_json, extra_param_json=extra_param_json)
 
-        if view_instance.pt == "form_python_action":
+        if view_instance.pt in ["form_python_action", "form_jump"]:
           for k, v in current_action['params'].items():
             renderHiddenField(embedded_dict, k, v)
             embedded_dict['_embedded']['form_definition']['group_list'][-1][1].append((k, {'meta_type': 'StringField'}))
