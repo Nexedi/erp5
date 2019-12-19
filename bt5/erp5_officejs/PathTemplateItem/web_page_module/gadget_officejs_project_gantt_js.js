@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, console */
+/*global window, rJS, RSVP, document, console */
 /*jslint nomen: true, indent: 2 */
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, document) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -101,6 +101,7 @@
             data_list = [],
             sale_order_uid,
             delivery_data, tree_data, start_date,
+            gantt_spinner = document.getElementById("gantt_spinner"),
             now = new Date();
         task_list = task_list.data.rows;
         console.log("task_list:", task_list);
@@ -151,12 +152,14 @@
           }
 
           gantt_data.data_list = data_list;
+          gantt_spinner.classList.add("hidden");
           return gadget.property_dict.gantt_widget.render(gantt_data);
         } else {
+          gantt_spinner.classList.add("hidden");
           empty_gantt_element.classList.remove("ui-hidden");
         }
       });
     });
 
 
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, document));
