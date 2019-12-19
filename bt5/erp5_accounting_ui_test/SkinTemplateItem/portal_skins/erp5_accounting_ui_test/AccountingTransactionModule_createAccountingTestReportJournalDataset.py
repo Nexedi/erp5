@@ -10,7 +10,7 @@ yesterday = today - 1
 tomorrow = today + 1
 
 
-context.AccountingZuite_createDocument(
+context.AccountingTransactionModule_createAccountingTestDocument(
   portal_type='Accounting Transaction',
   simulation_state='delivered',
   start_date=yesterday,
@@ -23,7 +23,7 @@ context.AccountingZuite_createDocument(
      "source_credit": 100}
   ]
 )
-context.AccountingZuite_createDocument(
+context.AccountingTransactionModule_createAccountingTestDocument(
   portal_type='Sale Invoice Transaction',
   title='First One',
   simulation_state='delivered',
@@ -42,7 +42,7 @@ context.AccountingZuite_createDocument(
      "source_credit": 100.00},
   ]
 )
-context.AccountingZuite_createDocument(
+context.AccountingTransactionModule_createAccountingTestDocument(
   portal_type='Sale Invoice Transaction',
   title='Second One',
   simulation_state='delivered',
@@ -65,7 +65,7 @@ context.AccountingZuite_createDocument(
      "source_credit": 200.00},
   ]
 )
-context.AccountingZuite_createDocument(
+context.AccountingTransactionModule_createAccountingTestDocument(
   portal_type='Sale Invoice Transaction',
   title='Third One',
   simulation_state='delivered',
@@ -85,7 +85,7 @@ context.AccountingZuite_createDocument(
      "source_credit": 300.00},
   ]
 )
-context.AccountingZuite_createDocument(
+context.AccountingTransactionModule_createAccountingTestDocument(
   portal_type='Accounting Transaction',
   simulation_state='delivered',
   start_date=today,
@@ -98,7 +98,7 @@ context.AccountingZuite_createDocument(
      "source_credit": 111},
   ]
 )
-context.AccountingZuite_createDocument(
+context.AccountingTransactionModule_createAccountingTestDocument(
   portal_type='Sale Invoice Transaction',
   simulation_state='delivered',
   destination_section_value=portal.organisation_module.client_2,

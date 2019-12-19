@@ -50,15 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>report_name, report_style</string> </value>
+            <value> <string>two_banks=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingZuite_initializeAccountingTransactionReportTest</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>AccountingTransactionModule_createAccountingTestReportDataset</string> </value>
         </item>
       </dictionary>
     </pickle>

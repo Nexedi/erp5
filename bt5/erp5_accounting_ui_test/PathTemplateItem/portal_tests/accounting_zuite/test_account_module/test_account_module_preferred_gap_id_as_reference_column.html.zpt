@@ -6,13 +6,13 @@
 <tr><td rowspan="1" colspan="4">
 Test `preferred_gap_id` column of Account Module
 </td></tr>
-</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList">
-<tal:block metal:use-macro="here/AccountingZuite_CommonTemplate/macros/init"/>
+</thead><tbody tal:define="init_method string:AccountingTransactionModule_createAccountingTransactionList">
+<tal:block metal:use-macro="here/ERP5Site_viewAccountingZuiteCommonTemplate/macros/init"/>
 
 <!-- Setup {{{ -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingZuite_setAccountReferencePreference</td>
+  <td>${base_url}/PreferenceTool_setAccountingTestAccountReferencePreference</td>
   <td></td>
 </tr>
 <tr>

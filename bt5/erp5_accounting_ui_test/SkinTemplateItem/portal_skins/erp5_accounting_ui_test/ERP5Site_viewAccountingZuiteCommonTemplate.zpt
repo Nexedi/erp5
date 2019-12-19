@@ -4,7 +4,7 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>open</td>
-      <td>${base_url}/AccountingZuite_reset</td>
+      <td>${base_url}/ERP5Site_resetConfigurationForAccountingTest</td>
       <td></td>
     </tr>
     <tr>

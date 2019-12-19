@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingZuite_setDocumentSectionPreference</string> </value>
+            <value> <string>AccountingTransactionModule_createAccountingTestReportJournalDataset</string> </value>
         </item>
       </dictionary>
     </pickle>
