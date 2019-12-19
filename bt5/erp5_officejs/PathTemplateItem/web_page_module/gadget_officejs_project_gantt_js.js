@@ -100,7 +100,8 @@
             tree_list = [],
             data_list = [],
             sale_order_uid,
-            delivery_data, tree_data;
+            delivery_data, tree_data, start_date,
+            now = new Date();
         task_list = task_list.data.rows;
         console.log("task_list:", task_list);
         if (task_list.length) {
@@ -111,13 +112,18 @@
               if (source_project_uid_list.indexOf(task.source_project_uid) === -1) {
                 source_project_uid_list.push(task.source_project_uid);
               }
-              source_project_data = source_project_dict[task.source_project_uid] || {'start_date': new Date(task.start_date),
+              if (!task.start_date) {
+                start_date = new Date();
+              } else {
+                start_date = task.start_date;
+              }
+              source_project_data = source_project_dict[task.source_project_uid] || {'start_date': new Date(start_date),
                                                                           'stop_date': new Date(task.stop_date),
                                                                           'title': task.source_project_title,
                                                                           'type': 'project',
                                                                           'id': task.source_project_uid};
               source_project_data.start_date = new Date(Math.min.apply(
-                  null, [source_project_data.start_date, new Date(task.start_date)]));
+                  null, [source_project_data.start_date, new Date(start_date)]));
               source_project_data.stop_date = new Date(Math.max.apply(
                   null, [source_project_data.stop_date, new Date(task.stop_date)]));
               source_project_dict[task.source_project_uid] = source_project_data;
@@ -126,7 +132,7 @@
               // We assume that by the sort on order_reference that the first line is a level 1 line
               sale_order_uid = task.parent_uid;
             }
-            if (task.start_date !== undefined && task.stop_date !== undefined) {
+            if (task.start_date && task.stop_date) {
               delivery_data = {'title': task.title,
                            'id': task.uid,
                            'tree_id': task.uid,
