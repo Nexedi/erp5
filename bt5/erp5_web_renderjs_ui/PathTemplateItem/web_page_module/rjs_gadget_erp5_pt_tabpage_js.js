@@ -104,9 +104,12 @@
             }}));
           }
           for (i = 0; i < jump_list.length; i += 1) {
-            promise_list.push(gadget.getUrlFor({command: 'push_history', options: {
-              extended_search: new URI(jump_list[i].href).query(true).query,
-              page: 'search'
+            promise_list.push(gadget.getUrlFor({command: 'display_dialog_with_history', options: {
+              jio_key: gadget.state.jio_key,
+              view: jump_list[i].href,
+              page: undefined,//'jump'  // Views in ERP5 must be forms but because of
+              // extended_search: new URI(jump_list[i].href).query(true).query,
+              // page: 'search'
             }}));
           }
           promise_list.push(
