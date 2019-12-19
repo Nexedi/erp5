@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -68,8 +68,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_tab.js</string> </value>
+            <value> <string>gadget_erp5_pt_form_jump.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_pt_tabpage_js</string> </value>
+            <value> <string>rjs_gadget_erp5_pt_form_jump_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -87,7 +91,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -97,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Tab JS</string> </value>
+            <value> <string>Gadget ERP5 Jump</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -163,7 +167,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>romain</string> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -185,8 +189,8 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1411723496.44</float>
-                              <string>GMT</string>
+                              <float>1458230790.32</float>
+                              <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
@@ -234,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>980.38533.36436.43793</string> </value>
+                      <value> <string>980.39677.42637.17442</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +256,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1576772278.01</float>
+                              <float>1578316445.17</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -283,7 +287,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>romain</string> </value>
+                      <value> <string>zope</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -313,8 +317,8 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1411723463.29</float>
-                              <string>GMT</string>
+                              <float>1458230686.49</float>
+                              <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
