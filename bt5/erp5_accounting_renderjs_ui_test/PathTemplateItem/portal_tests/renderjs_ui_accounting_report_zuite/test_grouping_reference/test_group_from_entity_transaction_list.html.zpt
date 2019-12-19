@@ -6,7 +6,7 @@
 <tr><td rowspan="1" colspan="4">
 Grouping from entity transaction view
 </td></tr>
-</thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0&add_related_payments:int=1">
+</thead><tbody tal:define="init_method string:AccountingTransactionModule_createAccountingTransactionList?add_draft_transactions:int=0&add_related_payments:int=1">
 
 <!-- Setup {{{ -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForAccountingRenderjsUi/macros/init"/>
@@ -95,7 +95,7 @@ Grouping from entity transaction view
 <!-- mark the module as changed, reindex and come back to the entity -->
 <tr>
   <td>open</td>
-  <td>${base_url}/AccountingZuite_markChanged</td>
+  <td>${base_url}/AccountingTransactionModule_markAccountingTestDataChanged</td>
   <td></td>
 </tr>
 <tr>

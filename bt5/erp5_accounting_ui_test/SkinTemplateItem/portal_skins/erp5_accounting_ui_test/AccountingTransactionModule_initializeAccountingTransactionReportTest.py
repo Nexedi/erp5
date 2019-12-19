@@ -7,18 +7,18 @@ module = portal.accounting_module
 # This option is necessary for RJS interface to render Reports
 # If you'd keep XHTML value "View" the RJS will not crash it will
 # only refuse to validate Report Form View
-portal.AccountingZuite_setAccountReferencePreference(report_style=report_style)
+portal.PreferenceTool_setAccountingTestAccountReferencePreference(report_style=report_style)
 
 # First, clean up the module
 module.manage_delObjects(list(module.objectIds()))
 
 # Create datasets
 if report_name == "journal":
-  module.AccountingZuite_createReportJournalDataset()
+  module.AccountingTransactionModule_createAccountingTestReportJournalDataset()
 elif report_name in ("trial-balance", "general-ledger"):
-  module.AccountingZuite_createReportDataset()
+  module.AccountingTransactionModule_createAccountingTestReportDataset()
 elif report_name in ("account-statement", "balance-sheet", "profit-and-loss"):
-  module.AccountingZuite_createReportDataset(two_banks=True)
+  module.AccountingTransactionModule_createAccountingTestReportDataset(two_banks=True)
 elif report_name == "other-parties":
   module.AccountingZuite_createReportOtherPartiesDataset(with_ledger=False)
 elif report_name == "other-parties-ledger":

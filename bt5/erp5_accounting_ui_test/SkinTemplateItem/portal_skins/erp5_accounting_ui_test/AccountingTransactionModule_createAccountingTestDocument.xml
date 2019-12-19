@@ -50,11 +50,15 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>month_count=1</string> </value>
+            <value> <string>portal_type, simulation_state=None, parent=None, embedded=(), **kwargs</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingZuite_createAccountingTransactionListWithPersons</string> </value>
+            <value> <string>AccountingTransactionModule_createAccountingTestDocument</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

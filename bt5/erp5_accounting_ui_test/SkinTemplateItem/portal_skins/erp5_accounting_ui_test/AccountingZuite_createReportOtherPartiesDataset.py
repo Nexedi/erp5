@@ -46,7 +46,7 @@ else:
     extra_kwargs_general = {}
     extra_kwargs_detailed = {}
 
-context.AccountingZuite_createDocument(
+context.AccountingTransactionModule_createAccountingTestDocument(
     portal_type='Accounting Transaction',
     title='Transaction 1',
     source_reference='1',
@@ -62,7 +62,7 @@ context.AccountingZuite_createDocument(
     **extra_kwargs_general
     )
 
-context.AccountingZuite_createDocument(
+context.AccountingTransactionModule_createAccountingTestDocument(
     portal_type='Accounting Transaction',
     title='Transaction 2',
     source_reference='2',
@@ -78,7 +78,7 @@ context.AccountingZuite_createDocument(
     )
 
 if with_ledger:
-    context.AccountingZuite_createDocument(
+    context.AccountingTransactionModule_createAccountingTestDocument(
         portal_type='Accounting Transaction',
         title='Transaction 3',
         source_reference='3',
