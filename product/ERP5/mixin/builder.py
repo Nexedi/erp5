@@ -477,7 +477,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         not self._isUpdated(x, 'delivery')]
       if merge_delivery:
         # We must have only one delivery to update in the case of merge
-        delivery, = delivery_to_update_list
+        delivery = delivery_to_update_list[0]
         property_dict = {}
       else:
         delivery, property_dict = self._findUpdatableObject(
