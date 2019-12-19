@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_jump.js</string> </value>
+            <value> <string>gadget_erp5_pt_form_jump.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -234,7 +234,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>980.38546.25211.16042</string> </value>
+                      <value> <string>980.38548.37224.1587</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +252,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1576770513.98</float>
+                              <float>1576772675.11</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
