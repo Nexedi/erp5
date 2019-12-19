@@ -3,14 +3,13 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>ERP5 Page Jump</title>
-    <link rel="http://www.renderjs.org/rel/interface" href="interface_page.html">
+    <title>ERP5 PT Form Python Action</title>
+    <link rel="http://www.renderjs.org/rel/interface" href="interface_erp5_page_template.html">
+    <link rel="http://www.renderjs.org/rel/interface" href="interface_erp5_form_content_provider.html">
 
     <!-- renderjs -->
     <script src="rsvp.js" type="text/javascript"></script>
     <script src="renderjs.js" type="text/javascript"></script>
-
-    <script src="handlebars.js" type="text/javascript"></script>
     <script src="jiodev.js" type="text/javascript"></script>
 
     <!-- custom script -->
@@ -18,23 +17,13 @@
     <script src="gadget_erp5_global.js" type="text/javascript"></script>
     <script src="gadget_erp5_page_jump.js" type="text/javascript"></script>
 
-    <!-- XXX need theme here currently -->
-    <script id="table-template" type="text/x-handlebars-template">
-      <section class="ui-content-header-plain">
-        <h3 data-i18n="[last]{{definition_i18n}}">
-          <span class="ui-icon ui-icon-plane">&nbsp;</span>
-          {{definition_title}}
-        </h3>
-      </section>
-
-      <ul class="document-listview">
-        {{#each documentlist}}
-          <li><a data-i18n="{{i18n}}" href="{{link}}">{{title}}</a></li>
-        {{/each}}
-      </ul>
-    </script>
-
   </head>
   <body>
+    <form>
+      <div data-gadget-url="gadget_erp5_form.html"
+              data-gadget-scope="erp5_form"
+              data-gadget-sandbox="public">
+      </div>
+    </form>
   </body>
 </html>
