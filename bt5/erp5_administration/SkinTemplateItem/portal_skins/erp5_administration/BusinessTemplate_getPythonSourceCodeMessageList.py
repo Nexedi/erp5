@@ -15,6 +15,14 @@ class Message:
   def getListItemUrl(self, *args, **kw):
     return self.edit_url
 
+  def getListItemUrlDict(self, *args, **kw):
+    return {
+      'command': 'raw',
+      'options': {
+        'url': self.edit_url
+      }
+    }
+
   def __repr__(self):
     return "{}:{}".format(self.location, self.message)
 
