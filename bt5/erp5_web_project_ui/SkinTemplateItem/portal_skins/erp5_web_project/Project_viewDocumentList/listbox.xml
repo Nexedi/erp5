@@ -258,7 +258,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>project_view_document_selection</string> </value>
+                    <value> <string>base_view_project_document_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

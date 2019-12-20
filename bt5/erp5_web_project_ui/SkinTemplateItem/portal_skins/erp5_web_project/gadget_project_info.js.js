@@ -33,7 +33,7 @@
     return view_list.filter(d => d.name === name)[0].href;
   }
 
-  function setLastTestResult(gadget, project_title, svg_element) {
+  function setLatestTestResult(gadget, project_title, svg_element) {
     var query = createProjectQuery(project_title,
                  [["portal_type", "Test Result"]]);
     return gadget.jio_allDocs({
@@ -258,7 +258,7 @@
           }
           enableLink(document.getElementById("document_link"), url_list[8]);
           enableLink(document.getElementById("activity_link"), url_list[9]);
-          setLastTestResult(gadget, modification_dict.project_title,
+          setLatestTestResult(gadget, modification_dict.project_title,
                             document.getElementById("test_result_svg"));
         });
     })
