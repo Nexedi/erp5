@@ -112,6 +112,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
             (!gadget.state.editable && gadget.state.editor === 'fck_editor') ||
             (!gadget.state.editable && gadget.state.editor === 'jsmd_editor') ||
+            (!gadget.state.editable && gadget.state.editor === 'monaco') ||
             (gadget.state.editor === 'pdf')) {
           queue
             .push(function () {
@@ -143,6 +144,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
              (editor_dict.hasOwnProperty(gadget.state.editor))) ||
             (!gadget.state.editable && gadget.state.editor === 'fck_editor') ||
             (!gadget.state.editable && gadget.state.editor === 'jsmd_editor') ||
+            (!gadget.state.editable && gadget.state.editor === 'monaco') ||
             (gadget.state.editor === 'pdf')) {
         queue
           .push(function () {

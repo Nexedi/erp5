@@ -157,7 +157,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'editor\', context.Base_getEditorFieldPreferredTextEditor()), (\'portal_type\', context.getPortalType()), (\'maximize\', \'listbox\' not in field.id)]</string> </value>
+            <value> <string>python: [(\'editor\', context.Base_getEditorFieldPreferredTextEditor()), (\'portal_type\', context.getPortalType()), (\'maximize\', \'listbox\' not in field.id), (\'content_type\', context.getProperty(\'content_type\'))]</string> </value>
         </item>
       </dictionary>
     </pickle>
