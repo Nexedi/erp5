@@ -45,5 +45,7 @@ bt5_installation_list = bt5_update_catalog_list + ('erp5_xhtml_style',
                                                    'erp5_authentication_policy',
                                                    'erp5_l10n_fr',
                                                    'erp5_mrp_item',
+                                                   'erp5_discount_resource',
+                                                   'erp5_administration',
                                                    )
 return bt5_installation_list, []
