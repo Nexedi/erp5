@@ -59,7 +59,7 @@ MIN_TIC=0.0073                      # 0.0333 0.0020, 0.260
 MAX_TIC=0.0150                      # 0.0354 0.0090, 0.343
 MIN_OBJECT_CREATION=0.0053          # 0.0130  0.0010, 0.0070
 MAX_OBJECT_CREATION=0.0068          # 0.0145  0.0040, 0.0082
-LISTBOX_COEF=0.00165                # 0.00173 0.02472
+LISTBOX_COEF=0.00150                # 0.00173 0.02472
 # Change history
 # 2016-08-11
 #   Adapt values with new hardware from online.net.
