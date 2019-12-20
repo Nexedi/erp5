@@ -363,9 +363,13 @@ def parseActionUrl(url):
           param_value = int(param_value)
         elif param_type == "bool":
           param_value = True if param_value.lower() in ("true", "1") else False
+        elif param_type == "list":
+          if param_name not in param_dict:
+            param_dict[param_name] = []
+          param_dict[param_name].append(param_value)
+          param_value = param_dict[param_name]
         else:
-          raise ValueError("Cannot convert param {}={} to type {}. Feel free to add implemetation at the position of this exception.".format(
-            param_name, param_value, param_type))
+          raise ValueError("Cannot parse argument: {}".format(param))
       param_dict[param_name] = param_value
   return {
     'view_id': script,
