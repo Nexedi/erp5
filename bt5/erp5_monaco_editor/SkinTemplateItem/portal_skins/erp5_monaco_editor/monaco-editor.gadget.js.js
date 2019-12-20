@@ -78,7 +78,7 @@
           key: options.key,
           editable: options.editable === undefined ? true : options.editable
         };
-      if (options.portal_type === 'Web Page') {
+      if (options.portal_type === 'Web Page' || options.content_type == 'text/html') {
         model_language = 'html';
       } else if (options.portal_type === 'Web Script') {
         model_language = 'javascript';
