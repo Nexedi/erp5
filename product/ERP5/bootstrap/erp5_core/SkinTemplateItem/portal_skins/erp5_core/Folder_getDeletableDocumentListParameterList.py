@@ -4,7 +4,7 @@ parameter_list = field.getTemplateField().get_value('default_params')
 # If the listbox does not display them, do not add the state filter parameter
 filter_portal_type_list = [x[1] for x in parameter_list if x[0] == 'portal_type']
 if filter_portal_type_list:
-  if sametype(filter_portal_type_list, ''):
+  if same_type(filter_portal_type_list, ''):
     filter_portal_type_list = [filter_portal_type_list]
 else:
   filter_portal_type_list = None
