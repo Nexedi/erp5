@@ -7,21 +7,34 @@ class Message:
 
   Supports both being displayed in a listbox and being printed.
   """
-  def __init__(self, location, message, edit_url):
+  def __init__(self, location, message, edit_url, jio_key=None):
     self.location = location
     self.message = message
     self.edit_url = edit_url
+    self.jio_key = jio_key
 
   def getListItemUrl(self, *args, **kw):
     return self.edit_url
 
   def getListItemUrlDict(self, *args, **kw):
-    return {
-      'command': 'raw',
-      'options': {
-        'url': self.edit_url
+    if self.jio_key is None:
+      # Use raw portal skins edition
+      return {
+        'command': 'raw',
+        'options': {
+          'url': self.edit_url
+        }
       }
-    }
+    else:
+      # Stay in ERP5JS
+      # XXX How to focus on the line to change directly?
+      return {
+        'command': 'push_history',
+        'options': {
+          'jio_key': self.jio_key,
+          'editable': True,
+        }
+      }
 
   def __repr__(self):
     return "{}:{}".format(self.location, self.message)
@@ -60,7 +73,8 @@ def checkComponent(component_instance):
       Message(
         location="{component_path}:{row}:{column}".format(**annotation),
         message=annotation["text"],
-        edit_url="{component_path}?line={row}".format(**annotation),))
+        edit_url="{component_path}?line={row}".format(**annotation),
+        jio_key=annotation['component_path'],),)
 
 # Check scripts
 script_container_list = []
