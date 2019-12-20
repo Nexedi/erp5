@@ -24,3 +24,4 @@ test.erp5.testFunctionalRJSRecoverPassword
 test.erp5.testFunctionalRJSInterfaceValidator
 test.erp5.testFunctionalRJSDms
 test.erp5.testRJSPortalType
+test.erp5.testRJSUpgrader
