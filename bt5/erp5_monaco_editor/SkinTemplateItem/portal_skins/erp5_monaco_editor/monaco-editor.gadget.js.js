@@ -171,6 +171,8 @@
             .push(addExtraLibrary('./monaco-renderjs.d.ts', 'renderjs'))
             .push(addExtraLibrary('./monaco-jio.d.ts', 'jio'));
         }
+      if (modification_dict.hasOwnProperty('editable')){
+        gadget.editor.updateOptions({readOnly: !this.state.editable});
       }
       return queue;
     })
