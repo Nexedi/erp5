@@ -7,6 +7,9 @@
   <item>Reference</item>
   <item>SortIndex</item>
  </portal_type>
+ <portal_type id="Web Site">
+  <item>WebSiteRenderJSUpgradeConstraint</item>
+ </portal_type>
  <portal_type id="Web Style">
   <item>Reference</item>
   <item>SortIndex</item>
