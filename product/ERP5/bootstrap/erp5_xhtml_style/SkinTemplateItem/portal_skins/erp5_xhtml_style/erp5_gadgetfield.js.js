@@ -98,6 +98,12 @@
     .allowPublicAcquisition('translateHtml', function (argument_list) {
       return argument_list[0];
     })
+    .allowPublicAcquisition('redirect', function (argument_list) {
+        var argument = argument_list[0];
+        if (argument.command === 'raw' && argument.options && argument.options.url) {
+          location.replace(argument.options.url);
+        }
+      })
 
     /////////////////////////////////////////////////////////////////
     // declared methods
