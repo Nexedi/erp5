@@ -75,9 +75,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>text/css</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -264,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1574438678.87</float>
+                              <float>1574438679.87</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
