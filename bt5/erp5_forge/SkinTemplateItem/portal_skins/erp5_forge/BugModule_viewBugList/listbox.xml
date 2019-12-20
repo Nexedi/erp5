@@ -202,7 +202,7 @@
                         </tuple>
                         <tuple>
                           <string>state_bug_domain</string>
-                          <string>Bug Status</string>
+                          <string>Bug State</string>
                         </tuple>
                       </list>
                     </value>

@@ -224,7 +224,7 @@
                         </tuple>
                         <tuple>
                           <string>state_support_domain</string>
-                          <string>Request Status</string>
+                          <string>Request State</string>
                         </tuple>
                       </list>
                     </value>
