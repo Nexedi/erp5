@@ -210,7 +210,7 @@
                         </tuple>
                         <tuple>
                           <string>state_task_report_domain</string>
-                          <string>Task Report Status</string>
+                          <string>Task Report State</string>
                         </tuple>
                       </list>
                     </value>
