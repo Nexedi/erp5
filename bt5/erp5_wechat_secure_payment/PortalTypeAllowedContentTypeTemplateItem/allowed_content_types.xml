@@ -2,4 +2,7 @@
  <portal_type id="Secure Payment Tool">
   <item>Wechat Service</item>
  </portal_type>
+ <portal_type id="Wechat Service">
+  <item>Link</item>
+ </portal_type>
 </allowed_content_type_list>
