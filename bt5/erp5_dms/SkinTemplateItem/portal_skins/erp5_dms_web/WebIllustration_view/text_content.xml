@@ -71,6 +71,22 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>image_display</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>image_format</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>image_pre_converted_only</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>image_quality</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -127,7 +143,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: "data:%s,%s" % (context.getContentType("image/svg+xml"), context.getTextContent(""))</string> </value>
+            <value> <string>python: "%s?format=" % here.absolute_url()</string> </value>
         </item>
       </dictionary>
     </pickle>
