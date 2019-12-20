@@ -1,6 +1,6 @@
 /*global window, rJS, RSVP*/
 /*jslint indent: 2, maxlen: 80 */
-(function (window, rJS, RSVP) {
+(function (navigator, window, rJS, RSVP) {
   "use strict";
 
   var ZONE_LIST = [
@@ -236,7 +236,10 @@
               if (gadget.state.timezone_style) {
                 text_content = state_date.toLocaleDateString();
                 if (!gadget.state.date_only) {
-                  text_content += " " + state_date.toLocaleTimeString();
+                  text_content += " " + state_date.toLocaleTimeString(
+                    navigator.languages[0],
+                    {timeStyle: "short"}
+                  );
                 }
               } else {
                 //get timezone difference between server and local browser
@@ -245,7 +248,10 @@
                 state_date.setUTCHours(state_date.getUTCHours() + offset_time_zone);
                 text_content = state_date.toLocaleDateString();
                 if (!gadget.state.date_only) {
-                  text_content += " " + state_date.toLocaleTimeString();
+                  text_content += " " + state_date.toLocaleTimeString(
+                    navigator.languages[0],
+                    {timeStyle: "short"}
+                  );
                 }
               }
             }
@@ -381,4 +387,4 @@
       return true;
     }, {mutex: 'changestate'});
 
-}(window, rJS, RSVP));
+}(navigator, window, rJS, RSVP));
