@@ -549,6 +549,9 @@
         return route(this, 'translation_gadget', 'getTranslationList',
                      argument_list);
       })
+    .allowPublicAcquisition("getLanguage", function getLanguage() {
+      return route(this, 'translation_gadget', 'getLanguage');
+    })
 
     .allowPublicAcquisition("redirect", function redirect(param_list) {
       return route(this, 'router', 'redirect', param_list);
