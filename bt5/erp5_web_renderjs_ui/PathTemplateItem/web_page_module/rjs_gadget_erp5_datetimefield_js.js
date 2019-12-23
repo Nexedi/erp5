@@ -32,7 +32,7 @@
   ];
 
   rJS(window)
-
+    .declareAcquiredMethod('getLanguge', 'getLanguage')
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
@@ -228,24 +228,38 @@
       } else {
         queue
           .push(function (gadget_list) {
-            var text_content = "",
+            return RSVP.all([
+              gadget.getLanguage(),
+              gadget_list
+            ]);
+          })
+          .push(function (result_list) {
+            var language = result_list[0],
+              gadget_list = result_list[1],
+              text_content = "",
               state_date,
               offset_time_zone;
             if (gadget.state.value) {
               state_date = new Date(gadget.state.value);
               if (gadget.state.timezone_style) {
-                text_content = state_date.toLocaleDateString();
+                text_content = state_date.toLocaleDateString(language);
                 if (!gadget.state.date_only) {
-                  text_content += " " + state_date.toLocaleTimeString();
+                  text_content += " " + state_date.toLocaleTimeString(
+                    language,
+                    {timeStyle: "short"}
+                  );
                 }
               } else {
                 //get timezone difference between server and local browser
                 offset_time_zone = timezone + (state_date.getTimezoneOffset() / 60);
                 //adjust hour in order to get correct date time string
                 state_date.setUTCHours(state_date.getUTCHours() + offset_time_zone);
-                text_content = state_date.toLocaleDateString();
+                text_content = state_date.toLocaleDateString(language);
                 if (!gadget.state.date_only) {
-                  text_content += " " + state_date.toLocaleTimeString();
+                  text_content += " " + state_date.toLocaleTimeString(
+                    language,
+                    {timeStyle: "short"}
+                  );
                 }
               }
             }
