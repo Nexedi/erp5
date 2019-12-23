@@ -1,6 +1,11 @@
 Static Web Section | SortIndex
+Static Web Section | WebSectionUpgradeConstraint
+Static Web Section | WebSectionUpgradeConstraint
+Static Web Site | WebSectionUpgradeConstraint
 Static Web Site | WebSitePreference
 Web Page | Reference
 Web Page | SortIndex
 Web Section | SortIndex
+Web Section | WebSectionUpgradeConstraint
+Web Site | WebSectionUpgradeConstraint
 Web Site | WebSitePreference
