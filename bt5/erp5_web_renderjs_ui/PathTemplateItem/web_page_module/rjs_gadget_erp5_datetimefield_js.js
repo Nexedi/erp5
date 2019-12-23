@@ -32,7 +32,7 @@
   ];
 
   rJS(window)
-
+    .declareAcquiredMethod('getSelectedLanguage', 'getSelectedLanguage')
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
@@ -228,24 +228,52 @@
       } else {
         queue
           .push(function (gadget_list) {
-            var text_content = "",
+            return RSVP.all([
+              gadget.getSelectedLanguage(),
+              gadget_list
+            ]);
+          })
+          .push(function (result_list) {
+            var language = result_list[0],
+              gadget_list = result_list[1],
+              text_content = "",
               state_date,
+              locale_formatted_state_date,
               offset_time_zone;
             if (gadget.state.value) {
               state_date = new Date(gadget.state.value);
+              /* Ideally we would like to use {timeStyle: "short"} as option
+               * to hide seconds. Unfortunately it doesn't work in older
+               * versions of firefox. Luckily, by using
+               *   {hour: "numeric", minute: "numeric"}
+               * it hides seconds, and still respects the locale.
+               * >> date = new Date(2019, 1, 1, 1, 1)
+               * >> date.toLocaleTimeString(
+               *      'en', {hour: "numeric", minute: "numeric"}
+               *    )
+               *    "1:01 AM"
+               * >> date.toLocaleTimeString(
+               *      'fr', {hour: "numeric", minute: "numeric"}
+               *    )
+               *    "01:01"
+               */
+              locale_formatted_state_date = state_date.toLocaleTimeString(
+                language,
+                {hour: "numeric", minute: "numeric"}
+              );
               if (gadget.state.timezone_style) {
-                text_content = state_date.toLocaleDateString();
+                text_content = state_date.toLocaleDateString(language);
                 if (!gadget.state.date_only) {
-                  text_content += " " + state_date.toLocaleTimeString();
+                  text_content += " " + locale_formatted_state_date;
                 }
               } else {
                 //get timezone difference between server and local browser
                 offset_time_zone = timezone + (state_date.getTimezoneOffset() / 60);
                 //adjust hour in order to get correct date time string
                 state_date.setUTCHours(state_date.getUTCHours() + offset_time_zone);
-                text_content = state_date.toLocaleDateString();
+                text_content = state_date.toLocaleDateString(language);
                 if (!gadget.state.date_only) {
-                  text_content += " " + state_date.toLocaleTimeString();
+                  text_content += " " + locale_formatted_state_date;
                 }
               }
             }

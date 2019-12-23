@@ -153,6 +153,19 @@
   <td>glob:${now}*</td>
 </tr>
 
+<!-- Seconds should also be invisible in non-editable mode,
+     and that output follows locale (here "en") -->
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/verify_is_non_editable_mode" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>assertText</td>
+  <td>//div[@data-gadget-scope='field_my_start_date']//p</td>
+  <td>regexp:1?\d/[123]?\d/20\d\d \d\d?:\d\d (AM|PM)</td>
+</tr>
+
 </tbody></table>
 </body>
 </html>
