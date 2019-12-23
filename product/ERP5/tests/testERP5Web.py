@@ -29,7 +29,7 @@
 ##############################################################################
 
 import re
-import unittest
+import time
 from unittest import expectedFailure, skip
 from StringIO import StringIO
 from urllib import urlencode
@@ -2114,11 +2114,81 @@ class TestERP5WebCategoryPublicationWorkflow(ERP5TypeTestCase):
     self.assertEqual([], self.category.getParentValue().contentValues())
 
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Web))
-  suite.addTest(unittest.makeSuite(TestERP5WebWithSimpleSecurity))
-  suite.addTest(unittest.makeSuite(TestERP5WebCategoryPublicationWorkflow))
-  suite.addTest(unittest.makeSuite(TestWebSiteTraversalHook))
-  suite.addTest(unittest.makeSuite(TestWebSectionTraversalHook))
-  return suite
+class ERP5WebUpgraderMixin(object):
+  """Test mixin that checks that web site or web sections are upgraded.
+
+  Subclasses must set `upgraded` attribute.
+  """
+  upgraded = None # type: erp5.portal_type.WebSection
+  def getBusinessTemplateList(self):
+    return ('erp5_base', 'erp5_web', )
+
+  def test_empty_constraint(self):
+    self.assertEqual(
+        [], [str(m.getMessage()) for m in self.upgraded.checkConsistency()])
+
+  def test_upgrader_fix_modification_date(self):
+    # Upgrader sets the modification date on the web section if
+    # it's older than its default page.
+    html_page = self.portal.web_page_module.newContent(
+        portal_type='Web Page',
+        reference=self.id(),
+    )
+    html_page.publish()
+    self.tic()
+
+    self.upgraded.edit(aggregate_value=html_page)
+    self.tic()
+    time.sleep(1)
+    html_page.edit(text_content="<p>Hello again</p>")
+    self.tic()
+    self.assertLess(
+        self.upgraded.getModificationDate(),
+        html_page.getModificationDate()
+        )
+    self.assertEqual(
+        ['Web Section {} is older than default page'.format(self.upgraded.getRelativeUrl())],
+        [str(m.getMessage()) for m in self.upgraded.checkConsistency()])
+    self.upgraded.fixConsistency()
+    self.tic()
+
+    self.assertEqual(
+        [], [str(m.getMessage()) for m in self.upgraded.checkConsistency()])
+    self.assertGreater(
+        self.upgraded.getModificationDate(),
+        html_page.getModificationDate())
+
+
+class TestERP5WebSiteUpgrader(ERP5WebUpgraderMixin, ERP5TypeTestCase):
+  def afterSetUp(self):
+    super(ERP5WebUpgraderMixin, self).afterSetUp()
+    self.upgraded = self.portal.web_site_module.newContent(
+        portal_type='Web Site',
+    )
+
+
+class TestERP5WebSectionUpgrader(ERP5WebUpgraderMixin, ERP5TypeTestCase):
+  def afterSetUp(self):
+    super(ERP5WebUpgraderMixin, self).afterSetUp()
+    self.upgraded = self.portal.web_site_module.newContent(
+        portal_type='Web Site',
+    ).newContent(
+        portal_type='Web Section',
+    )
+
+class TestERP5StaticWebSiteUpgrader(ERP5WebUpgraderMixin, ERP5TypeTestCase):
+  def afterSetUp(self):
+    super(ERP5WebUpgraderMixin, self).afterSetUp()
+    self.upgraded = self.portal.web_site_module.newContent(
+        portal_type='Static Web Site',
+    )
+
+
+class TestERP5StaticWebSectionUpgrader(ERP5WebUpgraderMixin, ERP5TypeTestCase):
+  def afterSetUp(self):
+    super(ERP5WebUpgraderMixin, self).afterSetUp()
+    self.upgraded = self.portal.web_site_module.newContent(
+        portal_type='Web Site',
+    ).newContent(
+        portal_type='Static Web Section',
+    )
