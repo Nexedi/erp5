@@ -120,37 +120,7 @@ input[type="submit"] {
   color: #111;
 }
 
-.gadget-gantt .ui-hidden {
-  visibility: hidden;
-}
-
 .worklist-title {
   color: #777777;
   margin-top: 10px;
-}
-
-.ui-icon-spinner {
-  opacity: 1;
-}
-.ui-icon-spinner::before {
-  content: "\f110";
-  animation: spin 0.5s infinite linear;
-}
-.first-loader {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 300%;
-  animation-name: fadein;
-  animation-duration: 0.2s;
-  animation-delay: 0.3s;
-  animation-fill-mode: both;
-  animation-timing-function: ease-in;
-}
-.gadget-content .field_container > div > div > div.ui-field-contain div.spinner {
-  width: 0%;
-}
-.gadget-content .field_container > div > div > div.ui-field-contain div.hidden {
-  visibility: hidden;
 }
