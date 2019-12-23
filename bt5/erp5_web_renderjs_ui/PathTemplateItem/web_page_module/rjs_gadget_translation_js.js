@@ -1,7 +1,27 @@
-/*global document, window, rJS, translation_data */
+/*global document, window, RSVP, rJS, translation_data */
 /*jslint nomen: true, indent: 2 */
-(function (document, window, rJS, translation_data) {
+(function (document, window, RSVP, rJS, translation_data) {
   "use strict";
+
+  function getLanguage(gadget) {
+    var queue = new RSVP.Queue();
+
+    if (!gadget.state.language) {
+      queue.push(function () {
+        return gadget.getSettingList([
+          "selected_language",
+          "default_selected_language"
+        ]);
+      })
+      .push(function (result_list) {
+        gadget.state.language = result_list[0] || result_list[1];
+      });
+    }
+
+    return queue.push(function () {
+      return gadget.state.language;
+    });
+  }
 
   function translate(string, gadget) {
     if (translation_data[gadget.state.language]) {
@@ -106,20 +126,17 @@
   }
 
   function promiseTranslateList(gadget, string_list, only_first) {
-    // XXX Allow to change the language
-    if (!gadget.state.language) {
-      return gadget.getSettingList(["selected_language",
-                                    "default_selected_language"])
-        .push(function (result_list) {
-          gadget.state.language = result_list[0] || result_list[1];
-          return translateList(gadget, string_list, only_first);
-        });
-    }
-    return translateList(gadget, string_list, only_first);
+    return getLanguage(gadget)
+      .push(function () {
+        return translateList(gadget, string_list, only_first);
+      });
   }
 
   rJS(window)
     .declareAcquiredMethod("getSettingList", "getSettingList")
+    .declareMethod('getLanguage', function () {
+      return getLanguage(this);
+    })
     .declareMethod('getTranslationList', function (string_list) {
       return promiseTranslateList(this, string_list);
     })
@@ -129,15 +146,10 @@
 
     .declareMethod('translateHtml', function (string) {
       var gadget = this;
-      if (!gadget.state.language) {
-        return gadget.getSettingList(["selected_language",
-                                      "default_selected_language"])
-          .push(function (result_list) {
-            gadget.state.language = result_list[0] || result_list[1];
-            return translateHtml(string, gadget);
-          });
-      }
-      return translateHtml(string, gadget);
+      return getLanguage(gadget)
+        .push(function (language) {
+          return translateHtml(string, gadget);
+        });
     });
 
-}(document, window, rJS, translation_data));
+}(document, window, RSVP, rJS, translation_data));
