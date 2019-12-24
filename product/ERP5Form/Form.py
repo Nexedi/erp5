@@ -27,6 +27,7 @@
 #
 ##############################################################################
 import hashlib
+import re
 
 from copy import deepcopy
 
@@ -38,6 +39,8 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.CMFCore.utils import _checkPermission, getToolByName
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.ERP5Type import PropertySheet, Permissions
+from Products.ERP5Type import CodingStyle
+from Products.ERP5Type.ObjectMessage import ObjectMessage
 
 from urllib import quote
 from Products.ERP5Type.Globals import DTMLFile, get_request
@@ -1312,6 +1315,71 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
     def PrincipiaSearchSource(self):
       return str((self.pt, self.name, self.action, self.update_action,
                   self.encoding, self.stored_encoding, self.enctype))
+
+    def _checkConsistency(self, fixit=0, filter=None, **kw):
+      message_list = CodingStyle.checkConsistency(self, fixit=fixit, source_code=self.asXML())
+      object_relative_url = '/'.join(self.getPhysicalPath())[len(self.getPortalObject().getPath()):]
+
+      def addMessage(rule_reference, message):
+        """Adds a message to the list of problems.
+        * rule_reference: reference of the web page on erp5.com defining the rule
+        * message: the message
+        """
+        message_list.append(
+           ObjectMessage(
+             object_relative_url=object_relative_url,
+             message="{rule_reference}: {message}".format(
+                rule_reference=rule_reference,
+                message=message)))
+
+      if self.pt:
+        prefix, method = self.getId().split('_', 1)
+        del prefix
+        if self.pt in ('form_view', 'form_list', 'form_dialog', 'report_view'):
+          if self.getId() not in CodingStyle.ignored_skin_id_set:
+            # For ignored_skin_id_set, we only ignore naming of the form itself.
+            if not method.startswith('view'):
+              addMessage(
+                  'erp5-Guideline.Form.Name.Uses.Lowercase.View.After.Portal.Type',
+                  # note: ${portal_type} is *not* a translation substitution
+                  'Form name must follow ${portal_type}_view.* naming')
+            if self.pt == 'form_dialog' and not method.endswith('Dialog'):
+              addMessage(
+                  'erp5-Guideline.Form.Report.Dialog.Is.Postfixed.With.Dialog',
+                  'Dialog form name must follow ${portal_type}_view.*Dialog naming')
+            if self.pt == 'report_view' and not method.endswith('Report'):
+              addMessage(
+                  'erp5-Guideline.Report.Name.Uses.Portal.Type.Followed.By.View.Report.Name.And.Report',
+                  'Report form name must follow ${portal_type}_view.*Report naming')
+
+          is_field_library = self.getId().endswith('FieldLibrary')
+          if self.pt == 'form_view' and not is_field_library:
+            translated_workflow_state_field_re = re.compile('my_translated_.*state_title$')
+            def isTranslatedWorkflowStateField(f):
+              return translated_workflow_state_field_re.match(f.getId()) and f.getId() not in (
+                  # exception for some properties containing "state" in their names
+                  'my_initial_implementation_state', )
+            not_translated_workflow_state_field_re = re.compile('my_(?!translated_).*state(_title|)$')
+            for group_name in self.get_groups():
+              field_list = self.get_fields_in_group(group_name)
+              for index, field in enumerate(field_list):
+                if isTranslatedWorkflowStateField(field):
+                  is_in_right_group = 'right' in group_name
+                  # workflow states fields must be the last ones, so we check
+                  # that this field or all the one below match the
+                  # my_translated_${state_variable}_title regex
+                  all_bottom_fields_are_workflow_state_fields = {True} == {
+                      isTranslatedWorkflowStateField(f) for f in field_list[index:]}
+                  if not (all_bottom_fields_are_workflow_state_fields and is_in_right_group):
+                    addMessage(
+                        'erp5-Guideline.Place.Simulation.And.Validation.Fields.In.Bottom.Of.Right.Group',
+                        'Workflow state fields must be at the bottom right')
+                if not_translated_workflow_state_field_re.match(field.getId()):
+                  addMessage(
+                      'erp5-Guideline.Use.Correct.Names.For.Simulation.And.Validation.Titles',
+                      'Workflow state fields should be named my_translated_${state_variable}_title')
+      return message_list
+
 
 # utility function
 def get_field_meta_type_and_proxy_flag(field):
