@@ -7,6 +7,9 @@
 # Because this script is called during the post-upgrade phase, we are
 # looking for the category by its new name.
 
+if activate_kw is None:
+  activate_kw = {}
+
 portal = context.getPortalObject()
 
 error_list = []

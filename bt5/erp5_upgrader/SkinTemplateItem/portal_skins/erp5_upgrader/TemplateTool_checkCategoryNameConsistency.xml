@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>fixit=False, activate_kw={}, **kw</string> </value>
+            <value> <string>fixit=False, activate_kw=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

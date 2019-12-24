@@ -6,7 +6,7 @@ if active_process.ActiveProcess_sense() and not fixit:
 
 with context.defaultActivateParameterDict(activate_kw, placeless=True):
   constraint_message_list = context.checkConsistency(
-    fixit=fixit, filter=filter,)
+    fixit=fixit, filter=filter_dict,)
 
 if constraint_message_list and not active_process.getResultList():
   active_process.postActiveResult(
