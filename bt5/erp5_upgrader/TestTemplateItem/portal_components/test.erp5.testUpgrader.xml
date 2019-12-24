@@ -45,20 +45,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>R: 33, 0: Too many ancestors (9/7) (too-many-ancestors)</string>
-                <string>W: 59,64: Unused argument \'sequence\' (unused-argument)</string>
-                <string>W: 76,42: Unused argument \'sequence\' (unused-argument)</string>
-                <string>W: 89,48: Unused argument \'sequence\' (unused-argument)</string>
-                <string>W:104,53: Unused argument \'sequence\' (unused-argument)</string>
-                <string>W:109,51: Unused argument \'sequence\' (unused-argument)</string>
-                <string>W:112,52: Unused argument \'sequence\' (unused-argument)</string>
-                <string>W:115,56: Unused argument \'sequence\' (unused-argument)</string>
-                <string>W:122,54: Unused argument \'sequence\' (unused-argument)</string>
-                <string>W:140,54: Unused argument \'sequence\' (unused-argument)</string>
-                <string>W:147,54: Unused argument \'sequence\' (unused-argument)</string>
-                <string>R: 33, 0: Too many public methods (136/20) (too-many-public-methods)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

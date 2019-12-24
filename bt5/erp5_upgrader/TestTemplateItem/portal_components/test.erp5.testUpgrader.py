@@ -828,7 +828,6 @@ class TestUpgrader(ERP5TypeTestCase):
     self.assertEqual(title, 'M. post_upgrade')
 
   def stepCheckPersonTitleHistory(self, sequence=None):
-    person = sequence['person']
     self.assertEqual(
       [x.changes for x in self.portal.person_module['1'].Base_getZODBHistoryList()[-3:]],
       [('title:M. pre_upgrade',), ('title:M. upgrader',), ('title:M. post_upgrade',)])

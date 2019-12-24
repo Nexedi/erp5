@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>active_process, activate_kw={}, fixit=False, filter_dict={}</string> </value>
+            <value> <string>active_process, activate_kw=None, fixit=False, filter_dict=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
