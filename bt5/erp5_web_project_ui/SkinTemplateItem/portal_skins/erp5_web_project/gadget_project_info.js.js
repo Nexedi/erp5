@@ -33,8 +33,8 @@
     return view_list.filter(d => d.name === name)[0].href;
   }
 
-  function setLatestTestResult(gadget, project_title, svg_element) {
-    var query = createProjectQuery(project_title,
+  function setLatestTestResult(gadget, project_title, svg_element, project_id) {
+    var query = createProjectQuery(project_id,
                  [["portal_type", "Test Result"]]);
     return gadget.jio_allDocs({
       query: query,
@@ -73,15 +73,27 @@
       });
   }
 
-  function createProjectQuery(project_title, key_value_list) {
-    var i, query_list = [];
-    if (project_title) {
-      query_list.push(new SimpleQuery({
-        key: "source_project_title",
+  function createProjectQuery(project_jio_key, key_value_list) {
+    var i, query_list = [], id_query_list = [], id_complex_query;
+    if (project_jio_key) {
+      id_query_list.push(new SimpleQuery({
+        key: "source_project__relative_url",
         operator: "",
         type: "simple",
-        value: project_title
+        value: project_jio_key
       }));
+      id_query_list.push(new SimpleQuery({
+        key: "source_project__relative_url",
+        operator: "",
+        type: "simple",
+        value: project_jio_key + "/%%"
+      }));
+      id_complex_query = new ComplexQuery({
+        operator: "OR",
+        query_list: id_query_list,
+        type: "complex"
+      });
+      query_list.push(id_complex_query);
     }
     for (i = 0; i < key_value_list.length; i += 1) {
       query_list.push(new SimpleQuery({
@@ -222,23 +234,23 @@
               null, createProjectQuery(null, [["selection_domain_date_milestone_domain", "future"]])),
             getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
               ["title", "delivery.start_date", "source_title"],
-              createProjectQuery(modification_dict.project_title,
+              createProjectQuery(modification_dict.jio_key,
                 [["selection_domain_state_task_domain", "confirmed"]])),
             getUrlParameterDict('support_request_module', "view", [["delivery.start_date", "descending"]],
-              null, createProjectQuery(modification_dict.project_title,
+              null, createProjectQuery(modification_dict.jio_key,
                 [["selection_domain_state_support_domain", "validated"]])),
             getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
               ["title", "description", "source_person_title", "destination_person_title", "delivery.start_date"],
-              createProjectQuery(modification_dict.project_title,
+              createProjectQuery(modification_dict.jio_key,
                 [["selection_domain_state_bug_domain", "open"]])),
             getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
               ["title", "delivery.start_date", "source_title"],
-              createProjectQuery(modification_dict.project_title,
+              createProjectQuery(modification_dict.jio_key,
                 [["selection_domain_state_task_report_domain", "confirmed"]])),
             getUrlParameterDict('test_result_module', 'view', [["delivery.start_date", "descending"]],
-              null, createProjectQuery(modification_dict.project_title, [])),
+              null, createProjectQuery(modification_dict.jio_key, [])),
             getUrlParameterDict('test_suite_module', 'view', [["creation_date", "descending"]],
-              null, createProjectQuery(modification_dict.project_title, [])),
+              null, createProjectQuery(modification_dict.jio_key, [["translated_validation_state_title", "validated"]])),
             getUrlParameterDict(web_page_info.id, web_page_info.edit_view),
             getUrlParameterDict(modification_dict.jio_key, document_view, [["modification_date", "descending"]],
               ["download", "title", "reference", "modification_date"], createProjectQuery(null, [["selection_domain_state_document_domain", "confirmed"]])),
@@ -259,7 +271,7 @@
           enableLink(document.getElementById("document_link"), url_list[8]);
           enableLink(document.getElementById("activity_link"), url_list[9]);
           setLatestTestResult(gadget, modification_dict.project_title,
-                            document.getElementById("test_result_svg"));
+                            document.getElementById("test_result_svg"), modification_dict.jio_key);
         });
     })
 
