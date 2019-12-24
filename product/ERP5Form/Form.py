@@ -38,6 +38,8 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.CMFCore.utils import _checkPermission, getToolByName
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.ERP5Type import PropertySheet, Permissions
+from Products.ERP5Type import CodingStyle
+from Products.ERP5Type.ObjectMessage import ObjectMessage
 
 from urllib import quote
 from Products.ERP5Type.Globals import DTMLFile, get_request
@@ -1313,6 +1315,27 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
     # classes so that they can be removed from Base.
     def _getAcquireLocalRoles(self):
       return True
+
+    def _checkConsistency(self, fixit=0, filter=None, **kw):
+      message_list = CodingStyle.checkConsistency(self, fixit=fixit, source_code=self.asXML())
+      object_relative_url = '/'.join(self.getPhysicalPath())[len(self.getPortalObject().getPath()):],
+      def addMessage(message):
+         message_list.append(
+           ObjectMessage(
+             object_relative_url=object_relative_url,
+             message=message))
+      if self.pt:
+        prefix, method = self.getId().split('_', 1)
+        del prefix
+        if self.pt in ('form_view', 'form_list', 'form_dialog', 'report_view'):
+          if not method.startswith('view'):
+            addMessage('Form name must follow ${portal_type}_view.* naming')
+          if self.pt == 'form_dialog' and not method.endswith('Dialog'):
+            addMessage('Dialog form name must follow ${portal_type}_view.*Dialog naming')
+          if self.pt == 'report_view' and not method.endswith('Report'):
+            addMessage('Report form name must follow ${portal_type}_view.*Report naming')
+      return message_list
+
 
 # utility function
 def get_field_meta_type_and_proxy_flag(field):
