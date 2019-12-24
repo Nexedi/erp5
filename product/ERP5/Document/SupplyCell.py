@@ -32,49 +32,49 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Path import Path
 
 class SupplyCell(Path):
-    """A Supply Cell is used for different variations in a supply line.
+  """A Supply Cell is used for different variations in a supply line.
+  """
+
+  meta_type = 'ERP5 Supply Cell'
+  portal_type = 'Supply Cell'
+  add_permission = Permissions.AddPortalContent
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Amount
+                    , PropertySheet.Task
+                    , PropertySheet.Movement
+                    , PropertySheet.Price
+                    , PropertySheet.SupplyLine
+                    , PropertySheet.Discount
+                    , PropertySheet.Path
+                    , PropertySheet.FlowCapacity
+                    , PropertySheet.Predicate
+                    , PropertySheet.MappedValue
+                    , PropertySheet.Reference
+                    )
+
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'hasCellContent' )
+  def hasCellContent(self, base_id='movement'):
+    """A cell cannot have cell content itself.
     """
+    return 0
 
-    meta_type = 'ERP5 Supply Cell'
-    portal_type = 'Supply Cell'
-    add_permission = Permissions.AddPortalContent
+  # Override getQuantityUnitXXX to negate same methods defined in
+  # Amount class. Because cell must acquire quantity unit from line
+  # not from resource.
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getQuantityUnitValue')
+  def getQuantityUnitValue(self):
+    return self.getParentValue().getQuantityUnitValue()
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Amount
-                      , PropertySheet.Task
-                      , PropertySheet.Movement
-                      , PropertySheet.Price
-                      , PropertySheet.SupplyLine
-                      , PropertySheet.Discount
-                      , PropertySheet.Path
-                      , PropertySheet.FlowCapacity
-                      , PropertySheet.Predicate
-                      , PropertySheet.MappedValue
-                      , PropertySheet.Reference
-                      )
-
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'hasCellContent' )
-    def hasCellContent(self, base_id='movement'):
-      """A cell cannot have cell content itself.
-      """
-      return 0
-
-    # Override getQuantityUnitXXX to negate same methods defined in
-    # Amount class. Because cell must acquire quantity unit from line
-    # not from resource.
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'getQuantityUnitValue')
-    def getQuantityUnitValue(self):
-      return self.getParentValue().getQuantityUnitValue()
-
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'getQuantityUnit')
-    def getQuantityUnit(self, checked_permission=None):
-      return self.getParentValue().getQuantityUnit(checked_permission=checked_permission)
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getQuantityUnit')
+  def getQuantityUnit(self, checked_permission=None):
+    return self.getParentValue().getQuantityUnit(checked_permission=checked_permission)

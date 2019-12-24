@@ -33,7 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Node import Node
 
 class Organisation(Node):
-    """
+  """
       An Organisation object holds the information about
       an organisation (ex. a division in a company, a company,
       a service in a public administration).
@@ -46,27 +46,27 @@ class Organisation(Node):
 
       Organisation objects inherit from the MetaNode base class
       (one of the 5 base classes in the ERP5 universal business model)
-    """
+  """
 
-    meta_type = 'ERP5 Organisation'
-    portal_type = 'Organisation'
-    add_permission = Permissions.AddPortalContent
+  meta_type = 'ERP5 Organisation'
+  portal_type = 'Organisation'
+  add_permission = Permissions.AddPortalContent
 
-    zope.interface.implements(interfaces.INode)
+  zope.interface.implements(interfaces.INode)
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Organisation
-                      , PropertySheet.Mapping
-                      , PropertySheet.Task
-                      , PropertySheet.Reference
-                      )
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Organisation
+                    , PropertySheet.Mapping
+                    , PropertySheet.Task
+                    , PropertySheet.Reference
+                    )
 
 

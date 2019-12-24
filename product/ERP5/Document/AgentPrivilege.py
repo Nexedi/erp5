@@ -32,22 +32,22 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 
 class AgentPrivilege(XMLObject):
-    """
-    An Agent Privilege allow the Bank Account owner to give permissions to an Agent for a given period of time, for a maximum amount of money.
-    """
-    # CMF Type Definition
-    meta_type = 'ERP5 Agent Privilege'
-    portal_type = 'Agent Privilege'
+  """
+  An Agent Privilege allow the Bank Account owner to give permissions to an Agent for a given period of time, for a maximum amount of money.
+  """
+  # CMF Type Definition
+  meta_type = 'ERP5 Agent Privilege'
+  portal_type = 'Agent Privilege'
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      , PropertySheet.AgentPrivilege
-                      )
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Task
+                    , PropertySheet.AgentPrivilege
+                    )

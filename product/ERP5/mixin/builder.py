@@ -791,9 +791,9 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       category_index_dict[i.getId()] = i.getIntIndex()
 
     def sort_movement_group(a, b):
-        return cmp(category_index_dict.get(a.getCollectOrderGroup()),
-                   category_index_dict.get(b.getCollectOrderGroup())) or \
-               cmp(a.getIntIndex(), b.getIntIndex())
+      return cmp(category_index_dict.get(a.getCollectOrderGroup()),
+                 category_index_dict.get(b.getCollectOrderGroup())) or \
+             cmp(a.getIntIndex(), b.getIntIndex())
     if portal_type is None:
       portal_type = self.getPortalMovementGroupTypeList()
     movement_group_list = [x for x in self.contentValues(filter={'portal_type': portal_type}) \

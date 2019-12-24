@@ -204,7 +204,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     """Return list of HTML <a> tags for displays."""
     links = []
     for display in self.displayIds(exclude):
-        links.append('<a href="%s?display=%s">%s</a>' % (self.REQUEST['URL'], display, display))
+      links.append('<a href="%s?display=%s">%s</a>' % (self.REQUEST['URL'], display, display))
     return links
 
   security.declareProtected(Permissions.AccessContentsInformation, 'displayMap')
@@ -367,11 +367,11 @@ class Image(TextConvertableMixin, File, OFSImage):
                                cwd='/',
                                close_fds=True)
     try:
-        # XXX: The only portable way is to pass what stdin.write can accept,
-        #      which is a string for PIPE.
-        image, err = process.communicate(data)
+      # XXX: The only portable way is to pass what stdin.write can accept,
+      #      which is a string for PIPE.
+      image, err = process.communicate(data)
     finally:
-        del process
+      del process
     if image:
       return StringIO(image)
     raise ConversionError('Image conversion failed (%s).' % err)

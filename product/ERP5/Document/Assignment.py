@@ -33,22 +33,22 @@ from Products.ERP5.Document.Path import Path
 
 
 class Assignment(Path):
-    # CMF Type Definition
-    meta_type = 'ERP5 Assignment'
-    portal_type = 'Assignment'
-    add_permission = Permissions.AddPortalContent
+  # CMF Type Definition
+  meta_type = 'ERP5 Assignment'
+  portal_type = 'Assignment'
+  add_permission = Permissions.AddPortalContent
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Path
-                      , PropertySheet.Assignment
-                      )
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Path
+                    , PropertySheet.Assignment
+                    )

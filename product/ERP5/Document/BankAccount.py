@@ -34,43 +34,43 @@ from Products.ERP5.Document.Node import Node
 from Products.ERP5.Document.Coordinate import Coordinate
 
 class BankAccount(Node, Coordinate):
-    """
+  """
       A bank account number holds a collection of numbers and codes
         (ex. SWIFT, RIB, etc.) which may be used to identify a bank account.
 
       A Bank Account is owned by a Person or an Organisation. A Bank Account
         contain Agents with Agent Privileges used by the owner to delegate the
         management of the bank account to trusted third-party Persons.
+  """
+
+  meta_type = 'ERP5 Bank Account'
+  portal_type = 'Bank Account'
+  add_permission = Permissions.AddPortalContent
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.CategoryCore
+                    , PropertySheet.Task
+                    , PropertySheet.Resource
+                    , PropertySheet.Reference
+                    , PropertySheet.BankAccount
+                    )
+
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getReference')
+  def getReference(self, *args, **kw):
+    """reference depends on the site configuration.
     """
-
-    meta_type = 'ERP5 Bank Account'
-    portal_type = 'Bank Account'
-    add_permission = Permissions.AddPortalContent
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.CategoryCore
-                      , PropertySheet.Task
-                      , PropertySheet.Resource
-                      , PropertySheet.Reference
-                      , PropertySheet.BankAccount
-                      )
-
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getReference')
-    def getReference(self, *args, **kw):
-      """reference depends on the site configuration.
-      """
-      value = self._baseGetReference(*args, **kw)
-      if value in (None, ''):
-        # Try to get a skin from type name
-        method = self._getTypeBasedMethod('getReference')
-        if method is not None:
-          return method(*args, **kw)
-      return value
+    value = self._baseGetReference(*args, **kw)
+    if value in (None, ''):
+      # Try to get a skin from type name
+      method = self._getTypeBasedMethod('getReference')
+      if method is not None:
+        return method(*args, **kw)
+    return value
 
 # XXX The following "helper methods" have been commented out, and kept in the
 # code as an example.

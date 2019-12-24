@@ -33,27 +33,27 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Path import Path
 
 class Career(Path):
-    """
+  """
       Contains information about abilities, salary, grade, role... of a
       Person at a certain career step.
-    """
-    # CMF Type Definition
-    meta_type = 'ERP5 Career'
-    portal_type = 'Career'
-    add_permission = Permissions.AddPortalContent
+  """
+  # CMF Type Definition
+  meta_type = 'ERP5 Career'
+  portal_type = 'Career'
+  add_permission = Permissions.AddPortalContent
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Path
-                      , PropertySheet.Reference
-                      , PropertySheet.Assignment
-                      )
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Path
+                    , PropertySheet.Reference
+                    , PropertySheet.Assignment
+                    )

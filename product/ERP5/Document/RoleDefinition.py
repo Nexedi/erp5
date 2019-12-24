@@ -33,36 +33,36 @@ from Products.ERP5Type.ERP5Type \
   import ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
 
 class RoleDefinition(XMLObject):
-    # CMF Type Definition
-    meta_type = 'ERP5 Role Definition'
-    portal_type = 'Role Definition'
-    add_permission = Permissions.ChangeLocalRoles
+  # CMF Type Definition
+  meta_type = 'ERP5 Role Definition'
+  portal_type = 'Role Definition'
+  add_permission = Permissions.ChangeLocalRoles
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    zope.interface.implements(interfaces.ILocalRoleGenerator)
+  zope.interface.implements(interfaces.ILocalRoleGenerator)
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.RoleDefinition
-                      )
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.RoleDefinition
+                    )
 
-    def _setRoleName(self, value):
-      if value and value not in \
-         zip(*self.RoleDefinition_getRoleNameItemList())[1]:
-        raise Unauthorized("You are not allowed to give %s role" % value)
-      self._baseSetRoleName(value)
+  def _setRoleName(self, value):
+    if value and value not in \
+       zip(*self.RoleDefinition_getRoleNameItemList())[1]:
+      raise Unauthorized("You are not allowed to give %s role" % value)
+    self._baseSetRoleName(value)
 
-    security.declarePrivate("getLocalRolesFor")
-    def getLocalRolesFor(self, ob, user_name=None):
-      group_id_generator = getattr(ob,
-        ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT)
-      role_list = self.getRoleName(),
-      return {group_id: role_list
-        for group_id in group_id_generator(category_order=('agent',),
-                                           agent=self.getAgentList())}
+  security.declarePrivate("getLocalRolesFor")
+  def getLocalRolesFor(self, ob, user_name=None):
+    group_id_generator = getattr(ob,
+      ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT)
+    role_list = self.getRoleName(),
+    return {group_id: role_list
+      for group_id in group_id_generator(category_order=('agent',),
+                                         agent=self.getAgentList())}

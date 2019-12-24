@@ -38,7 +38,7 @@ import re
 _marker = object()
 
 class Coordinate(Base):
-    """
+  """
         Coordinates is a mix-in class which is used to store elementary
         coordinates of an Entity (ex. Person, Organisation)
 
@@ -75,179 +75,177 @@ class Coordinate(Base):
         In order to be able to list all coordinates of an Entity,
         a list of Coordinate metatypes has to be defined and
         stored somewhere. (TODO)
-        """
+  """
 
-    meta_type = 'ERP5 Coordinate'
-    portal_type = 'Coordinate'
-    add_permission = Permissions.AddPortalContent
+  meta_type = 'ERP5 Coordinate'
+  portal_type = 'Coordinate'
+  add_permission = Permissions.AddPortalContent
 
-    # Declarative interface
-    zope.interface.implements(interfaces.ICoordinate, )
+  # Declarative interface
+  zope.interface.implements(interfaces.ICoordinate, )
 
-    # Declarative security (replaces __ac_permissions__)
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security (replaces __ac_permissions__)
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.Coordinate
-                      )
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.SimpleItem
+                    , PropertySheet.Coordinate
+                    )
 
-    ### helper methods
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'getRegularExpressionFindAll')
-    def getRegularExpressionFindAll(self, regular_expression, string):
-      """
-      allows call of re.findall in a python script used for Coordinate
-      """
-      return re.findall(regular_expression, string)
+  ### helper methods
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getRegularExpressionFindAll')
+  def getRegularExpressionFindAll(self, regular_expression, string):
+    """
+    allows call of re.findall in a python script used for Coordinate
+    """
+    return re.findall(regular_expression, string)
 
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'getRegularExpressionGroups')
-    def getRegularExpressionGroups(self, regular_expression, string):
-      """
-      allows call of re.search.groups in a python script used for Coordinate
-      """
-      match = re.search(regular_expression, string)
-      if match is None:
-        return ()
-      return re.search(regular_expression, string).groups()
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getRegularExpressionGroups')
+  def getRegularExpressionGroups(self, regular_expression, string):
+    """
+    allows call of re.search.groups in a python script used for Coordinate
+    """
+    match = re.search(regular_expression, string)
+    if match is None:
+      return ()
+    return re.search(regular_expression, string).groups()
 
-    ### Mix-in methods
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'asText' )
-    def asText(self):
-      """
-          returns the coordinate as a text string
-      """
-      script = self._getTypeBasedMethod('asText')
-      if script is not None:
-        return script()
+  ### Mix-in methods
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'asText' )
+  def asText(self):
+    """
+    returns the coordinate as a text string
+    """
+    script = self._getTypeBasedMethod('asText')
+    if script is not None:
+      return script()
 
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'getText')
-    def getText(self):
-      """
-      calls asText
-      """
-      return self.asText()
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'getText')
+  def getText(self):
+    """
+    calls asText
+    """
+    return self.asText()
 
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'hasText')
-    def hasText(self):
-      """
-      calls asText
-      """
-      return bool(self.asText())
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'hasText')
+  def hasText(self):
+    """
+    calls asText
+    """
+    return bool(self.asText())
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getCoordinateText')
-    def getCoordinateText(self, default=_marker):
-      """Fallback on splitted values (old API)
-      """
-      if not self.hasCoordinateText() and self.isDetailed():
-        # Display old values (parsed ones)
-        # empty value is None, not ''
-        value = self.asText()
-        if value:
-          return value
-        if default is _marker:
-          return None
-        else:
-          return default
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCoordinateText')
+  def getCoordinateText(self, default=_marker):
+    """Fallback on splitted values (old API)
+    """
+    if not self.hasCoordinateText() and self.isDetailed():
+      # Display old values (parsed ones)
+      # empty value is None, not ''
+      value = self.asText()
+      if value:
+        return value
       if default is _marker:
-        return self._baseGetCoordinateText()
-      return self._baseGetCoordinateText(default)
+        return None
+      else:
+        return default
+    if default is _marker:
+      return self._baseGetCoordinateText()
+    return self._baseGetCoordinateText(default)
 
-    security.declareProtected( Permissions.ModifyPortalContent, 'fromText' )
-    @deprecated
-    def fromText(self, coordinate_text):
-      """
-            modifies the coordinate according to the input text
-            must be implemented by subclasses
-      """
-      script = self._getTypeBasedMethod('fromText')
-      if script is not None:
-        return script(text=coordinate_text)
+  security.declareProtected( Permissions.ModifyPortalContent, 'fromText' )
+  @deprecated
+  def fromText(self, coordinate_text):
+    """
+    modifies the coordinate according to the input text
+    must be implemented by subclasses
+    """
+    script = self._getTypeBasedMethod('fromText')
+    if script is not None:
+      return script(text=coordinate_text)
 
-    security.declareProtected(Permissions.ModifyPortalContent, '_setText')
-    def _setText(self, value):
-      """
-      calls fromText
-      """
-      return self.fromText(value)
+  security.declareProtected(Permissions.ModifyPortalContent, '_setText')
+  def _setText(self, value):
+    """
+    calls fromText
+    """
+    return self.fromText(value)
 
-    security.declareProtected( Permissions.AccessContentsInformation,
-                               'standardTextFormat')
-    def standardTextFormat(self):
-      """
-      Returns the standard text formats for telephone numbers
-      """
-      pass
+  security.declareProtected( Permissions.AccessContentsInformation,
+                             'standardTextFormat')
+  def standardTextFormat(self):
+    """
+    Returns the standard text formats for telephone numbers
+    """
+    pass
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
-    def isDetailed(self):
-      return False
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  def isDetailed(self):
+    return False
 
-    security.declarePrivate( '_writeFromPUT' )
-    def _writeFromPUT( self, body ):
-      headers = {}
-      headers, body = parseHeadersBody(body, headers)
-      lines = body.split( '\n' )
-      self.edit( lines[0] )
-      headers['Format'] = self.COORDINATE_FORMAT
-      new_subject = keywordsplitter(headers)
-      headers['Subject'] = new_subject or self.Subject()
-      haveheader = headers.has_key
-      for key, value in self.getMetadataHeaders():
-        if key != 'Format' and not haveheader(key):
-          headers[key] = value
+  security.declarePrivate( '_writeFromPUT' )
+  def _writeFromPUT( self, body ):
+    headers, body = parseHeadersBody(body, headers)
+    lines = body.split( '\n' )
+    self.edit( lines[0] )
+    headers['Format'] = self.COORDINATE_FORMAT
+    new_subject = keywordsplitter(headers)
+    headers['Subject'] = new_subject or self.Subject()
+    haveheader = headers.has_key
+    for key, value in self.getMetadataHeaders():
+      if key != 'Format' and not haveheader(key):
+        headers[key] = value
+    self._editMetadata(title=headers['Title'],
+                       subject=headers['Subject'],
+                       description=headers['Description'],
+                       contributors=headers['Contributors'],
+                       effective_date=headers['Effective_date'],
+                       expiration_date=headers['Expiration_date'],
+                       format=headers['Format'],
+                       language=headers['Language'],
+                       rights=headers['Rights'],
+                       )
 
-      self._editMetadata(title=headers['Title'],
-                        subject=headers['Subject'],
-                        description=headers['Description'],
-                        contributors=headers['Contributors'],
-                        effective_date=headers['Effective_date'],
-                        expiration_date=headers['Expiration_date'],
-                        format=headers['Format'],
-                        language=headers['Language'],
-                        rights=headers['Rights'],
-                        )
+  ## FTP handlers
+  security.declareProtected( Permissions.ModifyPortalContent, 'PUT')
+  def PUT(self, REQUEST, RESPONSE):
+    """
+    Handle HTTP / WebDAV / FTP PUT requests.
+    """
+    self.dav__init(REQUEST, RESPONSE)
+    self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
+    if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
+      raise Forbidden, 'REQUEST_METHOD should be PUT.'
+    body = REQUEST.get('BODY', '')
+    try:
+      self._writeFromPUT( body )
+      RESPONSE.setStatus(204)
+      return RESPONSE
+    except ResourceLockedError:
+      get_transaction().abort()
+      RESPONSE.setStatus(423)
+      return RESPONSE
 
-    ## FTP handlers
-    security.declareProtected( Permissions.ModifyPortalContent, 'PUT')
-    def PUT(self, REQUEST, RESPONSE):
-      """
-          Handle HTTP / WebDAV / FTP PUT requests.
-      """
-      self.dav__init(REQUEST, RESPONSE)
-      self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
-      if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
-        raise Forbidden, 'REQUEST_METHOD should be PUT.'
-      body = REQUEST.get('BODY', '')
-      try:
-        self._writeFromPUT( body )
-        RESPONSE.setStatus(204)
-        return RESPONSE
-      except ResourceLockedError:
-        get_transaction().abort()
-        RESPONSE.setStatus(423)
-        return RESPONSE
+  security.declareProtected( Permissions.View, 'manage_FTPget' )
+  def manage_FTPget(self):
+    """
+    Get the coordinate as text for WebDAV src / FTP download.
+    """
+    hdrlist = self.getMetadataHeaders()
+    hdrtext = formatRFC822Headers( hdrlist )
+    bodytext = '%s\n\n%s' % ( hdrtext, self.asText() )
 
-    security.declareProtected( Permissions.View, 'manage_FTPget' )
-    def manage_FTPget(self):
-      """
-          Get the coordinate as text for WebDAV src / FTP download.
-      """
-      hdrlist = self.getMetadataHeaders()
-      hdrtext = formatRFC822Headers( hdrlist )
-      bodytext = '%s\n\n%s' % ( hdrtext, self.asText() )
+    return bodytext
 
-      return bodytext
-
-    security.declareProtected( Permissions.View, 'get_size' )
-    def get_size( self ):
-      """
-          Used for FTP and apparently the ZMI now too
-      """
-      return len(self.manage_FTPget())
+  security.declareProtected( Permissions.View, 'get_size' )
+  def get_size( self ):
+    """
+    Used for FTP and apparently the ZMI now too
+    """
+    return len(self.manage_FTPget())
