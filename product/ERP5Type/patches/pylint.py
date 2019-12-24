@@ -190,29 +190,39 @@ MANAGER.register_failed_import_hook(fail_hook_erp5_component)
 ## transforms but this would require either checking dynamically which
 ## attributes has been added (much more complex than the current approach)
 ## or listing them statically (inconvenient).
-from pylint.checkers import BaseChecker
-from pylint.interfaces import UNDEFINED
-BaseChecker_add_message = BaseChecker.add_message
-def add_message(self, msg_descr, line=None, node=None, args=None,
-                confidence=UNDEFINED):
-    """
-    Monkey patched to dynamically ignore some error/warning messages
-    """
-    if msg_descr == 'no-name-in-module':
-        name, module_name = args
-        if not module_name.startswith('erp5.'):
-            # Do not call __import__ as this may load ZODB Component which
-            # should use 'version' and not use monkey patches...
-            try:
-                getattr(sys.modules[module_name], name)
-            except (KeyError, AttributeError):
-                pass
-            else:
-                # Do nothing as this does exist
-                return
-    BaseChecker_add_message(self, msg_descr, line=line, node=node,
-                            args=args, confidence=confidence)
-BaseChecker.add_message = add_message
+from astroid.exceptions import NotFoundError
+from astroid.scoped_nodes import Module
+Module_getattr = Module.getattr
+def _getattr(self, name, *args, **kw):
+    try:
+        return Module_getattr(self, name, *args, **kw)
+    except NotFoundError, e:
+        if self.name.startswith('erp5.'):
+            raise
+
+        real_module = __import__(self.name, fromlist=[self.name], level=0)
+        try:
+            attr = getattr(real_module, name)
+        except AttributeError:
+            raise e
+
+        # XXX: What about int, str or bool not having __module__?
+        try:
+            origin_module_name = attr.__module__
+        except AttributeError:
+            raise e
+        if self.name == origin_module_name:
+            raise
+
+        # ast_from_class() actually works for any attribute of a Module
+        try:
+            ast = MANAGER.ast_from_class(attr)
+        except AstroidBuildingException:
+            raise e
+
+        self.locals[name] = [ast]
+        return [ast]
+Module.getattr = _getattr
 
 if sys.modules['isort'] is None:
     del sys.modules['isort']

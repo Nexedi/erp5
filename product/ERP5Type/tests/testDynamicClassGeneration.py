@@ -2225,11 +2225,12 @@ hoge()
 %(module2)s.hoge()
 %(module2_with_version)s.hoge()
 
-# Attributes added through Products.XXX.patches: Must not raise error
+# Attributes added through Products.XXX.patches: Must not raise error nor
+# warnings when being used.
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
-# To avoid 'unused-import' warnings...
-ValidationFailed('anything')
-
+class FooBar(ValidationFailed):
+  def __init__(self, *args, **kw):
+    super(FooBar, self).__init__(*args, **kw)
 """ % (dict(namespace=namespace,
             reference1=imported_reference1,
             module2=imported_module2,
