@@ -40,13 +40,12 @@ for property_sheet_id, category_list in constraint_type_per_id.iteritems():
     constraint_type_per_type.setdefault(portal_type, set()).update(category_list)
 
 portal_type_tool = portal.portal_types
-portal_type_list = constraint_type_per_type.keys()
 
-for portal_type in portal_type_list:
+for portal_type in list(constraint_type_per_type.keys()):
   allowed_content_type_list = \
     portal_type_tool[portal_type].getTypeAllowedContentTypeList()
   for allowed_content_type in allowed_content_type_list:
-    if allowed_content_type in portal_type_list:
+    if allowed_content_type in constraint_type_per_type:
       type_list = constraint_type_per_type.pop(allowed_content_type)
       for constraint_type in type_list:
         type_per_constraint_type[constraint_type].remove(allowed_content_type)
