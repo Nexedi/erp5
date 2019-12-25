@@ -6,6 +6,7 @@ LDAP Entry Objects
 __version__ = "$Revision: 1.13 $"[11:-2]
 
 import Acquisition, AccessControl, OFS, string
+import transaction
 from App.special_dtml import HTMLFile
 from App.Dialogs import MessageDialog
 import ldap, urllib, UserList
@@ -296,7 +297,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
             self._data={}
         self._isNew=isNew
         if isNew:
-            get_transaction().register(self)
+            transaction.get().register(self)
             self._registered=1
         self._isDeleted=0               #deletion flag
         self._clearSubentries()
@@ -312,7 +313,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
         is called.
         """
         if not self._registered:
-            get_transaction().register(self)
+            transaction.get().register(self)
             self._registered=1
 
         kwdict.update(kw)
@@ -330,7 +331,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
         Unset (delete) an attribute
         """
         if not self._registered:
-            get_transaction().register(self)
+            transaction.get().register(self)
             self._registered=1
 
         if type(attr) is type(''):
@@ -371,7 +372,7 @@ class TransactionalEntry(GenericEntry): #Acquisition.Implicit
         c._registerDelete(o.dn)
         o._isDeleted=1
         if not o._registered:
-            get_transaction().register(o)
+            transaction.get().register(o)
             o._registered=1
         del self._subentries()[o.id]
 

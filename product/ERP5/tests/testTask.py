@@ -128,6 +128,7 @@ class TestTaskMixin:
 #    portal = self.getPortal()
 #    uf = portal.acl_users
 #    if not uf.getUserById('dummy'):
+#      import transaction
 #      uf._doAddUser('manager', '', ['Manager'], [])
 #      self.loginByUserName('manager')
 #      person_module = portal.getDefaultModule(self.person_portal_type)
@@ -141,7 +142,7 @@ class TestTaskMixin:
 #                                     start_date='1980-01-01',
 #                                     stop_date='2099-12-31')
 #      assignment.open()
-#      get_transaction().commit()
+#      transaction.commit()
 #      self.tic()
 #      module_list = []
 #      portal_type_list = []
@@ -164,7 +165,7 @@ class TestTaskMixin:
 #                   '')
 #        ti.updateRoleMapping()
 #
-#      get_transaction().commit()
+#      transaction.commit()
 #      self.tic()
 #      portal.portal_caches.clearAllCache()
 #

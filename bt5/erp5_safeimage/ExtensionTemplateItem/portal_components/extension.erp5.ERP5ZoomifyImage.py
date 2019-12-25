@@ -463,7 +463,7 @@ class ZoomifyZopeProcessor(ZoomifyBase):
 
     #import Zope
     #app = Zope.app()
-    #get_transaction().begin()
+    #transaction.manager.begin()
     self._process()
     #app._p_jar.close()
     #del app

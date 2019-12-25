@@ -230,7 +230,8 @@ class Coordinate(Base):
       RESPONSE.setStatus(204)
       return RESPONSE
     except ResourceLockedError:
-      get_transaction().abort()
+      import transaction
+      transaction.abort()
       RESPONSE.setStatus(423)
       return RESPONSE
 
