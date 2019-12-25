@@ -189,52 +189,6 @@ class Coordinate(Base):
   def isDetailed(self):
     return False
 
-  security.declarePrivate( '_writeFromPUT' )
-  def _writeFromPUT( self, body ):
-    headers = {}
-    headers, body = parseHeadersBody(body, headers)
-    lines = body.split( '\n' )
-    self.edit( lines[0] )
-    headers['Format'] = self.COORDINATE_FORMAT
-    new_subject = keywordsplitter(headers)
-    headers['Subject'] = new_subject or self.Subject()
-    haveheader = headers.has_key
-    for key, value in self.getMetadataHeaders():
-      if key != 'Format' and not haveheader(key):
-        headers[key] = value
-    self._editMetadata(title=headers['Title'],
-                       subject=headers['Subject'],
-                       description=headers['Description'],
-                       contributors=headers['Contributors'],
-                       effective_date=headers['Effective_date'],
-                       expiration_date=headers['Expiration_date'],
-                       format=headers['Format'],
-                       language=headers['Language'],
-                       rights=headers['Rights'],
-                       )
-
-  ## FTP handlers
-  security.declareProtected( Permissions.ModifyPortalContent, 'PUT')
-  def PUT(self, REQUEST, RESPONSE):
-    """
-    Handle HTTP / WebDAV / FTP PUT requests.
-    """
-    from webdav.Lockable import ResourceLockedError
-    self.dav__init(REQUEST, RESPONSE)
-    self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
-    if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
-      raise Forbidden, 'REQUEST_METHOD should be PUT.'
-    body = REQUEST.get('BODY', '')
-    try:
-      self._writeFromPUT( body )
-      RESPONSE.setStatus(204)
-      return RESPONSE
-    except ResourceLockedError:
-      import transaction
-      transaction.abort()
-      RESPONSE.setStatus(423)
-      return RESPONSE
-
   security.declareProtected( Permissions.View, 'manage_FTPget' )
   def manage_FTPget(self):
     """
