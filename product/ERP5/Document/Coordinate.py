@@ -219,6 +219,7 @@ class Coordinate(Base):
     """
     Handle HTTP / WebDAV / FTP PUT requests.
     """
+    from webdav.Lockable import ResourceLockedError
     self.dav__init(REQUEST, RESPONSE)
     self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
     if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
