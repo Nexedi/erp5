@@ -191,6 +191,7 @@ class Coordinate(Base):
 
   security.declarePrivate( '_writeFromPUT' )
   def _writeFromPUT( self, body ):
+    headers = {}
     headers, body = parseHeadersBody(body, headers)
     lines = body.split( '\n' )
     self.edit( lines[0] )
