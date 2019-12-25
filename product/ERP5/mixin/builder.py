@@ -169,7 +169,6 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       getattr(delivery_module, delivery_module_before_building_script_id)()
 
   def generateMovementListForStockOptimisation(self, group_by_node=1, **kw):
-    from Products.ERP5Type.Document import newTempMovement
     now = DateTime()
     movement_list = []
     for attribute, method in [('node_uid', 'getDestinationUid'),
@@ -203,7 +202,9 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     resource_portal_type_list = self.getResourcePortalTypeList()
     def newMovement(inventory_item, resource):
       # Create temporary movement
-      movement = newTempMovement(self.getPortalObject(), "temp")
+      movement = self.getPortalObject().portal_trash.newContent(
+        portal_type="Movement",
+        temp_object=True)
       resource_portal_type = resource.getPortalType()
       assert resource_portal_type in resource_portal_type_list, \
         "Builder %r does not support resource of type : %r" % (
