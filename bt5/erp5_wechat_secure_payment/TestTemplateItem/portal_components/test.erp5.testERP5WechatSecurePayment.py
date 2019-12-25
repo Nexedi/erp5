@@ -112,8 +112,9 @@ class TestERP5WechatSecurePayment(TestERP5WechatSecurePaymentMixin):
       wechat_mode='PRODUCTION',
     )
     with mock.patch.object(
-      self.service, 'callWechatApi', return_value={"result_code": 'SUCCESS', "code_url": 'http://somecodeurl'}):
+        self.service, 'callWechatApi', return_value={"result_code": 'SUCCESS', "code_url": 'http://somecodeurl'}),\
+        mock.patch.object(self.portal, 'absolute_url', return_value='https://erp5.example.com'):
       result = self.service.navigate({"out_trade_no": '1234', "total_fee": '5000'})
-      self.assertEqual(result, "https://softinst109876.host.vifib.net/erp5/#wechat_payment?trade_no=1234&price=5000&payment_url=http://somecodeurl")
+      self.assertEqual(result, "https://erp5.example.com/#wechat_payment?trade_no=1234&price=5000&payment_url=http://somecodeurl")
 
 
