@@ -66,9 +66,15 @@
 
 <tr><td>click</td>
     <td>//div[@class="actions"]//span[text() = "View"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>css=.bottom iframe</td><td></td></tr>
+<tr><td>selectFrame</td>
+    <td>css=.bottom iframe</td><td></td></tr>
 <tr><td>waitForText</td>
-    <td>css=.bottom pre</td>
-    <td>Hello</td></tr>
+    <td>//body</td>
+    <td>glob:1*Hello</td></tr>
+<tr><td>selectFrame</td>
+    <td>relative=top</td><td></td></tr>
 
 </tbody></table>
 </body>

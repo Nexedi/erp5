@@ -637,6 +637,12 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
     objectItems = ZMIForm.objectItems
     objectValues = ZMIForm.objectValues
 
+    # If content_type is not text/html ZopePageTemplate will check that the
+    # source is well formed XML, but this does not really applies to Forms,
+    # they don't have source. By setting content_type here we make sure we
+    # don't get ERP5Type's Base default content_type.
+    content_type = ZopePageTemplate.content_type
+
     def __init__(self, id, title, unicode_mode=0, encoding='UTF-8',
                  stored_encoding='UTF-8'):
         """Initialize form.

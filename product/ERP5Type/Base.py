@@ -847,6 +847,8 @@ class Base( CopyContainer,
   security.declareProtected( Permissions.AccessContentsInformation, 'getId' )
   getId = BaseAccessor.Getter('getId', 'id', 'string')
 
+  content_type = None # content_type is a property in ERP5, but a method in CMF
+
   # Debug
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getOid')
