@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
-/*global window, document, rJS, RSVP, Node, asBoolean , ensureArray, SimpleQuery, ComplexQuery, Query*/
-(function (window, document, rJS, RSVP, Node, asBoolean, ensureArray, SimpleQuery, ComplexQuery, Query) {
+/*global window, document, rJS, RSVP, Node, asBoolean , ensureArray*/
+(function (window, document, rJS, RSVP, Node, asBoolean, ensureArray) {
   "use strict";
 
   function appendDt(fragment, dt_title, dt_icon,
@@ -28,37 +28,6 @@
       dd_element.appendChild(a_element);
       fragment.appendChild(dd_element);
     }
-  }
-
-  function createExtendedSearchQuery(key_value_list) {
-    var i, query_list = [], id_query_list = [], id_complex_query;
-    for (i = 0; i < key_value_list.length; i += 1) {
-      query_list.push(new SimpleQuery({
-        key: key_value_list[i][0],
-        operator: "",
-        type: "simple",
-        value: key_value_list[i][1]
-      }));
-    }
-    return Query.objectToSearchText(new ComplexQuery({
-      operator: "AND",
-      query_list: query_list,
-      type: "complex"
-    }));
-  }
-
-  function getUrlParameterDict(jio_key, view, sort_list, column_list, key_value_list) {
-    return {
-      command: 'display',
-      options: {
-        'jio_key': jio_key,
-        'page': 'form',
-        'view': view,
-        'field_listbox_sort_list:json': sort_list,
-        'field_listbox_column_list:json': column_list,
-        'extended_search': createExtendedSearchQuery(key_value_list)
-      }
-    };
   }
 
   rJS(window)
@@ -188,34 +157,14 @@
         queue
           // Update the global links
           .push(function () {
-            return gadget.getSetting("hateoas_url");
-          })
-          .push(function (hateoas_url) {
-            var project_view = hateoas_url +
-              '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-              'project_module&view=ProjectModule_viewProjectManagementList',
-              document_view = hateoas_url +
-              '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-              'document_module&view=Project_viewDocumentList';
             return RSVP.all([
               context.getUrlForList([
-                getUrlParameterDict('project_module', project_view, [["title", "ascending"]],
-                  ["title", "default_destination_section_title"],
-                  [["selection_domain_state_project_domain", "started"]]),
-                getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
-                  ["title", "delivery.start_date", "source_title"],
-                  [["selection_domain_state_task_domain", "confirmed"]]),
-                getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
-                  ["title", "delivery.start_date", "source_title"],
-                  [["selection_domain_state_task_report_domain", "confirmed"]]),
-                getUrlParameterDict('document_module', document_view, [["modification_date", "descending"]],
-                  ["download", "title", "reference", "modification_date"],
-                  [["selection_domain_state_document_domain", "confirmed"]]),
-                getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
-                  ["title", "description", "source_person_title", "destination_person_title", "delivery.start_date"],
-                  [["selection_domain_state_bug_domain", "open"]]),
-                getUrlParameterDict('test_result_module', 'view', [["delivery.start_date", "descending"]],
-                  null, []),
+                {command: 'display_stored_state', options: {jio_key: "project_module"}},
+                {command: 'display_stored_state', options: {jio_key: "task_module"}},
+                {command: 'display_stored_state', options: {jio_key: "task_report_module"}},
+                {command: 'display_stored_state', options: {jio_key: "document_module"}},
+                {command: 'display_stored_state', options: {jio_key: "bug_module"}},
+                {command: 'display_stored_state', options: {jio_key: "test_result_module"}},
                 {command: 'display', options: {page: "logout"}}
               ]),
               context.getTranslationList([
@@ -435,4 +384,4 @@
 
     }, /*useCapture=*/false, /*preventDefault=*/true);
 
-}(window, document, rJS, RSVP, Node, asBoolean, ensureArray, SimpleQuery, ComplexQuery, Query));
+}(window, document, rJS, RSVP, Node, asBoolean, ensureArray));
