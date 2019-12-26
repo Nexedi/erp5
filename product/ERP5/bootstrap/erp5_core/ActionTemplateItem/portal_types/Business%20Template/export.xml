@@ -30,7 +30,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -50,7 +52,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>8.0</float> </value>
+            <value> <float>7.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
