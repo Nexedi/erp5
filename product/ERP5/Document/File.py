@@ -74,7 +74,6 @@ class File(Document, CMFFile):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Default global values
-  content_type = '' # Required for WebDAV support (default value)
   data = '' # A hack required to use OFS.Image.index_html without calling OFS.Image.__init__
 
   # Default Properties

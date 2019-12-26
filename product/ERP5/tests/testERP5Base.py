@@ -1379,10 +1379,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEqual('organisation@example.com',
       organisation.getAlternateEmailCoordinateText())
 
-  # Marked as expectedFailure as it shall be never possible to use edit method to set
-  # local property which would override existing method
-  @expectedFailure
-  def test_content_type_property(self):
+  def test_content_type_local_property(self):
     portal_type = 'Person'
     person_module = self.portal.getDefaultModule(portal_type)
     person = person_module.newContent(portal_type=portal_type)
@@ -1392,6 +1389,20 @@ class TestERP5Base(ERP5TypeTestCase):
 
     # edit content_type on document which has no content_type property configured
     person.edit(content_type='text/xml')
+
+  def test_EmbeddedFile_content_type(self):
+    embedded_file = self.portal.person_module.newContent(
+        portal_type='Person'
+    ).newContent(
+        portal_type='Embedded File'
+    )
+
+    self.assertFalse(embedded_file.hasContentType())
+    self.assertEqual('text/plain', embedded_file.getContentType('text/plain'))
+
+    embedded_file.edit(content_type='text/xml')
+    self.assertEqual('text/xml', embedded_file.getContentType())
+    self.assertEqual('text/xml', embedded_file.getProperty('content_type'))
 
   def test_BankAccount_validateIBAN(self):
     self.assertTrue(
