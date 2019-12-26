@@ -171,7 +171,7 @@
                 'Editable',
                 'Projects',
                 'Tasks',
-                'Tasks Reports',
+                'Task Reports',
                 'Documents',
                 'Bugs',
                 'Tests',
