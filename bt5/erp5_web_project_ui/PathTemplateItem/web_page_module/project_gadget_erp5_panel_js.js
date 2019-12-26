@@ -44,28 +44,8 @@
     };
   }
 
-  function createProjectQuery(project_jio_key, key_value_list) {
+  function createExtendedSearchQuery(key_value_list) {
     var i, query_list = [], id_query_list = [], id_complex_query;
-    if (project_jio_key) {
-      id_query_list.push(new SimpleQuery({
-        key: "source_project__relative_url",
-        operator: "",
-        type: "simple",
-        value: project_jio_key
-      }));
-      id_query_list.push(new SimpleQuery({
-        key: "source_project__relative_url",
-        operator: "",
-        type: "simple",
-        value: project_jio_key + "/%%"
-      }));
-      id_complex_query = new ComplexQuery({
-        operator: "OR",
-        query_list: id_query_list,
-        type: "complex"
-      });
-      query_list.push(id_complex_query);
-    }
     for (i = 0; i < key_value_list.length; i += 1) {
       query_list.push(new SimpleQuery({
         key: key_value_list[i][0],
@@ -219,36 +199,23 @@
               'document_module&view=Project_viewDocumentList';
             return RSVP.all([
               context.getUrlForList([
-                {
-                  'command': 'display',
-                  'options': {
-                    'page': 'form',
-                    'editable': 0,
-                    'jio_key': 'project_module',
-                    'view': project_view,
-                    'field_listbox_sort_list:json': [["title", "ascending"]],
-                    'field_listbox_column_list:json': ["title",
-                                                       "default_destination_section_title"],
-                    'extended_search': 'selection_domain_state_project_domain:  "started"'
-                  }
-                },
+                getUrlParameterDict('project_module', project_view, [["title", "ascending"]],
+                  ["title", "default_destination_section_title"],
+                  createExtendedSearchQuery([["selection_domain_state_project_domain", "started"]])),
                 getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
                   ["title", "delivery.start_date", "source_title"],
-                  createProjectQuery(null,
-                    [["selection_domain_state_task_domain", "confirmed"]])),
+                  createExtendedSearchQuery([["selection_domain_state_task_domain", "confirmed"]])),
                 getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
                   ["title", "delivery.start_date", "source_title"],
-                  createProjectQuery(null,
-                    [["selection_domain_state_task_report_domain", "confirmed"]])),
+                  createExtendedSearchQuery([["selection_domain_state_task_report_domain", "confirmed"]])),
                 getUrlParameterDict('document_module', document_view, [["modification_date", "descending"]],
                   ["download", "title", "reference", "modification_date"],
-                  createProjectQuery(null, [["selection_domain_state_document_domain", "confirmed"]])),
+                  createExtendedSearchQuery([["selection_domain_state_document_domain", "confirmed"]])),
                 getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
                   ["title", "description", "source_person_title", "destination_person_title", "delivery.start_date"],
-                  createProjectQuery(null,
-                    [["selection_domain_state_bug_domain", "open"]])),
+                  createExtendedSearchQuery([["selection_domain_state_bug_domain", "open"]])),
                 getUrlParameterDict('test_result_module', 'view', [["delivery.start_date", "descending"]],
-                  null, createProjectQuery(null, [])),
+                  null, createExtendedSearchQuery([])),
                 {command: 'display', options: {page: "logout"}}
               ]),
               context.getTranslationList([
