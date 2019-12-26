@@ -30,20 +30,6 @@
     }
   }
 
-  function getUrlParameterDict(jio_key, view, sort_list, column_list, extended_search) {
-    return {
-      command: 'push_history',
-      options: {
-        'jio_key': jio_key,
-        'page': 'form',
-        'view': view,
-        'field_listbox_sort_list:json': sort_list,
-        'field_listbox_column_list:json': column_list,
-        'extended_search': extended_search
-      }
-    };
-  }
-
   function createExtendedSearchQuery(key_value_list) {
     var i, query_list = [], id_query_list = [], id_complex_query;
     for (i = 0; i < key_value_list.length; i += 1) {
@@ -59,6 +45,20 @@
       query_list: query_list,
       type: "complex"
     }));
+  }
+
+  function getUrlParameterDict(jio_key, view, sort_list, column_list, key_value_list) {
+    return {
+      command: 'display',
+      options: {
+        'jio_key': jio_key,
+        'page': 'form',
+        'view': view,
+        'field_listbox_sort_list:json': sort_list,
+        'field_listbox_column_list:json': column_list,
+        'extended_search': createExtendedSearchQuery(key_value_list)
+      }
+    };
   }
 
   rJS(window)
@@ -201,21 +201,21 @@
               context.getUrlForList([
                 getUrlParameterDict('project_module', project_view, [["title", "ascending"]],
                   ["title", "default_destination_section_title"],
-                  createExtendedSearchQuery([["selection_domain_state_project_domain", "started"]])),
+                  [["selection_domain_state_project_domain", "started"]]),
                 getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
                   ["title", "delivery.start_date", "source_title"],
-                  createExtendedSearchQuery([["selection_domain_state_task_domain", "confirmed"]])),
+                  [["selection_domain_state_task_domain", "confirmed"]]),
                 getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
                   ["title", "delivery.start_date", "source_title"],
-                  createExtendedSearchQuery([["selection_domain_state_task_report_domain", "confirmed"]])),
+                  [["selection_domain_state_task_report_domain", "confirmed"]]),
                 getUrlParameterDict('document_module', document_view, [["modification_date", "descending"]],
                   ["download", "title", "reference", "modification_date"],
-                  createExtendedSearchQuery([["selection_domain_state_document_domain", "confirmed"]])),
+                  [["selection_domain_state_document_domain", "confirmed"]]),
                 getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
                   ["title", "description", "source_person_title", "destination_person_title", "delivery.start_date"],
-                  createExtendedSearchQuery([["selection_domain_state_bug_domain", "open"]])),
+                  [["selection_domain_state_bug_domain", "open"]]),
                 getUrlParameterDict('test_result_module', 'view', [["delivery.start_date", "descending"]],
-                  null, createExtendedSearchQuery([])),
+                  null, []),
                 {command: 'display', options: {page: "logout"}}
               ]),
               context.getTranslationList([
@@ -239,12 +239,12 @@
               li_element,
               icon_and_key_list = [
                 'home', null,
-                'puzzle-piece', 'm',
-                'tasks', 'w',
-                'history', 'h',
-                'search', 's',
+                'tasks', null,
                 'sliders', null,
-                'power-off', 'o'
+                'tasks', null,
+                'puzzle-piece', null,
+                'tasks', null,
+                'power-off', null
               ],
               ul_element = context.element.querySelector("ul");
 
