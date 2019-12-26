@@ -707,6 +707,7 @@ class Folder(OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
   PUT_factory = None
   # XXX Prevent inheritance from PortalFolderBase
   description = None
+  content_type = None # content_type is a property in ERP5, but a method in CMF
 
   # Per default we use BTree folder
   _folder_handler = BTREE_HANDLER
