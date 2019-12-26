@@ -90,9 +90,16 @@
     <td>//a[@data-i18n="View"]</td><td></td></tr>
 <tr><td>click</td>
     <td>//a[@data-i18n="View"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="editor"]//iframe</td><td></td></tr>
+<tr><td>selectFrame</td>
+    <td>//div[@data-gadget-scope="editor"]//iframe</td><td></td></tr>
 <tr><td>waitForText</td>
-    <td>//div[@data-gadget-scope="field_my_text_content"]//pre</td>
-    <td>Hello</td></tr>
+    <td>//body</td>
+    <!-- we have line number -->
+    <td>glob:1*Hello</td></tr>
+<tr><td>selectFrame</td>
+    <td>relative=top</td><td></td></tr>
 
 </tbody></table>
 </body>
