@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
-/*global window, document, rJS, RSVP, Node, asBoolean , ensureArray*/
-(function (window, document, rJS, RSVP, Node, asBoolean, ensureArray) {
+/*global window, document, rJS, RSVP, Node, asBoolean , ensureArray, SimpleQuery, ComplexQuery, Query*/
+(function (window, document, rJS, RSVP, Node, asBoolean, ensureArray, SimpleQuery, ComplexQuery, Query) {
   "use strict";
 
   function appendDt(fragment, dt_title, dt_icon,
@@ -30,6 +30,57 @@
     }
   }
 
+  function getUrlParameterDict(jio_key, view, sort_list, column_list, extended_search) {
+    return {
+      command: 'push_history',
+      options: {
+        'jio_key': jio_key,
+        'page': 'form',
+        'view': view,
+        'field_listbox_sort_list:json': sort_list,
+        'field_listbox_column_list:json': column_list,
+        'extended_search': extended_search
+      }
+    };
+  }
+
+  function createProjectQuery(project_jio_key, key_value_list) {
+    var i, query_list = [], id_query_list = [], id_complex_query;
+    if (project_jio_key) {
+      id_query_list.push(new SimpleQuery({
+        key: "source_project__relative_url",
+        operator: "",
+        type: "simple",
+        value: project_jio_key
+      }));
+      id_query_list.push(new SimpleQuery({
+        key: "source_project__relative_url",
+        operator: "",
+        type: "simple",
+        value: project_jio_key + "/%%"
+      }));
+      id_complex_query = new ComplexQuery({
+        operator: "OR",
+        query_list: id_query_list,
+        type: "complex"
+      });
+      query_list.push(id_complex_query);
+    }
+    for (i = 0; i < key_value_list.length; i += 1) {
+      query_list.push(new SimpleQuery({
+        key: key_value_list[i][0],
+        operator: "",
+        type: "simple",
+        value: key_value_list[i][1]
+      }));
+    }
+    return Query.objectToSearchText(new ComplexQuery({
+      operator: "AND",
+      query_list: query_list,
+      type: "complex"
+    }));
+  }
+
   rJS(window)
     .setState({
       visible: false
@@ -40,6 +91,7 @@
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
 
     /////////////////////////////////////////////////////////////////
@@ -156,24 +208,57 @@
         queue
           // Update the global links
           .push(function () {
+            return gadget.getSetting("hateoas_url");
+          })
+          .push(function (hateoas_url) {
+            var project_view = hateoas_url +
+              '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
+              'project_module&view=ProjectModule_viewProjectManagementList',
+              document_view = hateoas_url +
+              '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
+              'document_module&view=Project_viewDocumentList';
             return RSVP.all([
               context.getUrlForList([
-                {command: 'display'},
-                {command: 'display', options: {page: "front"}},
-                {command: 'display', options: {page: "worklist"}},
-                {command: 'display', options: {page: "history"}},
-                {command: 'display_stored_state', options: {page: "search"}},
-                {command: 'display', options: {page: "preference"}},
+                {
+                  'command': 'display',
+                  'options': {
+                    'page': 'form',
+                    'editable': 0,
+                    'jio_key': 'project_module',
+                    'view': project_view,
+                    'field_listbox_sort_list:json': [["title", "ascending"]],
+                    'field_listbox_column_list:json': ["title",
+                                                       "default_destination_section_title"],
+                    'extended_search': 'selection_domain_state_project_domain:  "started"'
+                  }
+                },
+                getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
+                  ["title", "delivery.start_date", "source_title"],
+                  createProjectQuery(null,
+                    [["selection_domain_state_task_domain", "confirmed"]])),
+                getUrlParameterDict('task_report_module', 'view', [["delivery.start_date", "descending"]],
+                  ["title", "delivery.start_date", "source_title"],
+                  createProjectQuery(null,
+                    [["selection_domain_state_task_report_domain", "confirmed"]])),
+                getUrlParameterDict('document_module', document_view, [["modification_date", "descending"]],
+                  ["download", "title", "reference", "modification_date"],
+                  createProjectQuery(null, [["selection_domain_state_document_domain", "confirmed"]])),
+                getUrlParameterDict('bug_module', "view", [["delivery.start_date", "descending"]],
+                  ["title", "description", "source_person_title", "destination_person_title", "delivery.start_date"],
+                  createProjectQuery(null,
+                    [["selection_domain_state_bug_domain", "open"]])),
+                getUrlParameterDict('test_result_module', 'view', [["delivery.start_date", "descending"]],
+                  null, createProjectQuery(null, [])),
                 {command: 'display', options: {page: "logout"}}
               ]),
               context.getTranslationList([
                 'Editable',
-                'Home',
-                'Modules',
-                'Worklists',
-                'History',
-                'Search',
-                'Preferences',
+                'Projects',
+                'Tasks',
+                'Tasks Reports',
+                'Documents',
+                'Bugs',
+                'Tests',
                 'Logout'
               ]),
               context.getDeclaredGadget("erp5_checkbox")
@@ -383,4 +468,4 @@
 
     }, /*useCapture=*/false, /*preventDefault=*/true);
 
-}(window, document, rJS, RSVP, Node, asBoolean, ensureArray));
+}(window, document, rJS, RSVP, Node, asBoolean, ensureArray, SimpleQuery, ComplexQuery, Query));
