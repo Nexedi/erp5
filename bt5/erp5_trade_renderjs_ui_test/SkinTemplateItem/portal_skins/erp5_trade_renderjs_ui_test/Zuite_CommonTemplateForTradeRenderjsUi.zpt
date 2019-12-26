@@ -29,6 +29,7 @@
       <td>Deleted Successfully.</td>
       <td></td>
     </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
     <tr>
       <td colspan="3"><p></p></td>
     </tr>
