@@ -83,6 +83,9 @@
         element.removeChild(element.firstChild);
       }
 
+      if (typeof value_list === 'string') {
+        value_list = [value_list];
+      }
       for (i = 0; i < value_list.length; i += 1) {
         value_dict[value_list[i]] = null;
       }
