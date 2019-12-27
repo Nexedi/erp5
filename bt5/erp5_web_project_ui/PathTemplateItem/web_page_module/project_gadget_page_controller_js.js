@@ -23,7 +23,6 @@
             'command': 'display',
             'options': {
               'page': 'form',
-              'editable': 0,
               'jio_key': 'project_module',
               'view': hateoas_url +
               '/ERP5Document_getHateoas?mode=traverse&relative_url=' +

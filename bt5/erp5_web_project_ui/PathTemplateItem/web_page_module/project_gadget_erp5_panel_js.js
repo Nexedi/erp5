@@ -159,6 +159,7 @@
           .push(function () {
             return RSVP.all([
               context.getUrlForList([
+                {command: 'display'},
                 {command: 'display_stored_state', options: {jio_key: "project_module"}},
                 {command: 'display_stored_state', options: {jio_key: "task_module"}},
                 {command: 'display_stored_state', options: {jio_key: "task_report_module"}},
@@ -169,6 +170,7 @@
               ]),
               context.getTranslationList([
                 'Editable',
+                'Home',
                 'Projects',
                 'Tasks',
                 'Task Reports',
@@ -188,6 +190,7 @@
               li_element,
               icon_and_key_list = [
                 'home', null,
+                'tasks', null,
                 'tasks', null,
                 'sliders', null,
                 'tasks', null,
