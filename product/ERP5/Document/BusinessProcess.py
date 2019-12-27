@@ -39,8 +39,6 @@ from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
 import zope.interface
 
-from zLOG import LOG
-
 _marker = object()
 
 class BusinessProcess(Path, XMLObject):
