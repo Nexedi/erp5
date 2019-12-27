@@ -1,0 +1,5 @@
+mixin.erp5.BuilderMixin
+mixin.erp5.ERP5UserMixin
+mixin.erp5.EncryptedPasswordMixin
+mixin.erp5.LoginAccountProviderMixin
+mixin.erp5.OOoDocumentExtensibleTraversableMixin

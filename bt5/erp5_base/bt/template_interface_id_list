@@ -1,0 +1,5 @@
+interface.erp5.ICoordinate
+interface.erp5.IEncryptedPassword
+interface.erp5.ILoginAccountProvider
+interface.erp5.IMovementGroup
+interface.erp5.IRoundingTool

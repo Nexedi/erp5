@@ -197,7 +197,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     def test_02_AqDynamic(self):
       module = self.getPersonModule()
       person = module.newContent(id='1', portal_type='Person')
-      from Products.ERP5Type.Document import Person
+      from erp5.component.document import Person
       # Person class should have no method getFirstName
       self.assertFalse(hasattr(Person.Person, 'getFirstName'))
       # Calling getFirstName should produce dynamic methods related to the
