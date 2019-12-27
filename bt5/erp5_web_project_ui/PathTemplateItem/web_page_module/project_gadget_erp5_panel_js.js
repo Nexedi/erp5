@@ -190,12 +190,12 @@
               li_element,
               icon_and_key_list = [
                 'home', null,
-                'tasks', null,
+                'th-list', null,
                 'tasks', null,
                 'sliders', null,
-                'tasks', null,
-                'puzzle-piece', null,
-                'tasks', null,
+                'files-o', null,
+                'bug', null,
+                'checkbox-on', null,
                 'power-off', null
               ],
               ul_element = context.element.querySelector("ul");
