@@ -62,12 +62,18 @@ class TestERP5TypeInterfaces(unittest.TestCase):
 def makeTestMethod(import_tuple, interface):
   """Common method which checks if documents implements interface"""
   def testMethod(self):
-    _temp = __import__(import_tuple[0], globals(), locals(),
-        ['%s' % import_tuple[1]])
-    Klass = getattr(_temp, import_tuple[1])
-    _temp = __import__('Products.ERP5Type.interfaces', globals(), locals(),
-        ['%s' % interface])
-    Interface = getattr(_temp, interface)
+    Klass = getattr(
+      __import__(import_tuple[0], globals(), locals(), [import_tuple[0]]),
+      import_tuple[1])
+
+    import Products.ERP5Type.interfaces
+    try:
+      Interface = getattr(Products.ERP5Type.interfaces, interface)
+    except AttributeError:
+      InterfaceModuleName = 'erp5.component.interface.%s' % interface
+      Interface = getattr(
+        __import__(InterfaceModuleName, globals(), locals(), [InterfaceModuleName]),
+        interface)
 
     verifyClass(Interface, Klass)
 

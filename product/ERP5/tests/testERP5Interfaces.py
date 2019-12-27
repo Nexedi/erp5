@@ -34,23 +34,23 @@ import unittest
 # this list can be generated automatically using introspection or can be set
 # manually and treated as reference to what implements what
 implements_tuple_list = [
-  (('Products.ERP5.Document.RoleDefinition', 'RoleDefinition'), 'ILocalRoleGenerator'),
-  (('Products.ERP5.Document.BusinessLink','BusinessLink'), 'IBusinessLink'),
-  (('Products.ERP5.Document.BusinessLink','BusinessLink'), 'ICategoryAccessProvider'),
+  (('erp5.component.document.RoleDefinition', 'RoleDefinition'), 'ILocalRoleGenerator'),
+  (('erp5.component.document.BusinessLink','BusinessLink'), 'IBusinessLink'),
+  (('erp5.component.document.BusinessLink','BusinessLink'), 'ICategoryAccessProvider'),
   (('Products.ERP5.Document.TradeCondition','TradeCondition'), 'IAmountGenerator'),
   (('Products.ERP5.Document.TradeModelCell','TradeModelCell'), 'IAmountGenerator'),
   (('Products.ERP5.Document.TradeModelCell','TradeModelCell'), 'IVariated'),
   (('Products.ERP5.Document.TradeModelLine','TradeModelLine'), 'IAmountGenerator'),
   (('Products.ERP5.Document.TradeModelLine','TradeModelLine'), 'IVariated'),
-  (('Products.ERP5.Document.TradeModelPath','TradeModelPath'), 'IArrowBase'),
+  (('erp5.component.document.TradeModelPath','TradeModelPath'), 'IArrowBase'),
   (('Products.ERP5.Document.Transformation','Transformation'), 'IAmountGenerator'),
   (('Products.ERP5.Document.Transformation','Transformation'), 'IVariated'),
   (('Products.ERP5.Document.TransformedResource','TransformedResource'), 'IVariated'),
   #IDocument
   (('Products.ERP5.Document.Document', 'Document'), 'IDocument'),
-  (('Products.ERP5.Document.Image', 'Image'), 'IDocument'),
+  (('erp5.component.document.Image', 'Image'), 'IDocument'),
   (('Products.ERP5.Document.File', 'File'), 'IDocument'),
-  (('Products.ERP5OOo.Document.OOoDocument', 'OOoDocument'), 'IDocument'),
+  (('erp5.component.document.OOoDocument', 'OOoDocument'), 'IDocument'),
   (('Products.ERP5.Document.TextDocument', 'TextDocument'), 'IDocument'),
   (('Products.ERP5.Document.EmailDocument', 'EmailDocument'), 'IDocument'),
   (('Products.ERP5.Document.Event', 'Event'), 'IDocument'),
@@ -69,19 +69,21 @@ for movement_group_class_name in ['MovementGroup', 'BaseVariantMovementGroup',
     'RootAppliedRuleCausalityMovementGroup', 'SplitMovementGroup',
     'TitleMovementGroup',
     'VariantMovementGroup', 'VariationPropertyMovementGroup']:
-  implements_tuple_list.append((('Products.ERP5Type.Document.%s' % \
+  implements_tuple_list.append((('erp5.component.document.%s' % \
       movement_group_class_name, movement_group_class_name),
       'IMovementGroup'))
 
 class TestERP5Interfaces(ERP5TypeTestCase):
   """Tests implementation of interfaces"""
+  def getBusinessTemplateList(self):
+    return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade')
 
 addTestMethodDynamically(TestERP5Interfaces, implements_tuple_list)
 
 for failing_method in [
     'test_Products.ERP5.GeneratedAmountList_GeneratedAmountList_implements_IAmountList',
-    'test_Products.ERP5.Document.BusinessLink_BusinessLink_implements_IBusinessLink',
-    'test_Products.ERP5.Document.BusinessLink_BusinessLink_implements_ICategoryAccessProvider',
+    'test_erp5.component.document.BusinessLink_BusinessLink_implements_IBusinessLink',
+    'test_erp5.component.document.BusinessLink_BusinessLink_implements_ICategoryAccessProvider',
     'test_Products.ERP5.Document.TradeModelCell_TradeModelCell_implements_IVariated',
     'test_Products.ERP5.Document.TradeModelLine_TradeModelLine_implements_IVariated',
     'test_Products.ERP5.Document.Transformation_Transformation_implements_IVariated',

@@ -34,7 +34,6 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.Utils import sortValueList
 from Products.ERP5Type.Core.Predicate import Predicate
-from Products.ERP5.Document.BusinessProcess import BusinessProcess
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
 _MARKER = []
@@ -130,6 +129,7 @@ class asComposedDocument(object):
     try:
       self.__class__ = cls.__class_cache[base_class]
     except KeyError:
+      from erp5.component.document.BusinessProcess import BusinessProcess
       cls.__class_cache[base_class] = self.__class__ = \
         type(base_class.__name__, (cls, base_class, BusinessProcess), {})
               # here we could inherit many "useful" classes dynamically - héhé
