@@ -548,7 +548,7 @@ class PDFTypeInformation(ERP5TypeInformation):
     #                                cache_factory='dms_cache_factory')
     return generateERP5Form().__of__(self)
 
-  # XXX criticize ERP5.Document.Image
+  # XXX criticize Image Document
   #     (we are forced to use xlarge preference)
   def getWidth(self):
     portal_preferences = self.getPortalObject().portal_preferences

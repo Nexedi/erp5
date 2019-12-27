@@ -58,15 +58,7 @@ from Products.PortalTransforms.Transform import Transform
 Transform_tr_init = Transform._tr_init
 Transform_manage_beforeDelete = Transform.manage_beforeDelete
 
-from Products.ERP5.Document.Organisation import Organisation
-from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from ZODB.broken import Broken
-
 instance_home = os.environ['INSTANCE_HOME']
-
-class MockBrokenOrganisation(Organisation, Broken):
-  meta_type = 'ERP5 Mock Broken Organisation'
-  portal_type = 'Mock Broken Organisation'
 
 class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def getBusinessTemplateList(self):
@@ -7169,6 +7161,12 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       retrieve it with a new connection, it does not become a broken object.
       Probablly there is remaing the object-cache somewhere in Zope.
     """
+    from erp5.component.document.Organisation import Organisation
+    from ZODB.broken import Broken
+    class MockBrokenOrganisation(Organisation, Broken):
+      meta_type = 'ERP5 Mock Broken Organisation'
+      portal_type = 'Mock Broken Organisation'
+
     setattr(sys.modules['Products.ERP5.Document'],
            'MockBrokenOrganisation', MockBrokenOrganisation)
 
@@ -7192,6 +7190,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     self.tic() # triger undex/index the document
 
     # set unindexable so that it will act as Broken object
+    from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
     self.portal.organisation_module['1'].isIndexable = \
         ConstantGetter('isIndexable', value=False)
     self.commit()

@@ -56,10 +56,10 @@ class TestPortalTypeClass(ERP5TypeTestCase):
 
   def testMigrateOldObject(self):
     """
-    Check migration of persistent objects with old classes
-    like Products.ERP5(Type).Document.Person.Person
+    Check migration of persistent objects with non-erp5.portal_type classes
+    (which used to be the full module name and not only the class name)
     """
-    from Products.ERP5Type.Document.Person import Person
+    from erp5.component.document.Person import Person
     person_module = self.portal.person_module
     connection = person_module._p_jar
     newId = self.portal.person_module.generateNewId
@@ -76,12 +76,11 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     def check(migrated):
       klass = old_object.__class__
       self.assertEqual(klass.__module__,
-        migrated and 'erp5.portal_type' or 'Products.ERP5.Document.Person')
+        migrated and 'erp5.portal_type' or 'erp5.component.document.erp5_version.Person')
       self.assertEqual(klass.__name__, 'Person')
       self.assertEqual(klass.__setstate__ is Persistent.__setstate__, migrated)
 
-    # Import a .xml containing a Person created with an old
-    # Products.ERP5Type.Document.Person.Person type
+    # Import a .xml containing a Person created with the full module name
     self.importObjectFromFile(person_module, 'non_migrated_person.xml')
     self.commit()
     unload('non_migrated_person')
@@ -95,7 +94,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     unload(obj_id)
     old_object = person_module[obj_id]
     # From now on, everything happens as if the object was a old, non-migrated
-    # object with an old Products.ERP5(Type).Document.Person.Person
+    # object
     check(0)
     # reload the object
     old_object._p_activate()
@@ -2014,52 +2013,51 @@ def bar(*args, **kwargs):
     """
     reference = self._generateReference('TestVersionPriority')
     source_code = self._getValidSourceCode(reference)
-
-    component_erp5_version = self._newComponent(
-      reference,
-      source_code + """
+    priority_tuple = self.portal.getVersionPriorityList()
+    try:
+      self.portal.setVersionPriorityList(('bar | 42.0',) + priority_tuple)
+      component_bar_version = self._newComponent(
+        reference,
+        source_code + """
 def function_foo(*args, **kwargs):
-  return "TestERP5VersionPriority"
-""")
+  return "TestBarVersionPriority"
+  """,
+        'bar')
+      component_bar_version.validate()
+      self.tic()
 
-    component_erp5_version.validate()
-    self.tic()
-
-    component_foo_version = self._newComponent(
-      reference,
-      source_code + """
+      component_foo_version = self._newComponent(
+        reference,
+        source_code + """
 def function_foo(*args, **kwargs):
   return "TestFooVersionPriority"
-""",
-      'foo')
+  """,
+        'foo')
+      component_foo_version.validate()
+      self.tic()
 
-    component_foo_version.validate()
-    self.tic()
+      self.assertModuleImportable(reference,
+                                  expected_default_version='bar_version')
 
-    self.assertModuleImportable(reference,
-                                expected_default_version='erp5_version')
+      # Component for 'foo_version' must not be importable as 'foo' has not been
+      # added to ERP5Site version priorities
+      self.failIfModuleImportable('foo_version.%s' % reference)
 
-    # Component for 'foo_version' must not be importable as 'foo' has not been
-    # added to ERP5Site version priorities
-    self.failIfModuleImportable('foo_version.%s' % reference)
+      top_module_name = self._document_class._getDynamicModuleNamespace()
+      top_module = __import__(top_module_name, level=0,
+                              fromlist=[top_module_name])
 
-    top_module_name = self._document_class._getDynamicModuleNamespace()
-    top_module = __import__(top_module_name, level=0,
-                            fromlist=[top_module_name])
+      self._importModule(reference)
+      module = getattr(top_module, reference)
+      self.assertHasAttribute(module, 'function_foo')
+      self.assertEqual(module.function_foo(), "TestBarVersionPriority")
 
-    self._importModule(reference)
-    module = getattr(top_module, reference)
-    self.assertHasAttribute(module, 'function_foo')
-    self.assertEqual(module.function_foo(), "TestERP5VersionPriority")
+      ComponentTool.reset = assertResetCalled
 
-    from Products.ERP5.ERP5Site import getSite
-    site = getSite()
-    ComponentTool.reset = assertResetCalled
-    priority_tuple = site.getVersionPriorityList()
-    try:
-      # Add 'foo' version with a higher priority as 'erp5' version and check
-      # whether 'foo' version of the Component is used and not erp5 version
-      site.setVersionPriorityList(('foo | 99.0',) + priority_tuple)
+      # Add 'foo' version with a higher priority as 'bar' version and check
+      # whether 'foo' version of the Component is used and not bar version
+      self.portal.setVersionPriorityList(('foo | 99.0', 'bar | 42.0') +
+                                         priority_tuple)
       self.tic()
 
       self.assertEqual(ComponentTool._reset_performed, True)
@@ -2067,7 +2065,7 @@ def function_foo(*args, **kwargs):
       self.assertModuleImportable(
         reference,
         expected_default_version='foo_version',
-        expected_additional_version_tuple=('erp5_version',))
+        expected_additional_version_tuple=('bar_version',))
 
       self._importModule(reference)
       module = getattr(top_module, reference)
@@ -2076,7 +2074,7 @@ def function_foo(*args, **kwargs):
 
     finally:
       ComponentTool.reset = ComponentTool._original_reset
-      site.setVersionPriorityList(priority_tuple)
+      self.portal.setVersionPriorityList(priority_tuple)
       self.tic()
 
   def testDeveloperRoleSecurity(self):
@@ -2563,7 +2561,7 @@ class TestZodbDocumentComponent(_TestZodbComponent):
   _document_class = DocumentComponent
 
   def _getValidSourceCode(self, class_name):
-    return '''from Products.ERP5.Document.Person import Person
+    return '''from erp5.component.document.Person import Person
 
 class %sAnything:
   pass
@@ -2580,7 +2578,7 @@ class %s(Person):
     self.assertEqual(component.getTextContentErrorMessageList(), [])
     self.assertEqual(component.getTextContentWarningMessageList(), [])
 
-    component.setTextContent("""from Products.ERP5.Document.Person import Person
+    component.setTextContent("""from erp5.component.document.Person import Person
 
 class DifferentFromReference(Person):
   pass
@@ -2601,8 +2599,6 @@ class DifferentFromReference(Person):
     that the newly-defined function on ZODB Component can be called as well as
     methods from Person Document
     """
-    from Products.ERP5.Document.Person import Person as PersonDocument
-
     self.failIfModuleImportable('TestPortalType')
 
     # Create a new Document Component inheriting from Person Document which
@@ -2612,7 +2608,7 @@ class DifferentFromReference(Person):
     test_component = self._newComponent(
       'TestPortalType',
       """
-from Products.ERP5.Document.Person import Person
+from erp5.component.document.Person import Person
 
 class TestPortalType(Person):
   def test42(self):
@@ -2633,6 +2629,7 @@ class TestPortalType(Person):
     # Create a new Person
     person_module = self.portal.person_module
     person = person_module.newContent(id='Foo Bar', portal_type='Person')
+    from erp5.component.document.Person import Person as PersonDocument
     self.assertTrue(PersonDocument in person.__class__.mro())
 
     # There is no reason that TestPortalType Document Component has been
@@ -2659,6 +2656,7 @@ class TestPortalType(Person):
       # to access test42() defined in TestPortalType Document Component
       self.assertHasAttribute(self._module, 'TestPortalType')
       self.assertTrue(self._module.TestPortalType.TestPortalType in person.__class__.mro())
+      from erp5.component.document.Person import Person as PersonDocument
       self.assertTrue(PersonDocument in person.__class__.mro())
 
     finally:

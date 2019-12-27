@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.Document.Person import Person as ERP5Person
+from erp5.component.document.erp5_version.Person import Person as ERP5Person
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.exceptions import AccessControl_Unauthorized

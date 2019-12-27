@@ -34,7 +34,7 @@ from Products.CMFCore.WorkflowCore import WorkflowAction
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from Products.ERP5.Document.Image import Image
+from erp5.component.document.Image import Image
 
 class ApparelMeasurement(XMLObject, XMLMatrix, Image):
     """

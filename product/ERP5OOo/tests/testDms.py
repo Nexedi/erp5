@@ -2075,14 +2075,14 @@ return 1
     )
 
   def test_Text_conversion_to_base_format_no_original_format_access(self):
-    """Checks Document.OOoDocument"""
+    """Checks OOoDocument Document"""
     self._test_document_conversion_to_base_format_no_original_format_access(
       'Text',
       'TEST-en-002.odt'
     )
 
   def test_Image_conversion_to_base_format_no_original_format_access(self):
-    """Checks Document.Image"""
+    """Checks Image Document"""
     self._test_document_conversion_to_base_format_no_original_format_access(
       'Image',
       'TEST-en-002.png'
