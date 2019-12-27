@@ -33,39 +33,39 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Path import Path
 
 class Supply(Path, XMLObject):
-    """A Supply defines precise pricing and shipping conditions between
-    two trade parties for a limited selection of traded products,
-    components, services, etc. It can be used to represent price
-    catalogs, product referencing, pricing policy, etc.
+  """A Supply defines precise pricing and shipping conditions between
+  two trade parties for a limited selection of traded products,
+  components, services, etc. It can be used to represent price
+  catalogs, product referencing, pricing policy, etc.
+  """
+  # CMF Type Definition
+  meta_type = 'ERP5 Supply'
+  portal_type = 'Supply'
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Price
+                    , PropertySheet.Movement
+                    , PropertySheet.Delivery
+                    , PropertySheet.Path
+                    , PropertySheet.FlowCapacity
+                    , PropertySheet.Comment
+                    )
+
+  #######################################################
+  # Defer indexing process
+  def reindexObject(self, *k, **kw):
     """
-    # CMF Type Definition
-    meta_type = 'ERP5 Supply'
-    portal_type = 'Supply'
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Price
-                      , PropertySheet.Movement
-                      , PropertySheet.Delivery
-                      , PropertySheet.Path
-                      , PropertySheet.FlowCapacity
-                      , PropertySheet.Comment
-                      )
-
-    #######################################################
-    # Defer indexing process
-    def reindexObject(self, *k, **kw):
-      """
-        Reindex children, as editing properties on Supply need
-        to be propagated into predicate table for Supply Line
-      """
-      self.recursiveReindexObject(*k, **kw)
+      Reindex children, as editing properties on Supply need
+      to be propagated into predicate table for Supply Line
+    """
+    self.recursiveReindexObject(*k, **kw)

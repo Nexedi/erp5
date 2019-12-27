@@ -78,7 +78,7 @@ def _getEffectiveModel(self, start_date, stop_date):
       sort_on=(('version', 'descending'),))
   if not model_list:
     if self.getValidationState() == 'invalidated':
-       return self
+      return self
     raise KeyError('No %s found with the reference %s between %s and %s' % \
             (self.getPortalType(), reference, start_date, stop_date))
   return model_list[0].getObject()
