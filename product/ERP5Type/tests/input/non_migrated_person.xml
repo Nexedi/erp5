@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Person" module="Products.ERP5Type.Document.Person"/>
+      <global name="Person" module="erp5.component.document.Person"/>
     </pickle>
     <pickle>
       <dictionary>

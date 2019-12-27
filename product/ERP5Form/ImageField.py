@@ -61,7 +61,7 @@ class ImageFieldWidget(Widget.TextWidget):
     image_display = fields.StringField('image_display',
                                title='Image Display',
                                description=(
-        "The display size. See ERP5.Document.Image.default_displays_id_list "
+        "The display size. See erp5.component.document.Image.default_displays_id_list "
         "for possible values. This is only used with ERP5 Images."),
                                default='thumbnail',
                                required=0)
@@ -219,7 +219,7 @@ class ImageFieldWidget(Widget.TextWidget):
       try: # try image properties
         aspect_ratio = picture_width / picture_height
       except (TypeError, ZeroDivisionError):
-        try: # try ERP5.Document.Image API
+        try: # try Image Document API
           height = picture_height
           if height:
             aspect_ratio = picture_width / height

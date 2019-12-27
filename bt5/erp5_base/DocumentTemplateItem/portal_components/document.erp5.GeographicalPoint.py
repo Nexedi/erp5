@@ -28,7 +28,7 @@
 ##############################################################################
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Url import Url
+from erp5.component.document.Url import Url
 
 class GeographicalPoint(Url):
   """

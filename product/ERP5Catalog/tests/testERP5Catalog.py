@@ -3723,7 +3723,7 @@ VALUES
                       folder_object_list], real_title_list)
 
   def test_getParentUid(self):
-    from Products.ERP5.Document.Assignment import Assignment
+    from erp5.component.document.Assignment import Assignment
     import erp5.portal_type
     person_module = self.getPersonModule()
 

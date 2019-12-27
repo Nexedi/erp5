@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.Document.Supply import Supply
+from erp5.component.document.Supply import Supply
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet

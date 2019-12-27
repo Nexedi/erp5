@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Ticket import Ticket
-from Products.ERP5.mixin.encrypted_password import EncryptedPasswordMixin
+from erp5.component.mixin.EncryptedPasswordMixin import EncryptedPasswordMixin
 
 class CredentialRequest(Ticket, EncryptedPasswordMixin):
     """

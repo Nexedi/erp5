@@ -1,4 +1,4 @@
-from Products.ERP5.Document.Image import Image
+from erp5.component.document.Image import Image
 from zLOG import LOG,INFO,ERROR,WARNING
 
 

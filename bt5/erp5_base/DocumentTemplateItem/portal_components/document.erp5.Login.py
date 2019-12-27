@@ -27,8 +27,8 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5.mixin.encrypted_password import EncryptedPasswordMixin
-from Products.ERP5.mixin.login_account_provider import LoginAccountProviderMixin
+from erp5.component.mixin.EncryptedPasswordMixin import EncryptedPasswordMixin
+from erp5.component.mixin.LoginAccountProviderMixin import LoginAccountProviderMixin
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.XMLObject import XMLObject
