@@ -70,7 +70,7 @@ if (not context.isWebMode()) and (context.REQUEST.get('web_section_value', None)
   portal = context.getPortalObject()
   # raise NotImplementedError(context.REQUEST['web_section_value'])
   web_section = portal.restrictedTraverse("/".join(context.REQUEST['web_section_value']))
-  context = getattr(web_section, context.getRelativeUrl())
+  context = web_section.restrictedTraverse(context.getRelativeUrl())
   # raise NotImplementedError(context)
 
 # form_id = 'view' means use default document view. Let the JS handle it
