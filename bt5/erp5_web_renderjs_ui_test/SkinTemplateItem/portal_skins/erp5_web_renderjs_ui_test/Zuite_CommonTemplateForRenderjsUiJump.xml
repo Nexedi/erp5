@@ -33,8 +33,29 @@
             </value>
         </item>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>description</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>text</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Common Template for PTZuite, it will reuse parts of the Listbox Zuite</string> </value>
         </item>
         <item>
             <key> <string>expand</string> </key>
@@ -42,7 +63,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testPageJumpMenuAction</string> </value>
+            <value> <string>Zuite_CommonTemplateForRenderjsUiJump</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
@@ -50,7 +71,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode></unicode> </value>
+            <value> <unicode>Common Template for All Trade Renderjs ui Zuite</unicode> </value>
         </item>
       </dictionary>
     </pickle>
