@@ -37,7 +37,8 @@
         var splitted_jio_key_list,
           splitted_current_jio_key_list,
           command,
-          i;
+          i,
+          result_dict = {};
 
         if (!result.jio_key) {
           return;
@@ -46,32 +47,28 @@
           // don't update navigation history when not really redirecting
           return gadget.redirect({command: 'cancel_dialog_with_history'});
         }
-        // Check if the redirection goes to a same parent's subdocument.
-        // In this case, do not add current document to the history
+        // Check if the redirection goes to a module.
+        // In this case, do not add the module to the history
+        // Keep the current context too
         // example: when cloning, do not keep the original document in history
         splitted_jio_key_list = result.jio_key.split('/');
-        splitted_current_jio_key_list = gadget.state.jio_key.split('/');
-
-
-        command = 'display_with_history';
-        if (splitted_jio_key_list.length === splitted_current_jio_key_list.length) {
-          for (i = 0; i < splitted_jio_key_list.length - 1; i += 1) {
-            if (splitted_jio_key_list[i] !== splitted_current_jio_key_list[i]) {
-              command = 'push_history';
-            }
-          }
+        if (splitted_jio_key_list.length < 2) {
+          command = 'change';
+          // result_dict["jio_key"] = gadget.state.jio_key;
+          // result_dict["page"] = "cosucous";
+          result_dict['action_view'] = gadget.state.view;
+          result_dict['view'] = result.view;
         } else {
           command = 'push_history';
+          result_dict["jio_key"] = result.jio_key;
+          result_dict["view"] = result.view;
         }
+
 
         // forced document change thus we update history
         return gadget.redirect({
           command: command,
-          options: {
-            "jio_key": result.jio_key,
-            "view": result.view
-            // do not mingle with editable because it isn't necessary
-          }
+          options: result_dict
         });
       });
   }
@@ -96,12 +93,14 @@
     .declareMethod('getContent', getContent, {mutex: 'changestate'})
 
     .declareMethod('render', function render(options) {
+      console.log('--- jump', options);
       return this.changeState({
         jio_key: options.jio_key,
         view: options.view,
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,
-        erp5_form: options.erp5_form || {}
+        erp5_form: options.erp5_form || {},
+        action_view: options.action_view
       });
     })
 
@@ -110,6 +109,9 @@
     })
 
     .onStateChange(function onStateChange() {
+      if (this.state.action_view) {
+        throw new Error('nutnut ' + this.state.action_view);
+      }
       var form_gadget = this;
       return new RSVP.Queue()
         .push(function () {
