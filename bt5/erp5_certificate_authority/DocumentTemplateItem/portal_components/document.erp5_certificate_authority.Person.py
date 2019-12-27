@@ -1,5 +1,5 @@
 from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
-from Products.ERP5.Document.Person import Person as ERP5Person
+from erp5.component.document.erp5_version.Person import Person as ERP5Person
 
 class Person(ERP5Person):
   security = ClassSecurityInfo()

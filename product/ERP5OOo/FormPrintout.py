@@ -624,7 +624,7 @@ class ODFStrategy(Implicit):
     try: # try image properties
       aspect_ratio = Decimal(picture.width) / Decimal(picture.height)
     except (TypeError, ZeroDivisionError):
-      try: # try ERP5.Document.Image API
+      try: # try Image Document API
         height = Decimal(picture.getHeight())
         if height:
           aspect_ratio = Decimal(picture.getWidth()) / height
