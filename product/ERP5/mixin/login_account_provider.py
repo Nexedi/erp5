@@ -27,7 +27,9 @@
 #
 ##############################################################################
 
-from Products.ERP5Type import Permissions
+import zope.interface
+
+from Products.ERP5Type import Permissions, interfaces
 from AccessControl.AuthEncoding import pw_validate
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -39,6 +41,9 @@ class LoginAccountProviderMixin:
 
   # Declarative security
   security = ClassSecurityInfo()
+
+  # Declarative interfaces
+  zope.interface.implements(interfaces.ILoginAccountProvider)
 
   security.declareProtected(Permissions.SetOwnPassword, 'notifyLoginFailure')
   def notifyLoginFailure(self, **kw):
