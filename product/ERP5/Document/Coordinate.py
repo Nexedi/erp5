@@ -28,7 +28,6 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from zExceptions import Forbidden
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Base import Base
