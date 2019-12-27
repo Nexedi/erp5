@@ -118,6 +118,13 @@ class Widget:
                               default="",
                               required=0)
 
+  gadget_url_js = fields.StringField('gadget_url_js',
+                                      title='Gadget javascript URL',
+                                      description=(
+      "A url specifying the customised gadget javascript in renderjs_ui."),
+                              default="",
+                              required=0)
+
   def render(self, field, key, value, REQUEST):
       """Renders this widget as HTML using property values in field.
       """
@@ -131,6 +138,10 @@ class Widget:
     except KeyError:
     # In case extra is not defined as in DateTimeWidget
       extra = ''
+    try:
+      gadget_url_js = field.get_value('gadget_url_js')
+    except KeyError:
+      gadget_url_js = ''
     result = ''
     # We must adapt the rendering to the type of the value
     # in order to get the correct type back
@@ -140,13 +151,15 @@ class Widget:
                           type="hidden",
                           name="%s:list" % key,
                           value=v,
-                          extra=extra)
+                          extra=extra,
+                          gadget_url_js=gadget_url_js)
     else:
       result = render_element("input",
                           type="hidden",
                           name=key,
                           value=value,
-                          extra=extra)
+                          extra=extra,
+                          gadget_url_js=gadget_url_js)
     return result
 
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
@@ -333,7 +346,8 @@ class TextWidget(Widget):
   """Text widget
   """
   property_names = Widget.property_names +\
-                    ['display_width', 'display_maxwidth', 'input_type', 'extra']
+                    ['display_width', 'display_maxwidth', 'input_type', 'extra',
+                     'gadget_url_js']
 
   default = fields.StringField('default',
                                 title='Default',
@@ -382,7 +396,8 @@ class TextWidget(Widget):
                             value=value,
                             size=field.get_value('display_width'),
                             maxlength=display_maxwidth,
-                            extra=field.get_value('extra'))
+                            extra=field.get_value('extra'),
+                            gadget_url_js=field.get_value('gadget_url_js'))
     else:
       return render_element("input",
                             type=input_type,
@@ -390,7 +405,8 @@ class TextWidget(Widget):
                             css_class=field.get_value('css_class'),
                             value=value,
                             size=field.get_value('display_width'),
-                            extra=field.get_value('extra'))
+                            extra=field.get_value('extra'),
+                            gadget_url_js=field.get_value('gadget_url_js'))
 
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
     """Render text as non-editable.
