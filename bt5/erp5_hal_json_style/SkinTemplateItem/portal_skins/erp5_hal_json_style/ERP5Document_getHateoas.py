@@ -433,6 +433,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     "editable": field.get_value("editable"),
     "hidden": field.get_value("hidden"),
     "description": field.get_value("description"),
+    "gadget_url_js": field.get_value("gadget_url_js") if field.has_value("gadget_url_js") else None
   }
 
   if "Field" in meta_type:
