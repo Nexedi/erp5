@@ -79,7 +79,7 @@
             <key> <string>text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:${object_url}/Base_jumpToRelatedObject?base_category=bar_category&related:int=0&portal_type=Bar
+string:${object_url}/Base_jumpToRelatedObject?base_category=successor&portal_type=Bar
 
 ]]></string> </value>
         </item>
