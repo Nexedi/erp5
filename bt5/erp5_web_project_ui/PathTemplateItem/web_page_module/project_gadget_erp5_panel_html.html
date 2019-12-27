@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>ERP5 Project Panel</title>
+    <link rel="http://www.renderjs.org/rel/interface" href="interface_panel.html">
+    <!--
+      data-i18n=Editable
+      data-i18n=Home
+      data-i18n=Projects
+      data-i18n=Task
+      data-i18n=Task Reports
+      data-i18n=Documents
+      data-i18n=Bugs
+      data-i18n=Tests
+      data-i18n=Logout
+      data-i18n=Views
+      data-i18n=Workflows
+      data-i18n=Actions
+    -->
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="gadget_global.js" type="text/javascript"></script>
+
+    <!-- custom script -->
+    <script src="gadget_erp5_project_panel.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+    <div>
+      <div data-role="header">
+        <div class="ui-btn-left">
+          <div class="ui-controlgroup-controls">
+            <button data-i18n="Close" class="ui-btn-icon-notext ui-icon-delete">Close</button>
+          </div>
+        </div>
+        <div class="panel_img">
+        <img alt="ERP5" src="gadget_erp5_panel.png?format=png"/>
+        </div>
+      </div>
+      <div>
+
+        <form>
+          <button type="submit" class="ui-icon-action ui-btn-icon-right ui-screen-hidden">Submit</button>
+          <div data-gadget-url="gadget_erp5_searchfield.html"
+               data-gadget-scope="erp5_searchfield"
+               data-gadget-sandbox="public"></div>
+        </form>
+
+        <ul></ul>
+        <div data-gadget-url="gadget_erp5_field_multicheckbox.html"
+             data-gadget-scope="erp5_checkbox"
+             data-gadget-sandbox="public"></div>
+        <dl></dl>
+      </div>
+    </div>
+  </body>
+</html>
