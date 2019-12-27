@@ -32,8 +32,8 @@
         );
       })
       .push(function (result) {  // success redirect handler
-        console.log(result);
-        throw new Error("couscous");
+        // console.log(result);
+        // throw new Error("couscous");
         var splitted_jio_key_list,
           splitted_current_jio_key_list,
           command,
@@ -51,6 +51,8 @@
         // example: when cloning, do not keep the original document in history
         splitted_jio_key_list = result.jio_key.split('/');
         splitted_current_jio_key_list = gadget.state.jio_key.split('/');
+
+
         command = 'display_with_history';
         if (splitted_jio_key_list.length === splitted_current_jio_key_list.length) {
           for (i = 0; i < splitted_jio_key_list.length - 1; i += 1) {
