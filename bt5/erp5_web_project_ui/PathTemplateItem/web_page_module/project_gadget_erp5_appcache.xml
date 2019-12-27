@@ -115,6 +115,8 @@ gadget_project_info.html\n
 gadget_project_info.js\n
 gadget_erp5_page_project_redirector.html\n
 gadget_erp5_page_project_redirector.js\n
+gadget_erp5_project_panel.html\n
+gadget_erp5_project_panel.js\n
 \n
 favicon.ico\n
 font-awesome/font-awesome-webfont.eot\n
@@ -403,7 +405,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>979.47842.59522.17561</string> </value>
+                      <value> <string>979.50747.65222.58094</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -421,7 +423,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1573482418.03</float>
+                              <float>1577216049.89</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
