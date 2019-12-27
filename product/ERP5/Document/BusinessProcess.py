@@ -862,17 +862,17 @@ class BusinessProcess(Path, XMLObject):
     if trade_phase_list: # reduce graph
       next_dict = defaultdict(set)
       # build {phase: next_set} (i.e. reverse result)
-      for next, phase_set in result.iteritems():
+      for next_, phase_set in result.iteritems():
         for phase in phase_set:
-          next_dict[phase].add(next)
+          next_dict[phase].add(next_)
       # for each phase to remove
       for phase in set(result).difference(trade_phase_list):
         # edit the graph like we would do for a doubly linked list
         previous_set = result.pop(phase)
         next_set = next_dict[phase]
         # i.e. edit next phases to replace current phase by previous ones
-        for next in next_set:
-          phase_set = result[next]
+        for next_ in next_set:
+          phase_set = result[next_]
           # Not remove() as it may have already been removed earlier
           # if >1 elements of next_set have the same parent
           phase_set.discard(phase)
