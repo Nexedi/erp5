@@ -1,0 +1,124 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/create_translation_data" />
+
+
+<tr>
+  <td colspan="3"><b>Create object</b></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/BarModule_createObjects?num:int=1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/bar_module/0?editable=false</td>
+  <td></td>
+</tr>
+
+
+<tal:block metal:define-macro="go_to_datetime_field">
+  <tr>
+    <td colspan="3"><b>Go to datetime field view</b></td>
+  </tr>
+
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>click</td>
+    <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//ul[@class='document-listview']//a[@data-i18n='DateTimeField']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>click</td>
+    <td>//ul[@class='document-listview']//a[@data-i18n='DateTimeField']</td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope='field_my_start_date']//p</td>
+    <td></td>
+  </tr>
+</tal:block>
+
+
+<tr>
+  <td colspan="3"><b>Check the date format follows the "en" locale</b></td>
+</tr>
+
+<tr>
+  <td>assertText</td>
+  <td>//div[@data-gadget-scope='field_my_start_date']//p</td>
+  <td>regexp:^\d\d/\d\d/20\d\d \d\d?:\d\d (AM|PM)$</td>
+</tr>
+
+
+<tr>
+  <td colspan="3"><b>Change language to fr</b></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/fr/#/bar_module/0?editable=false</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/testDateTimeField/macros/go_to_datetime_field" />
+
+
+<tr>
+  <td colspan="3"><b>Check the date format follows the fr locale</b></td>
+</tr>
+
+<tr>
+  <td>assertText</td>
+  <td>//div[@data-gadget-scope='field_my_start_date']//p</td>
+  <td>regexp:^\d\d/\d\d/20\d\d \d\d:\d\d$</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
