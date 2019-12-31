@@ -82,7 +82,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_start_date']//div[@data-gadget-scope='field']//p[contains(text(), '11:00:00')]</td>
+  <td>//div[@data-gadget-scope='field_my_start_date']//div[@data-gadget-scope='field']//p[contains(text(), '11:00')]</td>
   <td></td>
 </tr>
 
