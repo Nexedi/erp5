@@ -140,7 +140,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name='search' and @value='draft']</td>
+  <td>//button[text()="draft"]</td>
   <td></td>
 </tr>
 <tr>
@@ -160,6 +160,11 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name='search' and @value='processing']</td>
+  <td>//button[text()="processing"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Home']</td>
   <td></td>
 </tr>
