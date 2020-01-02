@@ -56,12 +56,12 @@
 <!-- Check project present -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@class='document_table']//table//tbody//tr//a[text()="test-project"]</td>
+  <td>//div[@class='document_table']//table//tbody//tr//a[text()="test-project-home"]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@class='document_table']//table//tbody//tr//a[text()="test-project"]</td>
+  <td>//div[@class='document_table']//table//tbody//tr//a[text()="test-project-home"]</td>
   <td></td>
 </tr>
 <!-- check project quick view page elements -->
