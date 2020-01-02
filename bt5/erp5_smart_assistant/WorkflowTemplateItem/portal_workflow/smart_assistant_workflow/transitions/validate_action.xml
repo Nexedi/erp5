@@ -28,7 +28,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Validate the process</string> </value>
+            <value> <string>Notify everyone that the processing of this smart assistant document has been completed successfully.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validate Action</string> </value>
+            <value> <string>Finish Processing</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
