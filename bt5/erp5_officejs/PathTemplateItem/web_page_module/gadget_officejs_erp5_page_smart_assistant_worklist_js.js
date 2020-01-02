@@ -36,12 +36,12 @@
           var line_list = [];
           line_list.push({
             link: result[0],
-            title: "Smart Assistant To Open",
+            title: "Smart Assistant to Start Processing",
             count: result[2].data.total_rows
           });
           line_list.push({
             link: result[1],
-            title: "Smart Assistant To Process",
+            title: "Smart Assistant to Finish Processing",
             count: result[3].data.total_rows
           });
           gadget.element.querySelector('.document_list').innerHTML = table_template({
