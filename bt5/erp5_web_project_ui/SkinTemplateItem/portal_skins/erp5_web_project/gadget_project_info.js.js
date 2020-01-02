@@ -110,13 +110,16 @@
     }));
   }
 
-  function getWebPageInfo(gadget, project_reference) {
+  function getWebPageInfo(gadget, home_page_preference, project_pages) {
     var id,
       content,
       edit_view,
       redirector_ulr,
+      i,
       query,
       query_list = [],
+      id_query_list = [],
+      validation_state_query_list = [],
       valid_state_list = ["shared_alive", "released_alive", "published_alive"];
     query_list.push(new SimpleQuery({
       key: "portal_type",
@@ -124,31 +127,51 @@
       type: "simple",
       value: "Web Page"
     }));
-    query_list.push(new SimpleQuery({
-      key: "reference",
-      operator: "=",
-      type: "simple",
-      value: project_reference + '-Home.Page'
+    for (i = 0; i < valid_state_list.length; i += 1) {
+      validation_state_query_list.push(new SimpleQuery({
+        key: "validation_state",
+        type: "simple",
+        operator: "=",
+        value: valid_state_list[i]
+      }));
+    }
+    query_list.push(new ComplexQuery({
+      operator: "OR",
+      query_list: validation_state_query_list,
+      type: "complex"
     }));
-    query = new ComplexQuery({
+    for (i = 0; i < project_pages.length; i += 1) {
+      id_query_list.push(new SimpleQuery({
+        key: "id",
+        type: "simple",
+        operator: "=",
+        value: project_pages[i]
+      }));
+    }
+    query_list.push(new ComplexQuery({
+      operator: "OR",
+      query_list: id_query_list,
+      type: "complex"
+    }));
+    query = Query.objectToSearchText(new ComplexQuery({
       operator: "AND",
       query_list: query_list,
       type: "complex"
-    });
+    }));
     return gadget.getUrlFor({command: 'push_history', options: {page: "project_redirector"}})
       .push(function (url) {
         redirector_ulr = url;
         return gadget.jio_allDocs({
-          query: Query.objectToSearchText(query),
-          select_list: ['validation_state', 'text_content']
+          query: query,
+          select_list: ['text_content', 'publication_section']
         });
       })
       .push(function (result_list) {
         if (result_list.data.rows[0]) {
-          var i, state, web_page;
+          var i, web_page, publication_section;
           for (i = 0; i < result_list.data.rows.length; i = i + 1) {
-            state = result_list.data.rows[i].value.validation_state;
-            if (valid_state_list.includes(state)) {
+            publication_section = result_list.data.rows[i].value.publication_section;
+            if (publication_section === home_page_preference) {
               web_page = result_list.data.rows[i];
               break;
             }
@@ -196,7 +219,8 @@
       var state_dict = {
           jio_key: options.jio_key || "",
           project_title: options.project_title,
-          project_reference: options.project_reference
+          home_page_preference: options.home_page_preference,
+          project_pages: options.project_pages
         };
       return this.changeState(state_dict);
     })
@@ -208,7 +232,7 @@
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
-            getWebPageInfo(gadget, modification_dict.project_reference),
+            getWebPageInfo(gadget, modification_dict.home_page_preference, modification_dict.project_pages),
             gadget.getDeclaredGadget("editor"),
             gadget.getSetting("hateoas_url")
           ]);
