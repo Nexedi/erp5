@@ -110,14 +110,14 @@
     }));
   }
 
-  function getWebPageInfo(gadget, project_reference) {
+  //TODO fully remove project_reference (render options, TALES exp, etc)
+  function getWebPageInfo(gadget, project_reference, home_page_preference) {
     var id,
       content,
       edit_view,
       redirector_ulr,
       query,
-      query_list = [],
-      valid_state_list = ["shared_alive", "released_alive", "published_alive"];
+      query_list = [];
     query_list.push(new SimpleQuery({
       key: "portal_type",
       operator: "=",
@@ -125,10 +125,16 @@
       value: "Web Page"
     }));
     query_list.push(new SimpleQuery({
-      key: "reference",
+      key: "validation_state",
       operator: "=",
       type: "simple",
-      value: project_reference + '-Home.Page'
+      value: ("shared_alive", "released_alive", "published_alive")
+    }));
+    query_list.push(new SimpleQuery({
+      key: "publication_section",
+      operator: "=",
+      type: "simple",
+      value: ('project_home_page')
     }));
     query = new ComplexQuery({
       operator: "AND",
@@ -140,15 +146,15 @@
         redirector_ulr = url;
         return gadget.jio_allDocs({
           query: Query.objectToSearchText(query),
-          select_list: ['validation_state', 'text_content']
+          select_list: ['validation_state', 'text_content', 'publication_section']
         });
       })
       .push(function (result_list) {
         if (result_list.data.rows[0]) {
-          var i, state, web_page;
+          var i, web_page, publication_section;
           for (i = 0; i < result_list.data.rows.length; i = i + 1) {
-            state = result_list.data.rows[i].value.validation_state;
-            if (valid_state_list.includes(state)) {
+            publication_section = result_list.data.rows[i].value.publication_section;
+            if (publication_section === home_page_preference) {
               web_page = result_list.data.rows[i];
               break;
             }
@@ -196,7 +202,8 @@
       var state_dict = {
           jio_key: options.jio_key || "",
           project_title: options.project_title,
-          project_reference: options.project_reference
+          project_reference: options.project_reference,
+          home_page_preference: options.home_page_preference
         };
       return this.changeState(state_dict);
     })
@@ -208,7 +215,7 @@
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
-            getWebPageInfo(gadget, modification_dict.project_reference),
+            getWebPageInfo(gadget, modification_dict.project_reference, modification_dict.home_page_preference),
             gadget.getDeclaredGadget("editor"),
             gadget.getSetting("hateoas_url")
           ]);
