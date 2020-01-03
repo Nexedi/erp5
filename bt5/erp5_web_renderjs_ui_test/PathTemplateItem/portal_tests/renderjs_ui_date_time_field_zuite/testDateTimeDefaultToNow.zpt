@@ -163,7 +163,7 @@
 <tr>
   <td>assertText</td>
   <td>//div[@data-gadget-scope='field_my_start_date']//p</td>
-  <td>regexp:[01]\d/[0123]\d/20\d\d \d\d?:\d\d (AM|PM)</td>
+  <td>regexp:1?\d/[123]?\d/20\d\d \d\d?:\d\d (AM|PM)</td>
 </tr>
 
 </tbody></table>
