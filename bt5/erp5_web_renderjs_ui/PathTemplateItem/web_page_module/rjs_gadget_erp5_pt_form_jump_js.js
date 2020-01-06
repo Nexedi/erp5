@@ -54,6 +54,8 @@
         splitted_jio_key_list = result.jio_key.split('/');
         if (splitted_jio_key_list.length < 2) {
           command = 'change';
+          // XXX Do not use change but couscous cancel dialog
+          result_dict["cancel"] = undefined;
           // result_dict["jio_key"] = gadget.state.jio_key;
           result_dict["page"] = "jump";
           result_dict['action_view'] = gadget.state.view;
