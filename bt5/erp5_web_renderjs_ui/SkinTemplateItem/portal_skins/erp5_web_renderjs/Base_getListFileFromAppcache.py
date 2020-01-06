@@ -1,9 +1,13 @@
-appcache_file = context.getLayoutProperty("configuration_manifest_url", default="gadget_erp5.appcache")
+appcache_reference = context.getLayoutProperty("configuration_manifest_url", default="gadget_erp5.appcache")
 
+web_manifest = context.getPortalObject().portal_catalog.getResultValue(
+  portal_type='Web Manifest',
+  reference=appcache_reference)
 
-text_content = context.web_page_module.searchFolder(
-  portal_type= 'Web Manifest',
-  reference = appcache_file)[0].getTextContent()
+if web_manifest is None:
+  text_content = ''
+else:
+  text_content = web_manifest.getTextContent()
 
 translation_data_file = []
 file_list = []
