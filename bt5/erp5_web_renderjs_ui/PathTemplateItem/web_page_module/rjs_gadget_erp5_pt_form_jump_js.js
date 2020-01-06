@@ -55,7 +55,7 @@
         if (splitted_jio_key_list.length < 2) {
           command = 'change';
           // result_dict["jio_key"] = gadget.state.jio_key;
-          // result_dict["page"] = "cosucous";
+          result_dict["page"] = "jump";
           result_dict['action_view'] = gadget.state.view;
           result_dict['view'] = result.view;
         } else {
