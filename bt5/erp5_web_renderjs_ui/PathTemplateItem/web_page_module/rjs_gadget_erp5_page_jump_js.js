@@ -1,6 +1,6 @@
-/*global window, rJS, renderFormViewHeader */
+/*global window, rJS, renderFormViewHeader, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, renderFormViewHeader) {
+(function (window, rJS, renderFormViewHeader, RSVP) {
   "use strict";
 
   var gadget_klass = rJS(window),
@@ -17,19 +17,40 @@
     };
   }
 
+  function disable() {
+    return;
+  }
+
   for (i = 0; i < method_list.length; i += 1) {
     gadget_klass.declareMethod(method_list[i], propagateMethod(method_list[i]));
   }
 
   gadget_klass
     .declareMethod('render', function (options) {
-      var argument_list = arguments;
-      this.state.jio_key = options.jio_key;
-      this.state.view = options.view;
-      return this.getDeclaredGadget('page_form')
-        .push(function (g) {
-          return g.render.apply(g, argument_list);
-        });
+      var argument_list = arguments,
+        gadget = this;
+
+      return RSVP.all([
+        gadget.getDeclaredGadget('page_form')
+          .push(function (g) {
+            return g.render.apply(g, argument_list);
+          }),
+        gadget.jio_getAttachment(options.jio_key, 'links')
+          .push(function (erp5_document) {
+            return RSVP.all([
+              renderFormViewHeader(gadget, options.jio_key,
+                                        options.view,
+                                        erp5_document),
+              gadget.updatePanel({
+                display_workflow_list: true,
+                erp5_document: erp5_document,
+                editable: true,
+                jio_key: options.jio_key,
+                view: options.view
+              })
+            ]);
+          })
+      ]);
     })
 
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
@@ -39,30 +60,7 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("updatePanel", "updatePanel")
 
-    .allowPublicAcquisition("updateHeader", function updateHeader() {
-      var gadget = this;
-      return gadget.jio_getAttachment(gadget.state.jio_key,
-                                            'links')
-        .push(function (erp5_document) {
-          return renderFormViewHeader(gadget, gadget.state.jio_key,
-                                      gadget.state.view,
-                                      erp5_document);
-        });
-    })
+    .allowPublicAcquisition("updateHeader", disable)
+    .allowPublicAcquisition("updatePanel", disable);
 
-    .allowPublicAcquisition("updatePanel", function updatePanel(param_list) {
-      var gadget = this;
-      return gadget.jio_getAttachment(gadget.state.jio_key,
-                                            'links')
-        .push(function (erp5_document) {
-          return gadget.updatePanel({
-            display_workflow_list: true,
-            erp5_document: erp5_document,
-            editable: true,
-            jio_key: gadget.state.jio_key,
-            view: gadget.state.view
-          });
-        });
-    });
-
-}(window, rJS, renderFormViewHeader));
+}(window, rJS, renderFormViewHeader, RSVP));
