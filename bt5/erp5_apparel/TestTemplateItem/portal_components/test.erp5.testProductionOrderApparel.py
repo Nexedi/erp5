@@ -32,7 +32,6 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5.tests.testOrder import TestOrderMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
@@ -69,7 +68,7 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     operation_category_list = ['operation1', 'operation2']
     if len(self.category_tool.operation.contentValues()) == 0:
       for category_id in operation_category_list:
-        o = self.category_tool.operation.newContent(
+        self.category_tool.operation.newContent(
                                                portal_type='Category',
                                                id=category_id)
 
@@ -310,7 +309,6 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
       sequence.edit(applied_rule=applied_rule)
       self.assertTrue(applied_rule is not None)
       # Test if applied rule has a specialise value with default_order_rule
-      portal_rules = getToolByName(order, 'portal_rules')
       # XXX hardcoded value
       self.assertEqual('default_production_order_rule', \
                         applied_rule.getSpecialiseReference())
@@ -366,7 +364,6 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     self.assertEqual(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEqual("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_delivering_rule', \
                       applied_rule.getSpecialiseReference())
     # Test next applied rule
@@ -377,7 +374,6 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     self.assertEqual(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEqual("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation
@@ -488,7 +484,6 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     self.assertEqual(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEqual("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation
@@ -547,7 +542,6 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     # Test supply applied rule
     applied_rule = component_movement.objectValues()[0]
     self.assertEqual("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_transformation_sourcing_rule', \
                       applied_rule.getSpecialiseReference())
     # Test supply movement
@@ -686,7 +680,6 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     self.assertEqual(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEqual("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_delivering_rule', \
                       applied_rule.getSpecialiseReference())
     # Test next applied rule
@@ -697,7 +690,6 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     self.assertEqual(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEqual("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation
@@ -759,7 +751,6 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     # Test supply applied rule
     applied_rule = component_movement.objectValues()[0]
     self.assertEqual("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_transformation_sourcing_rule', \
                       applied_rule.getSpecialiseReference())
     # Test supply movement
@@ -797,7 +788,6 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     applied_rule_list = modified_movement.objectValues()
     applied_rule = applied_rule_list[0]
     self.assertEqual("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_transformation_sourcing_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation
@@ -824,7 +814,6 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     self.assertEqual(1, len(applied_rule_list))
     applied_rule = applied_rule_list[0]
     self.assertEqual("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_transformation_rule', \
                       applied_rule.getSpecialiseReference())
     # Test deeper simulation
@@ -884,7 +873,6 @@ class TestProductionOrderApparelMixin(TestOrderMixin):
     # Test supply applied rule
     applied_rule = component_movement.objectValues()[0]
     self.assertEqual("Applied Rule", applied_rule.getPortalType())
-    portal_rules = getToolByName(applied_rule, 'portal_rules')
     self.assertEqual('default_transformation_sourcing_rule', \
                       applied_rule.getSpecialiseReference())
     # Test supply movement
@@ -1230,7 +1218,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
 
     supply_node = supply_chain.contentValues(portal_type='Supply Node')[0]
     cb_data = supply_chain.manage_cutObjects([supply_node.getId()])
-    copied, = empty_supply_chain.manage_pasteObjects(cb_data)
+    _, = empty_supply_chain.manage_pasteObjects(cb_data)
 
   def stepCheckPastedSupplyNode(self, sequence=None, sequence_list=None,
                                  **kw):

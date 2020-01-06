@@ -120,7 +120,7 @@ class TestApparelModel(ERP5TypeTestCase):
     color1 = apparel_colour_range.newContent(
         title = 'Blue',
         portal_type = 'Apparel Colour Range Variation')
-    color2 = apparel_colour_range.newContent(
+    apparel_colour_range.newContent(
         title = 'Red',
         portal_type = 'Apparel Colour Range Variation')
 

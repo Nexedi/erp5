@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Document Component" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>Consumption</string> </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value> <string>Products.ERP5.Document.Consumption</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>document.erp5.Consumption</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Document Component</string> </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_error_message</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_warning_message</string> </key>
+            <value>
+              <tuple>
+                <string>W: 40,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 45,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 46,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 49,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 50,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 53,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 60,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 62,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 63,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 67,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 73,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 75,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 77,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 78,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 82,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 83,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 85,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 87,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 88,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 93,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 95,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 97,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 99,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W:103,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W:105,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W:107,  0: Bad indentation. Found 8 spaces, expected 6 (bad-indentation)</string>
+                <string>W:108,  0: Bad indentation. Found 8 spaces, expected 6 (bad-indentation)</string>
+                <string>W:109,  0: Bad indentation. Found 10 spaces, expected 8 (bad-indentation)</string>
+                <string>W:110,  0: Bad indentation. Found 8 spaces, expected 6 (bad-indentation)</string>
+                <string>W:111,  0: Bad indentation. Found 10 spaces, expected 8 (bad-indentation)</string>
+                <string>W:112,  0: Bad indentation. Found 10 spaces, expected 8 (bad-indentation)</string>
+                <string>W:113,  0: Bad indentation. Found 12 spaces, expected 10 (bad-indentation)</string>
+                <string>W:114,  0: Bad indentation. Found 10 spaces, expected 8 (bad-indentation)</string>
+                <string>W:115,  0: Bad indentation. Found 12 spaces, expected 10 (bad-indentation)</string>
+                <string>W:117,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 62,  4: Arguments number differs from overridden \'_setVariationCategoryList\' method (arguments-differ)</string>
+                <string>W: 77,  4: Arguments number differs from overridden \'setVariationCategoryList\' method (arguments-differ)</string>
+                <string>W: 87,  4: Arguments number differs from overridden \'getVariationRangeBaseCategoryItemList\' method (arguments-differ)</string>
+                <string>W: 93, 13: map/filter on lambda could be replaced by comprehension (deprecated-lambda)</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>erp5</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>component_validation_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>validate</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>validated</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -30,8 +30,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from testOrder import TestOrderMixin
+from Products.ERP5.tests.testOrder import TestOrderMixin
 
 class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
   """
@@ -49,7 +48,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
   transformed_resource_portal_type = 'Transformation Transformed Resource'
   operation_portal_type = 'Transformation Operation'
 
-  def afterSetUp(self, quiet=1, run=1):
+  def afterSetUp(self):
     super(TestApparelTransformation, self).afterSetUp()
     self.login()
 
@@ -611,7 +610,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
                                       portal_type="Production Order",
                                       temp_object=1,
                                       specialise_value=transformation)
-    for i, expected in enumerate(expected_list):
+    for _, expected in enumerate(expected_list):
       context = production_order.newContent(
           portal_type="Production Order Line",
           quantity=1,

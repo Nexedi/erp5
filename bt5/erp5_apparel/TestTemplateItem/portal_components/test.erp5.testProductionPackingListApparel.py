@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -30,7 +31,7 @@
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5.tests.testProductionOrderApparel import TestProductionOrderApparelMixin
+from erp5.component.test.testProductionOrderApparel import TestProductionOrderApparelMixin
 from Products.ERP5.tests.testProductionPackingList import TestProductionDelivery
 
 class TestProductionDeliveryApparel(TestProductionOrderApparelMixin,
