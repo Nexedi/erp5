@@ -4,7 +4,6 @@ from ZODB.POSException import ConflictError
 from zExceptions import ExceptionFormatter
 
 from Products.CMFActivity.ActiveResult import ActiveResult
-from Products.ERP5Type.Document import newTempOOoDocument
 from zLOG import LOG, INFO
 
 def dumpWorkflowChain(self, ignore_default=False,
@@ -148,7 +147,11 @@ def checkConversionToolAvailability(self):
   severity = 0
 
   try:
-    temp_document = newTempOOoDocument(self, document_id, data=document_file.data, source_reference=document_id)
+    temp_document = portal.portal_trash.newContent(
+      portal_type='OOo Document',
+      temp_object=True,
+      data=document_file.data,
+      source_reference=document_id)
     temp_document.convertToBaseFormat()
     _, html_result = temp_document.convert(format='html')
   except ConflictError:

@@ -30,6 +30,7 @@ from Products.ERP5OOo.OOoUtils import OOoParser
 parser = OOoParser()
 category_list_spreadsheet_mapping = {}
 error_list = []
+portal = context.getPortalObject()
 
 def default_invalid_spreadsheet_error_handler(error_message):
   raise ValueError(error_message)
@@ -37,8 +38,8 @@ def default_invalid_spreadsheet_error_handler(error_message):
 if invalid_spreadsheet_error_handler is None:
   invalid_spreadsheet_error_handler = default_invalid_spreadsheet_error_handler
 
-property_id_set = context.portal_types.Category.getInstancePropertySet()
-property_id_set.update(getattr(context.portal_types, 'Base Category').getInstancePropertySet())
+property_id_set = portal.portal_types.Category.getInstancePropertySet()
+property_id_set.update(getattr(portal.portal_types, 'Base Category').getInstancePropertySet())
 
 def getIDFromString(string=None):
   """
@@ -83,10 +84,11 @@ if hasattr(import_file, 'headers'):
   content_type = import_file.headers.get('Content-Type', '')
 if not (content_type.startswith('application/vnd.sun.xml')
    or content_type.startswith('application/vnd.oasis.opendocument')):
-  from Products.ERP5Type.Document import newTempOOoDocument
-  tmp_ooo = newTempOOoDocument(context, "_")
-  tmp_ooo.edit(data=import_file.read(),
-               content_type=content_type)
+  tmp_ooo = portal.portal_trash.newContent(
+      portal_type='OOo Document',
+      temp_object=True,
+      data=import_file.read(),
+      content_type=content_type)
   tmp_ooo.convertToBaseFormat()
   _, import_file_content = tmp_ooo.convert('ods')
   parser.openFromString(str(import_file_content))
