@@ -7,8 +7,10 @@ error_list = []
 if appcache_reference:
   url_list = context.Base_getListFileFromAppcache()
   # Check that the manifest is newer than all cached resources.
-  appcache_manifest = getDocumentValue(appcache_reference).getObject()
-  appcache_manifest_modification_date = appcache_manifest.getModificationDate()
+  appcache_manifest = getDocumentValue(appcache_reference)
+  if appcache_manifest is not None:
+    appcache_manifest = appcache_manifest.getObject()
+    appcache_manifest_modification_date = appcache_manifest.getModificationDate()
   for url in url_list:
     if url:
       referenced_document = getDocumentValue(url)
