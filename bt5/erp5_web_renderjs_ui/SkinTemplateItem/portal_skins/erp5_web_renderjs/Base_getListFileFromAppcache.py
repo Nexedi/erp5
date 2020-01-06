@@ -1,8 +1,13 @@
 appcache_reference = context.getLayoutProperty("configuration_manifest_url", default="gadget_erp5.appcache")
 
-text_content = context.getPortalObject().portal_catalog.getResultValue(
+web_manifest = context.getPortalObject().portal_catalog.getResultValue(
   portal_type='Web Manifest',
-  reference=appcache_reference).getTextContent()
+  reference=appcache_reference)
+
+if web_manifest is None:
+  text_content = ''
+else:
+  text_content = web_manifest.getTextContent()
 
 translation_data_url_list = []
 url_list = []
