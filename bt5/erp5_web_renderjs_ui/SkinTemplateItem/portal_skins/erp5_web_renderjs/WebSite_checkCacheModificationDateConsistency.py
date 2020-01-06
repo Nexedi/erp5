@@ -20,8 +20,8 @@ if appcache_reference:
 
   if error_list and fixit:
     appcache_manifest.edit(
-        text_content='''# Last modified by {} on {}
-{}
-'''.format(script.getId(), DateTime(), appcache_manifest.getTextContent()))
+        text_content='''{}
+# Last modified by {} on {}
+'''.format(appcache_manifest.getTextContent(), script.getId(), DateTime()))
 
 return error_list
