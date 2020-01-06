@@ -33,7 +33,6 @@ from zLOG import LOG, DEBUG
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Document import newTempDocument
 
 
 class PaypalService(XMLObject):
@@ -67,15 +66,16 @@ class PaypalService(XMLObject):
     """See Payment Service Interface Documentation"""
     page_template = kw.pop("page_template")
     paypal_dict = kw.get("paypal_dict", {})
-    temp_document = newTempDocument(self, 'id')
-    temp_document.edit(
+    temp_document = self.getPortalObject().portal_trash.newContent(
+      portal_type='Document',
+      temp_object=True,
       link_url_string=self.getLinkUrlString(),
       title=self.getTitle(),
       field_list=self._getFieldList(paypal_dict),
       # append the rest of transmitted parameters page template
       **kw
     )
-    return getattr(temp_document, page_template)()
+    return getattr(temp_document.__of__(self), page_template)()
 
   def notifySuccess(self, redirect_path=None, REQUEST=None):
     """See Payment Service Interface Documentation"""
