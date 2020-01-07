@@ -44,6 +44,26 @@
   <td></td>
 </tr>
 
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/0/Foo_viewDateTimeField?my_start_date:date=2020/01/31%2013:01</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@title='Save']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyPortalStatusMessage</td>
+  <td>Data updated.</td>
+  <td></td>
+</tr>
+
+<!-- Test -->
 <tr>
   <td>open</td>
   <td>${base_url}/web_site_module/renderjs_runner/#/bar_module/0?editable=false</td>
@@ -92,7 +112,8 @@
 <tr>
   <td>assertText</td>
   <td>//div[@data-gadget-scope='field_my_start_date']//p</td>
-  <td>regexp:1?\d/[123]?\d/20\d\d \d\d?:\d\d (AM|PM)</td>
+  <td>1/31/2020 1:01 PM</td>
+  <!--td>regexp:1?\d/[123]?\d/20\d\d \d\d?:\d\d (AM|PM)</td-->
 </tr>
 
 
@@ -116,7 +137,8 @@
 <tr>
   <td>assertText</td>
   <td>//div[@data-gadget-scope='field_my_start_date']//p</td>
-  <td>regexp:\d\d/\d\d/20\d\d \d\d:\d\d$</td>
+  <td>31/01/2020 13:01</td>
+  <!--td>regexp:\d\d/\d\d/20\d\d \d\d:\d\d$</td-->
 </tr>
 
 </tbody></table>
