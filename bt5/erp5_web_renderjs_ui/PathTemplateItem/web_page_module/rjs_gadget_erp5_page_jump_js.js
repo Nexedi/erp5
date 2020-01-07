@@ -31,10 +31,12 @@
         gadget = this;
 
       return RSVP.all([
+        // Render the form_list...
         gadget.getDeclaredGadget('page_form')
           .push(function (g) {
             return g.render.apply(g, argument_list);
           }),
+        // But display the panel/header for the context document
         gadget.jio_getAttachment(options.jio_key, 'links')
           .push(function (erp5_document) {
             return RSVP.all([
@@ -60,6 +62,7 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("updatePanel", "updatePanel")
 
+    // Disable the form_list header/panel
     .allowPublicAcquisition("updateHeader", disable)
     .allowPublicAcquisition("updatePanel", disable);
 

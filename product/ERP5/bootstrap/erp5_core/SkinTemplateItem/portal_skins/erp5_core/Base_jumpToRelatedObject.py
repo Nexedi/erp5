@@ -1,4 +1,4 @@
-from ZTUtils import make_query
+# from ZTUtils import make_query
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
 checkPerm = portal.portal_membership.checkPermission
@@ -29,10 +29,18 @@ if related:
       module_id = portal.getDefaultModuleId(portal_type[0], None)
       if module_id is not None:
         module = portal.getDefaultModule(portal_type[0])
+        message = Base_translateString(
+          # first, try to get a full translated message with portal types
+          "Documents related to %s." % context.getPortalType(),
+           # if not found, fallback to generic translation
+          default=Base_translateString('Documents related to ${that_portal_type} : ${that_title}.',
+            mapping={"that_portal_type": context.getTranslatedPortalType(),
+                     "that_title": context.getTitleOrId() }),)
         return module.Base_redirect(
                  'view', keep_items={'default_%s_uid' % base_category: relation.getUid(),
                                      'ignore_hide_rows': 1,
-                                     'reset': 1})
+                                     'reset': 1,
+                                     'portal_status_message': message})
   search_method = getattr(relation, 'get%sRelatedList' % getter_base_name)
 else:
   search_method = getattr(relation, 'get%sList' % getter_base_name)
@@ -109,9 +117,17 @@ else:
     relation_found = 0
   else :
     selection_uid_list = [x.getUid() for x in related_object_list]
+    message = Base_translateString(
+      # first, try to get a full translated message with portal types
+      "Documents related to %s." % context.getPortalType(),
+       # if not found, fallback to generic translation
+      default=Base_translateString('Documents related to ${that_portal_type} : ${that_title}.',
+        mapping={"that_portal_type": context.getTranslatedPortalType(),
+                 "that_title": context.getTitleOrId() }),)
     return context.Base_redirect(relation_form_id,
                 keep_items=dict(reset=1,
-                                uid=selection_uid_list))
+                                uid=selection_uid_list,
+                                portal_status_message=message))
 
 query_params = dict(portal_status_message=message)
 if selection_name and not relation_found:

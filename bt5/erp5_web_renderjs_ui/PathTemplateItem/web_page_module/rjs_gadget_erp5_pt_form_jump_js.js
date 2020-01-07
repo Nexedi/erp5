@@ -27,17 +27,13 @@
       .push(function (data) {
         return gadget.submitContent(
           gadget.state.jio_key,
-          gadget.state.erp5_document._embedded._view._actions.put.href,  // most likely points to Base_callDialogMethod
+          gadget.state.erp5_document._embedded._view._actions.put.href,  // most likely points to Base_jumpToRelatedObject
           data
         );
       })
       .push(function (result) {  // success redirect handler
-        // console.log(result);
-        // throw new Error("couscous");
         var splitted_jio_key_list,
-          splitted_current_jio_key_list,
           command,
-          i,
           result_dict = {};
 
         if (!result.jio_key) {
@@ -47,23 +43,20 @@
           // don't update navigation history when not really redirecting
           return gadget.redirect({command: 'cancel_dialog_with_history'});
         }
-        // Check if the redirection goes to a module.
-        // In this case, do not add the module to the history
-        // Keep the current context too
-        // example: when cloning, do not keep the original document in history
+
         splitted_jio_key_list = result.jio_key.split('/');
         if (splitted_jio_key_list.length < 2) {
-          command = 'change';
-          // XXX Do not use change but couscous cancel dialog
-          result_dict["cancel"] = undefined;
-          // result_dict["jio_key"] = gadget.state.jio_key;
-          result_dict["page"] = "jump";
-          result_dict['action_view'] = gadget.state.view;
-          result_dict['view'] = result.view;
+          // When going to a module, stick to the current document context,
+          // ie, display current document panel/header, but display the module form_list
+          // This is implemented by the page "jump"
+          command = 'display_with_history';
+          result_dict.jio_key = gadget.state.jio_key;
+          result_dict.view = result.view;
+          result_dict.page = "jump";
         } else {
           command = 'push_history';
-          result_dict["jio_key"] = result.jio_key;
-          result_dict["view"] = result.view;
+          result_dict.jio_key = result.jio_key;
+          result_dict.view = result.view;
         }
 
 
@@ -95,7 +88,6 @@
     .declareMethod('getContent', getContent, {mutex: 'changestate'})
 
     .declareMethod('render', function render(options) {
-      console.log('--- jump', options);
       return this.changeState({
         jio_key: options.jio_key,
         view: options.view,

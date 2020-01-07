@@ -97,7 +97,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Jump JS</string> </value>
+            <value> <string>Gadget ERP5 Form Jump JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -234,7 +234,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>980.64424.40175.36573</string> </value>
+                      <value> <string>981.337.64021.48674</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +252,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1578323233.18</float>
+                              <float>1578410060.49</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
