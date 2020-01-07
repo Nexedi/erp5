@@ -93,7 +93,7 @@
             promise_list = [];
           erp5_document = result;
           view_list = ensureArray(erp5_document._links.view);
-          jump_list = ensureArray(erp5_document._links.action_object_jump);
+          jump_list = ensureArray(erp5_document._links.action_object_jio_jump);
 
           for (i = 0; i < view_list.length; i += 1) {
             promise_list.push(gadget.getUrlFor({command: 'display_with_history', options: {
