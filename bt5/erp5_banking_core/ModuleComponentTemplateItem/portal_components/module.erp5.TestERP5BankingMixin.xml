@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Module Component" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>TestERP5BankingMixin</string> </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value> <string>Products.ERP5Banking.tests.TestERP5BankingMixin</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>module.erp5.TestERP5BankingMixin</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Module Component</string> </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_error_message</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_warning_message</string> </key>
+            <value>
+              <tuple>
+                <string>W: 98,  8: Unused variable \'userdb_path\' (unused-variable)</string>
+                <string>W:493, 40: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:631,  4: Unused variable \'de_co_vault_type\' (unused-variable)</string>
+                <string>W:632,  4: Unused variable \'guichet_bi_vault_type\' (unused-variable)</string>
+                <string>W:634,  4: Unused variable \'guichet_gp_vault_type\' (unused-variable)</string>
+                <string>W:636,  4: Unused variable \'guichet_gv_vault_type\' (unused-variable)</string>
+                <string>W:638,  4: Unused variable \'guichet_op_vault_type\' (unused-variable)</string>
+                <string>W:662,  8: Unused variable \'encaisse_des_devises\' (unused-variable)</string>
+                <string>W:730, 53: Redefining built-in \'open\' (redefined-builtin)</string>
+                <string>W:730, 44: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:750, 77: Redefining built-in \'open\' (redefined-builtin)</string>
+                <string>W:750, 53: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:757, 71: Redefining built-in \'open\' (redefined-builtin)</string>
+                <string>W:757, 50: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:767, 35: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:779, 29: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:868, 25: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:932,  4: Unused variable \'inventory_line\' (unused-variable)</string>
+                <string>W:944, 53: Redefining built-in \'min\' (redefined-builtin)</string>
+                <string>W:944, 58: Redefining built-in \'max\' (redefined-builtin)</string>
+                <string>W:944, 28: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:960, 33: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:984, 29: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:1030, 24: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:1047, 37: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:1056,  4: Unused variable \'variation\' (unused-variable)</string>
+                <string>W:1127,  2: Dangerous default value [] as argument (dangerous-default-value)</string>
+                <string>W:1202, 24: map/filter on lambda could be replaced by comprehension (deprecated-lambda)</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>erp5</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>component_validation_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>validate</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>validated</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

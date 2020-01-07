@@ -1,0 +1,11 @@
+document.erp5.BankingOperation
+document.erp5.BankingOperationLine
+document.erp5.CashContainer
+document.erp5.CashCurrency
+document.erp5.CashDelivery
+document.erp5.CashDeliveryCell
+document.erp5.CashDeliveryLine
+document.erp5.CashInventory
+document.erp5.CashInventoryCell
+document.erp5.CashInventoryLine
+document.erp5.CheckOperationLine
