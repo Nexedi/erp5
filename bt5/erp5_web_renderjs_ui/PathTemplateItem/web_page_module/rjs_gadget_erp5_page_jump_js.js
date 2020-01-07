@@ -40,7 +40,7 @@
             return RSVP.all([
               renderFormViewHeader(gadget, options.jio_key,
                                         options.view,
-                                        erp5_document),
+                                        erp5_document, true),
               gadget.updatePanel({
                 display_workflow_list: true,
                 erp5_document: erp5_document,
