@@ -42,26 +42,6 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
   """
   Mixin class for unit test of banking operations
   """
-
-  def getBusinessTemplateList(self):
-    """
-      Return the list of business templates we need to run the test.
-      This method is called during the initialization of the unit test by
-      the unit test framework in order to know which business templates
-      need to be installed to run the test on.
-    """
-    return ('erp5_core_proxy_field_legacy',
-            'erp5_base',
-            'erp5_pdm',
-            'erp5_trade',
-            'erp5_item',
-            'erp5_accounting',
-            'erp5_banking_core',
-            'erp5_banking_inventory',
-            'erp5_banking_cash',
-            'erp5_banking_check',
-    )
-
   def enableLightInstall(self):
     """
       Return if we should do a light install (1) or not (0)
