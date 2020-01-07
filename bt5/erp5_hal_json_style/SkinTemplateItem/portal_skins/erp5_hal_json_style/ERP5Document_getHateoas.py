@@ -1358,7 +1358,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # (e.g. function or bound class method will) not have .meta_type thus be considered a Script
         # then we execute it directly
         if "Script" in getattr(view_instance, "meta_type", "Script"):
-          if current_action.get('category_type', None) == 'object_jump':
+          if current_action.get('category_type', None) == 'object_jio_jump':
             view_instance = getattr(traversed_document, 'Base_viewFakeJumpForm')
           else:
             view_instance = getattr(traversed_document, 'Base_viewFakePythonScriptActionForm')
@@ -1410,7 +1410,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
         global_action_type = ("view", "workflow", "object_new_content_action",
                               "object_clone_action", "object_delete_action",
-                              "object_list_action", "object_jump")
+                              "object_list_action", "object_jio_jump")
         if (erp5_action_key == view_action_type or
             erp5_action_key in global_action_type or
             "_jio" in erp5_action_key):
@@ -1435,32 +1435,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                 "view": erp5_action_list[-1]['name'],
                 "extra_param_json": urlsafe_b64encode(json.dumps(ensureSerializable(extra_param_json)))
               }
-
-        if erp5_action_key == 'object_jumpX':
-          # XXX couscous
-          if 'Base_jumpToRelatedObject?' in view_action['url']:
-            # Fetch the URL arguments
-            # XXX Correctly unquote arguments
-            argument_dict = dict([x.split('=') for x in view_action['url'].split('?', 1)[1].split("&")])
-            jump_portal_type = argument_dict.pop('portal_type', None)
-            if (jump_portal_type is not None):
-              jump_portal_type = jump_portal_type.replace('+', ' ')
-            final_argument_dict = {'portal_type': jump_portal_type}
-            jump_related = argument_dict.pop('related', 1)
-            if (jump_related):
-              jump_related_suffix = ''
-            else:
-              jump_related_suffix = 'related_'
-
-            jump_uid = portal.restrictedTraverse(argument_dict.pop('jump_from_relative_url', getRealRelativeUrl(traversed_document))).getUid()
-            final_argument_dict['default_%s_%suid' % (argument_dict.pop('base_category'), jump_related_suffix)] = jump_uid
-
-            erp5_action_list[-1]['href'] = url_template_dict["jio_search_template"] % {
-              "query": make_query({"query": sql_catalog.buildQuery(final_argument_dict).asSearchTextExpression(sql_catalog)})
-            }
-          else:
-            # XXX How to handle all custom jump actions?
-            erp5_action_list.pop(-1)
 
       if erp5_action_list:
         if len(erp5_action_list) == 1:
