@@ -7,7 +7,7 @@
               onchange="submitAction(this.form,'Base_doJump')">
         <option selected="selected" value=""
                 i18n:translate="" i18n:domain="ui">Jump...</option>
-        <tal:block tal:repeat="jump actions/object_jump | nothing">
+        <tal:block tal:repeat="jump python:here.Base_fixDialogActions(actions, 'object_jump') or []">
           <option tal:attributes="value jump/url"
                   tal:content="jump/name" i18n:translate="" i18n:domain="ui" />
         </tal:block>
