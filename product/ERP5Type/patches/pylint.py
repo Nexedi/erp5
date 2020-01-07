@@ -224,5 +224,34 @@ def _getattr(self, name, *args, **kw):
         return [ast]
 Module.getattr = _getattr
 
+from astroid import register_module_extender
+def AccessControl_PermissionRole_transform():
+    return AstroidBuilder(MANAGER).string_build('''
+def rolesForPermissionOn(perm, object, default=_default_roles, n=None):
+    return None
+
+class PermissionRole(object):
+    def __init__(self, name, default=('Manager',)):
+        return None
+    def __of__(self, parent):
+        return None
+    def rolesForPermissionOn(self, value):
+        return None
+
+class imPermissionRole(object):
+    def __of__(self, value):
+        return None
+    def rolesForPermissionOn(self, value):
+        return None
+    def __getitem__(self, i):
+        return None
+    def __len__(self):
+        return None
+
+_what_not_even_god_should_do = []
+''')
+register_module_extender(MANAGER, 'AccessControl.PermissionRole',
+                         AccessControl_PermissionRole_transform)
+
 if sys.modules['isort'] is None:
     del sys.modules['isort']

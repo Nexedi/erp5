@@ -2231,6 +2231,9 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed
 class FooBar(ValidationFailed):
   def __init__(self, *args, **kw):
     super(FooBar, self).__init__(*args, **kw)
+
+# Transforms for Zope which should ideally be upstream'ed
+from AccessControl.PermissionRole import rolesForPermissionOn, PermissionRole, imPermissionRole, _what_not_even_god_should_do # pylint: disable=unused-import
 """ % (dict(namespace=namespace,
             reference1=imported_reference1,
             module2=imported_module2,
