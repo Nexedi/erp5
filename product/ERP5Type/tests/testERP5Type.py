@@ -211,6 +211,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     def test_03_NewTempObject(self):
       portal = self.portal
 
+      # WARNING: `newTemp<PortalType>(self, ID)` is deprecated in favor of
+      # `self.newContent(portal_type=<PortalType>, temp_object=True, id=ID)`
       from Products.ERP5Type.Document import newTempPerson
       o = newTempPerson(portal, 1.2)
       o.setTitle('toto')

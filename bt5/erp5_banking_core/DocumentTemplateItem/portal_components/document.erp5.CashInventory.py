@@ -63,7 +63,7 @@ class CashInventory(Inventory, BankingOperation):
       setting another kind of temp delivery line.
       """
       def newTempCashDeliveryLine(self, inventory_id):
-        return self.getPortalObject().portal_trash.newContent(
+        return self.newContent(
           portal_type='Cash Delivery Line',
           temp_object=True,
           id=inventory_id)
