@@ -66,7 +66,7 @@ class PaypalService(XMLObject):
     """See Payment Service Interface Documentation"""
     page_template = kw.pop("page_template")
     paypal_dict = kw.get("paypal_dict", {})
-    temp_document = self.getPortalObject().portal_trash.newContent(
+    temp_document = self.newContent(
       portal_type='Document',
       temp_object=True,
       link_url_string=self.getLinkUrlString(),
@@ -75,7 +75,7 @@ class PaypalService(XMLObject):
       # append the rest of transmitted parameters page template
       **kw
     )
-    return getattr(temp_document.__of__(self), page_template)()
+    return getattr(temp_document, page_template)()
 
   def notifySuccess(self, redirect_path=None, REQUEST=None):
     """See Payment Service Interface Documentation"""
