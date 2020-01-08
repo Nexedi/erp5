@@ -109,3 +109,13 @@ class TestRenderJSUpgrade(ERP5TypeTestCase):
     manifest_content_list = manifest_content.split('\n')
     self.assertIn(manifest_content_list[0] , self.manifest.getTextContent())
     self.assertIn('\n'.join(manifest_content_list[2:]) , self.manifest.getTextContent())
+
+  def test_upgrade_site_with_non_existant_appcache(self):
+    non_existant_appcache = 'gw4wA4qA4T9^s*L3WD="k]'
+    self.web_site.setProperty(
+        'configuration_manifest_url', non_existant_appcache)
+    self.tic()
+    self.assertEqual(
+        [
+          'Error: Web Site %s references a non existant appcache %s' % (self.web_site.getRelativeUrl(), non_existant_appcache)
+        ], [str(m.getMessage()) for m in self.web_site.checkConsistency()])
