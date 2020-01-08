@@ -434,7 +434,9 @@
 
     display_url = getDisplayUrlFor(jio_key, options);
 
-    if (storage_key) {
+    // Only keep state for the default view
+    // otherwise, user will never be able to reset it with the filter panel
+    if (storage_key && ((options.view === undefined) || (options.view === 'view'))) {
       queue = gadget.props.jio_state_gadget.put(storage_key, dropStickyParameterEntry(options));
     } else {
       queue = new RSVP.Queue();
