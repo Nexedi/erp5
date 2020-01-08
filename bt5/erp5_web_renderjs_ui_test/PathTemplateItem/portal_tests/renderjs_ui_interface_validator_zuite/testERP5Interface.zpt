@@ -13,7 +13,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 
 <tal:block tal:define="check_configuration python: {'app_cache_reference': 'gadget_erp5.appcache',
-                                                    'gadget_count': 64}">
+                                                    'gadget_count': 65}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUiInterface/macros/run_app_interface_check" />
 </tal:block>
 

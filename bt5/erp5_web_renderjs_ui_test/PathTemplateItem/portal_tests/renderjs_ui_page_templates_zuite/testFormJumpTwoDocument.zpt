@@ -1,0 +1,55 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Page Front</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Page Tab Link List</td></tr>
+</thead><tbody>
+
+<tal:block tal:define="jump_configuration python: {'jump_count': 2}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUiJump/macros/init" />
+</tal:block>
+
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Documents related to Bar : Title 0.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="pagination_configuration python: {'header': '(2)', 'footer': '2 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+<tal:block tal:define="parsed_query python: '';
+                       search_query python: ''">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
+</tal:block>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Related 0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Related 1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Bar: Title 0</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Custom Action No Dialog</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
