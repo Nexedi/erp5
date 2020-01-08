@@ -1,0 +1,64 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+  <tal:block metal:define-macro="init">
+    <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+    <tr>
+      <td>open</td>
+      <td>${base_url}/bar_module/BarModule_createObjects?num:int=1</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Created Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><b tal:content="python: 'Create %(jump_count)i related bar' % jump_configuration"></b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td tal:content="python: '${base_url}/bar_module/0/Bar_createRelatedObjects?num:int=%(jump_count)i' % jump_configuration"></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Created Successfully.</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_site_module/renderjs_runner/#/bar_module</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
+
+    <tal:block tal:define="click_configuration python: {'text': 'Title 0'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+    <!-- Go to another tab, to ensure cancel url is correctly used -->
+    <tal:block tal:define="click_configuration python: {'text': 'Metadata'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+    <tal:block tal:define="click_configuration python: {'text': 'Views'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <tal:block tal:define="click_configuration python: {'text': 'Related Bar'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+    </tal:block>
+    <!-- One loader for the form jump dialog submission -->
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <!-- Another loader for loading the final page -->
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+  </tal:block>
+
+</tal:block>
