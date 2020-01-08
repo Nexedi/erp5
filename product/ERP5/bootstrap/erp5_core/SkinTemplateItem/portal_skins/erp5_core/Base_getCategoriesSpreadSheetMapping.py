@@ -84,7 +84,7 @@ if hasattr(import_file, 'headers'):
   content_type = import_file.headers.get('Content-Type', '')
 if not (content_type.startswith('application/vnd.sun.xml')
    or content_type.startswith('application/vnd.oasis.opendocument')):
-  tmp_ooo = portal.portal_trash.newContent(
+  tmp_ooo = context.newContent(
       portal_type='OOo Document',
       temp_object=True,
       data=import_file.read(),
