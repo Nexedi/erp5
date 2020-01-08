@@ -329,11 +329,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python:\'<img src="%s">\' % here.getPhotoData()
-
-]]></string> </value>
+            <value> <string>python: here.getAbsoluteUrl()</string> </value>
         </item>
       </dictionary>
     </pickle>
