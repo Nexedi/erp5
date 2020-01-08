@@ -3,24 +3,18 @@
 (function (document, window, RSVP, rJS, translation_data) {
   "use strict";
 
-  function getSelectedLanguage(gadget) {
-    var queue = new RSVP.Queue();
-
+  function getSelectedLanguage(gadget, callback) {
     if (!gadget.state.language) {
-      queue.push(function () {
-        return gadget.getSettingList([
+      return gadget.getSettingList([
           "selected_language",
           "default_selected_language"
-        ]);
-      })
-      .push(function (result_list) {
-        gadget.state.language = result_list[0] || result_list[1];
-      });
+        ])
+        .push(function (result_list) {
+          gadget.state.language = result_list[0] || result_list[1];
+          return callback(gadget.state.language);
+        });
     }
-
-    return queue.push(function () {
-      return gadget.state.language;
-    });
+    return callback(gadget.state.language);
   }
 
   function translate(string, gadget) {
@@ -126,8 +120,7 @@
   }
 
   function promiseTranslateList(gadget, string_list, only_first) {
-    return getSelectedLanguage(gadget)
-      .push(function () {
+    return getSelectedLanguage(gadget, function () {
         return translateList(gadget, string_list, only_first);
       });
   }
@@ -135,7 +128,9 @@
   rJS(window)
     .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareMethod('getSelectedLanguage', function () {
-      return getSelectedLanguage(this);
+      return getSelectedLanguage(this, function (language) {
+        return language;
+      });
     })
     .declareMethod('getTranslationList', function (string_list) {
       return promiseTranslateList(this, string_list);
@@ -146,10 +141,9 @@
 
     .declareMethod('translateHtml', function (string) {
       var gadget = this;
-      return getSelectedLanguage(gadget)
-        .push(function (language) {
-          return translateHtml(string, gadget);
-        });
+      return getSelectedLanguage(gadget, function () {
+        return translateHtml(string, gadget);
+      });
     });
 
 }(document, window, RSVP, rJS, translation_data));
