@@ -11,7 +11,7 @@ for brain in context.getPortalObject().portal_catalog(portal_type='Action Inform
     continue
   # if (action_type in ['object_report', 'object_exchange']):
   #   continue
-  if ('web' in action_type) or ('jio' in action_type) or (action_type in ['object_view', 'object_list', 'object_jump', 'object_sort', 'object_ui', 'object_search']):
+  if ('web' in action_type) or ('jio' in action_type) or (action_type in ['object_view', 'object_list', 'object_sort', 'object_ui', 'object_search']):
     continue
 
   i += 1
@@ -20,6 +20,34 @@ for brain in context.getPortalObject().portal_catalog(portal_type='Action Inform
 result = '--- %i<br>%s' % (i, result)
 print result
 return printed
+
+
+return context.getPortalObject().portal_catalog(source_project_title='1234', src__=1)
+
+return context.getPortalObject().portal_catalog(source_project_uid='1234', src__=1)
+
+
+
+parameter_list = field.getTemplateField().get_value('default_params')
+
+# Some document subobjects have a workflow, and so, can be only be deleted from some state
+# If the listbox does not display them, do not add the state filter parameter
+filter_portal_type_list = [x[1] for x in parameter_list if x[0] == 'portal_type']
+if filter_portal_type_list:
+  if sametype(filter_portal_type_list, ''):
+    filter_portal_type_list = [filter_portal_type_list]
+else:
+  filter_portal_type_list = None
+
+return parameter_list + context.Module_listWorkflowTransitionItemList(filter_portal_type_list=filter_portal_type_list)
+
+
+
+
+
+
+
+
 
 # check selection content
 portal = context.getPortalObject()
