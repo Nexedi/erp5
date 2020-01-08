@@ -201,10 +201,9 @@ class FolderMixIn(ExtensionClass.Base):
         portal_type = allowed_content_type_list[0].id
       else:
         raise ValueError('Creation disallowed')
-    else:
+    elif not temp_object:
       type_info = pt.getTypeInfo(container)
-      if type_info is not None and not type_info.allowType(portal_type) and \
-          'portal_trash' not in container.getPhysicalPath():
+      if type_info is not None and not type_info.allowType(portal_type):
         raise ValueError('Disallowed subobject type: %s on %r' % (portal_type, container))
 
     type_info = pt.getTypeInfo(portal_type)
