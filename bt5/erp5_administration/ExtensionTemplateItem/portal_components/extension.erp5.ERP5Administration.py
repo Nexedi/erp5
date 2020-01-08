@@ -147,9 +147,10 @@ def checkConversionToolAvailability(self):
   severity = 0
 
   try:
-    temp_document = portal.portal_trash.newContent(
+    temp_document = self.newContent(
       portal_type='OOo Document',
       temp_object=True,
+      id=document_id,
       data=document_file.data,
       source_reference=document_id)
     temp_document.convertToBaseFormat()
