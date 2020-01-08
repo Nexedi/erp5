@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_jump</string> </value>
+            <value> <string>object_jio_jump</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
