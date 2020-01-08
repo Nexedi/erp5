@@ -102,7 +102,10 @@ class TestRenderJSUpgrade(ERP5TypeTestCase):
     self.assertGreater(
         self.manifest.getModificationDate(),
         self.javascript.getModificationDate())
+    # Last modified... is insert at second line
     self.assertIn(
         'Last modified by WebSite_checkCacheModificationDateConsistency on',
-        self.manifest.getTextContent())
-    self.assertIn(manifest_content, self.manifest.getTextContent())
+        self.manifest.getTextContent().split('\n')[1])
+    manifest_content_list = manifest_content.split('\n')
+    self.assertIn(manifest_content_list[0] , self.manifest.getTextContent())
+    self.assertIn('\n'.join(manifest_content_list[2:]) , self.manifest.getTextContent())
