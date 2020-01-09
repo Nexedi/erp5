@@ -506,12 +506,17 @@ class CopyContainer:
         # Note: do not use __recurse as it only iterates over immediate content,
         # and then stop instead of calling itself into them. It relies on called
         # methods to call it back, and we do not want that for _setUid .
+        # Basically this block of code is for ERP5ish objects only.
         todo_list = [new_ob]
         while todo_list:
           document = todo_list.pop()
           todo_list.extend(document.objectValues())
-          todo_list.extend(document.opaqueValues())
-          document._setUid(None)
+          opaqueValues = getattr(document, 'opaqueValues', None)
+          if opaqueValues is not None:
+            todo_list.extend(opaqueValues())
+          _setUid = getattr(document, '_setUid', None)
+          if _setUid is not None:
+            _setUid(None)
       self._setObject(new_id, new_ob, set_owner=set_owner)
       new_ob = self._getOb(new_id)
       new_ob._postCopy(self, op=op)
