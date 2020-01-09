@@ -267,6 +267,18 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEqual(b.isTempObject(), 1)
       self.assertEqual(b.getId(), str(2))
 
+      # Test newContent with the temp_object parameter on the Portal
+      o = portal.newContent(portal_type="Person", temp_object=1)
+      o.setTitle('bar')
+      self.assertEqual(o.getTitle(), 'bar')
+      self.assertEqual(o.isTempObject(), 1)
+      a = o.newContent(id=1, portal_type="Telephone", temp_object=1)
+      self.assertEqual(str(a.getId()), str(1))
+      self.assertEqual(a.isTempObject(), 1)
+      b = o.newContent(id=2, portal_type="Telephone")
+      self.assertEqual(b.isTempObject(), 1)
+      self.assertEqual(b.getId(), str(2))
+
       # Test newContent with the temp_object parameter and where a non-temp_object would not be allowed
       o = portal.person_module.newContent(portal_type="Organisation", temp_object=1)
       o.setTitle('bar')

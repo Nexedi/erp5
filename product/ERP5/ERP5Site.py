@@ -283,6 +283,9 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     request.RESPONSE.realm = None
     return super(ERP5Site, self).__before_publishing_traverse__(self2, request)
 
+  def _getTypesTool(self):
+    return self.portal_types
+
   def _initSystemPreference(self, cloudooo_url):
     """
     Post-addERP5Site code to make sure that cloudoo is configured,
@@ -1745,25 +1748,6 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     module_id = self.getDefaultModuleId(portal_type, default)
     if module_id:
       return getattr(self, module_id, None)
-
-  security.declareProtected(Permissions.AddPortalContent, 'newContent')
-  def newContent(self, id=None, portal_type=None, **kw):
-    """
-      Creates a new content
-    """
-    if id is None:
-      raise ValueError, 'The id should not be None'
-    if portal_type is None:
-      raise ValueError, 'The portal_type should not be None'
-    self.portal_types.constructContent(type_name=portal_type,
-                                       container=self,
-                                       id=id,
-                                       ) # **kw) removed due to CMF bug
-    new_instance = self[id]
-
-    if kw:
-      new_instance._edit(force_update=1, **kw)
-    return new_instance
 
   security.declarePublic('getVisibleAllowedContentTypeList')
   def getVisibleAllowedContentTypeList(self):
