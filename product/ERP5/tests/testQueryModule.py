@@ -62,7 +62,7 @@ class TestQueryModule(ERP5TypeTestCase):
 
   def test_jump_query_action_visible(self):
     action_list = self.portal.portal_actions.listFilteredActionsFor(
-                self.doc).get('object_jump')
+                self.doc).get('object_jio_jump')
     self.assertEqual(1, len([ai for ai in
             action_list if ai['name'] == 'Queries']))
 
