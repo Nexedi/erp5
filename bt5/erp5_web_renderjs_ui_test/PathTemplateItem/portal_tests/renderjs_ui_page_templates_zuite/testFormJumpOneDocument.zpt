@@ -30,6 +30,24 @@
   <td></td>
 </tr>
 
+<!-- Check the history link -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Bar: Related 0' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Bar: Title 0' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Metadata' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
+
 </tbody></table>
 </body>
 </html>
