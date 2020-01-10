@@ -436,7 +436,9 @@
 
     // Only keep state for the default view
     // otherwise, user will never be able to reset it with the filter panel
-    if (storage_key && ((options.view === undefined) || (options.view === 'view'))) {
+    // Do not store state for module subdocument, to not pollute the IDB size
+    if ((storage_key && (storage_key.indexOf('/') === -1)) &&
+        ((options.view === undefined) || (options.view === 'view'))) {
       queue = gadget.props.jio_state_gadget.put(storage_key, dropStickyParameterEntry(options));
     } else {
       queue = new RSVP.Queue();
