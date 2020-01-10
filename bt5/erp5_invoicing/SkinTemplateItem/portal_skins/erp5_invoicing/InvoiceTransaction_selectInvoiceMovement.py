@@ -11,18 +11,28 @@ if context.Invoice_isAdvanced():
   kw['explanation_portal_type']       = ['%s Order' % trade_type,
                                          '%s Invoice' % trade_type,
                                          '%s Packing List' % trade_type,
-                                         'Returned %s Packing List' % trade_type]
+                                         'Returned %s Order' % trade_type,
+                                         'Returned %s Packing List' % trade_type,
+                                        ]
 else:
   kw['explanation_portal_type']       = ['%s Order' % trade_type,
                                          '%s Invoice Transaction' % trade_type,
                                          '%s Packing List' % trade_type,
-                                         'Returned %s Packing List' % trade_type]
+                                         'Returned %s Order' % trade_type,
+                                         'Returned %s Packing List' % trade_type,
+                                        ]
 kw['portal_type']                   = 'Simulation Movement'
 
 kw['delivery_uid'] = None
 kw['left_join_list'] = ['delivery_uid']
 kw['select_dict'] = dict(delivery_uid=None)
-kw['group_by'] = ('uid',)
+
+# We assume that all simulation movements without a delivery are in planned or auto planned state.
+# By passing this, catalog should use an index on portal_type + simulation state.
+# XXX actually we do not even pass auto_planned to have only 1 value, because we just do not use
+# auto_planned state in this project.
+kw['simulation_state'] = ('planned', )
+
 
 search_kw = kw.copy()
 search_kw['grand_parent_simulation_state'] = ['started']
