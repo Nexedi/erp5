@@ -32,6 +32,7 @@ def getRssDataAsDict(context, url, username=None, password=None):
     # some bozo exceptions can be ignored
     if not isinstance(d.bozo_exception, (
         feedparser.CharacterEncodingOverride,
+        feedparser.NonXMLContentType,
       )):
       return {'status': -5}
   if d.status == 401:
