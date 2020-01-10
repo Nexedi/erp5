@@ -26,5 +26,20 @@ for line in line_list:
   line.setResource(None)
   assert line.getResource() == resource
 
+
+# XXX Jérome: this is not backported yet.
+# If payments transactions were already built, we update these
+# payment transactions causalities to add this new invoice.
+payment_transaction_set = set([])
+for delivery in context.getCausalityValueList():
+  payment_transaction_set.update(
+    delivery.getCausalityRelatedValueList(portal_type='Payment Transaction'))
+  for order in delivery.getCausalityValueList():
+    payment_transaction_set.update(
+      order.getCausalityRelatedValueList(portal_type='Payment Transaction'))
+for payment_transaction in payment_transaction_set:
+  if context not in payment_transaction.getCausalityValueList():
+    payment_transaction.setCausalityValueList(payment_transaction.getCausalityValueList() + [context])
+
 # round debit / credit on created transaction.
 context.AccountingTransaction_roundDebitCredit()
