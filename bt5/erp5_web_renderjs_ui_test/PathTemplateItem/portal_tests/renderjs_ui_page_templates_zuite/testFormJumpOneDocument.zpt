@@ -18,10 +18,15 @@
                                                            'text': 'Bar related to Bar : Title 0.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
-  <td>assertTextPresent</td>
-  <td>Related 0</td>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Bar: Related 0' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='View' and contains(@class, 'active')]</td>
   <td></td>
 </tr>
 

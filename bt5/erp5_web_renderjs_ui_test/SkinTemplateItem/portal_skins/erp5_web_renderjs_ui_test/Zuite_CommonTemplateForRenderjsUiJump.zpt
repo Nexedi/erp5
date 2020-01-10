@@ -33,6 +33,13 @@
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+    <!-- Go to another tab, to ensure cancel url is correctly used -->
+    <tal:block tal:define="click_configuration python: {'text': 'Metadata'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
     <tal:block tal:define="click_configuration python: {'text': 'Views'}">
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
     </tal:block>
@@ -40,6 +47,9 @@
     <tal:block tal:define="click_configuration python: {'text': 'Related Bar'}">
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
     </tal:block>
+    <!-- One loader for the form jump dialog submission -->
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <!-- Another loader for loading the final page -->
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
   </tal:block>

@@ -14,15 +14,21 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUiJump/macros/init" />
 </tal:block>
 
-<tr>
-  <td>assertTextPresent</td>
-  <td>Title 0</td>
-  <td></td>
-</tr>
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'No Bar related.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Bar: Title 0' and contains(@href, '#!history_previous')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='panel']//a[text()='Metadata' and contains(@class, 'active')]</td>
+  <td></td>
+</tr>
 
 </tbody></table>
 </body>
