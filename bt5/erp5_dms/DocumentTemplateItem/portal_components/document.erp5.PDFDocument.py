@@ -31,7 +31,8 @@ import tempfile, os, pickle
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
+from erp5.component.interface.IWatermarkable import IWatermarkable
 from Products.ERP5.Document.Image import Image
 from Products.ERP5.Document.Document import ConversionError
 from subprocess import Popen, PIPE
@@ -67,7 +68,7 @@ class PDFDocument(Image):
                     , PropertySheet.Periodicity
                     )
 
-  zope.interface.implements(interfaces.IWatermarkable)
+  zope.interface.implements(IWatermarkable)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getWatermarkedData')
@@ -280,7 +281,7 @@ class PDFDocument(Image):
     if not self.hasData():
       return {}
     try:
-      return self._content_information.copy()
+      return self._content_information.copy() # pylint: disable=access-member-before-definition
     except AttributeError:
       pass
     tmp = tempfile.NamedTemporaryFile()
