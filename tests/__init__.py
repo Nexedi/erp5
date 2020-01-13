@@ -40,8 +40,8 @@ class _ERP5(SavedTestSuite):
         # glob('%s/product/ERP5Form/tests/test*.py' % path) +
         # ['%s/product/ERP5OOo/tests/testDeferredStyle.py' % path] +
         # ['%s/product/ERP5/tests/testXHTML.py' % path] +
-        ['%s/product/ERP5/tests/testERP5Core.py' % path] +
-        ['%s/product/ERP5/tests/testQueryModule.py' % path] +
+        # ['%s/product/ERP5/tests/testERP5Core.py' % path] +
+        # ['%s/product/ERP5/tests/testQueryModule.py' % path] +
         # ['%s/product/ERP5/tests/testBankReconciliation.py' % path] +
         # ['%s/product/ERP5Type/tests/testFunctionalCore.py' % path] +
         # ['%s/product/ERP5Type/tests/testFunctionalAnonymousSelection.py' % path] +
@@ -60,6 +60,7 @@ class _ERP5(SavedTestSuite):
         glob('%s/bt5/erp5_accounting_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_accounting_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_bank_reconciliation_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_document_scanner_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_gadget_interface_validator_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_web_monitoring_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_travel_expense_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
