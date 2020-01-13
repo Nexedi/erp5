@@ -271,10 +271,11 @@ class AmortisationRule(RuleMixin):
 
       ### First, plan the theorical accounting movements
       accounting_movement_list = []
-      immo_cache_dict = {'period':{}, 'price':{}}
+      immo_cache_dict = {'period':{}, 'price':{}, 'currency': {}}
       immo_period_list = my_item.getImmobilisationPeriodList(immo_cache_dict=immo_cache_dict)
       for period_number in range(len(immo_period_list)):
         immo_cache_dict['price'] = {}
+        immo_cache_dict['currency'] = {}
         previous_period = None
         next_period = None
         immo_period = immo_period_list[period_number]

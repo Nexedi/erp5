@@ -326,7 +326,9 @@ class ImmobilisableItem(Item, Amount):
       kw_key_list.sort()
       if kw_key_list.count('immo_cache_dict'):
         kw_key_list.remove('immo_cache_dict')
-      immo_cache_dict = kw.get('immo_cache_dict', {'period':{}, 'price':{}})
+      immo_cache_dict = kw.get('immo_cache_dict', {'period':{},
+                                                   'price':{},
+                                                   'currency': {}})
       kw['immo_cache_dict'] = immo_cache_dict
       if immo_cache_dict['period'].has_key((self.getRelativeUrl(), from_date, to_date) +
             tuple([(key,kw[key]) for key in kw_key_list])) :
@@ -732,7 +734,9 @@ class ImmobilisableItem(Item, Amount):
       start_date = immo_period['start_date']
       start_durability = immo_period['start_durability']
       if start_durability is None:
-        immo_cache_dict = kw.get('immo_cache_dict', {'period':{}, 'price':{}})
+        immo_cache_dict = kw.get('immo_cache_dict', {'period':{},
+                                                     'price':{},
+                                                     'currency': {}})
         start_durability = self.getRemainingDurability(at_date=start_date,
                                                        immo_cache_dict=immo_cache_dict)
         if start_durability is None:
@@ -788,14 +792,17 @@ class ImmobilisableItem(Item, Amount):
 
       if kw_key_list.count('immo_cache_dict'):
         kw_key_list.remove('immo_cache_dict')
-      immo_cache_dict = kw.get('immo_cache_dict', {'period':{}, 'price':{}})
+      immo_cache_dict = kw.get('immo_cache_dict', {'period':{},
+                                                   'price':{},
+                                                   'currency': {}})
       kw['immo_cache_dict'] = immo_cache_dict
 
-      if immo_cache_dict['price'].has_key( (self.getRelativeUrl(), at_date) +
-            tuple([(key,kw[key]) for key in kw_key_list]) ) :
-        returned_price = immo_cache_dict['price'][ (self.getRelativeUrl(), at_date) +
-            tuple( [(key,kw[key]) for key in kw_key_list]) ]
+      immo_cache_dict_price_key = ((self.getRelativeUrl(), at_date) +
+                                   tuple([(key,kw[key]) for key in kw_key_list]))
+      if immo_cache_dict['price'].has_key(immo_cache_dict_price_key) :
+        returned_price = immo_cache_dict['price'][immo_cache_dict_price_key]
         if with_currency:
+          currency = immo_cache_dict['currency'][immo_cache_dict_price_key]
           return '%0.2f %s' % (returned_price, currency)
         return returned_price
 
@@ -1017,8 +1024,8 @@ class ImmobilisableItem(Item, Amount):
       if returned_price is None:
         return None
       returned_price += disposal_price
-      immo_cache_dict['price'][ (self.getRelativeUrl(), at_date) +
-            tuple([(key,kw[key]) for key in kw_key_list]) ] = returned_price
+      immo_cache_dict['price'][immo_cache_dict_price_key] = returned_price
+      immo_cache_dict['currency'][immo_cache_dict_price_key] = currency
       if with_currency:
         return '%0.2f %s' % (returned_price, currency)
       return returned_price
