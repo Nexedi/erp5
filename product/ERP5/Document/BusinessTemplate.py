@@ -6395,7 +6395,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
       else:
         # Canonicalize all paths before comparing (at the same time this will
         # take care of trailing '/')
-        module_realpath = os.path.realpath(module_path)
+        try:
+          module_realpath = os.path.realpath(module_path)
+        except Exception:
+          return None
         for working_copy_path in working_copy_path_list:
           working_copy_path = os.path.realpath(working_copy_path)
           if working_copy_path.endswith('bt5'):
