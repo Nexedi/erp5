@@ -10,114 +10,69 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <tr><td rowspan="1" colspan="3">Test Scan Document (expected failure)</td></tr>
 </thead><tbody>
-<tr>
-  <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Done.</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
 <tr>
   <td>open</td>
   <td>${base_url}/web_site_module/renderjs_runner/</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<!-- Wait for gadget to be loaded -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_worklist.html']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Modules</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[text()="Modules"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//li/a[text()="Accounting"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//li/a[text()="Accounting"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class="ui-subheader"]/ul/li[3]/a[text()="Add"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//div[@class="ui-subheader"]/ul/li[3]/a[text()="Add"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>name=field_your_select_action</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Modules'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Accounting'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>select</td>
   <td>id=field_your_select_action</td>
   <td>Sale Invoice Transaction</td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Object created.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
-  <td>click</td>
-  <td>name=action_confirm</td>
+  <td>storeLocation</td>
+  <td>sale_invoice_transaction_url</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@class="ui-subheader"]/ul/li[2]/a[text()="Actions"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//div[@class="ui-subheader"]/ul/li[2]/a[text()="Actions"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[text()="Scan Document"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[text()="Scan Document"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_dialog.html']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>field_your_title</td>
-  <td></td>
-</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Scan Document'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>type</td>
   <td>field_your_title</td>
-  <td>Sample <span tal:replace="python: DateTime().strftime('%d_%m_%Y')"></span></td>
+  <td>Test Scan Document <span tal:replace="python: DateTime().ISO()"></span></td>
 </tr>
-<tr>
+<!--tr>
   <td>type</td>
   <td>field_your_reference</td>
-  <td>REF<span tal:replace="python: DateTime().strftime('%d%m%Y')"></span></td>
-</tr>
+  <td>TESTSCANDOCUMENT<span tal:replace="python: DateTime().ISO()"></span></td>
+</tr-->
 <tr>
   <td>type</td>
   <td>field_your_language</td>
@@ -136,63 +91,82 @@
 <tr>
   <td>type</td>
   <td>field_your_description</td>
-  <td>DESC <span tal:replace="python: DateTime().strftime('%d%m%Y')"></span></td>
+  <td>DESC <span tal:replace="python: DateTime().ISO()"></span></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForCondition</td>
-  <td>selenium.browserbot.getCurrentWindow().document.querySelector("video").readyState == 4</td>
-  <td>30000</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForCondition</td>
-  <td>selenium.browserbot.getCurrentWindow().document.querySelector(".confirm-btn").style.display != "none"</td>
-  <td>30000</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@class="reset-btn ui-btn-icon-left ui-icon-times"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForCondition</td>
-  <td>selenium.browserbot.getCurrentWindow().document.querySelector(".confirm-btn").style.display == "none"</td>
-  <td>30000</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForCondition</td>
-  <td>selenium.browserbot.getCurrentWindow().document.querySelector(".confirm-btn").style.display != "none"</td>
-  <td>30000</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@class="confirm-btn ui-btn-icon-left ui-icon-check"]</td>
-  <td></td>
-</tr>
-<tr>
+
+<div tal:repeat="item python:range(2)">
+
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>waitForCondition</td>
+    <td>selenium.browserbot.getCurrentWindow().document.querySelector("video").readyState == 4</td>
+    <td>30000</td>
+  </tr>
+  <tr>
+    <td>click</td>
+    <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>waitForCondition</td>
+    <td>selenium.browserbot.getCurrentWindow().document.querySelector(".confirm-btn").style.display != "none"</td>
+    <td>30000</td>
+  </tr>
+  <tr>
+    <td>click</td>
+    <td>//button[@class="reset-btn ui-btn-icon-left ui-icon-times"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>waitForCondition</td>
+    <td>selenium.browserbot.getCurrentWindow().document.querySelector(".confirm-btn").style.display == "none"</td>
+    <td>30000</td>
+  </tr>
+  <tr>
+    <td>click</td>
+    <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>waitForCondition</td>
+    <td>selenium.browserbot.getCurrentWindow().document.querySelector(".confirm-btn").style.display != "none"</td>
+    <td>3000</td>
+  </tr>
+  <tr>
+    <td>click</td>
+    <td>//button[@class="confirm-btn ui-btn-icon-left ui-icon-check"]</td>
+    <td></td>
+  </tr>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+  <tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                             'text': 'Captured'}">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+  </tal:block>
+
+</div>
+
+<!--tr>
   <td>waitForCondition</td>
   <td>selenium.browserbot.getCurrentWindow().document.querySelector(".page-number").innerText == "2"</td>
   <td>30000</td>
-</tr>
+</tr-->
 <tr>
   <td>storeValue</td>
   <td>//input[@id="field_your_active_process_url"]</td>
   <td>active_process_url</td>
 </tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'The document is being created in background.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>open</td>
   <td>${base_url}/erp5/Base_assertActiveProcessHasOneImage?active_process_url=${active_process_url}</td>
@@ -203,7 +177,70 @@
   <td>OK</td>
   <td></td>
 </tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
 <tr>
+  <td>open</td>
+  <td>${sale_invoice_transaction_url}</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Documents'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
+<tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+</tal:block>
+
+<tal:block tal:define="click_configuration python: {'text': 'PDF'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Preview'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<!-- Wait for pdfjs to be loaded -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="editor"]//iframe</td>
+  <td></td>
+</tr>
+<tr><!-- pdfjs iframe -->
+  <td>selectFrame</td>
+  <td>//div[@data-gadget-scope="editor"]//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//body</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>of 2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>of 2</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
+
+
+<!--tr>
   <td>open</td>
   <td>${base_url}/erp5/Base_removeActiveProcessFromFileSystem?active_process_url=${active_process_url}</td>
   <td></td>
@@ -212,7 +249,7 @@
   <td>assertTextPresent</td>
   <td>Done</td>
   <td></td>
-</tr>
+</tr-->
 </tbody></table>
 </body>
 </html>
