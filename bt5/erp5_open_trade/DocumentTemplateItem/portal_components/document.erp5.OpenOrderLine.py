@@ -29,7 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.SupplyLine import SupplyLine
+from erp5.component.document.SupplyLine import SupplyLine
 
 class OpenOrderLine(SupplyLine):
     """

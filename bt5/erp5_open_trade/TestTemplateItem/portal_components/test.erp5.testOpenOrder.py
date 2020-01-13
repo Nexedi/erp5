@@ -46,17 +46,6 @@ class TestOpenOrder(ERP5TypeTestCase):
   def getTitle(self):
     return 'Test Open Order'
 
-  def getBusinessTemplateList(self):
-
-    return ('erp5_base',
-            'erp5_pdm',
-            'erp5_simulation',
-            'erp5_trade',
-            'erp5_open_trade',
-            'erp5_open_trade_periodicity_line',
-            'erp5_configurator_standard_trade_template',
-            'erp5_simulation_test')
-
   def afterSetUp(self):
     if getattr(self.portal, '_run_after_setup', None) is not None:
       return
@@ -68,7 +57,7 @@ class TestOpenOrder(ERP5TypeTestCase):
       id='taxable',
       portal_type='Category',
       title='Taxable')
-    tax = self.portal.service_module.newContent(
+    self.portal.service_module.newContent(
       portal_type='Service',
       title='VAT',
       base_contribution='base_amount/taxable')
@@ -257,7 +246,7 @@ class TestOpenOrder(ERP5TypeTestCase):
       stop_date=DateTime(3000,8,1),
       )
 
-    open_sale_order_line = open_sale_order.newContent(
+    open_sale_order.newContent(
       portal_type='Open Sale Order Line',
       resource=self.portal.service_module.training.getRelativeUrl(),
       price=100,

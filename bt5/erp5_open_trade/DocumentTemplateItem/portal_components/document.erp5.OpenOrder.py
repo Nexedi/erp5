@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -29,7 +30,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Supply import Supply
+from erp5.component.document.Supply import Supply
 
 class OpenOrder(Supply):
   """
