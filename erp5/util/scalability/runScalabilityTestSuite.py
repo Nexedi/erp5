@@ -17,6 +17,7 @@ from erp5.util import taskdistribution
 from erp5.util.testnode import Utils
 from erp5.util.testnode.ProcessManager import ProcessManager
 import datetime
+from inspect import getargspec
 
 MAX_INSTALLATION_TIME = 60*50
 MAX_TESTING_TIME = 60
@@ -222,15 +223,11 @@ class ScalabilityLauncher(object):
     self.log("Test Case %s going to be run." %(current_test.title))
     # Prepare configuration
     current_test_number = int(current_test.title)
-    test_duration = suite.getTestDuration(current_test_number)
-    if not test_duration or test_duration == 0:
-      test_duration = SCALABILITY_TEST_DURATION
     benchmarks_path = os.path.join(self.__argumentNamespace.repo_location, suite.getTestPath())
     user_file_full_path = os.path.join(self.__argumentNamespace.repo_location, suite.getUsersFilePath())
     user_file_path = os.path.split(user_file_full_path)[0]
     user_file = os.path.split(user_file_full_path)[1]
     tester_path = self.__argumentNamespace.runner_path
-    user_quantity = suite.getUserQuantity(current_test_number)
     instance_url = self.__argumentNamespace.instance_url
     metric_url = self.__argumentNamespace.metric_url
 
@@ -239,9 +236,19 @@ class ScalabilityLauncher(object):
     metric_thread = TestMetricThread(metric_url, self.log, metric_thread_stop_event, interval=TEST_METRIC_TIME_INTERVAL)
     metric_thread.start()
 
+    bootstrap_password = self.__argumentNamespace.bootstrap_password
+    # Prepare users
+    user_quantity_dict = {}
+    total_user_quantity = 0
+    for test_suite in test_suite_list:
+      if 'test_name' in getargspec(suite.getUserQuantity).args:
+        user_quantity = suite.getUserQuantity(current_test_number, test_suite)
+      else:
+        user_quantity = suite.getUserQuantity(current_test_number)
+      user_quantity_dict[test_suite] = user_quantity
+      total_user_quantity += user_quantity
     try:
-      bootstrap_password = self.__argumentNamespace.bootstrap_password
-      self.updateUsersFile(user_quantity, bootstrap_password, user_file_full_path + ".py")
+      self.updateUsersFile(total_user_quantity, bootstrap_password, user_file_full_path + ".py")
     except Exception as e:
       self.log("ERROR while updating file: " + str(e))
 
@@ -250,12 +257,33 @@ class ScalabilityLauncher(object):
 
     command_list = []
     user_index = 0
+    max_test_duration = 0.0
     # Prepare commands
     for test_suite in test_suite_list:
+      getTestDuration = getattr(suite, 'getTestDuration', None)
+      if getTestDuration is not None:
+        if len(getargspec(getTestDuration).args) == 3:
+          test_duration = getTestDuration(current_test_number, test_suite)
+        else:
+          test_duration = getTestDuration(current_test_number)
+      else:
+        test_duration = 0
+      getTestRepeat = getattr(suite, 'getTestRepeat', None)
+      if getTestRepeat is not None:
+        if len(getargspec(getTestRepeat).args) == 3:
+          test_repeat = getTestRepeat(current_test_number, test_suite)
+        else:
+          test_repeat = getTestRepeat(current_test_number)
+      else:
+        test_repeat = -1
+      if not test_duration:
+        test_duration = SCALABILITY_TEST_DURATION
+      if max_test_duration < test_duration:
+        max_test_duration = test_duration
       log_file_name_prefix = "%s_%s_suite_%s" %(LOG_FILE_PREFIX, current_test.title, test_suite)
       command_list.append([tester_path,
                            instance_url,
-                           str(user_quantity//len(test_suite_list)),
+                           str(user_quantity_dict[test_suite]),
                            test_suite,
                            '--benchmark-path-list', benchmarks_path,
                            '--users-file-path', user_file_path,
@@ -264,9 +292,10 @@ class ScalabilityLauncher(object):
                            '--report-directory', self.__argumentNamespace.log_path,
                            '--max-errors', str(MAX_ERRORS),
                            '--user-index', str(user_index),
+                           "--repeat", "%d"%test_repeat,
                            "--duration", "%d"%test_duration,
                          ])
-      user_index += user_quantity//len(test_suite_list)
+      user_index += user_quantity_dict[test_suite]
     # Launch commands
     exec_env = os.environ.copy()
     exec_env.update({'raise_error_if_fail': False})
@@ -274,8 +303,8 @@ class ScalabilityLauncher(object):
       test_thread = TestThread(process_manager, command, self.log, env=exec_env)
       test_thread.start()
     # Sleep
-    self.log("Going to sleep for %s seconds." % str(test_duration))
-    time.sleep(test_duration)
+    self.log("Going to sleep for %s seconds." % str(max_test_duration))
+    time.sleep(max_test_duration)
     process_manager.killPreviousRun()
     self.moveLogs(log_dir, current_test)
 
@@ -298,12 +327,12 @@ class ScalabilityLauncher(object):
     test_details = "number of users=%d\n"\
                     "number of tests=%d\n"\
                     "tests=%s\n"\
-                    "duration=%d\n"\
+                    "maximum duration=%d\n"\
                     %(
-                      (user_quantity//len(test_suite_list))*len(test_suite_list),
+                      total_user_quantity,
                       len(test_suite_list),
                       '_'.join(test_suite_list),
-                      test_duration
+                      max_test_duration
                     )
     self.log("Test details: %s" % test_details)
 
@@ -331,7 +360,7 @@ class ScalabilityLauncher(object):
         test_result_line_test.stop(stdout=test_output,
                                    command=test_details,
                                    test_count=len(test_suite_list),
-                                   duration=test_duration)
+                                   duration=max_test_duration)
     except Exception as e:
       self.log("Error during communication to master: " + str(e))
       raise e

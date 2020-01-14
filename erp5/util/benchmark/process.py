@@ -171,15 +171,15 @@ class BenchmarkProcess(multiprocessing.Process):
     try:
       with result_instance as result:
         self._browser = self.getBrowser(result_instance.log_file)
-        if self._argument_namespace.duration > 0:
+        if self._argument_namespace.repeat > -1:
+          self._logger.info("Iterate until repeat %d" % self._argument_namespace.repeat)
+          while self._current_repeat != (self._argument_namespace.repeat + 1):
+            runIteration(result)
+            self._current_repeat += 1
+        elif:
           self._logger.info("Iterate until duration %d" % self._argument_namespace.duration)
           start_time = time.time()
           while self._argument_namespace.duration > (time.time()-start_time):
-            runIteration(result)
-            self._current_repeat += 1
-        else:
-          self._logger.info("Iterate until repeat %d" % self._argument_namespace.repeat)
-          while self._current_repeat != (self._argument_namespace.repeat + 1):
             runIteration(result)
             self._current_repeat += 1
 
