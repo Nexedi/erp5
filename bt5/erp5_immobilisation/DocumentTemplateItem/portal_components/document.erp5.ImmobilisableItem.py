@@ -32,7 +32,8 @@ from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
 from string import capitalize
 
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
+from erp5.component.interface.IImmobilisationItem import IImmobilisationItem
 from Products.ERP5Type.DateUtils import addToDate, getClosestDate, roundDate
 from Products.ERP5Type.DateUtils import getRoundedMonthBetween, millis
 from Products.ERP5Type.DateUtils import getAccountableYearFraction
@@ -78,7 +79,7 @@ class ImmobilisableItem(Item, Amount):
                       , PropertySheet.Amortisation
                       )
 
-    zope.interface.implements(interfaces.IImmobilisationItem)
+    zope.interface.implements(IImmobilisationItem)
 
     # IExpandableItem interface implementation
     def getSimulationMovementSimulationState(self, simulation_movement):

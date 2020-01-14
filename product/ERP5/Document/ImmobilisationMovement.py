@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Movement import Movement
@@ -97,6 +97,8 @@ class ImmobilisationMovement(Movement, XMLObject):
     """
     If to_translate is set, the method may return a dictionary {'msg':'...', 'mapping':{} }
     """
+    from erp5.component.interface.IImmobilisationItem import IImmobilisationItem
+
     relative_url = self.getRelativeUrl()
     def checkValuesAreNotNone(property_list):
       errors = []
@@ -140,7 +142,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     # Check if the date of this movement is unique
     date_error = 0
     for item in self.getAggregateValueList():
-      if interfaces.IImmobilisationItem.providedBy(item):
+      if IImmobilisationItem.providedBy(item):
         same_date_list = item.getUnfilteredImmobilisationMovementValueList(
                        from_date = self.getStopDate(),
                        to_date = self.getStopDate(),
@@ -198,7 +200,7 @@ class ImmobilisationMovement(Movement, XMLObject):
               return checkPreviousMovementForItem(previous_movement, item)
             return checkPreviousMovementForItem(previous_movement, item)
           for item in self.getAggregateValueList():
-            if interfaces.IImmobilisationItem.providedBy(item):
+            if IImmobilisationItem.providedBy(item):
               if not checkPreviousMovementForItem(self,item):
                 check_uncontinuous = 1
               else:

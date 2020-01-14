@@ -28,10 +28,8 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Document.ImmobilisableItem import ImmobilisationValidityError
-
 
 class ImmobilisationDelivery(XMLObject):
     """
@@ -68,6 +66,7 @@ class ImmobilisationDelivery(XMLObject):
       an invalid state
       """
       if self.getImmobilisationState() == 'calculating':
+        from erp5.component.document.ImmobilisableItem import ImmobilisationValidityError
         try:
           if self.isValidImmobilisationMovement(**kw):
             self.validateImmobilisation()
@@ -116,11 +115,12 @@ class ImmobilisationDelivery(XMLObject):
       """
       Return the list of each next immobilisation movement for each aggregated item
       """
+      from erp5.component.interface.IImmobilisationItem import IImmobilisationItem
       returned_list = []
       sub_movement_list = self.contentValues()
       for movement in self.getImmobilisationMovementList(**kw):
         for item in movement.getAggregateValueList():
-          if interfaces.IImmobilisationItem.providedBy(item):
+          if IImmobilisationItem.providedBy(item):
             future_movement_list = item.getFutureImmobilisationMovementValueList(
                                        at_date = self.getStopDate(),
                                        from_movement = self,
