@@ -52,9 +52,6 @@ RELATED_QUERY_SEPARATOR. \n\
 Offending related key: %r, for column %r, table_alias_list: %r, \
 rendered_related_key: \n%s"
 
-RELATED_KEY_ALIASED_MESSAGE = "\
-Support for explicit joins of aliased related keys is not yet implemented. \
-Offending related key: %r, for column %r, table_alias_list: %r"
 
 class RelatedKey(SearchKey):
   """
@@ -131,18 +128,8 @@ class RelatedKey(SearchKey):
     # must be registered to the related key "main" group (ie, the
     # value of the "group" variable) to be the same as the table used
     # in join_condition.
-    if table_alias_list is not None:
-      assert len(self.table_list) == len(table_alias_list), (self.table_list,
-        table_alias_list)
-      # XXX-Leo: remove the rest of this 'if' branch after making sure
-      # that ColumnMap.addRelatedKeyJoin() can handle collapsing
-      # chains of inner-joins that are subsets of one another based on
-      # having the same aliases:
-      msg = RELATED_KEY_ALIASED_MESSAGE % (self.related_key_id,
-                                           self.column,
-                                           table_alias_list,)
-      log.warning(msg + "\n\nForcing implicit join...")
-      column_map.implicit_join = True
+    assert table_alias_list is None or len(self.table_list) == len(table_alias_list), (
+            self.table_list, table_alias_list)
     for table_position in xrange(len(self.table_list) - 1):
       table_name = self.table_list[table_position]
       local_group = column_map.registerRelatedKeyColumn(related_column, table_position, group)
