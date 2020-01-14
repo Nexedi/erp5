@@ -11,6 +11,14 @@ if parent.getPortalType() == 'Applied Rule':
       parent.getParentValue().getParentValue().getSpecialiseValue().getPortalType() not in ['Order Root Simulation Rule']:
     return False
 
+  
+# 
+# Some business process does not generate invoice.
+# XXX isn't there a better way to configure this ???
+
+if 'business_process_module/4/delivery_path' in movement.getCausalityList():
+  return False
+
 source_section = movement.getSourceSection()
 destination_section = movement.getDestinationSection()
 if source_section == destination_section or source_section is None \
