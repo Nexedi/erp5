@@ -29,7 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5.Document.ImmobilisableItem import ImmobilisableItem
+from erp5.component.document.ImmobilisableItem import ImmobilisableItem
 
 
 class Machine(ImmobilisableItem):

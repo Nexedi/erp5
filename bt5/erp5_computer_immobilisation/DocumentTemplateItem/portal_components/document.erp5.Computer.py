@@ -28,8 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Machine import Machine
-
+from erp5.component.document.Machine import Machine
 
 class Computer(Machine):
   """

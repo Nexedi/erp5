@@ -2,11 +2,7 @@
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
-class TestERP5ComputerWithComputerModel(ERP5TypeTestCase):
-
-  def getBusinessTemplateList(self):
-    return [ 'erp5_base', 'erp5_computer_immobilisation' ]
-
+class TestComputerWithComputerModel(ERP5TypeTestCase):
   def afterSetUp(self):
     pass
 
@@ -131,5 +127,5 @@ class TestERP5ComputerWithComputerModel(ERP5TypeTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5ComputerWithComputerModel))
+  suite.addTest(unittest.makeSuite(TestComputerWithComputerModel))
   return suite

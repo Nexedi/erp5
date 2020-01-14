@@ -32,12 +32,6 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 class TestComputer(ERP5TypeTestCase):
   computer_portal_type = 'Computer'
 
-  def getBusinessTemplateList(self):
-    return (
-      'erp5_base',
-      'erp5_computer_immobilisation',
-    )
-
   def stepCreateComputer(self, sequence=None, **kw):
     computer_module = self.portal.getDefaultModule(self.computer_portal_type)
     computer = computer_module.newContent( \
