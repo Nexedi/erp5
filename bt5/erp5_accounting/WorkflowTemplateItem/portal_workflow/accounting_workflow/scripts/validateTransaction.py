@@ -79,8 +79,10 @@ if not skip_period_validation :
       section = source_section
       if section.getPortalType() == 'Organisation':
         section = section.Organisation_getMappingRelatedOrganisation()
-      if not len(section.contentValues(
-             filter=dict(portal_type="Accounting Period"))):
+      if not len([ap for ap in section.contentValues(
+            portal_type="Accounting Period",
+            checked_permission="Access contents information")
+                  if ap.getSimulationState() not in ('deleted', 'cancelled', 'draft',)]):
         valid_date = True
       else:
         accounting_period = transaction\
@@ -109,8 +111,10 @@ if not skip_period_validation :
       section = destination_section
       if section.getPortalType() == 'Organisation':
         section = section.Organisation_getMappingRelatedOrganisation()
-      if not len(section.contentValues(
-             filter=dict(portal_type="Accounting Period"))):
+      if not len([ap for ap in section.contentValues(
+            portal_type="Accounting Period",
+            checked_permission="Access contents information")
+                  if ap.getSimulationState() not in ('deleted', 'cancelled', 'draft',)]):
         valid_date = True
       else:
         accounting_period = transaction\
