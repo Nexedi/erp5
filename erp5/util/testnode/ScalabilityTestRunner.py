@@ -650,7 +650,8 @@ Require valid-user
                   "--runner-path", runner,
                   "--repo-location", repo_location,
                   "--log-path", log_path,
-                  "--metric-url", metric_url
+                  "--metric-url", metric_url,
+                  "--site-availability-url", site_availability_url,
                 ]
       logger.info("Running test case...")
       test_thread = TestThread(self.testnode.process_manager, command, logger.info, env=self.exec_env)

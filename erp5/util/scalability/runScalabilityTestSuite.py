@@ -139,6 +139,10 @@ class ScalabilityLauncher(object):
                         metavar='METRIC_URL',
                         help='Url to connect to instance metric generator')
 
+    parser.add_argument('--site-availability-url',
+                        metavar='SITE_AVAILABILITY_URL',
+                        help='Url to check instance availability')
+
   @staticmethod
   def _checkParsedArguments(namespace):
     return namespace
@@ -230,10 +234,11 @@ class ScalabilityLauncher(object):
     tester_path = self.__argumentNamespace.runner_path
     instance_url = self.__argumentNamespace.instance_url
     metric_url = self.__argumentNamespace.metric_url
+    site_availability_url = self.__argumentNamespace.site_availability_url
 
     # To take metrics
     metric_thread_stop_event = threading.Event()
-    metric_thread = TestMetricThread(metric_url, self.log, metric_thread_stop_event, interval=TEST_METRIC_TIME_INTERVAL)
+    metric_thread = TestMetricThread(metric_url, site_availability_url, self.log, metric_thread_stop_event, interval=TEST_METRIC_TIME_INTERVAL)
     metric_thread.start()
 
     bootstrap_password = self.__argumentNamespace.bootstrap_password

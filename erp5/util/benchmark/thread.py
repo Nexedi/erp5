@@ -29,6 +29,11 @@ import threading
 import time
 import requests
 
+# max time to wait for site availability before getting metrics
+CHECK_SITE_AVAILABILITY_TIMEOUT = 60 * 30
+# interval to check site availability
+CHECK_SITE_AVAILABILITY_INTERVAL = 60
+
 class TestThread(threading.Thread):
 
   def __init__(self, process_manager, command, log, env={}):
@@ -43,9 +48,10 @@ class TestThread(threading.Thread):
 
 class TestMetricThread(threading.Thread):
 
-  def __init__(self, metric_url, log, stop_event, interval=60):
+  def __init__(self, metric_url, site_availability_url, log, stop_event, interval=60):
     threading.Thread.__init__(self)
     self.metric_url = metric_url
+    self.site_availability_url = site_availability_url
     self.log = log
     self.interval = interval
     self.stop_event = stop_event
@@ -55,6 +61,15 @@ class TestMetricThread(threading.Thread):
   def run(self):
     while(not self.stop_event.is_set()):
       self.stop_event.wait(-time.time() % self.interval)
+      start_time = time.time()
+      while CHECK_SITE_AVAILABILITY_TIMEOUT > time.time() - start_time:
+        try:
+          response = requests.get(self.site_availability_url, timeout=60)
+          if response.status_code == 200 and response.content.strip() == '0':
+            break
+        except Exception as e:
+          self.log('Error checking site availability: %s' % e)
+        time.sleep(CHECK_SITE_AVAILABILITY_INTERVAL)
       try:
         response = requests.get(self.metric_url, timeout=60)
         if response.status_code == 200:
