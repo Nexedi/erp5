@@ -207,6 +207,22 @@
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
+<!-- Wait for pdfjs to be loaded -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="editor"]//iframe</td>
+  <td></td>
+</tr>
+<tr><!-- pdfjs iframe -->
+  <td>selectFrame</td>
+  <td>//div[@data-gadget-scope="editor"]//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//body</td>
+  <td></td>
+</tr>
 <tr>
   <td>waitForTextPresent</td>
   <td>of 2</td>
@@ -217,6 +233,13 @@
   <td>of 2</td>
   <td></td>
 </tr>
+<tr>
+  <td>selectFrame</td>
+  <td>relative=top</td>
+  <td></td>
+</tr>
+
+
 <!--tr>
   <td>open</td>
   <td>${base_url}/erp5/Base_removeActiveProcessFromFileSystem?active_process_url=${active_process_url}</td>
