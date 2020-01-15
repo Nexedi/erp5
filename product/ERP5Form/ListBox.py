@@ -1143,8 +1143,8 @@ class ListBoxRenderer:
       # (i.e. do not update parameters in listboxes intended to show a previously defined selection.
       listbox_prefix = '%s_' % self.getId()
       for k, v in self.request.form.iteritems():
-        # Ignore parameters for other listboxes and selection keys.
-        if 'listbox_' in k or k.endswith('selection_key'):
+        # Ignore selection keys.
+        if k.endswith('selection_key'):
           continue
         elif k.startswith(listbox_prefix):
           k = k[len(listbox_prefix):]
@@ -1153,6 +1153,9 @@ class ListBoxRenderer:
           # will limit the contents for the selection.
           if k != 'uid':
             params[k] = v
+        elif 'listbox_' in k:
+          # Ignore parameters for other listboxes
+          continue
         else:
           params[k] = v
       for k, v in self.getDefaultParamList():
