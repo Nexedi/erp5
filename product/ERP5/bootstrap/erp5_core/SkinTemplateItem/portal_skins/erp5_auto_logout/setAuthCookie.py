@@ -21,6 +21,6 @@ resp.setCookie(
   path='/',
   secure=getattr(portal, 'REQUEST', {}).get('SERVER_URL', '').startswith('https:'),
   http_only=True,
-  same_site='None',
+  same_site='Lax',
   **kw
 )
