@@ -136,18 +136,16 @@ class PDFParser:
   security.declarePublic('getPageImage')
   def getPageImage(self, page, format, resolution, quality):
     """
-    Return an instance of newTempImage containing the pape page of
-    the pdf file
+    Return a temporary Image object containing the pape page of the pdf file
     width, height: attributes in pixel (px)
     format: jpg, png, etc...
     resolution: resolution of produced image for exemple 600
     quality: quality of produced image for exemple 200 raisonable quality
     more hight is quality more time it takes to be gererated
     """
-    from Products.ERP5Type.Document import newTempPDFDocument
-    from Products.ERP5Type.Document import newTempImage
     temp_pdf_document_name = "tmp%s.pdf" %  str(random.random()).split('.')[-1]
-    temp_pdf_document = newTempPDFDocument(self, temp_pdf_document_name)
+    temp_pdf_document = self.newContent(temp_object=True,
+      portal_type='PDF Document', id=temp_pdf_document_name)
     temp_pdf_document.setData(self.getData())
     display = 'xlarge'
     mime, image_data = temp_pdf_document.convert(format = format,
@@ -157,7 +155,8 @@ class PDFParser:
                                                  display = display)
     page_image = None
     if image_data is not None:
-      page_image = newTempImage(self, "page_%s" % page)
+      page_image = self.newContent(temp_object=True, portal_type='Image',
+        id="page_%s" % page)
       page_image.setData(page_image)
     return page_image
 

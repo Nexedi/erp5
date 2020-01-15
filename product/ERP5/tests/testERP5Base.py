@@ -914,11 +914,11 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEqual('image/png', image.getContentType())
     self.assertEqual((320, 250), (image.getWidth(), image.getHeight()))
 
-    from Products.ERP5Type.Document import newTempImage
     def convert(**kw):
       image_type, image_data = image.convert('jpg', display='thumbnail', **kw)
       self.assertEqual('image/jpeg', image_type)
-      thumbnail = newTempImage(self.portal, 'thumbnail', data=image_data)
+      thumbnail = self.portal.newContent(temp_object=True, portal_type='Image',
+        id='thumbnail', data=image_data)
       self.assertEqual(image_type, thumbnail.getContentType())
       self.assertEqual((128, 100), (thumbnail.getWidth(),
                                     thumbnail.getHeight()))

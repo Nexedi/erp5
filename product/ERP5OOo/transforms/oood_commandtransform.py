@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.interfaces import idatastream
-from Products.ERP5Type.Document import newTempOOoDocument
 from Products.ERP5.Document.Document import ConversionError
 from Acquisition import aq_base
 from zope.interface import implements

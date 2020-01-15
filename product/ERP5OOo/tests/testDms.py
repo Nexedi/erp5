@@ -589,8 +589,7 @@ class TestDocument(TestDocumentMixin):
 
   def testTempOOoDocument_get_size(self):
     # test get_size on temporary OOoDocument
-    from Products.ERP5Type.Document import newTempOOoDocument
-    doc = newTempOOoDocument(self.portal, 'tmp')
+    doc = self.portal.newContent(temp_object=True, portal_type='OOo Document', id='tmp')
     doc.edit(data='OOo')
     self.assertEqual(len('OOo'), doc.get_size())
 
@@ -603,8 +602,7 @@ class TestDocument(TestDocumentMixin):
 
   def testTempOOoDocument_hasData(self):
     # test hasData on TempOOoDocument
-    from Products.ERP5Type.Document import newTempOOoDocument
-    doc = newTempOOoDocument(self.portal, 'tmp')
+    doc = self.portal.newContent(temp_object=True, portal_type='OOo Document', id='tmp')
     self.assertFalse(doc.hasData())
     doc.edit(file=makeFileUpload('import_data_list.ods'))
     self.assertTrue(doc.hasData())

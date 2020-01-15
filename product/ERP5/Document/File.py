@@ -240,8 +240,7 @@ class File(Document, CMFFile):
           content_type.startswith("image/"):
       # The file should behave like it is an Image for convert
       # the content to target format.
-      from Products.ERP5Type.Document import newTempImage
-      return newTempImage(self, self.getId(),
+      return self.newContent(temp_object=True, portal_type='Image', id=self.getId(),
                  data=self.getData(),
                  content_type=content_type,
                  filename=self.getFilename())._convert(format, **kw)

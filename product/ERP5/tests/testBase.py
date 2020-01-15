@@ -597,8 +597,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       Create a temp object_instance which will be tested.
     """
     portal = self.getPortal()
-    from Products.ERP5Type.Document import newTempOrganisation
-    tmp_object = newTempOrganisation(portal, "a_wonderful_id")
+    tmp_object = portal.newContent(temp_object=True,
+      portal_type='Organisation', id="a_wonderful_id")
     sequence.edit(
         object_instance=tmp_object,
         current_title='',
@@ -635,8 +635,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     Create a temp object_instance which will be tested.
     """
     portal = self.getPortal()
-    from Products.ERP5Type.Document import newTempAmount
-    tmp_object = newTempAmount(portal, "another_wonderful_id")
+    tmp_object = portal.newContent(temp_object=True, portal_type='Amount',
+      id="another_wonderful_id")
     sequence.edit(
         object_instance=tmp_object,
         current_title='',
@@ -913,8 +913,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     est to edit a temp object.
     """
     portal = self.getPortal()
-    from Products.ERP5Type.Document import newTempOrganisation
-    tmp_object = newTempOrganisation(portal, "a_wonderful_id")
+    tmp_object = portal.newContent(temp_object=True, portal_type='Organisation',
+      id="a_wonderful_id")
     tmp_object.edit(title='new title')
     self.assertEqual('new title', tmp_object.getTitle())
 

@@ -16,8 +16,8 @@ if exchange_line.getBasePrice() in (None, 0, 0.0):
 # We have to looking for other currency exchanges lines
 # Note: SupplyCell is the class of Currency Exchange Line portal type objects
 # But in reality, anything should do.
-from Products.ERP5Type.Document import newTempSupplyCell as newTemp
-temp_object = newTemp(context.getPortalObject(),'temp_object')
+temp_object = context.getPortalObject().newContent(temp_object=True,
+  portal_type='Supply Cell', id='temp_object')
 start_date = exchange_line.getStartDate()
 temp_kw = {'category_list':['resource/%s' % exchange_line.getParentValue().getRelativeUrl(),
                             'price_currency/%s' % exchange_line.getPriceCurrency()],

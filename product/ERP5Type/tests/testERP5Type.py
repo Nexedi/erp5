@@ -211,37 +211,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     def test_03_NewTempObject(self):
       portal = self.portal
 
-      # WARNING: `newTemp<PortalType>(self, ID)` is deprecated in favor of
-      # `self.newContent(portal_type=<PortalType>, temp_object=True, id=ID)`
-      from Products.ERP5Type.Document import newTempPerson
-      o = newTempPerson(portal, 1.2)
-      o.setTitle('toto')
-      self.assertEqual(o.getTitle(), 'toto')
-      self.assertEqual(str(o.getId()), str(1.2))
-
-      from Products.ERP5Type.Document import newTempOrganisation
-      o = newTempOrganisation(portal, -123)
-      o.setTitle('toto')
-      self.assertEqual(o.getTitle(), 'toto')
-      self.assertEqual(str(o.getId()), str(-123))
-
-      # Try to edit with any property and then get it with getProperty
-      o = newTempOrganisation(portal,'a')
-      o.edit(tutu='toto')
-      self.assertEqual(o.getProperty('tutu'), 'toto')
-
-      # Same thing with an integer
-      o = newTempOrganisation(portal,'b')
-      o.edit(tata=123)
-      self.assertEqual(o.getProperty('tata'), 123)
-
-      # Make sure this is a Temp Object
-      self.assertEqual(o.isTempObject(), 1)
-
-      # Create a subobject and make sure it is a Temp Object
-      a = o.newContent(portal_type = 'Telephone')
-      self.assertEqual(a.isTempObject(), 1)
-
       # Test newContent with the temp_object parameter
       o = portal.person_module.newContent(id=987, portal_type="Person", temp_object=1)
       o.setTitle('bar')
@@ -254,6 +223,14 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       b = o.newContent(id=2, portal_type="Telephone")
       self.assertEqual(b.isTempObject(), 1)
       self.assertEqual(b.getId(), str(2))
+
+      # Try to edit with any property and then get it with getProperty
+      o.edit(tutu='toto')
+      self.assertEqual(o.getProperty('tutu'), 'toto')
+
+      # Same thing with an integer
+      o.edit(tata=123)
+      self.assertEqual(o.getProperty('tata'), 123)
 
       # Test newContent with the temp_object parameter and without ID
       o = portal.person_module.newContent(portal_type="Person", temp_object=1)
@@ -294,12 +271,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # check we can create temp object without specific roles/permissions
       self.logout()
       self.loginWithNoRole()
-      ## newTemp<PORTAL_TYPE>
-      o = newTempOrganisation(portal.organisation_module,'b')
-      self.assertEqual(o.isTempObject(), 1)
-      a = o.newContent(portal_type = 'Telephone')
-      self.assertEqual(a.isTempObject(), 1)
-      self.assertEqual(a, guarded_getattr(o, a.getId()))
       ## newContent
       o = portal.organisation_module.newContent(portal_type='Organisation',
                                                 temp_object=1)
@@ -1864,8 +1835,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       portal.portal_types.resetDynamicDocuments()
 
       # Create a new temporary person object.
-      from Products.ERP5Type.Document import newTempPerson
-      o = newTempPerson(portal, 'temp_person_1')
+      o = portal.newContent(temp_object=True, portal_type='Person', id='temp_person_1')
       self.assertTrue(o.isTempObject())
       self.assertEqual(o.getOriginalDocument(), None)
 
@@ -1906,7 +1876,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEqual(o.getValidationState(), 'validated')
 
       # Create a new temporary person object.
-      o = newTempPerson(portal, 'temp_person_2')
+      o = portal.newContent(temp_object=True, portal_type='Person', id='temp_person_2')
       self.assertTrue(o.isTempObject())
 
       # This should call methods generated for the persistent object.

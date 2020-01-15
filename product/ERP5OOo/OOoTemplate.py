@@ -54,7 +54,6 @@ except ImportError:
   SUPPORTS_WEBDAV_LOCKS = 0
 
 from Products.ERP5.Document.Document import ConversionError
-import Products.ERP5Type.Document
 
 from lxml import etree
 from lxml.etree import Element
@@ -347,7 +346,7 @@ class OOoTemplate(ZopePageTemplate):
 
       # If this is not a File, build a new file with this content
       if not isinstance(picture, File):
-        tmp_picture = Products.ERP5Type.Document.newTempImage(self, 'tmp')
+        tmp_picture = self.newContent(temp_object=True, portal_type='Image', id='tmp')
         tmp_picture.setData(picture())
         picture = tmp_picture
 
@@ -557,8 +556,8 @@ class OOoTemplate(ZopePageTemplate):
     else:
       filename = self._getFileName()
 
-    from Products.ERP5Type.Document import newTempOOoDocument
-    tmp_ooo = newTempOOoDocument(self, self.title_or_id())
+    tmp_ooo = self.newContent(temp_object=True, portal_type='OOo Document',
+      id=self.title_or_id())
     tmp_ooo.edit(data=ooo,
                  filename=filename,
                  content_type=mimetype,)

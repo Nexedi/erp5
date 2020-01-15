@@ -303,8 +303,8 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
                                    'inline;filename="%s%s"' % \
                                      (filename, guess_extension(content_type) or ''))
       return printout
-    from Products.ERP5Type.Document import newTempOOoDocument
-    tmp_ooo = newTempOOoDocument(self, self.title_or_id())
+    tmp_ooo = self.newContent(temp_object=True, portal_type='OOo Document',
+      id=self.title_or_id())
     tmp_ooo.edit(data=printout,
                  base_data=printout,
                  filename=self.title_or_id(),

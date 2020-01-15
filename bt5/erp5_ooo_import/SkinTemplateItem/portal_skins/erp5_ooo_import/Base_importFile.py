@@ -1,4 +1,3 @@
-from Products.ERP5Type.Document import newTempFile
 from Products.ERP5OOo.OOoUtils import OOoParser
 import string
 
@@ -16,8 +15,8 @@ def getSpreadsheet(file):
     if not (content_type.startswith('application/vnd.sun.xml')
        or content_type.startswith('application/vnd.oasis.opendocument')):
 
-      from Products.ERP5Type.Document import newTempOOoDocument
-      tmp_ooo = newTempOOoDocument(context, file.filename)
+      tmp_ooo = context.newContent(temp_object=True, portal_type='OOo Document',
+        id=file.filename)
       tmp_ooo.edit(data=file.read(), content_type=content_type)
       tmp_ooo.convertToBaseFormat()
       ignored, import_file_content = tmp_ooo.convert('ods')
@@ -51,7 +50,7 @@ if len(listbox) == 0:
   # Start a session and store the content of the file
   session_id = context.browser_id_manager.getBrowserId(create=1)
   session = context.portal_sessions[session_id]
-  temp_file = newTempFile(context, session_id)
+  temp_file = context.newContent(temp_object=True, portal_type='File', id=session_id)
   temp_file.edit(spreadsheet_mapping=spreadsheets)
 
   #create a temporary file_name

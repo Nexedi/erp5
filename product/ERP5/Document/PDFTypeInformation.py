@@ -604,7 +604,6 @@ class PDFTypeInformation(ERP5TypeInformation):
     """
       Returns the background image for a given page
     """
-    from Products.ERP5Type.Document import newTempImage
     import_pdf_file = self.getDefaultPdfFormValue()
     #depend on preferences, best xlargeheight = 1131
     mime, image_data = import_pdf_file.convert(format = 'jpg',
@@ -614,7 +613,8 @@ class PDFTypeInformation(ERP5TypeInformation):
                                                 display = 'xlarge')
     if image_data is None:
       return
-    page_image = newTempImage(self, "page_%s" % page)
+    page_image = self.newContent(temp_object=True, portal_type='Image',
+      id="page_%s" % page)
     page_image.setData(image_data)
     self.REQUEST.RESPONSE.setHeader('Content-Type', mime)
     return page_image

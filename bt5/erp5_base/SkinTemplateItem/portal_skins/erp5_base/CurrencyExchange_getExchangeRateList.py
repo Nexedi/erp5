@@ -26,11 +26,10 @@ if to_currency is not None:
     if start_date is None:
       from DateTime import DateTime
       start_date = DateTime()
-    from Products.ERP5Type.Document import newTempBase
     # Note: SupplyCell is the class of Currency Exchange Line portal type objects
     # But in reality, anything should do.
-    from Products.ERP5Type.Document import newTempSupplyCell as newTemp
-    temp_object = newTemp(context.getPortalObject(),'temp_object')
+    temp_object = context.getPortalObject().newContent(temp_object=True,
+      portal_type='Supply Cell', id='temp_object')
     temp_kw = {'category_list':['resource/%s' % from_currency,
                                 'price_currency/%s' % to_currency],
                'start_date':start_date

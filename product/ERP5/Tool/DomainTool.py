@@ -273,9 +273,8 @@ class DomainTool(BaseTool):
         mapped_value = None
       else:
         # Generate tempDeliveryCell
-        from Products.ERP5Type.Document import newTempSupplyCell
-        mapped_value = newTempSupplyCell(self.getPortalObject(),
-                                           'new_mapped_value')
+        mapped_value = self.getPortalObject().newContent(temp_object=True,
+          portal_type='Supply Cell', id='new_mapped_value')
         mapped_value_property_dict = {}
         # Look for each property the first predicate which defines the
         # property
@@ -318,7 +317,6 @@ class DomainTool(BaseTool):
       if predicate_list is None:
         predicate_list = self.searchPredicateList(context, test=test, **kw)
       if predicate_list:
-        from Products.ERP5Type.Document import newTempSupplyCell
         mapped_value_property_dict = defaultdict(list)
         # Look for each property the first predicate with unique criterion
         # categories which defines the property
@@ -327,8 +325,8 @@ class DomainTool(BaseTool):
             value = predicate.getProperty(mapped_value_property)
             if value is not None:
               mapped_value_property_dict[mapped_value_property].append(value)
-        mapped_value = newTempSupplyCell(self.getPortalObject(),
-                                         'multivalued_mapped_value')
+        mapped_value = self.getPortalObject().newContent(temp_object=True,
+          portal_type='Supply Cell', id='multivalued_mapped_value')
         mapped_value._setMappedValuePropertyList(
           mapped_value_property_dict.keys())
         mapped_value.__dict__.update(mapped_value_property_dict)

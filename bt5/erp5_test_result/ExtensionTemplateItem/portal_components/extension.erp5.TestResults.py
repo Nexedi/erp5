@@ -290,9 +290,6 @@ def TestResult_sendEmailNotification(self, mail_to=None, mail_from=None,
           extend_attachment(tb.splitlines())
         extend_attachment(tb_list[-1].split(END)[0].splitlines())
 
-  from Products.ERP5Type.Document import newTempUrl
-  send_mail = newTempUrl(self, '_').send
-
   attachment_list = []
   if traceback_attachment:
     if include_diff:
@@ -318,6 +315,7 @@ def TestResult_sendEmailNotification(self, mail_to=None, mail_from=None,
                                 mime_type='text/plain',
                                 content=content))
 
+  send_mail = self.newContent(temp_object=True, portal_type='Url', id='_').send
   for mail_to in mail_to_list:
     send_mail(from_url=mail_from,
               to_url=mail_to,

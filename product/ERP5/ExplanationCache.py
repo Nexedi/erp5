@@ -280,9 +280,8 @@ class ExplanationCache:
         # asComposedDocument() and business_process.getParentValue() is not a
         # module where newContent() allows creation of Business Processes.
         # XXX-JPS is this really OK with union business processes
-        from Products.ERP5Type.Document import newTempBusinessProcess
-        new_business_process = newTempBusinessProcess(
-          self.explanation, 'closure_business_process')
+        new_business_process = self.explanation.newContent(temp_object=True,
+          portal_type='Business Process', id='closure_business_process')
         for i, x in enumerate(business_link_list):
           id = 'closure_path_%s' % i
           new_business_process._setOb(id, x.asContext(id=id))
@@ -302,8 +301,8 @@ class ExplanationCache:
       return new_business_process
 
     # Build Union Business Process
-    from Products.ERP5Type.Document import newTempBusinessProcess
-    new_business_process = newTempBusinessProcess(self.explanation, 'union_business_process')
+    new_business_process = self.explanation.newContent(temp_object=True,
+      portal_type='Business Process', id='union_business_process')
     i = 0
     for business_link in self.getBusinessLinkValueList():
       i += 1
