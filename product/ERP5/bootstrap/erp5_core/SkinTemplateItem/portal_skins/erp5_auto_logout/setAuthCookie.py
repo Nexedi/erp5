@@ -15,12 +15,21 @@ portal.portal_sessions[
     )
   )
 ]['ac_renew'] = ac_renew
+
+same_site_cookie = 'Lax'
+current_web_section = getattr(portal, 'REQUEST', {}).get('current_web_section', None)
+if current_web_section is not None:
+  same_site_cookie = current_web_section.getLayoutProperty("same_site_cookie", default=same_site_cookie)
+if same_site_cookie not in ('None', 'Lax', 'Strict'):
+  # If there is a typo, go back to default value, or it will break erp5 usage
+  same_site_cookie = 'Lax'
+
 resp.setCookie(
   name=cookie_name,
   value=cookie_value,
   path='/',
   secure=getattr(portal, 'REQUEST', {}).get('SERVER_URL', '').startswith('https:'),
   http_only=True,
-  same_site='Lax',
+  same_site=same_site_cookie,
   **kw
 )
