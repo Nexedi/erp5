@@ -1636,7 +1636,7 @@ if (typeof document.contains !== 'function') {
 
   function privateDeclarePublicGadget(url, options, parent_gadget,
                                       old_element) {
-    var klass = renderJS.declareGadgetKlass(url);
+    var klass = renderJS.declareGadgetKlass(url, options);
     // gadget loading should not be interrupted
     // if not, gadget's definition will not be complete
     //.then will return another promise
@@ -1881,6 +1881,7 @@ if (typeof document.contains !== 'function') {
         // Clean up the element content
         // Remove all existing event listener
         options.element = old_element.cloneNode(false);
+      } else if (options.js_list === '') {
       } else {
         throw new Error('No need to manually provide a DOM element ' +
                         'without a parentNode: ' + url);
@@ -2118,7 +2119,7 @@ if (typeof document.contains !== 'function') {
     return tmp_constructor;
   }
 
-  renderJS.declareGadgetKlass = function declareGadgetKlass(url) {
+  renderJS.declareGadgetKlass = function declareGadgetKlass(url, options) {
     var tmp_constructor,
       defer;
 
@@ -2152,7 +2153,8 @@ if (typeof document.contains !== 'function') {
           promise_list = [],
           i,
           js_list = tmp_constructor.prototype.__required_js_list,
-          css_list = tmp_constructor.prototype.__required_css_list;
+          css_list = tmp_constructor.prototype.__required_css_list,
+          options_js_list = options.js_list;
         // Load JS
         if (js_list.length) {
           gadget_loading_klass_list.push(tmp_constructor);
@@ -2160,6 +2162,12 @@ if (typeof document.contains !== 'function') {
             promise_list.push(renderJS.declareJS(js_list[i], fragment));
           }
           promise_list.push(renderJS.declareJS(js_list[i], fragment, true));
+        }
+        if (options_js_list != undefined && options_js_list.length) {
+          for (i = 0; i < options_js_list.length - 1; i += 1) {
+            promise_list.push(renderJS.declareJS(options_js_list[i], fragment));
+          }
+          promise_list.push(renderJS.declareJS(options_js_list[i], fragment, true));
         }
         // Load CSS
         for (i = 0; i < css_list.length; i += 1) {
