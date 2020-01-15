@@ -22,8 +22,12 @@
     if (gadget.props.cropper) {
       gadget.props.cropper.destroy();
     }
-    gadget.props.cropper = new Cropper(root.querySelector('.photo'), {
-      data: gadget.props.preferred_cropped_canvas_data
+    // creating Cropper is asynchronous
+    return new RSVP.Promise(function (resolve) {
+      gadget.props.cropper = new Cropper(root.querySelector('.photo'), {
+        data: gadget.props.preferred_cropped_canvas_data,
+        ready: resolve
+      });
     });
   }
 
@@ -299,7 +303,7 @@
             }
           }
         }
-        gadget.startStream();
+        return gadget.startStream();
       }
       if (evt.target.className.indexOf("take-picture-btn") !== -1) {
         evt.preventDefault();
@@ -312,7 +316,7 @@
           .push(function () {
             root.querySelector(".camera-input").style.display = "none";
             setPageTwo(root);
-            enableButton(root);
+            return enableButton(root);
           });
       }
       if (evt.target.className.indexOf("reset-btn") !== -1) {
@@ -336,9 +340,7 @@
             var canvas = gadget.props.cropper.getCroppedCanvas();
             disableButton(gadget.element);
             return new Promise(function (resolve) {
-              canvas.toBlob(function (blob) {
-                resolve(blob);
-              }, 'image/jpeg', 0.85);
+              canvas.toBlob(resolve, 'image/jpeg', 0.85);
             });
           })
           .push(function (blob) {
