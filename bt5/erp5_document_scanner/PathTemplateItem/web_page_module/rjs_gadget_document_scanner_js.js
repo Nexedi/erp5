@@ -237,7 +237,7 @@
         .push(function () {
           var preferred_cropped_canvas_data = gadget.props.preferred_cropped_canvas_data;
           preferred_cropped_canvas_data = preferred_cropped_canvas_data || JSON.parse(options.preferred_cropped_canvas_data);
-          gadget.props.dialog_method = preferred_cropped_canvas_data.dialog_method;
+          gadget.props.dialog_method = options.dialog_method;
           // Clear photo input
           root.querySelector('.photoInput').value = "";
           gadget.props.page_number = parseInt(root.querySelector('input[name="page-number"]').value, 10);
