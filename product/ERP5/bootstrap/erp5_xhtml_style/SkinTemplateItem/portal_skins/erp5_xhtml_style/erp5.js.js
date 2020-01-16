@@ -229,6 +229,9 @@ var addOnChangeEventHandler = function() {
       - clicking a relation field wheel
       - clicking on a input with type submit
   */
+  $("#main_form").each(function(i) {
+    $(this).submit(function() {changed = false; return true;});
+  });
   $("#master div").each(function(i) {
     if ($(this).attr("class") == "input") {
         $(this).children().each(function() {

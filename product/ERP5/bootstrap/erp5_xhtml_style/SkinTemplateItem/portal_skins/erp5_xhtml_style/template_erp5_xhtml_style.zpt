@@ -31,7 +31,6 @@ DEPRECATION:
         <body tal:attributes="class body_css_class|nothing; dir language_direction;">
           <form id="main_form"
                 class="main_form"
-                onsubmit="changed=false; return true"
                 tal:attributes="enctype enctype | form/Form_getEnctype | nothing;
                 action url;
                 method python:str(path('form/method | string:post')).lower()">
