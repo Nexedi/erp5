@@ -16,6 +16,7 @@
 """
 
 import string, random
+rng = random.SystemRandom()
 vowels = ['a','e','i','o','u']
 consonants = [a for a in string.ascii_lowercase if a not in vowels]
 digits = string.digits
@@ -24,17 +25,17 @@ def a_part(slen):
     ret = ''
     for i in range(slen):			
         if i%2 ==0:
-            randid = random.randint(0,20) #number of consonants
+            randid = rng.randint(0,20) #number of consonants
             ret += consonants[randid]
         else:
-            randid = random.randint(0,4) #number of vowels
+            randid = rng.randint(0,4) #number of vowels
             ret += vowels[randid]
     return ret
 
 def n_part(slen):
     ret = ''
     for i in range(slen):
-        randid = random.randint(0,9) #number of digits
+        randid = rng.randint(0,9) #number of digits
         ret += digits[randid]
     return ret
 
