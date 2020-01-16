@@ -15,12 +15,20 @@ portal.portal_sessions[
     )
   )
 ]['ac_renew'] = ac_renew
+
+REQUEST_DICT = getattr(portal, 'REQUEST', {})
+
+same_site = portal.ERP5Site_getSameSite(host=REQUEST_DICT.get('HTTP_HOST', None))
+if same_site not in ('None', 'Lax', 'Strict'):
+  # Do not use the SameSite attribute
+  same_site = None
+
 resp.setCookie(
   name=cookie_name,
   value=cookie_value,
   path='/',
-  secure=getattr(portal, 'REQUEST', {}).get('SERVER_URL', '').startswith('https:'),
+  secure=REQUEST_DICT.get('SERVER_URL', '').startswith('https:'),
   http_only=True,
-  same_site='Lax',
+  same_site=same_site,
   **kw
 )
