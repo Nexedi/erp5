@@ -1,7 +1,8 @@
-alpha = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-random_id = ''
-for _ in range(0, 128):
-  random_id += random.choice(alpha)
+import os
+import base64
+
+# This is python 3.6 secret.token_urlsafe
+random_id = base64.urlsafe_b64encode(os.urandom(48)).rstrip(b'=').decode('ascii')
 
 # Define Reference from ID provided by portal_ids
 portal = context.getPortalObject()
