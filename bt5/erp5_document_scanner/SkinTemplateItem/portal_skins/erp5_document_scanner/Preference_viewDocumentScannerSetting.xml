@@ -35,7 +35,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_uploadDocumentFromCameraByActivity</string> </value>
+            <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -53,7 +57,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string>multipart/form-data</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -62,8 +66,6 @@
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
-                <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -72,30 +74,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>center</string> </key>
                     <value>
                       <list/>
                     </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list>
-                        <string>stringfield_validator</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_document_scanner_gadget</string>
+                        <string>my_preferred_image_scanner_conversion_enable_greyscale</string>
                       </list>
                     </value>
                 </item>
@@ -103,14 +91,9 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>your_title</string>
-                        <string>your_reference</string>
-                        <string>your_language</string>
-                        <string>your_version</string>
-                        <string>your_group</string>
-                        <string>your_publication_section</string>
-                        <string>your_publication_state</string>
-                        <string>your_description</string>
+                        <string>my_preferred_image_scanner_conversion_compression</string>
+                        <string>my_preferred_image_scanner_conversion_brightness</string>
+                        <string>my_preferred_image_scanner_conversion_contrast</string>
                       </list>
                     </value>
                 </item>
@@ -119,7 +102,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewUploadDocumentFromCameraDialog</string> </value>
+            <value> <string>Preference_viewDocumentScannerSetting</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -127,11 +110,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_viewUploadDocumentFromCameraDialog</string> </value>
+            <value> <string>Preference_viewDocumentScannerSettting</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_dialog</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -143,7 +126,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Create PDF</string> </value>
+            <value> <string>Document Scanner</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

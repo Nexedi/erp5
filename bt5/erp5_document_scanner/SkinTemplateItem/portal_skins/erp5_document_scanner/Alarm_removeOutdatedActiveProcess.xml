@@ -50,19 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>active_process</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_removeActiveProcessFromActivityTool</string> </value>
+            <value> <string>Alarm_removeOutdatedActiveProcess</string> </value>
         </item>
       </dictionary>
     </pickle>

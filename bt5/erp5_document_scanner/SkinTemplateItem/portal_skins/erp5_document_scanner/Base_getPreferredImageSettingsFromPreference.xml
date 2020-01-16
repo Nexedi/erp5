@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>classification=None, synchronous_metadata_discovery=None, cancel_url=None, batch_mode=False, editable_mode=1, group=None, publication_section=None, document_scanner_gadget=None, active_process_url=None, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_storeDocumentFromCameraInActiveProcess</string> </value>
+            <value> <string>Base_getPreferredImageSettingsFromPreference</string> </value>
         </item>
       </dictionary>
     </pickle>
