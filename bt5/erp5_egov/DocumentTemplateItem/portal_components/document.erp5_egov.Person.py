@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.Document.Person import Person
+from Products.ERP5.Document.Person import Person as ERP5Person
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
@@ -35,7 +35,7 @@ from Products.CMFCore.exceptions import AccessControl_Unauthorized
 
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
 
-class Person(Person):
+class Person(ERP5Person):
     """
     """
     security = ClassSecurityInfo()
