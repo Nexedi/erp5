@@ -104,8 +104,6 @@ def initialize( context ):
   ModuleSecurityInfo('ZODB.POSException').declarePublic('ConflictError')
   ModuleSecurityInfo('Products.CMFCore.WorkflowCore').declarePublic(
                                                    'WorkflowException')
-  ModuleSecurityInfo('Products.ERP5.Document.Image').declarePublic(
-                                                'getSizeFromImageDisplay')
 
   # Make sure InteactionWorkflow is visible in UI
   import Products.ERP5.InteractionWorkflow
