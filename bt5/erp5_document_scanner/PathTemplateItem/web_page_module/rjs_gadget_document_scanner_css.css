@@ -7,7 +7,7 @@ div[data-gadget-scope="field_your_document_scanner_gadget"] {
   text-align: center;
 }
 
-.video, .photo, .camera-output {
+.video, .photo, .camera-output, .canvas {
   max-width: 100%;
   width: auto;
   max-height: 500px;
@@ -17,11 +17,11 @@ div[data-gadget-scope="field_your_document_scanner_gadget"] {
 
 .camera-input, .camera-output {
   min-height: 360px;
-  display: none;
+  // display: none;
 }
 
 .canvas {
-  display: none;
+  // display: none;
   filter: brightness(1);
 }
 
@@ -58,12 +58,20 @@ div[data-gadget-scope="field_your_document_scanner_gadget"] {
   padding: 3pt;
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
+  display: "inline-block";
+  margin-right: 6pt;
 }
 
+.ui-btn-icon-left:before {
+  margin-right: 6pt;
+}
+
+/*
 .take-picture-btn, .capture-btn, .confirm-btn,
     .reset-btn, .confirm-btn, .change-camera-btn, .edit-btn {
   display: none;
 }
+*/
 
 .contentarea {
   font-size: 16px;
