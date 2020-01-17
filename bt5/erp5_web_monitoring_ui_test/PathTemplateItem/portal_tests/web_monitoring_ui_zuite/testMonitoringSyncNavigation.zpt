@@ -74,7 +74,7 @@
 </tr>
 <tr>
   <td>store</td>
-  <td>http://localhost:5378/rootInstance/public/feeds</td>
+  <td>${base_url}/portal_tests/web_monitoring_ui_zuite/simulator/rootInstance/public/feeds</td>
   <td>opml_url</td>
 </tr>
 <tr>
