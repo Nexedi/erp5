@@ -1,0 +1,89 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="click_save">
+    <tr>
+      <td colspan="3"><b>Click on Save</b></td>
+    </tr>
+    <tr>
+     <td>waitForElementPresent</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//button[@data-i18n='Save']</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>assertElementPresent</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//button[@data-i18n='Save']</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>waitForElementNotPresent</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//button[@data-i18n='Save'][contains(@class, "ui-disabled")]</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>assertElementNotPresent</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//button[@data-i18n='Save'][contains(@class, "ui-disabled")]</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>assertElementPresent</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//button[@data-i18n='Save']</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>click</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//button[@data-i18n='Save']</td>
+     <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="save">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/click_save" />
+    <tr>
+      <td colspan="3"><b>Save</b></td>
+    </tr>
+    <!-- Save Button is disabled  -->
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@data-i18n="Save"][contains(@class, "ui-disabled")]</td>
+      <td></td>
+    </tr>
+    <!-- First loader while calling Base_edit -->
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
+    <tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                               'text': 'Data updated.'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+    </tal:block>
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@data-i18n="Save"][contains(@class, "ui-icon-check")]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="wait_for_content_loaded">
+    <tr>
+      <td colspan="3"><b>Wait for the content to be loaded</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
+    <!-- XXX Sadly, spinner currently is dropped before all DOM modifications are done.
+         Until this is fixed, we use the ugly pause command -->
+    <tr>
+      <td>pause</td>
+      <td>100</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+</tal:block>
