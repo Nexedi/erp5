@@ -1,6 +1,6 @@
-/*jslint indent: 2 */
-/*global rJS, RSVP, window, navigator, Cropper, Promise, JSON, jIO*/
-(function (rJS, RSVP, window, navigator, Cropper, Promise, JSON, jIO) {
+/*jslint indent: 2, unparam: true */
+/*global rJS, RSVP, window, navigator, Cropper, Promise, JSON, jIO, promiseEventListener*/
+(function (rJS, RSVP, window, navigator, Cropper, Promise, JSON, jIO, promiseEventListener) {
   "use strict";
 
   function drawCanvas(gadget, img) {
@@ -142,11 +142,21 @@
       });
   }*/
 
-  function handleUserMedia(gadget, callback) {
-    var stream,
-      video = gadget.props.video;
+  function promiseUserMedia(device_id) {
+    return navigator.mediaDevices.getUserMedia({
+      video: {
+        deviceId: {
+          exact: device_id
+        }
+      },
+      audio: false
+    });
+  }
 
-    video.autoplay = "autoplay";
+  function handleUserMedia(device_id, callback) {
+    // Do not modify this function!
+    // There is no need to add the gadget logic inside
+    var stream;
 
     function canceller() {
       if (stream !== undefined) {
@@ -157,25 +167,19 @@
       }
     }
 
-    function waitForStream() {
-      return new RSVP.Queue()
+    function waitForStream(resolve, reject) {
+      new RSVP.Queue()
         .push(function () {
-          return navigator.mediaDevices.getUserMedia({
-            video: {
-              deviceId: {
-                exact: gadget.props.device_id
-              }
-            }
-          });
+          return promiseUserMedia(device_id);
         })
-        .push(function (mediaStream) {
-          stream = mediaStream;
-          video.srcObject = mediaStream;
-          return callback(gadget, stream);
+        .push(function (result) {
+          stream = result;
+          return callback(stream);
         })
         .push(undefined, function (error) {
           if (!(error instanceof RSVP.CancellationError)) {
             canceller();
+            reject(error);
           }
         });
     }
@@ -183,26 +187,39 @@
     return new RSVP.Promise(waitForStream, canceller);
   }
 
-  function gotStream(gadget, mediaStream) {
+  function gotStream(media_stream) {
+    var gadget = this;
     return new RSVP.Queue()
       .push(function () {
+        var video = gadget.props.video;
+        video.srcObject = media_stream;
+        video.autoplay = "autoplay";
+        video.loop = "loop";
+        video.muted = "muted";
+
+        return RSVP.any([
+          // Wait for the video to be ready
+          promiseEventListener(video, 'loadedmetadata', true),
+          promiseEventListener(video, 'canplaythrough', true),
+          promiseEventListener(video, 'error', true, function () {
+            throw new Error("Can't play the video file");
+          })
+        ]);
+      })
+      .push(function () {
+        gadget.props.video.play();
         var image_capture;
-        image_capture = new window.ImageCapture(mediaStream.getVideoTracks()[0]);
+        image_capture = new window.ImageCapture(media_stream.getVideoTracks()[0]);
         gadget.props.image_capture = image_capture;
         return image_capture.getPhotoCapabilities();
       })
       .push(function (photoCapabilities) {
         gadget.props.image_width = photoCapabilities.imageWidth.max;
         gadget.props.image_height = photoCapabilities.imageHeight.max;
-        return gadget.props.video.play();
       })
       .push(function () {
         return setPageOne(gadget);
       });
-  }
-
-  function startStream(gadget) {
-    return handleUserMedia(gadget, gotStream);
   }
 
   rJS(window)
@@ -212,15 +229,28 @@
     )
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
+
     .declareJob("startStream", function () {
-      return startStream(this);
+      return handleUserMedia(this.props.device_id, gotStream.bind(this));
     })
+
     .ready(function () {
       this.props = {
         video: this.element.querySelector(".video")
       };
     })
+
     .declareMethod('render', function (options) {
+      // This method is called during the ERP5 form rendering
+      return this.changeState({
+        dialog_method: options.dialog_method,
+        preferred_cropped_canvas_data: options.preferred_cropped_canvas_data,
+        // XXX to drop
+        timestamp: new Date()
+      });
+    })
+
+    .onStateChange(function () {
       var root = this.element,
         camera_list = [],
         gadget = this;
@@ -236,8 +266,7 @@
         })
         .push(function () {
           var preferred_cropped_canvas_data = gadget.props.preferred_cropped_canvas_data;
-          preferred_cropped_canvas_data = preferred_cropped_canvas_data || JSON.parse(options.preferred_cropped_canvas_data);
-          gadget.props.dialog_method = options.dialog_method;
+          preferred_cropped_canvas_data = preferred_cropped_canvas_data || JSON.parse(gadget.state.preferred_cropped_canvas_data);
           // Clear photo input
           root.querySelector('.photoInput').value = "";
           gadget.props.page_number = parseInt(root.querySelector('input[name="page-number"]').value, 10);
@@ -355,7 +384,7 @@
             gadget.props.cropper.destroy();
           })
           .push(function () {
-            return gadget.submitDialogWithCustomDialogMethod(gadget.props.dialog_method);
+            return gadget.submitDialogWithCustomDialogMethod(gadget.state.dialog_method);
           })
           .push(function () {
             gadget.props.page_number = gadget.props.page_number + 1;
@@ -364,4 +393,4 @@
       }
     }, false, false);
 
-}(rJS, RSVP, window, navigator, Cropper, Promise, JSON, jIO));
+}(rJS, RSVP, window, navigator, Cropper, Promise, JSON, jIO, promiseEventListener));
