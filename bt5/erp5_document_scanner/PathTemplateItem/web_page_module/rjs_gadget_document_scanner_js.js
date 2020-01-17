@@ -311,6 +311,11 @@
       return result;
     })
     .onEvent("click", function (evt) {
+      // Only handle click on BUTTON element
+      if (evt.target.tagName !== 'BUTTON') {
+        return;
+      }
+
       var e,
         new_preferred_cropped_canvas_data,
         gadget = this,
@@ -391,6 +396,7 @@
             root.querySelector('input[name="page-number"]').value = gadget.props.page_number;
           });
       }
+      throw new Error('Unhandled button ' + evt.target);
     }, false, false);
 
 }(rJS, RSVP, window, navigator, Cropper, Promise, JSON, jIO, promiseEventListener));
