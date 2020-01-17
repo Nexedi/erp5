@@ -898,6 +898,11 @@ class TestLocalRoleManagement(RoleManagementTestCase):
   def testSimpleLocalRole(self):
     """Test simple case of setting a role.
     """
+    def viewSecurity():
+      return self.publish(
+        self.portal.absolute_url_path() + '/Base_viewSecurity',
+        basic='%s:%s' % (self.username, self.username),
+      )
     self._getTypeInfo().newContent(portal_type='Role Information',
       role_name='Assignor',
       description='desc.',
@@ -913,9 +918,7 @@ class TestLocalRoleManagement(RoleManagementTestCase):
 
     # check if assignment change is effective immediately
     self.login()
-    res = self.publish(self.portal.absolute_url_path() + \
-                       '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
-                       (self.username, self.username))
+    res = viewSecurity()
     self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
                      ["--> ['F1_G1_S1']"], res.body)
     assignment = self.person.newContent( portal_type='Assignment',
@@ -923,15 +926,11 @@ class TestLocalRoleManagement(RoleManagementTestCase):
                                   site='subcat',
                                   function='another_subcat' )
     assignment.open()
-    res = self.publish(self.portal.absolute_url_path() + \
-                       '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
-                       (self.username, self.username))
+    res = viewSecurity()
     self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
                      ["--> ['F1_G1_S1']", "--> ['F2_G1_S1']"], res.body)
     assignment.setGroup('another_subcat')
-    res = self.publish(self.portal.absolute_url_path() + \
-                       '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
-                       (self.username, self.username))
+    res = viewSecurity()
     self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
                      ["--> ['F1_G1_S1']", "--> ['F2_G2_S1']"], res.body)
     self.abort()
@@ -1181,11 +1180,15 @@ class TestKeyAuthentication(RoleManagementTestCase):
     response = self.publish('%s/%s?__ac_key=%s' %(base_url, web_page.getReference(),
                                                   key))
     self.assertEqual(response.getStatus(), 200)
-    response = self.publish('%s/%s?__ac_name=%s&__ac_password=%s' % (
-      base_url, web_page.getReference(), reference, 'guest'))
+    response = self.publish(
+      base_url + '/' + web_page.getReference(),
+      basic=reference + ':guest',
+    )
     self.assertEqual(response.getStatus(), 200)
-    response = self.publish('%s/%s?__ac_name=%s&__ac_password=%s' % (
-      base_url, web_page.getReference(), 'ERP5TypeTestCase', ''))
+    response = self.publish(
+      base_url + '/' + web_page.getReference(),
+      basic='ERP5TypeTestCase:',
+    )
     self.assertEqual(response.getStatus(), 200)
 
 

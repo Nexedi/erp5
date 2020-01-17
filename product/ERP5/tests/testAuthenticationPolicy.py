@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+from functools import partial
 import unittest
 import urllib
 from StringIO import StringIO
@@ -603,10 +604,13 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     time.sleep(1)
     self.assertTrue(login.isPasswordExpired())
 
+    publish = partial(
+      self.publish,
+      portal.absolute_url_path() + '/view',
+      basic=self.id() + ':password',
+    )
     # User cannot login
-    path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s' % (
-      self.id(), 'password')
-    response = self.publish(path)
+    response = publish()
     self.assertTrue(response.getHeader("Location").endswith("login_form"))
     self.tic()
 
@@ -615,7 +619,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
         portal_type='Credential Recovery')
 
     # trying to login again does not create a new credential recovery
-    response = self.publish(path)
+    response = publish()
     self.tic()
     credential_recovery, = login.getDestinationDecisionRelatedValueList(
         portal_type='Credential Recovery')
@@ -640,24 +644,30 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     login.setPassword('used_ALREADY_1234')
     self.tic()
 
-    path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s'  %('test-05', 'used_ALREADY_1234')
-    response = self.publish(path)
+    response = self.publish(
+      portal.absolute_url_path() + '/view',
+      basic='test-05:used_ALREADY_1234',
+    )
     self.assertTrue('Welcome to ERP5' in response.getBody())
     self.assertFalse(login.isLoginBlocked())
 
+    publish = partial(
+      self.publish,
+      portal.absolute_url_path() + '/view',
+      basic='test-05:bad_test',
+    )
     # fail request #1
-    path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s'  %('test-05', 'bad_test')
-    response = self.publish(path)
+    response = publish()
     self.assertTrue(response.getHeader("Location").endswith("login_form"))
     self.assertFalse(login.isLoginBlocked())
 
     # fail request #2
-    response = self.publish(path)
+    response = publish()
     self.assertTrue(response.getHeader("Location").endswith("login_form"))
     self.assertFalse(login.isLoginBlocked())
 
     # fail request #3
-    response = self.publish(path)
+    response = publish()
     self.assertTrue(response.getHeader("Location").endswith("login_form"))
     self.assertTrue(login.isLoginBlocked())
 
@@ -665,8 +675,12 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
 
     # test message that account is blocked
     self.assertTrue(login.isLoginBlocked())
-    path = portal.absolute_url_path() + '/logged_in?__ac_name=%s&__ac_password=%s'  %('test-05', 'used_ALREADY_1234')
-    response = self.publish(path)
+    publish = partial(
+      self.publish,
+      portal.absolute_url_path() + '/logged_in',
+      basic='test-05:used_ALREADY_1234',
+    )
+    response = publish()
     self.assertTrue(response.getHeader("Location").endswith("login_form?portal_status_message=Account is blocked."))
 
     # test expire password message, first unblock it
@@ -674,7 +688,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference.setPreferredMaxPasswordLifetimeDuration(0)
     self.tic()
     self._clearCache()
-    response = self.publish(path)
+    response = publish()
     self.assertTrue(response.getHeader("Location").endswith("login_form?portal_status_message=Password is expired."))
     self.assertTrue(login.isPasswordExpired())
 
@@ -683,7 +697,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference.setPreferredPasswordLifetimeExpireWarningDuration(24)
     self.tic()
     self._clearCache()
-    response = self.publish(path)
+    response = publish()
 
     self.assertTrue('Your password will expire' in response.getHeader("Location"))
     self.assertTrue('You are advised to change it as soon as possible' in response.getHeader("Location"))
@@ -692,8 +706,10 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference.setPreferredPasswordLifetimeExpireWarningDuration(12)
     self.tic()
     self._clearCache()
-    path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s'  %('test-05', 'used_ALREADY_1234')
-    response = self.publish(path)
+    response = self.publish(
+      portal.absolute_url_path() + '/view',
+      basic='test-05:used_ALREADY_1234',
+    )
     self.assertTrue('Welcome to ERP5' in response.getBody())
 
   def test_ExpireOldAuthenticationEventList(self):
