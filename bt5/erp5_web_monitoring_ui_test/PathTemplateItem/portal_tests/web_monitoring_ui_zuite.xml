@@ -7,6 +7,72 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>__before_publishing_traverse__</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="MultiHook" module="ZPublisher.BeforeTraverse"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_defined_in_class</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>_hookname</string> </key>
+                        <value> <string>__before_publishing_traverse__</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_list</string> </key>
+                        <value>
+                          <list>
+                            <object id="1.1">
+                              <klass>
+                                <global name="AccessRule" module="Products.SiteAccess.AccessRule"/>
+                              </klass>
+                              <tuple/>
+                              <state>
+                                <dictionary>
+                                  <item>
+                                      <key> <string>name</string> </key>
+                                      <value> <string>MonitorBackend_accessRule</string> </value>
+                                  </item>
+                                </dictionary>
+                              </state>
+                            </object>
+                          </list>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_prior</string> </key>
+                        <value>
+                          <none/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>__before_traverse__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key>
+                      <tuple>
+                        <int>1</int>
+                        <string>AccessRule</string>
+                      </tuple>
+                    </key>
+                    <value> <reference id="1.1"/> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
