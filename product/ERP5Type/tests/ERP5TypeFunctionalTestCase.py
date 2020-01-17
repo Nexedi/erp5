@@ -80,7 +80,7 @@ selenium.webdriver.common.utils.join_host_port = join_host_port
 # /selenium workaround
 
 
-ZELENIUM_BASE_URL = "%s/portal_tests/%s/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=../postResults&__ac_name=%s&__ac_password=%s"
+ZELENIUM_BASE_URL = "%s/portal_tests/%s/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=../postResults"
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 # handle 'system global' instance
@@ -171,18 +171,18 @@ class FunctionalTestRunner:
     transaction.begin()
     return self.portal.portal_tests.TestTool_getResults(self.run_only)
 
-  def _getTestURL(self):
+  def _getTestBaseURL(self):
     # Access the https proxy in front of runUnitTest's zserver
     base_url = os.getenv('zserver_frontend_url')
     if base_url:
-      base_url = '%s%s' % (base_url, self.portal.getId())
-    else:
-      base_url = self.portal.portal_url()
+      return '%s%s' % (base_url, self.portal.getId())
+    return self.portal.portal_url()
+
+  def _getTestURL(self):
     return ZELENIUM_BASE_URL % (
-        base_url,
+        self._getTestBaseURL(),
         self.run_only,
-        self.user,
-        self.password)
+    )
 
   def test(self, debug=0):
     xvfb = Xvfb(self.instance_home)
@@ -207,6 +207,19 @@ class FunctionalTestRunner:
         kw.update(firefox_binary=firefox_bin, executable_path=geckodriver)
       browser = webdriver.Firefox(**kw)
       start_time = time.time()
+      browser.get(self._getTestBaseURL() + '/login_form')
+      login_field = WebDriverWait(browser, 10).until(
+        EC.presence_of_element_located((By.NAME, '__ac_name')),
+      )
+      login_field.clear()
+      login_field.send_keys(self.user)
+      password_field = browser.find_element_by_name('__ac_password')
+      password_field.clear()
+      password_field.send_keys(self.password)
+      login_form_url = browser.current_url
+      password_field.submit()
+      WebDriverWait(browser, 10).until(EC.url_changes(login_form_url))
+      WebDriverWait(browser, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'body')))
       browser.get(self._getTestURL())
 
       WebDriverWait(browser, 10).until(EC.presence_of_element_located((
