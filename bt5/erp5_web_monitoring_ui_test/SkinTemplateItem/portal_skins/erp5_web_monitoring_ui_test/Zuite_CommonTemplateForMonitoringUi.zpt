@@ -1,0 +1,167 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="monitoring_ui_setup">
+    <tr tal:define="
+                    global MONITORING_INSTANCE_ROOT string:rootInstance;
+                    global MONITORING_INSTANCE_1 string:subInstance-1;
+                    global MONITORING_INSTANCE_2 string:subInstance-2;
+                    global MONITORING_USERNAME string:admin;
+                    global MONITORING_PASSWORD string:ntpvmhkg;
+                    global MONITORING_HOSTING_TITLE string:TEST Hosting Subscription">
+      <td colspan="3"><b>Monitoring UI Zuite Setup</b></td>
+    </tr>
+    <tr>
+      <td>store</td>
+      <td tal:content="MONITORING_INSTANCE_ROOT"></td>
+      <td>MONITORING_INSTANCE_ROOT</td>
+    </tr>
+    <tr>
+      <td>store</td>
+      <td tal:content="MONITORING_INSTANCE_1"></td>
+      <td>MONITORING_INSTANCE_1</td>
+    </tr>
+    <tr>
+      <td>store</td>
+      <td tal:content="MONITORING_INSTANCE_2"></td>
+      <td>MONITORING_INSTANCE_2</td>
+    </tr>
+    <tr>
+      <td>store</td>
+      <td tal:content="MONITORING_USERNAME"></td>
+      <td>MONITORING_USERNAME</td>
+    </tr>
+    <tr>
+      <td>store</td>
+      <td tal:content="MONITORING_PASSWORD"></td>
+      <td>MONITORING_PASSWORD</td>
+    </tr>
+    <tr>
+      <td>store</td>
+      <td tal:content="MONITORING_HOSTING_TITLE"></td>
+      <td>MONITORING_HOSTING_TITLE</td>
+    </tr>
+    <tr>
+      <td>store</td>
+      <td tal:content="here/portal_tests/web_monitoring_ui_zuite/MonitorBackend_getBaseUrl">http://example.com/erp5</td>
+      <td>MONITORING_SIMULATOR_URL</td>
+    </tr>
+    <tr>
+      <td>store</td>
+      <td>${MONITORING_SIMULATOR_URL}/rootInstance/public/feeds</td>
+      <td>MONITORING_OPML_URL</td>
+    </tr>
+    <tr>
+      <td>store</td>
+      <td>test_promise_2</td>
+      <td>MONITORING_PROMISE_TITLE</td>
+    </tr>
+    <tr>
+      <td colspan="3"><b>Cleanup</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertTextPresent</td>
+      <td>Reset Successfully.</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><b>Initialize</b></td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>${base_url}/web_site_module/officejs_monitoring/</td>
+      <td></td>
+    </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+  </tal:block>
+  <tal:block metal:define-macro="click_save">
+    <tr>
+      <td colspan="3"><b>Click on Save</b></td>
+    </tr>
+    <tr>
+     <td>waitForElementPresent</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//button[@data-i18n='Save']</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>assertElementPresent</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//button[@data-i18n='Save']</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>waitForElementNotPresent</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//button[@data-i18n='Save'][contains(@class, "ui-disabled")]</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>assertElementNotPresent</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//button[@data-i18n='Save'][contains(@class, "ui-disabled")]</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>assertElementPresent</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//button[@data-i18n='Save']</td>
+     <td></td>
+    </tr>
+    <tr>
+     <td>click</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//button[@data-i18n='Save']</td>
+     <td></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="save">
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/click_save" />
+    <tr>
+      <td colspan="3"><b>Save</b></td>
+    </tr>
+    <!-- Save Button is disabled  -->
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@data-i18n="Save"][contains(@class, "ui-disabled")]</td>
+      <td></td>
+    </tr>
+    <!-- First loader while calling Base_edit -->
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
+    <tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                               'text': 'Data updated.'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+    </tal:block>
+    <tr>
+      <td>verifyElementPresent</td>
+      <td>//button[@data-i18n="Save"][contains(@class, "ui-icon-check")]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+  <tal:block metal:define-macro="wait_for_content_loaded">
+    <tr>
+      <td colspan="3"><b>Wait for the content to be loaded</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
+    <!-- XXX Sadly, spinner currently is dropped before all DOM modifications are done.
+         Until this is fixed, we use the ugly pause command -->
+    <tr>
+      <td>pause</td>
+      <td>100</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+</tal:block>
