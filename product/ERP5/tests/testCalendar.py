@@ -1767,6 +1767,67 @@ class TestCalendar(ERP5ReportTestCase):
             to_date=DateTime(2016, 1, 31).latestTime(),
             node_uid=person.getUid()))
 
+  def test_GroupCalendarPeriodExceptionWhenNoAvailabilityAndValidExceptions(self):
+    """Variation on test_GroupCalendarPeriodExceptionWhenNoAvailability, also
+    check that other exceptions works fine.
+    """
+    group_calendar = self.portal.group_calendar_module.newContent(
+        portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+        portal_type='Group Presence Period')
+    group_calendar_period.setStartDate('2016/01/01 09:00')
+    group_calendar_period.setStopDate('2016/01/01 16:00')
+    group_calendar_period.setPeriodicityStopDate('2016/02/01')
+    group_calendar_period.setResourceValue(
+        self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar_period.setPeriodicityWeekDayList(
+        ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', ))
+    group_calendar.confirm()
+
+    # Add two exceptions on 2016/01/02 (which does not repeat) and on 2016/01/04 (
+    # which is a valid exception).
+    #
+    #     January 2016
+    #  Su Mo Tu We Th Fr Sa
+    #                  1 ?2
+    #   3 -4  5  6  7  8  9
+    #  10 11 12 13 14 15 16
+    #  17 18 19 20 21 22 23
+    #  24 25 26 27 28 29 30
+    #  31
+    group_calendar_period.newContent(
+        portal_type="Calendar Exception",
+        exception_date=DateTime(2016, 1, 2))
+    group_calendar_period.newContent(
+        portal_type="Calendar Exception",
+        exception_date=DateTime(2016, 1, 4))
+
+    person = self.portal.person_module.newContent(portal_type='Person')
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+        specialise_value=group_calendar,
+        resource_value=self.portal.service_module.consulting_service,
+        start_date=DateTime(2016, 1, 1).earliestTime(),
+        stop_date=DateTime(2016, 1, 31).latestTime(),
+        destination_value=person)
+    assignment.confirm()
+    self.tic()
+    self.assertTrue(assignment.asMovementList())
+    days = [m.getStartDate().Date() for m in assignment.asMovementList()]
+    self.assertIn('2016/01/01', days)
+    self.assertNotIn('2016/01/02', days)
+    self.assertNotIn('2016/01/03', days)
+    self.assertNotIn('2016/01/04', days)
+    self.assertIn('2016/01/05', days)
+    self.assertIn('2016/01/06', days)
+
+    self.assertEqual(
+        7 * 60 * 60 * 20, # 7 hours per day, 20 "business days" ( because 04 is not counted)
+        self.portal.portal_simulation.getInventory(
+            portal_type=self.portal.getPortalCalendarPeriodTypeList(),
+            from_date=DateTime(2016, 1, 1).earliestTime(),
+            to_date=DateTime(2016, 1, 31).latestTime(),
+            node_uid=person.getUid()))
+
   def test_PersonModule_viewLeaveRequestReport(self):
     # in this test, type1 is the type for presences, type2 & type3 are types
     # for leaves.

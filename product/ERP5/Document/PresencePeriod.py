@@ -137,13 +137,9 @@ class PresencePeriod(Movement, PeriodicityMixin):
     exception_value_list = self.getCalendarPeriodExceptionValueList()
     exception_date_list = [x.getExceptionDate() \
                                        for x in exception_value_list]
-    exception_date_list = [x for x in exception_date_list if x is not None]
-    exception_date_list.sort()
-    if len(exception_date_list) != 0:
-      current_exception_date = exception_date_list.pop(0).Date()
-    else:
-      current_exception_date = None
-
+    exception_date_set = set(
+        [x.Date() for x in exception_date_list if x is not None]
+    )
     start_date = self.getStartDate()
     if start_date is not None:
       stop_date = self.getStopDate(start_date)
@@ -155,32 +151,7 @@ class PresencePeriod(Movement, PeriodicityMixin):
         next_start_date = self.getNextPeriodicalDate(addToDate(start_date, day=-1))
         while (next_start_date is not None) and \
           (next_start_date <= periodicity_stop_date):
-
-          # Check that next_start_date is not an exception
-          if (current_exception_date is not None) and \
-             (current_exception_date == next_start_date.Date()):
-              # We match an exception date
-              # So, don't return this value
-              # Update the next exception date
-              if len(exception_date_list) != 0:
-                current_exception_date = exception_date_list.pop(0).Date()
-              else:
-                current_exception_date = None
-          elif (current_exception_date is not None) and \
-             (current_exception_date < next_start_date.Date()):
-            # SQL method don't like iterator
-  #             yield (next_start_date, next_start_date+duration)
-            result.append({'start_date': next_start_date,
-                           'stop_date': addToDate(next_start_date, second=second_duration),
-                           'quantity': self.getQuantity()})
-            # Update the next exception date
-            if len(exception_date_list) != 0:
-              current_exception_date = exception_date_list.pop(0).Date()
-            else:
-              current_exception_date = None
-          else:
-            # SQL method don't like iterator
-  #             yield (next_start_date, next_start_date+duration)
+          if next_start_date.Date() not in exception_date_set:
             result.append({'start_date': next_start_date,
                            'stop_date': addToDate(next_start_date, second=second_duration),
                            'quantity': self.getQuantity()})
