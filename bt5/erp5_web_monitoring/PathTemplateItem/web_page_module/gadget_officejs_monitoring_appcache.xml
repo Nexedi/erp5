@@ -357,6 +357,7 @@ NETWORK:\n
             </item>
           </dictionary>
         </list>
+        <none/>
       </tuple>
     </pickle>
   </record>
@@ -416,6 +417,7 @@ NETWORK:\n
             </item>
           </dictionary>
         </list>
+        <none/>
       </tuple>
     </pickle>
   </record>

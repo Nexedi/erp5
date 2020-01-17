@@ -100,7 +100,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
     <pickle>
       <tuple>
