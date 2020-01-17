@@ -1,520 +1,280 @@
 <html xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:metal="http://xml.zope.org/namespaces/metal">
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      tal:define="global TEST_NAME string:Test SlapOS Monitoring UI Full Scenario">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test SlapOS Monitoring UI</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title tal:content="TEST_NAME"></title>
 </head>
-<body>
-<table cellpadding="1" cellspacing="1" border="1">
-<thead>
-<tr><td rowspan="1" colspan="3">Test SlapOS Monitoring UI</td></tr>
-</thead><tbody>
-<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-<tr>
-  <td>store</td>
-  <td tal:content="here/portal_tests/web_monitoring_ui_zuite/MonitorBackend_getBaseUrl">http://example.com/erp5</td>
-  <td>monitor_simulator_url</td>
-</tr>
-<!-- Clean Up -->
-<tr>
-  <td>open</td>
-  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Reset Successfully.</td>
-  <td></td>
-</tr>
-<!-- Initialize -->
-<tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/officejs_monitoring/</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Monitoring Configurations']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Synchronize']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Synchronizing Data...</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Synchronisation finished</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Monitoring Configurations']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@id="destroyOPML"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//input[@name='check_online_access']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>500</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Add']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n="Save"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Change Password']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>store</td>
-  <td>${monitor_simulator_url}/rootInstance/public/feeds</td>
-  <td>opml_url</td>
-</tr>
-<tr>
-  <td>store</td>
-  <td>rootInstance</td>
-  <td>instance_root</td>
-</tr>
-<tr>
-  <td>store</td>
-  <td>subInstance-1</td>
-  <td>instance_1</td>
-</tr>
-<tr>
-  <td>store</td>
-  <td>admin</td>
-  <td>username</td>
-</tr>
-<tr>
-  <td>store</td>
-  <td>ntpvmhkg</td>
-  <td>password</td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>name=url</td>
-  <td>${opml_url}</td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>name=username</td>
-  <td>${username}</td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>name=password</td>
-  <td>${password}</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementNotPresent</td>
-  <td>//span[contains(@class, 'ui-text-error')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>500</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n='OPML Documents']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Monitoring Configurations']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@id="destroyOPML"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>3000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//table[contains(@class, 'ui-table-inset')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${opml_url}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>storeElementPresent</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td>has_hosting</td>
-</tr>
-<tr>
-  <td>storeText</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td>hosting_title</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Synchronize']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Synchronizing Data...</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Synchronisation finished</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n='Monitoring Promises']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Hosting Subscriptions']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>2000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n='Software Instances']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>2000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${instance_root}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${instance_1}</td>
-  <td></td>
-</tr>
-<tr>
-  <!-- Navigate to the first instance -->
-  <td>click</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Instance: ${instance_root}']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//h1[@data-i18n='Instance Promises Status']</td>
-  <td></td>
-</tr>
-<!-- Display list of promises -->
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Promises']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>500</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n='Monitoring Promises']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//span[@data-i18n="Monitoring Promises Status"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${instance_root}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${instance_1}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>storeText</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td>promise_title</td>
-</tr>
-<tr>
-  <!-- Open the first promise -->
-  <td>click</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Promise: ${promise_title}']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//h1[@data-i18n='Promise Status History']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//span[contains(@class, 'label')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>open</td>
-  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Done.</td>
-  <td></td>
-</tr>
-<tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/officejs_monitoring/app/#!display?n.page=settings_configurator</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Monitoring Configurations']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>2000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n='OPML Documents']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>2000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td>${hosting_title}</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='${hosting_title}']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>name=password</td>
-  <td>${password}</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//input[@name='verify_password']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Synchronize']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Synchronizing Data...</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Synchronisation finished</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Monitoring Configurations']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n='OPML Documents']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td>${hosting_title}</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>500</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='${hosting_title}']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Delete']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n='OPML Documents']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextNotPresent</td>
-  <td>${opml_url}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextNotPresent</td>
-  <td>${hosting_title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Hosting Subscriptions']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>2000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextNotPresent</td>
-  <td>${hosting_title}</td>
-  <td></td>
-</tr>
-</tbody></table>
-</body>
+  <body>
+    <table cellpadding="1" cellspacing="1" border="1">
+      <thead>
+        <tr><td rowspan="1" colspan="3" tal:content="TEST_NAME"></td></tr>
+      </thead>
+      <tbody>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/monitoring_ui_setup"/>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/add_monitoring_endpoint"/>
+        <tr>
+          <td colspan="3"><b>Synchronize manually</b></td>
+        </tr>
+        <tal:block tal:define="click_configuration python: {'text': 'Synchronize'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+        </tal:block>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+        <tal:block tal:define="pagination_configuration python: {'header': '(16)', 'footer': '16 Records'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+        </tal:block>
+        <tr>
+          <td colspan="3"><b>Check Hosting Subscription</b></td>
+        </tr>
+        <tal:block tal:define="click_configuration python: {'text': 'Hosting Subscriptions'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+        </tal:block>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[text()='${MONITORING_HOSTING_TITLE}']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertElementPresent</td>
+          <td>//a[text()='${MONITORING_HOSTING_TITLE}']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[text()='${MONITORING_HOSTING_TITLE}']</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+        <tal:block tal:define="pagination_configuration python: {'header': '(3)', 'footer': '3 Records'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+        </tal:block>
+        <tal:block tal:define="cell_configuration python: {'line': 0, 'index': 0, 'text': MONITORING_INSTANCE_ROOT}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_cell_text" />
+        </tal:block>
+        <tal:block tal:define="cell_configuration python: {'line': 1, 'index': 0, 'text': MONITORING_INSTANCE_1}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_cell_text" />
+        </tal:block>
+        <tal:block tal:define="cell_configuration python: {'line': 2, 'index': 0, 'text': MONITORING_INSTANCE_2}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_cell_text" />
+        </tal:block>
+        <tr>
+          <td colspan="3"><b>Navigate to the root instance</b></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[text()='${MONITORING_INSTANCE_ROOT}']</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n='Instance: ${MONITORING_INSTANCE_ROOT}']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertElementPresent</td>
+          <td>//a[@data-i18n='Instance: ${MONITORING_INSTANCE_ROOT}']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertElementPresent</td>
+          <td>//h1[contains(.,'Instance Promises Status')]</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3"><b>Display list of promises</b></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@data-i18n='Promises']</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+        <tal:block tal:define="pagination_configuration python: {'header': '(16)', 'footer': '16 Records'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+        </tal:block>
+        <tal:block tal:define="cell_configuration python: {'line': 0, 'index': 3, 'text': MONITORING_HOSTING_TITLE}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_cell_text" />
+        </tal:block>
+        <tal:block tal:define="cell_configuration python: {'line': 0, 'index': 2, 'text': MONITORING_INSTANCE_ROOT}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_cell_text" />
+        </tal:block>
+        <tal:block tal:define="cell_configuration python: {'line': 1, 'index': 2, 'text': MONITORING_INSTANCE_2}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_cell_text" />
+        </tal:block>
+        <tr>
+          <td colspan="3"><b>Check the promise</b></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[text()='${MONITORING_PROMISE_TITLE}']</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n='Promise: ${MONITORING_PROMISE_TITLE}']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertElementPresent</td>
+          <td>//a[@data-i18n='Promise: ${MONITORING_PROMISE_TITLE}']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>${MONITORING_HOSTING_TITLE}</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+        <tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': 'No records'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+        </tal:block>
+        <tr>
+          <td colspan="3"><b>Let the backend process all work</b></td>
+        </tr>
+        <tr>
+          <td>open</td>
+          <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Done.</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td colspan="3"><b>Update the Hosting Subscription</b></td>
+        </tr>
+        <tr>
+          <td>open</td>
+          <td>${base_url}/web_site_module/officejs_monitoring/app/#!display?n.page=settings_configurator</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n='Monitoring Configurations']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertElementPresent</td>
+          <td>//a[@data-i18n='Monitoring Configurations']</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+        <tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+        </tal:block>
+        <tr>
+          <td>assertElementPresent</td>
+          <td>//a[text()='${MONITORING_HOSTING_TITLE}']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[text()='${MONITORING_HOSTING_TITLE}']</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n='${MONITORING_HOSTING_TITLE}']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertElementPresent</td>
+          <td>//a[@data-i18n='${MONITORING_HOSTING_TITLE}']</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/save" />
+        <tr>
+          <td>type</td>
+          <td>name=password</td>
+          <td>${MONITORING_PASSWORD}</td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//input[@name='verify_password']</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/save" />
+        <tal:block tal:define="click_configuration python: {'text': 'Synchronize'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+        </tal:block>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+        <tal:block tal:define="pagination_configuration python: {'header': '(16)', 'footer': '16 Records'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+        </tal:block>
+        <tal:block tal:define="click_configuration python: {'text': 'Monitoring Configurations'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+        </tal:block>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+        <tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+        </tal:block>
+        <tr>
+          <td colspan="3"><b>Delete the Hosting Subscription</b></td>
+        </tr>
+        <tr>
+          <td>assertElementPresent</td>
+          <td>//a[text()='${MONITORING_HOSTING_TITLE}']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[text()='${MONITORING_HOSTING_TITLE}']</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
+        <tr>
+          <td>waitForElementPresent</td>
+          <td>//a[@data-i18n='${MONITORING_HOSTING_TITLE}']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertElementPresent</td>
+          <td>//a[@data-i18n='${MONITORING_HOSTING_TITLE}']</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@data-i18n='Delete']</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+        <tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': 'No records'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+        </tal:block>
+        <tr>
+          <td>assertTextNotPresent</td>
+          <td>${MONITORING_OPML_URL}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>assertTextNotPresent</td>
+          <td>${MONITORING_HOSTING_TITLE}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>click</td>
+          <td>//a[@data-i18n='Hosting Subscriptions']</td>
+          <td></td>
+        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
+        <tr>
+          <td>assertTextNotPresent</td>
+          <td>${MONITORING_HOSTING_TITLE}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
 </html>
