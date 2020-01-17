@@ -1,0 +1,39 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      tal:define="global TEST_NAME string:Test SlapOS Monitoring UI Manual Synchronization">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title tal:content="TEST_NAME"></title>
+</head>
+  <body>
+    <table cellpadding="1" cellspacing="1" border="1">
+      <thead>
+        <tr><td rowspan="1" colspan="3" tal:content="TEST_NAME"></td></tr>
+      </thead>
+      <tbody>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/monitoring_ui_setup"/>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/add_monitoring_endpoint"/>
+        <tr>
+          <td colspan="3"><b>Synchronize manually</b></td>
+        </tr>
+        <tal:block tal:define="click_configuration python: {'text': 'Synchronize'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+        </tal:block>
+        <tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                                   'text': 'Synchronizing Data...'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+        </tal:block>
+        <tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                                   'text': 'Synchronisation finished.'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+        </tal:block>
+        <tr>
+          <td>assertTextPresent</td>
+          <td>Test is not finished yet, as in reality we have to check if synchronization had effect with data being added to the promises</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
