@@ -216,6 +216,10 @@ class TestXHTMLMixin(ERP5TypeTestCase):
                      "Repeated listbox selection names:\n" +
                      portal_skins.SkinsTool_checkDuplicateSelectionName())
 
+  def test_SkinsTool_checkFieldExternalValidator(self):
+    self.assertFalse(
+      self.portal.portal_skins.SkinsTool_checkFieldExternalValidator())
+
   def test_javascript_lint(self):
     skins_tool = self.portal.portal_skins
     path_list = []
