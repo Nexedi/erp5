@@ -1292,6 +1292,7 @@ class TestAuthenticationCookie(UserManagementTestCase):
     request.form['__ac_name'] = login
     request.form['__ac_password'] = password
     request['PARENTS'] = [self.portal]
+    request.method = request.environ['REQUEST_METHOD'] = 'POST'
     # (the secure flag is only set if we accessed through https)
     request.setServerURL('https', 'example.com')
 

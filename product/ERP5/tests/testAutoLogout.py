@@ -28,7 +28,10 @@
 #
 ##############################################################################
 
+from functools import partial
+from StringIO import StringIO
 import unittest
+import urllib
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 
@@ -69,9 +72,17 @@ class TestAuoLogout(ERP5TypeTestCase):
     portal = self.getPortal()
     request = self.app.REQUEST
 
+    stdin = urllib.urlencode({
+      '__ac_name': self.manager_username,
+      '__ac_password': self.manager_password,
+    })
     now = DateTime()
-    path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s'  %(self.manager_username, self.manager_password)
-    response = self.publish(path)
+    publish = partial(
+      self.publish,
+      portal.absolute_url_path() + '/view',
+      request_method='POST',
+    )
+    response = publish(stdin=StringIO(stdin))
     self.assertIn('Welcome to ERP5', response.getBody())
 
     # check '__ac' cookie has set an expire timeout
@@ -86,7 +97,7 @@ class TestAuoLogout(ERP5TypeTestCase):
     self.tic()
     portal.portal_caches.clearAllCache()
 
-    response = self.publish(path)
+    response = publish(stdin=StringIO(stdin))
     self.assertIn('Welcome to ERP5', response.getBody())
     ac_cookie = response.getCookie('__ac')
     self.assertNotEqual(ac_cookie, None)
