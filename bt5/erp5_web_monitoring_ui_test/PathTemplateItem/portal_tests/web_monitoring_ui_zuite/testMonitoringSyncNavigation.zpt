@@ -10,6 +10,11 @@
 <tr><td rowspan="1" colspan="3">Test SlapOS Monitoring UI</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>store</td>
+  <td tal:content="here/portal_tests/web_monitoring_ui_zuite/MonitorBackend_getBaseUrl">http://example.com/erp5</td>
+  <td>monitor_simulator_url</td>
+</tr>
 <!-- Clean Up -->
 <tr>
   <td>open</td>
@@ -89,7 +94,7 @@
 </tr>
 <tr>
   <td>store</td>
-  <td>http://localhost:5378/rootInstance/public/feeds</td>
+  <td>${monitor_simulator_url}/rootInstance/public/feeds</td>
   <td>opml_url</td>
 </tr>
 <tr>
