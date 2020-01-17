@@ -34,21 +34,6 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Synchronize']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Synchronizing Data...</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Synchronisation finished</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
   <td>//a[@data-i18n='Monitoring Configurations']</td>
   <td></td>
 </tr>
