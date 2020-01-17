@@ -15,7 +15,9 @@
   <td tal:content="here/portal_tests/web_monitoring_ui_zuite/MonitorBackend_getBaseUrl">http://example.com/erp5</td>
   <td>monitor_simulator_url</td>
 </tr>
-<!-- Clean Up -->
+<tr>
+  <td colspan="3"><b>Cleanup</b></td>
+</tr>
 <tr>
   <td>open</td>
   <td>${base_url}/bar_module/ListBoxZuite_reset</td>
@@ -26,7 +28,9 @@
   <td>Reset Successfully.</td>
   <td></td>
 </tr>
-<!-- Initialize -->
+<tr>
+  <td colspan="3"><b>Initialize</b></td>
+</tr>
 <tr>
   <td>open</td>
   <td>${base_url}/web_site_module/officejs_monitoring/</td>
@@ -38,19 +42,10 @@
   <td></td>
 </tr>
 <tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Synchronize']</td>
-  <td></td>
+  <td colspan="3"><b><i>XXX:</i> Cleanup previous run or clone and install offline?</b></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Synchronizing Data...</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Synchronisation finished</td>
-  <td></td>
+  <td colspan="3"><b>Add monitoring endpoint</b></td>
 </tr>
 <tr>
   <td>click</td>
@@ -70,11 +65,6 @@
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>500</td>
   <td></td>
 </tr>
 <tr>
@@ -138,23 +128,13 @@
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<tr>
   <td>assertElementNotPresent</td>
   <td>//span[contains(@class, 'ui-text-error')]</td>
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>500</td>
-  <td></td>
-</tr>
-<tr>
   <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n='OPML Documents']</td>
+  <td>//span[@data-i18n='Monitoring Promises Status']</td>
   <td></td>
 </tr>
 <tr>
@@ -168,29 +148,17 @@
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>3000</td>
+  <td>waitForElementPresent</td>
+  <td>//a["${opml_url}"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
-  <td>//table[contains(@class, 'ui-table-inset')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${opml_url}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>storeElementPresent</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td>has_hosting</td>
-</tr>
-<tr>
-  <td>storeText</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
+  <td>store</td>
+  <td>TEST Hosting Subscription</td>
   <td>hosting_title</td>
+</tr>
+<tr>
+  <td colspan="3"><b>Synchronize manually</b></td>
 </tr>
 <tr>
   <td>click</td>
@@ -209,8 +177,11 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n='Monitoring Promises']</td>
+  <td>//span[@data-i18n='Monitoring Promises Status']</td>
   <td></td>
+</tr>
+<tr>
+  <td colspan="3"><b>Check Hosting Subscription</b></td>
 </tr>
 <tr>
   <td>click</td>
@@ -218,28 +189,18 @@
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>2000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='${hosting_title}']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
+  <td>//a[text()='${hosting_title}']</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n='Software Instances']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>2000</td>
+  <td>//h1[contains(.,'Software Instances')]</td>
   <td></td>
 </tr>
 <tr>
@@ -285,18 +246,8 @@
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>500</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n='Monitoring Promises']</td>
-  <td></td>
-</tr>
-<tr>
   <td>assertElementPresent</td>
-  <td>//span[@data-i18n="Monitoring Promises Status"]</td>
+  <td>//span[@data-i18n='Monitoring Promises Status']</td>
   <td></td>
 </tr>
 <tr>
@@ -451,11 +402,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<tr>
   <td>verifyText</td>
   <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
   <td>${hosting_title}</td>
@@ -463,11 +409,6 @@
 <tr>
   <td>click</td>
   <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>500</td>
   <td></td>
 </tr>
 <tr>
@@ -486,11 +427,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<tr>
   <td>assertTextNotPresent</td>
   <td>${opml_url}</td>
   <td></td>
@@ -503,11 +439,6 @@
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Hosting Subscriptions']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>2000</td>
   <td></td>
 </tr>
 <tr>
