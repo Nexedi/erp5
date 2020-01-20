@@ -2,12 +2,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test SlapOS Monitoring UI (expected failure)</title>
+<title>Test SlapOS Monitoring UI</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test SlapOS Monitoring UI (expected failure)</td></tr>
+<tr><td rowspan="1" colspan="3">Test SlapOS Monitoring UI</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <tr>
