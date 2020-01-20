@@ -139,7 +139,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n='OPML Documents']</td>
+  <td>//span[@data-i18n='Monitoring Promises Status']</td>
   <td></td>
 </tr>
 <tr>
