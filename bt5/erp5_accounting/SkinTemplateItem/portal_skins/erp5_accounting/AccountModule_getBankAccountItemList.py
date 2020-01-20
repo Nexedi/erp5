@@ -22,10 +22,11 @@ if organisation:
 
   # if organisation is an independant accounting section and contains bank accounts,
   # only take into account those.
+  bank_account_list = []
   if organisation_value == organisation_value.Organisation_getMappingRelatedOrganisation():
     bank_account_list = organisation_value.searchFolder(**search_kw)
   # else we lookup in organisations from parent groups.
-  else:
+  if not len(bank_account_list):
     group_value = organisation_value.getGroupValue(None)
     if group_value is not None:
       uid_list = []
