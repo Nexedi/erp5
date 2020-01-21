@@ -220,7 +220,7 @@
           domsugar('div', {class: 'camera-header'}, [
             domsugar('h4', [
               'Page ',
-              domsugar('label', {class: 'page-number', text: '1'})
+              domsugar('label', {class: 'page-number', text: gadget.state.page})
             ])
           ]),
           domsugar('div', {class: 'camera-input'}, [video]),
@@ -230,22 +230,6 @@
         gadget.element.replaceChild(div, gadget.element.firstElementChild);
 
       });
-
-/*
-      .push(function () {
-        var preferred_cropped_canvas_data = gadget.props.preferred_cropped_canvas_data;
-        preferred_cropped_canvas_data = preferred_cropped_canvas_data || JSON.parse(gadget.state.preferred_cropped_canvas_data);
-        // Clear photo input
-        root.querySelector('.photoInput').value = "";
-        gadget.props.page_number = parseInt(root.querySelector('input[name="page-number"]').value, 10);
-        root.querySelector(".camera-input").style.display = "";
-        root.querySelector(".camera-output").style.display = "none";
-
-
-        gadget.props.preferred_cropped_canvas_data = preferred_cropped_canvas_data;
-      })
-
-      */
   }
 
   // Capture the media stream
@@ -283,13 +267,10 @@
           domsugar('div', {class: 'camera-header'}, [
             domsugar('h4', [
               'Page ',
-              domsugar('label', {class: 'page-number', text: '1'})
+              domsugar('label', {class: 'page-number', text: gadget.state.page})
             ])
           ]),
           canvas,
-          /*
-          domsugar('div', {class: 'camera-input'}, [video]),
-          */
           domsugar('div', {class: 'edit-picture'}, [
             domsugar('button', {type: 'button',
                                 class: 'reset-btn ui-btn-icon-left ui-icon-times',
@@ -321,7 +302,7 @@
       domsugar('div', {class: 'camera-header'}, [
         domsugar('h4', [
           'Page ',
-          domsugar('label', {class: 'page-number', text: '1'})
+          domsugar('label', {class: 'page-number', text: gadget.state.page})
         ])
       ]),
       domsugar('img', {src: gadget.state.blob_url})
@@ -354,7 +335,8 @@
     })
 
     .setState({
-      display_step: 'display_video'
+      display_step: 'display_video',
+      page: 1
     })
     .declareMethod('render', function (options) {
       // This method is called during the ERP5 form rendering
@@ -455,7 +437,8 @@
           .push(function (evt) {
             return gadget.changeState({
               blob_url: undefined,
-              display_step: 'display_video'
+              display_step: 'display_video',
+              page: gadget.state.page + 1
             });
           });
       }
