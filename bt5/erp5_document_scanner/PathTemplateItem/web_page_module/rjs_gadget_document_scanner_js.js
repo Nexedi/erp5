@@ -1,6 +1,6 @@
 /*jslint indent: 2, unparam: true */
-/*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar*/
-(function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar) {
+/*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap*/
+(function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap) {
   "use strict";
 
   //////////////////////////////////////////////////
@@ -173,7 +173,8 @@
   function captureAndRenderPicture(gadget) {
     var image_capture = new window.ImageCapture(
       gadget.element.querySelector('video').srcObject.getVideoTracks()[0]
-    );
+    ),
+      div;
     return new RSVP.Queue()
       .push(function () {
         return image_capture.getPhotoCapabilities();
@@ -187,7 +188,7 @@
       })
       .push(function (bitmap) {
         var // blob_url = URL.createObjectURL(blob),
-          // img = domsugar('img', {src: blob_url}),
+          // img = domsugar('img', {src: blob_url});
           canvas = domsugar('canvas', {class: 'canvas'});
 
         // Prepare the cropper canvas
@@ -195,7 +196,7 @@
         canvas.height = bitmap.height;
         canvas.getContext('2d').drawImage(bitmap, 0, 0);//, img.width, img.height);
 
-        var div = domsugar('div', {class: 'camera'}, [
+        div = domsugar('div', {class: 'camera'}, [
           domsugar('div', {class: 'camera-header'}, [
             domsugar('h4', [
               'Page ',
@@ -218,7 +219,10 @@
           ])
         ]);
 
+        // XXX How to change the dom only when cropper is ready?
+        // For now, it needs to access dom element size
         gadget.element.replaceChild(div, gadget.element.firstElementChild);
+
         // creating Cropper is asynchronous
         return new RSVP.Promise(function (resolve) {
           gadget.cropper = new Cropper(canvas, {
@@ -227,46 +231,6 @@
           });
         });
       });
-/*
-        return jIO.util.readBlobAsDataURL(blob);
-      })
-      .push(function (result) {
-        var photoInput = el.querySelector(".photoInput"),
-          photo = el.querySelector("img"),
-          data_str = result.target.result;
-
-        photo.setAttribute("src", data_str);
-        photoInput.setAttribute("value", data_str.split(",")[1]);
-        return drawCanvas(gadget, photo);
-      });
-  function drawCanvas(gadget, img) {
-    var ratio, x, y,
-      root = gadget.element,
-      canvas = root.querySelector("canvas");
-    canvas.width = gadget.props.image_width;
-    canvas.height = gadget.props.image_height;
-    ratio  = Math.min(canvas.width / img.width, canvas.height / img.height);
-    x = (canvas.width - img.width * ratio) / 2;
-    y = (canvas.height - img.height * ratio) / 2;
-
-    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-    canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height, x, y, img.width * ratio, img.height * ratio);
-
-    //contrastImage(canvas, canvas, 10);
-
-    root.querySelector(".camera-output").style.display = "";
-    if (gadget.props.cropper) {
-      gadget.props.cropper.destroy();
-    }
-    // creating Cropper is asynchronous
-    return new RSVP.Promise(function (resolve) {
-      gadget.props.cropper = new Cropper(root.querySelector('.photo'), {
-        data: gadget.props.preferred_cropped_canvas_data,
-        ready: resolve
-      });
-    });
-  }
-  */
   }
 
   //////////////////////////////////////////////////
@@ -301,8 +265,8 @@
             dialog_method: options.dialog_method,
             preferred_cropped_canvas_data: options.preferred_cropped_canvas_data,
             display_step: 'display_video',
-            device_id: device_id
-            // XXX timestamp: new Date(),
+            device_id: device_id,
+            key: options.key
           });
         });
     })
@@ -311,14 +275,6 @@
       var gadget = this;
       // ALL DOM modifications must be done only in this method
       // this prevent concurrency issue on DOM access
-
-      /* The list of possible display_step are:
-         * start_video: no button can be display at this step,
-                        as it will not be possible to capture the stream yet
-         * start_video: capture, stop the stream
-         * reset: XXX
-         * upload: XXX
-      */
       if (gadget.state.display_step === 'display_video') {
         return renderVideoCapture(gadget);
       }
@@ -327,58 +283,31 @@
         return captureAndRenderPicture(gadget);
       }
 
-/*
-      if (gadget.state.display_step === 'reset') {
-        gadget.element.querySelector(".camera-input").style.display = "";
-        gadget.element.querySelector(".camera-output").style.display = "none";
-        gadget.element.querySelector('.photoInput').value = "";
-        gadget.props.cropper.destroy();
-        setPageOne(gadget);
-        return gadget.deferChangeState({display_step: 'start_video'});
-      }
-
-      if (gadget.state.display_step === 'upload') {
-        var e,
-          new_preferred_cropped_canvas_data,
-          camera_list = this.props.camera_list,
-          root = this.element;
-        new_preferred_cropped_canvas_data = gadget.props.cropper.getData();
-        for (e in new_preferred_cropped_canvas_data) {
-          if (new_preferred_cropped_canvas_data.hasOwnProperty(e)) {
-            gadget.props.preferred_cropped_canvas_data[e] = new_preferred_cropped_canvas_data[e];
-          }
-        }
-        return new RSVP.Queue()
-          .push(function () {
-            var canvas = gadget.props.cropper.getCroppedCanvas();
-            disableButton(gadget.element);
-            return new Promise(function (resolve) {
-              canvas.toBlob(resolve, 'image/jpeg', 0.85);
-            });
-          })
-          .push(function (blob) {
-            return jIO.util.readBlobAsDataURL(blob);
-          })
-          .push(function (result) {
-            var base64data = result.target.result,
-              block = base64data.split(";"),
-              realData = block[1].split(",")[1];
-            root.querySelector(".photo").src = base64data;
-            root.querySelector(".photoInput").value = realData;
-            gadget.props.cropper.destroy();
-          })
-          .push(function () {
-            return gadget.submitDialogWithCustomDialogMethod(gadget.state.dialog_method);
-          })
-          .push(function () {
-            gadget.props.page_number = gadget.props.page_number + 1;
-            root.querySelector('input[name="page-number"]').value = gadget.props.page_number;
-          });
-      }
-      */
       // Ease developper work by raising for not handled cases
       throw new Error('Unhandled display step: ' + gadget.state.display_step);
 
+    })
+
+    .declareMethod('getContent', function () {
+      var gadget = this;
+      return new RSVP.Queue()
+        .push(function () {
+          var canvas = gadget.cropper.getCroppedCanvas();
+          return new Promise(function (resolve) {
+            canvas.toBlob(resolve, 'image/jpeg', 0.85);
+          });
+        })
+        .push(function (blob) {
+          return jIO.util.readBlobAsDataURL(blob);
+        })
+        .push(function (evt) {
+          var result = {};
+          result[gadget.state.key] = JSON.stringify({
+            input_value: evt.target.result.split(';')[1].split(',')[1],
+            preferred_cropped_canvas_data: gadget.cropper.getData()
+          });
+          return result;
+        });
     })
 
     .onEvent("click", function (evt) {
@@ -406,13 +335,10 @@
           display_step: 'display_video'
         });
       }
-    /*
+
       if (evt.target.className.indexOf("confirm-btn") !== -1) {
-        return this.changeState({
-          display_step: 'upload'
-        });
+        return this.submitDialogWithCustomDialogMethod(this.state.dialog_method);
       }
-*/
 
 /*
       var e,
@@ -426,17 +352,16 @@
                          root.querySelector('.photo'));
       }*
       if (evt.target.className.indexOf("change-camera-btn") !== -1) {
-        evt.preventDefault();
-
-        for (e in camera_list) {
-          if (camera_list.hasOwnProperty(e)) {
-            if (camera_list[e].deviceId !== gadget.props.device_id) {
-              gadget.props.device_id = camera_list[e].deviceId;
-              break;
-            }
-          }
-        }
-        return gadget.startStream();
+      return selectMediaDevice(gadget.state.device_id, false)
+        .push(function (device_id) {
+          return gadget.changeState({
+            dialog_method: options.dialog_method,
+            preferred_cropped_canvas_data: options.preferred_cropped_canvas_data,
+            display_step: 'display_video',
+            device_id: device_id
+            // XXX timestamp: new Date(),
+          });
+        });
       }
 */
       throw new Error('Unhandled button: ' + evt.target.textContent);
@@ -450,4 +375,4 @@
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted");
 
-}(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar));
+}(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap));
