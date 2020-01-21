@@ -53,7 +53,7 @@
   //////////////////////////////////////////////////
   // helper function
   //////////////////////////////////////////////////
-  function selectMediaDevice(current_device_id, force_new_device) {
+  function getVideoDeviceList() {
     if (!navigator.mediaDevices) {
       throw new Error("mediaDevices is not supported");
     }
@@ -65,6 +65,25 @@
       .push(function (info_list) {
         var j,
           device,
+          len = info_list.length,
+          device_list = [];
+
+        for (j = len - 1; j >= 0; j -= 1) {
+          // trick to select back camera in mobile
+          device = info_list[j];
+          if (device.kind === 'videoinput') {
+            device_list.push(device);
+          }
+        }
+        return device_list;
+      });
+  }
+
+  function selectMediaDevice(current_device_id, force_new_device) {
+    return getVideoDeviceList()
+      .push(function (info_list) {
+        var j,
+          device,
           len = info_list.length;
 
         for (j = len - 1; j >= 0; j -= 1) {
@@ -73,7 +92,7 @@
           if (device.kind === 'videoinput') {
             if ((!current_device_id) ||
                 (force_new_device && (device.deviceId !== current_device_id)) ||
-                (device.deviceId === current_device_id)) {
+                (!force_new_device && (device.deviceId === current_device_id))) {
               return device.deviceId;
             }
           }
@@ -123,12 +142,30 @@
 
       .push(function () {
         video.play();
-        return gadget.getTranslationList([
-          "Take Picture", "Change Camera"
+        return RSVP.all([
+          getVideoDeviceList(),
+          gadget.getTranslationList(["Take Picture", "Change Camera"])
         ]);
       })
-      .push(function (translation_list) {
-        var div = domsugar('div', {class: 'camera'}, [
+      .push(function (result_list) {
+        var button_list = [
+          domsugar('button', {type: 'button',
+                              class: 'take-picture-btn ui-btn-icon-left ui-icon-circle',
+                              text: result_list[1][0]
+                             })
+        ],
+          div;
+        // Only display the change camera if device has at least 2 cameras
+        if (result_list[0].length > 1) {
+          button_list.push(
+            domsugar('button', {type: 'button',
+                                class: 'change-camera-btn ui-icon-refresh ui-btn-icon-left',
+                                text: result_list[1][1]
+                               })
+          );
+        }
+
+        div = domsugar('div', {class: 'camera'}, [
           domsugar('div', {class: 'camera-header'}, [
             domsugar('h4', [
               'Page ',
@@ -136,16 +173,7 @@
             ])
           ]),
           domsugar('div', {class: 'camera-input'}, [video]),
-          domsugar('div', {class: 'edit-picture'}, [
-            domsugar('button', {type: 'button',
-                                class: 'take-picture-btn ui-btn-icon-left ui-icon-circle',
-                                text: translation_list[0]
-                               }),
-            domsugar('button', {type: 'button',
-                                class: 'change-camera-btn ui-icon-refresh ui-btn-icon-left',
-                                text: translation_list[1]
-                               })
-          ])
+          domsugar('div', {class: 'edit-picture'}, button_list)
         ]);
 
         gadget.element.replaceChild(div, gadget.element.firstElementChild);
@@ -184,17 +212,21 @@
       })
       .push(function (blob) {
         gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
-        return createImageBitmap(blob);
+        return RSVP.all([
+          gadget.getTranslationList(["Reset", "Confirm"]),
+          createImageBitmap(blob)
+        ]);
       })
-      .push(function (bitmap) {
+      .push(function (result_list) {
         var // blob_url = URL.createObjectURL(blob),
           // img = domsugar('img', {src: blob_url});
+          bitmap = result_list[1],
           canvas = domsugar('canvas', {class: 'canvas'});
 
         // Prepare the cropper canvas
         canvas.width = bitmap.width;
         canvas.height = bitmap.height;
-        canvas.getContext('2d').drawImage(bitmap, 0, 0);//, img.width, img.height);
+        canvas.getContext('2d').drawImage(bitmap, 0, 0);
 
         div = domsugar('div', {class: 'camera'}, [
           domsugar('div', {class: 'camera-header'}, [
@@ -210,11 +242,11 @@
           domsugar('div', {class: 'edit-picture'}, [
             domsugar('button', {type: 'button',
                                 class: 'reset-btn ui-btn-icon-left ui-icon-times',
-                                text: 'Reset'
+                                text: result_list[0][0]
                                }),
             domsugar('button', {type: 'button',
                                 class: 'confirm-btn ui-btn-icon-left ui-icon-check',
-                                text: 'Confirm'
+                                text: result_list[0][1]
                                })
           ])
         ]);
@@ -311,33 +343,43 @@
     })
 
     .onEvent("click", function (evt) {
-      var i,
-        list;
       // Only handle click on BUTTON element
       if (evt.target.tagName !== 'BUTTON') {
         return;
       }
 
+      var gadget = this;
+
       // Disable any button. It must be managed by this gadget
       evt.preventDefault();
-      list = this.element.querySelectorAll('button').forEach(function (elt) {
+      gadget.element.querySelectorAll('button').forEach(function (elt) {
         elt.disabled = true;
       });
 
       if (evt.target.className.indexOf("take-picture-btn") !== -1) {
-        return this.changeState({
+        return gadget.changeState({
           display_step: 'crop_picture'
         });
       }
 
       if (evt.target.className.indexOf("reset-btn") !== -1) {
-        return this.changeState({
+        return gadget.changeState({
           display_step: 'display_video'
         });
       }
 
       if (evt.target.className.indexOf("confirm-btn") !== -1) {
-        return this.submitDialogWithCustomDialogMethod(this.state.dialog_method);
+        return gadget.submitDialogWithCustomDialogMethod(gadget.state.dialog_method);
+      }
+
+      if (evt.target.className.indexOf("change-camera-btn") !== -1) {
+        return selectMediaDevice(gadget.state.device_id, true)
+          .push(function (device_id) {
+            return gadget.changeState({
+              display_step: 'display_video',
+              device_id: device_id
+            });
+          });
       }
 
 /*
@@ -351,18 +393,7 @@
         return grayscale(root.querySelector(".canvas"),
                          root.querySelector('.photo'));
       }*
-      if (evt.target.className.indexOf("change-camera-btn") !== -1) {
-      return selectMediaDevice(gadget.state.device_id, false)
-        .push(function (device_id) {
-          return gadget.changeState({
-            dialog_method: options.dialog_method,
-            preferred_cropped_canvas_data: options.preferred_cropped_canvas_data,
-            display_step: 'display_video',
-            device_id: device_id
-            // XXX timestamp: new Date(),
-          });
-        });
-      }
+
 */
       throw new Error('Unhandled button: ' + evt.target.textContent);
     }, false, false)
