@@ -716,26 +716,9 @@ if (typeof document.contains !== 'function') {
 
   window.URL = URL;
 
-}(DOMParser));;/*
- * Copyright 2012, Nexedi SA
- *
- * This program is free software: you can Use, Study, Modify and Redistribute
- * it under the terms of the GNU General Public License version 3, or (at your
- * option) any later version, as published by the Free Software Foundation.
- *
- * You can also Link and Combine this program with other software covered by
- * the terms of any of the Free Software licenses or any of the Open Source
- * Initiative approved licenses and Convey the resulting work. Corresponding
- * source of such a combination shall include the source code for all other
- * software used.
- *
- * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- * See COPYING file for full licensing terms.
- * See https://www.nexedi.com/licensing for rationale and options.
- */
+}(DOMParser));;/*! RenderJs */
 /*jslint nomen: true*/
+
 /*
  * renderJs - Generic Gadget library renderer.
  * https://renderjs.nexedi.com/
@@ -1338,9 +1321,8 @@ if (typeof document.contains !== 'function') {
   }
 
   function startService(gadget) {
-    if (((gadget.constructor.__service_list.length === 0) &&
-         (!gadget.constructor.__job_declared)) ||
-        (gadget.hasOwnProperty('__monitor'))) {
+    if ((gadget.constructor.__service_list.length === 0) &&
+        (!gadget.constructor.__job_declared)) {
       return;
     }
     createGadgetMonitor(gadget);
@@ -1361,13 +1343,6 @@ if (typeof document.contains !== 'function') {
       );
   }
 
-  function registerMethod(gadget_klass, method_name, method_type) {
-    if (!gadget_klass.hasOwnProperty('__method_type_dict')) {
-      gadget_klass.__method_type_dict = {};
-    }
-    gadget_klass.__method_type_dict[method_name] = method_type;
-  }
-
   /////////////////////////////////////////////////////////////////
   // RenderJSGadget.declareJob
   // gadget internal method, which trigger execution
@@ -1385,7 +1360,6 @@ if (typeof document.contains !== 'function') {
         context.__job_list.push([name, callback, argument_list]);
       }
     };
-    registerMethod(this, name, 'job');
     // Allow chain
     return this;
   };
@@ -1415,7 +1389,6 @@ if (typeof document.contains !== 'function') {
       }
       return ensurePushableQueue(callback, argument_list, context);
     };
-    registerMethod(this, name, 'method');
     // Allow chain
     return this;
   };
@@ -1424,21 +1397,6 @@ if (typeof document.contains !== 'function') {
     .declareMethod('getInterfaceList', function getInterfaceList() {
       // Returns the list of gadget prototype
       return this.__interface_list;
-    })
-    .declareMethod('getMethodList', function getMethodList(type) {
-      // Returns the list of gadget methods
-      var key,
-        method_list = [],
-        method_dict = this.constructor.__method_type_dict || {};
-      for (key in method_dict) {
-        if (method_dict.hasOwnProperty(key)) {
-          if ((type === undefined) ||
-              (type === method_dict[key])) {
-            method_list.push(key);
-          }
-        }
-      }
-      return method_list;
     })
     .declareMethod('getRequiredCSSList', function getRequiredCSSList() {
       // Returns a list of CSS required by the gadget
@@ -1547,7 +1505,7 @@ if (typeof document.contains !== 'function') {
           gadget
         );
       };
-      registerMethod(this, name, 'acquired_method');
+
       // Allow chain
       return this;
     };
@@ -1607,9 +1565,11 @@ if (typeof document.contains !== 'function') {
   /////////////////////////////////////////////////////////////////
   // privateDeclarePublicGadget
   /////////////////////////////////////////////////////////////////
-  function createPrivateInstanceFromKlass(Klass, options, parent_gadget,
-                                          old_element) {
+  function createPrivateInstanceFromKlass(Klass, options, parent_gadget) {
     // Get the gadget class and instanciate it
+    if (options.element === undefined) {
+      options.element = document.createElement("div");
+    }
     var i,
       gadget_instance,
       template_node_list = Klass.__template_element.body.childNodes,
@@ -1624,18 +1584,10 @@ if (typeof document.contains !== 'function') {
     }
     gadget_instance.element.appendChild(fragment);
     setAqParent(gadget_instance, parent_gadget);
-    clearGadgetInternalParameters(gadget_instance);
-    if (old_element !== undefined) {
-      // Add gadget to the DOM if needed
-      // Do it when all DOM modifications are done
-      old_element.parentNode.replaceChild(options.element,
-                                          old_element);
-    }
     return gadget_instance;
   }
 
-  function privateDeclarePublicGadget(url, options, parent_gadget,
-                                      old_element) {
+  function privateDeclarePublicGadget(url, options, parent_gadget) {
     var klass = renderJS.declareGadgetKlass(url);
     // gadget loading should not be interrupted
     // if not, gadget's definition will not be complete
@@ -1643,12 +1595,10 @@ if (typeof document.contains !== 'function') {
     //so loading_klass_promise can't be cancel
     if (typeof klass.then === 'function') {
       return klass.then(function createAsyncPrivateInstanceFromKlass(Klass) {
-        return createPrivateInstanceFromKlass(Klass, options, parent_gadget,
-                                              old_element);
+        return createPrivateInstanceFromKlass(Klass, options, parent_gadget);
       });
     }
-    return createPrivateInstanceFromKlass(klass, options, parent_gadget,
-                                          old_element);
+    return createPrivateInstanceFromKlass(klass, options, parent_gadget);
   }
 
   /////////////////////////////////////////////////////////////////
@@ -1680,18 +1630,17 @@ if (typeof document.contains !== 'function') {
   /////////////////////////////////////////////////////////////////
   // privateDeclareIframeGadget
   /////////////////////////////////////////////////////////////////
-  function privateDeclareIframeGadget(url, options, parent_gadget,
-                                      old_element) {
+  function privateDeclareIframeGadget(url, options, parent_gadget) {
     var gadget_instance,
       iframe,
       iframe_loading_deferred = RSVP.defer();
-    if (old_element === undefined) {
+    if (options.element === undefined) {
       throw new Error("DOM element is required to create Iframe Gadget " +
                       url);
     }
 
     // Check if the element is attached to the DOM
-    if (!document.contains(old_element)) {
+    if (!document.contains(options.element)) {
       throw new Error("The parent element is not attached to the DOM for " +
                       url);
     }
@@ -1715,12 +1664,8 @@ if (typeof document.contains !== 'function') {
     gadget_instance.__path = url;
     gadget_instance.element = options.element;
     gadget_instance.state = {};
+    // Attach it to the DOM
     options.element.appendChild(iframe);
-    clearGadgetInternalParameters(gadget_instance);
-    // Add gadget to the DOM if needed
-    // Do it when all DOM modifications are done
-    old_element.parentNode.replaceChild(options.element,
-                                        old_element);
 
     // XXX Manage unbind when deleting the gadget
 
@@ -1788,8 +1733,7 @@ if (typeof document.contains !== 'function') {
   /////////////////////////////////////////////////////////////////
   // privateDeclareDataUrlGadget
   /////////////////////////////////////////////////////////////////
-  function privateDeclareDataUrlGadget(url, options, parent_gadget,
-                                       old_element) {
+  function privateDeclareDataUrlGadget(url, options, parent_gadget) {
 
     return new RSVP.Queue()
       .push(function waitForDataUrlAjax() {
@@ -1809,8 +1753,7 @@ if (typeof document.contains !== 'function') {
         return readBlobAsDataURL(blob);
       })
       .push(function handleDataURL(data_url) {
-        return privateDeclareIframeGadget(data_url, options, parent_gadget,
-                                          old_element);
+        return privateDeclareIframeGadget(data_url, options, parent_gadget);
       });
   }
 
@@ -1818,10 +1761,31 @@ if (typeof document.contains !== 'function') {
   // RenderJSGadget.declareGadget
   /////////////////////////////////////////////////////////////////
   function setGadgetInstanceHTMLContext(gadget_instance, options,
-                                        parent_gadget, url,
-                                        old_element, scope) {
+                                        parent_gadget, url) {
     var i,
+      scope,
       queue;
+    clearGadgetInternalParameters(gadget_instance);
+
+    // Store local reference to the gadget instance
+    scope = options.scope;
+    if (scope === undefined) {
+      scope = 'RJS_' + scope_increment;
+      scope_increment += 1;
+      while (parent_gadget.__sub_gadget_dict.hasOwnProperty(scope)) {
+        scope = 'RJS_' + scope_increment;
+        scope_increment += 1;
+      }
+    }
+    parent_gadget.__sub_gadget_dict[scope] = gadget_instance;
+    gadget_instance.element.setAttribute("data-gadget-scope",
+                                         scope);
+
+    // Put some attribute to ease page layout comprehension
+    gadget_instance.element.setAttribute("data-gadget-url", url);
+    gadget_instance.element.setAttribute("data-gadget-sandbox",
+                                         options.sandbox);
+    gadget_instance.element._gadget = gadget_instance;
 
     function ready_executable_wrapper(fct) {
       return function executeReadyWrapper() {
@@ -1830,11 +1794,6 @@ if (typeof document.contains !== 'function') {
     }
 
     function ready_wrapper() {
-      // Always set the parent reference when all ready are finished
-      // in case the gadget declaration is cancelled
-      // (and ready are not finished)
-      gadget_instance.element._gadget = gadget_instance;
-      parent_gadget.__sub_gadget_dict[scope] = gadget_instance;
       if (document.contains(gadget_instance.element)) {
         startService(gadget_instance);
       }
@@ -1862,9 +1821,7 @@ if (typeof document.contains !== 'function') {
     .declareMethod('declareGadget', function declareGadget(url, options) {
       var parent_gadget = this,
         method,
-        result,
-        scope,
-        old_element;
+        result;
 
       if (options === undefined) {
         options = {};
@@ -1872,38 +1829,9 @@ if (typeof document.contains !== 'function') {
       if (options.sandbox === undefined) {
         options.sandbox = "public";
       }
-      if (options.element === undefined) {
-        options.element = document.createElement('div');
-      } else if (typeof options.element === 'string') {
-        options.element = document.createElement(options.element);
-      } else if (options.element.parentNode) {
-        old_element = options.element;
-        // Clean up the element content
-        // Remove all existing event listener
-        options.element = old_element.cloneNode(false);
-      } else {
-        throw new Error('No need to manually provide a DOM element ' +
-                        'without a parentNode: ' + url);
-      }
 
       // transform url to absolute url if it is relative
       url = renderJS.getAbsoluteURL(url, this.__path);
-
-      // Store local reference to the gadget instance
-      scope = options.scope;
-      if (scope === undefined) {
-        scope = 'RJS_' + scope_increment;
-        scope_increment += 1;
-        while (parent_gadget.__sub_gadget_dict.hasOwnProperty(scope)) {
-          scope = 'RJS_' + scope_increment;
-          scope_increment += 1;
-        }
-      }
-      options.element.setAttribute("data-gadget-scope", scope);
-
-      // Put some attribute to ease page layout comprehension
-      options.element.setAttribute("data-gadget-url", url);
-      options.element.setAttribute("data-gadget-sandbox", options.sandbox);
 
       if (options.sandbox === "public") {
         method = privateDeclarePublicGadget;
@@ -1915,7 +1843,7 @@ if (typeof document.contains !== 'function') {
         throw new Error("Unsupported sandbox options '" +
                         options.sandbox + "'");
       }
-      result = method(url, options, parent_gadget, old_element);
+      result = method(url, options, parent_gadget);
       // Set the HTML context
       if (typeof result.then === 'function') {
         return new RSVP.Queue()
@@ -1924,13 +1852,11 @@ if (typeof document.contains !== 'function') {
           })
           .push(function setAsyncGadgetInstanceHTMLContext(gadget_instance) {
             return setGadgetInstanceHTMLContext(gadget_instance, options,
-                                                parent_gadget, url,
-                                                old_element, scope);
+                                                parent_gadget, url);
           });
       }
       return setGadgetInstanceHTMLContext(result, options,
-                                          parent_gadget, url, old_element,
-                                          scope);
+                                          parent_gadget, url);
     })
     .declareMethod('getDeclaredGadget',
       function getDeclaredGadget(gadget_scope) {
@@ -2432,7 +2358,7 @@ if (typeof document.contains !== 'function') {
     TmpConstructor.__ready_list = [];
     TmpConstructor.__service_list = RenderJSGadget.__service_list.slice();
     TmpConstructor.prototype.__path = url;
-    root_gadget = new TmpConstructor();
+    root_gadget = new RenderJSEmbeddedGadget();
     setAqParent(root_gadget, createLastAcquisitionGadget());
 
     declare_method_list_waiting = [
@@ -2440,8 +2366,7 @@ if (typeof document.contains !== 'function') {
       "getRequiredCSSList",
       "getRequiredJSList",
       "getPath",
-      "getTitle",
-      "getMethodList"
+      "getTitle"
     ];
 
     // Inform parent gadget about declareMethod calls here.
@@ -2505,11 +2430,10 @@ if (typeof document.contains !== 'function') {
     }
 
     // Surcharge declareMethod to inform parent window
-    TmpConstructor.declareMethod = function declareMethod(name, callback,
-                                                          options) {
+    TmpConstructor.declareMethod = function declareMethod(name, callback) {
       var result = RenderJSGadget.declareMethod.apply(
           this,
-          [name, callback, options]
+          [name, callback]
         );
       notifyDeclareMethod(name);
       return result;
