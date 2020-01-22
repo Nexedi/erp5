@@ -204,8 +204,10 @@
     for (i = 0; i < len; i += 1) {
       // XXX TODO: show nice looking thumbnail
       // from gadget.state.blob_url_i
+      console.log(i, gadget.state.page, i === gadget.state.page);
       thumbnail_dom_list.push(domsugar('button', {type: 'button',
                                                   text: 'Image' + (i + 1),
+                                                  disabled: (i === gadget.state.page),
                                                   class: 'show-img',
                                                   'data-page': i
                                                  }));
@@ -535,7 +537,7 @@
 
         return gadget.changeState({
           display_step: 'show_picture',
-          page: evt.target.getAttribute('data-page')
+          page: parseInt(evt.target.getAttribute('data-page'), 10)
         });
       }
 
