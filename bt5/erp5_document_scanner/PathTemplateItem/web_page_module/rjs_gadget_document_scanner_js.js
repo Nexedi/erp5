@@ -238,6 +238,8 @@
     for (i = 0; i < len; i += 1) {
       // XXX TODO: show nice looking thumbnail
       // from gadget.state.blob_url_i
+      // XXX TODO translation + right term
+      // XXX TODO display a loader when sending
       if (gadget.state['blob_state_' + i] !== 'deleted') {
         thumbnail_dom_list.push(domsugar('button', {type: 'button',
                                                     text: 'Image' + (i + 1) + ' (' + gadget.state['blob_state_' + i] + ')',
@@ -249,6 +251,16 @@
                                                    }));
       }
     }
+
+    // Always add a button to generate a new image
+    // XXX TODO translation + right term
+    thumbnail_dom_list.push(domsugar('button', {type: 'button',
+                                                text: 'New',
+                                                // Do not allow to show again the current image
+                                                disabled: (len === gadget.state.page - 1),
+                                                class: 'new-btn'
+                                               }));
+
     return domsugar('ol', thumbnail_dom_list);
   }
 
@@ -390,17 +402,13 @@
   }
 
   function renderSubmittedPicture(gadget) {
-    return gadget.getTranslationList(["Reset", "Delete", "Retry"])
+    return gadget.getTranslationList(["Delete", "Retry"])
       .push(function (translation_list) {
         var button_list = [
-          domsugar('button', {type: 'button',
-                              class: 'new-btn ui-btn-icon-left ui-icon-times',
-                              text: translation_list[0]
-                             }),
           // XXX TODO: improve icon
           domsugar('button', {type: 'button',
                               class: 'delete-btn ui-btn-icon-left ui-icon-times',
-                              text: translation_list[1]
+                              text: translation_list[0]
                              })
         ],
           div;
@@ -410,7 +418,7 @@
             // XXX TODO improve icon
             domsugar('button', {type: 'button',
                                 class: 'retry-btn ui-btn-icon-left ui-icon-times',
-                                text: translation_list[2]
+                                text: translation_list[1]
                                })
           );
         }
