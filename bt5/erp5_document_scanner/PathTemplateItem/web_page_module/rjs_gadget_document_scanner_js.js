@@ -197,6 +197,22 @@
       });
   }
 
+  function buildPreviousThumbnailDom(gadget) {
+    var i,
+      len = gadget.state.page_count,
+      thumbnail_dom_list = [];
+    for (i = 0; i < len; i += 1) {
+      // XXX TODO: show nice looking thumbnail
+      // from gadget.state.blob_url_i
+      thumbnail_dom_list.push(domsugar('button', {type: 'button',
+                                                  text: 'Image' + (i + 1),
+                                                  class: 'show-img',
+                                                  'data-page': i
+                                                 }));
+    }
+    return domsugar('ul', thumbnail_dom_list);
+  }
+
   // Display the video stream from a media source
   function renderVideoCapture(gadget) {
     var video;
@@ -257,7 +273,8 @@
             ])
           ]),
           domsugar('div', {class: 'camera-input'}, [video]),
-          domsugar('div', {class: 'edit-picture'}, button_list)
+          domsugar('div', {class: 'edit-picture'}, button_list),
+          buildPreviousThumbnailDom(gadget)
         ]);
 
         gadget.element.replaceChild(div, gadget.element.firstElementChild);
@@ -314,7 +331,8 @@
                                 class: 'confirm-btn ui-btn-icon-left ui-icon-check',
                                 text: result_list[0][1]
                                })
-          ])
+          ]),
+          buildPreviousThumbnailDom(gadget)
         ]);
 
         // XXX How to change the dom only when cropper is ready?
@@ -333,19 +351,29 @@
   }
 
   function renderSubmittedPicture(gadget) {
-    var div = domsugar('div', {class: 'camera'}, [
-      domsugar('div', {class: 'camera-header'}, [
-        domsugar('h4', [
-          'Page ',
-          domsugar('label', {class: 'page-number', text: gadget.state.page})
-        ])
-      ]),
-      domsugar('img', {src: gadget.state.blob_url})
-    ]);
+    return gadget.getTranslationList(["Reset"])
+      .push(function (translation_list) {
+        var div = domsugar('div', {class: 'camera'}, [
+          domsugar('div', {class: 'camera-header'}, [
+            domsugar('h4', [
+              'Page ',
+              domsugar('label', {class: 'page-number', text: gadget.state.page})
+            ])
+          ]),
+          domsugar('img', {src: gadget.state['blob_url_' + gadget.state.page]}),
+          domsugar('div', {class: 'edit-picture'}, [
+            domsugar('button', {type: 'button',
+                                class: 'new-btn ui-btn-icon-left ui-icon-times',
+                                text: translation_list[0]
+                               })
+          ]),
+          buildPreviousThumbnailDom(gadget)
+        ]);
 
-    // XXX How to change the dom only when cropper is ready?
-    // For now, it needs to access dom element size
-    gadget.element.replaceChild(div, gadget.element.firstElementChild);
+        // XXX How to change the dom only when cropper is ready?
+        // For now, it needs to access dom element size
+        gadget.element.replaceChild(div, gadget.element.firstElementChild);
+      });
   }
 
   //////////////////////////////////////////////////
@@ -374,7 +402,8 @@
 
     .setState({
       display_step: 'display_video',
-      page: 1
+      page: 1,
+      page_count: 0
     })
     .declareMethod('render', function (options) {
       // This method is called during the ERP5 form rendering
@@ -404,7 +433,7 @@
         return captureAndRenderPicture(gadget);
       }
 
-      if (gadget.state.display_step === 'submitting') {
+      if (gadget.state.display_step === 'show_picture') {
         return renderSubmittedPicture(gadget);
       }
 
@@ -452,6 +481,13 @@
         });
       }
 
+      if (evt.target.className.indexOf("new-btn") !== -1) {
+        return gadget.changeState({
+          display_step: 'display_video',
+          page: gadget.state.page_count + 1
+        });
+      }
+
       if (evt.target.className.indexOf("confirm-btn") !== -1) {
         return new RSVP.Queue()
           .push(function () {
@@ -464,22 +500,18 @@
             return jIO.util.readBlobAsDataURL(blob);
           })
           .push(function (evt) {
-            return gadget.changeState({
-              blob_url: evt.target.result,
+            var state_dict = {
               preferred_cropped_canvas_data: gadget.cropper.getData(),
-              display_step: 'submitting'
-            });
+              display_step: 'display_video',
+              page: gadget.state.page + 1,
+              page_count: gadget.state.page_count + 1
+            };
+            // Keep image date, as user may need to display it again
+            state_dict['blob_url_' + gadget.state.page_count] = evt.target.result;
+            return gadget.changeState(state_dict);
           })
           .push(function () {
             gadget.detached_promise_dict.cropper.cancel('Not needed anymore, as cropped');
-            return gadget.submitDialogWithCustomDialogMethod(gadget.state.dialog_method);
-          })
-          .push(function (evt) {
-            return gadget.changeState({
-              blob_url: undefined,
-              display_step: 'display_video',
-              page: gadget.state.page + 1
-            });
           });
       }
 
@@ -493,15 +525,23 @@
           });
       }
 
+      if (evt.target.className.indexOf("show-img") !== -1) {
+        if (gadget.detached_promise_dict.cropper) {
+          gadget.detached_promise_dict.cropper.cancel('Not needed anymore, as cancelled');
+        }
+        if (gadget.detached_promise_dict.media_stream) {
+          gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as cancelled');
+        }
+
+        return gadget.changeState({
+          display_step: 'show_picture',
+          page: evt.target.getAttribute('data-page')
+        });
+      }
+
       throw new Error('Unhandled button: ' + evt.target.textContent);
     }, false, false)
 
-
-    .declareAcquiredMethod(
-      "submitDialogWithCustomDialogMethod",
-      "submitDialogWithCustomDialogMethod"
-    )
-    .declareAcquiredMethod("getTranslationList", "getTranslationList")
-    .declareAcquiredMethod("notifySubmitted", "notifySubmitted");
+    .declareAcquiredMethod("getTranslationList", "getTranslationList");
 
 }(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap));
