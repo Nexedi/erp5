@@ -160,7 +160,14 @@
     if (gadget.detached_promise_dict.hasOwnProperty(key)) {
       gadget.detached_promise_dict[key].cancel('Replacing key: ' + key);
     }
-    gadget.detached_promise_dict[key] = promise;
+    gadget.detached_promise_dict[key] = new RSVP.Queue()
+      .push(function () {
+        return promise;
+      })
+      .push(undefined, function (error) {
+        // Crash the gadget if the detached promise raise an unexpected error
+        gadget.raise(error);
+      });
   }
 
   // Display the video stream from a media source
@@ -320,6 +327,9 @@
     .ready(function () {
       this.detached_promise_dict = {};
     })
+    .declareJob('raise', function (error) {
+      throw error;
+    })
     .declareService(function handleDetachedPromiseDict() {
       // This service is responsable to cancel all ongoing detached promises
       // if the gadget is removed from the page
@@ -379,6 +389,7 @@
       var gadget = this,
         result = {};
       if (gadget.state.display_step === 'submitting') {
+        // do not send any content when sending the final form
         result[gadget.state.key] = JSON.stringify({
           input_value: gadget.state.blob_url.split(';')[1].split(',')[1],
           preferred_cropped_canvas_data: gadget.state.preferred_cropped_canvas_data
