@@ -50,6 +50,33 @@
     return new RSVP.Promise(waitForStream, canceller);
   }
 
+  function handleCropper(element, data, callback) {
+    var cropper;
+
+    function canceller() {
+      cropper.destroy();
+    }
+
+    // creating Cropper is asynchronous
+    return new RSVP.Promise(function (resolve, reject) {
+      cropper = new Cropper(element, {
+        data: data,
+        ready: function () {
+          return new RSVP.Queue()
+            .push(function () {
+              return callback(cropper);
+            })
+            .push(undefined, function (error) {
+              if (!(error instanceof RSVP.CancellationError)) {
+                canceller();
+                reject(error);
+              }
+            });
+        }
+      });
+    }, canceller);
+  }
+
   //////////////////////////////////////////////////
   // helper function
   //////////////////////////////////////////////////
@@ -177,8 +204,7 @@
       .push(function () {
         var defer = RSVP.defer();
         addDetachedPromise(gadget, 'media_stream',
-                           handleUserMedia(gadget.state.device_id,
-                                           defer.resolve));
+                           handleUserMedia(gadget.state.device_id, defer.resolve));
         return defer.promise;
       })
       .push(function (media_stream) {
@@ -263,7 +289,8 @@
         var // blob_url = URL.createObjectURL(blob),
           // img = domsugar('img', {src: blob_url});
           bitmap = result_list[1],
-          canvas = domsugar('canvas', {class: 'canvas'});
+          canvas = domsugar('canvas', {class: 'canvas'}),
+          defer = RSVP.defer();
 
         // Prepare the cropper canvas
         canvas.width = bitmap.width;
@@ -294,13 +321,14 @@
         // For now, it needs to access dom element size
         gadget.element.replaceChild(div, gadget.element.firstElementChild);
 
-        // creating Cropper is asynchronous
-        return new RSVP.Promise(function (resolve) {
-          gadget.cropper = new Cropper(canvas, {
-            data: gadget.state.preferred_cropped_canvas_data,
-            ready: resolve
-          });
-        });
+        addDetachedPromise(gadget, 'cropper',
+                           handleCropper(canvas,
+                                         gadget.state.preferred_cropped_canvas_data,
+                                         defer.resolve));
+        return defer.promise;
+      })
+      .push(function (cropper) {
+        gadget.cropper = cropper;
       });
   }
 
@@ -443,6 +471,7 @@
             });
           })
           .push(function () {
+            gadget.detached_promise_dict.cropper.cancel('Not needed anymore, as cropped');
             return gadget.submitDialogWithCustomDialogMethod(gadget.state.dialog_method);
           })
           .push(function (evt) {
