@@ -92,13 +92,16 @@
         }
         // XXX long or not, working or not, who knows?
         return RSVP.any([
-          RSVP.delay(getRandomInt(5000)),
-          RSVP.timeout(getRandomInt(5000))
+          RSVP.delay(2000 + getRandomInt(3000)),
+          RSVP.timeout(2000 + getRandomInt(3000))
         ]);
       })
       .push(function () {
         var state_dict = {};
         state_dict['blob_state_' + blob_page] = 'stored';
+        // XXX TODO: ajax must return a active process image content UUID
+        // which should be sent in the final form submittion
+        state_dict['blob_uuid_' + blob_page] = 'XXX';
         return gadget.changeState(state_dict);
       }, function () {
         // XXX TODO: Handle error case
@@ -235,15 +238,16 @@
     for (i = 0; i < len; i += 1) {
       // XXX TODO: show nice looking thumbnail
       // from gadget.state.blob_url_i
-      console.log(i, gadget.state.page, i === gadget.state.page);
-      thumbnail_dom_list.push(domsugar('button', {type: 'button',
-                                                  text: 'Image' + (i + 1) + ' (' + gadget.state['blob_state_' + i] + ')',
-                                                  // Do not allow to show again the current image
-                                                  // or do not allow to show sending image (to simplify button management)
-                                                  disabled: (i === gadget.state.page) || (gadget.state['blob_state_' + i] === 'sending'),
-                                                  class: 'show-img',
-                                                  'data-page': i
-                                                 }));
+      if (gadget.state['blob_state_' + i] !== 'deleted') {
+        thumbnail_dom_list.push(domsugar('button', {type: 'button',
+                                                    text: 'Image' + (i + 1) + ' (' + gadget.state['blob_state_' + i] + ')',
+                                                    // Do not allow to show again the current image
+                                                    // or do not allow to show sending image (to simplify button management)
+                                                    disabled: (i === gadget.state.page) || (gadget.state['blob_state_' + i] === 'sending'),
+                                                    class: 'show-img',
+                                                    'data-page': i
+                                                   }));
+      }
     }
     return domsugar('ol', thumbnail_dom_list);
   }
@@ -386,9 +390,32 @@
   }
 
   function renderSubmittedPicture(gadget) {
-    return gadget.getTranslationList(["Reset"])
+    return gadget.getTranslationList(["Reset", "Delete", "Retry"])
       .push(function (translation_list) {
-        var div = domsugar('div', {class: 'camera'}, [
+        var button_list = [
+          domsugar('button', {type: 'button',
+                              class: 'new-btn ui-btn-icon-left ui-icon-times',
+                              text: translation_list[0]
+                             }),
+          // XXX TODO: improve icon
+          domsugar('button', {type: 'button',
+                              class: 'delete-btn ui-btn-icon-left ui-icon-times',
+                              text: translation_list[1]
+                             })
+        ],
+          div;
+
+        if (gadget.state['blob_state_' + gadget.state.page] === 'failed') {
+          button_list.push(
+            // XXX TODO improve icon
+            domsugar('button', {type: 'button',
+                                class: 'retry-btn ui-btn-icon-left ui-icon-times',
+                                text: translation_list[2]
+                               })
+          );
+        }
+
+        div = domsugar('div', {class: 'camera'}, [
           domsugar('div', {class: 'camera-header'}, [
             domsugar('h4', [
               'Page ',
@@ -396,12 +423,8 @@
             ])
           ]),
           domsugar('img', {src: gadget.state['blob_url_' + gadget.state.page]}),
-          domsugar('div', {class: 'edit-picture'}, [
-            domsugar('button', {type: 'button',
-                                class: 'new-btn ui-btn-icon-left ui-icon-times',
-                                text: translation_list[0]
-                               })
-          ]),
+          // XXX TODO: why is the button rendering different from the other pages?
+          domsugar('div', {class: 'edit-picture'}, button_list),
           buildPreviousThumbnailDom(gadget)
         ]);
 
@@ -517,7 +540,8 @@
         return;
       }
 
-      var gadget = this;
+      var gadget = this,
+        state_dict;
 
       // Disable any button. It must be managed by this gadget
       evt.preventDefault();
@@ -542,6 +566,15 @@
           display_step: 'display_video',
           page: gadget.state.page_count + 1
         });
+      }
+
+      if (evt.target.className.indexOf("delete-btn") !== -1) {
+        state_dict = {
+          display_step: 'display_video',
+          page: gadget.state.page_count + 1
+        };
+        state_dict['blob_state_' + gadget.state.page] = 'deleted';
+        return gadget.changeState(state_dict);
       }
 
       if (evt.target.className.indexOf("confirm-btn") !== -1) {
@@ -575,6 +608,19 @@
 
             gadget.detached_promise_dict.cropper.cancel('Not needed anymore, as cropped');
           });
+      }
+
+      if (evt.target.className.indexOf("retry-btn") !== -1) {
+        // XXX TODO Send the image to ERP5
+        // XXX Ensure that you have the active process relative url
+        addDetachedPromise(gadget, 'ajax_' + (gadget.state.page),
+                           handleAsyncStore(gadget, gadget.state.page));
+        state_dict = {
+          display_step: 'display_video',
+          page: gadget.state.page_count + 1
+        };
+        state_dict['blob_state_' + gadget.state.page] = 'sending';
+        return gadget.changeState(state_dict);
       }
 
       if (evt.target.className.indexOf("change-camera-btn") !== -1) {
