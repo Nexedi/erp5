@@ -99,6 +99,11 @@
 </tr>
 <tr>
   <td>store</td>
+  <td>subInstance-2</td>
+  <td>instance_2</td>
+</tr>
+<tr>
+  <td>store</td>
   <td>admin</td>
   <td>username</td>
 </tr>
@@ -204,24 +209,21 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='${instance_root}']</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>${instance_root}</td>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='${instance_1}']</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>${instance_1}</td>
-  <td></td>
+  <td colspan="3"><b>Navigate to the root instance</b></td>
 </tr>
 <tr>
-  <!-- Navigate to the first instance -->
   <td>click</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
+  <td>//a[text()='${instance_root}']</td>
   <td></td>
 </tr>
 <tr>
@@ -230,40 +232,40 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
+  <td>waitForElementPresent</td>
+  <td>//h1[contains(.,'Instance Promises Status')]</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
-  <td>//h1[@data-i18n='Instance Promises Status']</td>
-  <td></td>
+  <td colspan="3"><b>Display list of promises</b></td>
 </tr>
-<!-- Display list of promises -->
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Promises']</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
-  <td>//span[@data-i18n='Monitoring Promises Status']</td>
+  <td>waitForElementPresent</td>
+  <td>//h1[contains(.,'Monitoring Promises')]</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='${hosting_title}']</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>${instance_root}</td>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='${instance_root}']</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>${instance_1}</td>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='${instance_1}']</td>
   <td></td>
+</tr>
+<tr>
+  <td colspan="3"><b>XXX: Checkpoint</b></td>
 </tr>
 <tr>
   <td>storeText</td>
