@@ -484,7 +484,6 @@
       var gadget = this,
         display_step,
         thumbnail_container;
-      console.log(gadget.state);
       // ALL DOM modifications must be done only in this method
       // this prevent concurrency issue on DOM access
 
@@ -519,19 +518,6 @@
         thumbnail_container
       );
 
-    })
-
-    .declareMethod('getContent', function () {
-      var gadget = this,
-        result = {};
-      if (gadget.state.display_step === 'submitting') {
-        // do not send any content when sending the final form
-        result[gadget.state.key] = JSON.stringify({
-          input_value: gadget.state.blob_url.split(';')[1].split(',')[1],
-          preferred_cropped_canvas_data: gadget.state.preferred_cropped_canvas_data
-        });
-      }
-      return result;
     })
 
     .onEvent("click", function (evt) {
@@ -589,7 +575,7 @@
             return jIO.util.readBlobAsDataURL(blob);
           })
           .push(function (evt) {
-            var state_dict = {
+            state_dict = {
               preferred_cropped_canvas_data: gadget.cropper.getData(),
               display_step: 'display_video',
               page: gadget.state.page + 1,
@@ -649,6 +635,27 @@
 
       throw new Error('Unhandled button: ' + evt.target.textContent);
     }, false, false)
+
+    //////////////////////////////////////////////////
+    // Used when submitting the form
+    //////////////////////////////////////////////////
+    .declareMethod('getContent', function () {
+      var gadget = this,
+        result = {};
+      // XXX TODO: check all blob, and only return the UUID for the one in stored state
+      result[gadget.state.key] = JSON.stringify({
+        input_value: 'XXX',
+        preferred_cropped_canvas_data: gadget.state.preferred_cropped_canvas_data
+      });
+      throw new Error('not implemented getContent');
+    }, {mutex: 'changestate'})
+
+    .declareMethod('checkValidity', function () {
+      // XXX TODO: check all blob, and ensure they are all: deleted, stored
+      // Any other state prevent to submit the form
+      // XXX if the state is required, ensure there is at least one blob stored
+      return false;
+    }, {mutex: 'changestate'})
 
     .declareAcquiredMethod("getTranslationList", "getTranslationList");
 
