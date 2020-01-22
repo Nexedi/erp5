@@ -77,6 +77,40 @@
     }, canceller);
   }
 
+  function handleAsyncStore(gadget, blob_page) {
+    return new RSVP.Queue()
+      .push(function () {
+        // XXX TODO: jio.util.ajax  with
+        /*
+        JSON.stringify({
+          input_value: gadget.state.blob_url_XXX.split(';')[1].split(',')[1],
+          // preferred_cropped_canvas_data: gadget.state.preferred_cropped_canvas_data
+        })
+        */
+        function getRandomInt(max) {
+          return Math.floor(Math.random() * Math.floor(max));
+        }
+        // XXX long or not, working or not, who knows?
+        return RSVP.any([
+          RSVP.delay(2000 + getRandomInt(3000)),
+          RSVP.timeout(2000 + getRandomInt(3000))
+        ]);
+      })
+      .push(function () {
+        var state_dict = {};
+        state_dict['blob_state_' + blob_page] = 'stored';
+        // XXX TODO: ajax must return a active process image content UUID
+        // which should be sent in the final form submittion
+        state_dict['blob_uuid_' + blob_page] = 'XXX';
+        return gadget.changeState(state_dict);
+      }, function () {
+        // XXX TODO: Handle error case
+        var state_dict = {};
+        state_dict['blob_state_' + blob_page] = 'failed';
+        return gadget.changeState(state_dict);
+      });
+  }
+
   //////////////////////////////////////////////////
   // helper function
   //////////////////////////////////////////////////
@@ -197,6 +231,39 @@
       });
   }
 
+  function buildPreviousThumbnailDom(gadget) {
+    var i,
+      len = gadget.state.page_count,
+      thumbnail_dom_list = [];
+    for (i = 0; i < len; i += 1) {
+      // XXX TODO: show nice looking thumbnail
+      // from gadget.state.blob_url_i
+      // XXX TODO translation + right term
+      // XXX TODO display a loader when sending
+      if (gadget.state['blob_state_' + i] !== 'deleted') {
+        thumbnail_dom_list.push(domsugar('button', {type: 'button',
+                                                    text: 'Image' + (i + 1) + ' (' + gadget.state['blob_state_' + i] + ')',
+                                                    // Do not allow to show again the current image
+                                                    // or do not allow to show sending image (to simplify button management)
+                                                    disabled: (i === gadget.state.page) || (gadget.state['blob_state_' + i] === 'sending'),
+                                                    class: 'show-img',
+                                                    'data-page': i
+                                                   }));
+      }
+    }
+
+    // Always add a button to generate a new image
+    // XXX TODO translation + right term
+    thumbnail_dom_list.push(domsugar('button', {type: 'button',
+                                                text: 'New',
+                                                // Do not allow to show again the current image
+                                                disabled: (len === gadget.state.page - 1),
+                                                class: 'new-btn'
+                                               }));
+
+    return domsugar('ol', thumbnail_dom_list);
+  }
+
   // Display the video stream from a media source
   function renderVideoCapture(gadget) {
     var video;
@@ -257,7 +324,8 @@
             ])
           ]),
           domsugar('div', {class: 'camera-input'}, [video]),
-          domsugar('div', {class: 'edit-picture'}, button_list)
+          domsugar('div', {class: 'edit-picture'}, button_list),
+          buildPreviousThumbnailDom(gadget)
         ]);
 
         gadget.element.replaceChild(div, gadget.element.firstElementChild);
@@ -314,7 +382,8 @@
                                 class: 'confirm-btn ui-btn-icon-left ui-icon-check',
                                 text: result_list[0][1]
                                })
-          ])
+          ]),
+          buildPreviousThumbnailDom(gadget)
         ]);
 
         // XXX How to change the dom only when cropper is ready?
@@ -333,19 +402,44 @@
   }
 
   function renderSubmittedPicture(gadget) {
-    var div = domsugar('div', {class: 'camera'}, [
-      domsugar('div', {class: 'camera-header'}, [
-        domsugar('h4', [
-          'Page ',
-          domsugar('label', {class: 'page-number', text: gadget.state.page})
-        ])
-      ]),
-      domsugar('img', {src: gadget.state.blob_url})
-    ]);
+    return gadget.getTranslationList(["Delete", "Retry"])
+      .push(function (translation_list) {
+        var button_list = [
+          // XXX TODO: improve icon
+          domsugar('button', {type: 'button',
+                              class: 'delete-btn ui-btn-icon-left ui-icon-times',
+                              text: translation_list[0]
+                             })
+        ],
+          div;
 
-    // XXX How to change the dom only when cropper is ready?
-    // For now, it needs to access dom element size
-    gadget.element.replaceChild(div, gadget.element.firstElementChild);
+        if (gadget.state['blob_state_' + gadget.state.page] === 'failed') {
+          button_list.push(
+            // XXX TODO improve icon
+            domsugar('button', {type: 'button',
+                                class: 'retry-btn ui-btn-icon-left ui-icon-times',
+                                text: translation_list[1]
+                               })
+          );
+        }
+
+        div = domsugar('div', {class: 'camera'}, [
+          domsugar('div', {class: 'camera-header'}, [
+            domsugar('h4', [
+              'Page ',
+              domsugar('label', {class: 'page-number', text: gadget.state.page + 1})
+            ])
+          ]),
+          domsugar('img', {src: gadget.state['blob_url_' + gadget.state.page]}),
+          // XXX TODO: why is the button rendering different from the other pages?
+          domsugar('div', {class: 'edit-picture'}, button_list),
+          buildPreviousThumbnailDom(gadget)
+        ]);
+
+        // XXX How to change the dom only when cropper is ready?
+        // For now, it needs to access dom element size
+        gadget.element.replaceChild(div, gadget.element.firstElementChild);
+      });
   }
 
   //////////////////////////////////////////////////
@@ -374,7 +468,8 @@
 
     .setState({
       display_step: 'display_video',
-      page: 1
+      page: 1,
+      page_count: 0
     })
     .declareMethod('render', function (options) {
       // This method is called during the ERP5 form rendering
@@ -387,43 +482,50 @@
             dialog_method: options.dialog_method,
             preferred_cropped_canvas_data: JSON.parse(options.preferred_cropped_canvas_data),
             device_id: device_id,
-            key: options.key
+            key: options.key,
+            first_render: true
           });
         });
     })
 
-    .onStateChange(function () {
-      var gadget = this;
+    .onStateChange(function (modification_dict) {
+      var gadget = this,
+        display_step,
+        thumbnail_container;
       // ALL DOM modifications must be done only in this method
       // this prevent concurrency issue on DOM access
-      if (gadget.state.display_step === 'display_video') {
+
+      // Only refresh the full gadget content after the first render call
+      // or if the display_step is modified
+      // or if displaying another image
+      if (modification_dict.first_render || modification_dict.hasOwnProperty('page')) {
+        display_step = gadget.state.display_step;
+      } else {
+        display_step = modification_dict.display_step;
+      }
+      if (display_step === 'display_video') {
         return renderVideoCapture(gadget);
       }
-
-      if (gadget.state.display_step === 'crop_picture') {
+      if (display_step === 'crop_picture') {
         return captureAndRenderPicture(gadget);
       }
-
-      if (gadget.state.display_step === 'submitting') {
+      if (display_step === 'show_picture') {
         return renderSubmittedPicture(gadget);
       }
-
-      // Ease developper work by raising for not handled cases
-      throw new Error('Unhandled display step: ' + gadget.state.display_step);
-
-    })
-
-    .declareMethod('getContent', function () {
-      var gadget = this,
-        result = {};
-      if (gadget.state.display_step === 'submitting') {
-        // do not send any content when sending the final form
-        result[gadget.state.key] = JSON.stringify({
-          input_value: gadget.state.blob_url.split(';')[1].split(',')[1],
-          preferred_cropped_canvas_data: gadget.state.preferred_cropped_canvas_data
-        });
+      if (display_step) {
+        // Ease developper work by raising for not handled cases
+        throw new Error('Unhandled display step: ' + gadget.state.display_step);
       }
-      return result;
+
+      // Only refresh the thumbnail list
+      // if display_step is not modified
+      // XXX TODO use a more precise selector
+      thumbnail_container = gadget.element.querySelector('ol');
+      thumbnail_container.parentElement.replaceChild(
+        buildPreviousThumbnailDom(gadget),
+        thumbnail_container
+      );
+
     })
 
     .onEvent("click", function (evt) {
@@ -432,7 +534,8 @@
         return;
       }
 
-      var gadget = this;
+      var gadget = this,
+        state_dict;
 
       // Disable any button. It must be managed by this gadget
       evt.preventDefault();
@@ -452,6 +555,22 @@
         });
       }
 
+      if (evt.target.className.indexOf("new-btn") !== -1) {
+        return gadget.changeState({
+          display_step: 'display_video',
+          page: gadget.state.page_count + 1
+        });
+      }
+
+      if (evt.target.className.indexOf("delete-btn") !== -1) {
+        state_dict = {
+          display_step: 'display_video',
+          page: gadget.state.page_count + 1
+        };
+        state_dict['blob_state_' + gadget.state.page] = 'deleted';
+        return gadget.changeState(state_dict);
+      }
+
       if (evt.target.className.indexOf("confirm-btn") !== -1) {
         return new RSVP.Queue()
           .push(function () {
@@ -464,23 +583,38 @@
             return jIO.util.readBlobAsDataURL(blob);
           })
           .push(function (evt) {
-            return gadget.changeState({
-              blob_url: evt.target.result,
+            state_dict = {
               preferred_cropped_canvas_data: gadget.cropper.getData(),
-              display_step: 'submitting'
-            });
+              display_step: 'display_video',
+              page: gadget.state.page + 1,
+              page_count: gadget.state.page_count + 1
+            };
+            // Keep image date, as user may need to display it again
+            state_dict['blob_url_' + gadget.state.page_count] = evt.target.result;
+            state_dict['blob_state_' + gadget.state.page_count] = 'sending';
+            return gadget.changeState(state_dict);
           })
           .push(function () {
+            // XXX TODO Send the image to ERP5
+            // XXX Ensure that you have the active process relative url
+            addDetachedPromise(gadget, 'ajax_' + (gadget.state.page_count - 1),
+                               handleAsyncStore(gadget, gadget.state.page_count - 1));
+
             gadget.detached_promise_dict.cropper.cancel('Not needed anymore, as cropped');
-            return gadget.submitDialogWithCustomDialogMethod(gadget.state.dialog_method);
-          })
-          .push(function (evt) {
-            return gadget.changeState({
-              blob_url: undefined,
-              display_step: 'display_video',
-              page: gadget.state.page + 1
-            });
           });
+      }
+
+      if (evt.target.className.indexOf("retry-btn") !== -1) {
+        // XXX TODO Send the image to ERP5
+        // XXX Ensure that you have the active process relative url
+        addDetachedPromise(gadget, 'ajax_' + (gadget.state.page),
+                           handleAsyncStore(gadget, gadget.state.page));
+        state_dict = {
+          display_step: 'display_video',
+          page: gadget.state.page_count + 1
+        };
+        state_dict['blob_state_' + gadget.state.page] = 'sending';
+        return gadget.changeState(state_dict);
       }
 
       if (evt.target.className.indexOf("change-camera-btn") !== -1) {
@@ -493,15 +627,44 @@
           });
       }
 
+      if (evt.target.className.indexOf("show-img") !== -1) {
+        if (gadget.detached_promise_dict.cropper) {
+          gadget.detached_promise_dict.cropper.cancel('Not needed anymore, as cancelled');
+        }
+        if (gadget.detached_promise_dict.media_stream) {
+          gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as cancelled');
+        }
+
+        return gadget.changeState({
+          display_step: 'show_picture',
+          page: parseInt(evt.target.getAttribute('data-page'), 10)
+        });
+      }
+
       throw new Error('Unhandled button: ' + evt.target.textContent);
     }, false, false)
 
+    //////////////////////////////////////////////////
+    // Used when submitting the form
+    //////////////////////////////////////////////////
+    .declareMethod('getContent', function () {
+      var gadget = this,
+        result = {};
+      // XXX TODO: check all blob, and only return the UUID for the one in stored state
+      result[gadget.state.key] = JSON.stringify({
+        input_value: 'XXX',
+        preferred_cropped_canvas_data: gadget.state.preferred_cropped_canvas_data
+      });
+      throw new Error('not implemented getContent');
+    }, {mutex: 'changestate'})
 
-    .declareAcquiredMethod(
-      "submitDialogWithCustomDialogMethod",
-      "submitDialogWithCustomDialogMethod"
-    )
-    .declareAcquiredMethod("getTranslationList", "getTranslationList")
-    .declareAcquiredMethod("notifySubmitted", "notifySubmitted");
+    .declareMethod('checkValidity', function () {
+      // XXX TODO: check all blob, and ensure they are all: deleted, stored
+      // Any other state prevent to submit the form
+      // XXX if the state is required, ensure there is at least one blob stored
+      return false;
+    }, {mutex: 'changestate'})
+
+    .declareAcquiredMethod("getTranslationList", "getTranslationList");
 
 }(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap));
