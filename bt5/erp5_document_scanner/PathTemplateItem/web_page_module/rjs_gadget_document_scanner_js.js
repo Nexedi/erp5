@@ -77,6 +77,37 @@
     }, canceller);
   }
 
+  function handleAsyncStore(gadget, blob_page) {
+    return new RSVP.Queue()
+      .push(function () {
+        // XXX TODO: jio.util.ajax  with
+        /*
+        JSON.stringify({
+          input_value: gadget.state.blob_url_XXX.split(';')[1].split(',')[1],
+          // preferred_cropped_canvas_data: gadget.state.preferred_cropped_canvas_data
+        })
+        */
+        function getRandomInt(max) {
+          return Math.floor(Math.random() * Math.floor(max));
+        }
+        // XXX long or not, working or not, who knows?
+        return RSVP.any([
+          RSVP.delay(getRandomInt(5000)),
+          RSVP.timeout(getRandomInt(5000))
+        ]);
+      })
+      .push(function () {
+        var state_dict = {};
+        state_dict['blob_state_' + blob_page] = 'stored';
+        return gadget.changeState(state_dict);
+      }, function () {
+        // XXX TODO: Handle error case
+        var state_dict = {};
+        state_dict['blob_state_' + blob_page] = 'failed';
+        return gadget.changeState(state_dict);
+      });
+  }
+
   //////////////////////////////////////////////////
   // helper function
   //////////////////////////////////////////////////
@@ -206,13 +237,15 @@
       // from gadget.state.blob_url_i
       console.log(i, gadget.state.page, i === gadget.state.page);
       thumbnail_dom_list.push(domsugar('button', {type: 'button',
-                                                  text: 'Image' + (i + 1),
-                                                  disabled: (i === gadget.state.page),
+                                                  text: 'Image' + (i + 1) + ' (' + gadget.state['blob_state_' + i] + ')',
+                                                  // Do not allow to show again the current image
+                                                  // or do not allow to show sending image (to simplify button management)
+                                                  disabled: (i === gadget.state.page) || (gadget.state['blob_state_' + i] === 'sending'),
                                                   class: 'show-img',
                                                   'data-page': i
                                                  }));
     }
-    return domsugar('ul', thumbnail_dom_list);
+    return domsugar('ol', thumbnail_dom_list);
   }
 
   // Display the video stream from a media source
@@ -359,7 +392,7 @@
           domsugar('div', {class: 'camera-header'}, [
             domsugar('h4', [
               'Page ',
-              domsugar('label', {class: 'page-number', text: gadget.state.page})
+              domsugar('label', {class: 'page-number', text: gadget.state.page + 1})
             ])
           ]),
           domsugar('img', {src: gadget.state['blob_url_' + gadget.state.page]}),
@@ -418,29 +451,50 @@
             dialog_method: options.dialog_method,
             preferred_cropped_canvas_data: JSON.parse(options.preferred_cropped_canvas_data),
             device_id: device_id,
-            key: options.key
+            key: options.key,
+            first_render: true
           });
         });
     })
 
-    .onStateChange(function () {
-      var gadget = this;
+    .onStateChange(function (modification_dict) {
+      var gadget = this,
+        display_step,
+        thumbnail_container;
+      console.log(gadget.state);
       // ALL DOM modifications must be done only in this method
       // this prevent concurrency issue on DOM access
-      if (gadget.state.display_step === 'display_video') {
+
+      // Only refresh the full gadget content after the first render call
+      // or if the display_step is modified
+      // or if displaying another image
+      if (modification_dict.first_render || modification_dict.hasOwnProperty('page')) {
+        display_step = gadget.state.display_step;
+      } else {
+        display_step = modification_dict.display_step;
+      }
+      if (display_step === 'display_video') {
         return renderVideoCapture(gadget);
       }
-
-      if (gadget.state.display_step === 'crop_picture') {
+      if (display_step === 'crop_picture') {
         return captureAndRenderPicture(gadget);
       }
-
-      if (gadget.state.display_step === 'show_picture') {
+      if (display_step === 'show_picture') {
         return renderSubmittedPicture(gadget);
       }
+      if (display_step) {
+        // Ease developper work by raising for not handled cases
+        throw new Error('Unhandled display step: ' + gadget.state.display_step);
+      }
 
-      // Ease developper work by raising for not handled cases
-      throw new Error('Unhandled display step: ' + gadget.state.display_step);
+      // Only refresh the thumbnail list
+      // if display_step is not modified
+      // XXX TODO use a more precise selector
+      thumbnail_container = gadget.element.querySelector('ol');
+      thumbnail_container.parentElement.replaceChild(
+        buildPreviousThumbnailDom(gadget),
+        thumbnail_container
+      );
 
     })
 
@@ -510,9 +564,15 @@
             };
             // Keep image date, as user may need to display it again
             state_dict['blob_url_' + gadget.state.page_count] = evt.target.result;
+            state_dict['blob_state_' + gadget.state.page_count] = 'sending';
             return gadget.changeState(state_dict);
           })
           .push(function () {
+            // XXX TODO Send the image to ERP5
+            // XXX Ensure that you have the active process relative url
+            addDetachedPromise(gadget, 'ajax_' + (gadget.state.page_count - 1),
+                               handleAsyncStore(gadget, gadget.state.page_count - 1));
+
             gadget.detached_promise_dict.cropper.cancel('Not needed anymore, as cropped');
           });
       }
