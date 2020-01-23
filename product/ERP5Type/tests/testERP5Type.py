@@ -33,7 +33,7 @@ except ImportError: # BBB: ZODB < 4
 import unittest
 import sys
 import mock
-
+import httplib
 import transaction
 from random import randint
 from unittest import expectedFailure
@@ -3023,6 +3023,14 @@ return True''')
       person = self.getPersonModule().newContent(portal_type='Person')
       person.validate()
       self.assertRaises(WorkflowException, person.validate)
+
+    def test_workflow_transitions_are_not_published(self):
+      person = self.getPersonModule().newContent(portal_type='Person')
+      # workflow methods are not published by zope because they don't have a __doc__ attribute
+      self.assertIsNone(person.validate.__doc__)
+      ret = self.publish('%s/validate' % person.getPath(), basic='ERP5TypeTestCase:')
+      self.assertEqual(httplib.NOT_FOUND, ret.getStatus())
+      self.assertEqual('draft', person.getValidationState())
 
     def test_PropertyConstantGetter(self):
       """
