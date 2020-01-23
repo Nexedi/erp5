@@ -18,7 +18,7 @@ portal.portal_sessions[
 
 REQUEST_DICT = getattr(portal, 'REQUEST', {})
 
-same_site = portal.ERP5Site_getSameSite(host=REQUEST_DICT.get('HTTP_HOST', None))
+same_site = portal.ERP5Site_getAuthCookieSameSite(host=REQUEST_DICT.get('HTTP_HOST', None))
 if same_site not in ('None', 'Lax', 'Strict'):
   # Do not use the SameSite attribute
   same_site = None
