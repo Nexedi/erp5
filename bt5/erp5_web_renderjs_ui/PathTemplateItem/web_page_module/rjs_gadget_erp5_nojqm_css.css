@@ -1166,6 +1166,7 @@ div[data-gadget-scope='header'] .ui-header ul {
 }
 .gadget-content .required > .ui-field-contain > label {
   font-weight: bold;
+  color: #1F1F1F;
 }
 .gadget-content .invisible > .ui-field-contain > label {
   display: none;
