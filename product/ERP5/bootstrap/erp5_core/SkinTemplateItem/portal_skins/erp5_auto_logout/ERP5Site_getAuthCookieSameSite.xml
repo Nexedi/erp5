@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_getSameSite</string> </value>
+            <value> <string>ERP5Site_getAuthCookieSameSite</string> </value>
         </item>
       </dictionary>
     </pickle>
