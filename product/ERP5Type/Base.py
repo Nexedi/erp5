@@ -142,6 +142,13 @@ def resetRegisteredWorkflowMethod(portal_type=None):
 
 class WorkflowMethod(Method):
 
+  def __of__(self, instance):
+    """Prevent publication of method by clearing the __doc__ that zope publishing mechanism uses.
+    """
+    wrapped = super(WorkflowMethod, self).__of__(instance)
+    wrapped.im_func.__doc__ = None # prevent publication
+    return wrapped
+
   def __init__(self, method, id=None, reindex=1):
     """
       method - a callable object or a method
