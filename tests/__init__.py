@@ -43,6 +43,7 @@ class _ERP5(SavedTestSuite):
         # ['%s/product/ERP5/tests/testERP5Core.py' % path] +
         # ['%s/product/ERP5/tests/testQueryModule.py' % path] +
         # ['%s/product/ERP5/tests/testBankReconciliation.py' % path] +
+        ['%s/product/ERP5Security/tests/testERP5Security.py' % path] +
         # ['%s/product/ERP5Type/tests/testFunctionalCore.py' % path] +
         # ['%s/product/ERP5Type/tests/testFunctionalAnonymousSelection.py' % path] +
         # glob('%s/bt5/erp5_web/TestTemplateItem/portal_components/test.*.test*.py' % path) +
@@ -68,6 +69,7 @@ class _ERP5(SavedTestSuite):
         # glob('%s/bt5/erp5_officejs_afs_directory_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_test_result/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_oauth*/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         []
       ):
       component_re_match = component_re.match(test_path)
