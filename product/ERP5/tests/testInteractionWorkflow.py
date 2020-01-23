@@ -28,6 +28,7 @@
 ##############################################################################
 
 import unittest
+import httplib
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -613,6 +614,18 @@ context.setTitle('Bar')
     # two calls: one to _setProperty, and one to _setDescription
     self.assertEqual(len(call_list), 6)
 
+  def test_interaction_workflow_methods_are_published(self):
+    """Wrapping a publishable method in an interaction workflow does not prevent its publication.
+    """
+    self.assertIsNotNone(self.organisation.getTitle.__doc__)
+    self.createInteractionWorkflow()
+    self.interaction.setProperties('default', method_id='getTitle')
+    self.assertIsNotNone(self.organisation.getTitle.__doc__)
+
+    self.organisation.setTitle(self.id())
+    ret = self.publish('%s/getTitle' % self.organisation.getPath(), basic='ERP5TypeTestCase:')
+    self.assertEqual(httplib.OK, ret.getStatus())
+    self.assertEqual(self.id(), ret.getBody())
 
   def test_security(self):
     # wrapping a method in an interaction workflow adds a default security to

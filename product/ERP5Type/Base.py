@@ -161,12 +161,13 @@ class WorkflowMethod(Method):
       self._transition_id = method.__name__
     else:
       self._transition_id = id
-    # Only publishable methods can be published as interactions
+    # Only publishable methods can be published as interactions.
     # A pure private method (ex. _doNothing) can not be published
     # This is intentional to prevent methods such as submit, share to
     # be called from a URL. If someone can show that this way
     # is wrong (ex. for remote operation of a site), let us know.
-    if not method.__name__.startswith('_'):
+    self.__doc__ = method.__doc__
+    if method.__name__.startswith('_') or method.__doc__ is None:
       self.__name__ = method.__name__
       for func_id in ['func_code', 'func_defaults', 'func_dict', 'func_doc', 'func_globals', 'func_name']:
         setattr(self, func_id, getattr(method, func_id, None))
