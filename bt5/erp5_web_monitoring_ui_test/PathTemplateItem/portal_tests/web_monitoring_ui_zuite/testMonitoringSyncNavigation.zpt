@@ -265,17 +265,16 @@
   <td></td>
 </tr>
 <tr>
-  <td colspan="3"><b>XXX: Checkpoint</b></td>
+  <td colspan="3"><b>Check the promise</b></td>
 </tr>
 <tr>
-  <td>storeText</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
+  <td>store</td>
+  <td>test_promise_2</td>
   <td>promise_title</td>
 </tr>
 <tr>
-  <!-- Open the first promise -->
   <td>click</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
+  <td>//a[text()='${promise_title}']</td>
   <td></td>
 </tr>
 <tr>
@@ -290,7 +289,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//h1[@data-i18n='Promise Status History']</td>
+  <td>//h1[contains(.,'Promise Status History')]</td>
   <td></td>
 </tr>
 <tr>
@@ -325,23 +324,21 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h1[@data-i18n='OPML Documents']</td>
+  <td>//h1[contains(.,'OPML Documents')]</td>
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>2000</td>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='${hosting_title}']</td>
   <td></td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
-  <td>${hosting_title}</td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
+  <td>//a[text()='${hosting_title}']</td>
   <td></td>
+</tr>
+<tr>
+  <td colspan="3"><b>XXX: Checkpoint</b></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
@@ -351,11 +348,6 @@
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
   <td></td>
 </tr>
 <tr>
@@ -371,11 +363,6 @@
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
   <td></td>
 </tr>
 <tr>
