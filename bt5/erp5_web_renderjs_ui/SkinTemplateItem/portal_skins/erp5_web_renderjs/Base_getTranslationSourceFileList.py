@@ -2,7 +2,7 @@ import re
 
 service_worker_reference = context.getLayoutProperty("configuration_service_worker_url", default="gadget_erp5_serviceworker.js")
 
-service_worker = context.web_page_module.getResultValue(
+service_worker = context.getPortalObject().portal_catalog.getResultValue(
   portal_type='Web Script',
   reference=service_worker_reference)
 
