@@ -52,7 +52,7 @@ if not login.hasPassword():
       credential_recovery.submit()
     else:
       # system should generate a password
-      password = context.Person_generatePassword(alpha=5, numeric=3)
+      password = context.Person_generatePassword()
       login.setPassword(password)
 
   # create a global account
