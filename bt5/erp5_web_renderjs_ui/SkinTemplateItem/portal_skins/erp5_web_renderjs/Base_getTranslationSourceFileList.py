@@ -2,9 +2,14 @@ import re
 
 service_worker_reference = context.getLayoutProperty("configuration_service_worker_url", default="gadget_erp5_serviceworker.js")
 
-text_content = context.web_page_module.searchFolder(
+service_worker = context.web_page_module.getResultValue(
   portal_type='Web Script',
-  reference=service_worker_reference)[0].getTextContent()
+  reference=service_worker_reference)
+
+if service_worker is None:
+  text_content = ''
+else:
+  text_content = service_worker.getTextContent()
 
 filename_pattern = re.compile("'(?P<filename>[a-zA-Z0-9-_\.\?=]*)'")
 filename_list = []
