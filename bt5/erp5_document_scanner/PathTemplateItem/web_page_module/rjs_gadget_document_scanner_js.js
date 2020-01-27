@@ -666,10 +666,25 @@
     }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
-      // XXX TODO: check all blob, and ensure they are all: deleted, stored
-      // Any other state prevent to submit the form
-      // XXX if the state is required, ensure there is at least one blob stored
-      return false;
+      var gadget = this,
+        has_thumbnail = false,
+        key;
+      for (key in gadget.state) {
+        if (gadget.state.hasOwnProperty(key)) {
+          if (key.indexOf("blob_state_") !== -1 &&
+              !gadget.state[key].match("deleted|stored")) {
+            return false;
+          }
+          if (key.indexOf("blob_url_") !== -1) {
+            if (!gadget.state[key]) {
+              return false;
+            } else if (has_thumbnail) {
+              has_thumbnail = true;
+            }
+          }
+        }
+      }
+      return has_thumbnail;
     }, {mutex: 'changestate'})
 
     .declareAcquiredMethod("getTranslationList", "getTranslationList");
