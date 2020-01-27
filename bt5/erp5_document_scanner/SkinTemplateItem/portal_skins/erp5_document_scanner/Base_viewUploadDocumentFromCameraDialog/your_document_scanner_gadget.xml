@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>default</string>
                 <string>gadget_url</string>
                 <string>renderjs_extra</string>
                 <string>title</string>
@@ -52,6 +53,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -62,19 +69,19 @@
                 <item>
                     <key> <string>gadget_url</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>renderjs_extra</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -88,6 +95,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_gadget_field</string> </value>
@@ -128,7 +139,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>string: gadget_document_scanner.html</string> </value>
+            <value> <string>python: here.Base_getDefaultBackendDataAsJSON()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -141,12 +152,25 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'dialog_method\', \'Base_storeDocumentFromCameraInActiveProcess\'), (\'preferred_cropped_canvas_data\', context.Base_getPreferredCropperSettingsFromSelection()),]</string> </value>
+            <value> <string>string: gadget_document_scanner.html</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(\'dialog_method\', \'Base_storeDocumentFromCameraInActiveProcess\'), (\'preferred_cropped_canvas_data\', context.Base_getPreferredCropperSettingsFromSelection()),]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
