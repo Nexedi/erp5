@@ -503,7 +503,7 @@
       } else {
         display_step = modification_dict.display_step;
       }
-      if (display_step === 'display_video') {
+      if (display_step === 'display_video' || modification_dict.hasOwnProperty('device_id')) {
         return renderVideoCapture(gadget);
       }
       if (display_step === 'crop_picture') {
