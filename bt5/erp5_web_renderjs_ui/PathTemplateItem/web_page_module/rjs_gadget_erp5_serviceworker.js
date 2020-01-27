@@ -1,5 +1,5 @@
 /*jslint indent: 2*/
-/*global self, caches, fetch, Promise, URL, location, Response*/
+/*global self, caches, fetch, Promise, URL, location, Response, console*/
 (function (self, caches, fetch, Promise, URL, location, Response) {
   "use strict";
 
@@ -7,9 +7,10 @@
     // CLIENT_CACHE_MAPPING_NAME must not start with `prefix`
     // else it may be used as a normal content cache.
     CLIENT_CACHE_MAPPING_NAME = '__erp5js_' + location.toString(),
-    CACHE_NAME = prefix + '_0001',
+    CACHE_NAME = prefix + '_0007',
     CACHE_MAP = {},
     // Files required to make this app work offline
+    REQUIRED_LANGUAGE_PREFIX_LIST = ['', 'fr/'],
     REQUIRED_FILES = [
       'favicon.ico',
       'font-awesome/font-awesome-webfont.eot',
@@ -158,12 +159,14 @@
     ],
     required_url_list = [],
     i,
-    len = REQUIRED_FILES.length;
+    j;
 
-  for (i = 0; i < len; i += 1) {
-    required_url_list.push(
-      new URL(REQUIRED_FILES[i], location.toString()).toString()
-    );
+  for (i = 0; i < REQUIRED_FILES.length; i += 1) {
+    for (j = 0; j < REQUIRED_LANGUAGE_PREFIX_LIST.length; j += 1) {
+      required_url_list.push(
+        new URL(REQUIRED_LANGUAGE_PREFIX_LIST[j] + REQUIRED_FILES[i], location.toString()).toString()
+      );
+    }
   }
   self.addEventListener('install', function (event) {
     // Perform install step:  loading each required file into cache
@@ -181,13 +184,13 @@
               .then(function (cache) {
                 // Add all offline dependencies to the cache
                 return Promise.all(
-                  REQUIRED_FILES
+                  required_url_list
                     .map(function (url) {
                       /* Return a promise that's fulfilled
                          when each url is cached.
                       */
                       // Use cache.add because safari does not support cache.addAll.
-                      console.log("Install " + CACHE_NAME + " = " + url);
+                      // console.log("Install " + CACHE_NAME + " = " + url);
                       return cache.add(url);
                     })
                 );
@@ -253,12 +256,12 @@
       // and don't get cache_key from CACHE_MAP and erp5js_cache.
       cache_key = CACHE_MAP[client_id];
     }
-    console.log("Client Id = " + client_id);
-
+    // console.log("Client Id = " + client_id);
+/*
     if (cache_key) {
       console.log("cache_key from CACHE_MAP " + cache_key);
     }
-
+*/
     if ((event.request.method !== 'GET') ||
         (required_url_list.indexOf(url.toString()) === -1)) {
       // Try not to use the untrustable fetch function
@@ -282,7 +285,7 @@
                       // We use Cache Storage as a persistent database.
                       cache_key = response.statusText;
                       CACHE_MAP[client_id] = cache_key;
-                      console.log("cache_key from Cache Storage " + cache_key);
+                      // console.log("cache_key from Cache Storage " + cache_key);
                     }
                   });
               });
@@ -295,7 +298,7 @@
             return caches.keys()
               .then(function (keys) {
                 keys = keys.filter(function (key) {return key.startsWith(prefix); });
-                console.log("KEYS = " + keys);
+                // console.log("KEYS = " + keys);
                 if (keys.length) {
                   cache_key = keys.sort().reverse()[0];
                   if (client_id) {
@@ -323,7 +326,7 @@
           // Don't give request object itself. Firefox's Cache Storage
           // does not work properly when VARY contains Accept-Language.
           // Give URL string instead, then cache.match works on both Firefox and Chrome.
-          console.log("MATCH " + cache_key + " " + url);
+          // console.log("MATCH " + cache_key + " " + url);
           return cache.match(event.request.url);
         })
         .then(function (response) {
@@ -333,7 +336,7 @@
           }
           // Not in cache - return the result from the live server
           // `fetch` is essentially a "fallback"
-          console.log("MISS " + cache_key + " " + url);
+          // console.log("MISS " + cache_key + " " + url);
           return fetch(event.request);
         })
     );
