@@ -145,3 +145,11 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         'return c.most_common(1)',
         expected=[('a', 3)]
     )
+
+  def test_collections_namedtuple(self):
+    self.createAndRunScript(
+        'from collections import namedtuple',
+        'Object = namedtuple("Object", ["a", "b", "c"])',
+        'return Object(a=1, b=2, c=3).a',
+        expected=1
+    )

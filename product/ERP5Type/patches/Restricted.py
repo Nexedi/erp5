@@ -205,6 +205,8 @@ ContainerAssertions[Counter] = _check_access_wrapper(Counter, _counter_white_lis
 Counter.__guarded_setitem__ = dict.__setitem__
 Counter.__guarded_delitem__ = dict.__delitem__
 
+ModuleSecurityInfo('collections').declarePublic('namedtuple')
+
 # given as example in Products.PythonScripts.module_access_examples
 allow_module('base64')
 allow_module('binascii')
