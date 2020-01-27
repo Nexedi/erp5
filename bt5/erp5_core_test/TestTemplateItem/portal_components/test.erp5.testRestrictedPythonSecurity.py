@@ -336,3 +336,16 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
           calendar.HTMLCalendar().getfirstweekday()
           '''),
     )
+
+  def test_collections_Counter(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          from collections import Counter
+          c = Counter(["a", "b"])
+          c["a"] = c["a"] + 1
+          del c["b"]
+          c.update({"a": 1})
+          return c.most_common(1)
+        '''),
+        expected=[('a', 3)]
+    )
