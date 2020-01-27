@@ -349,3 +349,52 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         '''),
         expected=[('a', 3)]
     )
+
+  def test_collections_defaultdict(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          from collections import defaultdict
+          d = defaultdict(list)
+          d["x"].append(1)
+          d["y"] = 2
+          del d["y"]
+          return d
+          '''),
+        expected={"x": [1]}
+    )
+
+  def test_collections_namedtuple(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          from collections import namedtuple
+          Object = namedtuple("Object", ["a", "b", "c"])
+          return Object(a=1, b=2, c=3).a
+          '''),
+        expected=1
+    )
+    # also make sure we can iterate on nametuples
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          from collections import namedtuple
+          Object = namedtuple("Object", ["a", "b", "c"])
+          returned = []
+          for x in Object(a=1, b=2, c=3):
+            returned.append(x)
+          return returned
+          '''),
+        expected=[1, 2, 3]
+    )
+
+  def test_collections_OrderedDict(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          from collections import OrderedDict
+          d = OrderedDict()
+          d["a"] = 1
+          d["b"] = 2
+          d["c"] = 3
+          del d["c"]
+          return list(d.items())
+          '''),
+        expected=[("a", 1), ("b", 2)]
+    )

@@ -211,6 +211,8 @@ ContainerAssertions[Counter] = _check_access_wrapper(Counter, _counter_white_lis
 Counter.__guarded_setitem__ = dict.__setitem__
 Counter.__guarded_delitem__ = dict.__delitem__
 
+ModuleSecurityInfo('collections').declarePublic('namedtuple')
+
 # given as example in Products.PythonScripts.module_access_examples
 allow_module('base64')
 allow_module('binascii')
@@ -302,6 +304,7 @@ ModuleSecurityInfo('email.mime.text').declarePublic('MIMEText')
 MNAME_MAP = {
   'zipfile': 'Products.ERP5Type.ZipFile',
   'calendar': 'Products.ERP5Type.Calendar',
+  'collections': 'Products.ERP5Type.Collections',
 }
 for alias, real in MNAME_MAP.items():
   assert '.' not in alias, alias # TODO: support this
