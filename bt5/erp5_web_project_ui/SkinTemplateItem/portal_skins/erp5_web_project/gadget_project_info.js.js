@@ -117,24 +117,34 @@
       edit_view,
       redirector_ulr,
       query,
-      query_list = [];
+      query_list = [],
+      i,
+      validation_state_query_list = [],
+      valid_state_list = ["shared_alive", "released_alive", "published_alive"];
     query_list.push(new SimpleQuery({
       key: "portal_type",
       operator: "=",
       type: "simple",
       value: "Web Page"
     }));
-    query_list.push(new SimpleQuery({
-      key: "validation_state",
-      operator: "=",
-      type: "simple",
-      value: ("shared_alive", "released_alive", "published_alive")
+    for (i = 0; i < valid_state_list.length; i += 1) {
+      validation_state_query_list.push(new SimpleQuery({
+        key: "validation_state",
+        type: "simple",
+        operator: "=",
+        value: valid_state_list[i]
+      }));
+    }
+    query_list.push(new ComplexQuery({
+      operator: "OR",
+      query_list: validation_state_query_list,
+      type: "complex"
     }));
     query_list.push(new SimpleQuery({
       key: "publication_section",
       operator: "=",
       type: "simple",
-      value: ('project_home_page')
+      value: 'project_home_page'
     }));
     query = new ComplexQuery({
       operator: "AND",
