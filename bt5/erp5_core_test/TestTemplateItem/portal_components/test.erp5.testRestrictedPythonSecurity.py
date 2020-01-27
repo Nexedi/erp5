@@ -263,7 +263,6 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         expected=["one", "Unauthorized()", 2],
     )
 
-
   def test_json(self):
     self.createAndRunScript(
         textwrap.dedent('''\
@@ -272,3 +271,15 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
           '''),
         expected={"ok": [True]}
     )
+  def test_collections_Counter(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          from collections import Counter
+          c = Counter(["a", "b"])
+          c["a"] = c["a"] + 1
+          c.update({"a": 1})
+          return c.most_common(1)
+        '''),
+        expected=[('a', 3)]
+    )
+
