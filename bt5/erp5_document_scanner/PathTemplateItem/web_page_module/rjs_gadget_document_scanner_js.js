@@ -675,7 +675,8 @@
           if (key.indexOf("blob_url_") !== -1) {
             if (!gadget.state[key]) {
               return false;
-            } else if (has_thumbnail) {
+            }
+            if (gadget.state[key] && !has_thumbnail) {
               has_thumbnail = true;
             }
           }
