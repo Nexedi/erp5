@@ -1,3 +1,5 @@
+from urlparse import urlparse
+
 portal = context.getPortalObject()
 kw = {}
 expire_interval = portal.portal_preferences.getPreferredMaxUserInactivityDuration()
@@ -17,8 +19,11 @@ portal.portal_sessions[
 ]['ac_renew'] = ac_renew
 
 REQUEST = portal.REQUEST
-
-same_site = portal.ERP5Site_getAuthCookieSameSite(host=REQUEST.environ.get('HTTP_HOST'))
+parse_dict = urlparse(REQUEST.other.get('ACTUAL_URL'))
+same_site = portal.ERP5Site_getAuthCookieSameSite(scheme=parse_dict.scheme,
+                                                  hostname=parse_dict.hostname,
+                                                  port=parse_dict.port,
+                                                  path=parse_dict.path)
 if same_site not in ('None', 'Lax', 'Strict'):
   # Do not use the SameSite attribute
   same_site = None
