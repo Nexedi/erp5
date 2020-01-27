@@ -12,6 +12,7 @@
 ##############################################################################
 
 import sys
+import copy
 
 from RestrictedPython.RestrictionMutator import RestrictionMutator
 
@@ -181,6 +182,9 @@ ModuleSecurityInfo('collections').declarePublic('OrderedDict')
 from collections import defaultdict
 ModuleSecurityInfo('collections').declarePublic('defaultdict')
 
+from collections import Counter
+ModuleSecurityInfo('collections').declarePublic('Counter')
+
 from AccessControl.ZopeGuards import _dict_white_list
 
 # Attributes cannot be set on defaultdict, thus modify 'safetype' dict
@@ -194,6 +198,12 @@ full_write_guard.func_closure[1].cell_contents.__self__[defaultdict] = True
 ContainerAssertions[OrderedDict] = _check_access_wrapper(OrderedDict, _dict_white_list)
 OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
 OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
+
+_counter_white_list = copy.copy(_dict_white_list)
+_counter_white_list['most_common'] = 1
+ContainerAssertions[Counter] = _check_access_wrapper(Counter, _counter_white_list)
+Counter.__guarded_setitem__ = dict.__setitem__
+Counter.__guarded_delitem__ = dict.__delitem__
 
 # given as example in Products.PythonScripts.module_access_examples
 allow_module('base64')

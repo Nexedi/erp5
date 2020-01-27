@@ -136,4 +136,12 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     self.assertRaises(Unauthorized,
       self.createAndRunScript, 'import os',
                                'return os.system')
-
+  def test_collections_Counter(self):
+    self.createAndRunScript(
+        'from collections import Counter',
+        'c = Counter(["a", "b"])',
+        'c["a"] = c["a"] + 1',
+        'c.update({"a": 1})',
+        'return c.most_common(1)',
+        expected=[('a', 3)]
+    )
