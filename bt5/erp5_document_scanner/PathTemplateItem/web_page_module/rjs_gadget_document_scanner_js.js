@@ -1,6 +1,6 @@
 /*jslint indent: 2, unparam: true */
-/*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap*/
-(function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap) {
+/*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData*/
+(function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData) {
   "use strict";
 
   //////////////////////////////////////////////////
@@ -78,23 +78,19 @@
   }
 
   function handleAsyncStore(gadget, blob_page) {
+    var data = new FormData();
+    data.append("input_value",
+                     gadget.state['blob_url_' + blob_page].split(';')[1].split(',')[1]);
     return new RSVP.Queue()
       .push(function () {
-        // XXX TODO: jio.util.ajax  with
-        /*
-        JSON.stringify({
-          input_value: gadget.state.blob_url_XXX.split(';')[1].split(',')[1],
-          // preferred_cropped_canvas_data: gadget.state.preferred_cropped_canvas_data
-        })
-        */
-        function getRandomInt(max) {
-          return Math.floor(Math.random() * Math.floor(max));
-        }
-        // XXX long or not, working or not, who knows?
-        return RSVP.any([
-          RSVP.delay(2000 + getRandomInt(3000)),
-          RSVP.timeout(2000 + getRandomInt(3000))
-        ]);
+        return jIO.util.ajax({
+          "type": "POST",
+          "url": gadget.state.store_new_image_cropped_method,
+          "data": data,
+          "xhrFields": {
+            withCredentials: true
+          }
+        });
       })
       .push(function () {
         var state_dict = {};
@@ -481,6 +477,7 @@
         .push(function (device_id) {
           return gadget.changeState({
             dialog_method: options.dialog_method,
+            store_new_image_cropped_method: options.store_new_image_cropped_method,
             active_process: default_value.active_process,
             image_list: default_value.image_list,
             preferred_cropped_canvas_data: JSON.parse(options.preferred_cropped_canvas_data),
@@ -689,4 +686,4 @@
 
     .declareAcquiredMethod("getTranslationList", "getTranslationList");
 
-}(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap));
+}(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData));
