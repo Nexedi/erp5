@@ -475,11 +475,14 @@
       // This method is called during the ERP5 form rendering
       // changeState is used to ensure not resetting the gadget current display
       // if not needed
-      var gadget = this;
+      var gadget = this,
+        default_value = JSON.parse(options.value);
       return selectMediaDevice(gadget.state.device_id, false)
         .push(function (device_id) {
           return gadget.changeState({
             dialog_method: options.dialog_method,
+            active_process: default_value.active_process,
+            image_list: default_value.image_list,
             preferred_cropped_canvas_data: JSON.parse(options.preferred_cropped_canvas_data),
             device_id: device_id,
             key: options.key,
@@ -651,6 +654,10 @@
       var gadget = this,
         result = {};
       // XXX TODO: check all blob, and only return the UUID for the one in stored state
+      result.data_json = JSON.stringify({
+        active_process: gadget.state.active_process,
+        image_list: gadget.state.image_list
+      });
       result[gadget.state.key] = JSON.stringify({
         input_value: 'XXX',
         preferred_cropped_canvas_data: gadget.state.preferred_cropped_canvas_data
