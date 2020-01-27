@@ -246,7 +246,7 @@
                                                     // Do not allow to show again the current image
                                                     // or do not allow to show sending image (to simplify button management)
                                                     disabled: (i === gadget.state.page) || (gadget.state['blob_state_' + i] === 'sending'),
-                                                    class: 'show-img',
+                                                    'class': 'show-img',
                                                     'data-page': i
                                                    }));
       }
@@ -258,7 +258,7 @@
                                                 text: 'New',
                                                 // Do not allow to show again the current image
                                                 disabled: (len === gadget.state.page - 1),
-                                                class: 'new-btn'
+                                                'class': 'new-btn'
                                                }));
 
     return domsugar('ol', thumbnail_dom_list);
@@ -301,7 +301,7 @@
       .push(function (result_list) {
         var button_list = [
           domsugar('button', {type: 'button',
-                              class: 'take-picture-btn ui-btn-icon-left ui-icon-circle',
+                              'class': 'take-picture-btn ui-btn-icon-left ui-icon-circle',
                               text: result_list[1][0]
                              })
         ],
@@ -310,21 +310,21 @@
         if (result_list[0].length > 1) {
           button_list.push(
             domsugar('button', {type: 'button',
-                                class: 'change-camera-btn ui-icon-refresh ui-btn-icon-left',
+                                'class': 'change-camera-btn ui-icon-refresh ui-btn-icon-left',
                                 text: result_list[1][1]
                                })
           );
         }
 
-        div = domsugar('div', {class: 'camera'}, [
-          domsugar('div', {class: 'camera-header'}, [
+        div = domsugar('div', {'class': 'camera'}, [
+          domsugar('div', {'class': 'camera-header'}, [
             domsugar('h4', [
               'Page ',
-              domsugar('label', {class: 'page-number', text: gadget.state.page})
+              domsugar('label', {'class': 'page-number', text: gadget.state.page})
             ])
           ]),
-          domsugar('div', {class: 'camera-input'}, [video]),
-          domsugar('div', {class: 'edit-picture'}, button_list),
+          domsugar('div', {'class': 'camera-input'}, [video]),
+          domsugar('div', {'class': 'edit-picture'}, button_list),
           buildPreviousThumbnailDom(gadget)
         ]);
 
@@ -357,7 +357,7 @@
         var // blob_url = URL.createObjectURL(blob),
           // img = domsugar('img', {src: blob_url});
           bitmap = result_list[1],
-          canvas = domsugar('canvas', {class: 'canvas'}),
+          canvas = domsugar('canvas', {'class': 'canvas'}),
           defer = RSVP.defer();
 
         // Prepare the cropper canvas
@@ -365,21 +365,21 @@
         canvas.height = bitmap.height;
         canvas.getContext('2d').drawImage(bitmap, 0, 0);
 
-        div = domsugar('div', {class: 'camera'}, [
-          domsugar('div', {class: 'camera-header'}, [
+        div = domsugar('div', {'class': 'camera'}, [
+          domsugar('div', {'class': 'camera-header'}, [
             domsugar('h4', [
               'Page ',
-              domsugar('label', {class: 'page-number', text: gadget.state.page})
+              domsugar('label', {'class': 'page-number', text: gadget.state.page})
             ])
           ]),
           canvas,
-          domsugar('div', {class: 'edit-picture'}, [
+          domsugar('div', {'class': 'edit-picture'}, [
             domsugar('button', {type: 'button',
-                                class: 'reset-btn ui-btn-icon-left ui-icon-times',
+                                'class': 'reset-btn ui-btn-icon-left ui-icon-times',
                                 text: result_list[0][0]
                                }),
             domsugar('button', {type: 'button',
-                                class: 'confirm-btn ui-btn-icon-left ui-icon-check',
+                                'class': 'confirm-btn ui-btn-icon-left ui-icon-check',
                                 text: result_list[0][1]
                                })
           ]),
@@ -407,7 +407,7 @@
         var button_list = [
           // XXX TODO: improve icon
           domsugar('button', {type: 'button',
-                              class: 'delete-btn ui-btn-icon-left ui-icon-times',
+                              'class': 'delete-btn ui-btn-icon-left ui-icon-times',
                               text: translation_list[0]
                              })
         ],
@@ -417,22 +417,22 @@
           button_list.push(
             // XXX TODO improve icon
             domsugar('button', {type: 'button',
-                                class: 'retry-btn ui-btn-icon-left ui-icon-times',
+                                'class': 'retry-btn ui-btn-icon-left ui-icon-times',
                                 text: translation_list[1]
                                })
           );
         }
 
-        div = domsugar('div', {class: 'camera'}, [
-          domsugar('div', {class: 'camera-header'}, [
+        div = domsugar('div', {'class': 'camera'}, [
+          domsugar('div', {'class': 'camera-header'}, [
             domsugar('h4', [
               'Page ',
-              domsugar('label', {class: 'page-number', text: gadget.state.page + 1})
+              domsugar('label', {'class': 'page-number', text: gadget.state.page + 1})
             ])
           ]),
           domsugar('img', {src: gadget.state['blob_url_' + gadget.state.page]}),
           // XXX TODO: why is the button rendering different from the other pages?
-          domsugar('div', {class: 'edit-picture'}, button_list),
+          domsugar('div', {'class': 'edit-picture'}, button_list),
           buildPreviousThumbnailDom(gadget)
         ]);
 
