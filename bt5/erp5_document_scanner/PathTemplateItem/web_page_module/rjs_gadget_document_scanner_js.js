@@ -81,6 +81,7 @@
     var data = new FormData();
     data.append("input_value",
                      gadget.state['blob_url_' + blob_page].split(';')[1].split(',')[1]);
+    data.append("active_process_url", gadget.state.active_process);
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.ajax({
