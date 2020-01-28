@@ -30,7 +30,7 @@ if not image_str:
   return context.Base_renderForm('Base_viewUploadDocumentFromCameraDialog',
                                message=translateString('Nothing to capture'))
 
-active_process = context.Base_postDataToActiveResult(
+active_process, _ = context.Base_postDataToActiveResult(
   active_process_url,
   image_str)
 
