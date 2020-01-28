@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>input_value, active_process_url, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
