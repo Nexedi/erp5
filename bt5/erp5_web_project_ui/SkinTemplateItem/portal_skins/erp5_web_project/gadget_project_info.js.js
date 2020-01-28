@@ -111,14 +111,15 @@
   }
 
   //TODO fully remove project_reference (render options, TALES exp, etc)
-  function getWebPageInfo(gadget, project_reference, home_page_preference) {
+  function getWebPageInfo(gadget, project_reference, home_page_preference, project_pages) {
     var id,
       content,
       edit_view,
       redirector_ulr,
+      i,
       query,
       query_list = [],
-      i,
+      id_query_list = [],
       validation_state_query_list = [],
       valid_state_list = ["shared_alive", "released_alive", "published_alive"];
     query_list.push(new SimpleQuery({
@@ -140,23 +141,30 @@
       query_list: validation_state_query_list,
       type: "complex"
     }));
-    query_list.push(new SimpleQuery({
-      key: "publication_section",
-      operator: "=",
-      type: "simple",
-      value: 'project_home_page'
+    for (i = 0; i < project_pages.length; i += 1) {
+      id_query_list.push(new SimpleQuery({
+        key: "id",
+        type: "simple",
+        operator: "=",
+        value: project_pages[i]
+      }));
+    }
+    query_list.push(new ComplexQuery({
+      operator: "OR",
+      query_list: id_query_list,
+      type: "complex"
     }));
-    query = new ComplexQuery({
+    query = Query.objectToSearchText(new ComplexQuery({
       operator: "AND",
       query_list: query_list,
       type: "complex"
-    });
+    }));
     return gadget.getUrlFor({command: 'push_history', options: {page: "project_redirector"}})
       .push(function (url) {
         redirector_ulr = url;
         return gadget.jio_allDocs({
-          query: Query.objectToSearchText(query),
-          select_list: ['validation_state', 'text_content', 'publication_section']
+          query: query,
+          select_list: ['text_content', 'publication_section']
         });
       })
       .push(function (result_list) {
@@ -213,7 +221,8 @@
           jio_key: options.jio_key || "",
           project_title: options.project_title,
           project_reference: options.project_reference,
-          home_page_preference: options.home_page_preference
+          home_page_preference: options.home_page_preference,
+          project_pages: options.project_pages
         };
       return this.changeState(state_dict);
     })
@@ -225,7 +234,7 @@
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
-            getWebPageInfo(gadget, modification_dict.project_reference, modification_dict.home_page_preference),
+            getWebPageInfo(gadget, modification_dict.project_reference, modification_dict.home_page_preference, modification_dict.project_pages),
             gadget.getDeclaredGadget("editor"),
             gadget.getSetting("hateoas_url")
           ]);
