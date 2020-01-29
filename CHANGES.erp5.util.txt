@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.66 (2020-01-30)
+-------------------
+
+  * erp5.util:
+
+    - testnode: Use shared parts when building softwares
+
 0.4.65 (2019-10-30)
 -------------------
 

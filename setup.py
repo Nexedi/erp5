@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import glob
 import os
 
-version = '0.4.65'
+version = '0.4.66'
 name = 'erp5.util'
 long_description = open("README.erp5.util.txt").read() + "\n"
 
