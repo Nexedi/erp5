@@ -88,6 +88,7 @@ from Products.ERP5Type.Message import Message
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, super_user
 from Products.ERP5Type.mixin.json_representable import JSONRepresentableMixin
+from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGenerator
 
 from zope.interface import classImplementsOnly, implementedBy
 
@@ -707,6 +708,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
         method.registerTransitionAlways(portal_type, wf_id, tr_id)
 
 class Base(
+            ResponseHeaderGenerator,
             CopyContainer,
             PropertyManager,
             PortalContent,
