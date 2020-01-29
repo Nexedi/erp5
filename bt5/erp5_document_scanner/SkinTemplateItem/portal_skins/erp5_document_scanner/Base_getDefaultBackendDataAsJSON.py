@@ -1,5 +1,5 @@
 import json
-context.log("Called")
+
 active_process = context.getPortalObject().portal_activities.newActiveProcess()
 
 return json.dumps({
