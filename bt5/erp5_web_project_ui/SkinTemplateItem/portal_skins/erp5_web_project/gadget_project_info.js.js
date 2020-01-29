@@ -110,8 +110,7 @@
     }));
   }
 
-  //TODO fully remove project_reference (render options, TALES exp, etc)
-  function getWebPageInfo(gadget, project_reference, home_page_preference, project_pages) {
+  function getWebPageInfo(gadget, home_page_preference, project_pages) {
     var id,
       content,
       edit_view,
@@ -220,7 +219,6 @@
       var state_dict = {
           jio_key: options.jio_key || "",
           project_title: options.project_title,
-          project_reference: options.project_reference,
           home_page_preference: options.home_page_preference,
           project_pages: options.project_pages
         };
@@ -234,7 +232,7 @@
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
-            getWebPageInfo(gadget, modification_dict.project_reference, modification_dict.home_page_preference, modification_dict.project_pages),
+            getWebPageInfo(gadget, modification_dict.home_page_preference, modification_dict.project_pages),
             gadget.getDeclaredGadget("editor"),
             gadget.getSetting("hateoas_url")
           ]);
