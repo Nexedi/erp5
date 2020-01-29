@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-
+from collections import defaultdict
 import os
 import unittest
 from unittest import expectedFailure
@@ -1666,6 +1666,127 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEqual(chat_address.getValidationState(), 'deleted')
     self.tic()
     self.assertEqual(chat_address.getId(), chat_address_id)
+
+  def test_response_header_generator(self):
+    portal = self.portal
+    person_module = portal.person_module
+    response_header_dict = defaultdict(set)
+    def setResponseHeaderRule(
+      document,
+      header_name,
+      method_id=None,
+      fallback_value='',
+      fallback_value_replace=False,
+    ):
+      document.setResponseHeaderRule(
+        header_name,
+        method_id,
+        fallback_value,
+        fallback_value_replace,
+      )
+      self.commit()
+      # document.setResponseHeaderRule succeeded, flag for cleanup
+      response_header_dict[document].add(header_name)
+    def assertPublishedHeaderEqual(document, header_name, value):
+      self.assertEqual(
+        self.publish(document.getPath()).getHeader(header_name),
+        value,
+      )
+
+    try:
+      # Invalid header names are rejected
+      self.assertRaises(ValueError, setResponseHeaderRule, portal, ' ')
+      self.assertRaises(ValueError, setResponseHeaderRule, portal, ':')
+      self.assertRaises(ValueError, setResponseHeaderRule, portal, '\t')
+      self.assertRaises(ValueError, setResponseHeaderRule, portal, '\r')
+      self.assertRaises(ValueError, setResponseHeaderRule, portal, '\n')
+
+      # Invalid header values are rejected
+      self.assertRaises(
+        ValueError, setResponseHeaderRule, portal, 'Foo', fallback_value='\x7f',
+      )
+      self.assertRaises(
+        ValueError, setResponseHeaderRule, portal, 'Foo', fallback_value='\x1f',
+      )
+      self.assertRaises(
+        ValueError, setResponseHeaderRule, portal, 'Foo', fallback_value='\r',
+      )
+      self.assertRaises(
+        ValueError, setResponseHeaderRule, portal, 'Foo', fallback_value='\n',
+      )
+
+      # Test sanity checks
+      # Nothing succeeded, cleanup must still be empty.
+      assert not response_header_dict
+      header_name = 'Bar'
+      value = 'this is a value'
+      script_value = 'this comes from the script'
+      other_value = 'this is another value'
+      script_container_value = self.getSkinsTool().custom
+      script_argument_string = (
+        'request, header_name, fallback_value, fallback_value_replace, '
+        'current_value'
+      )
+      script_id = 'ERP5Site_getBarResponseHeader'
+      createZODBPythonScript(
+        script_container_value,
+        script_id,
+        script_argument_string,
+        'return %r, False' % (script_value, ),
+      )
+      raising_script_id = 'ERP5Site_getBarResponseHeaderRaising'
+      createZODBPythonScript(
+        script_container_value,
+        raising_script_id,
+        script_argument_string,
+        'raise Exception',
+      )
+      bad_value_script_id = 'ERP5Site_getBadBarResponseHeader'
+      createZODBPythonScript(
+        script_container_value,
+        bad_value_script_id,
+        script_argument_string,
+        'return "\\n", False',
+      )
+      assertPublishedHeaderEqual(portal, header_name, None)
+      assertPublishedHeaderEqual(person_module, header_name, None)
+
+      # Basic functionality: fallback only
+      setResponseHeaderRule(portal, header_name, fallback_value=value)
+      assertPublishedHeaderEqual(portal, header_name, value)
+      assertPublishedHeaderEqual(person_module, header_name, value)
+
+      # Basic functionality: dynamic invalid value
+      setResponseHeaderRule(portal, header_name, method_id=bad_value_script_id)
+      assertPublishedHeaderEqual(portal, header_name, None)
+      assertPublishedHeaderEqual(person_module, header_name, None)
+
+      # Basic functionality: dynamic value with fallback
+      setResponseHeaderRule(portal, header_name, method_id=raising_script_id, fallback_value=value)
+      assertPublishedHeaderEqual(portal, header_name, value)
+      assertPublishedHeaderEqual(person_module, header_name, value)
+
+      # Basic functionality: dynamic value
+      setResponseHeaderRule(portal, header_name, method_id=script_id)
+      assertPublishedHeaderEqual(portal, header_name, script_value)
+      assertPublishedHeaderEqual(person_module, header_name, script_value)
+
+      # Value overriding
+      setResponseHeaderRule(person_module, header_name, fallback_value=other_value, fallback_value_replace=True)
+      assertPublishedHeaderEqual(portal, header_name, script_value)
+      assertPublishedHeaderEqual(person_module, header_name, other_value)
+
+      # Already-set value is appended to
+      setResponseHeaderRule(person_module, header_name, fallback_value=other_value, fallback_value_replace=False)
+      assertPublishedHeaderEqual(portal, header_name, script_value)
+      assertPublishedHeaderEqual(person_module, header_name, script_value + ', ' + other_value)
+    finally:
+      for document, header_name_set in response_header_dict.iteritems():
+        for header_name in header_name_set:
+          try:
+            document.deleteResponseHeaderRule(header_name)
+          except KeyError:
+            pass
 
 def test_suite():
   suite = unittest.TestSuite()
