@@ -95,7 +95,7 @@
       })
       .push(function () {
         var state_dict = {};
-        state_dict['blob_state_' + blob_page] = 'stored';
+        state_dict['blob_state_' + blob_page] = 'OK';
         // XXX TODO: ajax must return a active process image content UUID
         // which should be sent in the final form submittion
         state_dict['blob_uuid_' + blob_page] = 'XXX';
@@ -103,7 +103,7 @@
       }, function () {
         // XXX TODO: Handle error case
         var state_dict = {};
-        state_dict['blob_state_' + blob_page] = 'failed';
+        state_dict['blob_state_' + blob_page] = 'Error';
         return gadget.changeState(state_dict);
       });
   }
@@ -239,7 +239,7 @@
       // XXX TODO display a loader when sending
       if (gadget.state['blob_state_' + i] !== 'deleted') {
         thumbnail_dom_list.push(domsugar('button', {type: 'button',
-                                                    text: 'Image' + (i + 1) + ' (' + gadget.state['blob_state_' + i] + ')',
+                                                    text: 'Page' + (i + 1) + ' (' + gadget.state['blob_state_' + i] + ')',
                                                     // Do not allow to show again the current image
                                                     // or do not allow to show sending image (to simplify button management)
                                                     disabled: (i === gadget.state.page) || (gadget.state['blob_state_' + i] === 'sending'),
@@ -252,7 +252,7 @@
     // Always add a button to generate a new image
     // XXX TODO translation + right term
     thumbnail_dom_list.push(domsugar('button', {type: 'button',
-                                                text: 'New',
+                                                text: 'New Page',
                                                 // Do not allow to show again the current image
                                                 disabled: (len === gadget.state.page - 1),
                                                 'class': 'new-btn'
@@ -292,7 +292,7 @@
         video.play();
         return RSVP.all([
           getVideoDeviceList(),
-          gadget.getTranslationList(["Take Picture", "Change Camera"])
+          gadget.getTranslationList(["Capture", "Change Camera"])
         ]);
       })
       .push(function (result_list) {
@@ -346,7 +346,7 @@
       .push(function (blob) {
         gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
         return RSVP.all([
-          gadget.getTranslationList(["Reset", "Confirm"]),
+          gadget.getTranslationList(["Delete", "Save"]),
           createImageBitmap(blob)
         ]);
       })
@@ -399,7 +399,7 @@
   }
 
   function renderSubmittedPicture(gadget) {
-    return gadget.getTranslationList(["Delete", "Retry"])
+    return gadget.getTranslationList(["Delete", "Save"])
       .push(function (translation_list) {
         var button_list = [
           // XXX TODO: improve icon
