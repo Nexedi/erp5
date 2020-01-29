@@ -1,13 +1,11 @@
-.device-selector {
-  text-align: center;
-  font-size: 19px;
-}
-
-div[data-gadget-scope="field_your_document_scanner_gadget"] {
+div[data-gadget-url$="gadget_document_scanner.html"] {
   text-align: center;
 }
 
-.video, .photo, .camera-output, .canvas {
+div[data-gadget-url$="gadget_document_scanner.html"] .photo,
+div[data-gadget-url$="gadget_document_scanner.html"] .video,
+div[data-gadget-url$="gadget_document_scanner.html"] .camera-output,
+div[data-gadget-url$="gadget_document_scanner.html"] .canvas {
   max-width: 100%;
   width: auto;
   max-height: 500px;
@@ -15,45 +13,38 @@ div[data-gadget-scope="field_your_document_scanner_gadget"] {
   text-align: center;
 }
 
-.camera-input, .camera-output {
+div[data-gadget-url$="gadget_document_scanner.html"] .camera-input {
   min-height: 360px;
-  // display: none;
 }
 
-.canvas {
-  // display: none;
-  filter: brightness(1);
-}
-
-.page-number {
+div[data-gadget-url$="gadget_document_scanner.html"] .page-number {
   display: inline;
 }
 
-.camera-header {
+div[data-gadget-url$="gadget_document_scanner.html"] .camera-header {
   font-size: 12pt;
   font-weight: 400;
 }
 
-.camera-input, .camera-output, .camera-header, .edit-picture {
+div[data-gadget-url$="gadget_document_scanner.html"] .camera-input,
+div[data-gadget-url$="gadget_document_scanner.html"] .camera-output,
+div[data-gadget-url$="gadget_document_scanner.html"] .camera-header,
+div[data-gadget-url$="gadget_document_scanner.html"] .edit-picture {
   text-align: center;
 }
 
-.camera, .camera-input, .camera-output {
+div[data-gadget-url$="gadget_document_scanner.html"] .camera,
+div[data-gadget-url$="gadget_document_scanner.html"] .camera-input {
   display: inline-block;
 }
 
-.capture-button, .reset-button {
-  display: inline;
-  margin: 0 2em 0 2em;
-}
-
-.startbutton {
-  display: block;
-  margin: 0 auto;
-}
-
-.reset-btn, .confirm-btn, .edit-btn, .take-picture-btn,
-    .capture-btn, .change-camera-btn, .confirm-btn {
+div[data-gadget-url$="gadget_document_scanner.html"] .reset-btn,
+div[data-gadget-url$="gadget_document_scanner.html"] .confirm-btn,
+div[data-gadget-url$="gadget_document_scanner.html"] .edit-btn,
+div[data-gadget-url$="gadget_document_scanner.html"] .take-picture-btn,
+div[data-gadget-url$="gadget_document_scanner.html"] .capture-btn,
+div[data-gadget-url$="gadget_document_scanner.html"] .change-camera-btn,
+div[data-gadget-url$="gadget_document_scanner.html"] .confirm-btn {
   color: #212529;
   padding: 3pt;
   border: 1px solid rgba(0, 0, 0, 0.14);
@@ -62,30 +53,11 @@ div[data-gadget-scope="field_your_document_scanner_gadget"] {
   margin-right: 6pt;
 }
 
-.ui-btn-icon-left:before {
+div[data-gadget-url$="gadget_document_scanner.html"] .ui-btn-icon-left:before {
   margin-right: 6pt;
 }
 
-/*
-.take-picture-btn, .capture-btn, .confirm-btn,
-    .reset-btn, .confirm-btn, .change-camera-btn, .edit-btn {
-  display: none;
-}
-*/
-
-.contentarea {
-  font-size: 16px;
-  font-family: "Lucida Grande", "Arial", sans-serif;
-  width: 760px;
-}
-
-button:disabled,
-button[disabled]{
+div[data-gadget-url$="gadget_document_scanner.html"] button:disabled,
+div[data-gadget-url$="gadget_document_scanner.html"] button[disabled] {
   color: #999999;
-}
-
-@media only screen and (max-width: 600px) {
-  body {
-    max-height: 360px;
-  }
 }
