@@ -38,6 +38,7 @@ from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
+from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGenerator
 
 from zLOG import LOG, INFO, WARNING, ERROR
 from string import join
@@ -227,7 +228,7 @@ class _site(threading.local):
 getSite, setSite = _site()
 
 
-class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
+class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
   """
   The *only* function this class should have is to help in the setup
   of a new ERP5.  It should not assist in the functionality at all.
