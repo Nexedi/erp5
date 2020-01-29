@@ -2213,10 +2213,12 @@ if (typeof document.contains !== 'function') {
           title: "",
           interface_list: [],
           required_css_list: [],
-          required_js_list: []
+          required_js_list: [],
+          path: url
         },
         i,
-        element;
+        element,
+        base_found = false;
 
       if (!url || !isAbsoluteOrDataURL.test(url)) {
         throw new Error("The url should be absolute: " + url);
@@ -2233,19 +2235,31 @@ if (typeof document.contains !== 'function') {
               // element.href returns absolute URL in firefox but "" in chrome;
               if (element.rel === "stylesheet") {
                 settings.required_css_list.push(
-                  renderJS.getAbsoluteURL(element.getAttribute("href"), url)
+                  renderJS.getAbsoluteURL(element.getAttribute("href"),
+                                          settings.path)
                 );
               } else if (element.nodeName === "SCRIPT" &&
                          (element.type === "text/javascript" ||
                           !element.type)) {
                 settings.required_js_list.push(
-                  renderJS.getAbsoluteURL(element.getAttribute("src"), url)
+                  renderJS.getAbsoluteURL(element.getAttribute("src"),
+                                          settings.path)
                 );
               } else if (element.rel ===
                          "http://www.renderjs.org/rel/interface") {
                 settings.interface_list.push(
-                  renderJS.getAbsoluteURL(element.getAttribute("href"), url)
+                  renderJS.getAbsoluteURL(element.getAttribute("href"),
+                                          settings.path)
                 );
+              } else if ((element.nodeName === "BASE") && !base_found &&
+                         element.getAttribute("href")) {
+                settings.path = renderJS.getAbsoluteURL(
+                  element.getAttribute("href"),
+                  settings.path
+                );
+                // Only use the first base element found
+// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base#Usage_notes
+                base_found = true;
               }
             }
           }
