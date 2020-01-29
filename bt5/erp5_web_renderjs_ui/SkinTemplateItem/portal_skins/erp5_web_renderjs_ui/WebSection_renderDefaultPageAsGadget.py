@@ -65,6 +65,12 @@ if configuration_webapp_manifest_url is None:
 else:
   mapping_dict["webapp_manifest_full_link_tag"] = '<link rel="manifest" href="' + configuration_webapp_manifest_url + '">'
 
+# base tag
+if mapping_dict["default_selected_language"] == default_language:
+  mapping_dict["extra_base_tag"] = ""
+else:
+  mapping_dict["extra_base_tag"] = '<base href="../">'
+
 # Wallpaper
 # It can not be done in Javascript, due to CSP protection.
 # data- attribute can not be accessed outside the content property
