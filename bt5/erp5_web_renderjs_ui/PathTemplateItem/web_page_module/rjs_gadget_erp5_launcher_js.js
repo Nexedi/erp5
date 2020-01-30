@@ -12,11 +12,22 @@
       panel_visible: false,
       setting_id: "setting/" + document.head.querySelector(
         'script[data-renderjs-configuration="application_title"]'
+      ).textContent,
+      base_prefix: document.head.querySelector(
+        'script[data-renderjs-configuration="base_prefix"]'
       ).textContent
     });
 
   function renderMainGadget(gadget, url, options) {
     var page_gadget;
+    if (gadget.state.base_prefix) {
+      // For now, we assume the url is always relative
+      // Until one router starts to return absolute url
+      url = new URL(
+        url,
+        new URL(gadget.state.base_prefix, window.location.href).href
+      ).href;
+    }
     return gadget.declareGadget(url, {
       scope: MAIN_SCOPE
     })
