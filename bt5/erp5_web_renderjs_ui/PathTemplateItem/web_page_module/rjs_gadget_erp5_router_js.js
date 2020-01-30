@@ -193,8 +193,6 @@
         prefix = '&';
       }
     }
-    result = new URL(result, window.location.href).href;
-    console.log('getDisplayUrlFor', result);
     return result;
   }
 
@@ -248,8 +246,6 @@
       // Build URL template to allow getting user information
       result += '{' + prefix + 'n.me}';
     }
-    result = new URL(result, window.location.href).href;
-    console.log('getCommandUrlFor', result);
     return result;
   }
 
@@ -274,13 +270,10 @@
     } else {
       hash = getCommandUrlFor(gadget, 'error', options);
     }
-/*
+
     if (absolute_url) {
       hash = new URL(hash, window.location.href).href;
     }
-*/
-    // hash = new URL(hash, window.location.href).href;
-    console.log('getCommandUrlForMethod', hash);
     return hash;
   }
 
