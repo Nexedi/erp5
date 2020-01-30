@@ -76,6 +76,7 @@
   function createProjectQuery(project_jio_key, key_value_list) {
     var i, query_list = [], id_query_list = [], id_complex_query;
     if (project_jio_key) {
+      //relation to project or child project lines
       id_query_list.push(new SimpleQuery({
         key: "source_project__relative_url",
         operator: "",
@@ -120,7 +121,8 @@
       query_list = [],
       id_query_list = [],
       validation_state_query_list = [],
-      valid_state_list = ["shared_alive", "released_alive", "published_alive"];
+      valid_state_list = ["shared_alive", "released_alive", "published_alive"],
+      web_page;
     query_list.push(new SimpleQuery({
       key: "portal_type",
       operator: "=",
@@ -153,6 +155,12 @@
       query_list: id_query_list,
       type: "complex"
     }));
+    query_list.push(new SimpleQuery({
+      key: "publication_section__relative_url",
+      operator: "=",
+      type: "simple",
+      value: "publication_section/" + home_page_preference
+    }));
     query = Query.objectToSearchText(new ComplexQuery({
       operator: "AND",
       query_list: query_list,
@@ -163,31 +171,22 @@
         redirector_ulr = url;
         return gadget.jio_allDocs({
           query: query,
-          select_list: ['text_content', 'publication_section']
+          select_list: ['text_content']
         });
       })
       .push(function (result_list) {
         if (result_list.data.rows[0]) {
-          var i, web_page, publication_section;
-          for (i = 0; i < result_list.data.rows.length; i = i + 1) {
-            publication_section = result_list.data.rows[i].value.publication_section;
-            if (publication_section === home_page_preference) {
-              web_page = result_list.data.rows[i];
-              break;
-            }
-          }
-          if (web_page) {
-            id = web_page.id;
-            content = parseHTMLLinks(web_page.value.text_content, redirector_ulr);
-            return gadget.jio_getAttachment(id, "links")
-              .push(function (web_page_document) {
-                edit_view = getActionListByName(
-                  ensureArray(web_page_document._links.view),
-                  "view_editor"
-                );
-                return {"id": id, "content": content, "edit_view": edit_view};
-              });
-          }
+          web_page = result_list.data.rows[0];
+          id = web_page.id;
+          content = parseHTMLLinks(web_page.value.text_content, redirector_ulr);
+          return gadget.jio_getAttachment(id, "links")
+            .push(function (web_page_document) {
+              edit_view = getActionListByName(
+                ensureArray(web_page_document._links.view),
+                "view_editor"
+              );
+              return {"id": id, "content": content, "edit_view": edit_view};
+            });
         }
         return {"id": id, "content": content, "edit_view": edit_view};
       });
