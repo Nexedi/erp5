@@ -123,6 +123,9 @@
       validation_state_query_list = [],
       valid_state_list = ["shared_alive", "released_alive", "published_alive"],
       web_page;
+    if (project_pages.length === 0) {
+      return {"id": id, "content": content, "edit_view": edit_view};
+    }
     query_list.push(new SimpleQuery({
       key: "portal_type",
       operator: "=",
