@@ -173,6 +173,17 @@ Wait for activities</span>
   <td>Are you sure you want to remove this gadget from your personalized page?</td>
   <td></td>
 </tr>
+<!--
+  Clicking on the "delete pad" button sends an ajax request to KnowledgePad_deleteBox using jQuery.ajax.
+  KnowledgePad_deleteBox will mark the knowledge pad as deleted, and the wait_for_activities below is
+  to wait for this reindex activity. We want to make sure the server really recieved this request before
+  navigating to wait_for_activities.
+-->
+<tr>
+  <td>waitForCondition</td>
+  <td>selenium.browserbot.getCurrentWindow().jQuery.active == 0</td>
+  <td>30000</td>
+</tr>
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">
 Wait for activities</span>
 <tr>
