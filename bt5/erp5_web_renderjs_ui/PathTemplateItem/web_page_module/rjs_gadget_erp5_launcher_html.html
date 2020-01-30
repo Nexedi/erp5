@@ -4,8 +4,7 @@
     <meta charset="utf-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    ${extra_base_tag}
-    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="shortcut icon" href="${base_prefix}favicon.ico">
     <meta name="theme-color" content="#085078">
 
     <title>${application_title}</title>
@@ -16,6 +15,7 @@
     ${webapp_manifest_full_link_tag}
 
     <script data-renderjs-configuration="application_title" type="text/x-renderjs-configuration">${application_title}</script>
+    <script data-renderjs-configuration="base_prefix" type="text/x-renderjs-configuration">${base_prefix}</script>
     <script data-renderjs-configuration="panel_gadget" type="text/x-renderjs-configuration">${panel_gadget}</script>
     <script data-renderjs-configuration="action_view" type="text/x-renderjs-configuration">${action_view}</script>
     <script data-renderjs-configuration="default_view_reference" type="text/x-renderjs-configuration">${default_view_reference}</script>
@@ -27,16 +27,16 @@
     <script data-renderjs-configuration="website_url_set" type="text/x-renderjs-configuration">${website_url_set}</script>
     <script data-renderjs-configuration="service_worker_url" type="text/x-renderjs-configuration">${service_worker_url}</script>
 
-    <script src="rsvp.js"></script>
-    <script src="renderjs.js"></script>
-    <script src="erp5_launcher_nojqm.js"></script>
+    <script src="${base_prefix}rsvp.js"></script>
+    <script src="${base_prefix}renderjs.js"></script>
+    <script src="${base_prefix}erp5_launcher_nojqm.js"></script>
 
   </head>
 
   <body>
     <div data-role="page">
 
-      <div data-gadget-url="gadget_jio.html"
+      <div data-gadget-url="${base_prefix}gadget_jio.html"
           data-gadget-scope="setting_gadget"
           data-gadget-sandbox="public"></div>
 
@@ -44,7 +44,7 @@
           data-gadget-scope="router"
           data-gadget-sandbox="public"></div>
 
-      <div data-gadget-async-url="gadget_erp5_notification.html"
+      <div data-gadget-async-url="${base_prefix}gadget_erp5_notification.html"
           data-gadget-scope="notification"
           data-gadget-sandbox="public"></div>
 
@@ -61,7 +61,7 @@
           data-gadget-sandbox="public"></div>
 
 
-      <div data-gadget-async-url="gadget_erp5_editor_panel.html"
+      <div data-gadget-async-url="${base_prefix}gadget_erp5_editor_panel.html"
           data-gadget-scope="editor_panel"
           data-gadget-sandbox="public"></div>
 
