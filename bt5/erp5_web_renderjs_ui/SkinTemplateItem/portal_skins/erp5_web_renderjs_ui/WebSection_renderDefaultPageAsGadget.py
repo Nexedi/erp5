@@ -1,5 +1,6 @@
 import json
 import re
+from urlparse import urljoin
 
 if REQUEST is None:
   REQUEST = context.REQUEST
@@ -31,23 +32,32 @@ view_as_web_method = default_web_page.getTypeBasedMethod(
   fallback_script_id="WebPage_viewAsWeb"
   )
 
+selected_language = portal.Localizer.get_selected_language()
+
+# base tag
+if selected_language == default_language:
+  base_prefix = ""
+else:
+  base_prefix = '../'
+
 mapping_dict = {
+  "base_prefix": base_prefix,
   "frontpage_gadget": web_section.getLayoutProperty("configuration_frontpage_gadget_url", default="worklist"),
   "jio_document_page_gadget": web_section.getLayoutProperty("configuration_default_jio_document_page_gadget_url", default="form"),
   "application_title": web_section.getLayoutProperty("configuration_application_title", default="ERP5"),
   "action_view": web_section.getLayoutProperty("configuration_view_action_category", default="object_view"),
   "default_view_reference": web_section.getLayoutProperty("configuration_default_view_action_reference", default="view"),
   "hateoas_url": web_section.getLayoutProperty("configuration_hateoas_url", default="hateoas/"),
-  "panel_gadget": web_section.getLayoutProperty("configuration_panel_gadget_url", default="gadget_erp5_panel.html"),
-  "router_gadget": web_section.getLayoutProperty("configuration_router_gadget_url", default="gadget_erp5_router.html"),
-  "header_gadget": web_section.getLayoutProperty("configuration_header_gadget_url", default="gadget_erp5_header.html"),
-  "jio_gadget": web_section.getLayoutProperty("configuration_jio_gadget_url", default="gadget_jio.html"),
-  "translation_gadget": web_section.getLayoutProperty("configuration_translation_gadget_url", default="gadget_translation.html"),
+  "panel_gadget": urljoin(base_prefix, web_section.getLayoutProperty("configuration_panel_gadget_url", default="gadget_erp5_panel.html")),
+  "router_gadget": urljoin(base_prefix, web_section.getLayoutProperty("configuration_router_gadget_url", default="gadget_erp5_router.html")),
+  "header_gadget": urljoin(base_prefix, web_section.getLayoutProperty("configuration_header_gadget_url", default="gadget_erp5_header.html")),
+  "jio_gadget": urljoin(base_prefix, web_section.getLayoutProperty("configuration_jio_gadget_url", default="gadget_jio.html")),
+  "translation_gadget": urljoin(base_prefix, web_section.getLayoutProperty("configuration_translation_gadget_url", default="gadget_translation.html")),
   "manifest_url": web_section.getLayoutProperty("configuration_manifest_url", default="gadget_erp5.appcache"),
-  "stylesheet_url": web_section.getLayoutProperty("configuration_stylesheet_url", default="gadget_erp5_nojqm.css"),
-  "service_worker_url": web_section.getLayoutProperty("configuration_service_worker_url", default=""),
+  "stylesheet_url": urljoin(base_prefix, web_section.getLayoutProperty("configuration_stylesheet_url", default="gadget_erp5_nojqm.css")),
+  "service_worker_url": urljoin(base_prefix, web_section.getLayoutProperty("configuration_service_worker_url", default="")),
   "language_map": json.dumps({tmp['id']: portal.Base_translateString(tmp['title'], lang = tmp['id']) for tmp in portal.Localizer.get_languages_map() if tmp['id'] in available_language_set}),
-  "default_selected_language":  portal.Localizer.get_selected_language(),
+  "default_selected_language": selected_language,
   "website_url_set": json.dumps(website_url_set),
   "site_description": web_section.getLayoutProperty("description", default=""),
   "site_keywords": web_section.getLayoutProperty("subject", default=""),
@@ -64,12 +74,6 @@ if configuration_webapp_manifest_url is None:
   mapping_dict["webapp_manifest_full_link_tag"] = ''
 else:
   mapping_dict["webapp_manifest_full_link_tag"] = '<link rel="manifest" href="' + configuration_webapp_manifest_url + '">'
-
-# base tag
-if mapping_dict["default_selected_language"] == default_language:
-  mapping_dict["extra_base_tag"] = ""
-else:
-  mapping_dict["extra_base_tag"] = '<base href="../">'
 
 # Wallpaper
 # It can not be done in Javascript, due to CSP protection.

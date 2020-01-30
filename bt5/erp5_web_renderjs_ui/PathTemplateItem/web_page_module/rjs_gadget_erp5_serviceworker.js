@@ -7,10 +7,9 @@
     // CLIENT_CACHE_MAPPING_NAME must not start with `prefix`
     // else it may be used as a normal content cache.
     CLIENT_CACHE_MAPPING_NAME = '__erp5js_' + location.toString(),
-    CACHE_NAME = prefix + '_0007',
+    CACHE_NAME = prefix + '_0013',
     CACHE_MAP = {},
     // Files required to make this app work offline
-    REQUIRED_LANGUAGE_PREFIX_LIST = ['', 'fr/'],
     REQUIRED_FILES = [
       'favicon.ico',
       'font-awesome/font-awesome-webfont.eot',
@@ -155,18 +154,17 @@
       'jiodev.js',
       'renderjs.js',
       'rsvp.js',
-      './'
+      './',
+      'fr/',
+      'fa/'
     ],
     required_url_list = [],
-    i,
-    j;
+    i;
 
   for (i = 0; i < REQUIRED_FILES.length; i += 1) {
-    for (j = 0; j < REQUIRED_LANGUAGE_PREFIX_LIST.length; j += 1) {
-      required_url_list.push(
-        new URL(REQUIRED_LANGUAGE_PREFIX_LIST[j] + REQUIRED_FILES[i], location.toString()).toString()
-      );
-    }
+    required_url_list.push(
+      new URL(REQUIRED_FILES[i], location.toString()).toString()
+    );
   }
   self.addEventListener('install', function (event) {
     // Perform install step:  loading each required file into cache
