@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ExternalMethod" module="Products.ExternalMethod.ExternalMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_function</string> </key>
+            <value> <string>Base_renderFormAtEndOfTransaction</string> </value>
+        </item>
+        <item>
+            <key> <string>_module</string> </key>
+            <value> <string>HalStyle</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_renderFormAtEndOfTransaction</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
