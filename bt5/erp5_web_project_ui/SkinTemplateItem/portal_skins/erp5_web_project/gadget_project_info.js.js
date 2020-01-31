@@ -111,7 +111,7 @@
     }));
   }
 
-  function getWebPageInfo(gadget, home_page_preference, project_pages) {
+  function getWebPageInfo(gadget, project_jio_key, home_page_preference) {
     var id,
       content,
       edit_view,
@@ -123,9 +123,6 @@
       validation_state_query_list = [],
       valid_state_list = ["shared_alive", "released_alive", "published_alive"],
       web_page;
-    if (project_pages.length === 0) {
-      return {"id": id, "content": content, "edit_view": edit_view};
-    }
     query_list.push(new SimpleQuery({
       key: "portal_type",
       operator: "=",
@@ -145,18 +142,11 @@
       query_list: validation_state_query_list,
       type: "complex"
     }));
-    for (i = 0; i < project_pages.length; i += 1) {
-      id_query_list.push(new SimpleQuery({
-        key: "id",
-        type: "simple",
-        operator: "=",
-        value: project_pages[i]
-      }));
-    }
-    query_list.push(new ComplexQuery({
-      operator: "OR",
-      query_list: id_query_list,
-      type: "complex"
+    query_list.push(new SimpleQuery({
+      key: "follow_up__relative_url",
+      operator: "=",
+      type: "simple",
+      value: project_jio_key
     }));
     query_list.push(new SimpleQuery({
       key: "publication_section__relative_url",
@@ -221,8 +211,7 @@
       var state_dict = {
           jio_key: options.jio_key || "",
           project_title: options.project_title,
-          home_page_preference: options.home_page_preference,
-          project_pages: options.project_pages
+          home_page_preference: options.home_page_preference
         };
       return this.changeState(state_dict);
     })
@@ -234,7 +223,7 @@
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
-            getWebPageInfo(gadget, modification_dict.home_page_preference, modification_dict.project_pages),
+            getWebPageInfo(gadget, modification_dict.jio_key, modification_dict.home_page_preference),
             gadget.getDeclaredGadget("editor"),
             gadget.getSetting("hateoas_url")
           ]);
