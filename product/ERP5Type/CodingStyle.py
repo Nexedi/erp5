@@ -82,6 +82,7 @@ def getSkinPrefixList(self):
 
     'DCWorkflow', # some workflow script use this, not sure it's correct.
     'SkinsTool',
+    'MailHost',
 
     'Entity', # A base class for Person / Organisation
     'Zuite', # Products.Zelenium test suites
