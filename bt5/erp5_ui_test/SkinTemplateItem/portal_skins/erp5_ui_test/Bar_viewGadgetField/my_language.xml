@@ -76,6 +76,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>data_url</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -100,14 +104,16 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>extra</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -118,7 +124,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -174,7 +192,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>gadget_stringfield.html</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -197,6 +215,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -213,24 +237,15 @@
                     <value> <string>stringfield_validator</string> </value>
                 </item>
                 <item>
+                    <key> <string>validator_form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: field.restrictedTraverse(\'gadget_stringfield.html\').absolute_url()</string> </value>
         </item>
       </dictionary>
     </pickle>
