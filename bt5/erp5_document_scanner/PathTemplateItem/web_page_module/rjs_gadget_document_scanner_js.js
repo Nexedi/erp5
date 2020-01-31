@@ -239,7 +239,7 @@
         for (i = 0; i < len; i += 1) {
           // XXX TODO: show nice looking thumbnail
           // from gadget.state.blob_url_i
-          // XXX TODO translation + right term
+          // XXX right term
           // XXX TODO display a loader when sending
           if (gadget.state['blob_state_' + i] !== 'deleted') {
             thumbnail_dom_list.push(domsugar('button', {type: 'button',
@@ -253,7 +253,7 @@
           }
         }
         // Always add a button to generate a new image
-        // XXX TODO translation + right term
+        // XXX TODO right term
         thumbnail_dom_list.push(domsugar('button', {type: 'button',
                                                     text: result_list[1],
                                                     // Do not allow to show again the current image
