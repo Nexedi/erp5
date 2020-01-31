@@ -111,57 +111,6 @@
   //////////////////////////////////////////////////
   // helper function
   //////////////////////////////////////////////////
-  /*function contrastImage(input, output, contrast) {
-    var i,
-      outputContext,
-      inputContext = input.getContext("2d"),
-      imageData = inputContext.getImageData(0, 0, input.width, input.height),
-      data = imageData.data,
-      factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
-    for (i = 0; i < data.length; i += 4) {
-      data[i] = factor * (data[i] - 128) + 128;
-      data[i + 1] = factor * (data[i + 1] - 128) + 128;
-      data[i + 2] = factor * (data[i + 2] - 128) + 128;
-    }
-    outputContext = output.getContext("2d");
-    outputContext.putImageData(imageData, 0, 0);
-  }*/
-
-  /*function grayscale(input, output) {
-    var i,
-      gray,
-      outputContext,
-      outputCanvas = document.createElement("canvas"),
-      inputContext = input.getContext("2d"),
-      imageData = inputContext.getImageData(0, 0, input.width, input.height),
-      data = imageData.data,
-      arraylength = input.width * input.height * 4;
-    //gray = 0.3*R + 0.59*G + 0.11*B
-    // http://www.tannerhelland.com/3643/grayscale-image-algorithm-vb6/
-    for (i = arraylength - 1; i > 0; i -= 4) {
-      gray = 0.3 * data[i - 3] + 0.59 * data[i - 2] + 0.11 * data[i - 1];
-      data[i - 3] = gray;
-      data[i - 2] = gray;
-      data[i - 1] = gray;
-    }
-    outputContext = outputCanvas.getContext("2d");
-    outputContext.putImageData(imageData, 0, 0);
-    data = canvas.toDataURL("image/png");
-    output.setAttribute("src", data);
-    if (cropper) {
-      cropper.destroy();
-    }
-    return new RSVP.Queue()
-      .push(function () {
-        cropper = new Cropper(
-          output,
-          {
-            data: preferred_cropped_canvas_data
-          }
-        );
-      });
-  }*/
-
   function getVideoDeviceList() {
     if (!navigator.mediaDevices) {
       throw new Error("mediaDevices is not supported");
@@ -239,7 +188,7 @@
         for (i = 0; i < len; i += 1) {
           // XXX TODO: show nice looking thumbnail
           // from gadget.state.blob_url_i
-          // XXX TODO translation + right term
+          // XXX right term
           // XXX TODO display a loader when sending
           if (gadget.state['blob_state_' + i] !== 'deleted') {
             thumbnail_dom_list.push(domsugar('button', {type: 'button',
@@ -253,7 +202,7 @@
           }
         }
         // Always add a button to generate a new image
-        // XXX TODO translation + right term
+        // XXX TODO right term
         thumbnail_dom_list.push(domsugar('button', {type: 'button',
                                                     text: result_list[1],
                                                     // Do not allow to show again the current image
@@ -609,7 +558,6 @@
             return gadget.changeState(state_dict);
           })
           .push(function () {
-            // XXX TODO Send the image to ERP5
             // XXX Ensure that you have the active process relative url
             addDetachedPromise(gadget, 'ajax_' + (gadget.state.page_count - 1),
                                handleAsyncStore(gadget, gadget.state.page_count - 1));
@@ -619,7 +567,6 @@
       }
 
       if (evt.target.className.indexOf("retry-btn") !== -1) {
-        // XXX TODO Send the image to ERP5
         // XXX Ensure that you have the active process relative url
         addDetachedPromise(gadget, 'ajax_' + (gadget.state.page),
                            handleAsyncStore(gadget, gadget.state.page));
