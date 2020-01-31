@@ -90,7 +90,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>project_home_page</string> </value>
+            <value> <string>project_home_page_for_test</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -100,7 +100,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>project_home_page</string> </value>
+            <value> <string>project_home_page_for_test</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
