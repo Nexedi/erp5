@@ -5,7 +5,7 @@
  </chain>
  <chain>
   <type>Foo</type>
-  <workflow>edit_workflow, foo_validation_workflow, foo_workflow</workflow>
+  <workflow>edit_workflow, foo_interaction_workflow, foo_validation_workflow, foo_workflow</workflow>
  </chain>
  <chain>
   <type>Foo Line</type>

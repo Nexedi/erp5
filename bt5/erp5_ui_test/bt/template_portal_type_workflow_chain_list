@@ -3,5 +3,6 @@ Bar | edit_workflow
 Bar | foo_workflow
 Foo Line | pricing_interaction_workflow
 Foo | edit_workflow
+Foo | foo_interaction_workflow
 Foo | foo_validation_workflow
 Foo | foo_workflow
