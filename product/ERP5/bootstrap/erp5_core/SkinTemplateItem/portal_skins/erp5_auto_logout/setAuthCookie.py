@@ -23,7 +23,8 @@ parse_dict = urlparse(REQUEST.other.get('ACTUAL_URL'))
 same_site = portal.ERP5Site_getAuthCookieSameSite(scheme=parse_dict.scheme,
                                                   hostname=parse_dict.hostname,
                                                   port=parse_dict.port,
-                                                  path=parse_dict.path)
+                                                  path=parse_dict.path,
+                                                  user_agent=REQUEST.environ.get('HTTP_USER_AGENT'))
 if same_site not in ('None', 'Lax', 'Strict'):
   # Do not use the SameSite attribute
   same_site = None
