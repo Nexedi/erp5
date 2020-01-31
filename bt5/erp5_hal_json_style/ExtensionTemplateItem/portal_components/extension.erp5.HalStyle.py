@@ -2,7 +2,7 @@ from Acquisition import aq_self, aq_base, aq_inner
 from Products.ERP5Type.Utils import UpperCase
 from ZODB.POSException import ConflictError
 from AccessControl import Unauthorized
-
+import transaction
 
 def Base_aqSelf(self):
   return aq_self(self)
@@ -103,3 +103,16 @@ def WorkflowTool_listActionParameterList(self):
 
 
   return result_list
+
+
+def Base_renderFormAtEndOfTransaction(self, request, response, form_id, **kw):
+  def renderFormAndSetResponseBody(context, request, response, form_id, **kw):
+    kw['message'] = request.get('portal_status_message') or kw['message']
+    response.setBody(context.Base_renderForm(form_id, **kw))
+
+  transaction.get().addBeforeCommitHook(
+      renderFormAndSetResponseBody, (
+          self,
+          request,
+          response,
+          form_id,), kw)
