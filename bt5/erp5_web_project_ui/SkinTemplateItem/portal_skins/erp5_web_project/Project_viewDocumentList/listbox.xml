@@ -212,7 +212,7 @@
                       <list>
                         <tuple>
                           <string>state_document_domain</string>
-                          <string>Document Status</string>
+                          <string>Document State</string>
                         </tuple>
                       </list>
                     </value>
