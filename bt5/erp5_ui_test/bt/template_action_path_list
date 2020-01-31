@@ -26,6 +26,7 @@ Foo | dummy_multicheckboxfield_report
 Foo | dummy_multilistfield_report
 Foo | dummy_radiofield_report
 Foo | dummy_report
+Foo | fail_dialog_action_jio
 Foo | list
 Foo | python_action_jio
 Foo | python_error_action_jio
