@@ -53,6 +53,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -68,14 +72,12 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>js_sandbox</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -107,7 +109,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>gadget_erp5_side_by_side_diff.html</string> </value>
                 </item>
                 <item>
                     <key> <string>js_sandbox</string> </key>
@@ -137,19 +139,6 @@
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: field.restrictedTraverse(\'gadget_erp5_side_by_side_diff.html\').absolute_url()</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
