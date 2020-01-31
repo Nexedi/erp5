@@ -558,7 +558,6 @@
             return gadget.changeState(state_dict);
           })
           .push(function () {
-            // XXX TODO Send the image to ERP5
             // XXX Ensure that you have the active process relative url
             addDetachedPromise(gadget, 'ajax_' + (gadget.state.page_count - 1),
                                handleAsyncStore(gadget, gadget.state.page_count - 1));
@@ -568,7 +567,6 @@
       }
 
       if (evt.target.className.indexOf("retry-btn") !== -1) {
-        // XXX TODO Send the image to ERP5
         // XXX Ensure that you have the active process relative url
         addDetachedPromise(gadget, 'ajax_' + (gadget.state.page),
                            handleAsyncStore(gadget, gadget.state.page));
