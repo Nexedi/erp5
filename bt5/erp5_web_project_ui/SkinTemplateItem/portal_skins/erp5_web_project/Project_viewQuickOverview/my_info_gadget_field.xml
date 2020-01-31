@@ -253,7 +253,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: {"project_title":here.getTitle(), "jio_key": here.getRelativeUrl(), "home_page_preference": here.getPortalObject().portal_preferences.getPreferredPublicationSection() }</string> </value>
+            <value> <string>python: {"jio_key": here.getRelativeUrl(), "publication_section": here.getPortalObject().portal_preferences.getPreferredPublicationSection() }</string> </value>
         </item>
       </dictionary>
     </pickle>

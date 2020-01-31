@@ -33,8 +33,8 @@
     return view_list.filter(d => d.name === name)[0].href;
   }
 
-  function setLatestTestResult(gadget, project_title, svg_element, project_id) {
-    var query = createProjectQuery(project_id,
+  function setLatestTestResult(gadget, svg_element, project_jio_key) {
+    var query = createProjectQuery(project_jio_key,
                  [["portal_type", "Test Result"]]);
     return gadget.jio_allDocs({
       query: query,
@@ -111,7 +111,7 @@
     }));
   }
 
-  function getWebPageInfo(gadget, project_jio_key, home_page_preference) {
+  function getWebPageInfo(gadget, project_jio_key, publication_section) {
     var id,
       content,
       edit_view,
@@ -152,7 +152,7 @@
       key: "publication_section__relative_url",
       operator: "=",
       type: "simple",
-      value: "publication_section/" + home_page_preference
+      value: "publication_section/" + publication_section
     }));
     query = Query.objectToSearchText(new ComplexQuery({
       operator: "AND",
@@ -210,8 +210,7 @@
     .declareMethod('render', function (options) {
       var state_dict = {
           jio_key: options.jio_key || "",
-          project_title: options.project_title,
-          home_page_preference: options.home_page_preference
+          publication_section: options.publication_section
         };
       return this.changeState(state_dict);
     })
@@ -223,7 +222,7 @@
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
-            getWebPageInfo(gadget, modification_dict.jio_key, modification_dict.home_page_preference),
+            getWebPageInfo(gadget, modification_dict.jio_key, modification_dict.publication_section),
             gadget.getDeclaredGadget("editor"),
             gadget.getSetting("hateoas_url")
           ]);
@@ -285,8 +284,7 @@
           }
           enableLink(document.getElementById("document_link"), url_list[8]);
           enableLink(document.getElementById("activity_link"), url_list[9]);
-          setLatestTestResult(gadget, modification_dict.project_title,
-                            document.getElementById("test_result_svg"), modification_dict.jio_key);
+          setLatestTestResult(gadget, document.getElementById("test_result_svg"), modification_dict.jio_key);
         });
     })
 
