@@ -232,33 +232,36 @@
     var i,
       len = gadget.state.page_count,
       thumbnail_dom_list = [];
-    for (i = 0; i < len; i += 1) {
-      // XXX TODO: show nice looking thumbnail
-      // from gadget.state.blob_url_i
-      // XXX TODO translation + right term
-      // XXX TODO display a loader when sending
-      if (gadget.state['blob_state_' + i] !== 'deleted') {
+
+
+    return gadget.getTranslationList(["Page", "New Page"])
+      .push(function (result_list) {
+        for (i = 0; i < len; i += 1) {
+          // XXX TODO: show nice looking thumbnail
+          // from gadget.state.blob_url_i
+          // XXX TODO translation + right term
+          // XXX TODO display a loader when sending
+          if (gadget.state['blob_state_' + i] !== 'deleted') {
+            thumbnail_dom_list.push(domsugar('button', {type: 'button',
+                                                        text: result_list[0] + (i + 1) + ' (' + gadget.state['blob_state_' + i] + ')',
+                                                        // Do not allow to show again the current image
+                                                        // or do not allow to show sending image (to simplify button management)
+                                                        disabled: (i === gadget.state.page) || (gadget.state['blob_state_' + i] === 'sending'),
+                                                        'class': 'show-img',
+                                                        'data-page': i
+                                                      }));
+          }
+        }
+        // Always add a button to generate a new image
+        // XXX TODO translation + right term
         thumbnail_dom_list.push(domsugar('button', {type: 'button',
-                                                    text: 'Page' + (i + 1) + ' (' + gadget.state['blob_state_' + i] + ')',
+                                                    text: result_list[1],
                                                     // Do not allow to show again the current image
-                                                    // or do not allow to show sending image (to simplify button management)
-                                                    disabled: (i === gadget.state.page) || (gadget.state['blob_state_' + i] === 'sending'),
-                                                    'class': 'show-img',
-                                                    'data-page': i
-                                                   }));
-      }
-    }
-
-    // Always add a button to generate a new image
-    // XXX TODO translation + right term
-    thumbnail_dom_list.push(domsugar('button', {type: 'button',
-                                                text: 'New Page',
-                                                // Do not allow to show again the current image
-                                                disabled: (len === gadget.state.page - 1),
-                                                'class': 'new-btn'
-                                               }));
-
-    return domsugar('ol', thumbnail_dom_list);
+                                                    disabled: (len === gadget.state.page - 1),
+                                                    'class': 'new-btn'
+                                                 }));
+        return domsugar('ol', thumbnail_dom_list);
+      });
   }
 
   // Display the video stream from a media source
@@ -292,7 +295,8 @@
         video.play();
         return RSVP.all([
           getVideoDeviceList(),
-          gadget.getTranslationList(["Capture", "Change Camera"])
+          gadget.getTranslationList(["Capture", "Change Camera"]),
+          buildPreviousThumbnailDom(gadget)
         ]);
       })
       .push(function (result_list) {
@@ -322,7 +326,7 @@
           ]),
           domsugar('div', {'class': 'camera-input'}, [video]),
           domsugar('div', {'class': 'edit-picture'}, button_list),
-          buildPreviousThumbnailDom(gadget)
+          result_list[2]
         ]);
 
         gadget.element.replaceChild(div, gadget.element.firstElementChild);
@@ -347,7 +351,8 @@
         gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
         return RSVP.all([
           gadget.getTranslationList(["Delete", "Save"]),
-          createImageBitmap(blob)
+          createImageBitmap(blob),
+          buildPreviousThumbnailDom(gadget)
         ]);
       })
       .push(function (result_list) {
@@ -380,7 +385,7 @@
                                 text: result_list[0][1]
                                })
           ]),
-          buildPreviousThumbnailDom(gadget)
+          result_list[2]
         ]);
 
         // XXX How to change the dom only when cropper is ready?
@@ -399,13 +404,19 @@
   }
 
   function renderSubmittedPicture(gadget) {
-    return gadget.getTranslationList(["Delete", "Save"])
-      .push(function (translation_list) {
+    return new RSVP.Queue()
+      .push(function () {
+        return RSVP.all([
+          gadget.getTranslationList(["Delete", "Save"]),
+          buildPreviousThumbnailDom(gadget)
+        ]);
+      })
+      .push(function (result_list) {
         var button_list = [
           // XXX TODO: improve icon
           domsugar('button', {type: 'button',
                               'class': 'delete-btn ui-btn-icon-left ui-icon-times',
-                              text: translation_list[0]
+                              text: result_list[0][0]
                              })
         ],
           div;
@@ -415,7 +426,7 @@
             // XXX TODO improve icon
             domsugar('button', {type: 'button',
                                 'class': 'retry-btn ui-btn-icon-left ui-icon-times',
-                                text: translation_list[1]
+                                text: result_list[0][1]
                                })
           );
         }
@@ -430,7 +441,7 @@
           domsugar('img', {src: gadget.state['blob_url_' + gadget.state.page]}),
           // XXX TODO: why is the button rendering different from the other pages?
           domsugar('div', {'class': 'edit-picture'}, button_list),
-          buildPreviousThumbnailDom(gadget)
+          result_list[1]
         ]);
 
         // XXX How to change the dom only when cropper is ready?
@@ -521,12 +532,14 @@
       // Only refresh the thumbnail list
       // if display_step is not modified
       // XXX TODO use a more precise selector
-      thumbnail_container = gadget.element.querySelector('ol');
-      thumbnail_container.parentElement.replaceChild(
-        buildPreviousThumbnailDom(gadget),
-        thumbnail_container
-      );
-
+      return buildPreviousThumbnailDom(gadget)
+        .push(function (result) {
+          thumbnail_container = gadget.element.querySelector('ol');
+          thumbnail_container.parentElement.replaceChild(
+            result,
+            thumbnail_container
+          );
+        });
     })
 
     .onEvent("click", function (evt) {
