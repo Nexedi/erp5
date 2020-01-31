@@ -97,10 +97,12 @@ def getSkinPrefixList(self):
 
 
 # Some skin names that does not respect our conventions but are ignored, for example
-# when this naming is used by zope.
+# when this naming is used by zope or scripts that changing would be too hard.
 ignored_skin_id_set = {
   'twiddleAuthCookie',
   'setAuthCookie',
+  'ERP5Document_getHateoas',
+  'Script_getParams',
 }
 
 # Generic method to check consistency of a skin item
