@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>scheme, hostname, port, path</string> </value>
+            <value> <string>scheme, hostname, port, path, user_agent</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
