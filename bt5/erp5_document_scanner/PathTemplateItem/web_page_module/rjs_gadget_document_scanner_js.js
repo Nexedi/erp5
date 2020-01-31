@@ -111,57 +111,6 @@
   //////////////////////////////////////////////////
   // helper function
   //////////////////////////////////////////////////
-  /*function contrastImage(input, output, contrast) {
-    var i,
-      outputContext,
-      inputContext = input.getContext("2d"),
-      imageData = inputContext.getImageData(0, 0, input.width, input.height),
-      data = imageData.data,
-      factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
-    for (i = 0; i < data.length; i += 4) {
-      data[i] = factor * (data[i] - 128) + 128;
-      data[i + 1] = factor * (data[i + 1] - 128) + 128;
-      data[i + 2] = factor * (data[i + 2] - 128) + 128;
-    }
-    outputContext = output.getContext("2d");
-    outputContext.putImageData(imageData, 0, 0);
-  }*/
-
-  /*function grayscale(input, output) {
-    var i,
-      gray,
-      outputContext,
-      outputCanvas = document.createElement("canvas"),
-      inputContext = input.getContext("2d"),
-      imageData = inputContext.getImageData(0, 0, input.width, input.height),
-      data = imageData.data,
-      arraylength = input.width * input.height * 4;
-    //gray = 0.3*R + 0.59*G + 0.11*B
-    // http://www.tannerhelland.com/3643/grayscale-image-algorithm-vb6/
-    for (i = arraylength - 1; i > 0; i -= 4) {
-      gray = 0.3 * data[i - 3] + 0.59 * data[i - 2] + 0.11 * data[i - 1];
-      data[i - 3] = gray;
-      data[i - 2] = gray;
-      data[i - 1] = gray;
-    }
-    outputContext = outputCanvas.getContext("2d");
-    outputContext.putImageData(imageData, 0, 0);
-    data = canvas.toDataURL("image/png");
-    output.setAttribute("src", data);
-    if (cropper) {
-      cropper.destroy();
-    }
-    return new RSVP.Queue()
-      .push(function () {
-        cropper = new Cropper(
-          output,
-          {
-            data: preferred_cropped_canvas_data
-          }
-        );
-      });
-  }*/
-
   function getVideoDeviceList() {
     if (!navigator.mediaDevices) {
       throw new Error("mediaDevices is not supported");
