@@ -66,9 +66,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -95,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>unsafe/gadget_field_graph_chart.html</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -116,19 +114,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: here.Foo_getSimpleGraphData()</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: "unsafe/gadget_field_graph_chart.html"</string> </value>
         </item>
       </dictionary>
     </pickle>

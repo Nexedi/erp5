@@ -142,9 +142,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -215,7 +213,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>gadget_custom_player.html</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -271,19 +269,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python:here.aq_parent.aq_parent.getPortalType() == \'Web Section\'</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:field.restrictedTraverse(\'gadget_custom_player.html\').absolute_url()</string> </value>
         </item>
       </dictionary>
     </pickle>

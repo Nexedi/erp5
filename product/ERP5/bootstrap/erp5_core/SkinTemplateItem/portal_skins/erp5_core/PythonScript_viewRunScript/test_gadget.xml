@@ -124,9 +124,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -137,7 +135,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -185,7 +195,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>gadget_callable_run.html</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -196,8 +206,22 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
                     <value> <string>Test</string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_form_id</string> </key>
+                    <value> <string></string> </value>
                 </item>
               </dictionary>
             </value>
@@ -214,19 +238,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python:{\'param_list\': \',\'.join(here.ZScriptHTML_tryParams()), \'output_url\': here.getRelativeUrl(), \'log_url\':here.getPortalObject().portal_introspections.getRelativeUrl()+\'/tailEventLog\'}</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: field.restrictedTraverse(\'gadget_callable_run.html\').absolute_url()</string> </value>
         </item>
       </dictionary>
     </pickle>
