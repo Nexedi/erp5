@@ -13,7 +13,7 @@ default_columns = '\n'.join(( 'id | ID'
                             , 'title | Title'
                             , 'quantity | Quantity'
                             ))
-result = form.listbox.ListBox_setPropertyList( 
+form.listbox.ListBox_setPropertyList(
     field_title            = 'Bars'
   , field_columns          = default_columns
   , field_sort             = 'id'

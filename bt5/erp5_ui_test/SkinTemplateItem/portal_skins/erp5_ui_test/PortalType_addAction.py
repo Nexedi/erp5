@@ -1,3 +1,5 @@
+# this script has a parameter named `id`
+# pylint: disable=redefined-builtin
 """Add or replace an action on a type informations from types tool.
 """
 assert context.meta_type in ('ERP5 Type Information', 'ERP5 Base Type'), context.meta_type
