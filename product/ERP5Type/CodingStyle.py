@@ -82,6 +82,7 @@ def getSkinPrefixList(self):
 
     'DCWorkflow', # some workflow script use this, not sure it's correct.
     'SkinsTool',
+    'MailHost',
 
     'Entity', # A base class for Person / Organisation
     'Zuite', # Products.Zelenium test suites
@@ -97,10 +98,32 @@ def getSkinPrefixList(self):
 
 
 # Some skin names that does not respect our conventions but are ignored, for example
-# when this naming is used by zope.
+# when this naming is used by zope or scripts that changing would be too hard.
 ignored_skin_id_set = {
   'twiddleAuthCookie',
   'setAuthCookie',
+  'ERP5Document_getHateoas',
+  'Script_getParams',
+  'AccessTabZuite_disablePreference',
+  'AccessTabZuite_setPreference',
+  'BTZuite_CommonTemplate',
+  'BTZuite_reset',
+  'FooViewDummyMultiListFieldDialog_setFieldPropertyList',
+  'FooView_setFieldsProperties',
+  'ListBoxDialogModeZuite_CommonTemplate',
+  'ListBoxDialogModeZuite_reset',
+  'ListBoxZuite_CommonTemplate',
+  'ListBoxZuite_getSelectionCheckedUidsAsHtml',
+  'ListBoxZuite_reset',
+  'ListBoxZuite_resetReportSelections',
+  'ListBoxZuite_setPreferredListboxViewModeLineCount',
+  'MatrixBoxZuite_CommonTemplate',
+  'OOoImportZuite_importFile',
+  'OOoImportZuite_reset',
+  'PTZuite_CommonTemplate',
+  'PortalType_addAction',
+  'PortalType_deleteAction',
+  'RelationFieldZuite_CommonTemplate',
 }
 
 # Generic method to check consistency of a skin item

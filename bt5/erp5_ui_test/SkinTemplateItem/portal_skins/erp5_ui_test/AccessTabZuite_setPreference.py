@@ -7,6 +7,6 @@ if preference is None:
                                               portal_type="Preference")
 
 if preference.getPreferenceState() != "enabled":
-   preference.enable()
+  preference.enable()
 
 return 'Set Preference Successfully.'

@@ -8,4 +8,4 @@ kw = {
 #  'selection_params': {},
   'temporary_selection': False,
 }
-return [ReportSection(**kw) for x in xrange(3)]
+return [ReportSection(**kw) for _ in xrange(3)]

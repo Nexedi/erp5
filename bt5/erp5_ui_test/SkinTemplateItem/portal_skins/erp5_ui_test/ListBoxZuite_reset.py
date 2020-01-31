@@ -8,7 +8,7 @@ for name in ('foo_module', 'bar_module', 'foo_bar_module'):
 
 # Reset the foo module listbox
 form = context.FooModule_viewFooList
-result = form.listbox.ListBox_setPropertyList()
+form.listbox.ListBox_setPropertyList()
 
 #form.listbox.manage_edit(dict(
 #  lines = 3, all_columns = [], search_columns = [], sort_columns = [],
@@ -22,7 +22,7 @@ default_columns = '\n'.join(( 'id | ID'
                             , 'title | Title'
                             , 'quantity | Quantity'
                             ))
-result = form.listbox.ListBox_setPropertyList( 
+form.listbox.ListBox_setPropertyList( 
     field_title            = 'Foo Lines'
   , field_columns          = default_columns
   , field_sort             = 'id'
