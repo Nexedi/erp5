@@ -16,13 +16,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_view</string>
+                <string>action_type/object_onlyjio_view</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_view</string> </value>
+            <value> <string>object_onlyjio_view</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -66,7 +66,7 @@
         </item>
         <item>
             <key> <string>visible</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
       </dictionary>
     </pickle>
