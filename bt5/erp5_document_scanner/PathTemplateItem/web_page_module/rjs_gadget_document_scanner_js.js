@@ -185,23 +185,6 @@
 
     return gadget.getTranslationList(["Page", "New Page"])
       .push(function (result_list) {
-        for (i = 0; i < len; i += 1) {
-          // XXX TODO: show nice looking thumbnail
-          // from gadget.state.blob_url_i
-          // XXX right term
-          // XXX TODO display a loader when sending
-          if (gadget.state['blob_state_' + i] !== 'deleted') {
-            thumbnail_dom_list.push(domsugar('button', {type: 'button',
-                                                        text: result_list[0] + (i + 1) + ' (' + gadget.state['blob_state_' + i] + ')',
-                                                        // Do not allow to show again the current image
-                                                        // or do not allow to show sending image (to simplify button management)
-                                                        disabled: (i === gadget.state.page) || (gadget.state['blob_state_' + i] === 'sending'),
-                                                        'class': 'show-img',
-                                                        'data-page': i
-                                                      }));
-          }
-        }
-        // Always add a button to generate a new image
         // XXX TODO right term
         thumbnail_dom_list.push(domsugar('button', {type: 'button',
                                                     text: result_list[1],
@@ -209,7 +192,22 @@
                                                     disabled: (len === gadget.state.page - 1),
                                                     'class': 'new-btn'
                                                  }));
-        return domsugar('ol', thumbnail_dom_list);
+
+        for (i = 0; i < len; i += 1) {
+          // XXX right term
+          // XXX TODO display a loader when saving
+          if (gadget.state['blob_state_' + i] !== 'deleted') {
+            thumbnail_dom_list.push(domsugar('button', {
+              type: "button",
+              // Do not allow to show again the current image
+              // or do not allow to show saving image (to simplify button management)
+              disabled: (i === gadget.state.page) || (gadget.state['blob_state_' + i] === 'saving')
+            }, [domsugar("img", {"class": "show-img",
+                                 'data-page': i,
+                                 src: gadget.state['blob_url_' + i]})]));
+          }
+        }
+        return domsugar('ol', {"class": "thumbnail-list"}, thumbnail_dom_list);
       });
   }
 
@@ -493,7 +491,7 @@
 
     .onEvent("click", function (evt) {
       // Only handle click on BUTTON element
-      if (evt.target.tagName !== 'BUTTON') {
+      if (evt.target.tagName !== 'BUTTON' && evt.target.tagName !== 'IMG') {
         return;
       }
 
@@ -554,7 +552,7 @@
             };
             // Keep image date, as user may need to display it again
             state_dict['blob_url_' + gadget.state.page_count] = evt.target.result;
-            state_dict['blob_state_' + gadget.state.page_count] = 'sending';
+            state_dict['blob_state_' + gadget.state.page_count] = 'saving';
             return gadget.changeState(state_dict);
           })
           .push(function () {
@@ -574,7 +572,7 @@
           display_step: 'display_video',
           page: gadget.state.page_count + 1
         };
-        state_dict['blob_state_' + gadget.state.page] = 'sending';
+        state_dict['blob_state_' + gadget.state.page] = 'saving';
         return gadget.changeState(state_dict);
       }
 

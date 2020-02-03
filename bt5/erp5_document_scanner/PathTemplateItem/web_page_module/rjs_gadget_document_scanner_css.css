@@ -61,3 +61,11 @@ div[data-gadget-url$="gadget_document_scanner.html"] button:disabled,
 div[data-gadget-url$="gadget_document_scanner.html"] button[disabled] {
   color: #999999;
 }
+
+div[data-gadget-url$="gadget_document_scanner.html"] > .camera > .thumbnail-list {
+  padding-top: .5em;
+}
+
+div[data-gadget-url$="gadget_document_scanner.html"] .show-img {
+  width: 35%;
+}
