@@ -80,7 +80,7 @@
   function handleAsyncStore(gadget, blob_page) {
     var data = new FormData();
     data.append("input_value",
-                     gadget.state['blob_url_' + blob_page].split(';')[1].split(',')[1]);
+                gadget.state['blob_url_' + blob_page].split(';')[1].split(',')[1]);
     data.append("active_process_url", gadget.state.active_process);
     return new RSVP.Queue()
       .push(function () {
@@ -93,12 +93,10 @@
           }
         });
       })
-      .push(function () {
+      .push(function (response) {
         var state_dict = {};
         state_dict['blob_state_' + blob_page] = 'OK';
-        // XXX TODO: ajax must return a active process image content UUID
-        // which should be sent in the final form submittion
-        state_dict['blob_uuid_' + blob_page] = 'XXX';
+        state_dict['blob_uuid_' + blob_page] = response.uuid;
         return gadget.changeState(state_dict);
       }, function () {
         // XXX TODO: Handle error case
