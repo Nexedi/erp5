@@ -3,7 +3,7 @@ from datetime import datetime
 now = datetime.now()
 date_time = now.strftime("%m-%d-%Y-%H-%M-%S")
 test_id = "test-project-" + date_time
-project_reference = 'test-project-' + date_time
+project_reference = 'test-project-home' if home_page else 'test-project'
 page_reference = 'test-home-page-' + date_time
 
 module = portal.getDefaultModule('Project')
