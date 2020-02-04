@@ -121,7 +121,6 @@
       query_list = [],
       id_query_list = [],
       validation_state_query_list = [],
-      valid_state_list = ["shared_alive", "released_alive", "published_alive"],
       web_page;
     query_list.push(new SimpleQuery({
       key: "portal_type",
@@ -129,18 +128,12 @@
       type: "simple",
       value: "Web Page"
     }));
-    for (i = 0; i < valid_state_list.length; i += 1) {
-      validation_state_query_list.push(new SimpleQuery({
-        key: "validation_state",
-        type: "simple",
-        operator: "=",
-        value: valid_state_list[i]
-      }));
-    }
-    query_list.push(new ComplexQuery({
-      operator: "OR",
-      query_list: validation_state_query_list,
-      type: "complex"
+    query_list.push(new SimpleQuery({
+      key: "validation_state",
+      operator: "=",
+      type: "simple",
+      value: ("shared", "released", "published", "shared_alive",
+              "released_alive", "published_alive")
     }));
     query_list.push(new SimpleQuery({
       key: "follow_up__relative_url",
