@@ -7,6 +7,7 @@ Creates the Book header.
 </tal:comment>
 <tal:block tal:define="book_theme                        python: options.get('book_theme');
                        book_title                        python: options.get('book_title');
+                       book_header                       python: options.get('book_header');
                        book_language                     python: options.get('book_language');
                        book_theme_css_font_list          python: options.get('book_theme_css_font_list');
                        book_theme_css_url                python: options.get('book_theme_css_url');
@@ -66,7 +67,11 @@ Creates the Book header.
 
 <tal:block tal:condition="python: False">
   <tal:block metal:define-macro="book_header">
-    <table class="ci-book-header">
+    <tal:block tal:condition="python: book_header">
+      <tal:block tal:content="structure python: book_header"></tal:block>
+    </tal:block>
+    <tal:block tal:condition="python: not book_header">
+      <table class="ci-book-header">
         <tbody>
           <tr>
             <td>
@@ -105,5 +110,6 @@ Creates the Book header.
           </tr>
         </tbody>
       </table>
+    </tal:block>
   </tal:block>
 </tal:block>
