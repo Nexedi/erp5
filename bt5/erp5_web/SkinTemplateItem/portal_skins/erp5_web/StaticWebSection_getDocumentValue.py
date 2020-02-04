@@ -21,6 +21,11 @@
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 if portal is None: portal = context.getPortalObject()
 
+# The list of portal types here should be large enough to include
+# all portal_types defined in the various sections so that
+# href tags which point to a document by reference can still work.
+valid_portal_type_list = portal.getPortalDocumentTypeList()
+
 # Find the applicable language
 if language is None:
   language = portal.Localizer.get_selected_language()
@@ -49,6 +54,7 @@ base_sort = (('effective_date', 'descending'), )
 document_list = context.searchResults(
   reference=name,
   effective_date=effective_date,
+  portal_type=valid_portal_type_list,
   language=(language, ''),
   sort_on=(('language', 'descending'), ) + base_sort,
   limit=1,
