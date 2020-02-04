@@ -3,6 +3,11 @@
    fix acquisition issues within the _aq_dynamic
    lookup from WebSection class.
 """
+if not name:
+  # Catalog does not search empty reference.
+  # Skip the query in such case.
+  return None
+
 if portal is None:
   portal = context.getPortalObject()
 
