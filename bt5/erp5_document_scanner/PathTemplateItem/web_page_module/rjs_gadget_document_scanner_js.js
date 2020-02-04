@@ -183,7 +183,6 @@
 
     return gadget.getTranslationList(["Page", "New Page"])
       .push(function (result_list) {
-        // XXX TODO right term
         thumbnail_dom_list.push(domsugar('button', {type: 'button',
                                                     text: result_list[1],
                                                     // Do not allow to show again the current image
@@ -192,7 +191,6 @@
                                                  }));
 
         for (i = 0; i < len; i += 1) {
-          // XXX right term
           // XXX TODO display a loader when saving
           if (gadget.state['blob_state_' + i] !== 'deleted') {
             thumbnail_dom_list.push(domsugar('button', {
