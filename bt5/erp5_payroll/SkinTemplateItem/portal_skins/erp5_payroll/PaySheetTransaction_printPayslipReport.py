@@ -15,7 +15,7 @@ Wire PaySheetTransaction through to erp5_corporate_identity Report
 return context.Base_printAsReport(
   format=format,
   report_title="Payslip",
-  report_name="Person_generatePayslipReport",
+  report_name = "PaySheetTransaction_generatePayslipReport",
   language=target_language,
   start_date=context.getStartDate() or None,
   stop_date=context.getStopDate() or None,
