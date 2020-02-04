@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>format=\'pdf\', batch_mode=None, override_source_organisation_title=None, document_save=None, display_milestone=None, document_download=None, document_language=None, document_reference=None, document_version=None, display_header=None, display_detail=None, display_comment=None, document_title=None, display_depth=None, report_title=None, display_orphan=None, report_name=None, start_date=None, stop_date=None, *args,**kw</string> </value>
+            <value> <string>format=\'pdf\', batch_mode=None, override_source_organisation_title=None, document_save=None, display_milestone=None, document_download=None, document_language=None, document_reference=None, document_version=None, display_header=None, display_detail=None, display_comment=None, document_title=None, display_depth=None, report_title=None, display_orphan=None, report_name=None, start_date=None, stop_date=None, report_header=None, report_footer=None,*args,**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

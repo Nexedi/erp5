@@ -7,6 +7,7 @@ Creates the Book footer.
 </tal:comment>
 <tal:block tal:define="book_theme                        python: options.get('book_theme');
                        book_title                        python: options.get('book_title');
+                       book_footer                       python: options.get('book_footer');
                        book_language                     python: options.get('book_language');
                        book_theme_css_font_list          python: options.get('book_theme_css_font_list');
                        book_theme_css_url                python: options.get('book_theme_css_url');
@@ -41,14 +42,19 @@ Creates the Book footer.
 
 <tal:block tal:condition="python: False">
   <tal:block metal:define-macro="book_footer">
-    <table class="ci-book-footer">
-      <tbody>
-        <tr>
-          <td><span tal:content="python: book_full_reference"></span></td>
-          <td><span style="margin-left:-55px;" i18n:translate="" i18n:domain="erp5_ui">Company Confidential</span></td>
-          <td><span class="ci-book-footer-copy">&copy;</span><span tal:content="python: ''.join([book_source_organisation_title, ' - ISO 16016'])"></span></td>
-        </tr>
-      </tbody>
-    </table>
+    <tal:block tal:condition="python: book_footer">
+      <tal:block tal:content="structure python: book_footer"></tal:block>
+    </tal:block>
+    <tal:block tal:condition="python: not book_footer">
+      <table class="ci-book-footer">
+        <tbody>
+          <tr>
+            <td><span tal:content="python: book_full_reference"></span></td>
+            <td><span style="margin-left:-55px;" i18n:translate="" i18n:domain="erp5_ui">Company Confidential</span></td>
+            <td><span class="ci-book-footer-copy">&copy;</span><span tal:content="python: ''.join([book_source_organisation_title, ' - ISO 16016'])"></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </tal:block>
   </tal:block>
 </tal:block>

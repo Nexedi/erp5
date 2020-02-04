@@ -34,6 +34,7 @@ MAIN FILE: generate report (book header/footer and report content)
 # --------
 # report_name               report to generate
 # report_title              report title
+# report_header             custom report header
 
 from Products.PythonScripts.standard import html_quote
 from base64 import b64encode
@@ -94,6 +95,19 @@ doc_translated_title = translateText(doc_report_title) if doc_report_title else 
 # fallback in case language is still None
 if doc_language is None or doc_language == "":
   doc_language = doc_localiser.get_selected_language() or doc_localiser.get_default_language() or "en"
+
+# custom header
+doc_header = None
+doc_report_header = kw.get('report_header', None)
+if doc_report_header:
+  doc_report_header = getattr(doc, doc_report_header)
+  doc_header = doc_report_header()
+
+doc_footer = None
+doc_report_footer = kw.get('report_footer', None)
+if doc_report_footer:
+  doc_report_footer = getattr(doc, doc_report_footer)
+  doc_footer = doc_report_footer()
 
 doc_content, report_override_doc_title, report_override_doc_subtitle = doc_report(
   display_report=None if doc_embed else True,
@@ -173,6 +187,8 @@ if doc_format == "html":
     book_full_reference=doc_full_reference,
     book_source_organisation_title=doc_source.get("organisation_title") or blank,
     book_content=doc_content,
+    book_header = doc_header,
+    book_footer = doc_footer
   )
 
   return doc.Base_finishWebPageCreation(
@@ -218,6 +234,7 @@ if doc_format == "pdf":
     book_revision=doc_revision,
     book_version=doc_version,
     book_short_date=doc_short_date,
+    book_header = doc_header
   )
 
   doc_foot = doc.WebPage_createBookFooter(
@@ -231,6 +248,7 @@ if doc_format == "pdf":
     book_template_css_url=doc_theme.get("template_css_url"),
     book_full_reference=doc_full_reference,
     book_source_organisation_title=doc_source.get("organisation_title") or blank,
+    book_footer = doc_footer
   )
 
   # ================ encode and build cloudoo elements =========================
