@@ -5,6 +5,9 @@
 """
 if portal is None:
   portal = context.getPortalObject()
+
+kw['limit'] = 1
+
 document_list = portal.portal_catalog.getDocumentValueList(
   reference=name,
   language=language,
