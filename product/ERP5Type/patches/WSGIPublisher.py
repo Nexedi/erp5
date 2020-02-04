@@ -33,7 +33,7 @@ from AccessControl.SecurityManagement import noSecurityManager
 from Acquisition import aq_acquire
 from Acquisition import aq_inner
 from Acquisition import aq_parent
-from Products.ERP5Type.Timeout import wrap_call_object
+from Products.ERP5Type.Timeout import getPublisherDeadlineValue
 from transaction.interfaces import TransientError
 from zExceptions import Redirect
 from zExceptions import Unauthorized
@@ -51,7 +51,7 @@ from ZPublisher.HTTPResponse import HTTPResponse
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.Iterators import IStreamIterator, IUnboundStreamIterator
 from ZPublisher.mapply import mapply
-from ZPublisher.WSGIPublisher import call_object as call_object_orig
+from ZPublisher.WSGIPublisher import call_object
 from ZPublisher.WSGIPublisher import missing_name, WSGIResponse
 
 
@@ -64,7 +64,6 @@ _DEFAULT_DEBUG_MODE = False
 _DEFAULT_REALM = None
 _MODULE_LOCK = allocate_lock()
 _MODULES = {}
-call_object = wrap_call_object(call_object_orig)
 
 
 AC_LOGGER = logging.getLogger('event.AccessControl')
@@ -342,41 +341,42 @@ def transaction_pubevents(request, response, err_hook, tm=transaction.manager):
 
 
 def publish(request, module_info):
-    obj, realm, debug_mode = module_info
+    with getPublisherDeadlineValue(request):
+        obj, realm, debug_mode = module_info
 
-    request.processInputs()
-    response = request.response
+        request.processInputs()
+        response = request.response
 
-    if debug_mode:
-        response.debug_mode = debug_mode
+        if debug_mode:
+            response.debug_mode = debug_mode
 
-    if realm and not request.get('REMOTE_USER', None):
-        response.realm = realm
+        if realm and not request.get('REMOTE_USER', None):
+            response.realm = realm
 
-    noSecurityManager()
+        noSecurityManager()
 
-    # Get the path list.
-    # According to RFC1738 a trailing space in the path is valid.
-    path = request.get('PATH_INFO')
-    request['PARENTS'] = [obj]
+        # Get the path list.
+        # According to RFC1738 a trailing space in the path is valid.
+        path = request.get('PATH_INFO')
+        request['PARENTS'] = [obj]
 
-    obj = request.traverse(path, validated_hook=validated_hook)
-    notify(pubevents.PubAfterTraversal(request))
-    recordMetaData(obj, request)
+        obj = request.traverse(path, validated_hook=validated_hook)
+        notify(pubevents.PubAfterTraversal(request))
+        recordMetaData(obj, request)
 
-    result = mapply(obj,
-                    request.args,
-                    request,
-                    call_object,
-                    1,
-                    missing_name,
-                    dont_publish_class,
-                    request,
-                    bind=1)
-    if result is not response:
-        response.setBody(result)
+        result = mapply(obj,
+                        request.args,
+                        request,
+                        call_object,
+                        1,
+                        missing_name,
+                        dont_publish_class,
+                        request,
+                        bind=1)
+        if result is not response:
+            response.setBody(result)
 
-    return response
+        return response
 
 
 @contextmanager

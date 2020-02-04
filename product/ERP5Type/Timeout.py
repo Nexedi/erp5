@@ -1,6 +1,7 @@
 ##############################################################################
-# Copyright (c) 2019 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2019-2020 Nexedi SA and Contributors. All Rights Reserved.
 #                     Kazuhiko <kazuhiko@nexedi.com>
+#                     Vincent Pelletier <vincent@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -33,7 +34,7 @@ from Products.TimerService.timerserver.TimerServer import TimerRequest
 
 __all__ = (
   'TimeoutReachedError', 'Deadline', 'getDeadline', 'getTimeLeft',
-  'wrap_call_object',
+  'getPublisherDeadlineValue',
 )
 
 class TimeoutReachedError(Exception):
@@ -101,21 +102,10 @@ def getTimeLeft():
   deadline = getattr(_site_local, 'deadline', None)
   return None if deadline is None else max(deadline - time.time(), 0.000001)
 
-def wrap_call_object(call_object):
+def getPublisherDeadlineValue(request):
   """
-  Return argument wrapped so it is executed in a timeout context using
-  publisher_timeout.
-
-  call_object (callable (object, args, request) -> any)
-    call_object-like function, which should be executed under a deadline based
-    on publisher_timeout value at call-time.
-    Dedline will not be applied if request is a TimerRequest instance, as these
-    requests are not strictly published, and hence do not fall under control of
-    the same setting.
+  Return an instance of Deadline class suitable for publication.
   """
-  def deadlined_call_object(object, args, request):
-    with Deadline(
-      None if isinstance(request, TimerRequest) else publisher_timeout,
-    ):
-      return call_object(object, args, request)
-  return deadlined_call_object
+  return Deadline(
+    None if isinstance(request, TimerRequest) else publisher_timeout,
+  )
