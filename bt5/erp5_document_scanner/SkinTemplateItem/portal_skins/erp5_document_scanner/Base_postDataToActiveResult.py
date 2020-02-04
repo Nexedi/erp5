@@ -5,14 +5,6 @@
 import string
 import random
 
-reference =  str(
-  DateTime().millis()) + '-' + ''.join(
-    random.sample(
-      string.letters+string.digits, random.randint(
-        6, 10)
-    )
-)
-
 portal = context.getPortalObject()
 
 if REQUEST:
@@ -23,5 +15,11 @@ if active_process_url:
 else:
   active_process = portal.portal_activities.newActiveProcess()
 
-active_process.postActiveResult(detail=detail, reference=reference)
-return active_process, reference
+if generate_new_uid:
+  id_group = ('document_scanner_js', active_process.getUid())
+  new_uid = portal.portal_ids.generateNewId(id_group=id_group, default=0)
+else:
+  new_uid = None
+
+active_process.postActiveResult(detail=detail, reference=new_uid)
+return active_process, new_uid
