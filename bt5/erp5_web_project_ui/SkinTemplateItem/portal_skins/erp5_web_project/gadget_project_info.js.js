@@ -174,7 +174,7 @@
               return {"id": id, "content": content, "edit_view": edit_view};
             });
         }
-        return {"id": id, "content": content, "edit_view": edit_view};
+        return null;
       });
   }
 
@@ -211,32 +211,37 @@
     .onStateChange(function (modification_dict) {
       var gadget = this,
         web_page_info,
+        url_parameter_list,
+        promise_list,
         editor;
       return new RSVP.Queue()
         .push(function () {
-          return RSVP.all([
-            getWebPageInfo(gadget, modification_dict.jio_key, modification_dict.publication_section),
-            gadget.getDeclaredGadget("editor"),
+          promise_list = [
             gadget.getSetting("hateoas_url")
-          ]);
+          ];
+          if (modification_dict.publication_section) {
+            promise_list.push(gadget.getDeclaredGadget("editor")),
+            promise_list.push(getWebPageInfo(gadget, modification_dict.jio_key, modification_dict.publication_section));
+          }
+          return RSVP.all(promise_list);
         })
         .push(function (result_list) {
-          var document_view = result_list[2] +
+          var document_view = result_list[0] +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
             modification_dict.jio_key + '&view=Project_viewDocumentList',
-            milestone_view = result_list[2] +
+            milestone_view = result_list[0] +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
             modification_dict.jio_key + '&view=Project_viewMilestoneList',
-            activity_view = result_list[2] +
+            activity_view = result_list[0] +
             '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
             modification_dict.jio_key + '&view=Project_viewActivityList';
-          web_page_info = result_list[0];
-          if (web_page_info.id) {
+          web_page_info = result_list[2];
+          if (web_page_info) {
             editor = result_list[1];
             editor.render({"editor": "fck_editor", "editable": false, "maximize": true,
                            "value": web_page_info.content});
           }
-          return gadget.getUrlForList([
+          url_parameter_list = [
             getUrlParameterDict('milestone_module', milestone_view, [["stop_date", "ascending"]],
               null, createProjectQuery(null, [["selection_domain_date_milestone_domain", "future"]])),
             getUrlParameterDict('task_module', "view", [["delivery.start_date", "descending"]],
@@ -258,11 +263,14 @@
               null, createProjectQuery(modification_dict.jio_key, [])),
             getUrlParameterDict('test_suite_module', 'view', [["creation_date", "descending"]],
               null, createProjectQuery(modification_dict.jio_key, [["translated_validation_state_title", "validated"]])),
-            getUrlParameterDict(web_page_info.id, web_page_info.edit_view),
             getUrlParameterDict(modification_dict.jio_key, document_view, [["modification_date", "descending"]],
               ["download", "title", "reference", "modification_date"], createProjectQuery(null, [["selection_domain_state_document_domain", "confirmed"]])),
             getUrlParameterDict(modification_dict.jio_key, activity_view, [["modification_date", "descending"]])
-          ]);
+          ];
+          if (web_page_info) {
+            url_parameter_list.push(getUrlParameterDict(web_page_info.id, web_page_info.edit_view));
+          }
+          return gadget.getUrlForList(url_parameter_list);
         })
         .push(function (url_list) {
           enableLink(document.getElementById("milestone_link"), url_list[0]);
@@ -272,11 +280,11 @@
           enableLink(document.getElementById("report_link"), url_list[4]);
           enableLink(document.getElementById("test_result_link"), url_list[5]);
           enableLink(document.getElementById("test_suite_link"), url_list[6]);
-          if (web_page_info.id) {
-            enableLink(document.getElementById("web_page_link"), url_list[7]);
+          enableLink(document.getElementById("document_link"), url_list[7]);
+          enableLink(document.getElementById("activity_link"), url_list[8]);
+          if (web_page_info) {
+            enableLink(document.getElementById("web_page_link"), url_list[9]);
           }
-          enableLink(document.getElementById("document_link"), url_list[8]);
-          enableLink(document.getElementById("activity_link"), url_list[9]);
           setLatestTestResult(gadget, document.getElementById("test_result_svg"), modification_dict.jio_key);
         });
     })
