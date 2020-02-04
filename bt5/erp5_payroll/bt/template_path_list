@@ -2,6 +2,8 @@ portal_categories/base_amount/payroll
 portal_categories/base_amount/payroll/l10n
 portal_categories/contribution_share/employee
 portal_categories/contribution_share/employer
+portal_categories/report_section/payroll
+portal_categories/report_section/payroll/**
 portal_categories/use/social_declaration
 portal_categories/use/social_declaration/l10n
 portal_deliveries/pay_sheet_builder
