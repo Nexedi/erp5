@@ -101,7 +101,7 @@
       }, function () {
         // XXX TODO: Handle error case
         var state_dict = {};
-        state_dict['blob_state_' + blob_page] = 'Error';
+        state_dict['blob_state_' + blob_page] = 'error';
         return gadget.changeState(state_dict);
       });
   }
@@ -177,6 +177,7 @@
 
   function buildPreviousThumbnailDom(gadget) {
     var i,
+      img_class,
       len = gadget.state.page_count,
       thumbnail_dom_list = [];
 
@@ -193,12 +194,17 @@
         for (i = 0; i < len; i += 1) {
           // XXX TODO display a loader when saving
           if (gadget.state['blob_state_' + i] !== 'deleted') {
+            if (gadget.state['blob_state_' + i] === "error") {
+              img_class = "show-img upload-error";
+            } else {
+              img_class = "show-img";
+            }
             thumbnail_dom_list.push(domsugar('button', {
               type: "button",
               // Do not allow to show again the current image
               // or do not allow to show saving image (to simplify button management)
               disabled: (i === gadget.state.page) || (gadget.state['blob_state_' + i] === 'saving')
-            }, [domsugar("img", {"class": "show-img",
+            }, [domsugar("img", {"class": img_class,
                                  'data-page': i,
                                  src: gadget.state['blob_url_' + i]})]));
           }
@@ -362,7 +368,7 @@
         ],
           div;
 
-        if (gadget.state['blob_state_' + gadget.state.page] === 'failed') {
+        if (gadget.state['blob_state_' + gadget.state.page] === 'error') {
           button_list.push(
             // XXX TODO improve icon
             domsugar('button', {type: 'button',
@@ -475,7 +481,7 @@
       // XXX TODO use a more precise selector
       return buildPreviousThumbnailDom(gadget)
         .push(function (result) {
-          thumbnail_container = gadget.element.querySelector('ol');
+          thumbnail_container = gadget.element.querySelector('.thumbnail-list');
           thumbnail_container.parentElement.replaceChild(
             result,
             thumbnail_container
