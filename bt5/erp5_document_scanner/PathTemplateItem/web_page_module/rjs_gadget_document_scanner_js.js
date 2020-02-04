@@ -299,9 +299,7 @@
         ]);
       })
       .push(function (result_list) {
-        var // blob_url = URL.createObjectURL(blob),
-          // img = domsugar('img', {src: blob_url});
-          bitmap = result_list[1],
+        var bitmap = result_list[1],
           canvas = domsugar('canvas', {'class': 'canvas'}),
           defer = RSVP.defer();
 
