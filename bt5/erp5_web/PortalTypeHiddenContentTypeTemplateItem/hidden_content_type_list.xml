@@ -1,0 +1,8 @@
+<hidden_content_type_list>
+ <portal_type id="Web Site">
+  <item>Static Web Section</item>
+ </portal_type>
+ <portal_type id="Web Site Module">
+  <item>Static Web Site</item>
+ </portal_type>
+</hidden_content_type_list>
