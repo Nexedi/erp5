@@ -50,6 +50,8 @@ return context.Base_viewAsReport(
   display_milestone=display_milestone,
   report_name=report_name,
   report_title=report_title,
+  report_header = report_header,
+  report_footer = report_footer,
   start_date=start_date,
   stop_date=stop_date,
   batch_mode=batch_mode,

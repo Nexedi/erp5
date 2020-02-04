@@ -8,6 +8,8 @@ Generates the complete book (only called in HTML version)
 <tal:block tal:define="book_raw_tables                   python: options.get('book_raw_tables');
                        book_raw_report                   python: options.get('book_raw_report');
                        book_theme                        python: options.get('book_theme');
+                       book_header                       python: options.get('book_header');
+                       book_footer                       python: options.get('book_footer');
                        book_title                        python: options.get('book_title');
                        book_language                     python: options.get('book_language');
                        book_theme_css_font_list          python: options.get('book_theme_css_font_list');
