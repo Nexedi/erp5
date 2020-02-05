@@ -93,13 +93,13 @@
           }
         });
       })
-      .push(function (response) {
-        var state_dict = {};
+      .push(function (evt) {
+        var state_dict = {},
+          data = JSON.parse(evt.target.responseText);
         state_dict['blob_state_' + blob_page] = 'OK';
-        state_dict['blob_uuid_' + blob_page] = response.uuid;
+        state_dict['blob_uuid_' + blob_page] = data.uuid;
         return gadget.changeState(state_dict);
       }, function () {
-        // XXX TODO: Handle error case
         var state_dict = {};
         state_dict['blob_state_' + blob_page] = 'error';
         return gadget.changeState(state_dict);
@@ -607,18 +607,29 @@
     // Used when submitting the form
     //////////////////////////////////////////////////
     .declareMethod('getContent', function () {
-      var gadget = this,
-        result = {};
-      // XXX TODO: check all blob, and only return the UUID for the one in stored state
-      result.data_json = JSON.stringify({
-        active_process: gadget.state.active_process,
-        image_list: gadget.state.image_list
-      });
-      result[gadget.state.key] = JSON.stringify({
-        input_value: 'XXX',
-        preferred_cropped_canvas_data: gadget.state.preferred_cropped_canvas_data
-      });
-      throw new Error('not implemented getContent');
+      var key,
+        uuid_key,
+        result,
+        gadget = this,
+        image_list = [];
+
+      for (key in gadget.state) {
+        if (gadget.state.hasOwnProperty(key)) {
+          if (key.indexOf("blob_state_") !== -1 &&
+              gadget.state[key] == "OK") {
+            uuid_key = "blob_uuid_" + key.replace("blob_state_", "");
+            image_list.push(gadget.state[uuid_key]);
+          }
+        }
+      }
+      result = {
+        data_json: JSON.stringify({
+          active_process: gadget.state.active_process,
+          image_list: image_list,
+          preferred_cropped_canvas_data: gadget.state.preferred_cropped_canvas_data
+        })
+      };
+      return result;
     }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
@@ -628,7 +639,7 @@
       for (key in gadget.state) {
         if (gadget.state.hasOwnProperty(key)) {
           if (key.indexOf("blob_state_") !== -1 &&
-              !gadget.state[key].match("deleted|stored")) {
+              !gadget.state[key].match("deleted|OK")) {
             return false;
           }
           if (key.indexOf("blob_url_") !== -1) {
