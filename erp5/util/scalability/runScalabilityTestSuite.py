@@ -143,6 +143,11 @@ class ScalabilityLauncher(object):
                         metavar='SITE_AVAILABILITY_URL',
                         help='Url to check instance availability')
 
+    parser.add_argument('--serial-test',
+                        metavar='SERIAL_TEST',
+                        action='store_true',
+                        help='Without this option, all test methods are invoked in parallel')
+
   @staticmethod
   def _checkParsedArguments(namespace):
     return namespace
@@ -235,6 +240,7 @@ class ScalabilityLauncher(object):
     instance_url = self.__argumentNamespace.instance_url
     metric_url = self.__argumentNamespace.metric_url
     site_availability_url = self.__argumentNamespace.site_availability_url
+    serial_test = self.__argumentNamespace.serial_test
 
     # To take metrics
     metric_thread_stop_event = threading.Event()
@@ -260,11 +266,12 @@ class ScalabilityLauncher(object):
     now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
     log_dir = "test-%s_%s" % (current_test.title, now)
 
-    command_list = []
     user_index = 0
     max_test_duration = 0.0
+    exec_env = os.environ.copy()
+    exec_env.update({'raise_error_if_fail': False})
     # Prepare commands
-    for test_suite in test_suite_list:
+    for index, test_suite in enumerate(test_suite_list, start=1):
       getTestDuration = getattr(suite, 'getTestDuration', None)
       if getTestDuration is not None:
         if len(getargspec(getTestDuration).args) == 3:
@@ -286,7 +293,7 @@ class ScalabilityLauncher(object):
       if max_test_duration < test_duration:
         max_test_duration = test_duration
       log_file_name_prefix = "%s_%s_suite_%s" %(LOG_FILE_PREFIX, current_test.title, test_suite)
-      command_list.append([tester_path,
+      command = [tester_path,
                            instance_url,
                            str(user_quantity_dict[test_suite]),
                            test_suite,
@@ -299,18 +306,21 @@ class ScalabilityLauncher(object):
                            '--user-index', str(user_index),
                            "--repeat", "%d"%test_repeat,
                            "--duration", "%d"%test_duration,
-                         ])
+                         ]
       user_index += user_quantity_dict[test_suite]
-    # Launch commands
-    exec_env = os.environ.copy()
-    exec_env.update({'raise_error_if_fail': False})
-    for index, command in enumerate(command_list, start=1):
+      # Launch command
       test_thread = TestThread(process_manager, command, self.log, env=exec_env)
       test_thread.start()
-    # Sleep
-    self.log("Going to sleep for %s seconds." % str(max_test_duration))
-    time.sleep(max_test_duration)
-    process_manager.killPreviousRun()
+      if serial_test:
+        self.log("Going to sleep for %s seconds." % str(test_duration))
+        test_thread.join(test_duration)
+        if test_thread.is_alive():
+          process_manager.killPreviousRun()
+    if not serial_test:
+      # Sleep
+      self.log("Going to sleep for %s seconds." % str(max_test_duration))
+      time.sleep(max_test_duration)
+      process_manager.killPreviousRun()
     self.moveLogs(log_dir, current_test)
 
     self.log("Test Case %s has finished" %(current_test.title))
