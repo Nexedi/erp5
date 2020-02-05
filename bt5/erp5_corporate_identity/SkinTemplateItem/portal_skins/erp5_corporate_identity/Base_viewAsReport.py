@@ -96,18 +96,25 @@ doc_translated_title = translateText(doc_report_title) if doc_report_title else 
 if doc_language is None or doc_language == "":
   doc_language = doc_localiser.get_selected_language() or doc_localiser.get_default_language() or "en"
 
+doc_language = html_quote(override_document_language) if override_document_language else doc_language
+
+if doc_language is not None:
+  doc.REQUEST['AcceptLanguage'].set(doc_language, 10)
+else:
+  doc_language = blank
+
 # custom header
 doc_header = None
 doc_report_header = kw.get('report_header', None)
 if doc_report_header:
   doc_report_header = getattr(doc, doc_report_header)
-  doc_header = doc_report_header()
+  doc_header = doc_report_header(language=doc_language)
 
 doc_footer = None
 doc_report_footer = kw.get('report_footer', None)
 if doc_report_footer:
   doc_report_footer = getattr(doc, doc_report_footer)
-  doc_footer = doc_report_footer()
+  doc_footer = doc_report_footer(language=doc_language)
 
 doc_content, report_override_doc_title, report_override_doc_subtitle = doc_report(
   display_report=None if doc_embed else True,
@@ -123,29 +130,25 @@ doc_content, report_override_doc_title, report_override_doc_subtitle = doc_repor
   start_date=doc_report_start_date,
   stop_date=doc_report_stop_date,
   report_title=doc_translated_title,
-  override_batch_mode=override_batch_mode
+  override_batch_mode=override_batch_mode,
+  language = doc_language
 )
+
 if doc.isModuleType():
   doc_reference = html_quote(override_document_reference) if override_document_reference else blank
   doc_short_title = translateText(report_override_doc_subtitle if report_override_doc_subtitle else html_quote(doc_report_title) if doc_report_title else blank)
   doc_version = html_quote(override_document_version) if override_document_version else getattr(doc, "version", None) or "001"
   doc_title = translateText(html_quote(override_document_title) if override_document_title else report_override_doc_title if report_override_doc_title else blank)
-  doc_language = html_quote(override_document_language) if override_document_language else doc_language
 else:
   doc_reference = html_quote(override_document_reference) if override_document_reference else doc.getReference() or blank
   doc_short_title = translateText(report_override_doc_subtitle if report_override_doc_subtitle else html_quote(doc_report_title) if doc_report_title else doc.getShortTitle() or blank)
   doc_version = html_quote(override_document_version) if override_document_version else getattr(doc, "version", None) or "001"
   doc_title = translateText(html_quote(override_document_title) if override_document_title else report_override_doc_title if report_override_doc_title else doc.getTitle() or blank)
-  doc_language = html_quote(override_document_language) if override_document_language else doc_language
 
 # test overrides
 if override_batch_mode:
   doc_modification_date = DateTime("1976-11-04")
   doc_revision = "1"
-if doc_language is not None:
-  doc.REQUEST['AcceptLanguage'].set(doc_language, 10)
-if doc_language is None:
-  doc_language = blank
 if doc_reference == blank:
   doc_reference = doc_prefix + doc_title.replace(" ", ".")
 doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])
@@ -153,7 +156,6 @@ doc_short_date = doc_modification_date.strftime('%Y-%m-%d')
 
 # ------------------------------- Theme ----------------------------------------
 doc_theme = doc.Base_getThemeDict(doc_format=doc_format, css_path="template_css/book", skin="Book")
-
 # --------------------------- Source/Destination -------------------------------
 doc_source = doc.Base_getSourceDict(
   override_source_person_title=None,
