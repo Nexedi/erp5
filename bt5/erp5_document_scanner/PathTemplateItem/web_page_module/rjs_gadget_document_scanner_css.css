@@ -67,9 +67,13 @@ div[data-gadget-url$="gadget_document_scanner.html"] > .camera > .thumbnail-list
 }
 
 div[data-gadget-url$="gadget_document_scanner.html"] .show-img {
-  width: 35%;
+  width: 21%;
 }
 
 div[data-gadget-url$="gadget_document_scanner.html"] .upload-error {
     border: 3px solid red;
+}
+
+div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
+  font-size: 26pt;
 }

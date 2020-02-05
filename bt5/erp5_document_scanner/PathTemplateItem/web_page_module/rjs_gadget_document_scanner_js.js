@@ -185,10 +185,9 @@
     return gadget.getTranslationList(["Page", "New Page"])
       .push(function (result_list) {
         thumbnail_dom_list.push(domsugar('button', {type: 'button',
-                                                    text: result_list[1],
                                                     // Do not allow to show again the current image
                                                     disabled: (len === gadget.state.page - 1),
-                                                    'class': 'new-btn'
+                                                    'class': 'new-btn ui-btn-icon-left ui-icon-plus'
                                                  }));
 
         for (i = 0; i < len; i += 1) {
