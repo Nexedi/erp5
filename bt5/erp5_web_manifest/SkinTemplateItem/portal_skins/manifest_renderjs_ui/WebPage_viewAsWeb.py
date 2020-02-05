@@ -5,6 +5,9 @@ if response is None:
 
 web_page = context
 
+# The vanilla HTML is wanted
+response.setBase(None)
+
 if REQUEST.getHeader('If-Modified-Since', '') == web_page.getModificationDate().rfc822():
   response.setStatus(304)
   return ""
