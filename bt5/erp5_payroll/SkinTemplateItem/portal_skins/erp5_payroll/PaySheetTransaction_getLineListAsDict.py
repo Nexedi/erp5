@@ -25,6 +25,9 @@ for line in line_list:
   if line.getResourceId() == 'total_employee_contributions':
     continue
   line_dict = {
+      'report_section': line.getReportSection(),
+      'group_by_report_section': line.getGroupByReportSection(),
+      'resource_title': line.getResourceTitle(),
       'group'  : line.getSourceSectionTitle(),
       'source_section_title': line.getSourceSectionTitle(),
       'title'  : line.getTitle(),

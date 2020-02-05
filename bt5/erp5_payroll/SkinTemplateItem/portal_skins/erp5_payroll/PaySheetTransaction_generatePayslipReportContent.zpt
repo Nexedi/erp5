@@ -1,260 +1,92 @@
-<tal:comment replace="nothing">
-<!-- """
-================================================================================
-Generates payslip report for a person
-================================================================================
-"""
-# paramters
-# ------------------------------------------------------------------------------
-# language                       document language to translate headers
-# display_report                 whether this is a standalone or embedded report
-# display_sandbox                wrap in iframe if multiple gantts on page
-# display_embedded               called internally to create embedded chart
-# report_title                   title to display ("Budget" used instead)
-#
--->
-</tal:comment>
-
-<tal:block tal:define="global documen_language        python: options.get('document_language');
-                       global sandbox                 python: options.get('display_sandbox') or 0;
-                       global embedded                python: options.get('display_embedded') or 0;
-                       global display_report          python: options.get('display_report') or 0;
-                       global display_detail          python: options.get('display_detail');
-                       global display_header          python: options.get('display_header');
-                       global display_depth           python: options.get('display_depth');">
-
-  <tal:comment replace="nothing"><!-- sandboxed call - when integrated into another document (drop irrelevant params) --></tal:comment>
-  <tal:block tal:condition="python: sandbox">
-    <iframe width="100%" style="border:0 none; background-color:#FFFFFF;box-sizing:border-box;-wekbit-box-sizing:border-box;"
-            tal:attributes="src       python: '%s/WebPage_viewAsWeb?portal_skin=Report&amp;document_language=%s&amp;report_name=PaySheetTransaction_generatePayslipReport&amp;display_embedded=1&amp;display_detail=%s&amp;display_header=%s&amp;display_depth=%s' % (context.absolute_url(), language, display_detail, display_header, display_depth);">
-    </iframe>
-  </tal:block>
-
-  <tal:comment replace="nothing"><!-- regular call --></tal:comment>
-  <tal:block tal:condition="python: (embedded and sandbox == 0) or (embedded == 0 and sandbox == 0)">
-    <tal:block metal:use-macro="context/PaySheetTransaction_generatePayslipReportContent/macros/report"/>
-  </tal:block>
-</tal:block>
-
+<tal:block metal:use-macro="context/PaySheetTransaction_generatePayslipReportContent/macros/report"/>
 <tal:block tal:condition="python: False">
   <tal:block metal:define-macro="report">
-    <tal:block tal:define="global start_date              python: options.get('start_date');
-                           global stop_date               python: options.get('stop_date');
-                           global payslip_data            python: options.get('report_data');
-                           override_display_header        python: True;">
+    <tal:block tal:define="payslip_data            python: options.get('report_data');
+                           payslip_line_list       python: payslip_data['payslip_line_list'];
+                           quantity_renderer nocall:here/Base_viewFieldLibrary/my_view_mode_money_quantity/render_pdf;
+                           price_renderer nocall:here/PaySheetTransaction_viewFieldLibrary/my_price/render_pdf;
+                           ">
       <tal:block tal:condition="python: payslip_data is not None">
-        <tal:block tal:condition="python: display_report">
-          <tal:block tal:condition="python: override_display_header is None">
-            <tal:block tal:replace="structure python: '<h%(headcount)d>%(title)s</h%(headcount)d>' % {'headcount': display_header, 'title': options.get('report_title')}"></tal:block>
-          </tal:block>
-
-          <!--div class="ci-book-report-date-wrapper">
-            <span i18n:translate="" i18n:domain="erp5_ui">From</span>
-            <span tal:content="python: start_date.strftime('%Y-%m-%d')"></span>
-            <span i18n:translate="" i18n:domain="erp5_ui">to</span>
-            <span tal:content="python: stop_date.strftime('%Y-%m-%d')"></span>
-          </div-->
-
-          <div class="ci-book-report-content-header-wrapper">
-            <table class="ci-book-table">
-              <tbody>
-                <tr>
-                  <td style="background:#fff">
-                    <div class="ci-book-report-content-card">
-                      <tal:block tal:define="sender            python: payslip_data['source_address_line_list'];">
-                        <tal:block tal:repeat="address_line sender">
-                          <tal:block tal:condition="python: address_line.get('is_header', None) is not None">
-                            <span class="ci-book-report-emphasis" tal:content="python: address_line['value']">Nexedi Sa</span>
-                          </tal:block>
-                          <tal:block tal:condition="python: address_line.get('is_header', None) is None">
-                            <span tal:content="python: address_line['value']">2 Rue unerue</span>
-                          </tal:block>
-                        </tal:block>
-                      </tal:block>
-                    </div>
-                    <div class="ci-book-report-content-card">
-                      <tal:block tal:define="sender_info       python: payslip_data['source_corporate_info_line_list'];">
-                        <tal:block tal:repeat="info_line sender_info">
-                          <tal:block tal:condition="python: info_line.get('is_header', None) is not None">
-                            <span class="ci-book-report-emphasis" tal:content="python: info_line['value']">UserTest Slicea</span>
-                          </tal:block>
-                          <tal:block tal:condition="python: info_line.get('is_header', None) is None">
-                            <span tal:content="python: info_line['value']">2 Rue unerue</span>
-                          </tal:block>
-                        </tal:block>
-                      </tal:block>
-                    </div>
-                  </td>
-                  <td style="background:#fff">
-                    <div class="ci-book-report-content-card">
-                      <tal:block tal:define="recipient         python: payslip_data['destination_address_line_list'];">
-                        <tal:block tal:repeat="address_line recipient">
-                          <tal:block tal:condition="python: address_line.get('is_header', None) is not None">
-                            <span class="ci-book-report-emphasis ci-book-report-headline" tal:content="python: address_line['value']"></span>
-                          </tal:block>
-                          <tal:block tal:condition="python: address_line.get('is_header', None) is None">
-                            <span tal:content="python: address_line['value']"></span>
-                          </tal:block>
-                        </tal:block>
-                      </tal:block>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </tal:block>
-
         <div class="ci-book-report-content-table-wrapper">
           <table class="ci-book-table">
             <thead>
               <tr>
                 <th i18n:translate="" i18n:domain="erp5_ui">Designation</th>
                 <th i18n:translate="" i18n:domain="erp5_ui">Base</th>
-                <th i18n:translate="" i18n:domain="erp5_ui">Employee Share (%)</th>
-                <th i18n:translate="" i18n:domain="erp5_ui">Employee Share</th>
-                <th i18n:translate="" i18n:domain="erp5_ui">Employer Share (%)</th>
-                <th i18n:translate="" i18n:domain="erp5_ui">Employer Share</th>
+                <th colspan="2" i18n:translate="" i18n:domain="erp5_ui">Employee</th>
+                <th colspan="2" i18n:translate="" i18n:domain="erp5_ui">Employer</th>
+              </tr>
+              <tr>
+                <td i18n:translate="" i18n:domain="erp5_ui"></td>
+                <td i18n:translate="" i18n:domain="erp5_ui"></td>
+                <td i18n:translate="" i18n:domain="erp5_ui">Employee share rate</td>
+                <td i18n:translate="" i18n:domain="erp5_ui">Employee Share</td>
+                <td i18n:translate="" i18n:domain="erp5_ui">Employer share rate</td>
+                <td i18n:translate="" i18n:domain="erp5_ui">Employer Share</td>
               </tr>
             </thead>
             <tbody>
-              <tal:block tal:define="section_list       python: payslip_data['payslip_section_list'];">
-                <tal:block tal:repeat="section_info  section_list">
-                  <tal:block tal:repeat="line section_info">
+                <tal:block tal:repeat="line  payslip_line_list">
                     <tal:block tal:define="last_class   python: 'ci-book-report-table-section-end' if repeat.get('line').end is True else '';">
                       <tr tal:attributes="class python: last_class">
-                        <tal:block tal:condition="python: line.get('is_header', None) is not None">
-                          <td><b tal:content="python: line['value']"></b></td>
+                        <td tal:content="python: line['title']"></td>
+                        <tal:block tal:condition="python: line['base']">
+                          <td tal:content="python: quantity_renderer(line['base'])"></td>
                         </tal:block>
-                        <tal:block tal:condition="python: line.get('is_header', None) is None">
-                          <td class="ci-book-report-cell-indent" tal:content="python: line['value']"></td>
+                        <tal:block tal:condition="python: not line['base']">
+                          <td></td>
                         </tal:block>
-                        <td tal:content="python: line['value_base']"></td>
-                        <td tal:content="python: line['value_employee_share_rate']"></td>
-                        <td tal:content="python: line['value_employee_share']"></td>
-                        <td tal:content="python: line['value_employer_share_rate']"></td>
-                        <td tal:content="python: line['value_employer_share']"></td>
+                        <tal:block tal:condition="python: line['employee_price']">
+                          <td tal:content="python: price_renderer(line['employee_price'])"></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: not line['employee_price']">
+                          <td></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: line['employee_total_price']">
+                          <td tal:content="python: quantity_renderer(line['employee_total_price'])"></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: not line['employee_total_price']">
+                          <td></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: line['employer_price']">
+                          <td tal:content="python: price_renderer(line['employer_price'])"></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: not line['employer_price']">
+                          <td></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: line['employer_total_price']">
+                          <td tal:content="python: quantity_renderer(line['employer_total_price'])"></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: not line['employer_total_price']">
+                          <td></td>
+                        </tal:block>
                       </tr>
                     </tal:block>
                   </tal:block>
-                </tal:block>
-              </tal:block>
             </tbody>
           </table>
         </div>
-        <div class="ci-book-report-content-summary-wrapper">
-          <div class="ci-book-report-content-section">
-            <table class="ci-book-table">
-              <tbody>
-                <tr>
-                  <td style="background:#fff">
-                    <div class="ci-book-report-content-card">
-                      <span><b i18n:translate="" i18n:domain="erp5_ui">Net payable</b></span><span><b tal:content="python: payslip_data['general_data_dict']['net_salary']"></b></span>
-                    </div>
-                  </td>
-                 </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="ci-book-report-content-footer-wrapper">
-         <div class="ci-book-report-content-section">
-            <table class="ci-book-table">
-              <tbody>
-                <tr>
-                  <td style="background:#fff">
-                    <div class="ci-book-report-content-card">
-                      <span><b i18n:translate="" i18n:domain="erp5_ui">Contract Info</b></span>
-                      <tal:block tal:define="hiring_info       python: payslip_data['destination_hiring_info_list'];">
-                        <tal:block tal:repeat="info_line hiring_info">
-                          <tal:block tal:condition="python: info_line.get('is_header', None) is not None">
-                            <span class="ci-book-report-emphasis" tal:content="python: info_line['value']"></span>
-                          </tal:block>
-                          <tal:block tal:condition="python: info_line.get('is_header', None) is None">
-                            <span tal:content="python: info_line['value']"></span>
-                          </tal:block>
-                        </tal:block>
-                      </tal:block>
-                    </div>
-                  </td>
-                  <td style="background:#fff">
-                    <div class="ci-book-report-content-card">
-                      <span><b i18n:translate="" i18n:domain="erp5_ui">Attendance</b></span>
-                      <tal:block tal:define="attendance_info       python: payslip_data['destination_attendance_info_list'];">
-                        <tal:block tal:repeat="info_line attendance_info">
-                          <tal:block tal:condition="python: info_line.get('is_header', None) is not None">
-                            <span class="ci-book-report-emphasis" tal:content="python: info_line['value']"></span>
-                          </tal:block>
-                          <tal:block tal:condition="python: info_line.get('is_header', None) is None">
-                            <span tal:content="python: info_line['value']"></span>
-                          </tal:block>
-                        </tal:block>
-                      </tal:block>
-                    </div>
-                  </td>
-                  <td style="background:#fff">
-                    <div class="ci-book-report-content-card">
-                      <span><b i18n:translate="" i18n:domain="erp5_ui">Paid Vacation (in days)</b></span>
-                      <tal:block tal:define="vacation_info       python: payslip_data['destination_vacation_info_list'];">
-                        <tal:block tal:repeat="info_line vacation_info">
-                          <tal:block tal:condition="python: info_line.get('is_header', None) is not None">
-                            <span class="ci-book-report-emphasis" tal:content="python: info_line['value']"></span>
-                          </tal:block>
-                          <tal:block tal:condition="python: info_line.get('is_header', None) is None">
-                            <span tal:content="python: info_line['value']"></span>
-                          </tal:block>
-                        </tal:block>
-                      </tal:block>
-                    </div>
-                  </td>
-                  <td style="background:#fff">
-                    <div class="ci-book-report-content-card">
-                      <span><b i18n:translate="" i18n:domain="erp5_ui">Tax Info</b></span>
-                      <tal:block tal:define="tax_info       python: payslip_data['destination_taxation_info_list'];">
-                        <tal:block tal:repeat="info_line tax_info">
-                          <tal:block tal:condition="python: info_line.get('is_header', None) is not None">
-                            <span class="ci-book-report-emphasis" tal:content="python: info_line['value']"></span>
-                          </tal:block>
-                          <tal:block tal:condition="python: info_line.get('is_header', None) is None">
-                            <span tal:content="python: info_line['value']"></span>
-                          </tal:block>
-                        </tal:block>
-                      </tal:block>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="ci-book-report-content-section">
-            <table class="ci-book-table">
-              <thead>
-                <tr>
-                  <th colspan="6"><span i18n:translate="" i18n:domain="erp5_ui">Cumuls Annuels</span>&nbsp;<span>(</span><span tal:content="python: payslip_data['general_data_dict']['year']"></span><span>)</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tal:block tal:define="cumulative_title       python: payslip_data['cumulative_title_list'];
-                                       cumulative_info        python: payslip_data['cumulative_info_list']">
-                  <tr>
-                    <tal:block tal:repeat="info_line cumulative_title">
-                       <td><b style="font-weight:bold;" i18n:translate="" i18n:domain="erp5_ui" tal:content="python: info_line['value']"></b></td>
-                    </tal:block>
-                  </tr>
-                  <tr>
-                    <tal:block tal:repeat="info_line cumulative_info">
-                       <td style="text-align: right;" i18n:translate="" i18n:domain="erp5_ui" tal:content="python: info_line['value']"></td>
-                    </tal:block>
-                  </tr>
-                </tal:block>
-              </tbody>
-            </table>
-          </div>
+        <div>
+          <table>
+            <tbody>
+              <tr>
+                <td i18n:translate="" i18n:domain="erp5_ui">NET TO PAY BEFORE INCOME TAX</td>
+                <td tal:content="python: '%s %s' % (
+                                 quantity_renderer(
+                                   payslip_data['net_salary']),
+                                   payslip_data['currency'])">800.000,00</td>
+              </tr>
+              <tr>
+                <td i18n:translate="" i18n:domain="erp5_ui">dont évolution de la rémunération à la supression des cotisations salariales chômage et maladie</td>
+                <td tal:content="python: quantity_renderer(payslip_data['amount_benefit'])"></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </tal:block>
-    </tal:block>
-    <tal:block tal:condition="python: payslip_data is None">
-      <h1 i18n:translate="" i18n:domain="erp5_ui" class="custom-header">XXX ERROR Payslip Report: No Paysheet data available</h1>
+      <tal:block tal:condition="python: payslip_data is None">
+        <h1 i18n:translate="" i18n:domain="erp5_ui" class="custom-header">XXX ERROR Payslip Report: No Paysheet data available</h1>
+      </tal:block>
     </tal:block>
   </tal:block>
 </tal:block>
