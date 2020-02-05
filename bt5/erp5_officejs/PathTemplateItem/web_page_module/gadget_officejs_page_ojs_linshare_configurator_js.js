@@ -86,7 +86,7 @@
         return gadget.setSetting('jio_storage_description', configuration);
       })
       .push(function () {
-        return gadget.setSetting('jio_storage_name', options.name);
+        return gadget.setSetting('jio_storage_name', options.name || "LINSHARE");
       })
       .push(function () {
         return gadget.setSetting('sync_reload', true);
