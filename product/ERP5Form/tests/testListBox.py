@@ -770,8 +770,9 @@ class TestListBox(ERP5TypeTestCase):
       'ERP5TypeTestCase:',
     )
     self.assertEqual(result.getStatus(), 500)
-    self.assertTrue('Error Type: TimeoutReachedError' in result.getBody())
-    self.assertTrue('Error Value: 1969: Query execution was interrupted (max_statement_time exceeded): SET STATEMENT' in result.getBody())
+    body = result.getBody()
+    self.assertIn('Error Type: TimeoutReachedError', body)
+    self.assertIn('Error Value: 1969: Query execution was interrupted (max_statement_time exceeded): SET STATEMENT', body)
 
   def test_zodb_timeout(self):
     portal = self.getPortal()
@@ -808,7 +809,7 @@ return context.objectValues()
       'ERP5TypeTestCase:',
     )
     self.assertEqual(result.getStatus(), 500)
-    self.assertTrue('Error Type: TimeoutReachedError' in result.getBody())
+    self.assertIn('Error Type: TimeoutReachedError', result.getBody())
 
 def test_suite():
   suite = unittest.TestSuite()
