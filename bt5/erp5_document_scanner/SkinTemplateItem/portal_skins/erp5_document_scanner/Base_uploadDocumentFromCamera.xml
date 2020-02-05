@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>publication_state, active_process_url=None, **kw</string> </value>
+            <value> <string>publication_state, active_process_url, image_list, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
