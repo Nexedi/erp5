@@ -68,11 +68,7 @@
   <td>field_your_title</td>
   <td>Test Scan Document <span tal:replace="python: DateTime().ISO()"></span></td>
 </tr>
-<!--tr>
-  <td>type</td>
-  <td>field_your_reference</td>
-  <td>TESTSCANDOCUMENT<span tal:replace="python: DateTime().ISO()"></span></td>
-</tr-->
+
 <tr>
   <td>type</td>
   <td>field_your_language</td>
@@ -95,7 +91,7 @@
 </tr>
 
 <div tal:repeat="item python:range(2)">
-
+  <!-- Click on Capture -->
   <tr>
     <td>waitForElementPresent</td>
     <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
@@ -108,9 +104,15 @@
   </tr>
   <tr>
     <td>waitForElementPresent</td>
+    <td>//div[@class="cropper-wrap-box"]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>waitForElementPresent</td>
     <td>//button[@class="reset-btn ui-btn-icon-left ui-icon-times"]</td>
     <td></td>
   </tr>
+  <!-- Click on Delete -->
   <tr>
     <td>click</td>
     <td>//button[@class="reset-btn ui-btn-icon-left ui-icon-times"]</td>
@@ -121,6 +123,7 @@
     <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
     <td></td>
   </tr>
+  <!-- Click on Capture again -->
   <tr>
     <td>click</td>
     <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
@@ -131,42 +134,128 @@
     <td>//button[@class="confirm-btn ui-btn-icon-left ui-icon-check"]</td>
     <td></td>
   </tr>
+  <!-- Click on Confirm -->
   <tr>
     <td>click</td>
     <td>//button[@class="confirm-btn ui-btn-icon-left ui-icon-check"]</td>
     <td></td>
   </tr>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-  <tal:block tal:define="notification_configuration python: {'class': 'success',
-                                                             'text': 'Captured'}">
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
-  </tal:block>
-
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
+    <td></td>
+  </tr>
+  <!-- wait upload starts -->
+  <tr>
+    <td>waitForElementPresent</td>
+    <td>//button[@class="ui-btn-icon-left ui-icon-spinner"]</td>
+    <td></td>
+  </tr>
 </div>
-
+<!-- wait upload finish -->
 <tr>
-  <td>storeValue</td>
-  <td>//input[@id="field_your_active_process_url"]</td>
-  <td>active_process_url</td>
+  <td>waitForElementNotPresent</td>
+  <td>//button[@class="ui-btn-icon-left ui-icon-spinner"]</td>
+  <td></td>
 </tr>
-
+<tr>
+  <td>assertElementPresent</td>
+  <td>//button[@class="new-btn ui-btn-icon-left ui-icon-plus" and @disabled]</td>
+  <td></td>
+</tr>
+<!-- check if first image exists -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//img[@data-page="0" and @class="show-img"]</td>
+  <td></td>
+</tr>
+<!-- check if second image exists -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//img[@data-page="1" and @class="show-img"]</td>
+  <td></td>
+</tr>
+<!-- check if third image does not exists -->
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//img[@data-page="2" and @class="show-img"]</td>
+  <td></td>
+</tr>
+<!-- open first image -->
+<tr>
+  <td>click</td>
+  <td>//img[@data-page="0" and @class="show-img"]</td>
+  <td></td>
+</tr>
+<!-- check if delete button appears -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@class="delete-btn ui-btn-icon-left ui-icon-times"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//button[@class="new-btn ui-btn-icon-left ui-icon-plus" and @disabled]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class="new-btn ui-btn-icon-left ui-icon-plus"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="cropper-wrap-box"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@class="confirm-btn ui-btn-icon-left ui-icon-check"]</td>
+  <td></td>
+</tr>
+<!-- Click on Confirm -->
+<tr>
+  <td>click</td>
+  <td>//button[@class="confirm-btn ui-btn-icon-left ui-icon-check"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@class="take-picture-btn ui-btn-icon-left ui-icon-circle"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@class="ui-btn-icon-left ui-icon-spinner"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//img[@data-page="2" and @class="show-img"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//button[@class="ui-btn-icon-left ui-icon-spinner"]</td>
+  <td></td>
+</tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'The document is being created in background.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-<tr>
-  <td>open</td>
-  <td>${base_url}/erp5/Base_assertActiveProcessHasOneImage?active_process_url=${active_process_url}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>OK</td>
-  <td></td>
-</tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
@@ -215,12 +304,12 @@
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>of 2</td>
+  <td>of 3</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>of 2</td>
+  <td>of 3</td>
   <td></td>
 </tr>
 <tr>
@@ -229,17 +318,6 @@
   <td></td>
 </tr>
 
-
-<!--tr>
-  <td>open</td>
-  <td>${base_url}/erp5/Base_removeActiveProcessFromFileSystem?active_process_url=${active_process_url}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Done</td>
-  <td></td>
-</tr-->
 </tbody></table>
 </body>
 </html>
