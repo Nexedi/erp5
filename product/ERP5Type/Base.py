@@ -49,8 +49,6 @@ from persistent import Persistent
 from persistent.TimeStamp import TimeStamp
 from zExceptions import NotFound, Unauthorized
 
-from ZopePatch import ERP5PropertyManager
-
 from Products.CMFCore.PortalContent import PortalContent
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCacheHeaders, _ViewEmulator
@@ -712,7 +710,7 @@ class Base( CopyContainer,
             PortalContent,
             ActiveObject,
             OFS.History.Historical,
-            ERP5PropertyManager,
+            PropertyManager,
             PropertyTranslatableBuiltInDictMixIn,
             JSONRepresentableMixin,
             ):
@@ -1278,9 +1276,9 @@ class Base( CopyContainer,
           result = [result]
         return result
     if d is not _MARKER:
-      return ERP5PropertyManager.getProperty(self, key, d=d,
+      return PropertyManager.getProperty(self, key, d=d,
                 local_properties=True, **kw)
-    return ERP5PropertyManager.getProperty(self, key,
+    return PropertyManager.getProperty(self, key,
                 local_properties=True, **kw)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getPropertyList' )
@@ -1356,11 +1354,11 @@ class Base( CopyContainer,
     # If we are here, this means we do not use a property that
     # comes from an ERP5 PropertySheet, we should use the
     # PropertyManager
-    if ERP5PropertyManager.hasProperty(self,key, local_properties=True):
-      ERP5PropertyManager._updateProperty(self, key, value,
+    if PropertyManager.hasProperty(self,key, local_properties=True):
+      PropertyManager._updateProperty(self, key, value,
                           local_properties=True)
     else:
-      ERP5PropertyManager._setProperty(self, key, value, type=type)
+      PropertyManager._setProperty(self, key, value, type=type)
     # This should not be there, because this ignore all checks made by
     # the PropertyManager. If there is problems, please complain to
     # seb@nexedi.com
@@ -1390,7 +1388,7 @@ class Base( CopyContainer,
     # Finaly use standard PropertyManager
     #LOG("Changing attr: ",0, key)
     #try:
-    ERP5PropertyManager._setPropValue(self, key, value)
+    PropertyManager._setPropValue(self, key, value)
     #except ConflictError:
     #  raise
     # This should not be there, because this ignore all checks made by
