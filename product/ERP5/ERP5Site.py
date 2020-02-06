@@ -1806,6 +1806,12 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
             for obj in tool.objectValues():
               obj.migrateToPortalTypeClass()
 
+  security.declarePublic('isTempObject')
+  def isTempObject(self):
+    """Return true if self is an instance of a temporary document class.
+    """
+    return 0
+
 Globals.InitializeClass(ERP5Site)
 
 def getBootstrapDirectory():

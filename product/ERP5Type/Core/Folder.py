@@ -162,13 +162,6 @@ class FolderMixIn(ExtensionClass.Base):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declarePublic('isTempObject')
-  def isTempObject(self):
-    """Return true if self is an instance of a temporary document class.
-    """
-    # Note: Folder inherits from Base and FolderMixIn but Base has priority.
-    return 0
-
   security.declarePublic('newContent')
   def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, container=None, temp_object=0, **kw):
