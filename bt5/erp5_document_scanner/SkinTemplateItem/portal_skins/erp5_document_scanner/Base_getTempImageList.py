@@ -13,6 +13,6 @@ for result in active_process.getResultList():
     pdf_data_list.append(
       image_module.newContent(data=decodestring(result.detail),
                               portal_type="Image",
-                              temp_object=False).convert(format="pdf")[1])
+                              temp_object=True).convert(format="pdf")[1])
 
 return pdf_data_list
