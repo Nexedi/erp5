@@ -23,11 +23,7 @@ from Acquisition import aq_base
 from zExceptions import BadRequest
 from DateTime import DateTime
 
-class ERP5PropertyManager(PropertyManager):
-  """
-    This class is only for backward compatibility.
-  """
-  pass
+ERP5PropertyManager = PropertyManager # BBB
 
 PropertyManager_manage_propertiesForm=DTMLFile('properties',
                                                _dtmldir,
