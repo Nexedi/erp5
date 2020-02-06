@@ -178,6 +178,7 @@
   function buildPreviousThumbnailDom(gadget) {
     var i,
       img_class,
+      btn_class = "",
       len = gadget.state.page_count,
       thumbnail_dom_list = [];
 
@@ -198,8 +199,13 @@
             } else {
               img_class = "show-img";
             }
+
+            if (gadget.state['blob_state_' + i] === "saving") {
+              btn_class = "ui-btn-icon-left ui-icon-spinner";
+            }
             thumbnail_dom_list.push(domsugar('button', {
               type: "button",
+              "class": btn_class,
               // Do not allow to show again the current image
               // or do not allow to show saving image (to simplify button management)
               disabled: (i === gadget.state.page) || (gadget.state['blob_state_' + i] === 'saving')
@@ -477,7 +483,6 @@
 
       // Only refresh the thumbnail list
       // if display_step is not modified
-      // XXX TODO use a more precise selector
       return buildPreviousThumbnailDom(gadget)
         .push(function (result) {
           thumbnail_container = gadget.element.querySelector('.thumbnail-list');
