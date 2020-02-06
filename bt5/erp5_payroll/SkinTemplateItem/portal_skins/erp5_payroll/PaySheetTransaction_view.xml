@@ -88,6 +88,8 @@
                         <string>listbox_employer_total_price</string>
                         <string>listbox_int_index</string>
                         <string>listbox_title</string>
+                        <string>listbox_report_section</string>
+                        <string>listbox_group_by_report_section</string>
                       </list>
                     </value>
                 </item>
