@@ -8,9 +8,10 @@
 
 column_list = []
 editable_column_list = [('int_index', 'PaySheet Order'),
-                        ('title', 'Title'),]
+                        ('title', 'Title')]
 
-not_editable_column_list = [('source_section_title', 'Service Provider'),
+not_editable_column_list = [('report_section', 'Report Section'),
+                            ('source_section_title', 'Service Provider'),
                             ('slice', 'Slice'),]
 
 column_list.extend(editable_column_list)
