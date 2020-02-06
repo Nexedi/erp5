@@ -706,11 +706,12 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
       else:
         method.registerTransitionAlways(portal_type, wf_id, tr_id)
 
-class Base( CopyContainer,
+class Base(
+            CopyContainer,
+            PropertyManager,
             PortalContent,
             ActiveObject,
             OFS.History.Historical,
-            PropertyManager,
             PropertyTranslatableBuiltInDictMixIn,
             JSONRepresentableMixin,
             ):
@@ -3516,7 +3517,11 @@ class Base( CopyContainer,
     return new_document
 
   def _postCopy(self, container, op=0):
-    super(Base, self)._postCopy(container, op=op)
+    # Note: "super" cannot be used here, as this method gets stolen by
+    # ERP5Type.Core.Folder, which also inherits from CopyContainer before
+    # inheriting from ourselves, in which case "super" ends up calling the
+    # OFS.CopySupport method, which we do not want.
+    CopyContainer._postCopy(self, container, op)
     if op == 0: # copy (not cut)
       # We are the copy of another document (either cloned or copy/pasted),
       # forget id generator state.

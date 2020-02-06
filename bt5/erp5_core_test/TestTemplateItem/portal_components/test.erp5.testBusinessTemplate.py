@@ -34,7 +34,6 @@ from unittest import expectedFailure, skip
 from AccessControl import getSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
-from OFS.SimpleItem import SimpleItem
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
 from urllib import pathname2url
@@ -6302,11 +6301,9 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       if obj.id in object_id_list:
         obj.int_index = marker_list.pop()
       return obj
-    SimpleItem_getCopy = SimpleItem._getCopy
     import Products.ERP5.tests
     try:
       BaseTemplateItem.removeProperties = removeProperties
-      SimpleItem._getCopy = lambda *args: self.fail()
       template_tool = portal.portal_templates
       bt_path = os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
                              'test_data',
@@ -6335,7 +6332,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
         self.tic()
     finally:
       BaseTemplateItem.removeProperties = BaseTemplateItem_removeProperties
-      SimpleItem._getCopy = SimpleItem_getCopy
       gc.enable()
     # check the previously existing instance now behaves as the overriden class
     self.assertTrue(getattr(portal.another_file, 'isClassOverriden', False))
