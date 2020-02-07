@@ -12,7 +12,8 @@ response.setHeader("Access-Control-Allow-Origin", "*")
 web_page = context
 web_section = context.getWebSectionValue()
 
-if REQUEST.getHeader('If-Modified-Since', '') == web_page.getModificationDate().rfc822():
+# Must-Revalidate caching policy uses Base_getWebSiteDrivenModificationDate
+if REQUEST.getHeader('If-Modified-Since', '') == web_page.Base_getWebSiteDrivenModificationDate().rfc822():
   response.setStatus(304)
   return ""
 
