@@ -96,6 +96,10 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content_substitution_mapping_method_id</string> </key>
+            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>ERP5 ServiceWorker</string> </value>
         </item>
@@ -234,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>981.43215.21388.62139</string> </value>
+                      <value> <string>981.45037.17470.33382</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +256,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1580982701.01</float>
+                              <float>1581092014.2</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
