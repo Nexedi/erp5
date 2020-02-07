@@ -16,11 +16,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The publication section for documents</string> </value>
+            <value> <string>The publication section for web pages to be used as project home page</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>preferred_publication_section_property</string> </value>
+            <value> <string>preferred_project_home_page_publication_section_category_property</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

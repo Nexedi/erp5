@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_preferred_publication_section</string> </value>
+            <value> <string>my_preferred_project_home_page_publication_section_category</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -102,7 +102,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Publication Section</string> </value>
+                    <value> <string>Home Page Publication Section</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_categories[field.getId().replace(\'my_preferred_\', \'\', 1)].getCategoryChildCompactLogicalPathItemList()</string> </value>
+            <value> <string>python: here.portal_categories["publication_section"].getCategoryChildCompactLogicalPathItemList()</string> </value>
         </item>
       </dictionary>
     </pickle>
