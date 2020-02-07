@@ -14,7 +14,7 @@ project.validate()
 
 if home_page:
   system_preference = portal.portal_preferences.getActiveSystemPreference()
-  system_preference.setPreferredPublicationSection("project_home_page_for_test")
+  system_preference.setPreferredProjectHomePagePublicationSectionCategory("project_home_page_for_test")
   publication_section = context.restrictedTraverse('portal_categories/publication_section/project_home_page_for_test')
   module = portal.getDefaultModule('Web Page')
   home_page = module.newContent(id = test_id,
