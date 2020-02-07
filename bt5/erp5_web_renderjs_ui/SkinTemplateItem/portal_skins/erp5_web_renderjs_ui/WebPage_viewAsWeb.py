@@ -1,3 +1,6 @@
+from DateTime import DateTime
+import json
+
 if REQUEST is None:
   REQUEST = context.REQUEST
 if response is None:
@@ -10,15 +13,15 @@ response.setBase(None)
 response.setHeader("Access-Control-Allow-Origin", "*")
 
 web_page = context
-web_section = REQUEST.get("current_web_section")
-if web_section is None:
-  parent_value = context.getParentValue()
-  if parent_value.getPortalType() == "Web Section":
-    web_section = parent_value
+web_section = context.getWebSectionValue()
+# Must-Revalidate caching policy uses Base_getWebSiteDrivenModificationDate
+modification_date_string = web_page.Base_getWebSiteDrivenModificationDate().rfc822()
 
-if REQUEST.getHeader('If-Modified-Since', '') == web_page.getModificationDate().rfc822():
-  response.setStatus(304)
-  return ""
+modified_since = REQUEST.getHeader('If-Modified-Since', '')
+if modified_since:
+  if DateTime(modified_since).rfc822() == modification_date_string:
+    response.setStatus(304)
+    return ""
 
 portal_type = web_page.getPortalType()
 web_content = web_page.getTextContent()
