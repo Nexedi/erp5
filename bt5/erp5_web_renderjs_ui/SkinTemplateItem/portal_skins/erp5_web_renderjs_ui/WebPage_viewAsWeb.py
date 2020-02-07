@@ -11,9 +11,10 @@ response.setHeader("Access-Control-Allow-Origin", "*")
 
 web_page = context
 web_section = context.getWebSectionValue()
+modification_date_string = web_page.Base_getWebSiteDrivenModificationDate().rfc822()
 
 # Must-Revalidate caching policy uses Base_getWebSiteDrivenModificationDate
-if REQUEST.getHeader('If-Modified-Since', '') == web_page.Base_getWebSiteDrivenModificationDate().rfc822():
+if REQUEST.getHeader('If-Modified-Since', '') == modification_date_string:
   response.setStatus(304)
   return ""
 
@@ -23,6 +24,9 @@ web_content = web_page.getTextContent()
 # set headers depending on type of script
 if (portal_type == "Web Script"):
   response.setHeader('Content-Type', 'application/javascript; charset=utf-8')
+  web_content = web_page.TextDocument_substituteTextContent(web_content, mapping_dict={
+    'modification_date': modification_date_string
+  })
 
 elif (portal_type == "Web Style"):
   response.setHeader('Content-Type', 'text/css; charset=utf-8')
