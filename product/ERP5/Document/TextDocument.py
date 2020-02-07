@@ -97,13 +97,15 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContent
         if is_str:
           text = text.decode('utf-8')
 
-        unicode_mapping = {}
-        for k, v in mapping.iteritems():
-          if isinstance(v, str):
-            v = v.decode('utf-8')
-          elif not isinstance(v, unicode):
-            v = str(v).decode('utf-8')
-          unicode_mapping[k] = v
+        class UnicodeMapping:
+          def __getitem__(self, item):
+            v = mapping[item]
+            if isinstance(v, str):
+              v = v.decode('utf-8')
+            elif not isinstance(v, unicode):
+              v = str(v).decode('utf-8')
+            return v
+        unicode_mapping = UnicodeMapping()
 
         if safe_substitute:
           text = Template(text).safe_substitute(unicode_mapping)

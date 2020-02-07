@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-
+import textwrap
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 
@@ -174,3 +174,28 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     self.assertRaises(KeyError, doc.convert, 'txt', safe_substitute=False)
     self.assertRaises(KeyError, doc.convert, 'html', safe_substitute=False)
     self.assertRaises(KeyError, doc.asSubjectText, safe_substitute=False)
+
+  def test_substitution_lazy_dict(self):
+    """Substitution script just needs to return an object implementing
+    __getitem__ protocol.
+    """
+    module = self.portal.notification_message_module
+    createZODBPythonScript(
+        self.portal, 'NotificationMessage_getDummySubstitionMapping', '**kw',
+        textwrap.dedent(
+            '''\
+            class DynamicDict:
+              def __getitem__(self, key):
+                return "(dynamic key: %s)" % key
+            return DynamicDict()
+            '''))
+    doc = module.newContent(
+        portal_type='Notification Message',
+        content_type='text/plain',
+        text_content='substitution text: ${a}',
+        text_content_substitution_mapping_method_id='NotificationMessage_getDummySubstitionMapping'
+    )
+
+    mime, text = doc.convert('txt')
+    self.assertEqual('text/plain', mime)
+    self.assertEqual('substitution text: (dynamic key: a)', text)
