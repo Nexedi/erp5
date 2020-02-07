@@ -66,6 +66,8 @@ override_document_reference = kw.get('document_reference')
 override_document_language = kw.get('document_language')
 override_source_organisation_title=kw.get('override_source_organisation', None)
 override_batch_mode = kw.get('batch_mode')
+css_path = kw.get('css_path', 'template_css/book')
+conversion_dict = kw.get('conversion_dict', {})
 
 # we are just caller, so if no dates are passed, the report must decide what to set
 doc_report_start_date_input = kw.get('start_date', None) or getattr(context.REQUEST.form, 'start_date', None)
@@ -155,7 +157,7 @@ doc_full_reference = '-'.join([doc_reference, doc_version, doc_language])
 doc_short_date = doc_modification_date.strftime('%Y-%m-%d')
 
 # ------------------------------- Theme ----------------------------------------
-doc_theme = doc.Base_getThemeDict(doc_format=doc_format, css_path="template_css/book", skin="Book")
+doc_theme = doc.Base_getThemeDict(doc_format=doc_format, css_path=css_path, skin="Book")
 # --------------------------- Source/Destination -------------------------------
 doc_source = doc.Base_getSourceDict(
   override_source_person_title=None,
@@ -259,8 +261,7 @@ if doc_format == "pdf":
   xsl_style_sheet_data = blank
   embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_content, allow_script=True)
   footer_embedded_html_data = doc.Base_convertHtmlToSingleFile(doc_foot, allow_script=True)
-
-  pdf_file = doc.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
+  default_conversion_kw = dict(
     encoding="utf8",
     margin_top=40,
     margin_bottom=20,
@@ -271,8 +272,9 @@ if doc_format == "pdf":
     header_spacing=10,
     footer_html_data=b64encode(footer_embedded_html_data),
     footer_spacing=3,
-    )
   )
+  default_conversion_kw.update(conversion_dict)
+  pdf_file = doc.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=default_conversion_kw)
 
   return doc.WebPage_finishPdfCreation(
     doc_download=doc_download,
