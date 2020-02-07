@@ -99,6 +99,6 @@ else:
     background-attachment: fixed;
     background-image: url("%s");
   }
-  """ % wallpaper_url)
+  """ % urljoin(base_prefix, wallpaper_url))
 
 return view_as_web_method(mapping_dict=mapping_dict)
