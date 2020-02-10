@@ -175,6 +175,11 @@ url_list.extend([
   web_section.getLayoutProperty("configuration_stylesheet_url", default=default_url),
 ])
 
+# Add all extra dependencies
+precache_manifest_url_list = web_section.getLayoutProperty("configuration_precache_manifest_url_list", default='').splitlines()
+for precache_manifest_script_id in precache_manifest_url_list:
+  url_list.extend(web_section.restrictedTraverse(precache_manifest_script_id)())
+
 result = json.dumps(dict.fromkeys(url_list, None), indent=2)
 response.setHeader('Content-Type', 'application/json')
 return result
