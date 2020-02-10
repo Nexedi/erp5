@@ -3,7 +3,7 @@ portal = context.getPortalObject()
 portal.portal_catalog.searchAndActivate(
   portal_type=["Active Process",],
   method_id='ActiveProcess_removeItselfFromActivityTool',
-  reference="document_scanner_js",
+  reference=context.Base_getDocumentScannerDefaultReference(),
   # Active Process don't have creation date set
-  indexation_timestamp="< %s" % (DateTime()-4).earliestTime(),
+  modification_date="< %s" % (DateTime()-4).earliestTime(),
 )
