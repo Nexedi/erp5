@@ -1,4 +1,5 @@
 from DateTime import DateTime
+import json
 
 if REQUEST is None:
   REQUEST = context.REQUEST
@@ -28,9 +29,12 @@ web_content = web_page.getTextContent()
 # set headers depending on type of script
 if (portal_type == "Web Script"):
   response.setHeader('Content-Type', 'application/javascript; charset=utf-8')
-  web_content = web_page.TextDocument_substituteTextContent(web_content, mapping_dict={
-    'modification_date': modification_date_string
-  })
+  if web_page.getTextContentSubstitutionMappingMethodId():
+    web_content = web_page.TextDocument_substituteTextContent(web_content, mapping_dict={
+      'modification_date': modification_date_string,
+      # Make JSLint happy for the service worker code
+      'required_url_list': json.dumps(web_section.WebSection_getPrecacheManifest())
+    })
 
 elif (portal_type == "Web Style"):
   response.setHeader('Content-Type', 'text/css; charset=utf-8')
