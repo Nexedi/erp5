@@ -10,14 +10,15 @@ portal = context.getPortalObject()
 if REQUEST:
   return RuntimeError("You cannot run this script in the url")
 
+reference = context.Base_getDocumentScannerDefaultReference()
 if active_process_url:
   active_process = portal.restrictedTraverse(active_process_url)
 else:
-  active_process = portal.portal_activities.newActiveProcess()
-  active_process.setReference("document_scanner_js")
+  active_process = portal.portal_activities.newActiveProcess(
+    reference=reference)
 
 if generate_new_uid:
-  id_group = ('document_scanner_js', active_process.getUid())
+  id_group = (reference, active_process.getUid())
   new_uid = portal.portal_ids.generateNewId(id_group=id_group, default=0)
 else:
   new_uid = None
