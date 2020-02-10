@@ -1,45 +1,41 @@
 /*jslint indent: 2*/
-/*global self, caches, fetch, Promise, URL, location*/
-(function (self, caches, fetch, Promise, URL, location) {
+/*global self, caches, fetch, Promise, URL, location, JSON*/
+(function (self, caches, fetch, Promise, URL, location, JSON) {
   "use strict";
 
   var prefix = location.toString() + '_',
     CACHE_NAME = prefix + '${modification_date}',
-    required_url_list = [];
+    REQUIRED_FILES = JSON.parse('${required_url_list}'),
+    required_url_list = [],
+    i,
+    len = REQUIRED_FILES.length;
+
+  for (i = 0; i < len; i += 1) {
+    required_url_list.push(
+      new URL(REQUIRED_FILES[i], location.toString()).toString()
+    );
+  }
 
   self.addEventListener('install', function (event) {
     // Perform install step:  loading each required file into cache
     event.waitUntil(
-      fetch('WebSection_getPrecacheManifest')
-        .then(function (response) {
-          return Promise.all([
-            response.json(),
-            caches.open(CACHE_NAME)
-          ]);
-        })
-        .then(function (result_list) {
-          var required_file_dict = result_list[0],
-            cache = result_list[1],
-            key,
-            promise = Promise.resolve(),
-            url;
+      caches.open(CACHE_NAME)
+        .then(function (cache) {
+          var promise = Promise.resolve();
 
-          function append(url) {
+          function append(url_to_cache) {
             promise = promise
               .then(function () {
                 // Use cache.add because safari does not support cache.addAll.
-                return cache.add(url);
+                return cache.add(url_to_cache);
               });
           }
 
-          for (key in required_file_dict) {
-            if (required_file_dict.hasOwnProperty(key)) {
-              url = new URL(key, location.toString()).toString();
-              // Add all offline dependencies to the cache
-              // One by one, to not hammer zopes
-              required_url_list.push(url);
-              append(url);
-            }
+          len = required_url_list.length;
+          for (i = 0; i < len; i += 1) {
+            // Add all offline dependencies to the cache
+            // One by one, to not hammer zopes
+            append(required_url_list[i]);
           }
           return promise;
         })
@@ -128,4 +124,4 @@
     );
   });
 
-}(self, caches, fetch, Promise, URL, location));
+}(self, caches, fetch, Promise, URL, location, JSON));

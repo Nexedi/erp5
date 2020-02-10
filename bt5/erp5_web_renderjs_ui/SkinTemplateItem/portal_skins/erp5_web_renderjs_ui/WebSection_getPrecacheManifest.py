@@ -1,10 +1,3 @@
-import json
-
-if REQUEST is None:
-  REQUEST = context.REQUEST
-if response is None:
-  response = REQUEST.RESPONSE
-
 web_section = context
 
 # Add all ERP5JS gadget
@@ -180,6 +173,4 @@ precache_manifest_url_list = web_section.getLayoutProperty("configuration_precac
 for precache_manifest_script_id in precache_manifest_url_list:
   url_list.extend(web_section.restrictedTraverse(precache_manifest_script_id)())
 
-result = json.dumps(dict.fromkeys(url_list, None), indent=2)
-response.setHeader('Content-Type', 'application/json')
-return result
+return url_list
