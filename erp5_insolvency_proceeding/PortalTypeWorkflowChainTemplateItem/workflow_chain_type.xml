@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Insolvency Proceeding</type>
+  <workflow>edit_workflow, insolvency_proceeding_interaction_workflow, ticket_workflow</workflow>
+ </chain>
+</workflow_chain>
