@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Test Component" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>testBusinessTemplate</string> </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value> <string>Products.ERP5.tests.testBusinessTemplate</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test.erp5.testBusinessTemplate</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Test Component</string> </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_error_message</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_warning_message</string> </key>
+            <value>
+              <tuple>
+                <string>W:2834,  0: Bad indentation. Found 10 spaces, expected 8 (bad-indentation)</string>
+                <string>W:3153,  0: Bad indentation. Found 8 spaces, expected 6 (bad-indentation)</string>
+                <string>W: 78,  2: Arguments number differs from overridden \'_catch_log_errors\' method (arguments-differ)</string>
+                <string>W: 95,  2: Arguments number differs from overridden \'_ignore_log_errors\' method (arguments-differ)</string>
+                <string>W:145, 10: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:437,  8: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:628,  6: Redefining built-in \'object\' (redefined-builtin)</string>
+                <string>W:616,  4: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:627,  8: Unused variable \'i\' (unused-variable)</string>
+                <string>W:652,  6: Redefining built-in \'object\' (redefined-builtin)</string>
+                <string>W:651,  8: Unused variable \'i\' (unused-variable)</string>
+                <string>W:706,  6: Redefining built-in \'object\' (redefined-builtin)</string>
+                <string>W:719,  6: Redefining built-in \'object\' (redefined-builtin)</string>
+                <string>W:1201,  8: Unused variable \'i\' (unused-variable)</string>
+                <string>W:1269,  8: Unused variable \'i\' (unused-variable)</string>
+                <string>W:1347, 10: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:1363, 10: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:1376, 10: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:1387, 10: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:1399, 10: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:1399, 14: Unused variable \'wf_ids\' (unused-variable)</string>
+                <string>W:1455, 10: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:1487,  4: Redefining built-in \'bin\' (redefined-builtin)</string>
+                <string>W:1723,  4: Redefining built-in \'filter\' (redefined-builtin)</string>
+                <string>W:1740,  4: Redefining built-in \'filter\' (redefined-builtin)</string>
+                <string>W:1760,  6: Expression "catalog._getFilterDict()[method_id]" is assigned to nothing (expression-not-assigned)</string>
+                <string>W:1781,  6: Expression "catalog._getFilterDict()[method_id]" is assigned to nothing (expression-not-assigned)</string>
+                <string>W:2478,  4: Unreachable code (unreachable)</string>
+                <string>W:2753, 12: Unused variable \'key\' (unused-variable)</string>
+                <string>W:2869,  4: No exception type(s) specified (bare-except)</string>
+                <string>W:2880,  4: No exception type(s) specified (bare-except)</string>
+                <string>W:2974, 10: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:3004, 10: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:3004, 14: Unused variable \'wf_ids\' (unused-variable)</string>
+                <string>W:3019, 10: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:3019, 14: Unused variable \'wf_ids\' (unused-variable)</string>
+                <string>W:3034, 10: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:3072,  6: Unused variable \'portal_type\' (unused-variable)</string>
+                <string>W:3149, 69: Unused variable \'i\' (unused-variable)</string>
+                <string>W:6339, 12: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:6429,  8: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W:6824,  4: Unused variable \'new_object\' (unused-variable)</string>
+                <string>W:7004,  4: Unused variable \'bt\' (unused-variable)</string>
+                <string>W:7009,  4: Unused variable \'bt\' (unused-variable)</string>
+                <string>W:7189,  4: Unused variable \'broken\' (unused-variable)</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>erp5</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>component_validation_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>validate</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>validated</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

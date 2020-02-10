@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Test Component" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>testTransactionalVariable</string> </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value> <string>Products.ERP5Type.tests.testTransactionalVariable</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>test.erp5.testTransactionalVariable</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Test Component</string> </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_error_message</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_warning_message</string> </key>
+            <value>
+              <tuple>
+                <string>W: 34,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 36,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 37,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 39,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 43,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 44,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 45,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 46,  0: Bad indentation. Found 8 spaces, expected 6 (bad-indentation)</string>
+                <string>W: 48,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 49,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 50,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 52,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 53,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 54,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 55,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 57,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 58,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 59,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 60,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 62,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 63,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 66,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 67,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 68,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 71,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 72,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 73,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 74,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 77,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 78,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 79,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 80,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 82,  0: Bad indentation. Found 4 spaces, expected 2 (bad-indentation)</string>
+                <string>W: 83,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 86,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 87,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 88,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 92,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 93,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 94,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 95,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 96,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 97,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W:101,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W:102,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W:103,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W:104,  0: Bad indentation. Found 6 spaces, expected 4 (bad-indentation)</string>
+                <string>W: 46,  8: Statement seems to have no effect (pointless-statement)</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>erp5</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>component_validation_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>validate</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>validated</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
