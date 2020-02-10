@@ -26,7 +26,7 @@
         gadget_util,
         jio_document,
         portal_type,
-        parent_portal_type,
+        default_portal_type,
         default_view,
         app_action_list,
         form_definition,
@@ -38,12 +38,12 @@
       current_version = current_version.substr(index);
       return gadget.getSettingList(["migration_version",
                                     "app_view_reference",
-                                    "parent_portal_type",
+                                    "default_portal_type",
                                     'default_view_reference',
                                     'app_actions'])
         .push(function (setting_list) {
           app_view = options.action || setting_list[1];
-          parent_portal_type = setting_list[2];
+          default_portal_type = setting_list[2];
           default_view = setting_list[3];
           app_action_list = setting_list[4];
           if (setting_list[0] !== current_version) {
@@ -72,17 +72,15 @@
         }, function (error) {
           // instaceof error is Object, so use status_code and undefined jio_key
           if (error.status_code === 400 && !options.jio_key) {
-            return parent_portal_type;
+            return default_portal_type;
           }
           throw error;
         })
-        .push(function (parent_portal_type) {
+        .push(function (current_portal_type) {
           if (jio_document) {
             portal_type = jio_document.portal_type;
-          } else if (options.portal_type) {
-            portal_type = options.portal_type;
           } else {
-            portal_type = parent_portal_type;
+            portal_type = current_portal_type;
           }
           return gadget_util.getFormDefinition(portal_type, app_view);
         })
