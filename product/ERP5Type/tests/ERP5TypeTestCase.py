@@ -286,6 +286,46 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       """
       self.portal.portal_membership.getAuthenticatedMember().getUserName()
 
+    def enableLightInstall(self):
+      """
+      You can override this. Return if we should do a light install (1) or not (0)
+      """
+      return 1
+
+    def enableActivityTool(self):
+      """
+      You can override this. Return if we should create (1) or not (0) an activity tool
+      """
+      return 1
+
+    def enableHotReindexing(self):
+      """
+      You can override this. Return if we should create (1) or not (0) an activity tool
+      """
+      return 0
+
+    def manuallyInstallBusinessTemplate(self, *template_list):
+      new_template_list = self._getBTPathAndIdList(template_list)
+      light_install = self.enableLightInstall()
+      self._installBusinessTemplateList(new_template_list,
+                                        light_install=light_install)
+      self.portal.ERP5Site_updateTranslationTable()
+      self.tic()
+
+    def uninstallBusinessTemplate(self, *template_list):
+      template_list = set(template_list)
+      uninstalled_list = []
+      portal = self.portal
+      for bt in portal.portal_templates.getInstalledBusinessTemplateList():
+        bt_title = bt.getTitle()
+        if bt_title in template_list:
+          bt.uninstall(remove_translations=True)
+          uninstalled_list.append(bt_title)
+      if uninstalled_list:
+        getattr(portal, 'ERP5Site_updateTranslationTable', lambda: None)()
+      self.tic()
+      return uninstalled_list
+
     def changeSkin(self, skin_name):
       """
         Change current Skin
@@ -869,46 +909,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       app = PortalTestCase._app(self)
       app.REQUEST['HTTP_ACCEPT_CHARSET'] = 'utf-8'
       return app
-
-    def enableLightInstall(self):
-      """
-      You can override this. Return if we should do a light install (1) or not (0)
-      """
-      return 1
-
-    def enableActivityTool(self):
-      """
-      You can override this. Return if we should create (1) or not (0) an activity tool
-      """
-      return 1
-
-    def enableHotReindexing(self):
-      """
-      You can override this. Return if we should create (1) or not (0) an activity tool
-      """
-      return 0
-
-    def manuallyInstallBusinessTemplate(self, *template_list):
-      new_template_list = self._getBTPathAndIdList(template_list)
-      light_install = self.enableLightInstall()
-      self._installBusinessTemplateList(new_template_list,
-                                        light_install=light_install)
-      self.portal.ERP5Site_updateTranslationTable()
-      self.tic()
-
-    def uninstallBusinessTemplate(self, *template_list):
-      template_list = set(template_list)
-      uninstalled_list = []
-      portal = self.portal
-      for bt in portal.portal_templates.getInstalledBusinessTemplateList():
-        bt_title = bt.getTitle()
-        if bt_title in template_list:
-          bt.uninstall(remove_translations=True)
-          uninstalled_list.append(bt_title)
-      if uninstalled_list:
-        getattr(portal, 'ERP5Site_updateTranslationTable', lambda: None)()
-      self.tic()
-      return uninstalled_list
 
     def __onConnect(self, connector):
       self.__connector_set.add(connector)
