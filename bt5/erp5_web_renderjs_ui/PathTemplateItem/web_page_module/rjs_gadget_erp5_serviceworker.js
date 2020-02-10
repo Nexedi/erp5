@@ -21,21 +21,27 @@
           var required_file_dict = result_list[0],
             cache = result_list[1],
             key,
-            promise_list = [],
+            promise = Promise.resolve(),
             url;
+
+          function append(url) {
+            promise = promise
+              .then(function () {
+                // Use cache.add because safari does not support cache.addAll.
+                return cache.add(url);
+              });
+          }
 
           for (key in required_file_dict) {
             if (required_file_dict.hasOwnProperty(key)) {
               url = new URL(key, location.toString()).toString();
+              // Add all offline dependencies to the cache
+              // One by one, to not hammer zopes
               required_url_list.push(url);
-              // Use cache.add because safari does not support cache.addAll.
-              // console.log("Install " + CACHE_NAME + " = " + url);
-              promise_list.push(cache.add(url));
+              append(url);
             }
           }
-
-          // Add all offline dependencies to the cache
-          return Promise.all(promise_list);
+          return promise;
         })
         .then(function () {
           // When user accesses ERP5JS web site first time, service worker is
