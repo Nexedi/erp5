@@ -14,6 +14,7 @@ if active_process_url:
   active_process = portal.restrictedTraverse(active_process_url)
 else:
   active_process = portal.portal_activities.newActiveProcess()
+  active_process.setReference("document_scanner_js")
 
 if generate_new_uid:
   id_group = ('document_scanner_js', active_process.getUid())
