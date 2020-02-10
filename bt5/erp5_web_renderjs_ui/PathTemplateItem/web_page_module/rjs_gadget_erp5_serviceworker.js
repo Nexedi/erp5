@@ -10,51 +10,32 @@
   self.addEventListener('install', function (event) {
     // Perform install step:  loading each required file into cache
     event.waitUntil(
-      // We create cache only if it does not exist. That is because
-      // we do not want to override an existing cache by mistake.
-      // Code consistency is very important. We must not mix different
-      // versions of code.
-      // (For example, developer change service worker code and forget
-      // to increase the cache version.)
-      caches.has(CACHE_NAME)
-        .then(function (result) {
-          if (!result) {
-            return fetch('WebSection_getPrecacheManifest')
-              .then(function (response) {
-                return Promise.all([
-                  response.json(),
-                  caches.open(CACHE_NAME)
-                ]);
-              })
-              .then(function (result_list) {
-                var required_file_dict = result_list[0],
-                  cache = result_list[1],
-                  key,
-                  promise_list = [],
-                  url;
+      fetch('WebSection_getPrecacheManifest')
+        .then(function (response) {
+          return Promise.all([
+            response.json(),
+            caches.open(CACHE_NAME)
+          ]);
+        })
+        .then(function (result_list) {
+          var required_file_dict = result_list[0],
+            cache = result_list[1],
+            key,
+            promise_list = [],
+            url;
 
-                for (key in required_file_dict) {
-                  if (required_file_dict.hasOwnProperty(key)) {
-                    url = new URL(key, location.toString()).toString();
-                    required_url_list.push(url);
-                    // Use cache.add because safari does not support cache.addAll.
-                    // console.log("Install " + CACHE_NAME + " = " + url);
-                    promise_list.push(cache.add(url));
-                  }
-                }
-
-                // Add all offline dependencies to the cache
-                return Promise.all(promise_list);
-              })
-              .catch(function (error) {
-                // Since we do not allow to override existing cache, if cache installation
-                // failed, we need to delete the cache completely.
-                caches.delete(CACHE_NAME);
-                // Explicitly unregister service worker else it may not be done.
-                self.registration.unregister();
-                throw error;
-              });
+          for (key in required_file_dict) {
+            if (required_file_dict.hasOwnProperty(key)) {
+              url = new URL(key, location.toString()).toString();
+              required_url_list.push(url);
+              // Use cache.add because safari does not support cache.addAll.
+              // console.log("Install " + CACHE_NAME + " = " + url);
+              promise_list.push(cache.add(url));
+            }
           }
+
+          // Add all offline dependencies to the cache
+          return Promise.all(promise_list);
         })
         .then(function () {
           // When user accesses ERP5JS web site first time, service worker is
@@ -66,6 +47,14 @@
           // So, we want to activate the new service worker immediately if it was
           // the first one.
           return self.skipWaiting();
+        })
+        .catch(function (error) {
+          // Since we do not allow to override existing cache, if cache installation
+          // failed, we need to delete the cache completely.
+          caches.delete(CACHE_NAME);
+          // Explicitly unregister service worker else it may not be done.
+          self.registration.unregister();
+          throw error;
         })
     );
   });
