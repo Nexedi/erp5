@@ -93,7 +93,11 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>insolvency_proceeding_listbox</string>
+                        <string>insolvency_proceeding_listbox_start_date</string>
+                        <string>insolvency_proceeding_listbox_stop_date</string>
+                      </list>
                     </value>
                 </item>
                 <item>
