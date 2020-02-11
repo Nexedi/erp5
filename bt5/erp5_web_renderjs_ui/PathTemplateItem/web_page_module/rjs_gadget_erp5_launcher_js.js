@@ -965,7 +965,7 @@
             // * it does not slow down the current page rendering
             // * it is not triggered too often if user click on multiple links
             // * it is triggered only if the user browse the site
-            return RSVP.delay(60000);
+            return RSVP.delay(20000);
           })
           .push(function () {
             return registration.update();
