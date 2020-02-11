@@ -96,6 +96,9 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>insolvency_proceeding_listbox</string>
+                        <string>insolvency_proceeding_listbox_start_date</string>
+                        <string>insolvency_proceeding_listbox_stop_date</string>
                       </list>
                     </value>
                 </item>
