@@ -124,10 +124,10 @@
         })
         .then(function (client_list) {
           // Notify all clients that they can reload the page
-          var i,
-            len = client_list.length;
-          for (i = 0; i < len; i += 1) {
-            client_list[i].postMessage('claim');
+          var j,
+            client_len = client_list.length;
+          for (j = 0; j < client_len; j += 1) {
+            client_list[j].postMessage('claim');
           }
 
         })
