@@ -10,6 +10,7 @@
   var MAIN_SCOPE = "m",
     default_state_json_string = JSON.stringify({
       panel_visible: false,
+      service_worker_claimed: false,
       setting_id: "setting/" + document.head.querySelector(
         'script[data-renderjs-configuration="application_title"]'
       ).textContent,
@@ -420,13 +421,7 @@
 
           if (setting.hasOwnProperty('service_worker_url') &&
               (setting.service_worker_url !== '')) {
-            if (navigator.serviceWorker !== undefined) {
-              // Check if a ServiceWorker already controls the site on load
-              if (!navigator.serviceWorker.controller) {
-                // Register the ServiceWorker
-                navigator.serviceWorker.register(setting.service_worker_url);
-              }
-            }
+            gadget.registerServiceWorker(setting.service_worker_url);
           }
 
           return setting_gadget.put(gadget.state.setting_id, setting);
@@ -691,6 +686,16 @@
     .allowPublicAcquisition("renderApplication", function renderApplication(
       param_list
     ) {
+      if (this.state.service_worker_claimed) {
+        // As a new service worker claimed the client,
+        // reload the page to ensure it uses the lastest gadget versions
+        return location.reload();
+      }
+      if (this.state.service_worker_registration) {
+        // Mimic service worker update rule
+        // when a navigation to an in-scope page
+        this.deferServiceWorkerUpdate(this.state.service_worker_registration);
+      }
       return this.render.apply(this, param_list);
     })
 
@@ -923,7 +928,49 @@
         wallpaper_url = null;
         wallpaper_absolute_url = null;
       }
+    })
+
+    /////////////////////////////////////////////////////////////////
+    // Service worker handling
+    /////////////////////////////////////////////////////////////////
+    .declareJob('registerServiceWorker',
+                function registerServiceWorker(service_worker_url) {
+        var gadget = this;
+        if (navigator.serviceWorker !== undefined) {
+          return RSVP.all([
+            // Register the ServiceWorker
+            navigator.serviceWorker
+                     .register(service_worker_url)
+                     .then(function (registration) {
+                        gadget.state.service_worker_registration = registration;
+                      }),
+            // Check when a new worker has been activated from another tab
+            // XXX Not promise based, but we do not want to add a new dependency
+            navigator.serviceWorker
+                     .addEventListener('message',
+                                       function handleMessage(event) {
+                if (event.data == 'claim') {
+                  gadget.state.service_worker_claimed = true;
+                }
+              })
+          ]);
+        }
+      })
+    .declareJob('deferServiceWorkerUpdate',
+                function deferServiceWorkerUpdate(registration) {
+      return new RSVP.Queue()
+        .push(function () {
+          // Delay service worker update, so that:
+          // * it does not slow down the current page rendering
+          // * it is not triggered too often if user click on multiple links
+          // * it is triggered only if the user browse the site
+          return RSVP.delay(60000);
+        })
+        .push(function () {
+          return registration.update();
+        });
     });
+
 
 }(window, document, RSVP, rJS,
   XMLHttpRequest, location, console, navigator, Event, URL));
