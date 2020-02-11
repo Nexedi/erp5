@@ -71,6 +71,7 @@
                       <list>
                         <string>listbox</string>
                         <string>listbox_period_list</string>
+                        <string>insolvency_proceeding_listbox</string>
                       </list>
                     </value>
                 </item>
@@ -88,6 +89,8 @@
                         <string>listbox_stop_date</string>
                         <string>listbox_period_list_start_date</string>
                         <string>listbox_period_list_stop_date</string>
+                        <string>insolvency_proceeding_listbox_start_date</string>
+                        <string>insolvency_proceeding_listbox_stop_date</string>
                       </list>
                     </value>
                 </item>
