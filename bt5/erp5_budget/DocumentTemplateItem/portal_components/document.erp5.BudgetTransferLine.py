@@ -32,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 
-from erp5.component.document.SupplyLine import SupplyLine
+from Products.ERP5.Document.SupplyLine import SupplyLine
 
 class BudgetTransferLine(SupplyLine):
   """

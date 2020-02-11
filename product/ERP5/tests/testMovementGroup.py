@@ -29,6 +29,7 @@
 import os
 import unittest
 from DateTime import DateTime
+from Products.ERP5.mixin.builder import DuplicatedPropertyDictKeysError
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class MovementGroupTestCase(ERP5TypeTestCase):
@@ -363,7 +364,6 @@ class TestDuplicatedKeyRaiseException(MovementGroupTestCase):
                   collect_order_group='delivery')
 
     movement_relative_url_list = [q.getRelativeUrl() for q in movement_list]
-    from erp5.component.mixin.BuilderMixin import DuplicatedPropertyDictKeysError
     self.assertRaises(
       DuplicatedPropertyDictKeysError,
       self.builder.build,
