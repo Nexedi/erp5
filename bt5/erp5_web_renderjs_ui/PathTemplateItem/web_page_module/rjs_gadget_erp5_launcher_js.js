@@ -317,7 +317,8 @@
         throw error;
       })
       .push(function (doc) {
-        for (var key in setting_dict) {
+        var key;
+        for (key in setting_dict) {
           if (setting_dict.hasOwnProperty(key)) {
             if (!doc.hasOwnProperty(key) ||
                 doc[key] !== setting_dict[key]) {
@@ -942,34 +943,34 @@
             navigator.serviceWorker
                      .register(service_worker_url)
                      .then(function (registration) {
-                        gadget.state.service_worker_registration = registration;
-                      }),
+                gadget.state.service_worker_registration = registration;
+              }),
             // Check when a new worker has been activated from another tab
             // XXX Not promise based, but we do not want to add a new dependency
             navigator.serviceWorker
                      .addEventListener('message',
                                        function handleMessage(event) {
-                if (event.data == 'claim') {
-                  gadget.state.service_worker_claimed = true;
-                }
-              })
+                  if (event.data === 'claim') {
+                    gadget.state.service_worker_claimed = true;
+                  }
+                })
           ]);
         }
       })
     .declareJob('deferServiceWorkerUpdate',
                 function deferServiceWorkerUpdate(registration) {
-      return new RSVP.Queue()
-        .push(function () {
-          // Delay service worker update, so that:
-          // * it does not slow down the current page rendering
-          // * it is not triggered too often if user click on multiple links
-          // * it is triggered only if the user browse the site
-          return RSVP.delay(60000);
-        })
-        .push(function () {
-          return registration.update();
-        });
-    });
+        return new RSVP.Queue()
+          .push(function () {
+            // Delay service worker update, so that:
+            // * it does not slow down the current page rendering
+            // * it is not triggered too often if user click on multiple links
+            // * it is triggered only if the user browse the site
+            return RSVP.delay(60000);
+          })
+          .push(function () {
+            return registration.update();
+          });
+      });
 
 
 }(window, document, RSVP, rJS,
