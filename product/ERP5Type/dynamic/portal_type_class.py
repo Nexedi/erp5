@@ -476,20 +476,19 @@ def synchronizeDynamicModules(context, force=False):
 
     LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")
     try:
-      for _, klass in inspect.getmembers(erp5.portal_type,
-                                         inspect.isclass):
+      for class_name, klass in inspect.getmembers(erp5.portal_type,
+                                                  inspect.isclass):
         # Zope Interface is implemented through __implements__,
         # __implemented__ (both implementedBy instances) and __provides__
         # (ClassProvides instance) attributes set on the class by
         # zope.interface.declarations.implementedByFallback.
         #
         # However both implementedBy and ClassProvides instances keep a
-        # reference to the class itself, thus creating a circular references.
+        # reference to the class itself, thus creating a circular references
+        # preventing erp5.* classes to be GC even when not being actually used
+        # anywhere anymore after a reset.
         for k in klass.mro():
-          module_name = k.__module__
-          if (module_name.startswith('erp5.') and
-              # Components are reset independently of Portal Types classes
-              not module_name.startswith('erp5.component.')):
+          if k.__module__.startswith('erp5.'):
             for attr in ('__implements__', '__implemented__', '__provides__'):
               if k.__dict__.get(attr) is not None:
                 delattr(k, attr)
