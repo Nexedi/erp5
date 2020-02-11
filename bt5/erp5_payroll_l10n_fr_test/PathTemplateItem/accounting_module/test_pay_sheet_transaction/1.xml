@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Pay Sheet Line" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>report_section</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>base_contribution/base_amount/payroll/base/contribution</string>
+                <string>base_contribution/base_amount/payroll/base/income_tax</string>
+                <string>base_contribution/base_amount/payroll/base/fixed</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/base/csg_non_deductible</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/base/csg</string>
+                <string>base_contribution/base_amount/payroll/report/salary/gross</string>
+                <string>base_contribution/base_amount/payroll/report/salary/net</string>
+                <string>destination/account_module/remuneration_personnel</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>group_by_report_section</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value> <int>10</int> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Pay Sheet Line</string> </value>
+        </item>
+        <item>
+            <key> <string>price</string> </key>
+            <value> <float>2250.0</float> </value>
+        </item>
+        <item>
+            <key> <string>quantity</string> </key>
+            <value> <float>1.0</float> </value>
+        </item>
+        <item>
+            <key> <string>report_section</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Salaire de base</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
