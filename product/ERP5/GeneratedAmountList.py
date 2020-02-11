@@ -31,6 +31,7 @@ from collections import defaultdict
 import zope.interface
 from AccessControl import allow_class
 from Products.ERP5Type import interfaces
+from Products.ERP5.Document.RoundingModel import RoundingProxy
 
 class GeneratedAmountList(list):
   """
@@ -87,7 +88,6 @@ class GeneratedAmountList(list):
         aggregate_dict[key] = [amount, amount.getQuantity()]
       else:
         aggregate[1] += amount.getQuantity()
-    from erp5.component.document.RoundingModel import RoundingProxy
     for amount, quantity in aggregate_dict.itervalues():
       # Before we ignore 'quantity==0' amount here for better performance,
       # but it is not a good idea, especially when the first expand causes
