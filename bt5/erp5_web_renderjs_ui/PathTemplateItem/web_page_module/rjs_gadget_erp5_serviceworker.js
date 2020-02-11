@@ -54,8 +54,6 @@
           // Since we do not allow to override existing cache, if cache installation
           // failed, we need to delete the cache completely.
           caches.delete(CACHE_NAME);
-          // Explicitly unregister service worker else it may not be done.
-          self.registration.unregister();
           throw error;
         })
     );
@@ -119,7 +117,19 @@
           );
         })
         .then(function () {
-          self.clients.claim();
+          return self.clients.claim();
+        })
+        .then(function () {
+          return self.clients.matchAll();
+        })
+        .then(function (client_list) {
+          // Notify all clients that they can reload the page
+          var i,
+            len = client_list.length;
+          for (i = 0; i < len; i += 1) {
+            client_list[i].postMessage('claim');
+          }
+
         })
     );
   });
