@@ -13,7 +13,7 @@ selection_mapping = portal.portal_selections.getSelectionParamsFor(
   REQUEST=context.REQUEST) or {}
 
 http_user_agent = context.REQUEST["HTTP_USER_AGENT"]
-selection_mapping[http_user_agent] = preferred_cropped_canvas_data
+selection_mapping[http_user_agent] = preferred_cropped_canvas_data or {}
 
 portal.portal_selections.setSelectionParamsFor(
   context.Base_getDocumentScannerSelectionName(),
