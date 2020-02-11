@@ -96,12 +96,12 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     #Overwrite immediateReindexObject() with a crashing method
     def crashingMethod(self):
       self.ImmediateReindexObjectIsCalled()
-    from erp5.component.document.Organisation import Organisation
+    from Products.ERP5Type.Document.Organisation import Organisation
     Organisation.immediateReindexObject = crashingMethod
 
   def beforeTearDown(self):
     # Remove crashing method
-    from erp5.component.document.Organisation import Organisation
+    from Products.ERP5Type.Document.Organisation import Organisation
     del Organisation.immediateReindexObject
 
   def createCategories(self):
