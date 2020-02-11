@@ -48,7 +48,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
   def beforeTearDown(self):
     transaction.abort()
     self.tic()
-    from erp5.component.document.Organisation import Organisation
+    Organisation = Products.ERP5.Document.Organisation.Organisation
     Organisation.security.names.pop('doSomethingStupid', None)
     if hasattr(Organisation, 'doSomethingStupid'):
       delattr(Organisation, 'doSomethingStupid')
@@ -66,7 +66,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
       """A patched method
       """
       self.setDescription(value)
-    from erp5.component.document.Organisation import Organisation
+    Organisation = Products.ERP5.Document.Organisation.Organisation
     Organisation.doSomethingStupid = doSomethingStupid
     portal_type = self.getTypeTool()['Organisation']
     portal_type._setTypeBaseCategoryList(['size'])
@@ -649,7 +649,7 @@ context.setTitle('Bar')
     # wrapping a method in an interaction workflow adds a default security to
     # this method, but does not override existing security definition (defined
     # on the class)
-    from erp5.component.document.Organisation import Organisation
+    Organisation = Products.ERP5.Document.Organisation.Organisation
     security = ClassSecurityInfo()
     security.declarePrivate('doSomethingStupid')
     security.apply(Organisation)
