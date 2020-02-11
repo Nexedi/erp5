@@ -2599,20 +2599,6 @@ class DifferentFromReference(Person):
     that the newly-defined function on ZODB Component can be called as well as
     methods from Person Document
     """
-    ## Create an Interface assigned to the test ZODB Component to check that
-    ## only resetting Portal Type classes do not have any side-effect on
-    ## Interfaces defined on ZODB Components
-    from zope.interface import Interface
-    class ITestPortalType(Interface):
-      """Anything"""
-      def foo():
-        """Anything"""
-    from types import ModuleType
-    interface_module = ModuleType('ITestPortalType')
-    interface_module.ITestPortalType = ITestPortalType
-    import sys
-    sys.modules['ITestPortalType'] = interface_module
-
     self.failIfModuleImportable('TestPortalType')
 
     # Create a new Document Component inheriting from Person Document which
@@ -2624,27 +2610,17 @@ class DifferentFromReference(Person):
       """
 from erp5.component.document.Person import Person
 
-from ITestPortalType import ITestPortalType
-import zope.interface
-
 class TestPortalType(Person):
   def test42(self):
     return 42
-
-  zope.interface.implements(ITestPortalType)
-  def foo(self):
-    pass
 """)
+
     test_component.validate()
     self.tic()
 
     # As TestPortalType Document Component has been validated, it should now
     # be available
-    self.assertModuleImportable('TestPortalType', reset=False)
-    self.assertTrue(ITestPortalType.implementedBy(self._module.TestPortalType.TestPortalType))
-
-    self._component_tool.reset(force=True,
-                               reset_portal_type_at_transaction_boundary=True)
+    self.assertModuleImportable('TestPortalType')
 
     person_type = self.portal.portal_types.Person
     person_type_class = person_type.getTypeClass()
@@ -2660,12 +2636,19 @@ class TestPortalType(Person):
     # assigned to a Person
     self.failIfHasAttribute(person, 'test42')
     self.failIfHasAttribute(self._module, 'TestPortalType')
-    self.assertFalse(ITestPortalType.providedBy(person))
-    self.assertFalse(ITestPortalType.implementedBy(person.__class__))
     for klass in person.__class__.mro():
       self.assertNotEqual(klass.__name__, 'TestPortalType')
 
-    def _check():
+    # Reset Portal Type classes to ghost to make sure that everything is reset
+    self._component_tool.reset(force=True,
+                               reset_portal_type_at_transaction_boundary=True)
+
+    # TestPortalType must be available in type class list
+    self.assertTrue('TestPortalType' in person_type.getDocumentTypeList())
+    try:
+      person_type.setTypeClass('TestPortalType')
+      self.commit()
+
       self.assertHasAttribute(person, 'test42')
       self.assertEqual(person.test42(), 42)
 
@@ -2675,21 +2658,6 @@ class TestPortalType(Person):
       self.assertTrue(self._module.TestPortalType.TestPortalType in person.__class__.mro())
       from erp5.component.document.Person import Person as PersonDocument
       self.assertTrue(PersonDocument in person.__class__.mro())
-      self.assertTrue(ITestPortalType.providedBy(person))
-      self.assertTrue(ITestPortalType.implementedBy(person.__class__))
-
-    # Reset Portal Type classes to ghost to make sure that everything is reset
-    self._component_tool.reset(force=True,
-                               reset_portal_type_at_transaction_boundary=False)
-    # TestPortalType must be available in type class list
-    self.assertTrue('TestPortalType' in person_type.getDocumentTypeList())
-    try:
-      person_type.setTypeClass('TestPortalType')
-      self.commit()
-      _check()
-
-      self.portal.portal_types.resetDynamicDocuments()
-      _check()
 
     finally:
       person_type.setTypeClass('Person')
@@ -2724,101 +2692,6 @@ class TestWithImport(TestImported):
     # imported without being present before
     self.assertModuleImportable('TestWithImport')
     self.assertModuleImportable('TestImported')
-
-  def testGC(self):
-    """
-    Zope Implements and ClassProvides keep a reference to the class itself,
-    thus creating a circular reference which can only be garbage collected by
-    'gc' module (and not by reference counting).
-
-    So check that ZODB Components modules are properly garbage collectable
-    after a reset (in 'gc' terms: considered 'unreachable' but 'collectable'
-    and could be freed).
-    """
-    from zope.interface import Interface
-    class ITestGC(Interface):
-      """Anything"""
-      def foo():
-        """Anything"""
-    from types import ModuleType
-    interface_module = ModuleType('ITestGC')
-    interface_module.ITestGC = ITestGC
-    import sys
-    sys.modules['ITestGC'] = interface_module
-
-    self.failIfModuleImportable('TestGC')
-    test_component = self._newComponent(
-      'TestGC',
-      """from Products.ERP5Type.XMLObject import XMLObject
-from ITestGC import ITestGC
-import zope.interface
-
-class TestGC(XMLObject):
-  zope.interface.implements(ITestGC)
-  def foo(self):
-      pass
-""")
-    self.tic()
-    self.failIfModuleImportable('TestGC')
-
-    test_component.validate()
-    self.tic()
-
-    import gc
-    initial_gc_debug_flags = gc.get_debug()
-    initial_stderr = sys.stderr
-    try:
-      gc.disable()
-
-      gc.collect()
-      self.assertModuleImportable('TestGC', reset=False)
-      class_id = id(self._module.TestGC.TestGC)
-      Implements_id = id(self._module.TestGC.TestGC.__implemented__)
-      ClassProvides_id = id(self._module.TestGC.TestGC.__provides__)
-      self.assertEqual(gc.collect(), 0)
-      self.assertEqual(gc.garbage, [])
-
-      self._component_tool.reset(force=True)
-      gc.collect()
-      self.assertEqual(gc.garbage, [])
-
-      import sys
-      from cStringIO import StringIO
-      import erp5.component
-      gc.set_debug(
-        gc.DEBUG_STATS |
-        gc.DEBUG_UNCOLLECTABLE |
-        gc.DEBUG_COLLECTABLE |
-        gc.DEBUG_OBJECTS |
-        gc.DEBUG_INSTANCES)
-      stderr = StringIO()
-      sys.stderr = stderr
-      # Still not garbage collectable as RefManager still keeps a reference
-      erp5.component.ref_manager.clear()
-      # Once deleted, the ZODB Component module must be collectable...
-      self.assertNotEqual(gc.collect(), 0)
-
-    finally:
-      gc.set_debug(initial_gc_debug_flags)
-      gc.enable()
-
-      sys.stderr = initial_stderr
-
-    # And make sure that it has really be collected thanks to DEBUG_COLLECTABLE
-    self.assertEqual(gc.garbage, [])
-    stderr.seek(0)
-    found_line_list = []
-    for line in stderr:
-      if ('0x%x>' % class_id in line or
-          '0x%x>' % Implements_id in line or
-          '0x%x>' % ClassProvides_id in line):
-        found_line_list.append(line)
-
-    self.assertEqual(
-      ['gc: collectable <ClassProvides 0x%x>\n' % ClassProvides_id,
-       'gc: collectable <ExtensionClass.ExtensionClass 0x%x>\n' % class_id,
-       'gc: collectable <Implements 0x%x>\n' % Implements_id],
-      sorted(found_line_list))
 
 from Products.ERP5Type.Core.TestComponent import TestComponent
 
