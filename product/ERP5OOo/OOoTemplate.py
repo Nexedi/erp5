@@ -370,7 +370,7 @@ class OOoTemplate(ZopePageTemplate):
       try: # try image properties
         aspect_ratio = float(picture.width) / float(picture.height)
       except (TypeError, ZeroDivisionError):
-        try: # try Image Document API
+        try: # try ERP5.Document.Image API
           height = float(picture.getHeight())
           if height:
             aspect_ratio = float(picture.getWidth()) / height
