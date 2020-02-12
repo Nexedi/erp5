@@ -881,7 +881,8 @@
 
       /* Function `fetchLineContent` calls changeState({"allDocs_result": JIO.allDocs()})
          so this if gets re-evaluated later with allDocs_result defined. */
-      if (gadget.state.allDocs_result === undefined) {
+      if (modification_dict.hasOwnProperty('render_timestamp') &&
+          (gadget.state.allDocs_result === undefined)) {
         // Trigger line content calculation
         result_queue
           .push(function () {
