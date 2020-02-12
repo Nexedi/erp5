@@ -41,27 +41,26 @@
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_field_listbox.html']</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_page_project_front_page.html']</td>
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>Projects</td>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='front-project-list']</td>
   <td></td>
 </tr>
 <!-- Check project present -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@class='document_table']//table//tbody//tr//a[text()="test-project-home"]</td>
+  <td>//div[@class='front-project-list']//div[@class='project-title']//a[text()='test-project']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@class='document_table']//table//tbody//tr//a[text()="test-project-home"]</td>
+  <td>//div[@class='front-project-list']//div[@class='project-title']//a[text()='test-project']</td>
   <td></td>
 </tr>
 <!-- check project quick view page elements -->
