@@ -62,6 +62,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
+                        <string>my_front_page_gadget_field</string>
                         <string>listbox</string>
                       </list>
                     </value>
