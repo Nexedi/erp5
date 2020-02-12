@@ -1,6 +1,6 @@
 /*jslint indent: 2, unparam: true */
-/*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman*/
-(function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman) {
+/*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman, URL, File*/
+(function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman, URL, File) {
   "use strict";
 
   //////////////////////////////////////////////////
@@ -50,7 +50,7 @@
     return new RSVP.Promise(waitForStream, canceller);
   }
 
-  function handleCropper(gadget, element, data, settings, callback) {
+  function handleCropper(element, data, callback) {
     var cropper,
       queue = new RSVP.Queue(),
       img =  domsugar("img"),
@@ -58,50 +58,6 @@
 
     function canceller() {
       cropper.destroy();
-    }
-
-    if (settings.brightness || settings.contrast || settings.enable_greyscale || settings.compression) {
-      return new RSVP.Queue()
-        .push(function () {
-          return new Promise(function (resolve) {
-            Caman(canvas, element, function () {
-              if (settings.brightness !== 0) {
-                this.brightness(data.brightness);
-              }
-              if (settings.contrast !== 0) {
-                this.contrast(data.contrast);
-              }
-              if (settings.enable_greyscale) {
-                this.greyscale();
-              }
-              this.render(function () {
-                resolve(canvas.toDataURL("image/jpeg", settings.compression));
-              });
-            });
-          });
-        })
-        .push(function (data_str) {
-          img.setAttribute("src", data_str);
-
-          // creating Cropper is asynchronous
-          return new RSVP.Promise(function (resolve, reject) {
-            cropper = new Cropper(img, {
-              data: data,
-              ready: function () {
-                return new RSVP.Queue()
-                  .push(function () {
-                    return callback(cropper);
-                  })
-                  .push(undefined, function (error) {
-                    if (!(error instanceof RSVP.CancellationError)) {
-                      canceller();
-                      reject(error);
-                    }
-                  });
-              }
-            });
-          }, canceller);
-        });
     }
 
     // creating Cropper is asynchronous
@@ -337,7 +293,10 @@
 
   // Capture the media stream
   function captureAndRenderPicture(gadget) {
-    var image_capture = new window.ImageCapture(
+    var file,
+       settings = gadget.state.preferred_image_settings_data,
+       data = gadget.state.preferred_cropped_canvas_data,
+       image_capture = new window.ImageCapture(
         gadget.element.querySelector('video').srcObject.getVideoTracks()[0]
       ),
       div;
@@ -351,6 +310,38 @@
       })
       .push(function (blob) {
         gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
+        if (settings.brightness || settings.contrast || settings.enable_greyscale || settings.compression) {
+          return new RSVP.Queue()
+            .push(function () {
+              return jIO.util.readBlobAsDataURL(blob);
+            })
+            .push(function (result) {
+              var canvas = domsugar('canvas', {'class': 'canvas'});
+              return new Promise(function (resolve) {
+                // XXX the correct usage is `new Caman()` but the library does not support it
+                Caman(canvas, result.target.result, function () {
+                  if (settings.brightness && settings.brightness !== 0) {
+                    this.brightness(settings.brightness);
+                  }
+                  if (settings.contrast && settings.contrast !== 0) {
+                    this.contrast(settings.contrast);
+                  }
+                  if (settings.enable_greyscale) {
+                    this.greyscale();
+                  }
+                  this.render(function () {
+                    canvas.toBlob(function (blob) {
+                      resolve(blob);
+                    });
+                  });
+                });
+              });
+            });
+        } else {
+          return blob;
+        }
+      })
+      .push(function (blob) {
         return RSVP.all([
           gadget.getTranslationList(["Delete", "Save"]),
           createImageBitmap(blob),
@@ -361,7 +352,6 @@
         var bitmap = result_list[1],
           canvas = domsugar('canvas', {'class': 'canvas'}),
           defer = RSVP.defer();
-
         // Prepare the cropper canvas
         canvas.width = bitmap.width;
         canvas.height = bitmap.height;
@@ -393,10 +383,8 @@
         gadget.element.replaceChild(div, gadget.element.firstElementChild);
 
         addDetachedPromise(gadget, 'cropper',
-                           handleCropper(gadget,
-                                         canvas,
+                           handleCropper(canvas,
                                          gadget.state.preferred_cropped_canvas_data,
-                                         gadget.state.preferred_image_settings_data,
                                          defer.resolve));
         return defer.promise;
       })
@@ -712,4 +700,4 @@
 
     .declareAcquiredMethod("getTranslationList", "getTranslationList");
 
-}(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman));
+}(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman, URL, File));
