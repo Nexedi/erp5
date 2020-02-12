@@ -16,13 +16,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_jio_action</string>
+                <string>action_type/object_action</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_jio_action</string> </value>
+            <value> <string>object_action</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -32,9 +32,8 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>This action selects all transactions from this account at a given date to reconcile them all.\n
+This is only useful to start using bank reconciliation after using accounting for some years.</string> </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
