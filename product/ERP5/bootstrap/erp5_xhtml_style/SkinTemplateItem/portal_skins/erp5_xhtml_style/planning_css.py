@@ -84,12 +84,12 @@ for area_name in properties_structure.keys():
       returned_list.append('.%s{' % class_name)
     else:
       returned_list.append('#%s{' % class_name)
-    for id in css_dict[class_name].keys():
-      if same_type(css_dict[class_name][id],''):
-        returned_list.append('%s:%s;\n' % (id,css_dict[class_name][id]))
+    for id_ in css_dict[class_name].keys():
+      if same_type(css_dict[class_name][id_], ''):
+        returned_list.append('%s:%s;\n' % (id_, css_dict[class_name][id_]))
       else:
         # if data is type float or integer then need to add 'px' at the end
-        returned_list.append('%s:%s%s;\n' % (id, int(css_dict[class_name][id] + 0.5),'px'))
+        returned_list.append('%s:%s%s;\n' % (id_, int(css_dict[class_name][id_] + 0.5), 'px'))
     returned_list.append('}\n')
 returned_list.append(" \
 .planning_box_topleft{ position:absolute;left:0;top:0;} \n \
