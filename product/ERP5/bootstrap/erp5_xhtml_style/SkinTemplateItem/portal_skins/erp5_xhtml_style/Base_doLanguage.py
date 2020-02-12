@@ -1,3 +1,6 @@
+# pylint: disable=redefined-builtin
+# select_language is a builtin because of Localizer add in builtins and pylint uses it as it runs in same process as ERP5.
+# https://lab.nexedi.com/nexedi/erp5/blob/52146f5e3abf538c056a1ab2ffd124757c4825d6/product/Localizer/itools/i18n/accept.py#L163
 import re
 
 try:
