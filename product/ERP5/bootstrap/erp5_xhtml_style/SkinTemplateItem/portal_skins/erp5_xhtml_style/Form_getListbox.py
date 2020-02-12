@@ -1,5 +1,4 @@
 # Return first listbox in a form that is enabled and not hidden
-# Christophe Dumez <christophe@nexedi.com>
 # This script should be used to detect a listbox without having to name it "listbox"
 
 form=context
@@ -22,5 +21,5 @@ def isListBox(field):
 # the listbox is there.
 for group in ('bottom', 'center', 'left', 'right', 'Default'):
   for field in form.get_fields_in_group(group):
-     if isListBox(field) and not(field['hidden']) and field['enabled']:
-       return field
+    if isListBox(field) and not(field['hidden']) and field['enabled']:
+      return field

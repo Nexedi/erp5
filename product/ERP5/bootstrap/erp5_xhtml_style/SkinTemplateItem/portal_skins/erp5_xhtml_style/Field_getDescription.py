@@ -20,9 +20,9 @@ def getFieldDescription(field_id):
           properties = document.propertyMap()
         except AttributeError: # If context has no propertyMap, give up
           properties = []
-        for property in properties:
-          if split_id[1] == property['id']:
-            desc = property.get('description', '')
+        for prop in properties:
+          if split_id[1] == prop['id']:
+            desc = prop.get('description', '')
             break
   return desc
 
