@@ -1,6 +1,6 @@
 /*jslint indent: 2, unparam: true */
-/*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData*/
-(function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData) {
+/*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman*/
+(function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman) {
   "use strict";
 
   //////////////////////////////////////////////////
@@ -50,11 +50,58 @@
     return new RSVP.Promise(waitForStream, canceller);
   }
 
-  function handleCropper(element, data, callback) {
-    var cropper;
+  function handleCropper(gadget, element, data, settings, callback) {
+    var cropper,
+      queue = new RSVP.Queue(),
+      img =  domsugar("img"),
+      canvas = domsugar('canvas', {'class': 'canvas'});
 
     function canceller() {
       cropper.destroy();
+    }
+
+    if (settings.brightness || settings.contrast || settings.enable_greyscale || settings.compression) {
+      return new RSVP.Queue()
+        .push(function () {
+          return new Promise(function (resolve) {
+            Caman(canvas, element, function () {
+              if (settings.brightness !== 0) {
+                this.brightness(data.brightness);
+              }
+              if (settings.contrast !== 0) {
+                this.contrast(data.contrast);
+              }
+              if (settings.enable_greyscale) {
+                this.greyscale();
+              }
+              this.render(function () {
+                resolve(canvas.toDataURL("image/jpeg", settings.compression));
+              });
+            });
+          });
+        })
+        .push(function (data_str) {
+          img.setAttribute("src", data_str);
+
+          // creating Cropper is asynchronous
+          return new RSVP.Promise(function (resolve, reject) {
+            cropper = new Cropper(img, {
+              data: data,
+              ready: function () {
+                return new RSVP.Queue()
+                  .push(function () {
+                    return callback(cropper);
+                  })
+                  .push(undefined, function (error) {
+                    if (!(error instanceof RSVP.CancellationError)) {
+                      canceller();
+                      reject(error);
+                    }
+                  });
+              }
+            });
+          }, canceller);
+        });
     }
 
     // creating Cropper is asynchronous
@@ -291,9 +338,10 @@
   // Capture the media stream
   function captureAndRenderPicture(gadget) {
     var image_capture = new window.ImageCapture(
-      gadget.element.querySelector('video').srcObject.getVideoTracks()[0]
-    ),
+        gadget.element.querySelector('video').srcObject.getVideoTracks()[0]
+      ),
       div;
+
     return new RSVP.Queue()
       .push(function () {
         return image_capture.getPhotoCapabilities();
@@ -345,8 +393,10 @@
         gadget.element.replaceChild(div, gadget.element.firstElementChild);
 
         addDetachedPromise(gadget, 'cropper',
-                           handleCropper(canvas,
+                           handleCropper(gadget,
+                                         canvas,
                                          gadget.state.preferred_cropped_canvas_data,
+                                         gadget.state.preferred_image_settings_data,
                                          defer.resolve));
         return defer.promise;
       })
@@ -445,6 +495,7 @@
             active_process: default_value.active_process,
             image_list: default_value.image_list,
             preferred_cropped_canvas_data: JSON.parse(options.preferred_cropped_canvas_data),
+            preferred_image_settings_data: JSON.parse(options.preferred_image_settings_data),
             device_id: device_id,
             key: options.key,
             first_render: true
@@ -661,4 +712,4 @@
 
     .declareAcquiredMethod("getTranslationList", "getTranslationList");
 
-}(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData));
+}(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman));
