@@ -1,17 +1,32 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
-/*global rJS, window*/
-(function (window, rJS) {
+/*global rJS, window, document*/
+(function (window, rJS, document) {
   "use strict";
 
   rJS(window)
     .declareMethod("declareGadgetToCheck", function (url) {
-      return this.declareGadget(url, {
-        scope: 'gadget_to_check'
-      })
+      // return;
+      console.log('declareGadgetToCheck', url);
+      this.element.innerHTML = '';
+      var div = document.createElement('div'),
+        gadget = this;
+      this.element.appendChild(div);
+      return new RSVP.Queue()
+        .push(function () {
+          return gadget.declareGadget(url, {
+            scope: 'gadget_to_check',
+            sandbox: 'iframe',
+            element: div
+          });
+        })
         .push(function () {
           // Do not return the loaded gadget.
           // XXX This seems to break rJS iframe communication
-          return;
+          console.log('loaded', url);
+          // return RSVP.delay(500);
+        }, function (error) {
+          console.log('failed', error, url);
+          throw error;
         });
     })
 
@@ -29,4 +44,4 @@
         });
     });
 
-}(window, rJS));
+}(window, rJS, document));
