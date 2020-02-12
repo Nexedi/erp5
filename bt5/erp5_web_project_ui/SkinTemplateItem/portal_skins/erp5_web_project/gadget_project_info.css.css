@@ -1,49 +1,113 @@
-#generate-rss {
-  padding: 5.5pt;
-  margin-right: 12pt;
-  background-color: #FF6600;
-  border-color: #FF6600;
-  color: #FFFFFF;
-  border-radius: 0.325em;
-  border-width: 0.5px;
+/* FRONT PAGE */
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list  {
+  margin-top: 10px;
+}
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box  {
+  margin-bottom: 10px;
   border-style: solid;
-  min-width: 6em;
-  line-height: 1.5;
-  display: none;
-  text-align: center;
-  width: fit-content;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 5px;
+  padding: 5px;
+  padding-left: 15px;
 }
 
-.restore-button {
-  padding: 6pt;
-  margin-right: 12pt;
-  background-color: #FF6600;
-  color: #FFFFFF;
-  border-radius: 0.325em;
-  border-width: 0.5px;
-  border-style: solid;
-  min-width: 8em;
-  line-height: 1.5;
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] a {
+  color: #267B87;
+  text-decoration: none;
 }
 
-#wrap1 iframe {
-  height: 100%;
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-info  {
+  display: inline-flex;
+  width: 100%
 }
 
-#wrap2 iframe {
-  height: 100%;
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-info .left  {
+  width: 35%;
 }
 
-.gadget-content .ui-field-contain .graph-spinner {
-  position: relative;
-  top: 100px;
-  width: 120px;
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-line  {
+  margin-bottom: 5px;
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 1.25em;
+  line-height: 1.58em;
+  letter-spacing: -.003em;
 }
 
-.gadget-content .ui-field-contain .count-spinner {
-  top: 20px;
-  width: 120px;
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-line.field {
+  display: flex;
 }
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-line.field label {
+  color: #767676;
+}
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-line.field span {
+  margin-left: 15px;
+}
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-title  {
+  color: #19535F;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 33px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box span.margined  {
+  margin-right: 5px;
+}
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .status  {
+  padding-left: 21px;
+}
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .status.none {
+  background: #adadad !important;
+}
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .status.none.orange  {
+  background: #f0ad4e !important;
+}
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .status.none.red  {
+  background: #de1e00 !important;
+}
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .status.none.green {
+  background: #00b80c !important;
+}
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .loader {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  font-size: 300%;
+  animation-name: fadein;
+  animation-duration: 0.2s;
+  animation-delay: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: ease-in;
+}
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .ui-icon-spinner {
+  opacity: 1;
+}
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .ui-icon-spinner::before {
+  content: "\f110";
+  animation: spin 0.5s infinite linear;
+}
+
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .ui-icon-spinner.ui-hidden {
+  visibility: hidden;
+}
+
+
+/* PROJECT PAGE */
 
 .gadget-content .ui-field-contain .bottom .first-line-buttons {
   -webkit-appearance: none;
@@ -123,4 +187,38 @@ input[type="submit"] {
 .worklist-title {
   color: #777777;
   margin-top: 10px;
+}
+
+
+/* PROJECT HOME PAGE */
+
+body.cke_editable h1 {
+  margin-top: 1.5em;
+  font-family: "Roboto", Arial, sans-serif;
+  color: #19535F;
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+body.cke_editable h2 {
+  font-family: "Roboto", Arial, sans-serif;
+  font-weight: normal;
+  font-size: 25px;
+  line-height: 33px;
+  color: #19535F;
+}
+
+body.cke_editable p, body.cke_editable li, body.cke_editable span {
+  font-family: 'Heuristica', 'Helvetica', Times, serif;
+}
+
+body.cke_editable ul li, body.cke_editable p {
+  font-size: 1.25em;
+  line-height: 1.58em;
+  letter-spacing: -.003em;
+}
+
+body.cke_editable a {
+  color: #267B87;
+  text-decoration: none;
 }

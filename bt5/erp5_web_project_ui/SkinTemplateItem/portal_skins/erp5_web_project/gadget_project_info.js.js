@@ -3,6 +3,10 @@
 (function (window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer, SimpleQuery, ComplexQuery, Query) {
   "use strict";
 
+  /*jshint esnext: true */
+  const VALID_STATE_LIST = ["shared", "released", "published",
+                            "shared_alive", "released_alive", "published_alive"];
+
   function addRedirectionToReference(href, url) {
     if (!href.startsWith("https") && !href.startsWith("http") &&
         !href.startsWith("ftp") && !href.includes("/")
@@ -14,13 +18,15 @@
 
   function parseHTMLLinks(html, url) {
     var parser = new DOMParser(), i,
+      //TODO create head and link html elements and prepend to doc instead of using text
+      styles_header = '<head><link rel="stylesheet" type="text/css" href="gadget_project_info.css"></head>',
       oSerializer = new XMLSerializer(),
       doc = parser.parseFromString(html, "text/html"),
       link_list = doc.getElementsByTagName("a");
     for (i = 0; i < link_list.length; i += 1) {
       link_list[i].setAttribute('href', addRedirectionToReference(link_list[i].getAttribute('href'), url));
     }
-    return oSerializer.serializeToString(doc);
+    return styles_header + oSerializer.serializeToString(doc);
   }
 
   function enableLink(link_element, url) {
@@ -129,13 +135,6 @@
       value: "Web Page"
     }));
     query_list.push(new SimpleQuery({
-      key: "validation_state",
-      operator: "=",
-      type: "simple",
-      value: ("shared", "released", "published", "shared_alive",
-              "released_alive", "published_alive")
-    }));
-    query_list.push(new SimpleQuery({
       key: "follow_up__relative_url",
       operator: "=",
       type: "simple",
@@ -152,6 +151,7 @@
       query_list: query_list,
       type: "complex"
     }));
+    query += ' AND validation_state: ("' + VALID_STATE_LIST.join('", "') + '")';
     return gadget.getUrlFor({command: 'push_history', options: {page: "project_redirector"}})
       .push(function (url) {
         redirector_ulr = url;
@@ -220,7 +220,7 @@
             gadget.getSetting("hateoas_url")
           ];
           if (modification_dict.publication_section) {
-            promise_list.push(gadget.getDeclaredGadget("editor")),
+            promise_list.push(gadget.getDeclaredGadget("editor"));
             promise_list.push(getWebPageInfo(gadget, modification_dict.jio_key, modification_dict.publication_section));
           }
           return RSVP.all(promise_list);
