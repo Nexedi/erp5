@@ -10,6 +10,7 @@
       aux_complex_query,
       aux_query_list = [],
       query_list = [],
+      //TODO: test result will need a differet query because we only need the last test per project, no all
       portal_type_list = ["Task", "Bug", "Task Report", "Benchmark Result"],
       valid_state_list = ["planned", "ordered", "confirmed", "started", "stopped", "delivered", "ready", "failed", "public_stopped"];
 
@@ -78,12 +79,17 @@
       query_list: query_list,
       type: "complex"
     });
+    // TODO: filter result by too old creation/end date? to reduce results
 
     return new RSVP.Queue()
       .push(function () {
         var promise_list = [],
+          //TODO: review limit and fields
           limit = [0, 1000],
-          select_list = ['source_project', 'source_project_title','portal_type', 'stop_date', 'modification_date', 'simulation_state'];//, 'validation_state'];
+          select_list = ['source_project', 'source_project_title', 'portal_type', 'stop_date', 'modification_date', 'simulation_state'];
+        // XXX: two separated queries because this query fails with not implemented error:
+        // ( parent__validation_state = "validated" OR source_project__validation_state = "validated" )
+        // TODO: do some research
         promise_list.push(gadget.jio_allDocs({
           query: Query.objectToSearchText(milestone_query),
           limit: limit,
@@ -115,14 +121,15 @@
           //TODO check modification date and return item with status 0, 1 or 2 (green, orange, red)
           //we need 2 limit dates that should be based on portal type (e.g. Milestones segmented by months, maybe Taks by weeks)
           //where to set this limits dates? a manifest? site configuration?
-          //for test results, check validation state (0 = pass, 2 = fail)
           item.status = 0;
+          //for quick testing purposes
           if (item.id === "project_module/1/7") {
             item.status = 2;
           }
           if (item.id === "project_module/1/6") {
             item.status = 1;
           }
+          //for test results, check validation state (0 = pass, 2 = fail)
           return item;
         }
 
