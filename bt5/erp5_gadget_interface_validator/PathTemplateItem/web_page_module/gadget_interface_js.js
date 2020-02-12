@@ -257,8 +257,7 @@
               // XXX Load in an iframe
               return context.declareGadget('gadget_interface_loader.html', {
                 scope: gadget_to_check_url,
-                element: element,
-                sandbox: 'iframe'
+                element: element
               });
             })
             .push(function (result) {
@@ -356,118 +355,139 @@
       return this.changeState(options);
     })
 
-    .onStateChange(function () {
+    .onStateChange(function (modification_dict) {
       var context = this,
         required_interface_list = [],
         gadget_method_list = [],
         error_list = [];
 
-      return getOrDeclareGadget(context, context.state.gadget_to_check_url)
-
-        .push(function (gadget_to_check) {
-          // Get the list of interfaces/methods
-          return RSVP.all([
-            gadget_to_check.getGadgetToCheckInterfaceList(),
-            gadget_to_check.getGadgetToCheckMethodList('method')
-          ]);
-        })
-        .push(function (result_list) {
-          required_interface_list = result_list[0];
-          gadget_method_list = result_list[1];
-        }, function (error) {
-          error_list.push({
-            details: "Error with gadget loading\n" + (error.message || '')
+      if (modification_dict.hasOwnProperty('gadget_to_check_url')) {
+        return getOrDeclareGadget(context, context.state.gadget_to_check_url)
+      /*
+          .push(undefined, function (error) {
+            console.warn('oups', error);
+            context.element.innerHTML = '';
+            return;
           });
-        })
+          */
 
-        .push(function () {
-          // Get all methods definition for every interface
-          var promise_list = [],
-            i;
-          for (i = 0; i < required_interface_list.length; i += 1) {
-            promise_list.push(
-              getDefinedInterfaceMethodList(required_interface_list[i],
-                                            error_list)
-            );
-          }
-          return RSVP.all(promise_list);
-        })
+          .push(function (gadget_to_check) {
+            // Get the list of interfaces/methods
+            return RSVP.all([
+              gadget_to_check.getGadgetToCheckInterfaceList(),
+              gadget_to_check.getGadgetToCheckMethodList('method')
+            ]);
+          })
+          .push(function (result_list) {
+            required_interface_list = result_list[0];
+            gadget_method_list = result_list[1];
+          }, function (error) {
+            error_list.push({
+              details: "Error with gadget loading\n" + (error.message || '')
+            });
+          })
 
-        .push(function (method_table) {
-          var interface_method_list = [],
-            i,
-            j,
-            promise_list = [];
+          .push(function () {
+            // Get all methods definition for every interface
+            var promise_list = [],
+              i;
+            for (i = 0; i < required_interface_list.length; i += 1) {
+              promise_list.push(
+                getDefinedInterfaceMethodList(required_interface_list[i],
+                                              error_list)
+              );
+            }
+            return RSVP.all(promise_list);
+          })
 
-          for (i = 0; i < method_table.length; i += 1) {
-            for (j = 0; j < method_table[i].length; j += 1) {
-              // Check method declared twice
-              if (interface_method_list.indexOf(method_table[i][j].name) >= 0) {
-                error_list.push({
-                  details: "Method documented in multiple interface\n" +
-                           method_table[i][j].name
-                });
-              } else {
-                interface_method_list.push(method_table[i][j].name);
+          .push(function (method_table) {
+            var interface_method_list = [],
+              i,
+              j,
+              promise_list = [];
+
+            for (i = 0; i < method_table.length; i += 1) {
+              for (j = 0; j < method_table[i].length; j += 1) {
+                // Check method declared twice
+                if (interface_method_list.indexOf(method_table[i][j].name) >=
+                    0) {
+                  error_list.push({
+                    details: "Method documented in multiple interface\n" +
+                             method_table[i][j].name
+                  });
+                } else {
+                  interface_method_list.push(method_table[i][j].name);
+                }
               }
             }
-          }
 
-          // Check unknown method declaration
-          for (i = 0; i < gadget_method_list.length; i += 1) {
-            if (interface_method_list.indexOf(
-                gadget_method_list[i]
-              ) < 0) {
-              error_list.push({
-                details: "Method not documented in the interface\n" +
-                         gadget_method_list[i]
-              });
+            // Check unknown method declaration
+            for (i = 0; i < gadget_method_list.length; i += 1) {
+              if (interface_method_list.indexOf(
+                  gadget_method_list[i]
+                ) < 0) {
+                error_list.push({
+                  details: "Method not documented in the interface\n" +
+                           gadget_method_list[i]
+                });
+              }
             }
-          }
 
-          // Check that all interfaces are implemented
-          for (i = 0; i < required_interface_list.length; i += 1) {
-            promise_list.push(
-              verifyAllMethodDeclared(method_table[i], gadget_method_list,
-                                      error_list)
-            );
-          }
-          return RSVP.all(promise_list);
-
-        })
-        .push(function () {
-          // Display result
-          var i,
-            error_message = '',
-            summary_message;
-
-          if (error_list.length === 0) {
-            summary_message = 'Success';
-          } else {
-            summary_message = 'Failure';
-          }
-
-          for (i = 0; i < error_list.length; i += 1) {
-            error_message += (error_list[i].details + '\n\n');
-          }
-
-          if (context.state.summary) {
-            if (error_message !== '') {
-              console.warn(error_message, error_list);
+            // Check that all interfaces are implemented
+            for (i = 0; i < required_interface_list.length; i += 1) {
+              promise_list.push(
+                verifyAllMethodDeclared(method_table[i], gadget_method_list,
+                                        error_list)
+              );
             }
-            error_message = summary_message;
-          } else {
-            error_message = summary_message + '\n\n' + error_message;
-          }
-          context.element.firstElementChild.textContent = error_message;
-        })
+            return RSVP.all(promise_list);
 
-        .push(undefined, function (error) {
-          console.warn(error);
-          context.element.firstElementChild.textContent =
-            "Unexpected error";
-        });
+          })
+          .push(function () {
+            // Display result
+            var i,
+              error_message = '',
+              summary_message;
 
+            if (error_list.length === 0) {
+              summary_message = 'Success';
+            } else {
+              summary_message = 'Failure';
+            }
+
+            for (i = 0; i < error_list.length; i += 1) {
+              error_message += (error_list[i].details + '\n\n');
+            }
+
+            if (context.state.summary) {
+              if (error_message !== '') {
+                console.warn(error_message, error_list);
+              }
+              error_message = summary_message;
+            } else {
+              error_message = summary_message + '\n\n' + error_message;
+            }
+            context.element.firstElementChild.textContent = error_message;
+          })
+
+          .push(undefined, function (error) {
+            console.warn(error);
+            context.element.firstElementChild.textContent =
+              "Unexpected error: " + error;
+          });
+      }
+
+      if (modification_dict.hasOwnProperty('error')) {
+        console.warn(context.state.error);
+        context.element.firstElementChild.textContent =
+          "Unexpected error: " + context.state.error;
+      }
+    })
+
+    .allowPublicAcquisition('reportServiceError', function (param_list) {
+      // Subgadget services failed.
+      // Report it as an error instead of crashing the page
+      return this.changeState({error: param_list[0]});
     });
 
 }(window, rJS, RSVP, DOMParser, jIO, console, document));
