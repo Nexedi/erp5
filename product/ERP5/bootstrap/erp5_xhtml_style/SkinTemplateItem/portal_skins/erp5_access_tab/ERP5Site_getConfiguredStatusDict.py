@@ -10,7 +10,6 @@ def getConfiguredStatusDict():
 
   express_pref_dict = context.ERP5Site_getExpressPreferenceDict()
   subscription_status = express_pref_dict.get('subscription_status')
-  configuration_status = express_pref_dict.get('configuration_status')
   user_id = express_pref_dict.get('user_id')
 
   SUPPORT_ENABLED = 'support_enabled'
@@ -39,7 +38,6 @@ basic_mode, dms_mode, express_mode = getConfiguredStatusDict()
 member = portal.portal_membership.getAuthenticatedMember()
 role_list = list(member.getRoles())
 role_list.sort()
-group_list = ()
 getGroups = getattr(member, 'getGroups', None)
 if role_list == ['Authenticated', 'Member'] and not getGroups():
   basic_mode = False
