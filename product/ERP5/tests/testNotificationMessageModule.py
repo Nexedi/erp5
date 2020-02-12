@@ -27,11 +27,10 @@
 #
 ##############################################################################
 
-import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-from Products.ERP5Type.tests.utils import DummyMailHost
+
 
 class TestNotificationMessageModule(ERP5TypeTestCase):
   """
@@ -40,39 +39,26 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return ('erp5_base',)
 
-  def getTitle(self):
-    return 'Notification Message Module'
-
-  def getNotificationMessageModule(self):
-    return self.getPortal().notification_message_module
-
   def createUser(self, name, role_list):
-    user_folder = self.getPortal().acl_users
-    user_folder._doAddUser(name, 'password', role_list, [])
+    self.portal.acl_users._doAddUser(name, self.newPassword(), role_list, [])
 
   def afterSetUp(self):
     self.createUser('erp5user', ['Auditor', 'Author'])
     self.createUser('manager', ['Manager'])
-    portal = self.getPortal()
-    if 'MailHost' in portal.objectIds():
-      portal.manage_delObjects(['MailHost'])
-    portal._setObject('MailHost', DummyMailHost('MailHost'))
-    portal.email_from_address = 'site@example.invalid'
-    self.portal.portal_caches.clearAllCache()
-    self.tic()
+    self.portal.email_from_address = 'site@example.invalid'
     self.loginByUserName('erp5user')
 
   def beforeTearDown(self):
     self.abort()
     # clear modules if necessary
-    module_list = (self.getNotificationMessageModule(),)
+    module_list = (self.portal.notification_message_module,)
     for module in module_list:
       module.manage_delObjects(list(module.objectIds()))
     self.tic()
 
-  def test_01_get_document(self):
-    module = self.getNotificationMessageModule()
-    tool = self.getPortal().portal_notifications
+  def test_notification_tool_getDocumentValue(self):
+    module = self.portal.notification_message_module
+    tool = self.portal.portal_notifications
     self.loginByUserName('manager')
     #Test Document A in english
     n_m_en = module.newContent(portal_type='Notification Message',
@@ -108,11 +94,10 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     result = tool.getDocumentValue(reference='A', language='fr')
     self.assertEqual(result.getRelativeUrl(), n_m_fr_02.getRelativeUrl())
 
-
   def test_substitution_content(self):
     """Tests that content and subject have string.Template based substitutions
     """
-    module = self.getNotificationMessageModule()
+    module = self.portal.notification_message_module
     createZODBPythonScript(self.portal,
                            'NotificationMessage_getDummySubstitionMapping',
                            '**kw',
@@ -130,11 +115,10 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
 
     self.assertEqual('Test b', doc.asSubjectText())
 
-
   def test_substitution_content_parameters(self):
     """Tests that we can pass parameters to convert to the substitution method,
     by using substitution_method_parameter_dict """
-    module = self.getNotificationMessageModule()
+    module = self.portal.notification_message_module
     createZODBPythonScript(self.portal,
                            'NotificationMessage_getDummySubstitionMapping',
                            '**kw',
@@ -150,11 +134,10 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                              substitution_method_parameter_dict=dict(a='b'))
     self.assertEqual('substitution text: b', text.rstrip())
 
-
   def test_substitution_content_and_convert(self):
     """Tests that substitution also works with different target format.
     """
-    module = self.getNotificationMessageModule()
+    module = self.portal.notification_message_module
     createZODBPythonScript(self.portal,
                            'NotificationMessage_getDummySubstitionMapping',
                            '**kw',
@@ -172,7 +155,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     """Tests that 'safe' substitution is performed, unless safe_substitute is
     explicitly passed to False.
     """
-    module = self.getNotificationMessageModule()
+    module = self.portal.notification_message_module
     createZODBPythonScript(self.portal,
                            'NotificationMessage_getDummySubstitionMapping',
                            '**kw',
@@ -191,9 +174,3 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     self.assertRaises(KeyError, doc.convert, 'txt', safe_substitute=False)
     self.assertRaises(KeyError, doc.convert, 'html', safe_substitute=False)
     self.assertRaises(KeyError, doc.asSubjectText, safe_substitute=False)
-
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestNotificationMessageModule))
-  return suite
