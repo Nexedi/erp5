@@ -97,3 +97,11 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     for business_template in self.portal.portal_templates.contentValues():
       if business_template.getTitle() in self.getTestedBusinessTemplateList():
         self.assertEqual([], business_template.BusinessTemplate_getPythonSourceCodeMessageList())
+
+  def test_rebuild_business_template(self):
+    """Try to rebuild business template to catch packaging errors.
+    """
+    template_tool = self.portal.portal_templates
+    for bt_title in self.getTestedBusinessTemplateList():
+      bt = template_tool.getInstalledBusinessTemplate(bt_title, strict=True)
+      bt.build()
