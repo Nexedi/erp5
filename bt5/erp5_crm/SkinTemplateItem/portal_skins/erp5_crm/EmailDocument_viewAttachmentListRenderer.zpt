@@ -1,7 +1,7 @@
 <tal:block tal:define="information_list here/getAttachmentInformationList">
   <ul>
     <li tal:repeat="information information_list">
-      <a tal:content="information/filename | information/uid" tal:attributes="href python:'getAttachmentData?index:int=%s' % information['index']"/>
+      <a target="_blank" tal:content="information/filename | information/uid" tal:attributes="href python:'%s/getAttachmentData?index:int=%s' % (context.absolute_url(), information['index'])"/>
       (<tal:block tal:content="information/content_type" />)
     </li>
   </ul>
