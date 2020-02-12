@@ -14,13 +14,15 @@
 
   function parseHTMLLinks(html, url) {
     var parser = new DOMParser(), i,
+      //TODO create head and link html elements and prepend to doc instead of using text
+      styles_header = '<head><link rel="stylesheet" type="text/css" href="gadget_project_info.css"></head>',
       oSerializer = new XMLSerializer(),
       doc = parser.parseFromString(html, "text/html"),
       link_list = doc.getElementsByTagName("a");
     for (i = 0; i < link_list.length; i += 1) {
       link_list[i].setAttribute('href', addRedirectionToReference(link_list[i].getAttribute('href'), url));
     }
-    return oSerializer.serializeToString(doc);
+    return styles_header + oSerializer.serializeToString(doc);
   }
 
   function enableLink(link_element, url) {
@@ -220,7 +222,7 @@
             gadget.getSetting("hateoas_url")
           ];
           if (modification_dict.publication_section) {
-            promise_list.push(gadget.getDeclaredGadget("editor")),
+            promise_list.push(gadget.getDeclaredGadget("editor"));
             promise_list.push(getWebPageInfo(gadget, modification_dict.jio_key, modification_dict.publication_section));
           }
           return RSVP.all(promise_list);
