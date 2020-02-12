@@ -944,6 +944,11 @@
                      .register(service_worker_url)
                      .then(function (registration) {
                 gadget.state.service_worker_registration = registration;
+              })
+              .catch(function (error) {
+                // If service worker installation is rejected,
+                // do not prevent the site to be usable, even if slower
+                console.warn("Service worker registration failed", error);
               }),
             // Check when a new worker has been activated from another tab
             // XXX Not promise based, but we do not want to add a new dependency
