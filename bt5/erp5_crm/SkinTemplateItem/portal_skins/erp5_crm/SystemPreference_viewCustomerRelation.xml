@@ -93,6 +93,8 @@
                         <string>my_preferred_event_assessment_form_id_list</string>
                         <string>my_preferred_event_sender_email</string>
                         <string>my_preferred_customer_relation_language_list</string>
+                        <string>my_preferred_insolvency_proceeding_use_list</string>
+                        <string>my_preferred_insolvency_proceeding_resource</string>
                       </list>
                     </value>
                 </item>
