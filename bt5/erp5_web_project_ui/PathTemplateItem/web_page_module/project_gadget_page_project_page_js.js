@@ -1,7 +1,12 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer, SimpleQuery, ComplexQuery, Query*/
-(function (window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer, SimpleQuery, ComplexQuery, Query) {
+/*global window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer,
+SimpleQuery, ComplexQuery, Query*/
+(function (window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer,
+            SimpleQuery, ComplexQuery, Query) {
   "use strict";
+
+  var VALID_STATE_LIST = ["shared", "released", "published",
+                          "shared_alive", "released_alive", "published_alive"];
 
   function addRedirectionToReference(href, url) {
     if (!href.startsWith("https") && !href.startsWith("http") &&
@@ -14,11 +19,19 @@
 
   function parseHTMLLinks(html, url) {
     var parser = new DOMParser(), i,
+      styles_link = document.createElement('link'),
       oSerializer = new XMLSerializer(),
       doc = parser.parseFromString(html, "text/html"),
-      link_list = doc.getElementsByTagName("a");
+      link_list = doc.querySelectorAll("a"),
+      header = doc.querySelector("head");
+    styles_link.href = "gadget_erp5_page_project.css";
+    styles_link.type = "text/css";
+    styles_link.rel = "stylesheet";
+    header.appendChild(styles_link);
     for (i = 0; i < link_list.length; i += 1) {
-      link_list[i].setAttribute('href', addRedirectionToReference(link_list[i].getAttribute('href'), url));
+      link_list[i].setAttribute('href',
+                                addRedirectionToReference(link_list[i]
+                                                          .getAttribute('href'), url));
     }
     return oSerializer.serializeToString(doc);
   }
@@ -33,44 +46,22 @@
     return view_list.filter(d => d.name === name)[0].href;
   }
 
-  function setLatestTestResult(gadget, svg_element, project_jio_key) {
-    var query = createProjectQuery(project_jio_key,
-                 [["portal_type", "Test Result"]]);
-    return gadget.jio_allDocs({
-      query: query,
-      limit: 1,
-      sort_on: [['creation_date', 'descending']],
-      select_list: ['simulation_state']
-    })
-      .push(function (result_list) {
-        var state;
-        result_list = result_list.data.rows;
-        if (result_list.length > 0) {
-          svg_element.classList.remove("ui-hidden");
-          state = result_list[0].value.simulation_state;
-          switch (state) {
-          case 'started':
-            svg_element.classList.add("running");
-            document.getElementById("test_result_running").classList.remove("ui-hidden");
-            break;
-          case 'failed':
-            svg_element.classList.add("fail");
-            document.getElementById("test_result_fail").classList.remove("ui-hidden");
-            break;
-          case 'cancelled':
-            svg_element.classList.add("cancelled");
-            document.getElementById("test_result_running").classList.remove("ui-hidden");
-            break;
-          case 'stopped':
-          case 'public_stopped':
-            svg_element.classList.add("pass");
-            document.getElementById("test_result_pass").classList.remove("ui-hidden");
-            break;
-          default:
-            svg_element.classList.add("ui-hidden");
-          }
-        }
-      });
+  function createMultipleSimpleOrQuery(key, value_list) {
+    var i,
+      query_list = [];
+    for (i = 0; i < value_list.length; i += 1) {
+      query_list.push(new SimpleQuery({
+        key: key,
+        operator: "",
+        type: "simple",
+        value: value_list[i]
+      }));
+    }
+    return new ComplexQuery({
+      operator: "OR",
+      query_list: query_list,
+      type: "complex"
+    });
   }
 
   function createProjectQuery(project_jio_key, key_value_list) {
@@ -111,29 +102,63 @@
     }));
   }
 
+  function setLatestTestResult(gadget, svg_element, project_jio_key) {
+    var query = createProjectQuery(project_jio_key,
+                 [["portal_type", "Test Result"]]);
+    return gadget.jio_allDocs({
+      query: query,
+      limit: 1,
+      sort_on: [['creation_date', 'descending']],
+      select_list: ['simulation_state']
+    })
+      .push(function (result_list) {
+        var state;
+        result_list = result_list.data.rows;
+        if (result_list.length > 0) {
+          svg_element.classList.remove("ui-hidden");
+          state = result_list[0].value.simulation_state;
+          switch (state) {
+          case 'started':
+            svg_element.classList.add("running");
+            document.querySelector("#test_result_running")
+              .classList.remove("ui-hidden");
+            break;
+          case 'failed':
+            svg_element.classList.add("fail");
+            document.querySelector("#test_result_fail")
+              .classList.remove("ui-hidden");
+            break;
+          case 'cancelled':
+            svg_element.classList.add("cancelled");
+            document.querySelector("#test_result_running")
+              .classList.remove("ui-hidden");
+            break;
+          case 'stopped':
+          case 'public_stopped':
+            svg_element.classList.add("pass");
+            document.querySelector("#test_result_pass")
+              .classList.remove("ui-hidden");
+            break;
+          default:
+            svg_element.classList.add("ui-hidden");
+          }
+        }
+      });
+  }
+
   function getWebPageInfo(gadget, project_jio_key, publication_section) {
     var id,
       content,
       edit_view,
       redirector_ulr,
-      i,
       query,
       query_list = [],
-      id_query_list = [],
-      validation_state_query_list = [],
       web_page;
     query_list.push(new SimpleQuery({
       key: "portal_type",
       operator: "=",
       type: "simple",
       value: "Web Page"
-    }));
-    query_list.push(new SimpleQuery({
-      key: "validation_state",
-      operator: "=",
-      type: "simple",
-      value: ("shared", "released", "published", "shared_alive",
-              "released_alive", "published_alive")
     }));
     query_list.push(new SimpleQuery({
       key: "follow_up__relative_url",
@@ -147,17 +172,20 @@
       type: "simple",
       value: "publication_section/" + publication_section
     }));
-    query = Query.objectToSearchText(new ComplexQuery({
+    query_list.push(createMultipleSimpleOrQuery('validation_state', VALID_STATE_LIST));
+    query = new ComplexQuery({
       operator: "AND",
       query_list: query_list,
       type: "complex"
-    }));
-    return gadget.getUrlFor({command: 'push_history', options: {page: "project_redirector"}})
+    });
+    return gadget.getUrlFor({command: 'push_history',
+                             options: {page: "project_redirector"}})
       .push(function (url) {
         redirector_ulr = url;
         return gadget.jio_allDocs({
-          query: query,
-          select_list: ['text_content']
+          query: Query.objectToSearchText(query),
+          select_list: ['text_content'],
+          limit: 2
         });
       })
       .push(function (result_list) {
@@ -220,8 +248,9 @@
             gadget.getSetting("hateoas_url")
           ];
           if (modification_dict.publication_section) {
-            promise_list.push(gadget.getDeclaredGadget("editor")),
-            promise_list.push(getWebPageInfo(gadget, modification_dict.jio_key, modification_dict.publication_section));
+            promise_list.push(gadget.getDeclaredGadget("editor"));
+            promise_list.push(getWebPageInfo(gadget, modification_dict.jio_key,
+                                             modification_dict.publication_section));
           }
           return RSVP.all(promise_list);
         })
@@ -273,19 +302,21 @@
           return gadget.getUrlForList(url_parameter_list);
         })
         .push(function (url_list) {
-          enableLink(document.getElementById("milestone_link"), url_list[0]);
-          enableLink(document.getElementById("task_link"), url_list[1]);
-          enableLink(document.getElementById("support_request_link"), url_list[2]);
-          enableLink(document.getElementById("bug_link"), url_list[3]);
-          enableLink(document.getElementById("report_link"), url_list[4]);
-          enableLink(document.getElementById("test_result_link"), url_list[5]);
-          enableLink(document.getElementById("test_suite_link"), url_list[6]);
-          enableLink(document.getElementById("document_link"), url_list[7]);
-          enableLink(document.getElementById("activity_link"), url_list[8]);
+          enableLink(document.querySelector("#milestone_link"), url_list[0]);
+          enableLink(document.querySelector("#task_link"), url_list[1]);
+          enableLink(document.querySelector("#support_request_link"), url_list[2]);
+          enableLink(document.querySelector("#bug_link"), url_list[3]);
+          enableLink(document.querySelector("#report_link"), url_list[4]);
+          enableLink(document.querySelector("#test_result_link"), url_list[5]);
+          enableLink(document.querySelector("#test_suite_link"), url_list[6]);
+          enableLink(document.querySelector("#document_link"), url_list[7]);
+          enableLink(document.querySelector("#activity_link"), url_list[8]);
           if (web_page_info) {
-            enableLink(document.getElementById("web_page_link"), url_list[9]);
+            enableLink(document.querySelector("#web_page_link"), url_list[9]);
           }
-          setLatestTestResult(gadget, document.getElementById("test_result_svg"), modification_dict.jio_key);
+          //XXX move into a job to call it async
+          setLatestTestResult(gadget, document.querySelector("#test_result_svg"),
+                              modification_dict.jio_key);
         });
     })
 
