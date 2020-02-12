@@ -104,8 +104,12 @@ url_list = [
   'gadget_erp5_pt_embedded_form_render.js',
   'gadget_erp5_pt_form_dialog.html',
   'gadget_erp5_pt_form_dialog.js',
+  'gadget_erp5_pt_form_jump.html',
+  'gadget_erp5_pt_form_jump.js',
   'gadget_erp5_pt_form_list.html',
   'gadget_erp5_pt_form_list.js',
+  'gadget_erp5_pt_form_python_action.html',
+  'gadget_erp5_pt_form_python_action.js',
   'gadget_erp5_pt_form_view.html',
   'gadget_erp5_pt_form_view.js',
   'gadget_erp5_pt_form_view_editable.html',
@@ -172,5 +176,10 @@ url_list.extend([
 precache_manifest_url_list = web_section.getLayoutProperty("configuration_precache_manifest_url_list", default='').splitlines()
 for precache_manifest_script_id in precache_manifest_url_list:
   url_list.extend(web_section.restrictedTraverse(precache_manifest_script_id)())
+
+if REQUEST is not None:
+  import json
+  REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
+  return json.dumps(dict.fromkeys(url_list), indent=2)
 
 return url_list
