@@ -32,9 +32,8 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>This action selects all transactions from this account at a given date to reconcile them all.\n
+This is only useful to start using bank reconciliation after using accounting for some years.</string> </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -48,7 +47,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>Modify portal content</string>
+                <string>Manage portal</string>
               </tuple>
             </value>
         </item>
