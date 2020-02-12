@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>home_page=False, create_project_documents=False</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_createTestStartedProject</string> </value>
+            <value> <string>ERP5Site_getProjectTestStatusData</string> </value>
         </item>
       </dictionary>
     </pickle>
