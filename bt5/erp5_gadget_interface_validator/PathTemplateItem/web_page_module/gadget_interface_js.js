@@ -235,9 +235,11 @@
   function getOrDeclareGadget(context, gadget_to_check_url) {
     return context.getDeclaredGadget(gadget_to_check_url)
       .push(undefined, function (error) {
+        // console.log('failed', error);
         var element,
           loader_gadget,
-          current_defer;
+          current_defer,
+          tmp_counter;
         if (error instanceof rJS.ScopeError) {
           element = document.createElement('div');
           context.element.querySelector('div').appendChild(element);
@@ -250,26 +252,40 @@
               current_defer = RSVP.defer();
               interface_loader_defer = current_defer;
               counter += 1;
-              return previous_deferred.promise;
+              tmp_counter = counter;
+              console.log('wait for previous promise', counter, gadget_to_check_url);
+              return previous_deferred.promise
+                // Prevent cancelling the previous execution?
+                .always();
             })
             .push(function () {
+              console.log('doing promise', tmp_counter, gadget_to_check_url);
               context.element.firstElementChild.textContent = 'Loading';
               // XXX Load in an iframe
               return context.declareGadget('gadget_interface_loader.html', {
                 scope: gadget_to_check_url,
                 element: element,
-                sandbox: 'iframe'
+                // sandbox: 'iframe'
               });
             })
             .push(function (result) {
+              console.log('declared', result);
               loader_gadget = result;
+              // context.element.appendChild(loader_gadget.element);
+            /*
+              return RSVP.delay(5000);
+            })
+            .push(function () {
+            */
               return loader_gadget.declareGadgetToCheck(gadget_to_check_url);
             })
             .push(function () {
               // Iframe loaded, unblock the next iteration
+              console.log('resolving promise', tmp_counter, gadget_to_check_url);
               current_defer.resolve();
               return loader_gadget;
             }, function (error) {
+              console.log('Argh promise', tmp_counter, gadget_to_check_url, error, current_defer.promise);
               current_defer.resolve();
               throw error;
             });
@@ -353,6 +369,11 @@
 */
 
     .declareMethod("render", function (options) {
+      return this.deferRender(options);
+    })
+
+    .declareJob("deferRender", function (options) {
+      console.log("deferRender");
       return this.changeState(options);
     })
 
@@ -363,9 +384,17 @@
         error_list = [];
 
       return getOrDeclareGadget(context, context.state.gadget_to_check_url)
+    /*
+        .push(undefined, function (error) {
+          console.warn('oups', error);
+          context.element.innerHTML = '';
+          return;
+        });
+        */
 
         .push(function (gadget_to_check) {
           // Get the list of interfaces/methods
+          console.log('checking', gadget_to_check);
           return RSVP.all([
             gadget_to_check.getGadgetToCheckInterfaceList(),
             gadget_to_check.getGadgetToCheckMethodList('method')
@@ -452,9 +481,11 @@
           }
 
           if (context.state.summary) {
+            /*
             if (error_message !== '') {
-              console.warn(error_message, error_list);
+              console.warn('nutnut', error_message, error_list);
             }
+            */
             error_message = summary_message;
           } else {
             error_message = summary_message + '\n\n' + error_message;
@@ -463,7 +494,7 @@
         })
 
         .push(undefined, function (error) {
-          console.warn(error);
+          console.warn('couscous', error);
           context.element.firstElementChild.textContent =
             "Unexpected error";
         });
