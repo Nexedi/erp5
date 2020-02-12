@@ -27,6 +27,10 @@
 #
 ##############################################################################
 
+import tarfile
+import os
+import glob
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Testing import ZopeTestCase
 from Acquisition import aq_base
@@ -97,3 +101,27 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     for business_template in self.portal.portal_templates.contentValues():
       if business_template.getTitle() in self.getTestedBusinessTemplateList():
         self.assertEqual([], business_template.BusinessTemplate_getPythonSourceCodeMessageList())
+
+  def test_rebuild_business_template(self):
+    """Try to rebuild business template to catch packaging errors.
+    """
+    template_tool = self.portal.portal_templates
+    for bt_title in self.getTestedBusinessTemplateList():
+      bt = template_tool.getInstalledBusinessTemplate(bt_title, strict=True)
+      # make sure we can rebuild
+      bt.build()
+
+      # check we don't add or remove members.
+      # first, build a set of files that were on the original business template repository
+      base_path, local_path = self.portal.portal_templates.getLastestBTOnRepos(bt_title)
+      existing_files = set([os.path.relpath(y, base_path)
+        for x in os.walk(os.path.join(base_path, local_path))
+            for y in glob.glob(os.path.join(x[0], '*')) if os.path.isfile(y)])
+
+      # then compare this with the files in the newly exported business template.
+      bt_file = bt.export()
+      bt_file.seek(0) # XXX this StringIO was already read...
+      new_files = set(tarfile.open(fileobj=bt_file, mode='r:gz').getnames())
+
+      self.maxDiff = None
+      self.assertEqual(existing_files, new_files)
