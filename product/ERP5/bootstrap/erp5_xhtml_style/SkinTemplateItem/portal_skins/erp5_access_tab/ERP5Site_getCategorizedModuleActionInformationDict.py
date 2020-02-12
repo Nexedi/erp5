@@ -128,7 +128,6 @@ def getModuleActionInformationDict(**kw):
         print_list.append((translated_title, module_print_list))
 
     # Add the actions, only if they are not empty.
-    action_list_dict = {}
     for k, v in (('add', add_list), ('search', search_list),
                  ('exchange', exchange_list), ('report', report_list),
                  ('print', print_list), ('view', view_list)):
