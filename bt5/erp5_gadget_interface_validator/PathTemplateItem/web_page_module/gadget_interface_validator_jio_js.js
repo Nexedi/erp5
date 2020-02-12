@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, jIO, QueryFactory, SimpleQuery */
+/*global window, rJS, RSVP, jIO, QueryFactory, SimpleQuery, URL */
 /*jslint indent: 2, maxerr: 3, nomen: true */
-(function (window, rJS, RSVP, jIO, QueryFactory, SimpleQuery) {
+(function (window, rJS, RSVP, jIO, QueryFactory, SimpleQuery, URL) {
   "use strict";
 
   //////////////////////////////////////////////
@@ -12,16 +12,26 @@
     return (new RegExp(suffix + '$', 'i')).test(str);
   }
 
-  function fetchAppcacheData(appcache_url) {
+  function fetchPrecacheData(precache_url) {
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.ajax({
-          url: appcache_url,
-          dataType: 'text'
+          url: precache_url,
+          dataType: 'json'
         });
       })
       .push(function (evt) {
-        return evt.target.responseText.split('\n');
+        var key,
+          precache_dict = evt.target.response,
+          result_list = [],
+          precache_absolute_url = (new URL(precache_url, window.location)).href;
+        for (key in precache_dict) {
+          if (precache_dict.hasOwnProperty(key)) {
+            console.log(key, precache_absolute_url);
+            result_list.push((new URL(key, precache_absolute_url)).href);
+          }
+        }
+        return result_list;
       });
   }
 
@@ -66,11 +76,11 @@
   InterfaceValidatorStorage.prototype.buildQuery = function (options) {
     // XXX HARDCODED
     var query = QueryFactory.create(options.query || '');
-    if (!((query instanceof SimpleQuery) && (query.key === 'appcache_url'))) {
+    if (!((query instanceof SimpleQuery) && (query.key === 'precache_url'))) {
       // Only accept simple query with an appcache_url
       return [];
     }
-    return fetchAppcacheData(query.value)
+    return fetchPrecacheData(query.value)
     // return fetchAppcacheData('gadget_interface_validator_test.appcache')
       .push(function (filename_list) {
         return filterGadgetList(filename_list);
@@ -123,4 +133,4 @@
       return wrapJioCall(this, 'get', arguments);
     });
 
-}(window, rJS, RSVP, jIO, QueryFactory, SimpleQuery));
+}(window, rJS, RSVP, jIO, QueryFactory, SimpleQuery, URL));
