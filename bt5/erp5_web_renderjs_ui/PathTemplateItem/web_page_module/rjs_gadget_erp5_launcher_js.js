@@ -973,7 +973,11 @@
             return RSVP.delay(20000);
           })
           .push(function () {
-            return registration.update();
+            return registration
+              .update()
+              .catch(function (error) {
+                console.warn("Service worker update failed", error);
+              });
           });
       });
 
