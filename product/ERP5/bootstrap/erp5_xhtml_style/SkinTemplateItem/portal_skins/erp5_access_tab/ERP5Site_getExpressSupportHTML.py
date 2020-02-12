@@ -1,8 +1,5 @@
-language = context.Localizer.get_selected_language()
-
 SUPPORT_ENABLED = 'support_enabled'
 SUPPORT_DISABLED = 'support_disabled'
-ADVERTISEMENT_ENABLED = 'advertisement_enabled'
 
 if express_mode==SUPPORT_ENABLED:
   # For Express users.
