@@ -124,6 +124,8 @@ ignored_skin_id_set = {
   'PortalType_addAction',
   'PortalType_deleteAction',
   'RelationFieldZuite_CommonTemplate',
+  'Field_getDescription',
+  'ERP5XhtmlStyle_redirect',
 }
 
 # Generic method to check consistency of a skin item
