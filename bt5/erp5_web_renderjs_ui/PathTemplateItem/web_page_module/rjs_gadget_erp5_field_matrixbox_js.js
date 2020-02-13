@@ -77,17 +77,6 @@
       key: ''
     })
 
-    //////////////////////////////////////////////
-    // acquired method
-    //////////////////////////////////////////////
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
-    .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")
-    .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
-    .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("translate", "translate")
 
     /** Render constructs and saves gadgets into `props.gadget_dict` if they don not exist yet. 
      */
