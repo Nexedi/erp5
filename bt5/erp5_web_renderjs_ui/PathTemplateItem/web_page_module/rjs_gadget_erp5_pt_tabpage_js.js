@@ -1,20 +1,11 @@
-/*global window, rJS, RSVP, Handlebars, URI, calculatePageTitle, ensureArray */
+/*global window, rJS, RSVP, domsugar, URI, calculatePageTitle, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 
 /** Page for displaying Views, Jump and BreadCrumb navigation for a document.
 */
 
-(function (window, rJS, RSVP, Handlebars, URI, calculatePageTitle, ensureArray) {
+(function (window, rJS, RSVP, domsugar, URI, calculatePageTitle, ensureArray) {
   "use strict";
-
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    table_template = Handlebars.compile(gadget_klass.__template_element
-                         .getElementById("table-template")
-                         .innerHTML);
 
   /** Go recursively up the parent-chain and insert breadcrumbs in the last argument.
    */
@@ -48,13 +39,37 @@
       });
   }
 
-  gadget_klass
+  function generateSection(title, icon, view_list) {
+    var i,
+      dom_list = [];
+
+    for (i = 0; i < view_list.length; i += 1) {
+      dom_list.push(domsugar('li', [domsugar('a', {
+        href: view_list[i].link,
+        text: view_list[i].title
+      })]));
+    }
+
+    return domsugar(null, [
+      domsugar('section', {class: 'ui-content-header-plain'}, [
+        domsugar('h3', [
+          domsugar('span', {class: 'ui-icon ui-icon-' + icon, html: '&nbsp;'}),
+          title
+        ])
+      ]),
+      domsugar('ul', {class: 'document-listview'}, dom_list)
+    ]);
+
+  }
+
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("updateHeader", "updateHeader")
 
     /////////////////////////////////////////////////////////////////
@@ -83,94 +98,77 @@
         jump_action_list = [],
         breadcrumb_action_list = [],
         erp5_document,
-        tab_title = "Views",
-        tab_icon = "eye",
         jump_list;
 
       return gadget.jio_getAttachment(gadget.state.jio_key, "links")
+
         .push(function (result) {
           var i,
-            promise_list = [];
+            url_for_kw_list = [];
           erp5_document = result;
           view_list = ensureArray(erp5_document._links.view);
           jump_list = ensureArray(erp5_document._links.action_object_jio_jump);
 
           for (i = 0; i < view_list.length; i += 1) {
-            promise_list.push(gadget.getUrlFor({command: 'display_with_history', options: {
+            url_for_kw_list.push({command: 'display_with_history', options: {
               jio_key: gadget.state.jio_key,
               view: view_list[i].href,
               page: undefined  // Views in ERP5 must be forms but because of
                                // OfficeJS we keep it empty for different default
-            }}));
+            }});
           }
           for (i = 0; i < jump_list.length; i += 1) {
-            promise_list.push(gadget.getUrlFor({command: 'display_dialog_with_history', options: {
+            url_for_kw_list.push({command: 'display_dialog_with_history', options: {
               jio_key: gadget.state.jio_key,
               view: jump_list[i].href
-            }}));
+            }});
           }
-          promise_list.push(
-            modifyBreadcrumbList(gadget,
-                                 erp5_document._links.parent || "#",
-                                 breadcrumb_action_list)
-          );
-          return RSVP.all(promise_list);
+
+          url_for_kw_list.push({command: 'cancel_dialog_with_history'});
+
+          return RSVP.hash({
+            url_list: gadget.getUrlForList(url_for_kw_list),
+            _: modifyBreadcrumbList(gadget,
+                                    erp5_document._links.parent || "#",
+                                    breadcrumb_action_list),
+            translation_list: gadget.getTranslationList(['Views', 'Jumps', 'Breadcrumb']),
+            page_title: calculatePageTitle(gadget, erp5_document)
+          });
         })
-        .push(function (all_result) {
-          var i, j;
-          j = 0;
+
+        .push(function (result_dict) {
+          var i,
+            j = 0;
+
           for (i = 0; i < view_list.length; i += 1) {
             tab_list.push({
               title: view_list[i].title,
-              i18n: view_list[i].title,
-              link: all_result[j]
+              link: result_dict.url_list[j]
             });
             j += 1;
           }
           for (i = 0; i < jump_list.length; i += 1) {
             jump_action_list.push({
               title: jump_list[i].title,
-              link: all_result[j],
-              i18n: jump_list[i].title
+              link: result_dict.url_list[j]
             });
             j += 1;
           }
 
-          return gadget.translateHtml(table_template({
-            definition_title: tab_title,
-            definition_i18n: tab_title,
-            definition_icon: tab_icon,
-            documentlist: tab_list
-          }) + table_template({
-            definition_title: "Jumps",
-            documentlist: jump_action_list,
-            definition_icon: "plane",
-            definition_i18n: "Jumps"
-          }) + table_template({
-            definition_title: "Breadcrumb",
-            documentlist: breadcrumb_action_list,
-            definition_icon: "ellipsis-v",
-            definition_i18n: "Breadcrumb"
-          }));
-        })
-        .push(function (my_translated_html) {
-          gadget.element.innerHTML = my_translated_html;
-
-          return RSVP.all([
-            gadget.getUrlFor({command: 'cancel_dialog_with_history'}),
-            calculatePageTitle(gadget, erp5_document)
+          domsugar(gadget.element, [
+            generateSection(result_dict.translation_list[0], 'eye', tab_list),
+            generateSection(result_dict.translation_list[1], 'plane', jump_action_list),
+            generateSection(result_dict.translation_list[2], 'ellipsis-v', breadcrumb_action_list)
           ]);
-        })
-        .push(function (url_list) {
-          var dict = {
-            back_url: url_list[0],
-            page_title: url_list[1]
-          };
-          return gadget.updateHeader(dict);
+
+          return gadget.updateHeader({
+            back_url: result_dict.url_list[j],
+            page_title: result_dict.page_title
+          });
         });
     })
     .declareMethod("triggerSubmit", function () {
       return;
     });
 
-}(window, rJS, RSVP, Handlebars, URI, calculatePageTitle, ensureArray));
+}(window, rJS, RSVP, domsugar, URI, calculatePageTitle, ensureArray));
