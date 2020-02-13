@@ -56,7 +56,9 @@ class SecurePaymentTool(BaseTool):
   def find(self, service_reference="default"):
     """Search a payment service by reference"""
     if service_reference:
-      result = self.searchFolder(reference=service_reference)
+      result = self.portal_catalog.unrestrictedSearchResults(
+              parent_uid=self.getUid(),
+              reference=service_reference)
       if len(result) > 0:
         return result[0].getObject().__of__(self)
 
