@@ -27,7 +27,6 @@
           precache_absolute_url = (new URL(precache_url, window.location)).href;
         for (key in precache_dict) {
           if (precache_dict.hasOwnProperty(key)) {
-            console.log(key, precache_absolute_url);
             result_list.push((new URL(key, precache_absolute_url)).href);
           }
         }
@@ -42,8 +41,8 @@
     var gadget_list = [],
       i;
     for (i = 0; i < filename_list.length; i += 1) {
-      if (endsWith(filename_list[i], '.html') &&
-          (filename_list[i][0] !== '#')) {
+      if (endsWith(filename_list[i], '.html') ||
+          endsWith(filename_list[i], '/')) {
         gadget_list.push(filename_list[i]);
       }
     }
