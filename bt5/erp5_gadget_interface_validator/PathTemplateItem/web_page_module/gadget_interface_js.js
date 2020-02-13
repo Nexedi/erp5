@@ -261,7 +261,6 @@
               });
             })
             .push(function (result) {
-              console.log('declared', result);
               loader_gadget = result;
               return loader_gadget.declareGadgetToCheck(gadget_to_check_url);
             })
@@ -374,7 +373,6 @@
 
           .push(function (gadget_to_check) {
             // Get the list of interfaces/methods
-            console.log('checking', gadget_to_check);
             return RSVP.all([
               gadget_to_check.getGadgetToCheckInterfaceList(),
               gadget_to_check.getGadgetToCheckMethodList('method')
@@ -462,11 +460,9 @@
             }
 
             if (context.state.summary) {
-              /*
               if (error_message !== '') {
-                console.warn('nutnut', error_message, error_list);
+                console.warn(error_message, error_list);
               }
-              */
               error_message = summary_message;
             } else {
               error_message = summary_message + '\n\n' + error_message;
