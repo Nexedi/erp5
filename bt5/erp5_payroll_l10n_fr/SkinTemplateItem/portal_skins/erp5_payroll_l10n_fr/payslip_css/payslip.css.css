@@ -1,0 +1,148 @@
+body {
+  color:#000;
+  font-size: 3mm;
+  font-family: "Roboto Condensed", Arial, SimHei, STXihei, sans-serif;
+  font-weight: normal;
+}
+
+/* payslip header*/
+
+.payslip-report-emphasis {
+  font-weight: bold;
+}
+table {
+  border-collapse: collapse;
+  page-break-inside: avoid;
+}
+
+table.payslip-report-detail-table thead tr th,
+table.payslip-holiday thead tr th,
+table.payslip-income-tax thead tr th,
+table.payslip-cumul thead tr th,
+table.payslip-income-tax thead tr td{
+  background-color: #e0e0e0;
+  font-weight: bold;
+  text-align: center;
+  padding-top: 2mm;
+  padding-bottom: 2mm;
+  border:1px solid #a1a1a1;
+}
+
+.payslip-header-title .payslip-title,
+.payslip-header-title .payslip-period{
+  font-size: 5.29167mm;
+  width:45%;
+  text-align:left;
+  display: inline-block;
+}
+
+.payslip-header-detail {
+  padding-top:10px;
+}
+.payslip-header-detail .payslip-header-employer,
+.payslip-header-detail .payslip-header-employee{
+  border: 1px solid black;
+  border-radius:1%;
+  width:45%;
+  text-align: left;
+  min-height:200px;
+}
+
+.payslip-cumul-net-to-pay:after,
+.payslip-holiday-income-tax:after,
+.payslip-header-detail:after{
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+.payslip-cumul-net-to-pay .payslip-cumul,
+.payslip-holiday-income-tax .payslip-holiday,
+.payslip-header-detail .payslip-header-employer{
+  float:left;
+}
+.payslip-cumul-net-to-pay .payslip-net-to-pay,
+.payslip-holiday-income-tax .payslip-income-tax,
+.payslip-header-detail .payslip-header-employee{
+  float:right;
+}
+
+.payslip-header-detail .payslip-header-employer span,
+.payslip-header-detail .payslip-header-employee span{
+  display: block;
+  padding-top:4px;
+  padding-left:2px;
+}
+
+.payslip-header-detail .payslip-header-employer span:not(:first-child),
+.payslip-header-detail .payslip-header-employee span:not(:first-child){
+  padding-left:4px;
+}
+
+
+table.payslip-report-detail-table,
+table.payslip-report-net-to-pay-before-income-tax-table {
+  margin-top: 5mm;
+  margin-bottom: 5mm;
+  margin-left: auto;
+  margin-right: auto;
+  width:100%;
+}
+
+table.payslip-holiday tr td,
+table.payslip-income-tax tr td,
+table.payslip-cumul tr td,
+table.payslip-net-to-pay tr td,
+table.payslip-report-net-to-pay-before-income-tax-table tbody tr td,
+table.payslip-report-detail-table tbody tr.report-section td {
+   border:1px solid #a1a1a1;
+}
+
+
+table.payslip-report-detail-table tbody tr td{
+  border-left:1px solid #a1a1a1;
+  border-right:1px solid #a1a1a1;
+}
+
+table.payslip-cumul tbody tr td,
+table.payslip-net-to-pay tbody tr td:nth-child(2),
+table.payslip-income-tax tbody tr td,
+table.payslip-report-net-to-pay-before-income-tax-table tbody tr td:not(:first-child),
+table.payslip-report-detail-table tbody tr td:not(:first-child) {
+  text-align: right;
+}
+
+table.payslip-report-detail-table tbody tr:not(.report-title) td:first-child {
+  padding-left: 10px;
+}
+/* base column*/
+table.payslip-report-detail-table tbody tr td:nth-child(2){
+  min-width:150px;
+}
+table.payslip-net-to-pay tbody tr:not(:nth-child(2)) td:first-child,
+table.payslip-report-net-to-pay-before-income-tax-table tbody tr:first-child td,
+table.payslip-report-detail-table tbody tr.report-section td,
+table.payslip-report-detail-table tbody tr.report-title td:first-child{
+  font-weight: bold;
+}
+
+.payslip-cumul-net-to-pay .payslip-cumul,
+.payslip-cumul-net-to-pay .payslip-net-to-pay,
+.payslip-holiday-income-tax .payslip-holiday,
+.payslip-holiday-income-tax .payslip-income-tax{
+  width:45%;
+}
+.payslip-holiday-income-tax .payslip-holiday tbody tr td:first-child{
+  width:50%;
+}
+
+.payslip-cumul-net-to-pay {
+  padding-top:5mm;
+}
+
+table.payslip-report-net-to-pay-before-income-tax-table tbody tr:first-child td.net-to-pay-before-income-tax{
+  font-weight:900;
+  font-size: 4.5mm;
+}
