@@ -1,0 +1,35 @@
+<tal:block tal:define="data_dict here/PaySheetTransaction_getODTDataDict;
+                       other_data_dict here/PaySheetTransaction_getOtherInformationsDataDict;
+                       language python: options.get('language');
+                       date_renderer nocall:here/Base_viewFieldLibrary/my_date_time_field/render_pdf;
+                       ">
+   <div class="payslip-header-title">
+     <span class="payslip-title payslip-report-emphasis" tal:content='python: here.Base_translateString("Payslip", lang=language).upper()'></span>
+     <span class="payslip-period payslip-report-emphasis" tal:content='python: here.Base_translateString("From ${start_date} to ${stop_date}",
+                                                          lang=language,
+                                                          mapping={
+                                                            "start_date": date_renderer(here.getStartDate()),
+                                                            "stop_date": date_renderer(here.getStopDate())})'></span>
+   </div>
+    <div class="payslip-header-detail">
+      <div class="payslip-header-employer">
+        <span class='payslip-report-emphasis' tal:content='python:data_dict["destination_section_title"]'>destination_section</span>
+        <span tal:condition="data_dict/destination_section_address" tal:content='python:data_dict["destination_section_address"]'>address</span>
+        <span tal:condition='data_dict/destination_section_corporate_registration_codeid' tal:content='python:data_dict["destination_section_corporate_registration_codeid"]'>SIRET</span>
+        <span tal:condition='data_dict/destination_section_activity_codeid' tal:content='python:data_dict["destination_section_activity_codeid"]'>APE</span>
+      </div>
+      <div class="payslip-header-employee">
+        <span class='payslip-report-emphasis' tal:content='python:data_dict["source_section_title"].upper()'>source_section</span>
+        <tal:block tal:condition="data_dict/source_section_address"
+                   tal:define="address_list python: data_dict['source_section_address'].split('\n');">
+          <tal:block tal:repeat="line  address_list">
+            <span tal:content='line'></span>
+          </tal:block>
+        </tal:block>
+        <span tal:condition='other_data_dict/source_section_default_career_social_code' tal:content='python:other_data_dict["source_section_default_career_social_code"]'>185897778270987</span>
+        <span tal:condition='other_data_dict/source_section_default_career_start_date' tal:content='python:other_data_dict["source_section_default_career_start_date"]'>12/09/2005</span>
+        <span tal:condition='other_data_dict/source_section_career_title' tal:content='python:other_data_dict["source_section_career_title"]'>Réceptionniste</span>
+        <span tal:condition='other_data_dict/source_section_default_career_coefficient' tal:content='python:other_data_dict["source_section_default_career_coefficient"]'>100</span>
+      </div>
+  </div>
+</tal:block>

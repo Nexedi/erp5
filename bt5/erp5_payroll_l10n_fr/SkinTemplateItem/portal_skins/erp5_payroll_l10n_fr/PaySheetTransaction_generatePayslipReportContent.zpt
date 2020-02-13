@@ -1,0 +1,180 @@
+<tal:block metal:use-macro="context/PaySheetTransaction_generatePayslipReportContent/macros/report"/>
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="report">
+    <tal:block tal:define="payslip_data            python: options.get('report_data');
+                           payslip_line_list       python: payslip_data['contribution_dict_list'] + payslip_data['non_contribution_dict_list'];
+                           income_tax_dict python: payslip_data['income_tax_dict'];
+                           other_data_dict  here/PaySheetTransaction_getOtherInformationsDataDict;
+                           quantity_renderer nocall:here/Base_viewFieldLibrary/my_view_mode_money_quantity/render_pdf;
+                           price_renderer nocall:here/PaySheetTransaction_viewFieldLibrary/my_price/render_pdf;
+                           hour_renderer nocall:here/AnnotationLine_viewFieldLibrary/my_work_time_annotation_line_quantity/render_pdf;">
+      <tal:block tal:condition="python: payslip_data is not None">
+        <div class="payslip-report-content-detail-wrapper">
+          <table class="payslip-report-detail-table">
+            <thead>
+              <!--tr>
+                <th i18n:translate="" i18n:domain="erp5_ui">Designation</th>
+                <th i18n:translate="" i18n:domain="erp5_ui">Base</th>
+                <th colspan="2" i18n:translate="" i18n:domain="erp5_ui">Employee</th>
+                <th colspan="2" i18n:translate="" i18n:domain="erp5_ui">Employer</th>
+              </tr-->
+              <tr>
+                <th i18n:translate="" i18n:domain="erp5_ui">Designation</th>
+                <th i18n:translate="" i18n:domain="erp5_ui">Base</th>
+                <th i18n:translate="" i18n:domain="erp5_ui">Employee Share Rate</th>
+                <th i18n:translate="" i18n:domain="erp5_ui">Employee Share</th>
+                <th i18n:translate="" i18n:domain="erp5_ui">Employer Share Rate</th>
+                <th i18n:translate="" i18n:domain="erp5_ui">Employer Share</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tal:block tal:repeat="line  payslip_line_list">
+                    <tal:block tal:define="class_name python: ' '.join(line.get('style_class', []))">
+                      <tr tal:attributes="class python: class_name">
+                        <td tal:content="python: line['title']"></td>
+                        <tal:block tal:condition="python: line['base']">
+                          <td tal:content="python: quantity_renderer(line['base'])"></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: not line['base']">
+                          <td></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: line['employee_price']">
+                          <td tal:content="python: price_renderer(line['employee_price'])"></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: not line['employee_price']">
+                          <td></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: line['employee_total_price']">
+                          <td tal:content="python: quantity_renderer(line['employee_total_price'])"></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: not line['employee_total_price']">
+                          <td></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: line['employer_price']">
+                          <td tal:content="python: price_renderer(line['employer_price'])"></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: not line['employer_price']">
+                          <td></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: line['employer_total_price']">
+                          <td tal:content="python: quantity_renderer(line['employer_total_price'])"></td>
+                        </tal:block>
+                        <tal:block tal:condition="python: not line['employer_total_price']">
+                          <td></td>
+                        </tal:block>
+                      </tr>
+                    </tal:block>
+                  </tal:block>
+            </tbody>
+          </table>
+        </div>
+        <div class="payslip-report-net-to-pay-before-income-tax-wrapper">
+          <table class="payslip-report-net-to-pay-before-income-tax-table">
+            <tbody>
+              <tr>
+                <td i18n:translate="" i18n:domain="erp5_ui">NET PAYABLE BEFORE INCOME TAX</td>
+                <td class="net-to-pay-before-income-tax" tal:content="python: '%s %s' % (
+                                 quantity_renderer(
+                                   payslip_data['net_salary_before_income_tax']),
+                                   payslip_data['currency'])">800.000,00</td>
+              </tr>
+              <tr>
+                <td i18n:translate="" i18n:domain="erp5_ui">dont évolution de la rémunération à la supression des cotisations salariales chômage et maladie</td>
+                <td tal:content="python: quantity_renderer(payslip_data['amount_of_remuneration_evolution'])"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- holiday -->
+         <div class="payslip-holiday-income-tax">
+          <table class="payslip-holiday">
+            <thead>
+              <tr>
+                <th colspan="2" i18n:translate="" i18n:domain="erp5_ui">Paid vacation (in days)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td i18n:translate="" i18n:domain="erp5_ui">Earned on this period</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td i18n:translate="" i18n:domain="erp5_ui">Taken on this period</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td i18n:translate="" i18n:domain="erp5_ui">Remaining</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        <!-- tax -->
+          <table class="payslip-income-tax">
+            <thead>
+              <tr>
+                <th colspan="3" i18n:translate="" i18n:domain="erp5_ui">Income Tax</th>
+              </tr>
+              <tr>
+                <td i18n:translate="" i18n:domain="erp5_ui">Base</td>
+                <td i18n:translate="" i18n:domain="erp5_ui">Rate</td>
+                <td i18n:translate="" i18n:domain="erp5_ui">Amount</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td tal:content='python: quantity_renderer(income_tax_dict["base"])'></td>
+                <td tal:content='python: price_renderer(income_tax_dict["employee_price"])'></td>
+                <td tal:content='python: quantity_renderer(income_tax_dict["employee_total_price"])'></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- cumul -->
+        <div class='payslip-cumul-net-to-pay'>
+          <table class='payslip-cumul'>
+            <thead>
+              <tr>
+                <th i18n:translate="" i18n:domain="erp5_ui">Cumuls Annuels</th>
+                <th i18n:translate="" i18n:domain="erp5_ui">Gross Salary</th>
+                <th i18n:translate="" i18n:domain="erp5_ui">Net Imposable</th>
+                <th i18n:translate="" i18n:domain="erp5_ui">Work Hours </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td tal:content="python: other_data_dict['year']"></td>
+                <td tal:content="python: other_data_dict['year_to_date_gross_salary']"></td>
+                <td tal:content="python: other_data_dict['year_to_date_taxable_net_salary']"></td>
+                <td tal:content="python: hour_renderer(other_data_dict['year_to_date_worked_hour_count'] + other_data_dict['year_to_date_bonus_worked_hour_count'])"></td>
+              </tr>
+            </tbody>
+          </table>
+
+        <!-- net to pay  -->
+          <table class='payslip-net-to-pay'>
+            <tbody>
+              <tr>
+                <td i18n:translate="" i18n:domain="erp5_ui">Net payable</td>
+                <td tal:content="python: quantity_renderer(payslip_data['net_salary'])"></td>
+              </tr>
+              <tr>
+                <td i18n:translate="" i18n:domain="erp5_ui">Contribution Relief</td>
+                <td tal:content="python: quantity_renderer(payslip_data['total_contribution_relief'])"></td>
+              </tr>
+              <tr>
+                <td i18n:translate="" i18n:domain="erp5_ui">Total Pay By Employeur</td>
+                <td tal:content="python: quantity_renderer(payslip_data['total_pay_by_employer'])"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </tal:block>
+      <tal:block tal:condition="python: payslip_data is None">
+        <h1 i18n:translate="" i18n:domain="erp5_ui" class="custom-header">ERROR Payslip Report: No Paysheet data available</h1>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</tal:block>
