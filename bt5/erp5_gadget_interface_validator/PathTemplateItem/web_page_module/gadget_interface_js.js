@@ -235,11 +235,9 @@
   function getOrDeclareGadget(context, gadget_to_check_url) {
     return context.getDeclaredGadget(gadget_to_check_url)
       .push(undefined, function (error) {
-        // console.log('failed', error);
         var element,
           loader_gadget,
-          current_defer,
-          tmp_counter;
+          current_defer;
         if (error instanceof rJS.ScopeError) {
           element = document.createElement('div');
           context.element.querySelector('div').appendChild(element);
@@ -252,40 +250,26 @@
               current_defer = RSVP.defer();
               interface_loader_defer = current_defer;
               counter += 1;
-              tmp_counter = counter;
-              console.log('wait for previous promise', counter, gadget_to_check_url);
-              return previous_deferred.promise
-                // Prevent cancelling the previous execution?
-                .always();
+              return previous_deferred.promise;
             })
             .push(function () {
-              console.log('doing promise', tmp_counter, gadget_to_check_url);
               context.element.firstElementChild.textContent = 'Loading';
               // XXX Load in an iframe
               return context.declareGadget('gadget_interface_loader.html', {
                 scope: gadget_to_check_url,
-                element: element,
-                // sandbox: 'iframe'
+                element: element
               });
             })
             .push(function (result) {
               console.log('declared', result);
               loader_gadget = result;
-              // context.element.appendChild(loader_gadget.element);
-            /*
-              return RSVP.delay(5000);
-            })
-            .push(function () {
-            */
               return loader_gadget.declareGadgetToCheck(gadget_to_check_url);
             })
             .push(function () {
               // Iframe loaded, unblock the next iteration
-              console.log('resolving promise', tmp_counter, gadget_to_check_url);
               current_defer.resolve();
               return loader_gadget;
             }, function (error) {
-              console.log('Argh promise', tmp_counter, gadget_to_check_url, error, current_defer.promise);
               current_defer.resolve();
               throw error;
             });
@@ -427,7 +411,8 @@
             for (i = 0; i < method_table.length; i += 1) {
               for (j = 0; j < method_table[i].length; j += 1) {
                 // Check method declared twice
-                if (interface_method_list.indexOf(method_table[i][j].name) >= 0) {
+                if (interface_method_list.indexOf(method_table[i][j].name) >=
+                    0) {
                   error_list.push({
                     details: "Method documented in multiple interface\n" +
                              method_table[i][j].name
@@ -490,17 +475,17 @@
           })
 
           .push(undefined, function (error) {
-            console.warn('couscous', error);
+            console.warn(error);
             context.element.firstElementChild.textContent =
-              "Unexpected error";
+              "Unexpected error: " + error;
           });
-        }
+      }
 
-        if (modification_dict.hasOwnProperty('error')) {
-          console.warn('couscous', context.state.error);
-          context.element.firstElementChild.textContent =
-            "Unexpected error";
-        }
+      if (modification_dict.hasOwnProperty('error')) {
+        console.warn(context.state.error);
+        context.element.firstElementChild.textContent =
+          "Unexpected error: " + context.state.error;
+      }
     })
 
     .allowPublicAcquisition('reportServiceError', function (param_list) {
