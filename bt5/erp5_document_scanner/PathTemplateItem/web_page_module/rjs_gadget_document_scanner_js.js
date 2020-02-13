@@ -1,6 +1,6 @@
 /*jslint indent: 2, unparam: true */
-/*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman, URL, File*/
-(function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman, URL, File) {
+/*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman*/
+(function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, caman) {
   "use strict";
 
   //////////////////////////////////////////////////
@@ -51,10 +51,7 @@
   }
 
   function handleCropper(element, data, callback) {
-    var cropper,
-      queue = new RSVP.Queue(),
-      img =  domsugar("img"),
-      canvas = domsugar('canvas', {'class': 'canvas'});
+    var cropper;
 
     function canceller() {
       cropper.destroy();
@@ -97,8 +94,8 @@
         });
       })
       .push(function (evt) {
-        var state_dict = {},
-          data = JSON.parse(evt.target.responseText);
+        var state_dict = {};
+        data = JSON.parse(evt.target.responseText);
         state_dict['blob_state_' + blob_page] = 'OK';
         state_dict['blob_uuid_' + blob_page] = data.uuid;
         return gadget.changeState(state_dict);
@@ -188,12 +185,6 @@
 
     return gadget.getTranslationList(["Page", "New Page"])
       .push(function (result_list) {
-        thumbnail_dom_list.push(domsugar('button', {type: 'button',
-                                                    // Do not allow to show again the current image
-                                                    disabled: (len === gadget.state.page - 1),
-                                                    'class': 'new-btn ui-btn-icon-left ui-icon-plus'
-                                                 }));
-
         for (i = 0; i < len; i += 1) {
           // XXX TODO display a loader when saving
           if (gadget.state['blob_state_' + i] !== 'deleted') {
@@ -217,7 +208,13 @@
                                  src: gadget.state['blob_url_' + i]})]));
           }
         }
-        return domsugar('ol', {"class": "thumbnail-list"}, thumbnail_dom_list);
+        return domsugar("div", {"class": "thumbnail-area"}, [
+          domsugar('button', {type: 'button',
+            // Do not allow to show again the current image
+            disabled: (len === gadget.state.page - 1),
+            'class': 'new-btn ui-btn-icon-left ui-icon-plus'}),
+          domsugar('ol', {"class": "thumbnail-list"}, thumbnail_dom_list)
+        ]);
       });
   }
 
@@ -293,10 +290,8 @@
 
   // Capture the media stream
   function captureAndRenderPicture(gadget) {
-    var file,
-       settings = gadget.state.preferred_image_settings_data,
-       data = gadget.state.preferred_cropped_canvas_data,
-       image_capture = new window.ImageCapture(
+    var settings = gadget.state.preferred_image_settings_data,
+      image_capture = new window.ImageCapture(
         gadget.element.querySelector('video').srcObject.getVideoTracks()[0]
       ),
       div;
@@ -319,7 +314,7 @@
               var canvas = domsugar('canvas', {'class': 'canvas'});
               return new Promise(function (resolve) {
                 // XXX the correct usage is `new Caman()` but the library does not support it
-                Caman(canvas, result.target.result, function () {
+                caman(canvas, result.target.result, function () {
                   if (settings.brightness && settings.brightness !== 0) {
                     this.brightness(settings.brightness);
                   }
@@ -337,9 +332,8 @@
                 });
               });
             });
-        } else {
-          return blob;
         }
+        return blob;
       })
       .push(function (blob) {
         return RSVP.all([
@@ -524,7 +518,7 @@
       // if display_step is not modified
       return buildPreviousThumbnailDom(gadget)
         .push(function (result) {
-          thumbnail_container = gadget.element.querySelector('.thumbnail-list');
+          thumbnail_container = gadget.element.querySelector('.thumbnail-area');
           thumbnail_container.parentElement.replaceChild(
             result,
             thumbnail_container
@@ -659,7 +653,7 @@
       for (key in gadget.state) {
         if (gadget.state.hasOwnProperty(key)) {
           if (key.indexOf("blob_state_") !== -1 &&
-              gadget.state[key] == "OK") {
+              gadget.state[key] === "OK") {
             uuid_key = "blob_uuid_" + key.replace("blob_state_", "");
             image_list.push(gadget.state[uuid_key]);
           }
@@ -700,4 +694,4 @@
 
     .declareAcquiredMethod("getTranslationList", "getTranslationList");
 
-}(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman, URL, File));
+}(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman));
