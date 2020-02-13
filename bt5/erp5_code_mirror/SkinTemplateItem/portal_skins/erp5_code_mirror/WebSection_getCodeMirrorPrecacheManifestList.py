@@ -39,6 +39,7 @@ url_list = [
   "codemirror/mode/css/css.js",
   "codemirror/mode/htmlmixed/htmlmixed.js",
   "codemirror.gadget.js",
+  "codemirror.gadget.html"
 ]
 
 return url_list
