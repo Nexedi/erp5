@@ -26,5 +26,3 @@ else:
 
 for action in action_list:
   getattr(doc, action)()
-
-context.Base_removeActiveProcessFromActivityTool(active_process)
