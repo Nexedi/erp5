@@ -5,28 +5,19 @@
 
   rJS(window)
     .declareMethod("declareGadgetToCheck", function (url) {
-      // return;
-      console.log('declareGadgetToCheck', url);
-      this.element.innerHTML = '';
       var div = document.createElement('div'),
         gadget = this;
+      this.element.innerHTML = '';
       this.element.appendChild(div);
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.declareGadget(url, {
-            scope: 'gadget_to_check',
-            sandbox: 'iframe',
-            element: div
-          });
-        })
+      return gadget.declareGadget(url, {
+        scope: 'gadget_to_check',
+        sandbox: 'iframe',
+        element: div
+      })
         .push(function () {
           // Do not return the loaded gadget.
           // XXX This seems to break rJS iframe communication
-          console.log('loaded', url);
-          // return RSVP.delay(500);
-        }, function (error) {
-          console.log('failed', error, url);
-          throw error;
+          return;
         });
     })
 
