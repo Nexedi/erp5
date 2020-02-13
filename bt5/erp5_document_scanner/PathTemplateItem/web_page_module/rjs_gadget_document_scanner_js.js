@@ -60,6 +60,7 @@
     // creating Cropper is asynchronous
     return new RSVP.Promise(function (resolve, reject) {
       cropper = new Cropper(element, {
+        viewMode: 3,
         data: data,
         ready: function () {
           return new RSVP.Queue()
@@ -514,7 +515,7 @@
         throw new Error('Unhandled display step: ' + gadget.state.display_step);
       }
 
-      // Only refresh the thumbnail list
+      // Only refresh the thumbnail area
       // if display_step is not modified
       return buildPreviousThumbnailDom(gadget)
         .push(function (result) {
@@ -574,7 +575,7 @@
           .push(function () {
             var canvas = gadget.cropper.getCroppedCanvas();
             return new Promise(function (resolve) {
-              canvas.toBlob(resolve, 'image/jpeg', 0.85);
+              canvas.toBlob(resolve);
             });
           })
           .push(function (blob) {
