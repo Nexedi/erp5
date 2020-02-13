@@ -1,23 +1,12 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, Node, rJS, Handlebars */
-(function (window, Node, rJS, Handlebars) {
+/*global window, Node, rJS, domsugar */
+(function (window, Node, rJS, domsugar) {
   "use strict";
-
-  var gadget_klass = rJS(window),
-    success_button_source = gadget_klass.__template_element
-                         .getElementById("success-button-template")
-                         .innerHTML,
-    success_button_template = Handlebars.compile(success_button_source),
-
-    error_button_source = gadget_klass.__template_element
-                         .getElementById("error-button-template")
-                         .innerHTML,
-    error_button_template = Handlebars.compile(error_button_source);
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-  gadget_klass
+  rJS(window)
     .declareMethod('notify', function (options) {
       if (options && options.message) {
         return this.changeState({
@@ -51,15 +40,13 @@
       }
 
       if (modification_dict.hasOwnProperty('message')) {
-        if (this.state.status === 'success') {
-          this.element.innerHTML = success_button_template({
-            message: this.state.message
-          });
-        } else {
-          this.element.innerHTML = error_button_template({
-            message: this.state.message
-          });
-        }
+        domsugar(this.element, [
+          domsugar('button', {
+            type: 'submit',
+            class: (this.state.status === 'success') ? 'success' : 'error',
+            text: this.state.message
+          })
+        ]);
       }
 
     })
@@ -71,4 +58,4 @@
       }
     }, false, false);
 
-}(window, Node, rJS, Handlebars));
+}(window, Node, rJS, domsugar));

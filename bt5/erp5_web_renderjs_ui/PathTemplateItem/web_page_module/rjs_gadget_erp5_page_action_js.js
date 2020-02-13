@@ -1,109 +1,131 @@
-/*global window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray */
+/*global window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray) {
+(function (window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    table_template = Handlebars.compile(gadget_klass.__template_element
-                         .getElementById("table-template")
-                         .innerHTML);
+  function generateSection(title, icon, view_list) {
+    var i,
+      dom_list = [];
 
-  /** Render translated HTML of title + links
-   *
-   * @param {string} title - H3 title of the section with the links
-   * @param {string} icon - alias used in font-awesome iconset
-   * @param {Array} command_list - array of links obtained from ERP5 HATEOAS
-   */
-  function renderLinkList(gadget, jio_key, title, icon, erp5_link_list,
-                          editable) {
-    return new RSVP.Queue()
-      .push(function () {
-        return RSVP.all(
-          erp5_link_list.map(function (erp5_link) {
-            return gadget.getUrlFor({
-              "command": 'display_with_history_and_cancel',
-              "options": {
-                "jio_key": jio_key,
-                "view": erp5_link.href,
-                "editable": editable
-              }
-            });
-          })
-        );
-      })
-      .push(function (url_list) {
-        // prepare links for template (replace @href for RJS link)
-        return gadget.translateHtml(
-          table_template({
-            "definition_i18n": title,
-            "definition_title": title,
-            "definition_icon": icon,
-            "document_list": erp5_link_list.map(function (erp5_link, index) {
-              return {
-                "title": erp5_link.title,
-                "i18n": erp5_link.title,
-                "link": url_list[index]
-              };
-            })
-          })
-        );
-      });
+    for (i = 0; i < view_list.length; i += 1) {
+      dom_list.push(domsugar('li', [domsugar('a', {
+        href: view_list[i].link,
+        text: view_list[i].title
+      })]));
+    }
+
+    return domsugar(null, [
+      domsugar('section', {class: 'ui-content-header-plain'}, [
+        domsugar('h3', [
+          domsugar('span', {class: 'ui-icon ui-icon-' + icon, html: '&nbsp;'}),
+          title
+        ])
+      ]),
+      domsugar('ul', {class: 'document-listview'}, dom_list)
+    ]);
+
   }
 
-
-  gadget_klass
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+
+    /** Render only transforms its arguments and passes them to mutex-protected onStateChange
+
+    options:
+      jio_key: {string} currently viewed document (e.g. foo/1)
+      page: {string} selected page (always "tab" for page_tab)
+      view: {string} always "view"
+      selection, history, selection_index
+    */
     .declareMethod("render", function (options) {
+      return this.changeState({
+        jio_key: options.jio_key,
+        editable: options.editable,
+        view: options.view
+      });
+    })
+
+    .onStateChange(function () {
       var gadget = this,
-        erp5_document;
+        erp5_document,
+        group_list;
 
       // Get the whole view as attachment because actions can change based on
       // what view we are at. If no view available than fallback to "links".
-      return gadget.jio_getAttachment(options.jio_key, options.view || "links")
+      return gadget.jio_getAttachment(gadget.state.jio_key, gadget.state.view || "links")
         .push(function (jio_attachment) {
-          var transition_list = ensureArray(jio_attachment._links.action_workflow),
-            action_list = ensureArray(jio_attachment._links.action_object_jio_action)
-              .concat(ensureArray(jio_attachment._links.action_object_jio_button))
-              .concat(ensureArray(jio_attachment._links.action_object_jio_fast_input)),
-            clone_list = ensureArray(jio_attachment._links.action_object_clone_action),
-            delete_list = ensureArray(jio_attachment._links.action_object_delete_action);
-
           erp5_document = jio_attachment;
 
-          return RSVP.all([
-            renderLinkList(gadget, options.jio_key, "Workflows", "random", transition_list),
-            renderLinkList(gadget, options.jio_key, "Actions", "gear", action_list),
-            // Stay in editable mode after cloning, as user will probably edit the new document
-            renderLinkList(gadget, options.jio_key, "Clone", "clone", clone_list, true),
-            renderLinkList(gadget, options.jio_key, "Delete", "trash-o", delete_list)
-          ]);
+          var i,
+            j,
+            url_for_kw_list = [];
+
+          group_list = [
+            // Action list, editable, icon
+            ensureArray(erp5_document._links.action_workflow), undefined, 'random',
+            ensureArray(erp5_document._links.action_object_jio_action)
+              .concat(ensureArray(erp5_document._links.action_object_jio_button))
+              .concat(ensureArray(erp5_document._links.action_object_jio_fast_input)), undefined, 'gear',
+            ensureArray(erp5_document._links.action_object_clone_action), true, 'clone',
+            ensureArray(erp5_document._links.action_object_delete_action), undefined, 'trash-o'];
+
+          for (i = 0; i < group_list.length; i += 3) {
+            for (j = 0; j < group_list[i].length; j += 1) {
+              url_for_kw_list.push({command: 'display_with_history_and_cancel', options: {
+                jio_key: gadget.state.jio_key,
+                view: group_list[i][j].href,
+                editable: group_list[i + 1]
+              }});
+            }
+          }
+
+          url_for_kw_list.push({command: 'cancel_dialog_with_history'});
+
+          return RSVP.hash({
+            url_list: gadget.getUrlForList(url_for_kw_list),
+            translation_list: gadget.getTranslationList(['Workflows', 'Actions', 'Clone', 'Delete']),
+            page_title: calculatePageTitle(gadget, erp5_document)
+          });
         })
-        .push(function (translated_html_link_list) {
-          gadget.element.innerHTML = translated_html_link_list.join("\n");
-          return RSVP.all([
-            calculatePageTitle(gadget, erp5_document),
-            gadget.getUrlFor({command: 'cancel_dialog_with_history'})
-          ]);
-        })
-        .push(function (result_list) {
+
+        .push(function (result_dict) {
+          var i,
+            j,
+            k = 0,
+            dom_list = [],
+            link_list;
+
+          for (i = 0; i < group_list.length; i += 3) {
+            link_list = [];
+            for (j = 0; j < group_list[i].length; j += 1) {
+              link_list.push({
+                title: group_list[i][j].title,
+                link: result_dict.url_list[k]
+              });
+              k += 1;
+            }
+            dom_list.push(
+              generateSection(result_dict.translation_list[i / 3], group_list[i + 2], link_list)
+            );
+
+          }
+
+          domsugar(gadget.element, dom_list);
+
           return gadget.updateHeader({
-            page_title: result_list[0],
-            back_url: result_list[1]
+            back_url: result_dict.url_list[result_dict.url_list.length - 1],
+            page_title: result_dict.page_title
           });
         });
     })
@@ -111,4 +133,4 @@
       return;
     });
 
-}(window, rJS, RSVP, Handlebars, calculatePageTitle, ensureArray));
+}(window, rJS, RSVP, domsugar, calculatePageTitle, ensureArray));

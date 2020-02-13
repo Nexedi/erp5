@@ -1,7 +1,7 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, document, rJS, RSVP, calculatePageTitle, Handlebars,
+/*global window, rJS, RSVP, calculatePageTitle, domsugar,
          ensureArray */
-(function (window, document, rJS, RSVP, calculatePageTitle, Handlebars,
+(function (window, rJS, RSVP, calculatePageTitle, domsugar,
            ensureArray) {
   "use strict";
 
@@ -86,7 +86,8 @@
                 (!result.view)) {
               // don't update navigation history when not really redirecting
               return gadget.redirect({command: 'cancel_dialog_with_history'});
-            } else if (gadget.state.jio_key === result.jio_key) {
+            }
+            if (gadget.state.jio_key === result.jio_key) {
               command = 'display_with_history_and_cancel';
             } else {
               // Check if the redirection goes to a same parent's subdocument.
@@ -133,13 +134,7 @@
     return submitDialog.apply(this, [false, param_list[0]]);
   }
 
-  var gadget_klass = rJS(window),
-    dialog_button_source = gadget_klass.__template_element
-                         .getElementById("dialog-button-template")
-                         .innerHTML,
-    dialog_button_template = Handlebars.compile(dialog_button_source);
-
-  gadget_klass
+  rJS(window)
     .setState({
       'redirect_to_parent': false,  // set by a presence of special field
       'has_update_action': undefined  // default "submit" issue update in case of its presence
@@ -152,8 +147,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("translate", "translate")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("submitContent", "submitContent")
     .allowPublicAcquisition("submitDialogWithCustomDialogMethod",
                             submitDialogWithCustomDialogMethod)
@@ -238,31 +232,43 @@
           // Set the dialog button
           if (modification_dict.hasOwnProperty('has_update_action') ||
               modification_dict.hasOwnProperty('update_action_title')) {
-            return form_gadget.translateHtml(dialog_button_template({
-              show_update_button: form_gadget.state.has_update_action
-            }))
-              .push(function (html) {
-                var div = document.createElement('div'),
-                  dialog_button_container = form_gadget.element
-                                   .querySelector('.dialog_button_container');
-                div.innerHTML = html;
-                if (form_gadget.state.has_update_action && form_gadget.state.update_action_title) {
-                  div.querySelector('button[name="action_update"]')
-                     .textContent = form_gadget.state.form_definition
-                                                     .update_action_title;
+
+            return form_gadget.getTranslationList(['Update', 'Proceed', 'Cancel'])
+              .push(function (translation_list) {
+                var dom_list = [];
+
+                if (form_gadget.state.has_update_action) {
+                  dom_list.push(
+                    domsugar('button', {disabled: true,
+                                        name: 'action_update',
+                                        type: 'button',
+                                        text: form_gadget.state.update_action_title || translation_list[0]}
+                            )
+                  );
                 }
-                while (dialog_button_container.firstChild) {
-                  dialog_button_container.firstChild.remove();
-                }
-                dialog_button_container.innerHTML = div.innerHTML;
+
+                dom_list.push(
+                  domsugar('input', {disabled: true,
+                                     name: 'action_confirm',
+                                     class: 'dialogconfirm',
+                                     type: 'submit',
+                                     value: translation_list[1]}),
+                  domsugar('a', {class: 'dialogcancel',
+                                 text: translation_list[2]})
+                );
+
+                domsugar(form_gadget.element
+                                    .querySelector('.dialog_button_container'),
+                         dom_list);
               });
+
           }
         })
         .push(function () {
           // Calculate the h3 properties
-          return RSVP.all([
-            form_gadget.translate(form_gadget.state.form_definition.title),
-            form_gadget.translate(title)
+          return form_gadget.getTranslationList([
+            form_gadget.state.form_definition.title,
+            title
           ]);
         })
         .push(function (translated_title_list) {
@@ -345,4 +351,4 @@
       }
     });
 
-}(window, document, rJS, RSVP, calculatePageTitle, Handlebars, ensureArray));
+}(window, rJS, RSVP, calculatePageTitle, domsugar, ensureArray));

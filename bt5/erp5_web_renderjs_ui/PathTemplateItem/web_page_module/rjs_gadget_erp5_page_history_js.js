@@ -1,19 +1,9 @@
-/*global window, rJS, RSVP, Handlebars, SimpleQuery, ComplexQuery, Query */
+/*global window, rJS, RSVP, domsugar, SimpleQuery, ComplexQuery, Query */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, SimpleQuery, ComplexQuery, Query) {
+(function (window, rJS, RSVP, domsugar, SimpleQuery, ComplexQuery, Query) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    source = gadget_klass.__template_element
-                         .getElementById("table-template")
-                         .innerHTML,
-    table_template = Handlebars.compile(source);
-
-  gadget_klass
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
@@ -74,25 +64,29 @@
         })
         .push(function (url_list) {
           var i,
-            document_list = [],
+            dom_list = [],
             document_dict = {};
 
           for (i = 2; i < url_list.length; i += 1) {
             document_dict[row_list[i - 2].id] = {
-              link: url_list[i],
-              title: (row_list[i - 2].value.title || row_list[i - 2].id) +
+              href: url_list[i],
+              text: (row_list[i - 2].value.title || row_list[i - 2].id) +
                      " (" + row_list[i - 2].value.translated_portal_type + ")"
             };
           }
           // Sort by access time
           for (i = 0; i < id_list.length; i += 1) {
             if (document_dict.hasOwnProperty(id_list[i])) {
-              document_list.push(document_dict[id_list[i]]);
+              dom_list.push(domsugar('li', [
+                domsugar('a', document_dict[id_list[i]])
+              ]));
             }
           }
-          gadget.element.querySelector('.document_list').innerHTML = table_template(
-            {document_list: document_list}
-          );
+
+          domsugar(gadget.element.querySelector('.document_list'), [
+            domsugar('ul', {class: 'document-listview'}, dom_list)
+          ]);
+
           return gadget.updateHeader({
             page_title: 'History',
             page_icon: 'history',
@@ -104,4 +98,4 @@
     .declareMethod("triggerSubmit", function () {
       return;
     });
-}(window, rJS, RSVP, Handlebars, SimpleQuery, ComplexQuery, Query));
+}(window, rJS, RSVP, domsugar, SimpleQuery, ComplexQuery, Query));

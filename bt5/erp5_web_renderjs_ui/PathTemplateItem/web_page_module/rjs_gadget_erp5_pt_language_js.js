@@ -1,14 +1,9 @@
-/*global window, rJS, RSVP, Handlebars */
+/*global window, rJS, RSVP, domsugar */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars) {
+(function (window, rJS, RSVP, domsugar) {
   "use strict";
-  var gadget_klass = rJS(window),
-    dialog_button_source = gadget_klass.__template_element
-                         .getElementById("dialog-button-template")
-                         .innerHTML,
-    dialog_button_template = Handlebars.compile(dialog_button_source);
 
-  gadget_klass
+  rJS(window)
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("setSetting", "setSetting")
@@ -71,10 +66,11 @@
             }
           }
 
-          gadget.element.querySelector('.dialog_button_container')
-                .innerHTML = dialog_button_template({
-              button_text: first_result_list[3][2]
-            });
+          domsugar(gadget.element.querySelector('.dialog_button_container'), [
+            domsugar('input', {name: 'action_update',
+                               type: 'submit',
+                               value: first_result_list[3][2]})
+          ]);
 
           return RSVP.all([
             gadget.updateHeader({
@@ -150,4 +146,4 @@
     .declareMethod("triggerSubmit", function () {
       return;
     });
-}(window, rJS, RSVP, Handlebars));
+}(window, rJS, RSVP, domsugar));

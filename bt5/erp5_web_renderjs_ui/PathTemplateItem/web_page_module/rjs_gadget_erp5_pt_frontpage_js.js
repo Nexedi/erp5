@@ -1,15 +1,39 @@
-/*global window, rJS, jIO, RSVP, Handlebars */
+/*global window, rJS, jIO, RSVP, domsugar */
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
-(function (window, rJS, jIO, RSVP, Handlebars) {
+(function (window, rJS, jIO, RSVP, domsugar) {
   "use strict";
 
-  var gadget_klass = rJS(window),
-    card_list_template_source = gadget_klass.__template_element
-                         .getElementById("card-list-template")
-                         .innerHTML,
-    card_list_template = Handlebars.compile(card_list_template_source);
+  function generateCardList(element, card_list) {
+    var i,
+      len = card_list.length,
+      card,
+      dom_list = [],
+      sub_dom_list,
+      len2,
+      j;
 
-  gadget_klass
+    for (i = 0; i < len; i += 1) {
+      card = card_list[i];
+
+      len2 = card.module_list.length;
+      sub_dom_list = [];
+      for (j = 0; j < len2; j += 1) {
+        sub_dom_list.push(domsugar('li', [
+          domsugar('a', {
+            href: card.module_list[j].link,
+            text: card.module_list[j].translated_title
+          })
+        ]));
+      }
+      dom_list.push(domsugar('li', [
+        domsugar('h2', {text: card.business_application_translated_title}),
+        domsugar('ul', sub_dom_list)
+      ]));
+    }
+    domsugar(element, dom_list);
+  }
+
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
@@ -121,9 +145,8 @@
               module_list: other_module_list
             });
           }
-          gadget.element.querySelector('ul').innerHTML = card_list_template({
-            card_list: card_list
-          });
+
+          generateCardList(gadget.element.querySelector('ul'), card_list);
 
           return gadget.updateHeader({
             page_title: 'Modules',
@@ -134,4 +157,4 @@
         });
     });
 
-}(window, rJS, jIO, RSVP, Handlebars));
+}(window, rJS, jIO, RSVP, domsugar));
