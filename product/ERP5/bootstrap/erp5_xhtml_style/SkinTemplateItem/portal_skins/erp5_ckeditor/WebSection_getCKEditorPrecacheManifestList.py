@@ -1,6 +1,7 @@
 url_list = [
   "renderjs.js",
   "rsvp.js",
+  "ckeditor.gadget.html",
   "ckeditor.gadget.js",
   "ckeditor/skins/moono-lisa/icons.png",
   "ckeditor/skins/moono-lisa/editor_iequirks.css",
