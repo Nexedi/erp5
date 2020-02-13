@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!--
+      data-i18n=Submit
+      data-i18n=Configure Editor
+      data-i18n=Close
+      data-i18n=Add Criteria
+      data-i18n=Reset
+    -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>ERP5 Configure Editor</title>
@@ -9,51 +16,10 @@
     <!-- renderjs -->
     <script src="rsvp.js"></script>
     <script src="renderjs.js"></script>
-    <script src="handlebars.js"></script>
+    <script src="domsugar.js"></script>
 
     <!-- custom script -->
     <script src="gadget_erp5_configure_editor.js"></script>
-
-    <script id="column-item-template" type="text/x-handlebars-template">
-      <button type="button" class="ui-icon ui-icon-minus"></button>
-      <div class="column_item ui-controlgroup-controls" >
-        <select>
-          {{#each option}}
-            {{#equal value selected_option}}
-              <option selected="selected" data-i18n="{{text}}" value="{{value}}">{{text}}</option>
-            {{else}}
-              <option value="{{value}}" data-i18n="{{text}}">{{text}}</option>
-            {{/equal}}
-          {{/each}}
-        </select>
-      </div>
-    </script>
-
-    <script id="column-template" type="text/x-handlebars-template">
-      <div>
-        <div data-role="header" class="ui-header">
-          <div class="ui-btn-right">
-            <div class="ui-controlgroup-controls">
-              <button data-i18n="Submit" type="submit" class="submit ui-btn-icon-left ui-icon-check">Submit</button>
-            </div>
-          </div>
-
-          <h1 data-i18n="Configure Editor">Configure Editor</h1>
-
-          <div class="ui-btn-left">
-            <div class="ui-controlgroup-controls">
-              <button data-i18n="Close" type="button" class="close ui-btn-icon-left ui-icon-times">Close</button>
-            </div>
-          </div>
-        </div>
-
-        <section>
-          <div class="column_item_container"></div>
-          <button type="button" class="plus ui-icon-plus ui-btn-icon-left">Add Criteria</button>
-          <button type="button" class="trash ui-icon-trash-o ui-btn-icon-left">Reset</button>
-        </section>
-      </div>
-    </script>
 
   </head>
   <body>
