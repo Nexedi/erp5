@@ -3097,6 +3097,9 @@ msgstr "Contenu"
 msgid "Contextual Help"
 msgstr "Aide contextuelle"
 
+msgid "Continuation of Activity"
+msgstr "Continuation d'activité"
+
 msgid "Contract"
 msgstr "Contrat"
 
@@ -3511,8 +3514,11 @@ msgstr "Compte naturellement créditeur"
 msgid "Credit Transactions"
 msgstr "Mouvements crédit"
 
+msgid "Creditor"
+msgstr "Créancier"
+
 msgid "Creditors"
-msgstr "Créditeurs"
+msgstr "Créanciers"
 
 msgid "Cure Name"
 msgstr "Désignation"
@@ -3768,6 +3774,9 @@ msgstr "Mvts. Débit"
 
 msgid "Debit Transactions"
 msgstr "Mouvements débits"
+
+msgid "Debtor"
+msgstr "Débiteur"
 
 msgid "Debtors"
 msgstr "Débiteurs"
@@ -6361,6 +6370,15 @@ msgstr "Les données comportent des erreurs, reportez-vous aux messages ci-desso
 msgid "Input is required but no input given."
 msgstr "Ce champ est obligatoire."
 
+msgid "Insolvency Proceeding"
+msgstr "Procédure d'insolvabilité"
+
+msgid "Insolvency Proceeding Type"
+msgstr "Type de procédure d'insolvabilité"
+
+msgid "Insolvency Proceedings"
+msgstr "Procédures d'insolvabilité"
+
 msgid "Inspect Object"
 msgstr "Inspecter l'objet"
 
@@ -6753,6 +6771,12 @@ msgstr "Brouillard"
 
 msgid "Journalize"
 msgstr "Passer au brouillard"
+
+msgid "Judicial Administrator"
+msgstr "Administrateur judiciaire"
+
+msgid "Judicial Representative"
+msgstr "Mandataire judiciaire"
 
 msgid "July"
 msgstr "Juillet"
