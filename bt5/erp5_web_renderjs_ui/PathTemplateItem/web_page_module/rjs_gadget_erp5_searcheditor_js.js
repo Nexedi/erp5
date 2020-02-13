@@ -1,19 +1,10 @@
 /*jslint indent: 2, maxerr: 3, maxlen: 100, nomen: true */
-/*global window, document, rJS, Handlebars,
+/*global window, document, rJS, domsugar,
   QueryFactory, SimpleQuery, ComplexQuery, Query*/
-(function (window, document, rJS, Handlebars,
+(function (window, document, rJS, domsugar,
   QueryFactory, SimpleQuery, ComplexQuery, Query) {
   "use strict";
-  var gadget_klass = rJS(window),
-    template_element = gadget_klass.__template_element,
-
-    filter_item_template = Handlebars.compile(template_element
-                         .getElementById("filter-item-template")
-                         .innerHTML),
-    filter_template = Handlebars.compile(template_element
-                         .getElementById("filter-template")
-                         .innerHTML),
-    NUMERIC = [
+  var NUMERIC = [
       ["Equal to", "="], ["Greater than", ">"],
       ["Less than", "<"], ["Less than or Equal to", "<="],
       ["Greater than or Equal to", ">="]
@@ -135,7 +126,63 @@
     return {key: key, operator: operator, value_list: value_list};
   }
 
-  function createFilterItemTemplate(gadget, query_dict) {
+  function generateFilterItemTemplate(options) {
+    var column_option_list = options.option.map(function (option) {
+      return domsugar('option', {
+        selected: !!option.selected,
+        value: option.value,
+        text: option.text
+      });
+    }),
+      operator_option_list = options.operator_option.map(function (option) {
+        return domsugar('option', {
+          selected: !!option.selected,
+          value: option.value,
+          text: option.text
+        });
+      }),
+      div_dom_list = [
+        domsugar('select', {class: 'column'}, column_option_list),
+        domsugar('select', operator_option_list)
+      ];
+
+    if (options.domain_option) {
+      div_dom_list.push(domsugar(
+        'select',
+        {required: true},
+        options.domain_option.map(function (option) {
+          return domsugar('option', {
+            selected: !!option.selected,
+            value: option.value || undefined,
+            text: option.text
+          });
+        })
+      ));
+
+    } else if (options.input_list) {
+      div_dom_list.push.apply(div_dom_list, options.input_list.map(function (option) {
+        return domsugar('input', {
+          required: !!option.required,
+          value: option.value,
+          type: option.type
+        });
+      }));
+
+    } else {
+      div_dom_list.push(domsugar('input', {
+        type: options.input_type,
+        value: options.input_value,
+        required: true
+      }));
+    }
+
+    return domsugar('div', [
+      domsugar('button', {class: 'ui-icon ui-icon-minus'}),
+      domsugar('div', {class: 'filter_item'}, div_dom_list)
+    ]);
+  }
+
+  function createFilterItemTemplate(gadget, query_dict, translation_dict, column_translation_dict) {
     var operator_default_list = DEFAULT,
       operator_option_list = [],
       column_option_list = [],
@@ -168,7 +215,8 @@
         is_selected = is_selected ||
           (query_detail_dict.key === gadget.state.search_column_list[i][0]);
         column_option_list.push({
-          text: gadget.state.search_column_list[i][1],
+          text: column_translation_dict[gadget.state.search_column_list[i][1]] ||
+                gadget.state.search_column_list[i][1],
           value: gadget.state.search_column_list[i][0],
           selected: (query_detail_dict.key === gadget.state.search_column_list[i][0])
         });
@@ -181,7 +229,7 @@
         is_selected = is_selected ||
           ("at_least_one_exact_match" === operator_default_list[i][1]);
         operator_option_list.push({
-          text: operator_default_list[i][0],
+          text: translation_dict[operator_default_list[i][0]],
           value: operator_default_list[i][1],
           selected: ("at_least_one_exact_match" === operator_default_list[i][1])
         });
@@ -202,7 +250,7 @@
         value: "",
         required: ""
       });
-      return filter_item_template({
+      return generateFilterItemTemplate({
         option: column_option_list,
         operator_option: operator_option_list,
         input_list: input_list,
@@ -247,7 +295,7 @@
     for (i = 0; i < operator_default_list.length; i += 1) {
       is_selected = is_selected || (query_dict.operator === operator_default_list[i][1]);
       operator_option_list.push({
-        text: operator_default_list[i][0],
+        text: translation_dict[operator_default_list[i][0]],
         value: operator_default_list[i][1],
         selected: (query_dict.operator === operator_default_list[i][1])
       });
@@ -271,7 +319,7 @@
       query_dict.operator = DEFAULT[0][1];
       query_dict.key = PREFIX_RAW;
       operator_option_list = [{
-        text: DEFAULT[0][0],
+        text: translation_dict[DEFAULT[0][0]],
         value: DEFAULT[0][1],
         selected: true
       }];
@@ -281,7 +329,8 @@
     for (i = 0; i < gadget.state.search_column_list.length; i += 1) {
       is_selected = is_selected || (query_dict.key === gadget.state.search_column_list[i][0]);
       column_option_list.push({
-        text: gadget.state.search_column_list[i][1],
+        text: column_translation_dict[gadget.state.search_column_list[i][1]] ||
+              gadget.state.search_column_list[i][1],
         value: gadget.state.search_column_list[i][0],
         selected: (query_dict.key === gadget.state.search_column_list[i][0])
       });
@@ -290,7 +339,7 @@
       throw new Error('SearchEditor: no key found for: ' + query_dict.key);
     }
 
-    return filter_item_template({
+    return generateFilterItemTemplate({
       option: column_option_list,
       operator_option: operator_option_list,
       input_value: query_dict.value,
@@ -405,11 +454,11 @@
     return index;
   }
 
-  gadget_klass
+  rJS(window)
     //////////////////////////////////////////////
     // acquired method
     //////////////////////////////////////////////
-    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("trigger", "trigger")
 
@@ -455,6 +504,7 @@
           options.domain_list[i][1]
         ]);
       }
+      // Translated later
       search_column_list.push([PREFIX_TEXT, "Searchable Text"]);
       search_column_list.push([PREFIX_RAW, "Search Expression"]);
 
@@ -585,6 +635,7 @@
 
       return this.changeState({
         search_column_list: search_column_list.concat(additional_search_column_list),
+        additional_search_column_list: additional_search_column_list,
         begin_from_key: options.begin_from,
         // [{key: 'title', value: 'Foo', operator: 'like'}]
         query_list: query_list,
@@ -597,13 +648,7 @@
     })
 
     .onStateChange(function onStateChange(modification_dict) {
-      var gadget = this,
-        container = gadget.element.querySelector(".container"),
-        div = document.createElement("div"),
-        subdiv,
-        operator_select,
-        filter_item_container,
-        i;
+      var gadget = this;
 
       if (modification_dict.update_filter_dom !== undefined &&
           Object.keys(modification_dict).length === 1) {
@@ -611,30 +656,101 @@
         return;
       }
 
-      div.innerHTML = filter_template();
+      return gadget.getTranslationList([
+        'Submit',
+        'Filter Editor',
+        'Close',
+        'Add Criteria',
+        'Reset',
+        'All criterions (AND)',
+        'At least one (OR)',
+        'Contains',
+        'Equal to',
+        'Equal to (at least one)',
+        'Greater than',
+        'Less than',
+        'Less than or Equal to',
+        'Greater than or Equal to',
+        'Searchable Text',
+        'Search Expression'
+      ])
+        .push(function (translation_list) {
+          var filter_dom_list =
+              gadget.state.query_list.map(
+                function (query) {
+                  return createFilterItemTemplate(
+                    gadget,
+                    query,
+                    {
+                      'Contains': translation_list[7],
+                      'Equal to': translation_list[8],
+                      'Equal to (at least one)': translation_list[9],
+                      'Greater than': translation_list[10],
+                      'Less than': translation_list[11],
+                      'Less than or Equal to': translation_list[12],
+                      'Greater than or Equal to': translation_list[13]
+                    },
+                    {
+                      'Searchable Text': translation_list[14],
+                      'Search Expression': translation_list[15]
+                    }
+                  );
+                }
+              );
 
-      operator_select = div.querySelector("select");
-      if (gadget.state.operator === "OR") {
-        operator_select.querySelectorAll("option")[1].setAttribute('selected', 'selected');
-      }
-
-      filter_item_container = div.querySelector(".filter_item_container");
-
-      for (i = 0; i < gadget.state.query_list.length; i += 1) {
-        subdiv = document.createElement("div");
-        subdiv.innerHTML = createFilterItemTemplate(gadget, gadget.state.query_list[i]);
-        filter_item_container.appendChild(subdiv);
-      }
-
-      return gadget.translateHtml(div.innerHTML)
-        .push(function (translated_html) {
-          div.innerHTML = translated_html;
-
-          while (container.firstChild) {
-            container.removeChild(container.firstChild);
-          }
-
-          container.appendChild(div);
+          domsugar(gadget.element.querySelector(".container"), [
+            domsugar('div', [
+              domsugar('div', {'data-role': 'header', 'class': 'ui-header'}, [
+                domsugar('div', {class: 'ui-btn-right'}, [
+                  domsugar('div', {class: 'ui-controlgroup-controls'}, [
+                    domsugar('button', {
+                      type: 'submit',
+                      class: 'ui-btn-icon-left ui-icon-check',
+                      text: translation_list[0]
+                    })
+                  ])
+                ]),
+                domsugar('h1', {text: translation_list[1]}),
+                domsugar('div', {class: 'ui-btn-left'}, [
+                  domsugar('div', {class: 'ui-controlgroup-controls'}, [
+                    domsugar('button', {
+                      type: 'submit',
+                      class: 'close ui-btn-icon-left ui-icon-times',
+                      text: translation_list[2]
+                    })
+                  ])
+                ])
+              ]),
+              domsugar('section', [
+                domsugar('fieldset', [
+                  domsugar('select', {name: 'heard_about'}, [
+                    domsugar('option', {
+                      value: 'AND',
+                      text: translation_list[5],
+                      selected: (gadget.state.operator === "AND")
+                    }),
+                    domsugar('option', {
+                      value: 'OR',
+                      text: translation_list[6],
+                      selected: (gadget.state.operator === "OR")
+                    })
+                  ])
+                ]),
+                domsugar('div', {class: 'filter_item_container'},
+                         filter_dom_list),
+                domsugar('button', {
+                  class: 'plus ui-icon-plus ui-btn-icon-left',
+                  text: translation_list[3]
+                }),
+                domsugar('button', {
+                  class: 'trash ui-icon-trash-o ui-btn-icon-left',
+                  text: translation_list[4]
+                })
+                // domsugar('div', {class: 'domain_item_container'},
+                //          domain_dom_list),
+              ])
+            ])
+          ]);
           return gadget.focusOnLastInput(gadget.state.focus_on);
         });
     })
@@ -773,5 +889,5 @@
       }
     }, false, false);
 
-}(window, document, rJS, Handlebars,
+}(window, document, rJS, domsugar,
   QueryFactory, SimpleQuery, ComplexQuery, Query));
