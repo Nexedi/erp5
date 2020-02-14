@@ -34,7 +34,6 @@ from DateTime import DateTime
 from Products.CMFCore.utils import _checkPermission
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests import CodingStyleTestCase
 from Products.ERP5Type.tests.utils import reindex
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
@@ -5930,22 +5929,6 @@ class TestInternalInvoiceTransaction(AccountingTestCase):
         [ (line.getSourceValue(), line.getSourceDebit(), line.getSourceCredit())
           for line in payment.getMovementList(
               portal_type='Internal Invoice Transaction Line')])
-
-
-class TestAccountingCodingStyle(CodingStyleTestCase.CodingStyleTestCase, AccountingTestCase):
-  """Runs CodingStyleTestCase checks on erp5_accounting
-  """
-  def getBusinessTemplateList(self):
-    # include administration for test_PythonSourceCode
-    return AccountingTestCase.getBusinessTemplateList(self) + (
-        'erp5_administration', )
-
-  def getTestedBusinessTemplateList(self):
-    return ('erp5_accounting', )
-
-  def beforeTearDown(self):
-    # we don't want to run AccountingTestCase.tearDown
-    pass
 
 
 class TestAccountingAlarms(AccountingTestCase):
