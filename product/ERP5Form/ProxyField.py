@@ -460,7 +460,16 @@ class ProxyField(ZMIField):
               if candidate_folder is not None:
                 proxy_form = candidate_folder._getOb(form_id, None)
                 if proxy_form is not None:
-                  proxy_field = proxy_form._getOb(field_id, None)
+                  # proxy_form was retrieved outside of skin magic, fake the
+                  # acquisition context skin magic would have produced so it
+                  # works the same (ex: for acquired permissions).
+                  # The drawback is that the form the field is actually comming
+                  # from will be harder to identify, but that's just how skins
+                  # work.
+                  proxy_field = aq_base(proxy_form).__of__(portal)._getOb(
+                    field_id,
+                    None,
+                  )
                   if proxy_field is not None:
                     break
 
