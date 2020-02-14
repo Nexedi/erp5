@@ -27,6 +27,7 @@ document.erp5.MonthlyRangeMovementGroup
 document.erp5.MovementGroup
 document.erp5.NestedLineMovementGroup
 document.erp5.OOoDocument
+document.erp5.OpenOrder
 document.erp5.OrderBuilder
 document.erp5.OrderMovementGroup
 document.erp5.Organisation
