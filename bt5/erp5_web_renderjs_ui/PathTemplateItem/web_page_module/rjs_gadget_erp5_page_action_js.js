@@ -124,7 +124,7 @@
           domsugar(gadget.element, dom_list);
 
           return gadget.updateHeader({
-            back_url: result_dict.url_list[result_dict.url_list - 1],
+            back_url: result_dict.url_list[result_dict.url_list.length - 1],
             page_title: result_dict.page_title
           });
         });
