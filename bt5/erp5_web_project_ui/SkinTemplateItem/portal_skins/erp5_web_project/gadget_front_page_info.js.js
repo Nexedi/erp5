@@ -141,9 +141,8 @@
           if (project_id in project_list_dict) {
             if (item.value.portal_type in project_list_dict[project_id]) {
               var project_row = project_list_dict[project_id][item.value.portal_type];
-              if (status_ok) {
-                project_row.ok_count++;
-              } else {
+              project_row.total_count++;
+              if (!status_ok) {
                 project_row.out_count++;
                 if (project_row.status < item.status) {
                   project_row.status = item.status;
@@ -151,11 +150,19 @@
               }
               project_row.list.push(item);
             } else {
-              project_list_dict[project_id][item.value.portal_type] = { "status": item.status, "ok_count" : 0 + status_ok, "out_count" : 0 + !status_ok, "list" : [item] };
+              project_list_dict[project_id][item.value.portal_type] = { "status": item.status,
+                                                                        "total_count" : 1,
+                                                                        "out_count" : 0 + !status_ok,
+                                                                        "list" : [item]
+                                                                      };
             }
           } else {
             project_list_dict[project_id] = {};
-            project_list_dict[project_id][item.value.portal_type] = { "status": item.status, "ok_count" : 0 + status_ok, "out_count" : 0 + !status_ok, "list" : [item] };
+            project_list_dict[project_id][item.value.portal_type] = { "status": item.status,
+                                                                      "total_count" : 1,
+                                                                      "out_count" : 0 + !status_ok,
+                                                                      "list" : [item]
+                                                                    };
           }
         }
         return project_list_dict;
