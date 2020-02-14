@@ -108,6 +108,7 @@ def WorkflowTool_listActionParameterList(self):
 def Base_renderFormAtEndOfTransaction(self, request, response, form_id, **kw):
   def renderFormAndSetResponseBody(context, request, response, form_id, **kw):
     kw['message'] = request.get('portal_status_message') or kw['message']
+    kw['level'] = request.get('portal_status_level') or kw.get('level')
     response.setBody(context.Base_renderForm(form_id, **kw))
 
   transaction.get().addBeforeCommitHook(

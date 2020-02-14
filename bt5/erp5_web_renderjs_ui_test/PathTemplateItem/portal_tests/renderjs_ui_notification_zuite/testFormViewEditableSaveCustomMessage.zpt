@@ -2,12 +2,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test Form View Editable Save Action</title>
+<title>Test Custom Message for View Editable Save Action</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test Form View Editable Save Action</td></tr>
+<tr><td rowspan="1" colspan="3">Test Custom Message for View Editable Save Action</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 
@@ -16,19 +16,18 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=true</td>
   <td></td>
 </tr>
-
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <tr>
   <td>type</td>
   <td>field_my_title</td>
-  <td>QWERTY</td>
+  <td>Custom Message</td>
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
 
-<tal:block tal:define="notification_configuration python: {'class': 'success',
-                                                           'text': 'Data updated.'}">
+<tal:block tal:define="notification_configuration python: {'class': 'error',
+                                                           'text': 'Custom Message.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 
