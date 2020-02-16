@@ -142,9 +142,7 @@
         var j,
           device,
           len = info_list.length;
-
-        for (j = len - 1; j >= 0; j -= 1) {
-          // trick to select back camera in mobile
+        for (j = 0; j < len; j += 1) {
           device = info_list[j];
           if (device.kind === 'videoinput') {
             if ((!current_device_id) ||
@@ -209,13 +207,13 @@
                                  src: gadget.state['blob_url_' + i]})]));
           }
         }
-        return domsugar("div", {"class": "thumbnail-area"}, [
-          domsugar('button', {type: 'button',
-            // Do not allow to show again the current image
-            disabled: (len === gadget.state.page - 1),
-            'class': 'new-btn ui-btn-icon-left ui-icon-plus'}),
-          domsugar('ol', {"class": "thumbnail-list"}, thumbnail_dom_list)
-        ]);
+        thumbnail_dom_list.push(domsugar('button', {type: 'button',
+                                                    text: 'New Page',
+                                                    // Do not allow to show again the current image
+                                                    disabled: (len === gadget.state.page - 1),
+                                                    class: 'new-btn ui-btn-icon-left ui-icon-plus'
+                                                   }));
+        return domsugar('ol', {"class": "thumbnail-list"}, thumbnail_dom_list);
       });
   }
 
@@ -305,17 +303,28 @@
         return image_capture.takePhoto({imageWidth: capabilities.imageWidth.max});
       })
       .push(function (blob) {
+        return createImageBitmap(blob);
+      })
+      .push(function (bitmap) {
+        var canvas = domsugar('canvas', {'class': 'canvas'});
+        canvas.width = bitmap.width;
+        canvas.height = bitmap.height;
+        canvas.getContext('2d').drawImage(bitmap, 0, 0);
+        return canvas;
+      })
+      .push(function (canvas) {
+        var new_canvas;
         gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
         if (settings.brightness || settings.contrast || settings.enable_greyscale || settings.compression) {
+          new_canvas = domsugar('canvas', {'class': 'canvas',
+                                           'width': canvas.width,
+                                           'height': canvas.height
+                                          });
           return new RSVP.Queue()
-            .push(function () {
-              return jIO.util.readBlobAsDataURL(blob);
-            })
             .push(function (result) {
-              var canvas = domsugar('canvas', {'class': 'canvas'});
               return new Promise(function (resolve) {
                 // XXX the correct usage is `new Caman()` but the library does not support it
-                caman(canvas, result.target.result, function () {
+                caman(new_canvas, canvas.toDataURL(), function () {
                   if (settings.brightness && settings.brightness !== 0) {
                     this.brightness(settings.brightness);
                   }
@@ -326,31 +335,27 @@
                     this.greyscale();
                   }
                   this.render(function () {
-                    canvas.toBlob(function (blob) {
-                      resolve(blob);
-                    });
+                    resolve(new_canvas);
                   });
                 });
               });
             });
         }
-        return blob;
+        return canvas;
       })
-      .push(function (blob) {
+      .push(function (canvas) {
         return RSVP.all([
           gadget.getTranslationList(["Delete", "Save"]),
-          createImageBitmap(blob),
+          new Promise(function (resolve) {
+            resolve(canvas);
+          }),
           buildPreviousThumbnailDom(gadget)
         ]);
       })
       .push(function (result_list) {
-        var bitmap = result_list[1],
-          canvas = domsugar('canvas', {'class': 'canvas'}),
+        var canvas = result_list[1],
           defer = RSVP.defer();
         // Prepare the cropper canvas
-        canvas.width = bitmap.width;
-        canvas.height = bitmap.height;
-        canvas.getContext('2d').drawImage(bitmap, 0, 0);
 
         div = domsugar('div', {'class': 'camera'}, [
           domsugar('div', {'class': 'camera-header'}, [
@@ -376,7 +381,6 @@
         // XXX How to change the dom only when cropper is ready?
         // For now, it needs to access dom element size
         gadget.element.replaceChild(div, gadget.element.firstElementChild);
-
         addDetachedPromise(gadget, 'cropper',
                            handleCropper(canvas,
                                          gadget.state.preferred_cropped_canvas_data,
@@ -519,7 +523,7 @@
       // if display_step is not modified
       return buildPreviousThumbnailDom(gadget)
         .push(function (result) {
-          thumbnail_container = gadget.element.querySelector('.thumbnail-area');
+          thumbnail_container = gadget.element.querySelector('.thumbnail-list');
           thumbnail_container.parentElement.replaceChild(
             result,
             thumbnail_container

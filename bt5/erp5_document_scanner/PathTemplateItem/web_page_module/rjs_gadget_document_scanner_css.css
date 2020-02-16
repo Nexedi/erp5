@@ -2,6 +2,15 @@ div[data-gadget-url$="gadget_document_scanner.html"] {
   text-align: center;
 }
 
+@media only screen and (max-width: 750px) {
+  div[data-gadget-url$="gadget_document_scanner.html"] .camera {
+    max-width: 90%;
+  }
+  div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
+    min-width: 35%;
+  }
+}
+
 div[data-gadget-url$="gadget_document_scanner.html"] .photo,
 div[data-gadget-url$="gadget_document_scanner.html"] .video,
 div[data-gadget-url$="gadget_document_scanner.html"] .camera-output,
@@ -81,9 +90,14 @@ div[data-gadget-url$="gadget_document_scanner.html"] .thumbnail-list > button {
 }
 
 div[data-gadget-url$="gadget_document_scanner.html"] .upload-error {
-    border: 3px solid red;
+  border: 3px solid red;
 }
 
 div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
-  font-size: 26pt;
+  font-size: 13pt;
+  display: inline-grid !important;
+  padding: 18pt;
+  margin-left: 0.2em;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 0.325em;
 }
