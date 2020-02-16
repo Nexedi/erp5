@@ -46,6 +46,9 @@ div[data-gadget-url$="gadget_front_page_info.html"] .front-project-list .project
 
 div[data-gadget-url$="gadget_front_page_info.html"] .front-project-list .project-box .status  {
   padding-left: 21px;
+}
+
+div[data-gadget-url$="gadget_front_page_info.html"] .front-project-list .project-box span  {
   margin-right: 5px;
 }
 
