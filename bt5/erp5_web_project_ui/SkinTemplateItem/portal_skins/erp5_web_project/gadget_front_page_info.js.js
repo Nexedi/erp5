@@ -3,7 +3,154 @@
 (function (window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query) {
   "use strict";
 
-  function renderProjectList(element_list) {
+  //TODO
+  //get lastest (unique) TR for each project
+  function getProjectElementList(gadget) {
+
+    function getComplexQuery(query_dict, operator) {
+      var key,
+        query_list = [];
+      for (key in query_dict) {
+        if (query_dict.hasOwnProperty(key)) {
+          query_list.push(new SimpleQuery({
+            key: key,
+            operator: "=",
+            type: "simple",
+            value: query_dict[key]
+          }));
+        }
+      }
+      return new ComplexQuery({
+        operator: operator,
+        query_list: query_list,
+        type: "complex"
+      });
+    }
+
+    var i,
+      project_query = getComplexQuery({"portal_type" : "Project",
+                                       "validation_state" : "validated"},
+                                      "AND"),
+      milestone_query = getComplexQuery({"portal_type" : "Project Milestone",
+                                         "parent__validation_state" : "validated"},
+                                        "AND"),
+      non_milestone_query,
+      aux_complex_query,
+      aux_query_list = [],
+      query_list = [],
+      portal_type_list = ["Task", "Bug", "Task Report", "Benchmark Result"],
+      valid_state_list = ["planned", "ordered", "confirmed", "started", "stopped", "delivered", "ready", "failed", "public_stopped"];
+
+    //validated project tasks, bugs, etc
+    query_list.push(new SimpleQuery({
+      key: "source_project__validation_state",
+      operator: "=",
+      type: "simple",
+      value: "validated"
+    }));
+
+    //portal types
+    /*//ATTEPMT 1 TO AVOID ITERATE portal_type VALUE LIST
+    //(from jio documentation)
+    var in_list = function (object_value, comparison_value_list) {
+      return comparison_value_list.indexOf(object_value) >= 0;
+    };
+    aux_complex_query = new SimpleQuery({
+      type: "simple",
+      key: {
+        read_from: "portal_type",
+        equal_match: in_list
+      },
+      value: ["Task", "Bug", "Task Report", "Benchmark Result"]
+    });
+    // in_list function is never called, no query on portal types
+
+    //ATTEMPT 2 TO AVOID ITERATE portal_type VALUE LIST (same for states)
+    aux_complex_query = new SimpleQuery({
+      key: "portal_type",
+      operator: "=",
+      type: "simple",
+      value: ("Task", "Bug", "Task Report", "Benchmark Result")
+    });
+    //only last portal type value of the list is considered
+    //the rest, ignored*/
+
+    aux_query_list = [];
+    for (i = 0; i < portal_type_list.length; i += 1) {
+      aux_query_list.push(new SimpleQuery({
+        key: "portal_type",
+        operator: "=",
+        type: "simple",
+        value: portal_type_list[i]
+      }));
+    }
+    aux_complex_query = new ComplexQuery({
+      operator: "OR",
+      query_list: aux_query_list,
+      type: "complex"
+    });
+
+    query_list.push(aux_complex_query);
+
+    //states for tasks, bugs, reports, tests
+    aux_query_list = [];
+    for (i = 0; i < valid_state_list.length; i += 1) {
+      aux_query_list.push(new SimpleQuery({
+        key: "simulation_state",
+        operator: "=",
+        type: "simple",
+        value: valid_state_list[i]
+      }));
+    }
+    aux_complex_query = new ComplexQuery({
+      operator: "OR",
+      query_list: aux_query_list,
+      type: "complex"
+    });
+    query_list.push(aux_complex_query);
+
+    non_milestone_query = new ComplexQuery({
+      operator: "AND",
+      query_list: query_list,
+      type: "complex"
+    });
+    // TODO: filter result by too old creation/end date? to reduce results
+
+    return new RSVP.Queue()
+      .push(function () {
+        var promise_list = [],
+          //TODO: review limit and fields
+          limit = [0, 1000],
+          select_list = ['source_project', 'portal_type', 'stop_date', 'modification_date', 'simulation_state'];
+        // XXX: two separated queries because this query fails with not implemented error:
+        // ( parent__validation_state = "validated" OR source_project__validation_state = "validated" )
+        // TODO: do some research
+        promise_list.push(gadget.jio_allDocs({
+          query: Query.objectToSearchText(milestone_query),
+          limit: limit,
+          select_list: select_list,
+          sort_on: [["modification_date", "descending"]]
+        }));
+        promise_list.push(gadget.jio_allDocs({
+          query: Query.objectToSearchText(non_milestone_query),
+          limit: limit,
+          select_list: select_list,
+          sort_on: [["modification_date", "descending"]]
+        }));
+        promise_list.push(gadget.jio_allDocs({
+          query: Query.objectToSearchText(project_query),
+          limit: limit,
+          select_list: ['title'],
+          sort_on: [["modification_date", "descending"]]
+        }));
+        return RSVP.all(promise_list);
+      })
+      .push(function (result_list) {
+        return [result_list[0].data.rows.concat(result_list[1].data.rows), result_list[2].data.rows];
+      });
+  }
+
+  function renderProjectList(element_list, project_list) {
     var i,
       project,
       item,
@@ -52,7 +199,7 @@
       return item;
     }
 
-    function createProjectHtmlElement(project_id) {
+    function createProjectHtmlElement(project_id, project_title) {
       var project_element = document.createElement('li'),
         box_div = document.createElement('div'),
         title_div = document.createElement('div'),
@@ -64,7 +211,7 @@
       box_div.classList.add("project-box");
       title_div.classList.add("project-title");
       //TODO get project info (another jio query?)
-      title_div.innerHTML = project_id;
+      title_div.innerHTML = project_title;
       info_div.classList.add("project-info");
       left_info_div.classList.add("left");
       right_line_div.classList.add("project-line");
@@ -98,6 +245,12 @@
       line_div.appendChild(total);
       line_div.appendChild(fail);
       return [line_div, status, total, fail];
+    }
+
+    for (i = 0; i < project_list.length; i += 1) {
+      project_html_element_list = createProjectHtmlElement(project_list[i].id, project_list[i].value.title);
+      project_list_dict[project_list[i].id] = {"html_element" : project_html_element_list[0],
+                                       "left_div_html" : project_html_element_list[1]};
     }
 
     for (i = 0; i < element_list.length; i += 1) {
@@ -136,26 +289,6 @@
                                                                     "list" : [item]
                                                                   };
         }
-      } else {
-        project_html_element_list = createProjectHtmlElement(project_id);
-        project_li = project_html_element_list[0];
-        left_div = project_html_element_list[1];
-        project_line_html_element_list = createProjectLineHtmlElement(item.value.portal_type, 1, 0 + !status_ok, item.status_color);
-        left_line_div = project_line_html_element_list[0];
-        status_span = project_line_html_element_list[1];
-        total_span = project_line_html_element_list[2];
-        fail_span = project_line_html_element_list[3];
-        left_div.appendChild(left_line_div);
-        project_list_dict[project_id] = {"html_element" : project_li, "left_div_html" : left_div};
-        project_list_dict[project_id][item.value.portal_type] = { "status": item.status,
-                                                                  "status_html" : status_span,
-                                                                  "total_count" : 1,
-                                                                  "total_html" : total_span,
-                                                                  "out_count" : 0 + !status_ok,
-                                                                  "out_html" : fail_span,
-                                                                  "list" : [item],
-                                                                  "html_element" : left_line_div
-                                                                };
       }
     }
     console.log("project_list_dict:", project_list_dict);
@@ -164,112 +297,6 @@
         ul_list.appendChild(project_list_dict[project].html_element);
       }
     }
-  }
-
-  function getProjectElementList(gadget) {
-    var i,
-      milestone_query,
-      non_milestone_query,
-      aux_complex_query,
-      aux_query_list = [],
-      query_list = [],
-      //TODO: test result will need a differet query because we only need the latest test per project, no all
-      portal_type_list = ["Task", "Bug", "Task Report", "Benchmark Result"],
-      valid_state_list = ["planned", "ordered", "confirmed", "started", "stopped", "delivered", "ready", "failed", "public_stopped"];
-
-    //validated project milestones
-    aux_query_list.push(new SimpleQuery({
-      key: "parent__validation_state",
-      operator: "=",
-      type: "simple",
-      value: "validated"
-    }));
-    aux_query_list.push(new SimpleQuery({
-      key: "portal_type",
-      operator: "=",
-      type: "simple",
-      value: "Project Milestone"
-    }));
-    milestone_query = new ComplexQuery({
-      operator: "AND",
-      query_list: aux_query_list,
-      type: "complex"
-    });
-
-    //validated project tasks, bugs, etc
-    aux_query_list = [];
-    query_list.push(new SimpleQuery({
-      key: "source_project__validation_state",
-      operator: "=",
-      type: "simple",
-      value: "validated"
-    }));
-    //portal types
-    for (i = 0; i < portal_type_list.length; i += 1) {
-      aux_query_list.push(new SimpleQuery({
-        key: "portal_type",
-        operator: "=",
-        type: "simple",
-        value: portal_type_list[i]
-      }));
-    }
-    aux_complex_query = new ComplexQuery({
-      operator: "OR",
-      query_list: aux_query_list,
-      type: "complex"
-    });
-    query_list.push(aux_complex_query);
-    //states
-    aux_query_list = [];
-    //for tasks, bugs, reports, tests
-    for (i = 0; i < valid_state_list.length; i += 1) {
-      aux_query_list.push(new SimpleQuery({
-        key: "simulation_state",
-        operator: "=",
-        type: "simple",
-        value: valid_state_list[i]
-      }));
-    }
-    aux_complex_query = new ComplexQuery({
-      operator: "OR",
-      query_list: aux_query_list,
-      type: "complex"
-    });
-    query_list.push(aux_complex_query);
-
-    non_milestone_query = new ComplexQuery({
-      operator: "AND",
-      query_list: query_list,
-      type: "complex"
-    });
-    // TODO: filter result by too old creation/end date? to reduce results
-
-    return new RSVP.Queue()
-      .push(function () {
-        var promise_list = [],
-          //TODO: review limit and fields
-          limit = [0, 1000],
-          select_list = ['source_project', 'source_project_title', 'portal_type', 'stop_date', 'modification_date', 'simulation_state'];
-        // XXX: two separated queries because this query fails with not implemented error:
-        // ( parent__validation_state = "validated" OR source_project__validation_state = "validated" )
-        // TODO: do some research
-        promise_list.push(gadget.jio_allDocs({
-          query: Query.objectToSearchText(milestone_query),
-          limit: limit,
-          select_list: select_list,
-          sort_on: [["modification_date", "descending"]]
-        }));
-        promise_list.push(gadget.jio_allDocs({
-          query: Query.objectToSearchText(non_milestone_query),
-          limit: limit,
-          select_list: select_list,
-          sort_on: [["modification_date", "descending"]]
-        }));
-        return RSVP.all(promise_list);
-      })
-      .push(function (result_list) {
-        return result_list[0].data.rows.concat(result_list[1].data.rows);
-      });
   }
 
   rJS(window)
@@ -289,7 +316,7 @@
       return getProjectElementList(gadget)
         .push(function (element_list) {
           console.log("element_list:", element_list);
-          renderProjectList(element_list);
+          renderProjectList(element_list[0], element_list[1]);
         });
     })
 
