@@ -14,21 +14,15 @@
   <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
 <tr>
   <td>click</td>
   <td>//input[@data-i18n='[value]Submit New Support Request']</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@data-i18n="[value]Proceed"]</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>type</td>
   <td>//input[@name='field_your_title']</td>
@@ -52,17 +46,13 @@
 <tal:block tal:define="text_content string:First Post Content">
   <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
 </tal:block>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@data-i18n='[value]Proceed']</td>
-  <td></td>
-</tr>
 
-<tr>
-  <td>click</td>
-  <td>//input[@data-i18n='[value]Proceed']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'New Support Request created.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>waitForText</td>
@@ -79,6 +69,7 @@
 <tal:block tal:define="text_content string:Second Post Content">
   <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
 </tal:block>
+
 <tr>
   <td>click</td>
   <td>//input[@data-i18n='[value]Post Comment']</td>
@@ -130,6 +121,7 @@
   <td>${current_location}</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <!-- The second post was submitted only once. -->
 <tr>
