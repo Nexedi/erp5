@@ -45,6 +45,9 @@ content += ";\n}(window));"
 translation_data_file=context.web_page_module.searchFolder(portal_type='Web Script',reference=translation_data_file)[0]
 translation_data_file.edit(text_content = content)
 
+# Edit web section modification date
+context.edit()
+
 if batch_mode:
   return 'done'
 return context.Base_redirect('view', keep_items=dict(portal_status_message=Base_translateString("Translation Data Create")))
