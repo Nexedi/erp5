@@ -534,7 +534,7 @@
     })
 
     .onEvent("click", function (evt) {
-      // Only handle click on BUTTON element
+      // Only handle click on BUTTON and IMG element
       if (evt.target.tagName !== 'BUTTON' && evt.target.tagName !== 'IMG') {
         return;
       }
@@ -544,9 +544,13 @@
 
       // Disable any button. It must be managed by this gadget
       evt.preventDefault();
-      gadget.element.querySelectorAll('button').forEach(function (elt) {
-        elt.disabled = true;
-      });
+      // If user clicks on same image twice,
+      // we don't need to disable everything again if parent is already disabled
+      if (evt.target.tagName === 'IMG' && !evt.target.parentElement.disabled) {
+        gadget.element.querySelectorAll('button').forEach(function (elt) {
+          elt.disabled = true;
+        });
+      }
 
       if (evt.target.className.indexOf("take-picture-btn") !== -1) {
         return gadget.changeState({
