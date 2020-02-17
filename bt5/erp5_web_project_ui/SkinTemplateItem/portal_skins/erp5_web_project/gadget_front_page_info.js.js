@@ -7,6 +7,37 @@
   //get lastest (unique) TR for each project
   function getProjectElementList(gadget) {
 
+    //TODO ATTEMPT TO FILTER BY DATE
+    var date_query_list = [],
+      date_query,
+      now_date = new Date(),
+      one_year_old_date = new Date();
+    one_year_old_date.setFullYear(one_year_old_date.getFullYear() - 1);
+
+    /*date_query_list.push(new SimpleQuery({
+      key: "portal_type",
+      operator: "=",
+      type: "simple",
+      value: "Task"
+    }));
+    date_query_list.push(new SimpleQuery({
+      type: "simple",
+      key: "creation_date",
+      value: {"query": one_year_old_date, "range": ">="}
+      //value: {'query': (one_year_old_date, now_date), 'range': 'minmax'}
+    }));
+    date_query = new ComplexQuery({
+      operator: "AND",
+      query_list: date_query_list,
+      type: "complex"
+    });*/
+    date_query = new SimpleQuery({
+      type: "simple",
+      key: "creation_date",
+      value: {"query": one_year_old_date, "range": ">="}
+      //value: {'query': (one_year_old_date, now_date), 'range': 'minmax'}
+    });
+
     function getComplexQuery(query_dict, operator) {
       var key,
         query_list = [];
@@ -50,7 +81,7 @@
     }));
 
     //portal types
-    /*//ATTEPMT 1 TO AVOID ITERATE portal_type VALUE LIST
+    /*//ATTEMPT 1 TO AVOID ITERATE portal_type VALUE LIST
     //(from jio documentation)
     var in_list = function (object_value, comparison_value_list) {
       return comparison_value_list.indexOf(object_value) >= 0;
@@ -89,7 +120,6 @@
       query_list: aux_query_list,
       type: "complex"
     });
-
     query_list.push(aux_complex_query);
 
     //states for tasks, bugs, reports, tests
@@ -109,19 +139,22 @@
     });
     query_list.push(aux_complex_query);
 
+    
+    // TODO: filter result by too old creation date? to reduce results
+    query_list.push(date_query);
+    
     non_milestone_query = new ComplexQuery({
       operator: "AND",
       query_list: query_list,
       type: "complex"
     });
-    // TODO: filter result by too old creation/end date? to reduce results
 
     return new RSVP.Queue()
       .push(function () {
         var promise_list = [],
           //TODO: review limit and fields
           limit = [0, 1000],
-          select_list = ['source_project', 'portal_type', 'stop_date', 'modification_date', 'simulation_state'];
+          select_list = ['source_project', 'portal_type', 'stop_date', 'modification_date', 'simulation_state', 'creation_date'];
         // XXX: two separated queries because this query fails with not implemented error:
         // ( parent__validation_state = "validated" OR source_project__validation_state = "validated" )
         // TODO: do some research
@@ -143,6 +176,12 @@
           select_list: ['title'],
           sort_on: [["modification_date", "descending"]]
         }));
+        /*promise_list.push(gadget.jio_allDocs({
+          query: Query.objectToSearchText(date_query),
+          limit: [0, 30],
+          select_list: ['title', 'creation_date'],
+          sort_on: [["creation_date", "descending"]]
+        }));*/
         return RSVP.all(promise_list);
       })
       .push(function (result_list) {
