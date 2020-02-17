@@ -145,7 +145,7 @@ url_list = [
   'gadget_editor.js',
   'gadget_button_maximize.html',
   'gadget_button_maximize.js',
-  'handlebars.js',
+  'domsugar.js',
   'jiodev.js',
   'renderjs.js',
   'rsvp.js',
