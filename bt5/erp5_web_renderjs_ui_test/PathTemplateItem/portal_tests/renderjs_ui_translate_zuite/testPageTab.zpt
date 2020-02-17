@@ -21,55 +21,21 @@
   <td></td>
 </tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
+<tal:block tal:define="click_configuration python: {'text': 'Title 1'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Title 1</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>verifyElementPresent</td>
-  <td>link=Title 1</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>link=Title 1</td>
-  <td></td>
-</tr>
-
-
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n = 'Views']</td>
-  <td></td>
-</tr>
- 
- 
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n = 'Views']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForTextNotPresent</td>
-  <td>ID</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//h3[text() = 'shitu']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>verifyElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//h3[text() = 'shitu']</td>
   <td></td>
 </tr>
