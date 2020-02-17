@@ -97,29 +97,13 @@
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//button[@data-i18n='Save']</td>
- 	<td></td>
-</tr>
-
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//a[text()='Foo Line: 2']</td>
- 	<td></td>
-</tr>
-
- 
 <tr>
   <td>storeLocation</td>
  	<td>url</td>
  	<td></td>
 </tr>
 
- 
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
-
 <tr>
  	<td>open</td>
  	<td>${url}</td>
@@ -264,12 +248,7 @@
                                                            'text': 'Document deleted'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
-
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//a[@data-i18n="Previous"]</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': 'No records'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
@@ -282,13 +261,8 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
- 	<td>waitForTextPresent</td>
- 	<td>Delete</td>
-  <td></td>
-</tr>
-<tr>
- 	<td>verifyElementNotPresent</td>
- 	<td>//a[@data-i18n='Delete Document']</td>
+ 	<td>assertElementNotPresent</td>
+ 	<td>//a[text()='Delete Document']</td>
   <td></td>
 </tr>
 </tbody></table>

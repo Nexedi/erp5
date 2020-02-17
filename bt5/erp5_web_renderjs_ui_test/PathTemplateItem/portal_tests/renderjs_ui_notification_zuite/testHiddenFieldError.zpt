@@ -16,13 +16,12 @@ Check that user gets notified if there is an error on a hidden field.
 
 <tr><td>open</td>
     <td>${renderjs_url}/#/foo_module/1/?editable=1</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <!-- Originaly the field was required and we tested here an empty value. Problem is that Firefox
      evaluates numerical rule before required value wheras Chrome does it in the opposite direction -->
 
 <!-- Put negative quantity so the external validator will not pass external test in the next view -->
-<tr><td>waitForElementPresent</td>
-    <td>//input[@name="field_my_quantity"]</td><td></td></tr>
 <tr><td>type</td>
     <td>//input[@name="field_my_quantity"]</td>
     <td>-20</td></tr>
@@ -30,20 +29,17 @@ Check that user gets notified if there is an error on a hidden field.
 
 <!-- Let the external validator throw an error - this time we test explicitely
      for a notification with the error -->
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Views"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="View Hidden Positive-Only Quantity"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="View Hidden Positive-Only Quantity"]</td><td></td></tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'View Hidden Positive-Only Quantity'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tr><td>waitForElementPresent</td>
-    <td>//button[@data-i18n='Save']</td><td></td></tr>
-<tr><td>click</td>
-    <td>//button[@data-i18n='Save']</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
 <tal:block tal:define="notification_configuration python: {'class': 'error',
                                                            'text': 'Input data has errors.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
