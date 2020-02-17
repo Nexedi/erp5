@@ -101,3 +101,13 @@ div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
 }
+
+div[data-gadget-url$="gadget_document_scanner.html"] .img-container {
+  /* Never limit the container height here */
+  max-width: 100%;
+}
+
+div[data-gadget-url$="gadget_document_scanner.html"] .img-container img {
+  /* This is important */
+  width: 100%;
+}
