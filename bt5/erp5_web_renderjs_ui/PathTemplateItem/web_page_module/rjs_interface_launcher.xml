@@ -73,15 +73,17 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>erp5_launcher.html</string> </value>
+            <value> <string>interface_launcher.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Starting Point</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_launcher_html</string> </value>
+            <value> <string>rjs_interface_launcher</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -98,12 +100,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>ERP5 Application Launcher</string> </value>
+            <value> <string>Interface Launcher</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -191,7 +189,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1469697538.23</float>
+                              <float>1581954380.55</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -240,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>981.59416.23022.53862</string> </value>
+                      <value> <string>981.59419.52167.41745</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -258,7 +256,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1581954760.5</float>
+                              <float>1581954974.2</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -319,7 +317,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1469697401.23</float>
+                              <float>1581954343.16</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
