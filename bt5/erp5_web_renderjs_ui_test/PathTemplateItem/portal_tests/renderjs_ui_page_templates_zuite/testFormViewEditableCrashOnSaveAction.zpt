@@ -15,36 +15,26 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=1</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[text()='Views']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[text()='Views']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='View Crash on Save']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='View Crash on Save']</td>
-  <td></td>
-</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'View Crash on Save'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <!-- Wait for gadget to be loaded -->
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>Title 1</td>
   <td></td>
 </tr>
@@ -59,11 +49,8 @@
   <td>field_my_short_title</td>
   <td>Q</td>
 </tr>
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td>
-  <td></td>
-</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
 <!-- Wait for the notification to appear. We cannot use verifyText because the button
      is there all the time. It gets text assigned and is shown asynchronously later. -->
 
