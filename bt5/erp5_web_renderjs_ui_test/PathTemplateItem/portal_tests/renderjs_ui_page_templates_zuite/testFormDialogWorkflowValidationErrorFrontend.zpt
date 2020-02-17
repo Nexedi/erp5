@@ -15,28 +15,18 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=1</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[text()='Actions']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[text()='Actions']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Custom Required Dialog']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Custom Required Dialog']</td>
-  <td></td>
-</tr>
-<!-- Wait for gadget to be loaded -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Custom Required Dialog'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>assertElementPresent</td>
   <td>//input[@name='field_your_custom_workflow_variable']</td>

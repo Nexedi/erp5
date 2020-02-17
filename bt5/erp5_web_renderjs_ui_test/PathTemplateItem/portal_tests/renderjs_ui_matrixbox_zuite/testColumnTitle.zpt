@@ -30,15 +30,18 @@
     <td>Done.</td><td></td></tr>
 <tr><td>open</td>
     <td>${renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Views"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="Views"]</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="MatrixBox"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="MatrixBox"]</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'MatrixBox'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr><td>assertElementPresent</td>
     <td>//div[@data-gadget-scope="field_matrixbox"]//tbody/tr/th</td><td></td></tr>
 
 <!-- Verify presence of header and column texts -->

@@ -28,16 +28,11 @@
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
-<tr>
-  <td>assertElementPresent</td>
-  <td>//a[@data-i18n='Add']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Add</td>
-  <td></td>
-</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
@@ -46,23 +41,16 @@
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Save</td>
-  <td></td>
-</tr>
 <tr>
   <td>assertTextPresent</td>
   <td>Quantity</td>
   <td></td>
 </tr>
 
-
-<tr>
-  <td>click</td>
-  <td>link=Add</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
@@ -70,13 +58,6 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Save</td>
-  <td></td>
-</tr>
-
 
 <tr>
   <td>storeLocation</td>
@@ -92,27 +73,12 @@
   <td>${url}</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1/a</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>click</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1/a</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Foo Category</td>
-  <td></td>
-</tr>
-
+<tal:block tal:define="click_configuration python: {'text': 'Foo Line: 1'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>type</td>
@@ -156,6 +122,7 @@
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//a</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>waitForElementPresent</td>
@@ -177,45 +144,23 @@
   <td>${url}</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Views"]</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': '2'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n="Views"]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="2"]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n="2"]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Actions"]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>assertElementPresent</td>
-  <td>//a[@data-i18n="Actions"]</td>
-  <td></td>
-</tr>
-
-
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 </tbody></table>
 </body>

@@ -43,6 +43,8 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
 
@@ -102,39 +104,12 @@
   <td></td>
 </tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Editable']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Next']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Next']</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementNotPresent</td>
-  <td>//a[@data-i18n = "Foo: Title 2"]</td>
-  <td></td>
-</tr>
-
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Foo: Title 3']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Next'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>verifyText</td>
@@ -142,26 +117,11 @@
   <td>Title 3</td>
 </tr>
 
+<tal:block tal:define="click_configuration python: {'text': 'Next'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Next']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementNotPresent</td>
-  <td>//a[@data-i18n = "Foo: Title 3"]</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Foo: Title 4']</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>verifyText</td>
@@ -169,26 +129,10 @@
   <td>Title 4</td>
 </tr>
 
-
-
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Previous']</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementNotPresent</td>
-  <td>//a[@data-i18n = "Foo: Title 4"]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Foo: Title 3']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Previous'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>verifyText</td>

@@ -27,16 +27,12 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Add']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Add</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
@@ -44,12 +40,6 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@type='submit' and @data-i18n='Save']</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>assertTextPresent</td>
@@ -58,11 +48,11 @@
 </tr>
 
 
-<tr>
-  <td>click</td>
-  <td>link=Add</td>
-  <td></td>
-</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
@@ -71,29 +61,23 @@
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@type='submit' and @data-i18n='Save']</td>
-  <td></td>
-</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'Foo Line: 1'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
-  <td>click</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1/a</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>Foo Category</td>
   <td></td>
 </tr>
 
-<tr>
-  <td>click</td>
-  <td>link=Add</td>
-  <td></td>
-</tr>
+
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
@@ -101,12 +85,6 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@type='submit' and @data-i18n='Save']</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>storeLocation</td>
@@ -122,23 +100,17 @@
   <td>${url}</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+
+<tal:block tal:define="click_configuration python: {'text': 'Foo Line: 2'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1/a</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>click</td>
-  <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1/a</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForTextPresent</td>
+  <td>assertTextPresent</td>
   <td>Foo Category</td>
   <td></td>
 </tr>

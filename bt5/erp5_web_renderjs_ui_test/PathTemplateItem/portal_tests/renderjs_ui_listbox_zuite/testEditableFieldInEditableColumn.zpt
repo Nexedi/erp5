@@ -27,28 +27,23 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Add']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-
-<tr>
-  <td>click</td>
-  <td>link=Add</td>
-  <td></td>
-</tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'Object created.'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
 
@@ -63,16 +58,12 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module?editable=true</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
 </tal:block>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope="field_listbox"]//div[@class='datetimefield']</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>verifyElementPresent</td>

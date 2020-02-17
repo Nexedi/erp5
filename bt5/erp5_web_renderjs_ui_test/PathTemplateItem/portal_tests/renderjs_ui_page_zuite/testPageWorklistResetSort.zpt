@@ -59,13 +59,13 @@
 <!-- Generate links to worklist on default module view -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Draft To Validate ' and contains(@href, '#!display_stored_state')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Draft To Validate' and contains(@href, '#!display_stored_state')]</td>
   <td></td>
 </tr>
 
 <!-- Follow one link -->
 <!-- Header has a link to the previous history entry -->
-<tal:block tal:define="click_configuration python: {'text': 'Draft To Validate '}">
+<tal:block tal:define="click_configuration python: {'text': 'Draft To Validate'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
 </tal:block>
 

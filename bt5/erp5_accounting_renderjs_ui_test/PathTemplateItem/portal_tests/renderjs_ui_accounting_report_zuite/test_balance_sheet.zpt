@@ -25,18 +25,17 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>open</td>
     <td>${renderjs_url}/#/accounting_module/</td><td></td></tr>
 
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Export"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Balance Sheet"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="Balance Sheet" and contains(@href, 'balance_sheet_report')]</td><td></td></tr>
+<tal:block tal:define="click_configuration python: {'text': 'Export'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr><td>waitForElementPresent</td>
-    <td>//select[@name="field_your_section_category"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[text()="Balance Sheet" and contains(@href, 'balance_sheet_report')]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr><td>select</td>
     <td>//select[@name="field_your_section_category"]</td>
     <td>value=group/demo_group</td></tr>
