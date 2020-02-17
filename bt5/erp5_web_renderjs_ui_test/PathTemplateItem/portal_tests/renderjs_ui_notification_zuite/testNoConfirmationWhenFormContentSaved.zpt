@@ -19,19 +19,10 @@
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Views"]</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n="Views"]</td>
-  <td></td>
-</tr>
-
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>storeLocation</td>
@@ -47,27 +38,12 @@
   <td>${url}</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Relation Fields"]</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n="Relation Fields"]</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name="field_my_title"]</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Relation Fields'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>type</td>
