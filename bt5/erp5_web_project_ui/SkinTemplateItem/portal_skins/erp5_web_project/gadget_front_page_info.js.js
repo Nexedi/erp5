@@ -1,19 +1,32 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer, SimpleQuery, ComplexQuery, Query*/
-(function (window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer, SimpleQuery, ComplexQuery, Query) {
+/*global window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query*/
+(function (window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query) {
   "use strict";
 
   function renderProjectList(element_list) {
-    var ul_list = document.getElementById("js-project-list");
-    var project_list_dict = {}, i;
+    var i,
+      project,
+      item,
+      status_ok,
+      project_id,
+      project_row,
+      project_li,
+      project_html_element_list,
+      project_line_html_element_list,
+      left_div,
+      left_line_div,
+      status_span,
+      total_span,
+      fail_span,
+      ul_list = document.getElementById("js-project-list"),
+      project_list_dict = {};
 
     function getProjectId(id) {
       var segments = id.split("/");
       if (segments.length === 2) {
         return id;
-      } else {
-        return segments.slice(0, -1).join("/");
       }
+      return segments.slice(0, -1).join("/");
     }
 
     function setStatus(item) {
@@ -21,23 +34,30 @@
       //we need 2 limit dates that should be based on portal type (e.g. Milestones segmented by months, maybe Taks by weeks)
       //where to set this limits dates? a manifest? site configuration?
       item.status = 0;
+      item.status_color = "green";
       //for quick testing purposes
       if (item.id === "project_module/1/7") {
         item.status = 2;
+        item.status_color = "red";
       }
       if (item.id === "project_module/1/6") {
         item.status = 1;
+        item.status_color = "orange";
+      }
+      if (item.id === "bug_module/5") {
+        item.status = 1;
+        item.status_color = "orange";
       }
       //for test results, check validation state (0 = pass, 2 = fail)
       return item;
     }
 
     function createProjectHtmlElement(project_id) {
-      var project_li = document.createElement('li'),
+      var project_element = document.createElement('li'),
         box_div = document.createElement('div'),
         title_div = document.createElement('div'),
         info_div = document.createElement('div'),
-        left_div = document.createElement('div'),
+        left_info_div = document.createElement('div'),
         right_div = document.createElement('div'),
         right_line_div = document.createElement('div'),
         forum_link = document.createElement('a');
@@ -46,71 +66,66 @@
       //TODO get project info (another jio query?)
       title_div.innerHTML = project_id;
       info_div.classList.add("project-info");
-      left_div.classList.add("left");
+      left_info_div.classList.add("left");
       right_line_div.classList.add("project-line");
       forum_link.href = "todo";
       forum_link.innerHTML = project_id + " forum link";
       right_line_div.appendChild(forum_link);
       right_div.appendChild(right_line_div);
-      info_div.appendChild(left_div);
+      info_div.appendChild(left_info_div);
       info_div.appendChild(right_div);
       box_div.appendChild(title_div);
       box_div.appendChild(info_div);
-      project_li.appendChild(box_div);
-      return [project_li, left_div];
+      project_element.appendChild(box_div);
+      return [project_element, left_info_div];
     }
 
-    function createProjectLineHtmlElement(portal_type, total_count, out_count) {
-      var left_line_div = document.createElement('div'),
-        status_span = document.createElement('span'),
-        name_span = document.createElement('span'),
-        fail_span = document.createElement('span'),
-        total_span = document.createElement('span');
-      left_line_div.classList.add("project-line");
-      status_span.classList.add("status");
-      status_span.classList.add("green");//or red or orange
-      name_span.classList.add("name");
-      name_span.innerHTML = portal_type;
-      total_span.classList.add("total"); //create style?
-      total_span.innerHTML = total_count;
-      fail_span.classList.add("fail"); //create style?
-      fail_span.innerHTML = "(" + out_count + ")";
-
-      left_line_div.appendChild(status_span);
-      left_line_div.appendChild(name_span);
-      left_line_div.appendChild(total_span);
-      left_line_div.appendChild(fail_span);
-      return [left_line_div, status_span, total_span, fail_span];
+    function createProjectLineHtmlElement(portal_type, total_count, out_count, status_color) {
+      var line_div = document.createElement('div'),
+        status = document.createElement('span'),
+        name = document.createElement('span'),
+        fail = document.createElement('span'),
+        total = document.createElement('span');
+      line_div.classList.add("project-line");
+      status.classList.add("status");
+      status.classList.add(status_color);
+      name.classList.add("name");
+      name.innerHTML = portal_type;
+      total.innerHTML = total_count;
+      fail.innerHTML = "(" + out_count + ")";
+      line_div.appendChild(status);
+      line_div.appendChild(name);
+      line_div.appendChild(total);
+      line_div.appendChild(fail);
+      return [line_div, status, total, fail];
     }
 
     for (i = 0; i < element_list.length; i += 1) {
-      var item = setStatus(element_list[i]),
-        status_ok = ((item.status > 0) ? 0 : 1),
-        project_id = ((item.value.source_project) ?
-                      getProjectId(item.value.source_project) : getProjectId(item.id));
-      if (project_id in project_list_dict) {
-        if (item.value.portal_type in project_list_dict[project_id]) {
-          var project_row = project_list_dict[project_id][item.value.portal_type];
-          project_row.total_count++;
+      item = setStatus(element_list[i]);
+      status_ok = ((item.status > 0) ? 0 : 1);
+      project_id = ((item.value.source_project) ?
+                    getProjectId(item.value.source_project) : getProjectId(item.id));
+      if (project_list_dict.hasOwnProperty(project_id)) {
+        if (project_list_dict[project_id].hasOwnProperty(item.value.portal_type)) {
+          project_row = project_list_dict[project_id][item.value.portal_type];
+          project_row.total_count += 1;
           project_row.total_html.innerHTML = project_row.total_count;
           if (!status_ok) {
-            project_row.out_count++;
+            project_row.out_count += 1;
             project_row.out_html.innerHTML = "(" + project_row.out_count + ")";
             if (project_row.status < item.status) {
               project_row.status = item.status;
-              //TODO
-              project_row.status_html.classList.remove("green");
-              project_row.status_html.classList.remove("orange");
-              project_row.status_html.classList.add("red");
+              project_row.status_html.classList.remove("green", "red", "orange");
+              project_row.status_html.classList.add(item.status_color);
             }
           }
           project_row.list.push(item);
         } else {
-          var project_line_html_element_list = createProjectLineHtmlElement(item.value.portal_type, 1, 0 + !status_ok),
-            left_line_div = project_line_html_element_list[0],
-            status_span = project_line_html_element_list[1],
-            total_span = project_line_html_element_list[2],
-            fail_span = project_line_html_element_list[3];
+          project_line_html_element_list = createProjectLineHtmlElement(item.value.portal_type, 1, 0 + !status_ok, item.status_color);
+          left_line_div = project_line_html_element_list[0];
+          status_span = project_line_html_element_list[1];
+          total_span = project_line_html_element_list[2];
+          fail_span = project_line_html_element_list[3];
           project_list_dict[project_id].left_div_html.appendChild(left_line_div);
           project_list_dict[project_id][item.value.portal_type] = { "status": item.status,
                                                                     "status_html" : status_span,
@@ -122,14 +137,14 @@
                                                                   };
         }
       } else {
-        var project_html_element_list = createProjectHtmlElement(project_id),
-          project_li = project_html_element_list[0],
-          left_div = project_html_element_list[1],
-          project_line_html_element_list = createProjectLineHtmlElement(item.value.portal_type, 1, 0 + !status_ok),
-          left_line_div = project_line_html_element_list[0],
-          status_span = project_line_html_element_list[1],
-          total_span = project_line_html_element_list[2],
-          fail_span = project_line_html_element_list[3];
+        project_html_element_list = createProjectHtmlElement(project_id);
+        project_li = project_html_element_list[0];
+        left_div = project_html_element_list[1];
+        project_line_html_element_list = createProjectLineHtmlElement(item.value.portal_type, 1, 0 + !status_ok, item.status_color);
+        left_line_div = project_line_html_element_list[0];
+        status_span = project_line_html_element_list[1];
+        total_span = project_line_html_element_list[2];
+        fail_span = project_line_html_element_list[3];
         left_div.appendChild(left_line_div);
         project_list_dict[project_id] = {"html_element" : project_li, "left_div_html" : left_div};
         project_list_dict[project_id][item.value.portal_type] = { "status": item.status,
@@ -144,14 +159,15 @@
       }
     }
     console.log("project_list_dict:", project_list_dict);
-    //TODO iterate projects
-    ul_list.appendChild(project_list_dict["project_module/1"].html_element);
-    ul_list.appendChild(project_list_dict["project_module/5"].html_element);
-    ul_list.appendChild(project_list_dict["project_module/35"].html_element);
+    for (project in project_list_dict) {
+      if (project_list_dict.hasOwnProperty(project)) {
+        ul_list.appendChild(project_list_dict[project].html_element);
+      }
+    }
   }
 
   function getProjectElementList(gadget) {
-    var query, i,
+    var i,
       milestone_query,
       non_milestone_query,
       aux_complex_query,
@@ -268,7 +284,7 @@
       return this.changeState(options);
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function () {
       var gadget = this;
       return getProjectElementList(gadget)
         .push(function (element_list) {
@@ -285,4 +301,4 @@
       return true;
     });
 
-}(window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer, SimpleQuery, ComplexQuery, Query));
+}(window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query));
