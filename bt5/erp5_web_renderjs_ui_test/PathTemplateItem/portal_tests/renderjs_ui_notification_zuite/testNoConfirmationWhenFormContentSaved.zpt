@@ -2,45 +2,22 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Test RenderJS UI</title>
+<title>Test No Confirmation when Form Content Saved</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+<tr><td rowspan="1" colspan="3">Test No Confirmation when Form Content Saved</td></tr>
 </thead><tbody>
-<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-
-<!-- Clean Up -->
-<tr>
-  <td>open</td>
-  <td>${base_url}/foo_module/ListBoxZuite_reset</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Reset Successfully.</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=true</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Add']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Add</td>
-  <td></td>
-</tr>
-
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <tr>
   <td>waitForElementPresent</td>

@@ -16,55 +16,15 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=true</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<!-- Wait for gadget to be loaded -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Title 1</td>
-  <td></td>
-</tr>
-
-<!-- Header has a save button -->
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td>
-  <td></td>
-</tr>
 <tr>
   <td>type</td>
   <td>field_my_title</td>
   <td>Custom Message</td>
 </tr>
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit' and contains(@class, 'ui-icon-check')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo: Custom Message' and contains(@href, '#!history_previous')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextNotPresent</td>
-  <td>Title 1</td>
-  <td></td>
-</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
 
 <tal:block tal:define="notification_configuration python: {'class': 'error',
                                                            'text': 'Custom Message.'}">
