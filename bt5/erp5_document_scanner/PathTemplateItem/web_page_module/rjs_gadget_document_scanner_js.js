@@ -211,7 +211,7 @@
                                                     text: 'New Page',
                                                     // Do not allow to show again the current image
                                                     disabled: (len === gadget.state.page - 1),
-                                                    class: 'new-btn ui-btn-icon-left ui-icon-plus'
+                                                    "class": 'new-btn ui-btn-icon-left ui-icon-plus'
                                                    }));
         return domsugar('ol', {"class": "thumbnail-list"}, thumbnail_dom_list);
       });
@@ -303,28 +303,31 @@
         return image_capture.takePhoto({imageWidth: capabilities.imageWidth.max});
       })
       .push(function (blob) {
-        return createImageBitmap(blob);
+        return RSVP.all([
+          createImageBitmap(blob),
+          jIO.util.readBlobAsDataURL(blob)
+        ]);
       })
-      .push(function (bitmap) {
-        var canvas = domsugar('canvas', {'class': 'canvas'});
+      .push(function (result_list) {
+        var bitmap = result_list[0],
+          canvas = domsugar('canvas', {'class': 'canvas'});
         canvas.width = bitmap.width;
         canvas.height = bitmap.height;
         canvas.getContext('2d').drawImage(bitmap, 0, 0);
-        return canvas;
+        return [canvas, result_list[1].target.result];
       })
-      .push(function (canvas) {
-        var new_canvas;
+      .push(function (result_list) {
+        var new_canvas,
+            canvas = result_list[0],
+            data_url = result_list[1];
         gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
         if (settings.brightness || settings.contrast || settings.enable_greyscale || settings.compression) {
-          new_canvas = domsugar('canvas', {'class': 'canvas',
-                                           'width': canvas.width,
-                                           'height': canvas.height
-                                          });
+          new_canvas = domsugar('canvas', {'class': 'canvas'});
           return new RSVP.Queue()
             .push(function (result) {
               return new Promise(function (resolve) {
                 // XXX the correct usage is `new Caman()` but the library does not support it
-                caman(new_canvas, canvas.toDataURL(), function () {
+                caman(new_canvas, data_url, function () {
                   if (settings.brightness && settings.brightness !== 0) {
                     this.brightness(settings.brightness);
                   }
@@ -347,16 +350,16 @@
         return RSVP.all([
           gadget.getTranslationList(["Delete", "Save"]),
           new Promise(function (resolve) {
-            resolve(canvas);
+            resolve(canvas.toDataURL("image/jpeg"));
           }),
           buildPreviousThumbnailDom(gadget)
         ]);
       })
       .push(function (result_list) {
-        var canvas = result_list[1],
+        var data_url = result_list[1],
+          img = domsugar("img", {"src": data_url}),
           defer = RSVP.defer();
         // Prepare the cropper canvas
-
         div = domsugar('div', {'class': 'camera'}, [
           domsugar('div', {'class': 'camera-header'}, [
             domsugar('h4', [
@@ -364,7 +367,7 @@
               domsugar('label', {'class': 'page-number', text: gadget.state.page})
             ])
           ]),
-          canvas,
+          img,
           domsugar('div', {'class': 'edit-picture'}, [
             domsugar('button', {type: 'button',
                                 'class': 'reset-btn ui-btn-icon-left ui-icon-times',
@@ -382,7 +385,7 @@
         // For now, it needs to access dom element size
         gadget.element.replaceChild(div, gadget.element.firstElementChild);
         addDetachedPromise(gadget, 'cropper',
-                           handleCropper(canvas,
+                           handleCropper(img,
                                          gadget.state.preferred_cropped_canvas_data,
                                          defer.resolve));
         return defer.promise;
@@ -477,7 +480,6 @@
       return selectMediaDevice(gadget.state.device_id, false)
         .push(function (device_id) {
           return gadget.changeState({
-            dialog_method: options.dialog_method,
             store_new_image_cropped_method: options.store_new_image_cropped_method,
             active_process: default_value.active_process,
             image_list: default_value.image_list,
