@@ -727,31 +727,14 @@
     <tr>
       <td colspan="3"><b>Go to datetime field view</b></td>
     </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>click</td>
-      <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//ul[@class='document-listview']//a[@data-i18n='DateTimeField']</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>click</td>
-      <td>//ul[@class='document-listview']//a[@data-i18n='DateTimeField']</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//input[@name='field_my_start_date']</td>
-      <td></td>
-    </tr>
+    <tal:block tal:define="click_configuration python: {'text': 'Views'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+    <tal:block tal:define="click_configuration python: {'text': 'DateTimeField'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
     <tr>
       <td colspan="3"><p></p></td>
     </tr>
