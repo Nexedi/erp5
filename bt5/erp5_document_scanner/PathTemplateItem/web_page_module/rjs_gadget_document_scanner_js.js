@@ -60,7 +60,13 @@
     // creating Cropper is asynchronous
     return new RSVP.Promise(function (resolve, reject) {
       cropper = new Cropper(element, {
+        // restrict the minimum canvas size to fill fit the container
         viewMode: 3,
+        // Avoid any cropper calculation or guessing
+        scalable: false,
+        rotatable: false,
+        zoomable: false,
+        movable: false,
         data: data,
         ready: function () {
           return new RSVP.Queue()
@@ -367,7 +373,10 @@
               domsugar('label', {'class': 'page-number', text: gadget.state.page})
             ])
           ]),
-          img,
+          // If you don't know what you are doing:
+          // DON'T remove img from a div img-container.
+          // DON'T replace img by canvas.
+          domsugar("div", {"class": "img-container"}, [img]),
           domsugar('div', {'class': 'edit-picture'}, [
             domsugar('button', {type: 'button',
                                 'class': 'reset-btn ui-btn-icon-left ui-icon-times',
