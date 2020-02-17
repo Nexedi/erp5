@@ -36,7 +36,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save'][contains(@class, 'ui-icon-warning')]</td>
+  <td>//button[text()='Save'][contains(@class, 'ui-icon-warning')]</td>
   <td></td>
 </tr>
 
