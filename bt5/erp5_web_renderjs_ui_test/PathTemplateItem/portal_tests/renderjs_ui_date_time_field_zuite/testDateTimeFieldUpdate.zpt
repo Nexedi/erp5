@@ -39,14 +39,10 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/bar_module/0?editable=true</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_bar_datetime_field_view" />
 
 <!-- Actual test -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_start_date']</td>
-  <td></td>
-</tr>
 <tr>
   <td>storeValue</td>
   <td>//input[@name='field_my_start_date']</td>
