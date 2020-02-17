@@ -33,7 +33,7 @@
 <!-- Generate links to worklist on default module view -->
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Draft To Validate ' and contains(@href, '#!display_stored_state')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Draft To Validate' and contains(@href, '#!display_stored_state')]</td>
   <td></td>
 </tr>
 
@@ -41,7 +41,7 @@
 <!-- Header has a link to the previous history entry -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Draft To Validate ' and contains(@href, '#!display_stored_state')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Draft To Validate' and contains(@href, '#!display_stored_state')]</td>
   <td></td>
 </tr>
 
