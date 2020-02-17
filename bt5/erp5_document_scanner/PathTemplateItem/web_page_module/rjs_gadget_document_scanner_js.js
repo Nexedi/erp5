@@ -309,31 +309,21 @@
         return image_capture.takePhoto({imageWidth: capabilities.imageWidth.max});
       })
       .push(function (blob) {
-        return RSVP.all([
-          createImageBitmap(blob),
-          jIO.util.readBlobAsDataURL(blob)
-        ]);
+        return createImageBitmap(blob);
       })
-      .push(function (result_list) {
-        var bitmap = result_list[0],
-          canvas = domsugar('canvas', {'class': 'canvas'});
+      .push(function (bitmap) {
+        var canvas = domsugar('canvas', {'class': 'canvas'});
+        gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
+
         canvas.width = bitmap.width;
         canvas.height = bitmap.height;
         canvas.getContext('2d').drawImage(bitmap, 0, 0);
-        return [canvas, result_list[1].target.result];
-      })
-      .push(function (result_list) {
-        var new_canvas,
-            canvas = result_list[0],
-            data_url = result_list[1];
-        gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
         if (settings.brightness || settings.contrast || settings.enable_greyscale || settings.compression) {
-          new_canvas = domsugar('canvas', {'class': 'canvas'});
           return new RSVP.Queue()
             .push(function (result) {
               return new Promise(function (resolve) {
                 // XXX the correct usage is `new Caman()` but the library does not support it
-                caman(new_canvas, data_url, function () {
+                caman(canvas, null, function () {
                   if (settings.brightness && settings.brightness !== 0) {
                     this.brightness(settings.brightness);
                   }
@@ -344,19 +334,22 @@
                     this.greyscale();
                   }
                   this.render(function () {
-                    resolve(new_canvas);
+                    resolve([this.context.canvas, settings.compression]);
                   });
                 });
               });
             });
         }
-        return canvas;
+        return [canvas, settings.compression];
       })
-      .push(function (canvas) {
+      .push(function (result_list) {
+        var canvas = result_list[0],
+          compression = settings.compression || 1;
+
         return RSVP.all([
           gadget.getTranslationList(["Delete", "Save"]),
           new Promise(function (resolve) {
-            resolve(canvas.toDataURL("image/jpeg"));
+            resolve(canvas.toDataURL("image/jpeg", compression));
           }),
           buildPreviousThumbnailDom(gadget)
         ]);
