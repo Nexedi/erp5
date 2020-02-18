@@ -14,6 +14,8 @@
       one_year_old_date = new Date();
     one_year_old_date.setFullYear(one_year_old_date.getFullYear() - 1);
 
+    //var date = "Wed, 16 Oct 2019 09:06:19 +0000";
+    //var js_date = new Date(date);
     /*date_query_list.push(new SimpleQuery({
       key: "portal_type",
       operator: "=",
@@ -219,6 +221,7 @@
       //TODO check modification date and return item with status 0, 1 or 2 (green, orange, red)
       //we need 2 limit dates that should be based on portal type (e.g. Milestones segmented by months, maybe Taks by weeks)
       //where to set this limits dates? a manifest? site configuration?
+      var js_date = new Date(item.value.modification_date);
       item.status = 0;
       item.status_color = "green";
       //for quick testing purposes
@@ -249,7 +252,6 @@
         forum_link = document.createElement('a');
       box_div.classList.add("project-box");
       title_div.classList.add("project-title");
-      //TODO get project info (another jio query?)
       title_div.innerHTML = project_title;
       info_div.classList.add("project-info");
       left_info_div.classList.add("left");
@@ -311,7 +313,6 @@
               project_row.status_html.classList.add(item.status_color);
             }
           }
-          project_row.list.push(item);
         } else {
           project_line_html_element_list = createProjectLineHtmlElement(item.value.portal_type, 1, 0 + !status_ok, item.status_color);
           left_line_div = project_line_html_element_list[0];
@@ -324,8 +325,7 @@
                                                                     "total_count" : 1,
                                                                     "total_html" : total_span,
                                                                     "out_count" : 0 + !status_ok,
-                                                                    "out_html" : fail_span,
-                                                                    "list" : [item]
+                                                                    "out_html" : fail_span
                                                                   };
         }
       }
