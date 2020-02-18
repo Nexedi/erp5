@@ -46,7 +46,11 @@
       disabled: 1,
       hidden: 1,
       multiple: 1,
-      selected: 1
+      selected: 1,
+      required: 1,
+      readonly: 1,
+      autofocus: 1,
+      spellcheck: 1
     };
     // splitter = /(#|\.)/;
 
