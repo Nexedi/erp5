@@ -9,6 +9,9 @@ div[data-gadget-url$="gadget_document_scanner.html"] {
   div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
     min-width: 35%;
   }
+  div[data-gadget-url$="gadget_document_scanner.html"] .thumbnail-list > button {
+    max-width: 50%;
+  }
 }
 
 div[data-gadget-url$="gadget_document_scanner.html"] .photo,
@@ -96,7 +99,7 @@ div[data-gadget-url$="gadget_document_scanner.html"] .upload-error {
 div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
   font-size: 13pt;
   display: inline-grid !important;
-  padding: 18pt;
+  padding: 10pt;
   margin-left: 0.2em;
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
