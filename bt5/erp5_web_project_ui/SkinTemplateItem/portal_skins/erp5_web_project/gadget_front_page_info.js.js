@@ -192,54 +192,13 @@
   }
 
   function renderProjectList(element_list, project_list) {
-    var i,
-      project,
+    var i, j,
       item,
-      status_ok,
-      project_id,
-      project_row,
-      project_li,
+      project_html,
+      left_div_html,
       project_html_element_list,
-      project_line_html_element_list,
-      left_div,
-      left_line_div,
-      status_span,
-      total_span,
-      fail_span,
-      ul_list = document.getElementById("js-project-list"),
-      project_list_dict = {};
-
-    function getProjectId(id) {
-      var segments = id.split("/");
-      if (segments.length === 2) {
-        return id;
-      }
-      return segments.slice(0, -1).join("/");
-    }
-
-    function setStatus(item) {
-      //TODO check modification date and return item with status 0, 1 or 2 (green, orange, red)
-      //we need 2 limit dates that should be based on portal type (e.g. Milestones segmented by months, maybe Taks by weeks)
-      //where to set this limits dates? a manifest? site configuration?
-      var js_date = new Date(item.value.modification_date);
-      item.status = 0;
-      item.status_color = "green";
-      //for quick testing purposes
-      if (item.id === "project_module/1/7") {
-        item.status = 2;
-        item.status_color = "red";
-      }
-      if (item.id === "project_module/1/6") {
-        item.status = 1;
-        item.status_color = "orange";
-      }
-      if (item.id === "bug_module/5") {
-        item.status = 1;
-        item.status_color = "orange";
-      }
-      //for test results, check validation state (0 = pass, 2 = fail)
-      return item;
-    }
+      left_line_html,
+      ul_list = document.getElementById("js-project-list");
 
     function createProjectHtmlElement(project_id, project_title) {
       var project_element = document.createElement('li'),
@@ -285,56 +244,25 @@
       line_div.appendChild(name);
       line_div.appendChild(total);
       line_div.appendChild(fail);
-      return [line_div, status, total, fail];
+      return line_div;
     }
 
+    //XXX hardcoded for now (build a template?)
+    element_list = ["Milestones", "Tasks", "Bugs", "Task Reports", "Test Results"];
     for (i = 0; i < project_list.length; i += 1) {
       project_html_element_list = createProjectHtmlElement(project_list[i].id, project_list[i].value.title);
-      project_list_dict[project_list[i].id] = {"html_element" : project_html_element_list[0],
-                                       "left_div_html" : project_html_element_list[1]};
-    }
-
-    for (i = 0; i < element_list.length; i += 1) {
-      item = setStatus(element_list[i]);
-      status_ok = ((item.status > 0) ? 0 : 1);
-      project_id = ((item.value.source_project) ?
-                    getProjectId(item.value.source_project) : getProjectId(item.id));
-      if (project_list_dict.hasOwnProperty(project_id)) {
-        if (project_list_dict[project_id].hasOwnProperty(item.value.portal_type)) {
-          project_row = project_list_dict[project_id][item.value.portal_type];
-          project_row.total_count += 1;
-          project_row.total_html.innerHTML = project_row.total_count;
-          if (!status_ok) {
-            project_row.out_count += 1;
-            project_row.out_html.innerHTML = "(" + project_row.out_count + ")";
-            if (project_row.status < item.status) {
-              project_row.status = item.status;
-              project_row.status_html.classList.remove("green", "red", "orange");
-              project_row.status_html.classList.add(item.status_color);
-            }
-          }
-        } else {
-          project_line_html_element_list = createProjectLineHtmlElement(item.value.portal_type, 1, 0 + !status_ok, item.status_color);
-          left_line_div = project_line_html_element_list[0];
-          status_span = project_line_html_element_list[1];
-          total_span = project_line_html_element_list[2];
-          fail_span = project_line_html_element_list[3];
-          project_list_dict[project_id].left_div_html.appendChild(left_line_div);
-          project_list_dict[project_id][item.value.portal_type] = { "status": item.status,
-                                                                    "status_html" : status_span,
-                                                                    "total_count" : 1,
-                                                                    "total_html" : total_span,
-                                                                    "out_count" : 0 + !status_ok,
-                                                                    "out_html" : fail_span
-                                                                  };
-        }
+      project_html = project_html_element_list[0];
+      left_div_html = project_html_element_list[1];
+      for (j = 0; j < element_list.length; j += 1) {
+        //XXX hardcoded. This should come from the query
+        item = {"status_color": "green",
+                "total": 100,
+                "outdated": 40,
+                "title": element_list[j]};
+        left_line_html = createProjectLineHtmlElement(item.title, item.total, item.outdated, item.status_color);
+        left_div_html.appendChild(left_line_html);
       }
-    }
-    console.log("project_list_dict:", project_list_dict);
-    for (project in project_list_dict) {
-      if (project_list_dict.hasOwnProperty(project)) {
-        ul_list.appendChild(project_list_dict[project].html_element);
-      }
+      ul_list.appendChild(project_html);
     }
   }
 
