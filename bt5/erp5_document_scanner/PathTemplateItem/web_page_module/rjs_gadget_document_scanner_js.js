@@ -299,7 +299,8 @@
       image_capture = new window.ImageCapture(
         gadget.element.querySelector('video').srcObject.getVideoTracks()[0]
       ),
-      div;
+      div,
+      local_caman;
 
     return new RSVP.Queue()
       .push(function () {
@@ -323,7 +324,7 @@
             .push(function (result) {
               return new Promise(function (resolve) {
                 // XXX the correct usage is `new Caman()` but the library does not support it
-                caman(canvas, null, function () {
+                local_caman = caman(canvas, null, function () {
                   if (settings.brightness && settings.brightness !== 0) {
                     this.brightness(settings.brightness);
                   }
@@ -334,6 +335,14 @@
                     this.greyscale();
                   }
                   this.render(function () {
+                    // It's weird but Caman store a lot of data
+                    // in this variables. Please, double check before remove
+                    // this code
+                    this.pixelData = null;
+                    this.originalPixelData = null;
+                    this.renderer.modPixelData = null;
+                    this.imageData = null;
+                    this.initializedPixelData = null;
                     resolve([this.context.canvas, settings.compression]);
                   });
                 });
@@ -346,6 +355,9 @@
         var canvas = result_list[0],
           compression = settings.compression || 1;
 
+        // Clear caman as much as possible
+        local_caman = null;
+        caman.Store.flush(true);
         return RSVP.all([
           gadget.getTranslationList(["Delete", "Save"]),
           new Promise(function (resolve) {
