@@ -95,7 +95,7 @@
                   domsugar('div', {class: 'ui-controlgroup-controls'}, [
                     domsugar('button', {
                       type: 'submit',
-                      class: 'submit ui-btn-icon-left ui-icon-check',
+                      class: 'ui-btn-icon-left ui-icon-check',
                       text: translation_list[0]
                     })
                   ])
