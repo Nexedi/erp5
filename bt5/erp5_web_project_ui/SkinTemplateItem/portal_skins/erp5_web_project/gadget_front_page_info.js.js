@@ -7,40 +7,20 @@
   //get lastest (unique) TR for each project
   function getProjectElementList(gadget) {
 
-    //TODO ATTEMPT TO FILTER BY DATE
-    var date_query_list = [],
-      date_query,
-      now_date = new Date(),
+    var date_query,
       one_year_old_date = new Date();
     one_year_old_date.setFullYear(one_year_old_date.getFullYear() - 1);
+    one_year_old_date = one_year_old_date.toISOString();
+    one_year_old_date = one_year_old_date.substring(0, one_year_old_date.length - 5).replace("T", " ");
 
-    //var date = "Wed, 16 Oct 2019 09:06:19 +0000";
-    //var js_date = new Date(date);
-    /*date_query_list.push(new SimpleQuery({
-      key: "portal_type",
-      operator: "=",
-      type: "simple",
-      value: "Task"
-    }));
-    date_query_list.push(new SimpleQuery({
-      type: "simple",
-      key: "creation_date",
-      value: {"query": one_year_old_date, "range": ">="}
-      //value: {'query': (one_year_old_date, now_date), 'range': 'minmax'}
-    }));
-    date_query = new ComplexQuery({
-      operator: "AND",
-      query_list: date_query_list,
-      type: "complex"
-    });*/
     date_query = new SimpleQuery({
       type: "simple",
       key: "creation_date",
-      value: {"query": one_year_old_date, "range": ">="}
-      //value: {'query': (one_year_old_date, now_date), 'range': 'minmax'}
+      operator: ">",
+      value: one_year_old_date
     });
 
-    function getComplexQuery(query_dict, operator) {
+    function getComplexQuery(query_dict, operator, extra_query) {
       var key,
         query_list = [];
       for (key in query_dict) {
@@ -52,6 +32,9 @@
             value: query_dict[key]
           }));
         }
+      }
+      if (extra_query) {
+        query_list.push(extra_query);
       }
       return new ComplexQuery({
         operator: operator,
