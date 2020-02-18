@@ -162,42 +162,6 @@ class FolderMixIn(ExtensionClass.Base):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declarePublic('allowedContentTypes')
-  def allowedContentTypes(self):
-    """
-    List portal_types which can be added in this folder / object.
-    """
-    portal_types = self.getPortalObject().portal_types
-    myType = portal_types.getTypeInfo(self)
-    if myType is not None:
-      if myType.filter_content_types:
-        # Iterate over allowed content types to avoid going over all portal
-        # types and retaining only a fraction.
-        result = []
-        for portal_type in myType.getTypeAllowedContentTypeList():
-          contentType = portal_types.getTypeInfo(portal_type)
-          if contentType is None:
-            raise AttributeError(
-              "Portal type '%s' does not exist and should not be allowed in '%s'" % (
-                portal_type,
-                self.getPortalType(),
-              ),
-            )
-          result.append(contentType)
-      else:
-        result = [
-          contentType
-          for contentType in portal_types.listTypeInfo(self)
-          if myType.allowType(contentType.getId())
-        ]
-    else:
-      result = portal_types.listTypeInfo()
-    return [
-      x
-      for x in result
-      if x.isConstructionAllowed(self)
-    ]
-
   security.declarePublic('newContent')
   def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, container=None, temp_object=0, **kw):
