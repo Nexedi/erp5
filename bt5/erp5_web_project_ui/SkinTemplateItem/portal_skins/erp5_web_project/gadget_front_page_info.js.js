@@ -3,22 +3,7 @@
 (function (window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query) {
   "use strict";
 
-  //TODO
-  //get lastest (unique) TR for each project
   function getProjectElementList(gadget) {
-
-    var date_query,
-      one_year_old_date = new Date();
-    one_year_old_date.setFullYear(one_year_old_date.getFullYear() - 1);
-    one_year_old_date = one_year_old_date.toISOString();
-    one_year_old_date = one_year_old_date.substring(0, one_year_old_date.length - 5).replace("T", " ");
-
-    date_query = new SimpleQuery({
-      type: "simple",
-      key: "creation_date",
-      operator: ">",
-      value: one_year_old_date
-    });
 
     function getComplexQuery(query_dict, operator, extra_query) {
       var key,
@@ -55,90 +40,40 @@
       aux_query_list = [],
       query_list = [],
       portal_type_list = ["Task", "Bug", "Task Report", "Benchmark Result"],
-      valid_state_list = ["planned", "ordered", "confirmed", "started", "stopped", "delivered", "ready", "failed", "public_stopped"];
+      valid_state_list = ["planned", "ordered", "confirmed", "started", "stopped", "delivered", "ready", "failed", "public_stopped"],
+      date_query,
+      test_result_query,
+      one_year_old_date = new Date();
 
-    //validated project tasks, bugs, etc
-    query_list.push(new SimpleQuery({
+    //TODO get lastest (unique) TR for each project
+    //test_result_query = ...
+
+    //TODO filter too old objects?
+    one_year_old_date.setFullYear(one_year_old_date.getFullYear() - 1);
+    one_year_old_date = one_year_old_date.toISOString();
+    one_year_old_date = one_year_old_date.substring(0, one_year_old_date.length - 5).replace("T", " ");
+    date_query = new SimpleQuery({
+      type: "simple",
+      key: "creation_date",
+      operator: ">",
+      value: one_year_old_date
+    });
+
+    non_milestone_query = Query.objectToSearchText(new SimpleQuery({
       key: "source_project__validation_state",
       operator: "=",
       type: "simple",
       value: "validated"
     }));
-
-    //portal types
-    /*//ATTEMPT 1 TO AVOID ITERATE portal_type VALUE LIST
-    //(from jio documentation)
-    var in_list = function (object_value, comparison_value_list) {
-      return comparison_value_list.indexOf(object_value) >= 0;
-    };
-    aux_complex_query = new SimpleQuery({
-      type: "simple",
-      key: {
-        read_from: "portal_type",
-        equal_match: in_list
-      },
-      value: ["Task", "Bug", "Task Report", "Benchmark Result"]
-    });
-    // in_list function is never called, no query on portal types
-
-    //ATTEMPT 2 TO AVOID ITERATE portal_type VALUE LIST (same for states)
-    aux_complex_query = new SimpleQuery({
-      key: "portal_type",
-      operator: "=",
-      type: "simple",
-      value: ("Task", "Bug", "Task Report", "Benchmark Result")
-    });
-    //only last portal type value of the list is considered
-    //the rest, ignored*/
-
-    aux_query_list = [];
-    for (i = 0; i < portal_type_list.length; i += 1) {
-      aux_query_list.push(new SimpleQuery({
-        key: "portal_type",
-        operator: "=",
-        type: "simple",
-        value: portal_type_list[i]
-      }));
-    }
-    aux_complex_query = new ComplexQuery({
-      operator: "OR",
-      query_list: aux_query_list,
-      type: "complex"
-    });
-    query_list.push(aux_complex_query);
-
-    //states for tasks, bugs, reports, tests
-    aux_query_list = [];
-    for (i = 0; i < valid_state_list.length; i += 1) {
-      aux_query_list.push(new SimpleQuery({
-        key: "simulation_state",
-        operator: "=",
-        type: "simple",
-        value: valid_state_list[i]
-      }));
-    }
-    aux_complex_query = new ComplexQuery({
-      operator: "OR",
-      query_list: aux_query_list,
-      type: "complex"
-    });
-    query_list.push(aux_complex_query);
-
-    
-    // TODO: filter result by too old creation date? to reduce results
-    query_list.push(date_query);
-    
-    non_milestone_query = new ComplexQuery({
-      operator: "AND",
-      query_list: query_list,
-      type: "complex"
-    });
+    // done with string queries directly because there is no way to do "key IN <list-of-values>" with Query
+    // unless appending simple queries with AND by iterating on list but it's inefficient
+    non_milestone_query += ' AND portal_type: ("' + portal_type_list.join('", "') + '")';
+    non_milestone_query += ' AND simulation_state: ("' + valid_state_list.join('", "') + '")';
 
     return new RSVP.Queue()
       .push(function () {
         var promise_list = [],
-          //TODO: review limit and fields
-          limit = [0, 1000],
+          limit = [0, 100000],
           select_list = ['source_project', 'portal_type', 'stop_date', 'modification_date', 'simulation_state', 'creation_date'];
         // XXX: two separated queries because this query fails with not implemented error:
         // ( parent__validation_state = "validated" OR source_project__validation_state = "validated" )
@@ -150,7 +85,7 @@
           sort_on: [["modification_date", "descending"]]
         }));
         promise_list.push(gadget.jio_allDocs({
-          query: Query.objectToSearchText(non_milestone_query),
+          query: non_milestone_query,
           limit: limit,
           select_list: select_list,
           sort_on: [["modification_date", "descending"]]
@@ -161,12 +96,6 @@
           select_list: ['title'],
           sort_on: [["modification_date", "descending"]]
         }));
-        /*promise_list.push(gadget.jio_allDocs({
-          query: Query.objectToSearchText(date_query),
-          limit: [0, 30],
-          select_list: ['title', 'creation_date'],
-          sort_on: [["creation_date", "descending"]]
-        }));*/
         return RSVP.all(promise_list);
       })
       .push(function (result_list) {
