@@ -214,6 +214,15 @@
     if (operator_default_list === NUMERIC) {
       if (query_dict.key.indexOf("date") !== -1) {
         input_type = "date";
+        if (query_dict.value) {
+          // Zope DateTime uses local timezone automatically if date seperator
+          // was a slash like 2020/02/08, but if it was a dash like 2020-02-08,
+          // Zope DateTime ignores local timezone and timezone become GMT+0.
+          // Then if server is not located in GMT+0 zone, date search does not
+          // work. Since HTML5 date input field uses dash as a separator, it
+          // must be changed to slash before sending query to Zope.
+          query_dict.value = query_dict.value.replace(/\//g, "-");
+        }
       } else {
         input_type = "number";
       }
@@ -335,7 +344,8 @@
       select_list,
       key,
       operator,
-      value;
+      value,
+      input_field;
 
     for (i = 0; i < filter_item_list.length; i += 1) {
       select_list = filter_item_list[i].querySelectorAll("select");
@@ -356,6 +366,16 @@
           /*jslint continue: false */
         }
         value = filter_item_list[i].querySelector("input").value;
+        input_field = filter_item_list[i].querySelector("input");
+        if (input_field.type === 'date' && value) {
+          // Zope DateTime uses local timezone automatically if date seperator
+          // was a slash like 2020/02/08, but if it was a dash like 2020-02-08,
+          // Zope DateTime ignores local timezone and timezone become GMT+0.
+          // Then if server is not located in GMT+0 zone, date search does not
+          // work. Since HTML5 date input field uses dash as a separator, it
+          // must be changed to slash before sending query to Zope.
+          value = value.replace(/-/g, "/");
+        }
       }
       state.query_list.push({
         type: "simple",
