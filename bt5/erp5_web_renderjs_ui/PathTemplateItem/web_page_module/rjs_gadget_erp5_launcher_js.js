@@ -941,17 +941,25 @@
         var gadget = this;
         if (navigator.serviceWorker !== undefined) {
           return RSVP.all([
-            // Register the ServiceWorker
-            navigator.serviceWorker
-                     .register(service_worker_url)
-                     .then(function (registration) {
-                gadget.state.service_worker_registration = registration;
-              })
-              .catch(function (error) {
-                // If service worker installation is rejected,
-                // do not prevent the site to be usable, even if slower
-                console.warn("Service worker registration failed", error);
-              }),
+            // Delay service worker installation, so that:
+            // * it does not slow down the current page rendering
+            // * it is not triggered too often if user click on multiple links
+            // * it is triggered only if the user browse the site
+            RSVP.delay(20000)
+                .then(function () {
+                  // Register the ServiceWorker
+                  return navigator
+                    .serviceWorker
+                    .register(service_worker_url)
+                    .then(function (registration) {
+                      gadget.state.service_worker_registration = registration;
+                    })
+                    .catch(function (error) {
+                      // If service worker installation is rejected,
+                      // do not prevent the site to be usable, even if slower
+                      console.warn("Service worker registration failed", error);
+                    });
+                }),
             // Check when a new worker has been activated from another tab
             // XXX Not promise based, but we do not want to add a new dependency
             navigator.serviceWorker
