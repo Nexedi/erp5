@@ -103,6 +103,8 @@
         viewMode: 3,
         // Avoid any cropper calculation or guessing
         scalable: false,
+        // By default rotatable is true, if you remove it.
+        // Make sure, it is set on data.
         rotatable: false,
         zoomable: false,
         movable: false,
