@@ -79,6 +79,9 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 
+<!-- wait for all listboxes to be loaded -->
+<tr><td>waitForElementNotPresent</td>
+    <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//h1//span[contains(@class, "ui-icon-spinner")]</td><td></td></tr>
 <!-- 1. report section is the Bank -->
 <tr><td>store</td>
     <td>//div[@class="report_section_list"]/div/div[1]//div[@data-gadget-scope="erp5_form"]</td>
