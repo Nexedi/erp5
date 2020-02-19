@@ -1,3 +1,4 @@
+# pylint: disable=redefined-builtin
 from Products.PythonScripts.standard import newline_to_br, html_quote
 portal = context.getPortalObject()
 prefs = portal.portal_preferences

@@ -1,7 +1,7 @@
 from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
 request = portal.REQUEST
-format = request.get('format', '')
+format_ = request.get('format', '')
 skin_name = request.get('deferred_portal_skin', portal.portal_skins.getDefaultSkin())
 previous_skin_selection = request.get('previous_skin_selection', None)
 
@@ -43,7 +43,7 @@ if hasattr(form, 'ZScriptHTML_tryParams'):
   for param in form.ZScriptHTML_tryParams():
     params[param] = request.get(param)
 else:
-  params['format'] = format
+  params['format'] = format_
 
 activity_context.activate(
     activity='SQLQueue', tag=tag, priority=priority).Base_renderSimpleView(
