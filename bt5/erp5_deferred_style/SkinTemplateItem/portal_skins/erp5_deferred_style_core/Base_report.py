@@ -1,4 +1,4 @@
-from Products.ERP5Type.Message import translateString
+# pylint: disable=redefined-builtin
 
 request = container.REQUEST
 request.other.update(request_other)
