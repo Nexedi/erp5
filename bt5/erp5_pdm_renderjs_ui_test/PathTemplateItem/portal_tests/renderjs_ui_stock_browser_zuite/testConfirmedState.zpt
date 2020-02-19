@@ -78,7 +78,7 @@ Test stock browser for confirmed state
 <tal:block metal:use-macro="here/PdmZuite_CommonTemplateForRenderjsUi/macros/go_to_stock_view" />
 
 <tr>
-  <td>waitForElementNotPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[1]/td[5]/a</td>
   <td></td>
 </tr>
