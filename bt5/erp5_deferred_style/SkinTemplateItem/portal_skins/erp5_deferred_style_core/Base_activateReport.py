@@ -29,8 +29,13 @@ request_other = portal.ERP5Site_filterRequestForDeferredStyle(request)
 
 localizer_language = portal.Localizer.get_selected_language()
 
-context.activate(activity="SQLQueue", tag=tag, after_tag=after_tag,
-  priority=priority).Base_computeReportSection(
+context.activate(
+    activity="SQLQueue",
+    node=portal.portal_preferences.getPreferredDeferredReportActivityFamily(),
+    tag=tag,
+    after_tag=after_tag,
+    priority=priority,
+).Base_computeReportSection(
     form=form.getId(), 
     request_other=request_other, 
     user_name=user.getId(),
