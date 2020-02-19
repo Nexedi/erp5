@@ -39,12 +39,9 @@
         getComplexQuery({"portal_type" : "Test Result",
                          "source_project__validation_state" : "validated"},
                         "AND")),
-      document_query,
-      aux_complex_query,
-      aux_query_list = [],
-      query_list = [],
-      portal_type_list = ["Task", "Bug", "Task Report"],
-      valid_state_list = ["planned", "ordered", "confirmed", "delivered", "ready"],
+      //document_query,
+      //portal_type_list = ["Task", "Bug", "Task Report"],
+      //valid_state_list = ["planned", "ordered", "confirmed", "delivered", "ready"],
       test_state_list = ["failed", "stopped"],
       date_query,
       one_year_old_date = new Date();
@@ -62,7 +59,7 @@
       value: one_year_old_date
     });
 
-    document_query = Query.objectToSearchText(new SimpleQuery({
+    /*document_query = Query.objectToSearchText(new SimpleQuery({
       key: "source_project__validation_state",
       operator: "=",
       type: "simple",
@@ -71,7 +68,7 @@
     // done with string queries directly because there is no way to do "key IN <list-of-values>" with Query
     // unless appending simple queries with AND by iterating on list but it's inefficient
     document_query += ' AND portal_type: ("' + portal_type_list.join('", "') + '")';
-    document_query += ' AND simulation_state: ("' + valid_state_list.join('", "') + '")';
+    document_query += ' AND simulation_state: ("' + valid_state_list.join('", "') + '")';*/
 
     return new RSVP.Queue()
       .push(function () {
@@ -91,26 +88,26 @@
           sort_on: [["modification_date", "descending"]]
         }));
         promise_list.push(gadget.jio_allDocs({
-          query: document_query,
-          limit: limit,
-          select_list: select_list,
-          sort_on: [["modification_date", "descending"]]
-        }));
-        promise_list.push(gadget.jio_allDocs({
           query: test_result_query,
           limit: limit,
           select_list: ['source_project__relative_url', 'modification_date'],
           group_by: ['source_project__relative_url'],
           sort_on: [["modification_date", "descending"]]
         }));
+        /*promise_list.push(gadget.jio_allDocs({
+          query: document_query,
+          limit: limit,
+          select_list: select_list,
+          sort_on: [["modification_date", "descending"]]
+        }));*/
         return RSVP.all(promise_list);
       })
       .push(function (result_list) {
-        return [result_list[0].data.rows, result_list[1].data.rows, result_list[2].data.rows, result_list[3].data.rows];
+        return [result_list[0].data.rows, result_list[1].data.rows, result_list[2].data.rows/*, result_list[3].data.rows*/];
       });
   }
 
-  function renderProjectList(project_list, milestone_list, document_list, test_result_list) {
+  function renderProjectList(project_info_dict, project_list, milestone_list, test_result_list) {
     var i, j,
       item,
       project_html,
@@ -194,14 +191,17 @@
     .declareAcquiredMethod("getSetting", "getSetting")
 
     .declareMethod('render', function (options) {
+      if (options.project_info_dict) {
+        options.project_info_dict = JSON.parse(options.project_info_dict);
+      }
       return this.changeState(options);
     })
 
-    .onStateChange(function () {
+    .onStateChange(function (modification_dict) {
       var gadget = this;
       return getProjectElementList(gadget)
         .push(function (element_list) {
-          renderProjectList(element_list[0], element_list[1]);
+          renderProjectList(modification_dict.project_info_dict, element_list[0], element_list[1], element_list[2]);
         });
     })
 
