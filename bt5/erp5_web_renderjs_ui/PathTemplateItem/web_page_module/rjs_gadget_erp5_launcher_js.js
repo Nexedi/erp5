@@ -687,9 +687,11 @@
     .allowPublicAcquisition("renderApplication", function renderApplication(
       param_list
     ) {
-      if (this.state.service_worker_claimed) {
+      if (this.state.service_worker_claimed &&
+          (this.state.notification_options === undefined)) {
         // As a new service worker claimed the client,
         // reload the page to ensure it uses the lastest gadget versions
+        // Do it only if there is no notification to display
         return location.reload();
       }
       if (this.state.service_worker_registration) {
