@@ -84,10 +84,13 @@ div[data-gadget-url$="gadget_document_scanner.html"] > .camera > .thumbnail-list
 }
 
 div[data-gadget-url$="gadget_document_scanner.html"] .show-img {
+  width: 100%;
   padding-left: 0.2em;
+  padding-top: 0.2em;
   width: 6em;
   height: 6em;
   object-fit: cover;
+  float: left;
 }
 
 div[data-gadget-url$="gadget_document_scanner.html"] .thumbnail-list > button {
@@ -102,6 +105,7 @@ div[data-gadget-url$="gadget_document_scanner.html"] .upload-error {
 div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
   display: inline-grid !important;
   margin-left: 0.2em;
+  margin-top: 0.2em;
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
   width: 6em;
@@ -113,7 +117,11 @@ div[data-gadget-url$="gadget_document_scanner.html"] .img-container {
   max-width: 100%;
 }
 
-div[data-gadget-url$="gadget_document_scanner.html"] .img-container img {
-  /* This is important */
-  width: 100%;
+div[data-gadget-url$="gadget_document_scanner.html"] .btn-thumbnail:before {
+  color: #000;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 16pt;
 }
