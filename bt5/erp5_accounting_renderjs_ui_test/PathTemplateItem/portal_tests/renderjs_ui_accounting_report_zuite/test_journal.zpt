@@ -18,28 +18,25 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>${renderjs_url}/#/accounting_module/</td><td></td></tr>
+    <td>${renderjs_url}/#/accounting_module</td><td></td></tr>
 
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Export'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr><td>click</td>
-    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+    <td>//a[text()="Journal" and contains(@href, 'journal_report')]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Journal"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="Journal" and contains(@href, 'journal_report')]</td><td></td></tr>
-
-<tr><td>waitForElementPresent</td>
-    <td>//select[@name="field_your_section_category"]</td><td></td></tr>
 <tr><td>select</td>
     <td>//select[@name="field_your_section_category"]</td>
     <td>value=group/demo_group</td></tr>
 <!-- field_your_at_date is already at now() -->
 <!-- field_your_section_category_strict is False by default -->
 
-<tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-scope="field_your_portal_type"]/div/div[1]//select</td><td></td></tr>
 <!-- we need to zero-out portal_types to just 'Sale Invoice Transaction' -->
 <tal:block tal:repeat="_ python:range(8)"><!-- there is by default many Portal Types -->
 <!-- we take advantage of dissapearing elements when selecting one empty -->
@@ -54,8 +51,6 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
     <td>//div[@data-gadget-scope="field_your_portal_type"]/div/div[1]//select</td>
     <td>value=Sale Invoice Transaction</td></tr>
 
-<tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td><td></td></tr>
 <!-- we need to zero-out simulation_state to just 'delivered' -->
 <tal:block tal:repeat="_ python:range(4)"><!-- There is by default just few simulation states -->
 <!-- we take advantage of dissapearing elements when selecting one empty -->
@@ -69,16 +64,22 @@ Copy of <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product/ERP5/tes
 <tr><td>select</td>
     <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td>
     <td>value=delivered</td></tr>
-<tr><td>click</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'COUSCOUS'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tr><td>store</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${table}//../nav//span[text()="9 Records"]</td><td></td></tr>
 
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>
 
 <tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.day())"></td><td>day</td></tr>

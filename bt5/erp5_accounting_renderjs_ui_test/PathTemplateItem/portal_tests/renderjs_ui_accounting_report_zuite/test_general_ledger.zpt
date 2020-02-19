@@ -32,36 +32,32 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>${renderjs_url}/#/accounting_module/</td><td></td></tr>
+    <td>${renderjs_url}/#/accounting_module</td><td></td></tr>
 
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Export'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr><td>click</td>
-    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+    <td>//a[text()="General Ledger" and contains(@href, 'general_ledger_report')]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="General Ledger"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="General Ledger" and contains(@href, 'general_ledger_report')]</td><td></td></tr>
-
-<tr><td>waitForElementPresent</td><td>//input[@name="field_your_from_date"]</td><td></td></tr>
 <tr><td>type</td>
     <td>//input[@name="field_your_from_date"]</td>
     <td>${year}-1-1</td></tr>
-<tr><td>waitForElementPresent</td><td>//input[@name="field_your_at_date"]</td><td></td></tr>
 <tr><td>type</td>
     <td>//input[@name="field_your_at_date"]</td>
     <td>${year}-12-31</td></tr>
 
-<tr><td>waitForElementPresent</td><td>//select[@name="field_your_section_category"]</td><td></td></tr>
 <tr><td>select</td>
     <td>//select[@name="field_your_section_category"]</td>
     <td>value=group/demo_group</td></tr>
 <!-- All checkboxes are by default turned off -->
 
 <!-- we need to zero-out simulation_state to just 'delivered' -->
-<tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td><td></td></tr>
 <tal:block tal:repeat="_ python:range(4)"><!-- There is by default just few simulation states -->
 <!-- we take advantage of dissapearing elements when selecting one empty -->
 <tr><td>select</td>
@@ -75,20 +71,25 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td>
     <td>value=delivered</td></tr>
 
-<tr><td>click</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'COUSCOUS'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <!-- 1. report section is the Bank -->
 <tr><td>store</td>
     <td>//div[@class="report_section_list"]/div/div[1]//div[@data-gadget-scope="erp5_form"]</td>
     <td>form</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${form}//h3[text()="A-BANK - Bank (Bank1)"]</td><td></td></tr>
 
 <tr><td>store</td>
     <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${table}/../nav//span[text()="5 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
@@ -152,13 +153,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>store</td>
     <td>//div[@class="report_section_list"]/div/div[2]//div[@data-gadget-scope="erp5_form"]</td>
     <td>form</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${form}//h3[text()="A-PAY - Payable (Client 1)"]</td><td></td></tr>
 
 <tr><td>store</td>
     <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${table}/../nav//span[text()="2 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
@@ -192,13 +193,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>store</td>
     <td>//div[@class="report_section_list"]/div/div[3]//div[@data-gadget-scope="erp5_form"]</td>
     <td>form</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${form}//h3[text()="A-REC - Receivable (Client 1)"]</td><td></td></tr>
 
 <tr><td>store</td>
     <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${table}/../nav//span[text()="5 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
@@ -261,13 +262,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>store</td>
     <td>//div[@class="report_section_list"]/div/div[4]//div[@data-gadget-scope="erp5_form"]</td>
     <td>form</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${form}//h3[text()="A-REC - Receivable (Client 2)"]</td><td></td></tr>
 
 <tr><td>store</td>
     <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${table}/../nav//span[text()="1 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
@@ -290,13 +291,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>store</td>
     <td>//div[@class="report_section_list"]/div/div[5]//div[@data-gadget-scope="erp5_form"]</td>
     <td>form</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${form}//h3[text()="A-REC - Receivable (John Smith)"]</td><td></td></tr>
 
 <tr><td>store</td>
     <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${table}/../nav//span[text()="1 Records"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
@@ -319,13 +320,13 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>store</td>
     <td>//div[@class="report_section_list"]/div/div[6]//div[@data-gadget-scope="erp5_form"]</td>
     <td>form</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${form}//h3[text()="Total"]</td><td></td></tr>
 
 <tr><td>store</td>
     <td>${form}//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${table}/../nav//span[text()="1 Records"]</td><td></td></tr>
 
 <tr><td>store</td>

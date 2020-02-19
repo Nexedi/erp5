@@ -18,24 +18,22 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>${renderjs_url}/#/accounting_module/</td><td></td></tr>
+    <td>${renderjs_url}/#/accounting_module</td><td></td></tr>
 
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Export"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Trial Balance"]</td><td></td></tr>
+<tal:block tal:define="click_configuration python: {'text': 'Export'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 <tr><td>click</td>
-    <td>//a[@data-i18n="Trial Balance" and contains(@href, 'trial_balance_report')]</td><td></td></tr>
+    <td>//a[text()="Trial Balance" and contains(@href, 'trial_balance_report')]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.day())"></td><td>day</td></tr>
 <tr><td>store</td><td tal:content="python: '{:0>#2d}'.format(now.month())"></td><td>month</td></tr>
 <tr><td>store</td><td tal:content="python: now.year()"></td><td>year</td></tr>
 
-<tr><td>waitForElementPresent</td>
-    <td>//select[@name="field_your_section_category"]</td><td></td></tr>
 <tr><td>select</td>
     <td>//select[@name="field_your_section_category"]</td>
     <td>value=group/demo_group</td></tr>
@@ -59,8 +57,6 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>store</td>
     <td>//div[@data-gadget-scope="field_your_simulation_state"]//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_multilist.html"]</td>
     <td>multi_select</td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>${multi_select}/div[3]//select</td><td></td></tr>
 <tr><td>assertValue</td>
     <td>${multi_select}/div[1]//select</td>
     <td>delivered</td></tr>
@@ -71,16 +67,21 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>${multi_select}/div[3]//select</td>
     <td></td></tr>
 
-<tr><td>click</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'COUSCOUS'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tr><td>store</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${table}//../nav//span[text()="10 Records"]</td><td></td></tr>
 
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>
 
 
