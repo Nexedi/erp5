@@ -1,3 +1,4 @@
+# pylint: disable=redefined-builtin
 portal = context.getPortalObject()
 
 form = context.restrictedTraverse(form)
