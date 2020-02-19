@@ -28,25 +28,21 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>renderjs_url</td></tr>
 
 <tr><td>open</td>
-    <td>${renderjs_url}/#/accounting_module/</td><td></td></tr>
+    <td>${renderjs_url}/#/accounting_module</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+<tal:block tal:define="click_configuration python: {'text': 'Export'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr><td>click</td>
-    <td>//a[@data-i18n="Export"]</td><td></td></tr>
+    <td>//a[text()="Third Parties" and contains(@href, 'third_parties_report')]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Third Parties"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="Third Parties" and contains(@href, 'third_parties_report')]</td><td></td></tr>
-
-<tr><td>waitForElementPresent</td>
-    <td>//select[@name="field_your_section_category"]</td><td></td></tr>
 <tr><td>select</td>
     <td>//select[@name="field_your_section_category"]</td>
     <td>value=group/demo_group</td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-scope="field_your_ledger"]//select</td><td></td></tr>
 <tr><td>select</td>
     <td>//div[@data-gadget-scope="field_your_ledger"]//select</td>
     <td>value=ledger/accounting/general</td></tr>
@@ -57,8 +53,6 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
     <td>//input[@type="checkbox" and @name="field_your_omit_balanced_accounts"]</td><td></td></tr>
 
 <tr><th colspan="3">Zero-out simulation_state to just 'delivered'<th></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td><td></td></tr>
 <tal:block tal:repeat="_ python:range(4)"><!-- There is by default just few simulation states -->
 <!-- we take advantage of dissapearing elements when selecting one empty -->
 <tr><td>select</td>
@@ -71,16 +65,22 @@ Copy of unittest <a href="https://lab.nexedi.com/nexedi/erp5/blob/master/product
 <tr><td>select</td>
     <td>//div[@data-gadget-scope="field_your_simulation_state"]/div/div[1]//select</td>
     <td>value=delivered</td></tr>
-<tr><td>click</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_page_form.html"]//input[@type="submit"]</td><td></td></tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tal:block tal:define="notification_configuration python: {'class': 'success',
+                                                           'text': 'COUSCOUS'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 <tr><td>store</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
     <td>table</td></tr>
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>${table}//../nav//span[text()="2 Records"]</td><td></td></tr>
 
-<tr><td>waitForElementPresent</td>
+<tr><td>assertElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_currency"]//p[text()="EUR"]</td><td></td></tr>
 
 <tal:block tal:define="row_selector string:$${table}/tbody/tr[1];
