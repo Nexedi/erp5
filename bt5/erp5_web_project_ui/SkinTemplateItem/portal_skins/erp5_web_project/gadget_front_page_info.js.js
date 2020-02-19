@@ -35,18 +35,21 @@
       milestone_query = getComplexQuery({"portal_type" : "Project Milestone",
                                          "parent__validation_state" : "validated"},
                                         "AND"),
+      test_result_query = Query.objectToSearchText(
+        getComplexQuery({"portal_type" : "Test Result",
+                         "source_project__validation_state" : "validated"},
+                        "AND")),
       non_milestone_query,
       aux_complex_query,
       aux_query_list = [],
       query_list = [],
-      portal_type_list = ["Task", "Bug", "Task Report", "Benchmark Result"],
-      valid_state_list = ["planned", "ordered", "confirmed", "started", "stopped", "delivered", "ready", "failed", "public_stopped"],
+      portal_type_list = ["Task", "Bug", "Task Report"],
+      valid_state_list = ["planned", "ordered", "confirmed", "delivered", "ready", "failed", "public_stopped"],
+      test_state_list = ["failed", "stopped"],
       date_query,
-      test_result_query,
       one_year_old_date = new Date();
 
-    //TODO get lastest (unique) TR for each project
-    //test_result_query = ...
+    test_result_query += ' AND simulation_state: ("' + test_state_list.join('", "') + '")';
 
     //TODO filter too old objects?
     one_year_old_date.setFullYear(one_year_old_date.getFullYear() - 1);
@@ -96,14 +99,22 @@
           select_list: ['title'],
           sort_on: [["modification_date", "descending"]]
         }));
+        promise_list.push(gadget.jio_allDocs({
+          query: test_result_query,
+          limit: limit,
+          select_list: ['source_project__relative_url', 'modification_date'],
+          group_by: ['source_project__relative_url'],
+          //group_by: ['reference'],
+          sort_on: [["modification_date", "descending"]]
+        }));
         return RSVP.all(promise_list);
       })
       .push(function (result_list) {
-        return [result_list[0].data.rows.concat(result_list[1].data.rows), result_list[2].data.rows];
+        return [result_list[2].data.rows, result_list[0].data.rows, result_list[3].data.rows, result_list[1].data.rows];
       });
   }
 
-  function renderProjectList(element_list, project_list) {
+  function renderProjectList(project_list, milestone_list, test_result_list, other_list) {
     var i, j,
       item,
       project_html,
@@ -160,7 +171,7 @@
     }
 
     //XXX hardcoded for now (build a template?)
-    element_list = ["Milestones", "Tasks", "Bugs", "Task Reports", "Test Results"];
+    var element_list = ["Milestones", "Tasks", "Bugs", "Task Reports", "Test Results"];
     for (i = 0; i < project_list.length; i += 1) {
       project_html_element_list = createProjectHtmlElement(project_list[i].id, project_list[i].value.title);
       project_html = project_html_element_list[0];
