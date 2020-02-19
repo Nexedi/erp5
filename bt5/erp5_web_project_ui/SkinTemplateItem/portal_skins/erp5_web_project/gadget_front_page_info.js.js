@@ -39,12 +39,12 @@
         getComplexQuery({"portal_type" : "Test Result",
                          "source_project__validation_state" : "validated"},
                         "AND")),
-      non_milestone_query,
+      document_query,
       aux_complex_query,
       aux_query_list = [],
       query_list = [],
       portal_type_list = ["Task", "Bug", "Task Report"],
-      valid_state_list = ["planned", "ordered", "confirmed", "delivered", "ready", "failed", "public_stopped"],
+      valid_state_list = ["planned", "ordered", "confirmed", "delivered", "ready"],
       test_state_list = ["failed", "stopped"],
       date_query,
       one_year_old_date = new Date();
@@ -62,7 +62,7 @@
       value: one_year_old_date
     });
 
-    non_milestone_query = Query.objectToSearchText(new SimpleQuery({
+    document_query = Query.objectToSearchText(new SimpleQuery({
       key: "source_project__validation_state",
       operator: "=",
       type: "simple",
@@ -70,17 +70,20 @@
     }));
     // done with string queries directly because there is no way to do "key IN <list-of-values>" with Query
     // unless appending simple queries with AND by iterating on list but it's inefficient
-    non_milestone_query += ' AND portal_type: ("' + portal_type_list.join('", "') + '")';
-    non_milestone_query += ' AND simulation_state: ("' + valid_state_list.join('", "') + '")';
+    document_query += ' AND portal_type: ("' + portal_type_list.join('", "') + '")';
+    document_query += ' AND simulation_state: ("' + valid_state_list.join('", "') + '")';
 
     return new RSVP.Queue()
       .push(function () {
         var promise_list = [],
           limit = [0, 100000],
-          select_list = ['source_project', 'portal_type', 'stop_date', 'modification_date', 'simulation_state', 'creation_date'];
-        // XXX: two separated queries because this query fails with not implemented error:
-        // ( parent__validation_state = "validated" OR source_project__validation_state = "validated" )
-        // TODO: do some research
+          select_list = ['source_project', 'portal_type', 'modification_date'];
+        promise_list.push(gadget.jio_allDocs({
+          query: Query.objectToSearchText(project_query),
+          limit: limit,
+          select_list: ['title'],
+          sort_on: [["modification_date", "ascending"]]
+        }));
         promise_list.push(gadget.jio_allDocs({
           query: Query.objectToSearchText(milestone_query),
           limit: limit,
@@ -88,15 +91,9 @@
           sort_on: [["modification_date", "descending"]]
         }));
         promise_list.push(gadget.jio_allDocs({
-          query: non_milestone_query,
+          query: document_query,
           limit: limit,
           select_list: select_list,
-          sort_on: [["modification_date", "descending"]]
-        }));
-        promise_list.push(gadget.jio_allDocs({
-          query: Query.objectToSearchText(project_query),
-          limit: limit,
-          select_list: ['title'],
           sort_on: [["modification_date", "descending"]]
         }));
         promise_list.push(gadget.jio_allDocs({
@@ -104,24 +101,25 @@
           limit: limit,
           select_list: ['source_project__relative_url', 'modification_date'],
           group_by: ['source_project__relative_url'],
-          //group_by: ['reference'],
           sort_on: [["modification_date", "descending"]]
         }));
         return RSVP.all(promise_list);
       })
       .push(function (result_list) {
-        return [result_list[2].data.rows, result_list[0].data.rows, result_list[3].data.rows, result_list[1].data.rows];
+        return [result_list[0].data.rows, result_list[1].data.rows, result_list[2].data.rows, result_list[3].data.rows];
       });
   }
 
-  function renderProjectList(project_list, milestone_list, test_result_list, other_list) {
+  function renderProjectList(project_list, milestone_list, document_list, test_result_list) {
     var i, j,
       item,
       project_html,
       left_div_html,
       project_html_element_list,
       left_line_html,
-      ul_list = document.getElementById("js-project-list");
+      ul_list = document.getElementById("js-project-list"),
+      //XXX hardcoded for now (build a template?)
+      line_title_list = ["Milestones", "Tasks", "Bugs", "Task Reports", "Test Results"];
 
     function createProjectHtmlElement(project_id, project_title) {
       var project_element = document.createElement('li'),
@@ -170,18 +168,16 @@
       return line_div;
     }
 
-    //XXX hardcoded for now (build a template?)
-    var element_list = ["Milestones", "Tasks", "Bugs", "Task Reports", "Test Results"];
     for (i = 0; i < project_list.length; i += 1) {
       project_html_element_list = createProjectHtmlElement(project_list[i].id, project_list[i].value.title);
       project_html = project_html_element_list[0];
       left_div_html = project_html_element_list[1];
-      for (j = 0; j < element_list.length; j += 1) {
-        //XXX hardcoded. This should come from the query
+      for (j = 0; j < line_title_list.length; j += 1) {
+        //XXX hardcoded. This should come from the query results
         item = {"status_color": "green",
                 "total": 100,
                 "outdated": 40,
-                "title": element_list[j]};
+                "title": line_title_list[j]};
         left_line_html = createProjectLineHtmlElement(item.title, item.total, item.outdated, item.status_color);
         left_div_html.appendChild(left_line_html);
       }
@@ -205,7 +201,6 @@
       var gadget = this;
       return getProjectElementList(gadget)
         .push(function (element_list) {
-          console.log("element_list:", element_list);
           renderProjectList(element_list[0], element_list[1]);
         });
     })
