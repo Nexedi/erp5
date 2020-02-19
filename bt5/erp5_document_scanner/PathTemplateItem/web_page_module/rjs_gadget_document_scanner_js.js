@@ -80,7 +80,7 @@
           this.greyscale();
         }
         this.render(function () {
-          // XXX canceller should be called automatically
+          // XXX canceller should be called automatically ?
           canceller();
           resolve([this.context.canvas, settings.compression]);
         });
@@ -338,6 +338,7 @@
   // Capture the media stream
   function captureAndRenderPicture(gadget) {
     var settings = gadget.state.preferred_image_settings_data,
+      btn = gadget.element.querySelector(".take-picture-btn"),
       image_capture = new window.ImageCapture(
         gadget.element.querySelector('video').srcObject.getVideoTracks()[0]
       ),
@@ -345,18 +346,27 @@
 
     return new RSVP.Queue()
       .push(function () {
+        btn.classList.remove("ui-icon-circle");
+        btn.classList.add("ui-icon-spinner");
         return image_capture.getPhotoCapabilities();
       })
       .push(function (capabilities) {
         return image_capture.takePhoto({imageWidth: capabilities.imageWidth.max});
       })
       .push(function (blob) {
-        return createImageBitmap(blob);
+        return RSVP.all([
+          createImageBitmap(blob),
+          jIO.util.readBlobAsDataURL(blob)
+        ]);
       })
-      .push(function (bitmap) {
-        var canvas = domsugar('canvas', {'class': 'canvas'});
-        gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
+      .push(function (result_list) {
+        var bitmap = result_list[0],
+          img = domsugar("img", {"src": result_list[1].target.result}),
+          div = gadget.element.querySelector(".camera-input"),
+          canvas = domsugar('canvas', {'class': 'canvas'});
 
+        gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
+        div.replaceChild(img, div.firstElementChild);
         canvas.width = bitmap.width;
         canvas.height = bitmap.height;
         canvas.getContext('2d').drawImage(bitmap, 0, 0);
@@ -409,6 +419,8 @@
         // XXX How to change the dom only when cropper is ready?
         // For now, it needs to access dom element size
         gadget.element.replaceChild(div, gadget.element.firstElementChild);
+        btn.classList.add("ui-icon-circle");
+        btn.classList.remove("ui-icon-spinner");
         addDetachedPromise(gadget, 'cropper',
                            handleCropper(img,
                                          gadget.state.preferred_cropped_canvas_data,
@@ -571,7 +583,8 @@
       evt.preventDefault();
       // If user clicks on same image twice,
       // we don't need to disable everything again if parent is already disabled
-      if (evt.target.tagName === 'IMG' && !evt.target.parentElement.disabled) {
+      if (evt.target.tagName === 'BUTTON' || (
+            evt.target.tagName === 'IMG' && !evt.target.parentElement.disabled)) {
         gadget.element.querySelectorAll('button').forEach(function (elt) {
           elt.disabled = true;
         });
