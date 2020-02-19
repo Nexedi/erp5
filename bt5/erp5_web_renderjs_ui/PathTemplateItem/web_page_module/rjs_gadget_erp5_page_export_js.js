@@ -16,7 +16,7 @@
 
     return domsugar(null, [
       domsugar('section', {class: 'ui-content-header-plain'}, [
-        domsugar('h2', [
+        domsugar('h3', [
           domsugar('span', {class: 'ui-icon ui-icon-' + icon, html: '&nbsp;'}),
           title
         ])
