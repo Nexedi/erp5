@@ -50,6 +50,45 @@
     return new RSVP.Promise(waitForStream, canceller);
   }
 
+  function handleCaman(canvas, settings) {
+    var local_caman;
+
+    function canceller() {
+      // It's weird but Caman stores a lot of data
+      // in this variables. Please, double check before remove
+      // this code
+      local_caman.pixelData = null;
+      local_caman.originalPixelData = null;
+      local_caman.renderer.modPixelData = null;
+      local_caman.imageData = null;
+      local_caman.initializedPixelData = null;
+      // Clear caman as much as possible
+      local_caman = null;
+      caman.Store.flush(true);
+    }
+
+    return new Promise(function (resolve) {
+      // XXX the correct usage is `new Caman()` but the library does not support it
+      local_caman = caman(canvas, null, function () {
+        if (settings.brightness && settings.brightness !== 0) {
+          this.brightness(settings.brightness);
+        }
+        if (settings.contrast && settings.contrast !== 0) {
+          this.contrast(settings.contrast);
+        }
+        if (settings.enable_greyscale) {
+          this.greyscale();
+        }
+        this.render(function () {
+          // XXX canceller should be called automatically
+          canceller();
+          resolve([this.context.canvas, settings.compression]);
+        });
+      });
+      return local_caman;
+    }, canceller);
+  }
+
   function handleCropper(element, data, callback) {
     var cropper;
 
@@ -200,8 +239,11 @@
             }
 
             if (gadget.state['blob_state_' + i] === "saving") {
-              btn_class = "ui-btn-icon-left ui-icon-spinner";
+              btn_class = "btn-thumbnail ui-btn-icon-top ui-icon-spinner";
+            } else {
+              btn_class = "btn-thumbnail";
             }
+
             thumbnail_dom_list.push(domsugar('button', {
               type: "button",
               "class": btn_class,
@@ -209,8 +251,8 @@
               // or do not allow to show saving image (to simplify button management)
               disabled: (i === gadget.state.page) || (gadget.state['blob_state_' + i] === 'saving')
             }, [domsugar("img", {"class": img_class,
-                                 'data-page': i,
-                                 src: gadget.state['blob_url_' + i]})]));
+                                  'data-page': i,
+                                  src: gadget.state['blob_url_' + i]})]));
           }
         }
         thumbnail_dom_list.push(domsugar('button', {type: 'button',
@@ -299,8 +341,7 @@
       image_capture = new window.ImageCapture(
         gadget.element.querySelector('video').srcObject.getVideoTracks()[0]
       ),
-      div,
-      local_caman;
+      div;
 
     return new RSVP.Queue()
       .push(function () {
@@ -320,34 +361,7 @@
         canvas.height = bitmap.height;
         canvas.getContext('2d').drawImage(bitmap, 0, 0);
         if (settings.brightness || settings.contrast || settings.enable_greyscale || settings.compression) {
-          return new RSVP.Queue()
-            .push(function (result) {
-              return new Promise(function (resolve) {
-                // XXX the correct usage is `new Caman()` but the library does not support it
-                local_caman = caman(canvas, null, function () {
-                  if (settings.brightness && settings.brightness !== 0) {
-                    this.brightness(settings.brightness);
-                  }
-                  if (settings.contrast && settings.contrast !== 0) {
-                    this.contrast(settings.contrast);
-                  }
-                  if (settings.enable_greyscale) {
-                    this.greyscale();
-                  }
-                  this.render(function () {
-                    // It's weird but Caman store a lot of data
-                    // in this variables. Please, double check before remove
-                    // this code
-                    this.pixelData = null;
-                    this.originalPixelData = null;
-                    this.renderer.modPixelData = null;
-                    this.imageData = null;
-                    this.initializedPixelData = null;
-                    resolve([this.context.canvas, settings.compression]);
-                  });
-                });
-              });
-            });
+          return handleCaman(canvas, settings);
         }
         return [canvas, settings.compression];
       })
@@ -355,9 +369,6 @@
         var canvas = result_list[0],
           compression = settings.compression || 1;
 
-        // Clear caman as much as possible
-        local_caman = null;
-        caman.Store.flush(true);
         return RSVP.all([
           gadget.getTranslationList(["Delete", "Save"]),
           new Promise(function (resolve) {
