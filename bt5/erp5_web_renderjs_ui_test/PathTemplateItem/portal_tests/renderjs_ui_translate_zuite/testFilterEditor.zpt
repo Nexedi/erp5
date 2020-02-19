@@ -80,7 +80,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//option[@data-i18n='Contains']</td>
+  <td>//option[text()='baohang']</td>
   <td></td>
 </tr>
 
