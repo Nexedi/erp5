@@ -60,6 +60,7 @@
       <td>${base_url}/web_site_module/renderjs_runner/#/product_module/erp5_pdm_ui_test_product</td>
       <td></td>
     </tr>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
     <tal:block metal:use-macro="here/PdmZuite_CommonTemplateForRenderjsUi/macros/go_to_stock_view" />
   </tal:block>
 
@@ -67,31 +68,15 @@
     <tr>
       <td colspan="3"><b>Go to Stock view</b></td>
     </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>click</td>
-      <td>//div[contains(@class, 'ui-header')]//a[@data-i18n='Views']</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//ul[@class='document-listview']//a[@data-i18n='Stock']</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>click</td>
-      <td>//ul[@class='document-listview']//a[@data-i18n='Stock']</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]</td>
-      <td></td>
-    </tr>
+    <tal:block tal:define="click_configuration python: {'text': 'Views'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+    <tal:block tal:define="click_configuration python: {'text': 'Stock'}">
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+    </tal:block>
+    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
     <tr>
       <td colspan="3"><p></p></td>
     </tr>
