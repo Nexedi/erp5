@@ -19,7 +19,10 @@ if prefs.getPreferredDeferredReportStoredAsDocument():
       (attachment.get('title', document.getStandardFilename(format=format)), document.getRelativeUrl()))
     # pre-convert document before sending notification
     if format:
-      document.activate(tag=pre_convert_tag).convert(format=format)
+      document.activate(
+          node=portal.portal_preferences.getPreferredDeferredReportActivityFamily(),
+          tag=pre_convert_tag,
+      ).convert(format=format)
 
   url_base = portal.ERP5Site_getAbsoluteUrl()
   attachment_link_list = [
@@ -53,7 +56,11 @@ if prefs.getPreferredDeferredReportStoredAsDocument():
         message=message_html
     )
 
-portal.portal_notifications.activate(after_tag=pre_convert_tag, activity='SQLQueue').sendMessage(
+portal.portal_notifications.activate(
+    activity='SQLQueue',
+    node=portal.portal_preferences.getPreferredDeferredReportActivityFamily(),
+    after_tag=pre_convert_tag,
+  ).sendMessage(
     recipient=user_name,
     subject=subject,
     message=message,

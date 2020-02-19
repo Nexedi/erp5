@@ -46,7 +46,10 @@ else:
   params['format'] = format_
 
 activity_context.activate(
-    activity='SQLQueue', tag=tag, priority=priority).Base_renderSimpleView(
+    activity='SQLQueue',
+    node=portal.portal_preferences.getPreferredDeferredReportActivityFamily(),
+    tag=tag,
+    priority=priority,).Base_renderSimpleView(
            localizer_language=localizer_language,
            skin_name=skin_name,
            request_form=request_form,
