@@ -2829,6 +2829,7 @@ class TestZodbTestComponent(_TestZodbComponent):
 
   def _getValidSourceCode(self, *_):
     return '''from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+import os
 
 class Test(ERP5TypeTestCase):
   def getTitle(self):
@@ -2851,6 +2852,12 @@ class Test(ERP5TypeTestCase):
 
   def test_01_sampleTest(self):
     self.assertEqual(0, 0)
+
+  def afterClear(self):
+    super(Test, self).afterClear()
+
+    # Checked that this module has not been GC'ed until the very end...
+    self.assertNotEqual(os, None)
 '''
 
   def testRunLiveTest(self):
@@ -2864,6 +2871,27 @@ class Test(ERP5TypeTestCase):
     component.validate()
     self.tic()
 
+    from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
+    ERP5TypeTestLoader_loadTestsFromNames = ERP5TypeTestLoader.loadTestsFromNames
+    def loadTestsFromNames(self, *args, **kwargs):
+      """
+      Monkey patched to simulate a reset right after importing the ZODB Test
+      Component whose Unit Tests are going to be executed
+      """
+      ret = ERP5TypeTestLoader_loadTestsFromNames(self, *args, **kwargs)
+
+      from Products.ERP5.ERP5Site import getSite
+      getSite().portal_components.reset(force=True)
+
+      # Simulate a new REQUEST while the old one has been GC'ed
+      import erp5.component
+      erp5.component.ref_manager.clear()
+
+      import gc
+      gc.collect()
+
+      return ret
+
     self.assertEqual(component.getValidationState(), 'validated')
     self.assertModuleImportable('testRunLiveTest')
     self._component_tool.reset(force=True,
@@ -2872,10 +2900,12 @@ class Test(ERP5TypeTestCase):
     # ERP5TypeLiveTestCase.runLiveTest patches ERP5TypeTestCase bases, thus it
     # needs to be restored after calling runLiveTest
     base_tuple = ERP5TypeTestCase.__bases__
+    ERP5TypeTestLoader.loadTestsFromNames = loadTestsFromNames
     try:
       self._component_tool.runLiveTest('testRunLiveTest')
     finally:
       ERP5TypeTestCase.__bases__ = base_tuple
+      ERP5TypeTestLoader.loadTestsFromNames = ERP5TypeTestLoader_loadTestsFromNames
 
     # assertRegexpMatches is only available from Python >= 2.7
     import re
@@ -2899,10 +2929,12 @@ class Test(ERP5TypeTestCase):
                                reset_portal_type_at_transaction_boundary=True)
 
     base_tuple = ERP5TypeTestCase.__bases__
+    ERP5TypeTestLoader.loadTestsFromNames = loadTestsFromNames
     try:
       self._component_tool.runLiveTest('testRunLiveTest')
     finally:
       ERP5TypeTestCase.__bases__ = base_tuple
+      ERP5TypeTestLoader.loadTestsFromNames = ERP5TypeTestLoader_loadTestsFromNames
 
     # assertRegexpMatches is only available from Python >= 2.7
     import re

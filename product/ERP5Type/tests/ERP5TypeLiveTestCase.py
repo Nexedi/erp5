@@ -202,15 +202,12 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
         otherwise fallback on filesystem
         """
         if module is None:
-            import erp5.component.test
-
             try:
-                __import__('erp5.component.test.' + name.split('.')[0],
-                           fromlist=['erp5.component.test'],
-                           level=0)
+                self._importZodbTestComponent(name.split('.')[0])
             except ImportError:
                 pass
             else:
+                import erp5.component.test
                 module = erp5.component.test
 
         return super(ERP5TypeTestReLoader, self).loadTestsFromName(name,

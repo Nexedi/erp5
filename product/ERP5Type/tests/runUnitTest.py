@@ -278,6 +278,16 @@ class ERP5TypeTestLoader(unittest.TestLoader):
     lambda self: self._testMethodPrefix,
     lambda self, value: None)
 
+  def _importZodbTestComponent(self, name):
+    import erp5.component.test
+    module = __import__('erp5.component.test.' + name,
+                        fromlist=['erp5.component.test'],
+                        level=0)
+    try:
+      self._test_component_ref_list.append(module)
+    except AttributeError:
+      self._test_component_ref_list = [module]
+
   def loadTestsFromName(self, name, module=None):
     """
     This method is here for compatibility with old style arguments:
@@ -308,17 +318,13 @@ class ERP5TypeTestLoader(unittest.TestLoader):
       if ComponentTestCase not in ERP5TypeTestCase.__bases__:
         ERP5TypeTestCase.__bases__ = ComponentTestCase,
 
-      # TestLoader() does not perform any import so import the Module manually
-      module = __import__('erp5.component.test',
-                          fromlist=['erp5.component.test'],
-                          level=0)
-
-      # TODO-arnau: What about loading a test for a specific Component Version?
+      # `./runUnitTest erp5_base:testBase` executes Unit Test from
+      # erp5.component.testBase Module. This needs be imported beforehand:
+      # unittest loadTestsFromName() will then `getattr(module, name)`
       name = name.split(':')[1]
-
-      __import__('erp5.component.test.%s' % name.split('.')[0],
-                 ['erp5.component.test'],
-                 level=0)
+      import erp5.component.test
+      module = erp5.component.test
+      self._importZodbTestComponent(name.split('.')[0])
 
     return super(ERP5TypeTestLoader, self).loadTestsFromName(name, module)
 
