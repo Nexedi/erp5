@@ -482,6 +482,7 @@
         // XXX How to change the dom only when cropper is ready?
         // For now, it needs to access dom element size
         gadget.element.replaceChild(div, gadget.element.firstElementChild);
+        gadget.element.querySelector(".camera-header").scrollIntoView(false);
       });
   }
 
