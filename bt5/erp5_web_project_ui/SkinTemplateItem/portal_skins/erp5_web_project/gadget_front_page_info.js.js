@@ -32,26 +32,24 @@
     }
 
     var i,
-      project_query = getComplexQuery({"portal_type" : "Project",
-                                       "validation_state" : "validated"},
-                                      "AND"),
-      milestone_query = getComplexQuery({"portal_type" : "Project Milestone",
-                                         "parent__validation_state" : "validated"},
-                                        "AND"),
+      project_query = Query.objectToSearchText(
+        getComplexQuery({"portal_type" : "Project",
+                         "validation_state" : "validated"},
+                        "AND")),
+      milestone_query = Query.objectToSearchText(
+        getComplexQuery({"portal_type" : "Project Milestone",
+                         "parent__validation_state" : "validated"},
+                        "AND")),
       test_result_query = Query.objectToSearchText(
         getComplexQuery({"portal_type" : "Test Result",
                          "source_project__validation_state" : "validated"},
                         "AND")),
-      //document_query,
-      //portal_type_list = ["Task", "Bug", "Task Report"],
-      //valid_state_list = ["planned", "ordered", "confirmed", "delivered", "ready"],
-      test_state_list = ["failed", "stopped"],
-      date_query,
-      one_year_old_date = new Date();
+      test_state_list = ["failed", "stopped"];
 
     test_result_query += ' AND simulation_state: ("' + test_state_list.join('", "') + '")';
 
     //TODO filter too old objects?
+    var date_query, one_year_old_date = new Date();
     one_year_old_date.setFullYear(one_year_old_date.getFullYear() - 1);
     one_year_old_date = one_year_old_date.toISOString();
     one_year_old_date = one_year_old_date.substring(0, one_year_old_date.length - 5).replace("T", " ");
@@ -62,22 +60,10 @@
       value: one_year_old_date
     });
 
-    /*document_query = Query.objectToSearchText(new SimpleQuery({
-      key: "source_project__validation_state",
-      operator: "=",
-      type: "simple",
-      value: "validated"
-    }));
-    // done with string queries directly because there is no way to do "key IN <list-of-values>" with Query
-    // unless appending simple queries with AND by iterating on list but it's inefficient
-    document_query += ' AND portal_type: ("' + portal_type_list.join('", "') + '")';
-    document_query += ' AND simulation_state: ("' + valid_state_list.join('", "') + '")';*/
-
     return new RSVP.Queue()
       .push(function () {
         var promise_list = [],
-          limit = [0, 100000],
-          select_list = ['source_project', 'portal_type', 'modification_date'];
+          limit = [0, 100000];
         promise_list.push(gadget.jio_allDocs({
           query: Query.objectToSearchText(project_query),
           limit: limit,
@@ -85,28 +71,22 @@
           sort_on: [["modification_date", "ascending"]]
         }));
         promise_list.push(gadget.jio_allDocs({
-          query: Query.objectToSearchText(milestone_query),
+          query: milestone_query,
           limit: limit,
-          select_list: select_list,
+          select_list: ["parent__title", 'portal_type', 'modification_date'],
           sort_on: [["modification_date", "descending"]]
         }));
         promise_list.push(gadget.jio_allDocs({
           query: test_result_query,
           limit: limit,
-          select_list: ['source_project__relative_url', 'modification_date'],
+          select_list: ['source_project__relative_url', 'portal_type'],
           group_by: ['source_project__relative_url'],
           sort_on: [["modification_date", "descending"]]
         }));
-        /*promise_list.push(gadget.jio_allDocs({
-          query: document_query,
-          limit: limit,
-          select_list: select_list,
-          sort_on: [["modification_date", "descending"]]
-        }));*/
         return RSVP.all(promise_list);
       })
       .push(function (result_list) {
-        return [result_list[0].data.rows, result_list[1].data.rows, result_list[2].data.rows/*, result_list[3].data.rows*/];
+        return [result_list[0].data.rows, result_list[1].data.rows, result_list[2].data.rows];
       });
   }
 
@@ -118,12 +98,18 @@
       project_html_element_list,
       left_line_html,
       ul_list = document.getElementById("js-project-list"),
-      //XXX hardcoded for now (build a template?)
+      //XXX hardcoded portal_type-title dict (build a template?)
       line_title_list = {"Task": "Tasks",
+                         "Test Result" : "Test Results",
                          "Bug" : "Bugs",
+                         "Project Milestone" : "Milestones",
                          "Task Report": "Task Reports"},
+      project_id,
       project_dict,
-      type;
+      type,
+      outdated,
+      milestone_limit_date = new Date();
+    milestone_limit_date.setFullYear(milestone_limit_date.getFullYear() - 1);
 
     function createProjectHtmlElement(project_id, project_title) {
       var project_element = document.createElement('li'),
@@ -140,7 +126,7 @@
       info_div.classList.add("project-info");
       left_info_div.classList.add("left");
       right_line_div.classList.add("project-line");
-      forum_link.href = "todo";
+      forum_link.href = "TODO";
       forum_link.innerHTML = project_id + " forum link";
       right_line_div.appendChild(forum_link);
       right_div.appendChild(right_line_div);
@@ -170,6 +156,37 @@
       line_div.appendChild(total);
       line_div.appendChild(fail);
       return line_div;
+    }
+
+    function getProjectId(id) {
+      var segments = id.split("/");
+      if (segments.length === 2) {
+        return id;
+      }
+      return segments.slice(0, -1).join("/");
+    }
+
+    for (i = 0; i < milestone_list.length; i += 1) {
+      project_id = getProjectId(milestone_list[i].id);
+      if (!project_info_dict.hasOwnProperty(project_id)) {
+        project_info_dict[project_id] = {};
+      }
+      outdated = (new Date(milestone_list[i].value.modification_date) < milestone_limit_date) ? 1 : 0;
+      if (project_info_dict[project_id].hasOwnProperty(milestone_list[i].value.portal_type)) {
+        project_info_dict[project_id][milestone_list[i].value.portal_type].total += 1;
+        project_info_dict[project_id][milestone_list[i].value.portal_type].total += outdated;
+      } else {
+        project_info_dict[project_id][milestone_list[i].value.portal_type] = { 'total' : 1, 'outdated' : outdated };
+      }
+    }
+
+    for (i = 0; i < test_result_list.length; i += 1) {
+      project_id = test_result_list[i].value.source_project__relative_url;
+      if (!project_info_dict.hasOwnProperty(project_id)) {
+        project_info_dict[project_id] = {};
+      }
+      //TODO for test result, total and outdated are values the test itself should retrieve (all_tests and failed) but those are _local_properties
+      project_info_dict[project_id][test_result_list[i].value.portal_type] = { 'total' : 1, 'outdated' : 0 };
     }
 
     for (i = 0; i < project_list.length; i += 1) {
