@@ -233,7 +233,7 @@
       len = gadget.state.page_count,
       thumbnail_dom_list = [];
 
-    return gadget.getTranslationList(["Page", "New Page"])
+    return gadget.getTranslationList(["New Page"])
       .push(function (result_list) {
         for (i = 0; i < len; i += 1) {
           // XXX TODO display a loader when saving
@@ -262,7 +262,7 @@
           }
         }
         thumbnail_dom_list.push(domsugar('button', {type: 'button',
-                                                    text: 'New Page',
+                                                    text: result_list[0],
                                                     // Do not allow to show again the current image
                                                     disabled: (len === gadget.state.page - 1),
                                                     "class": 'new-btn ui-btn-icon-left ui-icon-plus'
@@ -302,7 +302,7 @@
         video.play();
         return RSVP.all([
           getVideoDeviceList(),
-          gadget.getTranslationList(["Capture", "Change Camera"]),
+          gadget.getTranslationList(["Capture", "Change Camera", "Page"]),
           buildPreviousThumbnailDom(gadget)
         ]);
       })
@@ -327,7 +327,7 @@
         div = domsugar('div', {'class': 'camera'}, [
           domsugar('div', {'class': 'camera-header'}, [
             domsugar('h4', [
-              'Page ',
+              result_list[1][2] + ' ',
               domsugar('label', {'class': 'page-number', text: gadget.state.page})
             ])
           ]),
@@ -386,7 +386,7 @@
           compression = settings.compression || 1;
 
         return RSVP.all([
-          gadget.getTranslationList(["Delete", "Save"]),
+          gadget.getTranslationList(["Delete", "Save", "Page"]),
           new Promise(function (resolve) {
             resolve(canvas.toDataURL("image/jpeg", compression));
           }),
@@ -401,7 +401,7 @@
         div = domsugar('div', {'class': 'camera'}, [
           domsugar('div', {'class': 'camera-header'}, [
             domsugar('h4', [
-              'Page ',
+              result_list[1][2] + ' ',
               domsugar('label', {'class': 'page-number', text: gadget.state.page})
             ])
           ]),
@@ -442,7 +442,7 @@
     return new RSVP.Queue()
       .push(function () {
         return RSVP.all([
-          gadget.getTranslationList(["Delete", "Save"]),
+          gadget.getTranslationList(["Delete", "Save", "Page"]),
           buildPreviousThumbnailDom(gadget)
         ]);
       })
@@ -469,7 +469,7 @@
         div = domsugar('div', {'class': 'camera'}, [
           domsugar('div', {'class': 'camera-header'}, [
             domsugar('h4', [
-              'Page ',
+              result_list[1][2] + ' ',
               domsugar('label', {'class': 'page-number', text: gadget.state.page + 1})
             ])
           ]),
