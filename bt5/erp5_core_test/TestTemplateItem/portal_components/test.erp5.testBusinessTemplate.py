@@ -7564,6 +7564,11 @@ class _ZodbComponentTemplateItemMixin(BusinessTemplateMixin):
   """
   def stepCreateZodbDocument(self, sequence=None, **kw):
     document_id = self.component_id_prefix + '.erp5.' + self.document_title
+    # Delete the Component created by previous tests executions
+    if document_id in self.portal.portal_components.objectIds():
+      self.portal.portal_components.manage_delObjects([document_id])
+      self.commit()
+
     component = self.portal.portal_components.newContent(
       id=document_id,
       version='erp5',
