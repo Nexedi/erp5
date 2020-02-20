@@ -938,35 +938,45 @@
     /////////////////////////////////////////////////////////////////
     .declareJob('registerServiceWorker',
                 function registerServiceWorker(service_worker_url) {
-        var gadget = this;
+        var gadget = this,
+          is_first_worker,
+          install_delay;
         if (navigator.serviceWorker !== undefined) {
+          is_first_worker = (navigator.serviceWorker.controller === null);
+          install_delay = is_first_worker ? 20000 : 2000;
           return RSVP.all([
             // Delay service worker installation, so that:
             // * it does not slow down the current page rendering
             // * it is not triggered too often if user click on multiple links
             // * it is triggered only if the user browse the site
-            RSVP.delay(20000)
-                .then(function () {
+            RSVP.delay(install_delay)
+              .then(function () {
                   // Register the ServiceWorker
-                  return navigator
-                    .serviceWorker
-                    .register(service_worker_url)
-                    .then(function (registration) {
-                      gadget.state.service_worker_registration = registration;
-                    })
-                    .catch(function (error) {
-                      // If service worker installation is rejected,
-                      // do not prevent the site to be usable, even if slower
-                      console.warn("Service worker registration failed", error);
-                    });
-                }),
+                return navigator.serviceWorker
+                  .register(service_worker_url)
+                  .then(function (registration) {
+                    gadget.state.service_worker_registration = registration;
+                  })
+                  .catch(function (error) {
+                    // If service worker installation is rejected,
+                    // do not prevent the site to be usable, even if slower
+                    console.warn("Service worker registration failed", error);
+                  });
+              }),
             // Check when a new worker has been activated from another tab
             // XXX Not promise based, but we do not want to add a new dependency
             navigator.serviceWorker
                      .addEventListener('message',
                                        function handleMessage(event) {
                   if (event.data === 'claim') {
-                    gadget.state.service_worker_claimed = true;
+                    if (is_first_worker) {
+                      // Do not reload if the worker is created after the page
+                      // is loaded, because they probably use the same
+                      // gadgets
+                      is_first_worker = false;
+                    } else {
+                      gadget.state.service_worker_claimed = true;
+                    }
                   }
                 })
           ]);
