@@ -139,6 +139,13 @@ class DataArray(BigFile):
     if zarray is not None:
       return zarray.dtype.names
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'setArrayDtypeNames')
+  def setArrayDtypeNames(self, names):
+    """
+    Set numpy array dtype names
+    """
+    self.getArray().dtype.names = names
+
   security.declareProtected(Permissions.View, 'index_html')
   def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw):
     """
