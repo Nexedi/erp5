@@ -16,8 +16,6 @@ valid_states = ['planned', 'ordered', 'confirmed', 'delivered', 'ready']
 valid_states = "('" + "', '".join(valid_states) + "')"
 valid_types = ['Task', 'Bug', 'Task Report']
 valid_types = "('" + "', '".join(valid_types) + "')"
-# TODO: GET THE CATEGORY_UID
-category = 282
 
 query = """SELECT DISTINCT
             COUNT(*) AS  `#number`,
@@ -26,8 +24,7 @@ query = """SELECT DISTINCT
           FROM (catalog AS `catalog`
             LEFT JOIN ( category AS `related_source_project__relative_url_category`
             INNER JOIN catalog AS `related_source_project__relative_url_1_catalog`
-            ON related_source_project__relative_url_category.base_category_uid = %i
-              AND related_source_project__relative_url_1_catalog.uid = related_source_project__relative_url_category.category_uid)
+            ON related_source_project__relative_url_1_catalog.uid = related_source_project__relative_url_category.category_uid)
             ON related_source_project__relative_url_category.uid = catalog.uid)
           WHERE
             1 = 1
@@ -35,11 +32,13 @@ query = """SELECT DISTINCT
             AND `catalog`.`simulation_state` IN %s
             AND ( `catalog`.`portal_type` IN %s)
             AND ( `related_source_project__relative_url_1_catalog`.`relative_url` IS NOT NULL)
+            AND `related_source_project__relative_url_1_catalog`.`portal_type` IN ('Project', 'Project Line')
+            AND `related_source_project__relative_url_1_catalog`.`validation_state` = 'validated'
           GROUP BY
             `related_source_project__relative_url_1_catalog`.`relative_url`,
             `catalog`.`portal_type`"""
 
-total_query = query % (category, now_date, valid_states, valid_types)
+total_query = query % (now_date, valid_states, valid_types)
 
 for row in context.cmf_activity_sql_connection.manage_test(total_query):
   key = getProjectId(row['source_project__relative_url'])
@@ -48,7 +47,7 @@ for row in context.cmf_activity_sql_connection.manage_test(total_query):
   else:
     project_dict[key] = {row['portal_type'] : { 'total' : row["#number"], 'outdated' : 0 }}
 
-outdated_query = query % (category, limit_date, valid_states, valid_types)
+outdated_query = query % (limit_date, valid_states, valid_types)
 
 for row in context.cmf_activity_sql_connection.manage_test(outdated_query):
   key = getProjectId(row['source_project__relative_url'])
