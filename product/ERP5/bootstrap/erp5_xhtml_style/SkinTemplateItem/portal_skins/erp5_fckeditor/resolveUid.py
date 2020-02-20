@@ -1,3 +1,4 @@
+# pylint: disable-all
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.standard import html_quote
 
