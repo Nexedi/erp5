@@ -95,17 +95,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <!--tr>
                 <td i18n:translate="" i18n:domain="erp5_ui">Earned on this period</td>
                 <td></td>
-              </tr>
+              </tr-->
               <tr>
                 <td i18n:translate="" i18n:domain="erp5_ui">Taken on this period</td>
-                <td></td>
+                <td tal:content="python: quantity_renderer(payslip_data['taken_holiday'])"></td>
               </tr>
               <tr>
                 <td i18n:translate="" i18n:domain="erp5_ui">Remaining</td>
-                <td></td>
+                <td tal:content="python: quantity_renderer(payslip_data['total_holiday'])"></td>
               </tr>
             </tbody>
           </table>

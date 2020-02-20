@@ -78,6 +78,9 @@
                       <list>
                         <string>your_target_language</string>
                         <string>your_international_form</string>
+                        <string>your_evoluation_remuneration</string>
+                        <string>your_taken_holiday</string>
+                        <string>your_total_holiday</string>
                       </list>
                     </value>
                 </item>
