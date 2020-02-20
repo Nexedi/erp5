@@ -3,6 +3,9 @@
 (function (window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query) {
   "use strict";
 
+  const STATUS_OK = "green";
+  const STATUS_NOT_OK = "red";
+
   function getProjectElementList(gadget) {
 
     function getComplexQuery(query_dict, operator, extra_query) {
@@ -108,7 +111,7 @@
   }
 
   function renderProjectList(project_info_dict, project_list, milestone_list, test_result_list) {
-    var i, j,
+    var i,
       item,
       project_html,
       left_div_html,
@@ -116,7 +119,11 @@
       left_line_html,
       ul_list = document.getElementById("js-project-list"),
       //XXX hardcoded for now (build a template?)
-      line_title_list = ["Milestones", "Tasks", "Bugs", "Task Reports", "Test Results"];
+      line_title_list = {"Task": "Tasks",
+                         "Bug" : "Bugs",
+                         "Task Report": "Task Reports"},
+      project_dict,
+      type;
 
     function createProjectHtmlElement(project_id, project_title) {
       var project_element = document.createElement('li'),
@@ -169,14 +176,15 @@
       project_html_element_list = createProjectHtmlElement(project_list[i].id, project_list[i].value.title);
       project_html = project_html_element_list[0];
       left_div_html = project_html_element_list[1];
-      for (j = 0; j < line_title_list.length; j += 1) {
-        //XXX hardcoded. This should come from the query results
-        item = {"status_color": "green",
-                "total": 100,
-                "outdated": 40,
-                "title": line_title_list[j]};
-        left_line_html = createProjectLineHtmlElement(item.title, item.total, item.outdated, item.status_color);
-        left_div_html.appendChild(left_line_html);
+
+      project_dict = project_info_dict[project_list[i].id];
+      for (type in project_dict) {
+        if (project_dict.hasOwnProperty(type)) {
+          left_line_html = createProjectLineHtmlElement(((line_title_list.hasOwnProperty(type)) ? line_title_list[type] : type),
+                                                        project_dict[type].total, project_dict[type].outdated,
+                                                        ((project_dict[type].outdated > 0) ? STATUS_NOT_OK : STATUS_OK));
+          left_div_html.appendChild(left_line_html);
+        }
       }
       ul_list.appendChild(project_html);
     }
