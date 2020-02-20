@@ -36,6 +36,7 @@ from DateTime.DateTime import DateTime, DateTimeError, _cache
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SearchText import parse
+import re
 
 MARKER = []
 
@@ -76,6 +77,11 @@ def castDate(value, change_timezone=True):
       # Because "2012/01/01 00:00:00 GMT+9" < "2012/01/01 00:00:00 GMT+0".
       if value.isdigit():
         raise DateTimeError
+      if re.match('\d+-\d+$|\d+-\d+-\d+$', value) is not None:
+        # DateTime('2012-01-01') ignores timezone and DateTime('2012/01/01')
+        # does not ignore timezone. Since timezone is a must, change date
+        # delimiter from a dash to a slash.
+        value = value.replace('-', '/')
       value = _DateTime(value, **date_kw)
     except DateTimeError:
       delimiter_count = countDelimiters(value)
