@@ -6,9 +6,6 @@ div[data-gadget-url$="gadget_document_scanner.html"] {
   div[data-gadget-url$="gadget_document_scanner.html"] .camera {
     max-width: 90%;
   }
-  div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
-    min-width: 35%;
-  }
   div[data-gadget-url$="gadget_document_scanner.html"] .thumbnail-list > button {
     max-width: 50%;
   }
