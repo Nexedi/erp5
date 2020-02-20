@@ -183,7 +183,7 @@
       });
   }
 
-  function selectMediaDevice(current_device_id, force_new_device) {
+  function selectMediaDevice(camera_list, current_device_id, force_new_device) {
     return getVideoDeviceList()
       .push(function (info_list) {
         var j,
@@ -193,11 +193,16 @@
           device = info_list[j];
           if (device.kind === 'videoinput') {
             if ((!current_device_id) ||
+                (camera_list.indexOf(device.deviceId) === -1 &&
                 (force_new_device && (device.deviceId !== current_device_id)) ||
-                (!force_new_device && (device.deviceId === current_device_id))) {
+                (!force_new_device && (device.deviceId === current_device_id)))) {
               return device.deviceId;
             }
           }
+        }
+
+        if (len > 0) {
+          return info_list[0].deviceId;
         }
         throw new Error("no media found");
       });
@@ -227,7 +232,6 @@
       btn_class = "",
       len = gadget.state.page_count,
       thumbnail_dom_list = [];
-
 
     return gadget.getTranslationList(["Page", "New Page"])
       .push(function (result_list) {
@@ -508,20 +512,27 @@
     .setState({
       display_step: 'display_video',
       page: 1,
-      page_count: 0
+      page_count: 0,
+      camera_list: []
     })
     .declareMethod('render', function (options) {
       // This method is called during the ERP5 form rendering
       // changeState is used to ensure not resetting the gadget current display
       // if not needed
       var gadget = this,
+        camera_list =  gadget.state.camera_list,
         default_value = JSON.parse(options.value);
-      return selectMediaDevice(gadget.state.device_id, false)
+
+      return selectMediaDevice(camera_list, gadget.state.device_id, false)
         .push(function (device_id) {
+          if (camera_list.indexOf(device_id) === -1) {
+            camera_list.push(device_id);
+          }
           return gadget.changeState({
             store_new_image_cropped_method: options.store_new_image_cropped_method,
             active_process: default_value.active_process,
             image_list: default_value.image_list,
+            camera_list: camera_list,
             preferred_cropped_canvas_data: JSON.parse(options.preferred_cropped_canvas_data),
             preferred_image_settings_data: JSON.parse(options.preferred_image_settings_data),
             device_id: device_id,
@@ -666,11 +677,18 @@
       }
 
       if (evt.target.className.indexOf("change-camera-btn") !== -1) {
-        return selectMediaDevice(gadget.state.device_id, true)
+        return selectMediaDevice(gadget.state.camera_list, gadget.state.device_id, true)
           .push(function (device_id) {
+            var camera_list = gadget.state.camera_list;
+            if (camera_list.indexOf(device_id) === -1) {
+              camera_list.push(device_id);
+            } else {
+              camera_list = [device_id];
+            }
             return gadget.changeState({
               display_step: 'display_video',
               preferred_cropped_canvas_data: {},
+              camera_list: camera_list,
               device_id: device_id
             });
           });
