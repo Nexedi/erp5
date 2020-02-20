@@ -401,7 +401,7 @@
         div = domsugar('div', {'class': 'camera'}, [
           domsugar('div', {'class': 'camera-header'}, [
             domsugar('h4', [
-              result_list[1][2] + ' ',
+              result_list[0][2] + ' ',
               domsugar('label', {'class': 'page-number', text: gadget.state.page})
             ])
           ]),
@@ -469,7 +469,7 @@
         div = domsugar('div', {'class': 'camera'}, [
           domsugar('div', {'class': 'camera-header'}, [
             domsugar('h4', [
-              result_list[1][2] + ' ',
+              result_list[0][2] + ' ',
               domsugar('label', {'class': 'page-number', text: gadget.state.page + 1})
             ])
           ]),
@@ -567,6 +567,7 @@
       if (display_step === 'show_picture') {
         return renderSubmittedPicture(gadget);
       }
+
       if (display_step) {
         // Ease developper work by raising for not handled cases
         throw new Error('Unhandled display step: ' + gadget.state.display_step);
