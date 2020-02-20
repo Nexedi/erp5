@@ -40,13 +40,21 @@
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//div[@data-gadget-scope='field_your_simulation_state']//select</td>
   <td>label=Closed</td>
 </tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>COUSCOUS</td>
+  <td></td>
+</tr>
+
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+
 <tal:block tal:define="notification_configuration python: {'class': 'error',
                                                            'text': 'No person found for your user'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 
 </tbody></table>
 </body>
