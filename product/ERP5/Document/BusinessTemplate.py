@@ -6546,7 +6546,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
         for name, obj in inspect.getmembers(product_obj):
           if (name[0] == '_' or
               name in ('this_module', 'Permissions') or
-              obj is product_obj):
+              obj is product_obj or
+              # Base cannot be migrated (InitGhostBase)
+              (product_name == 'ERP5Type' and name == 'Base')):
             continue
 
           if inspect.ismodule(obj):
