@@ -303,12 +303,7 @@
         ]);
       })
       .push(function (result_list) {
-        var button_list = [
-          domsugar('button', {type: 'button',
-                              'class': 'take-picture-btn ui-btn-icon-left ui-icon-circle',
-                              text: result_list[1][0]
-                             })
-        ],
+        var button_list = [],
           div;
         // Only display the change camera if device has at least 2 cameras
         if (result_list[0].length > 1) {
@@ -319,6 +314,11 @@
                                })
           );
         }
+        button_list.push(domsugar('button', {
+          type: 'button',
+          'class': 'take-picture-btn ui-btn-icon-left ui-icon-circle',
+          text: result_list[1][0]
+        }));
 
         div = domsugar('div', {'class': 'camera'}, [
           domsugar('div', {'class': 'camera-header'}, [
@@ -670,6 +670,7 @@
           .push(function (device_id) {
             return gadget.changeState({
               display_step: 'display_video',
+              preferred_cropped_canvas_data: {},
               device_id: device_id
             });
           });
