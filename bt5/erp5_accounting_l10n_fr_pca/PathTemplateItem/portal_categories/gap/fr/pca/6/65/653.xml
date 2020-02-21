@@ -49,6 +49,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -72,25 +73,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>789</string> </value>
-        </item>
-        <item>
-            <key> <string>effective_date</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>653</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>789</string> </value>
+            <value> <string>653</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Category</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Report des ressources non utilisées des exercices antérieurs</string> </value>
         </item>
       </dictionary>
     </pickle>
