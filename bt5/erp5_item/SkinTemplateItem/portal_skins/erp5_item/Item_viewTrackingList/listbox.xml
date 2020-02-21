@@ -91,12 +91,12 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>node_title</string>
-                          <string>Site or Warehouse</string>
-                        </tuple>
-                        <tuple>
                           <string>source_title</string>
                           <string>Origin</string>
+                        </tuple>
+                        <tuple>
+                          <string>node_title</string>
+                          <string>Site or Warehouse</string>
                         </tuple>
                         <tuple>
                           <string>section_title</string>
