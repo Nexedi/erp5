@@ -1,4 +1,3 @@
-from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.Utils import cartesianProduct
 portal = context.getPortalObject()
 

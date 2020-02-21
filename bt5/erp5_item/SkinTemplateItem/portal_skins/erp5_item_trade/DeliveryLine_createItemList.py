@@ -2,7 +2,6 @@ from Products.ERP5Type.Message import translateString
 
 item_list = []
 request = context.REQUEST
-total_quantity = 0.0
 
 item_portal_type = kw.get('type')
 
@@ -19,8 +18,6 @@ if dialog.has_field('your_item_extra_property_list'):
       item_property_dict[field_id.replace('your_', '', 1)] =\
                                     request.get(field_id)
 
-movement_cell_list = context.getCellValueList()
-base_id = 'movement'
 
 for line in kw.get('listbox'):
 
