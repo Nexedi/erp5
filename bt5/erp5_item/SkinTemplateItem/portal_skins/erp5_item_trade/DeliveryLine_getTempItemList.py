@@ -1,4 +1,3 @@
-from Products.ERP5Type.Document import newTempDeliveryLine
 portal = context.getPortalObject()
 
 try:
@@ -9,7 +8,11 @@ except ValueError:
 result = []
 
 for i in range(count):
-  obj = newTempDeliveryLine(portal, id="tmp_item_%s" % i, uid="new_item_%s" % i)
+  obj = portal.newContent(
+      portal_type='Movement',
+      temp_object=True,
+      id="tmp_item_%s" % i,
+      uid="new_item_%s" % i)
   result.append(obj)
 
 return result
