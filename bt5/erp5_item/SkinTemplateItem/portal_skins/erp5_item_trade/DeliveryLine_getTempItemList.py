@@ -1,4 +1,4 @@
-from Products.ERP5Type.Document import newTempDeliveryLine
+from Products.ERP5Type.Document import newTempDeliveryLine # pylint: disable=no-name-in-module
 portal = context.getPortalObject()
 
 try:
