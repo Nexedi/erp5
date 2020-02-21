@@ -213,7 +213,12 @@
 
     if (operator_default_list === NUMERIC) {
       if (query_dict.key.indexOf("date") !== -1) {
-        input_type = "date";
+        // input_type="date" forces end users to use a dash as date delimiter
+        // and it is not useful for ERP5 because Zope DateTime ignores
+        // timezone if date delimiter was a dash. Thus input_type="text" is
+        // better because end users can control string representation of
+        // DateTime by themselves. Also it is compatible with xhtml style.
+        input_type = "text";
       } else {
         input_type = "number";
       }
