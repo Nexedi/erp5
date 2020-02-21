@@ -1461,9 +1461,9 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   def test_getHateoas_group_by_param(self):
     fake_request = do_fake_request("GET")
     result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search",
-                                                                         select_list=['count(*)'],
+                                                                         select_list='count(*)',
                                                                          query='portal_type:"Base Category"',
-                                                                         group_by=["portal_type"])
+                                                                         group_by="portal_type")
     self.assertEquals(fake_request.RESPONSE.status, 200)
     self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
@@ -1476,7 +1476,7 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(result_dict['_query'], 'portal_type:"Base Category"')
     self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_select_list'], ['count(*)'])
-    self.assertEqual(result_dict['_group_by'], ["portal_type"])
+    self.assertEqual(result_dict['_group_by'], "portal_type")
     self.assertEqual(result_dict['_sort_on'], None)
 
     self.assertEqual(len(result_dict['_embedded']['contents']), 1)
