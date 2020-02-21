@@ -587,19 +587,21 @@
 
     .onEvent("click", function (evt) {
       // Only handle click on BUTTON and IMG element
-      if (evt.target.tagName !== 'BUTTON' && evt.target.tagName !== 'IMG') {
+      var gadget = this,
+        tag_name = evt.target.tagName,
+        state_dict;
+
+      if (tag_name !== 'BUTTON' &&
+          (tag_name !== 'IMG' || evt.target.className.indexOf("show-img") === -1)) {
         return;
       }
-
-      var gadget = this,
-        state_dict;
 
       // Disable any button. It must be managed by this gadget
       evt.preventDefault();
       // If user clicks on same image twice,
       // we don't need to disable everything again if parent is already disabled
-      if (evt.target.tagName === 'BUTTON' || (
-            evt.target.tagName === 'IMG' && !evt.target.parentElement.disabled)) {
+      if (tag_name === 'BUTTON' || (
+            tag_name === 'IMG' && !evt.target.parentElement.disabled)) {
         gadget.element.querySelectorAll('button').forEach(function (elt) {
           elt.disabled = true;
         });
