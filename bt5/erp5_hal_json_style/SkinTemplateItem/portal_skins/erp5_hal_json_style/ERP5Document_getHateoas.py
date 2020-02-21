@@ -1641,6 +1641,12 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       count_method = source_field.get_value('count_method')
     has_listbox_a_count_method = (count_method != "") and (count_method.getMethodName() != list_method)
 
+    # Cast to list if only one element is provided
+    if select_list is None:
+      select_list = []
+    elif same_type(select_list, ""):
+      select_list = [select_list]
+
     # hardcoded responses for site and portal objects (which are not Documents!)
     # we let the flow to continue because the result of a list_method call can
     # be similar - they can in practice return anything
@@ -1776,12 +1782,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       for k, v in catalog_kw.items():
         REQUEST.set(k, v)
       search_result_iterable = callable_list_method(**catalog_kw)
-
-    # Cast to list if only one element is provided
-    if select_list is None:
-      select_list = []
-    elif same_type(select_list, ""):
-      select_list = [select_list]
 
     # extract form field definition into `editable_field_dict`
     editable_field_dict = {}
