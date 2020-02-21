@@ -641,7 +641,7 @@
             var canvas = gadget.cropper.getCroppedCanvas();
             return new Promise(function (resolve) {
               // XXX too slow, takes 2 seconds or more on mobile.
-              canvas.toBlob(resolve);
+              canvas.toBlob(resolve, 'image/jpeg', 0.85);
             });
           })
           .push(function (blob) {
