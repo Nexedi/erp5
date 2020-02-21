@@ -763,18 +763,12 @@ if (typeof document.contains !== 'function') {
     try {
       result = callback.apply(context, argument_list);
     } catch (e) {
-      return new RSVP.Queue()
-        .push(function returnPushableError() {
-          return RSVP.reject(e);
-        });
+      return new RSVP.Queue(RSVP.reject(e));
     }
     if (result instanceof RSVP.Queue) {
       return result;
     }
-    return new RSVP.Queue()
-      .push(function returnPushableResult() {
-        return result;
-      });
+    return new RSVP.Queue(result);
   }
 
   function readBlobAsDataURL(blob) {
@@ -829,20 +823,10 @@ if (typeof document.contains !== 'function') {
         try {
           result = callback(evt);
         } catch (e) {
-          result = RSVP.reject(e);
+          return reject(e);
         }
 
-        callback_promise = result;
-        new RSVP.Queue()
-          .push(function waitForEventCallbackResult() {
-            return result;
-          })
-          .push(undefined, function handleEventCallbackError(error) {
-            if (!(error instanceof RSVP.CancellationError)) {
-              canceller();
-              reject(error);
-            }
-          });
+        callback_promise = new RSVP.Queue(result).push(undefined, reject);
       };
 
       target.addEventListener(type, handle_event_callback, useCapture);
@@ -1141,10 +1125,7 @@ if (typeof document.contains !== 'function') {
       if (resolved) {
         throw new ResolvedMonitorError();
       }
-      var queue = new RSVP.Queue()
-        .push(function waitForPromiseToMonitor() {
-          return promise_to_monitor;
-        })
+      var queue = new RSVP.Queue(promise_to_monitor)
         .push(function handlePromiseToMonitorSuccess(fulfillmentValue) {
           // Promise to monitor is fullfilled, remove it from the list
           var len = promise_list.length,
@@ -1160,13 +1141,6 @@ if (typeof document.contains !== 'function') {
           }
           promise_list = new_promise_list;
         }, function handlePromiseToMonitorError(rejectedReason) {
-          if (rejectedReason instanceof RSVP.CancellationError) {
-            if (!(promise_to_monitor.isFulfilled &&
-                  promise_to_monitor.isRejected)) {
-              // The queue could be cancelled before the first push is run
-              promise_to_monitor.cancel();
-            }
-          }
           reject(rejectedReason);
           throw rejectedReason;
         });
@@ -1321,16 +1295,16 @@ if (typeof document.contains !== 'function') {
   };
 
   function runJob(gadget, name, callback, argument_list) {
-    var job_promise = ensurePushableQueue(callback, argument_list, gadget);
     if (gadget.__job_dict.hasOwnProperty(name)) {
       gadget.__job_dict[name].cancel();
     }
+    var job_promise = ensurePushableQueue(callback, argument_list, gadget);
     gadget.__job_dict[name] = job_promise;
-    gadget.__monitor.monitor(new RSVP.Queue()
-      .push(function waitForJobPromise() {
-        return job_promise;
-      })
+    // gadget.__monitor.monitor(job_promise
+    gadget.__monitor.monitor(new RSVP.Queue(job_promise)
       .push(undefined, function handleJobError(error) {
+        // Do not crash monitor if the job has been cancelled
+        // by a new execution
         if (!(error instanceof RSVP.CancellationError)) {
           throw error;
         }
@@ -1918,10 +1892,7 @@ if (typeof document.contains !== 'function') {
       result = method(url, options, parent_gadget, old_element);
       // Set the HTML context
       if (typeof result.then === 'function') {
-        return new RSVP.Queue()
-          .push(function () {
-            return result;
-          })
+        return new RSVP.Queue(result)
           .push(function setAsyncGadgetInstanceHTMLContext(gadget_instance) {
             return setGadgetInstanceHTMLContext(gadget_instance, options,
                                                 parent_gadget, url,
@@ -2641,11 +2612,8 @@ if (typeof document.contains !== 'function') {
       embedded_channel,
       declare_method_list_waiting;
 
-    return new RSVP.Queue()
-      .push(function waitForLoadingGadget() {
-        // Wait for the loading gadget to be created
-        return wait_for_gadget_loaded;
-      })
+    // Wait for the loading gadget to be created
+    return new RSVP.Queue(wait_for_gadget_loaded)
       .push(function handleLoadingGadget(result_list) {
         TmpConstructor = result_list[0];
         root_gadget = result_list[1];
