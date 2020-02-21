@@ -774,6 +774,11 @@ if (typeof document.contains !== 'function') {
     return new RSVP.Queue()
       .push(function returnPushableResult() {
         return result;
+      }, function (e) {
+        if ((result !== undefined) && (result.cancel !== undefined)) {
+          result.cancel();
+        }
+        throw e;
       });
   }
 
@@ -1144,6 +1149,12 @@ if (typeof document.contains !== 'function') {
       var queue = new RSVP.Queue()
         .push(function waitForPromiseToMonitor() {
           return promise_to_monitor;
+        }, function (e) {
+          if ((promise_to_monitor !== undefined) &&
+              (promise_to_monitor.cancel !== undefined)) {
+            promise_to_monitor.cancel();
+          }
+          throw e;
         })
         .push(function handlePromiseToMonitorSuccess(fulfillmentValue) {
           // Promise to monitor is fullfilled, remove it from the list
@@ -1326,6 +1337,7 @@ if (typeof document.contains !== 'function') {
       gadget.__job_dict[name].cancel();
     }
     gadget.__job_dict[name] = job_promise;
+    // gadget.__monitor.monitor(job_promise
     gadget.__monitor.monitor(new RSVP.Queue()
       .push(function waitForJobPromise() {
         return job_promise;
@@ -1921,6 +1933,11 @@ if (typeof document.contains !== 'function') {
         return new RSVP.Queue()
           .push(function () {
             return result;
+          }, function (e) {
+            if ((result !== undefined) && (result.cancel !== undefined)) {
+              result.cancel();
+            }
+            throw e;
           })
           .push(function setAsyncGadgetInstanceHTMLContext(gadget_instance) {
             return setGadgetInstanceHTMLContext(gadget_instance, options,
