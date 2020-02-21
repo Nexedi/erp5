@@ -43,7 +43,10 @@ total_query = query % (now_date, valid_states, valid_types)
 for row in context.cmf_activity_sql_connection.manage_test(total_query):
   key = getProjectId(row['source_project__relative_url'])
   if key in project_dict:
-    project_dict[key][row['portal_type']] = { 'total' : row["#number"], 'outdated' : 0 }
+    if row['portal_type'] in project_dict[key]:
+      project_dict[key][row['portal_type']]['total'] = project_dict[key][row['portal_type']]['total'] + row["#number"]
+    else:
+      project_dict[key][row['portal_type']] = { 'total' : row["#number"], 'outdated' : 0 }
   else:
     project_dict[key] = {row['portal_type'] : { 'total' : row["#number"], 'outdated' : 0 }}
 
@@ -51,6 +54,7 @@ outdated_query = query % (limit_date, valid_states, valid_types)
 
 for row in context.cmf_activity_sql_connection.manage_test(outdated_query):
   key = getProjectId(row['source_project__relative_url'])
-  project_dict[key][row['portal_type']]['outdated'] = row["#number"]
+  #project_dict[key][row['portal_type']]['outdated'] = row["#number"]
+  project_dict[key][row['portal_type']]['outdated'] = project_dict[key][row['portal_type']]['outdated'] + row["#number"]
 
 return json.dumps(project_dict, indent=2)
