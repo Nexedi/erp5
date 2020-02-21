@@ -73,7 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Preference_viewDocumentScannerSettting</string> </value>
+            <value> <string>string:${object_url}/Preference_viewDocumentScannerSetting</string> </value>
         </item>
       </dictionary>
     </pickle>
