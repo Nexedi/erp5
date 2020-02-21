@@ -47,7 +47,8 @@ for movement in portal_catalog(query = query):
       portal_type = "Data Transformation",
       validation_state = "validated",
       resource_relative_url = movement.getResource()):
-    if transformation.getVariationCategoryList() ==  movement.getVariationCategoryList():
+    # Variation - only with resolution for now
+    if not transformation.getVariationCategoryList() or transformation.getVariationCategoryList() == movement.getVariationCategoryList():
       transformation_list.append(transformation)
 
   for transformation in transformation_list:
