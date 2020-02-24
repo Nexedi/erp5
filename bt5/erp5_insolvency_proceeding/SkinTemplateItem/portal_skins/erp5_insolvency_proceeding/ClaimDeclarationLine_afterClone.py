@@ -1,0 +1,1 @@
+context.ClaimDeclarationLine_init()
