@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Item import Item
+from erp5.component.document.Item import Item
 
 class ComputerPartition(Item):
   """Computer partition represents usage of Computer"""
