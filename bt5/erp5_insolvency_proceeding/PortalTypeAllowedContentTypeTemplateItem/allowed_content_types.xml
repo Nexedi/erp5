@@ -1,4 +1,10 @@
 <allowed_content_type_list>
+ <portal_type id="Claim Declaration">
+  <item>Claim Declaration Line</item>
+ </portal_type>
+ <portal_type id="Claim Declaration Module">
+  <item>Claim Declaration</item>
+ </portal_type>
  <portal_type id="Insolvency Proceeding Module">
   <item>Insolvency Proceeding</item>
  </portal_type>
