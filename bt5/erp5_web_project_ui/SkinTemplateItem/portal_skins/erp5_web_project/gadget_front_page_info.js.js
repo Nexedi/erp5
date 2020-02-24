@@ -56,7 +56,7 @@
   function getProjectDocumentList(gadget, limit_date) {
     var document_query,
       portal_type_list = ["Task", "Bug", "Task Report"],
-      valid_state_list = ["planned", "ordered", "confirmed", "delivered", "ready"];
+      valid_state_list = ["planned", "auto_planned", "ordered", "confirmed", "ready", "stopped", "started"];
     document_query = Query.objectToSearchText(new SimpleQuery({
       key: "source_project__validation_state",
       operator: "=",
@@ -156,22 +156,30 @@
         status = document.createElement('span'),
         name = document.createElement('span'),
         outdated = document.createElement('span'),
-        total = document.createElement('span');
+        total = document.createElement('span'),
+        open_bracket = document.createElement('span'),
+        close_bracket = document.createElement('span');
       line_div.classList.add("project-line");
       status.classList.add(STATUS_SPAN);
       status.classList.add(status_color);
+      status.classList.add("margined");
       status.setAttribute("id", getProjectSpanId(project_id, portal_type, STATUS_SPAN));
       name.classList.add("name");
+      name.classList.add("margined");
       name.innerHTML = title;
+      total.classList.add("margined");
       total.innerHTML = total_count;
       total.setAttribute("id", getProjectSpanId(project_id, portal_type, TOTAL_SPAN));
-      //outdated.innerHTML = "(" + out_count + ")";
       outdated.innerHTML = out_count;
       outdated.setAttribute("id", getProjectSpanId(project_id, portal_type, OUTDATED_SPAN));
       line_div.appendChild(status);
       line_div.appendChild(name);
       line_div.appendChild(total);
+      open_bracket.innerHTML = "(";
+      close_bracket.innerHTML = ")";
+      line_div.appendChild(open_bracket);
       line_div.appendChild(outdated);
+      line_div.appendChild(close_bracket);
       return line_div;
     }
 
@@ -292,7 +300,7 @@
           getComplexQuery({"portal_type" : "Test Result",
                            "source_project__validation_state" : "validated"},
                           "AND")),
-        test_state_list = ["failed", "stopped"];
+        test_state_list = ["failed", "stopped", "public_stopped"];
       test_result_query += ' AND simulation_state: ("' + test_state_list.join('", "') + '")';
 
       return gadget.jio_allDocs({
