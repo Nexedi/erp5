@@ -1,5 +1,9 @@
 <workflow_chain>
  <chain>
+  <type>Claim Declaration</type>
+  <workflow>claim_declaration_simulation_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Insolvency Proceeding</type>
   <workflow>edit_workflow, ticket_workflow</workflow>
  </chain>
