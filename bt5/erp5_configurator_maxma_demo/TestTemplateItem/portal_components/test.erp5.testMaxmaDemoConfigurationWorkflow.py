@@ -25,7 +25,7 @@
 #
 ##############################################################################
 
-from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
+from erp5.component.module.ConfiguratorTestMixin import \
     TestLiveConfiguratorWorkflowMixin
 from Products.ERP5Type.tests.Sequence import SequenceList
 from unittest import expectedFailure
