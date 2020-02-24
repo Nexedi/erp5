@@ -33,26 +33,26 @@ from Products.ERP5.Document.TradeModelCell import TradeModelCell
 from Products.ERP5Type.Core.Predicate import Predicate
 
 class PaySheetModelCell(TradeModelCell):
-    """Trade Model Line
-    """
-    meta_type = 'ERP5 Pay Sheet Model Cell'
-    portal_type = 'Pay Sheet Model Cell'
-    isCell = 1
+  """Trade Model Line
+  """
+  meta_type = 'ERP5 Pay Sheet Model Cell'
+  portal_type = 'Pay Sheet Model Cell'
+  isCell = 1
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    def getMappedValueBaseCategoryList(self):
-        result = self._baseGetMappedValueBaseCategoryList()
-        if not result:
-            if not self.hasCellContent(base_id='variation'):
-                result = self.getVariationRangeBaseCategoryList() # The current resource variation
-        return list(result) + ['trade_phase', 'quantity_unit']
+  def getMappedValueBaseCategoryList(self):
+    result = self._baseGetMappedValueBaseCategoryList()
+    if not result:
+      if not self.hasCellContent(base_id='variation'):
+        result = self.getVariationRangeBaseCategoryList() # The current resource variation
+    return list(result) + ['trade_phase', 'quantity_unit']
 
-    # Redefine some methods as we do not want to turn cells into predicate
-    def edit(self, **kw):
-        return super(Predicate, self).edit(**kw)
+  # Redefine some methods as we do not want to turn cells into predicate
+  def edit(self, **kw):
+    return super(Predicate, self).edit(**kw) # pylint: disable=bad-super-call
 
-    def setPredicateCategoryList(self, *args, **kw):
-        pass
+  def setPredicateCategoryList(self, *args, **kw):
+    pass

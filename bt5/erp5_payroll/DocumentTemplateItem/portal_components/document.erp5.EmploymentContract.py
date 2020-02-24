@@ -95,9 +95,7 @@ class EmploymentContract(SubscriptionItem):
             movement_stop_date = stop_date
           if not self.assertMovementExists(applied_rule, movement_start_date) and\
               movement_stop_date.month() <= number_of_months_in_year:
-            property_dict = {}
-
-            simulation_movement = applied_rule.newContent(
+            applied_rule.newContent(
                 id = 'movement_%s_%s' % (movement_start_date.year(), movement_stop_date.month()),
                 start_date = movement_start_date,
                 stop_date = movement_stop_date,

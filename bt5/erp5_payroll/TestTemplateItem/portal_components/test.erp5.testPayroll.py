@@ -1023,8 +1023,6 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
   def stepModelSetCategories(self, sequence=None, **kw):
     model = sequence.get('model')
     currency = sequence.get('price_currency')
-    employer = sequence.get('employer')
-    employee = sequence.get('employee')
     model.edit(\
         price_currency_value=currency,
         default_payment_condition_trade_date='custom',
@@ -1587,8 +1585,6 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     paysheet_without_date.PaySheetTransaction_applyModel()
     self.tic()
 
-    portal_type_list = ['Pay Sheet Model Line',]
-
     # check the paysheet contail no lines before calculation
     self.assertEqual(len(paysheet_without_date.contentValues(\
         portal_type='Pay Sheet Line')), 0)
@@ -1721,7 +1717,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         version='002',
         specialise_value=sequence.get('business_process'))
 
-    model_3 = self.getPortalObject().paysheet_model_module.newContent( \
+    self.getPortalObject().paysheet_model_module.newContent( \
         portal_type='Pay Sheet Model',
         variation_settings_category_list=['salary_range/france',],
         reference='fabien_model_2009',
@@ -1759,7 +1755,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     not be created.'''
     model = sequence.get('model')
     labour = sequence.get('labour_service')
-    line = model.newContent(
+    model.newContent(
           id='line',
           reference='zero_price_line',
           portal_type='Pay Sheet Model Line',
@@ -2630,7 +2626,7 @@ class TestPayroll(TestPayrollMixin):
     provider = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Service Provider')
-    other_provider = self.portal.organisation_module.newContent(
+    self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Another Service Provider')
     ps1 = self.portal.accounting_module.newContent(
@@ -2858,7 +2854,7 @@ class TestPayroll(TestPayrollMixin):
     provider = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Service Provider')
-    other_provider = self.portal.organisation_module.newContent(
+    self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Another Service Provider')
     ps1 = self.portal.accounting_module.newContent(
@@ -3319,7 +3315,6 @@ class TestPayroll(TestPayrollMixin):
 
   def test_modelSliceInheritance(self):
     '''Check the slice inheritance'''
-    base_id = 'cell'
     paysheet_model_module = self.getPortalObject().paysheet_model_module
     model_1 = paysheet_model_module.newContent(
         portal_type='Pay Sheet Model',

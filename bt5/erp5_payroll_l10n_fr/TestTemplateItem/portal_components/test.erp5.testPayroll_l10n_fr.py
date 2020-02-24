@@ -31,7 +31,7 @@
 """
 
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5.tests.testPayroll import TestPayrollMixin
+from erp5.component.test.testPayroll import TestPayrollMixin
 from DateTime import DateTime
 
 class TestPayroll_l10n_fr(TestPayrollMixin):
@@ -61,8 +61,10 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
   def stepCheckYearToDateSliceAmount(self, sequence=None, **kw):
     paysheet_module = self.portal.getDefaultModule(portal_type=\
         'Pay Sheet Transaction')
-    paysheet_list = paysheet_module.contentValues(portal_type=\
-        'Pay Sheet Transaction')
+    paysheet_list = [
+      paysheet for paysheet in paysheet_module.contentValues(
+        portal_type='Pay Sheet Transaction')
+      if paysheet.getSpecialiseValue() == sequence['model'] ]
     self.assertEqual(len(paysheet_list), 2) # 2 paysheet have been created
                                              # for this test
 
