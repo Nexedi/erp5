@@ -34,7 +34,7 @@ from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet
 
 from erp5.component.tool.ConfiguratorTool import _validateFormToRequest
-from Products.ERP5.Document.Item import Item
+from erp5.component.document.Item import Item
 
 ## Workflow states definitions
 INITIAL_STATE_TITLE = 'Start'

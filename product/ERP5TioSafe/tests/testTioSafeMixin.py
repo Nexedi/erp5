@@ -58,6 +58,7 @@ class testTioSafeMixin(ERP5TypeTestCase):
         # 'erp5_invoicing',
         # 'erp5_simplified_invoicing',
         'erp5_syncml',
+        'erp5_item',
         'erp5_tiosafe_core',
         'erp5_tiosafe_test',
         # 'erp5_tiosafe_accounting',

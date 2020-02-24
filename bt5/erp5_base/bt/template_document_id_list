@@ -13,6 +13,7 @@ document.erp5.Currency
 document.erp5.DayMovementGroup
 document.erp5.DeliveryCausalityAssignmentMovementGroup
 document.erp5.DeliveryTypeInformation
+document.erp5.Device
 document.erp5.EmbeddedFile
 document.erp5.FirstCausalityMovementGroup
 document.erp5.GeneratedDeliveryBuilder
@@ -44,6 +45,7 @@ document.erp5.RootAppliedRuleCausalityMovementGroup
 document.erp5.RoundingModel
 document.erp5.SimulatedDeliveryBuilder
 document.erp5.SplitMovementGroup
+document.erp5.SubscriptionItem
 document.erp5.Supply
 document.erp5.SupplyCell
 document.erp5.SupplyLine

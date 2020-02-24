@@ -426,6 +426,7 @@ class TestXHTML(TestXHTMLMixin):
       'erp5_accounting',
       'erp5_invoicing',
 
+      'erp5_item',
       'erp5_apparel',
 
 ##    'erp5_banking_core',
@@ -456,8 +457,6 @@ class TestXHTML(TestXHTMLMixin):
       'erp5_forge',
 
       'erp5_immobilisation',
-
-      'erp5_item',
 
       'erp5_mrp',
 
