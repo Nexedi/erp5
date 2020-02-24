@@ -29,31 +29,29 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Item import Item
+from erp5.component.document.Item import Item
 
 class Device(Item):
-    """
-      Devices represent equipments with one network interface
-    """
+  """
+  Devices represent equipments with one network interface
+  """
+  meta_type = 'ERP5 Device'
+  portal_type = 'Device'
+  add_permission = Permissions.AddPortalContent
 
-    meta_type = 'ERP5 Device'
-    portal_type = 'Device'
-    add_permission = Permissions.AddPortalContent
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Price
-                      , PropertySheet.Resource
-                      , PropertySheet.Item
-                      , PropertySheet.Amount
-                      , PropertySheet.Reference
-                      , PropertySheet.Device
-                      )
-
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Price
+                    , PropertySheet.Resource
+                    , PropertySheet.Item
+                    , PropertySheet.Amount
+                    , PropertySheet.Reference
+                    , PropertySheet.Device
+                    )
