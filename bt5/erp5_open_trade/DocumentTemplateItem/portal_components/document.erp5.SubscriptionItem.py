@@ -31,15 +31,12 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.Document.Item import Item
+from erp5.component.document.Item import Item
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.mixin.simulable import SimulableMixin
 from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Base import Base
-
-from zLOG import LOG
 
 class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
                        SimulableMixin, PeriodicityMixin):
@@ -111,7 +108,6 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
       TODO: clever handling of quantity (based on the nature
       of resource, ie. float or unit)
     """
-    from Products.ERP5Type.Document import newTempMovement
     result = []
 
     # Try to find the source open order
@@ -147,7 +143,9 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
           next_date = self.getNextPeriodicalDate(current_date)
           if next_date > stop_date:
             next_date = stop_date
-          generated_movement = newTempMovement(self, 'subscription_%s' % id_index)
+          generated_movement = self.newContent(temp_object=True,
+                                               portal_type='Movement',
+                                               id='subscription_%s' % id_index)
           generated_movement._edit(  aggregate_value=self,
                                      resource=resource,
                                      quantity=quantity,
