@@ -81,8 +81,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_reference</string>
-                        <string>my_resource</string>
+                        <string>my_causality_title</string>
                         <string>my_destination_section_title</string>
                         <string>my_source_section_title</string>
                       </list>
@@ -92,9 +91,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_destination_decision_title</string>
                         <string>my_source_decision_title</string>
-                        <string>my_continuation_of_activity</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
                         <string>my_translated_simulation_state_title</string>
@@ -106,7 +103,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>InsolvencyProceeding_view</string> </value>
+            <value> <string>ClaimDeclaration_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -114,7 +111,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>InsolvencyProceeding_view</string> </value>
+            <value> <string>ClaimDeclaration_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -130,7 +127,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Insolvency Proceeding</string> </value>
+            <value> <string>Claim Declaration</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
