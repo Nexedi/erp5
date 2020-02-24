@@ -556,6 +556,7 @@ define("rsvp/promise",
         // For now, simply reject the promise and does not propagate the cancel
         // to parent or children
         if (resolved) { return; }
+        promise.isCancelled = true;
         if (canceller !== undefined) {
           try {
             canceller();
@@ -587,6 +588,7 @@ define("rsvp/promise",
 
       if (promise.isFulfilled) { return; }
       if (promise.isRejected) { return; }
+      if (promise.isCancelled) { return; }
 
       if (hasCallback) {
         try {
@@ -617,6 +619,7 @@ define("rsvp/promise",
     Promise.prototype = {
       constructor: Promise,
 
+      isCancelled: undefined,
       isRejected: undefined,
       isFulfilled: undefined,
       rejectedReason: undefined,
