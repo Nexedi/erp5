@@ -461,6 +461,7 @@ class TestXHTML(TestXHTMLMixin):
 
       'erp5_mrp',
 
+      'erp5_open_trade',
       'erp5_payroll',
 
       'erp5_project',
