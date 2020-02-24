@@ -31,7 +31,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.TradeCondition import TradeCondition
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from Products.ERP5.Document.PaySheetTransaction import PaySheetTransaction
 
 class PaySheetModel(TradeCondition, XMLMatrix):
   """A PaySheetModel defines calculation rules for paysheets.
@@ -75,9 +74,11 @@ class PaySheetModel(TradeCondition, XMLMatrix):
     '''
     paysheet = kw.get('paysheet')
     if paysheet is None:
-      from Products.ERP5Type.Document import newTempPaySheetTransaction
-      paysheet = newTempPaySheetTransaction(self.getPortalObject(), '',
-                                            specialise_value=self)
+      paysheet = self.getPortalObject().newContent(
+        temp_object=True,
+        portal_type='Pay Sheet Transaction',
+        id='',
+        specialise_value=self)
     model_list = self.findEffectiveSpecialiseValueList(paysheet)
     for specialised_model in model_list:
       cell = XMLMatrix.getCell(specialised_model, *args, **kw)

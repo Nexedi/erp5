@@ -31,30 +31,30 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 
 class PaySheetModelSlice(DeliveryCell):
-    """
-      A PaySheetModelSlice allows to define max and min values
-      for each slice
-    """
+  """
+  A PaySheetModelSlice allows to define max and min values
+  for each slice
+  """
 
-    meta_type = 'ERP5 Pay Sheet Model Slice'
-    portal_type = 'Pay Sheet Model Slice'
-    isCell = 1
+  meta_type = 'ERP5 Pay Sheet Model Slice'
+  portal_type = 'Pay Sheet Model Slice'
+  isCell = 1
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Arrow
-                      , PropertySheet.Amount
-                      , PropertySheet.Task
-                      , PropertySheet.Movement
-                      , PropertySheet.Price
-                      , PropertySheet.Predicate
-                      , PropertySheet.MappedValue
-                      , PropertySheet.ItemAggregation
-                      , PropertySheet.PaySheetModel
-                      )
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Arrow
+                    , PropertySheet.Amount
+                    , PropertySheet.Task
+                    , PropertySheet.Movement
+                    , PropertySheet.Price
+                    , PropertySheet.Predicate
+                    , PropertySheet.MappedValue
+                    , PropertySheet.ItemAggregation
+                    , PropertySheet.PaySheetModel
+                    )
 
