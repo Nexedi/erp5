@@ -40,7 +40,6 @@
                 <string>base_application/base_amount/payroll/l10n/fr/base/csg_deductible</string>
                 <string>base_application/base_amount/payroll/l10n/fr/base/prevoyance</string>
                 <string>base_application/base_amount/payroll/l10n/fr/base/mutuelle_fixe</string>
-                <string>contribution_share/employee</string>
               </tuple>
             </value>
         </item>
@@ -85,6 +84,10 @@
         <item>
             <key> <string>price</string> </key>
             <value> <float>1.0</float> </value>
+        </item>
+        <item>
+            <key> <string>quantity</string> </key>
+            <value> <float>14.0</float> </value>
         </item>
         <item>
             <key> <string>report_section</string> </key>
@@ -150,34 +153,7 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <int>0</int> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="7" aka="AAAAAAAAAAc=">
-    <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>contribution_share/employee</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-              </dictionary>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
