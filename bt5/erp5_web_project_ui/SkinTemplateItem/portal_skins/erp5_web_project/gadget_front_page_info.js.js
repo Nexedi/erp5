@@ -220,99 +220,99 @@
         })
         .push(function (project_list) {
           //run the rest of queries and render async
-          gadget.renderMilestoneInfo();
-          gadget.renderProjectDocumentInfo();
-          gadget.renderOutdatedDocumentInfo();
-          gadget.renderTestResultInfo();
-        });
+          gadget.renderMilestoneInfo();
+          gadget.renderProjectDocumentInfo();
+          gadget.renderOutdatedDocumentInfo();
+          gadget.renderTestResultInfo();
+        });
     })
 
     .declareJob("renderMilestoneInfo", function () {
-      var gadget = this,
-        i, outdated,
-        milestone_list,
-        milestone_query = Query.objectToSearchText(
-        getComplexQuery({"portal_type" : "Project Milestone",
-                         "validation_state" : "validated",
-                         "parent__portal_type" : "Project"},
-                        "AND")),
-        milestone_limit_date = new Date();
-      milestone_limit_date.setFullYear(milestone_limit_date.getFullYear() - 1);
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.jio_allDocs({
-            query: milestone_query,
-            limit: 10000,
-            select_list: ["title", 'portal_type', "parent__title", "parent__relative_url"],
-            sort_on: [["modification_date", "descending"]]
-          })
-          .push(function (result) {
-            milestone_list = result.data.rows;
-            for (i = 0; i < milestone_list.length; i += 1) {
+      var gadget = this,
+        i, outdated,
+        milestone_list,
+        milestone_query = Query.objectToSearchText(
+        getComplexQuery({"portal_type" : "Project Milestone",
+                          "validation_state" : "validated",
+                          "parent__portal_type" : "Project"},
+                        "AND")),
+        milestone_limit_date = new Date();
+      milestone_limit_date.setFullYear(milestone_limit_date.getFullYear() - 1);
+      return new RSVP.Queue()
+        .push(function () {
+          return gadget.jio_allDocs({
+            query: milestone_query,
+            limit: 10000,
+            select_list: ["title", 'portal_type', "parent__title", "parent__relative_url"],
+            sort_on: [["modification_date", "descending"]]
+          })
+          .push(function (result) {
+            milestone_list = result.data.rows;
+            for (i = 0; i < milestone_list.length; i += 1) {
               outdated = (new Date(milestone_list[i].value.modification_date) < milestone_limit_date) ? 1 : 0;
               renderProjectLine(getProjectId(milestone_list[i].id),
                                 milestone_list[i].value.portal_type,
                                 1, outdated);
-            }
-          });
-        });
-    })
+            }
+          });
+        });
+    })
 
-    .declareJob("renderProjectDocumentInfo", function () {
-      var gadget = this,
-        i,
-        document_list;
+    .declareJob("renderProjectDocumentInfo", function () {
+      var gadget = this,
+        i,
+        document_list;
       return getProjectDocumentList(gadget)
-      .push(function (document_list) {
-        for (i = 0; i < document_list.length; i += 1) {
+      .push(function (document_list) {
+        for (i = 0; i < document_list.length; i += 1) {
           renderProjectLine(getProjectId(document_list[i].value.source_project__relative_url),
                             document_list[i].value.portal_type,
                             1, 0);
-        }
-      });
-    })
+        }
+      });
+    })
 
-    .declareJob("renderOutdatedDocumentInfo", function () {
-      var gadget = this,
-        i,
-        document_list,
-        limit_date = new Date();
-      limit_date.setFullYear(limit_date.getFullYear() - 1);
+    .declareJob("renderOutdatedDocumentInfo", function () {
+      var gadget = this,
+        i,
+        document_list,
+        limit_date = new Date();
+      limit_date.setFullYear(limit_date.getFullYear() - 1);
       limit_date = limit_date.toISOString();
       //XXX For testing
       limit_date = new Date().toISOString();
       limit_date = limit_date.substring(0, limit_date.length - 5).replace("T", " ");
       return getProjectDocumentList(gadget, limit_date)
-      .push(function (document_list) {
-        for (i = 0; i < document_list.length; i += 1) {
+      .push(function (document_list) {
+        for (i = 0; i < document_list.length; i += 1) {
           renderProjectLine(getProjectId(document_list[i].value.source_project__relative_url),
                             document_list[i].value.portal_type,
                             0, 1);
-        }
-      });
-    })
+        }
+      });
+    })
 
-    .declareJob("renderTestResultInfo", function () {
-      var gadget = this,
-        i,
-        test_list,
-        test_result_query = Query.objectToSearchText(
+    .declareJob("renderTestResultInfo", function () {
+      var gadget = this,
+        i,
+        test_list,
+        test_result_query = Query.objectToSearchText(
           getComplexQuery({"portal_type" : "Test Result",
                            "source_project__validation_state" : "validated"},
                           "AND")),
-        test_state_list = ["failed", "stopped", "public_stopped"];
-      test_result_query += ' AND simulation_state: ("' + test_state_list.join('", "') + '")';
+        test_state_list = ["failed", "stopped", "public_stopped"];
+      test_result_query += ' AND simulation_state: ("' + test_state_list.join('", "') + '")';
 
-      return gadget.jio_allDocs({
-        query: test_result_query,
-        limit: 10000,
-        select_list: ['source_project__relative_url', 'portal_type'],
-        group_by: ['source_project__relative_url'],
-        sort_on: [["modification_date", "descending"]]
-      })
-      .push(function (result) {
-        test_list = result.data.rows;
-        for (i = 0; i < test_list.length; i += 1) {
+      return gadget.jio_allDocs({
+        query: test_result_query,
+        limit: 10000,
+        select_list: ['source_project__relative_url', 'portal_type'],
+        group_by: ['source_project__relative_url'],
+        sort_on: [["modification_date", "descending"]]
+      })
+      .push(function (result) {
+        test_list = result.data.rows;
+        for (i = 0; i < test_list.length; i += 1) {
           //TODO total and outdated values should come with the test-result-row
           //(all_tests and failed) but those are _local_properties
           renderProjectLine(test_list[i].value.source_project__relative_url,
@@ -320,9 +320,9 @@
                             //
                             1, //parseInt(test_list[i].value.all_test, RADIX)
                             0); //parseInt(test_list[i].value.failed, RADIX)
-        }
-      });
-    })
+        }
+      });
+    })
 
     .declareMethod('getContent', function () {
       return {};
