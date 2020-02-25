@@ -11,6 +11,7 @@
   const STATUS_SPAN = "status";
   const TOTAL_SPAN = "total";
   const OUTDATED_SPAN = "outdated";
+  const QUERY_LIMIT = 100000;
   //XXX hardcoded portal_type-title dict (build a template?)
   const PORTAL_TITLE_DICT = {"Task": "Tasks",
                              "Test Result" : "Test Results",
@@ -70,7 +71,7 @@
     }
     return gadget.jio_allDocs({
       query: document_query,
-      limit: 10000,
+      limit: QUERY_LIMIT,
       select_list: ['source_project__relative_url', 'portal_type', 'count(*)'],
       group_by: ['portal_type', 'source_project__relative_url'],
       sort_on: [["modification_date", "descending"]]
@@ -87,7 +88,7 @@
                       "AND"));
     return gadget.jio_allDocs({
       query: project_query,
-      limit: 10000,
+      limit: QUERY_LIMIT,
       select_list: ['title'],
       sort_on: [["modification_date", "ascending"]]
     })
@@ -237,12 +238,13 @@
                           "parent__portal_type" : "Project"},
                         "AND")),
         milestone_limit_date = new Date();
+      //TODO Where to define/get the limit date? byt portal_type or the same for all documents?
       milestone_limit_date.setFullYear(milestone_limit_date.getFullYear() - 1);
       return new RSVP.Queue()
         .push(function () {
           return gadget.jio_allDocs({
             query: milestone_query,
-            limit: 10000,
+            limit: QUERY_LIMIT,
             select_list: ["title", 'portal_type', "parent__title", "parent__relative_url"],
             sort_on: [["modification_date", "descending"]]
           })
@@ -277,6 +279,7 @@
         i,
         document_list,
         limit_date = new Date();
+      //TODO Where to define/get the limit date? byt portal_type or the same for all documents?
       limit_date.setFullYear(limit_date.getFullYear() - 1);
       limit_date = limit_date.toISOString();
       //XXX For testing
@@ -297,15 +300,15 @@
         i,
         test_list,
         test_result_query = Query.objectToSearchText(
-          getComplexQuery({"portal_type" : "Test Result",
-                           "source_project__validation_state" : "validated"},
-                          "AND")),
+          getComplexQuery({"portal_type" : "Test Result",
+                            "source_project__validation_state" : "validated"},
+                          "AND")),
         test_state_list = ["failed", "stopped", "public_stopped"];
       test_result_query += ' AND simulation_state: ("' + test_state_list.join('", "') + '")';
 
       return gadget.jio_allDocs({
         query: test_result_query,
-        limit: 10000,
+        limit: QUERY_LIMIT,
         select_list: ['source_project__relative_url', 'portal_type'],
         group_by: ['source_project__relative_url'],
         sort_on: [["modification_date", "descending"]]
@@ -319,7 +322,7 @@
                             test_list[i].value.portal_type,
                             //
                             1, //parseInt(test_list[i].value.all_test, RADIX)
-                            0); //parseInt(test_list[i].value.failed, RADIX)
+                            0); //parseInt(test_list[i].value.failures, RADIX)
         }
       });
     })
