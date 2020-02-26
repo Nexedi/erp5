@@ -13,7 +13,10 @@
   const OUTDATED_SPAN = "outdated";
   const QUERY_LIMIT = 100000;
   const SUPERVISOR_FIELD_TITLE = "Supervisor";
-  //XXX hardcoded portal_types, states and titles dict (build a template?)
+  //XXX hardcoded one year old date to define outdated elements
+  //TODO Where to define/get the limit date? byt portal_type or the same for all documents?
+  const LIMIT_DATE = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
+  //XXX hardcoded portal_types, states and titles dict
   const PORTAL_TITLE_DICT = {"Task": "Tasks",
                              "Test Result" : "Test Results",
                              "Bug" : "Bugs",
@@ -274,10 +277,7 @@
         getComplexQuery({"portal_type" : "Project Milestone",
                           "validation_state" : "validated",
                           "parent__portal_type" : "Project"},
-                        "AND")),
-        milestone_limit_date = new Date();
-      //TODO Where to define/get the limit date? byt portal_type or the same for all documents?
-      milestone_limit_date.setFullYear(milestone_limit_date.getFullYear() - 1);
+                        "AND"));
       return new RSVP.Queue()
         .push(function () {
           return gadget.jio_allDocs({
@@ -289,7 +289,7 @@
           .push(function (result) {
             milestone_list = result.data.rows;
             for (i = 0; i < milestone_list.length; i += 1) {
-              outdated = (new Date(milestone_list[i].value.modification_date) < milestone_limit_date) ? 1 : 0;
+              outdated = (new Date(milestone_list[i].value.modification_date) < LIMIT_DATE) ? 1 : 0;
               renderProjectLine(getProjectId(milestone_list[i].id),
                                 milestone_list[i].value.portal_type,
                                 1, outdated);
@@ -315,14 +315,12 @@
     .declareJob("renderOutdatedDocumentInfo", function () {
       var gadget = this,
         i,
-        document_list,
-        limit_date = new Date();
-      //TODO Where to define/get the limit date? byt portal_type or the same for all documents?
-      limit_date.setFullYear(limit_date.getFullYear() - 1);
-      limit_date = limit_date.toISOString();
+        limit_date = LIMIT_DATE.toISOString()
+          .substring(0, LIMIT_DATE.toISOString().length - 5)
+          .replace("T", " "),
+        document_list;
       //XXX For testing
-      limit_date = new Date().toISOString();
-      limit_date = limit_date.substring(0, limit_date.length - 5).replace("T", " ");
+      limit_date = new Date().toISOString().substring(0, LIMIT_DATE.toISOString().length - 5).replace("T", " ");
       return getProjectDocumentList(gadget, limit_date)
       .push(function (document_list) {
         for (i = 0; i < document_list.length; i += 1) {
