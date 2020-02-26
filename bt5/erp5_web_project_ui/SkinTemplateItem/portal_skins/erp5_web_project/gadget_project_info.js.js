@@ -3,6 +3,10 @@
 (function (window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer, SimpleQuery, ComplexQuery, Query) {
   "use strict";
 
+  /*jshint esnext: true */
+  const VALID_STATE_LIST = ["shared", "released", "published",
+                            "shared_alive", "released_alive", "published_alive"];
+
   function addRedirectionToReference(href, url) {
     if (!href.startsWith("https") && !href.startsWith("http") &&
         !href.startsWith("ftp") && !href.includes("/")
@@ -131,13 +135,6 @@
       value: "Web Page"
     }));
     query_list.push(new SimpleQuery({
-      key: "validation_state",
-      operator: "=",
-      type: "simple",
-      value: ("shared", "released", "published", "shared_alive",
-              "released_alive", "published_alive")
-    }));
-    query_list.push(new SimpleQuery({
       key: "follow_up__relative_url",
       operator: "=",
       type: "simple",
@@ -154,6 +151,7 @@
       query_list: query_list,
       type: "complex"
     }));
+    query += ' AND validation_state: ("' + VALID_STATE_LIST.join('", "') + '")';
     return gadget.getUrlFor({command: 'push_history', options: {page: "project_redirector"}})
       .push(function (url) {
         redirector_ulr = url;
