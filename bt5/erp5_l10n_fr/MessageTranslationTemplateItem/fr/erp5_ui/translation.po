@@ -904,6 +904,9 @@ msgstr "Montant"
 msgid "Amount Limit"
 msgstr "Montant limite"
 
+msgid "Amount Non Subject To Contribution"
+msgstr "Montant Non Soumis À Cotisation"
+
 msgid "An account in the third party's accounting"
 msgstr "Un compte de tiers."
 
@@ -1933,8 +1936,14 @@ msgstr "Acheteur"
 msgid "CAD Library"
 msgstr "Nom du fichier Lectra"
 
+msgid "CSG Non Taxable To Income Tax"
+msgstr "CSG Non Imposable A L'impot Sur Le Revenu"
+
 msgid "CSG Salary"
 msgstr "Salaire Plafonné CSG"
+
+msgid "CSG/CRDS Taxable To Income Tax"
+msgstr "CSG/CRDS Imposable A L'impot Sur Le Revenu"
 
 msgid "CSV Style"
 msgstr "Style CSV"
@@ -3120,6 +3129,9 @@ msgstr "Prédicats de fichiers contribués"
 
 msgid "Contribution Registry Tool"
 msgstr "Outil de registre des contributions"
+
+msgid "Contribution Relief"
+msgstr "Allegement De Cotisations"
 
 msgid "Contribution Tool"
 msgstr "Outil de contribution"
@@ -5437,6 +5449,9 @@ msgstr "Antécédents familiaux"
 msgid "Family Medical Antecedants"
 msgstr "Antécédents familiaux"
 
+msgid "Family-Socal Security"
+msgstr "Famille-Securite Sociale"
+
 msgid "Fast Input"
 msgstr "Saisie rapide"
 
@@ -5976,6 +5991,9 @@ msgstr "En cas de problème de connexion, vérifiez que vous avez autorisé les 
 
 msgid "Head of Family"
 msgstr "Chef de famille"
+
+msgid "Health"
+msgstr "Sante"
 
 msgid "Health Information"
 msgstr "Informations médicales"
@@ -7645,6 +7663,9 @@ msgstr "Langue"
 msgid "My preferences"
 msgstr "Mes préférences"
 
+msgid "NET PAYABLE BEFORE INCOME TAX"
+msgstr "NET A PAYER AVANT IMPOT SUR LE REVENU"
+
 msgid "Name"
 msgstr "Nom"
 
@@ -8412,6 +8433,9 @@ msgstr "Autre constante 1"
 
 msgid "Other Constant 2"
 msgstr "Autre constante 2"
+
+msgid "Other Employer Contributions"
+msgstr "Autre Contributions Dues Par l'employeur"
 
 msgid "Other Parties"
 msgstr "Tiers"
@@ -9381,6 +9405,9 @@ msgstr "Imprimer le bulletin de paie"
 
 msgid "Print Results"
 msgstr "Imprimer le résultat"
+
+msgid "Print Simplified Payslip"
+msgstr "Imprimer le bulletin de paie simplifié"
 
 msgid "Print Style"
 msgstr "Style impression"
@@ -10824,6 +10851,9 @@ msgstr "Résultats"
 
 msgid "Results <em>${start} - ${stop}</em> of <em>${total}</em>."
 msgstr "Résultats <em>${start} - ${stop}</em> sur <em>${total}</em>."
+
+msgid "Retirement"
+msgstr "Retraite"
 
 msgid "Retract"
 msgstr "Se rétracter"
@@ -13714,11 +13744,17 @@ msgstr "Thème"
 msgid "Total ${category_level_1_title} ${level1_counter}"
 msgstr "Total ${level1_counter}"
 
+msgid "Total Amounts Non Subject To Contributions"
+msgstr "Total Des Montants Non Soumis A Cotisation"
+
 msgid "Total Available Budget"
 msgstr "Budget disponible total"
 
 msgid "Total Consumed Budget"
 msgstr "Budget consommé total"
+
+msgid "Total Contributions"
+msgstr "Total Des Cotisations Et Contributions"
 
 msgid "Total Current Budget"
 msgstr "Budget courant total"
@@ -13758,6 +13794,9 @@ msgstr "Budget initial total"
 
 msgid "Total Net Price"
 msgstr "Prix net total"
+
+msgid "Total Pay By Employeur"
+msgstr "Total Versé Par l'employeur"
 
 msgid "Total Price"
 msgstr "Montant"
@@ -14022,6 +14061,9 @@ msgstr "Annuler"
 
 msgid "Undo Reconciliation"
 msgstr "Défaire le rapprochement"
+
+msgid "Unemployment Insurance"
+msgstr "Assurance Chomage"
 
 msgid "Ungrouping"
 msgstr "Délettrage"
@@ -14674,11 +14716,17 @@ msgstr "Nombre de mots"
 msgid "Work"
 msgstr "Travail"
 
+msgid "Work Accident-Occupational Disease"
+msgstr "Accident Du Travail-Maladie Professionnelle"
+
 msgid "Work Duration"
 msgstr "Durée de travail"
 
 msgid "Work Duration Unit"
 msgstr "Unité de la durée de travail"
+
+msgid "Work Hours"
+msgstr "Heures Travaillées"
 
 msgid "Work Period End"
 msgstr "Fin de période"
