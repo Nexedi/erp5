@@ -112,7 +112,7 @@
     }
   }
 
-  function renderProjectList(project_list) {
+  function renderProjectList(gadget, project_list) {
     var i,
       item,
       project_html,
@@ -120,12 +120,12 @@
       project_html_element_list,
       left_line_html,
       ul_list = document.getElementById("js-project-list"),
+      url_parameter_list = [],
       project_id,
       project_dict,
-      type,
       outdated;
 
-    function createProjectHtmlElement(project_id, project_title) {
+    function createProjectHtmlElement(project_id, project_title, project_url) {
       var project_element = document.createElement('li'),
         box_div = document.createElement('div'),
         title_div = document.createElement('div'),
@@ -133,10 +133,13 @@
         left_info_div = document.createElement('div'),
         right_div = document.createElement('div'),
         right_line_div = document.createElement('div'),
+        project_link = document.createElement('a'),
         forum_link = document.createElement('a');
       box_div.classList.add("project-box");
       title_div.classList.add("project-title");
-      title_div.innerHTML = project_title;
+      project_link.href = project_url;
+      project_link.innerHTML = project_title;
+      title_div.appendChild(project_link);
       info_div.classList.add("project-info");
       left_info_div.classList.add("left");
       right_line_div.classList.add("project-line");
@@ -185,21 +188,40 @@
       return line_div;
     }
 
-    for (i = 0; i < project_list.length; i += 1) {
-      project_html_element_list = createProjectHtmlElement(project_list[i].id, project_list[i].value.title);
-      project_html = project_html_element_list[0];
-      left_div_html = project_html_element_list[1];
-
-      for (type in PORTAL_TITLE_DICT) {
-        if (PORTAL_TITLE_DICT.hasOwnProperty(type)) {
-          left_line_html = createProjectLineHtmlElement(project_list[i].id, type,
-                                                        ((PORTAL_TITLE_DICT.hasOwnProperty(type)) ? PORTAL_TITLE_DICT[type] : type),
-                                                        0, 0, NONE_STATUS);
-          left_div_html.appendChild(left_line_html);
+    return gadget.getSetting("hateoas_url")
+      .push(function (hateoas_url) {
+        for (i = 0; i < project_list.length; i += 1) {
+          url_parameter_list.push({
+            command: 'push_history',
+            options: {
+              'jio_key': project_list[i].id,
+              'page': 'form',
+              'view': hateoas_url +
+                '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
+                project_list[i].id +
+                '&view=Project_viewQuickOverview'
+            }
+          });
         }
-      }
-      ul_list.appendChild(project_html);
-    }
+        return gadget.getUrlForList(url_parameter_list);
+      })
+      .push(function (url_list) {
+        for (i = 0; i < project_list.length; i += 1) {
+          project_html_element_list = createProjectHtmlElement(project_list[i].id, project_list[i].value.title, url_list[i]);
+          project_html = project_html_element_list[0];
+          left_div_html = project_html_element_list[1];
+
+          for (var type in PORTAL_TITLE_DICT) {
+            if (PORTAL_TITLE_DICT.hasOwnProperty(type)) {
+              left_line_html = createProjectLineHtmlElement(project_list[i].id, type,
+                                                            ((PORTAL_TITLE_DICT.hasOwnProperty(type)) ? PORTAL_TITLE_DICT[type] : type),
+                                                            0, 0, NONE_STATUS);
+              left_div_html.appendChild(left_line_html);
+            }
+          }
+          ul_list.appendChild(project_html);
+        }
+      });
   }
 
   rJS(window)
@@ -218,7 +240,7 @@
       var gadget = this;
       return getProjectElementList(gadget)
         .push(function (project_list) {
-          return renderProjectList(project_list);
+          return renderProjectList(gadget, project_list);
         })
         .push(function (project_list) {
           //run the rest of queries and render async
