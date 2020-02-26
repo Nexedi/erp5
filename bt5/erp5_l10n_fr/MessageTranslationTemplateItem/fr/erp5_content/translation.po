@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: ERP5 Contents\n"
-"POT-Creation-Date: 2017-06-19 12:06+UTC\n"
-"PO-Revision-Date: 2017-06-19 12:06+UTC\n"
+"Project-Id-Version: ERP5 Content\n"
+"POT-Creation-Date: 2020-02-26 09:02+UTC\n"
+"PO-Revision-Date: 2020-02-26 09:02+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -101,6 +101,9 @@ msgstr "Américain"
 
 msgid "Americas"
 msgstr "Amériques"
+
+msgid "Amount Non Subject To Contribution"
+msgstr "Montant Non Soumis À Cotisation"
 
 msgid "Andorra"
 msgstr "Andorre"
@@ -354,6 +357,12 @@ msgstr "Routier"
 msgid "By Sea"
 msgstr "Maritime"
 
+msgid "CSG Non Taxable To Income Tax"
+msgstr "CSG Non Imposable A L'impot Sur Le Revenu"
+
+msgid "CSG/CRDS Taxable To Income Tax"
+msgstr "CSG/CRDS Imposable A L'impot Sur Le Revenu"
+
 msgid "Cambodia"
 msgstr "Cambodge"
 
@@ -536,6 +545,9 @@ msgstr "Nous contacter"
 
 msgid "Contacting TioLive"
 msgstr "Contacter Tiolive"
+
+msgid "Contribution Relief"
+msgstr "Allegement De Cotisations"
 
 msgid "Cook Islands"
 msgstr "Îles Cook"
@@ -876,6 +888,9 @@ msgstr "Îles Falkland"
 msgid "Falkland Islands (Malvinas)"
 msgstr "Îles Falkland (Malvinas)"
 
+msgid "Family-Socal Security"
+msgstr "Famille-Securite Sociale"
+
 msgid "Farming and Fishing and Forestry and Wildlife Contracting Services"
 msgstr "Services professionnels pour l'agriculture, la pêche, la sylviculture et la faune sauvage"
 
@@ -1104,6 +1119,9 @@ msgstr "Cadre de direction"
 msgid "Headquarters Manager"
 msgstr "Chef de direction"
 
+msgid "Health"
+msgstr "Sante"
+
 msgid "Health & social work"
 msgstr "Santé humaine et action sociale"
 
@@ -1172,6 +1190,9 @@ msgstr "Islandais"
 
 msgid "Income"
 msgstr "Produits"
+
+msgid "Income Tax"
+msgstr "Impôt Sur Le Revenu"
 
 msgid "India"
 msgstr "Inde"
@@ -1839,6 +1860,9 @@ msgstr "Autres"
 msgid "Other Current Liabilities"
 msgstr "Autres dettes à court terme"
 
+msgid "Other Employer Contributions"
+msgstr "Autre Contributions Dues Par l'employeur"
+
 msgid "Other Marketing Service"
 msgstr "Autre service"
 
@@ -2177,6 +2201,9 @@ msgstr "Restreint"
 
 msgid "Retail trade, except of motor vehicles"
 msgstr "Commerce de détail, à l'exception des automobiles et des motocycles"
+
+msgid "Retirement"
+msgstr "Retraite"
 
 msgid "Reunionese"
 msgstr "Réunionnai"
@@ -2682,6 +2709,9 @@ msgstr "Ukraine"
 msgid "Ukrainian"
 msgstr "Ukrainien"
 
+msgid "Unemployment Insurance"
+msgstr "Assurance Chomage"
+
 msgid "Unit"
 msgstr "Unité"
 
@@ -2798,6 +2828,9 @@ msgstr "Virement bancaire"
 
 msgid "Wood products except furniture"
 msgstr "Travail du bois et fabrication d'articles en bois et en liège, à l'exception des meubles ; fabrication d'articles en vannerie et sparterie"
+
+msgid "Work Accident-Occupational Disease"
+msgstr "Accident Du Travail-Maladie Professionnelle"
 
 msgid "Yemen"
 msgstr "Yémen"
