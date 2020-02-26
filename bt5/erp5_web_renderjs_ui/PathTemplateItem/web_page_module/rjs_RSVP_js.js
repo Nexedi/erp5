@@ -761,7 +761,7 @@ define("rsvp/queue",
     ResolvedQueueError.prototype = new Error();
     ResolvedQueueError.prototype.constructor = ResolvedQueueError;
 
-    var Queue = function() {
+    var Queue = function(thenable) {
       var queue = this,
         promise_list = [],
         promise,
@@ -777,6 +777,26 @@ define("rsvp/queue",
         for (var i = promise_list.length; i > 0; i--) {
           promise_list[i - 1].cancel();
         }
+      }
+
+      function checkPromise(next_promise) {
+        promise_list.push(next_promise);
+        // Handle pop
+        promise_list.push(next_promise.then(function (fulfillmentValue) {
+          promise_list.splice(0, 2);
+          if (promise_list.length === 0) {
+            fulfill(fulfillmentValue);
+          } else {
+            return fulfillmentValue;
+          }
+        }, function (rejectedReason) {
+          promise_list.splice(0, 2);
+          if (promise_list.length === 0) {
+            reject(rejectedReason);
+          } else {
+            throw rejectedReason;
+          }
+        }));
       }
 
       promise = new Promise(function(done, fail) {
@@ -796,13 +816,7 @@ define("rsvp/queue",
         };
       }, canceller);
 
-      promise_list.push(resolve());
-      promise_list.push(promise_list[0].then(function () {
-        promise_list.splice(0, 2);
-        if (promise_list.length === 0) {
-          fulfill();
-        }
-      }));
+      checkPromise(resolve(thenable));
 
       queue.cancel = function () {
         if (resolved) {return;}
@@ -825,25 +839,9 @@ define("rsvp/queue",
           throw new ResolvedQueueError();
         }
 
-        next_promise = last_promise.then(done, fail);
-        promise_list.push(next_promise);
-
         // Handle pop
-        promise_list.push(next_promise.then(function (fulfillmentValue) {
-          promise_list.splice(0, 2);
-          if (promise_list.length === 0) {
-            fulfill(fulfillmentValue);
-          } else {
-            return fulfillmentValue;
-          }
-        }, function (rejectedReason) {
-          promise_list.splice(0, 2);
-          if (promise_list.length === 0) {
-            reject(rejectedReason);
-          } else {
-            throw rejectedReason;
-          }
-        }));
+        checkPromise(last_promise.then(done, fail));
+
 
         return this;
       };
