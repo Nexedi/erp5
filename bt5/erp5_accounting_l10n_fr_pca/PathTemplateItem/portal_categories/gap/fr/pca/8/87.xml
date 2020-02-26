@@ -75,6 +75,12 @@
             <value> <string>87</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>effective_date</string> </key>
             <value>
               <none/>

@@ -65,6 +65,10 @@
             <key> <string>portal_type</string> </key>
             <value> <string>Category</string> </value>
         </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Quotes-parts de générosité reversée</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>

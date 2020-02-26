@@ -83,6 +83,10 @@
             <key> <string>portal_type</string> </key>
             <value> <string>Category</string> </value>
         </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Honoraires</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
