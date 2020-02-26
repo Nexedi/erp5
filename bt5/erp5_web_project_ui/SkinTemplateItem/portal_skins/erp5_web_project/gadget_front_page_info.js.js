@@ -12,12 +12,15 @@
   const TOTAL_SPAN = "total";
   const OUTDATED_SPAN = "outdated";
   const QUERY_LIMIT = 100000;
-  //XXX hardcoded portal_type-title dict (build a template?)
+  //XXX hardcoded portal_types, states and titles dict (build a template?)
   const PORTAL_TITLE_DICT = {"Task": "Tasks",
                              "Test Result" : "Test Results",
                              "Bug" : "Bugs",
                              "Project Milestone" : "Milestones",
-                             "Task Report": "Task Reports"};
+                             "Task Report": "Task Reports",
+                             "Support Request" : "Support Requests"};
+  const PORTAL_TYPE_LIST = ["Task", "Bug", "Task Report", "Support Request"];
+  const VALID_STATE_LIST = ["planned", "auto_planned", "ordered", "confirmed", "ready", "stopped", "started", "submitted", "validated"];
 
   function getProjectId(id) {
     var segments = id.split("/");
@@ -55,17 +58,15 @@
   }
 
   function getProjectDocumentList(gadget, limit_date) {
-    var document_query,
-      portal_type_list = ["Task", "Bug", "Task Report"],
-      valid_state_list = ["planned", "auto_planned", "ordered", "confirmed", "ready", "stopped", "started"];
+    var document_query;
     document_query = Query.objectToSearchText(new SimpleQuery({
       key: "source_project__validation_state",
       operator: "=",
       type: "simple",
       value: "validated"
     }));
-    document_query += ' AND simulation_state: ("' + valid_state_list.join('", "') + '")';
-    document_query += ' AND portal_type: ("' + portal_type_list.join('", "') + '")';
+    document_query += ' AND simulation_state: ("' + VALID_STATE_LIST.join('", "') + '")';
+    document_query += ' AND portal_type: ("' + PORTAL_TYPE_LIST.join('", "') + '")';
     if (limit_date) {
       document_query += ' AND modification_date: < "' + limit_date + '"';
     }
@@ -305,7 +306,6 @@
                           "AND")),
         test_state_list = ["failed", "stopped", "public_stopped"];
       test_result_query += ' AND simulation_state: ("' + test_state_list.join('", "') + '")';
-
       return gadget.jio_allDocs({
         query: test_result_query,
         limit: QUERY_LIMIT,
