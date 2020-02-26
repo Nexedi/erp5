@@ -1,5 +1,30 @@
 /* FRONT PAGE */
 
+.loader {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  font-size: 300%;
+  animation-name: fadein;
+  animation-duration: 0.2s;
+  animation-delay: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: ease-in;
+}
+
+.ui-icon-spinner {
+  opacity: 1;
+}
+
+.ui-icon-spinner::before {
+  content: "\f110";
+  animation: spin 0.5s infinite linear;
+}
+
+.ui-icon-spinner.ui-hidden {
+  visibility: hidden;
+}
+
 div[data-gadget-url$="gadget_front_page_info.html"] .front-project-list  {
   margin-top: 10px;
 }

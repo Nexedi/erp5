@@ -120,6 +120,7 @@
       project_html_element_list,
       left_line_html,
       ul_list = document.getElementById("js-project-list"),
+      spinner = document.getElementById("js-spinner"),
       url_parameter_list = [],
       project_id,
       project_dict,
@@ -206,6 +207,7 @@
         return gadget.getUrlForList(url_parameter_list);
       })
       .push(function (url_list) {
+        spinner.classList.add("ui-hidden");
         for (i = 0; i < project_list.length; i += 1) {
           project_html_element_list = createProjectHtmlElement(project_list[i].id, project_list[i].value.title, url_list[i]);
           project_html = project_html_element_list[0];
