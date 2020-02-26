@@ -12,6 +12,7 @@
   const TOTAL_SPAN = "total";
   const OUTDATED_SPAN = "outdated";
   const QUERY_LIMIT = 100000;
+  const SUPERVISOR_FIELD_TITLE = "Supervisor";
   //XXX hardcoded portal_types, states and titles dict (build a template?)
   const PORTAL_TITLE_DICT = {"Task": "Tasks",
                              "Test Result" : "Test Results",
@@ -82,7 +83,7 @@
     });
   }
 
-  function getProjectElementList(gadget) {
+  function getProjectList(gadget) {
     var project_query = Query.objectToSearchText(
       getComplexQuery({"portal_type" : "Project",
                        "validation_state" : "validated"},
@@ -90,7 +91,7 @@
     return gadget.jio_allDocs({
       query: project_query,
       limit: QUERY_LIMIT,
-      select_list: ['title'],
+      select_list: ['title', 'source_decision_title'],
       sort_on: [["modification_date", "ascending"]]
     })
     .push(function (result) {
@@ -126,7 +127,7 @@
       project_dict,
       outdated;
 
-    function createProjectHtmlElement(project_id, project_title, project_url) {
+    function createProjectHtmlElement(project_id, project_title, project_url, supervisor) {
       var project_element = document.createElement('li'),
         box_div = document.createElement('div'),
         title_div = document.createElement('div'),
@@ -134,8 +135,19 @@
         left_info_div = document.createElement('div'),
         right_div = document.createElement('div'),
         right_line_div = document.createElement('div'),
+        supervisor_line_div = document.createElement('div'),
         project_link = document.createElement('a'),
         forum_link = document.createElement('a');
+      if (supervisor) {
+        var supervisor_field_label = document.createElement('label'),
+          supervisor_value_span = document.createElement('span');
+        supervisor_line_div.classList.add("field", "project-line");
+        supervisor_field_label.innerHTML = SUPERVISOR_FIELD_TITLE;
+        supervisor_value_span.innerHTML = supervisor;
+        supervisor_line_div.appendChild(supervisor_field_label);
+        supervisor_line_div.appendChild(supervisor_value_span);
+        right_div.appendChild(supervisor_line_div);
+      }
       box_div.classList.add("project-box");
       title_div.classList.add("project-title");
       project_link.href = project_url;
@@ -209,7 +221,8 @@
       .push(function (url_list) {
         spinner.classList.add("ui-hidden");
         for (i = 0; i < project_list.length; i += 1) {
-          project_html_element_list = createProjectHtmlElement(project_list[i].id, project_list[i].value.title, url_list[i]);
+          project_html_element_list = createProjectHtmlElement(project_list[i].id, project_list[i].value.title,
+                                                               url_list[i], project_list[i].value.source_decision_title);
           project_html = project_html_element_list[0];
           left_div_html = project_html_element_list[1];
 
@@ -240,7 +253,7 @@
 
     .onStateChange(function () {
       var gadget = this;
-      return getProjectElementList(gadget)
+      return getProjectList(gadget)
         .push(function (project_list) {
           return renderProjectList(gadget, project_list);
         })

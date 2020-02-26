@@ -1,30 +1,5 @@
 /* FRONT PAGE */
 
-.loader {
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  font-size: 300%;
-  animation-name: fadein;
-  animation-duration: 0.2s;
-  animation-delay: 0.3s;
-  animation-fill-mode: both;
-  animation-timing-function: ease-in;
-}
-
-.ui-icon-spinner {
-  opacity: 1;
-}
-
-.ui-icon-spinner::before {
-  content: "\f110";
-  animation: spin 0.5s infinite linear;
-}
-
-.ui-icon-spinner.ui-hidden {
-  visibility: hidden;
-}
-
 div[data-gadget-url$="gadget_front_page_info.html"] .front-project-list  {
   margin-top: 10px;
 }
@@ -60,6 +35,18 @@ div[data-gadget-url$="gadget_front_page_info.html"] .front-project-list .project
   letter-spacing: -.003em;
 }
 
+div[data-gadget-url$="gadget_front_page_info.html"] .front-project-list .project-box .project-line.field {
+  display: flex;
+}
+
+div[data-gadget-url$="gadget_front_page_info.html"] .front-project-list .project-box .project-line.field label {
+  color: #767676;
+}
+
+div[data-gadget-url$="gadget_front_page_info.html"] .front-project-list .project-box .project-line.field span {
+  margin-left: 15px;
+}
+
 div[data-gadget-url$="gadget_front_page_info.html"] .front-project-list .project-box .project-title  {
   color: #19535F;
   font-weight: normal;
@@ -91,6 +78,31 @@ div[data-gadget-url$="gadget_front_page_info.html"] .front-project-list .project
 
 div[data-gadget-url$="gadget_front_page_info.html"] .front-project-list .project-box .status.none.green {
   background: #00b80c !important;
+}
+
+.loader {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  font-size: 300%;
+  animation-name: fadein;
+  animation-duration: 0.2s;
+  animation-delay: 0.3s;
+  animation-fill-mode: both;
+  animation-timing-function: ease-in;
+}
+
+.ui-icon-spinner {
+  opacity: 1;
+}
+
+.ui-icon-spinner::before {
+  content: "\f110";
+  animation: spin 0.5s infinite linear;
+}
+
+.ui-icon-spinner.ui-hidden {
+  visibility: hidden;
 }
 
 
