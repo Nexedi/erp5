@@ -1,6 +1,6 @@
-/*jslint indent: 2, unparam: true */
-/*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman*/
-(function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, caman) {
+/*jslint indent: 2, unparam: true, bitwise: true */
+/*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman, FileReader, DataView*/
+(function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, caman, FileReader, DataView) {
   "use strict";
 
   //////////////////////////////////////////////////
@@ -15,6 +15,57 @@
       },
       audio: false
     });
+  }
+
+  function getOrientationFromDataUrl(data_url) {
+    var view = new DataView(data_url),
+      length = view.byteLength,
+      offset = 2,
+      marker,
+      little,
+      tags,
+      i;
+
+    if (view.getUint16(0, false) !== 0xFFD8) {
+      return -2;
+    }
+    while (offset < length) {
+      if (view.getUint16(offset + 2, false) <= 8) {
+        return -1;
+      }
+      marker = view.getUint16(offset, false);
+      offset += 2;
+      if (marker === 0xFFE1) {
+        offset += 2;
+        if (view.getUint32(offset, false) !== 0x45786966) {
+          return -1;
+        }
+        offset += 6;
+        little = view.getUint16(offset, false) === 0x4949;
+        offset += view.getUint32(offset + 4, little);
+        tags = view.getUint16(offset, little);
+        offset += 2;
+        for (i = 0; i < tags; i = i + 1) {
+          if (view.getUint16(offset + (i * 12), little) === 0x0112) {
+            return view.getUint16(offset + (i * 12) + 8, little);
+          }
+        }
+      } else if ((marker & 0xFF00) !== 0xFF00) {
+        break;
+      }
+      offset += view.getUint16(offset, false);
+    }
+    return -1;
+  }
+
+  function getOrientation(blob) {
+    return RSVP.Queue()
+      .push(function () {
+        return jIO.util.readBlobAsArrayBuffer(blob);
+      })
+      .push(function (evt) {
+        return getOrientationFromDataUrl(evt.target.result);
+      });
   }
 
   function handleUserMedia(device_id, callback) {
@@ -103,9 +154,10 @@
         viewMode: 3,
         // Avoid any cropper calculation or guessing
         scalable: false,
-        // By default rotatable is true, if you remove it.
-        // Make sure, it is set on data.
-        rotatable: false,
+        // Please, DON'T touch on rotatable and checkOrientation. Removing it,
+        // we will not be able to fix orientation before crop.
+        rotatable: true,
+        checkOrientation: true,
         zoomable: false,
         movable: false,
         data: data,
@@ -349,6 +401,7 @@
       image_capture = new window.ImageCapture(
         gadget.element.querySelector('video').srcObject.getVideoTracks()[0]
       ),
+      canvas = domsugar('canvas', {'class': 'canvas'}),
       div;
 
     return new RSVP.Queue()
@@ -363,29 +416,70 @@
       .push(function (blob) {
         return RSVP.all([
           createImageBitmap(blob),
-          jIO.util.readBlobAsDataURL(blob)
+          getOrientation(blob)
         ]);
       })
       .push(function (result_list) {
         var bitmap = result_list[0],
-          img = domsugar("img", {"src": result_list[1].target.result}),
-          canvas = domsugar('canvas', {'class': 'canvas'});
+          orientation = result_list[1],
+          height = bitmap.height,
+          width = bitmap.width,
+          ctx;
 
-        div = gadget.element.querySelector(".camera-input");
+        if (4 < orientation && orientation < 9) {
+          canvas.width = height;
+          canvas.height = width;
+        } else {
+          canvas.width = width;
+          canvas.height = height;
+        }
+
+        ctx = canvas.getContext('2d');
+
+        // transform context before drawing image
+        switch (orientation) {
+        case 2:
+          ctx.transform(-1, 0, 0, 1, width, 0);
+          break;
+        case 3:
+          ctx.transform(-1, 0, 0, -1, width, height);
+          break;
+        case 4:
+          ctx.transform(1, 0, 0, -1, 0, height);
+          break;
+        case 5:
+          ctx.transform(0, 1, 1, 0, 0, 0);
+          break;
+        case 6:
+          ctx.transform(0, 1, -1, 0, height, 0);
+          break;
+        case 7:
+          ctx.transform(0, -1, -1, 0, height, width);
+          break;
+        case 8:
+          ctx.transform(0, -1, 1, 0, 0, width);
+          break;
+        default:
+          break;
+        }
+        ctx.drawImage(bitmap, 0, 0);
+        return canvas.toDataURL("image/jpeg");
+      })
+      .push(function (result) {
+        var img = domsugar("img", {"src": result});
         gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
+        div = gadget.element.querySelector(".camera-input");
         div.replaceChild(img, div.firstElementChild);
-        canvas.width = bitmap.width;
-        canvas.height = bitmap.height;
-        canvas.getContext('2d').drawImage(bitmap, 0, 0);
+      })
+      .push(function (result_list) {
         if (settings.brightness || settings.contrast || settings.enable_greyscale || settings.compression) {
           return handleCaman(canvas, settings);
         }
         return [canvas, settings.compression];
       })
       .push(function (result_list) {
-        var canvas = result_list[0],
-          compression = settings.compression || 1;
-
+        var compression = settings.compression || 1;
+        canvas = result_list[0];
         return RSVP.all([
           gadget.getTranslationList(["Delete", "Save", "Page"]),
           new Promise(function (resolve) {
@@ -783,4 +877,4 @@
 
     .declareAcquiredMethod("getTranslationList", "getTranslationList");
 
-}(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman));
+}(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman, FileReader, DataView));
