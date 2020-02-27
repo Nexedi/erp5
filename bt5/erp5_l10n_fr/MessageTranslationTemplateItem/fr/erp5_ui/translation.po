@@ -2545,6 +2545,15 @@ msgstr "Ville"
 msgid "Civil Status"
 msgstr "État civil"
 
+msgid "Claim Declaration"
+msgstr "Déclaration de créances"
+
+msgid "Claim Declaration Line"
+msgstr "Ligne de déclaration de créances"
+
+msgid "Claim Declaration Module"
+msgstr "Module déclaration de créances"
+
 msgid "Class"
 msgstr "Classe"
 
