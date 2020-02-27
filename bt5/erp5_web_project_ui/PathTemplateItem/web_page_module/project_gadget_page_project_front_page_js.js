@@ -21,9 +21,8 @@
                              "Test Result" : "Test Results",
                              "Bug" : "Bugs",
                              "Project Milestone" : "Milestones",
-                             "Task Report": "Task Reports",
-                             "Support Request" : "Support Requests"};
-  const PORTAL_TYPE_LIST = ["Task", "Bug", "Task Report", "Support Request"];
+                             "Task Report": "Task Reports"};
+  const PORTAL_TYPE_LIST = ["Task", "Bug", "Task Report"];
   const VALID_STATE_LIST = ["planned", "auto_planned", "ordered", "confirmed", "ready", "stopped", "started", "submitted", "validated"];
 
   function getProjectId(id) {
@@ -244,23 +243,34 @@
 
   rJS(window)
 
+    /////////////////////////////////////////////////////////////////
+    // Acquired methods
+    /////////////////////////////////////////////////////////////////
+    .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlForList", "getUrlForList")
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("getSetting", "getSetting")
 
     .declareMethod('render', function (options) {
-      return this.changeState(options);
-    })
-
-    .onStateChange(function () {
       var gadget = this;
       return getProjectList(gadget)
         .push(function (project_list) {
-          return renderProjectList(gadget, project_list);
-        })
-        .push(function (project_list) {
+          options.project_list = project_list;
+          return gadget.changeState(options);
+        });
+    })
+
+    .onStateChange(function (modification_dict) {
+      var gadget = this;
+      return gadget.updateHeader({
+        page_title: 'Project Management'
+      });
+    })
+
+    .declareService(function () {
+      var gadget = this;
+      return renderProjectList(gadget, gadget.state.project_list)
+        .push(function () {
           //run the rest of queries and render async
           gadget.renderMilestoneInfo();
           gadget.renderProjectDocumentInfo();
