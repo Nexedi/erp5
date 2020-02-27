@@ -192,10 +192,10 @@
         for (j = 0; j < len; j += 1) {
           device = info_list[j];
           if (device.kind === 'videoinput') {
-            if ((!current_device_id) ||
+            if (!current_device_id ||
                 (camera_list.indexOf(device.deviceId) === -1 &&
-                (force_new_device && (device.deviceId !== current_device_id)) ||
-                (!force_new_device && (device.deviceId === current_device_id)))) {
+                ((force_new_device && (device.deviceId !== current_device_id)) ||
+                  (!force_new_device && (device.deviceId === current_device_id))))) {
               return device.deviceId;
             }
           }
@@ -227,38 +227,39 @@
   }
 
   function buildPreviousThumbnailDom(gadget) {
-    var i,
-      img_class,
+    var img_class,
       btn_class = "",
       len = gadget.state.page_count,
       thumbnail_dom_list = [];
 
     return gadget.getTranslationList(["New Page"])
       .push(function (result_list) {
-        for (i = 0; i < len; i += 1) {
-          // XXX TODO display a loader when saving
-          if (gadget.state['blob_state_' + i] !== 'deleted') {
-            if (gadget.state['blob_state_' + i] === "error") {
-              img_class = "show-img upload-error";
-            } else {
-              img_class = "show-img";
-            }
+        var key, el;
+        for (el in gadget.state) {
+          if (gadget.state.hasOwnProperty(el) && el.indexOf("blob_state_") !== -1) {
+            key = parseInt(el.replace("blob_state_", ""), 10);
+            if (gadget.state['blob_state_' + key] !== 'deleted') {
+              if (gadget.state['blob_state_' + key] === "error") {
+                img_class = "show-img upload-error";
+              } else {
+                img_class = "show-img";
+              }
 
-            if (gadget.state['blob_state_' + i] === "saving") {
-              btn_class = "btn-thumbnail ui-btn-icon-top ui-icon-spinner";
-            } else {
-              btn_class = "btn-thumbnail";
+              if (gadget.state['blob_state_' + key] === "saving") {
+                btn_class = "btn-thumbnail ui-btn-icon-top ui-icon-spinner";
+              } else {
+                btn_class = "btn-thumbnail";
+              }
+              thumbnail_dom_list.push(domsugar('button', {
+                type: "button",
+                "class": btn_class,
+                // Do not allow to show again the current image
+                // or do not allow to show saving image (to simplify button management)
+                disabled: (key === gadget.state.page) || (gadget.state['blob_state_' + key] === 'saving')
+              }, [domsugar("img", {"class": img_class,
+                                   'data-page': key,
+                                    src: gadget.state['blob_url_' + key]})]));
             }
-
-            thumbnail_dom_list.push(domsugar('button', {
-              type: "button",
-              "class": btn_class,
-              // Do not allow to show again the current image
-              // or do not allow to show saving image (to simplify button management)
-              disabled: (i === gadget.state.page) || (gadget.state['blob_state_' + i] === 'saving')
-            }, [domsugar("img", {"class": img_class,
-                                  'data-page': i,
-                                  src: gadget.state['blob_url_' + i]})]));
           }
         }
         thumbnail_dom_list.push(domsugar('button', {type: 'button',
@@ -368,9 +369,9 @@
       .push(function (result_list) {
         var bitmap = result_list[0],
           img = domsugar("img", {"src": result_list[1].target.result}),
-          div = gadget.element.querySelector(".camera-input"),
           canvas = domsugar('canvas', {'class': 'canvas'});
 
+        div = gadget.element.querySelector(".camera-input");
         gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
         div.replaceChild(img, div.firstElementChild);
         canvas.width = bitmap.width;
@@ -587,7 +588,9 @@
 
     .onEvent("click", function (evt) {
       // Only handle click on BUTTON and IMG element
-      var gadget = this,
+      var el,
+        key,
+        gadget = this,
         tag_name = evt.target.tagName,
         state_dict;
 
@@ -600,8 +603,7 @@
       evt.preventDefault();
       // If user clicks on same image twice,
       // we don't need to disable everything again if parent is already disabled
-      if (tag_name === 'BUTTON' || (
-            tag_name === 'IMG' && !evt.target.parentElement.disabled)) {
+      if (tag_name === 'BUTTON' || (tag_name === 'IMG' && !evt.target.parentElement.disabled)) {
         gadget.element.querySelectorAll('button').forEach(function (elt) {
           elt.disabled = true;
         });
@@ -622,15 +624,25 @@
       if (evt.target.className.indexOf("new-btn") !== -1) {
         return gadget.changeState({
           display_step: 'display_video',
-          page: gadget.state.page_count + 1
+          page: gadget.state.page + 1
         });
       }
 
       if (evt.target.className.indexOf("delete-btn") !== -1) {
         state_dict = {
           display_step: 'display_video',
-          page: gadget.state.page_count + 1
+          page: 0
         };
+
+        for (el in gadget.state) {
+          if (gadget.state.hasOwnProperty(el) && el.indexOf("blob_state_") !== -1) {
+            key = el.replace("blob_state_", "");
+            if (gadget.state['blob_state_' + key] !== 'deleted') {
+              state_dict.page = state_dict.page + 1;
+            }
+          }
+        }
+
         state_dict['blob_state_' + gadget.state.page] = 'deleted';
         return gadget.changeState(state_dict);
       }
@@ -657,6 +669,8 @@
             // Keep image date, as user may need to display it again
             state_dict['blob_url_' + gadget.state.page_count] = evt.target.result;
             state_dict['blob_state_' + gadget.state.page_count] = 'saving';
+            state_dict['blob_uuid_' + gadget.state.page_count] = null;
+
             return gadget.changeState(state_dict);
           })
           .push(function () {
