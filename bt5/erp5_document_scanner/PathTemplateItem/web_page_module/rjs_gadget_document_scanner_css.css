@@ -57,13 +57,14 @@ div[data-gadget-url$="gadget_document_scanner.html"] .edit-btn,
 div[data-gadget-url$="gadget_document_scanner.html"] .take-picture-btn,
 div[data-gadget-url$="gadget_document_scanner.html"] .capture-btn,
 div[data-gadget-url$="gadget_document_scanner.html"] .delete-btn,
+div[data-gadget-url$="gadget_document_scanner.html"] .retry-btn,
 div[data-gadget-url$="gadget_document_scanner.html"] .change-camera-btn,
 div[data-gadget-url$="gadget_document_scanner.html"] .confirm-btn {
   color: #212529;
   padding: 3pt;
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
-  display: "inline-block";
+  display: inline-block;
   margin-right: 6pt;
 }
 
