@@ -39,6 +39,25 @@
     return view_list.filter(d => d.name === name)[0].href;
   }
 
+  function createMultipleSimpleOrQuery(key, value_list) {
+    var i,
+      search_query,
+      query_list = [];
+    for (i = 0; i < value_list.length; i += 1) {
+      query_list.push(new SimpleQuery({
+        key: key,
+        operator: "",
+        type: "simple",
+        value: value_list[i]
+      }));
+    }
+    return new ComplexQuery({
+      operator: "OR",
+      query_list: query_list,
+      type: "complex"
+    });
+  }
+
   function setLatestTestResult(gadget, svg_element, project_jio_key) {
     var query = createProjectQuery(project_jio_key,
                  [["portal_type", "Test Result"]]);
@@ -146,17 +165,17 @@
       type: "simple",
       value: "publication_section/" + publication_section
     }));
-    query = Query.objectToSearchText(new ComplexQuery({
+    query_list.push(createMultipleSimpleOrQuery('validation_state', VALID_STATE_LIST));
+    query = new ComplexQuery({
       operator: "AND",
       query_list: query_list,
       type: "complex"
-    }));
-    query += ' AND validation_state: ("' + VALID_STATE_LIST.join('", "') + '")';
+    });
     return gadget.getUrlFor({command: 'push_history', options: {page: "project_redirector"}})
       .push(function (url) {
         redirector_ulr = url;
         return gadget.jio_allDocs({
-          query: query,
+          query: Query.objectToSearchText(query),
           select_list: ['text_content']
         });
       })

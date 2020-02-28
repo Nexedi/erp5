@@ -26,6 +26,25 @@
   const PORTAL_TYPE_LIST = ["Task", "Bug", "Task Report"];
   const VALID_STATE_LIST = ["planned", "auto_planned", "ordered", "confirmed", "ready", "stopped", "started", "submitted", "validated"];
 
+  function createMultipleSimpleOrQuery(key, value_list) {
+    var i,
+      search_query,
+      query_list = [];
+    for (i = 0; i < value_list.length; i += 1) {
+      query_list.push(new SimpleQuery({
+        key: key,
+        operator: "",
+        type: "simple",
+        value: value_list[i]
+      }));
+    }
+    return new ComplexQuery({
+      operator: "OR",
+      query_list: query_list,
+      type: "complex"
+    });
+  }
+
   function getProjectId(id) {
     var segments = id.split("/");
     if (segments.length === 2) {
@@ -62,20 +81,31 @@
   }
 
   function getProjectDocumentList(gadget, limit_date) {
-    var document_query;
-    document_query = Query.objectToSearchText(new SimpleQuery({
+    var query_list = [],
+      document_query;
+    query_list.push(new SimpleQuery({
       key: "source_project__validation_state",
       operator: "=",
       type: "simple",
       value: "validated"
     }));
-    document_query += ' AND simulation_state: ("' + VALID_STATE_LIST.join('", "') + '")';
-    document_query += ' AND portal_type: ("' + PORTAL_TYPE_LIST.join('", "') + '")';
+    query_list.push(createMultipleSimpleOrQuery('portal_type', PORTAL_TYPE_LIST));
+    query_list.push(createMultipleSimpleOrQuery('simulation_state', VALID_STATE_LIST));
     if (limit_date) {
-      document_query += ' AND modification_date: < "' + limit_date + '"';
+      query_list.push(new SimpleQuery({
+        key: "modification_date",
+        operator: "<",
+        type: "simple",
+        value: limit_date
+      }));
     }
+    document_query = new ComplexQuery({
+      operator: "AND",
+      query_list: query_list,
+      type: "complex"
+    });
     return gadget.jio_allDocs({
-      query: document_query,
+      query: Query.objectToSearchText(document_query),
       limit: QUERY_LIMIT,
       select_list: ['source_project__relative_url', 'portal_type', 'count(*)'],
       group_by: ['portal_type', 'source_project__relative_url'],
@@ -352,16 +382,22 @@
       var gadget = this,
         i,
         test_list,
-        test_result_query = Query.objectToSearchText(
-          getComplexQuery({"portal_type" : "Test Result",
-                            "source_project__validation_state" : "validated"},
-                          "AND")),
+        query_list = [],
+        test_result_query,
         test_state_list = ["failed", "stopped", "public_stopped"];
-      test_result_query += ' AND simulation_state: ("' + test_state_list.join('", "') + '")';
+      query_list.push(getComplexQuery({"portal_type" : "Test Result",
+                                       "source_project__validation_state" : "validated"},
+                                      "AND"));
+      query_list.push(createMultipleSimpleOrQuery('simulation_state', test_state_list));
+      test_result_query = new ComplexQuery({
+        operator: "AND",
+        query_list: query_list,
+        type: "complex"
+      });
       return gadget.jio_allDocs({
-        query: test_result_query,
+        query: Query.objectToSearchText(test_result_query),
         limit: QUERY_LIMIT,
-        select_list: ['source_project__relative_url', 'portal_type'],
+        select_list: ['source_project__relative_url', 'portal_type', 'modification_date'],
         group_by: ['source_project__relative_url'],
         sort_on: [["modification_date", "descending"]]
       })
