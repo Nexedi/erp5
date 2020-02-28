@@ -56,7 +56,10 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Associate</string>
+                        <string>Auditor</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
@@ -66,7 +69,11 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -74,7 +81,11 @@
                     <key> <string>Delete objects</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -82,7 +93,11 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
+                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -90,7 +105,10 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
                         <string>Associate</string>
+                        <string>Auditor</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
