@@ -53,8 +53,9 @@
     return segments.slice(0, -1).join("/");
   }
 
-  function getProjectSpanId(project_id, portal_type, span_title) {
-    return [project_id, portal_type, span_title].join("-").replace("/", "-").replace(" ", "-");
+  function getProjectSpanId(project_id, portal_type, span_title, hash_selector) {
+    hash_selector = (hash_selector) ? '#' : '';
+    return hash_selector + [project_id, portal_type, span_title].join("-").replace("/", "-").replace(" ", "-");
   }
 
   function getComplexQuery(query_dict, operator, extra_query) {
@@ -133,10 +134,10 @@
   }
 
   function renderProjectLine(project_id, portal_type, total_count, outdated_count) {
-    var total_span = document.getElementById(getProjectSpanId(project_id, portal_type, TOTAL_SPAN)),
-      outdated_span = document.getElementById(getProjectSpanId(project_id, portal_type, OUTDATED_SPAN)),
-      status_span = document.getElementById(getProjectSpanId(project_id, portal_type, STATUS_SPAN)),
-      number_span = document.getElementById(getProjectSpanId(project_id, portal_type, NUMBER_SPAN));
+    var total_span = document.querySelector(getProjectSpanId(project_id, portal_type, TOTAL_SPAN, true)),
+      outdated_span = document.querySelector(getProjectSpanId(project_id, portal_type, OUTDATED_SPAN, true)),
+      status_span = document.querySelector(getProjectSpanId(project_id, portal_type, STATUS_SPAN, true)),
+      number_span = document.querySelector(getProjectSpanId(project_id, portal_type, NUMBER_SPAN, true));
     total_span.textContent = parseInt(total_span.textContent, RADIX) + total_count;
     outdated_span.textContent = parseInt(outdated_span.textContent, RADIX) + outdated_count;
     if (outdated_count > 0) {
@@ -155,8 +156,8 @@
       left_div_html,
       project_html_element_list,
       left_line_html,
-      ul_list = document.getElementById("js-project-list"),
-      spinner = document.getElementById("js-spinner"),
+      ul_list = document.querySelector("#js-project-list"),
+      spinner = document.querySelector("#js-spinner"),
       url_parameter_list = [],
       project_id,
       project_dict,

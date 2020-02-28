@@ -76,20 +76,20 @@
           switch (state) {
           case 'started':
             svg_element.classList.add("running");
-            document.getElementById("test_result_running").classList.remove("ui-hidden");
+            document.querySelector("test_result_running").classList.remove("ui-hidden");
             break;
           case 'failed':
             svg_element.classList.add("fail");
-            document.getElementById("test_result_fail").classList.remove("ui-hidden");
+            document.querySelector("test_result_fail").classList.remove("ui-hidden");
             break;
           case 'cancelled':
             svg_element.classList.add("cancelled");
-            document.getElementById("test_result_running").classList.remove("ui-hidden");
+            document.querySelector("test_result_running").classList.remove("ui-hidden");
             break;
           case 'stopped':
           case 'public_stopped':
             svg_element.classList.add("pass");
-            document.getElementById("test_result_pass").classList.remove("ui-hidden");
+            document.querySelector("test_result_pass").classList.remove("ui-hidden");
             break;
           default:
             svg_element.classList.add("ui-hidden");
@@ -176,7 +176,8 @@
         redirector_ulr = url;
         return gadget.jio_allDocs({
           query: Query.objectToSearchText(query),
-          select_list: ['text_content']
+          select_list: ['text_content'],
+          limit: 2
         });
       })
       .push(function (result_list) {
@@ -292,20 +293,20 @@
           return gadget.getUrlForList(url_parameter_list);
         })
         .push(function (url_list) {
-          enableLink(document.getElementById("milestone_link"), url_list[0]);
-          enableLink(document.getElementById("task_link"), url_list[1]);
-          enableLink(document.getElementById("support_request_link"), url_list[2]);
-          enableLink(document.getElementById("bug_link"), url_list[3]);
-          enableLink(document.getElementById("report_link"), url_list[4]);
-          enableLink(document.getElementById("test_result_link"), url_list[5]);
-          enableLink(document.getElementById("test_suite_link"), url_list[6]);
-          enableLink(document.getElementById("document_link"), url_list[7]);
-          enableLink(document.getElementById("activity_link"), url_list[8]);
+          enableLink(document.querySelector("milestone_link"), url_list[0]);
+          enableLink(document.querySelector("task_link"), url_list[1]);
+          enableLink(document.querySelector("support_request_link"), url_list[2]);
+          enableLink(document.querySelector("bug_link"), url_list[3]);
+          enableLink(document.querySelector("report_link"), url_list[4]);
+          enableLink(document.querySelector("test_result_link"), url_list[5]);
+          enableLink(document.querySelector("test_suite_link"), url_list[6]);
+          enableLink(document.querySelector("document_link"), url_list[7]);
+          enableLink(document.querySelector("activity_link"), url_list[8]);
           if (web_page_info) {
-            enableLink(document.getElementById("web_page_link"), url_list[9]);
+            enableLink(document.querySelector("web_page_link"), url_list[9]);
           }
           //TODO move into a job to call it async
-          setLatestTestResult(gadget, document.getElementById("test_result_svg"), modification_dict.jio_key);
+          setLatestTestResult(gadget, document.querySelector("test_result_svg"), modification_dict.jio_key);
         });
     })
 
