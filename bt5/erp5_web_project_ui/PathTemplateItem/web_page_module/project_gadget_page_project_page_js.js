@@ -1,11 +1,12 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer, SimpleQuery, ComplexQuery, Query*/
-(function (window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer, SimpleQuery, ComplexQuery, Query) {
+/*global window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer,
+SimpleQuery, ComplexQuery, Query*/
+(function (window, rJS, RSVP, document, ensureArray, DOMParser, XMLSerializer,
+            SimpleQuery, ComplexQuery, Query) {
   "use strict";
 
-  /*jshint esnext: true */
-  const VALID_STATE_LIST = ["shared", "released", "published",
-                            "shared_alive", "released_alive", "published_alive"];
+  var VALID_STATE_LIST = ["shared", "released", "published",
+                          "shared_alive", "released_alive", "published_alive"];
 
   function addRedirectionToReference(href, url) {
     if (!href.startsWith("https") && !href.startsWith("http") &&
@@ -28,7 +29,9 @@
     styles_link.rel = "stylesheet";
     header.appendChild(styles_link);
     for (i = 0; i < link_list.length; i += 1) {
-      link_list[i].setAttribute('href', addRedirectionToReference(link_list[i].getAttribute('href'), url));
+      link_list[i].setAttribute('href',
+                                addRedirectionToReference(link_list[i]
+                                                          .getAttribute('href'), url));
     }
     return oSerializer.serializeToString(doc);
   }
@@ -45,7 +48,6 @@
 
   function createMultipleSimpleOrQuery(key, value_list) {
     var i,
-      search_query,
       query_list = [];
     for (i = 0; i < value_list.length; i += 1) {
       query_list.push(new SimpleQuery({
@@ -60,46 +62,6 @@
       query_list: query_list,
       type: "complex"
     });
-  }
-
-  function setLatestTestResult(gadget, svg_element, project_jio_key) {
-    var query = createProjectQuery(project_jio_key,
-                 [["portal_type", "Test Result"]]);
-    return gadget.jio_allDocs({
-      query: query,
-      limit: 1,
-      sort_on: [['creation_date', 'descending']],
-      select_list: ['simulation_state']
-    })
-      .push(function (result_list) {
-        var state;
-        result_list = result_list.data.rows;
-        if (result_list.length > 0) {
-          svg_element.classList.remove("ui-hidden");
-          state = result_list[0].value.simulation_state;
-          switch (state) {
-          case 'started':
-            svg_element.classList.add("running");
-            document.querySelector("#test_result_running").classList.remove("ui-hidden");
-            break;
-          case 'failed':
-            svg_element.classList.add("fail");
-            document.querySelector("#test_result_fail").classList.remove("ui-hidden");
-            break;
-          case 'cancelled':
-            svg_element.classList.add("cancelled");
-            document.querySelector("#test_result_running").classList.remove("ui-hidden");
-            break;
-          case 'stopped':
-          case 'public_stopped':
-            svg_element.classList.add("pass");
-            document.querySelector("#test_result_pass").classList.remove("ui-hidden");
-            break;
-          default:
-            svg_element.classList.add("ui-hidden");
-          }
-        }
-      });
   }
 
   function createProjectQuery(project_jio_key, key_value_list) {
@@ -140,16 +102,57 @@
     }));
   }
 
+  function setLatestTestResult(gadget, svg_element, project_jio_key) {
+    var query = createProjectQuery(project_jio_key,
+                 [["portal_type", "Test Result"]]);
+    return gadget.jio_allDocs({
+      query: query,
+      limit: 1,
+      sort_on: [['creation_date', 'descending']],
+      select_list: ['simulation_state']
+    })
+      .push(function (result_list) {
+        var state;
+        result_list = result_list.data.rows;
+        if (result_list.length > 0) {
+          svg_element.classList.remove("ui-hidden");
+          state = result_list[0].value.simulation_state;
+          switch (state) {
+          case 'started':
+            svg_element.classList.add("running");
+            document.querySelector("#test_result_running")
+              .classList.remove("ui-hidden");
+            break;
+          case 'failed':
+            svg_element.classList.add("fail");
+            document.querySelector("#test_result_fail")
+              .classList.remove("ui-hidden");
+            break;
+          case 'cancelled':
+            svg_element.classList.add("cancelled");
+            document.querySelector("#test_result_running")
+              .classList.remove("ui-hidden");
+            break;
+          case 'stopped':
+          case 'public_stopped':
+            svg_element.classList.add("pass");
+            document.querySelector("#test_result_pass")
+              .classList.remove("ui-hidden");
+            break;
+          default:
+            svg_element.classList.add("ui-hidden");
+          }
+        }
+      });
+  }
+
   function getWebPageInfo(gadget, project_jio_key, publication_section) {
     var id,
       content,
       edit_view,
       redirector_ulr,
-      i,
       query,
       query_list = [],
-      id_query_list = [],
-      validation_state_query_list = [],
       web_page;
     query_list.push(new SimpleQuery({
       key: "portal_type",
@@ -175,7 +178,8 @@
       query_list: query_list,
       type: "complex"
     });
-    return gadget.getUrlFor({command: 'push_history', options: {page: "project_redirector"}})
+    return gadget.getUrlFor({command: 'push_history',
+                             options: {page: "project_redirector"}})
       .push(function (url) {
         redirector_ulr = url;
         return gadget.jio_allDocs({
@@ -245,7 +249,8 @@
           ];
           if (modification_dict.publication_section) {
             promise_list.push(gadget.getDeclaredGadget("editor"));
-            promise_list.push(getWebPageInfo(gadget, modification_dict.jio_key, modification_dict.publication_section));
+            promise_list.push(getWebPageInfo(gadget, modification_dict.jio_key,
+                                             modification_dict.publication_section));
           }
           return RSVP.all(promise_list);
         })
@@ -309,8 +314,9 @@
           if (web_page_info) {
             enableLink(document.querySelector("#web_page_link"), url_list[9]);
           }
-          //TODO move into a job to call it async
-          setLatestTestResult(gadget, document.querySelector("#test_result_svg"), modification_dict.jio_key);
+          //XXX move into a job to call it async
+          setLatestTestResult(gadget, document.querySelector("#test_result_svg"),
+                              modification_dict.jio_key);
         });
     })
 

@@ -3,32 +3,32 @@
 (function (window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt) {
   "use strict";
 
-  /*jshint esnext: true */
-  const STATUS_OK = "green";
-  const STATUS_NOT_OK = "red";
-  const NONE_STATUS = "none";
-  const RADIX = 10;
-  const STATUS_SPAN = "status";
-  const TOTAL_SPAN = "total";
-  const OUTDATED_SPAN = "outdated";
-  const NUMBER_SPAN = "number";
-  const QUERY_LIMIT = 100000;
-  const SUPERVISOR_FIELD_TITLE = "Supervisor";
-  //XXX hardcoded one year old date to define outdated elements
-  //TODO Where to define/get the limit date? byt portal_type or the same for all documents?
-  const LIMIT_DATE = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
-  //XXX hardcoded portal_types, states and titles dict
-  const PORTAL_TITLE_DICT = {"Task": "Tasks",
+  var STATUS_OK = "green",
+    STATUS_NOT_OK = "red",
+    NONE_STATUS = "none",
+    RADIX = 10,
+    STATUS_SPAN = "status",
+    TOTAL_SPAN = "total",
+    OUTDATED_SPAN = "outdated",
+    NUMBER_SPAN = "number",
+    QUERY_LIMIT = 100000,
+    SUPERVISOR_FIELD_TITLE = "Supervisor",
+    //XXX hardcoded one year old date to define outdated elements
+    // Where to define/get the limit date?
+    // by portal_type or the same for all documents?
+    LIMIT_DATE = new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+    //XXX hardcoded portal_types, states and titles dict
+    PORTAL_TITLE_DICT = {"Task": "Tasks",
                              "Test Result" : "Test Results",
                              "Bug" : "Bugs",
                              "Project Milestone" : "Milestones",
-                             "Task Report": "Task Reports"};
-  const PORTAL_TYPE_LIST = ["Task", "Bug", "Task Report"];
-  const VALID_STATE_LIST = ["planned", "auto_planned", "ordered", "confirmed", "ready", "stopped", "started", "submitted", "validated"];
+                             "Task Report": "Task Reports"},
+    PORTAL_TYPE_LIST = ["Task", "Bug", "Task Report"],
+    VALID_STATE_LIST = ["planned", "auto_planned", "ordered", "confirmed",
+                        "ready", "stopped", "started", "submitted", "validated"];
 
   function createMultipleSimpleOrQuery(key, value_list) {
     var i,
-      search_query,
       query_list = [];
     for (i = 0; i < value_list.length; i += 1) {
       query_list.push(new SimpleQuery({
@@ -54,8 +54,10 @@
   }
 
   function getProjectSpanId(project_id, portal_type, span_title, hash_selector) {
-    hash_selector = (hash_selector) ? '#' : '';
-    return hash_selector + [project_id, portal_type, span_title].join("-").replace("/", "-").replace(" ", "-");
+    hash_selector = hash_selector ? '#' : '';
+    //remove not allowed html id chars (spaces, slashes)
+    return hash_selector + [project_id, portal_type, span_title].join("-")
+      .replace("/", "-").replace(/\s/g, "-");
   }
 
   function getComplexQuery(query_dict, operator, extra_query) {
@@ -112,34 +114,44 @@
       group_by: ['portal_type', 'source_project__relative_url'],
       sort_on: [["modification_date", "descending"]]
     })
-    .push(function (result) {
-      return result.data.rows;
-    });
+      .push(function (result) {
+        return result.data.rows;
+      });
   }
 
   function getProjectList(gadget) {
     var project_query = Query.objectToSearchText(
       getComplexQuery({"portal_type" : "Project",
                        "validation_state" : "validated"},
-                      "AND"));
+                      "AND")
+    );
     return gadget.jio_allDocs({
       query: project_query,
       limit: QUERY_LIMIT,
       select_list: ['title', 'source_decision_title'],
       sort_on: [["modification_date", "ascending"]]
     })
-    .push(function (result) {
-      return result.data.rows;
-    });
+      .push(function (result) {
+        return result.data.rows;
+      });
   }
 
   function renderProjectLine(project_id, portal_type, total_count, outdated_count) {
-    var total_span = document.querySelector(getProjectSpanId(project_id, portal_type, TOTAL_SPAN, true)),
-      outdated_span = document.querySelector(getProjectSpanId(project_id, portal_type, OUTDATED_SPAN, true)),
-      status_span = document.querySelector(getProjectSpanId(project_id, portal_type, STATUS_SPAN, true)),
-      number_span = document.querySelector(getProjectSpanId(project_id, portal_type, NUMBER_SPAN, true));
+    var total_span = document.querySelector(
+      getProjectSpanId(project_id, portal_type, TOTAL_SPAN, true)
+    ),
+      outdated_span = document.querySelector(
+        getProjectSpanId(project_id, portal_type, OUTDATED_SPAN, true)
+      ),
+      status_span = document.querySelector(
+        getProjectSpanId(project_id, portal_type, STATUS_SPAN, true)
+      ),
+      number_span = document.querySelector(
+        getProjectSpanId(project_id, portal_type, NUMBER_SPAN, true)
+      );
     total_span.textContent = parseInt(total_span.textContent, RADIX) + total_count;
-    outdated_span.textContent = parseInt(outdated_span.textContent, RADIX) + outdated_count;
+    outdated_span.textContent = parseInt(outdated_span.textContent, RADIX) +
+      outdated_count;
     if (outdated_count > 0) {
       status_span.classList.remove(STATUS_OK);
       status_span.classList.add(STATUS_NOT_OK);
@@ -151,19 +163,16 @@
 
   function renderProjectList(gadget, project_list) {
     var i,
-      item,
       project_html,
       left_div_html,
       project_html_element_list,
       left_line_html,
       ul_list = document.querySelector("#js-project-list"),
       spinner = document.querySelector("#js-spinner"),
-      url_parameter_list = [],
-      project_id,
-      project_dict,
-      outdated;
+      url_parameter_list = [];
 
-    function createProjectHtmlElement(project_id, project_title, project_url, supervisor) {
+    function createProjectHtmlElement(project_id, project_title,
+                                      project_url, supervisor) {
       var project_li = document.createElement('li'),
         box_div = document.createElement('div'),
         title_div = document.createElement('div'),
@@ -173,10 +182,10 @@
         right_line_div = document.createElement('div'),
         supervisor_line_div = document.createElement('div'),
         project_link = document.createElement('a'),
-        forum_link = document.createElement('a');
+        forum_link = document.createElement('a'),
+        supervisor_field_label = document.createElement('label'),
+        supervisor_value_span = document.createElement('span');
       if (supervisor) {
-        var supervisor_field_label = document.createElement('label'),
-          supervisor_value_span = document.createElement('span');
         supervisor_line_div.classList.add("field", "project-line");
         supervisor_field_label.innerHTML = SUPERVISOR_FIELD_TITLE;
         supervisor_value_span.innerHTML = supervisor;
@@ -192,7 +201,7 @@
       info_div.classList.add("project-info");
       left_info_div.classList.add("left");
       right_line_div.classList.add("project-line");
-      //TODO
+      //XXX
       forum_link.href = "TODO";
       forum_link.innerHTML = project_id + " forum link";
       right_line_div.appendChild(forum_link);
@@ -205,7 +214,8 @@
       return [project_li, left_info_div];
     }
 
-    function createProjectLineHtmlElement(project_id, portal_type, title, total_count, out_count, status_color) {
+    function createProjectLineHtmlElement(project_id, portal_type, title, total_count,
+                                          out_count, status_color) {
       var line_div = document.createElement('div'),
         status_span = document.createElement('span'),
         name_span = document.createElement('span'),
@@ -218,22 +228,26 @@
       status_span.classList.add(STATUS_SPAN);
       status_span.classList.add(status_color);
       status_span.classList.add("margined");
-      status_span.setAttribute("id", getProjectSpanId(project_id, portal_type, STATUS_SPAN));
+      status_span.setAttribute("id", getProjectSpanId(project_id,
+                                                      portal_type, STATUS_SPAN));
       name_span.classList.add("name");
       name_span.classList.add("margined");
       name_span.innerHTML = title;
       total_span.classList.add("margined");
       total_span.innerHTML = total_count;
-      total_span.setAttribute("id", getProjectSpanId(project_id, portal_type, TOTAL_SPAN));
+      total_span.setAttribute("id", getProjectSpanId(project_id,
+                                                     portal_type, TOTAL_SPAN));
       outdated_span.innerHTML = out_count;
-      outdated_span.setAttribute("id", getProjectSpanId(project_id, portal_type, OUTDATED_SPAN));
+      outdated_span.setAttribute("id", getProjectSpanId(project_id,
+                                                        portal_type, OUTDATED_SPAN));
       open_bracket_span.innerHTML = "(";
       close_bracket_span.innerHTML = ")";
       number_span.appendChild(total_span);
       number_span.appendChild(open_bracket_span);
       number_span.appendChild(outdated_span);
       number_span.appendChild(close_bracket_span);
-      number_span.setAttribute("id", getProjectSpanId(project_id, portal_type, NUMBER_SPAN));
+      number_span.setAttribute("id", getProjectSpanId(project_id,
+                                                      portal_type, NUMBER_SPAN));
       number_span.classList.add("ui-hidden");
       line_div.appendChild(status_span);
       line_div.appendChild(name_span);
@@ -259,17 +273,23 @@
         return gadget.getUrlForList(url_parameter_list);
       })
       .push(function (url_list) {
+        var type;
         spinner.classList.add("ui-hidden");
         for (i = 0; i < project_list.length; i += 1) {
-          project_html_element_list = createProjectHtmlElement(project_list[i].id, project_list[i].value.title,
-                                                               url_list[i], project_list[i].value.source_decision_title);
+          project_html_element_list =
+            createProjectHtmlElement(project_list[i].id,
+                                     project_list[i].value.title,
+                                     url_list[i],
+                                     project_list[i].value.source_decision_title);
           project_html = project_html_element_list[0];
           left_div_html = project_html_element_list[1];
-
-          for (var type in PORTAL_TITLE_DICT) {
+          for (type in PORTAL_TITLE_DICT) {
             if (PORTAL_TITLE_DICT.hasOwnProperty(type)) {
               left_line_html = createProjectLineHtmlElement(project_list[i].id, type,
-                                                            ((PORTAL_TITLE_DICT.hasOwnProperty(type)) ? PORTAL_TITLE_DICT[type] : type),
+                                                            ((PORTAL_TITLE_DICT
+                                                              .hasOwnProperty(type)) ?
+                                                             PORTAL_TITLE_DICT[type] :
+                                                             type),
                                                             0, 0, NONE_STATUS);
               left_div_html.appendChild(left_line_html);
             }
@@ -298,7 +318,7 @@
         });
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function () {
       var gadget = this;
       return gadget.updateHeader({
         page_title: 'Project Management'
@@ -319,64 +339,71 @@
 
     .declareJob("renderMilestoneInfo", function () {
       var gadget = this,
-        i, outdated,
+        i,
+        outdated,
         milestone_list,
         milestone_query = Query.objectToSearchText(
-        getComplexQuery({"portal_type" : "Project Milestone",
-                          "validation_state" : "validated",
-                          "parent__portal_type" : "Project"},
-                        "AND"));
+          getComplexQuery({"portal_type" : "Project Milestone",
+                            "validation_state" : "validated",
+                            "parent__portal_type" : "Project"},
+                          "AND")
+        );
       return new RSVP.Queue()
         .push(function () {
           return gadget.jio_allDocs({
             query: milestone_query,
             limit: QUERY_LIMIT,
-            select_list: ["title", 'portal_type', "parent__title", "parent__relative_url"],
+            select_list: ["title", 'portal_type', "parent__title",
+                          "parent__relative_url"],
             sort_on: [["modification_date", "descending"]]
-          })
-          .push(function (result) {
-            milestone_list = result.data.rows;
-            for (i = 0; i < milestone_list.length; i += 1) {
-              outdated = (new Date(milestone_list[i].value.modification_date) < LIMIT_DATE) ? 1 : 0;
-              renderProjectLine(getProjectId(milestone_list[i].id),
-                                milestone_list[i].value.portal_type,
-                                1, outdated);
-            }
           });
+        })
+        .push(function (result) {
+          milestone_list = result.data.rows;
+          for (i = 0; i < milestone_list.length; i += 1) {
+            outdated = (new Date(milestone_list[i].value.modification_date) <
+                        LIMIT_DATE) ? 1 : 0;
+            renderProjectLine(getProjectId(milestone_list[i].id),
+                              milestone_list[i].value.portal_type,
+                              1, outdated);
+          }
         });
     })
 
     .declareJob("renderProjectDocumentInfo", function () {
       var gadget = this,
-        i,
-        document_list;
+        i;
       return getProjectDocumentList(gadget)
-      .push(function (document_list) {
-        for (i = 0; i < document_list.length; i += 1) {
-          renderProjectLine(getProjectId(document_list[i].value.source_project__relative_url),
-                            document_list[i].value.portal_type,
-                            1, 0);
-        }
-      });
+        .push(function (document_list) {
+          for (i = 0; i < document_list.length; i += 1) {
+            renderProjectLine(getProjectId(document_list[i].value
+                                           .source_project__relative_url),
+                              document_list[i].value.portal_type,
+                              1, 0);
+          }
+        });
     })
 
     .declareJob("renderOutdatedDocumentInfo", function () {
       var gadget = this,
         i,
+        //date ISO string format: "yyyy-mm-ddThh:mm:ss.mmmm"
+        //JIO query date format:  "yyyy-mm-dd hh:mm:ss"
         limit_date = LIMIT_DATE.toISOString()
           .substring(0, LIMIT_DATE.toISOString().length - 5)
-          .replace("T", " "),
-        document_list;
+          .replace("T", " ");
       //XXX For testing
-      limit_date = new Date().toISOString().substring(0, LIMIT_DATE.toISOString().length - 5).replace("T", " ");
+      limit_date = new Date().toISOString()
+        .substring(0, LIMIT_DATE.toISOString().length - 5).replace("T", " ");
       return getProjectDocumentList(gadget, limit_date)
-      .push(function (document_list) {
-        for (i = 0; i < document_list.length; i += 1) {
-          renderProjectLine(getProjectId(document_list[i].value.source_project__relative_url),
-                            document_list[i].value.portal_type,
-                            0, 1);
-        }
-      });
+        .push(function (document_list) {
+          for (i = 0; i < document_list.length; i += 1) {
+            renderProjectLine(getProjectId(document_list[i]
+                                           .value.source_project__relative_url),
+                              document_list[i].value.portal_type,
+                              0, 1);
+          }
+        });
     })
 
     .declareJob("renderTestResultInfo", function () {
@@ -402,18 +429,17 @@
         group_by: ['source_project__relative_url'],
         sort_on: [["modification_date", "descending"]]
       })
-      .push(function (result) {
-        test_list = result.data.rows;
-        for (i = 0; i < test_list.length; i += 1) {
-          //TODO total and outdated values should come with the test-result-row
-          //(all_tests and failed) but those are _local_properties
-          renderProjectLine(test_list[i].value.source_project__relative_url,
-                            test_list[i].value.portal_type,
-                            //
-                            1, //parseInt(test_list[i].value.all_test, RADIX)
-                            0); //parseInt(test_list[i].value.failures, RADIX)
-        }
-      });
+        .push(function (result) {
+          test_list = result.data.rows;
+          for (i = 0; i < test_list.length; i += 1) {
+            //XXX total and outdated values should come with the test-result-row
+            //(all_tests and failed) but those are _local_properties
+            renderProjectLine(test_list[i].value.source_project__relative_url,
+                              test_list[i].value.portal_type,
+                              1, //parseInt(test_list[i].value.all_test, RADIX)
+                              0); //parseInt(test_list[i].value.failures, RADIX)
+          }
+        });
     })
 
     .declareMethod('getContent', function () {
