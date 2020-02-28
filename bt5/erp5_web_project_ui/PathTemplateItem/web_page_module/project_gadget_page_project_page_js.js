@@ -19,7 +19,7 @@
   function parseHTMLLinks(html, url) {
     var parser = new DOMParser(), i,
       //TODO create head and link html elements and prepend to doc instead of using text
-      styles_header = '<head><link rel="stylesheet" type="text/css" href="gadget_project_info.css"></head>',
+      styles_header = '<head><link rel="stylesheet" type="text/css" href="gadget_erp5_page_project.css"></head>',
       oSerializer = new XMLSerializer(),
       doc = parser.parseFromString(html, "text/html"),
       link_list = doc.getElementsByTagName("a");
@@ -285,6 +285,7 @@
           if (web_page_info) {
             enableLink(document.getElementById("web_page_link"), url_list[9]);
           }
+          //TODO move into a job to call it async
           setLatestTestResult(gadget, document.getElementById("test_result_svg"), modification_dict.jio_key);
         });
     })
