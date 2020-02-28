@@ -18,15 +18,19 @@
 
   function parseHTMLLinks(html, url) {
     var parser = new DOMParser(), i,
-      //TODO create head and link html elements and prepend to doc instead of using text
-      styles_header = '<head><link rel="stylesheet" type="text/css" href="gadget_erp5_page_project.css"></head>',
+      styles_link = document.createElement('link'),
       oSerializer = new XMLSerializer(),
       doc = parser.parseFromString(html, "text/html"),
-      link_list = doc.getElementsByTagName("a");
+      link_list = doc.querySelectorAll("a"),
+      header = doc.querySelector("head");
+    styles_link.href = "gadget_erp5_page_project.css";
+    styles_link.type = "text/css";
+    styles_link.rel = "stylesheet";
+    header.appendChild(styles_link);
     for (i = 0; i < link_list.length; i += 1) {
       link_list[i].setAttribute('href', addRedirectionToReference(link_list[i].getAttribute('href'), url));
     }
-    return styles_header + oSerializer.serializeToString(doc);
+    return oSerializer.serializeToString(doc);
   }
 
   function enableLink(link_element, url) {
@@ -76,20 +80,20 @@
           switch (state) {
           case 'started':
             svg_element.classList.add("running");
-            document.querySelector("test_result_running").classList.remove("ui-hidden");
+            document.querySelector("#test_result_running").classList.remove("ui-hidden");
             break;
           case 'failed':
             svg_element.classList.add("fail");
-            document.querySelector("test_result_fail").classList.remove("ui-hidden");
+            document.querySelector("#test_result_fail").classList.remove("ui-hidden");
             break;
           case 'cancelled':
             svg_element.classList.add("cancelled");
-            document.querySelector("test_result_running").classList.remove("ui-hidden");
+            document.querySelector("#test_result_running").classList.remove("ui-hidden");
             break;
           case 'stopped':
           case 'public_stopped':
             svg_element.classList.add("pass");
-            document.querySelector("test_result_pass").classList.remove("ui-hidden");
+            document.querySelector("#test_result_pass").classList.remove("ui-hidden");
             break;
           default:
             svg_element.classList.add("ui-hidden");
@@ -293,20 +297,20 @@
           return gadget.getUrlForList(url_parameter_list);
         })
         .push(function (url_list) {
-          enableLink(document.querySelector("milestone_link"), url_list[0]);
-          enableLink(document.querySelector("task_link"), url_list[1]);
-          enableLink(document.querySelector("support_request_link"), url_list[2]);
-          enableLink(document.querySelector("bug_link"), url_list[3]);
-          enableLink(document.querySelector("report_link"), url_list[4]);
-          enableLink(document.querySelector("test_result_link"), url_list[5]);
-          enableLink(document.querySelector("test_suite_link"), url_list[6]);
-          enableLink(document.querySelector("document_link"), url_list[7]);
-          enableLink(document.querySelector("activity_link"), url_list[8]);
+          enableLink(document.querySelector("#milestone_link"), url_list[0]);
+          enableLink(document.querySelector("#task_link"), url_list[1]);
+          enableLink(document.querySelector("#support_request_link"), url_list[2]);
+          enableLink(document.querySelector("#bug_link"), url_list[3]);
+          enableLink(document.querySelector("#report_link"), url_list[4]);
+          enableLink(document.querySelector("#test_result_link"), url_list[5]);
+          enableLink(document.querySelector("#test_suite_link"), url_list[6]);
+          enableLink(document.querySelector("#document_link"), url_list[7]);
+          enableLink(document.querySelector("#activity_link"), url_list[8]);
           if (web_page_info) {
-            enableLink(document.querySelector("web_page_link"), url_list[9]);
+            enableLink(document.querySelector("#web_page_link"), url_list[9]);
           }
           //TODO move into a job to call it async
-          setLatestTestResult(gadget, document.querySelector("test_result_svg"), modification_dict.jio_key);
+          setLatestTestResult(gadget, document.querySelector("#test_result_svg"), modification_dict.jio_key);
         });
     })
 
