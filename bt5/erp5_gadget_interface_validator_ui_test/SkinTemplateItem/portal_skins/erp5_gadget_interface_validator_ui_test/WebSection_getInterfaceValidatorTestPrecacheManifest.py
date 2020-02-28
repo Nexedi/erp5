@@ -16,6 +16,8 @@ url_list = [
   'gadget_interface_validator_test_multiple_interface_duplicated_method_name.js',
   'gadget_interface_validator_test_unknown_method_declaration_gadget.html',
   'gadget_interface_validator_test_unknown_method_declaration_gadget.js',
+  'gadget_interface_validator_test_failing_service_gadget.html',
+  'gadget_interface_validator_test_failing_service_gadget.js'
 ]
 
 if REQUEST is not None:
