@@ -11,6 +11,7 @@
   const STATUS_SPAN = "status";
   const TOTAL_SPAN = "total";
   const OUTDATED_SPAN = "outdated";
+  const NUMBER_SPAN = "number";
   const QUERY_LIMIT = 100000;
   const SUPERVISOR_FIELD_TITLE = "Supervisor";
   //XXX hardcoded one year old date to define outdated elements
@@ -104,7 +105,8 @@
   function renderProjectLine(project_id, portal_type, total_count, outdated_count) {
     var total_span = document.getElementById(getProjectSpanId(project_id, portal_type, TOTAL_SPAN)),
       outdated_span = document.getElementById(getProjectSpanId(project_id, portal_type, OUTDATED_SPAN)),
-      status_span = document.getElementById(getProjectSpanId(project_id, portal_type, STATUS_SPAN));
+      status_span = document.getElementById(getProjectSpanId(project_id, portal_type, STATUS_SPAN)),
+      number_span = document.getElementById(getProjectSpanId(project_id, portal_type, NUMBER_SPAN));
     total_span.textContent = parseInt(total_span.textContent, RADIX) + total_count;
     outdated_span.textContent = parseInt(outdated_span.textContent, RADIX) + outdated_count;
     if (outdated_count > 0) {
@@ -113,6 +115,7 @@
     } else if (!status_span.classList.value.includes(STATUS_NOT_OK)) {
       status_span.classList.add(STATUS_OK);
     }
+    number_span.classList.remove("ui-hidden");
   }
 
   function renderProjectList(gadget, project_list) {
@@ -130,7 +133,7 @@
       outdated;
 
     function createProjectHtmlElement(project_id, project_title, project_url, supervisor) {
-      var project_element = document.createElement('li'),
+      var project_li = document.createElement('li'),
         box_div = document.createElement('div'),
         title_div = document.createElement('div'),
         info_div = document.createElement('div'),
@@ -167,39 +170,43 @@
       info_div.appendChild(right_div);
       box_div.appendChild(title_div);
       box_div.appendChild(info_div);
-      project_element.appendChild(box_div);
-      return [project_element, left_info_div];
+      project_li.appendChild(box_div);
+      return [project_li, left_info_div];
     }
 
     function createProjectLineHtmlElement(project_id, portal_type, title, total_count, out_count, status_color) {
       var line_div = document.createElement('div'),
-        status = document.createElement('span'),
-        name = document.createElement('span'),
-        outdated = document.createElement('span'),
-        total = document.createElement('span'),
-        open_bracket = document.createElement('span'),
-        close_bracket = document.createElement('span');
+        status_span = document.createElement('span'),
+        name_span = document.createElement('span'),
+        number_span = document.createElement('span'),
+        outdated_span = document.createElement('span'),
+        total_span = document.createElement('span'),
+        open_bracket_span = document.createElement('span'),
+        close_bracket_span = document.createElement('span');
       line_div.classList.add("project-line");
-      status.classList.add(STATUS_SPAN);
-      status.classList.add(status_color);
-      status.classList.add("margined");
-      status.setAttribute("id", getProjectSpanId(project_id, portal_type, STATUS_SPAN));
-      name.classList.add("name");
-      name.classList.add("margined");
-      name.innerHTML = title;
-      total.classList.add("margined");
-      total.innerHTML = total_count;
-      total.setAttribute("id", getProjectSpanId(project_id, portal_type, TOTAL_SPAN));
-      outdated.innerHTML = out_count;
-      outdated.setAttribute("id", getProjectSpanId(project_id, portal_type, OUTDATED_SPAN));
-      line_div.appendChild(status);
-      line_div.appendChild(name);
-      line_div.appendChild(total);
-      open_bracket.innerHTML = "(";
-      close_bracket.innerHTML = ")";
-      line_div.appendChild(open_bracket);
-      line_div.appendChild(outdated);
-      line_div.appendChild(close_bracket);
+      status_span.classList.add(STATUS_SPAN);
+      status_span.classList.add(status_color);
+      status_span.classList.add("margined");
+      status_span.setAttribute("id", getProjectSpanId(project_id, portal_type, STATUS_SPAN));
+      name_span.classList.add("name");
+      name_span.classList.add("margined");
+      name_span.innerHTML = title;
+      total_span.classList.add("margined");
+      total_span.innerHTML = total_count;
+      total_span.setAttribute("id", getProjectSpanId(project_id, portal_type, TOTAL_SPAN));
+      outdated_span.innerHTML = out_count;
+      outdated_span.setAttribute("id", getProjectSpanId(project_id, portal_type, OUTDATED_SPAN));
+      open_bracket_span.innerHTML = "(";
+      close_bracket_span.innerHTML = ")";
+      number_span.appendChild(total_span);
+      number_span.appendChild(open_bracket_span);
+      number_span.appendChild(outdated_span);
+      number_span.appendChild(close_bracket_span);
+      number_span.setAttribute("id", getProjectSpanId(project_id, portal_type, NUMBER_SPAN));
+      number_span.classList.add("ui-hidden");
+      line_div.appendChild(status_span);
+      line_div.appendChild(name_span);
+      line_div.appendChild(number_span);
       return line_div;
     }
 

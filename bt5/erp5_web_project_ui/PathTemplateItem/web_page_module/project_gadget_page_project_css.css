@@ -102,7 +102,8 @@ div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .ui-icon-spinne
   animation: spin 0.5s infinite linear;
 }
 
-div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .ui-icon-spinner.ui-hidden {
+div[data-gadget-url$="gadget_erp5_page_project_page.html"] .ui-hidden,
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .ui-hidden {
   visibility: hidden;
 }
 
@@ -150,14 +151,6 @@ input[type="submit"] {
   border-width: 1px;
   border-style: solid;
   min-width: 8em;
-}
-
-.gadget-content svg.test-result.ui-hidden {
-  visibility: hidden;
-}
-
-.gadget-content svg.test-result path.ui-hidden {
-  visibility: hidden;
 }
 
 .gadget-content svg.test-result {
