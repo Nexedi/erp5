@@ -34,7 +34,7 @@ from .Accessor import Accessor
 # Creation of default constructor
 class func_code: pass
 
-class PropertyGetter:
+class PropertyGetter(object):
   """
   This is class is mostly used in order to handle compatibility
   issues when we wish to make a property a method. For instance,
@@ -45,7 +45,7 @@ class PropertyGetter:
   __code__.co_argcount = 0
   __defaults__ = func_defaults = ()
 
-  def __init__(self, id, value=None):
+  def __init__(self, id=None, value=None):
     self._id = id
     self.__name__ = id
     self.value = value
