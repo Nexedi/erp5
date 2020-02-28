@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_getInterfaceValidatorPrecacheManifest</string> </value>
+            <value> <string>WebSection_getInterfaceValidatorTestPrecacheManifest</string> </value>
         </item>
       </dictionary>
     </pickle>

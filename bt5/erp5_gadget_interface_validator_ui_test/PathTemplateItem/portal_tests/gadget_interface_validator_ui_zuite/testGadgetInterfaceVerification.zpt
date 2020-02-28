@@ -10,7 +10,7 @@
 <tr><td rowspan="1" colspan="3">Test Gadget Interface Validation UI</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-<tal:block tal:define="check_configuration python: {'precache_reference': './WebSection_getInterfaceValidatorPrecacheManifest',
+<tal:block tal:define="check_configuration python: {'precache_reference': './WebSection_getInterfaceValidatorTestPrecacheManifest',
                                                     'gadget_count': 8}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUiInterface/macros/run_app_interface_check" />
 </tal:block>
