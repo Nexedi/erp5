@@ -17,7 +17,7 @@
     });
   }
 
-  function handleDataURLRead(data_url) {
+  function getOrientationFromDataUrl(data_url) {
     var view = new DataView(data_url),
       length = view.byteLength,
       offset = 2,
@@ -59,18 +59,14 @@
     return -1;
   }
 
-  function getOrientation(blob, callback) {
-    var fr = new FileReader();
-    return new RSVP.Promise(function waitFormDataURLRead(resolve, reject) {
-      fr.addEventListener("load", function onload(evt) {
-        resolve(handleDataURLRead(evt.target.result));
+  function getOrientation(blob) {
+    return RSVP.Queue()
+      .push(function () {
+        return jIO.util.readBlobAsArrayBuffer(blob);
+      })
+      .push(function (evt) {
+        return getOrientationFromDataUrl(evt.target.result);
       });
-
-      fr.addEventListener("error", reject);
-      fr.readAsArrayBuffer(blob);
-    }, function cancelReadBlobAsDataURL() {
-      fr.abort();
-    });
   }
 
   function handleUserMedia(device_id, callback) {
@@ -159,11 +155,11 @@
         viewMode: 3,
         // Avoid any cropper calculation or guessing
         scalable: false,
-        // By default rotatable is true, if you remove it.
-        // Make sure, it is set on data.
+        // Please, DON'T touch on rotatable and checkOrientation. Removing it,
+        // we will not be able to fix orientation before crop.
         rotatable: true,
-        zoomable: false,
         checkOrientation: true,
+        zoomable: false,
         movable: false,
         data: data,
         ready: function () {
