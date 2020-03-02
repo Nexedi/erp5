@@ -44,20 +44,10 @@
         try {
           result = callback(evt);
         } catch (e) {
-          result = RSVP.reject(e);
+          return reject(e);
         }
 
-        callback_promise = result;
-        new RSVP.Queue()
-          .push(function () {
-            return result;
-          })
-          .push(undefined, function (error) {
-            if (!(error instanceof RSVP.CancellationError)) {
-              canceller();
-              reject(error);
-            }
-          });
+        callback_promise = new RSVP.Queue(result).push(undefined, reject);
       };
 
       target.addEventListener(type, handle_event_callback, useCapture);
