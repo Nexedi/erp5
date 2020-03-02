@@ -11,6 +11,8 @@
     TOTAL_SPAN = "total",
     OUTDATED_SPAN = "outdated",
     NUMBER_SPAN = "number",
+    FORUM_LINK_ID_SUFFIX = "forum",
+    FORUM_LINK_TYPE = "link",
     QUERY_LIMIT = 100000,
     SUPERVISOR_FIELD_TITLE = "Supervisor",
     //XXX hardcoded one year old date to define outdated elements
@@ -19,10 +21,10 @@
     LIMIT_DATE = new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
     //XXX hardcoded portal_types, states and titles dict
     PORTAL_TITLE_DICT = {"Task": "Tasks",
-                             "Test Result" : "Test Results",
-                             "Bug" : "Bugs",
-                             "Project Milestone" : "Milestones",
-                             "Task Report": "Task Reports"},
+                         "Test Result" : "Test Results",
+                         "Bug" : "Bugs",
+                         "Project Milestone" : "Milestones",
+                         "Task Report": "Task Reports"},
     PORTAL_TYPE_LIST = ["Task", "Bug", "Task Report"],
     VALID_STATE_LIST = ["planned", "auto_planned", "ordered", "confirmed",
                         "ready", "stopped", "started", "submitted", "validated"];
@@ -53,10 +55,10 @@
     return segments.slice(0, -1).join("/");
   }
 
-  function getProjectSpanId(project_id, portal_type, span_title, hash_selector) {
+  function getProjectHtlmElementId(project_id, type, suffix, hash_selector) {
     hash_selector = hash_selector ? '#' : '';
     //remove not allowed html id chars (spaces, slashes)
-    return hash_selector + [project_id, portal_type, span_title].join("-")
+    return hash_selector + [project_id, type, suffix].join("-")
       .replace("/", "-").replace(/\s/g, "-");
   }
 
@@ -138,16 +140,16 @@
 
   function renderProjectLine(project_id, portal_type, total_count, outdated_count) {
     var total_span = document.querySelector(
-      getProjectSpanId(project_id, portal_type, TOTAL_SPAN, true)
+      getProjectHtlmElementId(project_id, portal_type, TOTAL_SPAN, true)
     ),
       outdated_span = document.querySelector(
-        getProjectSpanId(project_id, portal_type, OUTDATED_SPAN, true)
+        getProjectHtlmElementId(project_id, portal_type, OUTDATED_SPAN, true)
       ),
       status_span = document.querySelector(
-        getProjectSpanId(project_id, portal_type, STATUS_SPAN, true)
+        getProjectHtlmElementId(project_id, portal_type, STATUS_SPAN, true)
       ),
       number_span = document.querySelector(
-        getProjectSpanId(project_id, portal_type, NUMBER_SPAN, true)
+        getProjectHtlmElementId(project_id, portal_type, NUMBER_SPAN, true)
       );
     total_span.textContent = parseInt(total_span.textContent, RADIX) + total_count;
     outdated_span.textContent = parseInt(outdated_span.textContent, RADIX) +
@@ -201,9 +203,9 @@
       info_div.classList.add("project-info");
       left_info_div.classList.add("left");
       right_line_div.classList.add("project-line");
-      //XXX
-      forum_link.href = "TODO";
-      forum_link.innerHTML = project_id + " forum link";
+      forum_link.setAttribute("id", getProjectHtlmElementId(project_id, FORUM_LINK_TYPE,
+                                                            FORUM_LINK_ID_SUFFIX));
+      forum_link.classList.add("ui-hidden");
       right_line_div.appendChild(forum_link);
       right_div.appendChild(right_line_div);
       info_div.appendChild(left_info_div);
@@ -228,26 +230,26 @@
       status_span.classList.add(STATUS_SPAN);
       status_span.classList.add(status_color);
       status_span.classList.add("margined");
-      status_span.setAttribute("id", getProjectSpanId(project_id,
-                                                      portal_type, STATUS_SPAN));
+      status_span.setAttribute("id", getProjectHtlmElementId(project_id,
+                                                             portal_type, STATUS_SPAN));
       name_span.classList.add("name");
       name_span.classList.add("margined");
       name_span.innerHTML = title;
       total_span.classList.add("margined");
       total_span.innerHTML = total_count;
-      total_span.setAttribute("id", getProjectSpanId(project_id,
-                                                     portal_type, TOTAL_SPAN));
+      total_span.setAttribute("id", getProjectHtlmElementId(project_id,
+                                                            portal_type, TOTAL_SPAN));
       outdated_span.innerHTML = out_count;
-      outdated_span.setAttribute("id", getProjectSpanId(project_id,
-                                                        portal_type, OUTDATED_SPAN));
+      outdated_span.setAttribute("id", getProjectHtlmElementId(project_id,
+                                                               portal_type, OUTDATED_SPAN));
       open_bracket_span.innerHTML = "(";
       close_bracket_span.innerHTML = ")";
       number_span.appendChild(total_span);
       number_span.appendChild(open_bracket_span);
       number_span.appendChild(outdated_span);
       number_span.appendChild(close_bracket_span);
-      number_span.setAttribute("id", getProjectSpanId(project_id,
-                                                      portal_type, NUMBER_SPAN));
+      number_span.setAttribute("id", getProjectHtlmElementId(project_id,
+                                                             portal_type, NUMBER_SPAN));
       number_span.classList.add("ui-hidden");
       line_div.appendChild(status_span);
       line_div.appendChild(name_span);
@@ -334,38 +336,49 @@
           gadget.renderProjectDocumentInfo();
           gadget.renderOutdatedDocumentInfo();
           gadget.renderTestResultInfo();
+          gadget.renderProjectForumLink();
         });
     })
 
-    .declareJob("renderMilestoneInfo", function () {
+    .declareJob("renderMilestoneInfo", function (limit_date) {
       var gadget = this,
         i,
-        outdated,
+        query_list = [],
         milestone_list,
-        milestone_query = Query.objectToSearchText(
-          getComplexQuery({"portal_type" : "Project Milestone",
-                            "validation_state" : "validated",
-                            "parent__portal_type" : "Project"},
-                          "AND")
-        );
+        milestone_query = getComplexQuery({"portal_type" : "Project Milestone",
+                                            "validation_state" : "validated"},
+                                          "AND");
+      if (limit_date) {
+        query_list.push(milestone_query);
+        query_list.push(new SimpleQuery({
+          key: "modification_date",
+          operator: "<",
+          type: "simple",
+          value: limit_date
+        }));
+        milestone_query = new ComplexQuery({
+          operator: "AND",
+          query_list: query_list,
+          type: "complex"
+        });
+      }
       return new RSVP.Queue()
         .push(function () {
           return gadget.jio_allDocs({
-            query: milestone_query,
+            query: Query.objectToSearchText(milestone_query),
             limit: QUERY_LIMIT,
-            select_list: ["title", 'portal_type', "parent__title",
-                          "parent__relative_url"],
+            select_list: ['title', 'portal_type', 'count(*)'],
+            group_by: ['parent_uid'],
             sort_on: [["modification_date", "descending"]]
           });
         })
         .push(function (result) {
           milestone_list = result.data.rows;
           for (i = 0; i < milestone_list.length; i += 1) {
-            outdated = (new Date(milestone_list[i].value.modification_date) <
-                        LIMIT_DATE) ? 1 : 0;
             renderProjectLine(getProjectId(milestone_list[i].id),
                               milestone_list[i].value.portal_type,
-                              1, outdated);
+                              limit_date ? 0 : milestone_list[i].value["count(*)"],
+                              limit_date ? milestone_list[i].value["count(*)"] : 0);
           }
         });
     })
@@ -438,6 +451,41 @@
                               test_list[i].value.portal_type,
                               1, //parseInt(test_list[i].value.all_test, RADIX)
                               0); //parseInt(test_list[i].value.failures, RADIX)
+          }
+        });
+    })
+
+    .declareJob("renderProjectForumLink", function () {
+      var gadget = this,
+        i,
+        forum_link,
+        link_list,
+        link_query = Query.objectToSearchText(
+          getComplexQuery({"portal_type" : "Link",
+                            "validation_state" : "reachable",
+                            "parent__portal_type" : "Project",
+                            "parent__validation_state" : "validated"},
+                          "AND")
+        );
+      return new RSVP.Queue()
+        .push(function () {
+          return gadget.jio_allDocs({
+            query: link_query,
+            limit: QUERY_LIMIT,
+            select_list: ['title', 'portal_type', 'parent__relative_url', 'parent__portal_type', "url_string"],
+            sort_on: [["modification_date", "descending"]]
+          });
+        })
+        .push(function (result) {
+          link_list = result.data.rows;
+          for (i = 0; i < link_list.length; i += 1) {
+            forum_link = document.querySelector(
+              getProjectHtlmElementId(link_list[i].value.parent__relative_url,
+                                      FORUM_LINK_TYPE,
+                                      FORUM_LINK_ID_SUFFIX, true));
+            forum_link.href = link_list[i].value.url_string;
+            forum_link.innerHTML = link_list[i].value.title;
+            forum_link.classList.remove("ui-hidden");
           }
         });
     })

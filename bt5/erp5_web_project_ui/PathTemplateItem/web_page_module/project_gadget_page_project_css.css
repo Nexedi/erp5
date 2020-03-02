@@ -67,6 +67,7 @@ div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-
 
 div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .status.none {
   background: #adadad !important;
+  border-radius: 5px;
 }
 
 div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .status.none.orange  {
