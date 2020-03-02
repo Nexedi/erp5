@@ -17,49 +17,53 @@
     });
   }
 
+  function handleDataURLRead(data_url) {
+    var view = new DataView(data_url),
+      length = view.byteLength,
+      offset = 2,
+      marker,
+      little,
+      tags,
+      i;
+
+    if (view.getUint16(0, false) !== 0xFFD8) {
+      return -2;
+    }
+    while (offset < length) {
+      if (view.getUint16(offset + 2, false) <= 8) {
+        return -1;
+      }
+      marker = view.getUint16(offset, false);
+      offset += 2;
+      if (marker === 0xFFE1) {
+        offset += 2;
+        if (view.getUint32(offset, false) !== 0x45786966) {
+          return -1;
+        }
+        offset += 6;
+        little = view.getUint16(offset, false) === 0x4949;
+        offset += view.getUint32(offset + 4, little);
+        tags = view.getUint16(offset, little);
+        offset += 2;
+        for (i = 0; i < tags; i = i + 1) {
+          if (view.getUint16(offset + (i * 12), little) === 0x0112) {
+            return view.getUint16(offset + (i * 12) + 8, little);
+          }
+        }
+        continue;
+      } else if ((marker & 0xFF00) !== 0xFF00) {
+        break;
+      }
+      offset += view.getUint16(offset, false);
+    }
+    return -1;
+  }
+
   function getOrientation(blob, callback) {
     var fr = new FileReader();
     return new RSVP.Promise(function waitFormDataURLRead(resolve, reject) {
-      fr.addEventListener("load", function handleDataURLRead(evt) {
-        var view = new DataView(evt.target.result),
-          length = view.byteLength,
-          offset = 2,
-          marker,
-          little,
-          tags,
-          i;
-
-        if (view.getUint16(0, false) !== 0xFFD8) {
-          return resolve(-2);
-        }
-        while (offset < length) {
-          if (view.getUint16(offset + 2, false) <= 8) {
-            return resolve(-1);
-          }
-          marker = view.getUint16(offset, false);
-          offset += 2;
-          if (marker === 0xFFE1) {
-            offset += 2;
-            if (view.getUint32(offset, false) !== 0x45786966) {
-              return resolve(-1);
-            }
-            offset += 6;
-            little = view.getUint16(offset, false) === 0x4949;
-            offset += view.getUint32(offset + 4, little);
-            tags = view.getUint16(offset, little);
-            offset += 2;
-            for (i = 0; i < tags; i = i + 1) {
-              if (view.getUint16(offset + (i * 12), little) === 0x0112) {
-                return resolve(view.getUint16(offset + (i * 12) + 8, little));
-              }
-            }
-            continue;
-          } else if ((marker & 0xFF00) !== 0xFF00) {
-            break;
-          }
-          offset += view.getUint16(offset, false);
-        }
-        return resolve(-1);
+      fr.addEventListener("load", function onload(evt) {
+        resolve(handleDataURLRead(evt.target.result));
       });
 
       fr.addEventListener("error", reject);
