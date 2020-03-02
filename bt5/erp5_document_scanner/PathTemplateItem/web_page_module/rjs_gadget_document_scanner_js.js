@@ -402,6 +402,7 @@
       image_capture = new window.ImageCapture(
         gadget.element.querySelector('video').srcObject.getVideoTracks()[0]
       ),
+      canvas = domsugar('canvas', {'class': 'canvas'}),
       photo_blob,
       div;
 
@@ -415,17 +416,9 @@
         return image_capture.takePhoto({imageWidth: capabilities.imageWidth.max});
       })
       .push(function (blob) {
-        photo_blob = blob;
-        return jIO.util.readBlobAsDataURL(blob);
-      })
-      .push(function (result) {
-        var img = domsugar("img", {"src": result.target.result});
-        gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
-        div = gadget.element.querySelector(".camera-input");
-        div.replaceChild(img, div.firstElementChild);
         return RSVP.all([
-          createImageBitmap(photo_blob),
-          getOrientation(photo_blob)
+          createImageBitmap(blob),
+          getOrientation(blob)
         ]);
       })
       .push(function (result_list) {
@@ -433,7 +426,6 @@
           orientation = result_list[1],
           height = bitmap.height,
           width = bitmap.width,
-          canvas = domsugar('canvas', {'class': 'canvas'}),
           ctx;
 
         if (4 < orientation && orientation < 9) {
@@ -473,6 +465,15 @@
           break;
         }
         ctx.drawImage(bitmap, 0, 0);
+        return canvas.toDataURL("image/jpeg");
+      })
+      .push(function (result) {
+        var img = domsugar("img", {"src": result});
+        gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
+        div = gadget.element.querySelector(".camera-input");
+        div.replaceChild(img, div.firstElementChild);
+      })
+      .push(function (result_list) {
         if (settings.brightness || settings.contrast || settings.enable_greyscale || settings.compression) {
           return handleCaman(canvas, settings);
         }
