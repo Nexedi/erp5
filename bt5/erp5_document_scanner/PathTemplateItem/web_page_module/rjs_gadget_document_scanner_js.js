@@ -488,10 +488,7 @@
           new Promise(function (resolve) {
             resolve(canvas.toDataURL("image/jpeg", compression));
           }),
-          buildPreviousThumbnailDom(gadget),
-          new Promise(function (resolve) {
-            canvas.toBlob(resolve, "image/jpeg", compression);
-          })
+          buildPreviousThumbnailDom(gadget)
         ]);
       })
       .push(function (result_list) {
