@@ -242,6 +242,10 @@
   }
 
   function triggerMaximize(gadget, maximize) {
+    if (gadget.props.deferred_minimize !== undefined) {
+      gadget.props.deferred_minimize.cancel();
+      gadget.props.deferred_minimize = undefined;
+    }
     hideDesktopPanel(gadget, maximize);
     if (maximize) {
       return route(gadget, 'header', 'setButtonTitle', [{
@@ -249,10 +253,16 @@
         action: "maximize"
       }])
         .push(function () {
-          return new RSVP.Promise(function () {return; }, function () {
-            // Wait for cancellation
-            return triggerMaximize(gadget, false);
-          });
+          gadget.props.deferred_minimize = new RSVP.Promise(
+            function () {return; },
+            function () {
+              // Wait for cancellation
+              // return triggerMaximize(gadget, false);
+              hideDesktopPanel(gadget, false);
+              return route(gadget, 'header', 'setButtonTitle', [{}]);
+            }
+          );
+          return gadget.props.deferred_minimize;
         });
     }
     return route(gadget, 'header', 'setButtonTitle', [{}]);
