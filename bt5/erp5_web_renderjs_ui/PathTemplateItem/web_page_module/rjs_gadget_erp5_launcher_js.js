@@ -202,7 +202,7 @@
       // Gadget has not yet been correctly initialized
       throw error;
     }
-    if (error_response && error_response.text) {
+    if (error_response && error_response.text) {
       return error_response.text().then(
         function (request_error_text) {
           return gadget.changeState({
@@ -242,10 +242,6 @@
   }
 
   function triggerMaximize(gadget, maximize) {
-    if (gadget.props.deferred_minimize !== undefined) {
-      gadget.props.deferred_minimize.resolve();
-      gadget.props.deferred_minimize = undefined;
-    }
     hideDesktopPanel(gadget, maximize);
     if (maximize) {
       return route(gadget, 'header', 'setButtonTitle', [{
@@ -253,13 +249,10 @@
         action: "maximize"
       }])
         .push(function () {
-          gadget.props.deferred_minimize = RSVP.defer();
-          return gadget.props.deferred_minimize.promise;
-        })
-        .push(undefined, function (error) {
-          if (error instanceof RSVP.CancellationError) {
+          return new RSVP.Promise(function () {return; }, function () {
+            // Wait for cancellation
             return triggerMaximize(gadget, false);
-          }
+          });
         });
     }
     return route(gadget, 'header', 'setButtonTitle', [{}]);
@@ -771,7 +764,7 @@
             element.appendChild(container);
 
             // make an iframe to display error page from XMLHttpRequest.
-            if (gadget.state.request_error_text) {
+            if (gadget.state.request_error_text) {
               iframe = document.createElement('iframe');
               container.appendChild(iframe);
               iframe.srcdoc = gadget.state.request_error_text;
