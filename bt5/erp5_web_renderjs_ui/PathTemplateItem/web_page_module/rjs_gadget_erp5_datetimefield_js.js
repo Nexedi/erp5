@@ -83,7 +83,7 @@
           [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
           [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
         ],//leapyear
-        queue = new RSVP.Queue(),
+        queue,
         promise_list,
         input_state = {
           name: gadget.state.key,
@@ -122,10 +122,7 @@
             gadget.declareGadget('gadget_html5_element.html', {scope: 'P'})
           ];
         }
-        queue
-          .push(function () {
-            return RSVP.all(promise_list);
-          })
+        queue = new RSVP.Queue(RSVP.all(promise_list))
           .push(function (result_list) {
             // Clear first to DOM, append after to reduce flickering/manip
             while (element.firstChild) {
@@ -148,10 +145,7 @@
         } else {
           promise_list = [gadget.getDeclaredGadget('P')];
         }
-        queue
-          .push(function () {
-            return RSVP.all(promise_list);
-          });
+        queue = new RSVP.Queue(RSVP.all(promise_list));
       }
 
       // Calculate sub gadget states
@@ -268,9 +262,11 @@
                 }
               } else {
                 //get timezone difference between server and local browser
-                offset_time_zone = timezone + (state_date.getTimezoneOffset() / 60);
+                offset_time_zone = timezone +
+                                   (state_date.getTimezoneOffset() / 60);
                 //adjust hour in order to get correct date time string
-                state_date.setUTCHours(state_date.getUTCHours() + offset_time_zone);
+                state_date.setUTCHours(state_date.getUTCHours() +
+                                       offset_time_zone);
                 text_content = state_date.toLocaleDateString(language);
                 if (!gadget.state.date_only) {
                   text_content += " " + locale_formatted_state_date;
@@ -298,10 +294,7 @@
         if (gadget.state.timezone_style) {
           promise_list.push(gadget.getDeclaredGadget('SELECT'));
         }
-        return new RSVP.Queue()
-          .push(function () {
-            return RSVP.all(promise_list);
-          })
+        return new RSVP.Queue(RSVP.all(promise_list))
           .push(function (result_list) {
             var i;
             promise_list = [];

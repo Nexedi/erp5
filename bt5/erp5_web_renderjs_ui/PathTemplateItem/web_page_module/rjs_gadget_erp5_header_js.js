@@ -378,10 +378,7 @@
         promise_list.push(null);
       }
 
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all(promise_list);
-        })
+      return new RSVP.Queue(RSVP.all(promise_list))
         .push(function (result_list) {
           var j;
           for (j = 0; j < result_list.length; j += 1) {

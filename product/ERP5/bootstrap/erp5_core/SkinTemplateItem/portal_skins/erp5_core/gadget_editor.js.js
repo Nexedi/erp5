@@ -38,7 +38,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         this.element.classList.toggle('editor-maximize');
       }
       return this.triggerMaximize.apply(this, param_list)
-        .push(function () {
+        .push(undefined, function () {
           if (gadget.element.classList.contains('editor-maximize')) {
             gadget.element.classList.remove('editor-maximize');
           }
