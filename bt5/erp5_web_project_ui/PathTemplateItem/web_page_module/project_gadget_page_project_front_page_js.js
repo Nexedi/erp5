@@ -16,9 +16,11 @@
     QUERY_LIMIT = 100000,
     SUPERVISOR_FIELD_TITLE = "Supervisor",
     //XXX hardcoded one year old date to define outdated elements
-    // Where to define/get the limit date?
-    // by portal_type or the same for all documents?
-    LIMIT_DATE = new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+    // Where to define/get the limit date? by portal_type or the same for all documents?
+    //date ISO string format: "yyyy-mm-ddThh:mm:ss.mmmm"
+    //JIO query date format:  "yyyy-mm-dd hh:mm:ss"
+    LIMIT_DATE = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+      .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),
     //XXX hardcoded portal_types, states and titles dict
     PORTAL_TITLE_DICT = {"Task": "Tasks",
                          "Test Result" : "Test Results",
@@ -85,8 +87,37 @@
     });
   }
 
-  function getProjectDocumentList(gadget, limit_date) {
-    var query_list = [],
+  function renderProjectLine(project_id, portal_type, total_count, outdated_count) {
+    var total_span = document.querySelector(
+      getProjectHtlmElementId(project_id, portal_type, TOTAL_SPAN, true)
+    ),
+      outdated_span = document.querySelector(
+        getProjectHtlmElementId(project_id, portal_type, OUTDATED_SPAN, true)
+      ),
+      status_span = document.querySelector(
+        getProjectHtlmElementId(project_id, portal_type, STATUS_SPAN, true)
+      ),
+      number_span = document.querySelector(
+        getProjectHtlmElementId(project_id, portal_type, NUMBER_SPAN, true)
+      );
+    if (total_count > 0) {
+      total_span.textContent = parseInt(total_span.textContent, RADIX) + total_count;
+    }
+    outdated_span.textContent = parseInt(outdated_span.textContent, RADIX) +
+      outdated_count;
+    if (outdated_count > 0) {
+      status_span.classList.remove(STATUS_OK);
+      status_span.classList.add(STATUS_NOT_OK);
+    } else if (!status_span.classList.value.includes(STATUS_NOT_OK)) {
+      status_span.classList.add(STATUS_OK);
+    }
+    number_span.classList.remove("ui-hidden");
+  }
+
+  function renderProjectDocumentLines(gadget, limit_date) {
+    var i,
+      query_list = [],
+      document_list = [],
       document_query;
     query_list.push(new SimpleQuery({
       key: "source_project__validation_state",
@@ -117,7 +148,56 @@
       sort_on: [["modification_date", "descending"]]
     })
       .push(function (result) {
-        return result.data.rows;
+        document_list = result.data.rows;
+        for (i = 0; i < document_list.length; i += 1) {
+          renderProjectLine(getProjectId(document_list[i].value
+                                         .source_project__relative_url),
+                            document_list[i].value.portal_type,
+                            limit_date ? 0 : document_list[i].value["count(*)"],
+                            limit_date ? document_list[i].value["count(*)"] : 0);
+        }
+      });
+  }
+
+  function renderMilestoneLines(gadget, limit_date) {
+    var i,
+      query_list = [],
+      milestone_list,
+      milestone_query = getComplexQuery({"portal_type" : "Project Milestone",
+                                          "validation_state" : "validated"},
+                                        "AND");
+    if (limit_date) {
+      query_list.push(milestone_query);
+      query_list.push(new SimpleQuery({
+        key: "modification_date",
+        operator: "<",
+        type: "simple",
+        value: limit_date
+      }));
+      milestone_query = new ComplexQuery({
+        operator: "AND",
+        query_list: query_list,
+        type: "complex"
+      });
+    }
+    return new RSVP.Queue()
+      .push(function () {
+        return gadget.jio_allDocs({
+          query: Query.objectToSearchText(milestone_query),
+          limit: QUERY_LIMIT,
+          select_list: ['title', 'portal_type', 'count(*)'],
+          group_by: ['parent_uid'],
+          sort_on: [["modification_date", "descending"]]
+        });
+      })
+      .push(function (result) {
+        milestone_list = result.data.rows;
+        for (i = 0; i < milestone_list.length; i += 1) {
+          renderProjectLine(getProjectId(milestone_list[i].id),
+                            milestone_list[i].value.portal_type,
+                            limit_date ? 0 : milestone_list[i].value["count(*)"],
+                            limit_date ? milestone_list[i].value["count(*)"] : 0);
+        }
       });
   }
 
@@ -136,31 +216,6 @@
       .push(function (result) {
         return result.data.rows;
       });
-  }
-
-  function renderProjectLine(project_id, portal_type, total_count, outdated_count) {
-    var total_span = document.querySelector(
-      getProjectHtlmElementId(project_id, portal_type, TOTAL_SPAN, true)
-    ),
-      outdated_span = document.querySelector(
-        getProjectHtlmElementId(project_id, portal_type, OUTDATED_SPAN, true)
-      ),
-      status_span = document.querySelector(
-        getProjectHtlmElementId(project_id, portal_type, STATUS_SPAN, true)
-      ),
-      number_span = document.querySelector(
-        getProjectHtlmElementId(project_id, portal_type, NUMBER_SPAN, true)
-      );
-    total_span.textContent = parseInt(total_span.textContent, RADIX) + total_count;
-    outdated_span.textContent = parseInt(outdated_span.textContent, RADIX) +
-      outdated_count;
-    if (outdated_count > 0) {
-      status_span.classList.remove(STATUS_OK);
-      status_span.classList.add(STATUS_NOT_OK);
-    } else if (!status_span.classList.value.includes(STATUS_NOT_OK)) {
-      status_span.classList.add(STATUS_OK);
-    }
-    number_span.classList.remove("ui-hidden");
   }
 
   function renderProjectList(gadget, project_list) {
@@ -333,6 +388,7 @@
         .push(function () {
           //run the rest of queries and render async
           gadget.renderMilestoneInfo();
+          gadget.renderOtdatedMilestoneInfo();
           gadget.renderProjectDocumentInfo();
           gadget.renderOutdatedDocumentInfo();
           gadget.renderTestResultInfo();
@@ -340,83 +396,26 @@
         });
     })
 
-    .declareJob("renderMilestoneInfo", function (limit_date) {
-      var gadget = this,
-        i,
-        query_list = [],
-        milestone_list,
-        milestone_query = getComplexQuery({"portal_type" : "Project Milestone",
-                                            "validation_state" : "validated"},
-                                          "AND");
-      if (limit_date) {
-        query_list.push(milestone_query);
-        query_list.push(new SimpleQuery({
-          key: "modification_date",
-          operator: "<",
-          type: "simple",
-          value: limit_date
-        }));
-        milestone_query = new ComplexQuery({
-          operator: "AND",
-          query_list: query_list,
-          type: "complex"
-        });
-      }
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.jio_allDocs({
-            query: Query.objectToSearchText(milestone_query),
-            limit: QUERY_LIMIT,
-            select_list: ['title', 'portal_type', 'count(*)'],
-            group_by: ['parent_uid'],
-            sort_on: [["modification_date", "descending"]]
-          });
-        })
-        .push(function (result) {
-          milestone_list = result.data.rows;
-          for (i = 0; i < milestone_list.length; i += 1) {
-            renderProjectLine(getProjectId(milestone_list[i].id),
-                              milestone_list[i].value.portal_type,
-                              limit_date ? 0 : milestone_list[i].value["count(*)"],
-                              limit_date ? milestone_list[i].value["count(*)"] : 0);
-          }
-        });
+    .declareJob("renderMilestoneInfo", function () {
+      return renderMilestoneLines(this);
+    })
+
+    .declareJob("renderOtdatedMilestoneInfo", function () {
+      //XXX For testing. REMOVE and use LIMIT_DATE
+      var limit_date = new Date().toISOString()
+        .substring(0, new Date().toISOString().length - 5).replace("T", " ");
+      return renderMilestoneLines(this, limit_date);
     })
 
     .declareJob("renderProjectDocumentInfo", function () {
-      var gadget = this,
-        i;
-      return getProjectDocumentList(gadget)
-        .push(function (document_list) {
-          for (i = 0; i < document_list.length; i += 1) {
-            renderProjectLine(getProjectId(document_list[i].value
-                                           .source_project__relative_url),
-                              document_list[i].value.portal_type,
-                              1, 0);
-          }
-        });
+      return renderProjectDocumentLines(this);
     })
 
     .declareJob("renderOutdatedDocumentInfo", function () {
-      var gadget = this,
-        i,
-        //date ISO string format: "yyyy-mm-ddThh:mm:ss.mmmm"
-        //JIO query date format:  "yyyy-mm-dd hh:mm:ss"
-        limit_date = LIMIT_DATE.toISOString()
-          .substring(0, LIMIT_DATE.toISOString().length - 5)
-          .replace("T", " ");
-      //XXX For testing
-      limit_date = new Date().toISOString()
-        .substring(0, LIMIT_DATE.toISOString().length - 5).replace("T", " ");
-      return getProjectDocumentList(gadget, limit_date)
-        .push(function (document_list) {
-          for (i = 0; i < document_list.length; i += 1) {
-            renderProjectLine(getProjectId(document_list[i]
-                                           .value.source_project__relative_url),
-                              document_list[i].value.portal_type,
-                              0, 1);
-          }
-        });
+      //XXX For testing. REMOVE and use LIMIT_DATE
+      var limit_date = new Date().toISOString()
+        .substring(0, new Date().toISOString().length - 5).replace("T", " ");
+      return renderProjectDocumentLines(this, limit_date);
     })
 
     .declareJob("renderTestResultInfo", function () {
@@ -482,7 +481,8 @@
             forum_link = document.querySelector(
               getProjectHtlmElementId(link_list[i].value.parent__relative_url,
                                       FORUM_LINK_TYPE,
-                                      FORUM_LINK_ID_SUFFIX, true));
+                                      FORUM_LINK_ID_SUFFIX, true)
+            );
             forum_link.href = link_list[i].value.url_string;
             forum_link.innerHTML = link_list[i].value.title;
             forum_link.classList.remove("ui-hidden");
