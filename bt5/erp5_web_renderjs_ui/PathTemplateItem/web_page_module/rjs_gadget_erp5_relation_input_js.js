@@ -248,8 +248,7 @@
       return RSVP.Queue()
         .push(function () {
           var plane = gadget.element.querySelector("a"),
-            ul = gadget.element.querySelector(".search_ul"),
-            translation_promise;
+            ul = gadget.element.querySelector(".search_ul");
           plane.href = '';
 
           // uid is known
@@ -315,114 +314,112 @@
               return RSVP.delay(200);
             })
             .push(function () {
-              translation_promise = gadget.getTranslationList([
-                'Create New',
-                'Explore the Search Result List'
+              return RSVP.all([
+
+                gadget.jio_allDocs({
+                  query: Query.objectToSearchText(new ComplexQuery({
+                    operator: "AND",
+                    query_list: [
+                      QueryFactory.create(
+                        new URI(gadget.state.query).query(true).query
+                      ),
+                      new SimpleQuery({
+                        key: gadget.state.catalog_index,
+                        value: value_text
+                      })
+                    ]
+                  })),
+                  limit: [0, 10],
+                  select_list: [gadget.state.catalog_index, "uid"],
+                  sort_on: JSON.parse(gadget.state.sort_list_json)
+                }),
+
+                gadget.getTranslationList([
+                  'Create New',
+                  'Explore the Search Result List'
+                ])
+
               ]);
+            })
+            .push(function (result_list) {
+              var i,
+                row,
+                portal_type_list,
+                translated_portal_type_list,
+                fragment_element = document.createDocumentFragment(),
+                li_element;
 
-              return gadget.jio_allDocs({
-                query: Query.objectToSearchText(new ComplexQuery({
-                  operator: "AND",
-                  query_list: [
-                    QueryFactory.create(
-                      new URI(gadget.state.query).query(true).query
-                    ),
-                    new SimpleQuery({
-                      key: gadget.state.catalog_index,
-                      value: value_text
-                    })
-                  ]
-                })),
-                limit: [0, 10],
-                select_list: [gadget.state.catalog_index, "uid"],
-                sort_on: JSON.parse(gadget.state.sort_list_json)
-              })
-                .push(function (result) {
-                  return new RSVP.Queue()
-                    .push(function () {
-                      return RSVP.all([result, translation_promise]);
-                    })
-                    .push(function (result_list) {
-                      var i,
-                        row,
-                        portal_type_list,
-                        translated_portal_type_list,
-                        fragment_element = document.createDocumentFragment(),
-                        li_element;
+              plane.className = JUMP_UNKNOWN_CLASS_STR;
 
-                      plane.className = JUMP_UNKNOWN_CLASS_STR;
-
-                      // Documents
+              // Documents
 // <li class="ui-icon-sign-in ui-btn-icon-right" data-relative-url="{{id}}"
 //     data-uid="{{uid}}">{{value}}</li>
-                      for (i = 0; i < result_list[0].data.rows.length; i += 1) {
-                        row = result_list[0].data.rows[i];
-                        li_element = document.createElement('li');
-                        li_element.setAttribute('class',
-                          'ui-icon-sign-in ui-btn-icon-right');
-                        li_element.setAttribute('data-relative-url', row.id);
-                        li_element.setAttribute('data-uid', row.value.uid);
-                        li_element.textContent =
-                          row.value[gadget.state.catalog_index];
-                        fragment_element.appendChild(li_element);
-                      }
+              for (i = 0; i < result_list[0].data.rows.length; i += 1) {
+                row = result_list[0].data.rows[i];
+                li_element = document.createElement('li');
+                li_element.setAttribute('class',
+                  'ui-icon-sign-in ui-btn-icon-right');
+                li_element.setAttribute('data-relative-url', row.id);
+                li_element.setAttribute('data-uid', row.value.uid);
+                li_element.textContent =
+                  row.value[gadget.state.catalog_index];
+                fragment_element.appendChild(li_element);
+              }
 
-                      // New documents
+              // New documents
 //  <li class="ui-icon-plus ui-btn-icon-right" data-i18n="Create New"
 //      data-create-object="{{value}}" name="{{name}}">Create New
 //    <span> {{name}}: {{../value}}</span></li>
-                      if (gadget.state.allow_creation) {
-                        portal_type_list =
-                          JSON.parse(gadget.state.portal_types);
-                        translated_portal_type_list =
-                          JSON.parse(gadget.state.translated_portal_types);
-                        for (i = 0; i < portal_type_list.length; i += 1) {
-                          li_element = document.createElement('li');
-                          li_element.setAttribute('class',
-                            'ui-icon-plus ui-btn-icon-right');
-                          li_element.setAttribute('data-create-object',
-                                                  portal_type_list[i]);
-                          li_element.setAttribute('name',
-                            translated_portal_type_list[i]);
-                          li_element.textContent =
-                            result_list[1][0] + ' ' +
-                            translated_portal_type_list[i] +
-                            ': ' + value_text;
-                          fragment_element.appendChild(li_element);
-                        }
-                      }
+              if (gadget.state.allow_creation) {
+                portal_type_list =
+                  JSON.parse(gadget.state.portal_types);
+                translated_portal_type_list =
+                  JSON.parse(gadget.state.translated_portal_types);
+                for (i = 0; i < portal_type_list.length; i += 1) {
+                  li_element = document.createElement('li');
+                  li_element.setAttribute('class',
+                    'ui-icon-plus ui-btn-icon-right');
+                  li_element.setAttribute('data-create-object',
+                                          portal_type_list[i]);
+                  li_element.setAttribute('name',
+                    translated_portal_type_list[i]);
+                  li_element.textContent =
+                    result_list[1][0] + ' ' +
+                    translated_portal_type_list[i] +
+                    ': ' + value_text;
+                  fragment_element.appendChild(li_element);
+                }
+              }
 
-                      // Explore
+              // Explore
 // <li class="ui-icon-search ui-btn-icon-right" data-explore=true
 //     data-i18n="Explore the Search Result List" ></li>
-                      li_element = document.createElement('li');
-                      li_element.setAttribute('class',
-                        'ui-icon-search ui-btn-icon-right');
-                      li_element.setAttribute('data-explore',
-                                              true);
-                      li_element.textContent = result_list[1][1];
-                      fragment_element.appendChild(li_element);
+              li_element = document.createElement('li');
+              li_element.setAttribute('class',
+                'ui-icon-search ui-btn-icon-right');
+              li_element.setAttribute('data-explore',
+                                      true);
+              li_element.textContent = result_list[1][1];
+              fragment_element.appendChild(li_element);
 
-                      while (ul.firstChild) {
-                        ul.removeChild(ul.firstChild);
-                      }
-                      ul.appendChild(fragment_element);
-                    });
-                }, function (error) {
-                  if (error instanceof Error &&
-                      error.hash &&
-                      error.hash.expected &&
-                      error.hash.expected.length === 1 &&
-                      error.hash.expected[0] === "'QUOTE'") {
-                    return gadget.getTranslationList([
-                      "Invalid search criteria"
-                    ])
-                      .push(function (translation_list) {
-                        return gadget.notifyInvalid(translation_list[0]);
-                      });
-                  }
-                  throw error;
-                });
+              while (ul.firstChild) {
+                ul.removeChild(ul.firstChild);
+              }
+              ul.appendChild(fragment_element);
+            }, function (error) {
+              if (error instanceof Error &&
+                  error.hash &&
+                  error.hash.expected &&
+                  error.hash.expected.length === 1 &&
+                  error.hash.expected[0] === "'QUOTE'") {
+                return gadget.getTranslationList([
+                  "Invalid search criteria"
+                ])
+                  .push(function (translation_list) {
+                    return gadget.notifyInvalid(translation_list[0]);
+                  });
+              }
+              throw error;
             });
         });
 
