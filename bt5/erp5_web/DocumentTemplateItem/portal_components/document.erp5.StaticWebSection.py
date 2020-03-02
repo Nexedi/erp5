@@ -69,7 +69,7 @@ class StaticWebSection(WebSection):
     # Drop the automatically added VirtualHostMonster object ID
     virtual_url_part_tuple = request.get('VIRTUAL_URL_PARTS', None)
     if (virtual_url_part_tuple is not None) and \
-       (not urllib.unquote(virtual_url_part_tuple[1]).endswith("/".join(url_list))):
+       (not urllib.unquote(virtual_url_part_tuple[-1]).endswith("/".join(url_list))):
       url_list.pop(0)
 
     if request.get('ACTUAL_URL', '').endswith("/"): # or len(url_list) == 0:
