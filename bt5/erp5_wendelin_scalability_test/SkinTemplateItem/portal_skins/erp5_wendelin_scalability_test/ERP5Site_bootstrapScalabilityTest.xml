@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>user_quantity=None</string> </value>
+            <value> <string>user_quantity=None, setup_activity_tool=True, create_test_data=True, set_id_generator=True</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
