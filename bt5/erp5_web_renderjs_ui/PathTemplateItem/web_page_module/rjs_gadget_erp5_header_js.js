@@ -156,8 +156,6 @@
       var state = {
         error: false,
         title_text: '',
-        title_button_icon: undefined,
-        title_button_name: undefined,
         title_icon: undefined,
         title_url: undefined,
         left_button_title: undefined,
