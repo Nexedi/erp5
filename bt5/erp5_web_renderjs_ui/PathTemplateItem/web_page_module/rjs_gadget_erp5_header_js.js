@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, document, RSVP */
-(function (window, rJS, document, RSVP) {
+/*global window, rJS, document, RSVP, domsugar */
+(function (window, rJS, document, RSVP, domsugar) {
   "use strict";
 
   var possible_left_button_list = [
@@ -39,36 +39,51 @@
       ['upload_url', 'Upload', 'upload'],
       ['download_url', 'Download', 'download']
     ],
-    header_button_template = function (data) {
-      // <form><button name='{{name}}' data-i18n="{{title}}" type='submit' class='ui-icon-{{icon}} ui-btn-icon-left {{class}}'>{{title}}</button></form>
-      var form_element = document.createElement('form'),
-        button_element = document.createElement('button');
-
-      button_element.setAttribute('name', data.name);
-      button_element.setAttribute('data-i18n', data.title);
-      button_element.setAttribute('type', 'submit');
-      button_element.setAttribute('class', 'ui-icon-' + data.icon + ' ui-btn-icon-left ' + data.class);
-      form_element.appendChild(button_element);
-      return form_element.outerHTML;
+    promiseHeaderButton = function (gadget, data) {
+      return gadget.translate(data.title)
+        .push(function (result) {
+          return domsugar('form', [
+            domsugar('button', {
+              name: data.name,
+              text: result,
+              // XXX Compatibility with existing application tests
+              'data-i18n': data.title,
+              type: 'submit',
+              'class': 'ui-icon-' + data.icon + ' ui-btn-icon-left ' +
+                       data.class
+            })
+          ]);
+        });
     },
-    sub_header_template = function (data) {
+
+    promiseSubHeader = function (gadget, data) {
       // {{#each sub_header_list}}
       // <li><a href="{{url}}" data-i18n="{{title}}" class="ui-btn-icon-top ui-icon-{{icon}} {{class}}">{{title}}</a></li>
       // {{/each}}
-      var fragment = document.createElement('div'),
-        li_element,
-        a_element,
-        i;
+      var i,
+        translation_list = [];
+
       for (i = 0; i < data.sub_header_list.length; i += 1) {
-        li_element = document.createElement('li');
-        a_element = document.createElement('a');
-        a_element.setAttribute('href', data.sub_header_list[i].url);
-        a_element.setAttribute('data-i18n', data.sub_header_list[i].title);
-        a_element.setAttribute('class', 'ui-btn-icon-top ui-icon-' + data.sub_header_list[i].icon + ' ' + data.sub_header_list[i].class);
-        li_element.appendChild(a_element);
-        fragment.appendChild(li_element);
+        translation_list.push(data.sub_header_list[i].title);
       }
-      return fragment.innerHTML;
+      return gadget.getTranslationList(translation_list)
+        .push(function (result_list) {
+          var dom_list = [];
+          for (i = 0; i < data.sub_header_list.length; i += 1) {
+            dom_list.push(domsugar('li', [
+              domsugar('a', {
+                text: result_list[i],
+                // XXX Compatibility with existing application tests
+                'data-i18n': data.sub_header_list[i].title,
+                href: data.sub_header_list[i].url,
+                'class': 'ui-btn-icon-top ui-icon-' +
+                         data.sub_header_list[i].icon + ' ' +
+                         data.sub_header_list[i].class
+              })
+            ]));
+          }
+          return domsugar('ul', dom_list);
+        });
     };
 
   rJS(window)
@@ -81,25 +96,12 @@
       title_icon: undefined,
       title_url: undefined
     })
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function ready() {
-      this.props = {
-        element_list: [
-          this.element.querySelector("h1"),
-          this.element.querySelector(".ui-btn-left > div"),
-          this.element.querySelector(".ui-btn-right > div"),
-          this.element.querySelector(".ui-subheader").querySelector("ul")
-        ]
-      };
-    })
 
     //////////////////////////////////////////////
     // acquired methods
     //////////////////////////////////////////////
-    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")
     .declareAcquiredMethod("triggerPanel", "triggerPanel")
     .declareAcquiredMethod("triggerMaximize", "triggerMaximize")
@@ -250,9 +252,7 @@
         default_title_icon = "",
         default_right_icon = "",
         title_link,
-        title_button,
-        promise_list = [],
-        tmp_element;
+        promise_list = [];
       // Main title
       if (modification_dict.hasOwnProperty('error') ||
           modification_dict.hasOwnProperty('loaded') ||
@@ -273,35 +273,50 @@
           // Be careful, this is CPU costly
           document.title = gadget.state.title_text;
         }
+
+        // H1
         title_link = {
           title: gadget.state.title_text,
           icon: default_title_icon || gadget.state.title_icon,
           url: gadget.state.title_url
         };
         if (gadget.state.title_button_name) {
-          title_button = {
+          promise_list.push(promiseHeaderButton(gadget, {
             title: gadget.state.title_text,
             icon: default_title_icon || gadget.state.title_button_icon,
             name: gadget.state.title_button_name
-          };
-          promise_list.push(gadget.translateHtml(header_button_template(title_button)));
+          }));
         } else if (title_link.url === undefined) {
           // <span data-i18n="{{title}}" class="ui-btn-icon-left ui-icon-{{icon}}" >{{title}}</span>
-          tmp_element = document.createElement('span');
-          tmp_element.setAttribute('data-i18n', title_link.title);
-          tmp_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + title_link.icon);
-          promise_list.push(gadget.translateHtml(tmp_element.outerHTML));
+          promise_list.push(
+            gadget.translate(title_link.title)
+              .push(function (result) {
+                return domsugar('span', {
+                  'class': 'ui-btn-icon-left ui-icon-' + title_link.icon,
+                  text: result,
+                  // XXX Compatibility with existing application tests
+                  'data-i18n': title_link.title
+                });
+              })
+          );
         } else {
           // <a data-i18n="{{title}}" class="ui-btn-icon-left ui-icon-{{icon}}" href="{{url}}"  accesskey="u">{{title}}</a>
-          tmp_element = document.createElement('a');
-          tmp_element.setAttribute('data-i18n', title_link.title);
-          tmp_element.setAttribute('class', 'ui-btn-icon-left ui-icon-' + title_link.icon);
-          tmp_element.setAttribute('href', title_link.url);
-          tmp_element.setAttribute('accesskey', 'u');
-          promise_list.push(gadget.translateHtml(tmp_element.outerHTML));
+          promise_list.push(
+            gadget.translate(title_link.title)
+              .push(function (result) {
+                return domsugar('a', {
+                  'class': 'ui-btn-icon-left ui-icon-' + title_link.icon,
+                  'href': title_link.url,
+                  'accesskey': 'u',
+                  text: result,
+                  // XXX Compatibility with existing application tests
+                  'data-i18n': title_link.title
+                });
+              })
+          );
         }
       } else {
-        promise_list.push(null);
+        promise_list.push(gadget.element.querySelector("h1").firstChild);
       }
 
       // Left button
@@ -311,14 +326,14 @@
         if (gadget.state.left_button_title === undefined) {
           promise_list.push("");
         } else {
-          promise_list.push(gadget.translateHtml(header_button_template({
+          promise_list.push(promiseHeaderButton(gadget, {
             title: gadget.state.left_button_title,
             icon: gadget.state.left_button_icon,
             name: gadget.state.left_button_name
-          })));
+          }));
         }
       } else {
-        promise_list.push(null);
+        promise_list.push(gadget.element.querySelector(".ui-btn-left > div"));
       }
 
       // Handle right link
@@ -354,38 +369,67 @@
         }
 
         if (right_button !== undefined) {
-          promise_list.push(gadget.translateHtml(header_button_template(right_button)));
+          promise_list.push(promiseHeaderButton(gadget, right_button));
         } else if (right_link !== undefined) {
           // <a data-i18n="{{title}}" href="{{url}}" class="ui-icon-{{icon}} ui-btn-icon-left {{class}}">{{title}}</a>
-          tmp_element = document.createElement('a');
-          tmp_element.setAttribute('data-i18n', right_link.title);
-          tmp_element.setAttribute('class', 'ui-icon-' + right_link.icon + ' ui-btn-icon-left ' + right_link.class);
-          tmp_element.setAttribute('href', right_link.url);
-          promise_list.push(gadget.translateHtml(tmp_element.outerHTML));
+          promise_list.push(
+            gadget.translate(right_link.title)
+              .push(function (result) {
+                return domsugar('a', {
+                  text: result,
+                  // XXX Compatibility with existing application tests
+                  'data-i18n': right_link.title,
+                  'class': 'ui-icon-' + right_link.icon + ' ui-btn-icon-left ' +
+                           right_link.class,
+                  href: right_link.url
+                });
+              })
+          );
         } else {
           promise_list.push("");
         }
       } else {
-        promise_list.push(null);
+        promise_list.push(gadget.element.querySelector(".ui-btn-right > div"));
       }
 
       // Handle sub header
       if (modification_dict.hasOwnProperty('sub_header_list')) {
-        promise_list.push(gadget.translateHtml(sub_header_template({
+        promise_list.push(promiseSubHeader(gadget, {
           sub_header_list: gadget.state.sub_header_list
-        })));
+        }));
       } else {
-        promise_list.push(null);
+        promise_list.push(gadget.element.querySelector(".ui-subheader")
+                                        .querySelector("ul"));
       }
 
       return new RSVP.Queue(RSVP.all(promise_list))
         .push(function (result_list) {
-          var j;
-          for (j = 0; j < result_list.length; j += 1) {
-            if (result_list[j] !== null) {
-              gadget.props.element_list[j].innerHTML = result_list[j];
-            }
-          }
+          domsugar(gadget.element, [
+            domsugar('div', {'data-role': 'header', class: 'ui-header'}, [
+
+              // Left button
+              domsugar('div', {class: 'ui-btn-left'}, [
+                domsugar('div', {class: 'ui-controlgroup-controls'}, [
+                  result_list[1]
+                ])
+              ]),
+
+              // H1
+              domsugar('h1', [result_list[0]]),
+
+              // Right button
+              domsugar('div', {class: 'ui-btn-right'}, [
+                domsugar('div', {class: 'ui-controlgroup-controls'}, [
+                  result_list[2]
+                ])
+              ]),
+
+              // Subheader
+              domsugar('div', {class: 'ui-subheader'}, [
+                result_list[3]
+              ])
+            ])
+          ]);
         });
     })
 
@@ -406,4 +450,4 @@
       throw new Error("Unsupported button " + name);
     });
 
-}(window, rJS, document, RSVP));
+}(window, rJS, document, RSVP, domsugar));
