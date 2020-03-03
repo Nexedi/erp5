@@ -212,6 +212,7 @@
                     return storage.removeAttachment(id, name);
                   })
                   .push(undefined, function (error) {
+                    // XXX-catchall: This shall be another branch of promise above to not be catch-all like it's now
                     if ((error instanceof jIO.util.jIOError) &&
                         (error.status_code === 404)) {
                       return undefined;
@@ -272,7 +273,7 @@
             (error.status_code === 404)) {
           return undefined;
         }
-        console.error(error);
+        console.error(error); // XXX-catchall: this shall be throw error
       })
       .push(function (attachment) {
         if (attachment) {
@@ -366,6 +367,7 @@
     };
     return sub_storage.allDocs({include_docs: true})
       .push(undefined, function (error) {
+        // XXX-catchall
         //throw error;
         console.error(error);
         return undefined;
@@ -469,7 +471,7 @@
                 return {data: {total_rows: 0}};
               }
               //throw error;
-              console.error(error);
+              console.error(error); // XXX-catchall throw error
               return {data: {total_rows: 0}};
             })
             .push(function (opml_result) {
@@ -792,7 +794,7 @@
               );
             })
             .push(undefined, function (error) {
-              console.error(error);
+              console.error(error); // XXX-catchall: throw error
             });
         }
         for (j = 0; j < attachment_document_list.length; j += 1) {
