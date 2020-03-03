@@ -39,7 +39,7 @@
           redirect_options = {
             jio_key: result.data.rows[0].id
           };
-          return gadget.redirect({"command": "index", options: redirect_options});
+          return gadget.redirectByJob({"command": "index", options: redirect_options});
         }
         redirect_options = {
           extended_search: gadget.state.query
@@ -55,7 +55,7 @@
         } else if (gadget.state.portal_type === "promise") {
           redirect_options.page = "ojsm_status_list";
         }
-        return gadget.redirect({"command": "display", options: redirect_options});
+        return gadget.redirectByJob({"command": "display", options: redirect_options});
       });
   }
 
@@ -75,6 +75,9 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+    .declareJob("redirectByJob", function (options) {
+      return this.redirect(options);
+    })
     .declareMethod("triggerSubmit", function () {
       var argument_list = arguments;
       return this.getDeclaredGadget('form_view')
@@ -146,7 +149,7 @@
                     page: 'ojsm_dispatch'
                   })
                     .push(function () {
-                      return gadget.redirect({command: 'change', options: {
+                      return gadget.redirectByJob({command: 'change', options: {
                         page: "ojsm_erp5_configurator",
                         type: "erp5"
                       }});
