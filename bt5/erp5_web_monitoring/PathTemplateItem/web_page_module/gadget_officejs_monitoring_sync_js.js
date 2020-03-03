@@ -67,6 +67,7 @@
             return gadget.jio_repair();
           })
           .push(undefined, function (error) {
+            // XXX-catchall
             // should include error message in error
             has_error = true;
             console.error(error);
@@ -121,6 +122,7 @@
                   return testOnline(parser.origin);
                 })
                 .push(undefined, function () {
+                  // XXX-catchall
                   return {status: "ERROR"};
                 })
                 .push(function (online_result) {
