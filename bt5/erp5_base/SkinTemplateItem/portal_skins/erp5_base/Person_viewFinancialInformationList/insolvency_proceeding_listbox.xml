@@ -133,10 +133,6 @@
                           <string>source_decision_title</string>
                           <string>Judicial Representative</string>
                         </tuple>
-                        <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>Stop Date</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -167,8 +163,12 @@
                           <string>Debtor</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.start_date</string>
+                          <string>start_date</string>
                           <string>Start Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>Stop Date</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
