@@ -177,6 +177,7 @@
           });
         })
         .push(undefined, function (error) {
+          // XXX-catchall
           var message_text,
             code = 0;
           if (error instanceof jIO.util.jIOError) {
@@ -185,6 +186,7 @@
           } else if (error instanceof TypeError || error.message) {
             message_text = error.message;
           } else {
+            // XXX-catchall could be solved by putting here only throw error;
             code = error.target.status;
             message_text = error.target.responseType === "text" ?
                 error.target.statusText : "";
