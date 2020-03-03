@@ -70,6 +70,7 @@
             .get(gadget.property_dict.monitor_process_state);
         })
         .push(undefined, function () {
+          // XXX-catchall
           return gadget.notifySubmitted({
             message: "Error: Failed to download data files!",
             status: "error"
@@ -223,6 +224,7 @@
       return gadget.property_dict.jio_gadget
         .get(gadget.property_dict.monitor_process_state)
         .push(undefined, function () {
+          // XXX-catchall
           return gadget.notifySubmitted({
             message: "Error: Failed to download data files!",
             status: "error"

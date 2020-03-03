@@ -181,9 +181,6 @@
               settings_queue
                 .push(function () {
                   return gadget.jio_put(id, config);
-                })
-                .push(undefined, function (error) {
-                  throw error;
                 });
             }
             if (validate_result) {
@@ -594,6 +591,7 @@
                 return getInstanceOPMLListFromMaster(gadget, select_limit);
               })
               .push(undefined, function () {
+                // XXX-catchall: This shall be another branch of promise above to not be catch-all like it's now
                 gadget.state.message
                   .innerHTML = notify_msg_template({
                     status: 'error',
@@ -611,9 +609,6 @@
                   push_queue
                     .push(function () {
                       return gadget.jio_put(opml_dict.url, opml_dict);
-                    })
-                    .push(undefined, function (error) {
-                      throw error;
                     });
                 }
 
@@ -623,6 +618,7 @@
                 return push_queue;
               })
               .push(undefined, function () {
+                // XXX-catchall
                 gadget.state.message
                   .innerHTML = notify_msg_template({
                     status: 'error',
