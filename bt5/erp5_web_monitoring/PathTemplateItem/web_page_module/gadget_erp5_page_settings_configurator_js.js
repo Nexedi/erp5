@@ -187,7 +187,7 @@
         })
         .push(function () {
           return RSVP.all([
-            gadget.notifySubmitted({message: 'Parameters Updated', status: 'success'})
+            gadget.notifySubmitted({message: 'Data updated.', status: 'success'})
           ]);
         });
     })
