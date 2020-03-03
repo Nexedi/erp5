@@ -63,10 +63,7 @@
     })
     .declareMethod('repair', function () {
       var storage = this.props.jio_storage;
-      return storage.repair.apply(storage, arguments)
-        .push(undefined, function (error) {
-          throw error;
-        });
+      return storage.repair.apply(storage, arguments);
     });
 
 }(window, rJS, jIO));

@@ -24,6 +24,7 @@
     var resource_key = gadget.property_dict.resource_dict[key];
     return gadget.property_dict.jio_gadget.get(resource_key)
       .push(undefined, function () {
+        // XXX-catchall
         return gadget.notifySubmitted({
           message: "Error: Failed to download resource file '" + resource_key +
             "' from URL: " + gadget.state.opml_outline.url,

@@ -49,6 +49,7 @@
             );
           })
           .push(undefined, function (error) {
+            // XXX-catchall
             gadget.state.data_dict.data = {};
             return gadget.notifySubmitted({
               message: "Warning: Failed to download graph data file '" +
