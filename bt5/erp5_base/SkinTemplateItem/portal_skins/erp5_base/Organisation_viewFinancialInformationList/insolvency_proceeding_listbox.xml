@@ -127,7 +127,7 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>resource</string>
+                          <string>resource_translated_title</string>
                           <string>Insolvency Proceeding Type</string>
                         </tuple>
                         <tuple>
