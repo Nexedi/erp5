@@ -210,9 +210,10 @@
           gadget.state.promise.source + ".history"
         )
           .push(undefined, function (error) {
-            if (error.name === "cancel") {
+            if (error.name === "cancel") { // XXX-catchall: better error instanceof RSVP.CancellationError
               return undefined;
             }
+            // XXX-catchall
             return gadget.notifySubmitted({
               status: "error",
               message: "Failed to get promise history content! \n" +
