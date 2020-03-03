@@ -115,11 +115,15 @@
                           <string>Creditor</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.start_date</string>
+                          <string>total_price</string>
+                          <string>Total Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
                           <string>Start Date</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.stop_date</string>
+                          <string>stop_date</string>
                           <string>Stop Date</string>
                         </tuple>
                         <tuple>

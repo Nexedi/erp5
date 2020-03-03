@@ -23,14 +23,20 @@
             <value> <string>addXMLObject</string> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>delivery_movement</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Claim Declaration Line</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>ClaimDeclarationLine_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
