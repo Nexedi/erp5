@@ -71,7 +71,7 @@
       }
       return context.getUrlParameter('editable')
         .push(function () {
-          return context.registerSync();
+          return context.registerSynchronisation();
         })
         .push(function (editable) {
           return context.changeState({
@@ -273,7 +273,7 @@
       window.dispatchEvent(event);
       return result;
     })
-    .declareJob('registerSync', function () {
+    .declareJob('registerSynchronisation', function () {
       return this.getDeclaredGadget("sync_gadget")
         .push(function (sync_gadget) {
           return sync_gadget.register();
