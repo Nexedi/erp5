@@ -11,8 +11,10 @@ if configurator == None:
   return
 
 # install configurator if not intalled
-if configurator.getCurrentStateTitle() != "End":
+installed_bt5_list = [x.getTitle() for x in context.portal_templates.getInstalledBusinessTemplateList()]
+if "erp5_wendelin" not in installed_bt5_list:
   # nothing installed, thus do it
+  context.log("START auto-configuration.")
   context.ERP5Site_bootstrapScalabilityTest(user_quantity=0, setup_activity_tool=False, create_test_data=False, set_id_generator=False)
 else:
   context.log("All configured. Nothing to do.")
