@@ -58,7 +58,7 @@
                 return opml_gadget.saveOPML(doc, verify_opml);
               })
               .push(function (state) {
-                var msg = {message: 'Document Updated', status: 'success'};
+                var msg = {message: 'Data updated.', status: 'success'};
                 if (!state.status) {
                   msg = {message: 'Document update failed', status: "error"};
                 }
