@@ -4,7 +4,7 @@
  * http://www.gnu.org/licenses/lgpl.html
  */
 
-/*jslint nomen: true*/
+/*jslint nomen: true, indent: 2, maxerr: 3*/
 /*global jIO, RSVP */
 
 (function (jIO, RSVP) {
