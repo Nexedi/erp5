@@ -392,7 +392,7 @@
           gadget.renderProjectDocumentInfo();
           gadget.renderOutdatedDocumentInfo();
           gadget.renderTestResultInfo(gadget.state.project_list);
-          gadget.renderProjectForumLink();
+          gadget.renderProjectForumLink(gadget.state.project_list);
         });
     })
 
@@ -460,38 +460,42 @@
         });
     })
 
-    .declareJob("renderProjectForumLink", function () {
+    .declareJob("renderProjectForumLink", function (project_list) {
       var gadget = this,
         i,
         forum_link,
-        link_list,
-        link_query = Query.objectToSearchText(
-          getComplexQuery({"portal_type" : "Link",
-                            "validation_state" : "reachable",
-                            "parent__portal_type" : "Project",
-                            "parent__validation_state" : "validated"},
-                          "AND")
-        );
+        forum_link_html;
       return new RSVP.Queue()
         .push(function () {
-          return gadget.jio_allDocs({
-            query: link_query,
-            limit: QUERY_LIMIT,
-            select_list: ['title', 'portal_type', 'parent__relative_url', 'parent__portal_type', "url_string"],
-            sort_on: [["modification_date", "descending"]]
-          });
+          var promise_list = [];
+          for (i = 0; i < project_list.length; i += 1) {
+            promise_list.push(gadget.jio_allDocs({
+              query: Query.objectToSearchText(
+                getComplexQuery({"portal_type" : "Link",
+                                 "validation_state" : "reachable",
+                                 "parent__relative_url" : project_list[i].id},
+                                "AND")
+              ),
+              limit: 1,
+              select_list: ['title', 'portal_type', 'parent__relative_url', "url_string"],
+              sort_on: [["modification_date", "descending"]]
+            }));
+          }
+          return RSVP.all(promise_list);
         })
-        .push(function (result) {
-          link_list = result.data.rows;
-          for (i = 0; i < link_list.length; i += 1) {
-            forum_link = document.querySelector(
-              getProjectHtlmElementId(link_list[i].value.parent__relative_url,
-                                      FORUM_LINK_TYPE,
-                                      FORUM_LINK_ID_SUFFIX, true)
-            );
-            forum_link.href = link_list[i].value.url_string;
-            forum_link.innerHTML = link_list[i].value.title;
-            forum_link.classList.remove("ui-hidden");
+        .push(function (result_list) {
+          for (i = 0; i < result_list.length; i += 1) {
+            forum_link = result_list[i].data.rows[0];
+            if (forum_link && forum_link.value.parent__relative_url === project_list[i].id) {
+              forum_link_html = document.querySelector(
+                getProjectHtlmElementId(forum_link.value.parent__relative_url,
+                                        FORUM_LINK_TYPE,
+                                        FORUM_LINK_ID_SUFFIX, true)
+              );
+              forum_link_html.href = forum_link.value.url_string;
+              forum_link_html.innerHTML = forum_link.value.title;
+              forum_link_html.classList.remove("ui-hidden");
+            }
           }
         });
     })
