@@ -11,7 +11,9 @@
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
-
+    .declareJob("redirectByJob", function (options) {
+      return this.redirect(options);
+    })
     .declareMethod("render", function (options) {
       var gadget = this;
       return this.updateHeader({
@@ -30,7 +32,7 @@
             // reset redirections
             return gadget.setSetting("sync_redirect_options", undefined)
               .push(function () {
-                return gadget.redirect({
+                return gadget.redirectByJob({
                   "command": "display",
                   "options": redirect_options
                 });
@@ -44,7 +46,7 @@
               }
             })
             .push(function () {
-              return gadget.redirect({
+              return gadget.redirectByJob({
                 "command": "display",
                 "options": redirect_options
               });
