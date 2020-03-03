@@ -100,6 +100,8 @@
           ]);
         })
         .push(function (result) {
+          // XXX: didn't replace by renderByJob here, shall I declare it on
+          //      result[0] ?
           return result[0].render({
             erp5_document: {
               "_embedded": {"_view": {
