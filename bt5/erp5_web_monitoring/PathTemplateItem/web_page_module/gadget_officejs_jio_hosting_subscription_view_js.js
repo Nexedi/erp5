@@ -194,17 +194,17 @@
                   .value.aggregate_reference === undefined) {
                 // Instance is not Synchronized!
                 promise_list.push(false);
-                continue;
+              } else {
+                gadget_element = document.createElement("div");
+                element.appendChild(gadget_element);
+                promise_list.push(
+                  gadget.declareGadget("gadget_officejs_monitoring_parameter_view.html",
+                    {element: gadget_element,
+                      scope: 'p_' + gadget.state.instance_dict.data.rows[i].id,
+                      sandbox: "public"}
+                    )
+                );
               }
-              gadget_element = document.createElement("div");
-              element.appendChild(gadget_element);
-              promise_list.push(
-                gadget.declareGadget("gadget_officejs_monitoring_parameter_view.html",
-                  {element: gadget_element,
-                    scope: 'p_' + gadget.state.instance_dict.data.rows[i].id,
-                    sandbox: "public"}
-                  )
-              );
             }
             return RSVP.all(promise_list);
           })

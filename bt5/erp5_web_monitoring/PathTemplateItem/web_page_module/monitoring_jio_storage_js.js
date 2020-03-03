@@ -4,7 +4,7 @@
  * http://www.gnu.org/licenses/lgpl.html
  */
 
-/*jslint nomen: true */
+/*jslint nomen: true, indent: 2, maxerr: 3*/
 /*global jIO, RSVP, Rusha, console, Blob */
 
 (function (jIO, RSVP, Rusha, Blob, console) {
@@ -402,6 +402,15 @@
       });
   }
 
+  function fixDateTimezone(date_string) {
+    // set default timezone offset to UTC
+    // XXX should be removed later
+    if (ZONE_LIST.indexOf(date_string.slice(-5)) === -1) {
+      return date_string + "+0000";
+    }
+    return date_string;
+  }
+
   function updateHostingSubscriptionState(hosting, element) {
     var status = element.status.toUpperCase();
 
@@ -410,22 +419,15 @@
     }
     if (hosting.status === "ERROR") {
       return;
-    } else if (status === "ERROR") {
+    }
+    if (status === "ERROR") {
       hosting.status = status;
     } else if (status === "WARNING") {
       hosting.status = status;
-    } if (status === "OK" && hosting.status !== status) {
+    }
+    if (status === "OK" && hosting.status !== status) {
       hosting.status = status;
     }
-  }
-
-  function fixDateTimezone(date_string) {
-    // set default timezone offset to UTC
-    // XXX should be removed later
-    if (ZONE_LIST.indexOf(date_string.slice(-5)) === -1) {
-      return date_string + "+0000";
-    }
-    return date_string;
   }
 
   function getOpmlTree(context, opml_url, opml_spec, basic_login, opml_title) {
@@ -702,8 +704,7 @@
               name: result_list[i].url,
               doc: result_list[i].current_signature
             });
-          }
-          else if (context._remote_storage_unreachable_status !== undefined) {
+          } else if (context._remote_storage_unreachable_status !== undefined) {
             if (result_list[i].type === "webhttp") {
               // In case it was impossible to get software Instance
               // Add an empty Software Instance with unreachable status

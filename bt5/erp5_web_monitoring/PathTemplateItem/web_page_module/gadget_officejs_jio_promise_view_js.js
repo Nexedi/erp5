@@ -228,7 +228,7 @@
               start;
 
             function addUTCTimezone(date_string) {
-              if (new RegExp(/[+-][\d]{2}\:?[\d]{2}$/).test(date_string)) {
+              if (new RegExp(/[+\-][\d]{2}\:?[\d]{2}$/).test(date_string)) {
                 return date_string;
               }
               return date_string + "+0000";
