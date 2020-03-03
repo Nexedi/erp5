@@ -1,5 +1,5 @@
 /*global window, rJS, Handlebars */
-/*jslint indent: 2, maxerr: 3 */
+/*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, Handlebars) {
   "use strict";
 
@@ -7,7 +7,7 @@
     templater = gadget_klass.__template_element,
     status_field_template = Handlebars.compile(
       templater.getElementById("template-status-field").innerHTML
-    ); 
+    );
 
   gadget_klass
     .declareMethod('render', function (options) {
@@ -22,7 +22,7 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function () {
       if (this.state.hidded) {
         this.element.innerHTML = "";
       } else {
