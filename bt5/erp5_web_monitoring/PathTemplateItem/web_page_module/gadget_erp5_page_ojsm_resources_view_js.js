@@ -74,21 +74,21 @@
     //"date, io rw counter, io cycles counter, disk used"
     line_list = ["io rw count (Kb/s)", "io cycles count (/1000)"]; //, "disk used"];
     axis_list.push({
-        "0": {
-          "title": "IO read/write counter",
-          "scale_type": "linear",
-          "value_type": "date",
-          "zoom_range": date_window
-        }
-      });
+      "0": {
+        "title": "IO read/write counter",
+        "scale_type": "linear",
+        "value_type": "date",
+        "zoom_range": date_window
+      }
+    });
     axis_list.push({
-        "0": {
-          "title": "IO cycles counter",
-          "scale_type": "linear",
-          "value_type": "date",
-          "zoom_range": date_window
-        }
-      });
+      "0": {
+        "title": "IO cycles counter",
+        "scale_type": "linear",
+        "value_type": "date",
+        "zoom_range": date_window
+      }
+    });
     for (i = 0; i < line_list.length; i += 1) {
       line_list[i] = line_list[i].trim();
       data_list.push({
@@ -214,7 +214,7 @@
       })
       .push(function () {
         //return gadget.element.querySelector('form button[type="submit"]').click();
-        return  gadget.getDeclaredGadget('form_cpu_graph')
+        return gadget.getDeclaredGadget('form_cpu_graph')
           .push(function (form_gadget) {
             return form_gadget.getContent();
           })
@@ -433,14 +433,14 @@
                 "left",
                 [["my_graph_auto_update"], ["my_cpu_graph_select"]]
               ],
-              [
-                "right",
-                []
-              ],
-              [
-                "bottom",
-                []
-              ]]
+                [
+                  "right",
+                  []
+                ],
+                [
+                  "bottom",
+                  []
+                ]]
             }
           });
         })
@@ -479,7 +479,7 @@
         updateGraph(gadget, true);
       }
       if (evt.target.getAttribute("name") === "graph_auto_update_key") {
-        if (evt.target.value == "on") {
+        if (evt.target.value === "on") {
           gadget.property_dict.disable_update = false;
         } else {
           gadget.property_dict.disable_update = true;
