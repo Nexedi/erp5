@@ -12,7 +12,9 @@
     .declareAcquiredMethod("jio_remove", "jio_remove")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
-
+    .declareJob("redirectByJob", function (options) {
+      return this.redirect(options);
+    })
     .declareMethod("render", function (options) {
       var gadget = this;
 
@@ -24,7 +26,7 @@
           return gadget.notifySubmitted({message: "Document Deleted", status: "success"});
         })
         .push(function () {
-          return gadget.redirect({command: 'change', options: {
+          return gadget.redirectByJob({command: 'change', options: {
             page: options.return_url || 'settings_configurator'
           }});
         });

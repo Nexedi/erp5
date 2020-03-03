@@ -195,6 +195,9 @@
     .declareMethod("triggerSubmit", function (event) {
       return this.element.querySelector('form button[type="submit"]').click();
     })
+    .declareJob("redirectByJob", function (options) {
+      return this.redirect(options);
+    })
     .declareMethod("render", function (options) {
       var gadget = this,
         last_sync_time,
@@ -207,7 +210,7 @@
       if (options.url) {
         // backward compatibility redirect to add opml
         options.page = "ojsm_opml_add";
-        return gadget.redirect({"command": "change", "options": options});
+        return gadget.redirectByJob({"command": "change", "options": options});
       }
 
       return new RSVP.Queue()
