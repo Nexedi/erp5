@@ -391,7 +391,7 @@
           gadget.renderOtdatedMilestoneInfo();
           gadget.renderProjectDocumentInfo();
           gadget.renderOutdatedDocumentInfo();
-          gadget.renderTestResultInfo();
+          gadget.renderTestResultInfo(gadget.state.project_list);
           gadget.renderProjectForumLink();
         });
     })
@@ -418,38 +418,44 @@
       return renderProjectDocumentLines(this, limit_date);
     })
 
-    .declareJob("renderTestResultInfo", function () {
+    .declareJob("renderTestResultInfo", function (project_list) {
       var gadget = this,
         i,
-        test_list,
+        test_result,
         query_list = [],
         test_result_query,
         test_state_list = ["failed", "stopped", "public_stopped"];
-      query_list.push(getComplexQuery({"portal_type" : "Test Result",
-                                       "source_project__validation_state" : "validated"},
-                                      "AND"));
-      query_list.push(createMultipleSimpleOrQuery('simulation_state', test_state_list));
-      test_result_query = new ComplexQuery({
-        operator: "AND",
-        query_list: query_list,
-        type: "complex"
-      });
-      return gadget.jio_allDocs({
-        query: Query.objectToSearchText(test_result_query),
-        limit: QUERY_LIMIT,
-        select_list: ['source_project__relative_url', 'portal_type', 'modification_date'],
-        group_by: ['source_project__relative_url'],
-        sort_on: [["modification_date", "descending"]]
-      })
-        .push(function (result) {
-          test_list = result.data.rows;
-          for (i = 0; i < test_list.length; i += 1) {
-            //XXX total and outdated values should come with the test-result-row
-            //(all_tests and failed) but those are _local_properties
-            renderProjectLine(test_list[i].value.source_project__relative_url,
-                              test_list[i].value.portal_type,
-                              1, //parseInt(test_list[i].value.all_test, RADIX)
-                              0); //parseInt(test_list[i].value.failures, RADIX)
+      return new RSVP.Queue()
+        .push(function () {
+          var promise_list = [];
+          for (i = 0; i < project_list.length; i += 1) {
+            query_list = [getComplexQuery({"portal_type" : "Test Result",
+                                           "source_project__relative_url" : project_list[i].id},
+                                          "AND")];
+            query_list.push(createMultipleSimpleOrQuery('simulation_state', test_state_list));
+            test_result_query = new ComplexQuery({
+              operator: "AND",
+              query_list: query_list,
+              type: "complex"
+            });
+            promise_list.push(gadget.jio_allDocs({
+              query: Query.objectToSearchText(test_result_query),
+              limit: 1,
+              select_list: ['source_project__relative_url', 'portal_type', 'modification_date', 'all_tests', 'failures'],
+              sort_on: [["modification_date", "descending"]]
+            }));
+          }
+          return RSVP.all(promise_list);
+        })
+        .push(function (result_list) {
+          for (i = 0; i < result_list.length; i += 1) {
+            test_result = result_list[i].data.rows[0];
+            if (test_result) {
+              renderProjectLine(test_result.value.source_project__relative_url,
+                                test_result.value.portal_type,
+                                parseInt(test_result.value.all_tests, RADIX),
+                                parseInt(test_result.value.failures, RADIX));
+            }
           }
         });
     })
