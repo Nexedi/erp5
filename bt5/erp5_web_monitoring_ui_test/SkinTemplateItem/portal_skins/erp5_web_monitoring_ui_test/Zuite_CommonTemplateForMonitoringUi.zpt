@@ -1,0 +1,28 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <tal:block metal:define-macro="wait_for_content_loaded">
+    <tr>
+      <td colspan="3"><b>Wait for the content to be loaded</b></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_officejs_monitoring_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
+      <td></td>
+    </tr>
+    <!-- XXX Sadly, spinner currently is dropped before all DOM modifications are done.
+         Until this is fixed, we use the ugly pause command -->
+    <tr>
+      <td>pause</td>
+      <td>100</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+  </tal:block>
+</tal:block>
