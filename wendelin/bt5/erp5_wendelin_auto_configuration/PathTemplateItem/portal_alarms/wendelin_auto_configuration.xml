@@ -7,6 +7,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>active_sense_method_id</string> </key>
+            <value> <string>Alarm_setupAutoConfiguration</string> </value>
+        </item>
+        <item>
             <key> <string>automatic_solve</string> </key>
             <value> <int>0</int> </value>
         </item>
@@ -53,6 +57,25 @@
             </value>
         </item>
         <item>
+            <key> <string>periodicity_start_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1577836800.0</float>
+                    <string>GMT</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
             <key> <string>periodicity_week</string> </key>
             <value>
               <tuple/>
@@ -64,7 +87,9 @@
         </item>
         <item>
             <key> <string>sense_method_id</string> </key>
-            <value> <string>Alarm_setupAutoConfiguration</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
