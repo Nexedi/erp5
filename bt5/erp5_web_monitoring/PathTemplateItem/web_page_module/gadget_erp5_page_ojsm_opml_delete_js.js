@@ -14,6 +14,9 @@
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
 
     .declareMethod("render", function (options) {
+      return this.remove(options);
+    })
+    .declareJob("remove", function (options) {
       var gadget = this;
 
       return gadget.notifySubmitting()
