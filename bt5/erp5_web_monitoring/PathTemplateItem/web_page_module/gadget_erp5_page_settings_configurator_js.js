@@ -159,7 +159,7 @@
         doc;
       return gadget.notifySubmitting()
         .push(function () {
-          return  gadget.getDeclaredGadget('form_view');
+          return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
           return form_gadget.getContent();

@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, Handlebars */
+/*global window, rJS, RSVP, Rusha, Handlebars */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP, Rusha) {
   "use strict";

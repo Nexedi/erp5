@@ -178,7 +178,7 @@
         })
         .push(undefined, function (error) {
           var message_text,
-              code = 0;
+            code = 0;
           if (error instanceof jIO.util.jIOError) {
             message_text = error.message;
             code = error.status_code;
