@@ -85,6 +85,8 @@
                         <string>my_resource</string>
                         <string>my_destination_section_title</string>
                         <string>my_source_section_title</string>
+                        <string>listbox_start_date</string>
+                        <string>listbox_stop_date</string>
                       </list>
                     </value>
                 </item>

@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>all_columns</string>
                 <string>columns</string>
                 <string>editable_columns</string>
                 <string>portal_types</string>
@@ -101,24 +102,27 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>resource_title</string>
+                          <string>Type</string>
                         </tuple>
                         <tuple>
                           <string>aggregate_reference</string>
-                          <string>Sale Invoice Transaction</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
+                          <string>Invoice Number</string>
                         </tuple>
                         <tuple>
                           <string>price</string>
