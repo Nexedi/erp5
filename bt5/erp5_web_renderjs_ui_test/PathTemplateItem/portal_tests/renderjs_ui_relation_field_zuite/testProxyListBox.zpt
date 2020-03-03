@@ -42,12 +42,6 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
-  <td>assertElementPresent</td>
-  <td>//button[@type='submit' and @data-i18n='Save']</td>
-  <td></td>
-</tr>
-
-<tr>
   <td>assertTextPresent</td>
   <td>Quantity</td>
   <td></td>
@@ -66,12 +60,6 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-<tr>
-  <td>assertElementPresent</td>
-  <td>//button[@type='submit' and @data-i18n='Save']</td>
-  <td></td>
-</tr>
 
 
 <tal:block tal:define="click_configuration python: {'text': 'Foo Line: 1'}">
@@ -97,12 +85,6 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-
-<tr>
-  <td>assertElementPresent</td>
-  <td>//button[@type='submit' and @data-i18n='Save']</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>storeLocation</td>
