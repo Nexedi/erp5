@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -69,11 +69,13 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_document_scanner.html</string> </value>
+            <value> <string>gadget_document_scanner.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -83,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_document_scanner_html</string> </value>
+            <value> <string>scanner_gadget_document_scanner_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -93,7 +95,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -103,7 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Document Scanner</string> </value>
+            <value> <string>Gadget Document Scanner JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -193,7 +195,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1574261995.43</float>
+                              <float>1574261409.0</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -228,7 +230,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <string>romain</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -242,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>981.59367.17937.61354</string> </value>
+                      <value> <string>982.26648.29015.8021</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -260,7 +262,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1581984312.27</float>
+                              <float>1583748517.63</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -323,7 +325,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1574261595.83</float>
+                              <float>1574261340.43</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
