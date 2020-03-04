@@ -33,12 +33,12 @@
 <!-- Basic Menu Navigation -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//button[text()='Menu']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//button[text()='Menu']</td>
   <td></td>
 </tr>
 <tr>
@@ -89,12 +89,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//button[text()='Menu']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//button[text()='Menu']</td>
   <td></td>
 </tr>
 <tr>
@@ -145,7 +145,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//button[text()='Menu']</td>
   <td></td>
 </tr>
 <tr>
@@ -196,7 +196,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//button[text()='Menu']</td>
   <td></td>
 </tr>
 <tr>
@@ -247,7 +247,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//button[text()='Menu']</td>
   <td></td>
 </tr>
 <tr>

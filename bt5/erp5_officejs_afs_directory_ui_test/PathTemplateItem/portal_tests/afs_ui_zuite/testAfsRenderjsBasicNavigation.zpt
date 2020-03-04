@@ -33,12 +33,12 @@
 <!-- Basic Menu Navigation -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//button[text()='Menu']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//button[text()='Menu']</td>
   <td></td>
 </tr>
 <tr>
@@ -59,7 +59,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//button[text()='Menu']</td>
   <td></td>
 </tr>
 <tr>
@@ -80,7 +80,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//button[text()='Menu']</td>
   <td></td>
 </tr>
 <tr>
@@ -101,7 +101,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//button[text()='Menu']</td>
   <td></td>
 </tr>
 <tr>
