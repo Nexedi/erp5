@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getDefaultBackendDataAsJSON</string> </value>
+            <value> <string>Base_getDocumentScannerDefaultBackendDataAsJSON</string> </value>
         </item>
       </dictionary>
     </pickle>
