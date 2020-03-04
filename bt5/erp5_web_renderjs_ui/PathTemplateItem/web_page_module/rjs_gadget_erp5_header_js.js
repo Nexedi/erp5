@@ -46,6 +46,8 @@
             domsugar('button', {
               name: data.name,
               text: result,
+              // XXX Compatibility with existing application tests
+              'data-i18n': data.title,
               type: 'submit',
               'class': 'ui-icon-' + data.icon + ' ui-btn-icon-left ' +
                        data.class
@@ -71,6 +73,8 @@
             dom_list.push(domsugar('li', [
               domsugar('a', {
                 text: result_list[i],
+                // XXX Compatibility with existing application tests
+                'data-i18n': data.sub_header_list[i].title,
                 href: data.sub_header_list[i].url,
                 'class': 'ui-btn-icon-top ui-icon-' +
                          data.sub_header_list[i].icon + ' ' +
@@ -289,7 +293,9 @@
               .push(function (result) {
                 return domsugar('span', {
                   'class': 'ui-btn-icon-left ui-icon-' + title_link.icon,
-                  text: result
+                  text: result,
+                  // XXX Compatibility with existing application tests
+                  'data-i18n': title_link.title
                 });
               })
           );
@@ -302,7 +308,9 @@
                   'class': 'ui-btn-icon-left ui-icon-' + title_link.icon,
                   'href': title_link.url,
                   'accesskey': 'u',
-                  text: result
+                  text: result,
+                  // XXX Compatibility with existing application tests
+                  'data-i18n': title_link.title
                 });
               })
           );
@@ -369,6 +377,8 @@
               .push(function (result) {
                 return domsugar('a', {
                   text: result,
+                  // XXX Compatibility with existing application tests
+                  'data-i18n': right_link.title,
                   'class': 'ui-icon-' + right_link.icon + ' ui-btn-icon-left ' +
                            right_link.class,
                   href: right_link.url
