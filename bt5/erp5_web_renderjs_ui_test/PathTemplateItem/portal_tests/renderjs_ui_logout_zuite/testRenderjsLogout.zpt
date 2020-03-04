@@ -55,7 +55,16 @@
 </tal:block>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value='Confirm']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@value='Confirm']</td>
+  <td></td>
+</tr>
 
 <tr>
   <td>waitForElementPresent</td>
