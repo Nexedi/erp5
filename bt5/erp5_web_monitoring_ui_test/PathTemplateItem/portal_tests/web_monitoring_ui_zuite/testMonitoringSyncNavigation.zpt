@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>Test SlapOS Monitoring UI</title>
 </head>
-  <body>
+  <body tal:define="instance_root string:rootInstance; instance_1 string:subInstance-1; instance_2 string:subInstance-2; username string:admin; password string:ntpvmhkg">
     <table cellpadding="1" cellspacing="1" border="1">
       <thead>
         <tr><td rowspan="1" colspan="3">Test SlapOS Monitoring UI</td></tr>
@@ -39,9 +39,6 @@
         </tr>
         <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
         <tr>
-          <td colspan="3"><b><i>XXX:</i> Cleanup previous run or clone and install offline?</b></td>
-        </tr>
-        <tr>
           <td colspan="3"><b>Add monitoring endpoint</b></td>
         </tr>
         <tal:block tal:define="click_configuration python: {'text': 'Monitoring Configurations'}">
@@ -65,27 +62,27 @@
         </tr>
         <tr>
           <td>store</td>
-          <td>rootInstance</td>
+          <td tal:content="instance_root"></td>
           <td>instance_root</td>
         </tr>
         <tr>
           <td>store</td>
-          <td>subInstance-1</td>
+          <td tal:content="instance_1"></td>
           <td>instance_1</td>
         </tr>
         <tr>
           <td>store</td>
-          <td>subInstance-2</td>
+          <td tal:content="instance_2"></td>
           <td>instance_2</td>
         </tr>
         <tr>
           <td>store</td>
-          <td>admin</td>
+          <td tal:content="username"></td>
           <td>username</td>
         </tr>
         <tr>
           <td>store</td>
-          <td>ntpvmhkg</td>
+          <td tal:content="password"></td>
           <td>password</td>
         </tr>
         <tr>
@@ -155,11 +152,9 @@
         <tr>
           <td colspan="3"><b>Synchronize manually</b></td>
         </tr>
-        <tr>
-          <td>click</td>
-          <td>//a[@data-i18n='Synchronize']</td>
-          <td></td>
-        </tr>
+        <tal:block tal:define="click_configuration python: {'text': 'Synchronize'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
+        </tal:block>
         <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
         <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
         <tal:block tal:define="pagination_configuration python: {'header': '(16)', 'footer': '16 Records'}">
@@ -188,31 +183,19 @@
           <td></td>
         </tr>
         <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
-        <tr>
-          <td>waitForElementPresent</td>
-          <td>//h1[contains(.,'Software Instances')]</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>assertElementPresent</td>
-          <td>//h1[contains(.,'Software Instances')]</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>waitForElementPresent</td>
-          <td>//a[text()='${instance_root}']</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>assertElementPresent</td>
-          <td>//a[text()='${instance_root}']</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>assertElementPresent</td>
-          <td>//a[text()='${instance_1}']</td>
-          <td></td>
-        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+        <tal:block tal:define="pagination_configuration python: {'header': '(3)', 'footer': '3 Records'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+        </tal:block>
+        <tal:block tal:define="cell_configuration python: {'line': 0, 'index': 0, 'text': instance_root}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_cell_text" />
+        </tal:block>
+        <tal:block tal:define="cell_configuration python: {'line': 1, 'index': 0, 'text': instance_1}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_cell_text" />
+        </tal:block>
+        <tal:block tal:define="cell_configuration python: {'line': 2, 'index': 0, 'text': instance_2}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_cell_text" />
+        </tal:block>
         <tr>
           <td colspan="3"><b>Navigate to the root instance</b></td>
         </tr>
@@ -335,21 +318,10 @@
           <td>//a[@data-i18n='Monitoring Configurations']</td>
           <td></td>
         </tr>
-        <tr>
-          <td>pause</td>
-          <td>2000</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>waitForElementPresent</td>
-          <td>//h1[contains(.,'OPML Documents')]</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>assertElementPresent</td>
-          <td>//h1[contains(.,'OPML Documents')]</td>
-          <td></td>
-        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+        <tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+        </tal:block>
         <tr>
           <td>assertElementPresent</td>
           <td>//a[text()='${hosting_title}']</td>
@@ -397,16 +369,10 @@
           <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_panel_link" />
         </tal:block>
         <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
-        <tr>
-          <td>waitForElementPresent</td>
-          <td>//h1[contains(.,'OPML Documents')]</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>assertElementPresent</td>
-          <td>//h1[contains(.,'OPML Documents')]</td>
-          <td></td>
-        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+        <tal:block tal:define="pagination_configuration python: {'header': '(1)', 'footer': '1 Records'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+        </tal:block>
         <tr>
           <td>assertElementPresent</td>
           <td>//a[text()='${hosting_title}']</td>
@@ -434,16 +400,10 @@
           <td></td>
         </tr>
         <tal:block metal:use-macro="here/Zuite_CommonTemplateForMonitoringUi/macros/wait_for_content_loaded" />
-        <tr>
-          <td>waitForElementPresent</td>
-          <td>//h1[contains(.,'OPML Documents')]</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>assertElementPresent</td>
-          <td>//h1[contains(.,'OPML Documents')]</td>
-          <td></td>
-        </tr>
+        <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+        <tal:block tal:define="pagination_configuration python: {'header': '(0)', 'footer': 'No records'}">
+          <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
+        </tal:block>
         <tr>
           <td>assertTextNotPresent</td>
           <td>${opml_url}</td>
