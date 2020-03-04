@@ -90,7 +90,7 @@
   <td>DESC <span tal:replace="python: DateTime().ISO()"></span></td>
 </tr>
 
-<div tal:repeat="item python:range(2)">
+<div tal:repeat="item python:range(5)">
   <!-- Click on Capture -->
   <tr>
     <td>waitForElementPresent</td>
@@ -177,11 +177,28 @@
 </tr>
 <!-- check if third image does not exists -->
 <tr>
-  <td>assertElementNotPresent</td>
+  <td>assertElementPresent</td>
   <td>//img[@data-page="2" and @class="show-img"]</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//img[@data-page="3" and @class="show-img"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//img[@data-page="4" and @class="show-img"]</td>
+  <td></td>
+</tr>
+
 <!-- open first image -->
+<tr>
+  <td>click</td>
+  <td>//img[@data-page="0" and @class="show-img"]</td>
+  <td></td>
+</tr>
+<!-- open first image again -->
 <tr>
   <td>click</td>
   <td>//img[@data-page="0" and @class="show-img"]</td>
@@ -201,6 +218,13 @@
 <tr>
   <td>click</td>
   <td>//button[@class="new-btn ui-btn-icon-left ui-icon-plus"]</td>
+  <td></td>
+</tr>
+
+<!-- Switch camera -->
+<tr>
+  <td>click</td>
+  <td>//button[@class="change-camera-btn ui-icon-refresh ui-btn-icon-left"]</td>
   <td></td>
 </tr>
 <tr>
@@ -241,7 +265,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//img[@data-page="2" and @class="show-img"]</td>
+  <td>//img[@data-page="5" and @class="show-img"]</td>
   <td></td>
 </tr>
 <tr>
@@ -304,12 +328,12 @@
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>of 3</td>
+  <td>of 6</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>of 3</td>
+  <td>of 6</td>
   <td></td>
 </tr>
 <tr>
@@ -317,7 +341,6 @@
   <td>relative=top</td>
   <td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>
