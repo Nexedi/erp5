@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>remove_outdated_active_process</string> </value>
+            <value> <string>remove_outdated_document_scanner_active_processes</string> </value>
         </item>
         <item>
             <key> <string>periodicity_day_frequency</string> </key>
@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Remove Outdated Active Process</string> </value>
+            <value> <string>Remove Outdated Document Scanner Active Processes</string> </value>
         </item>
       </dictionary>
     </pickle>
