@@ -63,7 +63,13 @@
   <td>//div[@class='front-project-list']</td>
   <td></td>
 </tr>
-<!-- Check empty project --> id="project_module-empty-project-03-04-2020-13-20-06-Test-Result-status"
+<!-- Check draft project -->
+  <tr>
+    <td>assertElementNotPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-title']//a[text()='draft-project']</td>
+    <td></td>
+  </tr>
+<!-- Check empty project -->
   <tr>
     <td>assertElementPresent</td>
     <td>//div[@class='front-project-list']//div[@class='project-title']//a[text()='empty-project']</td>
@@ -149,36 +155,114 @@
     <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-hidden' and contains(@id, 'empty-project') and contains(@id, 'Task-Report') and contains(@id, '-number')]</td>
     <td></td>
   </tr>
-  
-  
-  
-  
-  
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@class='front-project-list']//div[@class='project-line']//span[text()='0' and @class='margined']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@class='front-project-list']//div[@class='project-line']//span[text()='0' and contains(@id, 'outdated')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@class='front-project-list']//div[@class='project-line']//span[text()='(']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@class='front-project-list']//div[@class='project-line']//span[text()=')']</td>
-  <td></td>
-</tr>
-  
-  <!--
-   <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//a[text()='Projects' and contains(@href, '#!display_stored_state') and contains(@href, 'n.jio_key=project_module')]</td>
-
-@id='milestone_link
-  
-  <div class="project-line"><span class="status none margined" id="project_module-test-project-02-27-2020-15-02-52-Task-status"></span><span class="name margined">Tasks</span><span class="margined" id="project_module-test-project-02-27-2020-15-02-52-Task-total">0</span><span>(</span><span id="project_module-test-project-02-27-2020-15-02-52-Task-outdated">0</span><span>)</span></div>
-  -->
+<!-- Check documented project -->
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-title']//a[text()='documented-project']</td>
+    <td></td>
+  </tr>
+  <!-- Check Task line -->
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='status none margined green' and contains(@id, 'documented-project') and contains(@id, 'Task') and contains(@id, '-status')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-visible' and contains(@id, 'documented-project') and contains(@id, 'Task') and contains(@id, '-number')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'documented-project') and contains(@id, 'Task') and contains(@id, '-total') and text()='3']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'documented-project') and contains(@id, 'Task') and contains(@id, '-outdated') and text()='0']</td>
+    <td></td>
+  </tr>
+  <!-- Check Bug line -->
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='status none margined green' and contains(@id, 'documented-project') and contains(@id, 'Bug') and contains(@id, '-status')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-visible' and contains(@id, 'documented-project') and contains(@id, 'Bug') and contains(@id, '-number')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'documented-project') and contains(@id, 'Bug') and contains(@id, '-total') and text()='3']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'documented-project') and contains(@id, 'Bug') and contains(@id, '-outdated') and text()='0']</td>
+    <td></td>
+  </tr>
+  <!-- Check Test Result line -->
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='status none margined green' and contains(@id, 'documented-project') and contains(@id, 'Test-Result') and contains(@id, '-status')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-visible' and contains(@id, 'documented-project') and contains(@id, 'Test-Result') and contains(@id, '-number')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'documented-project') and contains(@id, 'Test-Result') and contains(@id, '-total') and text()='20']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'documented-project') and contains(@id, 'Test-Result') and contains(@id, '-outdated') and text()='0']</td>
+    <td></td>
+  </tr>
+  <!-- Check Milestone line -->
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='status none margined green' and contains(@id, 'documented-project') and contains(@id, 'Milestone') and contains(@id, '-status')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-visible' and contains(@id, 'documented-project') and contains(@id, 'Milestone') and contains(@id, '-number')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'documented-project') and contains(@id, 'Milestone') and contains(@id, '-total') and text()='1']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'documented-project') and contains(@id, 'Milestone') and contains(@id, '-outdated') and text()='0']</td>
+    <td></td>
+  </tr>
+  <!-- Check Task Report line -->
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='status none margined green' and contains(@id, 'documented-project') and contains(@id, 'Task-Report') and contains(@id, '-status')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-visible' and contains(@id, 'documented-project') and contains(@id, 'Task-Report') and contains(@id, '-number')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'documented-project') and contains(@id, 'Task-Report') and contains(@id, '-total') and text()='3']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'documented-project') and contains(@id, 'Task-Report') and contains(@id, '-outdated') and text()='0']</td>
+    <td></td>
+  </tr>

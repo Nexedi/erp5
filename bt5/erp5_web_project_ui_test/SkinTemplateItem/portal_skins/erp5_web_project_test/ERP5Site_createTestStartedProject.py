@@ -26,6 +26,172 @@ if home_page:
   home_page.publishAlive()
 
 if create_project_documents:
+  # MILESTONES
+  project.newContent(id = test_id + "-1",
+                     portal_type = 'Project Milestone',
+                     reference = 'test-project-milestone')
+  # TASKS
+  module = portal.getDefaultModule('Task')
+  task = module.newContent(id = test_id + "-1",
+                           portal_type = 'Task',
+                           reference = 'lonely-task')
+  task.plan()
+  task = module.newContent(id = test_id + "-2",
+                           portal_type = 'Task',
+                           reference = 'task-' + project_reference,
+                           source_project_value = project)
+  task = module.newContent(id = test_id + "-3",
+                           portal_type = 'Task',
+                           reference = 'task-' + project_reference,
+                           source_project_value = project)
+  task.order()
+  task = module.newContent(id = test_id + "-4",
+                           portal_type = 'Task',
+                           reference = 'task-' + project_reference,
+                           source_project_value = project)
+  task.confirm()
+  task = module.newContent(id = test_id + "-5",
+                           portal_type = 'Task',
+                           reference = 'task-' + project_reference,
+                           source_project_value = project)
+  task.cancel()
+  task = module.newContent(id = test_id + "-6",
+                           portal_type = 'Task',
+                           reference = 'task-' + project_reference,
+                           source_project_value = project)
+  task.delete()
+  task = module.newContent(id = test_id + "-7",
+                           portal_type = 'Task',
+                           reference = 'task-' + project_reference,
+                           source_project_value = project)
+  task.plan()
+
+  # BUGS
+  module = portal.getDefaultModule('Bug')
+  bug = module.newContent(id = test_id + "-1",
+                           portal_type = 'Bug',
+                           reference = 'lonely-bug')
+  bug.confirm()
+  bug = module.newContent(id = test_id + "-2",
+                           portal_type = 'Bug',
+                           reference = 'bug-' + project_reference,
+                           source_project_value = project)
+  bug = module.newContent(id = test_id + "-3",
+                           portal_type = 'Bug',
+                           reference = 'bug-' + project_reference,
+                           source_project_value = project)
+  bug.confirm()
+  bug = module.newContent(id = test_id + "-4",
+                           portal_type = 'Bug',
+                           reference = 'bug-' + project_reference,
+                           source_project_value = project)
+  bug.confirm()
+  bug.stop()
+  bug = module.newContent(id = test_id + "-5",
+                           portal_type = 'Bug',
+                           reference = 'bug-' + project_reference,
+                           source_project_value = project)
+  bug.confirm()
+  bug.setReady()
+  bug = module.newContent(id = test_id + "-6",
+                           portal_type = 'Bug',
+                           reference = 'bug-' + project_reference,
+                           source_project_value = project)
+  bug.confirm()
+  bug.cancel()
+  bug = module.newContent(id = test_id + "-7",
+                           portal_type = 'Bug',
+                           reference = 'bug-' + project_reference,
+                           source_project_value = project)
+  bug.delete()
+  bug = module.newContent(id = test_id + "-8",
+                           portal_type = 'Bug',
+                           reference = 'bug-' + project_reference,
+                           source_project_value = project)
+  bug.confirm()
+  bug.stop()
+  bug.deliver()
+
+  # TASK REPORTS
+  module = portal.getDefaultModule('Task Report')
+  task_report = module.newContent(id = test_id + "-1",
+                           portal_type = 'Task Report',
+                           reference = 'lonely-task-report')
+  task_report.confirm()
+  task_report = module.newContent(id = test_id + "-2",
+                           portal_type = 'Task Report',
+                           reference = 'task-report-' + project_reference,
+                           source_project_value = project)
+  task_report = module.newContent(id = test_id + "-3",
+                           portal_type = 'Task Report',
+                           reference = 'task-report-' + project_reference,
+                           source_project_value = project)
+  task_report.confirm()
+  task_report = module.newContent(id = test_id + "-4",
+                           portal_type = 'Task Report',
+                           reference = 'task-report-' + project_reference,
+                           source_project_value = project)
+  task_report.stop()
+  task_report = module.newContent(id = test_id + "-5",
+                           portal_type = 'Task Report',
+                           reference = 'task-report-' + project_reference,
+                           source_project_value = project)
+  task_report.confirm()
+  task_report.start()
+  task_report = module.newContent(id = test_id + "-6",
+                           portal_type = 'Task Report',
+                           reference = 'task-report-' + project_reference,
+                           source_project_value = project)
+  task_report.stop()
+  task_report.deliver()
+  task_report = module.newContent(id = test_id + "-7",
+                           portal_type = 'Task Report',
+                           reference = 'task-report-' + project_reference,
+                           source_project_value = project)
+  task_report.delete()
+  task_report = module.newContent(id = test_id + "-8",
+                           portal_type = 'Task Report',
+                           reference = 'task-report-' + project_reference,
+                           source_project_value = project)
+  task_report.cancel()
+
+  # TEST RESULTS
+  module = context.portal_catalog.getDefaultModule('Test Result')
+  test_result = module.newContent(id = test_id + "-1",
+                                  portal_type = 'Test Result',
+                                  source_project_value = project)
+  test_result.newContent(id = "1",
+                         portal_type = 'Test Result Line',
+                         reference = "test-result-line")
+  test_result = module.newContent(id = test_id + "-2",
+                                  portal_type = 'Test Result',
+                                  source_project_value = project)
+  test_result.newContent(id = "1",
+                         portal_type = 'Test Result Line',
+                         reference = "test-result-line")
+  test_result.start()
+  test_result = module.newContent(id = test_id + "-3",
+                                  portal_type = 'Test Result',
+                                  source_project_value = project)
+  test_result.newContent(id = "1",
+                         portal_type = 'Test Result Line',
+                         reference = "test-result-line")
+  test_result.start()
+  test_result.fail()
+  test_result = module.newContent(id = test_id + "-4",
+                                  portal_type = 'Test Result',
+                                  source_project_value = project)
+  test_result_line = test_result.newContent(id = "1",
+                                            portal_type = 'Test Result Line',
+                                            reference = "test-result-line")
+  test_result_line.start()
+  test_result_line.stop(test_count=20)
+  import time
+  time.sleep(5)
+  test_result.start()
+  test_result.stop()
+  #tr_line.stop(error_count=2, failure_count=2)#, command=test_details, stdout=error_message, stderr=error_message)
+
   # EMPTY PROJECT
   module = portal.getDefaultModule('Project')
   empty_project = module.newContent(id = "empty-project-" + date_time,
@@ -38,7 +204,6 @@ if create_project_documents:
   empty_project = module.newContent(id = "draf-project-" + date_time,
                                     portal_type = 'Project',
                                     reference = "draf-project")
-
 
 print "Project Created"
 return printed
