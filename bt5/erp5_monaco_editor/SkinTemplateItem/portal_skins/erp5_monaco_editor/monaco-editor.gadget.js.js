@@ -3,6 +3,11 @@
 (function(window, rJS, monaco) {
   'use strict';
 
+  // globals
+  const JSLINT = window['JSLINT'];
+  const prettier = window['prettier'];
+  const prettierPlugins = window['prettierPlugins'];
+
   rJS(window)
     .declareAcquiredMethod('notifySubmit', 'notifySubmit')
     .declareJob('deferNotifySubmit', function() {
@@ -14,15 +19,14 @@
       // Ensure error will be correctly handled
       return this.notifyChange();
     })
-    .ready(function() {
-      var context = this,
-        editor;
+    .ready(function(context) {
+      let editor;
       function deferNotifyChange() {
         if (!context.state.ignoredChangeDuringInitialization) {
           return context.deferNotifyChange();
         }
       }
-      this.editor = editor = monaco.editor.create(
+      context.editor = editor = monaco.editor.create(
         this.element.querySelector('.monaco-container'),
         {
           /* because Alt+Click is LeftClick on ChromeOS */
@@ -154,18 +158,20 @@
           });
 
           // Type mapping for Nexedi libraries
-          function addExtraLibrary(script_name, lib_name) {
-            return fetch(script_name)
-              .then(function(resp) {
-                return resp.text();
-              })
-              .then(function(script_code) {
-                monaco.languages.typescript.javascriptDefaults.addExtraLib(
-                  script_code,
-                  lib_name
-                );
-              });
-          }
+          const addExtraLibrary = function(script_name, lib_name) {
+            return () => {
+              return fetch(script_name)
+                .then(function(resp) {
+                  return resp.text();
+                })
+                .then(function(script_code) {
+                  monaco.languages.typescript.javascriptDefaults.addExtraLib(
+                    script_code,
+                    lib_name
+                  );
+                });
+            };
+          };
           queue
             .push(addExtraLibrary('./monaco-rsvp.d.ts', 'rsvp'))
             .push(addExtraLibrary('./monaco-renderjs.d.ts', 'renderjs'))
@@ -190,4 +196,4 @@
       }
       return form_data;
     });
-})(window, rJS, monaco);
+})(window, rJS, window['monaco']);
