@@ -35,7 +35,7 @@
   <td></td>
 </tr>
 
-<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+<tal:block tal:define="click_configuration python: {'text': 'caozhuo'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
 </tal:block>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
