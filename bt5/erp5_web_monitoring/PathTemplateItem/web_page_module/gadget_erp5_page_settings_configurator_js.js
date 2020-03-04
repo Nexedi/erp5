@@ -22,16 +22,10 @@
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
 
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
-      var gadget = this,
-        destroy_element = gadget.element.querySelector("#destroyOPML");
+      var gadget = this;
       return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
           var i, value, len = result.data.total_rows;
-          if (result.data.total_rows === 0) {
-            destroy_element.setAttribute("disabled", "disabled");
-          } else if (destroy_element.getAttribute("disabled") === "disabled") {
-            destroy_element.setAttribute("disabled", "");
-          }
           for (i = 0; i < len; i += 1) {
             if (result.data.rows[i].value.hasOwnProperty("active")) {
               result.data.rows[i].value.active = {
@@ -149,6 +143,7 @@
             );
             element.setAttribute('rel', '');
             if (success) {
+              element.removeAttribute("disabled");
               return gadget.redirect({"command": "reload"});
             }
           });
