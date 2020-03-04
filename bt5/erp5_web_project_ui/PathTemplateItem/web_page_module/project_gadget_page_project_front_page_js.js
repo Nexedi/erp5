@@ -11,6 +11,7 @@
     TOTAL_SPAN = "total",
     OUTDATED_SPAN = "outdated",
     NUMBER_SPAN = "number",
+    NAME_SPAN = "name",
     FORUM_LINK_ID_SUFFIX = "forum",
     FORUM_LINK_TYPE = "link",
     QUERY_LIMIT = 100000,
@@ -113,6 +114,7 @@
       status_span.classList.add(STATUS_OK);
     }
     number_span.classList.remove("ui-hidden");
+    number_span.classList.add("ui-visible");
   }
 
   function renderProjectDocumentLines(gadget, limit_date) {
@@ -291,6 +293,8 @@
       name_span.classList.add("name");
       name_span.classList.add("margined");
       name_span.innerHTML = title;
+      name_span.setAttribute("id", getProjectHtlmElementId(project_id,
+                                                           portal_type, NAME_SPAN));
       total_span.classList.add("margined");
       total_span.innerHTML = total_count;
       total_span.setAttribute("id", getProjectHtlmElementId(project_id,
@@ -402,9 +406,9 @@
     })
 
     .declareJob("renderOtdatedMilestoneInfo", function () {
-      //XXX For testing. use LIMIT_DATE
-      return renderMilestoneLines(this, NOW_DATE);
-      //return renderMilestoneLines(this, LIMIT_DATE);
+      //XXX For testing -> use NOW_DATE
+      //return renderMilestoneLines(this, NOW_DATE);
+      return renderMilestoneLines(this, LIMIT_DATE);
     })
 
     .declareJob("renderProjectDocumentInfo", function () {
@@ -412,9 +416,9 @@
     })
 
     .declareJob("renderOutdatedDocumentInfo", function () {
-      //XXX For testing. use LIMIT_DATE
-      return renderProjectDocumentLines(this, NOW_DATE);
-      //return renderProjectDocumentLines(this, LIMIT_DATE);
+      //XXX For testing -> use NOW_DATE
+      //return renderProjectDocumentLines(this, NOW_DATE);
+      return renderProjectDocumentLines(this, LIMIT_DATE);
     })
 
     .declareJob("renderTestResultInfo", function (project_list) {
@@ -463,28 +467,30 @@
       var gadget = this,
         i,
         forum_link,
-        forum_link_html;
+        forum_link_html,
+        forum_link_list,
+        link_query = getComplexQuery({"portal_type" : "Link",
+                                      "validation_state" : "reachable",
+                                      "parent__validation_state" : "validated"},
+                                     "AND");
       return new RSVP.Queue()
         .push(function () {
-          var promise_list = [];
-          for (i = 0; i < project_list.length; i += 1) {
-            promise_list.push(gadget.jio_allDocs({
-              query: Query.objectToSearchText(
-                getComplexQuery({"portal_type" : "Link",
-                                 "validation_state" : "reachable",
-                                 "parent__relative_url" : project_list[i].id},
-                                "AND")
-              ),
-              limit: 1,
-              select_list: ['title', 'portal_type', 'parent__relative_url', "url_string"],
-              sort_on: [["modification_date", "descending"]]
-            }));
-          }
-          return RSVP.all(promise_list);
+          console.log("getting links");
+          return gadget.jio_allDocs({
+            query: Query.objectToSearchText(link_query),
+            limit: QUERY_LIMIT,
+            //select_list: ['title', 'portal_type', 'parent__relative_url', "url_string"],
+            //select_list: ['title', 'portal_type', 'parent__relative_url', 'count(*)'],
+            select_list: ['title', 'url_string'],
+            group_by: ['parent_uid'],
+            sort_on: [["modification_date", "descending"]]
+          });
         })
-        .push(function (result_list) {
-          for (i = 0; i < result_list.length; i += 1) {
-            forum_link = result_list[i].data.rows[0];
+        .push(function (result) {
+          forum_link_list = result.data.rows;
+          console.log(forum_link_list);
+          /*for (i = 0; i < forum_link_list.length; i += 1) {
+            forum_link = forum_link_list[0];
             if (forum_link && forum_link.value.parent__relative_url === project_list[i].id) {
               forum_link_html = document.querySelector(
                 getProjectHtlmElementId(forum_link.value.parent__relative_url,
@@ -495,7 +501,7 @@
               forum_link_html.innerHTML = forum_link.value.title;
               forum_link_html.classList.remove("ui-hidden");
             }
-          }
+          }*/
         });
     })
 
