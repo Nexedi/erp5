@@ -139,7 +139,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Base_getDefaultBackendDataAsJSON()</string> </value>
+            <value> <string>python: here.Base_getDocumentScannerDefaultBackendDataAsJSON()</string> </value>
         </item>
       </dictionary>
     </pickle>
