@@ -18,7 +18,8 @@
       return this.redirect({
         'command': 'display',
         'options': {
-          'page': 'project_front_page'
+          'page': 'project_front_page',
+          'editable': 'true'
         }
       });
     });
