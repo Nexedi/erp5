@@ -397,7 +397,7 @@
           gadget.renderProjectDocumentInfo();
           gadget.renderOutdatedDocumentInfo();
           gadget.renderTestResultInfo(gadget.state.project_list);
-          gadget.renderProjectForumLink(gadget.state.project_list);
+          gadget.renderProjectForumLink();
         });
     })
 
@@ -463,10 +463,9 @@
         });
     })
 
-    .declareJob("renderProjectForumLink", function (project_list) {
+    .declareJob("renderProjectForumLink", function () {
       var gadget = this,
         i,
-        forum_link,
         forum_link_html,
         forum_link_list,
         link_query = getComplexQuery({"portal_type" : "Link",
@@ -475,33 +474,29 @@
                                      "AND");
       return new RSVP.Queue()
         .push(function () {
-          console.log("getting links");
           return gadget.jio_allDocs({
             query: Query.objectToSearchText(link_query),
             limit: QUERY_LIMIT,
-            //select_list: ['title', 'portal_type', 'parent__relative_url', "url_string"],
-            //select_list: ['title', 'portal_type', 'parent__relative_url', 'count(*)'],
-            select_list: ['title', 'url_string'],
+            // TODO FIX not found column url_string when group by parent
+            select_list: ['title', 'portal_type'],//, 'url_string'],
             group_by: ['parent_uid'],
             sort_on: [["modification_date", "descending"]]
           });
         })
         .push(function (result) {
           forum_link_list = result.data.rows;
-          console.log(forum_link_list);
-          /*for (i = 0; i < forum_link_list.length; i += 1) {
-            forum_link = forum_link_list[0];
-            if (forum_link && forum_link.value.parent__relative_url === project_list[i].id) {
-              forum_link_html = document.querySelector(
-                getProjectHtlmElementId(forum_link.value.parent__relative_url,
-                                        FORUM_LINK_TYPE,
-                                        FORUM_LINK_ID_SUFFIX, true)
-              );
-              forum_link_html.href = forum_link.value.url_string;
-              forum_link_html.innerHTML = forum_link.value.title;
+          for (i = 0; i < forum_link_list.length; i += 1) {
+            forum_link_html = document.querySelector(
+              getProjectHtlmElementId(getProjectId(forum_link_list[i].id),
+                                      FORUM_LINK_TYPE,
+                                      FORUM_LINK_ID_SUFFIX, true)
+            );
+            if (forum_link_html) {
+              forum_link_html.href = forum_link_list[i].value.url_string;
+              forum_link_html.innerHTML = forum_link_list[i].value.title;
               forum_link_html.classList.remove("ui-hidden");
             }
-          }*/
+          }
         });
     })
 
