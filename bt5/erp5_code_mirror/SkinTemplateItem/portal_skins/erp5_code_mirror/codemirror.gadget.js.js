@@ -81,6 +81,10 @@
         mode = 'css';
       } else if ((options.portal_type === 'Python Script') ||
                  (options.portal_type === 'Test Component') ||
+                 (options.portal_type === 'Module Component') ||
+                 (options.portal_type === 'Interface Component') ||
+                 (options.portal_type === 'Document Component') ||
+                 (options.portal_type === 'Tool Component') ||
                  (options.portal_type === 'Extension Component')) {
         mode = 'python';
       }
