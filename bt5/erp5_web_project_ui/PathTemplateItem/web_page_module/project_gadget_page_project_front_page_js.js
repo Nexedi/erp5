@@ -19,8 +19,9 @@
     // Where to define/get the limit date? by portal_type or the same for all documents?
     //date ISO string format: "yyyy-mm-ddThh:mm:ss.mmmm"
     //JIO query date format:  "yyyy-mm-dd hh:mm:ss"
-    LIMIT_DATE = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+    LIMIT_DATE = new Date(new Date().setFullYear(new Date().getFullYear() - 1))
       .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),
+    NOW_DATE = new Date().toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),
     //XXX hardcoded portal_types, states and titles dict
     PORTAL_TITLE_DICT = {"Task": "Tasks",
                          "Test Result" : "Test Results",
@@ -401,10 +402,9 @@
     })
 
     .declareJob("renderOtdatedMilestoneInfo", function () {
-      //XXX For testing. REMOVE and use LIMIT_DATE
-      var limit_date = new Date().toISOString()
-        .substring(0, new Date().toISOString().length - 5).replace("T", " ");
-      return renderMilestoneLines(this, limit_date);
+      //XXX For testing. use LIMIT_DATE
+      return renderMilestoneLines(this, NOW_DATE);
+      //return renderMilestoneLines(this, LIMIT_DATE);
     })
 
     .declareJob("renderProjectDocumentInfo", function () {
@@ -412,10 +412,9 @@
     })
 
     .declareJob("renderOutdatedDocumentInfo", function () {
-      //XXX For testing. REMOVE and use LIMIT_DATE
-      var limit_date = new Date().toISOString()
-        .substring(0, new Date().toISOString().length - 5).replace("T", " ");
-      return renderProjectDocumentLines(this, limit_date);
+      //XXX For testing. use LIMIT_DATE
+      return renderProjectDocumentLines(this, NOW_DATE);
+      //return renderProjectDocumentLines(this, LIMIT_DATE);
     })
 
     .declareJob("renderTestResultInfo", function (project_list) {
