@@ -6,32 +6,32 @@
     </tr>
     <tr>
      <td>waitForElementPresent</td>
-     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[text()='Save']</td>
+     <td>//div[@data-gadget-scope='header']//button[text()='Save']</td>
      <td></td>
     </tr>
     <tr>
      <td>assertElementPresent</td>
-     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[text()='Save']</td>
+     <td>//div[@data-gadget-scope='header']//button[text()='Save']</td>
      <td></td>
     </tr>
     <tr>
      <td>waitForElementNotPresent</td>
-     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[text()='Save'][contains(@class, "ui-disabled")]</td>
+     <td>//div[@data-gadget-scope='header']//button[text()='Save'][contains(@class, "ui-disabled")]</td>
      <td></td>
     </tr>
     <tr>
      <td>assertElementNotPresent</td>
-     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[text()='Save'][contains(@class, "ui-disabled")]</td>
+     <td>//div[@data-gadget-scope='header']//button[text()='Save'][contains(@class, "ui-disabled")]</td>
      <td></td>
     </tr>
     <tr>
      <td>assertElementPresent</td>
-     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[text()='Save']</td>
+     <td>//div[@data-gadget-scope='header']//button[text()='Save']</td>
      <td></td>
     </tr>
     <tr>
      <td>click</td>
-     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[text()='Save']</td>
+     <td>//div[@data-gadget-scope='header']//button[text()='Save']</td>
      <td></td>
     </tr>
   </tal:block>
@@ -329,12 +329,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
+      <td>//div[@data-gadget-scope='header']//h1//*[contains(@class, "ui-icon-spinner")]</td>
       <td></td>
     </tr>
     <tr>
       <td>waitForElementNotPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//*[contains(@class, "ui-icon-spinner")]</td>
+      <td>//div[@data-gadget-scope='header']//h1//*[contains(@class, "ui-icon-spinner")]</td>
       <td></td>
     </tr>
     <!-- XXX Sadly, spinner currently is dropped before all DOM modifications are done.
@@ -472,12 +472,12 @@
     </tr>
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//span[contains(@class, "ui-icon-spinner")]</td>
+      <td>//div[@data-gadget-scope='header']//h1//span[contains(@class, "ui-icon-spinner")]</td>
       <td></td>
     </tr>
     <tr>
       <td>waitForElementNotPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//h1//span[contains(@class, "ui-icon-spinner")]</td>
+      <td>//div[@data-gadget-scope='header']//h1//span[contains(@class, "ui-icon-spinner")]</td>
       <td></td>
     </tr>
     <tr>
@@ -734,12 +734,12 @@
     </tr>
     <tr>
      <td>waitForElementPresent</td>
-     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[text()='Filter']</td>
+     <td>//div[@data-gadget-scope='header']//button[text()='Filter']</td>
      <td></td>
     </tr>
     <tr>
      <td>click</td>
-     <td>//div[contains(@data-gadget-url, 'gadget_erp5_header.html')]//button[text()='Filter']</td>
+     <td>//div[@data-gadget-scope='header']//button[text()='Filter']</td>
      <td></td>
     </tr>
     <tr>
