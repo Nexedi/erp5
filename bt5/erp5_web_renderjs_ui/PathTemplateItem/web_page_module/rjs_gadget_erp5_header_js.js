@@ -82,7 +82,7 @@
               })
             ]));
           }
-          return domsugar(null, dom_list);
+          return domsugar('ul', dom_list);
         });
     };
 
@@ -316,7 +316,7 @@
           );
         }
       } else {
-        promise_list.push(gadget.element.querySelector("h1"));
+        promise_list.push(gadget.element.querySelector("h1").firstChild);
       }
 
       // Left button
@@ -426,7 +426,7 @@
 
               // Subheader
               domsugar('div', {class: 'ui-subheader'}, [
-                domsugar('ul', [result_list[3]])
+                result_list[3]
               ])
             ])
           ]);
