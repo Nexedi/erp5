@@ -101,7 +101,7 @@
             return gadget.getSetting('latest_sync_time');
           })
           .push(function (finish_time) {
-            if (finish_time - sync_start_time < 0) {
+/*            if (finish_time - sync_start_time < 0) {
               // sync is running, cannot remove OPML now
               success = false;
               return RSVP.all([
@@ -111,7 +111,7 @@
                   status: 'error'
                 })
               ]);
-            }
+            }*/
             element.setAttribute("disabled", "disabled");
             return gadget.jio_allDocs({
               query: 'portal_type: "opml"',
