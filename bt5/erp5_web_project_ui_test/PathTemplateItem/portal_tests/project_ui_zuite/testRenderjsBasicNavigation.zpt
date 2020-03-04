@@ -103,52 +103,52 @@
 <!-- check project quick view page elements -->
 <tr>
  <td>waitForElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[@id='milestone_link' and @class='first-line-buttons']</td>
+ <td>//a[@id='milestone_link' and @class='first-line-buttons']</td>
  <td></td>
 </tr>
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Milestones' and contains(@href, '#!push_history') and contains(@href, 'n.jio_key=milestone_module')]</td>
+ <td>//a[text()='Milestones' and contains(@href, '#!push_history') and contains(@href, 'n.jio_key=milestone_module')]</td>
  <td></td>
 </tr>
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Support Requests']</td>
+ <td>//a[text()='Support Requests']</td>
  <td></td>
 </tr>
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Documents']</td>
+ <td>//a[text()='Documents']</td>
  <td></td>
 </tr>
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Activities']</td>
+ <td>//a[text()='Activities']</td>
  <td></td>
 </tr>
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Opened Bugs']</td>
+ <td>//a[text()='Opened Bugs']</td>
  <td></td>
 </tr>
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Ongoing Tasks']</td>
+ <td>//a[text()='Ongoing Tasks']</td>
  <td></td>
 </tr>
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Opened Task Reports']</td>
+ <td>//a[text()='Opened Task Reports']</td>
  <td></td>
 </tr>
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Latest Test Result']</td>
+ <td>//a[text()='Latest Test Result']</td>
  <td></td>
 </tr>
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Test Suite']</td>
+ <td>//a[text()='Test Suite']</td>
  <td></td>
 </tr>
 <!-- wait a bit for the editor -->
@@ -159,7 +159,7 @@
 </tr>
 <tr>
  <td>assertElementPresent</td>
- <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_project_info.html']//a[text()='Edit Project Page' and @class='first-line-buttons ui-disabled']</td>
+ <td>//a[text()='Edit Project Page' and @class='first-line-buttons ui-disabled']</td>
  <td></td>
 </tr>
 <tr>
