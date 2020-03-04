@@ -2,8 +2,9 @@ portal = context.getPortalObject()
 from datetime import datetime
 now = datetime.now()
 date_time = now.strftime("%m-%d-%Y-%H-%M-%S")
-test_id = "test-project-" + date_time
-project_reference = 'test-project-home' if home_page else 'test-project'
+test_id = "documented-project-" if create_project_documents else "test-project-"
+test_id += date_time
+project_reference = 'test-project-home' if home_page else 'documented-project' if create_project_documents else 'test-project'
 page_reference = 'test-home-page-' + date_time
 
 module = portal.getDefaultModule('Project')
@@ -23,6 +24,21 @@ if home_page:
                                 publication_section_value = publication_section,
                                 follow_up_value = project)
   home_page.publishAlive()
+
+if create_project_documents:
+  # EMPTY PROJECT
+  module = portal.getDefaultModule('Project')
+  empty_project = module.newContent(id = "empty-project-" + date_time,
+                                    portal_type = 'Project',
+                                    reference = "empty-project")
+  empty_project.validate()
+
+  # DRAFT PROJECT
+  module = portal.getDefaultModule('Project')
+  empty_project = module.newContent(id = "draf-project-" + date_time,
+                                    portal_type = 'Project',
+                                    reference = "draf-project")
+
 
 print "Project Created"
 return printed

@@ -1,0 +1,184 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_skins/erp5_web_project_test/ERP5Site_createTestStartedProject?create_project_documents=true</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Project Created</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_skins/erp5_web_project_test/ERP5Site_createTestStartedProject</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Project Created</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/project_management/</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_page_project_front_page.html']</td>
+  <td></td>
+</tr>
+<!-- Check project list elements -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='front-project-list']</td>
+  <td></td>
+</tr>
+<!-- Check empty project --> id="project_module-empty-project-03-04-2020-13-20-06-Test-Result-status"
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-title']//a[text()='empty-project']</td>
+    <td></td>
+  </tr>
+  <!-- Check empty Task line -->
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='status none margined' and contains(@id, 'empty-project') and contains(@id, 'Task') and contains(@id, '-status')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='name margined' and contains(@id, 'empty-project') and text()='Tasks']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-hidden' and contains(@id, 'empty-project') and contains(@id, 'Task') and contains(@id, '-number')]</td>
+    <td></td>
+  </tr>
+  <!-- Check empty Bug line -->
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='status none margined' and contains(@id, 'empty-project') and contains(@id, 'Bug') and contains(@id, '-status')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='name margined' and contains(@id, 'empty-project') and text()='Bugs']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-hidden' and contains(@id, 'empty-project') and contains(@id, 'Bug') and contains(@id, '-number')]</td>
+    <td></td>
+  </tr>
+  <!-- Check empty Test Result line -->
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='status none margined' and contains(@id, 'empty-project') and contains(@id, 'Test-Result') and contains(@id, '-status')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='name margined' and contains(@id, 'empty-project') and text()='Test Results']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-hidden' and contains(@id, 'empty-project') and contains(@id, 'Test-Result') and contains(@id, '-number')]</td>
+    <td></td>
+  </tr>
+  <!-- Check empty Milestone line -->
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='status none margined' and contains(@id, 'empty-project') and contains(@id, 'Milestone') and contains(@id, '-status')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='name margined' and contains(@id, 'empty-project') and text()='Milestones']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-hidden' and contains(@id, 'empty-project') and contains(@id, 'Milestone') and contains(@id, '-number')]</td>
+    <td></td>
+  </tr>
+  <!-- Check empty Task Report line -->
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='status none margined' and contains(@id, 'empty-project') and contains(@id, 'Task-Report') and contains(@id, '-status')]</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='name margined' and contains(@id, 'empty-project') and text()='Task Reports']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-hidden' and contains(@id, 'empty-project') and contains(@id, 'Task-Report') and contains(@id, '-number')]</td>
+    <td></td>
+  </tr>
+  
+  
+  
+  
+  
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='front-project-list']//div[@class='project-line']//span[text()='0' and @class='margined']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='front-project-list']//div[@class='project-line']//span[text()='0' and contains(@id, 'outdated')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='front-project-list']//div[@class='project-line']//span[text()='(']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@class='front-project-list']//div[@class='project-line']//span[text()=')']</td>
+  <td></td>
+</tr>
+  
+  <!--
+   <td>//div[@data-gadget-url='${base_url}/web_site_module/project_management/gadget_erp5_project_panel.html']//a[text()='Projects' and contains(@href, '#!display_stored_state') and contains(@href, 'n.jio_key=project_module')]</td>
+
+@id='milestone_link
+  
+  <div class="project-line"><span class="status none margined" id="project_module-test-project-02-27-2020-15-02-52-Task-status"></span><span class="name margined">Tasks</span><span class="margined" id="project_module-test-project-02-27-2020-15-02-52-Task-total">0</span><span>(</span><span id="project_module-test-project-02-27-2020-15-02-52-Task-outdated">0</span><span>)</span></div>
+  -->
