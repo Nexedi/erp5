@@ -99,7 +99,7 @@
                          set_value string:2">
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOfficeCell/macros/current_cell" />
   </tal:block>
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/save"/>
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save"/>
 
   <!-- XXX Romain -->
   <!--tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/open_document_with_title"/>

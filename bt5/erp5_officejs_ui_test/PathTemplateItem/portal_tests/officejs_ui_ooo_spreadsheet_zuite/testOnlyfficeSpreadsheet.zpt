@@ -56,7 +56,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Save']</td>
+  <td>//button[text()='Save']</td>
   <td></td>
 </tr>
 <tr>
@@ -115,7 +115,7 @@
   <td>${description}</td>
 </tr>
  <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/wait_for_load_spreadsheet"/>
- <tal:block metal:use-macro="here/Zuite_CommonTemplateForOnlyOffice/macros/save"/>
+ <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save"/>
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Document']</td>
@@ -124,7 +124,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Actions']</td>
+  <td>//a[text()='Actions']</td>
   <td></td>
 </tr>
 <!-- check panel actions -->
@@ -138,21 +138,16 @@
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_ojs_panel.html')]//dd//a[text()='Upload' and contains(@href, '#!change') and contains(@href, 'n.page=handle_action')]</td>
  <td></td>
 </tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Actions']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Upload']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Upload']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Upload'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//input[@value='Upload']</td>
@@ -197,7 +192,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Actions']</td>
+  <td>//a[text()='Actions']</td>
   <td></td>
 </tr>
 <!-- check panel actions -->
@@ -211,23 +206,18 @@
  <td>//div[contains(@data-gadget-url, 'gadget_erp5_ojs_panel.html')]//dd//a[text()='Download' and contains(@href, '#!change') and contains(@href, 'n.page=handle_action')]</td>
  <td></td>
 </tr>
+<tal:block tal:define="click_configuration python: {'text': 'Actions'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'Download'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Actions']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Download']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Download']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//input[@value='Download']</td>
   <td></td>
 </tr>
