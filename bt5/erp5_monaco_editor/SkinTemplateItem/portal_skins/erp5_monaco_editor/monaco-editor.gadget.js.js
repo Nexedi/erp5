@@ -88,7 +88,16 @@
         model_language = 'javascript';
       } else if (options.portal_type === 'Web Style') {
         model_language = 'css';
-      } else if (options.portal_type === 'Python Script') {
+      } else if (
+        options.portal_type === 'Python Script' ||
+        options.portal_type === 'Test Component' ||
+        options.portal_type === 'Extension Component' ||
+        options.portal_type === 'Document Component' ||
+        options.portal_type === 'Tool Component' ||
+        options.portal_type === 'Interface Component' ||
+        options.portal_type === 'Mixin Component' ||
+        options.portal_type === 'Module Component'
+      ) {
         model_language = 'python';
       }
       state_dict.model_language = model_language;
