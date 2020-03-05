@@ -1369,7 +1369,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       method_list_by_connection_id = defaultdict(list)
       for method_id in catalog.sql_clear_catalog:
         method = catalog[method_id]
-        method_list_by_connection_id[method.connection_id].append(method)
+        if hasattr(aq_base(method), 'connection_id'):
+          method_list_by_connection_id[method.connection_id].append(method)
 
       # Because we cannot select on deferred connections, _upgradeSchema
       # cannot be used on SQL methods using a deferred connection.

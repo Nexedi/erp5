@@ -4137,3 +4137,13 @@ class CatalogToolUpgradeSchemaTestCase(ERP5TypeTestCase):
     with self.assertRaisesRegexp(ProgrammingError,
                                  r"Table '.*\.table1' doesn't exist"):
       self.query_connection_2("SELECT b from table1")
+
+  def test_upgradeSchema_python_script(self):
+    method = self.catalog.newContent(
+        portal_type="Python Script",
+        id=self.id(),
+        body="print('for example, create initial data')")
+    self.catalog.setSqlClearCatalogList([method.getId()])
+    self.commit()
+
+    self.catalog_tool.upgradeSchema(sql_catalog_id=self.catalog.getId())
