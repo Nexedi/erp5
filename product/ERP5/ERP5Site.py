@@ -2350,6 +2350,9 @@ class ERP5Generator(PortalGenerator):
 
     self.setupTools(p, **kw)
 
+    # subscribe portal_alarms
+    p.portal_alarms.subscribe()
+
     if not p.hasObject('MailHost'):
       self.setupMailHost(p)
 
