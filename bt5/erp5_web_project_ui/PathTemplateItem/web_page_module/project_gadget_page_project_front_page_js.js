@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt*/
-(function (window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt) {
+/*global window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO*/
+(function (window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO) {
   "use strict";
 
   var STATUS_OK = "green",
@@ -421,14 +421,32 @@
       return renderProjectDocumentLines(this, LIMIT_DATE);
     })
 
-    .declareJob("renderTestResultInfo", function (project_list) {
-      var gadget = this,
-        i,
-        test_result,
-        query_list = [],
-        test_result_query,
-        test_state_list = ["failed", "stopped", "public_stopped"];
+    .declareJob("renderTestResultInfo", function () {
       return new RSVP.Queue()
+        .push(function () {
+          return jIO.util.ajax({
+            type: "GET",
+            //TODO fix "erp5" part of the url
+            url: document.location.origin + "/erp5/ERP5Site_getProjectTestStatusData"
+          });
+        })
+        .push(function (result) {
+          var project_id,
+            project_test_status_dict;
+          project_test_status_dict = JSON.parse(result.target.response);
+          for (project_id in project_test_status_dict) {
+            if (project_test_status_dict.hasOwnProperty(project_id)) {
+              renderProjectLine(project_id,
+                                "Test Result",
+                                parseInt(project_test_status_dict[project_id].all_tests, RADIX),
+                                parseInt(project_test_status_dict[project_id].failures, RADIX));
+            }
+          }
+        });
+        //alternative using jio queries ends up in a query per project, inefficient
+        //one shot query isn't possible because getting the most recent element AFTER group
+        //involves not supported clauses like MAX, HAVING or nested queries
+        /*var test_state_list = ["failed", "stopped", "public_stopped"];
         .push(function () {
           var promise_list = [];
           for (i = 0; i < project_list.length; i += 1) {
@@ -460,7 +478,7 @@
                                 parseInt(test_result.value.failures, RADIX));
             }
           }
-        });
+        });*/
     })
 
     .declareJob("renderProjectForumLink", function () {
@@ -508,4 +526,4 @@
       return true;
     });
 
-}(window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt));
+}(window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO));
