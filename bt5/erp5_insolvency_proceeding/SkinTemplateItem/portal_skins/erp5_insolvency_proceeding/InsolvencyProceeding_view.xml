@@ -73,7 +73,11 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_start_date</string>
+                        <string>listbox_stop_date</string>
+                        <string>listbox_total_price</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -85,8 +89,6 @@
                         <string>my_resource</string>
                         <string>my_destination_section_title</string>
                         <string>my_source_section_title</string>
-                        <string>listbox_start_date</string>
-                        <string>listbox_stop_date</string>
                       </list>
                     </value>
                 </item>
