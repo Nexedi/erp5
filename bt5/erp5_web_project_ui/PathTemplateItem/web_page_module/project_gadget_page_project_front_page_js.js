@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO*/
-(function (window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO) {
+/*global window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO, URL */
+(function (window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO, URL) {
   "use strict";
 
   var STATUS_OK = "green",
@@ -426,8 +426,7 @@
         .push(function () {
           return jIO.util.ajax({
             type: "GET",
-            //TODO fix "erp5" part of the url
-            url: document.location.origin + "/erp5/ERP5Site_getProjectTestStatusData"
+            url: new URL('./ERP5Site_getProjectTestStatusData', window.location.href)
           });
         })
         .push(function (result) {
@@ -526,4 +525,4 @@
       return true;
     });
 
-}(window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO));
+}(window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO, URL));
