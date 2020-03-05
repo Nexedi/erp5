@@ -7,6 +7,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>acquire_local_roles</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
             <key> <string>content_icon</string> </key>
             <value>
               <none/>
