@@ -1,10 +1,12 @@
-/*global window, rJS, RSVP, domsugar, navigator */
+/*global window, rJS, RSVP, domsugar, navigator, promiseEventListener */
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
-(function (window, rJS, RSVP, domsugar, navigator) {
+(function (window, rJS, RSVP, domsugar, navigator, promiseEventListener) {
   "use strict";
 
   rJS(window)
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
+
     .declareAcquiredMethod("updateHeader", "updateHeader")
 
     .declareMethod('render', function () {
@@ -12,13 +14,28 @@
       // Wait a bit a allow the header loader to be displayed
       return new RSVP.Queue(RSVP.delay(200))
         .push(function () {
+          return gadget.getUrlForList([
+            // Home page
+            {command: 'display'},
+            // Soft reload the gadget
+            {command: 'change'}
+          ]);
+        })
+        .push(function (url_list) {
+          gadget.checkServiceWorkerStatus();
           return gadget.updateHeader({
             page_title: 'Test Service Worker',
-            page_icon: 'puzzle-piece'
+            front_url: url_list[0],
+            tab_url: url_list[1]
           });
         });
     })
-    .declareService(function () {
+
+    .declareMethod("triggerSubmit", function () {
+      return;
+    })
+
+    .declareJob("checkServiceWorkerStatus", function () {
       var gadget = this,
         has_service_worker = (navigator.serviceWorker.controller !== null);
 
@@ -26,17 +43,21 @@
         text: "Has SW: " + has_service_worker.toString()
       });
       return new RSVP.Queue(navigator.serviceWorker.ready)
-        .push(function (worker) {
+        .push(function (worker_container) {
           domsugar(gadget.element, {
-            text: "SW: " + worker.toString()
+            text: "Has SW: true"
           });
-          return gadget.getUrlFor({command: 'change'});
+          return promiseEventListener(worker_container.active, 'statechange');
         })
-        .push(function (url) {
-          domsugar(gadget.element, [
-            domsugar('a', {href: url, text: "Check navigation"})
-          ]);
+        .push(function () {
+          // Wait a bit until the message is propagated
+          return RSVP.delay(2000);
+        })
+        .push(function () {
+          domsugar(gadget.element, {
+            text: "New SW ready"
+          });
         });
     });
 
-}(window, rJS, RSVP, domsugar, navigator));
+}(window, rJS, RSVP, domsugar, navigator, promiseEventListener));
