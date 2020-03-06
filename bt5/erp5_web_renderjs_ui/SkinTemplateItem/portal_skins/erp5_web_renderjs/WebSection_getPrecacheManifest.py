@@ -64,7 +64,7 @@ url_list = [
   'gadget_erp5_form.html',
   'gadget_erp5_form.js',
   'gadget_erp5_header.html',
-  # 'gadget_erp5_header.js',
+  'gadget_erp5_header.js',
   'gadget_erp5_jio.html',
   'gadget_erp5_jio.js',
   'gadget_erp5_label_field.html',
