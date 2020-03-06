@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, domsugar, navigator, promiseEventListener */
+/*global window, rJS, RSVP, domsugar, navigator, promiseEventListener, jIO */
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
-(function (window, rJS, RSVP, domsugar, navigator, promiseEventListener) {
+(function (window, rJS, RSVP, domsugar, navigator, promiseEventListener, jIO) {
   "use strict";
 
   rJS(window)
@@ -26,13 +26,23 @@
           return gadget.updateHeader({
             page_title: 'Test Service Worker',
             front_url: url_list[0],
-            tab_url: url_list[1]
+            tab_url: url_list[1],
+            submit_action: true
           });
         });
     })
 
     .declareMethod("triggerSubmit", function () {
-      return;
+      var gadget = this;
+      return new RSVP.Queue(jIO.util.ajax({
+        type: 'POST',
+        url: './Base_changeModificationDateForTest'
+      }))
+        .push(function () {
+          domsugar(gadget.element, {
+            text: "SW changed on server"
+          });
+        });
     })
 
     .declareJob("checkServiceWorkerStatus", function () {
@@ -60,4 +70,4 @@
         });
     });
 
-}(window, rJS, RSVP, domsugar, navigator, promiseEventListener));
+}(window, rJS, RSVP, domsugar, navigator, promiseEventListener, jIO));

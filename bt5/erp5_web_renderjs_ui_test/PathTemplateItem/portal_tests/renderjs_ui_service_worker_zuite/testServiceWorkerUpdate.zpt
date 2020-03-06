@@ -31,22 +31,26 @@
 </tr>
 
 <tr>
-  <td>openAndWait</td>
-  <td>${base_url}/web_site_module/renderjs_runner/Base_changeModificationDateForTest</td>
+  <td>click</td>
+  <td>//button[text()='Proceed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>SW changed on server</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>OK</td>
+  <td>SW changed on server</td>
   <td></td>
 </tr>
 
-<tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/renderjs_runner/#/?page=test_service_worker</td>
-  <td></td>
-</tr>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+<!-- Navigating ERP5JS should trigger service worker update -->
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>waitForTextPresent</td>
@@ -56,6 +60,13 @@
 <tr>
   <td>assertTextPresent</td>
   <td>Has SW: true</td>
+  <td></td>
+</tr>
+
+<!-- Update is not triggered immediately -->
+<tr>
+  <td>pause</td>
+  <td>30000</td>
   <td></td>
 </tr>
 
@@ -70,6 +81,7 @@
   <td></td>
 </tr>
 
+<!-- ERP5JS should reload itself while user is browsing it... -->
 <tal:block tal:define="click_configuration python: {'text': 'Views'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
 </tal:block>
@@ -81,6 +93,7 @@
   <td></td>
 </tr>
 
+<!-- ...But only once -->
 <tal:block tal:define="click_configuration python: {'text': 'Views'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
 </tal:block>
