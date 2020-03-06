@@ -309,6 +309,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_precache_manifest_script_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -382,6 +392,10 @@
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
             <value> <string>gadget_interface_validator_panel.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_precache_manifest_script_list</string> </key>
+            <value> <string>WebSection_getInterfaceValidatorPrecacheManifest</string> </value>
         </item>
         <item>
             <key> <string>configuration_precache_manifest_url_list</string> </key>
@@ -674,7 +688,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1582884975.52</float>
+                              <float>1583500783.67</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
