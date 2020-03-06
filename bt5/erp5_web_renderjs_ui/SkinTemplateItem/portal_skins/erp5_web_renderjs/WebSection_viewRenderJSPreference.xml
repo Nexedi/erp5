@@ -106,7 +106,7 @@
                         <string>my_configuration_webapp_manifest_url</string>
                         <string>my_configuration_service_worker_url</string>
                         <string>my_modification_date</string>
-                        <string>my_configuration_precache_manifest_url_list</string>
+                        <string>my_configuration_precache_manifest_script_list</string>
                       </list>
                     </value>
                 </item>

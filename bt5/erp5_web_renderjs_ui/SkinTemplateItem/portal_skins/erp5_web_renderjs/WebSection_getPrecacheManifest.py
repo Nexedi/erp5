@@ -64,7 +64,7 @@ url_list = [
   'gadget_erp5_form.html',
   'gadget_erp5_form.js',
   'gadget_erp5_header.html',
-  'gadget_erp5_header.js',
+  # 'gadget_erp5_header.js',
   'gadget_erp5_jio.html',
   'gadget_erp5_jio.js',
   'gadget_erp5_label_field.html',
@@ -173,7 +173,7 @@ url_list.extend([
 ])
 
 # Add all extra dependencies
-precache_manifest_url_list = web_section.getLayoutProperty("configuration_precache_manifest_url_list", default='').splitlines()
+precache_manifest_url_list = web_section.getLayoutProperty("configuration_precache_manifest_script_list", default='').splitlines()
 for precache_manifest_script_id in precache_manifest_url_list:
   url_list.extend(web_section.restrictedTraverse(precache_manifest_script_id)())
 
