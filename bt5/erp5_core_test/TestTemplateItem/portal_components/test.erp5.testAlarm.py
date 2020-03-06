@@ -81,6 +81,8 @@ class TestAlarm(ERP5TypeTestCase):
     # Test if portal_alarms was created
     self.assertNotEquals(self.portal._getOb('portal_alarms', None), None)
     self.assertNotEquals(self.portal.portal_types.getTypeInfo('Alarm Tool'), None)
+    # ... and that it should be subscribed by default
+    self.assertTrue(self.portal.portal_alarms.isSubscribed())
 
   def test_02_Initialization(self):
     """
