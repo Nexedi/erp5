@@ -282,3 +282,8 @@
     <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'failed-project') and contains(@id, 'Test-Result') and contains(@id, '-outdated') and text()='10']</td>
     <td></td>
   </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='status none margined red' and contains(@id, 'failed-project') and contains(@id, 'Test-Result') and contains(@id, '-status')]</td>
+    <td></td>
+  </tr>
