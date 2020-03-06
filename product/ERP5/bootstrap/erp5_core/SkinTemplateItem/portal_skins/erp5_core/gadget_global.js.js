@@ -101,7 +101,7 @@
         try {
           result = callback(evt);
         } catch (e) {
-          return reject(e);
+          result = reject(e);
         }
 
         callback_promise = new RSVP.Queue(result).push(undefined, reject);
