@@ -182,4 +182,4 @@ if REQUEST is not None:
   REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
   return json.dumps(dict.fromkeys(url_list), indent=2)
 
-return url_list
+return list(set(url_list))
