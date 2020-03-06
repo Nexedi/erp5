@@ -1,11 +1,16 @@
-portal = context.getPortalObject()
+import time
 from datetime import datetime
+portal = context.getPortalObject()
 now = datetime.now()
 date_time = now.strftime("%m-%d-%Y-%H-%M-%S")
+old_date_time = (DateTime()-366).strftime("%Y/%m/%d")
 test_id = "documented-project-" if create_project_documents else "test-project-"
 test_id += date_time
 project_reference = 'test-project-home' if home_page else 'documented-project' if create_project_documents else 'test-project'
 page_reference = 'test-home-page-' + date_time
+failed_project = "failed-project"
+empty_project = "empty-project"
+draft_project = "draft-project"
 
 module = portal.getDefaultModule('Project')
 project = module.newContent(id = test_id,
@@ -186,24 +191,42 @@ if create_project_documents:
                                             reference = "test-result-line")
   test_result_line.start()
   test_result_line.stop(test_count=20)
-  import time
   time.sleep(5)
   test_result.start()
   test_result.stop()
-  #tr_line.stop(error_count=2, failure_count=2)#, command=test_details, stdout=error_message, stderr=error_message)
+
+  # FAILED PROJECT
+  module = portal.getDefaultModule('Project')
+  failed_project = module.newContent(id = failed_project + "-" + date_time,
+                                     portal_type = 'Project',
+                                     reference = failed_project)
+  failed_project.validate()
+  module = context.portal_catalog.getDefaultModule('Test Result')
+  test_result = module.newContent(id = test_id + "-failed",
+                                  portal_type = 'Test Result',
+                                  source_project_value = failed_project)
+  test_result_line = test_result.newContent(id = "1",
+                                            portal_type = 'Test Result Line',
+                                            reference = "test-result-line")
+  test_result_line.start()
+  test_result_line.stop(test_count=15, error_count=10, failure_count=10)
+  import time
+  time.sleep(5)
+  test_result.start()
+  test_result.fail()
 
   # EMPTY PROJECT
   module = portal.getDefaultModule('Project')
-  empty_project = module.newContent(id = "empty-project-" + date_time,
+  empty_project = module.newContent(id = empty_project + "-" + date_time,
                                     portal_type = 'Project',
-                                    reference = "empty-project")
+                                    reference = empty_project)
   empty_project.validate()
 
   # DRAFT PROJECT
   module = portal.getDefaultModule('Project')
-  empty_project = module.newContent(id = "draf-project-" + date_time,
+  empty_project = module.newContent(id = draft_project + "-" + date_time,
                                     portal_type = 'Project',
-                                    reference = "draf-project")
+                                    reference = draft_project)
 
 print "Project Created"
 return printed

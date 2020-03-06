@@ -266,3 +266,19 @@
     <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'documented-project') and contains(@id, 'Task-Report') and contains(@id, '-outdated') and text()='0']</td>
     <td></td>
   </tr>
+<!-- Check failed project -->
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-title']//a[text()='failed-project']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'failed-project') and contains(@id, 'Test-Result') and contains(@id, '-total') and text()='15']</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'failed-project') and contains(@id, 'Test-Result') and contains(@id, '-outdated') and text()='10']</td>
+    <td></td>
+  </tr>
