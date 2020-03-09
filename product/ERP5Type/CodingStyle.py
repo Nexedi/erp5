@@ -130,6 +130,11 @@ ignored_skin_id_set = {
   'connectorERP5',
   'connectorPlone.py',
   'resolveUid',
+  'IndividualVariation_init',
+  'QuantityUnitConversion_getQuantityUnitList',
+  'ResourceModule_getConvertedInventoryList',
+  'ResourceModule_getConvertedInventoryStat',
+  'ResourceModule_getSelection',
 }
 
 # Generic method to check consistency of a skin item
