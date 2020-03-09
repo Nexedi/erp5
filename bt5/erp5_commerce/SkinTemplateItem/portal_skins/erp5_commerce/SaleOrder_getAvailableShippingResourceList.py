@@ -9,4 +9,6 @@ shipping_product_line_category_uid = portal.portal_categories.product_line.shipp
 
 return [r.getObject() for r in portal.portal_catalog(
                  product_line_uid=shipping_product_line_category_uid,
-                 portal_type=portal.getPortalResourceTypeList())]
+                 portal_type=portal.getPortalResourceTypeList(),
+                 validation_state=("validated", "published")
+)]
