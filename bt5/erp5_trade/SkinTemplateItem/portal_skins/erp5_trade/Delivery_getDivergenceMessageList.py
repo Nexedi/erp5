@@ -3,16 +3,12 @@ divergence_messages_list =  context.getDivergenceList()
 from Products.ERP5Type.Document import newTempBase
 from string import zfill
 
-global portal_object, new_id, l
 
 portal_object = context.getPortalObject()
-new_id = 0
 l = []
 
 # function to create a new fast input line
-def createInputLine(d_message):
-  global portal_object, new_id, l
-  new_id += 1
+def createInputLine(d_message, new_id):
   int_len = 3
   
   o = newTempBase( portal_object
@@ -28,8 +24,8 @@ def createInputLine(d_message):
   l.append(o)
 
 # generate all lines for the fast input form
-for d_message in divergence_messages_list:
-  createInputLine(d_message)
+for i, d_message in enumerate(divergence_messages_list):
+  createInputLine(d_message, i)
   
 # return the list of fast input lines
 
