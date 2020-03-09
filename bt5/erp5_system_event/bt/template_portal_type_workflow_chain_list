@@ -1,5 +1,9 @@
 Authentication Event | edit_workflow
 Authentication Event | system_event_workflow
+External Payment Event | edit_workflow
+External Payment Event | validation_workflow
+External Payment Message | edit_workflow
+External Payment Message | external_payment_message_workflow
 HTTP Exchange | edit_workflow
 HTTP Exchange | system_event_workflow
 Password Event | edit_workflow
