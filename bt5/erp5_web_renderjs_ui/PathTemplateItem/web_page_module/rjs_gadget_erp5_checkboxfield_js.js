@@ -13,8 +13,8 @@
       var field_json = options.field_json || {},
         state_dict,
         value;
-      if (field_json.default === 'on') {
-        value = 1;
+      if (typeof field_json.default === "string") {
+        value = !(field_json.default === '');
       } else {
         value = field_json.default;
       }
