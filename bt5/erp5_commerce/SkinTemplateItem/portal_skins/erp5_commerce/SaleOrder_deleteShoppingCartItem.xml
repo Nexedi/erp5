@@ -186,7 +186,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>field_my_order_line_id = None</string> </value>
+            <value> <string>field_my_order_line_id = None,form_id=\'SaleOrder_viewAsWeb\'</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
