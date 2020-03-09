@@ -11,5 +11,5 @@ if field_my_order_line_id is not None:
 else:
   portal_status_message = "Please select an item."
 
-context.Base_redirect('SaleOrder_viewAsWeb', \
+context.Base_redirect(form_id, \
                       keep_items={'portal_status_message': translateString(portal_status_message, mapping={})})
