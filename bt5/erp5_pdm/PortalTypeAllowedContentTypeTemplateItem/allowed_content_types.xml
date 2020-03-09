@@ -35,6 +35,9 @@
   <item>Sale Supply Line</item>
   <item>Supply Line</item>
  </portal_type>
+ <portal_type id="Product Individual Variation">
+  <item>Embedded File</item>
+ </portal_type>
  <portal_type id="Product Module">
   <item>Product</item>
  </portal_type>
