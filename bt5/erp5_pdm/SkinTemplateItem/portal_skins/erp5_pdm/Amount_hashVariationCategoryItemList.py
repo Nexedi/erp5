@@ -1,11 +1,12 @@
-# Remove empty items
-item_list = filter(lambda x: x not in [('',''), ['','']], 
-                   item_list)
-
+if default_sub_field_property_dict is None:
+  default_sub_field_property_dict = {}
 sub_field_dict = {}
 split_depth = 1
 
 for item in item_list:
+  # Remove empty items
+  if item in (('', ''), ['', '']):
+    continue
   # Get value of the item
   item_value = item[int(not is_right_display)]
   

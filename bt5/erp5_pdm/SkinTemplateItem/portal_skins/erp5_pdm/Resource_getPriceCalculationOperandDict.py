@@ -1,5 +1,3 @@
-from math import log
-
 result = context.getPriceParameterDict(context=movement, **kw)
 
 # Calculate
