@@ -454,7 +454,7 @@ class BusinessProcess(Path, XMLObject):
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
     """
-    return filter(lambda x:self.isTradeStateCompleted(explanation, x), self.getTradeStateList())
+    return [x for x in self.getTradeStateList() if self.isTradeStateCompleted(explanation, x)]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPartiallyCompletedTradeStateList')
   def getPartiallyCompletedTradeStateList(self, explanation):
@@ -464,7 +464,7 @@ class BusinessProcess(Path, XMLObject):
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
     """
-    return filter(lambda x:self.isTradeStatePartiallyCompleted(explanation, x), self.getTradeStateList())
+    return [x for x in self.getTradeStateList() if self.isTradeStatePartiallyCompleted(explanation, x)]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getLatestCompletedTradeStateList')
   def getLatestCompletedTradeStateList(self, explanation):
@@ -548,7 +548,7 @@ class BusinessProcess(Path, XMLObject):
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
     """
-    return filter(lambda x:self.isTradePhaseCompleted(explanation, x), self.getTradePhaseList())
+    return [x for x in self.getTradePhaseList() if self.isTradePhaseCompleted(explanation, x)]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPartiallyCompletedTradePhaseList')
   def getPartiallyCompletedTradePhaseList(self, explanation):
@@ -558,7 +558,7 @@ class BusinessProcess(Path, XMLObject):
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
     """
-    return filter(lambda x:self.isTradePhasePartiallyCompleted(explanation, x), self.getTradePhaseList())
+    return [x for x in self.getTradePhaseList() if self.isTradePhasePartiallyCompleted(explanation, x)]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isTradePhaseCompleted')
   def isTradePhaseCompleted(self, explanation, trade_phase):
@@ -694,7 +694,7 @@ class BusinessProcess(Path, XMLObject):
       kw = self._getPropertyAndCategoryDict(explanation, amount, trade_model_path, delay_mode=delay_mode)
       trade_phase = filter_trade_phase(trade_model_path.getTradePhaseList())
       try:
-        kw['trade_phase'], = trade_phase
+        kw['trade_phase'], = trade_phase # pylint: disable=unpacking-non-sequence
       except ValueError:
         pass
       kw.update(update_property_dict)

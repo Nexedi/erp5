@@ -26,7 +26,6 @@
 ##############################################################################
 
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
-from zLOG import LOG
 
 class DuplicateInventoryConstraint(ConstraintMixin):
   """

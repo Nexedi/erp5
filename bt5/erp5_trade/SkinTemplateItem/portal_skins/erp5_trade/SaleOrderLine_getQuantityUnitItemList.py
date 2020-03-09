@@ -5,15 +5,6 @@ entered on the fast input
 request = context.REQUEST
 portal = context.getPortalObject()
 
-base_category = portal.portal_categories.quantity_unit
-list_method_id = portal.portal_preferences.\
-    getPreferredCategoryChildItemListMethodId(
-                                  'getCategoryChildCompactLogicalPathItemList')
-
-method = getattr(base_category, list_method_id)
-item_list = method(base=0, local_sort_id=('int_index', 'translated_title'),
-                   checked_permission='View')
-
 result_item_list = [('', '')]
 
 resource_value = context.getResourceValue()
@@ -55,9 +46,9 @@ if resource_value is None:
       resource_value = resource_list[0]
 
 if resource_value is not None:
- quantity_unit_list = [(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0))
+  quantity_unit_list = [(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0))
                        for x in resource_value.getQuantityUnitValueList()]
- # return the first quantity_unit item of resource
- result_item_list.extend(quantity_unit_list)
+  # return the first quantity_unit item of resource
+  result_item_list.extend(quantity_unit_list)
 
 return result_item_list
