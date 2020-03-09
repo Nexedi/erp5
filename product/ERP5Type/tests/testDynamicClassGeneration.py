@@ -2610,6 +2610,7 @@ class DifferentFromReference(Person):
     from types import ModuleType
     interface_module = ModuleType('ITestPortalType')
     interface_module.ITestPortalType = ITestPortalType
+    import sys
     sys.modules['ITestPortalType'] = interface_module
 
     self.failIfModuleImportable('TestPortalType')
@@ -2742,6 +2743,7 @@ class TestWithImport(TestImported):
     from types import ModuleType
     interface_module = ModuleType('ITestGC')
     interface_module.ITestGC = ITestGC
+    import sys
     sys.modules['ITestGC'] = interface_module
 
     self.failIfModuleImportable('TestGC')
@@ -2765,8 +2767,6 @@ class TestGC(XMLObject):
     import gc
     initial_gc_debug_flags = gc.get_debug()
     initial_stderr = sys.stderr
-    from cStringIO import StringIO
-    stderr = StringIO()
     try:
       gc.disable()
 
@@ -2782,6 +2782,8 @@ class TestGC(XMLObject):
       gc.collect()
       self.assertEqual(gc.garbage, [])
 
+      import sys
+      from cStringIO import StringIO
       import erp5.component
       gc.set_debug(
         gc.DEBUG_STATS |
@@ -2789,6 +2791,7 @@ class TestGC(XMLObject):
         gc.DEBUG_COLLECTABLE |
         gc.DEBUG_OBJECTS |
         gc.DEBUG_INSTANCES)
+      stderr = StringIO()
       sys.stderr = stderr
       # Still not garbage collectable as RefManager still keeps a reference
       erp5.component.ref_manager.clear()
