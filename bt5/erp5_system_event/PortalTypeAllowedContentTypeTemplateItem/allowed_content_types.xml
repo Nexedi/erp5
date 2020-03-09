@@ -1,6 +1,10 @@
 <allowed_content_type_list>
+ <portal_type id="External Payment Event">
+  <item>External Payment Message</item>
+ </portal_type>
  <portal_type id="System Event Module">
   <item>Authentication Event</item>
+  <item>External Payment Event</item>
   <item>HTTP Exchange</item>
   <item>Password Event</item>
  </portal_type>
