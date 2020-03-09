@@ -1,4 +1,3 @@
-from Products.ERP5Type.Cache import CachingMethod
 portal = context.getPortalObject()
 
 if context.getPortalType() in portal.getPortalSaleTypeList():

@@ -178,9 +178,17 @@ class TradeModelPath(Path):
         result[base_category] = category_url_list
     return result
 
-  def _filterCategoryList(self, category_list, category, spec=(),
-                          filter=None, portal_type=(), base=0,
-                          keep_default=1, checked_permission=None):
+  def _filterCategoryList(
+      self,
+      category_list,
+      category,
+      spec=(),
+      filter=None, # pylint: disable=redefined-builtin
+      portal_type=(),
+      base=0,
+      keep_default=1,
+      checked_permission=None,
+  ):
     """
       XXX - implementation missing
       TBD - look at CategoryTool._buildFilter for inspiration

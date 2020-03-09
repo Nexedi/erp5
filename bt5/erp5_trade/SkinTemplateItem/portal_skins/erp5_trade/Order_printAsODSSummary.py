@@ -1,3 +1,6 @@
+#  this API uses format= as argument
+# pylint: disable=redefined-builtin
+
 # We wants to get data in order to do a nice summary of items inside the order
 # This report will mainly usefull when the same resource is ordered on many
 # different lines
@@ -14,14 +17,11 @@ error_kw = {}
 default_quantity_unit = None
 default_quantity_unit_title = ''
 resource_dict = {}
-summary_quantity_dict = {}
 object_list = []
 untranslatable_column_list = [] # We should not translate some columns
 full_total_price = 0
 worker_column_list = []
 source_trade_dict = {}
-
-context_relative_url = context.getRelativeUrl()
 
 def sortMovement(a, b):
   return cmp(a.getRelativeUrl(), b.getRelativeUrl())

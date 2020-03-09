@@ -4,7 +4,6 @@
   which were already created so that they are not duplicated.
 """
 from Products.ERP5Type.Message import translateString
-from Products.ERP5Type.Log import log
 portal = context.getPortalObject()
 
 # Retrieve line and cell portal type
@@ -21,7 +20,6 @@ for line in listbox:
   # Only create line if user has selected a resource
   if 'listbox_key' in line and (line.get('resource_relative_url', None) not in ("", None) \
                                       or line.get('source', None) not in ("", None)):
-    line_id = line['listbox_key']
 
     if line.get('resource_relative_url', None) not in ("", None):
       product = portal.restrictedTraverse(line["resource_relative_url"])
