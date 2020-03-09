@@ -1,5 +1,3 @@
-request = context.REQUEST
-
 cell_key_list = context.getCellKeyList( base_id = 'variation')
 
 for cell_key in cell_key_list:

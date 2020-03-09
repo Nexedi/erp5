@@ -11,11 +11,9 @@ sampling_amount inventory lines, sorted by date.
 # XXX: Might be set in preferences
 sampling_amount = kwargs.get('sampling_amount',20)
 
-from Products.ERP5Type.Document import newTempDocument
 from DateTime import DateTime
 
 resource = context
-request = context.REQUEST
 portal = context.getPortalObject()
 
 node = portal.restrictedTraverse(kwargs.get('node'))
@@ -47,7 +45,6 @@ inventory_tuple_list = []
 
 precise_time_format = '%Y/%m/%d %H:%M.%S'
 base_time_format = precise_time_format
-rough_time_form = '%Y/%m/%d'
 # XXX: Below performance issues:
 #  * sampling made in dumb way - it shall use SQL
 #  * inventory is invoked 3 times for each sample
@@ -72,15 +69,16 @@ for i in range(0,sampling_amount):
   inventory_tuple_list.append(internal_tuple)
 
 return_list = [] 
-for a in range(0,len(inventory_tuple_list)):
-  d = newTempDocument( portal, str(a) )
+for a in range(0, len(inventory_tuple_list)):
   data = inventory_tuple_list[a]
-  d.edit(
-    title = 'title %s'%(a,),
-    date = data[0],
-    current = data[1],
-    available = data[2],
-    future = data[3],
-  )
-  return_list.append(d)
+  return_list.append(
+      portal.newContent(
+          portal_type='Base',
+          temp_object=True,
+          id=str(a),
+          title='title %s'%(a,),
+          date=data[0],
+          current=data[1],
+          available=data[2],
+          future=data[3],))
 return return_list
