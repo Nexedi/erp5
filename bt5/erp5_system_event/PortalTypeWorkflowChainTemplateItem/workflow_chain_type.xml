@@ -4,6 +4,14 @@
   <workflow>edit_workflow, system_event_workflow</workflow>
  </chain>
  <chain>
+  <type>External Payment Event</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>External Payment Message</type>
+  <workflow>edit_workflow, external_payment_message_workflow</workflow>
+ </chain>
+ <chain>
   <type>HTTP Exchange</type>
   <workflow>edit_workflow, system_event_workflow</workflow>
  </chain>
