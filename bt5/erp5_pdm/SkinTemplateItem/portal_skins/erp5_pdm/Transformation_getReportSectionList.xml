@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reference_variation_category_list=[]</string> </value>
+            <value> <string>reference_variation_category_list=()</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
