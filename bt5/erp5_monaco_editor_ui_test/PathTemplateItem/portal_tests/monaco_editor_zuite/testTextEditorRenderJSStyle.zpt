@@ -30,12 +30,11 @@
     <td>${base_url}/web_site_module/renderjs_runner/#/web_page_module?editable=true</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n='Add']</td><td></td></tr>
-<tr><td>click</td>
-    <td>link=Add</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//select[@name='field_your_select_action']</td><td></td></tr>
+<tal:block tal:define="click_configuration python: {'text': 'Add'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr><td>select</td>
     <td>//select[@name='field_your_select_action']</td>
     <td>label=Web Page</td></tr>
@@ -45,16 +44,18 @@
                                                            'text': 'Object created.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Views"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="Views"]</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-     <td>//a[@data-i18n="Edit"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="Edit"]</td><td></td></tr>
+<tal:block tal:define="click_configuration python: {'text': 'Edit'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 
 <tr><td colspan="3"><b>Wait for editor to be loaded</b></td></tr>
 
@@ -73,23 +74,20 @@
 <tr><td>selectFrame</td>
     <td>relative=top</td><td></td></tr>
 
-<tr><td>click</td>
-    <td>//button[@data-i18n="Save"]</td><td></td></tr>
-<tal:block tal:define="notification_configuration python: {'class': 'success',
-                                                           'text': 'Data updated.'}">
-  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
-</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
 <tr><td colspan="3"><b>Check that our edition is reflected on preview.</b></td></tr>
 
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="Views"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="Views"]</td><td></td></tr>
-<tr><td>waitForElementPresent</td>
-    <td>//a[@data-i18n="View"]</td><td></td></tr>
-<tr><td>click</td>
-    <td>//a[@data-i18n="View"]</td><td></td></tr>
+<tal:block tal:define="click_configuration python: {'text': 'Views'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tal:block tal:define="click_configuration python: {'text': 'View'}">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_page_link" />
+</tal:block>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-scope="editor"]//iframe</td><td></td></tr>
 <tr><td>selectFrame</td>
