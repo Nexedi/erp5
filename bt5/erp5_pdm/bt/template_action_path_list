@@ -33,6 +33,7 @@ Measure | view
 Organisation | jump_to_internal_supply
 Organisation | jump_to_purchase_supply
 Organisation | jump_to_sale_supply
+Product Individual Variation | image_list
 Product Individual Variation | view
 Product Module | converted_inventory_report
 Product Module | transformed_inventory_report
