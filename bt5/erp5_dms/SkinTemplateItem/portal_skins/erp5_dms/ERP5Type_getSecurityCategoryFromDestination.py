@@ -5,7 +5,7 @@ of the document (e.g. in Memo type).
 from Products.ERP5Type.Log import log
 category_list = []
 
-for ob in object.getDestinationValueList():
+for ob in obj.getDestinationValueList():
   category_dict = {}
   for base_category in base_category_list:
     if base_category == 'group':

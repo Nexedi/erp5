@@ -3,6 +3,8 @@
   in such way that it is possible to select multiple
   function categories for the same document
 """
+if default_sub_field_property_dict is None:
+  default_sub_field_property_dict = {}
 # Initialise result
 sub_field_list = []
 
@@ -16,7 +18,7 @@ default_sub_field_property_dict.update({
 })
 
 z = 0
-for i in range(1):
+for _ in range(1):
   new_dict = default_sub_field_property_dict.copy()
   new_dict['title'] = '&nbsp;'
   new_dict['key'] = str(z)

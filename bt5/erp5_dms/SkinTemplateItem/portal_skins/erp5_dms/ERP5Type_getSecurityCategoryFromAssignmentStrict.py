@@ -3,4 +3,4 @@
 only the group the user is directly assigned to (not the whole group hierarchy path).
 """
 
-return context.ERP5Type_getSecurityCategoryFromAssignmentTree(base_category_list, user_name, object, portal_type, strict=True)
+return context.ERP5Type_getSecurityCategoryFromAssignmentTree(base_category_list, user_name, obj, portal_type, strict=True)
