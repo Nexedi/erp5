@@ -8,10 +8,8 @@ Person, just take from the object.
 
 category_list = []
 
-person_object = object
-
 # We look for valid assignments of this user
-for assignment in person_object.contentValues(filter={'portal_type': 'Assignment'}):
+for assignment in obj.contentValues(filter={'portal_type': 'Assignment'}):
   if assignment.getValidationState() == 'open':
     category_dict = {}
     for base_category in base_category_list:
@@ -22,7 +20,7 @@ for assignment in person_object.contentValues(filter={'portal_type': 'Assignment
       if category_value not in (None, ''):
         category_dict[base_category] = category_value
       else:
-        raise RuntimeError, "Error: '%s' property is required in order to update person security group"  % (base_category)
+        raise RuntimeError("Error: '%s' property is required in order to update person security group"  % (base_category))
     category_list.append(category_dict)
 
 return category_list

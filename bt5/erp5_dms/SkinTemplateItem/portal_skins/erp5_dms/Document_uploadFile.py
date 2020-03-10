@@ -1,3 +1,5 @@
+# this script has an `file` argument
+# pylint: disable=redefined-builtin
 """
 This script is called when a file is uploaded to an object via ERP5 standard interface.
 It does the following:
@@ -9,9 +11,9 @@ Otherwise it just uploads the file, bumps up revision number and calls metadata 
 
 """
 from Products.ERP5Type.Log import log, WARNING
+from Products.ERP5Type.Message import translateString
 
 translate = context.Base_translateString
-request = context.REQUEST
 current_type = context.getPortalType()
 file_name = file.filename
 
