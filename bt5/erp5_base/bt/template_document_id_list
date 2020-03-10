@@ -7,7 +7,6 @@ document.erp5.Career
 document.erp5.CategoryMovementGroup
 document.erp5.CausalityAssignmentMovementGroup
 document.erp5.CausalityMovementGroup
-document.erp5.ConfigurationSave
 document.erp5.Coordinate
 document.erp5.Currency
 document.erp5.DayMovementGroup
