@@ -21,7 +21,13 @@ SimpleQuery, ComplexQuery, Query*/
     var parser = new DOMParser(), i,
       oSerializer = new XMLSerializer(),
       doc = parser.parseFromString(html, "text/html"),
-      link_list = doc.querySelectorAll("a");
+      link_list = doc.querySelectorAll("a"),
+      styles_link = document.createElement('link'),
+      header = doc.querySelector("head");
+    styles_link.href = "gadget_erp5_page_project.css";
+    styles_link.type = "text/css";
+    styles_link.rel = "stylesheet";
+    header.appendChild(styles_link);
     for (i = 0; i < link_list.length; i += 1) {
       link_list[i].setAttribute('href',
                                 addRedirectionToReference(link_list[i]
