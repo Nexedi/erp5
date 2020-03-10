@@ -1,5 +1,4 @@
 from Products.PythonScripts.standard import Object
-from Products.ZSQLCatalog.SQLCatalog import Query
 from Products.ERP5Type.DateUtils import atTheEndOfPeriod
 request = container.REQUEST
 from_date = request.get('from_date', None)
@@ -8,10 +7,10 @@ aggregation_level = request.get('aggregation_level', None)
 portal = context.getPortalObject()
 module_list = []
 for module_id in portal.objectIds(spec=('ERP5 Folder',)):
-    module = portal.restrictedTraverse(module_id, None)
-    if module is not None:
-      if portal.portal_membership.checkPermission('View', module):
-        module_list.append(module)
+  module = portal.restrictedTraverse(module_id, None)
+  if module is not None:
+    if portal.portal_membership.checkPermission('View', module):
+      module_list.append(module)
 module_list.sort(key=lambda x: x.getTitle())
 
 # build document portal type list
@@ -69,25 +68,25 @@ line_list = []
 append = line_list.append
 period_count_dict = {}
 for portal_type in portal_type_list:
-    if portal_type_count_dict.has_key(portal_type):
-      period_count = portal_type_count_dict[portal_type]
-      obj = Object(uid="new_")
-      obj["document_type"] = context.Base_translateString(portal_type)
-    else:
-      continue
-    line_counter = 0
-    for period in period_list:
-      if period_count.has_key(period):
-        obj[period] = period_count[period]
-        line_counter += period_count[period]
-        if period_count_dict.has_key(period):
-          period_count_dict[period] = period_count_dict[period] + period_count[period]
-        else:
-          period_count_dict[period] = period_count[period]
+  if portal_type_count_dict.has_key(portal_type):
+    period_count = portal_type_count_dict[portal_type]
+    obj = Object(uid="new_")
+    obj["document_type"] = context.Base_translateString(portal_type)
+  else:
+    continue
+  line_counter = 0
+  for period in period_list:
+    if period_count.has_key(period):
+      obj[period] = period_count[period]
+      line_counter += period_count[period]
+      if period_count_dict.has_key(period):
+        period_count_dict[period] = period_count_dict[period] + period_count[period]
       else:
-        obj[period] = 0
-    obj['total'] = line_counter
-    append(obj)
+        period_count_dict[period] = period_count[period]
+    else:
+      obj[period] = 0
+  obj['total'] = line_counter
+  append(obj)
 
 # sort lines
 def cmpType(a, b):

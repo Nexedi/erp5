@@ -56,7 +56,7 @@ class Currency(Resource):
 
   # Unit conversion
   security.declareProtected(Permissions.AccessContentsInformation, 'convertQuantity')
-  def convertQuantity(self, quantity, from_unit, to_unit, variation_list=()):
+  def convertQuantity(self, quantity, from_unit, to_unit, variation_list=(), transformed_resource=None, transformed_variation_list=()):
     # 'variation_list' parameter may be deprecated:
     # cf Measure.getConvertedQuantity
     return quantity

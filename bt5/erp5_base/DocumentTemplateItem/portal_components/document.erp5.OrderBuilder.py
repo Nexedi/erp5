@@ -28,4 +28,9 @@
 #       for builders, and still distinguish order builders from others
 #       Once legacy simulation is dropped, "Order Builder" portal type should
 #       should be changed to use SimulatedDeliveryBuilder class.
+# pylint: disable=unused-import
 from erp5.component.document.GeneratedDeliveryBuilder import GeneratedDeliveryBuilder as OrderBuilder
+
+# XXX component expects a class with same name as the component, which we have thanks to the
+# imort above, but since it parses with regex, we have to have something that looks like a
+# class. Luckily, the regex is buggy, so having "class OrderBuilder:" here is enough.

@@ -3,8 +3,6 @@ delivery = state_change['object']
 stop_date = state_change.kwargs['stop_date']
 start_date = state_change.kwargs['start_date']
 
-tag = delivery.getPath() + '_split'
-split_and_defer = 0
 listbox = state_change['kwargs'].get('listbox')
 split_movement_list = []
 if listbox is not None:

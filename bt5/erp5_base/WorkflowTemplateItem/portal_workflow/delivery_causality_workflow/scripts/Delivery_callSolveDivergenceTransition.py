@@ -13,8 +13,7 @@ if listbox is not None:
   for k, v in listbox.items():
     object_url = v['choice']
     if object_url != 'ignore':
-      object = delivery.restrictedTraverse(object_url)
-      delivery_solve_property_dict[k] = object.getPropertyList(k)
+      delivery_solve_property_dict[k] = delivery.restrictedTraverse(object_url).getPropertyList(k)
 
 divergence_to_accept_list = []
 divergence_to_adopt_list = []
@@ -22,8 +21,7 @@ divergence_to_adopt_list = []
 divergence_dict = {}
 for divergence in divergence_list:
   simulation_movement_url = divergence.getProperty('simulation_movement').getRelativeUrl()
-  property = divergence.getProperty('tested_property')
-  divergence_dict['%s&%s' % (simulation_movement_url, property)] = divergence
+  divergence_dict['%s&%s' % (simulation_movement_url, divergence.getProperty('tested_property'))] = divergence
 
 for listbox in [state_change['kwargs'].get('line_group_listbox'),
                 state_change['kwargs'].get('cell_group_listbox')]:

@@ -1,4 +1,3 @@
-from Products.ZSQLCatalog.SQLCatalog import Query
 from Products.ERP5Type.DateUtils import atTheEndOfPeriod
 request = container.REQUEST
 portal = context.getPortalObject()

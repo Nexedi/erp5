@@ -1,3 +1,4 @@
+# coding: utf-8
 translateString = context.Base_translateString
 request = context.REQUEST
 
@@ -94,7 +95,6 @@ def getTaxLineList(order):
   return tax_line_list
 
 line_base_contribution_list = []
-number = 0
 tax_free_line_totalprice = 0
 line_list = []
 line_not_tax = []

@@ -1,10 +1,7 @@
 delivery = state_change['object']
 
 portal = delivery.getPortalObject()
-try:
-  portal.portal_solvers
-  portal.portal_solver_processes
-except AttributeError:
+if not (hasattr(portal, 'portal_solvers') and hasattr(portal, 'portal_solver_processes')):
   delivery.diverge()
 else:
   solver_tag = '%s_solve' % delivery.getPath()
