@@ -402,7 +402,7 @@
           gadget.renderOtdatedMilestoneInfo();
           gadget.renderProjectDocumentInfo();
           gadget.renderOutdatedDocumentInfo();
-          gadget.renderTestResultInfo(gadget.state.project_list);
+          gadget.renderTestResultInfo();
           gadget.renderProjectForumLink();
         });
     })

@@ -19,15 +19,9 @@ SimpleQuery, ComplexQuery, Query*/
 
   function parseHTMLLinks(html, url) {
     var parser = new DOMParser(), i,
-      styles_link = document.createElement('link'),
       oSerializer = new XMLSerializer(),
       doc = parser.parseFromString(html, "text/html"),
-      link_list = doc.querySelectorAll("a"),
-      header = doc.querySelector("head");
-    styles_link.href = "gadget_erp5_page_project.css";
-    styles_link.type = "text/css";
-    styles_link.rel = "stylesheet";
-    header.appendChild(styles_link);
+      link_list = doc.querySelectorAll("a");
     for (i = 0; i < link_list.length; i += 1) {
       link_list[i].setAttribute('href',
                                 addRedirectionToReference(link_list[i]
