@@ -30,6 +30,7 @@
 
 import unittest
 
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.utils import reindex
@@ -447,6 +448,29 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     context_movement = self.createMovement()
     self.assertEqual(None, business_path.getSourceValue())
     self.assertFalse(business_path.getArrowCategoryDict(context=context_movement).has_key('source'))
+
+  def test_BusinessPathDynamicCategoryAccessProviderReplaceCategory(self):
+    business_path = self.createTradeModelPath()
+    createZODBPythonScript(
+        self.portal.portal_skins.custom,
+        self.id(),
+        'movement',
+        'return []',
+    )
+    business_path.setSourceMethodId(self.id())
+    movement_node = self.portal.organisation_module.newContent(
+        portal_type='Organisation')
+    business_path.setSourceValue(movement_node)
+
+    context_movement = self.createMovement()
+    self.assertEqual(
+        [movement_node.getRelativeUrl()],
+        business_path.getArrowCategoryDict(
+            context=context_movement)['source'])
+    # in replace mode, categories not returned by the scripts are returned as []
+    # so that it replaces existing values.
+    business_path.setSourceMethodReplaceCategory(True)
+    self.assertEqual([], business_path.getArrowCategoryDict(context=context_movement)['source'])
 
   def test_BusinessState_getRemainingTradePhaseList(self):
     """
