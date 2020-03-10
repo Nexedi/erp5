@@ -810,10 +810,6 @@ def test_suite():
           # One way to fix this would be to allow a custom "init script" to be called
           # on a portal type.
           'test_erp5_simulation_Solver_Decision_SolverDecision_viewConfiguration',
-          # there's no container accepting delivery cell, but delivery cell has
-          # an interaction workflow which assumes delivery cell is contained in
-          # a delivery.
-          'test_erp5_trade_Delivery_Cell_DeliveryCell_view',
       ))
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestXHTML))
