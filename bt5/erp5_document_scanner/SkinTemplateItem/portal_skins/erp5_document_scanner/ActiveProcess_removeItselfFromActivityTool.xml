@@ -50,19 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>active_process, image_list, REQUEST=None</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getTempImageList</string> </value>
+            <value> <string>ActiveProcess_removeItselfFromActivityTool</string> </value>
         </item>
       </dictionary>
     </pickle>
