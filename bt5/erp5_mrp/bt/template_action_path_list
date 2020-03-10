@@ -1,4 +1,5 @@
 Component | resource_view_manufacturing_gantt
+Delivery Cell | view
 Manufacturing Execution Cell | view
 Manufacturing Execution Line | option_view
 Manufacturing Execution Line | quantity_view
