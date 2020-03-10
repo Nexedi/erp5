@@ -25,6 +25,11 @@ div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] a {
   text-decoration: none;
 }
 
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .left a {
+  color: #111;
+  text-decoration: none;
+}
+
 div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-info  {
   display: inline-flex;
 }
