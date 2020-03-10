@@ -14,6 +14,9 @@
     NAME_SPAN = "name",
     FORUM_LINK_ID_SUFFIX = "forum",
     FORUM_LINK_TYPE = "link",
+    OUTDATED_LABEL = " out of date",
+    FAILED_LABEL = " failed",
+    TEST_RESULT_PORTAL_TYPE = "Test Result",
     QUERY_LIMIT = 100000,
     SUPERVISOR_FIELD_TITLE = "Supervisor",
     //XXX hardcoded one year old date to define outdated elements
@@ -118,8 +121,10 @@
       }
     }
     if (number_span) {
-      number_span.classList.remove("ui-hidden");
-      number_span.classList.add("ui-visible");
+      if (outdated_count > 0) {
+        number_span.classList.remove("ui-hidden");
+        number_span.classList.add("ui-visible");
+      }
     }
   }
 
@@ -289,35 +294,38 @@
         outdated_span = document.createElement('span'),
         total_span = document.createElement('span'),
         open_bracket_span = document.createElement('span'),
-        close_bracket_span = document.createElement('span');
+        close_bracket_span = document.createElement('span'),
+        outdated_label_span = document.createElement('span');
       line_div.classList.add("project-line");
       status_span.classList.add(STATUS_SPAN);
       status_span.classList.add(status_color);
       status_span.classList.add("margined");
       status_span.setAttribute("id", getProjectHtlmElementId(project_id,
                                                              portal_type, STATUS_SPAN));
+      total_span.classList.add("margined");
+      total_span.innerHTML = total_count;
+      total_span.setAttribute("id", getProjectHtlmElementId(project_id,
+                                                            portal_type, TOTAL_SPAN));
       name_span.classList.add("name");
       name_span.classList.add("margined");
       name_span.innerHTML = title;
       name_span.setAttribute("id", getProjectHtlmElementId(project_id,
                                                            portal_type, NAME_SPAN));
-      total_span.classList.add("margined");
-      total_span.innerHTML = total_count;
-      total_span.setAttribute("id", getProjectHtlmElementId(project_id,
-                                                            portal_type, TOTAL_SPAN));
       outdated_span.innerHTML = out_count;
       outdated_span.setAttribute("id", getProjectHtlmElementId(project_id,
                                                                portal_type, OUTDATED_SPAN));
       open_bracket_span.innerHTML = "(";
+      outdated_label_span.innerHTML = (portal_type === TEST_RESULT_PORTAL_TYPE) ? FAILED_LABEL : OUTDATED_LABEL;
       close_bracket_span.innerHTML = ")";
-      number_span.appendChild(total_span);
       number_span.appendChild(open_bracket_span);
       number_span.appendChild(outdated_span);
+      number_span.appendChild(outdated_label_span);
       number_span.appendChild(close_bracket_span);
       number_span.setAttribute("id", getProjectHtlmElementId(project_id,
                                                              portal_type, NUMBER_SPAN));
       number_span.classList.add("ui-hidden");
       line_div.appendChild(status_span);
+      line_div.appendChild(total_span);
       line_div.appendChild(name_span);
       line_div.appendChild(number_span);
       return line_div;
@@ -413,7 +421,7 @@
 
     .declareJob("renderOtdatedMilestoneInfo", function () {
       //XXX For testing -> use NOW_DATE
-      //return renderMilestoneLines(this, NOW_DATE);
+      return renderMilestoneLines(this, NOW_DATE);
       return renderMilestoneLines(this, LIMIT_DATE);
     })
 
@@ -442,7 +450,7 @@
           for (project_id in project_test_status_dict) {
             if (project_test_status_dict.hasOwnProperty(project_id)) {
               renderProjectLine(project_id,
-                                "Test Result",
+                                TEST_RESULT_PORTAL_TYPE,
                                 parseInt(project_test_status_dict[project_id].all_tests, RADIX),
                                 parseInt(project_test_status_dict[project_id].failures, RADIX));
             }
