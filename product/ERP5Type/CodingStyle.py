@@ -161,6 +161,8 @@ ignored_skin_id_set = {
   'ProductionDelivery_generateReference',
   'ProductionDelivery_getFutureInventoryList',
   'ProductionDelivery_getSimulationStateColorText',
+  'CurrencyExchange_getExchangeRateList',
+  'ERP5Folder_getUnrestrictedContentTypeList',
 }
 
 # Generic method to check consistency of a skin item
