@@ -76,13 +76,13 @@ class MappedProperty(XMLObject):
       return mapping_dict
 
   # XXX do we need to protect this method?
-  def getMappedPropertyId(self, property, reverse=False):
+  def getMappedPropertyId(self, property, reverse=False): #  pylint: disable=redefined-builtin
     return self.getMappingDict(reverse=reverse).get(property, property)
 
   # Security should be handled by the target document not by the mapped
   # property document.
   security.declarePublic('getMappedProperty')
-  def getMappedProperty(self, document, property):
+  def getMappedProperty(self, document, property): #  pylint: disable=redefined-builtin
     if property.endswith('_list'):
       property = property[:-5]
       getProperty = document.getPropertyList
@@ -98,7 +98,7 @@ class MappedProperty(XMLObject):
   # Security should be handled by the target document not by the mapped
   # property document.
   security.declarePublic('setMappedProperty')
-  def setMappedProperty(self, document, property, value):
+  def setMappedProperty(self, document, property, value): #  pylint: disable=redefined-builtin
     if property.endswith('_list'):
       property = property[:-5]
       setProperty = document.setPropertyList
