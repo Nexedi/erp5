@@ -232,6 +232,58 @@
       });
   }
 
+  function getUrlParameterDict(jio_key, view, sort_list, column_list, extended_search) {
+    return {
+      command: 'push_history',
+      options: {
+        'jio_key': jio_key,
+        'page': 'form',
+        'view': view,
+        'field_listbox_sort_list:json': sort_list,
+        'field_listbox_column_list:json': column_list,
+        'extended_search': extended_search
+      }
+    };
+  }
+
+  function createProjectQuery(project_jio_key, key_value_list) {
+    var i, query_list = [], id_query_list = [], id_complex_query;
+    if (project_jio_key) {
+      //relation to project or child project lines
+      id_query_list.push(new SimpleQuery({
+        key: "source_project__relative_url",
+        operator: "",
+        type: "simple",
+        value: project_jio_key
+      }));
+      id_query_list.push(new SimpleQuery({
+        key: "source_project__relative_url",
+        operator: "",
+        type: "simple",
+        value: project_jio_key + "/%%"
+      }));
+      id_complex_query = new ComplexQuery({
+        operator: "OR",
+        query_list: id_query_list,
+        type: "complex"
+      });
+      query_list.push(id_complex_query);
+    }
+    for (i = 0; i < key_value_list.length; i += 1) {
+      query_list.push(new SimpleQuery({
+        key: key_value_list[i][0],
+        operator: "",
+        type: "simple",
+        value: key_value_list[i][1]
+      }));
+    }
+    return Query.objectToSearchText(new ComplexQuery({
+      operator: "AND",
+      query_list: query_list,
+      type: "complex"
+    }));
+  }
+
   function renderProjectList(gadget, project_list) {
     var i,
       project_html,
@@ -240,7 +292,14 @@
       left_line_html,
       ul_list = document.querySelector("#js-project-list"),
       spinner = document.querySelector("#js-spinner"),
-      url_parameter_list = [];
+      url_parameter_list = [],
+      milestone_url_list = [],
+      task_url_list = [],
+      task_report_url_list = [],
+      bug_url_list = [],
+      test_result_url_list = [],
+      milestone_view,
+      project_view;
 
     function createProjectHtmlElement(project_id, project_title,
                                       project_url, supervisor) {
@@ -288,8 +347,8 @@
       return [project_li, left_info_div];
     }
 
-    function createProjectLineHtmlElement(project_id, portal_type, title, total_count,
-                                          out_count, status_color) {
+    function createProjectLineHtmlElement(project_id, portal_type, line_url, title,
+                                          total_count, out_count, status_color) {
       var line_div = document.createElement('div'),
         status_span = document.createElement('span'),
         name_span = document.createElement('span'),
@@ -298,7 +357,8 @@
         total_span = document.createElement('span'),
         open_bracket_span = document.createElement('span'),
         close_bracket_span = document.createElement('span'),
-        outdated_label_span = document.createElement('span');
+        outdated_label_span = document.createElement('span'),
+        line_link = document.createElement('a');
       line_div.classList.add("project-line");
       status_span.classList.add(STATUS_SPAN);
       status_span.classList.add(status_color);
@@ -331,40 +391,104 @@
       line_div.appendChild(total_span);
       line_div.appendChild(name_span);
       line_div.appendChild(number_span);
-      return line_div;
+      line_link.appendChild(line_div);
+      if (line_url) {
+        line_link.href = line_url;
+      }
+      return line_link;
     }
 
     return gadget.getSetting("hateoas_url")
       .push(function (hateoas_url) {
         for (i = 0; i < project_list.length; i += 1) {
-          url_parameter_list.push({
-            command: 'push_history',
-            options: {
-              'jio_key': project_list[i].id,
-              'page': 'form',
-              'view': hateoas_url +
-                '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
-                project_list[i].id +
-                '&view=Project_viewQuickOverview'
-            }
-          });
+          milestone_view = hateoas_url +
+            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
+            project_list[i].id + '&view=Project_viewMilestoneList';
+          project_view = hateoas_url +
+            '/ERP5Document_getHateoas?mode=traverse&relative_url=' +
+            project_list[i].id +
+            '&view=Project_viewQuickOverview';
+          url_parameter_list.push(
+            getUrlParameterDict(project_list[i].id,
+                                project_view)
+          );
+          milestone_url_list.push(
+            getUrlParameterDict('milestone_module',
+                                milestone_view,
+                                [["stop_date", "ascending"]],
+                                null,
+                                createProjectQuery(null,
+                                                   [["selection_domain_date_milestone_domain", "future"]]))
+          );
+          task_url_list.push(
+            getUrlParameterDict('task_module',
+                                "view",
+                                [["delivery.start_date", "descending"]],
+                                ["title", "delivery.start_date", "source_title"],
+                                createProjectQuery(project_list[i].id,
+                                                   [["selection_domain_state_task_domain", "confirmed"]]))
+          );
+          task_report_url_list.push(
+            getUrlParameterDict('task_report_module',
+                                'view',
+                                [["delivery.start_date", "descending"]],
+                                ["title", "delivery.start_date", "source_title"],
+                                createProjectQuery(project_list[i].id,
+                                                   [["selection_domain_state_task_report_domain", "confirmed"]]))
+          );
+          bug_url_list.push(
+            getUrlParameterDict('bug_module',
+                                "view",
+                                [["delivery.start_date", "descending"]],
+                                ["title", "description", "source_person_title", "destination_person_title", "delivery.start_date"],
+                                createProjectQuery(project_list[i].id,
+                                                   [["selection_domain_state_bug_domain", "open"]]))
+          );
+          test_result_url_list.push(
+            getUrlParameterDict('test_result_module',
+                                'view',
+                                [["delivery.start_date", "descending"]],
+                                null,
+                                createProjectQuery(project_list[i].id, []))
+          );
         }
-        return gadget.getUrlForList(url_parameter_list);
+        return RSVP.all([gadget.getUrlForList(url_parameter_list),
+                         gadget.getUrlForList(milestone_url_list),
+                         gadget.getUrlForList(task_url_list),
+                         gadget.getUrlForList(task_report_url_list),
+                         gadget.getUrlForList(bug_url_list),
+                         gadget.getUrlForList(test_result_url_list)]);
       })
-      .push(function (url_list) {
-        var type;
+      .push(function (result_list) {
+        var type,
+          line_url;
         spinner.classList.add("ui-hidden");
         for (i = 0; i < project_list.length; i += 1) {
           project_html_element_list =
             createProjectHtmlElement(project_list[i].id,
                                      project_list[i].value.title,
-                                     url_list[i],
+                                     result_list[0][i],
                                      project_list[i].value.source_decision_title);
           project_html = project_html_element_list[0];
           left_div_html = project_html_element_list[1];
           for (type in PORTAL_TITLE_DICT) {
             if (PORTAL_TITLE_DICT.hasOwnProperty(type)) {
+              line_url = (function (portal_type) {
+                switch (portal_type) {
+                case 'Project Milestone':
+                  return result_list[1][i];
+                case 'Task':
+                  return result_list[2][i];
+                case 'Task Report':
+                  return result_list[3][i];
+                case 'Bug':
+                  return result_list[4][i];
+                case 'Test Result':
+                  return result_list[5][i];
+                }
+              })(type);
               left_line_html = createProjectLineHtmlElement(project_list[i].id, type,
+                                                            line_url,
                                                             ((PORTAL_TITLE_DICT
                                                               .hasOwnProperty(type)) ?
                                                              PORTAL_TITLE_DICT[type] :
