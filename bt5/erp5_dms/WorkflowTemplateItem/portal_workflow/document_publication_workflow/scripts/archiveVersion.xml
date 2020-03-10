@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change, validation_state=[\'published\', \'published_alive\', \'released\', \'released_alive\', \'shared\', \'shared_alive\'], now=None</string> </value>
+            <value> <string>state_change, validation_state=(\'published\', \'published_alive\', \'released\', \'released_alive\', \'shared\', \'shared_alive\'), now=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

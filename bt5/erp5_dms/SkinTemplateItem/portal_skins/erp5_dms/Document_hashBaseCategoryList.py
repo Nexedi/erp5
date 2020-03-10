@@ -8,8 +8,8 @@
 from Products.ERP5Type.Cache import CachingMethod
 
 def cached_DMSGetItemList(base_category):
-    basecatobject = context.portal_categories.resolveCategory(base_category)
-    return basecatobject.getCategoryChildLogicalPathItemList()
+  basecatobject = context.portal_categories.resolveCategory(base_category)
+  return basecatobject.getCategoryChildLogicalPathItemList()
 
 cached_DMSGetItemList = CachingMethod(cached_DMSGetItemList, id='DMGetItemListCachedMethodWhatever')
 
@@ -26,7 +26,6 @@ if default_sub_field_property_dict is None:
   }
 
 sub_field_dict = {}
-maximum_list_size = 5
 
 default_sub_field_property_dict['field_type'] = 'ListField'
 default_sub_field_property_dict['size'] = 1

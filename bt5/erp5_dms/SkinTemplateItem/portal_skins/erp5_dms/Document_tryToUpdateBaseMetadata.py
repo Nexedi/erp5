@@ -11,8 +11,6 @@ except ConversionError, e:
   message = 'Conversion Error: %s' % (str(e) or 'undefined.')
 except Exception, e:
   message = 'Problem: %s' % (repr(e) or 'undefined.')
-except:
-  message = 'Problem: unknown'
 
 # reach here, then exception was raised, message must be logged in workflow
 # do not simply raise but rather change external processing state

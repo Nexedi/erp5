@@ -1,3 +1,5 @@
+# this script has an `format` argument
+# pylint: disable=redefined-builtin
 """
   Generic method to handle conversion failures ans still return something to use 
   to explain what when wrong, etc.
