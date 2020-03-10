@@ -189,7 +189,7 @@
         return gadget.getDeclaredGadget('editor')
           .push(function (editor_gadget) {
             return editor_gadget.getContent.apply(editor_gadget, argument_list);
-          })
+          });
           /*
           .push(function (result) {
             var value = result[context.state.key] || '';
