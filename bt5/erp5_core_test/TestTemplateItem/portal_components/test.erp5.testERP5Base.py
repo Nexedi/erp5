@@ -1150,6 +1150,16 @@ class TestERP5Base(ERP5TypeTestCase):
     # workflow is affected
     self.assertTrue(comment in [q['comment'] for q in workflow_history ])
 
+  def test_comment_edit_workflow_edit_action_permission(self):
+    # no special permission is needed to programatically use edit_action from edit_workflow
+    comment = 'some comment'
+    person = self.portal.person_module.newContent(portal_type='Person')
+    self.logout()
+    self.portal.portal_workflow.doActionFor(person, 'edit_action', comment=comment)
+    workflow_history = self.getWorkflowHistory(person, 'edit_workflow')
+    # workflow is affected
+    self.assertIn(comment, [q['comment'] for q in workflow_history ])
+
   def test_comment_validation_workflow(self):
     comment = 'some comment'
     person = self.portal.person_module.newContent(portal_type='Person')
