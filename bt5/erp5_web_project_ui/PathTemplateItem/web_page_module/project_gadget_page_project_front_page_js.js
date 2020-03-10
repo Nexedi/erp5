@@ -448,42 +448,6 @@
             }
           }
         });
-        //alternative using jio queries ends up in a query per project, inefficient
-        //one shot query isn't possible because getting the most recent element AFTER group
-        //involves not supported clauses like MAX, HAVING or nested queries
-        /*var test_state_list = ["failed", "stopped", "public_stopped"];
-        .push(function () {
-          var promise_list = [];
-          for (i = 0; i < project_list.length; i += 1) {
-            query_list = [getComplexQuery({"portal_type" : "Test Result",
-                                           "source_project__relative_url" : project_list[i].id},
-                                          "AND")];
-            query_list.push(createMultipleSimpleOrQuery('simulation_state', test_state_list));
-            test_result_query = new ComplexQuery({
-              operator: "AND",
-              query_list: query_list,
-              type: "complex"
-            });
-            promise_list.push(gadget.jio_allDocs({
-              query: Query.objectToSearchText(test_result_query),
-              limit: 1,
-              select_list: ['source_project__relative_url', 'portal_type', 'modification_date', 'all_tests', 'failures'],
-              sort_on: [["modification_date", "descending"]]
-            }));
-          }
-          return RSVP.all(promise_list);
-        })
-        .push(function (result_list) {
-          for (i = 0; i < result_list.length; i += 1) {
-            test_result = result_list[i].data.rows[0];
-            if (test_result) {
-              renderProjectLine(test_result.value.source_project__relative_url,
-                                test_result.value.portal_type,
-                                parseInt(test_result.value.all_tests, RADIX),
-                                parseInt(test_result.value.failures, RADIX));
-            }
-          }
-        });*/
     })
 
     .declareJob("renderProjectForumLink", function () {
