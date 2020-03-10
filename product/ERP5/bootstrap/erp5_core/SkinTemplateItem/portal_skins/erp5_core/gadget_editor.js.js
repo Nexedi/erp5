@@ -1,8 +1,6 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, RSVP, document, FileReader, Blob,
-lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
-(function (window, rJS, RSVP, document, FileReader, Blob,
-            lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue) {
+/*global window, rJS, RSVP, document, FileReader, Blob*/
+(function (window, rJS, RSVP, document, FileReader, Blob) {
   "use strict";
 
   var editor_dict = {
@@ -44,8 +42,12 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
           }
         });
     })
-    .declareMethod('render', function (options) {
 
+    .declareMethod('render', function (options) {
+      return this.renderAsynchronously(options);
+    })
+
+    .declareJob('renderAsynchronously', function (options) {
       var state_dict = {
           value: options.value || "",
           editor: options.editor,
@@ -62,16 +64,12 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
     })
 
     .onStateChange(function (modification_dict) {
-      return this.renderAsynchronously(modification_dict);
-    })
-
-    .declareJob('renderAsynchronously', function (modification_dict) {
       var element = this.element,
         gadget = this,
         url,
         div = document.createElement('div'),
         div_max = document.createElement('div'),
-        queue = lockGadgetInQueue(gadget)();
+        queue = new RSVP.Queue();
 
       if ((modification_dict.hasOwnProperty('editable')) ||
           (modification_dict.hasOwnProperty('editor')) || 
@@ -179,8 +177,7 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
       } else {
         element.querySelector('pre').textContent = gadget.state.value;
       }
-      return queue
-        .push(unlockGadgetInQueue(gadget), unlockGadgetInFailedQueue(gadget));
+      return queue;
     })
 
     .declareMethod('getContent', function () {
@@ -189,14 +186,10 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         result;
       if (this.state.editable &&
           editor_dict.hasOwnProperty(gadget.state.editor)) {
-        return lockGadgetInQueue(gadget)()
-          .push(function () {
-            return gadget.getDeclaredGadget('editor');
-          })
+        return gadget.getDeclaredGadget('editor')
           .push(function (editor_gadget) {
             return editor_gadget.getContent.apply(editor_gadget, argument_list);
           })
-          .push(unlockGadgetInQueue(gadget), unlockGadgetInFailedQueue(gadget));
           /*
           .push(function (result) {
             var value = result[context.state.key] || '';
@@ -215,12 +208,11 @@ lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue*/
         return result;
       }
       return {};
-    })
+    }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
       // XXX How to implement this for editors?
       return true;
     });
 
-}(window, rJS, RSVP, document, FileReader, Blob,
-  lockGadgetInQueue, unlockGadgetInQueue, unlockGadgetInFailedQueue));
+}(window, rJS, RSVP, document, FileReader, Blob));
