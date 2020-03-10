@@ -154,6 +154,13 @@ ignored_skin_id_set = {
   'OrderModule_statOrderStatList',
   'PackingListContent_updateAfterEdit',
   'PackingListModule_getPackingListReport',
+  'Builder_selectAutoPlannedOrderList',
+  'Builder_updateManufacturingOrderAfterBuild',
+  'ManufacturingOrderBuilder_selectSimulationMovement',
+  'ProductionDelivery_copyOrderProperties',
+  'ProductionDelivery_generateReference',
+  'ProductionDelivery_getFutureInventoryList',
+  'ProductionDelivery_getSimulationStateColorText',
 }
 
 # Generic method to check consistency of a skin item
