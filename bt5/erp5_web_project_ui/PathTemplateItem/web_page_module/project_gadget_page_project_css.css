@@ -182,37 +182,3 @@ input[type="submit"] {
   color: #777777;
   margin-top: 10px;
 }
-
-
-/* PROJECT HOME PAGE */
-
-body.cke_editable h1 {
-  margin-top: 1.5em;
-  font-family: "Roboto", Arial, sans-serif;
-  color: #19535F;
-  font-size: 2em;
-  margin: 0.67em 0;
-}
-
-body.cke_editable h2 {
-  font-family: "Roboto", Arial, sans-serif;
-  font-weight: normal;
-  font-size: 25px;
-  line-height: 33px;
-  color: #19535F;
-}
-
-body.cke_editable p, body.cke_editable li, body.cke_editable span {
-  font-family: 'Heuristica', 'Helvetica', Times, serif;
-}
-
-body.cke_editable ul li, body.cke_editable p {
-  font-size: 1.25em;
-  line-height: 1.58em;
-  letter-spacing: -.003em;
-}
-
-body.cke_editable a {
-  color: #267B87;
-  text-decoration: none;
-}
