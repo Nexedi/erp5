@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -203,8 +202,8 @@ class SimulatedDeliveryBuilder(BuilderMixin):
     if property_dict in (None, {}):
       return
     delivery = self.getPortalObject().restrictedTraverse(delivery_relative_url)
-    for (property, value) in property_dict.iteritems():
-      delivery.setPropertyList(property, value)
+    for (prop, value) in property_dict.iteritems():
+      delivery.setPropertyList(prop, value)
 
     # Try to remove existing properties/categories from Movements that
     # should exist on Deliveries.
@@ -341,7 +340,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
                             'solveDivergence')
   solveDivergence = UnrestrictedMethod(_solveDivergence)
 
-  def _createDelivery(self, delivery_module, movement_list, activate_kw):
+  def _createDelivery(self, delivery_module, movement_list, activate_kw):  # pylint: disable=super-on-old-class
     """
       Refer to the docstring in GeneratedDeliveryBuilder.
       Unlike GeneratedDeliveryBuilder, SimulatedDeliveryBuilder needs to respect

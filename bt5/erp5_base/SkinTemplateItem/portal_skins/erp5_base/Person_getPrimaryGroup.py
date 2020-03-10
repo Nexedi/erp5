@@ -28,7 +28,7 @@ for assignment in context.contentValues(portal_type='Assignment'):
       and assignment.getValidationState() == 'open' \
       and ( assignment.getStartDate() is None or
             assignment.getStartDate() <= now <= assignment.getStopDate()):
-   existing_group_set[assignment.getGroup()] = 1
+    existing_group_set[assignment.getGroup()] = 1
 
 # If we have multiple groups defined on assignments, this scripts does not
 # try to guess, and fallback to the default career's group
