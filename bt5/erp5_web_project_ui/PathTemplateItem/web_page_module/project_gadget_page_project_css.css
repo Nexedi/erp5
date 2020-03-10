@@ -5,6 +5,7 @@ div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-
 }
 
 div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box  {
+  width: 32%;
   margin-bottom: 10px;
   border-style: solid;
   border-width: 1px;
@@ -21,11 +22,10 @@ div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] a {
 
 div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-info  {
   display: inline-flex;
-  width: 100%
 }
 
 div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-info .left  {
-  width: 35%;
+  width: 100%;
 }
 
 div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-line  {
@@ -42,10 +42,6 @@ div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-
 
 div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-line.field label {
   color: #767676;
-}
-
-div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-line.field span {
-  margin-left: 15px;
 }
 
 div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-title  {

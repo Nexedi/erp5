@@ -225,7 +225,7 @@
       query: project_query,
       limit: QUERY_LIMIT,
       select_list: ['title', 'source_decision_title'],
-      sort_on: [["modification_date", "ascending"]]
+      sort_on: [["title", "ascending"]]
     })
       .push(function (result) {
         return result.data.rows;
@@ -251,18 +251,21 @@
         left_info_div = document.createElement('div'),
         right_div = document.createElement('div'),
         right_line_div = document.createElement('div'),
-        supervisor_line_div = document.createElement('div'),
+        supervisor_field_div = document.createElement('div'),
+        supervisor_value_div = document.createElement('div'),
         project_link = document.createElement('a'),
         forum_link = document.createElement('a'),
         supervisor_field_label = document.createElement('label'),
         supervisor_value_span = document.createElement('span');
       if (supervisor) {
-        supervisor_line_div.classList.add("field", "project-line");
+        supervisor_field_div.classList.add("field", "project-line");
+        supervisor_value_div.classList.add("field", "project-line");
         supervisor_field_label.innerHTML = SUPERVISOR_FIELD_TITLE;
         supervisor_value_span.innerHTML = supervisor;
-        supervisor_line_div.appendChild(supervisor_field_label);
-        supervisor_line_div.appendChild(supervisor_value_span);
-        right_div.appendChild(supervisor_line_div);
+        supervisor_field_div.appendChild(supervisor_field_label);
+        supervisor_value_div.appendChild(supervisor_value_span);
+        right_div.appendChild(supervisor_field_div);
+        right_div.appendChild(supervisor_value_div);
       }
       box_div.classList.add("project-box");
       title_div.classList.add("project-title");
