@@ -42,6 +42,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class TestSecurityMixin(ERP5TypeTestCase):
   workflow_transition_protection_ignored_workflow_id_list = (
+      'edit_workflow',
   )
 
   def _prepareDocumentList(self):
