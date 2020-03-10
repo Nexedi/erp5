@@ -7,12 +7,12 @@ catalog.
 """
 from Products.ERP5Type.Log import log
 
-object = sci['object']
-portal = object.getPortalObject()
+document = sci['object']
+portal = document.getPortalObject()
 translateString = portal.Base_translateString
 
 # Get the owner
-owner = object.getViewPermissionOwner()
+owner = document.getViewPermissionOwner()
 owner_value = portal.Base_getUserValueByUserId(owner)
 
 # Get the authenticated user
@@ -43,11 +43,11 @@ Answer:
 ${answer}
 """ 
 msg = translateString(msg, 
-             mapping=dict(id=object.getId(),
+             mapping=dict(id=document.getId(),
                           subject=subject,
                           user=user_value.getTitle(),
-                          question=object.getDescription(),
-                          answer=object.getTextContent())
+                          question=document.getDescription(),
+                          answer=document.getTextContent())
             )
 
 # We can now notify the owner through the notification tool

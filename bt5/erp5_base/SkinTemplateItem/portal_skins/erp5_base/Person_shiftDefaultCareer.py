@@ -2,7 +2,6 @@ from Products.CMFActivity.Errors import ActivityPendingError
 Base_translateString = context.Base_translateString
 
 person = context
-career_list = []
 
 default_career = None
 if 'default_career' in person.objectIds():

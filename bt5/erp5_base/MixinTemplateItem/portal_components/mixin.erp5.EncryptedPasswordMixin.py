@@ -77,14 +77,22 @@ class EncryptedPasswordMixin:
     if not _checkPermission(Permissions.SetOwnPassword, self):
       raise AccessControl_Unauthorized('setPassword')
 
-  def _setEncodedPassword(self, value, format='default'):
+  def _setEncodedPassword(
+      self,
+      value,
+      format='default',  # pylint: disable=redefined-builtin
+  ):
     password = getattr(aq_base(self), 'password', None)
     if password is None or isinstance(password, basestring):
       password = self.password = PersistentMapping()
     self.password[format] = value
 
   security.declarePublic('setEncodedPassword')
-  def setEncodedPassword(self, value, format='default'):
+  def setEncodedPassword(
+      self,
+      value,
+      format='default',  # pylint: disable=redefined-builtin
+  ):
     """
     """
     self.checkUserCanChangePassword()
@@ -121,14 +129,14 @@ class EncryptedPasswordMixin:
     if password is marker:
       password = default_password
     else:
-      format = kw.get('format', 'default')
+      format_ = kw.get('format', 'default')
       # Backward compatibility: if it's not a PersistentMapping instance,
       # assume it's a monovalued string, which corresponds to default
       # password encoding.
       if isinstance(password, PersistentMapping):
-        password = password.get(format, default_password)
+        password = password.get(format_, default_password)
       else:
-        if format != 'default':
+        if format_ != 'default':
           password = default_password
     return password
 

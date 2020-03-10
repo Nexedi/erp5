@@ -19,10 +19,10 @@ delivery.activate(after_tag=tag).updateCausalityState()
 
 # Create delivery
 explanation_uid_list = []
-object = delivery
-while object is not None:
-  explanation_uid_list.append(object.getUid())
-  object = object.getCausalityValue()
+object_ = delivery
+while object_ is not None:
+  explanation_uid_list.append(object_.getUid())
+  object_ = object_.getCausalityValue()
     
 previous_tag = None
 for delivery_builder in delivery.getBuilderList():
