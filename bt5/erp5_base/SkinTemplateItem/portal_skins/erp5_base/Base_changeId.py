@@ -1,3 +1,5 @@
+# this script has an `id` argument
+# pylint: disable=redefined-builtin
 from Products.ERP5Type.Message import translateString
 
 if id and id != context.getId():

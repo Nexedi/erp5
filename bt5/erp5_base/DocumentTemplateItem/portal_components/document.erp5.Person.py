@@ -1,4 +1,3 @@
-
 ##############################################################################
 #
 # Copyright (c) 2002-2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -46,9 +45,18 @@ else:
   from Products.ERP5Security.ERP5UserManager import ERP5UserManager
   from Products.ERP5Security.ERP5LoginUserManager import ERP5LoginUserManager
 
-class UserExistsError(ValidationFailed):
+
+class UserExistsError(
+    ValidationFailed,
+    # to workaround pylint's false positive:
+    #   Exception doesn't inherit from standard "Exception" class (nonstandard-exception)
+    # because it cannot import ValidationFailed (which is set by a monkey patch), we also
+    # inherit from Exception.
+    Exception,
+  ):
   def __init__(self, user_id):
     super(UserExistsError, self).__init__('user id %s already exists' % (user_id, ))
+
 
 class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMixin):
   """
@@ -91,7 +99,7 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMi
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTitle')
-  def getTitle(self, **kw):
+  def getTitle(self, **kw):  # pylint: disable=super-on-old-class
     """
     Returns the title if it exists or a combination of
     first name, middle name and last name
@@ -105,7 +113,7 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMi
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTranslatedTitle')
-  def getTranslatedTitle(self, **kw):
+  def getTranslatedTitle(self, **kw):  # pylint: disable=super-on-old-class
     """
     Returns the title if it exists or a combination of
     first name, middle name and last name

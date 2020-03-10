@@ -14,9 +14,8 @@ context.setMembershipCriterionCategoryList(membership_list)
 context.setResourceValue(context.getParentValue())
 context.setMappedValuePropertyList(('base_price','discount'))
 if cell_range_key_list != [[None, None]] :
-  i = 0
   for k in cell_range_key_list:
-    category_list = filter(lambda k_item: k_item is not None, k)
+    category_list = [k_item for k_item in k if k]
     c = context.newCell(*k, **kwd)
     c.edit(mapped_value_property_list = ('base_price','discount'),
            force_update = 1,
