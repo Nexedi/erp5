@@ -448,6 +448,14 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEqual(None, business_path.getSourceValue())
     self.assertFalse(business_path.getArrowCategoryDict(context=context_movement).has_key('source'))
 
+  def test_BusinessPathDynamicCategoryAccessProvider_XXX_TODO(self):
+    business_path = self.createTradeModelPath()
+    business_path.setSourceMethodId('TradeModelPath_getDefaultSourceList')
+
+    context_movement = self.createMovement()
+    self.assertEqual(None, business_path.getSourceValue())
+    self.assertFalse(business_path.getArrowCategoryDict(context=context_movement).has_key('source'))
+
   def test_BusinessState_getRemainingTradePhaseList(self):
     """
     This test case is described for what trade_phase is remaining after the
