@@ -68,6 +68,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>gadget_erp5_page_project_page.js</string> </value>
         </item>
@@ -185,7 +191,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1582882412.91</float>
+                              <float>1583923139.12</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -234,7 +240,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.28167.7529.15718</string> </value>
+                      <value> <string>982.36846.48545.18193</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +258,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1583839344.31</float>
+                              <float>1584360005.19</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -279,7 +285,9 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -295,7 +303,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -313,7 +321,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1582882343.89</float>
+                              <float>1583923069.49</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

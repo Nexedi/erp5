@@ -169,7 +169,7 @@
   </tr>
   <tr>
     <td>assertElementPresent</td>
-    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-visible' and contains(@id, 'documented-project') and contains(@id, 'Task') and contains(@id, '-number')]</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-hidden' and contains(@id, 'documented-project') and contains(@id, 'Task') and contains(@id, '-number')]</td>
     <td></td>
   </tr>
   <tr>
@@ -190,7 +190,7 @@
   </tr>
   <tr>
     <td>assertElementPresent</td>
-    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-visible' and contains(@id, 'documented-project') and contains(@id, 'Bug') and contains(@id, '-number')]</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-hidden' and contains(@id, 'documented-project') and contains(@id, 'Bug') and contains(@id, '-number')]</td>
     <td></td>
   </tr>
   <tr>
@@ -211,7 +211,7 @@
   </tr>
   <tr>
     <td>assertElementPresent</td>
-    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-visible' and contains(@id, 'documented-project') and contains(@id, 'Test-Result') and contains(@id, '-number')]</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-hidden' and contains(@id, 'documented-project') and contains(@id, 'Test-Result') and contains(@id, '-number')]</td>
     <td></td>
   </tr>
   <tr>
@@ -232,7 +232,7 @@
   </tr>
   <tr>
     <td>assertElementPresent</td>
-    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-visible' and contains(@id, 'documented-project') and contains(@id, 'Milestone') and contains(@id, '-number')]</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-hidden' and contains(@id, 'documented-project') and contains(@id, 'Milestone') and contains(@id, '-number')]</td>
     <td></td>
   </tr>
   <tr>
@@ -253,7 +253,7 @@
   </tr>
   <tr>
     <td>assertElementPresent</td>
-    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-visible' and contains(@id, 'documented-project') and contains(@id, 'Task-Report') and contains(@id, '-number')]</td>
+    <td>//div[@class='front-project-list']//div[@class='project-line']//span[@class='ui-hidden' and contains(@id, 'documented-project') and contains(@id, 'Task-Report') and contains(@id, '-number')]</td>
     <td></td>
   </tr>
   <tr>
