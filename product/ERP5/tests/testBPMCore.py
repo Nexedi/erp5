@@ -385,13 +385,23 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
                     portal_type='Organisation')
     source_section_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
+    source_function_node = self.portal.organisation_module.newContent(
+                    portal_type='Organisation')
+    source_funding_node = self.portal.organisation_module.newContent(
+                    portal_type='Organisation')
     business_link = self.createBusinessLink()
     business_link.setSourceValue(source_node)
     business_link.setSourceSectionValue(source_section_node)
+    business_link.setSourceFunctionValue(source_function_node)
+    business_link.setSourceFundingValue(source_funding_node)
+
     self.assertEqual([source_node], business_link.getSourceValueList())
     self.assertEqual([source_node.getRelativeUrl()], business_link.getSourceList())
     self.assertEqual(source_node.getRelativeUrl(),
         business_link.getSource(default='something'))
+    self.assertEqual([source_section_node], business_link.getSourceSectionValueList())
+    self.assertEqual([source_function_node], business_link.getSourceFunctionValueList())
+    self.assertEqual([source_funding_node], business_link.getSourceFundingValueList())
 
   def test_EmptyBusinessLinkStandardCategoryAccessProvider(self):
     business_link = self.createBusinessLink()
