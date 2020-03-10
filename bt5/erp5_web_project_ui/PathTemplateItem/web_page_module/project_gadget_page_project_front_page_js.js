@@ -63,7 +63,7 @@
     hash_selector = hash_selector ? '#' : '';
     //remove not allowed html id chars (spaces, slashes)
     return hash_selector + [project_id, type, suffix].join("-")
-      .replace("/", "-").replace(/\s/g, "-");
+      .replace(/\//g, "-").replace(/\s/g, "-");
   }
 
   function getComplexQuery(query_dict, operator, extra_query) {
@@ -102,19 +102,25 @@
       number_span = document.querySelector(
         getProjectHtlmElementId(project_id, portal_type, NUMBER_SPAN, true)
       );
-    if (total_count > 0) {
+    if (total_count > 0 && total_span) {
       total_span.textContent = parseInt(total_span.textContent, RADIX) + total_count;
     }
-    outdated_span.textContent = parseInt(outdated_span.textContent, RADIX) +
-      outdated_count;
-    if (outdated_count > 0) {
-      status_span.classList.remove(STATUS_OK);
-      status_span.classList.add(STATUS_NOT_OK);
-    } else if (!status_span.classList.value.includes(STATUS_NOT_OK)) {
-      status_span.classList.add(STATUS_OK);
+    if (outdated_span) {
+      outdated_span.textContent = parseInt(outdated_span.textContent, RADIX) +
+        outdated_count;
     }
-    number_span.classList.remove("ui-hidden");
-    number_span.classList.add("ui-visible");
+    if (status_span) {
+      if (outdated_count > 0) {
+        status_span.classList.remove(STATUS_OK);
+        status_span.classList.add(STATUS_NOT_OK);
+      } else if (!status_span.classList.value.includes(STATUS_NOT_OK)) {
+        status_span.classList.add(STATUS_OK);
+      }
+    }
+    if (number_span) {
+      number_span.classList.remove("ui-hidden");
+      number_span.classList.add("ui-visible");
+    }
   }
 
   function renderProjectDocumentLines(gadget, limit_date) {
