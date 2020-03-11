@@ -2,6 +2,9 @@ from yapf.yapflib import yapf_api
 import json
 import tempfile
 import textwrap
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def ERP5Site_formatPythonSourceCode(self, data, REQUEST=None):
@@ -31,6 +34,7 @@ def ERP5Site_formatPythonSourceCode(self, data, REQUEST=None):
       formatted_code, changed = yapf_api.FormatCode(
           data['code'], style_config=f.name, **extra)
   except SyntaxError as e:
+    logger.exception("Error in source code")
     return json.dumps(dict(error=True, error_line=e.lineno))
 
   if REQUEST is not None:
