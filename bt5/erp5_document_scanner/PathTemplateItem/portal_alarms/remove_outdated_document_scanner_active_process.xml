@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>remove_outdated_document_scanner_active_processes</string> </value>
+            <value> <string>remove_outdated_document_scanner_active_process</string> </value>
         </item>
         <item>
             <key> <string>periodicity_day_frequency</string> </key>

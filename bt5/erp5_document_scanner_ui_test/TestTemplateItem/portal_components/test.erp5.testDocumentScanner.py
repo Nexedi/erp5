@@ -73,6 +73,6 @@ class DocumentScanner(ERP5TypeTestCase):
     req("update catalog set modification_date='{date}' where uid={uid}".format(
       date=(DateTime()-6).toZone('UTC'),
       uid=active_process.getUid()))
-    self.portal.portal_alarms.remove_outdated_document_scanner_active_processes.activeSense()
+    self.portal.portal_alarms.remove_outdated_document_scanner_active_process.activeSense()
     self.tic()
     self.assertNotIn(active_process.getId(), list(self.portal.portal_activities.objectIds()))
