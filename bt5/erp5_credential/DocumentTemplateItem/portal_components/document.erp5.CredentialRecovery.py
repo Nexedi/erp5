@@ -30,46 +30,41 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Ticket import Ticket
 from erp5.component.mixin.EncryptedPasswordMixin import EncryptedPasswordMixin
-try:
-  from Products import PluggableAuthService
-  from Products.ERP5Security.ERP5UserManager import ERP5UserManager
-except ImportError:
-  PluggableAuthService = None
 
 
 class CredentialRecovery(Ticket, EncryptedPasswordMixin):
-    """
-    """
+  """
+  """
 
-    meta_type = 'ERP5 Credential Recovery'
-    portal_type = 'Credential Recovery'
-    add_permission = Permissions.AddPortalContent
+  meta_type = 'ERP5 Credential Recovery'
+  portal_type = 'Credential Recovery'
+  add_permission = Permissions.AddPortalContent
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.CredentialQuestion
-                      , PropertySheet.DefaultCredentialQuestion
-                      , PropertySheet.Login
-                      , PropertySheet.Codification
-                      , PropertySheet.Person
-                      , PropertySheet.Url
-                      )
+  # Declarative properties
+  property_sheets = ( PropertySheet.CredentialQuestion
+                    , PropertySheet.DefaultCredentialQuestion
+                    , PropertySheet.Login
+                    , PropertySheet.Codification
+                    , PropertySheet.Person
+                    , PropertySheet.Url
+                    )
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'isAnswerCorrect')
-    def isAnswerCorrect(self):
-      '''
-      Check if the given answer match the real answer
-      The answer is not case sensitive
-      '''
-      related_person = self.getDestinationDecisionValue()
-      if related_person is not None:
-        real_answer = related_person.getDefaultCredentialQuestionAnswer()
-        if real_answer is not None:
-          proposed_answer = self.getDefaultCredentialQuestionAnswer()
-          if proposed_answer is not None:
-            return real_answer.lower() == proposed_answer.lower()
-      return False
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isAnswerCorrect')
+  def isAnswerCorrect(self):
+    '''
+    Check if the given answer match the real answer
+    The answer is not case sensitive
+    '''
+    related_person = self.getDestinationDecisionValue()
+    if related_person is not None:
+      real_answer = related_person.getDefaultCredentialQuestionAnswer()
+      if real_answer is not None:
+        proposed_answer = self.getDefaultCredentialQuestionAnswer()
+        if proposed_answer is not None:
+          return real_answer.lower() == proposed_answer.lower()
+    return False

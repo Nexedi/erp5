@@ -8,7 +8,6 @@ if REQUEST is not None:
 person = context.getDestinationDecisionValue(portal_type="Person")
 organisation = context.getDestinationDecisionValue(portal_type="Organisation")
 
-assignment_configuration = {}
 #Look on current assignment
 old_role_list = context.portal_categories.role.getCategoryChildLogicalPathItemList()[1:]
 #old_role_list look like [['title','logical_path'],]

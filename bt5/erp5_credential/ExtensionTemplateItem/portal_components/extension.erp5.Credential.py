@@ -71,9 +71,9 @@ def isSingleSignOnEnable(self):
   if isinstance(acl_users,PluggableAuthServiceTool):
      #List plugin which make authentication
     plugin_list = acl_users.plugins.listPlugins(IAuthenticationPlugin)
-    for plugin_name, plugin_value in plugin_list:
+    for _, plugin_value in plugin_list:
       #Try to find an ERP5RemoteUserManager
-      if isinstance(plugin_value,ERP5RemoteUserManager):
+      if isinstance(plugin_value, ERP5RemoteUserManager):
         #SSO is enable
         return True
   return False

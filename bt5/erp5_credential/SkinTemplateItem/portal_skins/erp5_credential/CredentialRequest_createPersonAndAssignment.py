@@ -9,8 +9,6 @@
 if REQUEST is not None:
   return None
 
-portal = context.getPortalObject()
-portal_preferences = context.portal_preferences
 
 # XXX by default we don't want to automatically create/update organisation
 # Someone should confirm this informations before creating the organisation
