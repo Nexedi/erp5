@@ -51,7 +51,7 @@ class DocumentScanner(ERP5TypeTestCase):
 
   def test_remove_outdated_active_process(self):
     data_dict = json.loads(
-      self.portal.Base_getDefaultBackendDataAsJSON())
+      self.portal.Base_getDocumentScannerDefaultBackendDataAsJSON())
     self.assertEqual(data_dict["image_list"], [])
     active_process_url = data_dict["active_process"]
     active_process = self.portal.restrictedTraverse(str(active_process_url))
