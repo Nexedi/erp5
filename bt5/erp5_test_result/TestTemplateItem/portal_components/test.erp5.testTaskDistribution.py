@@ -1547,6 +1547,17 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.test_result.stop()
       self.tic()
 
+  def test_stop_test_build_failure(self):
+    self._start_test_result()
+    self.test_result.setStringIndex('FAILED')
+    with responses.RequestsMock() as rsps:
+      rsps.add_callback(
+          responses.POST,
+          self.post_commit_status_url,
+          self._response_callback('failed'))
+      self.test_result.fail()
+      self.tic()
+
   def test_TestResult_getTestSuiteData(self):
     """test for TestResult_getTestSuiteData helper script
     """
