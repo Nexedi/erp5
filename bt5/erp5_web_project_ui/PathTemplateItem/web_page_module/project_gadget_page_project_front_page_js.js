@@ -23,7 +23,10 @@
     // Where to define/get the limit date? by portal_type or the same for all documents?
     //date ISO string format: "yyyy-mm-ddThh:mm:ss.mmmm"
     //JIO query date format:  "yyyy-mm-dd hh:mm:ss"
-    LIMIT_DATE = new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+    //FOR DEMO
+    /*LIMIT_DATE = new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+      .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),*/
+    LIMIT_DATE = new Date(2019, 11, 19, 10, 33, 30, 0)
       .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),
     NOW_DATE = new Date().toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),
     //XXX hardcoded portal_types, states and titles dict
@@ -225,7 +228,9 @@
       query: project_query,
       limit: QUERY_LIMIT,
       select_list: ['title', 'source_decision_title'],
-      sort_on: [["title", "ascending"]]
+      //FOR DEMO
+      //sort_on: [["title", "ascending"]],
+      sort_on: [["modification_date", "ascending"]]
     })
       .push(function (result) {
         return result.data.rows;
@@ -424,15 +429,15 @@
             getUrlParameterDict('task_module',
                                 "view",
                                 [["delivery.start_date", "descending"]],
-                                ["title", "delivery.start_date", "source_title"],
+                                ["title", "delivery.start_date", "source_title", "translated_simulation_state_title"],
                                 createProjectQuery(project_list[i].id,
-                                                   [["selection_domain_state_task_domain", "confirmed"]]))
+                                                   [["selection_domain_state_task_domain", "opened"]]))
           );
           task_report_url_list.push(
             getUrlParameterDict('task_report_module',
                                 'view',
                                 [["delivery.start_date", "descending"]],
-                                ["title", "delivery.start_date", "source_title"],
+                                ["title", "delivery.start_date", "source_title", "translated_simulation_state_title"],
                                 createProjectQuery(project_list[i].id,
                                                    [["selection_domain_state_task_report_domain", "confirmed"]]))
           );
@@ -440,7 +445,8 @@
             getUrlParameterDict('bug_module',
                                 "view",
                                 [["delivery.start_date", "descending"]],
-                                ["title", "description", "source_person_title", "destination_person_title", "delivery.start_date"],
+                                ["title", "description", "source_person_title", "destination_person_title",
+                                 "delivery.start_date", "translated_simulation_state_title"],
                                 createProjectQuery(project_list[i].id,
                                                    [["selection_domain_state_bug_domain", "open"]]))
           );
@@ -547,8 +553,6 @@
     })
 
     .declareJob("renderOtdatedMilestoneInfo", function () {
-      //XXX For testing -> use NOW_DATE
-      return renderMilestoneLines(this, NOW_DATE);
       return renderMilestoneLines(this, LIMIT_DATE);
     })
 
@@ -557,8 +561,6 @@
     })
 
     .declareJob("renderOutdatedDocumentInfo", function () {
-      //XXX For testing -> use NOW_DATE
-      //return renderProjectDocumentLines(this, NOW_DATE);
       return renderProjectDocumentLines(this, LIMIT_DATE);
     })
 
@@ -614,8 +616,11 @@
                                       FORUM_LINK_ID_SUFFIX, true)
             );
             if (forum_link_html) {
-              forum_link_html.href = forum_link_list[i].value.url_string;
-              forum_link_html.innerHTML = forum_link_list[i].value.title;
+              //forum_link_html.href = forum_link_list[i].value.url_string;
+              //forum_link_html.innerHTML = forum_link_list[i].value.title;
+              //HARDCODED FOR DEMO
+              forum_link_html.href = "https://www.erp5.com/group_section/forum";
+              forum_link_html.innerHTML = "forum link";
               forum_link_html.classList.remove("ui-hidden");
             }
           }
