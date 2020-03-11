@@ -45,9 +45,8 @@
                                                            'text': 'Data received.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
-<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr><td>assertText</td>
+<tr><td>waitForText</td>
     <td>//p[@id='field_last_form_id']</td>
     <td>Foo_viewRelationField</td></tr>
 </tbody></table>
