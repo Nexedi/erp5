@@ -163,6 +163,10 @@ ignored_skin_id_set = {
   'ProductionDelivery_getSimulationStateColorText',
   'CurrencyExchange_getExchangeRateList',
   'ERP5Folder_getUnrestrictedContentTypeList',
+  'FCKeditor_getDocumentList',
+  'FCKeditor_getDocumentListQuery',
+  'FCKeditor_getImageList',
+  'FCKeditor_getSetReferenceUrl',
 }
 
 # Generic method to check consistency of a skin item
