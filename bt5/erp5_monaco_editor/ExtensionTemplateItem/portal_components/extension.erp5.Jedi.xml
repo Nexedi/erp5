@@ -45,7 +45,18 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W: 54,  2: Reimport \'erp5.portal_type\' (imported line 20) (reimported)</string>
+                <string>W: 80,  8: Unreachable code (unreachable)</string>
+                <string>W: 80,  8: Unused variable \'annotation_classes\' (unused-variable)</string>
+                <string>W:  7,  0: Unused TYPE_CHECKING imported from typing (unused-import)</string>
+                <string>W:  7,  0: Unused Tuple imported from typing (unused-import)</string>
+                <string>W:  7,  0: Unused Sequence imported from typing (unused-import)</string>
+                <string>W:  7,  0: Unused Dict imported from typing (unused-import)</string>
+                <string>W:  7,  0: Unused Optional imported from typing (unused-import)</string>
+                <string>W: 56,  0: Unused Type imported from typing (unused-import)</string>
+                <string>W: 56,  0: Unused List imported from typing (unused-import)</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -100,24 +111,28 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
     <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>validate</string> </value>
-            </item>
-            <item>
-                <key> <string>validation_state</string> </key>
-                <value> <string>validated</string> </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>validate</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>validated</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
     </pickle>
   </record>
 </ZopeData>
