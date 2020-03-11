@@ -49,23 +49,19 @@
   <td>${base_url}/web_site_module/renderjs_runner/#/bar_module/1</td>
   <td></td>
 </tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
 
 <!-- Wait for gadget to be loaded -->
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view.html']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Title 1</td>
   <td></td>
 </tr>
 
 <!-- Header has a link to the export page
      Here, we assume that portal_types/Bar has no Object JIO Report Action -->
 <tr>
-  <td>waitForElementPresent</td>
+  <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='header']//a[text()='Export' and contains(@class, 'ui-disabled')]</td>
   <td></td>
 </tr>
