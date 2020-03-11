@@ -279,6 +279,26 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_service_worker_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_precache_manifest_script_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -353,11 +373,22 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_erp5_project.appcache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
             <value> <string>gadget_erp5_project_panel.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_precache_manifest_script_list</string> </key>
+            <value> <string>WebSection_getCKEditorPrecacheManifestList\n
+WebSection_getWebProjectPrecacheManifestList</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_service_worker_url</string> </key>
+            <value> <string>gadget_erp5_serviceworker.js</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
