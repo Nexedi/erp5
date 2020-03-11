@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testCacheManifest</string> </value>
+            <value> <string>testServiceWorker</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode>Cache Manifest can be fully loaded</unicode> </value>
+            <value> <unicode>Service Worker can be fully loaded</unicode> </value>
         </item>
       </dictionary>
     </pickle>
