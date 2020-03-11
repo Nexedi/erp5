@@ -5,21 +5,21 @@ Manager -- allow to update all image property"""
 if REQUEST is not None:
   raise ValueError, "This script can not be call from url"
 
-def getAccessor(property):
-  return "".join([x.capitalize() for x in property.split('_')])
+def getAccessor(prop):
+  return "".join([x.capitalize() for x in prop.split('_')])
 
 def copyValue(source_document, source_accessor,
               destination_document, destination_accessor):
-    getter = getattr(source_document, 'get%s' % source_accessor)
-    value = getter() 
-    setter = getattr(destination_document, 'set%s' % destination_accessor)
-    setter(value)
+  getter = getattr(source_document, 'get%s' % source_accessor)
+  value = getter()
+  setter = getattr(destination_document, 'set%s' % destination_accessor)
+  setter(value)
 
 def copyDocument(source_document, destination_document, mapping):
-    for source_property, destination_property in mapping:
-        source_accessor, destination_accessor = getAccessor(source_property), getAccessor(destination_property)
-        copyValue(source_document, source_accessor,
-                  destination_document, destination_accessor)
+  for source_property, destination_property in mapping:
+    source_accessor, destination_accessor = getAccessor(source_property), getAccessor(destination_property)
+    copyValue(source_document, source_accessor,
+              destination_document, destination_accessor)
 
 new_default_image = context.getDefaultImageValue()
 if new_default_image is not None:
