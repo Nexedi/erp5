@@ -5,6 +5,8 @@ import typing
 import logging
 from threading import RLock
 
+from Products.ERP5Type.Cache import transactional_cached
+
 logger = logging.getLogger("erp5.extension.Jedi")
 
 import os
@@ -43,7 +45,9 @@ from jedi.evaluate.lazy_context import LazyKnownContexts
 from jedi.evaluate.base_context import ContextSet, NO_CONTEXTS
 
 if typing.TYPE_CHECKING:
-  import erp5.portal_type.ERP5Site  # pylint: disable=unused-import,no-name-in-module,import-error
+  import erp5.portal_type
+
+from typing import List, Type
 
 
 def executeJediXXX(callback, context, arguments):
@@ -55,8 +59,7 @@ def executeJediXXX(callback, context, arguments):
     def filter_func(val):
       if isinstance(val, TreeInstance) and val.tree_node.type == 'classdef':
         logger.info(
-            "classdef cool => %s == %s",
-            val.tree_node.name.value,
+            "classdef cool => %s == %s", val.tree_node.name.value,
             class_from_portal_type)
         return val.tree_node.name.value == class_from_portal_type
       if isinstance(val, LazyKnownContexts) and filter_func(val.infer()):
@@ -108,8 +111,7 @@ def executeJediXXX(callback, context, arguments):
         #    {x for x in original._set if class_from_portal_type in str(x)})
         logger.info(
             'portal_type based method, returning\n   %s instead of\n   %s',
-            filtered,
-            original)
+            filtered, original)
         return filtered
 
   # methods returning List of portal types
@@ -190,19 +192,22 @@ _TYPE_MAP = {
 
 def _label(definition):
   # type: (jedi.api.classes.Completion,) -> str
-  if definition.type == 'param':
-    return '{}='.format(definition.name)
+  #if definition.type == 'param':
+  #  return '{}='.format(definition.name)
   if definition.type in ('function', 'method') and hasattr(definition,
                                                            'params'):
     params = ', '.join([param.name for param in definition.params])
     return '{}({})'.format(definition.name, params)
   return definition.name
 
+
 def _insertText(definition):
   # type: (jedi.api.classes.Completion,) -> str
-  if definition.type == 'param':
-    return '{}='.format(definition.name)
+  # XXX
+  #if definition.type == 'param':
+  #  return '{}='.format(definition.name)
   return definition.name
+
 
 def _detail(definition):
   try:
@@ -220,8 +225,12 @@ def _sort_text(definition):
   return prefix.format(definition.name)
 
 
-def _format_docstring(docstring):
-  return docstring
+def _format_docstring(d):
+  try:
+    return d.docstring()
+  except Exception as e:
+    logger.exception('error getting completions from %s', d)
+    return "```{}```".format(repr(e))
 
 
 def _format_completion(d):
@@ -230,7 +239,7 @@ def _format_completion(d):
       'label': _label(d),
       '_kind': _TYPE_MAP.get(d.type),
       'detail': _detail(d),
-      'documentation': _format_docstring(d.docstring()),
+      'documentation': _format_docstring(d),
       'sortText': _sort_text(d),
       'insertText': _insertText(d),
   }
@@ -247,7 +256,8 @@ def _guessType(name, context_type=None):
     return context_type
   if name in (
       'context',
-      'container',):
+      'container',
+  ):
     return 'erp5.portal_type.ERP5Site'
   if name == 'script':
     return 'Products.PythonScripts.PythonScript'
@@ -260,7 +270,7 @@ def _guessType(name, context_type=None):
 
 # Jedi is not thread safe
 import Products.ERP5Type.Utils
-jedi_lock = getattr(Products.ERP5Type.Utils, 'jedi_lock', None) # type: RLock
+jedi_lock = getattr(Products.ERP5Type.Utils, 'jedi_lock', None)  # type: RLock
 if jedi_lock is None:
   logger.critical("There was no lock, making a new one")
   jedi_lock = Products.ERP5Type.Utils.jedi_lock = RLock()
@@ -272,66 +282,70 @@ def ERP5Site_getPythonSourceCodeCompletionList(self, data, REQUEST=None):
   """
   portal = self.getPortalObject()
   logger.debug('jedi get lock %s (%s)', jedi_lock, id(jedi_lock))
-  if not jedi_lock.acquire(False):
+  for _ in range(10):
+    locked = not jedi_lock.acquire(False)
+    if locked:
+      time.sleep(.5)
+    else:
+      jedi_lock.release()
+      break
+  else:
     raise RuntimeError('jedi is locked')
-  with jedi_lock:
 
+  with jedi_lock:
     # register our erp5 plugin
     from jedi.plugins import plugin_manager
     if not getattr(plugin_manager, '_erp5_plugin_registered', None):
       plugin_manager.register(makeERP5Plugin())
       plugin_manager._erp5_plugin_registered = True
 
-    if isinstance(data, basestring):
-      data = json.loads(data)
+  if isinstance(data, basestring):
+    data = json.loads(data)
 
-    # data contains the code, the bound names and the script params. From this
-    # we reconstruct a function that can be checked
+  # data contains the code, the bound names and the script params. From this
+  # we reconstruct a function that can be checked
 
-    def indent(text):
-      return ''.join(("  " + line) for line in text.splitlines(True))
+  def indent(text):
+    return ''.join(("  " + line) for line in text.splitlines(True))
 
-    script_name = data.get('script_name', 'unknown.py')  #  TODO name
-    is_python_script = 'bound_names' in data
+  script_name = data.get('script_name', 'unknown.py')  #  TODO name
+  is_python_script = 'bound_names' in data
 
-    if is_python_script:
-      signature_parts = data['bound_names']
-      if data['params']:
-        signature_parts += [data['params']]
-      signature = ", ".join(signature_parts)
+  if is_python_script:
+    signature_parts = data['bound_names']
+    if data['params']:
+      signature_parts += [data['params']]
+    signature = ", ".join(signature_parts)
 
-      # guess type of `context`
-      context_type = None
-      if '_' in script_name:
-        context_type = script_name.split('_')[0]
+    # guess type of `context`
+    context_type = None
+    if '_' in script_name:
+      context_type = script_name.split('_')[0]
 
-        if context_type not in [ti.replace(' ', '')
-                                for ti in portal.portal_types.objectIds()] + [
-                                    'ERP5Site',]:
-          logger.warning(
-              "context_type %s has no portal type, using ERP5Site",
-              context_type)
-          context_type = None
-        else:
-          context_type = 'erp5.portal_type.{}'.format(context_type)
+      if context_type not in [ti.replace(' ', '')
+                              for ti in portal.portal_types.objectIds()] + [
+                                  'ERP5Site',
+                              ]:
+        logger.warning(
+            "context_type %s has no portal type, using ERP5Site", context_type)
+        context_type = None
+      else:
+        context_type = 'erp5.portal_type.{}'.format(context_type)
 
-      imports = "import erp5.portal_type; import Products.ERP5Type.Core.Folder; import ZPublisher.HTTPRequest; import Products.PythonScripts"
-      type_annotation = "  #  type: ({}) -> None".format(
-          ', '.join(
-              [_guessType(part, context_type) for part in signature_parts]))
-      body = "%s\ndef %s(%s):\n%s\n%s" % (
-          imports,
-          script_name,
-          signature,
-          type_annotation,
-          indent(data['code']) or "  pass")
-      data['position']['line'] = data['position'][
-          'line'] + 3  # imports, fonction header + type annotation line
-      data['position'][
-          'column'] = data['position']['column'] + 2  # "  " from indent(text)
-    else:
-      body = data['code']
+    imports = "import erp5.portal_type; import Products.ERP5Type.Core.Folder; import ZPublisher.HTTPRequest; import Products.PythonScripts"
+    type_annotation = "  #  type: ({}) -> None".format(
+        ', '.join([_guessType(part, context_type) for part in signature_parts]))
+    body = "%s\ndef %s(%s):\n%s\n%s" % (
+        imports, script_name, signature, type_annotation, indent(data['code'])
+        or "  pass")
+    data['position']['line'] = data['position'][
+        'line'] + 3  # imports, fonction header + type annotation line
+    data['position'][
+        'column'] = data['position']['column'] + 2  # "  " from indent(text)
+  else:
+    body = data['code']
 
+  with jedi_lock:
     logger.debug("jedi getting completions for %s ...", script_name)
     start = time.time()
     script = jedi.Script(
@@ -342,18 +356,80 @@ def ERP5Site_getPythonSourceCodeCompletionList(self, data, REQUEST=None):
         sys_path=['/tmp/ahaha/'] + list(sys.path),
     )
 
-    completions = [_format_completion(c) for c in script.completions()]
-    logger.info(
-        "jedi got %d completions in %.2fs",
-        len(completions), (time.time() - start))
+    def _get_param_name(p):
+      if (p.name.startswith('param ')):
+        return p.name[6:]  # drop leading 'param '
+      return p.name
 
+    def _get_param_value(p):
+      pair = p.description.split('=')
+      if (len(pair) > 1):
+        return pair[1]
+      return None
+
+    completions = []
+    signature_completions = set()
+    try:
+      signatures = []
+      call_signatures = script.call_signatures()
+      logger.info(
+          "jedi first got %d call signatures in %.2fs", len(call_signatures),
+          (time.time() - start))
+      for signature in call_signatures:
+        for pos, param in enumerate(signature.params):
+          if not param.name:
+            continue
+
+          name = _get_param_name(param)
+          if param.name == 'self' and pos == 0:
+            continue
+          if name.startswith('*'):
+            continue
+
+          value = _get_param_value(param)
+          signatures.append((signature, name, value))
+      for signature, name, value in signatures:
+
+        completion = {
+            'label': '{}='.format(name),
+            '_kind': 'Variable',
+            'detail': value,
+            #'documentation': value,
+            'sortText': 'aaaaa_{}'.format(name),
+            'insertText': '{}='.format(name),
+        }
+
+        completions.append(completion)
+        signature_completions.add(name)
+    except Exception:
+      logger.exception("Error getting call signatures")
+    completions.extend(
+        _format_completion(c)
+        for c in script.completions()
+        if c.name not in signature_completions)
+
+    logger.info(
+        "jedi got %d completions in %.2fs", len(completions),
+        (time.time() - start))
     if data.get('xxx_hover'):
       completions = ''  # XXX this is not "completions" ...
       for definition in script.goto_definitions():
-        completions = definition.docstring()
-    if REQUEST is not None:
-      REQUEST.RESPONSE.setHeader('content-type', 'application/json')
-    return json.dumps(completions)
+        documentation_lines = definition.docstring().splitlines()
+        # reformat this in nicer markdown
+        completions = textwrap.dedent(
+            '''\
+            `{}`
+
+            ---
+            {}
+            ''').format(
+                documentation_lines[0],
+                '\n'.join(documentation_lines[1:]),
+            )
+        logger.info('hover: %s', completions)
+  if REQUEST is not None:
+    REQUEST.RESPONSE.setHeader('content-type', 'application/json')
+  return json.dumps(completions)
 
 
 import textwrap
@@ -469,10 +545,7 @@ def SkinsTool_getStubForClass(self, class_name):
 
       skin_by_type[type_].append(
           SkinDefinition(
-              script.getId(),
-              docstring,
-              type_comment,
-              skin_folder.getId(),
+              script.getId(), docstring, type_comment, skin_folder.getId(),
               params))
 
   for type_, skins in skin_by_type.items():
@@ -507,6 +580,104 @@ def SkinsTool_getStubForClass(self, class_name):
   return "\n".join(line_list)
 
 
+@WorkflowMethod.disable
+def makeTempClass(portal, portal_type):
+  # type: (erp5.portal_type.ERP5Site, str) -> Type[Products.ERP5Type.Base.Base]
+  # everything is allowed in portal trash so we create our
+  # temp object there.
+  return portal.portal_trash.newContent(
+      portal_type=portal_type,
+      temp_object=True,
+      id='?',
+      title='?',
+  ).__class__
+
+
+def _getPythonTypeFromPropertySheetType(prop):
+  # type: (erp5.portal_type.StandardProperty,) -> str
+  property_sheet_type = prop.getElementaryType()
+  if property_sheet_type in ('content', 'object'):
+    # TODO
+    return 'Any'
+  mapped_type = {
+      'string': 'str',
+      'boolean': 'bool',
+      'data': 'bytes',
+      # XXX jedi does not understand DateTime dynamic name, so use "real name"
+      'date': 'DateTime.DateTime',
+      'int': 'int',
+      'long': 'int',  # ???
+      'lines': 'List[str]',
+      'tokens': 'List[str]',
+      'float': 'float',
+      'text': 'str',
+  }.get(property_sheet_type, 'Any')
+  if prop.isMultivalued() \
+        and property_sheet_type not in ('lines', 'token'):
+    # XXX see Resource/p_variation_base_category_property, we can have multivalued lines properties
+    return 'List[{}]'.format(mapped_type)
+  return mapped_type
+
+
+def _isMultiValuedProperty(prop):
+  # type: (erp5.portal_type.StandardProperty,) -> str
+  """If this is a multi valued property, we have to generate list accessor.
+  """
+  if prop.isMultivalued():
+    return True
+  return prop.getElementaryType() in ('lines', 'tokens')
+
+
+@transactional_cached()
+def TypeInformation_getEditParameterDict(self):
+  # type: (ERP5TypeInformation) -> Dict[str, Tuple[str, str]]
+  """returns a mapping of properties that can be set on this type by edit or newContent
+  
+  The returned data format is tuples containing documentation and type annotations,
+  keyed by parameter, like:
+
+    { "title": ("The title of the document", "str") }
+
+  """
+
+  portal = self.getPortalObject()
+  property_dict = {}  # type: Dict[str, Tuple[str, str]]
+
+  temp_class = makeTempClass(portal, self.getId())
+  for property_sheet_id in [
+      parent_class.__name__
+      for parent_class in temp_class.mro()
+      if parent_class.__module__ == 'erp5.accessor_holder.property_sheet'
+  ]:
+    property_sheet = portal.portal_property_sheets[property_sheet_id]
+    for prop in property_sheet.contentValues():
+      if not prop.getReference():
+        continue
+      if prop.getPortalType() in ('Standard Property', 'Acquired Property'):
+        property_dict[('{}_list' if _isMultiValuedProperty(prop) else
+                       '{}').format(prop.getReference())] = (
+                           prop.getDescription(),
+                           _getPythonTypeFromPropertySheetType(prop))
+      elif prop.getPortalType() in ('Category Property',
+                                    'Dynamic Category Property'):
+
+        property_dict['{}'.format(
+            prop.getReference())] = (prop.getDescription(), 'str')
+        if 0:  # too slow
+          property_dict['{}_list'.format(
+              prop.getReference())] = (prop.getDescription(), 'List[str]')
+          property_dict['{}_value'.format(prop.getReference())] = (
+              prop.getDescription(), 'Products.ERP5Type.Base.Base')
+          property_dict['{}_value_list'.format(prop.getReference())] = (
+              prop.getDescription(), 'List[Products.ERP5Type.Base.Base]')
+
+      elif prop.getPortalType() == 'Dynamic Category Property':
+        # TODO
+        pass
+
+  return property_dict
+
+
 def TypeInformation_getStub(self):
   # type: (ERP5TypeInformation) -> str
   """returns a .pyi stub file for this portal type
@@ -518,14 +689,7 @@ def TypeInformation_getStub(self):
   # TODO: getParentValue
   # TODO: a class for magic things like getPortalObject ?
 
-  @WorkflowMethod.disable
-  def makeTempClass():
-    # everything is allowed in portal trash so we create our
-    # temp object there.
-    return portal.portal_trash.newContent(
-        portal_type=self.getId(), temp_object=True, id='?', title='?').__class__
-
-  temp_class = makeTempClass()
+  temp_class = makeTempClass(portal, self.getId())
 
   # mro() of temp objects is like :
   # (<class 'erp5.temp_portal_type.Temporary Person Module'>,
@@ -538,13 +702,15 @@ def TypeInformation_getStub(self):
   parent_class = temp_class.mro()[1]
   parent_class_module = parent_class.__module__
 
-  imports = set([
-      'from erp5.portal_type import Type_CatalogBrain',
-      'from erp5.portal_type import Type_AnyPortalTypeList',
-      'from erp5.portal_type import Type_AnyPortalTypeCatalogBrainList',
-      'from typing import Union, List, Optional, Any, overload, Literal, TypeVar, Generic',
-      'from DateTime import DateTime.DateTime as DateTime # XXX help jedi',
-  ])
+  imports = set(
+      [
+          'import Products.ERP5Type.Base.Base',
+          'from erp5.portal_type import Type_CatalogBrain',
+          'from erp5.portal_type import Type_AnyPortalTypeList',
+          'from erp5.portal_type import Type_AnyPortalTypeCatalogBrainList',
+          'from typing import Union, List, Optional, Any, overload, Literal, TypeVar, Generic',
+          'from DateTime.DateTime import DateTime as DateTime # XXX help jedi',
+      ])
   header = ""
   methods = []
   debug = ""
@@ -561,16 +727,6 @@ def TypeInformation_getStub(self):
           # This is not really valid for a .pyi, but jedi does not care.
           docstring="{}\n    return '{}'".format(
               safe_docstring(self.getId()), self.getId())))
-
-  # XXX debug
-  methods.append(
-      method_template_template.format(
-          decorator='',
-          method_name='reveal_portal_tye_{}'.format(
-              safe_python_identifier(self.getId())),
-          method_args='self',
-          return_type='',
-          docstring=safe_docstring("ahaha cool :)")))
 
   imports.add('from erp5.portal_type import ERP5Site')
   methods.append(
@@ -596,11 +752,10 @@ def TypeInformation_getStub(self):
               method_args="self",
               return_type=type(property_value.value).__name__,
               docstring=safe_docstring('TODO %s' % property_value)))
-    elif isinstance(property_value,
-                    (WorkflowState.TitleGetter,
-                     WorkflowState.TranslatedGetter,
-                     WorkflowState.TranslatedTitleGetter,
-                     WorkflowState.Getter)):
+    elif isinstance(
+        property_value,
+        (WorkflowState.TitleGetter, WorkflowState.TranslatedGetter,
+         WorkflowState.TranslatedTitleGetter, WorkflowState.Getter)):
       # TODO: docstring (with link to workflow)
       methods.append(
           method_template_template.format(
@@ -634,8 +789,7 @@ def TypeInformation_getStub(self):
     # TODO: generated methods for categories.
     else:
       debug += "\n  # not handled property: {} -> {} {}".format(
-          property_name,
-          property_value,
+          property_name, property_value,
           getattr(property_value, '__dict__', ''))
 
   # for folderish contents, generate typed contentValues
@@ -661,9 +815,10 @@ def TypeInformation_getStub(self):
         if len(allowed_content_types) > 1:
           # not correct but it makes jedi complete well when portal_type='one'
           return_type = 'Union[{}]'.format(
-              ', '.join((
-                  'List[Type_CatalogBrain[{}]]'.format(t)
-                  for t in allowed_content_types_classes)))
+              ', '.join(
+                  (
+                      'List[Type_CatalogBrain[{}]]'.format(t)
+                      for t in allowed_content_types_classes)))
       methods.append(
           method_template_template.format(
               decorator='',
@@ -673,11 +828,29 @@ def TypeInformation_getStub(self):
               docstring=safe_docstring(
                   getattr(getattr(temp_class, method_name), '__doc__', None))))
 
+    new_content_method_arg = "self"
+    parameters_by_parameter_name = defaultdict(list)
+    for allowed_content_type in allowed_content_types:
+      for prop, prop_def in TypeInformation_getEditParameterDict(
+          portal.portal_types[allowed_content_type]).items():
+        parameters_by_parameter_name[prop].append(
+            (allowed_content_type, prop_def))
+    if parameters_by_parameter_name:
+      new_content_method_arg += ',\n'
+    for prop, prop_defs in sorted(parameters_by_parameter_name.items()):
+      # XXX we could build a better documentation with this prop_def, but no tools seems to understand this.
+      # XXX can we assume that all properties have same types ? shouldn't we build unions ?
+      param_type = prop_defs[0][1][1]
+      new_content_method_arg += '    {}:{} = None,\n'.format(
+          safe_python_identifier(prop),
+          param_type,
+      )
+
     methods.append(
         method_template_template.format(
             decorator='',
             method_name='newContent',
-            method_args="self",  # TODO
+            method_args=new_content_method_arg,
             return_type=subdocument_type,
             docstring=safe_docstring(
                 getattr(temp_class.newContent, '__doc__', None))))
@@ -688,7 +861,8 @@ def TypeInformation_getStub(self):
         '__getattr__',
         '__getitem__',
         '_getOb',
-        'get',):
+        'get',
+    ):
       methods.append(
           method_template_template.format(
               decorator='',
@@ -700,7 +874,8 @@ def TypeInformation_getStub(self):
   for identity_method in (
       'getObject',
       'asContext',
-      '__of__',):
+      '__of__',
+  ):
     method = getattr(temp_class, identity_method, None)
     if method is not None:
       methods.append(
@@ -812,55 +987,12 @@ def PropertySheet_getStub(self):
   debug = ''
   methods = []
   imports = [
-      'from typing import Optional, List, Any',
-      'from DateTime import DateTime',
+      'from typing import Optional, List, Any', 'from DateTime import DateTime',
       'from erp5.portal_type import Type_CatalogBrain',
       'from erp5.portal_type import Type_AnyPortalType',
       'from erp5.portal_type import Type_AnyPortalTypeList'
   ]
   method_template_template = """  def {method_name}({method_args}) -> {return_type}:\n    {docstring}"""
-
-  # debug
-  methods.append(
-      method_template_template.format(
-          method_name='reveal_property_sheet_{}'.format(
-              safe_python_identifier(self.getId())),
-          method_args='self',
-          return_type='str',
-          docstring=safe_docstring("ahaha cool :)")))
-
-  def _getPythonTypeFromPropertySheetType(prop):
-    # type: (erp5.portal_type.StandardProperty,) -> str
-    property_sheet_type = prop.getElementaryType()
-    if property_sheet_type in ('content', 'object'):
-      # TODO
-      return 'Any'
-    mapped_type = {
-        'string': 'str',
-        'boolean': 'bool',
-        'data': 'bytes',
-          # XXX jedi does not understand DateTime dynamic name, so use "real name"
-        'date': 'DateTime.DateTime',
-        'int': 'int',
-        'long': 'int',  # ???
-        'lines': 'List[str]',
-        'tokens': 'List[str]',
-        'float': 'float',
-        'text': 'str',
-    }.get(property_sheet_type, 'Any')
-    if prop.isMultivalued() \
-          and property_sheet_type not in ('lines', 'token'):
-       # XXX see Resource/p_variation_base_category_property, we can have multivalued lines properties
-      return 'List[{}]'.format(mapped_type)
-    return mapped_type
-
-  def _isMultiValuedProperty(prop):
-    # type: (erp5.portal_type.StandardProperty,) -> str
-    """If this is a multi valued property, we have to generate list accessor.
-    """
-    if prop.isMultivalued():
-      return True
-    return prop.getElementaryType() in ('lines', 'tokens')
 
   from Products.ERP5Type.Utils import convertToUpperCase
   from Products.ERP5Type.Utils import evaluateExpressionFromString
@@ -1083,12 +1215,14 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
   # generate erp5/__init__.py
   with open(
       os.path.join(module_dir, '__init__.py'),
-      'w',) as erp5__init__f:
+      'w',
+  ) as erp5__init__f:
     for module in (
         'portal_type',
         'accessor_holder',
         'skins_tool',
-        'component',):
+        'component',
+    ):
       erp5__init__f.write('from . import {module}\n'.format(module=module))
       mkdir_p(os.path.join(module_dir, module))
       if module == 'portal_type':
@@ -1098,8 +1232,10 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
             os.path.join(
                 module_dir,
                 module,
-                '__init__.py',),
-            'w',) as module_f:
+                '__init__.py',
+            ),
+            'w',
+        ) as module_f:
           for ti in portal.portal_types.contentValues():
             class_name = safe_python_identifier(ti.getId())
             all_portal_type_class_names.append(class_name)
@@ -1120,12 +1256,9 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
                 logger.exception("Could not generate code for %s", ti.getId())
                 stub_code = """class {class_name}:\n  {error}""".format(
                     class_name=class_name,
-                    error=safe_docstring("Error trying to create {}: {} {}".format(
-                        ti.getId(),
-                        e.__class__,
-                        e
-                    ))
-                )
+                    error=safe_docstring(
+                        "Error trying to create {}: {} {}".format(
+                            ti.getId(), e.__class__, e)))
               type_information_f.write(stub_code)
 
           # portal type groups ( useful ? used in Simulation Tool only )
@@ -1143,7 +1276,8 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
                 os.path.join(
                     module_dir,
                     module,
-                    '{}.pyi'.format(group_class),),
+                    '{}.pyi'.format(group_class),
+                ),
                 'w',
             ) as group_f:
               group_f.write(
@@ -1168,8 +1302,10 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
               os.path.join(
                   module_dir,
                   module,
-                  'ICatalogTool.pyi',),
-              'w',) as portal_f:
+                  'ICatalogTool.pyi',
+              ),
+              'w',
+          ) as portal_f:
             portal_f.write(
                 textwrap.dedent(
                     '''
@@ -1191,8 +1327,10 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
               os.path.join(
                   module_dir,
                   module,
-                  'ISimulationTool.pyi',),
-              'w',) as portal_f:
+                  'ISimulationTool.pyi',
+              ),
+              'w',
+          ) as portal_f:
             portal_f.write(
                 textwrap.dedent(
                     '''
@@ -1211,8 +1349,10 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
               os.path.join(
                   module_dir,
                   module,
-                  'ERP5Site.pyi',),
-              'w',) as portal_f:
+                  'ERP5Site.pyi',
+              ),
+              'w',
+          ) as portal_f:
             portal_f.write(ERP5Site_getPortalStub(self.getPortalObject()))
 
           # some type helpers
@@ -1221,8 +1361,10 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
               os.path.join(
                   module_dir,
                   module,
-                  'Type_CatalogBrain.pyi',),
-              'w',) as catalog_brain_f:
+                  'Type_CatalogBrain.pyi',
+              ),
+              'w',
+          ) as catalog_brain_f:
             catalog_brain_f.write(
                 textwrap.dedent(
                     '''
@@ -1241,7 +1383,8 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
               os.path.join(
                   module_dir,
                   module,
-                  'Type_InventoryListBrain.pyi',),
+                  'Type_InventoryListBrain.pyi',
+              ),
               'w',
           ) as catalog_brain_f:
             catalog_brain_f.write(
@@ -1249,7 +1392,7 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
                     '''
                     from typing import TypeVar, Generic
                     from erp5.component.extension.InventoryBrain import InventoryListBrain
-                    from DateTime import DateTime.DateTime as DateTime
+                    from DateTime.DateTime import DateTime as DateTime
                     from erp5.portal_type import Group_node
                     from erp5.portal_type import Group_resource
 
@@ -1294,8 +1437,7 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
               'Type_AnyPortalType = Union[\n  {}]\n'.format(
                   ',\n  '.join(
                       '{}'.format(portal_type_class)
-                      for portal_type_class in all_portal_type_class_names),
-              ))
+                      for portal_type_class in all_portal_type_class_names),))
           module_f.write(
               'Type_AnyPortalTypeList = Union[\n  {}]\n'.format(
                   ',\n  '.join(
@@ -1305,22 +1447,21 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
               'Type_AnyPortalTypeCatalogBrainList = Union[\n  {}]\n'.format(
                   ',\n  '.join(
                       'List[Type_CatalogBrain[{}]]'.format(portal_type_class)
-                      for portal_type_class in all_portal_type_class_names),
-              ))
+                      for portal_type_class in all_portal_type_class_names),))
           module_f.write(
               'Type_AnyPortalTypeInventoryListBrainList = Union[\n  {}]\n'
               .format(
                   ',\n  '.join(
                       'List[Type_InventoryListBrain[{}]]'.format(
                           portal_type_class)
-                      for portal_type_class in all_portal_type_class_names),
-              ))
+                      for portal_type_class in all_portal_type_class_names),))
 
       elif module == 'accessor_holder':
         # TODO: real path is accessor_holder.something !?
         with open(
             os.path.join(module_dir, module, '__init__.py'),
-            'w',) as accessor_holder_f:
+            'w',
+        ) as accessor_holder_f:
           for ps in portal.portal_property_sheets.contentValues():
             class_name = safe_python_identifier(ps.getId())
             accessor_holder_f.write(
@@ -1339,7 +1480,8 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
         skins_tool = portal.portal_skins
         with open(
             os.path.join(module_dir, module, '__init__.py'),
-            'w',) as skins_tool_f:
+            'w',
+        ) as skins_tool_f:
           for class_name in SkinsTool_getClassSet(skins_tool):
             skins_tool_f.write(
                 'from {class_name} import {class_name}\n'.format(
@@ -1348,13 +1490,15 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
                 os.path.join(
                     module_dir,
                     module,
-                    '{}.pyi'.format(class_name),),
+                    '{}.pyi'.format(class_name),
+                ),
                 'w',
             ) as skin_f:
               skin_f.write(
                   SkinsTool_getStubForClass(
                       skins_tool,
-                      class_name,).encode('utf-8'))
+                      class_name,
+                  ).encode('utf-8'))
       elif module == 'component':
         # TODO: component versions ?
         module_to_component_portal_type_mapping = {
@@ -1367,8 +1511,10 @@ def ERP5Site_dumpModuleCode(self, component_or_script=None):
         }
         with open(
             os.path.join(module_dir, module, '__init__.py'),
-            'w',) as component_module__init__f:
-          for sub_module, portal_type in module_to_component_portal_type_mapping.items():
+            'w',
+        ) as component_module__init__f:
+          for sub_module, portal_type in module_to_component_portal_type_mapping.items(
+          ):
             component_module__init__f.write(
                 'from . import {}\n'.format(sub_module))
             mkdir_p(os.path.join(module_dir, module, sub_module))
