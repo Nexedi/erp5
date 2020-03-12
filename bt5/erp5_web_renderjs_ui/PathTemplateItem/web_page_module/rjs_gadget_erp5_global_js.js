@@ -114,7 +114,7 @@
           page: "action",
           view: view
         }},
-        {command: 'display', options: {}},
+        {command: 'history_previous'},
         {command: 'display_dialog_with_history', options: {
           jio_key: jio_key,
           page: "export",

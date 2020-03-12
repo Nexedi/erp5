@@ -645,13 +645,15 @@
         var parent_link = erp5_document._links.parent,
           uri,
           options = {};
+        copyStickyParameterDict(previous_options, options);
         if (parent_link !== undefined) {
           uri = new URI(parent_link.href);
-          copyStickyParameterDict(previous_options, options);
           options.jio_key = uri.segment(2);
           // When redirecting to parent, always try to restore the state
           return execDisplayStoredStateCommand(gadget, options);
         }
+        // If no parent, return to the home page
+        return gadget.redirect({command: 'display', options: options});
       }, function (error) {
         if ((error instanceof jIO.util.jIOError) &&
             (error.status_code === 404)) {
