@@ -50,34 +50,19 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>user_quantity=None, setup_activity_tool=True, create_test_data=True, set_id_generator=True</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>guard</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>ERP5Site_bootstrapScalabilityTest</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Guard" module="Products.DCWorkflow.Guard"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>roles</string> </key>
+            <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
                 <string>Manager</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_isReady</string> </value>
         </item>
       </dictionary>
     </pickle>
