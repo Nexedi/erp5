@@ -1,0 +1,8 @@
+currency_module/test_loyalty_record_currency
+currency_module/test_loyalty_reward_currency
+notification_message_module/test_notification_message
+person_module/test_sale_order_receiver
+person_module/test_sale_order_receiver/**
+service_module/test_discount
+product_module/test_product
+organisation_module/test_sale_order_supplier
