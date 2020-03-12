@@ -2,8 +2,5 @@
   The purpose of the script is to tell if configuration of a site was finished or not.
   It is used from Deployment Tests.
 """
-installed_bt5_list = [x.getTitle() for x in context.portal_templates.getInstalledBusinessTemplateList()]
-if "erp5_wendelin" in installed_bt5_list:
-  return 1
-else:
-  return 0
+return context.portal_templates.getInstalledBusinessTemplate("erp5_wendelin", strict=True) is not None
+0
