@@ -1465,11 +1465,11 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
         # of this name implement consistency checking on object
         continue
       if fixit:
-        extra_errors = obj.fixConsistency(filter=filter, **kw)
+        if hasattr(aq_base(obj), 'fixConsistency'):
+          error_list.extend(obj.fixConsistency(filter=filter, **kw))
       else:
-        extra_errors = obj.checkConsistency(filter=filter, **kw)
-      if len(extra_errors) > 0:
-        error_list += extra_errors
+        if hasattr(aq_base(obj), 'checkConsistency'):
+          error_list.extend(obj.checkConsistency(filter=filter, **kw))
     # We should also return an error if any
     return error_list
 
