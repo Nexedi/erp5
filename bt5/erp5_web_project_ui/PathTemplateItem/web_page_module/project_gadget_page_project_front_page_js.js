@@ -62,7 +62,7 @@
     if (segments.length === 2) {
       return id;
     }
-    return segments.slice(0, -1).join("/");
+    return segments.slice(0, 2).join("/");
   }
 
   function getProjectHtlmElementId(project_id, type, suffix, hash_selector) {
