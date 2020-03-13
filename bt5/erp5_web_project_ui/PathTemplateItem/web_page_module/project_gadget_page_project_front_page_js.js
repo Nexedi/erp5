@@ -337,7 +337,8 @@
       project_link.innerHTML = project_title;
       title_div.appendChild(project_link);
       info_div.classList.add("project-info");
-      left_info_div.classList.add("left");
+      left_info_div.classList.add("project-left");
+      right_div.classList.add("project-right");
       right_line_div.classList.add("project-line");
       forum_link.setAttribute("id", getProjectHtlmElementId(project_id, FORUM_LINK_TYPE,
                                                             FORUM_LINK_ID_SUFFIX));
