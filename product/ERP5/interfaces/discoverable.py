@@ -33,7 +33,7 @@ class IDiscoverable(Interface):
   """
   Discoverable interface specification
 
-  Documents which implement IMetadataDiscoverable provides
+  Documents which implement IDiscoverable provides
   methods to discover and update metadata properties
   from content, user input, file name, etc.
   """
