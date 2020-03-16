@@ -17,14 +17,8 @@ def recursiveCopyLine(to_document, from_document):
     recursiveCopyLine(reverse_line, line)
     newCell = reverse_line.newContent
     for cell in line.objectValues(portal_type='Invoice Cell'):
-      raise NotImplementedError
-      newCell(
-        # TODO: what properties ?
-        portal_type=cell.getPortalType(),
-        category_list=cell.getCategoryList(),
-      )
+      raise NotImplementedError("NotImplemented: Should do something with %s and %s" % (cell, newCell))
 
-portal = context.getPortalObject()
 reverse_invoice = context.getParentValue().newContent(
   portal_type=context.getPortalType(),
   created_by_builder=1, # tell init script to not create lines
