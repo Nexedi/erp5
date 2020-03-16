@@ -227,10 +227,9 @@
     return gadget.jio_allDocs({
       query: project_query,
       limit: QUERY_LIMIT,
-      select_list: ['title', 'source_decision_title'],
-      //FOR DEMO
-      //sort_on: [["title", "ascending"]],
-      sort_on: [["modification_date", "ascending"]]
+      select_list: ['title', 'source_decision_title',
+                    'source_decision_relative_url', 'forum_link'],
+      sort_on: [["title", "ascending"]]
     })
       .push(function (result) {
         return result.data.rows;
@@ -303,11 +302,12 @@
       task_report_url_list = [],
       bug_url_list = [],
       test_result_url_list = [],
+      supervisor_url_list = [],
       milestone_view,
       project_view;
 
     function createProjectHtmlElement(project_id, project_title,
-                                      project_url, supervisor) {
+                                      project_url, supervisor, supervisor_url) {
       var project_li = document.createElement('li'),
         box_div = document.createElement('div'),
         title_div = document.createElement('div'),
@@ -320,14 +320,15 @@
         project_link = document.createElement('a'),
         forum_link = document.createElement('a'),
         supervisor_field_label = document.createElement('label'),
-        supervisor_value_span = document.createElement('span');
+        supervisor_value_link = document.createElement('a');
       if (supervisor) {
         supervisor_field_div.classList.add("field", "project-line");
-        supervisor_value_div.classList.add("field", "project-line");
+        supervisor_value_div.classList.add("field", "project-line", "value");
         supervisor_field_label.innerHTML = SUPERVISOR_FIELD_TITLE;
-        supervisor_value_span.innerHTML = supervisor;
+        supervisor_value_link.innerHTML = supervisor;
+        supervisor_value_link.href = supervisor_url;
         supervisor_field_div.appendChild(supervisor_field_label);
-        supervisor_value_div.appendChild(supervisor_value_span);
+        supervisor_value_div.appendChild(supervisor_value_link);
         right_div.appendChild(supervisor_field_div);
         right_div.appendChild(supervisor_value_div);
       }
@@ -458,13 +459,18 @@
                                 null,
                                 createProjectQuery(project_list[i].id, []))
           );
+          supervisor_url_list.push(
+            getUrlParameterDict(project_list[i].value.source_decision_relative_url,
+                                'view')
+          );
         }
         return RSVP.all([gadget.getUrlForList(url_parameter_list),
                          gadget.getUrlForList(milestone_url_list),
                          gadget.getUrlForList(task_url_list),
                          gadget.getUrlForList(task_report_url_list),
                          gadget.getUrlForList(bug_url_list),
-                         gadget.getUrlForList(test_result_url_list)]);
+                         gadget.getUrlForList(test_result_url_list),
+                         gadget.getUrlForList(supervisor_url_list)]);
       })
       .push(function (result_list) {
         var type,
@@ -475,7 +481,8 @@
             createProjectHtmlElement(project_list[i].id,
                                      project_list[i].value.title,
                                      result_list[0][i],
-                                     project_list[i].value.source_decision_title);
+                                     project_list[i].value.source_decision_title,
+                                     result_list[6][i]);
           project_html = project_html_element_list[0];
           left_div_html = project_html_element_list[1];
           for (type in PORTAL_TITLE_DICT) {
@@ -621,7 +628,7 @@
               //forum_link_html.innerHTML = forum_link_list[i].value.title;
               //HARDCODED FOR DEMO
               forum_link_html.href = "https://www.erp5.com/group_section/forum";
-              forum_link_html.innerHTML = "forum link";
+              forum_link_html.innerHTML = "Project Forum";
               forum_link_html.classList.remove("ui-hidden");
             }
           }

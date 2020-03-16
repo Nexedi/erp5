@@ -50,6 +50,11 @@ div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .project-left a
   text-decoration: none;
 }
 
+div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .project-right .value a {
+  color: #111;
+  text-decoration: none;
+}
+
 div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-info  {
   display: inline-flex;
 }
@@ -59,7 +64,7 @@ div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-
 }
 
 div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-info .project-right  {
-  min-width: 66px;
+  min-width: 92px;
 }
 
 div[data-gadget-url$="gadget_erp5_page_project_front_page.html"] .front-project-list .project-box .project-line  {
