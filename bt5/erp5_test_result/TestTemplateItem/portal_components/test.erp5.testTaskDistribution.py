@@ -1720,3 +1720,13 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
       self.test_result.start()
       self.tic()
 
+  def test_start_test_tolerate_errors(self):
+    with responses.RequestsMock() as rsps:
+      rsps.add(
+          responses.POST,
+          self.post_commit_status_url,
+          json={"message": 'Cannot transition status via :run from :running (Reason(s): Status cannot transition via "run")'},
+          status=httplib.BAD_REQUEST,
+      )
+      self.test_result.start()
+      self.tic()
