@@ -10,8 +10,6 @@ if not portal.portal_preferences.isAuthenticationPolicyEnabled():
 now = DateTime()
 one_second = 1/24.0/60.0/60.0
 check_duration = portal_preferences.getPreferredAuthenticationFailureCheckDuration()
-block_duration = portal_preferences.getPreferredAuthenticationFailureBlockDuration()
-max_authentication_failures = portal_preferences.getPreferredMaxAuthenticationFailure()
 check_time = now - check_duration*one_second
 
 # acknowledge last authentication events for user
