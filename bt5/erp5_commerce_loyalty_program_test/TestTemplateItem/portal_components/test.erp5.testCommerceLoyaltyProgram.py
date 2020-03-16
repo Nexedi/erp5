@@ -29,7 +29,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 
 
-class testCommerceLoyalty(ERP5TypeTestCase):
+class testCommerceLoyaltyProgram(ERP5TypeTestCase):
   """
   Test Commerce Loyalty
   """
@@ -40,7 +40,7 @@ class testCommerceLoyalty(ERP5TypeTestCase):
     """
     return (
       'erp5_base',
-      'erp5_commerce_loyalty',
+      'erp5_commerce_loyalty_program',
       'erp5_simulation_test',
       'erp5_configurator_standard_trade_template'
     )

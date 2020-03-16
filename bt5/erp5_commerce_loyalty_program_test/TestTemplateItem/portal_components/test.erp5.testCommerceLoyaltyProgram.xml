@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>testCommerceLoyalty</string> </value>
+            <value> <string>testCommerceLoyaltyProgram</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test.erp5.testCommerceLoyalty</string> </value>
+            <value> <string>test.erp5.testCommerceLoyaltyProgram</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
