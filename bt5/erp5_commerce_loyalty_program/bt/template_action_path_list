@@ -2,4 +2,5 @@ Loyalty Transaction Line | view
 Loyalty Transaction Module | view
 Loyalty Transaction Simulation Rule | view
 Loyalty Transaction | view
+Person | view_loyalty_account
 System Preference | loyalty_program_preference
