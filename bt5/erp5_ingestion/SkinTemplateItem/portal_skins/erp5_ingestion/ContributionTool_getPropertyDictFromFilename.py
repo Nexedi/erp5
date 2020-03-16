@@ -88,7 +88,7 @@ elif group_reference_path:
         if category is None: 
           break
   if category is not None:
-     new_dict['group'] = '/'.join(category.getRelativeUrl().split('/')[1:])
+    new_dict['group'] = '/'.join(category.getRelativeUrl().split('/')[1:])
 
 
 else:
