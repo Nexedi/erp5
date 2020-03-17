@@ -263,3 +263,11 @@ class Test(ERP5TypeTestCase):
     # test as sequence
     bucket = bucket_stream.getBucketKeyItemSequenceByKey(start_key=10, count=1)[0]
     self.assertEqual(100000, bucket[1].value)
+
+  def test_05_DataAnalyses(self):
+    """
+      Test data analyses' default configuration.
+      By default we have no Data Analyses configured thus test is minimal.
+    """
+    self.portal.Alarm_handleAnalysis()
+    self.tic()
