@@ -1349,7 +1349,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     # If we have current action definition we are able to render embedded view
     # which should be a "ERP5 Form" but in reality can be anything
     if current_action.get('view_id', ''):
-      if current_action['other_context'] is None:
+      if current_action.get('other_context', None) is None:
         view_context = traversed_document
       else:
         view_context = traversed_document.restrictedTraverse(current_action['other_context'])
