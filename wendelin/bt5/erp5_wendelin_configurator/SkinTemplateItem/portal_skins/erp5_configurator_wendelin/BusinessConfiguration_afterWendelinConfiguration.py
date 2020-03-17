@@ -6,8 +6,12 @@ from Products.ERP5Type.Log import log
 # Activate the knowledge pads on portal home to enable later the Wendelin 
 # Information gadget.
 portal = context.getPortalObject()
-configuration = portal.portal_preferences.getActivePreference()
-configuration.setPreferredHtmlStyleAccessTab(True)
+default_site_preference = getattr(portal.portal_preferences,
+                        'default_site_preference', None)
+if default_site_preference is not None:
+  default_site_preference.setPreferredHtmlStyleAccessTab(True)
+  if default_site_preference.getPreferenceState() == "disabled":
+    default_site_preference.enable()
 
 # updata local roles (if any)
 business_template = context.getSpecialiseValue()
