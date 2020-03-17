@@ -344,14 +344,24 @@ def getRealRelativeUrl(document):
   return '/'.join(portal.portal_url.getRelativeContentPath(document))
 
 
-def parseActionUrl(url):
+def parseActionUrl(context_relative_url, url):
   """Parse usual ERP5 Action URL into components: ~root, context~, view_id, param_dict, url.
 
   :param url: {str} is expected to be in form https://<site_root>/context/view_id?optional=params
   """
   param_dict = {}
   url_and_params = url.split(site_root.absolute_url())[-1].split('?')
-  _, script = url_and_params[0].strip("/ ").rsplit('/', 1)
+  url_path = url_and_params[0].strip("/ ")
+  other_context = None
+  _, script = url_path.rsplit('/', 1)
+  if context_relative_url is not None:
+    context_index = url_path.find(context_relative_url)
+    if context_index > -1:
+      # Do not forget to remove the '/' after the relative url
+      url_path = url_path[context_index + len(context_relative_url) + 1:]
+      if '/' in url_path:
+        # Check if there is an extra context
+        other_context, script = url_path.rsplit('/', 1)
   if len(url_and_params) > 1:
     for param in url_and_params[1].split('&'):
       param_name, param_value = param.split('=')
@@ -373,6 +383,7 @@ def parseActionUrl(url):
       param_dict[param_name] = param_value
   return {
     'view_id': script,
+    'other_context': other_context,
     'params': param_dict,
     'url': url
   }
@@ -1326,7 +1337,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       for view_action in erp5_action_dict[erp5_action_key]:
         # Try to embed the form in the result
         if (view == view_action['id']):
-          current_action = parseActionUrl('%s' % view_action['url'])  # current action/view being rendered
+          current_action = parseActionUrl(relative_url, '%s' % view_action['url'])  # current action/view being rendered
           current_action['category_type'] = erp5_action_key
 
     if view and (view != 'view') and (current_action.get('view_id', None) is None):
@@ -1338,7 +1349,11 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     # If we have current action definition we are able to render embedded view
     # which should be a "ERP5 Form" but in reality can be anything
     if current_action.get('view_id', ''):
-      view_instance = getattr(traversed_document, current_action['view_id'])
+      if current_action['other_context'] is None:
+        view_context = traversed_document
+      else:
+        view_context = traversed_document.restrictedTraverse(current_action['other_context'])
+      view_instance = getattr(view_context, current_action['view_id'])
       if (view_instance is not None):
         embedded_dict = {
           '_links': {
@@ -1359,9 +1374,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # then we execute it directly
         if "Script" in getattr(view_instance, "meta_type", "Script"):
           if current_action.get('category_type', None) == 'object_jio_jump':
-            view_instance = getattr(traversed_document, 'Base_viewFakeJumpForm')
+            view_instance = getattr(view_context, 'Base_viewFakeJumpForm')
           else:
-            view_instance = getattr(traversed_document, 'Base_viewFakePythonScriptActionForm')
+            view_instance = getattr(view_context, 'Base_viewFakePythonScriptActionForm')
 
         if view_instance.pt == "form_dialog":
           # If there is a "form_id" in the REQUEST then it means that last view was actually a form
@@ -1372,7 +1387,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         # REQUEST but expect all (formerly) URL query parameters to appear in their **kw
         # thus we send extra_param_json (=rjs way of passing parameters to REQUEST) as
         # selection_params so they get into callable's **kw.
-        renderForm(traversed_document, view_instance, embedded_dict,
+        renderForm(view_context, view_instance, embedded_dict,
                    selection_params=extra_param_json, extra_param_json=extra_param_json)
 
         if view_instance.pt in ["form_python_action", "form_jump"]:
@@ -1384,7 +1399,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           embedded_dict['_actions'] = {
             'put': {
               "href": url_template_dict["form_action"] % {
-                "traversed_document_url": site_root.absolute_url() + "/" + getRealRelativeUrl(traversed_document),
+                "traversed_document_url": site_root.absolute_url() + "/" + getRealRelativeUrl(view_context),
                 "action_id": current_action['view_id']
               }
             },
