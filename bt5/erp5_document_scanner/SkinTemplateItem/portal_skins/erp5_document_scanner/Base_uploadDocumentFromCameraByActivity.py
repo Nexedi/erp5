@@ -24,7 +24,7 @@ portal.portal_selections.setSelectionParamsFor(
 # Avoid to pass huge images to the activity
 kw.pop("your_document_scanner_gadget", None)
 
-context.activate().Base_uploadDocumentFromCamera(
+context.activate(activity='SQLQueue').Base_uploadDocumentFromCamera(
   publication_state=publication_state,
   active_process_url=active_process_url,
   image_list=image_list,
