@@ -26,7 +26,7 @@ query = AndQuery(
                   Query(simulation_state =  stream_simulation_state,
                         use_relative_url = "use/big_data/ingestion/stream")))
 
-for movement in portal_catalog(query):
+for movement in portal_catalog(query = query):
   if movement.getQuantity() <= 0:
     continue
   if movement.DataIngestionLine_hasMissingRequiredItem():
