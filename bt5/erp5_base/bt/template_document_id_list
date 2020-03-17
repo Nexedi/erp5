@@ -11,7 +11,6 @@ document.erp5.Coordinate
 document.erp5.Currency
 document.erp5.DayMovementGroup
 document.erp5.DeliveryCausalityAssignmentMovementGroup
-document.erp5.DeliveryTypeInformation
 document.erp5.EmbeddedFile
 document.erp5.FirstCausalityMovementGroup
 document.erp5.GeneratedDeliveryBuilder
