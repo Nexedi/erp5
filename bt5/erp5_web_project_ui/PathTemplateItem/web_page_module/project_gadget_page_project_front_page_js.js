@@ -19,16 +19,18 @@
     TEST_RESULT_PORTAL_TYPE = "Test Result",
     QUERY_LIMIT = 100000,
     SUPERVISOR_FIELD_TITLE = "Supervisor",
-    //XXX hardcoded one year old date to define outdated elements
-    // Where to define/get the limit date? by portal_type or the same for all documents?
+    //XXX hardcoded limit dates (3 months for milestones, 3 weeks for documents)
+    //define dates in System Preference Project tab?
     //date ISO string format: "yyyy-mm-ddThh:mm:ss.mmmm"
     //JIO query date format:  "yyyy-mm-dd hh:mm:ss"
-    //FOR DEMO
-    /*LIMIT_DATE = new Date(new Date().setFullYear(new Date().getFullYear() - 1))
-      .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),*/
-    LIMIT_DATE = new Date(2019, 11, 19, 10, 33, 30, 0)
+    /*MILESTONE_LIMIT_DATE = new Date(new Date().setDate(new Date().getDate() - 90))
       .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),
-    NOW_DATE = new Date().toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),
+    DOCUMENT_LIMIT_DATE = new Date(new Date().setDate(new Date().getDate() - 21))
+      .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),*/
+    //FOR DEMO
+    MILESTONE_LIMIT_DATE = new Date(2019, 11, 19, 10, 33, 30, 0)
+      .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),
+    DOCUMENT_LIMIT_DATE = MILESTONE_LIMIT_DATE,
     //XXX hardcoded portal_types, states and titles dict
     PORTAL_TITLE_DICT = {"Task": "Tasks",
                          "Test Result" : "Test Results",
@@ -79,7 +81,7 @@
       if (query_dict.hasOwnProperty(key)) {
         query_list.push(new SimpleQuery({
           key: key,
-          operator: "=",
+          operator: "",
           type: "simple",
           value: query_dict[key]
         }));
@@ -227,8 +229,7 @@
     return gadget.jio_allDocs({
       query: project_query,
       limit: QUERY_LIMIT,
-      select_list: ['title', 'source_decision_title',
-                    'source_decision_relative_url', 'forum_link'],
+      select_list: ['title', 'source_decision_title', 'source_decision_relative_url'],
       sort_on: [["title", "ascending"]]
     })
       .push(function (result) {
@@ -548,7 +549,7 @@
         .push(function () {
           //run the rest of queries and render async
           gadget.renderMilestoneInfo();
-          gadget.renderOtdatedMilestoneInfo();
+          gadget.renderOutdatedMilestoneInfo();
           gadget.renderProjectDocumentInfo();
           gadget.renderOutdatedDocumentInfo();
           gadget.renderTestResultInfo();
@@ -560,8 +561,8 @@
       return renderMilestoneLines(this);
     })
 
-    .declareJob("renderOtdatedMilestoneInfo", function () {
-      return renderMilestoneLines(this, LIMIT_DATE);
+    .declareJob("renderOutdatedMilestoneInfo", function () {
+      return renderMilestoneLines(this, MILESTONE_LIMIT_DATE);
     })
 
     .declareJob("renderProjectDocumentInfo", function () {
@@ -569,7 +570,7 @@
     })
 
     .declareJob("renderOutdatedDocumentInfo", function () {
-      return renderProjectDocumentLines(this, LIMIT_DATE);
+      return renderProjectDocumentLines(this, DOCUMENT_LIMIT_DATE);
     })
 
     .declareJob("renderTestResultInfo", function () {
@@ -602,16 +603,14 @@
         forum_link_list,
         link_query = getComplexQuery({"portal_type" : "Link",
                                       "validation_state" : "reachable",
-                                      "parent__validation_state" : "validated"},
+                                      "relative_url" : "project_module/%/forum_link"},
                                      "AND");
       return new RSVP.Queue()
         .push(function () {
           return gadget.jio_allDocs({
             query: Query.objectToSearchText(link_query),
             limit: QUERY_LIMIT,
-            // TODO FIX not found column url_string when group by parent
-            select_list: ['title', 'portal_type'],//, 'url_string'],
-            group_by: ['parent_uid'],
+            select_list: ['url_string'],
             sort_on: [["modification_date", "descending"]]
           });
         })
@@ -624,10 +623,7 @@
                                       FORUM_LINK_ID_SUFFIX, true)
             );
             if (forum_link_html) {
-              //forum_link_html.href = forum_link_list[i].value.url_string;
-              //forum_link_html.innerHTML = forum_link_list[i].value.title;
-              //HARDCODED FOR DEMO
-              forum_link_html.href = "https://www.erp5.com/group_section/forum";
+              forum_link_html.href = forum_link_list[i].value.url_string;
               forum_link_html.innerHTML = "Project Forum";
               forum_link_html.classList.remove("ui-hidden");
             }
