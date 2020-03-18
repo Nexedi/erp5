@@ -23,15 +23,10 @@
     //define dates in System Preference Project tab?
     //date ISO string format: "yyyy-mm-ddThh:mm:ss.mmmm"
     //JIO query date format:  "yyyy-mm-dd hh:mm:ss"
-    /*MILESTONE_LIMIT_DATE = new Date(new Date().setDate(new Date().getDate() - 90))
+    MILESTONE_LIMIT_DATE = new Date(new Date().setDate(new Date().getDate() - 90))
       .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),
     DOCUMENT_LIMIT_DATE = new Date(new Date().setDate(new Date().getDate() - 21))
-      .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),*/
-    //FOR DEMO
-    MILESTONE_LIMIT_DATE = new Date(2019, 11, 19, 10, 33, 30, 0)
       .toISOString().substring(0, new Date().toISOString().length - 5).replace("T", " "),
-    DOCUMENT_LIMIT_DATE = MILESTONE_LIMIT_DATE,
-    //XXX hardcoded portal_types, states and titles dict
     PORTAL_TITLE_DICT = {"Task": "Tasks",
                          "Test Result" : "Test Results",
                          "Bug" : "Bugs",
