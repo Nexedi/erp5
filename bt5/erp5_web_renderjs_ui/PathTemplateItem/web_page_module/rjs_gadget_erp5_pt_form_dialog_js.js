@@ -93,10 +93,12 @@
               // Check if the redirection goes to a same parent's subdocument.
               // In this case, do not add current document to the history
               // example: when cloning, do not keep the original document in history
+              // Exception for the modules, to prevent redirecting to the homepage to fast
               splitted_jio_key_list = result.jio_key.split('/');
               splitted_current_jio_key_list = gadget.state.jio_key.split('/');
               command = 'display_with_history';
-              if (splitted_jio_key_list.length === splitted_current_jio_key_list.length) {
+              if ((splitted_jio_key_list.length === splitted_current_jio_key_list.length) &&
+                  (splitted_jio_key_list.length > 1)) {
                 for (i = 0; i < splitted_jio_key_list.length - 1; i += 1) {
                   if (splitted_jio_key_list[i] !== splitted_current_jio_key_list[i]) {
                     command = 'push_history';
