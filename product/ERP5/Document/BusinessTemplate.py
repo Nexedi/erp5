@@ -6607,7 +6607,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                   subsubmodule_name)
               except ImportError, e:
                 LOG("BusinessTemplate", WARNING,
-                    "Skipping %s: Cannot be imported (%s)" % (filepath, e))
+                    "Skipping %s: Cannot be imported (%s)" % (filepath, e),
+                    error=True)
                 continue
               except AttributeError, e:
                 LOG("BusinessTemplate", WARNING,
@@ -6634,7 +6635,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                 interface_module = __import__(source_reference, {}, {}, source_reference)
               except ImportError, e:
                 LOG("BusinessTemplate", WARNING,
-                    "Skipping %s: Cannot be imported (%s)" % (filepath, e))
+                    "Skipping %s: Cannot be imported (%s)" % (filepath, e),
+                    error=True)
                 continue
 
               from zope.interface.interface import InterfaceClass
@@ -6662,7 +6664,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                 mixin_module = __import__(source_reference, {}, {}, source_reference)
               except ImportError, e:
                 LOG("BusinessTemplate", WARNING,
-                    "Skipping %s: Cannot be imported (%s)" % (filepath, e))
+                    "Skipping %s: Cannot be imported (%s)" % (filepath, e),
+                    error=True)
                 continue
 
               mixin_class_name = None
