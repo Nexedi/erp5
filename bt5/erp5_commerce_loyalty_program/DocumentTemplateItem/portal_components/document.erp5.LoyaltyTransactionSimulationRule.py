@@ -34,7 +34,7 @@ from Products.ERP5.mixin.rule import RuleMixin
 from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
 from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin
-
+from Acquisition import aq_base
 
 class LoyaltyTransactionSimulationRule(RuleMixin,MovementCollectionUpdaterMixin):
   """  """
@@ -89,13 +89,25 @@ class LoyaltyTransactionSimulationRule(RuleMixin,MovementCollectionUpdaterMixin)
 
 class LoyaltyTransactionRuleMovementGenerator(MovementGeneratorMixin):
   def _getUpdatePropertyDict(self, input_movement):
-    resource = self._applied_rule.getPortalObject().portal_preferences.getPreferredLoyaltyRecordCurrency()
-    return {'delivery': None, 'resource': resource, 'price': 1}
+    return {'causality': input_movement.getCausalityList(),
+            'delivery': None,
+            'price': 1}
 
   def _getInputMovementList(self, movement_list=None, rounding=False):
     simulation_movement = self._applied_rule.getParentValue()
-    if simulation_movement.getPortalType() != "Simulation Movement":
-      return []
-    quantity = simulation_movement.getCorrectedQuantity() * \
-               simulation_movement.getPrice(0.0)
-    return (simulation_movement.asContext(quantity=quantity),)
+    portal = self._applied_rule.getPortalObject()
+    amount_list = simulation_movement.getAggregatedAmountList(
+      amount_generator_type_list=portal.getPortalAmountGeneratorAllTypeList(0))
+    input_movement = aq_base(simulation_movement).__of__(self._applied_rule)
+    for amount in amount_list:
+      if amount.getResource():
+        movement = input_movement.asContext(**{k: v
+            for k, v in amount.__dict__.iteritems()
+            if k[0] != '_' and k != 'categories'})
+        base_category_set = set([x for x in amount.getBaseCategoryList() if x not in ('price_currency')])
+        movement._setCategoryMembership(base_category_set,
+                                        amount.getCategoryList(),
+                                        base=True)
+        movement.setQuantity(movement.getTotalPrice())
+        yield movement
+

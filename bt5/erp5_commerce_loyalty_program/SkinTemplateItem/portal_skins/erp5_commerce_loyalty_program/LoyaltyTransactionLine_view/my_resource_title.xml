@@ -82,8 +82,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Currency</string>
-                          <string>Currency</string>
+                          <string>Product</string>
+                          <string>Product</string>
+                        </tuple>
+                        <tuple>
+                          <string>Service</string>
+                          <string>Service</string>
                         </tuple>
                       </list>
                     </value>
