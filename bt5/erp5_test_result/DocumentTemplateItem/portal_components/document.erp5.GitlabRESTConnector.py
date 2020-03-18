@@ -102,6 +102,13 @@ class GitlabRESTConnector(XMLObject):
       # branch. This typically happen after a new commit was push-forced to
       # the tested branch.
       return
+    if state == 'running' and response.status_code == requests.codes.bad_request:
+      # Since we updated to gitlab 9.5.10, sometimes annotating a test as running
+      # fail with "Cannot transition status via :run from :running" error. This
+      # seem to happen when previous test did not receive the finish notification.
+      # In that case, it's better to ignore the error, the commit will not be
+      # annotated as "running", but that seems acceptable.
+      return
     response.raise_for_status()
 
 
