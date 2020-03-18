@@ -36,6 +36,25 @@
   <td>Bars</td>
 </tr>
 
+<tr>
+  <td colspan="3"><b>But header/panel are on the Foo Module</b></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Foo Module</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Bar Module</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Do Nothing Action</td>
+  <td></td>
+</tr>
+
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'success',
                                                            'text': 'bar_module'}">
@@ -44,8 +63,21 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
+  <td colspan="3"><b>Redireted to Bar Module</b></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Foo Module</td>
+  <td></td>
+</tr>
+<tr>
   <td>assertTextPresent</td>
   <td>Bar Module</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Do Nothing Action</td>
   <td></td>
 </tr>
 
