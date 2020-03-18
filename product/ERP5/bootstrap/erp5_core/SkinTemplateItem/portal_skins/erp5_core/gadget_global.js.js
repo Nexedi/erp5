@@ -104,7 +104,14 @@
           result = reject(e);
         }
 
-        callback_promise = new RSVP.Queue(result).push(undefined, reject);
+        callback_promise = new RSVP.Queue(result)
+          .push(undefined, function handleEventCallbackError(error) {
+            // Prevent rejecting the loop, if the result cancelled itself
+            if (!(error instanceof RSVP.CancellationError)) {
+              canceller();
+              reject(error);
+            }
+          });
       };
 
       target.addEventListener(type, handle_event_callback, useCapture);
