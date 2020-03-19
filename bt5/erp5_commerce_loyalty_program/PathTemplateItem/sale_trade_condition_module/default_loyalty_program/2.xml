@@ -22,10 +22,10 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>resource/service_module/2</string>
+                <string>resource/service_module/loyalty_coupon</string>
                 <string>use/loyalty_program/loyalty_point</string>
-                <string>base_application/base_amount/loyalty_program/coupon</string>
                 <string>trade_phase/default/invoicing</string>
+                <string>base_application/base_amount/loyalty_program/coupon</string>
               </tuple>
             </value>
         </item>
@@ -48,6 +48,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>loyalty_point_quantity</string> </key>
+            <value> <float>-5.0</float> </value>
         </item>
         <item>
             <key> <string>membership_criterion_category</string> </key>

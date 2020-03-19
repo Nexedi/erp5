@@ -15,5 +15,8 @@ destination_section = movement.getDestinationSection()
 if source_section == destination_section or source_section is None \
     or destination_section is None:
   return False
+destination_value = movement.getDestinationValue()
+if not destination_value or not destination_value.objectValues(portal_type='Loyalty Account'):
+  return False
 
 return True

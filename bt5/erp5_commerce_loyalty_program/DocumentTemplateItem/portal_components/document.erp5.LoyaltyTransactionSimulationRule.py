@@ -89,6 +89,12 @@ class LoyaltyTransactionSimulationRule(RuleMixin,MovementCollectionUpdaterMixin)
 
 class LoyaltyTransactionRuleMovementGenerator(MovementGeneratorMixin):
   def _getUpdatePropertyDict(self, input_movement):
+    # Adjust loyalty point quantity according to trade model line setting
+    tml = input_movement.getCausalityValue(portal_type='Trade Model Line')
+    loyalty_point_quantity = tml.getLoyaltyPointQuantity()
+    if not loyalty_point_quantity:
+      loyalty_point_quantity =self._applied_rule.getParentValue().getTotalPrice() * tml.getLoyaltyPointPrice()
+    input_movement.setQuantity(loyalty_point_quantity)
     return {'causality': input_movement.getCausalityList(),
             'delivery': None,
             'price': 1}
@@ -100,7 +106,8 @@ class LoyaltyTransactionRuleMovementGenerator(MovementGeneratorMixin):
       amount_generator_type_list=portal.getPortalAmountGeneratorAllTypeList(0))
     input_movement = aq_base(simulation_movement).__of__(self._applied_rule)
     for amount in amount_list:
-      if amount.getResource():
+      # Only take loyalty trade model line
+      if amount.getResource() and [x for x in amount.getBaseApplicationList() if x.startswith('base_amount/loyalty_program')]:
         movement = input_movement.asContext(**{k: v
             for k, v in amount.__dict__.iteritems()
             if k[0] != '_' and k != 'categories'})
@@ -108,6 +115,4 @@ class LoyaltyTransactionRuleMovementGenerator(MovementGeneratorMixin):
         movement._setCategoryMembership(base_category_set,
                                         amount.getCategoryList(),
                                         base=True)
-        movement.setQuantity(movement.getTotalPrice())
         yield movement
-

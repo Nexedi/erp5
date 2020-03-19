@@ -23,7 +23,7 @@
             <value>
               <tuple>
                 <string>use/loyalty_program/loyalty_point</string>
-                <string>resource/service_module/test_discount</string>
+                <string>resource/service_module/loyalty_discount</string>
                 <string>base_application/base_amount/loyalty_program/discount</string>
                 <string>trade_phase/default/invoicing</string>
               </tuple>
@@ -48,6 +48,16 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>loyalty_point_quantity</string> </key>
+            <value> <float>-5.0</float> </value>
         </item>
         <item>
             <key> <string>membership_criterion_category</string> </key>

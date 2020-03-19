@@ -23,7 +23,7 @@
             <value>
               <tuple>
                 <string>base_application/base_amount/loyalty_program/collect_point</string>
-                <string>resource/service_module/1</string>
+                <string>resource/service_module/loyalty_point</string>
                 <string>use/loyalty_program/loyalty_point</string>
                 <string>trade_phase/default/invoicing</string>
               </tuple>
@@ -45,6 +45,16 @@
         </item>
         <item>
             <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>loyalty_point_price</string> </key>
+            <value> <float>0.01</float> </value>
+        </item>
+        <item>
+            <key> <string>loyalty_point_quantity</string> </key>
             <value>
               <none/>
             </value>
@@ -83,7 +93,7 @@
             <key> <string>test_tales_expression</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: context.getExplanationValue().getTotalPrice() >=200 and context.SimulationMovement_testLoyaltySimulationRule()
+python: context.getExplanationValue().getTotalPrice() >=20 and context.SimulationMovement_testLoyaltySimulationRule()
 
 ]]></string> </value>
         </item>

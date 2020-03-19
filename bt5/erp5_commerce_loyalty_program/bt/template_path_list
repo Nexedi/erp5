@@ -9,3 +9,6 @@ portal_rules/loyalty_transaction_rule
 portal_rules/loyalty_transaction_rule/**
 sale_trade_condition_module/default_loyalty_program
 sale_trade_condition_module/default_loyalty_program/*
+service_module/loyalty_coupon
+service_module/loyalty_discount
+service_module/loyalty_point
