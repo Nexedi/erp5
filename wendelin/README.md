@@ -8,6 +8,14 @@ Wendelin combines the performance of scikit-learn machine learning library with
 NEO DB distributed storage in order to provide out-of-core processing of large 
 data sets.
 
+Additional source code of components part of Wendelin project
+-----------
+ - https://lab.nexedi.com/nexedi/wendelin.core - wendelin.core (also in pypi) - Out-of-Core processing module
+ - https://lab.nexedi.com/nexedi/fluent-plugin-wendelin - fluentd Wendelin plugin
+ - https://lab.nexedi.com/nexedi/fluent-plugin-bin - fluentd binary Wendelin plugin
+ - https://lab.nexedi.com/nexedi/ebulk - ebulk Wendelin plugin
+
+
 Main applications
 -----------
 
