@@ -167,6 +167,10 @@ ignored_skin_id_set = {
   'FCKeditor_getDocumentListQuery',
   'FCKeditor_getImageList',
   'FCKeditor_getSetReferenceUrl',
+  'Credential_accept',
+  'Credential_checkConsistency',
+  'Credential_copyRegistredInformation',
+  'Credential_updatePersonPassword',
 }
 
 # Generic method to check consistency of a skin item
