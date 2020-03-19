@@ -77,7 +77,9 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: (\'Organisation\',)</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
