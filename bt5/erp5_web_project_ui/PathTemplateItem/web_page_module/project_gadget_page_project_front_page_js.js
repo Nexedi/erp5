@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2 */
-/*global window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO, URL */
-(function (window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO, URL) {
+/*global window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO, URL, domsugar */
+(function (window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO, URL, domsugar) {
   "use strict";
 
   var STATUS_OK = "green",
@@ -194,16 +194,13 @@
         type: "complex"
       });
     }
-    return new RSVP.Queue()
-      .push(function () {
-        return gadget.jio_allDocs({
-          query: Query.objectToSearchText(milestone_query),
-          limit: QUERY_LIMIT,
-          select_list: ['title', 'portal_type', 'count(*)'],
-          group_by: ['parent_uid'],
-          sort_on: [["modification_date", "descending"]]
-        });
-      })
+    return gadget.jio_allDocs({
+      query: Query.objectToSearchText(milestone_query),
+      limit: QUERY_LIMIT,
+      select_list: ['title', 'portal_type', 'count(*)'],
+      group_by: ['parent_uid'],
+      sort_on: [["modification_date", "descending"]]
+    })
       .push(function (result) {
         milestone_list = result.data.rows;
         for (i = 0; i < milestone_list.length; i += 1) {
@@ -304,100 +301,71 @@
 
     function createProjectHtmlElement(project_id, project_title,
                                       project_url, supervisor, supervisor_url) {
-      var project_li = document.createElement('li'),
-        box_div = document.createElement('div'),
-        title_div = document.createElement('div'),
-        info_div = document.createElement('div'),
-        left_info_div = document.createElement('div'),
-        right_div = document.createElement('div'),
-        right_line_div = document.createElement('div'),
-        supervisor_field_div = document.createElement('div'),
-        supervisor_value_div = document.createElement('div'),
-        project_link = document.createElement('a'),
-        forum_link = document.createElement('a'),
-        supervisor_field_label = document.createElement('label'),
-        supervisor_value_link = document.createElement('a');
+      var project_link = domsugar('a', {
+          href: project_url
+        }, [project_title]),
+        title_div = domsugar('div', { class: "project-title" },
+                             [project_link]),
+        left_info_div = domsugar('div', { class: "project-left" }),
+        supervisor_field_label = domsugar('label', {}, [SUPERVISOR_FIELD_TITLE]),
+        supervisor_value_link = domsugar('a', {
+          href: supervisor_url
+        }, [supervisor]),
+        supervisor_field_div = domsugar('div', { class: "field project-line" },
+                             [supervisor_field_label]),
+        supervisor_value_div = domsugar('div', { class: "field project-line value" },
+                             [supervisor_value_link]),
+        forum_link = domsugar('a', {
+          id: getProjectHtlmElementId(project_id, FORUM_LINK_TYPE, FORUM_LINK_ID_SUFFIX),
+          class: "ui-hidden"
+        }),
+        right_line_div = domsugar('div', { class: "project-line" },
+                                  [forum_link]),
+        right_div = domsugar('div', { class: "project-right" }),
+        info_div = domsugar('div', { class: "project-info" },
+                            [left_info_div, right_div]),
+        box_div = domsugar('div', { class: "project-box" },
+                           [title_div, info_div]),
+        project_li = domsugar('li', {}, [box_div]);
       if (supervisor) {
-        supervisor_field_div.classList.add("field", "project-line");
-        supervisor_value_div.classList.add("field", "project-line", "value");
-        supervisor_field_label.innerHTML = SUPERVISOR_FIELD_TITLE;
-        supervisor_value_link.innerHTML = supervisor;
-        supervisor_value_link.href = supervisor_url;
-        supervisor_field_div.appendChild(supervisor_field_label);
-        supervisor_value_div.appendChild(supervisor_value_link);
         right_div.appendChild(supervisor_field_div);
         right_div.appendChild(supervisor_value_div);
       }
-      box_div.classList.add("project-box");
-      title_div.classList.add("project-title");
-      project_link.href = project_url;
-      project_link.innerHTML = project_title;
-      title_div.appendChild(project_link);
-      info_div.classList.add("project-info");
-      left_info_div.classList.add("project-left");
-      right_div.classList.add("project-right");
-      right_line_div.classList.add("project-line");
-      forum_link.setAttribute("id", getProjectHtlmElementId(project_id, FORUM_LINK_TYPE,
-                                                            FORUM_LINK_ID_SUFFIX));
-      forum_link.classList.add("ui-hidden");
-      right_line_div.appendChild(forum_link);
       right_div.appendChild(right_line_div);
-      info_div.appendChild(left_info_div);
-      info_div.appendChild(right_div);
-      box_div.appendChild(title_div);
-      box_div.appendChild(info_div);
-      project_li.appendChild(box_div);
       return [project_li, left_info_div];
     }
 
     function createProjectLineHtmlElement(project_id, portal_type, line_url, title,
                                           total_count, out_count, status_color) {
-      var line_div = document.createElement('div'),
-        status_span = document.createElement('span'),
-        name_span = document.createElement('span'),
-        number_span = document.createElement('span'),
-        outdated_span = document.createElement('span'),
-        total_span = document.createElement('span'),
-        open_bracket_span = document.createElement('span'),
-        close_bracket_span = document.createElement('span'),
-        outdated_label_span = document.createElement('span'),
-        line_link = document.createElement('a');
-      line_div.classList.add("project-line");
-      status_span.classList.add(STATUS_SPAN);
-      status_span.classList.add(status_color);
-      status_span.classList.add("margined");
-      status_span.setAttribute("id", getProjectHtlmElementId(project_id,
-                                                             portal_type, STATUS_SPAN));
-      total_span.classList.add("margined");
-      total_span.innerHTML = total_count;
-      total_span.setAttribute("id", getProjectHtlmElementId(project_id,
-                                                            portal_type, TOTAL_SPAN));
-      name_span.classList.add("name");
-      name_span.classList.add("margined");
-      name_span.innerHTML = title;
-      name_span.setAttribute("id", getProjectHtlmElementId(project_id,
-                                                           portal_type, NAME_SPAN));
-      outdated_span.innerHTML = out_count;
-      outdated_span.setAttribute("id", getProjectHtlmElementId(project_id,
-                                                               portal_type, OUTDATED_SPAN));
-      open_bracket_span.innerHTML = "(";
-      outdated_label_span.innerHTML = (portal_type === TEST_RESULT_PORTAL_TYPE) ? FAILED_LABEL : OUTDATED_LABEL;
-      close_bracket_span.innerHTML = ")";
-      number_span.appendChild(open_bracket_span);
-      number_span.appendChild(outdated_span);
-      number_span.appendChild(outdated_label_span);
-      number_span.appendChild(close_bracket_span);
-      number_span.setAttribute("id", getProjectHtlmElementId(project_id,
-                                                             portal_type, NUMBER_SPAN));
-      number_span.classList.add("ui-hidden");
-      line_div.appendChild(status_span);
-      line_div.appendChild(total_span);
-      line_div.appendChild(name_span);
-      line_div.appendChild(number_span);
-      line_link.appendChild(line_div);
-      if (line_url) {
-        line_link.href = line_url;
-      }
+      var status_span = domsugar('span', {
+          id: getProjectHtlmElementId(project_id, portal_type, STATUS_SPAN),
+          class: [STATUS_SPAN, status_color, "margined"].join(" ")
+        }),
+        name_span = domsugar('span', {
+          id: getProjectHtlmElementId(project_id, portal_type, NAME_SPAN),
+          class: "name margined"
+        }, [title]),
+        outdated_span = domsugar('span', {
+          id: getProjectHtlmElementId(project_id, portal_type, OUTDATED_SPAN)
+        }, [String(out_count)]),
+        total_span = domsugar('span', {
+          id: getProjectHtlmElementId(project_id, portal_type, TOTAL_SPAN),
+          class: "margined"
+        }, [String(total_count)]),
+        open_bracket_span = domsugar('span', {}, ["("]),
+        close_bracket_span = domsugar('span', {}, [")"]),
+        outdated_label_span = domsugar('span', {}, [
+          (portal_type === TEST_RESULT_PORTAL_TYPE) ? FAILED_LABEL : OUTDATED_LABEL
+        ]),
+        number_span = domsugar('span', {
+          id: getProjectHtlmElementId(project_id, portal_type, NUMBER_SPAN),
+          class: "ui-hidden"
+        }, [open_bracket_span, outdated_span, outdated_label_span, close_bracket_span]),
+        line_div = domsugar('div', { class: "project-line" },
+                            [status_span, total_span, name_span, number_span]),
+        line_link = domsugar('a', {
+          href: line_url || ""
+        }, [line_div]);
       return line_link;
     }
 
@@ -636,4 +604,4 @@
       return true;
     });
 
-}(window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO, URL));
+}(window, rJS, RSVP, document, SimpleQuery, ComplexQuery, Query, parseInt, jIO, URL, domsugar));
