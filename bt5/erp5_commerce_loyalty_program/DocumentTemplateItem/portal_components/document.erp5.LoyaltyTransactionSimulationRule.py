@@ -93,7 +93,7 @@ class LoyaltyTransactionRuleMovementGenerator(MovementGeneratorMixin):
     tml = input_movement.getCausalityValue(portal_type='Trade Model Line')
     loyalty_point_quantity = tml.getLoyaltyPointQuantity()
     if not loyalty_point_quantity:
-      loyalty_point_quantity =self._applied_rule.getParentValue().getTotalPrice() * tml.getLoyaltyPointPrice()
+      loyalty_point_quantity = self._applied_rule.getParentValue().getTotalPrice() * tml.getLoyaltyPointPrice()
     input_movement.setQuantity(loyalty_point_quantity)
     return {'causality': input_movement.getCausalityList(),
             'delivery': None,

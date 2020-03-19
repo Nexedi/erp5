@@ -41,7 +41,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>2</string> </value>
+            <value> <string>coupon</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -51,7 +51,7 @@
         </item>
         <item>
             <key> <string>loyalty_point_quantity</string> </key>
-            <value> <float>-5.0</float> </value>
+            <value> <float>-10.0</float> </value>
         </item>
         <item>
             <key> <string>membership_criterion_category</string> </key>
@@ -91,7 +91,7 @@
             <key> <string>test_tales_expression</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: context.getDestinationValue().Person_getTotalLoyaltyPoint() > 2
+python: context.getDestinationValue().Person_getTotalLoyaltyPoint() > 10
 
 ]]></string> </value>
         </item>

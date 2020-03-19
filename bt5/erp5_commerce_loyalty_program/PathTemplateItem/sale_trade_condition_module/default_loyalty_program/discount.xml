@@ -22,16 +22,16 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>base_application/base_amount/loyalty_program/collect_point</string>
-                <string>resource/service_module/loyalty_point</string>
                 <string>use/loyalty_program/loyalty_point</string>
+                <string>resource/service_module/loyalty_discount</string>
+                <string>base_application/base_amount/loyalty_program/discount</string>
                 <string>trade_phase/default/invoicing</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>collect_point</string> </value>
+            <value> <string>discount</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -41,7 +41,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>discount</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -50,14 +50,18 @@
             </value>
         </item>
         <item>
-            <key> <string>loyalty_point_price</string> </key>
-            <value> <float>0.01</float> </value>
-        </item>
-        <item>
-            <key> <string>loyalty_point_quantity</string> </key>
+            <key> <string>language</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>loyalty_point_price</string> </key>
+            <value> <float>-0.1</float> </value>
+        </item>
+        <item>
+            <key> <string>loyalty_point_quantity</string> </key>
+            <value> <float>0.0</float> </value>
         </item>
         <item>
             <key> <string>membership_criterion_category</string> </key>
@@ -71,7 +75,11 @@
         </item>
         <item>
             <key> <string>price</string> </key>
-            <value> <float>0.01</float> </value>
+            <value> <float>-0.2</float> </value>
+        </item>
+        <item>
+            <key> <string>quantity</string> </key>
+            <value> <float>1.0</float> </value>
         </item>
         <item>
             <key> <string>string_index</string> </key>
@@ -93,13 +101,13 @@
             <key> <string>test_tales_expression</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: context.getExplanationValue().getTotalPrice() >=20 and context.SimulationMovement_testLoyaltySimulationRule()
+python: context.getDestinationValue().Person_getTotalLoyaltyPoint() > 10
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Collect Point</string> </value>
+            <value> <string>Discount</string> </value>
         </item>
       </dictionary>
     </pickle>
