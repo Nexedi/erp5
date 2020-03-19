@@ -1,5 +1,4 @@
 translateString = context.Base_translateString
-request = context.REQUEST
 ptype = context.getPortalType()
 
 if not description:

@@ -1,11 +1,5 @@
 from DateTime import DateTime
-def sorted(seq):
-  seq = seq[:]
-  seq.sort()
-  return seq
-
 portal = context.getPortalObject()
-request = portal.REQUEST
 
 if not at_date:
   at_date=DateTime()

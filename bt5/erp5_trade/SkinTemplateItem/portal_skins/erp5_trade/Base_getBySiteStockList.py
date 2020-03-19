@@ -19,18 +19,18 @@ for brain in getattr(context.portal_simulation, inventory_list_method_dict[simul
     **kw):
 
   if positive_stock and negative_stock and not zero_stock and brain.inventory == 0:
-     result_list.append(brain)
+    result_list.append(brain)
   if positive_stock and not negative_stock and zero_stock and brain.inventory <0:
-     result_list.append(brain)
+    result_list.append(brain)
   if negative_stock and zero_stock and not positive_stock and brain.inventory >0:
-     result_list.append(brain)
+    result_list.append(brain)
   if positive_stock and not negative_stock and not zero_stock and brain.inventory <=0:
-     result_list.append(brain)
+    result_list.append(brain)
   if negative_stock and not positive_stock and not zero_stock and brain.inventory >=0:
-     result_list.append(brain)
+    result_list.append(brain)
   if zero_stock and not positive_stock and not negative_stock and brain.inventory!=0:
-     result_list.append(brain)
+    result_list.append(brain)
   if not positive_stock and not negative_stock and not zero_stock:
-     result_list.append(brain)
+    result_list.append(brain)
 
 return sorted(result_list, key=lambda brain: (brain.getResourceReference(), brain.getResourceTitle(), brain.variation_text))

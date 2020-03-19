@@ -28,4 +28,7 @@
 #       for builders, and still distinguish order builders from others
 #       Once legacy simulation is dropped, "Order Builder" portal type should
 #       should be changed to use SimulatedDeliveryBuilder class.
-from erp5.component.document.GeneratedDeliveryBuilder import GeneratedDeliveryBuilder as OrderBuilder
+from erp5.component.document.GeneratedDeliveryBuilder import GeneratedDeliveryBuilder
+
+class OrderBuilder(GeneratedDeliveryBuilder):
+  pass

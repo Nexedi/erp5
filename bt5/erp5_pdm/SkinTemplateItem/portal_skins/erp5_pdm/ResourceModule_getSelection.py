@@ -11,15 +11,6 @@ def getPreferredCategoryDisplayMethodId():
   return method == 'getTranslatedCompactTitle' and 'getCompactTranslatedTitle' \
       or method
 
-# Zope: waiting for __builtin__.set
-set = lambda seq: dict((k,None) for k in seq).iterkeys()
-
-# Zope: waiting for __builtin__.sorted
-def sorted(seq):
-  l = list(seq)
-  l.sort()
-  return l
-
 class ResourceSelection:
   """
   Helper class to handle a selection of resources.
@@ -67,7 +58,7 @@ class ResourceSelection:
     return common_quantity_unit_item_list
 
   def getCommonTransformedResourceItemList(self):
-   return [(r.title, r.relative_url) for r in \
+    return [(r.title, r.relative_url) for r in \
      context.Resource_zGetTransformedResourceList(resource_uid=self.getUidList())]
 
 self = ResourceSelection()

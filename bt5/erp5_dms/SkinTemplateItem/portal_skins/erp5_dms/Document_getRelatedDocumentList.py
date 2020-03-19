@@ -12,8 +12,7 @@ version of each of them.
 # Document_getSimilarityCloud = Document_get + upperCase(cloud) + ValueList
 # BG - not much use, they're too different
 
-from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
-from Products.ERP5Type.Log import log
+from Products.ERP5Type.Utils import convertToUpperCase
 
 def getRelatedLatest(category):
   funcname = 'get%sValueList' % convertToUpperCase(category)
@@ -44,5 +43,4 @@ if relation_id == 'all':
     dic[obj] = None
   return dic.keys()
 
-log('Relation %s is not provided for in this script' % relation)
 return [] # failover - undefined relation

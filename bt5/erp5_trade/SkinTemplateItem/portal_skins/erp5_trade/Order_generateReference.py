@@ -4,9 +4,8 @@ and milestones.
 """
 
 translateString = context.Base_translateString
-request = context.REQUEST
-current_type = context.getPortalType()
-if not reference: reference='SO'
+if not reference:
+  reference='SO'
 
 def generateReference(prefix, order, portal_type):
   for order_line in order.contentValues(portal_type=portal_type):

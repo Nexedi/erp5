@@ -1,3 +1,5 @@
+# this script has an `format` argument
+# pylint: disable=redefined-builtin
 """
 Convert Image (context) to a desired format and return as a binary `filename` file.
 Requires format and desired filename (adds extension if missing).

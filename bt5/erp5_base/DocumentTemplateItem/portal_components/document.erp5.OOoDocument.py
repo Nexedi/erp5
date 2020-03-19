@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -190,7 +189,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
 
     return cached_getTargetFormatItemList(self.getBaseContentType())
 
-  def _getConversionFromProxyServer(self, format):
+  def _getConversionFromProxyServer(self, format): #  pylint: disable=redefined-builtin
     """
       Communicates with server to convert a file
     """
@@ -226,7 +225,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     return response_dict['mime'], Pdata(dec(response_dict['data']))
 
   # Conversion API
-  def _convert(self, format, frame=0, **kw):
+  def _convert(self, format, frame=0, **kw): #  pylint: disable=redefined-builtin
     """Convert the document to the given format.
 
     If a conversion is already stored for this format, it is returned
@@ -346,8 +345,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     if zip_file is None:
       format_list = [x for x in self.getTargetFormatList()
                                 if x.startswith('html') or x.endswith('html')]
-      format = format_list[0]
-      mime, data = self._getConversionFromProxyServer(format)
+      mime, data = self._getConversionFromProxyServer(format_list[0])
       archive_file = cStringIO.StringIO()
       archive_file.write(str(data))
       zip_file = zipfile.ZipFile(archive_file)
