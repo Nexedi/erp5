@@ -173,7 +173,7 @@
       });
   }
 
-  function renderMilestoneLines(gadget, limit_date) {
+  function renderMilestoneLineList(gadget, limit_date) {
     var i,
       query_list = [],
       milestone_list,
@@ -460,15 +460,17 @@
                                 'view')
           );
         }
-        return RSVP.all([gadget.getUrlForList(url_parameter_list),
-                         gadget.getUrlForList(milestone_url_list),
-                         gadget.getUrlForList(task_url_list),
-                         gadget.getUrlForList(task_report_url_list),
-                         gadget.getUrlForList(bug_url_list),
-                         gadget.getUrlForList(test_result_url_list),
-                         gadget.getUrlForList(supervisor_url_list)]);
+        return RSVP.hash({
+          url_parameter_list: gadget.getUrlForList(url_parameter_list),
+          milestone_url_list: gadget.getUrlForList(milestone_url_list),
+          task_url_list: gadget.getUrlForList(task_url_list),
+          task_report_url_list: gadget.getUrlForList(task_report_url_list),
+          bug_url_list: gadget.getUrlForList(bug_url_list),
+          test_result_url_list: gadget.getUrlForList(test_result_url_list),
+          supervisor_url_list: gadget.getUrlForList(supervisor_url_list)
+        });
       })
-      .push(function (result_list) {
+      .push(function (result_dict) {
         var type,
           line_url;
         spinner.classList.add("ui-hidden");
@@ -476,9 +478,9 @@
           project_html_element_list =
             createProjectHtmlElement(project_list[i].id,
                                      project_list[i].value.title,
-                                     result_list[0][i],
+                                     result_dict.url_parameter_list[i],
                                      project_list[i].value.source_decision_title,
-                                     result_list[6][i]);
+                                     result_dict.supervisor_url_list[i]);
           project_html = project_html_element_list[0];
           left_div_html = project_html_element_list[1];
           for (type in PORTAL_TITLE_DICT) {
@@ -486,15 +488,15 @@
               line_url = (function (portal_type) {
                 switch (portal_type) {
                 case 'Project Milestone':
-                  return result_list[1][i];
+                  return result_dict.milestone_url_list[i];
                 case 'Task':
-                  return result_list[2][i];
+                  return result_dict.task_url_list[i];
                 case 'Task Report':
-                  return result_list[3][i];
+                  return result_dict.task_report_url_list[i];
                 case 'Bug':
-                  return result_list[4][i];
+                  return result_dict.bug_url_list[i];
                 case 'Test Result':
-                  return result_list[5][i];
+                  return result_dict.test_result_url_list[i];
                 }
               })(type);
               left_line_html = createProjectLineHtmlElement(project_list[i].id, type,
@@ -553,11 +555,11 @@
     })
 
     .declareJob("renderMilestoneInfo", function () {
-      return renderMilestoneLines(this);
+      return renderMilestoneLineList(this);
     })
 
     .declareJob("renderOutdatedMilestoneInfo", function () {
-      return renderMilestoneLines(this, MILESTONE_LIMIT_DATE);
+      return renderMilestoneLineList(this, MILESTONE_LIMIT_DATE);
     })
 
     .declareJob("renderProjectDocumentInfo", function () {
