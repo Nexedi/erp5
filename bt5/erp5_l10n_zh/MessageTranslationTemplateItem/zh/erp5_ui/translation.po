@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2018-01-09 12:01+UTC\n"
-"PO-Revision-Date: 2018-01-09 12:01+UTC\n"
+"Project-Id-Version: ERP5 Localized Interface\n"
+"POT-Creation-Date: 2020-03-19 14:03+UTC\n"
+"PO-Revision-Date: 2020-03-19 14:03+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: zh <>\n"
 "MIME-Version: 1.0\n"
@@ -42,6 +42,15 @@ msgstr "-- 选择文件类型 --"
 
 msgid "-- Select Project --"
 msgstr "-- 选择项目 --"
+
+msgid "1/3 Select one Software"
+msgstr "1/3 选择一个软件"
+
+msgid "2/3 Select one Release"
+msgstr "2/3 选择一个发布"
+
+msgid "3/3 Request Service:"
+msgstr "3/3 请求服务："
 
 msgid "A Campaign is a marketing mini-project which keeps track of all events associated to a given marketing action. Use it for example to manage press relation campaigns, assessment campaigns, product presentation campaigns which involve contacting many customers through email, phone, etc."
 msgstr "活动是一个小型营销项目，用于跟进关于一个给定的市场营销活动的所有事件。可以用它来管理媒体关系活动，评估型活动，产品演示活动，其中包括通过电子邮件，电话等联系众多的客户。"
@@ -424,11 +433,17 @@ msgstr "版本标识符"
 msgid "Absence Hours"
 msgstr "缺席时数"
 
+msgid "Accept"
+msgstr "接受"
+
 msgid "Accept Decision"
 msgstr "承兑"
 
 msgid "Accept Translation"
 msgstr "采纳翻译"
+
+msgid "Accept Upgrade Decision:"
+msgstr "接受升级决定："
 
 msgid "Accept new value"
 msgstr "接受新的值"
@@ -441,6 +456,9 @@ msgstr "采纳一项翻译，并将验证状态设为“已提交”，以等待
 
 msgid "Accepts the change that has been done rather than the original prevision. This action will be available whenever a packing list is divergent."
 msgstr "接受和预期装箱单的差异。在装箱单不匹配的情况下可以进行该指令的操作。"
+
+msgid "Access Monitor"
+msgstr "访问监控台"
 
 msgid "Account"
 msgstr "会计科目"
@@ -604,6 +622,12 @@ msgstr "操作"
 msgid "Action called in order to change the state of the assignment to update it"
 msgstr "更新任务分配状态的指令"
 
+msgid "Action not handled"
+msgstr "操作未处理"
+
+msgid "Action succeeded."
+msgstr "操作成功。"
+
 msgid "Action that will mark the career step of a person as stopped"
 msgstr "该指令使一个人的事业阶段的状态变为“已停止”"
 
@@ -676,6 +700,15 @@ msgstr "添加配件"
 msgid "Add Lines"
 msgstr "添加明细"
 
+msgid "Add Login"
+msgstr "添加登录"
+
+msgid "Add New User Login"
+msgstr "添加新用户登录"
+
+msgid "Add Organisation"
+msgstr "添加组织"
+
 msgid "Add Permission"
 msgstr "添加许可"
 
@@ -687,6 +720,9 @@ msgstr "添加与该项目相关的任务"
 
 msgid "Add Tasks"
 msgstr "添加任务"
+
+msgid "Add Ticket"
+msgstr "添加工单"
 
 msgid "Add gadgets"
 msgstr "添加配件"
@@ -736,6 +772,9 @@ msgstr "代理人特权"
 msgid "Agents"
 msgstr "人员"
 
+msgid "Aggregate"
+msgstr "合计"
+
 msgid "Aggregation Level"
 msgstr "集合层级"
 
@@ -757,9 +796,6 @@ msgstr "警报解除开始"
 msgid "Alarms"
 msgstr "警报"
 
-msgid "All criterions (AND)"
-msgstr "符合所有(和)"
-
 msgid "All Documents"
 msgstr "所有文件"
 
@@ -772,8 +808,20 @@ msgstr "所有相关文件"
 msgid "All Versions"
 msgstr "所有版本"
 
+msgid "All criterions (AND)"
+msgstr "符合所有(和)"
+
+msgid "All work caught up!"
+msgstr "所有的工作都完成了!"
+
+msgid "Allocation Scope"
+msgstr "发布状态/范围"
+
 msgid "Allowed Content Types"
 msgstr "允许的内容类型"
+
+msgid "Already Requested"
+msgstr "已请求"
 
 msgid "Amount"
 msgstr "金额"
@@ -823,8 +871,14 @@ msgstr "答复"
 msgid "Any Documents"
 msgstr "任何文件"
 
+msgid "Anytime, Anywhere"
+msgstr "随时随地  安全可靠"
+
 msgid "Apparel Models To Validate"
 msgstr "待验证服装模板"
+
+msgid "Application Delivery Service"
+msgstr "应用交付服务"
 
 msgid "Applied Model Lines"
 msgstr "已应用模式明细"
@@ -852,6 +906,9 @@ msgstr "将被新近文件取代的文件的验证状态设为“已存档”，
 
 msgid "Area"
 msgstr "地区"
+
+msgid "Ask Confirmation before Upgrade"
+msgstr "升级前需请求确认"
 
 msgid "Assign"
 msgstr "指派"
@@ -898,6 +955,12 @@ msgstr "任务指派"
 msgid "Assignments in updated state are being updated before being reopened."
 msgstr "在重新开始前已更新的分配"
 
+msgid "Associated Servers"
+msgstr "相关联的服务器"
+
+msgid "Associated Tickets"
+msgstr "相关联的集合"
+
 msgid "At Date"
 msgstr "结束日期"
 
@@ -913,6 +976,9 @@ msgstr "附件"
 msgid "Authorization Forced"
 msgstr "强制授权"
 
+msgid "Auto Upgrade"
+msgstr "自动升级"
+
 msgid "Automated command that will create and build the invoice"
 msgstr "自动指令,用于创建发票"
 
@@ -922,8 +988,8 @@ msgstr "可用"
 msgid "Available Languages"
 msgstr "可用语言"
 
-msgid "ascending"
-msgstr "升序"
+msgid "Back"
+msgstr "返回"
 
 msgid "Balance"
 msgstr "余额"
@@ -1128,6 +1194,9 @@ msgstr "买方"
 msgid "CRM"
 msgstr "客户关系管理"
 
+msgid "CRM, ERP ... Core Applications"
+msgstr "CRM ERP ...  各种核心数据库和应用"
+
 msgid "Cache Duration"
 msgstr "用时"
 
@@ -1308,6 +1377,12 @@ msgstr "因果整合流程"
 msgid "Causality workflow"
 msgstr "因果整合流程"
 
+msgid "Certificate is Requested."
+msgstr "证书已请求。"
+
+msgid "Certificate is Revoked."
+msgstr "证书已吊销。"
+
 msgid "Change Function"
 msgstr "更改职位"
 
@@ -1425,6 +1500,9 @@ msgstr "终止集合"
 msgid "Close Ticket Action"
 msgstr "终止集合操作"
 
+msgid "Close:"
+msgstr "终止："
+
 msgid "Closed"
 msgstr "已终止"
 
@@ -1436,6 +1514,18 @@ msgstr "终止日期"
 
 msgid "Closed State is used for accounting transactions that belong to \"closed\" accounting periods"
 msgstr "绝对性地终止一项会计交易，无法被“重启”而进行其他操作。"
+
+msgid "Closed for maintenance"
+msgstr "终止以维护"
+
+msgid "Closed for termination"
+msgstr "终止以不再使用"
+
+msgid "Closed forever"
+msgstr "永久终止并删除"
+
+msgid "Closed outdated"
+msgstr "因过期而终止"
 
 msgid "Closing Date"
 msgstr "闭户日期"
@@ -1457,6 +1547,9 @@ msgstr "颜色"
 
 msgid "Colour Range Created."
 msgstr "色彩范围已创建"
+
+msgid "Command Line to Run"
+msgstr "执行命令行"
 
 msgid "Comment"
 msgstr "评论"
@@ -1485,6 +1578,21 @@ msgstr "部件变量"
 msgid "Components"
 msgstr "元件"
 
+msgid "Computer Network"
+msgstr "计算机网络"
+
+msgid "Computer Network is transferred."
+msgstr "计算机网络已转移。"
+
+msgid "Computer Network:"
+msgstr "计算机网络："
+
+msgid "Computer Reference"
+msgstr "计算机编号"
+
+msgid "Computer is transferred."
+msgstr "计算机已转移。"
+
 msgid "Configuration Form"
 msgstr "配置表格"
 
@@ -1493,6 +1601,9 @@ msgstr "配置形式ID"
 
 msgid "Configuration Items"
 msgstr "配置项目"
+
+msgid "Configuration Parameter"
+msgstr "配置参数"
 
 msgid "Configuration State"
 msgstr "配置状态"
@@ -1548,8 +1659,14 @@ msgstr "确认装箱单操作"
 msgid "Confirm Transaction"
 msgstr "确认交易"
 
+msgid "Confirm your Password"
+msgstr "确认您的密码"
+
 msgid "Confirmed"
 msgstr "已确认"
+
+msgid "Connection Parameters"
+msgstr "连接参数"
 
 msgid "Connection String to be used to run Unit Tests"
 msgstr "用于运行单元测试的连接字符串"
@@ -1599,6 +1716,9 @@ msgstr "货柜明细包含了一个货柜中不同的产品编号。如果有三
 msgid "Containers"
 msgstr "货柜"
 
+msgid "Contains"
+msgstr "包含"
+
 msgid "Content"
 msgstr "内容"
 
@@ -1637,6 +1757,9 @@ msgstr "情境"
 
 msgid "Contextual Help"
 msgstr "上下文帮助"
+
+msgid "Continue"
+msgstr "继续"
 
 msgid "Contribute"
 msgstr "贡献"
@@ -1688,6 +1811,9 @@ msgstr "已转换物料库存报表"
 
 msgid "Converting"
 msgstr "转化中"
+
+msgid "Copied"
+msgstr "已复制"
 
 msgid "Copyright"
 msgstr "版权"
@@ -1806,6 +1932,7 @@ msgstr "创建人"
 msgid "Creates a simulation movement with the difference between prevision and current, allows to postpone part of delivery of a sale packing list"
 msgstr "创建一个预期和现有文件之间的差异的模拟运作，以推迟一部分销售装箱单的交付。"
 
+
 msgid "Creation Date"
 msgstr "成立日期"
 
@@ -1817,6 +1944,9 @@ msgstr "信用卡"
 
 msgid "Criterion Properties"
 msgstr "标准属性"
+
+msgid "Critical RSS"
+msgstr "重要订阅消息"
 
 msgid "Currencies"
 msgstr "货币"
@@ -1845,8 +1975,17 @@ msgstr "当前"
 msgid "Current Editing State"
 msgstr "当前编辑状态"
 
+msgid "Current Organisation"
+msgstr "当前组织"
+
+msgid "Current Project"
+msgstr "当前项目"
+
 msgid "Current Site"
 msgstr "当前站点"
+
+msgid "Current User"
+msgstr "当前用户"
 
 msgid "Customer"
 msgstr "客户"
@@ -1875,8 +2014,23 @@ msgstr "文件管理系统"
 msgid "DMS Preferences"
 msgstr "文件管理系统偏好设置"
 
-msgid "Data updated."
+msgid "Dashboard"
+msgstr "仪表板"
+
+msgid "Data Updated"
 msgstr "数据已更新"
+
+msgid "Data Updated."
+msgstr "数据已更新。"
+
+msgid "Data received."
+msgstr "数据已收到"
+
+msgid "Data updated"
+msgstr "数据已更新"
+
+msgid "Data updated."
+msgstr "数据已更新。"
 
 msgid "Date"
 msgstr "日期"
@@ -2085,8 +2239,17 @@ msgstr "彻底终止交易操作"
 msgid "Delete"
 msgstr "删除"
 
+msgid "Delete Network:"
+msgstr "删除网络: "
+
 msgid "Delete Objects"
 msgstr "删除对象"
+
+msgid "Delete Project:"
+msgstr "删除项目："
+
+msgid "Delete Site:"
+msgstr "删除站点："
 
 msgid "Delete The Objects"
 msgstr "删除对象"
@@ -2226,6 +2389,15 @@ msgstr "终点状态"
 msgid "Destination client of the invoice"
 msgstr "发票的最终客户"
 
+msgid "Destroy"
+msgstr "销毁"
+
+msgid "Destroy Hosting Subscription:"
+msgstr "销毁托管订阅："
+
+msgid "Destroy Software Installation"
+msgstr "销毁软件安装"
+
 msgid "Detailed Mode"
 msgstr "详细模式"
 
@@ -2264,11 +2436,14 @@ msgstr "长度"
 msgid "Disable"
 msgstr "禁用"
 
+msgid "Disable Login"
+msgstr "关闭登录账号"
+
 msgid "Disable Preference"
 msgstr "禁用偏好设置"
 
 msgid "Disabled"
-msgstr "无效"
+msgstr "已禁用"
 
 msgid "Discount"
 msgstr "折扣"
@@ -2349,7 +2524,7 @@ msgid "Document Publication Workflow"
 msgstr "文件发布流程"
 
 msgid "Document Reference"
-msgstr "文件代码"
+msgstr "文件编号"
 
 msgid "Document Search"
 msgstr "文件查询"
@@ -2399,6 +2574,9 @@ msgstr "领域"
 msgid "Download"
 msgstr "下载"
 
+msgid "Download Invoice"
+msgstr "下载账单"
+
 msgid "Download Open Document"
 msgstr "下载开源文件"
 
@@ -2435,14 +2613,8 @@ msgstr "待验证草稿"
 msgid "Drawing"
 msgstr "绘图文件"
 
-msgid "descending"
-msgstr "降序"
-
 msgid "EAN-13 Code"
 msgstr "EAN-13位代码"
-
-msgid "Equal to"
-msgstr "等于"
 
 msgid "ERP5 Configuration"
 msgstr "ERP5配置"
@@ -2453,9 +2625,6 @@ msgstr "ERP5站点"
 msgid "Edit"
 msgstr "编辑"
 
-msgid "Editable"
-msgstr "可编辑"
-
 msgid "Edit Business Template"
 msgstr "编辑业务模板"
 
@@ -2464,6 +2633,9 @@ msgstr "编辑表格ID"
 
 msgid "Edit Workflow"
 msgstr "编辑流程"
+
+msgid "Editable"
+msgstr "可编辑"
 
 msgid "Effective Date"
 msgstr "有效日期"
@@ -2531,6 +2703,9 @@ msgstr "启用一项“通用的”偏好设置"
 msgid "Enables a preference"
 msgstr "启用一项偏好设置"
 
+msgid "Encountered an unknown error. Try to resubmit."
+msgstr "发生未知错误。 请尝试重新提交。"
+
 msgid "End"
 msgstr "已结束"
 
@@ -2546,8 +2721,20 @@ msgstr "询价"
 msgid "Enquired"
 msgstr "已询价"
 
+msgid "Ensure you have another login configured, else you will not be able to login anymore."
+msgstr "确保您还有另一个配置过的登录用户，不然您将不再能登录。"
+
+msgid "Equal to"
+msgstr "等于"
+
+msgid "Equal to (at least one)"
+msgstr "等于(至少一个)"
+
 msgid "Error Message"
 msgstr "错误信息"
+
+msgid "Error page"
+msgstr "页面错误"
 
 msgid "Errors"
 msgstr "错误"
@@ -2636,6 +2823,9 @@ msgstr "文件交换"
 msgid "Exchange Rate"
 msgstr "汇率"
 
+msgid "Exclude"
+msgstr "排除"
+
 msgid "Exclusive Discount Ratio"
 msgstr "优先折扣率"
 
@@ -2684,6 +2874,12 @@ msgstr "外部处理流程"
 msgid "External Sources"
 msgstr "外部资源"
 
+msgid "Facebook Login:"
+msgstr "脸书登录："
+
+msgid "Fail..."
+msgstr "失败..."
+
 msgid "Fallback Base Categories"
 msgstr "备用基本类别"
 
@@ -2706,13 +2902,13 @@ msgid "Filename parsing regular expression"
 msgstr "文件名称解析常规表达式"
 
 msgid "Filter"
-msgstr "过滤"
+msgstr "筛选"
 
 msgid "Filter Content Types"
 msgstr "过滤内容类型"
 
 msgid "Filter Editor"
-msgstr "过滤编辑器"
+msgstr "筛选编辑器"
 
 msgid "Financial Information"
 msgstr "财务信息"
@@ -2756,6 +2952,9 @@ msgstr "格式"
 msgid "Format in which the user want to export the document"
 msgstr "用户希望文件输出的格式"
 
+msgid "Free Trial"
+msgstr "免费试用"
+
 msgid "Frequency (weeks)"
 msgstr "周期（周）"
 
@@ -2773,6 +2972,9 @@ msgstr "周期（月）"
 
 msgid "From Date"
 msgstr "起始日期"
+
+msgid "Front"
+msgstr "前端"
 
 msgid "Frozen"
 msgstr "已冻结"
@@ -2794,6 +2996,12 @@ msgstr "职位"
 
 msgid "Future"
 msgstr "将来"
+
+msgid "Future Organisation"
+msgstr "将来的组织"
+
+msgid "Future Project"
+msgstr "将来的项目"
 
 msgid "GAP"
 msgstr "国际财务报告准则"
@@ -2843,6 +3051,9 @@ msgstr "ERP5文件的概述。描述不是内部的，某些文件例如发票�
 msgid "General description which may be printed out on official documents and read by suppliers and clients."
 msgstr "关于该文件的大致描述，在正式文件中可以被打印出来，并被可供供应商和客户浏览"
 
+msgid "Generate New Invitation Link"
+msgstr "生成新的邀请链接"
+
 msgid "Geographic Address"
 msgstr "地理地址"
 
@@ -2858,6 +3069,9 @@ msgstr "普遍启用"
 msgid "Globally Enabled"
 msgstr "普遍启用的"
 
+msgid "Google Login:"
+msgstr "谷歌登录："
+
 msgid "Grade"
 msgstr "职称"
 
@@ -2866,6 +3080,9 @@ msgstr "图表"
 
 msgid "Greater than"
 msgstr "大于"
+
+msgid "Greater than or Equal to"
+msgstr "大于等于"
 
 msgid "Gross Weight"
 msgstr "毛重"
@@ -2935,6 +3152,12 @@ msgstr "历史记录"
 
 msgid "Home"
 msgstr "主页"
+
+msgid "Hosting Subscription"
+msgstr "托管订阅"
+
+msgid "Hosting Subscription:"
+msgstr "托管订阅："
 
 msgid "Hostname of the oood server."
 msgstr "oood服务器的主机名"
@@ -3032,11 +3255,20 @@ msgstr "在销售机会中，已联系标明，第三方，即潜在客户，已
 msgid "In a purchase/sale trade condition document, a discount model line defines the discount behaviour of an order towards certain products."
 msgstr "在一个采购和贸易条款文件中，折扣模式明细定义了针对特定产品的订单的折扣行为。"
 
+msgid "Include"
+msgstr "包含"
+
 msgid "Include Documents in Site Map"
 msgstr "站点地图包含文件"
 
 msgid "Include Subsections in Site Map"
 msgstr "站点地图包含子版块"
+
+msgid "Include your close message"
+msgstr "包含您的终止信息"
+
+msgid "Include your message"
+msgstr "包含您的信息"
 
 msgid "Incoming and Outgoing Events"
 msgstr "接收和发出事件"
@@ -3128,6 +3360,12 @@ msgstr "通过交付生成器初始化。"
 msgid "Input Loyalty Number if exist."
 msgstr "输入会员号"
 
+msgid "Input data has errors."
+msgstr "输入数据有错误。"
+
+msgid "Input is required but no input given."
+msgstr "有必输入项未填写"
+
 msgid "Install Business Template"
 msgstr "安装业务模板"
 
@@ -3137,8 +3375,20 @@ msgstr "安装状态"
 msgid "Installed"
 msgstr "已安装"
 
+msgid "Instance Parameter"
+msgstr "实例参数"
+
+msgid "Instance Parameters"
+msgstr "实例参数"
+
+msgid "Instance to be removed:"
+msgstr "将要被移除的实例："
+
 msgid "Instructions"
 msgstr "使用说明"
+
+msgid "Intent not supported"
+msgstr "不支持该意图。"
 
 msgid "Interfaces"
 msgstr "界面"
@@ -3263,8 +3513,14 @@ msgstr "内部贸易条款"
 msgid "Internal Uses"
 msgstr "内部用途"
 
+msgid "Invalid DateTime"
+msgstr "无效的日期或时间"
+
 msgid "Invalid Search Criteria"
 msgstr "无效搜索条件"
+
+msgid "Invalid search criteria"
+msgstr "无效的搜索条件"
 
 msgid "Invalidate"
 msgstr "废止"
@@ -3304,6 +3560,9 @@ msgstr "库存流程"
 
 msgid "Invisible"
 msgstr "不可见"
+
+msgid "Invite User"
+msgstr "邀请用户"
 
 msgid "Invoice"
 msgstr "发票"
@@ -3346,6 +3605,12 @@ msgstr "发票概览"
 
 msgid "Invoice cells are deeper level of details from invoice lines, eg when the same resource with variation is sold, you can use only one line and use cells for the variations."
 msgstr "发票单元是发票明细的进一步详细信息，例如，当一项包含变量的资源被售出，你只可以用一个明细来表示该资源，但可以用单元来表示它的变量。"
+
+msgid "Invoice:"
+msgstr "发票："
+
+msgid "Invoices"
+msgstr "账单"
 
 msgid "Invoices Report"
 msgstr "发票报表"
@@ -3430,9 +3695,6 @@ msgstr "一项会计交易已经被记入流水帐，记入借方和贷方"
 msgid "Jump"
 msgstr "前往"
 
-msgid "Jumps"
-msgstr "前往"
-
 msgid "Jump to Accounting Preference"
 msgstr "跳至会计偏好设置"
 
@@ -3447,6 +3709,9 @@ msgstr "跳至相关支付"
 
 msgid "Jump..."
 msgstr "前往..."
+
+msgid "Jumps"
+msgstr "前往"
 
 msgid "Keyword"
 msgstr "关键词"
@@ -3496,6 +3761,9 @@ msgstr "最新文件"
 msgid "Latest News"
 msgstr "热点新闻"
 
+msgid "Latitude"
+msgstr "纬度"
+
 msgid "Layout Configuration"
 msgstr "版面布局配置"
 
@@ -3514,11 +3782,17 @@ msgstr "长度(米)"
 msgid "Less than"
 msgstr "小于"
 
+msgid "Less than or Equal to"
+msgstr "小于等于"
+
 msgid "Letter"
 msgstr "信件"
 
 msgid "License"
 msgstr "许可证"
+
+msgid "Limit Exceed"
+msgstr "超出限制"
 
 msgid "Line"
 msgstr "明细"
@@ -3529,8 +3803,14 @@ msgstr "明细报表"
 msgid "Link"
 msgstr "链接"
 
+msgid "Link to the Computer"
+msgstr "连接到该计算机"
+
 msgid "Links to Web Pages to display as default content of the current section"
 msgstr "显示作为当前部分默认内容的链接"
+
+msgid "List"
+msgstr "列表"
 
 msgid "List Setting Reseted."
 msgstr "列表设置已重设"
@@ -3574,6 +3854,24 @@ msgstr "注销"
 msgid "Logged In as :"
 msgstr "登入用户："
 
+msgid "Login"
+msgstr "登录"
+
+msgid "Login Account"
+msgstr "登录账号"
+
+msgid "Login Name"
+msgstr "登录名"
+
+msgid "Login is Disabled."
+msgstr "不可登录。"
+
+msgid "Login to be disabled:"
+msgstr "该用户将不可登录："
+
+msgid "Logins"
+msgstr "登录账号"
+
 msgid "Logo"
 msgstr "商标"
 
@@ -3585,6 +3883,9 @@ msgstr "退出"
 
 msgid "Long Title"
 msgstr "长标题"
+
+msgid "Longitude"
+msgstr "经度"
 
 msgid "Lost Sale Opportunity, as it has been rejected by the customer"
 msgstr "已失去的销售机会，已经被客户拒绝"
@@ -3609,6 +3910,9 @@ msgstr "制作模板"
 
 msgid "Manage Business Templates"
 msgstr "管理业务模板"
+
+msgid "Map"
+msgstr "地图"
 
 msgid "Marital Status"
 msgstr "婚姻状况"
@@ -3701,6 +4005,9 @@ msgstr "成员标准"
 msgid "Membership Criterion Documents"
 msgstr "成员标准文档"
 
+msgid "Menu"
+msgstr "菜单"
+
 msgid "Message"
 msgstr "您希望咨询的信息"
 
@@ -3755,6 +4062,7 @@ msgstr "镜子账户"
 msgid "Miss Container"
 msgstr "缺失货柜"
 
+
 msgid "Missing"
 msgstr "缺失"
 
@@ -3797,6 +4105,12 @@ msgstr "模块"
 msgid "Money Amounts Fields Width"
 msgstr "金额字段宽度"
 
+msgid "Monitoring"
+msgstr "监控"
+
+msgid "Monitoring Status"
+msgstr "监控状态"
+
 msgid "Month"
 msgstr "月"
 
@@ -3812,6 +4126,9 @@ msgstr "多值密钥"
 msgid "Multivalued Membership Criteria"
 msgstr "多值成员标准"
 
+msgid "My Account"
+msgstr "我的帐号"
+
 msgid "My Contributed Content"
 msgstr "我贡献的内容"
 
@@ -3820,6 +4137,15 @@ msgstr "我的文件"
 
 msgid "My Favourites"
 msgstr "我的菜单"
+
+msgid "My Invoices"
+msgstr "我的发票"
+
+msgid "My Services"
+msgstr "我的服务"
+
+msgid "My Space"
+msgstr "我的空间"
 
 msgid "Name"
 msgstr "名称"
@@ -3839,14 +4165,92 @@ msgstr "纳米图像宽度"
 msgid "Nationality"
 msgstr "国籍"
 
+msgid "Network is Deleted."
+msgstr "网络已删除。"
+
+msgid "Network to be removed:"
+msgstr "将要被删除的网络: "
+
+msgid "Networks"
+msgstr "网络"
+
+msgid "Never Upgrade"
+msgstr "从不升级"
+
 msgid "New"
 msgstr "新建"
+
+msgid "New Computer"
+msgstr "新的计算机"
+
+msgid "New Computer created."
+msgstr "新的计算机已创建。"
+
+msgid "New Invitation link generated."
+msgstr "新的邀请链接已生成。"
+
+msgid "New Message"
+msgstr "新的信息"
+
+msgid "New Network"
+msgstr "新的网络"
+
+msgid "New Network created."
+msgstr "已创建新的网络。"
+
+msgid "New Organisation"
+msgstr "新组织"
+
+msgid "New Organisation created."
+msgstr "新的组织已创建。"
+
+msgid "New Project"
+msgstr "新的项目"
+
+msgid "New Project created."
+msgstr "新的项目已创建。"
+
+msgid "New Site"
+msgstr "新的站点"
+
+msgid "New Site created."
+msgstr "新的站点已创建。"
+
+msgid "New Software Installation created."
+msgstr "新的软件安装已创建。"
+
+msgid "New Ticket"
+msgstr "新的集合"
+
+msgid "New Ticket created."
+msgstr "新的集合已创建。"
+
+msgid "New Ticket related to"
+msgstr "新的集合关联至"
+
+msgid "New User Login created"
+msgstr "新用户登录已创建"
+
+msgid "New User Login created."
+msgstr "新用户登录已创建。"
+
+msgid "New organisation created"
+msgstr "新组织已创建"
+
+msgid "New organisation created."
+msgstr "新的组织已创建。"
+
+msgid "New service created."
+msgstr "已创建新的服务。"
+
+msgid "New ticket"
+msgstr "新票"
 
 msgid "News Reference"
 msgstr "新闻编号"
 
 msgid "Next"
-msgstr "下一个"
+msgstr "下一页"
 
 msgid "Next Alarm Date"
 msgstr "下次警报日期"
@@ -3856,6 +4260,9 @@ msgstr "无相关 ${portal_type}"
 
 msgid "No ${portal_type} related."
 msgstr "无相关 ${portal_type}。"
+
+msgid "No Alert!"
+msgstr "没有警报!"
 
 msgid "No Sale Invoice Transaction Related"
 msgstr "无相关销售发票交易"
@@ -3872,6 +4279,9 @@ msgstr "无相关文件。"
 msgid "No result."
 msgstr "无记录。"
 
+msgid "No such document was found"
+msgstr "未找到该文件"
+
 msgid "No trade condition."
 msgstr "无贸易条款"
 
@@ -3887,17 +4297,14 @@ msgstr "正常工作时数"
 msgid "Not Installed"
 msgstr "未安装"
 
-msgid "Less than or Equal to"
-msgstr "小于等于"
-
-msgid "Greater than or Equal to"
-msgstr "大于等于"
-
 msgid "Note"
 msgstr "笔记"
 
 msgid "Notes"
 msgstr "备注"
+
+msgid "Nothing selected"
+msgstr "还未选择任何选项"
 
 msgid "Notification"
 msgstr "提示"
@@ -4004,11 +4411,23 @@ msgstr "开户"
 msgid "Open Accounting Period"
 msgstr "开启会计期间"
 
+msgid "Open Public"
+msgstr "开启（公开）"
+
 msgid "Open Ticket"
 msgstr "开启集合"
 
 msgid "Open Ticket Action"
 msgstr "开启集合操作"
+
+msgid "Open for Friends only"
+msgstr "开启（仅朋友）"
+
+msgid "Open for Personal use only"
+msgstr "开启（仅个人）"
+
+msgid "Open for Subscribers only"
+msgstr "开启（仅订阅者）"
 
 msgid "Open the account and helps input transactions on it"
 msgstr "开设账户，使交易可以被录入"
@@ -4148,6 +4567,9 @@ msgstr "组织"
 msgid "Organisation that sends the invoice"
 msgstr "发送发票的机构"
 
+msgid "Organisation to be removed:"
+msgstr "将要被删除的组织："
+
 msgid "Organisations"
 msgstr "组织"
 
@@ -4250,8 +4672,14 @@ msgstr "板组用于指定默认板"
 msgid "Page Content"
 msgstr "页面内容"
 
+msgid "Parameter"
+msgstr "参数"
+
 msgid "Parameters"
 msgstr "参数"
+
+msgid "Parent Relative Url"
+msgstr "根相对地址"
 
 msgid "Password"
 msgstr "密码"
@@ -4261,6 +4689,15 @@ msgstr "确认密码"
 
 msgid "Password for a user in ERP5"
 msgstr "ERP5用户的密码"
+
+msgid "Password is different from confirmation"
+msgstr "密码不一致"
+
+msgid "Password is managed by Facebook, so you cannot change password for this login at this site."
+msgstr "您的密码由脸书管理，所以您不能在本网站上修改您的登录密码。"
+
+msgid "Password is managed by Google, so you cannot change password for this login at this site."
+msgstr "您的密码由谷歌管理，所以您不能在本网站上修改您的登录密码。"
 
 msgid "Path"
 msgstr "路径"
@@ -4273,6 +4710,9 @@ msgstr "应被保留的对象路径"
 
 msgid "Paths of objects whose workflow histories should be exported"
 msgstr "流程历史记录应被输出的对象路径"
+
+msgid "Pay Now"
+msgstr "现在支付"
 
 msgid "Payee"
 msgstr "收款人"
@@ -4293,13 +4733,16 @@ msgid "Payment Mode"
 msgstr "支付方式"
 
 msgid "Payment Reference"
-msgstr "支付代码"
+msgstr "支付编号"
 
 msgid "Payment Rule"
 msgstr "支付规则"
 
 msgid "Payment Rule generates payment transaction simulation movement from invoice transaction simulation movements."
 msgstr "支付规则从发票交易模拟运作中生成支付交易模拟运作"
+
+msgid "Payment State"
+msgstr "付款状态"
 
 msgid "Payment Transaction"
 msgstr "支付交易"
@@ -4315,6 +4758,9 @@ msgstr "工资单"
 
 msgid "Pending"
 msgstr "待解决"
+
+msgid "Pending Tickets to Process"
+msgstr "待处理工单"
 
 msgid "Period Start Date"
 msgstr "时间期间开始日期"
@@ -4387,6 +4833,9 @@ msgstr "预览小票请点更新"
 
 msgid "Please click \"Update\" first and confirm that all parameters are fine before clicking \"Solve Divergences\"."
 msgstr "单击“解决分歧”之前，请先单击“更新”并确认所有参数都填写正确。"
+
+msgid "Please review the form."
+msgstr "请检查表单。"
 
 msgid "Port of the oood server."
 msgstr "oood服务器端口"
@@ -4556,14 +5005,14 @@ msgstr "演示文档"
 msgid "Preview"
 msgstr "预览"
 
+msgid "Previous"
+msgstr "上一页"
+
 msgid "Previous Bank Statement Balance"
 msgstr "上一次银行结单余额"
 
 msgid "Previous Bank Statement Date"
 msgstr "上一次银行结单日期"
-
-msgid "Previous"
-msgstr "上一个"
 
 msgid "Price"
 msgstr "单价"
@@ -4622,6 +5071,12 @@ msgstr "发现问题"
 msgid "Procced"
 msgstr "继续"
 
+msgid "Proceed"
+msgstr "进行"
+
+msgid "Proceed to Supply Software"
+msgstr "进行软件提供。"
+
 msgid "Process File"
 msgstr "操作文件"
 
@@ -4650,7 +5105,7 @@ msgid "Product or Service"
 msgstr "产品或服务"
 
 msgid "Product or Service Reference"
-msgstr "产品或服务编码"
+msgstr "产品或服务编号"
 
 msgid "Products"
 msgstr "产品"
@@ -4718,11 +5173,17 @@ msgstr "项目标题"
 msgid "Project Workflow"
 msgstr "项目流程"
 
+msgid "Project is Deleted."
+msgstr "项目已删除。"
+
 msgid "Project to Open"
 msgstr "待开启项目"
 
 msgid "Project to Resume"
 msgstr "待续项目"
+
+msgid "Project to be removed:"
+msgstr "将要被删除的项目："
 
 msgid "Project which is suspended."
 msgstr "暂停项目"
@@ -4997,8 +5458,17 @@ msgstr "问题不可为空"
 msgid "Quick Search"
 msgstr "快速查询"
 
+msgid "RSS"
+msgstr "订阅消息"
+
+msgid "RSS (all)"
+msgstr "订阅消息(全部)"
+
+msgid "RSS Critical"
+msgstr "重要订阅消息"
+
 msgid "RSS Feed"
-msgstr "RSS 提要源"
+msgstr "订阅消息 源"
 
 msgid "Rate"
 msgstr "税率"
@@ -5070,13 +5540,13 @@ msgid "Recur on some months of the year (ex 5th, and 10th)"
 msgstr "在每年的某些月份复发（例如，在第5个月和第10个月复发）"
 
 msgid "Reference"
-msgstr "代码"
+msgstr "编号"
 
 msgid "Reference Currency"
-msgstr "参考货币"
+msgstr "货币编号"
 
 msgid "Reference Documents"
-msgstr "参考文件"
+msgstr "文件编号"
 
 msgid "Reference lookup regular expression"
 msgstr "编号查找常规表达式"
@@ -5085,19 +5555,19 @@ msgid "Reference of a document in ERP5, whatever the module considered. Exceptio
 msgstr "ERP5所有模块的文件都有编号。如果存在例外，则会在词汇表中相应的应用领域给予说明。例如，支付交易的编号有个特别的名称，采购和销售发票交易也是。详细信息请参见僵硬词汇。"
 
 msgid "Reference of a page, should be unique to retrieve a page easily"
-msgstr "一个页面的代码，应是唯一的从而可以轻松地检索页面"
+msgstr "一个页面的编号，应是唯一的从而可以轻松地检索页面"
 
 msgid "Reference of the Payment chosen by the accountant or the person in charge of accounting in ERP5. The payment reference can be a check number for example. Payment Reference only appears in Payment transactions"
 msgstr "公司会计或是负责ERP5会计模块的人选择的代表支付交易的编号，可以是支票号码，它只出现在支付交易中"
 
 msgid "Reference of the buyer in the purchase transaction"
-msgstr "采购交易中的买方代码"
+msgstr "采购交易中的买方编号"
 
 msgid "Reference of this accounting transaction"
-msgstr "该会计交易的代码"
+msgstr "该会计交易的编号"
 
 msgid "Referenced Documents"
-msgstr "参考文件"
+msgstr "编号文件"
 
 msgid "Region"
 msgstr "区域"
@@ -5111,11 +5581,17 @@ msgstr "已注册皮肤选项"
 msgid "Registered Version Priority Selection"
 msgstr "已注册版本优先选项"
 
+msgid "Regularisation Request:"
+msgstr "正则要求:"
+
 msgid "Reject"
 msgstr "否决"
 
 msgid "Reject Document"
 msgstr "否决文件"
+
+msgid "Reject Upgrade Decision:"
+msgstr "拒绝升级决定："
 
 msgid "Rejected"
 msgstr "已拒绝"
@@ -5149,6 +5625,9 @@ msgstr "相关业务模板"
 
 msgid "Related Components"
 msgstr "相关部件"
+
+msgid "Related Computer or Service"
+msgstr "相关联的计算机或服务"
 
 msgid "Related Documents"
 msgstr "相关文件"
@@ -5297,8 +5776,17 @@ msgstr "申请批准操作"
 msgid "Request Approval of Manager"
 msgstr "向管理者申请批准"
 
+msgid "Request Certificate"
+msgstr "申请证书"
+
 msgid "Request Keys"
 msgstr "要求密钥"
+
+msgid "Request New Certificate"
+msgstr "请求新的证书"
+
+msgid "Request New Token"
+msgstr "请求新令牌"
 
 msgid "Request Processing"
 msgstr "要求处理"
@@ -5312,11 +5800,17 @@ msgstr "要求翻译"
 msgid "Request Translation Action"
 msgstr "要求翻译操作"
 
+msgid "Request a Trial for"
+msgstr "请求试用"
+
 msgid "Requested Project"
 msgstr "已要求项目"
 
 msgid "Requester"
 msgstr "要求者"
+
+msgid "Requesting a service..."
+msgstr "正在请求一个服务..."
 
 msgid "Requirement Count"
 msgstr "要求数量"
@@ -5391,6 +5885,9 @@ msgstr ""
 
 msgid "Results"
 msgstr "结果"
+
+msgid "Return to Invoice List"
+msgstr "返回账单列表"
 
 msgid "Returned Goods"
 msgstr "退还货物"
@@ -5469,6 +5966,15 @@ msgstr "修订"
 
 msgid "Revision Number"
 msgstr "修订数"
+
+msgid "Revoke Certificate"
+msgstr "吊销证书"
+
+msgid "Revoke Computer Certificate"
+msgstr "吊销计算机证书"
+
+msgid "Revoke Person Certificate"
+msgstr "吊销用户证书"
 
 msgid "Rights"
 msgstr "权限"
@@ -5707,17 +6213,20 @@ msgstr "销售价格"
 msgid "Sales Uses"
 msgstr "销售用途"
 
-msgid "Schedule delivery of the remaining at later time"
-msgstr "计划稍后交付缺少产品的日程"
-
 msgid "Save"
 msgstr "保存"
+
+msgid "Schedule delivery of the remaining at later time"
+msgstr "计划稍后交付缺少产品的日程"
 
 msgid "Scriptable Keys"
 msgstr "可编写脚本密钥"
 
 msgid "Search"
 msgstr "查询"
+
+msgid "Search Expression"
+msgstr "搜索表达式"
 
 msgid "Search Keys"
 msgstr "搜索密钥"
@@ -5747,10 +6256,16 @@ msgid "Section Contents"
 msgstr "版块内容"
 
 msgid "Section Transaction Reference"
-msgstr "版块交易代码"
+msgstr "版块交易编号"
+
+msgid "Secure, Reliable, Fast"
+msgstr "多种应用 分发加速"
 
 msgid "Security Uid Columns"
 msgstr "安全Uid列"
+
+msgid "Select"
+msgstr "选择"
 
 msgid "Select Actions"
 msgstr "选择操作"
@@ -5827,6 +6342,9 @@ msgstr "编号"
 msgid "Serve Conversion Only If Already Converted In Cache"
 msgstr "服务转换仅当已转换缓存"
 
+msgid "Servers"
+msgstr "服务器"
+
 msgid "Service"
 msgstr "服务"
 
@@ -5841,6 +6359,9 @@ msgstr "服务可选变量"
 
 msgid "Service Variation"
 msgstr "服务变量"
+
+msgid "Service is Destroyed."
+msgstr "服务已销毁。"
 
 msgid "Services"
 msgstr "服务"
@@ -5926,6 +6447,9 @@ msgstr "显示无交易账户"
 msgid "Show All"
 msgstr "显示全部"
 
+msgid "Show All Tickets"
+msgstr "显示所有工单"
+
 msgid "Similar Documents"
 msgstr "类似文件"
 
@@ -5953,8 +6477,14 @@ msgstr "站点属性配置项目"
 msgid "Site Sections"
 msgstr "站点版块"
 
+msgid "Site is Deleted."
+msgstr "站点已删除。"
+
 msgid "Site or Warehouse"
 msgstr "站点或仓库"
+
+msgid "Site:"
+msgstr "站点："
 
 msgid "Sitemap"
 msgstr "站点地图"
@@ -5974,6 +6504,12 @@ msgstr "皮肤文件夹"
 msgid "Skin Selection"
 msgstr "皮肤选项"
 
+msgid "SlapOS Master API"
+msgstr "SlapOS主应用程序接口API"
+
+msgid "SlapOS Master Web UI"
+msgstr "SlapOS主网络用户界面"
+
 msgid "Small Image Height"
 msgstr "小图像高度"
 
@@ -5982,6 +6518,30 @@ msgstr "小图像宽度"
 
 msgid "Social Security Identification Number"
 msgstr "社会保险号码"
+
+msgid "Software Installation:"
+msgstr "软件安装:"
+
+msgid "Software Products"
+msgstr "软件产品"
+
+msgid "Software Release"
+msgstr "软件发布"
+
+msgid "Software Release URL"
+msgstr "软件发行URL"
+
+msgid "Software Release Version"
+msgstr "软件发布版本"
+
+msgid "Software Release to be Installed"
+msgstr "将要安装发布软件"
+
+msgid "Software Releases"
+msgstr "软件发布"
+
+msgid "Software Type"
+msgstr "软件类型"
 
 msgid "Sold"
 msgstr "已销售"
@@ -6047,7 +6607,7 @@ msgid "Source Section"
 msgstr "来源版块"
 
 msgid "Specialise Reference"
-msgstr "专门代码"
+msgstr "专门编号"
 
 msgid "Specialised Business Process Models"
 msgstr "专门业务流程模式"
@@ -6099,6 +6659,9 @@ msgstr "开始事业阶段"
 
 msgid "Start Date"
 msgstr "开始日期"
+
+msgid "Start Hosting Subscription"
+msgstr "开始托管订阅:"
 
 msgid "Start Periods ?"
 msgstr "开启期间？"
@@ -6160,6 +6723,9 @@ msgstr "不使用的偏好设置的状态"
 msgid "States"
 msgstr "状态"
 
+msgid "Status"
+msgstr "状态"
+
 msgid "Stock"
 msgstr "库存"
 
@@ -6189,6 +6755,12 @@ msgstr "停止事业阶段"
 
 msgid "Stop Date"
 msgstr "停止日期"
+
+msgid "Stop Hosting Subscription"
+msgstr "停止托管订阅:"
+
+msgid "Stop Hosting Subscription:"
+msgstr "停止托管订阅:"
 
 msgid "Stop Project"
 msgstr "停止项目"
@@ -6220,6 +6792,12 @@ msgstr "子类别"
 msgid "Subdivision of a product that helps define variations of this product based on different axis such as colour or size for instance. Each variation can have its own price."
 msgstr "产品文件的子文件可以根据不同的坐标例如颜色和尺寸,来定义不同的产品变量.每个变量可以设置各自的价格"
 
+msgid "Subject"
+msgstr "主题"
+
+msgid "Submit"
+msgstr "提交"
+
 msgid "Submit Document for Review"
 msgstr "递交文件以供审阅"
 
@@ -6238,6 +6816,12 @@ msgstr "待验证的已递交销售机会"
 msgid "Submitted Support Requests"
 msgstr "递交支持请求"
 
+msgid "Subscribe"
+msgstr "注册"
+
+msgid "Success..."
+msgstr "成功..."
+
 msgid "Successor"
 msgstr "后项"
 
@@ -6249,6 +6833,9 @@ msgstr "概要"
 
 msgid "Supervisor"
 msgstr "负责人"
+
+msgid "Supplied Softwares"
+msgstr "提供的软件"
 
 msgid "Supplier"
 msgstr "发票开票人"
@@ -6266,13 +6853,16 @@ msgid "Supplier Project"
 msgstr "供应方项目"
 
 msgid "Supplier Reference"
-msgstr "供应商代码"
+msgstr "供应商编号"
 
 msgid "Supplier Transaction Reference"
-msgstr "供应商交易代码"
+msgstr "供应商交易编号"
 
 msgid "Suppliers Roles"
 msgstr "供应商角色"
+
+msgid "Supply"
+msgstr "供应"
 
 msgid "Supply Line"
 msgstr "供应条件明细"
@@ -6324,6 +6914,12 @@ msgstr "已暂停项目"
 
 msgid "System Preference"
 msgstr "系统偏好设置"
+
+msgid "Target Computer Reference"
+msgstr "目标计算机编号"
+
+msgid "Target Computer Title"
+msgstr "目标计算机标题"
 
 msgid "Target Conversion Format"
 msgstr "目标转化格式"
@@ -6478,6 +7074,9 @@ msgstr "暂停交易期间"
 msgid "Temporarily Stopped"
 msgstr "已暂停"
 
+msgid "Temporary Closed"
+msgstr "暂时终止"
+
 msgid "Temporary close"
 msgstr "临时关闭"
 
@@ -6492,6 +7091,9 @@ msgstr "终止当前事业阶段"
 
 msgid "Terminated"
 msgstr "已终止"
+
+msgid "Terms of Service"
+msgstr "服务条款"
 
 msgid "Test Component"
 msgstr "测试部件"
@@ -6516,6 +7118,9 @@ msgstr "文本区字段高度"
 
 msgid "TextArea Field Width"
 msgstr "文本区字段宽度"
+
+msgid "Thank You"
+msgstr "谢谢您"
 
 msgid "The Accounting Period is closed. It is no longer possible to add accounting transactions in this period. A balance transaction has been created."
 msgstr "当一个交易期间终止时，就无法再该期间写入交易，同时结余处理将被建立。"
@@ -6557,7 +7162,7 @@ msgid "The Id of the callable ERP5 form used to view gadget"
 msgstr "用于查看配件的可调用ERP5表ID"
 
 msgid "The Invoice Reference"
-msgstr "发票代码"
+msgstr "发票编号"
 
 msgid "The Location where the project is handled, most of the time the name of an organisation."
 msgstr "项目进行的地点，多数时候是指公司或组织的名称"
@@ -6588,6 +7193,9 @@ msgstr "个人社会保险识别码"
 
 msgid "The Social Security Identification Number of the person."
 msgstr "该人的社会保险识别码"
+
+msgid "The Status"
+msgstr "状态"
 
 msgid "The Transformation Version"
 msgstr "转换版本"
@@ -7215,7 +7823,7 @@ msgid "Third Party Account"
 msgstr "第三方账户"
 
 msgid "Third Party Reference"
-msgstr "第三方代码"
+msgstr "第三方编号"
 
 msgid "Third Party/Product"
 msgstr "第三方/产品"
@@ -7234,6 +7842,15 @@ msgstr "该项指令将一项交易记录提交至总帐。它可以通过“重
 
 msgid "This action will post the transaction to the General Ledger. It can be journalized again thanks to the restart action"
 msgstr "该项操作将一项交易记录提交至总帐。它可以通过“重启”指令回到“已入账”状态。"
+
+msgid "This computer already has one certificate, please revoke it before request a new one."
+msgstr "该计算机已拥有一个证书，请在请求新的证书之前吊销已有证书。"
+
+msgid "This computer already has one certificate, please revoke it before request a new one.."
+msgstr "该计算机已拥有一个证书，请在请求新的证书之前吊销已有证书。"
+
+msgid "This computer has no certificate to revoke."
+msgstr "该计算机没有可吊销的证书。"
 
 msgid "This dialog has already been submitted. Do you want to submit again ?"
 msgstr "该请求已提交，确定重复提交该请求吗？"
@@ -7264,6 +7881,18 @@ msgstr "该选项帮助定义一个账户通常是贷方余额账户还是借方
 
 msgid "This page contains unsaved changes, do you really want to leave the page ?"
 msgstr "此页面包含未保存的更改，您是否真的想离开页面？"
+
+msgid "This person already has one certificate, please revoke it before request a new one."
+msgstr "该用户已拥有一个证书，请在请求新的证书之前吊销已有证书。"
+
+msgid "This person already has one certificate, please revoke it before request a new one.."
+msgstr "该用户已拥有一个证书，请在请求新的证书之前吊销已有证书。"
+
+msgid "This person already has one token, please revoke it before request a new one."
+msgstr "该用户已拥有一个令牌，请在请求新的令牌之前吊销已有证书。"
+
+msgid "This person has no certificate to revoke."
+msgstr "该用户没有可吊销的证书。"
 
 msgid "This state is shown when the goods that are shipped equal the previsions"
 msgstr "该整合状态在交付货物的数量和预期的一致时显示"
@@ -7308,16 +7937,16 @@ msgid "Ticket and events are cloned."
 msgstr "集合和事件已复制"
 
 msgid "Tickets"
-msgstr "集合"
+msgstr "工单"
 
 msgid "Tickets in this state are waiting for approval from the Ticket manager before being further processed."
-msgstr "该状态下的集合正在等待集合管理人的批准，已进行进一步的处理"
+msgstr "该状态下的工单正在等待工单管理人的批准，已进行进一步的处理"
 
 msgid "Tickets in this state have been fully processed and no longer need further processing."
-msgstr "该状态下的集合已经被完全处理，不需进一步的操作"
+msgstr "该状态下的工单已经被完全处理，不需进一步的操作"
 
 msgid "Tickets in this state require processing. They can be filled with events, and will remain open until their treatment is not entirely over."
-msgstr "在此状态下的集合需要进行处理。可以添加事件，并保持打开状态直至该集合得到完全处理。"
+msgstr "在此状态下的工单需要进行处理。可以添加事件，并保持打开状态直至该工单得到完全处理。"
 
 msgid "Time"
 msgstr "时间"
@@ -7363,6 +7992,12 @@ msgstr "任务报告的任务来源"
 
 msgid "To whom the task had been assigned."
 msgstr "受指派完成该项任务的人"
+
+msgid "Token"
+msgstr "令牌"
+
+msgid "Token is Requested."
+msgstr "令牌已请求。"
 
 msgid "Tools"
 msgstr "工具"
@@ -7425,10 +8060,10 @@ msgid "Trade Phase"
 msgstr "贸易阶段"
 
 msgid "Transaction Reference"
-msgstr "交易代码"
+msgstr "交易编号"
 
 msgid "Transaction Reference appears in Sale Invoice Transaction and Purchase Invoice Transaction, and is the Reference of the Transaction chosen by the accountant or the person in charge of accounting in ERP5. This is the equivalent of Payment Reference on a Payment Transaction."
-msgstr "出现在采购和销售发票交易的交易代码， 是公司会计或是负责ERP5会计模块的人选择的代表支付交易的代码。它和支付交易中的支付代码等价"
+msgstr "出现在采购和销售发票交易的交易编号， 是公司会计或是负责ERP5会计模块的人选择的代表支付交易的代码。它和支付交易中的支付编号等价"
 
 msgid "Transaction Type"
 msgstr "交易类型"
@@ -7459,6 +8094,18 @@ msgstr "与该银行账户相关的交易"
 
 msgid "Transactions to Reconcile"
 msgstr "待核对交易"
+
+msgid "Transfer"
+msgstr "传递"
+
+msgid "Transfer Computer"
+msgstr "转移计算机"
+
+msgid "Transfer Computer Network"
+msgstr "转移计算机网络"
+
+msgid "Transfer Service"
+msgstr "转移服务"
 
 msgid "Transformation"
 msgstr "物料转化"
@@ -7559,6 +8206,9 @@ msgstr "单元测试SQL连接字符串"
 msgid "Units"
 msgstr "单位"
 
+msgid "Unknown action to take:"
+msgstr "采取未知操作："
+
 msgid "Unpublish"
 msgstr "取消发布"
 
@@ -7616,6 +8266,12 @@ msgstr "已更新"
 msgid "Updated Business Templates"
 msgstr "更新业务模板"
 
+msgid "Upgrade"
+msgstr "升级"
+
+msgid "Upgrade Decision :"
+msgstr "升级决定:"
+
 msgid "Upload"
 msgstr "上传"
 
@@ -7660,6 +8316,9 @@ msgstr "已上传"
 
 msgid "Url of the document"
 msgstr "文件的Url"
+
+msgid "Usage"
+msgstr "用途"
 
 msgid "Use"
 msgstr "使用"
@@ -7854,7 +8513,7 @@ msgid "Vendor"
 msgstr "卖方"
 
 msgid "Vendor Transaction Reference"
-msgstr "卖方交易代码"
+msgstr "卖方交易编号"
 
 msgid "Vendor of the transaction"
 msgstr "交易中的卖方"
@@ -7875,12 +8534,6 @@ msgid "Version of the web page"
 msgstr "该网络页面的版本"
 
 msgid "View"
-msgstr "概览"
-
-msgid "Viewable"
-msgstr "预览"
-
-msgid "Views"
 msgstr "概览"
 
 msgid "View ${portal_type}"
@@ -7907,6 +8560,12 @@ msgstr "浏览网站"
 msgid "View report"
 msgstr "浏览报告"
 
+msgid "Viewable"
+msgstr "预览"
+
+msgid "Views"
+msgstr "概览"
+
 msgid "Visible"
 msgstr "可见"
 
@@ -7918,6 +8577,12 @@ msgstr "体积(m&#179;)"
 
 msgid "Warehouse"
 msgstr "仓库"
+
+msgid "Warning"
+msgstr "警告"
+
+msgid "Warnings"
+msgstr "警告"
 
 msgid "Web Message"
 msgstr "网站信息"
@@ -7957,6 +8622,9 @@ msgstr "周"
 
 msgid "Weight (kg)"
 msgstr "重量 (千克)"
+
+msgid "What are you looking for?"
+msgstr "您在寻找什么?"
 
 msgid "When a user of ERP5 wants to materialize a purchase that has been done by his company, he or she should use a purchase order. Purchase orders contain some general information about the buyer and the seller, and contain purchase order lines."
 msgstr "当ERP5用户想要实现一项其公司已经完成的采购，他就应该使用采购订单。采购订单包含了关于买方和卖方的基本信息，并包含采购订单明细。"
@@ -8009,9 +8677,6 @@ msgstr "必须定义工作开始期间"
 msgid "Workflow"
 msgstr "流程"
 
-msgid "Workflow-Transitions"
-msgstr "流程-过渡流程"
-
 msgid "Workflow Chains"
 msgstr "流程链"
 
@@ -8029,6 +8694,9 @@ msgstr "确定指定人的指派状态的流程"
 
 msgid "Workflow used to verify the consistency of packing list with the invoice."
 msgstr "用于验证装箱单与相应发票一致性的流程"
+
+msgid "Workflow-Transitions"
+msgstr "流程-过渡流程"
 
 msgid "Workflows"
 msgstr "工作流程"
@@ -8051,8 +8719,56 @@ msgstr "超小图像高度"
 msgid "Xsmall Image Width"
 msgstr "超小图像宽度"
 
+msgid "You are not allowed to access this content, please login with an user which has the right permission"
+msgstr "您没有权限查看此内容，请以有权限的用户登录。"
+
+msgid "You are offline."
+msgstr "您已离线。"
+
+msgid "You cannot delete this object because you have associated Computers and/or services."
+msgstr "您不能删除该网络，因为您已将它关联至计算机和/或服务。"
+
+msgid "You do not have the permissions to edit the object."
+msgstr "您没有编辑该对象的权限。"
+
+msgid "You sucessfully request destruction."
+msgstr "您成功请求销毁。"
+
+msgid "Your Account"
+msgstr "您的登录账号"
+
+msgid "Your Certificate"
+msgstr "您的证书"
+
+msgid "Your Close Message"
+msgstr "您的终止信息"
+
+msgid "Your Critical RSS Feed Link"
+msgstr "您的重要订阅RSS源链接"
+
+msgid "Your Email"
+msgstr "您的电子邮件"
+
+msgid "Your Friends email"
+msgstr "您朋友的邮箱"
+
+msgid "Your Invitation Link"
+msgstr "您的邀请链接"
+
 msgid "Your Item No."
 msgstr "对方产品编号"
+
+msgid "Your Message"
+msgstr "您的消息"
+
+msgid "Your RSS Feed Link"
+msgstr "您的订阅消息RSS源链接"
+
+msgid "Your RSS URL"
+msgstr "您的订阅消息RSS地址"
+
+msgid "Your Token"
+msgstr "您的令牌"
 
 msgid "Your name"
 msgstr "姓名"
@@ -8084,6 +8800,9 @@ msgstr "可用于在列表中的对象进行排序的整数"
 msgid "another base category to get if everything else fails"
 msgstr "当其他类别不成功时所获取的另一基本类别"
 
+msgid "ascending"
+msgstr "升序"
+
 msgid "build"
 msgstr "生成"
 
@@ -8105,6 +8824,9 @@ msgstr "定义了到达文档的基本URL"
 msgid "defines which email address is used by default for ingestion"
 msgstr "定义录入的默认邮箱地址"
 
+msgid "descending"
+msgstr "降序"
+
 msgid "if checked, if will install all the missing tools in the site when installing the business template"
 msgstr "如果勾选，在该站点安装该业务模板时就会安装所有缺失的工具"
 
@@ -8113,6 +8835,9 @@ msgstr "安装"
 
 msgid "instructions in order to explain how to use the resource"
 msgstr "资源的使用说明"
+
+msgid "loading"
+msgstr "加载中"
 
 msgid "marks the container as missing"
 msgstr "申报货柜遗失"
@@ -8144,14 +8869,23 @@ msgstr "集合相关的项目"
 msgid "requested"
 msgstr "已要求"
 
+msgid "sample of"
+msgstr "样本"
+
 msgid "serial number of the container"
 msgstr "货柜编号"
 
 msgid "started"
 msgstr "已开启"
 
+msgid "submit"
+msgstr "提交"
+
 msgid "tell for which protocol does the url hold"
 msgstr "说明该url拥有的协议"
+
+msgid "text"
+msgstr "文本"
 
 msgid "the deliver action will change the state of a document to delivered or posted, which are the final states of most documents in ERP5. Once a document is delivered or posted, it cannot be modified anymore. It can be used for example for sales packing lists or outgoing events."
 msgstr "传递指令将文件的状态更改为已传递或已提交，这是ERP5大多文件的最后状态。一旦一个文件被传递或提交，它将不能再被修改。该指令可用于例如销售装箱单或发出事件。"
@@ -8185,6 +8919,9 @@ msgstr "中等图像宽度（像素）"
 
 msgid "the width in pixel of nano image"
 msgstr "纳米图像宽度（像素）"
+
+msgid "title"
+msgstr "标题"
 
 msgid "transacion to carry forward the balance in order to open a new accounting period"
 msgstr "为开启一个新的会计期间而进行前期余额更新"
