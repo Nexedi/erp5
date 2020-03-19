@@ -171,6 +171,12 @@ ignored_skin_id_set = {
   'Credential_checkConsistency',
   'Credential_copyRegistredInformation',
   'Credential_updatePersonPassword',
+  'InvoiceTransaction_postGeneration',
+  'InvoiceTransaction_postTransactionLineGeneration',
+  'InvoiceTransaction_selectDelivery',
+  'InvoiceTransaction_selectInvoiceMovement',
+  'PurchaseInvoice_selectTradeModelMovementList',
+  'SaleInvoice_selectTradeModelMovementList',
 }
 
 # Generic method to check consistency of a skin item
