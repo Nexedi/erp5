@@ -1,11 +1,6 @@
-portal_alarms/loyalty_deliver
-portal_alarms/loyalty_reward_creation
-portal_alarms/loyalty_reward_invalidation
 portal_alarms/loyalty_transaction_builder_alarm
 portal_categories/base_amount/loyalty_program
 portal_categories/base_amount/loyalty_program/**
-portal_categories/trade_condition_type/sale
-portal_categories/trade_condition_type/sale/onetime
 portal_categories/use/loyalty_program
 portal_categories/use/loyalty_program/**
 portal_deliveries/loyalty_transaction_builder
