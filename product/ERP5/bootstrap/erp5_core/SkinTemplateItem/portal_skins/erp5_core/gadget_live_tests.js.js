@@ -70,8 +70,12 @@
           return gadget.changeState(state_dict);
         })
         .push(undefined, function (error) {
-          console.warn("Error launching live tests", error);
-          throw error;
+          var data_textarea = gadget.element.querySelector('textarea'),
+              error_message = "Error launching live tests";
+
+          console.warn(error_message, error);
+          data_textarea.value = error_message;
+          return gadget.changeState({test_running: false});
         });
     })
 
