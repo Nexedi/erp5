@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Service" module="erp5.portal_type"/>
+      <global name="Currency" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,6 +10,7 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
@@ -44,6 +45,7 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
@@ -53,28 +55,24 @@
             </value>
         </item>
         <item>
-            <key> <string>comment</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>DISCOUNT</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>EUR</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_discount</string> </value>
+            <value> <string>test_loyalty_currency</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Service</string> </value>
+            <value> <string>Currency</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>€</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>EUR</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -126,7 +124,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>validate</string> </value>
+                      <value> <string>publish</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -152,7 +150,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1584025739.52</float>
+                              <float>1583424916.18</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -161,7 +159,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>validated</string> </value>
+                      <value> <string>published</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -201,7 +199,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.31276.42005.27272</string> </value>
+                      <value> <string>982.21257.28646.52736</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -219,7 +217,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1584025730.64</float>
+                              <float>1583424608.04</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
