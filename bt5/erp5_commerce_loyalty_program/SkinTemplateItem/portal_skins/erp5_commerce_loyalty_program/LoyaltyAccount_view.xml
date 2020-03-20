@@ -14,7 +14,21 @@
         </item>
         <item>
             <key> <string>action</string> </key>
+            <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>action_title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -89,6 +103,10 @@
             <value> <string>LoyaltyAccount_view</string> </value>
         </item>
         <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view</string> </value>
+        </item>
+        <item>
             <key> <string>row_length</string> </key>
             <value> <int>4</int> </value>
         </item>
@@ -103,6 +121,14 @@
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
