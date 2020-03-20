@@ -266,6 +266,12 @@
     <td>//div[@class='front-project-list']//div[@class='project-line']//span[contains(@id, 'documented-project') and contains(@id, 'Task-Report') and contains(@id, '-outdated') and text()='0']</td>
     <td></td>
   </tr>
+  <!-- Check Forum link -->
+  <tr>
+    <td>assertElementPresent</td>
+    <td>//div[@class='front-project-list']//div[@class='project-right']//a[contains(@id, 'documented-project') and contains(@id, 'link-forum') and @href='test-forum-link' and text()='Project Forum']</td>
+    <td></td>
+  </tr>
 <!-- Check failed project -->
   <tr>
     <td>assertElementPresent</td>

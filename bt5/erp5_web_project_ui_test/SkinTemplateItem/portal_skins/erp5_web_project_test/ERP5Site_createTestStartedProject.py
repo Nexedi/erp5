@@ -31,6 +31,7 @@ if home_page:
   home_page.publishAlive()
 
 if create_project_documents:
+  project.setForumLinkUrlString("test-forum-link")
   # MILESTONES
   project.newContent(id = test_id + "-1",
                      portal_type = 'Project Milestone',
