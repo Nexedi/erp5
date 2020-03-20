@@ -397,7 +397,7 @@ Require valid-user
       self.frontend_address = configuration.get("frontend-address")
       self.instance_software_release = configuration.get('instance-software-release')
       self.use_existing_setup = self.instance_name is not None and self.frontend_address is not None
-      self.serial_test = configuration.get('serial-test', False)
+      self.serialise_test = configuration.get('serialise-test', False)
  
       node_test_suite.edit(configuration_list=configuration_list)
       self.launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
@@ -654,8 +654,8 @@ Require valid-user
                   "--metric-url", metric_url,
                   "--site-availability-url", site_availability_url,
                 ]
-      if self.serial_test:
-        command.append('--serial-test')
+      if self.serialise_test:
+        command.append('--serialise-test')
       logger.info("Running test case...")
       test_thread = TestThread(self.testnode.process_manager, command, logger.info, env=self.exec_env)
       test_thread.start()

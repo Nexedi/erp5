@@ -143,7 +143,7 @@ class ScalabilityLauncher(object):
                         metavar='SITE_AVAILABILITY_URL',
                         help='Url to check instance availability')
 
-    parser.add_argument('--serial-test',
+    parser.add_argument('--serialise-test',
                         metavar='SERIAL_TEST',
                         action='store_true',
                         help='Without this option, all test methods are invoked in parallel')
@@ -240,7 +240,7 @@ class ScalabilityLauncher(object):
     instance_url = self.__argumentNamespace.instance_url
     metric_url = self.__argumentNamespace.metric_url
     site_availability_url = self.__argumentNamespace.site_availability_url
-    serial_test = self.__argumentNamespace.serial_test
+    serialise_test = self.__argumentNamespace.serialise_test
 
     # To take metrics
     metric_thread_stop_event = threading.Event()
@@ -311,12 +311,12 @@ class ScalabilityLauncher(object):
       # Launch command
       test_thread = TestThread(process_manager, command, self.log, env=exec_env)
       test_thread.start()
-      if serial_test:
+      if serialise_test:
         self.log("Going to sleep for %s seconds." % str(test_duration))
         test_thread.join(test_duration)
         if test_thread.is_alive():
           process_manager.killPreviousRun()
-    if not serial_test:
+    if not serialise_test:
       # Sleep
       self.log("Going to sleep for %s seconds." % str(max_test_duration))
       time.sleep(max_test_duration)
