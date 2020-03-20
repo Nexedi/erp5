@@ -118,6 +118,7 @@
                       <list>
                         <string>my_quantity</string>
                         <string>my_quantity_read_only</string>
+                        <string>my_quantity_read_only_percent</string>
                         <string>my_frozen</string>
                         <string>my_lines_list</string>
                       </list>
