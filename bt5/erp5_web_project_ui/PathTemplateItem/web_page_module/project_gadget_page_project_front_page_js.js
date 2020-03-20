@@ -513,32 +513,32 @@
       return renderProjectList(gadget, gadget.state.project_list)
         .push(function () {
           //run the rest of queries and render async
-          gadget.renderMilestoneInfo();
-          gadget.renderOutdatedMilestoneInfo();
-          gadget.renderProjectDocumentInfo();
-          gadget.renderOutdatedDocumentInfo();
-          gadget.renderTestResultInfo();
-          gadget.renderProjectForumLink();
+          gadget.detachRenderMilestoneInfo();
+          gadget.detachRenderOutdatedMilestoneInfo();
+          gadget.detachRenderProjectDocumentInfo();
+          gadget.detachRenderOutdatedDocumentInfo();
+          gadget.detachRenderTestResultInfo();
+          gadget.detachRenderProjectForumLink();
         });
     })
 
-    .declareJob("renderMilestoneInfo", function () {
+    .declareJob("detachRenderMilestoneInfo", function () {
       return renderMilestoneLineList(this);
     })
 
-    .declareJob("renderOutdatedMilestoneInfo", function () {
+    .declareJob("detachRenderOutdatedMilestoneInfo", function () {
       return renderMilestoneLineList(this, MILESTONE_LIMIT_DATE);
     })
 
-    .declareJob("renderProjectDocumentInfo", function () {
+    .declareJob("detachRenderProjectDocumentInfo", function () {
       return renderProjectDocumentLines(this);
     })
 
-    .declareJob("renderOutdatedDocumentInfo", function () {
+    .declareJob("detachRenderOutdatedDocumentInfo", function () {
       return renderProjectDocumentLines(this, DOCUMENT_LIMIT_DATE);
     })
 
-    .declareJob("renderTestResultInfo", function () {
+    .declareJob("detachRenderTestResultInfo", function () {
       return new RSVP.Queue()
         .push(function () {
           return jIO.util.ajax({
@@ -561,7 +561,7 @@
         });
     })
 
-    .declareJob("renderProjectForumLink", function () {
+    .declareJob("detachRenderProjectForumLink", function () {
       var gadget = this,
         i,
         forum_link_html,
