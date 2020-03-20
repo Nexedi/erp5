@@ -1,0 +1,6 @@
+currency_module/test_loyalty_currency
+organisation_module/test_sale_order_supplier
+person_module/test_sale_order_receiver
+person_module/test_sale_order_receiver/**
+product_module/test_product
+sale_trade_condition_module/test_loyalty_program
