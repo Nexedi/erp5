@@ -1,0 +1,6 @@
+Loyalty Transaction Line | delivery_movement_simulation_interaction_workflow
+Loyalty Transaction Line | edit_workflow
+Loyalty Transaction Simulation Rule | edit_workflow
+Loyalty Transaction Simulation Rule | rule_validation_workflow
+Loyalty Transaction | edit_workflow
+Loyalty Transaction | loyalty_transaction_workflow
