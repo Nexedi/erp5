@@ -45,10 +45,10 @@
         data_attr;
       if (!isEmpty(this.state.text_content)) {
         if (this.state.prepend) {
-          content = this.state.prepend + "&nbsp;" + content;
+          content = this.state.prepend + content;
         }
         if (this.state.append) {
-          content = content + "&nbsp;" + this.state.append;
+          content = content + this.state.append;
         }
         new_element.textContent = content;
       } else if (!isEmpty(this.state.inner_html)) {
