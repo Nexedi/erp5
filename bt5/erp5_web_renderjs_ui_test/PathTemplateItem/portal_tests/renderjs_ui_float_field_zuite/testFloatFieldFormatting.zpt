@@ -43,6 +43,9 @@
 <tr><td>verifyText</td>
     <td>//div[@data-gadget-scope="field_my_quantity_read_only"]//p</td>
     <td>1 000 000.0</td></tr>
+<tr><td>verifyText</td>
+    <td>//div[@data-gadget-scope="field_my_quantity_read_only_percent"]//p</td>
+    <td>100000000.0%</td></tr>
 
 <!-- default quantity has to be 0
 This is regression test for bug #20171208-5E8D43
