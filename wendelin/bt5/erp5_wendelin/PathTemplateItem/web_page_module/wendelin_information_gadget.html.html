@@ -2,11 +2,7 @@
   <body>
     <h3>What is it?</h3>
     
-    <p>The Wendelin project started in the beginning of 2015 with Nexedi as 
-    consortium leader in charge of managing the development of a big data 
-    solution "made in France". Wendelin is based on open source software 
-    components and combines a number of widely used libraries for data 
-    analysis, modification and visualization.</p>
+    <p> <a href="https://wendelin.nexedi.com/">Wendelin</a> is convergent platform for Big Data and Machine Learning and a variant of ERP5 with extensions for ndarrays, a core module managing RAM beyond physical limits and interfaces with libraries such as scikit-learn, jupyter, pandas, fluentD or embulk. Wendelin is hosted on SlapOS and uses NEO for data storage allowing to manage the data life cycle from ingestion to commercialisation. It is developed and maintained by Nexedi.</p>
 
     <h3>What is included?</h3>
     
@@ -15,7 +11,7 @@
     <ul>
       <li>
         Famous scientific libraries, like: NumPy, Pandas and scikit-learn
-      </li>  
+      </li>
       <li>
         Integration with Jupyter frontend running the ERP5 kernel with access to 
         the previously  mentioned libraries to enable rapid prototyping and data 
@@ -27,22 +23,40 @@
         license, data operation, data product, data release, data set, data stream,
         data supply and sensor modules.
       </li>
+
     </ul>
     
     <h3>Developing Wendelin</h3>
     
-    If you want to customize Wendelin, check the 
-    <a href="${portal_url}/portal_skins/erp5_data_notebook/manage_main">
-    "erp5_data_notebook" folder at portal_skins.</a>
+    <p>
+        If you want to customize Wendelin you should first check its <a href="${portal_url}/portal_components"> tests</a>
+    </p>
+
     
-    To access the kernel you should see the 
-    <a href="${portal_url}/portal_components/extension.erp5.JupyterCompile">
-    JupyterCompile extension at portal_components. </a> 
+    <h3>Source code </h3>
+    <ul>
+      <li>
+        <a href="https://lab.nexedi.com/nexedi/wendelin">Wendelin</a>
+      </li>
+      <li>
+        <a href="https://lab.nexedi.com/nexedi/wendelin.core">wendelin.core (also in pypi) - Out-of-Core processing module </a>
+      </li>
+      <li>
+        <a href="https://lab.nexedi.com/nexedi/fluent-plugin-wendelin">fluentd Wendelin plugin</a>
+      </li>
+      <li>
+        <a href="https://lab.nexedi.com/nexedi/fluent-plugin-bin">fluentd binary Wendelin plugin</a>
+      </li>
+      <li>
+        <a href="https://lab.nexedi.com/nexedi/ebulk">ebulk Wendelin plugin</a>
+      </li>
+    </ul>
+
     
     <h3>Documentation</h3>
     
     To access the Wendelin official documentation 
-    <a href="http://www.wendelin.io/documentation/">click here.</a> 
+    <a href="https://wendelin.nexedi.com">click here.</a> 
     
   </body>
 </html>
