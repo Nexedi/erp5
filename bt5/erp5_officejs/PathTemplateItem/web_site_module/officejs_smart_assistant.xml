@@ -312,16 +312,6 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_cache_file</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>configuration_landing_page</string> </value>
                   </item>
                   <item>
@@ -420,10 +410,6 @@
         <item>
             <key> <string>configuration_application_title</string> </key>
             <value> <string>Spreedsheet Editor</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_cache_file</string> </key>
-            <value> <string>gadget_smart_assistant.appcache</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
