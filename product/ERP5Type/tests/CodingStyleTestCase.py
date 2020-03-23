@@ -125,3 +125,16 @@ class CodingStyleTestCase(ERP5TypeTestCase):
 
       self.maxDiff = None
       self.assertEqual(existing_files, new_files)
+
+  def test_run_upgrader(self):
+    self.portal.portal_alarms.upgrader_check_pre_upgrade.activeSense()
+    self.tic()
+    self.assertTrue(self.portal.portal_alarms.upgrader_check_pre_upgrade.sense())
+
+    self.portal.portal_alarms.promise_check_upgrader.activeSense()
+    self.tic()
+    self.assertTrue(self.portal.portal_alarms.promise_check_upgrader.sense())
+
+    self.portal.portal_alarms.upgrader_check_post_upgrade.activeSense()
+    self.tic()
+    self.assertTrue(self.portal.portal_alarms.upgrader_check_post_upgrade.sense())
