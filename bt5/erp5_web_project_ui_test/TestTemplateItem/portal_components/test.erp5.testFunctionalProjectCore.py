@@ -36,7 +36,6 @@ class TestProjectUICore(ERP5TypeFunctionalTestCase):
 
   def getBusinessTemplateList(self):
     return (
-      'erp5_project',
       'erp5_web_project_ui',
       'erp5_web_project_ui_test',
       'erp5_ui_test_core',
