@@ -262,16 +262,6 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_manifest_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>configuration_header_gadget_url</string> </value>
                   </item>
                   <item>
@@ -466,10 +456,6 @@
         <item>
             <key> <string>configuration_latest_version</string> </key>
             <value> <string>app</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs_spreadsheet.appcache</string> </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
