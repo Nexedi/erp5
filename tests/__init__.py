@@ -38,6 +38,7 @@ class _ERP5(ERP5TypeTestSuite):
         #glob('%s/product/*/tests/test*.py' % path) +
         #glob('%s/bt5/*/TestTemplateItem/test*.py' % path) +
         #glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+        glob('%s/product/ERP5/tests/testProject.py' % path) +
         glob('%s/bt5/erp5_web_project_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path)):
       component_re_match = component_re.match(test_path)
       if component_re_match is not None:
