@@ -2350,9 +2350,6 @@ class ERP5Generator(PortalGenerator):
 
     self.setupTools(p, **kw)
 
-    # subscribe portal_alarms
-    p.portal_alarms.subscribe()
-
     if not p.hasObject('MailHost'):
       self.setupMailHost(p)
 
@@ -2385,6 +2382,8 @@ class ERP5Generator(PortalGenerator):
       self.setupWorkflow(p)
       self.setupERP5Core(p,**kw)
       self.setupERP5Promise(p,**kw)
+      # subscribe portal_alarms
+      p.portal_alarms.subscribe()
 
     # Make sure the cache is initialized
     p.portal_caches.updateCache()
@@ -2421,7 +2420,6 @@ class ERP5Generator(PortalGenerator):
       template_tool.updateRepositoryBusinessTemplateList(repository.split())
       template_tool.installBusinessTemplateListFromRepository(
           ['erp5_promise'], activate=True, install_dependency=True)
-      p.portal_alarms.subscribe()
 
 
 # Zope offers no mechanism to extend AppInitializer so let's monkey-patch.
