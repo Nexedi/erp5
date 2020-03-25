@@ -100,8 +100,40 @@ class ERP5(_ERP5):
       if not status_dict['status_code']:
         status_dict = self.runUnitTest('--load', '--activity_node=2', full_test)
       return status_dict
-    if test.startswith('testFunctional'):
+    elif test.startswith('testFunctional'):
       return self._updateFunctionalTestResponse(self.runUnitTest(full_test))
+    elif test == 'testUpgradeInstanceWithOldDataFs':
+      old_data_path = None
+      for path in sys.path:
+        if path.endswith('/erp5-bin'):
+          old_data_path = os.path.join(path, 'test_data', test)
+          if not os.path.isdir(old_data_path):
+            return dict(
+              status_code=-1,
+              test_count=1,
+              failure_count=1,
+              stderr='%s does not exist or is not a directory' % old_data_path)
+
+          break
+      else:
+        return dict(
+          status_code=-1,
+          test_count=1,
+          failure_count=1,
+          stderr='erp5-bin repository not found in %s' % '\n'.join(sys.path))
+
+      instance_home = (self.instance and 'unit_test.%u' % self.instance
+                       or 'unit_test')
+      os.makedirs(os.path.join(instance_home, 'var'))
+
+      import shutil
+      shutil.copyfile(os.path.join(old_data_path, 'Data.fs'),
+                      os.path.join(instance_home, 'var', 'Data.fs'))
+      shutil.copyfile(os.path.join(old_data_path, 'dump.sql'),
+                      os.path.join(instance_home, 'dump.sql'))
+
+      return self.runUnitTest('--load', full_test)
+
     return super(ERP5, self).run(full_test)
 
   def _updateFunctionalTestResponse(self, status_dict):
@@ -192,4 +224,3 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
 
   def run(self, full_test):
     return self.runUnitTest('CodingStyleTest', TESTED_BUSINESS_TEMPLATE=full_test)
-
