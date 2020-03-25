@@ -507,6 +507,17 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   # ZopeTestCase below (Leo: I hate import side-effects with a passion).
   import App.config
   cfg = App.config.getConfiguration()
+  # Zope do not call setDefaultBehaviors() for testing instance as it does for
+  # a normal instance so `cfg.skip_ownership_checking = True` would not work
+  # here...
+  import AccessControl
+  AccessControl.setDefaultBehaviors(
+    # ownerous: ERP5 default (zope.conf: `skip-ownership-checking true`)
+    False,
+    # authenticated: Zope default (zope.conf: `skip_authentication_checking`)
+    True,
+    # verbose: Zope default
+    False)
   cfg.testinghome = instance_home
   cfg.instancehome = instance_home
   from Zope2.Startup.datatypes import DBTab
