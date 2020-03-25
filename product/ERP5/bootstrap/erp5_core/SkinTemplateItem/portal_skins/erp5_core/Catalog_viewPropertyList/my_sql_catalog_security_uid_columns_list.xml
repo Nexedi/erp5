@@ -12,6 +12,7 @@
               <list>
                 <string>height</string>
                 <string>title</string>
+                <string>whitespace_preserve</string>
                 <string>width</string>
               </list>
             </value>
@@ -80,6 +81,10 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Catalog Security UID Columns</string> </value>
+                </item>
+                <item>
+                    <key> <string>whitespace_preserve</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>width</string> </key>
