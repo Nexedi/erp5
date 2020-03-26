@@ -211,7 +211,6 @@ if create_project_documents:
                                             reference = "test-result-line")
   test_result_line.start()
   test_result_line.stop(test_count=15, error_count=10, failure_count=10)
-  import time
   time.sleep(5)
   test_result.start()
   test_result.fail()
