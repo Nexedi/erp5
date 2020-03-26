@@ -91,8 +91,8 @@ class PDFDocument(Image):
         raise ValueError("watermark_data cannot not be empty")
       if not self.hasData():
         raise ValueError("Cannot watermark an empty document")
-      self_reader = PdfFileReader(StringIO(self.getData()))
-      watermark_reader = PdfFileReader(StringIO(watermark_data))
+      self_reader = PdfFileReader(StringIO(self.getData()), overwriteWarnings=False)
+      watermark_reader = PdfFileReader(StringIO(watermark_data), overwriteWarnings=False)
       watermark_page_count = watermark_reader.getNumPages()
 
       output = PdfFileWriter()
@@ -315,7 +315,7 @@ class PDFDocument(Image):
         pass
       else:
         try:
-          pdf_file = PdfFileReader(tmp)
+          pdf_file = PdfFileReader(tmp, overwriteWarnings=False)
           for info_key, info_value in (pdf_file.getDocumentInfo() or {}).iteritems():
             info_key = info_key.lstrip("/")
             if isinstance(info_value, unicode):

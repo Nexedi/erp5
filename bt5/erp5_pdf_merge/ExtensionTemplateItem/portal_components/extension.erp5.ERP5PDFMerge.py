@@ -28,7 +28,7 @@
 
 def mergePDFList(self, pdf_data_list, start_on_recto=False):
   """Merge multiple PDFs in a new PDF.
-  
+
   Both input and output are raw PDF data as string, so pdf_data_list must be
   a list of strings, and the output is the merged pdf as a string.
   If "start_on_recto" is set to true, some blank pages will be added in order
@@ -37,12 +37,14 @@ def mergePDFList(self, pdf_data_list, start_on_recto=False):
   """
   from StringIO import StringIO
   from PyPDF2 import PdfFileWriter, PdfFileReader
-  
+
   output = PdfFileWriter()
-  
+
   for pdf_data in pdf_data_list:
     if pdf_data:
-      pdf_reader = PdfFileReader(StringIO(pdf_data))
+      # We should not let PdfFileReader overwrite warnings.showwarning method because we already do it in ERP5
+      # https://github.com/mstamy2/PyPDF2/blob/18a2627adac13124d4122c8b92aaa863ccfb8c29/PyPDF2/pdf.py#L1129
+      pdf_reader = PdfFileReader(StringIO(pdf_data), overwriteWarnings=False)
       page_count = pdf_reader.getNumPages()
       for page in range(page_count):
         output.addPage(pdf_reader.getPage(page))
