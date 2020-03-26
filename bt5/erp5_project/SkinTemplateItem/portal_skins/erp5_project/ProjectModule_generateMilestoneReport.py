@@ -27,9 +27,9 @@ portal_catalog = portal.portal_catalog
 # hasColumn exists, it is new and is not installed yet everywhere
 hasColumn = getattr(portal_catalog, 'hasColumn', None)
 if hasColumn is not None:
-  for property in ['outcome_description']:
-    if hasColumn(property):
-      select_dict[property] = None
+  for prop in ['outcome_description']:
+    if hasColumn(prop):
+      select_dict[prop] = None
 
 if len(project_uid_list):
   milestone_list = [x for x in portal.portal_catalog(parent_uid=project_uid_list,

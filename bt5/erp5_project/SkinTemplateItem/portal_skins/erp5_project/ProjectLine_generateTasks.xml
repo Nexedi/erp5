@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>source, source_section, destination_decision, destination_section, destination, task_line_quantity_unit, resource, listbox=[],**kw</string> </value>
+            <value> <string>source, source_section, destination_decision, destination_section, destination, task_line_quantity_unit, resource, listbox=(), **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

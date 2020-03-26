@@ -5,21 +5,15 @@ project_line_portal_type = 'Project Line'
 domain_list = []
 
 here = context.REQUEST['here']
-portal = context.getPortalObject()
-form_id=request.get('form_id')
-selection_name = request.get('selection_name')
-params = portal.portal_selections.getSelectionParamsFor(selection_name, request)
 object_path = request.get('object_path')
 if object_path is None:
   object_path = context.REQUEST.get('URL1').split('/')[-1]
-search_path = 'project_module/%s/%%' % object_path
 category_list = []
 
 if depth == 0:
   # Get start date and stop date from document
   from_date = request.get('from_date')
   at_date = request.get('at_date')
-  current_month = None
   # We must initialize from_date at the beginning of the month
   current_date = from_date
   is_total = here.is_total
@@ -56,10 +50,7 @@ if depth == 0:
       #i += 1
 
 else:
-  object_dict = here.object_dict
   string_index = getattr(parent, 'string_index')
-  object_sub_dict = object_dict.get(string_index, {})
-  object_url_dict = {}
   project_to_display_dict = here.monthly_project_to_display_dict.get(string_index, {})
   if depth == 1:
     category_list = [here.project_dict[x] for x in project_to_display_dict.keys() if
@@ -70,19 +61,15 @@ else:
     # Very specific to the monthly report, if no data, we do not display the current tree part
     # sor first, for performance, build a dict with all relative urls of project line that will
     # need to be displayed for this month
-    object_dict = here.object_dict
-
-    object_sub_dict = object_dict.get(getattr(parent, 'string_index'), {})
-    object_url_dict = {}
     for parent_category in parent_category_list:
       parent_category = '/'.join(parent_category.split('/')[1:])
       if project_to_display_dict.has_key(parent_category):
-	parent_category_object = context.restrictedTraverse(parent_category)
-	category_child_list = parent_category_object.contentValues(portal_type=project_line_portal_type)
-	#category_list.append(parent_category_object)
-	for category_child in category_child_list:
-	  if project_to_display_dict.has_key(category_child.getRelativeUrl()):
-	    category_list.append(category_child)
+        parent_category_object = context.restrictedTraverse(parent_category)
+        category_child_list = parent_category_object.contentValues(portal_type=project_line_portal_type)
+        #category_list.append(parent_category_object)
+        for category_child in category_child_list:
+          if project_to_display_dict.has_key(category_child.getRelativeUrl()):
+            category_list.append(category_child)
 
 
 i = 0

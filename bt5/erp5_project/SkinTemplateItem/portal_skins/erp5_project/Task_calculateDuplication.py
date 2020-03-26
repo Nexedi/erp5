@@ -1,8 +1,6 @@
 from Products.ERP5Type.DateUtils import addToDate
 Base_translateString = context.Base_translateString
 
-task_portal_type = 'Task'
-task_module = context.getDefaultModule(task_portal_type)
 
 def validateDay(date):
   if (periodicity_month_day_list in ([], None, ())):
@@ -30,7 +28,6 @@ def validateMonth(date):
 
 def getNextPeriodicalDate(current_date):
   next_start_date = current_date
-  previous_date = next_start_date
   next_start_date = addToDate(next_start_date, day=1)
   while 1:
     if (validateDay(next_start_date)) and \

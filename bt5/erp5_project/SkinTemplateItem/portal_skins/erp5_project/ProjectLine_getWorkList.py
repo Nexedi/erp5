@@ -12,7 +12,6 @@ def getWorkLineList(line,worker):
       result.append(line)
   return result
 
-listbox = []
 worker_list = context.getParentValue().getSourceValueList()
 work_line_list = []
 for worker in worker_list:

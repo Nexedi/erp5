@@ -1,6 +1,3 @@
-request = context.REQUEST
-domain_list = []
-
 if depth == 0:
   module = context.task_module
 

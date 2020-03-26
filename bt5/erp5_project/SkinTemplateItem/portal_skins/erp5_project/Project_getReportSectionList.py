@@ -4,8 +4,6 @@ result = []
 
 params = {}
 
-portal = context.portal_url.getPortalObject()
-
 for project_line in [x.getObject() for x in context.searchFolder(sort_id='int_index')]:
 
   result.append(
