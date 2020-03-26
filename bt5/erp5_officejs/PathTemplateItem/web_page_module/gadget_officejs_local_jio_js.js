@@ -38,6 +38,14 @@
         });
       }
     }
+    if (gadget.state_parameter_dict.jio_storage_name === "LINSHARE") {
+      delete gadget.state_parameter_dict.jio_storage;
+      return gadget.setSetting('jio_storage_name', undefined)
+        .push(function (error) {
+          return gadget.notifySubmitted({message: 'Unauthorized storage access',
+                                         status: 'error'});
+        });
+    }
     if (site) {
       return gadget.redirect({ command: "row", url: site});
     }
@@ -86,6 +94,7 @@
 
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("setSettingList", "setSettingList")
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
