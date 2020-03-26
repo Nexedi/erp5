@@ -2,6 +2,7 @@ portal_deliveries/task_invoice_builder
 portal_deliveries/task_invoice_builder/**
 portal_deliveries/task_report_builder
 portal_deliveries/task_report_builder/**
+portal_domains/date_milestone_domain
 portal_domains/project_person_domain
 portal_domains/project_person_task_report_domain
 portal_domains/project_project_domain
