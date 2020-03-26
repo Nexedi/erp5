@@ -1,8 +1,6 @@
 from Products.ERP5Type.Document import newTempBase
 from string import zfill
 
-global portal_object, new_id, l
-
 portal_object = context.getPortalObject()
 
 if lines_num is None:
@@ -13,9 +11,7 @@ l = []
 
 
 # function to create a new fast input line
-def createInputLine():
-  global portal_object, new_id, l
-  new_id += 1
+def createInputLine(new_id):
   int_len = 3
   o = newTempBase( portal_object,
                    str(new_id),
@@ -24,8 +20,8 @@ def createInputLine():
   l.append(o)
 
 # generate all lines for the fast input form
-for x in range(lines_num):
-  createInputLine()
+for new_id in range(lines_num):
+  createInputLine(new_id + 1)
 
 # return the list of fast input lines
 return l
