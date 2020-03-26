@@ -41,7 +41,7 @@
     if (gadget.state_parameter_dict.jio_storage_name === "LINSHARE") {
       delete gadget.state_parameter_dict.jio_storage;
       return gadget.setSetting('jio_storage_name', undefined)
-        .push(function (error) {
+        .push(function () {
           return gadget.notifySubmitted({message: 'Unauthorized storage access',
                                          status: 'error'});
         });
