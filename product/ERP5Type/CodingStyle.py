@@ -177,6 +177,9 @@ ignored_skin_id_set = {
   'InvoiceTransaction_selectInvoiceMovement',
   'PurchaseInvoice_selectTradeModelMovementList',
   'SaleInvoice_selectTradeModelMovementList',
+  'SaleInvoiceTransaction_selectTaskReportMovement',
+  'TaskListOverviewGadget_setPreferences',
+  'TaskListsGadgetListbox_getLineCss',
 }
 
 # Generic method to check consistency of a skin item
