@@ -1145,7 +1145,9 @@ msgid "Building State"
 msgstr "创建状态"
 
 msgid "Building is a causality state which will be displayed when ERP5 is creating a document from a related one. For example, when comfirm a sale order, a \"confirmed\" sale packing list will be built. During this process, the packing list's causality state is \"Building\", before turns to \"Calculating\" when ERP5 calculates if the packing list is convergent or divergent from its original sale order."
-msgstr "“创建中”是一个“因果整合状态”，用来表示ERP5系统正在创建关联文档。\r\n例如，当销售订单确定后，系统会创建一个销售装箱单。这个过程中,装箱单的“英国整合状态”就是“创建中”，然后才会变成“计算中”，表示ERP5系统开始计算该装箱单和原销售订单一致还是存在差异。"
+msgstr ""
+"“创建中”是一个“因果整合状态”，用来表示ERP5系统正在创建关联文档。\r\n"
+"例如，当销售订单确定后，系统会创建一个销售装箱单。这个过程中,装箱单的“英国整合状态”就是“创建中”，然后才会变成“计算中”，表示ERP5系统开始计算该装箱单和原销售订单一致还是存在差异。"
 
 msgid "Built"
 msgstr "已生成"
