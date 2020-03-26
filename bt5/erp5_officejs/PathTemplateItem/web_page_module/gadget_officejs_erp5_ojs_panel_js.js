@@ -279,6 +279,10 @@
       if (modification_dict.view_action_dict) {
         queue
           .push(function () {
+            //XXX HACK: this should use handle_action-custom_download_action
+            if (modification_dict.view_action_dict.action_list.hasOwnProperty("ooffice_download_document")) {
+              modification_dict.view_action_dict.action_list.ooffice_download_document.page = "ojs_download_convert";
+            }
             return RSVP.all([
               getElementList(gadget, modification_dict.view_action_dict.view_list),
               getElementList(gadget, modification_dict.view_action_dict.action_list)
