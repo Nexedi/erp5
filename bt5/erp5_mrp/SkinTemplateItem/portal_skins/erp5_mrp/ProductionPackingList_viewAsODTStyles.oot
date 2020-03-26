@@ -29,8 +29,7 @@
     <style:font-face style:name="StarSymbol" svg:font-family="StarSymbol" style:font-charset="x-symbol"/>
     <style:font-face style:name="DejaVu Sans1" svg:font-family="'DejaVu Sans'" style:font-pitch="variable"/>
     <style:font-face style:name="Times New Roman" svg:font-family="'Times New Roman'" style:font-family-generic="roman" style:font-pitch="variable"/>
-    <style:font-face style:name="Arial1" svg:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/>
-    <style:font-face style:name="Arial" svg:font-family="Arial" style:font-adornments="Normalny" style:font-family-generic="swiss" style:font-pitch="variable"/>
+    <style:font-face style:name="Liberation Sans" svg:font-family="'Liberation Sans'" style:font-family-generic="swiss" style:font-pitch="variable"/>
     <style:font-face style:name="DejaVu Sans" svg:font-family="'DejaVu Sans'" style:font-family-generic="swiss" style:font-pitch="variable"/>
     <style:font-face style:name="DejaVu Sans2" svg:font-family="'DejaVu Sans'" style:font-family-generic="system" style:font-pitch="variable"/>
   </office:font-face-decls>
@@ -53,7 +52,7 @@
       <style:table-row-properties fo:keep-together="always"/>
     </style:default-style>
     <style:style style:name="Standard" style:family="paragraph" style:class="text">
-      <style:text-properties style:font-name="Arial"/>
+      <style:text-properties style:font-name="Liberation Sans"/>
     </style:style>
     <style:style style:name="Text_20_body" style:display-name="Text body" style:family="paragraph" style:parent-style-name="Standard" style:class="text">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0.212cm"/>
@@ -71,7 +70,7 @@
         <style:tab-stops/>
         <style:background-image/>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial1" fo:font-size="7pt" style:font-name-asian="DejaVu Sans1" style:font-size-asian="14pt" style:font-name-complex="DejaVu Sans1" style:font-size-complex="14pt"/>
+      <style:text-properties style:font-name="Liberation Sans" fo:font-size="7pt" style:font-name-asian="DejaVu Sans1" style:font-size-asian="14pt" style:font-name-complex="DejaVu Sans1" style:font-size-complex="14pt"/>
     </style:style>
     <style:style style:name="Header_20_left" style:display-name="Header left" style:family="paragraph" style:parent-style-name="Standard" style:class="extra">
       <style:paragraph-properties text:number-lines="false" text:line-number="0">
