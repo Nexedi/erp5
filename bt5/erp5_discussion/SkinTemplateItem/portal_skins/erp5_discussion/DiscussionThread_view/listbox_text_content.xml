@@ -10,19 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
-                <string>list_method</string>
-                <string>page_template</string>
-                <string>portal_types</string>
-                <string>selection_name</string>
-                <string>sort</string>
-                <string>title</string>
+                <string>default</string>
+                <string>editable</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>listbox_text_content</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -59,6 +54,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -68,6 +73,10 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>text_editor</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -78,75 +87,28 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Author</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>text_content</string>
-                          <string>Content</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
-                </item>
-                <item>
-                    <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>page_template</string> </key>
+                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Discussion Post</string>
-                          <string>Discussion Post</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>discussion_post_selection</string> </value>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>my_text_content</string> </value>
                 </item>
                 <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>ascending</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>Bug_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Discussion Posts</string> </value>
+                    <key> <string>text_editor</string> </key>
+                    <value> <string>text_area</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -156,13 +118,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>contentValues</string> </value>
+            <key> <string>_text</string> </key>
+            <value> <string>python: cell.Event_getEditorFieldTextContent(editable=False)</string> </value>
         </item>
       </dictionary>
     </pickle>
