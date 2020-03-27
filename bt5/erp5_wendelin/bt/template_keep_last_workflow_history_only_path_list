@@ -1,1 +1,2 @@
 portal_callables/DataIngestionLine_writeFluentdIngestionToDataStream
+portal_callables/IngestionPolicy_parseSimpleFluentdTag
