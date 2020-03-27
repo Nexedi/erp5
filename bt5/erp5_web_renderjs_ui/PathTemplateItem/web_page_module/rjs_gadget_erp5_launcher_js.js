@@ -156,7 +156,8 @@
         }
       }
       if (error instanceof XMLHttpRequest) {
-        if (error.getResponseHeader('Content-Type').indexOf('text/') === 0) {
+        if ((error.getResponseHeader('Content-Type') || "")
+            .indexOf('text/') === 0) {
           error_response = error.response;
         }
         error = {
