@@ -1,2 +1,8 @@
 web_page_module/wendelin_information_gadget.html
 portal_gadgets/WendelinInformationGadget
+portal_ingestion_policies/default_http_json
+portal_ingestion_policies/default_http_json/**
+data_supply_module/default_http_json
+data_supply_module/default_http_json/**
+data_product_module/default_http_json
+data_product_module/default_http_json/**
