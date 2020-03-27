@@ -3,7 +3,6 @@ from datetime import datetime
 portal = context.getPortalObject()
 now = datetime.now()
 date_time = now.strftime("%m-%d-%Y-%H-%M-%S")
-old_date_time = (DateTime()-366).strftime("%Y/%m/%d")
 test_id = "documented-project-" if create_project_documents else "test-project-"
 test_id += date_time
 project_reference = 'test-project-home' if home_page else 'documented-project' if create_project_documents else 'test-project'
