@@ -76,7 +76,7 @@ class TimerServiceMixin(object):
 
   security.declarePrivate('manage_afterAdd')
   def manage_afterAdd(self, *args, **kw):
-    self.unsubscribe()
+    self.subscribe()
     super(TimerServiceMixin, self).manage_afterAdd(*args, **kw)
 
   security.declarePublic('getCurrentNode')
