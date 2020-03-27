@@ -6,11 +6,6 @@ updated_cell_count = 0
 dependant_dimensions_dict = context.BudgetLine_getSummaryDimensionKeyDict()
 cell_key_list = context.getCellKeyList()
 
-def reversed(seq):
-  seq = seq[::]
-  seq.sort(reverse=True)
-  return seq
-
 # we iterate in reversed order to update the deepest cells first
 for cell_key in reversed(cartesianProduct(context.getCellRange())):
   for idx, dimension in enumerate(cell_key):

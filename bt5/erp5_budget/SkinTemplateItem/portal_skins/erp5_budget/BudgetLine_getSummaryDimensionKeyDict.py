@@ -28,11 +28,6 @@ if budget_model is not None:
 
       non_strict_base_category_set[
           budget_variation.getProperty('variation_base_category')] = True
-  
-def reversed(seq):
-  seq = seq[::]
-  seq.sort(reverse=True)
-  return seq
 
 # build a dict of dependant dimensions
 dependant_dimensions_dict = {}
