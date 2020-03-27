@@ -1,4 +1,3 @@
-from Products.ZSQLCatalog.SQLCatalog import Query
 request = context.REQUEST
 
 object_dict = {} # it contains required temp object to display the listbox
@@ -111,8 +110,6 @@ for task_line in result_list:
   source_relative_url = source_dict['relative_url']
   start_date_task = task_line.date
   stop_date_task = task_line.mirror_date
-  year_start_date = start_date_task.year()
-  month_start_date = start_date_task.month()
 
   # create a list with people who works on the task
   current_column = (source_relative_url, source_title)
@@ -197,7 +194,6 @@ portal.portal_selections.setListboxDisplayMode(request, 'ReportTreeMode',
 
 result = []
 from Products.ERP5Form.Report import ReportSection
-param_dict = {}
 
 project_dict = {}
 for project_relative_url in project_relative_url_dict.keys():

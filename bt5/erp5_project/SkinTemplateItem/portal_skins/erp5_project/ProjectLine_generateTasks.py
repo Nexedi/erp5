@@ -42,8 +42,8 @@ task_items.sort(key=lambda x: x['id'])
 
 for item in task_items:
    
-   if item['title'] != '':
-      task = task_module.newContent( portal_type = document_type
+  if item['title'] != '':
+    task = task_module.newContent( portal_type = document_type
                                      , title = item['title']
                                      , reference = item['reference']
                                      , description = item['description']
@@ -59,15 +59,15 @@ for item in task_items:
                                      , destination = item['destination']
                                      )
       
-      if item['reference'] == '':
-        task.setReference('T-' + str(task.getId()))
+    if item['reference'] == '':
+      task.setReference('T-' + str(task.getId()))
       
-      if item['requirement'] is not None:
-          if isinstance(item['requirement'],str):
-              task.setTaskLineRequirement(item['requirement'])
-          else:
-              task.setTaskLineRequirementList(item['requirement'])
-      task.setSourceProjectValue(context_obj)
+    if item['requirement'] is not None:
+      if isinstance(item['requirement'],str):
+        task.setTaskLineRequirement(item['requirement'])
+      else:
+        task.setTaskLineRequirementList(item['requirement'])
+    task.setSourceProjectValue(context_obj)
 
 # return to the project
 return context.Base_redirect('view', keep_items={'portal_status_message': 'Tasks added at Task Module.'})

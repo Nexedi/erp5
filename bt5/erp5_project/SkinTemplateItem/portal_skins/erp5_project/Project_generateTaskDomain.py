@@ -9,7 +9,7 @@ search_path = 'project_module/%s/%%'
 if depth == 0:
   category_list = []
   for line in context.portal_catalog(path=search_path ):
-     category_list.extend([ i for i in line.getObject().getSourceProjectRelatedValueList() if i not in category_list])
+    category_list.extend([ i for i in line.getObject().getSourceProjectRelatedValueList() if i not in category_list])
 
 else:
   return domain_list
