@@ -6,4 +6,4 @@ discussion = context.DiscussionThread_getContextThread()
 if discussion == None:
   return 0
 
-return discussion.countFolder(portal_type='Discussion Post')[0][0]
+return discussion.DiscussionThread_getDiscussionPostCount()
