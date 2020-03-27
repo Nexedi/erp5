@@ -86,7 +86,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_text_content</string>
+                      </list>
                     </value>
                 </item>
                 <item>
