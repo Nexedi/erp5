@@ -2382,8 +2382,6 @@ class ERP5Generator(PortalGenerator):
       self.setupWorkflow(p)
       self.setupERP5Core(p,**kw)
       self.setupERP5Promise(p,**kw)
-      # subscribe portal_alarms
-      p.portal_alarms.subscribe()
 
     # Make sure the cache is initialized
     p.portal_caches.updateCache()
