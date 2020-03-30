@@ -134,6 +134,9 @@ safe_builtins['sorted'] = guarded_sorted
 def guarded_reversed(seq):
     return SafeIter(reversed(seq))
 safe_builtins['reversed'] = guarded_reversed
+ContainerAssertions[reversed] = 1
+# listreverseiterator is a special type, returned by list.__reversed__
+ContainerAssertions[type(reversed([]))] = 1
 
 def guarded_enumerate(seq, start=0):
     return NullIter(enumerate(guarded_iter(seq), start=start))
