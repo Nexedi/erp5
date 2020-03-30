@@ -45,7 +45,7 @@ SOURCE_DESTINATION_REFERENCE_LEGACY = True
 
 # This is used to register all Document classes used in ERP5
 # items are class names, values are class paths, e.g.:
-#   'Person' -> 'Products.ERP5.Document.Person.Person'
+#   'Person' -> 'erp5.component.document.Person.Person'
 document_class_registry = {}
 # similarly for mixins
 mixin_class_registry = {}
