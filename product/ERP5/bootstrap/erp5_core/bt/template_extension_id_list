@@ -4,3 +4,4 @@ extension.erp5.SearchUtility
 extension.erp5.StandardSecurity
 extension.erp5.ZODBHistory
 extension.erp5.FolderWorkflowActionUtils
+extension.erp5.PythonCodeUtils
