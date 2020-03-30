@@ -35,9 +35,18 @@ class _ERP5(ERP5TypeTestSuite):
     component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
                               "/test\.[^.]+\.([^.]+).py$")
     for test_path in (
-        glob('%s/product/*/tests/test*.py' % path) +
-        glob('%s/bt5/*/TestTemplateItem/test*.py' % path) +
-        glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+        #glob('%s/product/*/tests/test*.py' % path) +
+        #glob('%s/bt5/*/TestTemplateItem/test*.py' % path) +
+        #glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+        
+        #glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*OfficeJS*.py' % path)):
+        
+        glob('%s/bt5/erp5_hal_json_style/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_monaco_editor_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_travel_expense_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_gadget_interface_validator_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_officejs_*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
       component_re_match = component_re.match(test_path)
       if component_re_match is not None:
         test_case = "%s:%s" % (component_re_match.group(1),
@@ -226,3 +235,16 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
 
   def run(self, full_test):
     return self.runUnitTest('CodingStyleTest', TESTED_BUSINESS_TEMPLATE=full_test)
+
+class RJS_Only(_ERP5):
+  def getTestList(self):
+    #THESE 2 WORKS
+    #return [test for test in self._getAllTestList() if test.find('erp5_officejs_')>-1]
+    #return [test for test in self._getAllTestList() if any(test.find(bt)>-1 for bt in ["erp5_officejs_"])]
+    rjs_officejs_bt_list = ["erp5_officejs_",
+                            "renderjs_ui_test",
+                            "erp5_monaco_editor_ui_test",
+                            "erp5_travel_expense_ui_test",
+                            "erp5_gadget_interface_validator_ui_test",
+                            "erp5_hal_json_style"]
+    return [test for test in self._getAllTestList() if any(test.find(bt)>-1 for bt in rjs_officejs_bt_list)]
