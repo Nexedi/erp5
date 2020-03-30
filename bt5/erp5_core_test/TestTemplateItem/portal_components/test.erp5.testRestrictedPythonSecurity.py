@@ -25,12 +25,15 @@
 #
 ##############################################################################
 
+import textwrap
+import uuid
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type.patches.Restricted import allow_class_attribute
 from AccessControl import Unauthorized
-import uuid
+
 
 class TestRestrictedPythonSecurity(ERP5TypeTestCase):
   """
@@ -40,9 +43,9 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
   def getTitle(self):
     return "Restricted Python Security Test"
 
-  def runScript(self, container, name):
+  def runScript(self, container, name, kwargs):
     func = getattr(self.portal, name)
-    return func()
+    return func(**kwargs)
 
   def createAndRunScript(self, *args, **kwargs):
     # we do not care the script name for security test thus use uuid1
@@ -53,9 +56,9 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     try:
       createZODBPythonScript(script_container, name, '**kw', code)
       if expected:
-        self.assertEqual(self.runScript(script_container, name), expected)
+        self.assertEqual(self.runScript(script_container, name, kwargs.get('kwargs', {})), expected)
       else:
-        self.runScript(script_container, name)
+        self.runScript(script_container, name, kwargs.get('kwargs', {}))
     finally:
       removeZODBPythonScript(script_container, name)
 
@@ -136,4 +139,67 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     self.assertRaises(Unauthorized,
       self.createAndRunScript, 'import os',
                                'return os.system')
+
+  def test_generator_iteration(self):
+    generator_iteration_script = textwrap.dedent(
+        '''\
+        result = []
+        for elem in kw['generator']:
+          result.append(elem)
+        return result
+        ''')
+
+    class AllowedObject:
+      __allow_access_to_unprotected_subobjects__ = 1
+    allowed_object = AllowedObject()
+
+    from Acquisition import Implicit
+    class NotAllowedObject(Implicit):
+      __roles__ = ()
+    not_allowed_object = NotAllowedObject().__of__(self.portal)
+
+    def generator_with_allowed_objects():
+      yield 1
+      yield "two"
+      yield allowed_object
+
+    self.createAndRunScript(
+        generator_iteration_script,
+        kwargs={'generator': generator_with_allowed_objects()},
+        expected=[1, "two", allowed_object],
+    )
+    # generator expression
+    self.createAndRunScript(
+        generator_iteration_script,
+        kwargs={'generator': (x for x in [1, "two", allowed_object])},
+        expected=[1, "two", allowed_object],
+    )
+
+    def generator_with_not_allowed_objects():
+      yield "one"
+      yield not_allowed_object
+      yield 2
+    self.assertRaises(
+        Unauthorized,
+        self.createAndRunScript,
+        generator_iteration_script,
+        kwargs={'generator': generator_with_not_allowed_objects()},
+    )
+
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          result = []
+          i = iter(kw['generator'])
+          for _ in range(100): # prevent infinite loop
+            try:
+              result.append(next(i))
+            except StopIteration:
+              break
+            except Exception as e:
+              result.append(repr(e))
+          return result
+        '''),
+        kwargs={'generator': generator_with_not_allowed_objects()},
+        expected=["one", "Unauthorized()", 2],
+    )
 

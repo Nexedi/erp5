@@ -12,6 +12,7 @@
 ##############################################################################
 
 import sys
+import types
 
 from RestrictedPython.RestrictionMutator import RestrictionMutator
 
@@ -174,6 +175,8 @@ _set_white_dict = {
 ContainerAssertions[set] = _check_access_wrapper(set, _set_white_dict)
 
 ContainerAssertions[frozenset] = 1
+
+ContainerAssertions[types.GeneratorType] = 1
 
 from collections import OrderedDict
 ModuleSecurityInfo('collections').declarePublic('OrderedDict')
