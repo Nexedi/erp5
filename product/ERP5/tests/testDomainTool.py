@@ -52,7 +52,7 @@ class TestDomainTool(TestPredicateMixIn):
       Return the list of business templates.
 
     """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel')
+    return ('erp5_base','erp5_pdm', 'erp5_simulation', 'erp5_trade', 'erp5_apparel')
 
   def afterSetUp(self):
     domain_tool = self.getDomainTool()

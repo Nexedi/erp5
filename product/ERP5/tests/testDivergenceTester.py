@@ -31,7 +31,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import Sequence
 from Products.ERP5.tests.testPackingList import TestPackingListMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5.Document.FloatEquivalenceTester import DEFAULT_PRECISION
 
 class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
   """
@@ -355,6 +354,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
      Check Float Divergence tester behavior, especially around the
      default range = epsilon = abs(prevision_value * DEFAULT_PRECISION)
     """
+    from erp5.component.document.FloatEquivalenceTester import DEFAULT_PRECISION
     divergence_tester = sequence['price_divergence_tester']
 
     decision = sequence['order_line']
@@ -458,6 +458,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     movement = sequence.get('movement')
     prevision = simulation_movement.getPrice()
     self.assertEqual(prevision, 555.0)
+    from erp5.component.document.FloatEquivalenceTester import DEFAULT_PRECISION
     self.assertEqual(DEFAULT_PRECISION, 1e-12)
     # Since the epsilon here is, epsilon = 555.0 * 1e-12.
     # The following difference is smaller than the epsilon,

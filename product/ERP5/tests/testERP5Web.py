@@ -1592,6 +1592,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return ('erp5_base',
             'erp5_pdm',
+            'erp5_simulation',
             'erp5_trade',
             'erp5_project',
             'erp5_web',

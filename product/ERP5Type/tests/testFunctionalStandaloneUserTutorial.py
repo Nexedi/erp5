@@ -53,7 +53,7 @@ class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
             'erp5_dhtml_style',
             'erp5_jquery', 'erp5_jquery_ui',
             'erp5_knowledge_pad', 'erp5_pdm',
-            'erp5_trade', 'erp5_ooo_import',
+            'erp5_simulation', 'erp5_trade', 'erp5_ooo_import',
             'erp5_accounting', 'erp5_invoicing',
             'erp5_simplified_invoicing', 'erp5_project',
             'erp5_simulation',
