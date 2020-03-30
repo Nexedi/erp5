@@ -1135,7 +1135,7 @@ class TestAdvancedPurchaseInvoice(TestAdvancedInvoice):
 class TestWorkflow(SecurityTestCase):
   def getBusinessTemplateList(self):
     return ('erp5_core', 'erp5_base', 'erp5_pdm',
-            'erp5_trade', 'erp5_accounting',
+            'erp5_simulation', 'erp5_trade', 'erp5_accounting',
             'erp5_invoicing', 'erp5_advanced_invoicing')
 
   def afterSetUp(self):
