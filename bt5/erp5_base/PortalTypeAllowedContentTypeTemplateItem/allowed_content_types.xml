@@ -129,7 +129,4 @@
  <portal_type id="Rounding Tool">
   <item>Rounding Model</item>
  </portal_type>
- <portal_type id="Solver Tool">
-  <item>Solver Type</item>
- </portal_type>
 </allowed_content_type_list>
