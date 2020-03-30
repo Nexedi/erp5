@@ -43,13 +43,11 @@ class CodingStyleTest(CodingStyleTestCase, testXHTML.TestXHTMLMixin):
   """
 
   def getBusinessTemplateList(self):
-    # install erp5_administration to check with tools from erp5_administration
-    # and erp5_upgrader for CodingStyleTestCase.test_run_upgrader
+    # install erp5_upgrader for CodingStyleTestCase.test_run_upgrader
     # XXX also install erp5_full_text_myisam_catalog to workaround missing test
     # dependencies and the fact that test dependencies are not checked
     # recursively.
     return (
-        'erp5_administration',
         'erp5_upgrader',
         'erp5_full_text_myisam_catalog',
         self.tested_business_template)
