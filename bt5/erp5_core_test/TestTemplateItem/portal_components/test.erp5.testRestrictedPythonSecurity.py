@@ -140,6 +140,67 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
       self.createAndRunScript, 'import os',
                                'return os.system')
 
+  def test_sorted(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          returned = []
+          for i in sorted([2, 3, 1]):
+            returned.append(i)
+          return returned
+        '''),
+        expected=[1, 2, 3],
+    )
+
+  def test_reversed(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          returned = []
+          for i in reversed(('3', '2', '1')):
+            returned.append(i)
+          return returned
+        '''),
+        expected=['1', '2', '3'],
+    )
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          returned = []
+          for i in reversed([3, 2, 1]):
+            returned.append(i)
+          return returned
+        '''),
+        expected=[1, 2, 3],
+    )
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          returned = []
+          for i in reversed('321'):
+            returned.append(i)
+          return returned
+        '''),
+        expected=['1', '2', '3'],
+    )
+
+  def test_enumerate(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          returned = []
+          for i in enumerate(["zero", "one", "two",]):
+            returned.append(i)
+          return returned
+        '''),
+        expected=[(0, "zero"), (1, "one"), (2, "two"), ],
+    )
+    # with start= argument
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          returned = []
+          for i in enumerate(["one", "two", "three"], start=1):
+            returned.append(i)
+          return returned
+        '''),
+        expected=[(1, "one"), (2, "two"), (3, "three")],
+    )
+
   def test_generator_iteration(self):
     generator_iteration_script = textwrap.dedent(
         '''\
