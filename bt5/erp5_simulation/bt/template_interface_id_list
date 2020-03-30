@@ -1,0 +1,5 @@
+interface.erp5.IConfigurable
+interface.erp5.IDeliverySolver
+interface.erp5.IDeliverySolverFactory
+interface.erp5.IEquivalenceTester
+interface.erp5.ISolver
