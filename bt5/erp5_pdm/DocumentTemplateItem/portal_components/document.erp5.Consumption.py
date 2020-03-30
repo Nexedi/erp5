@@ -37,81 +37,85 @@ from Products.ERP5.mixin.variated import VariatedMixin
 
 
 class Consumption(XMLObject, XMLMatrix, VariatedMixin):
+  """
+    A matrix which provides default quantities
+    for a given quantity
+  """
+
+  meta_type = 'ERP5 Consumption'
+  portal_type = 'Consumption'
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.VariationRange
+                    )
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            '_setVariationCategoryList')
+  def _setVariationCategoryList(self, value, base_category_list=()):
     """
-      A matrix which provides default quantities
-      for a given quantity
+      Set consumption variation category list.
+      Set matrix cell range.
     """
+    self._setCategoryMembership(self.getVariationRangeBaseCategoryList(),
+                                value, base=1)
+    # XXX Must use in futur this method, but it failed today
+    #VariatedMixin._setVariationCategoryList(self, value)
+    # XXX FIXME: Use a interaction workflow instead
+    # Kept for compatibility.
+    self.updateCellRange(base_id='quantity')
 
-    meta_type = 'ERP5 Consumption'
-    portal_type = 'Consumption'
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'setVariationCategoryList')
+  def setVariationCategoryList(self, value, base_category_list=()):
+    """
+      Set consumption variation category list.
+      Reindex Object.
+    """
+    self._setVariationCategoryList(value)
+    self.reindexObject()
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'getVariationRangeBaseCategoryItemList')
+  def getVariationRangeBaseCategoryItemList(
+      self,
+      base=1,
+      display_id='getTitle',
+      current_category=None):
+    """
+      Return range of base variation item
+      Left display
+    """
+    # XXX get TitleOrId
+    return [(x, x) for x in self.getVariationRangeBaseCategoryList()]
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.VariationRange
-                      )
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'getQuantityRatio')
+  def getQuantityRatio(self, variation_category_line,
+                        variation_category_column):
+    """
+      Return quantity ratio for a virtual cell.
+      Return None if not result can be return.
+    """
+    cell_quantity_ratio_list = []
 
-    security.declareProtected(Permissions.ModifyPortalContent,
-                              '_setVariationCategoryList')
-    def _setVariationCategoryList(self,value):
-      """
-        Set consumption variation category list.
-        Set matrix cell range.
-      """
-      self._setCategoryMembership(self.getVariationRangeBaseCategoryList(),
-                                  value, base=1)
-      # XXX Must use in futur this method, but it failed today
-      #VariatedMixin._setVariationCategoryList(self, value)
-      # XXX FIXME: Use a interaction workflow instead
-      # Kept for compatibility.
-      self.updateCellRange(base_id='quantity')
-
-    security.declareProtected(Permissions.ModifyPortalContent,
-                              'setVariationCategoryList')
-    def setVariationCategoryList(self,value):
-      """
-        Set consumption variation category list.
-        Reindex Object.
-      """
-      self._setVariationCategoryList(value)
-      self.reindexObject()
-
-    security.declareProtected(Permissions.ModifyPortalContent,
-                              'getVariationRangeBaseCategoryItemList')
-    def getVariationRangeBaseCategoryItemList(self):
-      """
-        Return range of base variation item
-        Left display
-      """
-      # XXX get TitleOrId
-      return map( lambda x: (x,x)  , self.getVariationRangeBaseCategoryList() )
-
-    security.declareProtected(Permissions.ModifyPortalContent,
-                              'getQuantityRatio')
-    def getQuantityRatio(self, variation_category_line,
-                         variation_category_column):
-      """
-        Return quantity ratio for a virtual cell.
-        Return None if not result can be return.
-      """
-      cell_quantity_ratio_list = []
-
-      for variation_category in (variation_category_line,
-                                 variation_category_column):
-        cell = self.getCell(variation_category, base_id='quantity')
-        if cell is None:
+    for variation_category in (variation_category_line,
+                                variation_category_column):
+      cell = self.getCell(variation_category, base_id='quantity')
+      if cell is None:
+        return None
+      else:
+        cell_quantity_ratio = cell.getProperty('quantity')
+        if cell_quantity_ratio in [None, 0, '']:
           return None
         else:
-          cell_quantity_ratio = cell.getProperty('quantity')
-          if cell_quantity_ratio in [None, 0, '']:
-            return None
-          else:
-            cell_quantity_ratio_list.append( cell_quantity_ratio )
+          cell_quantity_ratio_list.append( cell_quantity_ratio )
 
-      return cell_quantity_ratio_list[1] / cell_quantity_ratio_list[0]
+    return cell_quantity_ratio_list[1] / cell_quantity_ratio_list[0]
