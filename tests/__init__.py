@@ -35,9 +35,10 @@ class _ERP5(ERP5TypeTestSuite):
     component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
                               "/test\.[^.]+\.([^.]+).py$")
     for test_path in (
-        glob('%s/product/*/tests/test*.py' % path) +
-        glob('%s/bt5/*/TestTemplateItem/test*.py' % path) +
-        glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+        #glob('%s/product/*/tests/test*.py' % path) +
+        #glob('%s/bt5/*/TestTemplateItem/test*.py' % path) +
+        #glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+        glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*OfficeJS*.py' % path)):
       component_re_match = component_re.match(test_path)
       if component_re_match is not None:
         test_case = "%s:%s" % (component_re_match.group(1),
@@ -226,3 +227,19 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
 
   def run(self, full_test):
     return self.runUnitTest('CodingStyleTest', TESTED_BUSINESS_TEMPLATE=full_test)
+
+class RJS_Only(ERP5):
+  def getTestList(self):
+    test_list = []
+    path = "%s/../" % HERE
+    for business_template_path in (
+            #glob('%s/../bt5/*' % HERE)
+            #+ glob('%s/../product/ERP5/bootstrap/*' % HERE)):
+            glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*OfficeJS*.py' % path)):
+      # we skip coding style check for business templates having this marker
+      # property. Since the property is not exported (on purpose), modified business templates
+      # will be candidate for coding style test again.
+      if os.path.isdir(business_template_path) and \
+              not os.path.exists(os.path.join(business_template_path, 'bt/skip_coding_style_test')):
+        test_list.append(os.path.basename(business_template_path))
+    return test_list
