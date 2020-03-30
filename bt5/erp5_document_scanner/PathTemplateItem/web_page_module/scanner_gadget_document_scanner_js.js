@@ -186,12 +186,26 @@
   }
 
   function handleAsyncStore(gadget, blob_page) {
-    var data = new FormData();
-    data.append("input_value",
-                gadget.state['blob_url_' + blob_page].split(';')[1].split(',')[1]);
-    data.append("active_process_url", gadget.state.active_process);
     return new RSVP.Queue()
       .push(function () {
+        if (gadget.state['blob_url_' + blob_page] === undefined) {
+          // Slow, takes 2 seconds or more on mobile.
+          return new RSVP.Queue(
+            promiseCanvasToBlob(gadget.state['blob_canvas_' + blob_page], 0.85)
+          )
+            .push(function (blob) {
+              return jIO.util.readBlobAsDataURL(blob);
+            })
+            .push(function (evt) {
+              gadget.state['blob_url_' + blob_page] = evt.target.result;
+            });
+        }
+      })
+      .push(function () {
+        var data = new FormData();
+        data.append("input_value",
+                    gadget.state['blob_url_' + blob_page].split(';')[1].split(',')[1]);
+        data.append("active_process_url", gadget.state.active_process);
         return jIO.util.ajax({
           "type": "POST",
           "url": gadget.state.store_new_image_cropped_method,
@@ -203,9 +217,9 @@
       })
       .push(function (evt) {
         var state_dict = {};
-        data = JSON.parse(evt.target.responseText);
         state_dict['blob_state_' + blob_page] = 'OK';
-        state_dict['blob_uuid_' + blob_page] = data.uuid;
+        state_dict['blob_uuid_' + blob_page] = 
+          JSON.parse(evt.target.responseText).uuid;
         return gadget.changeState(state_dict);
       }, function () {
         var state_dict = {};
@@ -801,9 +815,6 @@
         return new RSVP.Queue()
           .push(function () {
             var canvas = gadget.cropper.getCroppedCanvas(),
-              // XXX too slow, takes 2 seconds or more on mobile.
-              data_url = canvas.toDataURL("image/jpeg", 0.85);
-
             state_dict = {
               preferred_cropped_canvas_data: gadget.cropper.getData(),
               display_step: 'display_video',
@@ -811,7 +822,8 @@
               page_count: gadget.state.page_count + 1
             };
             // Keep image date, as user may need to display it again
-            state_dict['blob_url_' + gadget.state.page_count] = data_url;
+            state_dict['blob_canvas_' + gadget.state.page_count] = canvas;
+            // state_dict['blob_url_' + gadget.state.page_count] = data_url;
             state_dict['blob_state_' + gadget.state.page_count] = 'saving';
             state_dict['blob_uuid_' + gadget.state.page_count] = null;
 
