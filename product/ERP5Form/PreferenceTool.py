@@ -211,7 +211,7 @@ class PreferenceTool(BaseTool):
       user_id = getSecurityManager().getUser().getId()
       self._preference_cache[user_id] = \
           self._preference_cache.get(user_id, 0) + 1
-    self._preference_cache[None] = self._preference_cache.get(None, 0) + 1
+    self._preference_cache[""] = self._preference_cache.get("", 0) + 1
 
   def _getCacheId(self):
     """Return a cache id for preferences.
@@ -228,7 +228,7 @@ class PreferenceTool(BaseTool):
       self._preference_cache
     except AttributeError:
       self._preference_cache = OIBTree()
-    return self._preference_cache.get(None), self._preference_cache.get(user_id), user_id
+    return self._preference_cache.get(""), self._preference_cache.get(user_id or ""), user_id
 
   security.declareProtected(Permissions.View, 'getActiveUserPreference')
   def getActiveUserPreference(self) :
