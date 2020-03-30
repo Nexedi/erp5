@@ -103,7 +103,6 @@ class PresencePeriod(Movement, PeriodicityMixin):
     asMovementList returns a list a movement context with different
     single destination.
     """
-    result = []
     if self.getSource() != None or self.getDestination() != None:
       for period_data in self._getDatePeriodDataList():
         period_data = copy(period_data)
@@ -111,8 +110,7 @@ class PresencePeriod(Movement, PeriodicityMixin):
         date_list.sort()
         period_data['start_date'] = date_list[1]
         period_data['stop_date'] = date_list[0]
-        result.append(self.asContext(self, **period_data))
-    return result
+        yield self.asContext(self, **period_data)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getCalendarPeriodExceptionValueList')
@@ -134,7 +132,6 @@ class PresencePeriod(Movement, PeriodicityMixin):
     Get all periods between periodicity start date
     and periodicity stop date
     """
-    result = []
     exception_value_list = self.getCalendarPeriodExceptionValueList()
     exception_date_list = [x.getExceptionDate() \
                                        for x in exception_value_list]
@@ -153,12 +150,12 @@ class PresencePeriod(Movement, PeriodicityMixin):
         while (next_start_date is not None) and \
           (next_start_date <= periodicity_stop_date):
           if next_start_date.Date() not in exception_date_set:
-            result.append({'start_date': next_start_date,
-                           'stop_date': next_start_date + duration,
-                           'quantity': self.getQuantity()})
+            yield {
+                'start_date': next_start_date,
+                'stop_date': next_start_date + duration,
+                'quantity': self.getQuantity(),
+            }
           next_start_date = self.getNextPeriodicalDate(next_start_date)
-
-    return result
 
   def getNextPeriodicalDate(self, current_date, next_start_date=None):
     """
