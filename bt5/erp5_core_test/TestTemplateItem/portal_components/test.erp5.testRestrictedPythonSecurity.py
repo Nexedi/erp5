@@ -139,6 +139,111 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     self.assertRaises(Unauthorized,
       self.createAndRunScript, 'import os',
                                'return os.system')
+    self.assertRaises(Unauthorized,
+      self.createAndRunScript, 'from os import system')
+
+  def test_set(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          s = set()
+          s.add(1)
+          s.clear()
+          s.copy()
+          s = set([1, 2])
+          s.difference([1])
+          s.difference_update([1])
+          s.discard(1)
+          s.intersection([1])
+          s.intersection_update([1])
+          s.isdisjoint([1])
+          s.issubset([1])
+          s.issuperset([1])
+          s.add(1)
+          s.pop()
+          s.add(1)
+          s.remove(1)
+          s.symmetric_difference([1])
+          s.symmetric_difference_update([1])
+          s.union([1])
+          s.update()
+        '''),
+    )
+
+  def test_frozenset(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          s = frozenset([1, 2])
+          s.copy()
+          s.difference([1])
+          s.intersection([1])
+          s.isdisjoint([1])
+          s.issubset([1])
+          s.issuperset([1])
+          s.symmetric_difference([1])
+          s.union([1])
+        '''),
+    )
+
+  def test_sorted(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          returned = []
+          for i in sorted([2, 3, 1]):
+            returned.append(i)
+          return returned
+        '''),
+        expected=[1, 2, 3],
+    )
+
+  def test_reversed(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          returned = []
+          for i in reversed(('3', '2', '1')):
+            returned.append(i)
+          return returned
+        '''),
+        expected=['1', '2', '3'],
+    )
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          returned = []
+          for i in reversed([3, 2, 1]):
+            returned.append(i)
+          return returned
+        '''),
+        expected=[1, 2, 3],
+    )
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          returned = []
+          for i in reversed('321'):
+            returned.append(i)
+          return returned
+        '''),
+        expected=['1', '2', '3'],
+    )
+
+  def test_enumerate(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          returned = []
+          for i in enumerate(["zero", "one", "two",]):
+            returned.append(i)
+          return returned
+        '''),
+        expected=[(0, "zero"), (1, "one"), (2, "two"), ],
+    )
+    # with start= argument
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          returned = []
+          for i in enumerate(["one", "two", "three"], start=1):
+            returned.append(i)
+          return returned
+        '''),
+        expected=[(1, "one"), (2, "two"), (3, "three")],
+    )
 
   def test_generator_iteration(self):
     generator_iteration_script = textwrap.dedent(
@@ -202,3 +307,32 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         expected=["one", "Unauthorized()", 2],
     )
 
+  def test_json(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          import json
+          return json.loads(json.dumps({"ok": [True]}))
+          '''),
+        expected={"ok": [True]}
+    )
+
+  def test_calendar(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          import calendar
+          calendar.IllegalMonthError
+          calendar.IllegalWeekdayError
+          calendar.calendar(2020)
+          calendar.firstweekday()
+          calendar.isleap(2020)
+          calendar.leapdays(200, 2020)
+          calendar.month(2020, 1)
+          calendar.monthcalendar(2020, 1)
+          calendar.monthrange(2020, 1)
+          calendar.setfirstweekday(1)
+          calendar.timegm((2020, 1, 1, 0, 0, 0))
+          calendar.weekday(2020, 1, 1)
+          calendar.Calendar().getfirstweekday()
+          calendar.HTMLCalendar().getfirstweekday()
+          '''),
+    )
