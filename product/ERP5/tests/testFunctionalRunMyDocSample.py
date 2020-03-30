@@ -58,7 +58,7 @@ class TestZeleniumRunMyDocSample(ERP5TypeFunctionalTestCase):
     """
     return ('erp5_core_proxy_field_legacy', 'erp5_full_text_mroonga_catalog',
             'erp5_base', 'erp5_ui_test_core','erp5_web', 'erp5_ingestion',
-            'erp5_accounting',
+            'erp5_simulation', 'erp5_accounting',
             'erp5_jquery', 'erp5_dms', 'erp5_jquery_ui', 'erp5_web',
             'erp5_slideshow_style', 'erp5_knowledge_pad', 'erp5_run_my_doc',
             'erp5_user_tutorial_ui_test', 'erp5_user_tutorial',)

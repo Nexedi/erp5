@@ -32,7 +32,7 @@ from DateTime import DateTime
 
 class MilestoneReportingMixin:
 
-  business_template_list = ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_project',
+  business_template_list = ('erp5_base','erp5_pdm', 'erp5_simulation', 'erp5_trade', 'erp5_project',
     # XXX This report have to be updated not to use movement table
     "erp5_movement_table_catalog",
   )

@@ -40,7 +40,7 @@ class TestSupplyMixin:
     """
       List of needed Business Templates
     """
-    return ('erp5_base', 'erp5_pdm', 'erp5_dummy_movement', 'erp5_trade')
+    return ('erp5_base', 'erp5_pdm', 'erp5_dummy_movement', 'erp5_simulation', 'erp5_trade')
 
   def afterSetUp(self):
     self.login()
