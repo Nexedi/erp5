@@ -1,6 +1,10 @@
 /*jslint indent: 2, unparam: true, bitwise: true */
-/*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman, FileReader, DataView*/
-(function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, caman, FileReader, DataView) {
+/*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO,
+         promiseEventListener, domsugar, createImageBitmap, FormData, Caman,
+         FileReader, DataView, URL*/
+(function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO,
+           promiseEventListener, domsugar, createImageBitmap, FormData, caman,
+           FileReader, DataView, URL) {
   "use strict";
 
   //////////////////////////////////////////////////
@@ -17,8 +21,15 @@
     });
   }
 
-  function getOrientationFromDataUrl(data_url) {
-    var view = new DataView(data_url),
+  function promiseCanvasToBlob(canvas, compression) {
+    return new Promise(function (resolve) {
+      // XXX too slow, takes 2 seconds or more on mobile.
+      canvas.toBlob(resolve, 'image/jpeg', compression);
+    });
+  }
+
+  function getOrientationFromArrayBuffer(array_buffer) {
+    var view = new DataView(array_buffer),
       length = view.byteLength,
       offset = 2,
       marker,
@@ -59,12 +70,9 @@
   }
 
   function getOrientation(blob) {
-    return RSVP.Queue()
-      .push(function () {
-        return jIO.util.readBlobAsArrayBuffer(blob);
-      })
+    return new RSVP.Queue(jIO.util.readBlobAsArrayBuffer(blob))
       .push(function (evt) {
-        return getOrientationFromDataUrl(evt.target.result);
+        return getOrientationFromArrayBuffer(evt.target.result);
       });
   }
 
@@ -133,7 +141,7 @@
         this.render(function () {
           // XXX canceller should be called automatically ?
           canceller();
-          resolve([this.context.canvas, settings.compression]);
+          resolve();
         });
       });
       return local_caman;
@@ -391,6 +399,105 @@
       });
   }
 
+  function fixPhotoOrientation(blob) {
+    var orientation;
+    return getOrientation(blob)
+      .push(function (result) {
+        orientation = result;
+
+        // If orientation is correct, return the original blob
+        if ((orientation < 2) || (8 < orientation)) {
+          return blob;
+        }
+
+        // Else, transform the image
+        return new RSVP.Queue(createImageBitmap(blob))
+          .push(function (bitmap) {
+
+            var height = bitmap.height,
+              width = bitmap.width,
+              canvas = domsugar('canvas'),
+              ctx;
+
+            if (4 < orientation && orientation < 9) {
+              canvas.width = height;
+              canvas.height = width;
+            } else {
+              canvas.width = width;
+              canvas.height = height;
+            }
+
+            ctx = canvas.getContext('2d');
+
+            // transform context before drawing image
+            switch (orientation) {
+            case 2:
+              ctx.transform(-1, 0, 0, 1, width, 0);
+              break;
+            case 3:
+              ctx.transform(-1, 0, 0, -1, width, height);
+              break;
+            case 4:
+              ctx.transform(1, 0, 0, -1, 0, height);
+              break;
+            case 5:
+              ctx.transform(0, 1, 1, 0, 0, 0);
+              break;
+            case 6:
+              ctx.transform(0, 1, -1, 0, height, 0);
+              break;
+            case 7:
+              ctx.transform(0, -1, -1, 0, height, width);
+              break;
+            case 8:
+              ctx.transform(0, -1, 1, 0, 0, width);
+              break;
+            default:
+              break;
+            }
+            ctx.drawImage(bitmap, 0, 0);
+            return promiseCanvasToBlob(canvas);
+          });
+      });
+  }
+
+  function fixPhotoColor(blob, settings) {
+    if (!(settings.brightness || settings.contrast || settings.enable_greyscale)) {
+      return blob;
+    }
+
+    var canvas;
+    return new RSVP.Queue(createImageBitmap(blob))
+      .push(function (bitmap) {
+        canvas = domsugar('canvas');
+
+        canvas.width = bitmap.width;
+        canvas.height = bitmap.height;
+
+        canvas.getContext('2d').drawImage(bitmap, 0, 0);
+        return handleCaman(canvas, settings);
+      })
+      .push(function () {
+        return promiseCanvasToBlob(canvas);
+      });
+
+  }
+
+  function createLoadedImgElement(url) {
+    var img = domsugar('img', {src: url});
+    return new RSVP.Queue(RSVP.any([
+      promiseEventListener(img, 'load', false),
+      // Crash if it fails to load
+      new RSVP.Queue(promiseEventListener(img, 'error', false))
+        .push(function () {
+          throw new Error("Can't load the image src");
+        })
+    ]))
+      .push(function () {
+        return img;
+      });
+  }
+
   // Capture the media stream
   function captureAndRenderPicture(gadget) {
     var settings = gadget.state.preferred_image_settings_data,
@@ -398,8 +505,8 @@
       image_capture = new window.ImageCapture(
         gadget.element.querySelector('video').srcObject.getVideoTracks()[0]
       ),
-      canvas = domsugar('canvas', {'class': 'canvas'}),
-      div;
+      original_blob_url,
+      blob_url;
 
     return new RSVP.Queue()
       .push(function () {
@@ -411,84 +518,34 @@
         return image_capture.takePhoto({imageWidth: capabilities.imageWidth.max});
       })
       .push(function (blob) {
-        return RSVP.all([
-          createImageBitmap(blob),
-          getOrientation(blob)
-        ]);
-      })
-      .push(function (result_list) {
-        var bitmap = result_list[0],
-          orientation = result_list[1],
-          height = bitmap.height,
-          width = bitmap.width,
-          ctx;
-
-        if (4 < orientation && orientation < 9) {
-          canvas.width = height;
-          canvas.height = width;
-        } else {
-          canvas.width = width;
-          canvas.height = height;
-        }
-
-        ctx = canvas.getContext('2d');
-
-        // transform context before drawing image
-        switch (orientation) {
-        case 2:
-          ctx.transform(-1, 0, 0, 1, width, 0);
-          break;
-        case 3:
-          ctx.transform(-1, 0, 0, -1, width, height);
-          break;
-        case 4:
-          ctx.transform(1, 0, 0, -1, 0, height);
-          break;
-        case 5:
-          ctx.transform(0, 1, 1, 0, 0, 0);
-          break;
-        case 6:
-          ctx.transform(0, 1, -1, 0, height, 0);
-          break;
-        case 7:
-          ctx.transform(0, -1, -1, 0, height, width);
-          break;
-        case 8:
-          ctx.transform(0, -1, 1, 0, 0, width);
-          break;
-        default:
-          break;
-        }
-        ctx.drawImage(bitmap, 0, 0);
-        return canvas.toDataURL("image/jpeg");
-      })
-      .push(function (result) {
-        var img = domsugar("img", {"src": result});
         gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
-        div = gadget.element.querySelector(".camera-input");
+
+        // Display photo while doing calculation
+        original_blob_url = URL.createObjectURL(blob);
+        var img = domsugar("img", {"src": original_blob_url}),
+          div = gadget.element.querySelector(".camera-input");
         div.replaceChild(img, div.firstElementChild);
+
+        return fixPhotoOrientation(blob);
       })
-      .push(function (result_list) {
-        if (settings.brightness || settings.contrast || settings.enable_greyscale || settings.compression) {
-          return handleCaman(canvas, settings);
-        }
-        return [canvas, settings.compression];
+      .push(function (blob) {
+        return fixPhotoColor(blob, settings);
       })
-      .push(function (result_list) {
-        var compression = settings.compression || 1;
-        canvas = result_list[0];
+
+      .push(function (blob) {
+        blob_url = URL.createObjectURL(blob);
         return RSVP.all([
           gadget.getTranslationList(["Delete", "Save", "Page"]),
-          new Promise(function (resolve) {
-            resolve(canvas.toDataURL("image/jpeg", compression));
-          }),
+          createLoadedImgElement(blob_url),
           buildPreviousThumbnailDom(gadget)
         ]);
       })
       .push(function (result_list) {
-        var data_url = result_list[1],
-          img = domsugar("img", {"src": data_url}),
+
+        var img = result_list[1],
+          div,
           defer = RSVP.defer();
+
         // Prepare the cropper canvas
         div = domsugar('div', {'class': 'camera'}, [
           domsugar('div', {'class': 'camera-header'}, [
@@ -526,6 +583,8 @@
         return defer.promise;
       })
       .push(function (cropper) {
+        URL.revokeObjectURL(blob_url);
+        URL.revokeObjectURL(original_blob_url);
         gadget.cropper = cropper;
       });
   }
@@ -741,16 +800,10 @@
       if (evt.target.className.indexOf("confirm-btn") !== -1) {
         return new RSVP.Queue()
           .push(function () {
-            var canvas = gadget.cropper.getCroppedCanvas();
-            return new Promise(function (resolve) {
+            var canvas = gadget.cropper.getCroppedCanvas(),
               // XXX too slow, takes 2 seconds or more on mobile.
-              canvas.toBlob(resolve, 'image/jpeg', 0.85);
-            });
-          })
-          .push(function (blob) {
-            return jIO.util.readBlobAsDataURL(blob);
-          })
-          .push(function (evt) {
+              data_url = canvas.toDataURL("image/jpeg", 0.85);
+
             state_dict = {
               preferred_cropped_canvas_data: gadget.cropper.getData(),
               display_step: 'display_video',
@@ -758,7 +811,7 @@
               page_count: gadget.state.page_count + 1
             };
             // Keep image date, as user may need to display it again
-            state_dict['blob_url_' + gadget.state.page_count] = evt.target.result;
+            state_dict['blob_url_' + gadget.state.page_count] = data_url;
             state_dict['blob_state_' + gadget.state.page_count] = 'saving';
             state_dict['blob_uuid_' + gadget.state.page_count] = null;
 
@@ -874,4 +927,6 @@
 
     .declareAcquiredMethod("getTranslationList", "getTranslationList");
 
-}(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO, promiseEventListener, domsugar, createImageBitmap, FormData, Caman, FileReader, DataView));
+}(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO,
+  promiseEventListener, domsugar, createImageBitmap, FormData, Caman,
+  FileReader, DataView, URL));
