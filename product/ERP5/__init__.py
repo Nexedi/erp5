@@ -49,7 +49,7 @@ from Tool import CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool,\
                  TestTool, DomainTool, AlarmTool, OrderTool, DeliveryTool,\
                  TrashTool, ContributionTool, NotificationTool, PasswordTool,\
                  GadgetTool, ContributionRegistryTool, IntrospectionTool,\
-                 AcknowledgementTool, SolverTool, SolverProcessTool,\
+                 AcknowledgementTool, SolverTool,\
                  UrlRegistryTool, InterfaceTool,\
                  CertificateAuthorityTool, InotifyTool, TaskDistributionTool
 import ERP5Site
@@ -77,7 +77,6 @@ portal_tools = ( CategoryTool.CategoryTool,
                  IntrospectionTool.IntrospectionTool,
                  AcknowledgementTool.AcknowledgementTool,
                  SolverTool.SolverTool,
-                 SolverProcessTool.SolverProcessTool,
                  UrlRegistryTool.UrlRegistryTool,
                  CertificateAuthorityTool.CertificateAuthorityTool,
                  InotifyTool.InotifyTool,

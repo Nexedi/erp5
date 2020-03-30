@@ -45,7 +45,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     """
     Return the list of business templates.
     """
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade',)
+    return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',)
 
   def getTitle(self):
     """

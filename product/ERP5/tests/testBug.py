@@ -65,6 +65,7 @@ class TestBug(ERP5TypeTestCase):
            , 'erp5_crm'
            , 'erp5_forge'
            , 'erp5_pdm'
+           , 'erp5_simulation'
            , 'erp5_trade'
            , 'erp5_project'
            )
