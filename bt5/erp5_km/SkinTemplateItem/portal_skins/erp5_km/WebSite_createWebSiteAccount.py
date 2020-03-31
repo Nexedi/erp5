@@ -1,8 +1,6 @@
 """
   Create basic KM account using ERP5 credentials system.
 """
-from Products.Formulator.Errors import ValidationError, FormValidationError
-portal = context.getPortalObject()
 translateString = context.Base_translateString
 website = context.getWebSiteValue()
 
@@ -12,7 +10,7 @@ result, result_type = context.Base_edit(form_id, silent_mode=1, field_prefix='yo
 # Return if not appropriate
 if result_type != 'edit':
   return result
-kw, encapsulated_editor_list = result
+kw, _ = result
 
 # XXX: hard coded due to erp5_credentials requirement
 kw['role_list'] = ['internal']
