@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_category_list, user_name, object, portal_type</string> </value>
+            <value> <string>base_category_list, user_name, obj, portal_type</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
