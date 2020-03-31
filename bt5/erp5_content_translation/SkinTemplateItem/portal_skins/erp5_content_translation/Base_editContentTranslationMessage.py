@@ -1,5 +1,4 @@
 from Products.Formulator.Errors import FormValidationError
-from Products.CMFActivity.Errors import ActivityPendingError
 from Products.ERP5Type.Utils import convertToUpperCase
 
 request=container.REQUEST
@@ -26,7 +25,6 @@ if not silent_mode and not request.AUTHENTICATED_USER.has_permission('Modify por
 
 # Get the form
 form = getattr(context,form_id)
-edit_order = form.edit_order
 
 try:
   # Validate
