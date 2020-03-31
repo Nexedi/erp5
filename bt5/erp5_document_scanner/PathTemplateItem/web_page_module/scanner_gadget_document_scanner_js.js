@@ -126,23 +126,28 @@
       caman.Store.flush(true);
     }
 
-    return new Promise(function (resolve) {
+    return new Promise(function (resolve, reject) {
       // XXX the correct usage is `new Caman()` but the library does not support it
       local_caman = caman(canvas, null, function () {
-        if (settings.brightness && settings.brightness !== 0) {
-          this.brightness(settings.brightness);
-        }
-        if (settings.contrast && settings.contrast !== 0) {
-          this.contrast(settings.contrast);
-        }
-        if (settings.enable_greyscale) {
-          this.greyscale();
-        }
-        this.render(function () {
-          // XXX canceller should be called automatically ?
+        try {
+          if (settings.brightness && settings.brightness !== 0) {
+            this.brightness(settings.brightness);
+          }
+          if (settings.contrast && settings.contrast !== 0) {
+            this.contrast(settings.contrast);
+          }
+          if (settings.enable_greyscale) {
+            this.greyscale();
+          }
+          this.render(function () {
+            // XXX canceller should be called automatically ?
+            canceller();
+            resolve();
+          });
+        } catch (error) {
           canceller();
-          resolve();
-        });
+          reject(error);
+        }
       });
       return local_caman;
     }, canceller);
@@ -480,10 +485,13 @@
       return blob;
     }
 
-    var canvas;
+    var div;
     return new RSVP.Queue(createImageBitmap(blob))
       .push(function (bitmap) {
-        canvas = domsugar('canvas');
+        var canvas = domsugar('canvas');
+        // Caman expect the canvas to be in a container
+        // in order to replace it when resizing
+        div = domsugar('div', [canvas]);
 
         canvas.width = bitmap.width;
         canvas.height = bitmap.height;
@@ -492,7 +500,7 @@
         return handleCaman(canvas, settings);
       })
       .push(function () {
-        return promiseCanvasToBlob(canvas);
+        return promiseCanvasToBlob(div.firstElementChild);
       });
 
   }
@@ -529,7 +537,10 @@
         return image_capture.getPhotoCapabilities();
       })
       .push(function (capabilities) {
-        return image_capture.takePhoto({imageWidth: capabilities.imageWidth.max});
+        return image_capture.takePhoto({
+          imageWidth: capabilities.imageWidth.max,
+          imageHeight: capabilities.imageHeight.max
+        });
       })
       .push(function (blob) {
         gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
