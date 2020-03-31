@@ -502,7 +502,31 @@
       .push(function () {
         return promiseCanvasToBlob(div.firstElementChild);
       });
+  }
 
+  function resizePhoto(blob, original_width, original_height) {
+    var expected_width = 2000;
+    if (original_width < expected_width) {
+      return blob;
+    }
+    // expected_height = parseInt((original_height * expected_width) / original_width);
+
+    // alert(expected_width + ' ' + expected_height);
+
+    return new RSVP.Queue(createImageBitmap(blob, {
+      resizeWidth: expected_width,
+      // resizeHeight: expected_height,
+      resizeQuality: 'high'
+    }))
+      .push(function (bitmap) {
+        var canvas = domsugar('canvas');
+
+        canvas.width = bitmap.width;
+        canvas.height = bitmap.height;
+
+        canvas.getContext('2d').drawImage(bitmap, 0, 0);
+        return promiseCanvasToBlob(canvas);
+      });
   }
 
   function createLoadedImgElement(url) {
@@ -528,7 +552,9 @@
         gadget.element.querySelector('video').srcObject.getVideoTracks()[0]
       ),
       original_blob_url,
-      blob_url;
+      blob_url,
+      original_width,
+      original_height;
 
     return new RSVP.Queue()
       .push(function () {
@@ -537,9 +563,12 @@
         return image_capture.getPhotoCapabilities();
       })
       .push(function (capabilities) {
+        original_width = capabilities.imageWidth.max;
+        original_height = capabilities.imageHeight.max;
+
         return image_capture.takePhoto({
-          imageWidth: capabilities.imageWidth.max,
-          imageHeight: capabilities.imageHeight.max
+          imageWidth: original_width,
+          imageHeight: original_height
         });
       })
       .push(function (blob) {
@@ -551,6 +580,9 @@
           div = gadget.element.querySelector(".camera-input");
         div.replaceChild(img, div.firstElementChild);
 
+        return resizePhoto(blob, original_width, original_height);
+      })
+      .push(function (blob) {
         return fixPhotoOrientation(blob);
       })
       .push(function (blob) {
