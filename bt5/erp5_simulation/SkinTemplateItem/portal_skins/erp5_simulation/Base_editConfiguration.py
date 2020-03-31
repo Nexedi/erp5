@@ -6,7 +6,7 @@
 #   - Implement validation of list fields
 #
 from Products.ERP5Type.Message import translateString
-from Products.Formulator.Errors import ValidationError, FormValidationError
+from Products.Formulator.Errors import FormValidationError
 
 request=context.REQUEST
 
