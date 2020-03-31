@@ -31,38 +31,38 @@ from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.SupplyCell import SupplyCell
 
 class OpenOrderCell(SupplyCell):
+  """
+    An Open Order Cell allows to define specific properties
+    for each variation of a resource in an Open Order Line.
+  """
+  meta_type = 'ERP5 Open Order Cell'
+  portal_type = 'Open Order Cell'
+  add_permission = Permissions.AddPortalContent
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Amount
+                    , PropertySheet.Task
+                    , PropertySheet.Movement
+                    , PropertySheet.Price
+                    , PropertySheet.SupplyLine
+                    , PropertySheet.Discount
+                    , PropertySheet.Path
+                    , PropertySheet.FlowCapacity
+                    , PropertySheet.Predicate
+                    , PropertySheet.MappedValue
+                    , PropertySheet.Reference
+                    )
+
+  def getTotalPrice(self):
+    """Returns the total price for this open order cell.
+    Unlike Amount, we do not calculate a price implicitly if not defined.
+    Actually, I (jerome) think amount behaviour itself if wrong.
     """
-      An Open Order Cell allows to define specific properties
-      for each variation of a resource in an Open Order Line.
-    """
-    meta_type = 'ERP5 Open Order Cell'
-    portal_type = 'Open Order Cell'
-    add_permission = Permissions.AddPortalContent
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Amount
-                      , PropertySheet.Task
-                      , PropertySheet.Movement
-                      , PropertySheet.Price
-                      , PropertySheet.SupplyLine
-                      , PropertySheet.Discount
-                      , PropertySheet.Path
-                      , PropertySheet.FlowCapacity
-                      , PropertySheet.Predicate
-                      , PropertySheet.MappedValue
-                      , PropertySheet.Reference
-                      )
-
-    def getTotalPrice(self):
-      """Returns the total price for this open order cell.
-      Unlike Amount, we do not calculate a price implicitly if not defined.
-      Actually, I (jerome) think amount behaviour itself if wrong.
-      """
-      return (self.getQuantity() or 0) * (self.getPrice() or 0)
+    return (self.getQuantity() or 0) * (self.getPrice() or 0)
 
