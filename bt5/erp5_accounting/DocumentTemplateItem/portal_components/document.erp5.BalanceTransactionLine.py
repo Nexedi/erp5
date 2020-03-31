@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5.Document.AccountingTransactionLine import \
+from erp5.component.document.AccountingTransactionLine import \
                       AccountingTransactionLine
 from Products.ERP5.Document.InventoryLine import InventoryLine
 

@@ -30,7 +30,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Invoice import Invoice
+from erp5.component.document.Invoice import Invoice
 
 #XXX TODO: review naming of new methods
 

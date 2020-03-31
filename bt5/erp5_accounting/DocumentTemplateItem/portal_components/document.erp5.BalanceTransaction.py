@@ -31,7 +31,7 @@ from UserDict import UserDict
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Inventory import Inventory
-from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
+from erp5.component.document.AccountingTransaction import AccountingTransaction
 from Products.ZSQLCatalog.SQLCatalog import Query
 import types
 
@@ -401,7 +401,6 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     This method must return a function that accepts properties keywords
     arguments and returns a temp object edited with those properties.
     """
-    from Products.ERP5Type.Document import newTempAccountingTransactionLine
     # When have to reindex temp objects with quantity 0 in
     # order to update stock if delta become 0, but but redefining
     # isMovement we do not insert 0 lines in stock
@@ -409,8 +408,10 @@ class BalanceTransaction(AccountingTransaction, Inventory):
       return self.getProperty('total_price', 0) != 0 or \
              self.getProperty('quantity', 0) != 0
     def factory(*args, **kw):
-      doc = newTempAccountingTransactionLine(self, kw.pop('id', self.getId()),
-                                             uid=self.getUid())
+      doc = self.newContent(temp_object=True,
+                            portal_type='Accounting Transaction Line',
+                            id=kw.pop('id', self.getId()),
+                            uid=self.getUid())
       doc.portal_type = 'Balance Transaction Line'
       relative_url = kw.pop('relative_url', None)
       destination_total_asset_price = kw.pop('total_price', None)
