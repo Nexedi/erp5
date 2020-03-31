@@ -7,6 +7,7 @@ setting_dict = {
   "enable_greyscale": preference_tool.getPreferredImageScannerConversionEnableGreyscale(),
   "brightness": preference_tool.getPreferredImageScannerConversionBrightness(),
   "contrast": preference_tool.getPreferredImageScannerConversionContrast(),
+  "maximum_width": preference_tool.getPreferredImageScannerConversionMaximumWidth()
 }
 
 return json.dumps(setting_dict)
