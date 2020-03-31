@@ -6,10 +6,10 @@ if resource is not None:
   for base_category in base_category_list:
     if matrixbox:
       # XXX matrixbox is right_display (not as listfield) => invert display and value in item
-      cell_range.append( map(lambda x: (x[1],x[0]), context.getVariationCategoryItemList(base_category_list=(base_category,), display_id='translated_title' ) ) )
+      cell_range.append([(x[1], x[0]) for x in context.getVariationCategoryItemList(base_category_list=(base_category,), display_id='translated_title')])
     else:
       cell_range.append( context.getVariationCategoryList(base_category_list = (base_category,) ) )
 
-  cell_range = filter(lambda x: x != [], cell_range )
+  cell_range = [x for x in cell_range if x != []]
 
 return cell_range
