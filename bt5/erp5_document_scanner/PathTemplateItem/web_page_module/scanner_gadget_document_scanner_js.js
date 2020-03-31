@@ -551,10 +551,12 @@
       image_capture = new window.ImageCapture(
         gadget.element.querySelector('video').srcObject.getVideoTracks()[0]
       ),
-      original_blob_url,
       blob_url,
       original_width,
       original_height;
+
+    // Display last video frame while doing calculation
+    gadget.element.querySelector('video').pause();
 
     return new RSVP.Queue()
       .push(function () {
@@ -573,13 +575,6 @@
       })
       .push(function (blob) {
         gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
-
-        // Display photo while doing calculation
-        original_blob_url = URL.createObjectURL(blob);
-        var img = domsugar("img", {"src": original_blob_url}),
-          div = gadget.element.querySelector(".camera-input");
-        div.replaceChild(img, div.firstElementChild);
-
         return resizePhoto(blob, original_width, original_height);
       })
       .push(function (blob) {
@@ -641,7 +636,6 @@
       })
       .push(function (cropper) {
         URL.revokeObjectURL(blob_url);
-        URL.revokeObjectURL(original_blob_url);
         gadget.cropper = cropper;
       });
   }
