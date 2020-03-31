@@ -196,7 +196,8 @@
         if (gadget.state['blob_url_' + blob_page] === undefined) {
           // Slow, takes 2 seconds or more on mobile.
           return new RSVP.Queue(
-            promiseCanvasToBlob(gadget.state['blob_canvas_' + blob_page], 0.85)
+            promiseCanvasToBlob(gadget.state['blob_canvas_' + blob_page],
+                                gadget.state.preferred_image_settings_data.compression || 1)
           )
             .push(function (blob) {
               return jIO.util.readBlobAsDataURL(blob);
