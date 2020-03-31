@@ -223,7 +223,7 @@
       .push(function (evt) {
         var state_dict = {};
         state_dict['blob_state_' + blob_page] = 'OK';
-        state_dict['blob_uuid_' + blob_page] = 
+        state_dict['blob_uuid_' + blob_page] =
           JSON.parse(evt.target.responseText).uuid;
         return gadget.changeState(state_dict);
       }, function () {
@@ -857,7 +857,7 @@
       if (evt.target.className.indexOf("confirm-btn") !== -1) {
         return new RSVP.Queue()
           .push(function () {
-            var canvas = gadget.cropper.getCroppedCanvas(),
+            var canvas = gadget.cropper.getCroppedCanvas();
             state_dict = {
               preferred_cropped_canvas_data: gadget.cropper.getData(),
               display_step: 'display_video',
