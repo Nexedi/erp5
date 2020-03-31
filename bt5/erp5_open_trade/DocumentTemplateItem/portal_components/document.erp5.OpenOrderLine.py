@@ -32,54 +32,54 @@ from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.SupplyLine import SupplyLine
 
 class OpenOrderLine(SupplyLine):
+  """
+    An Open Order Line is a Supply Line with additional
+    properties to define repeatability
+
+  """
+  meta_type = 'ERP5 Open Order Line'
+  portal_type = 'Open Order Line'
+  add_permission = Permissions.AddPortalContent
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Amount
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Movement
+                    , PropertySheet.Price
+                    , PropertySheet.SupplyLine
+                    , PropertySheet.VariationRange
+                    , PropertySheet.Path
+                    , PropertySheet.FlowCapacity
+                    , PropertySheet.Predicate
+                    , PropertySheet.Comment
+                    )
+
+  def getTotalQuantity(self, default=0):
+    """Returns the total quantity for this open order line.
+    If the order line contains cells, the total quantity of cells are
+    returned.
     """
-      An Open Order Line is a Supply Line with additional
-      properties to define repeatability
+    if self.hasCellContent(base_id='path'):
+      return sum([cell.getQuantity() for cell in
+                    self.getCellValueList(base_id='path')])
+    return self.getQuantity(default)
 
+  def getTotalPrice(self):
+    """Returns the total price for this open order line.
+    If the order line contains cells, the total price of cells are
+    returned.
     """
-    meta_type = 'ERP5 Open Order Line'
-    portal_type = 'Open Order Line'
-    add_permission = Permissions.AddPortalContent
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Amount
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Movement
-                      , PropertySheet.Price
-                      , PropertySheet.SupplyLine
-                      , PropertySheet.VariationRange
-                      , PropertySheet.Path
-                      , PropertySheet.FlowCapacity
-                      , PropertySheet.Predicate
-                      , PropertySheet.Comment
-                      )
-
-    def getTotalQuantity(self, default=0):
-      """Returns the total quantity for this open order line.
-      If the order line contains cells, the total quantity of cells are
-      returned.
-      """
-      if self.hasCellContent(base_id='path'):
-        return sum([cell.getQuantity() for cell in
-                      self.getCellValueList(base_id='path')])
-      return self.getQuantity(default)
-
-    def getTotalPrice(self):
-      """Returns the total price for this open order line.
-      If the order line contains cells, the total price of cells are
-      returned.
-      """
-      if self.hasCellContent(base_id='path'):
-        return sum([cell.getTotalPrice() for cell in
-                      self.getCellValueList(base_id='path')])
-      return SupplyLine.getTotalPrice(self)
+    if self.hasCellContent(base_id='path'):
+      return sum([cell.getTotalPrice() for cell in
+                    self.getCellValueList(base_id='path')])
+    return SupplyLine.getTotalPrice(self)
 
 
