@@ -418,25 +418,46 @@
       });
   }
 
-  function fixPhotoOrientation(blob) {
+  function fixPhotoOrientationSizeColor(blob, original_width, original_height,
+                                        settings) {
     var orientation;
     return getOrientation(blob)
       .push(function (result) {
         orientation = result;
 
+        var expected_width = 2000,
+          bitmap_options,
+          div;
+
         // If orientation is correct, return the original blob
-        if ((orientation < 2) || (8 < orientation)) {
+        // and size is small
+        // no color correction is expected
+        if (((orientation < 2) || (8 < orientation)) &&
+            (original_width < expected_width) &&
+            (!(settings.brightness || settings.contrast || settings.enable_greyscale))) {
           return blob;
         }
 
+        if (expected_width < original_width) {
+          bitmap_options = {
+            resizeWidth: expected_width,
+            // resizeHeight: expected_height,
+            resizeQuality: 'high'
+          };
+        }
+
         // Else, transform the image
-        return new RSVP.Queue(createImageBitmap(blob))
+        return new RSVP.Queue(createImageBitmap(blob, bitmap_options))
           .push(function (bitmap) {
 
             var height = bitmap.height,
               width = bitmap.width,
               canvas = domsugar('canvas'),
               ctx;
+
+            // Caman expect the canvas to be in a container
+            // in order to replace it when resizing
+            div = domsugar('div', [canvas]);
 
             if (4 < orientation && orientation < 9) {
               canvas.width = height;
@@ -475,57 +496,14 @@
               break;
             }
             ctx.drawImage(bitmap, 0, 0);
-            return promiseCanvasToBlob(canvas);
+
+            if (settings.brightness || settings.contrast || settings.enable_greyscale) {
+              return handleCaman(canvas, settings);
+            }
+          })
+          .push(function () {
+            return promiseCanvasToBlob(div.firstElementChild);
           });
-      });
-  }
-
-  function fixPhotoColor(blob, settings) {
-    if (!(settings.brightness || settings.contrast || settings.enable_greyscale)) {
-      return blob;
-    }
-
-    var div;
-    return new RSVP.Queue(createImageBitmap(blob))
-      .push(function (bitmap) {
-        var canvas = domsugar('canvas');
-        // Caman expect the canvas to be in a container
-        // in order to replace it when resizing
-        div = domsugar('div', [canvas]);
-
-        canvas.width = bitmap.width;
-        canvas.height = bitmap.height;
-
-        canvas.getContext('2d').drawImage(bitmap, 0, 0);
-        return handleCaman(canvas, settings);
-      })
-      .push(function () {
-        return promiseCanvasToBlob(div.firstElementChild);
-      });
-  }
-
-  function resizePhoto(blob, original_width, original_height) {
-    var expected_width = 2000;
-    if (original_width < expected_width) {
-      return blob;
-    }
-    // expected_height = parseInt((original_height * expected_width) / original_width);
-
-    // alert(expected_width + ' ' + expected_height);
-
-    return new RSVP.Queue(createImageBitmap(blob, {
-      resizeWidth: expected_width,
-      // resizeHeight: expected_height,
-      resizeQuality: 'high'
-    }))
-      .push(function (bitmap) {
-        var canvas = domsugar('canvas');
-
-        canvas.width = bitmap.width;
-        canvas.height = bitmap.height;
-
-        canvas.getContext('2d').drawImage(bitmap, 0, 0);
-        return promiseCanvasToBlob(canvas);
       });
   }
 
@@ -575,15 +553,9 @@
       })
       .push(function (blob) {
         gadget.detached_promise_dict.media_stream.cancel('Not needed anymore, as captured');
-        return resizePhoto(blob, original_width, original_height);
+        return fixPhotoOrientationSizeColor(blob, original_width,
+                                            original_height, settings);
       })
-      .push(function (blob) {
-        return fixPhotoOrientation(blob);
-      })
-      .push(function (blob) {
-        return fixPhotoColor(blob, settings);
-      })
-
       .push(function (blob) {
         blob_url = URL.createObjectURL(blob);
         return RSVP.all([
