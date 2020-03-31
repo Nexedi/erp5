@@ -27,7 +27,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.AccountingTransactionLine import AccountingTransactionLine
+from erp5.component.document.AccountingTransactionLine import AccountingTransactionLine
 from erp5.component.module.BaobabMixin import BaobabMixin
 
 class BankingOperationLine(BaobabMixin, AccountingTransactionLine):

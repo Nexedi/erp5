@@ -1,0 +1,11 @@
+document.erp5.Account
+document.erp5.AccountTypeConstraint
+document.erp5.AccountingTransaction
+document.erp5.AccountingTransactionBalanceConstraint
+document.erp5.AccountingTransactionLine
+document.erp5.AccountingTransactionRootSimulationRule
+document.erp5.BalanceTransaction
+document.erp5.BalanceTransactionLine
+document.erp5.Invoice
+document.erp5.InvoiceRootSimulationRule
+document.erp5.PaymentSimulationRule

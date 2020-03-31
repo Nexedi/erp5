@@ -25,38 +25,49 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-#from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
-#from Products.CMFCore.utils import getToolByName
+
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Core.Predicate import Predicate
-from erp5.component.document.Invoice import Invoice
+from erp5.component.document.AccountingTransaction import AccountingTransaction
+from Products.ERP5.Document.Delivery import Delivery
 
-
-class AccountingRuleCell(Predicate, Invoice):
-  """
-An AccountingRuleCell object allows to add SaleInvoiceTransactionLines into a Matrix
-    """
-  # Default Properties
-  property_sheets = (
-      PropertySheet.Base,
-      PropertySheet.XMLObject,
-      PropertySheet.CategoryCore,
-      PropertySheet.DublinCore,
-      PropertySheet.Delivery,
-      PropertySheet.Task,
-      PropertySheet.Arrow,
-      PropertySheet.Movement,
-      PropertySheet.Amount,
-      PropertySheet.Reference,
-      PropertySheet.PaymentCondition,
-      PropertySheet.Predicate,
-      PropertySheet.MappedValue,
-  )
+class Invoice(AccountingTransaction):
   # CMF Type Definition
-  meta_type = 'ERP5 Accounting Rule Cell'
-  portal_type = 'Accounting Rule Cell'
+  meta_type = 'ERP5 Invoice'
+  portal_type = 'Invoice'
   add_permission = Permissions.AddPortalContent
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Delivery
+                    , PropertySheet.Order
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Movement
+                    , PropertySheet.Reference
+                    , PropertySheet.TradeCondition
+                    , PropertySheet.Folder
+                    )
+
+  security.declareProtected(
+      Permissions.AccessContentsInformation, 'getTotalPrice')
+  def getTotalPrice(self, **kw):
+    """ Returns the total price for this invoice """
+    kw.setdefault('portal_type',
+                  self.getPortalInvoiceMovementTypeList())
+    return Delivery.getTotalPrice(self, **kw)
+
+  security.declareProtected(
+      Permissions.AccessContentsInformation, 'getTotalQuantity')
+  def getTotalQuantity(self, **kw):
+    """ Returns the total quantity for this invoice """
+    kw.setdefault('portal_type',
+                  self.getPortalInvoiceMovementTypeList())
+    return Delivery.getTotalQuantity(self, **kw)
