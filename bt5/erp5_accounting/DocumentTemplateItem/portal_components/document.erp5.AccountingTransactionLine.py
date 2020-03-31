@@ -70,7 +70,7 @@ class AccountingTransactionLine(DeliveryLine):
 
   # Pricing in standard currency
   security.declareProtected(Permissions.AccessContentsInformation, 'getPrice')
-  def getPrice(self, context=None):
+  def getPrice(self, context=None): # pylint: disable=arguments-differ
     """
       On accounting transaction lines, the price is always set to 1.
       We use the `quantity` property for the default quantity, and the

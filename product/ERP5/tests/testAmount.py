@@ -523,6 +523,11 @@ class TestAccountingTransactionLine(TestMovement):
   """Tests for Accounting Transaction Line class, which have an overloaded
   'edit' method.
   """
+  def getBusinessTemplateList(self):
+    """
+    """
+    return ('erp5_base', 'erp5_simulation', 'erp5_accounting')
+
   def afterSetUp(self):
     self.login()
     self.portal = self.getPortal()

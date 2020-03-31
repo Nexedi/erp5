@@ -31,7 +31,7 @@ from UserDict import UserDict
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Inventory import Inventory
-from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
+from erp5.component.document.AccountingTransaction import AccountingTransaction
 from Products.ZSQLCatalog.SQLCatalog import Query
 import types
 
@@ -39,7 +39,7 @@ import types
 class InventoryKey(UserDict):
   """Class to use as a key when defining inventory dicts.
   """
-  def __init__(self, **kw):
+  def __init__(self, **kw): # pylint: disable=super-init-not-called
     self.data = {}
     self.data.update(kw)
 
@@ -49,7 +49,7 @@ class InventoryKey(UserDict):
   def pop(self, keys, *args):
     raise TypeError, 'InventoryKey are immutable'
 
-  def update(self, dict=None, **kwargs):
+  def update(self, dict=None, **kwargs): # pylint: disable=redefined-builtin
     raise TypeError, 'InventoryKey are immutable'
 
   def __delitem__(self, key):
