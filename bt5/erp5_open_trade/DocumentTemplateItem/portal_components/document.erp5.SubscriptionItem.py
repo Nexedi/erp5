@@ -226,7 +226,7 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
       return None
     return open_order_line.getQuantityUnit(checked_permission=checked_permission)
 
-  def getPrice(self):
+  def getPrice(self, context=None):
     open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
     if open_order_line is None:
       return None
@@ -262,8 +262,16 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
       return []
     return open_order_line.getSpecialiseValueList()
 
-  def _getCategoryMembershipList(self, category, spec=(), filter=None,
-      portal_type=(), base=0, keep_default=1, checked_permission=None, **kw):
+  def _getCategoryMembershipList(
+      self,
+      category,
+      spec=(),
+      filter=None, #  pylint:disable=redefined-builtin
+      portal_type=(),
+      base=0,
+      keep_default=1,
+      checked_permission=None,
+      **kw):
     if category == 'specialise':
       open_order_line = self.getAggregateRelatedValue(portal_type='Open Sale Order Line')
       return open_order_line._getCategoryMembershipList(category, spec=spec, filter=filter,
