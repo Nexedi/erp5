@@ -1,43 +1,14 @@
+# URLs specific to officejs text editor
+# TODO: abstract common officejs elements between different apps into a single precache manifest
 url_list = [
-  "renderjs.js",
-  "rsvp.js",
-
-  #officejs
   "font-awesome/font-awesome.css",
-  "font-awesome/font-awesome-webfont.eot",
-  "font-awesome/font-awesome-webfont.woff",
-  "font-awesome/font-awesome-webfont.woff2",
-  "font-awesome/font-awesome-webfont.ttf",
-  "font-awesome/font-awesome-webfont.svg",
-  "gadget_erp5_nojqm.css",
   "jio_ojs_storage.js",
-  "gadget_erp5_global.js",
   "URI.js",
   "dygraph.js",
   "handlebars.js",
-  "domsugar.js",
-  "jiodev.js",
-  "renderjs.js",
-  "rsvp.js",
-  "gadget_global.js",
-  "erp5_launcher_nojqm.js",
   "gadget_officejs_router.js",
-  "gadget_erp5_router.html",
-  "gadget_erp5_router.js",
-  "gadget_jio.html",
-  "gadget_jio.js",
   "gadget_translate.html",
   "gadget_translate.js",
-  "gadget_translation.html",
-  "gadget_translation.js",
-  "gadget_translation_data.js",
-  "gadget_erp5_editor_panel.html",
-  "gadget_erp5_editor_panel.js",
-  "gadget_erp5_ojs_panel.html",
-  "gadget_erp5_ojs_panel.js",
-  "gadget_erp5_header.html",
-  "gadget_erp5_header.js",
-
   "gadget_erp5_page_ojs_configurator.html",
   "gadget_erp5_page_ojs_configurator.js",
   "gadget_erp5_page_ojs_dav_configurator.html",
@@ -50,9 +21,92 @@ url_list = [
   "gadget_erp5_page_ojs_sync.js",
   "gadget_erp5_page_ojs_linshare_configurator.html",
   "gadget_erp5_page_ojs_linshare_configurator.js",
-
   "gadget_ojs_configurator_access.html",
   "gadget_ojs_configurator_access.js",
+  "gadget_officejs_setting.js",
+  "gadget_officejs_setting.html",
+  "favicon.ico",
+  "gadget_officejs_text_editor.json",
+  "officejs_logo_text_editor.png",
+  "gadget_officejs_text_editor_router.html",
+  "gadget_ojs_local_jio.html",
+  "gadget_ojs_local_jio.js",
+  "gadget_erp5_page_action_officejs.html",
+  "gadget_erp5_page_action_officejs.js",
+  "gadget_erp5_page_ojs_local_controller.html",
+  "gadget_erp5_page_ojs_local_controller.js",
+  "gadget_officejs_form_view.html",
+  "gadget_officejs_form_view.js",
+  "gadget_erp5_page_handle_action.html",
+  "gadget_erp5_page_handle_action.js",
+  "gadget_officejs_common_util.html",
+  "gadget_officejs_common_util.js",
+  "gadget_erp5_page_create_document.html",
+  "gadget_erp5_page_create_document.js",
+  #needed for appcachestorage sync
+  "/",
+  "app/",
+  "gadget_officejs_text_editor.configuration",
+  "gadget_officejs_bootloader.js",
+  "gadget_officejs_bootloader_presentation.html",
+  "gadget_officejs_bootloader_presentation.js",
+  "gadget_officejs_bootloader_presentation.css",
+  "gadget_officejs_bootloader_serviceworker.js",
+  "officejs_logo.png",
+  "jio_appcachestorage.js",
+  "jio_configuration_storage.js",
+
+  #app custom actions
+  "action_texteditor_clone.html",
+  "action_texteditor_clone.js",
+
+  #app_configuration_resources
+  #CONFIGURATION ELEMENTS generated on Fri Dec 13 14:45:53 2019. Same as in configuration manifest
+  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==",
+  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS90ZXh0X2VkaXRvcl92aWV3",
+  "hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvV2ViUGFnZU1vZHVsZV92aWV3V2ViUGFnZUxpc3RBc0ppb0ZvclRleHRFZGl0b3I=",
+  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdl",
+  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX3ZpZXc=",
+  "hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvV2ViUGFnZV92aWV3QXNUZXh0RG9jdW1lbnRGb3JUZXh0RWRpdG9y",
+  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX2Nsb25l",
+  "hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvQmFzZV9jbG9uZURvY3VtZW50Rm9yVGV4dEVkaXRvcg==",
+  #/app_configuration_resources
+]
+
+return url_list
+
+
+
+
+# These URLs are already present in base service worker
+# TODO: remove
+url_list = [
+  "renderjs.js",
+  "rsvp.js",
+  "font-awesome/font-awesome-webfont.eot",
+  "font-awesome/font-awesome-webfont.woff",
+  "font-awesome/font-awesome-webfont.woff2",
+  "font-awesome/font-awesome-webfont.ttf",
+  "font-awesome/font-awesome-webfont.svg",
+  "gadget_erp5_nojqm.css",
+  "gadget_erp5_global.js",
+  "domsugar.js",
+  "jiodev.js",
+  "gadget_global.js",
+  "erp5_launcher_nojqm.js",
+  "gadget_erp5_router.html",
+  "gadget_erp5_router.js",
+  "gadget_jio.html",
+  "gadget_jio.js",
+  "gadget_translation.html",
+  "gadget_translation.js",
+  "gadget_translation_data.js",
+  "gadget_erp5_editor_panel.html",
+  "gadget_erp5_editor_panel.js",
+  "gadget_erp5_ojs_panel.html",
+  "gadget_erp5_ojs_panel.js",
+  "gadget_erp5_header.html",
+  "gadget_erp5_header.js",
   "gadget_html5_input.html",
   "gadget_html5_input.js",
   "gadget_erp5_field_multicheckbox.html",
@@ -93,17 +147,6 @@ url_list = [
   "gadget_button_maximize.js",
   "gadget_erp5_configure_editor.html",
   "gadget_erp5_configure_editor.js",
-
-  #setting
-  "gadget_officejs_setting.js",
-  "gadget_officejs_setting.html",
-
-  "favicon.ico",
-  "gadget_officejs_text_editor.json",
-  "officejs_logo_text_editor.png",
-  "gadget_officejs_text_editor_router.html",
-
-  #new officejs approach
   "gadget_erp5_pt_form_view_editable.html",
   "gadget_erp5_pt_form_view_editable.js",
   "gadget_erp5_pt_form_dialog.html",
@@ -114,49 +157,6 @@ url_list = [
   "gadget_erp5_field_listbox.js",
   "gadget_html5_select.html",
   "gadget_html5_select.js",
-  "gadget_ojs_local_jio.html",
-  "gadget_ojs_local_jio.js",
-  "gadget_erp5_page_action_officejs.html",
-  "gadget_erp5_page_action_officejs.js",
-  "gadget_erp5_page_ojs_local_controller.html",
-  "gadget_erp5_page_ojs_local_controller.js",
-  "gadget_officejs_form_view.html",
-  "gadget_officejs_form_view.js",
-  "gadget_erp5_page_handle_action.html",
-  "gadget_erp5_page_handle_action.js",
-  "gadget_officejs_common_util.html",
-  "gadget_officejs_common_util.js",
-  "gadget_erp5_page_create_document.html",
-  "gadget_erp5_page_create_document.js",
-
-  #needed for appcachestorage sync
-  "/",
-  "app/",
-  "gadget_officejs_text_editor.configuration",
-  "gadget_officejs_bootloader.js",
-  "gadget_officejs_bootloader_presentation.html",
-  "gadget_officejs_bootloader_presentation.js",
-  "gadget_officejs_bootloader_presentation.css",
-  "gadget_officejs_bootloader_serviceworker.js",
-  "officejs_logo.png",
-  "jio_appcachestorage.js",
-  "jio_configuration_storage.js",
-
-  #app custom actions
-  "action_texteditor_clone.html",
-  "action_texteditor_clone.js",
-
-  #app_configuration_resources
-  #CONFIGURATION ELEMENTS generated on Fri Dec 13 14:45:53 2019. Same as in configuration manifest
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS90ZXh0X2VkaXRvcl92aWV3",
-  "hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvV2ViUGFnZU1vZHVsZV92aWV3V2ViUGFnZUxpc3RBc0ppb0ZvclRleHRFZGl0b3I=",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdl",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX3ZpZXc=",
-  "hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvV2ViUGFnZV92aWV3QXNUZXh0RG9jdW1lbnRGb3JUZXh0RWRpdG9y",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlL3RleHRfZWRpdG9yX2Nsb25l",
-  "hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfdGV4dF9lZGl0b3IvQmFzZV9jbG9uZURvY3VtZW50Rm9yVGV4dEVkaXRvcg==",
-  #/app_configuration_resources
 ]
 
 return url_list
