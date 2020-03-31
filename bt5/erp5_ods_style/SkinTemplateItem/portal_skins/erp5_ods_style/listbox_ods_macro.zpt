@@ -16,12 +16,12 @@
                selection_name python: listbox.get_value('selection_name', REQUEST=request);
                editable_columns python: listbox.get_value('editable_columns', REQUEST=request);
                untranslatable_columns python: [x[0] for x in listbox.get_value('untranslatable_columns', REQUEST=request)];
-               editable_fields listbox/Listbox_getEditableFieldDict;
+               editable_fields listbox/ListBox_getEditableFieldDict;
                selection python: here.portal_selections.getSelectionFor(selection_name, REQUEST=request);
                is_report_tree_mode selection/report_tree_mode | python: 0;
                is_domain_tree_mode selection/domain_tree_mode | python: 0;
                max_section_depth python: max([x.getSectionDepth() for x in listboxline_list]) + int(is_report_tree_mode);
-               listbox_line_structure python: here.Listbox_getReportTreeStructure(listbox_line_list=listboxline_list[1:], is_report_tree_mode=is_report_tree_mode, is_domain_tree_mode=is_domain_tree_mode, max_section_depth=max_section_depth);
+               listbox_line_structure python: here.ListBox_getReportTreeStructure(listbox_line_list=listboxline_list[1:], is_report_tree_mode=is_report_tree_mode, is_domain_tree_mode=is_domain_tree_mode, max_section_depth=max_section_depth);
                listboxline python:listboxline_list[0];
                first first | nothing;
                global merge_report_section_list python: request.get('merge_report_section_list', False);
