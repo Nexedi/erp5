@@ -314,7 +314,9 @@
         </item>
         <item>
             <key> <string>configuration_precache_manifest_script_list</string> </key>
-            <value> <string>WebSection_getTextEditorPrecacheManifestList</string> </value>
+            <value> <string>WebSection_getCKEditorPrecacheManifestList\n
+WebSection_getTextEditorPrecacheManifestList\n
+</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
@@ -579,7 +581,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.58227.12314.26077</string> </value>
+                      <value> <string>982.58265.9648.42752</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -597,7 +599,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585643951.58</float>
+                              <float>1585645318.13</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
