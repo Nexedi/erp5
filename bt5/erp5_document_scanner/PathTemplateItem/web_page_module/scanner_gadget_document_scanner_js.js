@@ -426,7 +426,7 @@
       .push(function (result) {
         orientation = result;
 
-        var expected_width = 2000,
+        var expected_width = settings.maximum_width,
           bitmap_options,
           div;
 
@@ -434,12 +434,12 @@
         // and size is small
         // no color correction is expected
         if (((orientation < 2) || (8 < orientation)) &&
-            (original_width < expected_width) &&
+            ((!expected_width) || (original_width < expected_width)) &&
             (!(settings.brightness || settings.contrast || settings.enable_greyscale))) {
           return blob;
         }
 
-        if (expected_width < original_width) {
+        if ((!!expected_width) && (expected_width < original_width)) {
           bitmap_options = {
             resizeWidth: expected_width,
             // resizeHeight: expected_height,
