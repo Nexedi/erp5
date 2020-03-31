@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>listbox_line_list=None, is_report_tree_mode=False, is_domain_tree_mode=False, max_section_depth=0</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Listbox_getEditableFieldDict</string> </value>
+            <value> <string>ListBox_getReportTreeStructure</string> </value>
         </item>
       </dictionary>
     </pickle>
