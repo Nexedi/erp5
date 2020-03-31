@@ -6600,9 +6600,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
             subsubmodule_portal_type = component_portal_type
             source_reference = "%s.%s" % (submodule_name, subsubmodule_name)
             migrate = filepath in portal_type_module_filepath_set
-            if component_portal_type == 'Document Component':
+            if component_portal_type in ('Document Component',
+                                         'Tool Component'):
               try:
-                document_class = getattr(
+                klass = getattr(
                   __import__(source_reference, {}, {}, [source_reference]),
                   subsubmodule_name)
               except ImportError, e:
@@ -6612,12 +6613,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
                 continue
               except AttributeError, e:
                 LOG("BusinessTemplate", WARNING,
-                    "Skipping %s: Cannot get Document class %s (%s)" %
+                    "Skipping %s: Cannot get class %s (%s)" %
                     (filepath, subsubmodule_name, e))
                 continue
 
               from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-              if issubclass(document_class, ERP5TypeInformation):
+              from Products.ERP5Type.Tool.TypesTool import TypeProvider
+              if issubclass(klass, (ERP5TypeInformation,
+                                    TypeProvider)):
                 # Skip for now as all portal_types/* must be able to be loaded
                 # to generate Workflow methods...
                 continue
