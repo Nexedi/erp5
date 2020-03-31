@@ -181,6 +181,7 @@ ignored_skin_id_set = {
   'TaskListOverviewGadget_setPreferences',
   'TaskListsGadgetListbox_getLineCss',
   'InventoryModule_reindexMovementList',
+  'DeliveryModule_mergeDeliveryList',
 }
 
 # Generic method to check consistency of a skin item
