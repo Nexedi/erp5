@@ -1,7 +1,6 @@
 div[data-gadget-url$="gadget_document_scanner.html"] {
   text-align: center;
 }
-
 @media only screen and (max-width: 750px) {
   div[data-gadget-url$="gadget_document_scanner.html"] .camera {
     max-width: 90%;
@@ -10,7 +9,6 @@ div[data-gadget-url$="gadget_document_scanner.html"] {
     max-width: 50%;
   }
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] .photo,
 div[data-gadget-url$="gadget_document_scanner.html"] .video,
 div[data-gadget-url$="gadget_document_scanner.html"] .camera-output,
@@ -21,36 +19,29 @@ div[data-gadget-url$="gadget_document_scanner.html"] .canvas {
   filter: brightness(1);
   text-align: center;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] .camera-input {
   min-height: 360px;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] .page-number {
   display: inline;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] .camera-header {
   font-size: 12pt;
   font-weight: 400;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] .camera-input,
 div[data-gadget-url$="gadget_document_scanner.html"] .camera-output,
 div[data-gadget-url$="gadget_document_scanner.html"] .camera-header,
 div[data-gadget-url$="gadget_document_scanner.html"] .edit-picture {
   text-align: center;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] .edit-picture {
   padding-top: 0.5em;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] .camera,
 div[data-gadget-url$="gadget_document_scanner.html"] .camera-input {
   display: inline-block;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] .reset-btn,
 div[data-gadget-url$="gadget_document_scanner.html"] .confirm-btn,
 div[data-gadget-url$="gadget_document_scanner.html"] .edit-btn,
@@ -67,37 +58,30 @@ div[data-gadget-url$="gadget_document_scanner.html"] .confirm-btn {
   display: inline-block;
   margin-right: 6pt;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] button:disabled,
 div[data-gadget-url$="gadget_document_scanner.html"] button[disabled] {
   color: #999999;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] > .camera > .thumbnail-list {
-  padding-top: .5em;
+  padding-top: 0.5em;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] .show-img {
   width: 6em;
   height: 6em;
   object-fit: cover;
   float: left;
 }
-
-div[data-gadget-url$="gadget_document_scanner.html"] .show-img ,
-    div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
+div[data-gadget-url$="gadget_document_scanner.html"] .show-img,
+div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
   border-radius: 0.325em;
 }
-
-div[data-gadget-url$="gadget_document_scanner.html"] .btn-thumbnail ,
-    div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
+div[data-gadget-url$="gadget_document_scanner.html"] .btn-thumbnail,
+div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
   margin-top: 0.2em;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] button:before {
   padding-right: 0.2em;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] .thumbnail-list > button {
   display: inline;
   float: left;
@@ -105,22 +89,18 @@ div[data-gadget-url$="gadget_document_scanner.html"] .thumbnail-list > button {
   border: 1px solid rgba(0, 0, 0, 0.14);
   border-radius: 0.325em;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] .upload-error {
   border: 3px solid red;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
   display: inline-grid !important;
   width: calc(6em + 1px);
   height: calc(6em + 1px);
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] .img-container {
   /* Never limit the container height here */
   max-width: 100%;
 }
-
 div[data-gadget-url$="gadget_document_scanner.html"] .btn-thumbnail:before {
   color: #000;
   position: absolute;
