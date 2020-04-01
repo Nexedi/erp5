@@ -209,7 +209,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string>WARNING: Setup of Data Notebook module for Jupyter integration exposes ERP5 to remote code execution and should be used carefully. Please note that still proper authentication is needed for remote code execution.</string> </value>
+                    <value> <string>WARNING: Setup of Data Notebook module for Jupyter integration exposes ERP5 to remote code execution and should be used carefully. Please note that still proper authentication is needed for remote code execution.\n
+\n
+WARNING: Setup of data lake functionality will enable the default data lake\'s security model which would allow anonymous users to register to your site (of course with proper email validation step!). Please note that this model is quite restrictive though and applies generally to Data Lake functionality only.</string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
