@@ -107,11 +107,9 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri - 13 Dec 2019 14:45:53 +0000\n
-# XXX + fonts\n
-# images/ajax-loader.gif\n
+# generated on Wed - 1 Apr 2020 14:45:53 +0000\n
+\n
 CACHE:\n
-#officejs\n
 \n
 NETWORK:\n
 *\n
@@ -267,7 +265,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.57135.22608.35276</string> </value>
+                      <value> <string>982.58171.53398.21316</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -285,7 +283,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585639428.84</float>
+                              <float>1585732453.7</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
