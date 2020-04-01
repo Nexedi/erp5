@@ -1,0 +1,116 @@
+div[data-gadget-url$="gadget_document_scanner.html"] {
+  text-align: center;
+
+  @media only screen and (max-width: 750px) {
+    .camera {
+      max-width: 90%;
+    }
+    .thumbnail-list > button {
+      max-width: 50%;
+    }
+  }
+
+  .photo, .video, .camera-output, .canvas {
+    max-width: 100%;
+    width: auto;
+    max-height: 500px;
+    filter: brightness(1);
+    text-align: center;
+  }
+
+  .camera-input {
+    min-height: 360px;
+  }
+
+  .page-number {
+    display: inline;
+  }
+
+  .camera-header {
+    font-size: 12pt;
+    font-weight: 400;
+  }
+
+  .camera-input, .camera-output, .camera-header, .edit-picture {
+    text-align: center;
+  }
+
+  .edit-picture {
+    padding-top: 0.5em;
+  }
+
+  .camera, .camera-input {
+    display: inline-block;
+  }
+
+  .reset-btn, .confirm-btn, .edit-btn, .take-picture-btn, .capture-btn,
+  .delete-btn, .retry-btn, .change-camera-btn, .confirm-btn {
+    color: #212529;
+    padding: 3pt;
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    border-radius: 0.325em;
+    display: inline-block;
+    margin-right: 6pt;
+  }
+
+
+  button:disabled, button[disabled] {
+    color: #999999;
+  }
+
+  > .camera > .thumbnail-list {
+    padding-top: .5em;
+  }
+
+  .show-img {
+    width: 6em;
+    height: 6em;
+    object-fit: cover;
+    float: left;
+  }
+
+  .show-img, .new-btn {
+    border-radius: 0.325em;
+  }
+
+  .btn-thumbnail, .new-btn {
+    margin-top: 0.2em;
+  }
+
+  button:before {
+    padding-right: 0.2em;
+  }
+
+  .thumbnail-list > button {
+    display: inline;
+    float: left;
+    margin-left: 0.2em;
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    border-radius: 0.325em;
+  }
+
+  .upload-error {
+    border: 3px solid red;
+  }
+
+  .new-btn {
+    display: inline-grid !important;
+    width: calc(6em + 1px);
+    height: calc(6em + 1px);
+  }
+
+  .img-container {
+    /* Never limit the container height here */
+    max-width: 100%;
+  }
+
+  .btn-thumbnail:before {
+    color: #000;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 16pt;
+  }
+
+}
