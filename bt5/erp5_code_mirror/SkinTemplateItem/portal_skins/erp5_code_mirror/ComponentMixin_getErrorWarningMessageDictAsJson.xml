@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Component_getTextContentHistoryRevisionDictListAsJSON</string> </value>
+            <value> <string>ComponentMixin_getErrorWarningMessageDictAsJson</string> </value>
         </item>
       </dictionary>
     </pickle>

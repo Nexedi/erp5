@@ -180,6 +180,7 @@ ignored_skin_id_set = {
   'SaleInvoiceTransaction_selectTaskReportMovement',
   'TaskListOverviewGadget_setPreferences',
   'TaskListsGadgetListbox_getLineCss',
+  'InventoryModule_reindexMovementList',
 }
 
 # Generic method to check consistency of a skin item

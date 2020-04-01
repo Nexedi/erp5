@@ -66,7 +66,6 @@
   <item>Causality Movement Group</item>
   <item>Day Movement Group</item>
   <item>Delivery Causality Assignment Movement Group</item>
-  <item>First Causality Movement Group</item>
   <item>Invoice Movement Group</item>
   <item>Monthly Range Movement Group</item>
   <item>Nested Line Movement Group</item>
@@ -128,8 +127,5 @@
  </portal_type>
  <portal_type id="Rounding Tool">
   <item>Rounding Model</item>
- </portal_type>
- <portal_type id="Solver Tool">
-  <item>Solver Type</item>
  </portal_type>
 </allowed_content_type_list>

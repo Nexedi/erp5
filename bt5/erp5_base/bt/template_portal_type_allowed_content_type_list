@@ -40,7 +40,6 @@ Order Builder | Causality Assignment Movement Group
 Order Builder | Causality Movement Group
 Order Builder | Day Movement Group
 Order Builder | Delivery Causality Assignment Movement Group
-Order Builder | First Causality Movement Group
 Order Builder | Invoice Movement Group
 Order Builder | Monthly Range Movement Group
 Order Builder | Nested Line Movement Group
@@ -88,4 +87,3 @@ Person | Link
 Person | Telephone
 Query Module | Query
 Rounding Tool | Rounding Model
-Solver Tool | Solver Type

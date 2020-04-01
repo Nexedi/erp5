@@ -227,6 +227,8 @@
                         <string>matrixbox_for_max_order_quantity</string>
                         <string>my_view_mode_target_delivery</string>
                         <string>my_base_price_per_slice</string>
+                        <string>my_report_mode_listbox_variation_category_item_list</string>
+                        <string>my_view_mode_read_only_title</string>
                       </list>
                     </value>
                 </item>
