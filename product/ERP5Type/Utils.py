@@ -509,10 +509,12 @@ def checkPythonSourceCode(source_code_str, portal_type=None):
            '--deprecated-modules=regsub,TERMIOS,Bastion,rexec']
 
       if portal_type == 'Interface Component':
-        # Interface inherits from InterfaceClass:
+        # __init__ method from base class %r is not called
+        args.append('--disable=W0231')
+        ## Interface inherits from InterfaceClass:
         # Inheriting 'Interface', which is not a class. (inherit-non-class)
         args.append('--disable=E0239')
-        # Interfaces methods may have no arguments:
+        ## Interfaces methods may have no arguments:
         # Method has no argument (no-method-argument)
         args.append('--disable=E0211')
         # Method should have "self" as first argument (no-self-argument)
