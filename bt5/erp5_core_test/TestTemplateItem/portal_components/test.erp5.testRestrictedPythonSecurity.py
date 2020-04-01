@@ -26,6 +26,7 @@
 ##############################################################################
 
 import textwrap
+import unittest
 import uuid
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -327,3 +328,35 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
           '''),
         expected=[("a", 1), ("b", 2)]
     )
+
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestRestrictedPythonSecurity))
+
+  # Also run original tests of RestrictedPython, to confirm that our patches did not break
+  # original functionality
+  import RestrictedPython.tests.testCompile
+  suite.addTest(RestrictedPython.tests.testCompile.test_suite())
+  import RestrictedPython.tests.testUtiliities
+  suite.addTest(RestrictedPython.tests.testUtiliities.test_suite())
+  import RestrictedPython.tests.testREADME
+  suite.addTest(RestrictedPython.tests.testREADME.test_suite())
+  import RestrictedPython.tests.testRestrictions
+  suite.addTest(RestrictedPython.tests.testRestrictions.test_suite())
+
+  # TODO apped this to AccessControl/tests/actual_python.py to test our extra
+  # builtins
+  '''
+def erp5_patch():
+    assert next(iter([True, ])) == True
+    assert list(sorted([3,2,1])) == [1, 2, 3]
+    assert list(reversed([3,2,1])) == [1, 2, 3]
+erp5_patch()
+  '''
+  import AccessControl.tests.test_safeiter
+  suite.addTest(AccessControl.tests.test_safeiter.test_suite())
+  import AccessControl.tests.testZopeGuards
+  suite.addTest(AccessControl.tests.testZopeGuards.test_suite())
+
+  return suite
