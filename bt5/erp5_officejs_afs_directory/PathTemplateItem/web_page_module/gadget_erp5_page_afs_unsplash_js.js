@@ -3,6 +3,8 @@
 (function (window, RSVP, rJS, Handlebars, jIO) {
   "use strict";
 
+  // NO LONGER USED
+
   // UNSPLASH API
   // API: https://unsplash.com/documentation#creating-a-developer-account
   var CID = "3196c4c1a2915c32bd9ca6ba5a88cec7555e06eb7e580546018f079394e9954f",

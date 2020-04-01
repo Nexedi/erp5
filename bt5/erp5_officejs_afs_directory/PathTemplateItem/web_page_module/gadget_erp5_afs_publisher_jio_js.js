@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, jIO, DOMParser, Object, Intl */
+/*global window, rJS, RSVP, jIO, DOMParser, Object, Intl, encodeURIComponent */
 /*jslint indent: 2, maxerr: 3, nomen: true */
-(function (window, rJS, RSVP, Object) {
+(function (window, rJS, RSVP, Object, Intl, encodeURIComponent) {
   "use strict";
 
   var SPACE = " ",
@@ -16,32 +16,6 @@
       2016: getEmptyKpiDict(),
       2017: getEmptyKpiDict(),
       2018: getEmptyKpiDict()
-    },
-    DIRTY_OLOH_LOOKUP_UNTIL_API_WORKS = {
-      "https://www.openhub.net/p/alfresco/analyses/latest/languages_summary": 62894263,
-      "https://www.openhub.net/p/swift-lang/analyses/latest/languages_summary": 755449,
-      "https://www.openhub.net/p/bluemind/analyses/latest/languages_summary": 857795,
-      "https://www.openhub.net/p/drupalcommerce/analyses/latest/languages_summary": 49743,
-      "https://www.openhub.net/p/obm/analyses/latest/languages_summary": 363914,
-      "https://www.openhub.net/p/linshare/analyses/latest/languages_summary": 185407,
-      "https://www.openhub.net/p/linid-directory-manager/analyses/latest/languages_summary": 725443,
-      "https://www.openhub.net/p/openpaas/analyses/latest/languages_summary": 228875,
-      "https://www.openhub.net/p/magento/analyses/latest/languages_summary": 13507099,
-      "https://www.openhub.net/p/mariadb/analyses/latest/languages_summary": 3163137,
-      "https://www.openhub.net/p/vscode/analyses/latest/languages_summary": 106972,
-      "https://www.openhub.net/p/mongodb/analyses/latest/languages_summary": 1734408,
-      "https://www.openhub.net/p/erp5/analyses/latest/languages_summary": 11685522,
-      "https://www.openhub.net/p/SlapOS/analyses/latest/languages_summary": 583328,
-      "https://www.openhub.net/p/wendelin/analyses/latest/languages_summary": 123904,
-      "https://www.openhub.net/p/renderjs/analyses/latest/languages_summary": 52261,
-      "https://www.openhub.net/p/odoo/analyses/latest/languages_summary": 2492373,
-      "https://www.openhub.net/p/mondrian/analyses/latest/languages_summary": 1319124,
-      "https://www.openhub.net/p/PrestaShop/analyses/latest/languages_summary": 539680,
-      "https://www.openhub.net/p/symfony/analyses/latest/languages_summary": 1480506,
-      "https://www.openhub.net/p/php-twig/analyses/latest/languages_summary": 22572,
-      "https://www.openhub.net/p/fabpots_Silex/analyses/latest/languages_summary": 11586,
-      "https://www.openhub.net/p/talend-studio/analyses/latest/languages_summary": 287512,
-      "https://www.openhub.net/p/xwiki/analyses/latest/languages_summary": 7909332
     };
 
   function getEmptyKpiDict() {
@@ -71,20 +45,6 @@
         }
       });
     });
-  }
-
-  function S4() {
-    return ('0000' + Math.floor(
-      Math.random() * 0x10000 /* 65536 */
-    ).toString(16)).slice(-4);
-  }
-
-  function UUID() {
-    return S4() + S4() + "-" +
-      S4() + "-" +
-      S4() + "-" +
-      S4() + "-" +
-      S4() + S4() + S4();
   }
 
   function setKpi(kpi, data) {
@@ -131,7 +91,8 @@
               publisher_object.total_assets = setKpi("total_assets", kpi);
               publisher_object.earnings = setKpi("earnings", kpi);
 
-              publisher_object.uid = UUID();
+              publisher_object.line_total = publisher_object.line_total || 0;
+              publisher_object.uid = "publisher_" + publisher_object.title;
               return gadget.jio_put(publisher_object.uid, publisher_object);
             });
         }
@@ -144,7 +105,7 @@
             return RSVP.all(promise_list);
           })
           .push(function () {
-            return gadget.jio_put(UUID(), {
+            return gadget.jio_put("kpi_dict", {
               portal_type: "kpi",
               data: GLOBAL_KPI_DICT
             });
@@ -153,87 +114,11 @@
 
       .push(function () {
         return gadget.jio_allDocs({
-          select_list: ['title', 'free_software_list', 'website', 'lines'],
+          select_list: ['title', 'free_software_list', 'website', 'line_total'],
           query: 'portal_type: "publisher"'
         });
       })
-      /////////////////////////////////////////////////////////////////
-      // Create Statistic Sheets
-      /////////////////////////////////////////////////////////////////
-      .push(function (result_list) {
-        var publisher_list = result_list.data.rows,
-          statistic_list = [],
-          i_len = publisher_list.length,
-          i;
 
-        // OPENHUB LOOKUP?
-        // curl https://www.openhub.net/projects/{project_id}/analyses/latest.xml 
-
-        function createStatisticSheet(my_publisher_row) {
-          var software_list = my_publisher_row.value.free_software_list,
-            j_len = software_list.length,
-            profile_url,
-            software_analysis,
-            software_analysis_list = [],
-            j;
-
-          for (j = 0; j < j_len; j += 1) {
-            profile_url = software_list[j].source_code_profile;
-            if (profile_url && profile_url !== "") {
-
-              // more yuck
-              software_analysis = DIRTY_OLOH_LOOKUP_UNTIL_API_WORKS[profile_url];
-              delete DIRTY_OLOH_LOOKUP_UNTIL_API_WORKS[profile_url];
-              //software_analysis = jIO.util.ajax({
-              //  type: "GET",
-              //  "url": profile_url.replace("/languages_summary", ".xml")
-              //});
-              // prevent multiple entries into calculation
-            }
-            software_analysis_list.push(software_analysis || 0);
-          }
-
-          return new RSVP.Queue()
-            .push(function () {
-              return RSVP.all(software_analysis_list);
-            })
-            .push(function (my_stat_list) {
-              var line_total = 0,
-                k_len = my_stat_list.length,
-                k;
-              for (k = 0; k < k_len; k += 1) {
-                if (my_stat_list[k]) {
-                  // xml =  parser.parseFromString(my_stat_list[k],"text/xml");
-                  //line_total += xml.getElementsByTagName("total_code_lines")[0]
-                  //  .childNodes[0].nodeValue;
-                  line_total += my_stat_list[k];
-                }
-              }
-              // actually we need to store this...
-              return new RSVP.Queue()
-                .push(function () {
-                  return gadget.jio_get(my_publisher_row.id);
-                })
-                .push(function (my_publisher) {
-                  my_publisher.lines = line_total;
-                  // my_publisher_row.value.lines = line_total.toString();
-                  return gadget.jio_put(my_publisher.uid, my_publisher);
-                });
-            });
-        }
-
-        for (i = 0; i < i_len; i += 1) {
-          statistic_list.push(createStatisticSheet(publisher_list[i]));
-        }
-
-        return new RSVP.Queue()
-          .push(function () {
-            return RSVP.all(statistic_list);
-          })
-          .push(function () {
-            return result_list;
-          });
-      })
       /////////////////////////////////////////////////////////////////
       // Make Software datasheets
       /////////////////////////////////////////////////////////////////
@@ -251,7 +136,7 @@
             software.portal_type = "software";
             software.publisher = publisher;
             software.publisher_website = website;
-            software.uid = UUID();
+            software.uid = "software_" + software.title;
 
             return gadget.jio_put(software.uid, software);
           }
@@ -306,7 +191,7 @@
             success_case.publisher = publisher;
             success_case.publisher_website = website;
             success_case.category_list = software.category_list;
-            success_case.uid = UUID();
+            success_case.uid = "case_" + success_case.title;
             return gadget.jio_put(success_case.uid, success_case);
           }
 
@@ -393,4 +278,4 @@
     .declareMethod('repair', function () {
       return this.state_parameter_dict.jio_storage.repair();
     });
-}(window, rJS, RSVP, Object, Intl));
+}(window, rJS, RSVP, Object, Intl, encodeURIComponent));

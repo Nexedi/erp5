@@ -14,10 +14,9 @@
 
     <!-- custom script -->
     <script src="gadget_global.js" type="text/javascript"></script>
-    
+
     <script src="gadget_erp5_page_afs_directory.js" type="text/javascript"></script>
 
-    
     <!-- templates -->
     <script id="frontpage-template" type="text/x-handlebars-template">
       <ul class="grid-items">
@@ -28,7 +27,7 @@
         {{/each}}
       </ul>
     </script>
-    
+
     <script id="list-partial" type="text/x-handlebars-template">
       <section class="ui-content-section ui-body-c">
         <h1>{{category}}</h1>
@@ -42,11 +41,23 @@
 
   </head>
   <body>
-    <div data-gadget-url="gadget_erp5_page_afs_unsplash.html"
-         data-gadget-scope="unsplash"
-         data-gadget-sandbox="public">
-    </div>
-    
+
+    <!--div data-gadget-url="gadget_erp5_page_afs_unsplash.html"
+      data-gadget-scope="unsplash"
+      data-gadget-sandbox="public">
+    </div-->
+
+    <section class="ui-banner-section">
+      <h1>What can Free Software do for you?</h1>
+      <img src="gadget_erp5_page_afs_banner_unsplash?format=" alt="Free Software" />
+      <span>
+        Photo by
+        <a target="_blank" href="https://unsplash.com/@laurent_peignault">Laurent Peignault</a>
+        &nbsp;/&nbsp;
+        <a target="_blank" href="https://unsplash.com/">Unsplash</a>
+      </span>
+    </section>
+
     <section class="ui-responsive ui-masonry-container"></section>
   </body>
 </html>
