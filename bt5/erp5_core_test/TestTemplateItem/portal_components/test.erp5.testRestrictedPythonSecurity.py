@@ -25,7 +25,10 @@
 #
 ##############################################################################
 
+import os.path
+import tempfile
 import textwrap
+import unittest
 import uuid
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -398,3 +401,88 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
           '''),
         expected=[("a", 1), ("b", 2)]
     )
+
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestRestrictedPythonSecurity))
+
+  # Also run original tests of RestrictedPython, to confirm that our patches did not break
+  # original functionality
+  import RestrictedPython.tests.testCompile
+  suite.addTest(RestrictedPython.tests.testCompile.test_suite())
+  import RestrictedPython.tests.testUtiliities
+  suite.addTest(RestrictedPython.tests.testUtiliities.test_suite())
+  import RestrictedPython.tests.testREADME
+  suite.addTest(RestrictedPython.tests.testREADME.test_suite())
+  import RestrictedPython.tests.testRestrictions
+  suite.addTest(RestrictedPython.tests.testRestrictions.test_suite())
+
+  import AccessControl.tests.test_requestmethod
+  suite.addTest(AccessControl.tests.test_requestmethod.test_suite())
+  import AccessControl.tests.test_safeiter
+  suite.addTest(AccessControl.tests.test_safeiter.test_suite())
+  import AccessControl.tests.test_tainted
+  suite.addTest(AccessControl.tests.test_tainted.test_suite())
+  import AccessControl.tests.test_formatter
+  suite.addTest(unittest.makeSuite(AccessControl.tests.test_formatter.FormatterTest))
+  import AccessControl.tests.test_userfolder
+  suite.addTest(AccessControl.tests.test_userfolder.test_suite())
+  import AccessControl.tests.test_users
+  suite.addTest(AccessControl.tests.test_users.test_suite())
+  import AccessControl.tests.testClassSecurityInfo
+  suite.addTest(AccessControl.tests.testClassSecurityInfo.test_suite())
+  import AccessControl.tests.testImplementation
+  suite.addTest(AccessControl.tests.testImplementation.test_suite())
+  import AccessControl.tests.testModuleSecurity
+  # we allow part of os module, so adjust this test for another not allowed module
+  def test_unprotected_module(self):
+    self.assertUnauth('subprocess', ())
+  AccessControl.tests.testModuleSecurity.ModuleSecurityTests.test_unprotected_module = test_unprotected_module
+  suite.addTest(AccessControl.tests.testModuleSecurity.test_suite())
+  import AccessControl.tests.testOwned
+  suite.addTest(AccessControl.tests.testOwned.test_suite())
+  import AccessControl.tests.testPasswordDigest
+  suite.addTest(AccessControl.tests.testPasswordDigest.test_suite())
+  import AccessControl.tests.testPermissionMapping
+  suite.addTest(AccessControl.tests.testPermissionMapping.test_suite())
+  import AccessControl.tests.testPermissionRole
+  suite.addTest(AccessControl.tests.testPermissionRole.test_suite())
+  import AccessControl.tests.testRole
+  suite.addTest(AccessControl.tests.testRole.test_suite())
+  import AccessControl.tests.testSecurityManager
+  suite.addTest(AccessControl.tests.testSecurityManager.test_suite())
+  import AccessControl.tests.testZCML
+  suite.addTest(AccessControl.tests.testZCML.test_suite())
+  import AccessControl.tests.testZopeGuards
+
+  # patch so that AccessControl.tests.testZopeGuards.TestActualPython.testPython
+  # also exercise our additions. This test checks that all safe builtins are tested
+  TestActualPython_compile = AccessControl.tests.testZopeGuards.TestActualPython._compile
+  def _compile(self, fname):
+    if fname == 'actual_python.py':
+      with open(os.path.join(
+          os.path.dirname(AccessControl.tests.testZopeGuards.__file__),
+          fname
+        )) as infile:
+        with tempfile.NamedTemporaryFile(suffix='.py', mode='w') as outfile:
+          outfile.write(
+              infile.read() + textwrap.dedent(
+              '''\
+              def erp5_patch():
+                  assert next(iter([True, ])) == True
+                  assert list(sorted([3,2,1])) == [1, 2, 3]
+                  assert list(reversed([3,2,1])) == [1, 2, 3]
+              erp5_patch()
+                '''
+          ))
+          outfile.flush()
+          return TestActualPython_compile(self, outfile.name)
+    return TestActualPython_compile(self, fname)
+  AccessControl.tests.testZopeGuards.TestActualPython._compile = _compile
+  suite.addTest(AccessControl.tests.testZopeGuards.test_suite())
+
+  import AccessControl.tests.testZopeSecurityPolicy
+  suite.addTest(AccessControl.tests.testZopeSecurityPolicy.test_suite())
+
+  return suite
