@@ -92,7 +92,7 @@ def _check_type_access(name, v):
   """
   def factory(inst, name):
     """
-     Check function used with ContainerAssetions checked by cAccessControl.
+     Check function used with ContainerAssertions checked by cAccessControl.
     """
     access = _safe_class_attribute_dict.get(inst, 0)
     # The next 'dict' only checks the access configuration type
