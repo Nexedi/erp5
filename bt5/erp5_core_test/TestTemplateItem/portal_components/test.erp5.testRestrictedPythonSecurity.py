@@ -330,6 +330,44 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
     )
 
 
+  def test_StringIO(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          import StringIO
+          s = StringIO.StringIO()
+          s.write("ok")
+          return s.getvalue()
+          '''),
+        expected="ok"
+    )
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          import StringIO
+          s = StringIO.StringIO("ok")
+          return s.getvalue()
+          '''),
+        expected="ok"
+    )
+
+  def test_cStringIO(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          import cStringIO
+          s = cStringIO.StringIO()
+          s.write("ok")
+          return s.getvalue()
+          '''),
+        expected="ok"
+    )
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          import cStringIO
+          s = cStringIO.StringIO('ok')
+          return s.getvalue()
+          '''),
+        expected="ok"
+    )
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestRestrictedPythonSecurity))

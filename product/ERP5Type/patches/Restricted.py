@@ -240,13 +240,12 @@ allow_type(type(re.compile('')))
 allow_type(type(re.match('x','x')))
 allow_type(type(re.finditer('x','x')))
 
-import cStringIO, StringIO
-f_cStringIO = cStringIO.StringIO()
-f_StringIO = StringIO.StringIO()
-allow_module('cStringIO')
 allow_module('StringIO')
-allow_type(type(f_cStringIO))
-allow_type(type(f_StringIO))
+allow_module('cStringIO')
+import cStringIO
+allow_type(cStringIO.InputType)
+allow_type(cStringIO.OutputType)
+
 
 ModuleSecurityInfo('cgi').declarePublic('escape', 'parse_header')
 allow_module('datetime')
@@ -313,6 +312,8 @@ MNAME_MAP = {
   'zipfile': 'Products.ERP5Type.ZipFile',
   'calendar': 'Products.ERP5Type.Calendar',
   'collections': 'Products.ERP5Type.Collections',
+  # XXX uses cStringIO instead of StringIO, because cStringIO is a type we can allow
+  'StringIO':  'cStringIO',
 }
 for alias, real in MNAME_MAP.items():
   assert '.' not in alias, alias # TODO: support this
