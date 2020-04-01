@@ -16,11 +16,24 @@ import sys
 import types
 
 from RestrictedPython.RestrictionMutator import RestrictionMutator
+_MARKER = []
+def checkNameLax(self, node, name=_MARKER):
+  """Verifies that a name being assigned is safe.
 
-# Unsafe attributes on protected objects are already disallowed at execution
-# and we don't want to maintain a duplicated list of exceptions.
-RestrictionMutator.checkName = RestrictionMutator.checkAttrName = \
-    lambda *args, **kw: None
+  In ERP5 we are much more lax that than in Zope's original restricted
+  python and allow to use names starting with _, because we rely on runtime
+  checks.
+  We don't allow to  define attributes ending with __roles__ though
+  """
+  if name is _MARKER:
+    # we use same implementation for checkName and checkAttrName which access
+    # the name in different ways ( see RestrictionMutator 3.6.0 )
+    name = node.attrname
+  if name.endswith('__roles__'):
+    self.error(node, '"%s" is an invalid variable name because '
+                     'it ends with "__roles__".' % name)
+
+RestrictionMutator.checkName = RestrictionMutator.checkAttrName = checkNameLax
 
 
 from Acquisition import aq_acquire

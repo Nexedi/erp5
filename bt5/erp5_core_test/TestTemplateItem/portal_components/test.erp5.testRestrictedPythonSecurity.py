@@ -402,6 +402,20 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         expected=[("a", 1), ("b", 2)]
     )
 
+  def test_lax_name(self):
+    self.createAndRunScript(
+        textwrap.dedent('''\
+          def _function():
+            pass
+          class SimpleObject:
+            def __init__(self):
+              self.attribute = 1
+            def _method(self):
+              _variable = 1
+          return SimpleObject().attribute
+          '''),
+        expected=1
+    )
 
 def test_suite():
   suite = unittest.TestSuite()
