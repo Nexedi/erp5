@@ -15,12 +15,12 @@ import copy
 import sys
 import types
 
-from RestrictedPython.RestrictionMutator import RestrictionMutator
+#from RestrictedPython.RestrictionMutator import RestrictionMutator
 
 # Unsafe attributes on protected objects are already disallowed at execution
 # and we don't want to maintain a duplicated list of exceptions.
-RestrictionMutator.checkName = RestrictionMutator.checkAttrName = \
-    lambda *args, **kw: None
+#RestrictionMutator.checkName = RestrictionMutator.checkAttrName = \
+#    lambda *args, **kw: None
 
 
 from Acquisition import aq_acquire
