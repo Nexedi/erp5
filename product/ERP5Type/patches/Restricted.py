@@ -81,36 +81,44 @@ def allow_class_attribute(klass, access=1):
   assert(inspect.isclass(klass))
   _safe_class_attribute_dict[klass] = access
 
-def _check_type_access(name, v):
-  """
-    Create a method which checks the access if the context type is <type 'type'>s.
-    Since the 'type' can be any types of classes, we support the three ways
-    defined in AccessControl/SimpleObjectPolicies.  We implement this
-    as "a method which returing a method" because we can not know what is the
-    type until it is actually called. So the three ways are simulated the
-    returning method inide this method.
-  """
-  def factory(inst, name):
-    """
-     Check function used with ContainerAssertions checked by cAccessControl.
-    """
-    access = _safe_class_attribute_dict.get(inst, 0)
-    # The next 'dict' only checks the access configuration type
-    if access == 1 or (isinstance(access, dict) and access.get(name, 0) == 1):
-      pass
-    elif isinstance(access, dict) and callable(access.get(name, 0)):
-      guarded_method = access.get(name)
-      return guarded_method(inst, name)
-    elif callable(access):
-      # Only check whether the access configuration raise error or not
-      access(inst, name)
-    else:
-      # fallback to default security
-      aq_acquire(inst, name, aq_validate, getSecurityManager().validate)
-    return v
-  return factory
 
-ContainerAssertions[type] = _check_type_access
+class CheckAccessType:
+  """ TODO update
+      Create a method which checks the access if the context type is <type 'type'>s.
+      Since the 'type' can be any types of classes, we support the three ways
+      defined in AccessControl/SimpleObjectPolicies.  We implement this
+      as "a method which returing a method" because we can not know what is the
+      type until it is actually called. So the three ways are simulated the
+      returning method inide this method.
+  """
+  def __len__(self):
+    # If Containers(type(x)) is true, ZopeGuard checks will short circuit
+    # thinking it's a simple type, but we don't want this for type, because
+    # type(x) is type for classes, being trueish would skip security check on classes.
+    return 0
+
+  def __call__(self, name, v):
+    def factory(inst, name):
+      """
+      Check function used with ContainerAssertions checked by cAccessControl.
+      """
+      access = _safe_class_attribute_dict.get(inst, 0)
+      # The next 'dict' only checks the access configuration type
+      if access == 1 or (isinstance(access, dict) and access.get(name, 0) == 1):
+        pass
+      elif isinstance(access, dict) and callable(access.get(name, 0)):
+        guarded_method = access.get(name)
+        return guarded_method(inst, name)
+      elif callable(access):
+        # Only check whether the access configuration raise error or not
+        access(inst, name)
+      else:
+        # fallback to default security
+        aq_acquire(inst, name, aq_validate, getSecurityManager().validate)
+      return v
+    return factory
+ContainerAssertions[type] = CheckAccessType()
+
 
 class SafeIterItems(SafeIter):
 
