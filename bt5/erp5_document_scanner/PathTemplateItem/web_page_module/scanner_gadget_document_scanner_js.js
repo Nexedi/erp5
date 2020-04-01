@@ -1,10 +1,10 @@
 /*jslint indent: 2, unparam: true, bitwise: true */
 /*global rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO,
          promiseEventListener, domsugar, createImageBitmap, FormData, Caman,
-         FileReader, DataView, URL*/
+         FileReader, DataView, URL, fx*/
 (function (rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO,
            promiseEventListener, domsugar, createImageBitmap, FormData, caman,
-           FileReader, DataView, URL) {
+           FileReader, DataView, URL, fx) {
   "use strict";
 
   //////////////////////////////////////////////////
@@ -109,6 +109,29 @@
     return new RSVP.Promise(waitForStream, canceller);
   }
 
+  function handleGfx(canvas, settings) {
+    var webgl_canvas = fx.canvas(),
+      texture = webgl_canvas.texture(canvas),
+      tmp;
+
+    // apply the ink filter
+    tmp = webgl_canvas.draw(texture);
+
+    if ((settings.brightness && settings.brightness !== 0) ||
+        (settings.contrast && settings.contrast !== 0)) {
+      tmp.brightnessContrast(
+        (settings.brightness || 0) / 100,
+        (settings.contrast || 0) / 100
+      );
+    }
+
+    if (settings.enable_greyscale) {
+      tmp.hueSaturation(0, -1);
+    }
+    tmp.update();
+    return webgl_canvas;
+  }
+
   function handleCaman(canvas, settings) {
     var local_caman;
 
@@ -142,7 +165,7 @@
           this.render(function () {
             // XXX canceller should be called automatically ?
             canceller();
-            resolve();
+            resolve(canvas);
           });
         } catch (error) {
           canceller();
@@ -427,30 +450,57 @@
         orientation = result;
 
         var expected_width = settings.maximum_width,
-          bitmap_options,
-          div;
-
+          bitmap_options;
         // If orientation is correct, return the original blob
         // and size is small
-        // no color correction is expected
+        // and no color correction is expected
         if (((orientation < 2) || (8 < orientation)) &&
-            ((!expected_width) || (original_width < expected_width)) &&
+            ((!expected_width) ||
+             ((original_width < expected_width) && (original_height < expected_width))) &&
             (!(settings.brightness || settings.contrast || settings.enable_greyscale))) {
           return blob;
         }
 
-        if ((!!expected_width) && (expected_width < original_width)) {
-          bitmap_options = {
-            resizeWidth: expected_width,
-            // resizeHeight: expected_height,
-            resizeQuality: 'high'
-          };
-        }
-
         // Else, transform the image
-        return new RSVP.Queue(createImageBitmap(blob, bitmap_options))
-          .push(function (bitmap) {
+        return new RSVP.Queue(createImageBitmap(blob))
 
+          .push(function (bitmap) {
+            // Check if image dimension must be changed
+            // It is mandatory to check the bitmap info,
+            // as the image could be rotated
+            var canvas,
+              webgl_context,
+              higher_dimension_key,
+              higher_dimension_value;
+
+            if (bitmap.width < bitmap.height) {
+              higher_dimension_key = 'resizeHeight';
+              higher_dimension_value = bitmap.height;
+            } else {
+              higher_dimension_key = 'resizeWidth';
+              higher_dimension_value = bitmap.width;
+            }
+
+            canvas = document.createElement('canvas');
+            webgl_context = canvas.getContext('webgl');
+
+            expected_width = Math.min(
+              expected_width || webgl_context.getParameter(webgl_context.MAX_TEXTURE_SIZE),
+              webgl_context.getParameter(webgl_context.MAX_TEXTURE_SIZE) - 1
+            );
+
+            if ((!!expected_width) && (expected_width < higher_dimension_value)) {
+              bitmap_options = {
+                resizeQuality: 'high'
+              };
+              bitmap_options[higher_dimension_key] = expected_width;
+              return createImageBitmap(blob, bitmap_options);
+            }
+
+            return bitmap;
+
+          })
+          .push(function (bitmap) {
             var height = bitmap.height,
               width = bitmap.width,
               canvas = domsugar('canvas'),
@@ -458,9 +508,9 @@
 
             // Caman expect the canvas to be in a container
             // in order to replace it when resizing
-            div = domsugar('div', [canvas]);
+            domsugar('div', [canvas]);
 
-            if (4 < orientation && orientation < 9) {
+            if ((4 < orientation) && (orientation < 9)) {
               canvas.width = height;
               canvas.height = width;
             } else {
@@ -499,11 +549,13 @@
             ctx.drawImage(bitmap, 0, 0);
 
             if (settings.brightness || settings.contrast || settings.enable_greyscale) {
-              return handleCaman(canvas, settings);
+              return handleGfx(canvas, settings);
+              // return handleCaman(canvas, settings);
             }
+            return canvas;
           })
-          .push(function () {
-            return promiseCanvasToBlob(div.firstElementChild);
+          .push(function (final_canvas) {
+            return promiseCanvasToBlob(final_canvas);
           });
       });
   }
@@ -951,4 +1003,4 @@
 
 }(rJS, RSVP, window, document, navigator, Cropper, Promise, JSON, jIO,
   promiseEventListener, domsugar, createImageBitmap, FormData, Caman,
-  FileReader, DataView, URL));
+  FileReader, DataView, URL, fx));
