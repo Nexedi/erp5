@@ -13,6 +13,22 @@ if default_site_preference is not None:
   if default_site_preference.getPreferenceState() == "disabled":
     default_site_preference.enable()
 
+# enable automatic approval of Credential Requests only if erp5_wendelin_data_lake is installed
+if portal.portal_templates.getInstalledBusinessTemplate("erp5_wendelin_data_lake_ingestion", strict=True) is not None:
+  default_system_preference = getattr(portal.portal_preferences,
+                                     'default_system_preference', None)
+  if default_system_preference is not None:
+    default_system_preference.setPreferredCredentialRequestAutomaticApproval(True)
+    if default_system_preference.getPreferenceState() == "disabled":
+      default_system_preference.enable()
+
+    # change periodicity of respective alarms from default 60 mins to 1 minute
+    # so that we can have a default system in which user registration happens instantly
+    accept_submitted_credentials = getattr(portal.portal_alarms,
+                                          'accept_submitted_credentials', None)
+    if accept_submitted_credentials is not None:
+      accept_submitted_credentials.setPeriodicityMinuteFrequency(1)
+      
 # updata local roles (if any)
 business_template = context.getSpecialiseValue()
 
