@@ -71,15 +71,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_afs_software_list.js</string> </value>
+            <value> <string>gadget_erp5_afs_publisher_storage.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Custom AFS software list gadget</string> </value>
+            <value> <string>Custom AFS publisher storage</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_erp5_page_afs_software_list_js</string> </value>
+            <value> <string>gadget_erp5_afs_publisher_storage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -97,11 +97,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget AFS Page Software List JS</string> </value>
+            <value> <string>Gadget AFS Publisher Storage</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value> <string>005</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -185,7 +185,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1472717012.87</float>
+                              <float>1473773985.6</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -234,7 +234,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.57244.48889.47155</string> </value>
+                      <value> <string>982.57237.47631.43093</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +252,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585585223.81</float>
+                              <float>1585583493.48</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -313,7 +313,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1472716972.97</float>
+                              <float>1473773975.51</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

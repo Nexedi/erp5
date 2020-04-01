@@ -71,15 +71,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_afs_software_list.js</string> </value>
+            <value> <string>gadget_erp5_afs_publisher_jio.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Custom AFS software list gadget</string> </value>
+            <value> <string>Custom AFS publisher gadget</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_erp5_page_afs_software_list_js</string> </value>
+            <value> <string>gadget_erp5_afs_publisher_jio_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -97,7 +97,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget AFS Page Software List JS</string> </value>
+            <value> <string>Gadget AFS Storage JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -185,7 +185,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1472717012.87</float>
+                              <float>1472635704.41</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -234,7 +234,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.57244.48889.47155</string> </value>
+                      <value> <string>982.58689.51657.16247</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +252,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585585223.81</float>
+                              <float>1585728670.64</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -313,7 +313,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1472716972.97</float>
+                              <float>1472635627.87</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

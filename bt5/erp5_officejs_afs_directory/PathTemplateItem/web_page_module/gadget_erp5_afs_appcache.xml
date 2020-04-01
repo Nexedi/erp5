@@ -104,6 +104,9 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
+# Last modified by WebSite_checkCacheModificationDateConsistency on 2020/03/27 09:12:7.112010 UTC\n
+# Last modified by WebSite_checkCacheModificationDateConsistency on 2020/03/23 09:29:47.867257 UTC\n
+# Last modified by WebSite_checkCacheModificationDateConsistency on 2020/03/09 13:53:8.596469 UTC\n
 # Last modified by WebSite_checkCacheModificationDateConsistency on 2020/02/17 16:16:46.725895 UTC\n
 # Last modified by WebSite_checkCacheModificationDateConsistency on 2020/02/13 13:51:47.480981 UTC\n
 # Last modified by WebSite_checkCacheModificationDateConsistency on 2020/02/11 16:56:56.234794 UTC\n
@@ -121,6 +124,7 @@ font-awesome/font-awesome-webfont.ttf\n
 font-awesome/font-awesome-webfont.svg\n
 gadget_erp5_afs_camera.png\n
 gadget_erp5_afs_logo.png\n
+gadget_erp5_page_afs_banner_unsplash?format=\n
 URI.js\n
 erp5_launcher_nojqm.js\n
 gadget_erp5_nojqm.css\n
@@ -165,6 +169,8 @@ gadget_erp5_page_afs_success_case.html\n
 gadget_erp5_page_afs_success_case.js\n
 gadget_erp5_page_afs_publisher.html\n
 gadget_erp5_page_afs_publisher.js\n
+gadget_erp5_page_afs_export.html\n
+gadget_erp5_page_afs_export.js\n
 gadget_erp5_page_afs_success_case_list.html\n
 gadget_erp5_page_afs_success_case_list.js\n
 gadget_erp5_page_afs_publisher_list.html\n
@@ -173,8 +179,8 @@ gadget_erp5_page_afs_publisher_statistic.html\n
 gadget_erp5_page_afs_publisher_statistic.js\n
 gadget_erp5_page_afs_financial_list.html\n
 gadget_erp5_page_afs_financial_list.js\n
-gadget_erp5_page_afs_unsplash.html\n
-gadget_erp5_page_afs_unsplash.js\n
+#gadget_erp5_page_afs_unsplash.html\n
+#gadget_erp5_page_afs_unsplash.js\n
 gadget_erp5_page_afs_software.html\n
 gadget_erp5_page_afs_software.js\n
 gadget_erp5_page_afs_directory.html\n
@@ -183,14 +189,17 @@ gadget_erp5_afs_dygraph.html\n
 gadget_erp5_afs_dygraph.js\n
 dygraph.js\n
 dygraph.css\n
-gadget_erp5_afs_jio.html\n
-gadget_erp5_afs_jio.js\n
+gadget_erp5_afs_publisher_jio.html\n
+gadget_erp5_afs_publisher_jio.js\n
+gadget_erp5_afs_publisher_storage.js\n
+gadget_erp5_afs_export_jio.js\n
+gadget_erp5_afs_export_jio.html\n
+gadget_erp5_afs_export_storage.js\n
 gadget_erp5_afs_panel.html\n
 gadget_erp5_afs_panel.js\n
 gadget_erp5_afs_router.html\n
 gadget_erp5_afs_router.js\n
 gadget_erp5_afs.css\n
-gadget_erp5_afs_storage.js\n
 gadget_erp5_page_afs_software_list.html\n
 gadget_erp5_page_afs_software_list.js\n
 NETWORK:\n
@@ -322,7 +331,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <string>System Processes</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -336,7 +345,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>981.59441.37027.22988</string> </value>
+                      <value> <string>982.51362.63695.51882</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -354,7 +363,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1582043182.97</float>
+                              <float>1585300327.14</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
