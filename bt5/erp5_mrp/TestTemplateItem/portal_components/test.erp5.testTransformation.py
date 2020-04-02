@@ -1,4 +1,5 @@
 ##############################################################################
+
 #
 # Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
 #          Sebastien Robin <seb@nexedi.com>
@@ -26,7 +27,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.tests.testProductionOrder import TestProductionOrderMixin
+from erp5.component.test.testProductionOrder import TestProductionOrderMixin
 from Products.ERP5.tests.testInventoryAPI import BaseTestUnitConversion
 
 class TestTransformationMixin(TestProductionOrderMixin):
