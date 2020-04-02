@@ -45,7 +45,7 @@ div[data-gadget-url$="gadget_document_scanner.html"] {
   }
 
   .reset-btn, .confirm-btn, .edit-btn, .take-picture-btn, .capture-btn,
-  .delete-btn, .retry-btn, .change-camera-btn, .confirm-btn {
+  .delete-btn, .retry-btn, .change-camera-btn, .confirm-btn, .auto-crop-btn {
     color: #212529;
     padding: 3pt;
     border: 1px solid rgba(0, 0, 0, 0.14);
