@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 ##############################################################################
 #
 # Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -31,7 +32,7 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5.tests.testProductionOrder import TestProductionOrderMixin
+from erp5.component.test.testProductionOrder import TestProductionOrderMixin
 from Products.ERP5.tests.testPackingList import TestPackingListMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 

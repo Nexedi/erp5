@@ -27,41 +27,32 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-
 from Products.ERP5Type import Permissions, PropertySheet
 
-from Products.ERP5.Document.DeliveryCell import DeliveryCell
+from Products.ERP5.Document.Delivery import Delivery
 
-class ManufacturingExecutionCell(DeliveryCell):
-    """
-      A DeliveryCell allows to define specific quantities
-      for each variation of a resource in a delivery line.
-    """
+class ManufacturingExecution(Delivery):
+  """
+  A Transaction object allows to add
+  elementary accounting transactions in the general ledger
+  """
+  # CMF Type Definition
+  meta_type = 'ERP5 Manufacturing Execution'
+  portal_type = 'Manufacturing Execution'
 
-    meta_type = 'ERP5 Manufacturing Execution Cell'
-    portal_type = 'Manufacturing Execution Cell'
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Arrow
-                      , PropertySheet.Amount
-                      , PropertySheet.Task
-                      , PropertySheet.Movement
-                      , PropertySheet.Price
-                      , PropertySheet.Predicate
-                      , PropertySheet.MappedValue
-                      , PropertySheet.ItemAggregation
-                      )
-
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'hasCellContent')
-    def hasCellContent(self, base_id='movement'):
-      """A cell cannot have cell content itself.
-      """
-      return 0
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Movement
+                    , PropertySheet.Delivery
+                    , PropertySheet.Reference
+                    , PropertySheet.TradeCondition
+                    )

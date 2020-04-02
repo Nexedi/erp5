@@ -46,13 +46,13 @@ class TestMRPMixin(TestBPMMixin):
   def _createRule(self, portal_type):
     x = portal_type.replace(' Simulation ', ' ').replace(' ', '_').lower()
     reference = "default_" + x
-    id = "testMRP_" + x
+    id_ = "testMRP_" + x
     rule_tool = self.portal.portal_rules
     try:
       rule = self.getRule(reference=reference)
-      self.assertEqual(rule.getId(), id)
+      self.assertEqual(rule.getId(), id_)
     except IndexError:
-      rule = rule_tool.newContent(id, portal_type,
+      rule = rule_tool.newContent(id_, portal_type,
         reference=reference,
         test_method_id="SimulationMovement_test" + portal_type.replace(' ', ''))
       def newTester(p, t, **kw):
@@ -127,10 +127,10 @@ class TestMRPMixin(TestBPMMixin):
     order = self.createOrder(specialise_value=business_process,
                              start_date=base_date,
                              stop_date=base_date+3)
-    order_line = self.createOrderLine(order,
-                                      quantity=10,
-                                      resource=transformation.getResource(),
-                                      specialise_value=transformation)
+    self.createOrderLine(order,
+                         quantity=10,
+                         resource=transformation.getResource(),
+                         specialise_value=transformation)
     return order
 
   def createDefaultTransformation(self):
@@ -291,8 +291,8 @@ class TestMRPImplementation(TestMRPMixin):
     self.order = self.createDefaultOrder(business_process)
     self.order_line, = self.order.objectValues()
     if use_item:
-     self.item = self.portal.item_module.newContent()
-     self.order_line.setAggregateValue(self.item)
+      self.item = self.portal.item_module.newContent()
+      self.order_line.setAggregateValue(self.item)
     self.order._edit(source_value=self.workshop, destination_value=self.destination)
     self.order.plan()
     self.tic()
@@ -360,7 +360,7 @@ class TestMRPImplementation(TestMRPMixin):
     def getRelatedDeliveryList(portal_type):
       return order.getCausalityRelatedValueList(portal_type=portal_type)
 
-    mo, = getRelatedDeliveryList("Manufacturing Order Line")
+    self.assertEquals(len(getRelatedDeliveryList("Manufacturing Order Line")), 1)
     # Build First Manufacturing Execution
     order.localBuild()
     self.tic()
@@ -415,8 +415,6 @@ class TestMRPImplementation(TestMRPMixin):
     order = self.order
     order.confirm()
     order.localBuild()
-    order_line = self.order_line
-    resource = order_line.getResourceValue()
     self.tic()
     manufacturing_order_line, = order.getCausalityRelatedValueList(
                             portal_type="Manufacturing Order Line")
