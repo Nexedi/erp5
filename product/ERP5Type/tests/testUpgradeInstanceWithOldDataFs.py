@@ -64,3 +64,17 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     alarm.solve()
     self.tic()
     self.assertEquals(alarm.getLastActiveProcess().getResultList(), [])
+
+    # Make sure that *all* Portal Type can be loaded after upgrade
+    import erp5.portal_type
+    from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
+    error_list = []
+    for portal_type_obj in self.portal.portal_types.listTypeInfo():
+      portal_type_id = portal_type_obj.getId()
+      portal_type_class = getattr(erp5.portal_type, portal_type_id)
+      portal_type_class.loadClass()
+      if issubclass(portal_type_class, ERP5BaseBroken):
+        error_list.append(portal_type_id)
+    self.assertEquals(
+      error_list, [],
+      msg="The following Portal Type classes could not be loaded (see zLOG.log): %r" % error_list)
