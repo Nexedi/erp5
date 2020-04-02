@@ -19,7 +19,8 @@ div[data-gadget-url$="gadget_document_scanner.html"] {
   }
 
   .camera-input {
-    min-height: 360px;
+    // Mimic cropper background
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   .page-number {
