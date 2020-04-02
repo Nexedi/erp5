@@ -50,7 +50,8 @@ div[data-gadget-url$="gadget_document_scanner.html"] .capture-btn,
 div[data-gadget-url$="gadget_document_scanner.html"] .delete-btn,
 div[data-gadget-url$="gadget_document_scanner.html"] .retry-btn,
 div[data-gadget-url$="gadget_document_scanner.html"] .change-camera-btn,
-div[data-gadget-url$="gadget_document_scanner.html"] .confirm-btn {
+div[data-gadget-url$="gadget_document_scanner.html"] .confirm-btn,
+div[data-gadget-url$="gadget_document_scanner.html"] .auto-crop-btn {
   color: #212529;
   padding: 3pt;
   border: 1px solid rgba(0, 0, 0, 0.14);
