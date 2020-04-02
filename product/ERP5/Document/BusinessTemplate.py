@@ -6437,18 +6437,22 @@ Business Template is a set of definitions, such as skins, portal types and categ
               error=True)
           continue
 
-        for cls in (tuple(zope.interface.implementedBy(portal_type_cls)) +
-                    portal_type_cls.mro()):
+        for i, cls in enumerate((portal_type_cls.mro() +
+                                 tuple(zope.interface.implementedBy(portal_type_cls)))):
           if cls in seen_cls_set:
             continue
-          seen_cls_set.add(cls)
-
           cls_module_filepath = self._checkFilesystemModulePath(
             inspect.getmodule(cls),
             working_copy_path_list)
           if cls_module_filepath is not None:
             cls_module_name = cls.__module__
+            if '.Document.' in cls_module_name or '.Tool.' in cls_module_name:
+              if i != 1:
+                continue
+
             yield cls.__name__, cls.__module__, cls_module_filepath
+
+          seen_cls_set.add(cls)
 
     security.declareProtected(Permissions.ManagePortal,
                               'getMigratableSourceCodeFromFilesystemList')
