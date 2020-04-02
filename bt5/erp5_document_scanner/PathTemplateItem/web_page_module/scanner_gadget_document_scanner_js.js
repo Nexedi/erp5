@@ -193,7 +193,7 @@
         background: false,
         minContainerWidth: 0,
         minContainerHeight: 0,
-        responsive: false,
+        responsive: true,
         // Avoid any cropper calculation or guessing
         scalable: false,
         rotatable: false,
