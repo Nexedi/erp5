@@ -186,14 +186,18 @@
     // creating Cropper is asynchronous
     return new RSVP.Promise(function (resolve, reject) {
       cropper = new Cropper(element, {
-        // restrict the minimum canvas size to fill fit the container
-        viewMode: 3,
+        // restrict the minimum canvas size to fit within the container
+        viewMode: 2,
+        guides: true,
+        center: true,
+        background: false,
+        minContainerWidth: 0,
+        minContainerHeight: 0,
+        responsive: false,
         // Avoid any cropper calculation or guessing
         scalable: false,
-        // Please, DON'T touch on rotatable and checkOrientation. Removing it,
-        // we will not be able to fix orientation before crop.
-        rotatable: true,
-        checkOrientation: true,
+        rotatable: false,
+        checkOrientation: false,
         zoomable: false,
         movable: false,
         data: data,
