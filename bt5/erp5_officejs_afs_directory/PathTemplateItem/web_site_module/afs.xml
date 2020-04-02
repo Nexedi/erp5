@@ -289,6 +289,26 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_service_worker_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_precache_manifest_script_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -363,15 +383,25 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_erp5_afs.appcache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
             <value> <string>gadget_erp5_afs_panel.html</string> </value>
         </item>
         <item>
+            <key> <string>configuration_precache_manifest_script_list</string> </key>
+            <value> <string>WebSection_getOfficeJSAfsPrecacheManifestList</string> </value>
+        </item>
+        <item>
             <key> <string>configuration_router_gadget_url</string> </key>
             <value> <string>gadget_erp5_afs_router.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_service_worker_url</string> </key>
+            <value> <string>gadget_erp5_serviceworker.js</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -606,7 +636,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <string>supersven</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -620,7 +650,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.57615.36764.14148</string> </value>
+                      <value> <string>982.61159.34215.43656</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -638,7 +668,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585606062.87</float>
+                              <float>1585820069.2</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
