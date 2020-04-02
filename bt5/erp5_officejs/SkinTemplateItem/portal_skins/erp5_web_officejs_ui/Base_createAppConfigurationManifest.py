@@ -22,21 +22,12 @@ try:
   router_file_reference = context.getLayoutProperty("configuration_router_gadget_url", default="")
   if router_file_reference is "":
     raise ValueError("Router Gadget Layout Property is missing")
-  appcache_file_reference = context.getLayoutProperty("configuration_manifest_url", default="")
-  if appcache_file_reference is "":
-    raise ValueError("Manifest URL Layout Property is missing")
 
   router_file = portal_catalog.getResultValue(
       portal_type = 'Web Page',
       reference = router_file_reference)
   if router_file is None:
     raise ValueError("Router web page '%s' not found" % router_file_reference)
-
-  appcache_manifest = portal_catalog.getResultValue(
-      portal_type = 'Web Manifest',
-      reference = appcache_file_reference)
-  if appcache_manifest is None:
-    raise ValueError("Appcache manifest '%s' not found" % appcache_file_reference)
 
   router_content = router_file.getTextContent()
 
@@ -116,29 +107,6 @@ try:
   content += configuration_element_lines
   content += "\nNETWORK:\n*"
   configuration_manifest.setTextContent(content)
-
-  appcache_configuration_elements = "#app_configuration_resources\n"
-  appcache_configuration_elements += "#CONFIGURATION ELEMENTS generated on %s. Same as in configuration manifest\n" % date
-  appcache_configuration_elements += configuration_element_lines
-  appcache_configuration_elements += "#/app_configuration_resources\n\n"
-  token_found = False
-  configuration_added = False
-  appcache_content = ""
-  appcache_line_list = appcache_manifest.getTextContent().split('\n')
-  for line in appcache_line_list:
-    if "#app_configuration_resources" in line:
-      token_found = True
-    if "NETWORK:" in line and not configuration_added:
-      appcache_content += appcache_configuration_elements
-      configuration_added = True
-    if "#/app_configuration_resources" in line:
-      appcache_content += appcache_configuration_elements
-      configuration_added = True
-      token_found = False
-    if not token_found:
-      if not "#/app_configuration_resources" in line:
-        appcache_content += line + '\n'
-  appcache_manifest.setTextContent(appcache_content)
 
 
 except (ValueError, KeyError, SyntaxError) as e:
