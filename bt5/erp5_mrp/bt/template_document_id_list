@@ -1,1 +1,6 @@
+document.erp5.ManufacturingExecution
+document.erp5.ManufacturingExecutionCell
+document.erp5.ManufacturingExecutionLine
 document.erp5.ProductionSimulationRule
+document.erp5.TransformationSimulationRule
+document.erp5.TransformationSourcingSimulationRule
