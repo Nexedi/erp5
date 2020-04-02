@@ -124,9 +124,11 @@ class ERP5(_ERP5):
 
       instance_home = (self.instance and 'unit_test.%u' % self.instance
                        or 'unit_test')
-      os.makedirs(os.path.join(instance_home, 'var'))
 
       import shutil
+      shutil.rmtree(instance_home, ignore_errors=True)
+
+      os.makedirs(os.path.join(instance_home, 'var'))
       shutil.copyfile(os.path.join(old_data_path, 'Data.fs'),
                       os.path.join(instance_home, 'var', 'Data.fs'))
       shutil.copyfile(os.path.join(old_data_path, 'dump.sql'),
