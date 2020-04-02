@@ -33,39 +33,38 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 
 class InvoiceCell(DeliveryCell):
+  """
+  A DeliveryCell allows to define specific quantities
+  for each variation of a resource in a delivery line.
+  """
+  meta_type = 'ERP5 Invoice Cell'
+  portal_type = 'Invoice Cell'
+  add_permission = Permissions.AddPortalContent
+  isCell = 1
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Arrow
+                    , PropertySheet.Amount
+                    , PropertySheet.ItemAggregation
+                    , PropertySheet.Task
+                    , PropertySheet.Movement
+                    , PropertySheet.Price
+                    , PropertySheet.Predicate
+                    , PropertySheet.MappedValue
+                    )
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+  def isAccountable(self):
     """
-      A DeliveryCell allows to define specific quantities
-      for each variation of a resource in a delivery line.
+    Returns 1 if this needs to be accounted
+    Only account movements which are not associated to a delivery
+    Whenever delivery is there, delivery has priority
     """
-    meta_type = 'ERP5 Invoice Cell'
-    portal_type = 'Invoice Cell'
-    add_permission = Permissions.AddPortalContent
-    isCell = 1
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Arrow
-                      , PropertySheet.Amount
-                      , PropertySheet.ItemAggregation
-                      , PropertySheet.Task
-                      , PropertySheet.Movement
-                      , PropertySheet.Price
-                      , PropertySheet.Predicate
-                      , PropertySheet.MappedValue
-                      )
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
-    def isAccountable(self):
-      """
-        Returns 1 if this needs to be accounted
-        Only account movements which are not associated to a delivery
-        Whenever delivery is there, delivery has priority
-      """
-      # Never accountable
-      return 0
-
+    # Never accountable
+    return 0

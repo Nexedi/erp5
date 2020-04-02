@@ -1,0 +1,5 @@
+document.erp5.InvoiceCell
+document.erp5.InvoiceLine
+document.erp5.InvoiceSimulationRule
+document.erp5.InvoiceTransactionSimulationRule
+document.erp5.TradeModelSimulationRule
