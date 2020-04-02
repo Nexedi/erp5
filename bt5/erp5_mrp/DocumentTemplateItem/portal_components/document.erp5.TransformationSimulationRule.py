@@ -26,10 +26,9 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5.mixin.rule import RuleMixin
 from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
@@ -120,7 +119,9 @@ class TransformationRuleMovementGenerator(MovementGeneratorMixin):
     else:
       arrow_list = parent_movement.getCategoryMembershipList(
           ('destination', 'destination_section'), base=True)
-    def newMovement(reference, kw={}):
+    def newMovement(reference, kw=None):
+      if kw is None:
+        kw = {}
       movement = aq_base(parent_movement.asContext(**kw)).__of__(
         self._applied_rule)
       movement._setReference(reference)

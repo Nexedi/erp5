@@ -34,7 +34,7 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testOrder import TestOrderMixin
+from Products.ERP5.tests.testOrder import TestOrderMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestProductionOrderMixin(TestOrderMixin):
@@ -95,9 +95,8 @@ class TestProductionOrderMixin(TestOrderMixin):
     TestOrderMixin.createCategories(self)
     if len(self.category_tool.operation.contentValues()) == 0:
       for category_id in self.operation_category_list:
-        o = self.category_tool.operation.newContent(
-                                               portal_type='Category',
-                                               id=category_id)
+        self.category_tool.operation.newContent(portal_type='Category',
+                                                id=category_id)
 
   def stepCreateColourSizeVariatedComponent1(self,sequence=None, sequence_list=None, \
                                     **kw):
@@ -683,8 +682,8 @@ class TestProductionOrderMixin(TestOrderMixin):
       simulation_movement_list = applied_rule.objectValues()
       sequence.edit(simulation_movement_list=simulation_movement_list)
 
-  def checkObjectAttributes(self, object, attribute_list):
-    LOG('checkObjectAttributes object.getPath',0,object.getPath())
+  def checkObjectAttributes(self, obj, attribute_list):
+    LOG('checkObjectAttributes object.getPath',0,obj.getPath())
     for value, attribute in attribute_list:
       try:
         self.assertEqual(value,
@@ -1759,7 +1758,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
 
     supply_node = supply_chain.contentValues(portal_type='Supply Node')[0]
     cb_data = supply_chain.manage_cutObjects([supply_node.getId()])
-    copied, = empty_supply_chain.manage_pasteObjects(cb_data)
+    self.assertEquals(len(empty_supply_chain.manage_pasteObjects(cb_data)), 1)
 
   def stepCheckPastedSupplyNode(self, sequence=None, sequence_list=None,
                                  **kw):

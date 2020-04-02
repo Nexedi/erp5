@@ -57,7 +57,7 @@ class ManufacturingExecutionLine(DeliveryLine):
                     )
 
   security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent')
-  def newCellContent(self, id, portal_type='Manufacturing Execution Cell', **kw):
+  def newCellContent(self, id, portal_type='Manufacturing Execution Cell', **kw): # pylint: disable=redefined-builtin
     """Overriden to specify default portal type
     """
     return self.newContent(id=id, portal_type=portal_type, **kw)
