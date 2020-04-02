@@ -158,8 +158,13 @@ for movement in portal_catalog(query = query):
         ):
           item = None
 
-          if item_type in portal.getPortalDeviceConfigurationTypeList() + portal.getPortalDataConfigurationTypeList():
-            if item_type != "Status Configuration":
+          if any(
+            (
+              item_type in portal.getPortalDeviceConfigurationTypeList() + portal.getPortalDataConfigurationTypeList(),
+              item_type == "Progress Indicator"
+            )
+          ):
+            if item_type not in ("Status Configuration", "Progress Indicator"):
               item = portal.portal_catalog.getResultValue(
                 portal_type=item_type,
                 #validation_state="validated",
