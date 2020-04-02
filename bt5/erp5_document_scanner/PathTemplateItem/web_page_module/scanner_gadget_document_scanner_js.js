@@ -407,7 +407,7 @@
         video.play();
         return RSVP.all([
           getVideoDeviceList(),
-          gadget.getTranslationList(["Capture", "Change Camera", "Page"]),
+          gadget.getTranslationList(["Capture", "Change Camera", "Page", "Auto Crop"]),
           buildPreviousThumbnailDom(gadget)
         ]);
       })
@@ -428,6 +428,15 @@
           'class': 'take-picture-btn ui-btn-icon-left ui-icon-circle',
           text: result_list[1][0]
         }));
+
+        if (gadget.state.is_cropper_size_confirmed) {
+          button_list.push(
+            domsugar('button', {type: 'button',
+                                'class': 'auto-crop-btn ui-icon-fast-forward ui-btn-icon-left',
+                                text: result_list[1][3]
+                               })
+          );
+        }
 
         div = domsugar('div', {'class': 'camera'}, [
           domsugar('div', {'class': 'camera-header'}, [
@@ -580,7 +589,7 @@
   }
 
   // Capture the media stream
-  function captureAndRenderPicture(gadget) {
+  function captureAndRenderPicture(gadget, is_auto_crop) {
     var settings = gadget.state.preferred_image_settings_data,
       btn = gadget.element.querySelector(".take-picture-btn"),
       image_capture = new window.ImageCapture(
@@ -625,7 +634,25 @@
 
         var img = result_list[1],
           div,
-          defer = RSVP.defer();
+          defer = RSVP.defer(),
+          edit_picture_element;
+
+        if (!is_auto_crop) {
+          edit_picture_element = domsugar('div', {'class': 'edit-picture'}, [
+            domsugar('button', {type: 'button',
+                                'class': 'reset-btn ui-btn-icon-left ui-icon-times',
+                                text: result_list[0][0]
+                               }),
+            domsugar('button', {type: 'button',
+                                'class': 'confirm-btn ui-btn-icon-left ui-icon-check',
+                                text: result_list[0][1]
+                               })
+          ]);
+        } else {
+          // Keep the previous disabled button list
+          // in order to reduce the flickering
+          edit_picture_element = gadget.element.querySelector('.edit-picture');
+        }
 
         // Prepare the cropper canvas
         div = domsugar('div', {'class': 'camera'}, [
@@ -639,16 +666,7 @@
           // DON'T remove img from a div img-container.
           // DON'T replace img by canvas.
           domsugar("div", {"class": "img-container"}, [img]),
-          domsugar('div', {'class': 'edit-picture'}, [
-            domsugar('button', {type: 'button',
-                                'class': 'reset-btn ui-btn-icon-left ui-icon-times',
-                                text: result_list[0][0]
-                               }),
-            domsugar('button', {type: 'button',
-                                'class': 'confirm-btn ui-btn-icon-left ui-icon-check',
-                                text: result_list[0][1]
-                               })
-          ]),
+          edit_picture_element,
           result_list[2]
         ]);
 
@@ -717,6 +735,32 @@
       });
   }
 
+  function cropPicture(gadget) {
+    var canvas = gadget.cropper.getCroppedCanvas(),
+      state_dict;
+    state_dict = {
+      preferred_cropped_canvas_data: gadget.cropper.getData(),
+      display_step: 'display_video',
+      page: gadget.state.page + 1,
+      page_count: gadget.state.page_count + 1,
+      is_cropper_size_confirmed: true
+    };
+    // Keep image date, as user may need to display it again
+    state_dict['blob_canvas_' + gadget.state.page_count] = canvas;
+    // state_dict['blob_url_' + gadget.state.page_count] = data_url;
+    state_dict['blob_state_' + gadget.state.page_count] = 'saving';
+    state_dict['blob_uuid_' + gadget.state.page_count] = null;
+
+    return gadget.changeState(state_dict)
+      .push(function () {
+        // XXX Ensure that you have the active process relative url
+        addDetachedPromise(gadget, 'ajax_' + (gadget.state.page_count - 1),
+                           handleAsyncStore(gadget, gadget.state.page_count - 1));
+
+        gadget.detached_promise_dict.cropper.cancel('Not needed anymore, as cropped');
+      });
+  }
+
   //////////////////////////////////////////////////
   // Gadget API
   //////////////////////////////////////////////////
@@ -745,7 +789,8 @@
       display_step: 'display_video',
       page: 1,
       page_count: 0,
-      camera_list: []
+      camera_list: [],
+      is_cropper_size_confirmed: false
     })
     .declareMethod('render', function (options) {
       // This method is called during the ERP5 form rendering
@@ -795,6 +840,9 @@
       if (display_step === 'crop_picture') {
         return captureAndRenderPicture(gadget);
       }
+      if (display_step === 'auto_crop_picture') {
+        return captureAndRenderPicture(gadget, true);
+      }
       if (display_step === 'show_picture') {
         return renderSubmittedPicture(gadget);
       }
@@ -839,12 +887,6 @@
         });
       }
 
-      if (evt.target.className.indexOf("take-picture-btn") !== -1) {
-        return gadget.changeState({
-          display_step: 'crop_picture'
-        });
-      }
-
       if (evt.target.className.indexOf("reset-btn") !== -1) {
         return gadget.changeState({
           display_step: 'display_video'
@@ -877,30 +919,22 @@
         return gadget.changeState(state_dict);
       }
 
+      if (evt.target.className.indexOf("take-picture-btn") !== -1) {
+        return gadget.changeState({
+          display_step: 'crop_picture'
+        });
+      }
+
       if (evt.target.className.indexOf("confirm-btn") !== -1) {
-        return new RSVP.Queue()
-          .push(function () {
-            var canvas = gadget.cropper.getCroppedCanvas();
-            state_dict = {
-              preferred_cropped_canvas_data: gadget.cropper.getData(),
-              display_step: 'display_video',
-              page: gadget.state.page + 1,
-              page_count: gadget.state.page_count + 1
-            };
-            // Keep image date, as user may need to display it again
-            state_dict['blob_canvas_' + gadget.state.page_count] = canvas;
-            // state_dict['blob_url_' + gadget.state.page_count] = data_url;
-            state_dict['blob_state_' + gadget.state.page_count] = 'saving';
-            state_dict['blob_uuid_' + gadget.state.page_count] = null;
+        return cropPicture(gadget);
+      }
 
-            return gadget.changeState(state_dict);
-          })
+      if (evt.target.className.indexOf("auto-crop-btn") !== -1) {
+        return gadget.changeState({
+          display_step: 'auto_crop_picture'
+        })
           .push(function () {
-            // XXX Ensure that you have the active process relative url
-            addDetachedPromise(gadget, 'ajax_' + (gadget.state.page_count - 1),
-                               handleAsyncStore(gadget, gadget.state.page_count - 1));
-
-            gadget.detached_promise_dict.cropper.cancel('Not needed anymore, as cropped');
+            return cropPicture(gadget);
           });
       }
 
