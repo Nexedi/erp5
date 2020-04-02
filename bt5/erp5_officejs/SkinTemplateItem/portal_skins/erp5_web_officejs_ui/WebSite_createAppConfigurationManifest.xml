@@ -74,7 +74,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_appcache_manifest</string>
                         <string>my_router_gadget</string>
                       </list>
                     </value>
