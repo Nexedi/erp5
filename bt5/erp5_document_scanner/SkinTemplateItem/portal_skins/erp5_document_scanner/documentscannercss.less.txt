@@ -99,7 +99,7 @@ div[data-gadget-url$="gadget_document_scanner.html"] {
     position: relative;
     width: 100%;
     img, video {
-      max-height: 75vh;
+      height: 70vh;
     }
   }
 
