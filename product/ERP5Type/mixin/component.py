@@ -376,7 +376,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
         for line in f:
           for (filesystem_module,
                zodb_module) in filesystem_zodb_module_mapping_set:
-            if line.startswith("from " + filesystem_module):
+            if line.startswith("from " + filesystem_module + " "):
               line = line.replace(filesystem_module, zodb_module, 1)
               break
 
