@@ -408,7 +408,7 @@
         video.play();
         return RSVP.all([
           getVideoDeviceList(),
-          gadget.getTranslationList(["Capture", "Change Camera", "Page", "Auto Crop"]),
+          gadget.getTranslationList(["Capture", "Change Camera", "Page", "1-click Capture"]),
           buildPreviousThumbnailDom(gadget)
         ]);
       })
