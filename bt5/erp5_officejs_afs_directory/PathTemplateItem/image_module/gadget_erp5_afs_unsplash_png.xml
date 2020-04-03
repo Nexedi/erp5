@@ -10,9 +10,11 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -50,9 +52,11 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
+                <string>Auditor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -205,11 +209,11 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>share_alive</string> </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <string>supersven</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -231,7 +235,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585146281.14</float>
+                              <float>1585928219.22</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -240,7 +244,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>shared_alive</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
