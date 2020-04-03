@@ -35,9 +35,10 @@ if 1: # keep indentation. Also good for quick disabling.
                        lambda: None)
         ping()
 
-    def newTransaction(self, *ignored):
+    newTransaction_orig = Connection.newTransaction
+    def newTransaction(self, *argv):
         self.ping()
-        self._storage_sync()
+        newTransaction_orig(self, *argv)
 
     Connection.ping = ping
     Connection.newTransaction = newTransaction
