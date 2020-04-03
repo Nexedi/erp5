@@ -15,7 +15,6 @@ div[data-gadget-url$="gadget_document_scanner.html"] .camera-output,
 div[data-gadget-url$="gadget_document_scanner.html"] .canvas {
   max-width: 100%;
   width: auto;
-  max-height: 500px;
   filter: brightness(1);
   text-align: center;
 }
@@ -98,15 +97,23 @@ div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
   width: calc(6em + 1px);
   height: calc(6em + 1px);
 }
-div[data-gadget-url$="gadget_document_scanner.html"] .img-container {
+div[data-gadget-url$="gadget_document_scanner.html"] .img-container,
+div[data-gadget-url$="gadget_document_scanner.html"] .camera-input {
   /* Never limit the container height here */
   position: relative;
   width: 100%;
-  max-height: 500px;
+  /*
+    img {
+      max-width: 100%;
+      width: 100%;
+    }
+*/
 }
-div[data-gadget-url$="gadget_document_scanner.html"] .img-container img {
-  max-width: 100%;
-  width: 100%;
+div[data-gadget-url$="gadget_document_scanner.html"] .img-container img,
+div[data-gadget-url$="gadget_document_scanner.html"] .camera-input img,
+div[data-gadget-url$="gadget_document_scanner.html"] .img-container video,
+div[data-gadget-url$="gadget_document_scanner.html"] .camera-input video {
+  max-height: 75vh;
 }
 div[data-gadget-url$="gadget_document_scanner.html"] .btn-thumbnail:before {
   color: #000;
