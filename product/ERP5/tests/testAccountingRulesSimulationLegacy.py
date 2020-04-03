@@ -902,16 +902,17 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
   def stepCreateMatchableInvoiceMovements(self, sequence, **kw) :
     """ Create a temp movement that will be matched by the
       default_invoice_transaction_rule """
-    from Products.ERP5Type.Document import newTempMovement
-    product_notebook_region_france_movement = newTempMovement(
-      sequence.get('invoice'),
-      'test1',
+    product_notebook_region_france_movement = sequence.get('invoice').newContent(
+      temp_object=True,
+      portal_type='Movement',
+      id='test1',
       resource = sequence.get('notebook').getRelativeUrl(),
       destination = sequence.get('client_fr').getRelativeUrl(),
     )
-    product_barebone_region_france_movement = newTempMovement(
-      sequence.get('invoice'),
-      'test2',
+    product_barebone_region_france_movement = sequence.get('invoice').newContent(
+      temp_object=True,
+      portal_type='Movement',
+      id='test2',
       resource = sequence.get('barebone').getRelativeUrl(),
       destination = sequence.get('client_fr').getRelativeUrl(),
     )
@@ -1005,16 +1006,17 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
 
   def stepCreateNotMatchableInvoiceMovements(self, sequence, **kw) :
     """ create a temp movement that not any cell could match. """
-    from Products.ERP5Type.Document import newTempMovement
-    bad_movement1 = newTempMovement(
-      sequence.get("invoice"),
-      'test3',
+    bad_movement1 = sequence.get("invoice").newContent(
+      temp_object=True,
+      portal_type='Movement',
+      id='test3',
       product = None,
       destination = sequence.get('client').getRelativeUrl(),
     )
-    bad_movement2 = newTempMovement(
-      sequence.get("invoice"),
-      'test4',
+    bad_movement2 = sequence.get("invoice").newContent(
+      temp_object=True,
+      portal_type='Movement',
+      id='test4',
       gap = 'gap/1',
       destination = sequence.get('client').getRelativeUrl(),
     )

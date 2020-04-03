@@ -1,6 +1,5 @@
 request = context.REQUEST
 from Products.ERP5Type.Document import newTempBase
-from Products.ERP5Type.Document import newTempMappedValue
 from AccessControl import getSecurityManager
 
 u=getSecurityManager().getUser()

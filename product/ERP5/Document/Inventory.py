@@ -144,7 +144,9 @@ class Inventory(Delivery):
 
 
     if temp_constructor is None:
-      from Products.ERP5Type.Document import newTempMovement as temp_constructor
+      def temp_constructor(self, id, *args, **kw):
+        return self.newContent(temp_object=True, portal_type='Movement',
+                               id=id, *args, **kw)
     stop_date = self.getStopDate()
 
     stock_object_list = []

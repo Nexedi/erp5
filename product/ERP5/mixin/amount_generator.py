@@ -273,7 +273,6 @@ class AmountGeneratorMixin:
       very likely not - proxying before or after must be decided
     """
     # It is the only place where we can import this
-    from Products.ERP5Type.Document import newTempAmount
     portal = self.getPortalObject()
     getRoundingProxy = portal.portal_roundings.getRoundingProxy
     amount_generator_line_type_list = \
@@ -470,9 +469,9 @@ class AmountGeneratorMixin:
         if getattr(self.aq_base, 'create_line', None) == 0:
           property_dict['resource'] = None
         # Create an Amount object
-        amount = newTempAmount(portal,
+        amount = portal.newContent(temp_object=True, portal_type='Amount',
           # we only want the id to be unique so we pick a random causality
-          property_dict['causality_value_list'][-1]
+          id=property_dict['causality_value_list'][-1]
             .getRelativeUrl().replace('/', '_'),
           notify_workflow=False)
         amount._setCategoryList(property_dict.pop('category_list', ()))

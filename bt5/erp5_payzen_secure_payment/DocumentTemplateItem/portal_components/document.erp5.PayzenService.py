@@ -2,7 +2,6 @@ import zope
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Document import newTempDocument
 import hashlib
 from zLOG import LOG, WARNING
 import datetime
@@ -343,7 +342,7 @@ class PayzenService(XMLObject, PayzenSOAP):
     if message_list:
       raise ValidationFailed, message_list
 
-    temp_document = newTempDocument(self, 'id')
+    temp_document = self.newContent(temp_object=True, portal_type='Document', id='id')
     temp_document.edit(
       link_url_string=self.getLinkUrlString(),
       title='title',

@@ -82,7 +82,6 @@ class Order(Delivery):
         # Find amounts from the result of getAggregatedAmountList.
         # Call getAggregatedAmountList and sum all the amounts which
         # base_contribution category is matched with.
-        from Products.ERP5Type.Document import newTempTradeModelLine
         from Products.ERP5.PropertySheet.TradeModelLine import TARGET_LEVEL_MOVEMENT
         trade_condition = self.getSpecialiseValue()
         if trade_condition is None:
@@ -103,8 +102,9 @@ class Order(Delivery):
           # We cannot find any amount so that the result is 0.
           return 0
         current_aggregated_amount_list = trade_condition.getAggregatedAmountList(self, rounding=rounding, force_create_line=True)
-        trade_model_line = newTempTradeModelLine(
-            self, '_temp_' + self.getId(), notify_workflow=False)
+        trade_model_line = self.newContent(temp_object=True,
+            portal_type='Trade Model Line',
+            id='_temp_' + self.getId(), notify_workflow=False)
         # prevent invoking interaction workflows.
         trade_model_line.portal_type = ''
         trade_model_line.edit(target_level=TARGET_LEVEL_MOVEMENT, price=1,

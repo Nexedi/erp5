@@ -47,8 +47,7 @@ class ContributionRegistryTool(BaseTool):
     # if a context is passed, ignore other arguments
     if context is None:
       # Build a temp object edited with provided parameters
-      from Products.ERP5Type.Document import newTempFile
-      context = newTempFile(self, '_')
+      context = self.newContent(temp_object=True, portal_type='File', id='_')
       context.edit(**kw)
 
     for predicate in self.objectValues(sort_on='int_index'):

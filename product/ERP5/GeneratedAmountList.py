@@ -74,7 +74,6 @@ class GeneratedAmountList(list):
     Groups amounts with same price, efficiency, reference and categories, merge
     them by summing their quantities, and return the new amounts in a new list.
     """
-    from Products.ERP5Type.Document import newTempAmount
     # XXX: Do we handle rounding correctly ?
     #      What to do if only total price is rounded ??
     aggregate_dict = {}
@@ -92,7 +91,10 @@ class GeneratedAmountList(list):
       # Before we ignore 'quantity==0' amount here for better performance,
       # but it is not a good idea, especially when the first expand causes
       # non-zero quantity and then quantity becomes zero.
-      aggregate = newTempAmount(amount.aq_parent, '', notify_workflow=False)
+      aggregate = amount.aq_parent.newContent(temp_object=True,
+                                              portal_type='Amount',
+                                              id='',
+                                              notify_workflow=False)
       aggregate.__dict__.update(amount.aq_base.__dict__)
       aggregate._setQuantity(quantity)
       if isinstance(amount, RoundingProxy):

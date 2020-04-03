@@ -58,9 +58,9 @@ class TestContributionRegistryTool(ERP5TypeTestCase):
 ##parameters=predicate=None
 ##title=
 ##
-from Products.ERP5Type.Document import newTempEvent
 
-event = newTempEvent(context, 'subobject', data=context.getData())
+event = context.newContent(temp_object=True, portal_type='Event',
+                           id='subobject', data=context.getData())
 
 subject = event.getContentInformation().get('Subject', None)
 if subject == 'Fax':

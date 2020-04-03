@@ -6,7 +6,6 @@
 # is a list of variation categories that are relevant for the produced resource
 
 
-from Products.ERP5Type.Document import newTempMovement
 
 # List of dictionaries:
 #   { id:resource_id,
@@ -22,7 +21,8 @@ for transformation_relative_url, variation_list_list in transformation_item_list
   if resource is None:
     continue
   for variation_list in variation_list_list:
-    movement = newTempMovement(resource, 'temp',
+    movement = resource.newContent(temp_object=True, portal_type='Movement',
+                               id='temp',
                                specialise_value=transformation,
                                variation_category_list=variation_list,
                                resource_value=resource,

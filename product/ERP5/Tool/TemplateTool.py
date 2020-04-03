@@ -987,7 +987,6 @@ class TemplateTool (BaseTool):
          update_only: return only bt that needs to be updated
          template_list: only returns bt within the given list
       """
-      from Products.ERP5Type.Document import newTempBusinessTemplate
       result_list = []
       template_set = None
       if template_list is not None:
@@ -1051,13 +1050,16 @@ class TemplateTool (BaseTool):
           installed_revision = ''
           version_state = 'new'
         uid = self.encodeRepositoryBusinessTemplateUid(repository, id)
-        obj = newTempBusinessTemplate(self, 'temp_' + uid,
-                                      version_state = version_state,
-                                      version_state_title=version_state.title(),
-                                      filename = filename,
-                                      installed_version = installed_version,
-                                      installed_revision = installed_revision,
-                                      repository = repository, **property_dict)
+        obj = self.newContent(temp_object=True,
+                              portal_type='Business Template',
+                              id='temp_' + uid,
+                              version_state=version_state,
+                              version_state_title=version_state.title(),
+                              filename=filename,
+                              installed_version=installed_version,
+                              installed_revision=installed_revision,
+                              repository=repository,
+                              **property_dict)
         obj.setUid(uid)
         result_list.append(obj)
       result_list.sort(key=lambda x: x.getTitle())

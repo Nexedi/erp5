@@ -826,10 +826,9 @@ return getBaseAmountQuantity""")
       ('tax_share/A',): .5,
       ('tax_share/B',): .6,
       }, base_application=(0,))
-    from Products.ERP5Type.Document import newTempAmount
     for x in ((100, 30, 10, 0, 0, 20, 5, 12),
               (500, 150, 20, 90, 40, 120, 55, 96)):
-      amount = newTempAmount(self.portal, '_',
+      amount = self.portal.newContent(temp_object=True, portal_type='Amount', id='_',
                             quantity=x[0], price=1,
                             base_contribution=base_amount)
       amount_list = trade_condition.getGeneratedAmountList((amount,))
@@ -882,10 +881,9 @@ return context""" % (base_amount, base_amount))
       sum((x.getTotalPrice() for x in amount_list), total_price))
 
   def test_05_dependencyResolution(self):
-    from Products.ERP5Type.Document import newTempAmount, newTempTradeModelLine
     from Products.ERP5.mixin.amount_generator import BaseAmountResolver
-    delivery_amount = newTempAmount(self.portal, '')
-    trade_model_line = newTempTradeModelLine(self.portal, '')
+    delivery_amount = self.portal.newContent(temp_object=True, portal_type='Amount', id='')
+    trade_model_line = self.portal.newContent(temp_object=True, portal_type='Trade Model Line', id='')
     def case(*lines):
       return BaseAmountResolver({}, {}), [{
         None: trade_model_line,

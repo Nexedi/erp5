@@ -51,10 +51,10 @@ from zLOG import LOG, WARNING
 def getExchangeRate(currency_value, section_currency, date):
   currency = currency_value.getRelativeUrl()
   if currency != section_currency:
-    from Products.ERP5Type.Document import newTempAccountingTransactionLine
-    return currency_value.getPrice(context=newTempAccountingTransactionLine(
-      currency_value.getPortalObject(),
-      "accounting_line",
+    return currency_value.getPrice(context=currency_value.getPortalObject().newContent(
+      temp_object=True,
+      portal_type='Accounting Transaction Line',
+      id="accounting_line",
       resource=currency,
       start_date=date,
       price_currency=section_currency

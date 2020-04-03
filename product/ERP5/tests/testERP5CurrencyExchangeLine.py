@@ -82,8 +82,8 @@ class CurrencyExchangeTestCase(AccountingTestCase):
   def _getPriceContext(self, **kw):
     """Returns a temp movement that we can use for getPrice(context=
     """
-    from Products.ERP5Type.Document import newTempMovement
-    return newTempMovement(self.portal, 'tmp', **kw)
+    return self.portal.newContent(temp_object=True, portal_type='Movement',
+                                  id='tmp', **kw)
 
 
 class TestCurrencyExchangeLine(CurrencyExchangeTestCase):

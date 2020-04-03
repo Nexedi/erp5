@@ -1,4 +1,3 @@
-from Products.ERP5Type.Document import newTempDomain
 portal = context.getPortalObject()
 portal_type_list = portal.getPortalEventTypeList()
 portal_types = portal.portal_types

@@ -309,14 +309,15 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
     )
 
     swimsuit_quantity = 4.0
-    from Products.ERP5Type.Document import newTempAmount
     n = 1
     # Check that getAggregatedAmount returns the expected results, a.k.a.
     # that our Transformation is set up correctly.
     for i, size in enumerate(self.size_category_list):
       for colour in self.colour_category_list:
         # id does not matter, just make it unique
-        temp_amount = newTempAmount(transformation, "foo_%s_%s" % (size, colour))
+        temp_amount = transformation.newContent(temp_object=True,
+                                                portal_type='Amount',
+                                                id="foo_%s_%s" % (size, colour))
         temp_amount.edit(
             quantity = swimsuit_quantity,
             variation_category_list = [size, colour],
