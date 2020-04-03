@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>bt5_id</string> </key>
-            <value> <string>erp5_full_text_mroonga_catalog</string> </value>
+            <value> <string>erp5_wendelin_examples</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>32</string> </value>
+            <value> <string>56</string> </value>
         </item>
         <item>
             <key> <string>install_dependency</string> </key>
@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>erp5_full_text_mroonga_catalog</string> </value>
+            <value> <string>erp5_wendelin_examples</string> </value>
         </item>
         <item>
             <key> <string>update_catalog</string> </key>
