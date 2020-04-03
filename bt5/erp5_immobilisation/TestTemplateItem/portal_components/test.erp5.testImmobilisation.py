@@ -72,28 +72,6 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     """
     self.commit()
 
-  def getBusinessTemplateList(self):
-    """
-      Return the list of business templates.
-
-    """
-    return ("erp5_core_proxy_field_legacy",
-            "erp5_base",
-            "erp5_pdm",# Needed by accounting
-            "erp5_simulation",
-            "erp5_trade",
-            "erp5_accounting",
-            "erp5_invoicing",
-            "erp5_simplified_invoicing",
-            "erp5_immobilisation",
-            "erp5_computer_immobilisation", # In order to use items
-            'erp5_configurator_standard_trade_template',
-            'erp5_configurator_standard_accounting_template',
-            'erp5_configurator_standard_invoicing_template',
-            "erp5_simulation_test",
-            "erp5_movement_table_catalog" # ImmobilisationItem.py uses movement table
-            )
-
   def getRuleTool(self):
     return getattr(self.getPortal(), 'portal_rules', None)
   def getAccountingModule(self):
@@ -164,7 +142,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
         assignment.open()
         person.validate()
 
-  def updateRoleMappings(self, portal_type_list=[]):
+  def updateRoleMappings(self, portal_type_list=()):
     """
     Update the local roles in existing objects.
     """
@@ -172,7 +150,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     for portal_type in portal_type_list:
       for brain in portal_catalog(portal_type = portal_type):
         obj = brain.getObject()
-        userdb_path, user_id = obj.getOwnerTuple()
+        _, user_id = obj.getOwnerTuple()
         obj.updateLocalRolesOnSecurityGroups(user_name = user_id)
         #obj.assignRoleToSecurityGroup(user_name = user_id)
 
@@ -187,26 +165,6 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       portal.portal_activities.manageCancel(message.object_path,message.method_id)
 
     self.createCategories()
-
-    #Assert default security Value
-
-    list_module = [ 'Inventory Module',
-                    'Purchase Packing List Module',
-                    'Internal Packing List Module',
-                    'Sale Packing List Module',
-                    'Building Module',
-                    'Incorporeal Item Module',
-                    'Reevaluation Module',
-                    'Restoration Module',
-                    self.getAccountingModule().getPortalType(),
-                    self.getOrganisationModule().getPortalType(),
-                    self.getItemModule().getPortalType(),
-                    self.getPackingListModule().getPortalType(),
-                    self.getInventoryModule().getPortalType(),
-                    self.getAccountModule().getPortalType(),
-                    self.getCurrencyModule().getPortalType(),
-                    self.getPersonModule().getPortalType()
-                    ]
 
     # Then add new components
     self.createCurrency()
@@ -403,17 +361,17 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
 
   def stepCreatePackingList(self, sequence=None, sequence_list=None, **kw):
     property_dict = {}
-    for property in ('source_section','destination_section','datetime','destination'):
-      value_list = sequence.get(property)
+    for property_ in ('source_section','destination_section','datetime','destination'):
+      value_list = sequence.get(property_)
       if value_list is not None:
-        if type(value_list) == type([]):
+        if isinstance(value_list, list):
           value = value_list[0]
           value_list.remove(value)
         else:
           value = value_list
       else:
         value = value_list
-      property_dict[property] = value
+      property_dict[property_] = value
     pl_module = self.getPackingListModule()
     pl = pl_module.newContent(portal_type = self.packing_list_portal_type)
     pl.edit( source_section_value =      property_dict['source_section'],
@@ -843,9 +801,9 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     self.stepCreatePackingList(sequence=sequence)
     self.stepAggregateItems(sequence=sequence)
     self.stepDeliverPackingList(sequence=sequence)
-    for property in ('amortisation_start_price','amortisation_duration','immobilisation_vat',
-                     'extra_cost_price','disposal_price'):
-      del parameter_dict[property]
+    for property_ in ('amortisation_start_price','amortisation_duration','immobilisation_vat',
+                      'extra_cost_price','disposal_price'):
+      del parameter_dict[property_]
     parameter_dict['amortisation_method'] = NO_CHANGE_METHOD
     sequence.edit(datetime = DateTime('2001/01/01'),
                   parameter_dict = parameter_dict,
@@ -903,11 +861,11 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     self.stepAggregateItems(sequence=sequence)
     self.stepDeliverPackingList(sequence=sequence)
     self.tic()
-    for property in ('amortisation_start_price','amortisation_duration','immobilisation_vat',
-                     'extra_cost_price','disposal_price'):
-      del parameter_dict[property]
-    for property in self.account_dict.keys():
-      del parameter_dict[property]
+    for property_ in ('amortisation_start_price','amortisation_duration','immobilisation_vat',
+                      'extra_cost_price','disposal_price'):
+      del parameter_dict[property_]
+    for property_ in self.account_dict.keys():
+      del parameter_dict[property_]
     parameter_dict.update(self.extra_monthly_dict)
     sequence.edit(datetime = DateTime('2002/03/01'),
                   parameter_dict = parameter_dict,
@@ -1138,10 +1096,10 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
         c_value = c_period[key]
         is_float = 0
         try:
-          if type(c_value) != type(DateTime()):
+          if not isinstance(c_value, DateTime):
             c_value=float(c_value)
             is_float = 1
-        except:
+        except Exception:
           pass
         if is_float:
           self.assertEqual(round(c_value,2),e_value)
@@ -2108,10 +2066,10 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
           c_value = getattr(c_movement,key)()
           is_float = 0
           try:
-            if type(c_value) != type(DateTime()):
+            if not isinstance(c_value, DateTime):
               c_value=float(c_value)
               is_float = 1
-          except:
+          except Exception:
             pass
           if is_float:
             wrong_movement = (round(c_value,2) != round(e_value,2))
@@ -2144,7 +2102,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       #LOG('More expected movements than calculated ! Remaining expected ones are', 0, e_simulation_movement_list)
       self.assertEqual(len(e_simulation_movement_list),0)
 
-  def _buildExpectedTransaction(self, date, source_section, destination_section, causality_state, causality_list=[]):
+  def _buildExpectedTransaction(self, date, source_section, destination_section, causality_state, causality_list):
     self.id_transaction+=1
     r_dict = {'id':self.id_transaction,'start_date':DateTime(date), 'stop_date':DateTime(date),
               'resource':'currency_module/EUR', 'line_list':[],
@@ -2952,14 +2910,14 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
           #LOG('c_value : ',0,c_value)
           is_float = 0
           try:
-            if type(c_value) != type(DateTime()):
+            if not isinstance(c_value, DateTime):
               c_value=float(c_value)
               is_float = 1
-          except:
+          except Exception:
             pass
-          if type(c_value) == type([]):
+          if isinstance(c_value, list):
             c_value.sort(key=lambda x: x.getId())
-          if type(e_value) == type([]):
+          if isinstance(e_value, list):
             e_value.sort(key=lambda x: x.getId())
           if is_float:
             wrong_transaction = (round(c_value,2) != round(e_value,2))
@@ -2997,10 +2955,10 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
             c_value = getattr(c_line,key)()
             is_float = 0
             try:
-              if type(c_value) != type(DateTime()):
+              if not isinstance(c_value, DateTime):
                 c_value=float(c_value)
                 is_float = 1
-            except:
+            except Exception:
               pass
             if is_float:
               wrong_line = (round(c_value,2) != round(e_value,2))
