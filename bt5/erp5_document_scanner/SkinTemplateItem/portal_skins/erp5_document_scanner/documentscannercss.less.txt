@@ -94,6 +94,10 @@ div[data-gadget-url$="gadget_document_scanner.html"] {
     height: calc(6em + 1px);
   }
 
+  .review-img-container {
+      height: 70vh;
+  }
+
   .img-container, .camera-input {
     /* Never limit the container height here */
     position: relative;
