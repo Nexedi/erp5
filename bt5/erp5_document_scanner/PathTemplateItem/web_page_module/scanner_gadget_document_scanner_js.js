@@ -191,9 +191,10 @@
         guides: true,
         center: true,
         background: false,
-        minContainerWidth: 0,
-        minContainerHeight: 0,
+        minContainerWidth: 1,
+        minContainerHeight: 1,
         responsive: true,
+        restore: true,
         // Avoid any cropper calculation or guessing
         scalable: false,
         rotatable: false,
@@ -730,8 +731,8 @@
 
         div = domsugar('div', {'class': 'camera'}, [
           buildPageTitle(gadget, result_list[0][2]),
-          domsugar('div', {'class': 'img-container'}, [
-            domsugar('img', {src: gadget.state['blob_url_' + gadget.state.page]})
+          domsugar('div', {'class': 'review-img-container'}, [
+            domsugar('img', {src: gadget.state['blob_url_' + gadget.state.display_index]})
           ]),
           // XXX TODO: why is the button rendering different from the other pages?
           domsugar('div', {'class': 'edit-picture'}, button_list),
