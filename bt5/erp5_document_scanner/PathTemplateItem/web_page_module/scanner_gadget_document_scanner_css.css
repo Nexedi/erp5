@@ -104,7 +104,7 @@ div[data-gadget-url$="gadget_document_scanner.html"] .img-container img,
 div[data-gadget-url$="gadget_document_scanner.html"] .camera-input img,
 div[data-gadget-url$="gadget_document_scanner.html"] .img-container video,
 div[data-gadget-url$="gadget_document_scanner.html"] .camera-input video {
-  max-height: 75vh;
+  height: 70vh;
 }
 div[data-gadget-url$="gadget_document_scanner.html"] .btn-thumbnail:before {
   color: #000;
