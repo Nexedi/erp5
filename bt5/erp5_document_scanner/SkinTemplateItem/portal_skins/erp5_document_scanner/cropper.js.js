@@ -1793,38 +1793,9 @@
 
   var handlers = {
     resize: function resize() {
-      var options = this.options,
-          container = this.container,
-          containerData = this.containerData;
-      var minContainerWidth = Number(options.minContainerWidth) || MIN_CONTAINER_WIDTH;
-      var minContainerHeight = Number(options.minContainerHeight) || MIN_CONTAINER_HEIGHT;
-
-      if (this.disabled || containerData.width <= minContainerWidth || containerData.height <= minContainerHeight) {
-        return;
-      }
-
-      var ratio = container.offsetWidth / containerData.width; // Resize when width changed or height changed
-
-      if (ratio !== 1 || container.offsetHeight !== containerData.height) {
-        var canvasData;
-        var cropBoxData;
-
-        if (options.restore) {
-          canvasData = this.getCanvasData();
-          cropBoxData = this.getCropBoxData();
-        }
-
-        this.render();
-
-        if (options.restore) {
-          this.setCanvasData(forEach(canvasData, function (n, i) {
-            canvasData[i] = n * ratio;
-          }));
-          this.setCropBoxData(forEach(cropBoxData, function (n, i) {
-            cropBoxData[i] = n * ratio;
-          }));
-        }
-      }
+      // Always render fully
+      // Otherwise, there are some display issue when increasing the window size (part of the canvas is hidden)
+      this.render();
     },
     dblclick: function dblclick() {
       if (this.disabled || this.options.dragMode === DRAG_MODE_NONE) {
