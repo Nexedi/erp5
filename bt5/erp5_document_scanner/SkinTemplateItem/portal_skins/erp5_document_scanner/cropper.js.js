@@ -1795,7 +1795,29 @@
     resize: function resize() {
       // Always render fully
       // Otherwise, there are some display issue when increasing the window size (part of the canvas is hidden)
+      var options = this.options,
+          container = this.container,
+          containerData = this.containerData;
+      var minContainerWidth = Number(options.minContainerWidth) || MIN_CONTAINER_WIDTH;
+      var minContainerHeight = Number(options.minContainerHeight) || MIN_CONTAINER_HEIGHT;
+
+      var ratio = container.offsetWidth / containerData.width; // Resize when width changed or height changed
+
+      var canvasData;
+      var cropBoxData;
+
+      canvasData = this.getCanvasData();
+      cropBoxData = this.getCropBoxData();
+
       this.render();
+
+      this.setCanvasData(forEach(canvasData, function (n, i) {
+        canvasData[i] = n * ratio;
+      }));
+      this.setCropBoxData(forEach(cropBoxData, function (n, i) {
+        cropBoxData[i] = n * ratio;
+      }));
+
     },
     dblclick: function dblclick() {
       if (this.disabled || this.options.dragMode === DRAG_MODE_NONE) {
