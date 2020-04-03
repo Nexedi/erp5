@@ -330,6 +330,31 @@
       });
   }
 
+  function buildPageTitle(gadget, page_translation) {
+    var i,
+      len,
+      // By default,
+      displayed_title = 0;
+    if (gadget.state.display_index === null) {
+      len = gadget.state.page_count;
+    } else {
+      len = gadget.state.display_index;
+    }
+    for (i = 0; i < len; i += 1) {
+      if ((gadget.state.hasOwnProperty('blob_state_' + i)) &&
+          (gadget.state['blob_state_' + i] !== 'deleted')) {
+        displayed_title += 1;
+      }
+    }
+
+    return domsugar('div', {'class': 'camera-header'}, [
+      domsugar('h4', [
+        page_translation + ' ',
+        domsugar('label', {'class': 'page-number', text: displayed_title + 1})
+      ])
+    ]);
+  }
+
   function buildPreviousThumbnailDom(gadget) {
     var img_class,
       btn_class = "",
@@ -359,7 +384,7 @@
                 "class": btn_class,
                 // Do not allow to show again the current image
                 // or do not allow to show saving image (to simplify button management)
-                disabled: (key === gadget.state.page) || (gadget.state['blob_state_' + key] === 'saving')
+                disabled: (key === gadget.state.display_index) || (gadget.state['blob_state_' + key] === 'saving')
               }, [domsugar("img", {"class": img_class,
                                    'data-page': key,
                                     src: gadget.state['blob_url_' + key]})]));
@@ -369,7 +394,7 @@
         thumbnail_dom_list.push(domsugar('button', {type: 'button',
                                                     text: result_list[0],
                                                     // Do not allow to show again the current image
-                                                    disabled: (len === gadget.state.page - 1),
+                                                    disabled: (len === gadget.state.display_index - 1),
                                                     "class": 'new-btn ui-btn-icon-left ui-icon-plus'
                                                    }));
         return domsugar('ol', {"class": "thumbnail-list"}, thumbnail_dom_list);
@@ -429,22 +454,15 @@
           text: result_list[1][0]
         }));
 
-        if (gadget.state.is_cropper_size_confirmed) {
-          button_list.push(
-            domsugar('button', {type: 'button',
-                                'class': 'auto-crop-btn ui-icon-fast-forward ui-btn-icon-left',
-                                text: result_list[1][3]
-                               })
-          );
-        }
+        button_list.push(
+          domsugar('button', {type: 'button',
+                              'class': 'auto-crop-btn ui-icon-fast-forward ui-btn-icon-left',
+                              text: result_list[1][3]
+                             })
+        );
 
         div = domsugar('div', {'class': 'camera'}, [
-          domsugar('div', {'class': 'camera-header'}, [
-            domsugar('h4', [
-              result_list[1][2] + ' ',
-              domsugar('label', {'class': 'page-number', text: gadget.state.page})
-            ])
-          ]),
+          buildPageTitle(gadget, result_list[1][2]),
           domsugar('div', {'class': 'camera-input'}, [video]),
           domsugar('div', {'class': 'edit-picture'}, button_list),
           result_list[2]
@@ -656,12 +674,7 @@
 
         // Prepare the cropper canvas
         div = domsugar('div', {'class': 'camera'}, [
-          domsugar('div', {'class': 'camera-header'}, [
-            domsugar('h4', [
-              result_list[0][2] + ' ',
-              domsugar('label', {'class': 'page-number', text: gadget.state.page})
-            ])
-          ]),
+          buildPageTitle(gadget, result_list[0][2]),
           // If you don't know what you are doing:
           // DON'T remove img from a div img-container.
           // DON'T replace img by canvas.
@@ -705,7 +718,7 @@
         ],
           div;
 
-        if (gadget.state['blob_state_' + gadget.state.page] === 'error') {
+        if (gadget.state['blob_state_' + gadget.state.display_index] === 'error') {
           button_list.push(
             // XXX TODO improve icon
             domsugar('button', {type: 'button',
@@ -716,13 +729,8 @@
         }
 
         div = domsugar('div', {'class': 'camera'}, [
-          domsugar('div', {'class': 'camera-header'}, [
-            domsugar('h4', [
-              result_list[0][2] + ' ',
-              domsugar('label', {'class': 'page-number', text: gadget.state.page + 1})
-            ])
-          ]),
-          domsugar('img', {src: gadget.state['blob_url_' + gadget.state.page]}),
+          buildPageTitle(gadget, result_list[0][2]),
+          domsugar('img', {src: gadget.state['blob_url_' + gadget.state.display_index]})
           // XXX TODO: why is the button rendering different from the other pages?
           domsugar('div', {'class': 'edit-picture'}, button_list),
           result_list[1]
@@ -741,9 +749,8 @@
     state_dict = {
       preferred_cropped_canvas_data: gadget.cropper.getData(),
       display_step: 'display_video',
-      page: gadget.state.page + 1,
-      page_count: gadget.state.page_count + 1,
-      is_cropper_size_confirmed: true
+      display_index: null,
+      page_count: gadget.state.page_count + 1
     };
     // Keep image date, as user may need to display it again
     state_dict['blob_canvas_' + gadget.state.page_count] = canvas;
@@ -787,7 +794,7 @@
 
     .setState({
       display_step: 'display_video',
-      page: 1,
+      display_index: null,
       page_count: 0,
       camera_list: [],
       is_cropper_size_confirmed: false
@@ -829,7 +836,7 @@
       // Only refresh the full gadget content after the first render call
       // or if the display_step is modified
       // or if displaying another image
-      if (modification_dict.first_render || modification_dict.hasOwnProperty('page')) {
+      if (modification_dict.first_render || modification_dict.hasOwnProperty('display_index')) {
         display_step = gadget.state.display_step;
       } else {
         display_step = modification_dict.display_step;
@@ -866,9 +873,7 @@
 
     .onEvent("click", function (evt) {
       // Only handle click on BUTTON and IMG element
-      var el,
-        key,
-        gadget = this,
+      var gadget = this,
         tag_name = evt.target.tagName,
         state_dict;
 
@@ -896,26 +901,17 @@
       if (evt.target.className.indexOf("new-btn") !== -1) {
         return gadget.changeState({
           display_step: 'display_video',
-          page: gadget.state.page + 1
+          display_index: null
         });
       }
 
       if (evt.target.className.indexOf("delete-btn") !== -1) {
         state_dict = {
           display_step: 'display_video',
-          page: 0
+          display_index: null
         };
 
-        for (el in gadget.state) {
-          if (gadget.state.hasOwnProperty(el) && el.indexOf("blob_state_") !== -1) {
-            key = el.replace("blob_state_", "");
-            if (gadget.state['blob_state_' + key] !== 'deleted') {
-              state_dict.page = state_dict.page + 1;
-            }
-          }
-        }
-
-        state_dict['blob_state_' + gadget.state.page] = 'deleted';
+        state_dict['blob_state_' + gadget.state.display_index] = 'deleted';
         return gadget.changeState(state_dict);
       }
 
@@ -940,13 +936,13 @@
 
       if (evt.target.className.indexOf("retry-btn") !== -1) {
         // XXX Ensure that you have the active process relative url
-        addDetachedPromise(gadget, 'ajax_' + (gadget.state.page),
-                           handleAsyncStore(gadget, gadget.state.page));
+        addDetachedPromise(gadget, 'ajax_' + (gadget.state.display_index),
+                           handleAsyncStore(gadget, gadget.state.display_index));
         state_dict = {
           display_step: 'display_video',
-          page: gadget.state.page_count + 1
+          display_index: null
         };
-        state_dict['blob_state_' + gadget.state.page] = 'saving';
+        state_dict['blob_state_' + gadget.state.display_index] = 'saving';
         return gadget.changeState(state_dict);
       }
 
@@ -978,7 +974,7 @@
 
         return gadget.changeState({
           display_step: 'show_picture',
-          page: parseInt(evt.target.getAttribute('data-page'), 10)
+          display_index: parseInt(evt.target.getAttribute('data-page'), 10)
         });
       }
 
