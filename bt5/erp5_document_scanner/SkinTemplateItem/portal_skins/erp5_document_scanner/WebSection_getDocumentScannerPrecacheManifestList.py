@@ -6,7 +6,8 @@ url_list = [
   "gadget_document_scanner.css",
   "cropper.css",
   "cropper.js",
-  "caman.full.min.js"
+  "caman.full.min.js",
+  "glfx.js"
 ]
 
 return url_list
