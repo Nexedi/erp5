@@ -94,6 +94,9 @@ div[data-gadget-url$="gadget_document_scanner.html"] .new-btn {
   width: calc(6em + 1px);
   height: calc(6em + 1px);
 }
+div[data-gadget-url$="gadget_document_scanner.html"] .review-img-container {
+  height: 70vh;
+}
 div[data-gadget-url$="gadget_document_scanner.html"] .img-container,
 div[data-gadget-url$="gadget_document_scanner.html"] .camera-input {
   /* Never limit the container height here */
