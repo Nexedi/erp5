@@ -17,11 +17,6 @@ div[data-gadget-url$="gadget_document_scanner.html"] {
     text-align: center;
   }
 
-  .camera-input {
-    // Mimic cropper background
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
   .page-number {
     display: inline;
   }
