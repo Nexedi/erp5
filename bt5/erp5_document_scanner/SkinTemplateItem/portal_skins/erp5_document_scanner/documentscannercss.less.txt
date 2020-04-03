@@ -13,7 +13,6 @@ div[data-gadget-url$="gadget_document_scanner.html"] {
   .photo, .video, .camera-output, .canvas {
     max-width: 100%;
     width: auto;
-    max-height: 500px;
     filter: brightness(1);
     text-align: center;
   }
@@ -100,9 +99,13 @@ div[data-gadget-url$="gadget_document_scanner.html"] {
     height: calc(6em + 1px);
   }
 
-  .img-container {
+  .img-container, .camera-input {
     /* Never limit the container height here */
-    max-width: 100%;
+    position: relative;
+    width: 100%;
+    img, video {
+      max-height: 75vh;
+    }
   }
 
   .btn-thumbnail:before {
