@@ -227,3 +227,46 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
 
   def run(self, full_test):
     return self.runUnitTest('CodingStyleTest', TESTED_BUSINESS_TEMPLATE=full_test)
+
+class RJS_Only(_ERP5):
+
+  def _getAllTestList(self):
+    
+    test_list = []
+    for business_template_path in (
+            glob('%s/../bt5/*' % HERE)
+            + glob('%s/../product/ERP5/bootstrap/*' % HERE)):
+      # we skip coding style check for business templates having this marker
+      # property. Since the property is not exported (on purpose), modified business templates
+      # will be candidate for coding style test again.
+      if os.path.isdir(business_template_path) and \
+              not os.path.exists(os.path.join(business_template_path, 'bt/skip_coding_style_test')):
+        test_list.append(os.path.basename(business_template_path))
+    return test_list
+    
+    test_list = []
+    path = "%s/../" % HERE
+    component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
+                              "/test\.[^.]+\.([^.]+).py$")
+    for test_path in (
+        #glob('%s/product/*/tests/test*.py' % path) +
+        #glob('%s/bt5/*/TestTemplateItem/test*.py' % path) +
+        #glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+        #glob('%s/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*OfficeJS*.py' % path)):
+      component_re_match = component_re.match(test_path)
+      if component_re_match is not None:
+        test_case = "%s:%s" % (component_re_match.group(1),
+                               component_re_match.group(2))
+      else:
+        test_case = test_path.split(os.sep)[-1][:-3] # remove .py
+      product = test_path.split(os.sep)[-3]
+      # don't test 3rd party products
+      if product in ('PortalTransforms', 'MailTemplates', 'Zelenium'):
+        continue
+      # ERP5TioSafe is disabled for now because it requires external programs
+      # such as php and it has not been updated for Zope >= 2.12
+      if product == 'ERP5TioSafe':
+        continue
+      test_list.append(test_case)
+    return test_list
