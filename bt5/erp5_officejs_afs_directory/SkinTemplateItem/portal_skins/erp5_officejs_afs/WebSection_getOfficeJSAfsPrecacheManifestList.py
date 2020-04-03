@@ -44,7 +44,7 @@ url_list = [
   # afs images
   'gadget_erp5_afs_camera.png',
   'gadget_erp5_afs_logo.png',
-  'gadget_erp5_page_afs_banner_unsplash?format='
+  'gadget_erp5_afs_banner_unsplash?format='
 ]
 
 return url_list

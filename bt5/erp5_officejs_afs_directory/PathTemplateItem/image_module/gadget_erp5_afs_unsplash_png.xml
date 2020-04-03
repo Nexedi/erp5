@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_afs_banner_unsplash</string> </value>
+            <value> <string>gadget_erp5_afs_banner_unsplash</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -266,7 +266,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <string>supersven</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -280,7 +280,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.49942.15068.31129</string> </value>
+                      <value> <string>982.49953.44781.50756</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -298,7 +298,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585145694.87</float>
+                              <float>1585921668.08</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
