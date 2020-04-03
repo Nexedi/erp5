@@ -191,9 +191,10 @@
         guides: true,
         center: true,
         background: false,
-        minContainerWidth: 0,
-        minContainerHeight: 0,
+        minContainerWidth: 1,
+        minContainerHeight: 1,
         responsive: true,
+        restore: true,
         // Avoid any cropper calculation or guessing
         scalable: false,
         rotatable: false,
@@ -730,7 +731,9 @@
 
         div = domsugar('div', {'class': 'camera'}, [
           buildPageTitle(gadget, result_list[0][2]),
-          domsugar('img', {src: gadget.state['blob_url_' + gadget.state.display_index]})
+          domsugar('div', {'class': 'review-img-container'}, [
+            domsugar('img', {src: gadget.state['blob_url_' + gadget.state.display_index]})
+          ]),
           // XXX TODO: why is the button rendering different from the other pages?
           domsugar('div', {'class': 'edit-picture'}, button_list),
           result_list[1]
@@ -796,8 +799,7 @@
       display_step: 'display_video',
       display_index: null,
       page_count: 0,
-      camera_list: [],
-      is_cropper_size_confirmed: false
+      camera_list: []
     })
     .declareMethod('render', function (options) {
       // This method is called during the ERP5 form rendering
