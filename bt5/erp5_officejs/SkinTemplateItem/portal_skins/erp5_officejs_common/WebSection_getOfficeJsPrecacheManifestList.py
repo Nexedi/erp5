@@ -52,4 +52,6 @@ url_list = [
   "jio_configuration_storage.js",
 ]
 
-return url_list
+base64_url_list = context.WebSection_getBase64ConfigurationUrlList(batch_mode=1)
+
+return url_list + base64_url_list
