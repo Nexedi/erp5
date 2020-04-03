@@ -225,3 +225,22 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
 
   def run(self, full_test):
     return self.runUnitTest('CodingStyleTest', TESTED_BUSINESS_TEMPLATE=full_test)
+
+class RJS_Only(_ERP5):
+
+  def _getAllTestList(self):
+    test_list = []
+    path = "%s/../" % HERE
+    component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
+                              "/test\.[^.]+\.([^.]+).py$")
+    for test_path in (
+        glob('%s/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+      component_re_match = component_re.match(test_path)
+      if component_re_match is not None:
+        test_case = "%s:%s" % (component_re_match.group(1),
+                               component_re_match.group(2))
+      else:
+        test_case = test_path.split(os.sep)[-1][:-3] # remove .py
+      test_list.append(test_case)
+    return test_list
