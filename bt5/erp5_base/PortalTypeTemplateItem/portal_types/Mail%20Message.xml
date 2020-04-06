@@ -39,7 +39,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Mail Message is an event which can be used to keep track of incoming emails (ex. support requests) or to create outgoing emails (for example in a campaign).</string> </value>
+            <value> <string>A Mail Message is an event which can be used to keep track of incoming emails (ex. support requests) or to create outgoing emails (for example in a campaign).\n
+\n
+Without erp5_crm Business Template, only temp_object can be created.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

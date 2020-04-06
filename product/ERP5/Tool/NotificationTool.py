@@ -351,17 +351,18 @@ class NotificationTool(BaseTool):
     if event_keyword_argument_dict is None:
       event_keyword_argument_dict = {}
     for notifier in notifier_list:
-      if notifier in available_notifier_list:
-        event = portal.getDefaultModule(notifier).newContent(portal_type=notifier,
-                                                           temp_object=not store_as_event,
-                                                           **event_keyword_argument_dict)
+      if notifier not in available_notifier_list:
+        raise TypeError("%r not in available Notifiers %r" %
+                        (notifier, available_notifier_list))
+      # If it is not going to be stored, no need to create it in a specific
+      # Module, especially considering that it may not be available such as
+      # `Event Module` (erp5_crm) for `Mail Message` (erp5_base) notifier
+      if not store_as_event:
+        event = portal.newContent(portal_type=notifier, temp_object=True,
+                                  **event_keyword_argument_dict)
       else:
-        # portal type does not exist, likely erp5_crm is not installed. Try to
-        # import the class with the same name.
-        from Products.ERP5Type import Document as document_module
-        constructor = getattr(document_module,
-          'newTemp%s' % notifier.replace(' ', ''))
-        event = constructor(self, '_', **event_keyword_argument_dict)
+        event = portal.getDefaultModule(notifier).newContent(portal_type=notifier,
+                                                             **event_keyword_argument_dict)
 
       event.setSourceValue(from_person)
       event.setDestinationValueList(to_person_list)

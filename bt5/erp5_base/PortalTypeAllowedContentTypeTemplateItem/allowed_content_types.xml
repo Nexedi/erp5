@@ -53,6 +53,9 @@
  <portal_type id="Geographical Area">
   <item>Geographical Location</item>
  </portal_type>
+ <portal_type id="Mail Message">
+  <item>Embedded File</item>
+ </portal_type>
  <portal_type id="Notification Message">
   <item>Role Definition</item>
  </portal_type>
