@@ -819,7 +819,7 @@
             active_process: default_value.active_process,
             image_list: default_value.image_list,
             camera_list: camera_list,
-            preferred_cropped_canvas_data: JSON.parse(options.preferred_cropped_canvas_data),
+            preferred_cropped_canvas_data: {},
             preferred_image_settings_data: JSON.parse(options.preferred_image_settings_data),
             device_id: device_id,
             key: options.key,
@@ -1005,8 +1005,7 @@
       result = {
         data_json: JSON.stringify({
           active_process: gadget.state.active_process,
-          image_list: image_list,
-          preferred_cropped_canvas_data: gadget.state.preferred_cropped_canvas_data
+          image_list: image_list
         })
       };
       return result;
