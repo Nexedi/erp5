@@ -731,7 +731,7 @@
 
         div = domsugar('div', {'class': 'camera'}, [
           buildPageTitle(gadget, result_list[0][2]),
-          domsugar('div', {'class': 'img-container'}, [
+          domsugar('div', {'class': 'review-img-container'}, [
             domsugar('img', {src: gadget.state['blob_url_' + gadget.state.display_index]})
           ]),
           // XXX TODO: why is the button rendering different from the other pages?
