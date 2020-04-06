@@ -62,8 +62,7 @@
       "Awesome Free Software Publisher List": {
         "url": "afs/",
         "storage_type": "precache",
-        "base_cache": "WebSection_getPrecacheManifest",
-        "cache": ["WebSection_getOfficeJSAfsPrecacheManifestList"],
+        "cache": "WebSection_getPrecacheManifest",
         "no_installer": true
       },
       "Jabber Client": {
@@ -127,8 +126,8 @@
     app = application_dict[form_result.web_site];
     zip_name = form_result.filename;
 
-    return gadget.fillZip(app.storage_type, app.base_cache, app.cache,
-                          origin_url + app.url, app.no_installer)
+    return gadget.fillZip(app.storage_type, app.cache, origin_url + app.url,
+                          app.no_installer)
       .push(function (zip_file) {
         var element = gadget.element,
           a = document.createElement("a"),
@@ -149,8 +148,8 @@
     .ready(function (g) {
       g.props = {};
     })
-    .declareMethod("fillZip", function (storage_type, base_cache, cache_file,
-                                        site_url, no_installer) {
+    .declareMethod("fillZip", function (storage_type, cache_file, site_url,
+                                        no_installer) {
       var file_storage = jIO.createJIO({
           type: "replicate",
           conflict_handling: 2,
@@ -167,7 +166,6 @@
               //keep appcache as default for backward compatibility
               type: storage_type || "appcache",
               take_installer: no_installer === undefined,
-              base_cache_manifest: base_cache,
               manifest: cache_file,
               origin_url: site_url,
               prefix: './'

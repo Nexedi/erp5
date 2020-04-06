@@ -6,8 +6,7 @@
   var rusha = new Rusha();
 
   function PreCacheStorage(spec) {
-    this._base_manifest = spec.base_cache_manifest;
-    this._precache_manifest_list = spec.manifest;
+    this._precache_manifest_script = spec.manifest;
     this._take_installer = spec.take_installer || false;
     this._origin_url = spec.origin_url !== undefined ?
         spec.origin_url : window.location.href;
@@ -88,52 +87,31 @@
   };
 
   PreCacheStorage.prototype.repair = function () {
-    var storage = this, promise_list = [];
+    var storage = this;
     return new RSVP.Queue()
       .push(function () {
-        promise_list.push(jIO.util.ajax({
+        return jIO.util.ajax({
           type: "GET",
-          url: new URL(storage._base_manifest,
+          url: new URL(storage._precache_manifest_script,
                        new URL(storage._version, storage._origin_url))
-        }));
-        for (var i = 0; i < storage._precache_manifest_list.length; i++) {
-          promise_list.push(jIO.util.ajax({
-            type: "GET",
-            url: new URL(storage._precache_manifest_list[i],
-                         new URL(storage._version, storage._origin_url))
-          }));
-        }
-        return RSVP.all(promise_list);
+        });
       })
-      .push(function (result_list) {
-        var base_manifest_text = result_list[0].target.responseText,
+      .push(function (response) {
+        var base_manifest_text = response.target.responseText,
           relative_url_list,
           i,
-          manifest_text,
-          manifest_url_list,
           hash = rusha.digestFromString(base_manifest_text);
         relative_url_list = Object.keys(JSON.parse(base_manifest_text));
         storage._relative_url_list.push(storage._version);
         storage._relative_url_list.push(storage._version +
-                                        storage._base_manifest);
-        for (i = 0; i < storage._precache_manifest_list.length; i++) {
-          storage._relative_url_list.push(storage._version +
-                                          storage._precache_manifest_list[i]);
-        }
-        for (i = 1; i < result_list.length; i++) {
-          manifest_text = result_list[i].target.responseText;
-          manifest_url_list = manifest_text.replace("['", "").replace("']", "")
-            .split("', '");
-          relative_url_list = relative_url_list.concat(manifest_url_list);
-        }
+                                        storage._precache_manifest_script);
         storage._documents[storage._origin_url] = {'hash': hash};
-        console.log("PRECACHESTORAAAAGE");
         for (i = 0; i < relative_url_list.length; i += 1) {
+          // TODO REMOVE URL PARAMETERS
           storage._relative_url_list.push(
             storage._version + relative_url_list[i]
           );
         }
-        console.log(storage._relative_url_list);
       })
       .push(undefined, function (error) {
         if (!error.message) {
