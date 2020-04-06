@@ -6,6 +6,7 @@
 
   var origin_url = (window.location.origin + window.location.pathname)
     .replace("officejs_export/", ""),
+    //TODO get rid of this old HARDCODED app dict and get everything from config
     application_dict = {
       "Text Editor": {
         "url": "officejs_text_editor/",
@@ -63,6 +64,7 @@
         "url": "afs/",
         "storage_type": "precache",
         "cache": "WebSection_getPrecacheManifest",
+        "service_worker": "gadget_erp5_serviceworker.js",
         "no_installer": true
       },
       "Jabber Client": {
@@ -127,7 +129,7 @@
     zip_name = form_result.filename;
 
     return gadget.fillZip(app.storage_type, app.cache, origin_url + app.url,
-                          app.no_installer)
+                          app.no_installer, app.service_worker)
       .push(function (zip_file) {
         var element = gadget.element,
           a = document.createElement("a"),
@@ -149,7 +151,7 @@
       g.props = {};
     })
     .declareMethod("fillZip", function (storage_type, cache_file, site_url,
-                                        no_installer) {
+                                        no_installer, service_worker) {
       var file_storage = jIO.createJIO({
           type: "replicate",
           conflict_handling: 2,
@@ -167,6 +169,7 @@
               type: storage_type || "appcache",
               take_installer: no_installer === undefined,
               manifest: cache_file,
+              service_worker: service_worker,
               origin_url: site_url,
               prefix: './'
             }

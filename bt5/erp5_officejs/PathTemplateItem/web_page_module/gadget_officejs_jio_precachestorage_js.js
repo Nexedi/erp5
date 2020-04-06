@@ -29,6 +29,9 @@
     } else {
       this._relative_url_list = [this._prefix + "/"];
     }
+    if (spec.service_worker) {
+      this._relative_url_list.push(this._prefix + spec.service_worker);
+    }
     if (this._take_installer) {
       this._version = 'app/';
     }
@@ -105,8 +108,6 @@
         storage._relative_url_list.push(storage._version);
         storage._relative_url_list.push(storage._version +
                                         storage._precache_manifest_script);
-        // HARDCODED. get from web site configuration
-        relative_url_list.push('gadget_erp5_serviceworker.js');
         storage._documents[storage._origin_url] = {'hash': hash};
         for (i = 0; i < relative_url_list.length; i += 1) {
           //remove url parameters due to special chars issue in server
