@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -23,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -41,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -59,18 +62,20 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_export.html</string> </value>
+            <value> <string>jio_precachestorage.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -80,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_export_html</string> </value>
+            <value> <string>gadget_officejs_jio_precachestorage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -88,7 +93,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -98,7 +103,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget OfficeJS jIO Export Page</string> </value>
+            <value> <string>jio_precachestorage.js</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -160,7 +171,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish</string> </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -186,7 +197,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1491395389.96</float>
+                              <float>1586165638.67</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -195,7 +206,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -235,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>979.3226.30420.13465</string> </value>
+                      <value> <string>983.1783.36514.29969</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -253,7 +264,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1586167074.77</float>
+                              <float>1586188304.63</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -314,7 +325,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1491395255.14</float>
+                              <float>1586165299.65</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
