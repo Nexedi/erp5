@@ -87,7 +87,7 @@
   };
 
   PreCacheStorage.prototype.repair = function () {
-    var storage = this;
+    var storage = this, url;
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.ajax({
@@ -105,11 +105,17 @@
         storage._relative_url_list.push(storage._version);
         storage._relative_url_list.push(storage._version +
                                         storage._precache_manifest_script);
+        // HARDCODED. get from web site configuration
+        relative_url_list.push('gadget_erp5_serviceworker.js');
         storage._documents[storage._origin_url] = {'hash': hash};
         for (i = 0; i < relative_url_list.length; i += 1) {
-          // TODO REMOVE URL PARAMETERS
+          //remove url parameters due to special chars issue in server
+          url = relative_url_list[i];
+          if (url.includes('?')) {
+            url = url.substring(0, url.indexOf('?'));
+          }
           storage._relative_url_list.push(
-            storage._version + relative_url_list[i]
+            storage._version + url
           );
         }
       })
