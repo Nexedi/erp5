@@ -55,7 +55,8 @@
 }
 
 .cropper-modal {
-  background-color: #000;
+  /* Disable the black layer around the image
+  background-color: #000;*/
   opacity: 0.5;
 }
 
