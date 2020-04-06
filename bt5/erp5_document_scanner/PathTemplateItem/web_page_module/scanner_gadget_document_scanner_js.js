@@ -7,6 +7,26 @@
            FileReader, DataView, URL, fx) {
   "use strict";
 
+  var CROPPER_DATA_JIO_KEY = 'cropperjs_data_';
+
+  function getDevicePreferredCropperData(gadget) {
+    return gadget.session_storage_jio.get(CROPPER_DATA_JIO_KEY + gadget.state.device_id)
+      .push(undefined, function (error) {
+        if ((error instanceof jIO.util.jIOError) &&
+            (error.status_code === 404)) {
+          return null;
+        }
+        throw error;
+      });
+  }
+
+  function putDevicePreferredCropperData(gadget, data) {
+    return gadget.session_storage_jio.put(
+      CROPPER_DATA_JIO_KEY + gadget.state.device_id,
+      data
+    );
+  }
+
   //////////////////////////////////////////////////
   // Browser API to promise
   //////////////////////////////////////////////////
@@ -201,7 +221,7 @@
         checkOrientation: false,
         zoomable: false,
         movable: false,
-        data: data,
+        data: data || {},
         ready: function () {
           return new RSVP.Queue()
             .push(function () {
@@ -434,7 +454,8 @@
         return RSVP.all([
           getVideoDeviceList(),
           gadget.getTranslationList(["Capture", "Change Camera", "Page", "1-click Capture"]),
-          buildPreviousThumbnailDom(gadget)
+          buildPreviousThumbnailDom(gadget),
+          getDevicePreferredCropperData(gadget)
         ]);
       })
       .push(function (result_list) {
@@ -455,12 +476,14 @@
           text: result_list[1][0]
         }));
 
-        button_list.push(
-          domsugar('button', {type: 'button',
-                              'class': 'auto-crop-btn ui-icon-fast-forward ui-btn-icon-left',
-                              text: result_list[1][3]
-                             })
-        );
+        if (result_list[3] !== null) {
+          button_list.push(
+            domsugar('button', {type: 'button',
+                                'class': 'auto-crop-btn ui-icon-fast-forward ui-btn-icon-left',
+                                text: result_list[1][3]
+                               })
+          );
+        }
 
         div = domsugar('div', {'class': 'camera'}, [
           buildPageTitle(gadget, result_list[1][2]),
@@ -646,7 +669,8 @@
         return RSVP.all([
           gadget.getTranslationList(["Delete", "Save", "Page"]),
           createLoadedImgElement(blob_url),
-          buildPreviousThumbnailDom(gadget)
+          buildPreviousThumbnailDom(gadget),
+          getDevicePreferredCropperData(gadget)
         ]);
       })
       .push(function (result_list) {
@@ -691,7 +715,7 @@
         btn.classList.remove("ui-icon-spinner");
         addDetachedPromise(gadget, 'cropper',
                            handleCropper(img,
-                                         gadget.state.preferred_cropped_canvas_data,
+                                         result_list[3],
                                          defer.resolve));
         return defer.promise;
       })
@@ -750,7 +774,6 @@
     var canvas = gadget.cropper.getCroppedCanvas(),
       state_dict;
     state_dict = {
-      preferred_cropped_canvas_data: gadget.cropper.getData(),
       display_step: 'display_video',
       display_index: null,
       page_count: gadget.state.page_count + 1
@@ -761,7 +784,11 @@
     state_dict['blob_state_' + gadget.state.page_count] = 'saving';
     state_dict['blob_uuid_' + gadget.state.page_count] = null;
 
-    return gadget.changeState(state_dict)
+    // Store the cropper data area
+    return putDevicePreferredCropperData(gadget, gadget.cropper.getData())
+      .push(function () {
+        return gadget.changeState(state_dict);
+      })
       .push(function () {
         // XXX Ensure that you have the active process relative url
         addDetachedPromise(gadget, 'ajax_' + (gadget.state.page_count - 1),
@@ -777,6 +804,18 @@
   rJS(window)
     .ready(function () {
       this.detached_promise_dict = {};
+      // use to store temporary cropper data area
+      this.session_storage_jio = jIO.createJIO({
+        type: "document",
+        document_id: "/",
+        sub_storage: {
+          type: "zip",
+          sub_storage: {
+            type: "local",
+            sessiononly: true
+          }
+        }
+      });
     })
     .declareJob('raise', function (error) {
       throw error;
@@ -819,7 +858,6 @@
             active_process: default_value.active_process,
             image_list: default_value.image_list,
             camera_list: camera_list,
-            preferred_cropped_canvas_data: {},
             preferred_image_settings_data: JSON.parse(options.preferred_image_settings_data),
             device_id: device_id,
             key: options.key,
@@ -959,7 +997,6 @@
             }
             return gadget.changeState({
               display_step: 'display_video',
-              preferred_cropped_canvas_data: {},
               camera_list: camera_list,
               device_id: device_id
             });
