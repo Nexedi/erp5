@@ -96,6 +96,9 @@ div[data-gadget-url$="gadget_document_scanner.html"] {
 
   .review-img-container {
       height: 70vh;
+      img {
+        max-height: 100%;
+      }
   }
 
   .img-container, .camera-input {
