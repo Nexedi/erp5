@@ -61,7 +61,9 @@
       },
       "Awesome Free Software Publisher List": {
         "url": "afs/",
-        "cache": "gadget_erp5_afs.appcache",
+        "storage_type": "precache",
+        "base_cache": "WebSection_getPrecacheManifest",
+        "cache": ["WebSection_getOfficeJSAfsPrecacheManifestList"],
         "no_installer": true
       },
       "Jabber Client": {
