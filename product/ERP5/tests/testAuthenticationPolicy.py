@@ -598,7 +598,8 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
 
     person = self.createUser(self.id(), password='password')
-    assignment = person.newContent(portal_type = 'Assignment')
+    person.setDefaultEmailCoordinateText('user@example.com')
+    assignment = person.newContent(portal_type='Assignment')
     assignment.open()
     login = person.objectValues(portal_type='ERP5 Login')[0]
 
@@ -618,14 +619,21 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
 
     # and a credential recovery is created automatically
-    credential_recovery, = login.getDestinationDecisionRelatedValueList(
+    credential_recovery, = person.getDestinationDecisionRelatedValueList(
         portal_type='Credential Recovery')
 
     # trying to login again does not create a new credential recovery
     response = publish()
+    self.assertTrue(response.getHeader("Location").endswith("login_form"))
     self.tic()
-    credential_recovery, = login.getDestinationDecisionRelatedValueList(
+    credential_recovery, = person.getDestinationDecisionRelatedValueList(
         portal_type='Credential Recovery')
+
+    credential_recovery.accept()
+    self.tic()
+    _, (to,), message = self.portal.MailHost._last_message
+    self.assertEqual(to, 'user@example.com')
+    self.assertIn('Password Recovery', message)
 
   def test_HttpRequest(self):
     """
