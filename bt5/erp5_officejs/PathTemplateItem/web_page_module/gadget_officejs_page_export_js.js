@@ -6,10 +6,13 @@
 
   var origin_url = (window.location.origin + window.location.pathname)
     .replace("officejs_export/", ""),
+    //TODO get rid of this old HARDCODED app dict and get everything from config
     application_dict = {
       "Text Editor": {
         "url": "officejs_text_editor/",
-        "cache": "gadget_officejs_text_editor.appcache"
+        "storage_type": "precache",
+        "cache": "WebSection_getPrecacheManifest",
+        "service_worker": "gadget_erp5_serviceworker.js"
       },
       "Smart Assistant": {
         "url": "officejs_smart_assistant/",
@@ -61,7 +64,9 @@
       },
       "Awesome Free Software Publisher List": {
         "url": "afs/",
-        "cache": "gadget_erp5_afs.appcache",
+        "storage_type": "precache",
+        "cache": "WebSection_getPrecacheManifest",
+        "service_worker": "gadget_erp5_serviceworker.js",
         "no_installer": true
       },
       "Jabber Client": {
@@ -125,7 +130,8 @@
     app = application_dict[form_result.web_site];
     zip_name = form_result.filename;
 
-    return gadget.fillZip(app.cache, origin_url + app.url, app.no_installer)
+    return gadget.fillZip(app.storage_type, app.cache, origin_url + app.url,
+                          app.no_installer, app.service_worker)
       .push(function (zip_file) {
         var element = gadget.element,
           a = document.createElement("a"),
@@ -146,7 +152,8 @@
     .ready(function (g) {
       g.props = {};
     })
-    .declareMethod("fillZip", function (cache_file, site_url, no_installer) {
+    .declareMethod("fillZip", function (storage_type, cache_file, site_url,
+                                        no_installer, service_worker) {
       var file_storage = jIO.createJIO({
           type: "replicate",
           conflict_handling: 2,
@@ -160,9 +167,11 @@
             type: "filesystem",
             document: site_url,
             sub_storage: {
-              type: "appcache",
+              //keep appcache as default for backward compatibility
+              type: storage_type || "appcache",
               take_installer: no_installer === undefined,
               manifest: cache_file,
+              service_worker: service_worker,
               origin_url: site_url,
               prefix: './'
             }
