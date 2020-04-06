@@ -66,8 +66,9 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     uf = portal.acl_users
     uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
     self.loginByUserName(self.manager_username)
-    kw = dict(portal_type='Person',
-              reference = 'test')
+
+    kw = dict(portal_type='ERP5 Login',
+              reference='test')
     if portal.portal_catalog.getResultValue(**kw) is None:
       # add a loggable Person
       person = self.createUser(
@@ -79,7 +80,6 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       person.validate()
       assignment = person.newContent(portal_type = 'Assignment')
       assignment.open()
-
 
     # Reset and Setup auth policy
     old_preference = portal.portal_catalog.getResultValue(
@@ -114,19 +114,21 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.portal.system_event_module.manage_delObjects([x.getId() for x in self._getPasswordEventList(login)])
 
 
-  def createUser(self, reference, password=None, person_kw=None):
+  def createUser(self, username, password=None, person_kw=None):
     """
-      Modified version from ERP5TypeTestCase, that does set reference as
-      password when password is None.
+      Modified version from ERP5TypeTestCase, that does not set reference as
+      password when password is None and does not set the same reference on
+      person, so that we can reveal problems with code assuming that person's
+      reference is same as login, which use to be true before ERP5 Login were
+      introduced.
     """
     if person_kw is None:
       person_kw = {}
-
-    person = self.portal.person_module.newContent(portal_type='Person',
-                                                  reference=reference,
-                                                  **person_kw)
+    self.createUser
+    person = self.portal.person_module.newContent(
+        portal_type='Person', **person_kw)
     login = person.newContent(portal_type='ERP5 Login',
-                              reference=reference,
+                              reference=username,
                               password=password)
     login.validate()
     return person
@@ -138,9 +140,10 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     portal = self.getPortal()
     self.assertTrue(portal.portal_preferences.isAuthenticationPolicyEnabled())
 
-    person = portal.portal_catalog.getResultValue(portal_type = 'Person',
-                                                  reference = 'test')
-    login = person.objectValues(portal_type='ERP5 Login')[0]
+    login = portal.portal_catalog.getResultValue(
+        portal_type='ERP5 Login',
+        reference='test')
+    self.assertIsNotNone(login)
     preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
                                                       title = 'Authentication',)
     # login should be allowed
