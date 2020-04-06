@@ -186,14 +186,18 @@
     // creating Cropper is asynchronous
     return new RSVP.Promise(function (resolve, reject) {
       cropper = new Cropper(element, {
-        // restrict the minimum canvas size to fill fit the container
-        viewMode: 3,
+        // restrict the minimum canvas size to fit within the container
+        viewMode: 2,
+        guides: true,
+        center: true,
+        background: false,
+        minContainerWidth: 0,
+        minContainerHeight: 0,
+        responsive: true,
         // Avoid any cropper calculation or guessing
         scalable: false,
-        // Please, DON'T touch on rotatable and checkOrientation. Removing it,
-        // we will not be able to fix orientation before crop.
-        rotatable: true,
-        checkOrientation: true,
+        rotatable: false,
+        checkOrientation: false,
         zoomable: false,
         movable: false,
         data: data,
@@ -425,11 +429,14 @@
           text: result_list[1][0]
         }));
 
-        button_list.push(
-          domsugar('button', {type: 'button',
-                              'class': 'auto-crop-btn ui-icon-fast-forward ui-btn-icon-left',
-                              text: result_list[1][3]
-                             }));
+        if (gadget.state.is_cropper_size_confirmed) {
+          button_list.push(
+            domsugar('button', {type: 'button',
+                                'class': 'auto-crop-btn ui-icon-fast-forward ui-btn-icon-left',
+                                text: result_list[1][3]
+                               })
+          );
+        }
 
         div = domsugar('div', {'class': 'camera'}, [
           domsugar('div', {'class': 'camera-header'}, [
@@ -715,9 +722,7 @@
               domsugar('label', {'class': 'page-number', text: gadget.state.page + 1})
             ])
           ]),
-          domsugar('div', {'class': 'img-container'}, [
-            domsugar('img', {src: gadget.state['blob_url_' + gadget.state.page]})
-          ]),
+          domsugar('img', {src: gadget.state['blob_url_' + gadget.state.page]}),
           // XXX TODO: why is the button rendering different from the other pages?
           domsugar('div', {'class': 'edit-picture'}, button_list),
           result_list[1]
@@ -737,7 +742,8 @@
       preferred_cropped_canvas_data: gadget.cropper.getData(),
       display_step: 'display_video',
       page: gadget.state.page + 1,
-      page_count: gadget.state.page_count + 1
+      page_count: gadget.state.page_count + 1,
+      is_cropper_size_confirmed: true
     };
     // Keep image date, as user may need to display it again
     state_dict['blob_canvas_' + gadget.state.page_count] = canvas;
@@ -783,7 +789,8 @@
       display_step: 'display_video',
       page: 1,
       page_count: 0,
-      camera_list: []
+      camera_list: [],
+      is_cropper_size_confirmed: false
     })
     .declareMethod('render', function (options) {
       // This method is called during the ERP5 form rendering
