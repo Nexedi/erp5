@@ -23,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -41,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -59,22 +62,20 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>zope</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_export.js</string> </value>
+            <value> <string>jio_precachestorage.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -84,30 +85,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_export_js</string> </value>
+            <value> <string>gadget_officejs_jio_precachestorage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1511776852.32</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -121,7 +103,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget OfficeJS jIO Export JS</string> </value>
+            <value> <string>jio_precachestorage.js</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -183,7 +171,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish</string> </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -209,7 +197,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1491395384.2</float>
+                              <float>1586165638.67</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -218,7 +206,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -258,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.23366.59824.50841</string> </value>
+                      <value> <string>983.2786.53619.59648</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -276,7 +264,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1587483350.21</float>
+                              <float>1586249010.29</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -337,7 +325,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1491394589.6</float>
+                              <float>1586165299.65</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
