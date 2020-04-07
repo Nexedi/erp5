@@ -231,6 +231,8 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
 class RJS_Only(_ERP5):
 
   def _getAllTestList(self):
+    #for tests purposes
+    return self._getAllTestList()
     test_list = []
     path = "%s/../" % HERE
     component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
