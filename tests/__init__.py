@@ -234,13 +234,24 @@ class RJS_Only(_ERP5):
     component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
                               "/test\.[^.]+\.([^.]+).py$")
     for test_path in (
-        glob('%s/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
-        glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+        #glob('%s/product/*/tests/test*.py' % path) +
+        #glob('%s/bt5/*/TestTemplateItem/test*.py' % path) +
+        #glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+        #glob('%s/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*OfficeJS*.py' % path)):
       component_re_match = component_re.match(test_path)
       if component_re_match is not None:
         test_case = "%s:%s" % (component_re_match.group(1),
                                component_re_match.group(2))
       else:
         test_case = test_path.split(os.sep)[-1][:-3] # remove .py
+      product = test_path.split(os.sep)[-3]
+      # don't test 3rd party products
+      if product in ('PortalTransforms', 'MailTemplates', 'Zelenium'):
+        continue
+      # ERP5TioSafe is disabled for now because it requires external programs
+      # such as php and it has not been updated for Zope >= 2.12
+      if product == 'ERP5TioSafe':
+        continue
       test_list.append(test_case)
     return test_list
