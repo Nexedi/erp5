@@ -7,7 +7,8 @@
            FileReader, DataView, URL, fx) {
   "use strict";
 
-  var CROPPER_DATA_JIO_KEY = 'cropperjs_data_';
+  var CROPPER_DATA_JIO_KEY = 'cropperjs_data_',
+    DEVICE_JIO_KEY = 'preferred_device';
 
   function getDevicePreferredCropperData(gadget) {
     return gadget.session_storage_jio.get(CROPPER_DATA_JIO_KEY + gadget.state.device_id)
@@ -24,6 +25,27 @@
     return gadget.session_storage_jio.put(
       CROPPER_DATA_JIO_KEY + gadget.state.device_id,
       data
+    );
+  }
+
+  function getPreferredDevice(gadget) {
+    return gadget.session_storage_jio.get(DEVICE_JIO_KEY)
+      .push(undefined, function (error) {
+        if ((error instanceof jIO.util.jIOError) &&
+            (error.status_code === 404)) {
+          return {};
+        }
+        throw error;
+      })
+      .push(function (jio_document) {
+        return jio_document.device_id;
+      });
+  }
+
+  function putPreferredDevice(gadget, device_id) {
+    return gadget.session_storage_jio.put(
+      DEVICE_JIO_KEY,
+      {device_id: device_id}
     );
   }
 
@@ -848,7 +870,10 @@
         camera_list =  gadget.state.camera_list,
         default_value = JSON.parse(options.value);
 
-      return selectMediaDevice(camera_list, gadget.state.device_id, false)
+      return getPreferredDevice(gadget)
+        .push(function (preferred_device_id) {
+          return selectMediaDevice(camera_list, preferred_device_id, false);
+        })
         .push(function (device_id) {
           if (camera_list.indexOf(device_id) === -1) {
             camera_list.push(device_id);
@@ -995,11 +1020,14 @@
             } else {
               camera_list = [device_id];
             }
-            return gadget.changeState({
-              display_step: 'display_video',
-              camera_list: camera_list,
-              device_id: device_id
-            });
+            return putPreferredDevice(gadget, device_id)
+              .push(function () {
+                return gadget.changeState({
+                  display_step: 'display_video',
+                  camera_list: camera_list,
+                  device_id: device_id
+                });
+              });
           });
       }
 
