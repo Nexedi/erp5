@@ -8,6 +8,7 @@ url_list = [
   "gadget_translate.html",
   "gadget_translate.js",
   "jio_ojs_storage.js",
+  "gadget_erp5_ojs_panel.js",
   "gadget_erp5_page_ojs_configurator.html",
   "gadget_erp5_page_ojs_configurator.js",
   "gadget_erp5_page_ojs_dav_configurator.html",
