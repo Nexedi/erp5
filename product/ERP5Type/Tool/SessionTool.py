@@ -164,8 +164,9 @@ class SessionTool(BaseTool):
 
       session_id = '1234567'
       session = context.portal_sessions[session_id]
-      session['shopping_cart'] = newTempOrder(context, '987654321') # will work only for local RAM sessions
-      (you can also use 'session.edit(shopping_cart= newTempOrder(context, '987654321'))' )
+      # will work only for local RAM sessions
+      session['shopping_cart'] = context.newContent(portal_type='Order', temp_object=True, id='987654321')
+      (you can also use 'session.edit(shopping_cart=context.newContent(context.newContent(portal_type='Order', temp_object=True, id='987654321'))' )
 
       (later in another script you can acquire shopping_cart):
 
