@@ -1021,12 +1021,13 @@ def importLocalDocument(class_id, path=None, class_path=None):
   setattr(Products.ERP5Type.Document, class_id, module)
 
   ### newTempFoo
+  temp_document_constructor_name = "newTemp%s" % class_id
   from Products.ERP5Type.ERP5Type import ERP5TypeInformation
   klass = getattr(module, class_id)
-  temp_type = ERP5TypeInformation(klass.portal_type)
-  temp_document_constructor = temp_type.constructTempInstance
-
-  temp_document_constructor_name = "newTemp%s" % class_id
+  temp_document_constructor = deprecated(
+    ('newTemp*(self, ID) will be removed, use self.newContent('
+     'temp_object=True, id=ID, portal_type=...)'))(
+      ERP5TypeInformation(klass.portal_type).constructTempInstance)
   setattr(Products.ERP5Type.Document,
           temp_document_constructor_name,
           temp_document_constructor)
