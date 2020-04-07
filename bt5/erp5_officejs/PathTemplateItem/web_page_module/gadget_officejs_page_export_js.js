@@ -10,7 +10,9 @@
     application_dict = {
       "Text Editor": {
         "url": "officejs_text_editor/",
-        "cache": "gadget_officejs_text_editor.appcache"
+        "storage_type": "precache",
+        "cache": "WebSection_getPrecacheManifest",
+        "service_worker": "gadget_erp5_serviceworker.js"
       },
       "Smart Assistant": {
         "url": "officejs_smart_assistant/",

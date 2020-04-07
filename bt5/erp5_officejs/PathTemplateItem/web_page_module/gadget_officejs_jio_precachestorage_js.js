@@ -30,13 +30,17 @@
     } else {
       this._relative_url_list = [this._prefix + "/"];
     }
-    if (spec.service_worker) {
-      this._relative_url_list.push(this._prefix + spec.service_worker);
-    }
     if (this._take_installer) {
       this._version = 'app/';
     }
     this._version = this._prefix + this._version;
+    if (spec.service_worker) {
+      if (this._take_installer) {
+        this._relative_url_list.push(this._version + spec.service_worker);
+      } else {
+        this._relative_url_list.push(this._prefix + spec.service_worker);
+      }
+    }
   }
 
   PreCacheStorage.prototype.get = function (id) {
