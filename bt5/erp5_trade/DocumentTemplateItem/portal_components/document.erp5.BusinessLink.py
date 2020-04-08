@@ -35,6 +35,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Path import Path
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.ExplanationCache import _getExplanationCache
+from erp5.component.interface.IBusinessLink import IBusinessLink
 
 import zope.interface
 
@@ -93,7 +94,7 @@ class BusinessLink(Path, Predicate):
                     )
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IBusinessLink,
+  zope.interface.implements(IBusinessLink,
                             interfaces.IPredicate,
                             )
 

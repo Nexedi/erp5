@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.Document.InvoiceTransactionSimulationRule import (InvoiceTransactionSimulationRule,
+from erp5.component.document.InvoiceTransactionSimulationRule import (InvoiceTransactionSimulationRule,
                                                                      InvoiceTransactionRuleMovementGenerator)
 
 class InventoryAssetPriceAccountingRuleMovementGenerator(InvoiceTransactionRuleMovementGenerator):

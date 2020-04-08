@@ -33,7 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.ImmobilisationMovement import ImmobilisationMovement
-from Products.ERP5.Document.DeliveryLine import DeliveryLine
+from erp5.component.document.DeliveryLine import DeliveryLine
 
 class ImmobilisationLine(Movement, XMLObject, ImmobilisationMovement, DeliveryLine):
   """

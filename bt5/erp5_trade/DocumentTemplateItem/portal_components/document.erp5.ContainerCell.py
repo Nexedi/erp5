@@ -31,48 +31,48 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 
-from Products.ERP5.Document.DeliveryCell import DeliveryCell
+from erp5.component.document.DeliveryCell import DeliveryCell
 
 class ContainerCell(DeliveryCell):
+  """
+  A DeliveryCell allows to define specific quantities
+  for each variation of a resource in a delivery line.
+  """
+  meta_type = 'ERP5 Container Cell'
+  portal_type = 'Container Cell'
+  isCell = 1
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Arrow
+                    , PropertySheet.Amount
+                    , PropertySheet.Task
+                    , PropertySheet.Movement
+                    , PropertySheet.Price
+                    , PropertySheet.Predicate
+                    , PropertySheet.MappedValue
+                    , PropertySheet.ItemAggregation
+                    )
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isAccountable')
+  def isAccountable(self):
     """
-      A DeliveryCell allows to define specific quantities
-      for each variation of a resource in a delivery line.
+    Returns 1 if this needs to be accounted
+    Only account movements which are not associated to a delivery
+    Whenever delivery is there, delivery has priority
     """
-    meta_type = 'ERP5 Container Cell'
-    portal_type = 'Container Cell'
-    isCell = 1
+    # Never accountable
+    return 0
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Arrow
-                      , PropertySheet.Amount
-                      , PropertySheet.Task
-                      , PropertySheet.Movement
-                      , PropertySheet.Price
-                      , PropertySheet.Predicate
-                      , PropertySheet.MappedValue
-                      , PropertySheet.ItemAggregation
-                      )
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'isAccountable')
-    def isAccountable(self):
-      """
-        Returns 1 if this needs to be accounted
-        Only account movements which are not associated to a delivery
-        Whenever delivery is there, delivery has priority
-      """
-      # Never accountable
-      return 0
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
-    def isDivergent(self):
-      """Return True if this movement diverges from the its simulation.
-      Container Cells are never divergent.
-      """
-      return False
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
+  def isDivergent(self):
+    """Return True if this movement diverges from the its simulation.
+    Container Cells are never divergent.
+    """
+    return False

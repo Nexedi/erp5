@@ -34,9 +34,9 @@ class InventoryInteractor(Interactor):
   subdocuments are modified.
   """
   def install(self):
-    from Products.ERP5.Document.InventoryLine import InventoryLine
+    from erp5.component.document.InventoryLine import InventoryLine
     self.on(InventoryLine.reindexObject).doAfter(self.reindexInventory)
-    from Products.ERP5.Document.InventoryCell import InventoryCell
+    from erp5.component.document.InventoryCell import InventoryCell
     self.on(InventoryCell.reindexObject).doAfter(self.reindexInventory)
 
   def reindexInventory(self, method_call_object, *args, **kw):
