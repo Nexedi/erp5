@@ -30,7 +30,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5.Document.DeliveryRootSimulationRule \
+from erp5.component.document.DeliveryRootSimulationRule \
      import DeliveryRootSimulationRule, DeliveryRuleMovementGenerator
 
 class InvoiceRootSimulationRule(DeliveryRootSimulationRule):

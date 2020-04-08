@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Container import Container
+from erp5.component.document.Container import Container
 from erp5.component.module.BaobabMixin import BaobabMixin
 
 class CashContainer(BaobabMixin, Container):

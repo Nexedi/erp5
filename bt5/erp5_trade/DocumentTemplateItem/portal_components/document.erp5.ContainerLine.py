@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2007-2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Fabien Morin <fabien@nexedi.com>
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,22 +28,21 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+
 from Products.ERP5Type import Permissions, PropertySheet
-from erp5.component.document.TradeModelLine import TradeModelLine
 
-class PaySheetModelLine(TradeModelLine):
-  """
-    A PaySheetModelLine object allows to implement lines in
-    PaySheetModel.
-    A PaySheetModelLine contain all parameters witch make it possible to
-    calculate a service contribution.
-  """
-  edited_property_list = ['price', 'causality','resource','quantity',
-              'title', 'base_application_list', 'base_contribution_list']
+from Products.ERP5.Document.DeliveryLine import DeliveryLine
 
-  meta_type = 'ERP5 Pay Sheet Model Line'
-  portal_type = 'Pay Sheet Model Line'
-  add_permission = Permissions.AddPortalContent
+class ContainerLine(DeliveryLine):
+  """
+  A DeliveryLine object allows to implement lines in
+  Deliveries (packing list, order, invoice, etc.)
+
+  It may include a price (for insurance, for customs, for invoices,
+  for orders)
+  """
+  meta_type = 'ERP5 Container Line'
+  portal_type = 'Container Line'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -58,15 +58,40 @@ class PaySheetModelLine(TradeModelLine):
                     , PropertySheet.Movement
                     , PropertySheet.Price
                     , PropertySheet.VariationRange
-                    , PropertySheet.MappedValue
-                    , PropertySheet.TradeModelLine
-                    , PropertySheet.Predicate
-                    , PropertySheet.Reference
+                    , PropertySheet.ItemAggregation
                     )
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'newCellContent' )
-  def newCellContent(self, id, portal_type='Pay Sheet Model Cell', **kw):
+  # Cell Related
+  security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
+  def newCellContent(self, id, portal_type='Container Cell', **kw): # pylint: disable=redefined-builtin
     """Overriden to specify default portal type
     """
     return self.newContent(id=id, portal_type=portal_type, **kw)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+  def isAccountable(self):
+    """
+    Returns 1 if this needs to be accounted
+    Only account movements which are not associated to a delivery
+    Whenever delivery is there, delivery has priority
+    """
+    # Never accountable
+    return 0
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
+  def isDivergent(self):
+    """Return True if this movement diverges from the its simulation.
+    Container Lines are never divergent.
+    """
+    return False
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalQuantity')
+  def getTotalQuantity(self, *args, **kw):
+    """
+    Returns the quantity if no cell or the total quantity if cells
+    """
+    base_id = 'movement'
+    if not self.hasCellContent(base_id=base_id):
+      return self.getQuantity()
+    return sum(cell.getQuantity() for cell in
+      self.getCellValueList(base_id=base_id))

@@ -27,7 +27,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.trade_model_path
+erp5.component.interface.ITradeModelPath
 """
 
 from zope.interface import Interface

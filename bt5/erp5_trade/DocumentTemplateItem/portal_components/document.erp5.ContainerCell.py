@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -29,40 +30,49 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.TradeModelLine import TradeModelLine
 
-class PaymentCondition(TradeModelLine):
-  """
-    Payment Conditions are used to define all the parameters of a payment
-  """
+from Products.ERP5.Document.DeliveryCell import DeliveryCell
 
-  meta_type = 'ERP5 Payment Condition'
-  portal_type = 'Payment Condition'
-  add_permission = Permissions.AddPortalContent
+class ContainerCell(DeliveryCell):
+  """
+  A DeliveryCell allows to define specific quantities
+  for each variation of a resource in a delivery line.
+  """
+  meta_type = 'ERP5 Container Cell'
+  portal_type = 'Container Cell'
+  isCell = 1
 
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
-  property_sheets = ( PropertySheet.PaymentCondition
-                    , PropertySheet.Chain
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Arrow
+                    , PropertySheet.Amount
+                    , PropertySheet.Task
+                    , PropertySheet.Movement
+                    , PropertySheet.Price
+                    , PropertySheet.Predicate
+                    , PropertySheet.MappedValue
+                    , PropertySheet.ItemAggregation
                     )
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getCalculationScript')
-  def getCalculationScript(self, context):
-    # In the case of Payment Condition, unlike Trade Model Line,
-    # it is not realistic to share the same method, so do not acquire
-    # a script from its parent.
-    #
-    # It is always complicated and different how to adopt the calculation of
-    # payment dates for each user, and it is not practical to force the
-    # user to set a script id in every Payment Condition, so it is better
-    # to use a type-based method here, unless a script is explicitly set.
-    script_id = self.getCalculationScriptId()
-    if script_id is not None:
-      method = getattr(context, script_id)
-      return method
-    method = self._getTypeBasedMethod('calculateMovement')
-    return method
+                            'isAccountable')
+  def isAccountable(self):
+    """
+    Returns 1 if this needs to be accounted
+    Only account movements which are not associated to a delivery
+    Whenever delivery is there, delivery has priority
+    """
+    # Never accountable
+    return 0
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
+  def isDivergent(self):
+    """Return True if this movement diverges from the its simulation.
+    Container Cells are never divergent.
+    """
+    return False
