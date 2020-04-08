@@ -61,7 +61,7 @@ class TradeModelLineCellConsistencyConstraint(ConstraintMixin):
   _message_id_tuple = ('message_cell_inexistance',)
 
   @staticmethod
-  def _convertFromFilesystemDefinition(base_id):
+  def _convertFromFilesystemDefinition(base_id, *args, **kw):
     """
     @see ERP5Type.mixin.constraint.ConstraintMixin._convertFromFilesystemDefinition
     """

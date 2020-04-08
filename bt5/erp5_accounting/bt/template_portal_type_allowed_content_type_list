@@ -15,13 +15,6 @@ Accounting Transaction | Accounting Transaction Line
 Accounting Transaction | Embedded File
 Balance Transaction | Balance Transaction Line
 Internal Invoice Transaction | Internal Invoice Transaction Line
-Invoice Root Simulation Rule | Category Membership Divergence Tester
-Invoice Root Simulation Rule | DateTime Divergence Tester
-Invoice Root Simulation Rule | Float Divergence Tester
-Invoice Root Simulation Rule | Net Converted Quantity Divergence Tester
-Invoice Root Simulation Rule | Specialise Divergence Tester
-Invoice Root Simulation Rule | String Divergence Tester
-Invoice Root Simulation Rule | Variation Divergence Tester
 Organisation | Accounting Period
 Organisation | Cash Register
 Payment Simulation Rule | Category Membership Divergence Tester
@@ -42,7 +35,6 @@ Property Sheet | Accounting Transaction Balance Constraint
 Purchase Invoice Transaction | Embedded File
 Purchase Invoice Transaction | Purchase Invoice Transaction Line
 Rule Tool | Accounting Transaction Root Simulation Rule
-Rule Tool | Invoice Root Simulation Rule
 Rule Tool | Payment Simulation Rule
 Sale Invoice Transaction | Embedded File
 Sale Invoice Transaction | Sale Invoice Transaction Line

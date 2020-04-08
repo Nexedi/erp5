@@ -7,5 +7,4 @@ document.erp5.AccountingTransactionRootSimulationRule
 document.erp5.BalanceTransaction
 document.erp5.BalanceTransactionLine
 document.erp5.Invoice
-document.erp5.InvoiceRootSimulationRule
 document.erp5.PaymentSimulationRule

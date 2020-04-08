@@ -75,7 +75,6 @@ Internal Invoice Transaction | document_list
 Internal Invoice Transaction | jump_related_payment
 Internal Invoice Transaction | source_asset
 Internal Invoice Transaction | view
-Invoice Root Simulation Rule | view
 Organisation | account_statement_export
 Organisation | account_statement_report
 Organisation | general_ledger_export
