@@ -1504,6 +1504,74 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_list.play(self, quiet=quiet)
 
 
+  def stepDeliverPackingList(self, sequence=None, sequence_list=None, **kw):
+    """
+      Deliver Packing List
+    """
+    packing_list = sequence.get('packing_list')
+    packing_list.stop()
+    packing_list.deliver()
+
+  def stepDeliverNewPackingList(self, sequence=None, sequence_list=None, **kw):
+    """
+      Deliver New Packing List
+    """
+    packing_list = sequence.get('new_packing_list')
+    packing_list.stop()
+    packing_list.deliver()
+
+  def stepExpandOrderRootAppliedRule(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check Order Applied Rule can be expanded without error
+    """
+    order = sequence.get('order')
+    related_applied_rule_list = order.getCausalityRelatedValueList( \
+                                  portal_type=self.applied_rule_portal_type)
+    applied_rule = related_applied_rule_list[0].getObject()
+    applied_rule.expand("immediate")
+
+  def test_11_02_PackingListDecreaseTwoTimesQuantityAndUpdateDeliveryAndDeliver(self,
+                                               quiet=quiet, run=run_all_test):
+    """
+      Change the quantity on an delivery line, then
+      see if the packing list is divergent and then
+      split and defer the packing list.
+      Deliver Packing Lists and make sure the root can be expanded
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    sequence_string = self.default_sequence + """
+        DecreasePackingListLineQuantity
+        CheckPackingListIsCalculating
+        Tic
+        CheckPackingListIsDiverged
+        SplitAndDeferPackingList
+        Tic
+        CheckPackingListIsSolved
+        CheckPackingListSplitted
+        DecreasePackingListLineQuantity
+        CheckPackingListIsCalculating
+        Tic
+        CheckPackingListIsDiverged
+        SplitAndDeferPackingList
+        Tic
+        CheckNewPackingListIsDivergent
+        NewPackingListAdoptPrevisionQuantity
+        Tic
+        CheckPackingListIsSolved
+        CheckNewPackingListIsSolved
+        CheckPackingListSplittedTwoTimes
+        DeliverPackingList
+        DeliverNewPackingList
+        Tic
+        ExpandOrderRootAppliedRule
+        """
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+
   def stepSplitAndMovePackingList(self, sequence=None, sequence_list=None, **kw):
     """
       Do the split and move to another delivery action
