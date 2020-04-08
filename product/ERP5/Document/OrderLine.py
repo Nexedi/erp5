@@ -32,27 +32,26 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 
 class OrderLine(DeliveryLine):
-    """
-      A order line defines quantity and price
-    """
+  """
+  A order line defines quantity and price
+  """
+  meta_type = 'ERP5 Order Line'
+  portal_type = 'Order Line'
 
-    meta_type = 'ERP5 Order Line'
-    portal_type = 'Order Line'
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Amount
-                      , PropertySheet.Task
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Arrow
-                      , PropertySheet.Movement
-                      , PropertySheet.Price
-                      , PropertySheet.VariationRange
-                      , PropertySheet.ItemAggregation
-                      )
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Amount
+                    , PropertySheet.Task
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Arrow
+                    , PropertySheet.Movement
+                    , PropertySheet.Price
+                    , PropertySheet.VariationRange
+                    , PropertySheet.ItemAggregation
+                    )

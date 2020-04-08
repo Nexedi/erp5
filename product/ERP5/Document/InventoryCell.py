@@ -34,64 +34,62 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 
-
 class InventoryCell(DeliveryCell):
+  """
+  An InventoryCell allows to define specific inventory
+  for each variation of a resource in an inventory line.
+  """
+  meta_type = 'ERP5 Inventory Cell'
+  portal_type = 'Inventory Cell'
+  add_permission = Permissions.AddPortalContent
+  isInventoryMovement = ConstantGetter('isInventoryMovement', value=True)
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Amount
+                    , PropertySheet.InventoryMovement
+                    , PropertySheet.Task
+                    , PropertySheet.Movement
+                    , PropertySheet.Price
+                    , PropertySheet.Predicate
+                    , PropertySheet.MappedValue
+                    , PropertySheet.ItemAggregation
+                    )
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTotalInventory')
+  def getTotalInventory(self):
     """
-      An InventoryCell allows to define specific inventory
-      for each variation of a resource in an inventory line.
+    Returns the inventory, as cells are not supposed to contain more cells.
     """
+    return self.getInventory()
 
-    meta_type = 'ERP5 Inventory Cell'
-    portal_type = 'Inventory Cell'
-    add_permission = Permissions.AddPortalContent
-    isInventoryMovement = ConstantGetter('isInventoryMovement', value=True)
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Amount
-                      , PropertySheet.InventoryMovement
-                      , PropertySheet.Task
-                      , PropertySheet.Movement
-                      , PropertySheet.Price
-                      , PropertySheet.Predicate
-                      , PropertySheet.MappedValue
-                      , PropertySheet.ItemAggregation
-                      )
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getTotalInventory')
-    def getTotalInventory(self):
-      """
-        Returns the inventory, as cells are not supposed to contain more cells.
-      """
+  security.declareProtected(Permissions.AccessContentsInformation, 'getQuantity')
+  def getQuantity(self):
+    """
+    Computes a quantity which allows to reach inventory
+    """
+    if not self.hasCellContent():
+      # First check if quantity already exists
+      quantity = self._baseGetQuantity()
+      if quantity not in (0.0, 0, None):
+        return quantity
+      # Make sure inventory is defined somewhere (here or parent)
+      if getattr(aq_base(self), 'inventory', None) is None:
+        return 0.0 # No inventory defined, so no quantity
       return self.getInventory()
+    else:
+      return None
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getQuantity')
-    def getQuantity(self):
-      """
-        Computes a quantity which allows to reach inventory
-      """
-      if not self.hasCellContent():
-        # First check if quantity already exists
-        quantity = self._baseGetQuantity()
-        if quantity not in (0.0, 0, None):
-          return quantity
-        # Make sure inventory is defined somewhere (here or parent)
-        if getattr(aq_base(self), 'inventory', None) is None:
-          return 0.0 # No inventory defined, so no quantity
-        return self.getInventory()
-      else:
-        return None
-
-    # Inventory cataloging
-    security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedInventory')
-    def getConvertedInventory(self):
-      """
-        provides a default inventory value - None since
-        no inventory was defined.
-      """
-      return self.getInventory() # XXX quantity unit is missing
+  # Inventory cataloging
+  security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedInventory')
+  def getConvertedInventory(self):
+    """
+    provides a default inventory value - None since
+    no inventory was defined.
+    """
+    return self.getInventory() # XXX quantity unit is missing

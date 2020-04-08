@@ -33,59 +33,57 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 
 class OrderCell(DeliveryCell):
+  """
+  A OrderCell allows to define specific quantities
+  for each variation of a resource in a delivery line.
+  """
+  meta_type = 'ERP5 Order Cell'
+  portal_type = 'Order Cell'
+  isCell = 1
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Arrow
+                    , PropertySheet.Amount
+                    , PropertySheet.Task
+                    , PropertySheet.Movement
+                    , PropertySheet.Price
+                    , PropertySheet.Predicate
+                    , PropertySheet.MappedValue
+                    , PropertySheet.ItemAggregation
+                    )
+
+  def reindexObject(self, *k, **kw):
     """
-      A OrderCell allows to define specific quantities
-      for each variation of a resource in a delivery line.
+    Reindex children and simulation
     """
+    self.recursiveReindexObject(*k,**kw)
 
-    meta_type = 'ERP5 Order Cell'
-    portal_type = 'Order Cell'
-    isCell = 1
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'isMovement')
+  def isMovement(self):
+    """
+    should be considered as a movement if the parent does not have sub lines
+    """
+    return not self.getParentValue().hasLineContent()
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Arrow
-                      , PropertySheet.Amount
-                      , PropertySheet.Task
-                      , PropertySheet.Movement
-                      , PropertySheet.Price
-                      , PropertySheet.Predicate
-                      , PropertySheet.MappedValue
-                      , PropertySheet.ItemAggregation
-                      )
-
-    def reindexObject(self, *k, **kw):
-      """
-      Reindex children and simulation
-      """
-      self.recursiveReindexObject(*k,**kw)
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-        'isMovement')
-    def isMovement(self):
-      """
-      should be considered as a movement if the parent does not have sub lines
-      """
-      return not self.getParentValue().hasLineContent()
-
-    security.declareProtected(Permissions.AccessContentsInformation,
+  security.declareProtected(Permissions.AccessContentsInformation,
         'getTotalPrice')
-    def getTotalPrice(self, default=0.0, *args, **kw):
-      "only return a value if self is a movement"
-      if not self.isMovement():
-        return default
-      return DeliveryCell.getTotalPrice(self, default=default, *args, **kw)
+  def getTotalPrice(self, default=0.0, *args, **kw):
+    "only return a value if self is a movement"
+    if not self.isMovement():
+      return default
+    return DeliveryCell.getTotalPrice(self, default=default, *args, **kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-        'getTotalQuantity')
-    def getTotalQuantity(self, default=0.0, *args, **kw):
-      "only return a value if self is a movement"
-      if not self.isMovement():
-        return default
-      return DeliveryCell.getTotalQuantity(self, default=default, *args, **kw)
-
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getTotalQuantity')
+  def getTotalQuantity(self, default=0.0, *args, **kw):
+    "only return a value if self is a movement"
+    if not self.isMovement():
+      return default
+    return DeliveryCell.getTotalQuantity(self, default=default, *args, **kw)
