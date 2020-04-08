@@ -235,8 +235,9 @@ class AccountingTestCase(ERP5TypeTestCase):
             'erp5_accounting', 'erp5_project',
             'erp5_ods_style',
             'erp5_configurator_standard_trade_template',
+            'erp5_invoicing',
             'erp5_configurator_standard_accounting_template',
-            'erp5_invoicing', 'erp5_configurator_standard_invoicing_template',
+            'erp5_configurator_standard_invoicing_template',
             'erp5_simulation_test', 'erp5_accounting_ui_test')
 
   @UnrestrictedMethod

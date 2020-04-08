@@ -3,6 +3,15 @@
   <item>Invoice Cell</item>
   <item>Invoice Line</item>
  </portal_type>
+ <portal_type id="Invoice Root Simulation Rule">
+  <item>Category Membership Divergence Tester</item>
+  <item>DateTime Divergence Tester</item>
+  <item>Float Divergence Tester</item>
+  <item>Net Converted Quantity Divergence Tester</item>
+  <item>Specialise Divergence Tester</item>
+  <item>String Divergence Tester</item>
+  <item>Variation Divergence Tester</item>
+ </portal_type>
  <portal_type id="Invoice Simulation Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>
@@ -22,6 +31,7 @@
   <item>Variation Divergence Tester</item>
  </portal_type>
  <portal_type id="Rule Tool">
+  <item>Invoice Root Simulation Rule</item>
   <item>Invoice Simulation Rule</item>
   <item>Invoice Transaction Simulation Rule</item>
   <item>Trade Model Simulation Rule</item>

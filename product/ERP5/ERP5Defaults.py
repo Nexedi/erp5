@@ -99,8 +99,7 @@ portal_invoice_movement_type_list = (
                       'Pay Sheet Cell',
                       )
 
-portal_tax_movement_type_list = ( 'Tax Line', 'Discount Line',
-                                  'Pay Sheet Line', )
+portal_tax_movement_type_list = ( 'Pay Sheet Line', )
 
 portal_order_movement_type_list = (
                       'Purchase Order Line',
