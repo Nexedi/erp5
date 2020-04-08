@@ -32,10 +32,9 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5.Document.Delivery import Delivery
-from warnings import warn
 
 class PackingList(Delivery):
-    """
+  """
       Delivery/PackingList is the main document
       which allows to control causality in the simulation
 
@@ -58,67 +57,66 @@ class PackingList(Delivery):
       - postpone delivery
 
       solutions are implemented as solvers
+  """
+  # CMF Type Definition
+  meta_type = 'ERP5 Packing List'
+  portal_type = 'Packing List'
+  add_permission = Permissions.AddPortalContent
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Comment
+                    , PropertySheet.Movement
+                    , PropertySheet.TradeCondition
+                    , PropertySheet.Order
+                    )
+
+  #######################################################
+  # Container computation
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isPacked')
+  def isPacked(self):
     """
-    # CMF Type Definition
-    meta_type = 'ERP5 Packing List'
-    portal_type = 'Packing List'
-    add_permission = Permissions.AddPortalContent
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Comment
-                      , PropertySheet.Movement
-                      , PropertySheet.TradeCondition
-                      , PropertySheet.Order
-                      )
-
-    #######################################################
-    # Container computation
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'isPacked')
-    def isPacked(self):
-      """
         Returns true if all quantities for all variations of resources are in
         containers.
 
         FIXME: this method does not support packing list with 2 movements of
         same resource.
-      """
-      # build a mapping of
-      # (resource, variation_text) -> quantity
-      container_dict = defaultdict(int)
-      for container in self.contentValues(
-          portal_type=self.getPortalContainerTypeList()):
-        for container_line in container.contentValues(
-          portal_type=self.getPortalContainerLineTypeList(),):
-          if container_line.hasCellContent(base_id='movement'):
-            for container_cell in container_line.contentValues(
-                portal_type=self.getPortalContainerLineTypeList(),):
-              key = (container_cell.getResource(),
-                container_cell.getVariationText())
-              container_dict[key] += container_cell.getQuantity()
-          else:
-            key = (container_line.getResource(),
-              container_line.getVariationText())
-            container_dict[key] += container_line.getQuantity()
+    """
+    # build a mapping of
+    # (resource, variation_text) -> quantity
+    container_dict = defaultdict(int)
+    for container in self.contentValues(
+        portal_type=self.getPortalContainerTypeList()):
+      for container_line in container.contentValues(
+        portal_type=self.getPortalContainerLineTypeList(),):
+        if container_line.hasCellContent(base_id='movement'):
+          for container_cell in container_line.contentValues(
+              portal_type=self.getPortalContainerLineTypeList(),):
+            key = (container_cell.getResource(),
+              container_cell.getVariationText())
+            container_dict[key] += container_cell.getQuantity()
+        else:
+          key = (container_line.getResource(),
+            container_line.getVariationText())
+          container_dict[key] += container_line.getQuantity()
 
-      if not container_dict:
+    if not container_dict:
+      return False
+
+    # Check that all movements are packed.
+    for movement in self.getMovementList():
+      key = (movement.getResource(),
+             movement.getVariationText())
+      if container_dict.get(key) != movement.getQuantity():
         return False
-
-      # Check that all movements are packed.
-      for movement in self.getMovementList():
-        key = (movement.getResource(),
-               movement.getVariationText())
-        if container_dict.get(key) != movement.getQuantity():
-          return False
-      return True
-
+    return True

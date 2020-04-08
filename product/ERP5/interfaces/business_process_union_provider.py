@@ -27,7 +27,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.business_process
+erp5.component.interface.IBusinessProcess
 """
 
 from zope.interface import Interface
