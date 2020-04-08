@@ -144,9 +144,9 @@ class Inventory(Delivery):
 
 
     if temp_constructor is None:
-      def temp_constructor(self, id, *args, **kw):
-        return self.newContent(temp_object=True, portal_type='Movement',
-                               id=id, *args, **kw)
+      temp_constructor = lambda self, id, *args, **kw: self.newContent(
+        temp_object=True, portal_type='Movement',
+        id=id, *args, **kw)
     stop_date = self.getStopDate()
 
     stock_object_list = []
@@ -199,8 +199,8 @@ class Inventory(Delivery):
 
       __order_id_counter_list = [0]
       def getOrderIdCounter():
-        value = __order_id_counter_list[0]
-        __order_id_counter_list[0] = value + 1
+        value = __order_id_counter_list[0] # pylint: disable=cell-var-from-loop
+        __order_id_counter_list[0] = value + 1 # pylint: disable=cell-var-from-loop
         return value
 
       for movement in method():
