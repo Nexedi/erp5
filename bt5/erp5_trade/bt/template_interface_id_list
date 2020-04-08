@@ -1,0 +1,3 @@
+interface.erp5.IBusinessLink
+interface.erp5.IBusinessProcess
+interface.erp5.ITradeModelPath

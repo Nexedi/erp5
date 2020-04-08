@@ -27,7 +27,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.business_link
+erp5.component.interface.IBusinessLink
 """
 
 from zope.interface import Interface
