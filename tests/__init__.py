@@ -231,8 +231,19 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
 class RJS_Only(_ERP5):
 
   def _getAllTestList(self):
-    #for tests purposes
-    return self._getAllTestList()
+    
+    test_list = []
+    for business_template_path in (
+            glob('%s/../bt5/*' % HERE)
+            + glob('%s/../product/ERP5/bootstrap/*' % HERE)):
+      # we skip coding style check for business templates having this marker
+      # property. Since the property is not exported (on purpose), modified business templates
+      # will be candidate for coding style test again.
+      if os.path.isdir(business_template_path) and \
+              not os.path.exists(os.path.join(business_template_path, 'bt/skip_coding_style_test')):
+        test_list.append(os.path.basename(business_template_path))
+    return test_list
+    
     test_list = []
     path = "%s/../" % HERE
     component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
