@@ -8,6 +8,8 @@ Invoice Line | edit_workflow
 Invoice Line | movement_resource_interaction_workflow
 Invoice Line | pricing_interaction_workflow
 Invoice Line | trade_matrix_workflow
+Invoice Root Simulation Rule | edit_workflow
+Invoice Root Simulation Rule | rule_validation_workflow
 Invoice Simulation Rule | edit_workflow
 Invoice Simulation Rule | rule_validation_workflow
 Invoice Transaction Simulation Rule | edit_workflow

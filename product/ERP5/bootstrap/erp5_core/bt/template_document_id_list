@@ -1,4 +1,7 @@
+document.erp5.Inventory
 document.erp5.InvoiceCell
 document.erp5.InvoiceLine
 document.erp5.Item
+document.erp5.Order
+document.erp5.PackingList
 document.erp5.ScriptConstraint

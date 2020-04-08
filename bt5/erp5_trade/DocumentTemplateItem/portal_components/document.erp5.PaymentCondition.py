@@ -1,7 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2007-2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Fabien Morin <fabien@nexedi.com>
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,21 +27,17 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.TradeModelLine import TradeModelLine
 
-class PaySheetModelLine(TradeModelLine):
+class PaymentCondition(TradeModelLine):
   """
-    A PaySheetModelLine object allows to implement lines in
-    PaySheetModel.
-    A PaySheetModelLine contain all parameters witch make it possible to
-    calculate a service contribution.
+    Payment Conditions are used to define all the parameters of a payment
   """
-  edited_property_list = ['price', 'causality','resource','quantity',
-              'title', 'base_application_list', 'base_contribution_list']
 
-  meta_type = 'ERP5 Pay Sheet Model Line'
-  portal_type = 'Pay Sheet Model Line'
+  meta_type = 'ERP5 Payment Condition'
+  portal_type = 'Payment Condition'
   add_permission = Permissions.AddPortalContent
 
   # Declarative security
@@ -49,24 +45,24 @@ class PaySheetModelLine(TradeModelLine):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.Amount
-                    , PropertySheet.Task
-                    , PropertySheet.Arrow
-                    , PropertySheet.Movement
-                    , PropertySheet.Price
-                    , PropertySheet.VariationRange
-                    , PropertySheet.MappedValue
-                    , PropertySheet.TradeModelLine
-                    , PropertySheet.Predicate
-                    , PropertySheet.Reference
+  property_sheets = ( PropertySheet.PaymentCondition
+                    , PropertySheet.Chain
                     )
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'newCellContent' )
-  def newCellContent(self, id, portal_type='Pay Sheet Model Cell', **kw):
-    """Overriden to specify default portal type
-    """
-    return self.newContent(id=id, portal_type=portal_type, **kw)
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getCalculationScript')
+  def getCalculationScript(self, context):
+    # In the case of Payment Condition, unlike Trade Model Line,
+    # it is not realistic to share the same method, so do not acquire
+    # a script from its parent.
+    #
+    # It is always complicated and different how to adopt the calculation of
+    # payment dates for each user, and it is not practical to force the
+    # user to set a script id in every Payment Condition, so it is better
+    # to use a type-based method here, unless a script is explicitly set.
+    script_id = self.getCalculationScriptId()
+    if script_id is not None:
+      method = getattr(context, script_id)
+      return method
+    method = self._getTypeBasedMethod('calculateMovement')
+    return method

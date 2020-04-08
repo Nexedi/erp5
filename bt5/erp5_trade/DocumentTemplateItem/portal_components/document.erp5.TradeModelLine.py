@@ -65,5 +65,5 @@ class TradeModelLine(AmountGeneratorLine):
     # Else tax provides only a ratio on amount
     return ('price',)
 
-  def getMappedValueBaseCategoryList(self):
+  def getMappedValueBaseCategoryList(self): # pylint: disable=arguments-differ
     return self._baseGetMappedValueBaseCategoryList() or ('trade_phase', 'use',)
