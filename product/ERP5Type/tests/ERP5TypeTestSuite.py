@@ -41,6 +41,18 @@ class ERP5TypeTestSuite(TestSuite):
       args = ("--firefox_bin=%s" % firefox_bin,) + args
     if xvfb_bin:
       args = ("--xvfb_bin=%s" % xvfb_bin,) + args
+    if 'testUpgradeInstanceWithOldDataFs' in args:
+      # our reference Data.fs uses `CONNECTION_STRING_REPLACED_BY_TEST_INIT_______________________________`
+      # as a connection string. Before we start, replace this by the connection string
+      # that this test node is using.
+      marker_connection_string = b'CONNECTION_STRING_REPLACED_BY_TEST_INIT_______________________________'
+      actual_connection_string = mysql_db_list[0].ljust(len(marker_connection_string)).encode()
+      assert len(marker_connection_string) == len(actual_connection_string)
+      with open(os.path.join(instance_home, 'var', 'Data.fs'), 'rb') as f:
+        data_fs = f.read()
+      with open(os.path.join(instance_home, 'var', 'Data.fs'), 'wb') as f:
+        f.write(data_fs.replace(marker_connection_string, actual_connection_string))
+
     try:
       runUnitTest = os.environ.get('RUN_UNIT_TEST',
                                    'runUnitTest')
