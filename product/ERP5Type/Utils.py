@@ -721,15 +721,15 @@ def registerBaseCategories(property_sheet):
     base_category_dict[bc] = 1
 
 def importLocalInterface(module_id, path = None, is_erp5_type=False):
-  def provides(class_id):
-    # Create interface getter
-    accessor_name = 'provides' + class_id
-    setattr(BaseClass, accessor_name, lambda self: self.provides(class_id))
-    BaseClass.security.declarePublic(accessor_name)
+  """
+  Import filesystem Interface and add it to Products.ERP5Type.interfaces,
+  only meaningful for filesystem Interface as they can all be loaded at
+  ERP5 startup.
+
+  Corresponding providesI<class_id> accessor is added to BaseAccessorHolder.
+  """
   class_id = "I" + convertToUpperCase(module_id)
-  if is_erp5_type:
-    provides(class_id)
-  else:
+  if not is_erp5_type:
     if path is None:
       instance_home = getConfiguration().instancehome
       path = os.path.join(instance_home, "interfaces")
@@ -742,7 +742,6 @@ def importLocalInterface(module_id, path = None, is_erp5_type=False):
     for k, v in module.__dict__.iteritems():
       if type(v) is InterfaceClass and v is not Interface:
         setattr(interfaces, k, v)
-        provides(class_id)
 
 def importLocalConstraint(class_id, path = None):
   import Products.ERP5Type.Constraint

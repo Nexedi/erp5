@@ -800,17 +800,29 @@ class Base(
     self.reindexObject()
 
   security.declarePublic('provides')
+  @classmethod
   def provides(cls, interface_name):
     """
-    Check if the current class provides a particular interface from ERP5Type's
-    interfaces registry
+    Check if the current class provides a particular interface from Interface
+    Components and fallback on ERP5Type's interfaces registry
     """
-    interface = getattr(interfaces, interface_name, None)
-    if interface is not None:
-      return interface.implementedBy(cls)
-    return False
-  provides = classmethod(CachingMethod(provides, 'Base.provides',
-                                       cache_factory='erp5_ui_long'))
+    from Products.ERP5Type.dynamic.portal_type_class import _importComponentClass
+    import erp5.component.interface
+    interface = _importComponentClass(erp5.component.interface, interface_name)
+    if interface is None:
+      try:
+        interface = getattr(interfaces, interface_name)
+      except AttributeError:
+        # provides() is public (DoS)
+        return False
+
+    return_value = interface.implementedBy(cls)
+    # XXX: All classes should already be 'erp5.portal_type'...
+    if cls.__module__ == 'erp5.portal_type':
+      # provides() is usually not called directly but through
+      # providesI<interface_name>() so optimize this common use case
+      setattr(cls, 'provides' + interface_name, lambda _: return_value)
+    return return_value
 
   def _aq_key(self):
     return (self.portal_type, self.__class__)
