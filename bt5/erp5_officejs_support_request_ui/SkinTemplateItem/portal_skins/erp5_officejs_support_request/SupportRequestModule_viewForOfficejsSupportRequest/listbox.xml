@@ -240,6 +240,10 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>causality_reference</string>
+                          <string>Visa File Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>resource_title</string>
                           <string>Type</string>
                         </tuple>

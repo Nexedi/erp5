@@ -102,6 +102,7 @@
                         <string>my_source_project_title</string>
                         <string>my_destination_title</string>
                         <string>your_preferred_editor</string>
+                        <string>my_causality_reference</string>
                       </list>
                     </value>
                 </item>
