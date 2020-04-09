@@ -226,9 +226,10 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     # a new interface
     class IForTest(Interface):
       pass
+    self.assertFalse('IForTest' in self.portal.portal_types.getInterfaceTypeList())
     from Products.ERP5Type import interfaces
     interfaces.IForTest = IForTest
-
+    self.assertTrue('IForTest' in self.portal.portal_types.getInterfaceTypeList())
 
     # one new type
     dummy_type = types_tool.newContent('InterfaceTestType',
