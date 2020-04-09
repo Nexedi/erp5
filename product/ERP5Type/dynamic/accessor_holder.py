@@ -151,6 +151,14 @@ def _generateBaseAccessorHolder(portal):
                                         base_category_id,
                                         category_tool)
 
+  # Create providesIFoo() getters of ZODB/FS Interface classes
+  def provides(class_id):
+    accessor_name = 'provides' + class_id
+    setattr(accessor_holder, accessor_name, lambda self: self.provides(class_id))
+    accessor_holder.security.declarePublic(accessor_name)
+  for class_id in portal.portal_types.getInterfaceTypeList():
+    provides(class_id)
+
   erp5.accessor_holder.registerAccessorHolder(accessor_holder)
   return accessor_holder
 
