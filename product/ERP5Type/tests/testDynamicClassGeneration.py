@@ -3036,6 +3036,7 @@ class %s(Interface):
     methods from Person Document
     """
     import erp5.portal_type
+    import erp5.accessor_holder
     person_type = self.portal.portal_types.Person
     person_type_class = erp5.portal_type.Person
 
@@ -3043,6 +3044,8 @@ class %s(Interface):
     self.tic()
     self.failIfModuleImportable('ITestPortalType')
     self.assertFalse('ITestPortalType' in person_type.getInterfaceTypeList())
+    self.failIfHasAttribute(erp5.accessor_holder.BaseAccessorHolder,
+                            'providesITestPortalType')
 
     component.validate()
     self.assertModuleImportable('ITestPortalType')
@@ -3053,6 +3056,11 @@ class %s(Interface):
     person_type_class.loadClass()
     implemented_by_list = list(implementedBy(person_type_class))
     self.assertFalse(ITestPortalType in implemented_by_list)
+    self.assertHasAttribute(erp5.accessor_holder.BaseAccessorHolder,
+                            'providesITestPortalType')
+    self.assertHasAttribute(person_type_class, 'providesITestPortalType')
+    new_person = self.portal.person_module.newContent(portal_type='Person')
+    self.assertFalse(new_person.providesITestPortalType())
     person_original_interface_type_list = list(person_type.getTypeInterfaceList())
     try:
       person_type.setTypeInterfaceList(person_original_interface_type_list +
@@ -3063,10 +3071,12 @@ class %s(Interface):
       person_type_class.loadClass()
       implemented_by_list = list(implementedBy(person_type_class))
       self.assertTrue(ITestPortalType in implemented_by_list)
+      self.assertTrue(new_person.providesITestPortalType())
 
     finally:
       person_type.setTypeInterfaceList(person_original_interface_type_list)
       self.commit()
+      self.assertFalse(new_person.providesITestPortalType())
 
 from Products.ERP5Type.Core.MixinComponent import MixinComponent
 class TestZodbMixinComponent(TestZodbInterfaceComponent):
