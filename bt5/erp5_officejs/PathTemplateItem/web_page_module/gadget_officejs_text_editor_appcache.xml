@@ -112,13 +112,7 @@
 CACHE:\n
 \n
 NETWORK:\n
-*\n
-\n
-\n
-\n
-\n
-\n
-</string> </value>
+*</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -265,7 +259,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.58171.53398.21316</string> </value>
+                      <value> <string>983.5715.46319.48179</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -283,7 +277,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585732453.7</float>
+                              <float>1586424225.29</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
