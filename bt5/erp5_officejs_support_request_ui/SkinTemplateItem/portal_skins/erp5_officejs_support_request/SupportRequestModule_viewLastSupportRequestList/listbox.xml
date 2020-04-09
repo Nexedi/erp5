@@ -345,7 +345,16 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>descending</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>descending</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -376,7 +385,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Folder_searchFolderSortByReferenceDescending</string> </value>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>
