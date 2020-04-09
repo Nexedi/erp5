@@ -233,6 +233,10 @@
                           <string>Support Request Type</string>
                         </tuple>
                         <tuple>
+                          <string>causality_reference</string>
+                          <string>Visa File Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>destination_decision_title</string>
                           <string>Requester</string>
                         </tuple>
