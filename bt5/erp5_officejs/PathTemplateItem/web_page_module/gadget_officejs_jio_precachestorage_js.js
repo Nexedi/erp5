@@ -18,6 +18,7 @@
       this._relative_url_list = [
         this._prefix,
         this._prefix + "gadget_officejs_bootloader.js",
+        this._prefix + "gadget_officejs_bootloader.html",
         this._prefix + "gadget_officejs_bootloader_presentation.html",
         this._prefix + "gadget_officejs_bootloader_presentation.js",
         this._prefix + "gadget_officejs_bootloader_presentation.css",
