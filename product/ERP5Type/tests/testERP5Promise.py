@@ -38,7 +38,7 @@ class TestERP5Promise(ERP5TypeTestCase):
       """
         Return the list of business templates.
       """
-      return ("erp5_promise", "erp5_base")
+      return ("erp5_base", "erp5_certificate_authority", "erp5_promise")
 
     def _test_promise_alarm(self, alarm_id):
       alarm = self.portal.portal_alarms[alarm_id]
