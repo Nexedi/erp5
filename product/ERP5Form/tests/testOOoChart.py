@@ -27,7 +27,6 @@
 ##############################################################################
 
 import unittest
-from Products.ERP5Form.Form import ERP5Form
 from DocumentTemplate import String
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -66,7 +65,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       portal = self.getPortal()
       container = portal.portal_skins.custom
       if self.form_id not in container.objectIds():
-        container._setObject(self.form_id, ERP5Form(self.form_id, 'View'))
+        container.manage_addProduct['ERP5Form'].addERP5Form(self.form_id, 'View')
         form = getattr(container, self.form_id)
 
         # create some persons in person_module
