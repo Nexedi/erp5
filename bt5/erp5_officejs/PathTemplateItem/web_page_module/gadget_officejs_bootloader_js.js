@@ -36,10 +36,16 @@ var repair = false;
         }
       },
       remote_sub_storage: {
-        type: "appcache",
+        /*type: "appcache",
         manifest: gadget.props.cache_file,
         version: gadget.props.version_url,
-        take_installer: true
+        take_installer: true*/
+        //TODO: keep appcache for backward compatibility
+        type: "precache",
+        take_installer: true,
+        manifest: "WebSection_getPrecacheManifest",
+        service_worker: "gadget_erp5_serviceworker.js",
+        version: gadget.props.version_url
       }
     });
   }
