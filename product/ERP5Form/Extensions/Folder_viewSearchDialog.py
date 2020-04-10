@@ -31,7 +31,6 @@ from Products.Formulator.TALESField import TALESMethod
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type.Message import translateString as translateStringAsMessage
-from Products.ERP5Form.Form import ERP5Form
 from Products.ERP5Form.ListBox import ListBoxListRenderer
 
 def translateString(*args, **kw):
@@ -49,7 +48,10 @@ def getSearchDialog(self, REQUEST=None):
   default_view = self.getTypeInfo().getDefaultViewFor(self)
   listbox = default_view.listbox
 
-  temp_form = ERP5Form('Folder_viewSearchDialog', 'Search').__of__(portal).__of__(self)
+  temp_form = self.newContent(temp_object=True,
+                              portal_type='ERP5 Form',
+                              id='Folder_viewSearchDialog',
+                              title='Search')
   temp_form.pt = 'form_dialog'
   temp_form.action = 'Folder_search'
 

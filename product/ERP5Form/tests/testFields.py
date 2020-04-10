@@ -44,7 +44,6 @@ from Products.Formulator.MethodField import Method, BoundMethod
 from Products.Formulator.TALESField import TALESMethod
 
 from Products.ERP5Type.Core.Folder import Folder
-from Products.ERP5Form.Form import ERP5Form
 from Products.ERP5Form.Form import field_value_cache
 from Products.ERP5Form.Form import getFieldValue
 from Products.ERP5Form import ProxyField
@@ -638,10 +637,8 @@ class TestProxyField(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.container = Folder('container').__of__(self.portal)
-    self.container._setObject('Base_viewProxyFieldLibrary',
-                               ERP5Form('Base_viewProxyFieldLibrary', 'Proxys'))
-    self.container._setObject('Base_view',
-                               ERP5Form('Base_view', 'View'))
+    self.container.manage_addProduct['ERP5Form'].addERP5Form('Base_viewProxyFieldLibrary', 'Proxys')
+    self.container.manage_addProduct['ERP5Form'].addERP5Form('Base_view', 'View')
     from Products.CMFCore.tests.base.utils import _setUpDefaultTraversable
     _setUpDefaultTraversable()
 
@@ -927,7 +924,7 @@ class TestFieldValueCache(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.root = self.portal
-    self.root.form = ERP5Form('form', 'Form')
+    self.root.manage_addProduct['ERP5Form'].addERP5Form('form', 'Form')
     self.root.getProperty = lambda key, d=None: \
       dict(on_memory_field='123').get(key, d)
 

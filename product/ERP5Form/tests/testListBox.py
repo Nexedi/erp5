@@ -41,7 +41,6 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from ZPublisher.HTTPRequest import FileUpload
 from StringIO import StringIO
 from Products.ERP5Form.Selection import Selection
-from Products.ERP5Form.Form import ERP5Form
 from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Form.ListBox import ListBoxHTMLRenderer
 
@@ -634,8 +633,7 @@ class TestListBox(ERP5TypeTestCase):
       field_columns=['listbox_value | Title',],)
 
     # create a form, to store our proxy field inside
-    portal._setObject('Test_view',
-                      ERP5Form('Test_view', 'View'))
+    portal.manage_addProduct['ERP5Form'].addERP5Form('Test_view', 'View')
     portal.Test_view.manage_addField('listbox', 'listbox', 'ProxyField')
     proxy_field = portal.Test_view.listbox
     proxy_field.manage_edit_xmlrpc(dict(
