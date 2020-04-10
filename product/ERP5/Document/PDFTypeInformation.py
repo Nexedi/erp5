@@ -33,7 +33,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-from Products.ERP5Form.Form import ERP5Form
 from Products.ERP5Form.PDFForm import PDFForm
 from Products.ERP5Form.ScribusParser import ScribusParser
 from Products.ERP5Form.PDFParser import PDFParser
@@ -444,7 +443,10 @@ class PDFTypeInformation(ERP5TypeInformation):
 
     def generateERP5Form():
       form_name = "view"
-      form = ERP5Form(form_name, self.getId())
+      form = self.newContent(temp_object=True,
+                             portal_type='ERP5 Form',
+                             id=form_name,
+                             title=self.getId())
       parsed_scribus = self._getParsedScribusFile()
       pages = range(len(parsed_scribus))
       #get the context for default values
@@ -546,7 +548,7 @@ class PDFTypeInformation(ERP5TypeInformation):
     #                                ('PDFTypeInformation_generateERP5Form',
     #                                md5(self.getDefaultScribusFormValue().getData()).digest()),
     #                                cache_factory='dms_cache_factory')
-    return generateERP5Form().__of__(self)
+    return generateERP5Form()
 
   # XXX criticize Image Document
   #     (we are forced to use xlarge preference)

@@ -30,7 +30,6 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5Form.Form import ERP5Form
 
 from xml.dom.minidom import parseString
 
@@ -150,8 +149,7 @@ class TestRSS(ERP5TypeTestCase):
     request.set('portal_skin', 'RSS');
     portal.portal_skins.changeSkin('RSS');
 
-    self.getPortal()._setObject('Test_view',
-                      ERP5Form('Test_view', 'View'))
+    self.getPortal().manage_addProduct['ERP5Form'].addERP5Form('Test_view', 'View')
     portal.Test_view.manage_addField('listbox', 'listbox', 'ListBox')
     portal.Test_view.manage_addField('listbox_link',  'listbox_link',  'StringField')
 
