@@ -411,7 +411,7 @@
             <key> <string>configuration_precache_manifest_script_list</string> </key>
             <value> <string>WebSection_getOfficeJsPrecacheManifestList\n
 WebSection_getOnlyOfficePrecacheManifestList\n
-WebSection_getOOfficeTextEditorPrecacheManifestLis</string> </value>
+WebSection_getOOfficeTextEditorPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
@@ -674,7 +674,7 @@ WebSection_getOOfficeTextEditorPrecacheManifestLis</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.59905.21811.6946</string> </value>
+                      <value> <string>982.59922.57150.55142</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -692,7 +692,7 @@ WebSection_getOOfficeTextEditorPrecacheManifestLis</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585744492.32</float>
+                              <float>1586530387.36</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
