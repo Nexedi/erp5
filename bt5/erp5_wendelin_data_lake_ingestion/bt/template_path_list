@@ -9,7 +9,7 @@ portal_alarms/wendelin_data_lake_handle_analysis
 portal_alarms/wendelin_data_lake_handle_analysis/**
 portal_callables/DataIngestionLine_writeEmbulkIngestionToDataStream
 portal_callables/DataTransformation_transformFIFDataToDataArray
-portal_callables/HandleFifEmbulkIngestion
+portal_callables/IngestionPolicy_handleEmbulkIngestion
 portal_categories/function/**
 portal_categories/use/**
 portal_ingestion_policies/wendelin_embulk
