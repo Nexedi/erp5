@@ -30,7 +30,6 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5Form.Form import ERP5Form
 
 
 class TestICal(ERP5TypeTestCase):
@@ -229,8 +228,7 @@ class TestICal(ERP5TypeTestCase):
     self.request.set('portal_skin', 'iCal');
     self.portal.portal_skins.changeSkin('iCal');
 
-    self.portal._setObject('Test_view',
-                        ERP5Form('Test_view', 'View'))
+    self.portal.manage_addProduct['ERP5Form'].addERP5Form('Test_view', 'View')
     self.portal.Test_view.manage_addField('listbox', 'listbox', 'ListBox')
 
     listbox=self.portal.Test_view.listbox
