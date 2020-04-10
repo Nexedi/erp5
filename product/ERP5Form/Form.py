@@ -438,7 +438,8 @@ def addERP5Form(self, id, title="", REQUEST=None):
     Result -- empty string
     """
     # add actual object
-    id = self._setObject(id, ERP5Form(id, title))
+    type_info = self.getPortalObject().portal_types.getTypeInfo('ERP5 Form')
+    type_info.constructInstance(container=self, id=id, title=title)
     # respond to the add_and_edit button if necessary
     add_and_edit(self, id, REQUEST)
     return ''
@@ -643,7 +644,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
     # don't get ERP5Type's Base default content_type.
     content_type = ZopePageTemplate.content_type
 
-    def __init__(self, id, title, unicode_mode=0, encoding='UTF-8',
+    def __init__(self, id, title='', unicode_mode=0, encoding='UTF-8',
                  stored_encoding='UTF-8'):
         """Initialize form.
         id    -- id of form
@@ -1311,14 +1312,6 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
     def PrincipiaSearchSource(self):
       return str((self.pt, self.name, self.action, self.update_action,
                   self.encoding, self.stored_encoding, self.enctype))
-
-    # XXX: This class is a mix between a document class and a regular class.
-    # Ideally, it should be made an alias to "erp5.portal_type.ERP5 Form",
-    # which is the corresponding fully-functional document class.
-    # Until then, hardcode some methods expected to exist on all document
-    # classes so that they can be removed from Base.
-    def _getAcquireLocalRoles(self):
-      return True
 
 # utility function
 def get_field_meta_type_and_proxy_flag(field):

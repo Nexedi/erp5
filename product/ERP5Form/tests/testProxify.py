@@ -29,7 +29,6 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.Formulator.TALESField import TALESMethod
 from Products.ERP5Type.Core.Folder import Folder
-from Products.ERP5Form.Form import ERP5Form
 from Products.ERP5Form.Form import field_value_cache
 
 class TestProxify(ERP5TypeTestCase):
@@ -40,8 +39,7 @@ class TestProxify(ERP5TypeTestCase):
   def afterSetUp(self):
     # base field library
     self.container = Folder('container').__of__(self.portal)
-    self.container._setObject('Base_view',
-                               ERP5Form('Base_view', 'Base'))
+    self.container.manage_addProduct['ERP5Form'].addERP5Form('Base_view', 'Base')
     base_view = self.base_view = self.container.Base_view
     base_view.manage_addField('my_string_field', 'String Field', 'StringField')
     base_view.manage_addField('my_list_field', 'List Field', 'ListField')
@@ -59,16 +57,14 @@ class TestProxify(ERP5TypeTestCase):
     del base_view.my_relation_string_field.values['relation_form_id']
 
     # address view
-    self.container._setObject('Address_view',
-                              ERP5Form('Address_view', 'Address'))
+    self.container.manage_addProduct['ERP5Form'].addERP5Form('Address_view', 'Address')
     address_view = self.address_view = self.container.Address_view
     address_view.manage_addField('my_region', 'Country', 'StringField')
     address_view.my_region.values['size'] = 1
     address_view.my_region.tales['items'] = TALESMethod('here/portal_categories/region/getCategoryChildTitleItemList')
 
     # person view
-    self.container._setObject('Person_view',
-                               ERP5Form('Person_view', 'Person'))
+    self.container.manage_addProduct['ERP5Form'].addERP5Form('Person_view', 'Person')
     person_view = self.person_view = self.container.Person_view
     person_view.manage_addField('my_name', 'Name', 'StringField')
     person_view.manage_addField('my_default_region', 'Country', 'ListField')
