@@ -282,9 +282,15 @@ class TestERP5Simulation(TestPackingListMixin, SecurityTestCase):
     for line in packing_list1.objectValues(
           portal_type= self.packing_list_line_portal_type):
       self.assertEqual(self.default_quantity-10,line.getQuantity())
+    self.assertEqual('solved', packing_list1.getCausalityState())
     for line in packing_list2.objectValues(
           portal_type= self.packing_list_line_portal_type):
       self.assertEqual(10+1000,line.getQuantity())
+    self.assertEqual('solved', packing_list2.getCausalityState())
+
+  def stepExpandOrder(self, sequence=None, sequence_list=None, **kw):
+    order = sequence.get('order')
+    order.updateSimulation(expand_root=1)
 
   def getOrderedPackingListFromOrder(self, order):
     packing_list_list = order.getCausalityRelatedValueList(
@@ -327,8 +333,10 @@ class TestERP5Simulation(TestPackingListMixin, SecurityTestCase):
                       stepCheckSolverIsSolving \
                       stepTic \
                       stepCheckPackingListSplittedForTest02 \
-                      stepCheckPackingListIsSolved \
                       stepCheckSolverIsSolved \
+                      stepExpandOrder \
+                      stepTic \
+                      stepCheckPackingListSplittedForTest02 \
                       '
     sequence_list.addSequenceString(sequence_string)
 
