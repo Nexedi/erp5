@@ -1408,11 +1408,11 @@ class ObjectTemplateItem(BaseTemplateItem):
           groups[path] = deepcopy(obj.groups)
         # copy the object
         if (getattr(aq_base(obj), '_mt_index', None) is not None and
-            obj._count() == 0):
-          # some btrees were exported in a corrupted state. They're empty but
-          # their metadata-index (._mt_index) contains entries which in
+            obj._count() != len(obj._mt_index.keys())):
+          # Some btrees were exported in a corrupted state.
+          # Their meta_type-index (._mt_index) contains entries which in
           # Zope 2.12 are used for .objectIds(), .objectValues() and
-          # .objectItems(). In these cases, force the
+          # .objectItems(). In these cases, recreate index.
           LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
               'Cleaning corrupted BTreeFolder2 object at %r.' % (path,))
           obj._initBTrees()
