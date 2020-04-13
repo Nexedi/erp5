@@ -56,6 +56,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     return ('erp5_core_proxy_field_legacy',
             'erp5_base',
             'erp5_web',
+            'erp5_crm',
             'erp5_credential',
             'erp5_system_event',
             'erp5_authentication_policy',)
