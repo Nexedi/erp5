@@ -812,9 +812,15 @@ class Base(
     if interface is None:
       interface = getattr(interfaces, interface_name, None)
 
+    return_value = False
     if interface is not None:
-      return interface.implementedBy(cls)
-    return False
+      return_value = interface.implementedBy(cls)
+
+    # XXX: All classes should already be 'erp5.portal_type'...
+    if cls.__module__ == 'erp5.portal_type':
+      setattr(cls, 'provides' + interface_name, lambda _: return_value)
+
+    return return_value
 
   def _aq_key(self):
     return (self.portal_type, self.__class__)

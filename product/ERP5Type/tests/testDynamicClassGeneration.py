@@ -3060,7 +3060,9 @@ class %s(Interface):
                             'providesITestPortalType')
     self.assertHasAttribute(person_type_class, 'providesITestPortalType')
     new_person = self.portal.person_module.newContent(portal_type='Person')
+    self.assertFalse('providesITestPortalType' in person_type_class.__dict__)
     self.assertFalse(new_person.providesITestPortalType())
+    self.assertTrue('providesITestPortalType' in person_type_class.__dict__)
     person_original_interface_type_list = list(person_type.getTypeInterfaceList())
     try:
       person_type.setTypeInterfaceList(person_original_interface_type_list +
@@ -3071,7 +3073,9 @@ class %s(Interface):
       person_type_class.loadClass()
       implemented_by_list = list(implementedBy(person_type_class))
       self.assertTrue(ITestPortalType in implemented_by_list)
+      self.assertFalse('providesITestPortalType' in person_type_class.__dict__)
       self.assertTrue(new_person.providesITestPortalType())
+      self.assertTrue('providesITestPortalType' in person_type_class.__dict__)
 
     finally:
       person_type.setTypeInterfaceList(person_original_interface_type_list)
