@@ -46,10 +46,9 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W:125,  4: Unused variable \'ingestion_id\' (unused-variable)</string>
-                <string>W:132, 34: Unused variable \'i\' (unused-variable)</string>
-                <string>W:132, 76: Unused variable \'j\' (unused-variable)</string>
-                <string>W:  9,  0: Unused datetime imported from datetime (unused-import)</string>
+                <string>W:108,  4: Unused variable \'ingestion_id\' (unused-variable)</string>
+                <string>W:115, 34: Unused variable \'i\' (unused-variable)</string>
+                <string>W:115, 76: Unused variable \'j\' (unused-variable)</string>
               </tuple>
             </value>
         </item>
@@ -105,24 +104,28 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
     <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>validate</string> </value>
-            </item>
-            <item>
-                <key> <string>validation_state</string> </key>
-                <value> <string>validated</string> </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>validate</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>validated</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
     </pickle>
   </record>
 </ZopeData>
