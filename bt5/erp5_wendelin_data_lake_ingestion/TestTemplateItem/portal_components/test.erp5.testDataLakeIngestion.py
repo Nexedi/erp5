@@ -6,7 +6,6 @@ import os
 import time
 import numpy as np
 import base64
-from datetime import datetime
 
 class TestDataIngestion(SecurityTestCase):
 
@@ -16,23 +15,13 @@ class TestDataIngestion(SecurityTestCase):
   PART_3 = REFERENCE_SEPARATOR + "003"
   EOF = REFERENCE_SEPARATOR + "EOF"
   FIF = REFERENCE_SEPARATOR + "fif"
-  TXT = REFERENCE_SEPARATOR + "txt"
   CSV = REFERENCE_SEPARATOR + "csv"
-  TSV = REFERENCE_SEPARATOR + "tsv"
-  GZ = REFERENCE_SEPARATOR + "gz"
-  NII = REFERENCE_SEPARATOR + "nii"
   SIZE_HASH = REFERENCE_SEPARATOR + "fake-size"+ REFERENCE_SEPARATOR + "fake-hash"
   SINGLE_INGESTION_END = REFERENCE_SEPARATOR
-  RANDOM = REFERENCE_SEPARATOR + ''.join([random.choice(string.ascii_letters + string.digits) for _ in xrange(3)])
-  CHUNK_SIZE_TXT = 50000
   CHUNK_SIZE_CSV = 25
   REF_PREFIX = "fake-supplier" + REFERENCE_SEPARATOR + "fake-dataset" + REFERENCE_SEPARATOR
   REF_SUPPLIER_PREFIX = "fake-supplier" + REFERENCE_SEPARATOR
-  INGESTION_SCRIPT = 'HandleFifEmbulkIngestion'
   INVALID = "_invalid"
-  NEW = "_NEW"
-  FALSE = "FALSE"
-  TRUE = "TRUE"
 
   def getTitle(self):
     return "DataIngestionTest"
@@ -42,7 +31,7 @@ class TestDataIngestion(SecurityTestCase):
             'erp5_wendelin', 'erp5_callables', 'erp5_core')
 
   def afterSetUp(self):
-    self.context = self.portal #.UnitTest_getContext()
+    self.context = self.portal
     self.assertEqual(self.REFERENCE_SEPARATOR, self.portal.getIngestionReferenceDictionary()["reference_separator"])
     self.assertEqual(self.INVALID, self.portal.getIngestionReferenceDictionary()["invalid_suffix"])
     self.assertEqual(self.EOF, self.REFERENCE_SEPARATOR + self.portal.getIngestionReferenceDictionary()["split_end_suffix"])
@@ -68,12 +57,6 @@ class TestDataIngestion(SecurityTestCase):
   def chunks(self, l, n):
     for i in xrange(0, len(l), n):
       yield l[i:i+n]
-
-  def generateRawDataBytesAndArray(self):
-    url = 'data_stream_module/mne_sample_for_test'
-    sample_data_stream = self.context.restrictedTraverse(url)
-    raw_data, array, json_data = self.context.generateRawData(sample_data_stream)
-    return raw_data, array, json_data
 
   def getIngestionPolicy(self, reference, ingestion_script):
     ingestion_policy = self.portal.portal_catalog.getResultValue(
