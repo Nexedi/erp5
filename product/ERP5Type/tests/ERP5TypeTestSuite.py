@@ -19,8 +19,10 @@ class ERP5TypeTestSuite(TestSuite):
     return self.runUnitTest(test)
 
   def runUnitTest(self, *args, **kw):
+    instance_home = self.instance and 'unit_test.%u' % self.instance \
+                                   or 'unit_test'
     if self.instance:
-      args = ('--instance_home=unit_test.%u' % self.instance,) + args
+      args = ('--instance_home=' + instance_home, ) + args
     if self.__dict__.has_key("bt5_path"):
       args = ("--bt5_path=%s" % self.bt5_path,) + args
     instance_number = self.instance or 1
@@ -41,6 +43,18 @@ class ERP5TypeTestSuite(TestSuite):
       args = ("--firefox_bin=%s" % firefox_bin,) + args
     if xvfb_bin:
       args = ("--xvfb_bin=%s" % xvfb_bin,) + args
+    if 'testUpgradeInstanceWithOldDataFs' in args:
+      # our reference Data.fs uses `CONNECTION_STRING_REPLACED_BY_TEST_INIT_______________________________`
+      # as a connection string. Before we start, replace this by the connection string
+      # that this test node is using.
+      marker_connection_string = b'CONNECTION_STRING_REPLACED_BY_TEST_INIT_______________________________'
+      actual_connection_string = mysql_db_list[0].ljust(len(marker_connection_string)).encode()
+      assert len(marker_connection_string) == len(actual_connection_string)
+      with open(os.path.join(instance_home, 'var', 'Data.fs'), 'rb') as f:
+        data_fs = f.read()
+      with open(os.path.join(instance_home, 'var', 'Data.fs'), 'wb') as f:
+        f.write(data_fs.replace(marker_connection_string, actual_connection_string))
+
     try:
       runUnitTest = os.environ.get('RUN_UNIT_TEST',
                                    'runUnitTest')
