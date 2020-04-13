@@ -65,14 +65,15 @@ def getSkinPrefixList(self):
   skin_prefix_list.extend(self.portal_types.getMixinTypeList())
 
   # Add interfaces prefix
-  skin_prefix_list.extend(self.portal_types.getInterfaceTypeList())
-  # XXX getInterfaceTypeList seems empty ... keep this low-level way for now.
+  # XXX getInterfaceTypeList does not include file system interfaces ... keep this low-level way for now.
   from Products.ERP5Type import interfaces
-  for interface_name in interfaces.__dict__.keys():
+  for interface_name in (
+      list(interfaces.__dict__.keys())
+      + list(self.portal_types.getInterfaceTypeList())):
     if interface_name.startswith('I'):
       skin_prefix_list.append(interface_name[1:])
-      # XXX do we really add with the I prefix ?
-      skin_prefix_list.append(interface_name)
+    # XXX do we really add with the I prefix ?
+    skin_prefix_list.append(interface_name)
 
   # Add other prefix
   skin_prefix_list.extend((
