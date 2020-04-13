@@ -42,6 +42,7 @@ except ImportError:
   warnings.warn("Please install unidiff, it is needed by Diff Tool",
                 DeprecationWarning)
 from AccessControl import ClassSecurityInfo
+from Acquisition import Explicit
 from Products.ERP5Type.patches.diff import DeepDiff
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
@@ -71,7 +72,7 @@ class DiffTool(BaseTool):
       path -- optional path to specify which property to diff
       patch_format -- optional format (rfc6902 or deepdiff)
     """
-    return PortalPatch(old_value, new_value, path, patch_format)
+    return PortalPatch(old_value, new_value, path, patch_format).__of__(self)
 
   security.declarePrivate('patchPortalObject')
   def patchPortalObject(self, old, diff_list):
@@ -89,7 +90,8 @@ class DiffTool(BaseTool):
 
     return new_obj
 
-class PortalPatch:
+
+class PortalPatch(Explicit):
   """
     Provides an abstraction to a patch that
     depends on the patch format.
@@ -283,3 +285,4 @@ class PortalPatch:
     return obj_dict
 
 InitializeClass(DiffTool)
+InitializeClass(PortalPatch)
