@@ -59,7 +59,7 @@ ACQUIRE_LOCAL_ROLE_GETTER_DICT = {
   for acquire_local_role in (False, True)
 }
 
-def _importClass(classpath):
+def _importFilesystemClass(classpath):
   try:
     module_path, class_name = classpath.rsplit('.', 1)
     module = __import__(module_path, {}, {}, (module_path,))
@@ -72,6 +72,19 @@ def _importClass(classpath):
     return klass
   except StandardError:
     raise ImportError('Could not import document class ' + classpath)
+
+def _importComponentClass(component_package, name):
+  module = component_package.find_load_module(name)
+  klass = None
+  if module is not None:
+    try:
+      klass = getattr(module, name)
+    except AttributeError:
+      LOG("ERP5Type.dynamic", WARNING,
+          "Could not get class '%s' in Component module %r, fallback on filesystem" %
+          (name, module))
+
+  return klass
 
 # Loading Cache Factory portal type would generate the accessor holder
 # for Cache Factory, itself defined with Standard Property thus
@@ -136,7 +149,7 @@ def generatePortalTypeClass(site, portal_type_name):
     else:
       # Loading the inner portal type class without any mixin,
       # interface or Property Sheet
-      klass = _importClass(document_class_registry.get(
+      klass = _importFilesystemClass(document_class_registry.get(
         core_portal_type_class_dict[portal_type_name]['type_class']))
 
       # LOG("ERP5Type.dynamic", INFO,
@@ -212,23 +225,15 @@ def generatePortalTypeClass(site, portal_type_name):
     type_class_namespace = document_class_registry.get(type_class, '')
     if not (type_class_namespace.startswith('Products.ERP5Type') or
             portal_type_name in core_portal_type_class_dict):
-      module = None
       if portal_type_name.endswith('Tool'):
         import erp5.component.tool
-        module = erp5.component.tool.find_load_module(type_class)
+        klass = _importComponentClass(erp5.component.tool, type_class)
 
       # Tool Component was introduced recently and some Tool have already been
       # migrated as Document Component
-      if module is None:
+      if klass is None:
         import erp5.component.document
-        module = erp5.component.document.find_load_module(type_class)
-      if module is not None:
-        try:
-          klass = getattr(module, type_class)
-        except AttributeError:
-          LOG("ERP5Type.dynamic", WARNING,
-              "Could not get class '%s' in Component module %r, fallback on filesystem" %
-              (type_class, module))
+        klass = _importComponentClass(erp5.component.document, type_class)
 
     if klass is None:
       type_class_path = document_class_registry.get(type_class)
@@ -239,7 +244,7 @@ def generatePortalTypeClass(site, portal_type_name):
 
   if klass is None:
     try:
-      klass = _importClass(type_class_path)
+      klass = _importFilesystemClass(type_class_path)
     except ImportError:
       error_msg = 'Could not import %s of Portal Type %s' % (type_class,
                                                              portal_type_name)
@@ -285,18 +290,9 @@ def generatePortalTypeClass(site, portal_type_name):
     # registry like there used to be with FS.
     import erp5.component.mixin
     for mixin in mixin_list:
-      mixin_module = erp5.component.mixin.find_load_module(mixin)
-      mixin_class = None
-      if mixin_module is not None:
-        try:
-          mixin_class = getattr(mixin_module, mixin)
-        except AttributeError:
-          LOG("ERP5Type.dynamic", WARNING,
-              "Could not get class '%s' in Component module %r, fallback on filesystem" %
-              (mixin, mixin_module))
-
+      mixin_class = _importComponentClass(erp5.component.mixin, mixin)
       if mixin_class is None:
-        mixin_class = _importClass(mixin_class_registry[mixin])
+        mixin_class = _importFilesystemClass(mixin_class_registry[mixin])
 
       mixin_class_list.append(mixin_class)
 
@@ -319,16 +315,7 @@ def generatePortalTypeClass(site, portal_type_name):
     import erp5.component.interface
     from Products.ERP5Type import interfaces as filesystem_interfaces
     for interface in interface_list:
-      interface_module = erp5.component.interface.find_load_module(interface)
-      interface_class = None
-      if interface_module is not None:
-        try:
-          interface_class = getattr(interface_module, interface)
-        except AttributeError:
-          LOG("ERP5Type.dynamic", WARNING,
-              "Could not get class '%s' in Component module %r, fallback on filesystem" %
-              (interface, interface_module))
-
+      interface_class = _importComponentClass(erp5.component.interface, interface)
       if interface_class is None:
         interface_class = getattr(filesystem_interfaces, interface)
 
