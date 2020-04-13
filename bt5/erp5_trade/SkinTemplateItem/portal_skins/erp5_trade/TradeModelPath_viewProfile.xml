@@ -73,6 +73,7 @@
                     <value>
                       <list>
                         <string>my_source_method_id</string>
+                        <string>my_source_method_replace_category</string>
                         <string>my_source_section_title</string>
                         <string>my_source_title</string>
                         <string>my_source_decision_title</string>
@@ -81,6 +82,8 @@
                         <string>my_source_project_title</string>
                         <string>my_source_reference</string>
                         <string>my_source_carrier_title</string>
+                        <string>my_source_function_title</string>
+                        <string>my_source_funding_title</string>
                       </list>
                     </value>
                 </item>
@@ -89,6 +92,7 @@
                     <value>
                       <list>
                         <string>my_destination_method_id</string>
+                        <string>my_destination_method_replace_category</string>
                         <string>my_destination_section_title</string>
                         <string>my_destination_title</string>
                         <string>my_destination_decision_title</string>
@@ -97,6 +101,8 @@
                         <string>my_destination_project_title</string>
                         <string>my_destination_reference</string>
                         <string>my_destination_carrier_title</string>
+                        <string>my_destination_function_title</string>
+                        <string>my_destination_funding_title</string>
                       </list>
                     </value>
                 </item>
