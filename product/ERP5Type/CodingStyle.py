@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.ObjectMessage import ObjectMessage
 from Products.ERP5Type import Permissions
 
@@ -36,19 +37,11 @@ def getLegacyCallableIdItemList(self):
       ('WebSection_getPermanentURLForView', 'getPermanentURL'),
     )
 
-# Define acceptable prefix list for skin folder items
-skin_prefix_list = None
+
+@transactional_cached()
 def getSkinPrefixList(self):
+  """Return the list of acceptable prefixes for skins.
   """
-  Return the list of acceptable prefix. Cache the result.
-
-  TODO: make the cache more efficient (read-only transaction
-  cache)
-  """
-  global skin_prefix_list
-  if skin_prefix_list:
-    return skin_prefix_list
-
   portal = self.getPortalObject()
 
   # Add portal types prefix
