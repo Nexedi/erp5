@@ -27,9 +27,6 @@
  <portal_type id="Meeting Module">
   <item>Meeting</item>
  </portal_type>
- <portal_type id="Preference">
-  <item>Support Request</item>
- </portal_type>
  <portal_type id="Sale Opportunity Module">
   <item>Sale Opportunity</item>
  </portal_type>
