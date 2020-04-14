@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>IngestionPolicy_handleEmbulkIngestion</string> </value>
+            <value> <string>IngestionPolicy_parseEbulkIngestionTag</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
