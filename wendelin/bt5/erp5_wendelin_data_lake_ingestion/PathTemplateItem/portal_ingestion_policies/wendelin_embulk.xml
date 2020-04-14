@@ -74,7 +74,7 @@
         </item>
         <item>
             <key> <string>script_id</string> </key>
-            <value> <string>IngestionPolicy_handleEmbulkIngestion</string> </value>
+            <value> <string>IngestionPolicy_parseEbulkIngestionTag</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -152,7 +152,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.48448.18949.19490</string> </value>
+                      <value> <string>983.7345.1194.25002</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -170,7 +170,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1586521981.09</float>
+                              <float>1586847373.47</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
