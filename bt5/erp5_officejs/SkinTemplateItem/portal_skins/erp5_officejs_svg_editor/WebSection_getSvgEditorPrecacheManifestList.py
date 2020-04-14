@@ -266,17 +266,7 @@ url_list = [
   "method-draw/src/svgutils.js",
   "method-draw/src/units.js",
   "method-draw/src/method-draw.js",
-  "method-draw/src/svgcanvas.js",
-
-  #app_configuration_resources
-  #CONFIGURATION ELEMENTS generated on Wed Apr 01 14:45:53 2020. Same as in configuration manifest
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBJbGx1c3RyYXRpb24=",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBJbGx1c3RyYXRpb24vc3ZnX2VkaXRvcl92aWV3",
-  "hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc3ZnX2VkaXRvci9XZWJQYWdlX3ZpZXdBc1N2Z0RvY3VtZW50Rm9yU3ZnRWRpdG9y",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS9zdmdfZWRpdG9yX3ZpZXc=",
-  "hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc3ZnX2VkaXRvci9XZWJQYWdlTW9kdWxlX3ZpZXdXZWJQYWdlTGlzdEFzSmlvRm9yU3ZnRWRpdG9y",
-  #/app_configuration_resources
+  "method-draw/src/svgcanvas.js"
 ]
 
 return url_list
