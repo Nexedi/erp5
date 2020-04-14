@@ -371,7 +371,7 @@ class RuleMixin(Predicate):
         updatable_compensation_movement.setQuantity(
             updatable_compensation_movement.getQuantity() + missing_quantity)
         updatable_compensation_movement.clearRecordedProperty('quantity')
-      else:
+      elif missing_quantity:
         # We must create a profit and loss movement
         new_movement = self._newProfitAndLossMovement(prevision_movement)
         if new_movement is not None:

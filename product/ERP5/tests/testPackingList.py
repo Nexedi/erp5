@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from collections import deque
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -35,6 +36,15 @@ from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.testOrder import TestOrderMixin
 from DateTime import DateTime
+
+def getTree(self):
+  tree = []
+  object_list = deque((self,))
+  while object_list:
+    self = object_list.popleft()
+    tree.append(self)
+    object_list += self.objectValues()
+  return tree
 
 class TestPackingListMixin(TestOrderMixin):
   """
@@ -1498,6 +1508,88 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
         CheckPackingListIsSolved
         CheckNewPackingListIsSolved
         CheckPackingListSplittedTwoTimes
+        """
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+
+  def stepDeliverPackingList(self, sequence=None, sequence_list=None, **kw):
+    """
+      Deliver Packing List
+    """
+    packing_list = sequence.get('packing_list')
+    packing_list.stop()
+    packing_list.deliver()
+
+  def stepDeliverNewPackingList(self, sequence=None, sequence_list=None, **kw):
+    """
+      Deliver New Packing List
+    """
+    packing_list = sequence.get('new_packing_list')
+    packing_list.stop()
+    packing_list.deliver()
+
+  def stepCheckExpandOrderRootAppliedRuleIsStable(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check Order Applied Rule can be expanded without error
+    """
+    order = sequence.get('order')
+    related_applied_rule_list = order.getCausalityRelatedValueList( \
+                                  portal_type=self.applied_rule_portal_type)
+    applied_rule = related_applied_rule_list[0].getObject()
+    before = set(getTree(applied_rule))
+    applied_rule.expand("immediate")
+    after = getTree(applied_rule)
+    self.assertTrue(before.issubset(after))
+    for element in after:
+      if element in before:
+        if (element.getPortalType() == 'Simulation Movement' and
+            element.getDelivery() and
+            element.getParentValue().getSpecialiseValue().getPortalType()
+            != 'Order Root Simulation Rule'):
+          self.assertFalse(element.getDivergenceList())
+      else:
+        if element.getPortalType() == 'Simulation Movement':
+          element = element.getParentValue()
+          self.assertNotIn(element, before)
+
+  def test_11_02_PackingListDecreaseTwoTimesQuantityAndUpdateDeliveryAndDeliver(self,
+                                               quiet=quiet, run=run_all_test):
+    """
+      Change the quantity on an delivery line, then
+      see if the packing list is divergent and then
+      split and defer the packing list.
+      Deliver Packing Lists and make sure the root can be expanded
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    sequence_string = self.default_sequence + """
+        DecreasePackingListLineQuantity
+        CheckPackingListIsCalculating
+        Tic
+        CheckPackingListIsDiverged
+        SplitAndDeferPackingList
+        Tic
+        CheckPackingListIsSolved
+        CheckPackingListSplitted
+        DecreasePackingListLineQuantity
+        CheckPackingListIsCalculating
+        Tic
+        CheckPackingListIsDiverged
+        SplitAndDeferPackingList
+        Tic
+        CheckNewPackingListIsDivergent
+        NewPackingListAdoptPrevisionQuantity
+        Tic
+        CheckPackingListIsSolved
+        CheckNewPackingListIsSolved
+        CheckPackingListSplittedTwoTimes
+        DeliverPackingList
+        DeliverNewPackingList
+        Tic
+        CheckExpandOrderRootAppliedRuleIsStable
         """
     sequence_list.addSequenceString(sequence_string)
 
