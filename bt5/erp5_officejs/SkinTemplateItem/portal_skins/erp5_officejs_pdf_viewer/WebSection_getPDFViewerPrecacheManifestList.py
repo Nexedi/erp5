@@ -238,17 +238,7 @@ url_list = [
   "pdf_js/cmaps/RKSJ-H.bcmap",
   "pdf_js/cmaps/KSC-EUC-H.bcmap",
   "pdf_js/cmaps/EUC-V.bcmap",
-  "pdf_js/debugger.js",
-
-  #app_configuration_resources
-  #CONFIGURATION ELEMENTS generated on Wed Apr 01 12:11:34 2020. Same as in configuration manifest
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1BERg==",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1BERi9wZGZfdmlld2VyX3ZpZXc=",
-  "hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfcGRmX3ZpZXdlci9Eb2N1bWVudF92aWV3QXNQZGZEb2N1bWVudEZvclBkZlZpZXdlcg==",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZQ==",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0RvY3VtZW50IE1vZHVsZS9wZGZfdmlld2VyX3ZpZXc=",
-  "hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfcGRmX3ZpZXdlci9Eb2N1bWVudE1vZHVsZV92aWV3RG9jdW1lbnRMaXN0QXNKaW9Gb3JQZGZWaWV3ZXI=",
-  #/app_configuration_resources
+  "pdf_js/debugger.js"
 
 ]
 
