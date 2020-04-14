@@ -357,7 +357,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\'; font-src \'self\'; style-src \'self\' data:; frame-src \'self\' data:</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' data: blob:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\'; font-src \'self\'; style-src \'self\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -678,7 +678,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.49998.55063.39219</string> </value>
+                      <value> <string>983.13214.25464.59101</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -696,7 +696,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585149135.27</float>
+                              <float>1586874388.75</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
