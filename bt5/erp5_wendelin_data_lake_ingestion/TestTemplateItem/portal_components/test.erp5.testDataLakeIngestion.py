@@ -58,21 +58,6 @@ class TestDataIngestion(SecurityTestCase):
     for i in xrange(0, len(l), n):
       yield l[i:i+n]
 
-  def getIngestionPolicy(self, reference, ingestion_script):
-    ingestion_policy = self.portal.portal_catalog.getResultValue(
-                    portal_type = 'Ingestion Policy',
-                    reference = reference)
-    if ingestion_policy != None: return ingestion_policy
-    ingestion_policy = self.portal.portal_ingestion_policies.newContent( \
-        id = reference,
-        portal_type ='Ingestion Policy',
-        reference = reference,
-        version = '001',
-        script_id = ingestion_script)
-    ingestion_policy.validate()
-    self.tic()
-    return ingestion_policy
-    
   def getDataIngestion(self, reference):
     data_ingestion = self.portal.portal_catalog.getResultValue(
                     portal_type = 'Data Ingestion',
@@ -142,14 +127,15 @@ class TestDataIngestion(SecurityTestCase):
 
     data_stream_data = data_stream.getData()
     self.assertEqual(data_chunk, data_stream_data)
+
+    # check Data Stream and Data Set
+    self.assertEqual('validated', data_stream.getValidationState())
     
   def test_01_DefaultEbulkIngestion(self):
     """
       Test default ingestion with ebulk too.
     """
-    delimiter = ","
-    extension = self.CSV
-    self.stepIngest(extension, delimiter)
+    self.stepIngest(self.CSV, ",")
     
   def test_02_DefaultSplitIngestion(self):
     """
