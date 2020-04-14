@@ -138,8 +138,9 @@ function draw(canvas) {
   });
   addFeed();
 
+
   if ($("#total_discount").length > 0) {
-    builder.addText(context, $.trim($("#total_discount tr th").text()), {x:130});
+    addText(context, $.trim($("#total_discount tr th").text()), {x:130});
     priceControl(context, $.trim($("#total_discount tr td").text()), {x:385});
     addFeed();
 
@@ -207,66 +208,78 @@ function enableEpsonMonitoring(printer_url){
     msg = "ERROR: Unable to connect to the printer at the URL (Unreachable or Power off): " + monitoting_epos.address
     $("#js_error_log").append("<div>" + msg + "</div>");
     console.log(msg);
+    monitoting_epos.close();
   }
 
   monitoting_epos.onoffline = function () {
     msg = "ERROR: Printer seems offline check if you can access printer at the URL (Unreachable or Power off): " + monitoting_epos.address
     $("#js_error_log").append("<div>" + msg + "</div>");
     console.log(msg);
+    monitoting_epos.close();
+
   }
 
   monitoting_epos.online = function () {
     msg = "INFO: Printer is online at" + monitoting_epos.address
     $("#js_error_log").append("<div>" + msg + "</div>");
     console.log(msg);
+    monitoting_epos.close()
   }
 
   monitoting_epos.onpaperend = function () {
     msg = "WARNNING: Printer report that paper is finished!"
     $("#js_error_log").append("<div>" + msg + "</div>");
     console.log(msg);
+    monitoting_epos.close();
   };
 
   monitoting_epos.onpapernearend = function () {
     msg = "WARNNING: Printer report that paper is near finished from finish!"
     $("#js_error_log").append("<div>" + msg + "</div>");
     console.log(msg);
+    monitoting_epos.close();
   };
 
   monitoting_epos.onpaperok = function () {
     msg = "INFO: Printer report that paper is OK."
     $("#js_error_log").append("<div>" + msg + "</div>");
     console.log(msg);
+    monitoting_epos.close();
   };
 
   monitoting_epos.ondrawerclosed = function () {
     msg = "INFO: Printer report that drawer is closed."
     $("#js_error_log").append("<div>" + msg + "</div>");
     console.log(msg);
+    monitoting_epos.close();
   };
 
   monitoting_epos.ondraweropen = function () {
     msg = "INFO: Printer report that drawer is open."
     $("#js_error_log").append("<div>" + msg + "</div>");
     console.log(msg);
+    monitoting_epos.close();
   };
 
   monitoting_epos.oncoveropen = function () {
     msg = "WARNNING: Printer report that cover is open! Please close it!"
     $("#js_error_log").append("<div>" + msg + "</div>");
     console.log(msg);
+    monitoting_epos.close();
   };
 
   monitoting_epos.oncoverok = function () {
     msg = "INFO: Printer cover is closed."
     $("#js_error_log").append("<div>" + msg + "</div>");
     console.log(msg);
+    monitoting_epos.close();
   };
 
   monitoting_epos.onstatuschange = function (status) {
     msg = "INFO: Printer changed status to :" + status;
     $("#js_error_log").append("<div>" + msg + "</div>");
     console.log(msg);
+    monitoting_epos.close();
   };
 
   monitoting_epos.open();

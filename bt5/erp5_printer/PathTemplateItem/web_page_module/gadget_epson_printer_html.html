@@ -1,0 +1,192 @@
+<html>
+  <head>
+    <!--
+     data-i18n=Receipt
+     data-i18n=Order Number
+     data-i18n=Document Date
+     data-i18n=Currency
+     data-i18n=Products details
+     data-i18n=PROD
+     data-i18n=QTY
+     data-i18n=PRICE
+     data-i18n=Total Including Tax
+     data-i18n=Discount
+     data-i18n=Total With Discount
+     data-i18n=Print by Epson
+     data-i18n=Confirm Order and Return
+     data-i18n=Cancel Order and Return
+     data-i18n=Products details
+     data-i18n=Order Information
+     data-i18n=Payment
+     data-i18n=Delivery Mode
+    -->
+
+    <meta charset="utf-8">
+    <script type="text/javascript" src="jquery.js" ></script>
+    <script type="text/javascript" src="epos-print-4.1.0.js"></script>
+    <script type="text/javascript" src= "erp5_epson_canvas_printout.js"></script>
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="jiodev.js" type="text/javascript"></script>
+    <script type="text/javascript" src="gadget_global.js"></script>
+    <script type="text/javascript" src="handlebars.js"></script>
+    <link rel="stylesheet" type="text/css" href="erp5_epson_gadget.css">
+
+    <script id="epson-print-template" type="text/x-handlebars-template">
+     <header>
+      <h2 id="invoice_title">
+        <span>{{Receipt}}</span>
+      </h2>
+
+      <div>
+         <canvas id="canvas" width="512" style="display:none;" height="480"></canvas>
+         <img id="company_logo" alt="" src="{{source_section_image_absolute_url}}?quality=75.0&display=small&format=png" width="250" height="45">
+      </div>
+      <div id="company-info">
+        <div style="font-weight:bold">{{source_title}}</div>
+        <div>{{source_section_registeredcapital}}</div>
+        <div>{{source_address}}</div>
+        <div>{{source_telfax}}</div>
+        <div>{{source_email}}</div>
+        <div>{{source_section_corporateregcode}}</div>
+        <div>{{source_vatid}}</div>
+      <div>
+    </header>
+    <br>
+    <article>
+      <div id="detail">
+        <br>
+        <div id="invoice_information">
+          <div id="invoice_information_title">
+            <span style="font-weight:bold">{{Order_Information}}</span>
+          </div>
+          <div id="invoice_information_detail">
+            <div>
+              <span>{{Order_Number}}:</span>
+              <span>{{reference}}</span>
+            </div>
+            <div>
+              <span>{{Document_Date}}:</span>
+              <span>{{start_date}}</span>
+            </div>
+            <div>
+              <span>{{Currency}}:</span>
+              <span>{{currency}}</span>
+            </div>
+            {{#if payment_condition}}
+              <div>
+                <span>{{Payment}}:</span>
+                <span>{{payment_condition}}</span>
+              </div>
+            {{/if}}
+            {{#if delivery_mode}}
+              <div>
+                <span>{{Delivery_Mode}}:</span>
+                <span>{{delivery}}</span>
+              </div>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+      <br>
+      <div id="product_detail_title">
+        <span style="font-weight:bold">{{Products_details}}</span>
+      </div>
+
+      <table id="invoice_line">
+        <thead>
+            <tr>
+              <th>
+                <span>{{PROD}}</span>
+              </th>
+              <th>
+                <span>{{QTY}}</span>
+              </th>
+              <th>
+                <span>{{PRICE}}</span>
+              </th>
+            </tr>
+        </thead>
+        <tbody>
+          {{#each line_not_tax}}
+            <tr>
+              <td><span>{{resource_title}}</span></td>
+              <td><span>{{total_quantity}}</span></td>
+              <td><span>{{total_price}}</span></td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+      <br>
+      <table id="total_price">
+        <tr>
+          <th>
+            <span>{{Total_Including_Tax}}:</span>
+          </th>
+          <td>
+            <span>{{total_price}}</span>
+          </td>
+        </tr>
+      </table>
+      {{#if total_discount}}
+        <table id="total_discount">
+          <tr>
+            <th>
+              <span>{{Discount}}:</span>
+            </th>
+            <td>
+              <span>{{total_discount}}</span>
+            </td>
+          </tr>
+        </table>
+        <table id="total_price_with_discount">
+          <tr>
+            <th>
+              <span>{{Total_With_Discount}}:</span>
+            </th>
+            <td>
+             <span>{{total_price_with_discount}}</span>
+            </td>
+          </tr>
+        </table>
+        {{/if}}
+      <br />
+      <br />
+      <br />
+      <div id="loyalty_information_image" style="width:350px;text-align:center;">
+        <canvas id="ordernumbercanvas" width="512" style="display:none;" height="480"></canvas>
+        <img id="order_barcode" width="250" height="45" src="Base_generateBarcodeImage?barcode_type=code128&data={{reference}}">
+        <br />
+        <span id="order_number">{{reference}}</span>
+      </div>
+      <br />
+      <br>
+      <br>
+    </article>
+    <footer>Generated with ERP5 <br /> Open Source ERP suite (www.erp5.com)</footer>
+    <div class="footer_button">
+
+        <button id="print_button"><span>{{Print_by_Epson}}</span></button>
+
+        <button class="confirm_return" type="submit" value="SaleOrder_confirmAndReturn">
+           <span>{{Confirm_Order_and_Return}}</span>
+        </button>
+
+        <button class="cancel_return" type="submit" value="SaleOrder_cancelAndReturn">
+          <span>{{Cancel_Order_and_Return}}</span>
+        </button>
+    </div>
+      <hr>
+      <div id="js_error_log"> </div>
+    </script>
+
+    <script type="text/javascript" src="erp5_epson_gadget.js" ></script>
+
+    <link rel="license" href="http://www.opensource.org/licenses/mit-license/">
+  </head>
+  <body>
+    <form class='epson container' style="background:white; font-size: larger;">
+    </form>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+.epson h2#invoice_title {
+  font-size: 1.5em;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+
+.epson table tr th {
+  font-weight: bold;
+}
+
+.epson table {
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+
+.epson table tr th,
+.epson table tr td {
+  padding: 1px;
+}
+
+.epson #print_button,
+.epson .confirm_return{
+  padding: 6pt;
+  margin-top: 30pt;
+  margin-right: 12pt;
+  background-color: #FF6600;
+  color: #FFFFFF;
+  border-radius: 0.325em;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #FF6600;
+  min-width: 8em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.epson #print_button:hover,
+.epson .confirm_return:hover,
+.epson #print_button:focus,
+.epson .confirm_return:focus{
+    background-color: #ff8533;
+}
+
+.epson .cancel_return{
+  background-color: #2FA2E4;
+  color: white;
+  padding: 6pt;
+  margin-top: 30pt;
+  margin-right: 12pt;
+  border-radius: 0.325em;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #767676;
+  min-width: 8em;
+  box-shadow: 0 2px 4px rgb(47, 162, 228);
+}
+
+.epson .cancel_return:hover,
+.epson .cancel_return:focus{
+    background-color: #46ade8;
+}
+
+.epson .footer_button button:not(:first-child) {
+  margin-left: 50px;
+}
