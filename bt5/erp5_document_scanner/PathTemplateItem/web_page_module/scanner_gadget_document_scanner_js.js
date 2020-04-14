@@ -56,7 +56,9 @@
     return navigator.mediaDevices.getUserMedia({
       video: {
         deviceId: {
-          exact: device_id
+          // Prevent passing empty string as device_id
+          // because it throws OverconstrainedError
+          exact: device_id || undefined
         }
       },
       audio: false
