@@ -40,7 +40,7 @@ try:
                                                reference=configuration_file_reference)
     configuration_manifest.publish()
 
-  url_list = context.WebSection_getBase64ConfigurationUrlList(batch_mode=0)
+  url_list = context.WebSection_getBase64ConfigurationUrlList(batch_mode="0")
   configuration_element_lines_string = ""
   for path in url_list:
     configuration_element_lines_string += path + "\n"
