@@ -820,27 +820,31 @@
                 'text': translation_list[3]
               }));
 
-              // Add Do button
-              // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
-              div_element_list.push(domsugar('button', {
-                'disabled': gadget.state.disabled,
-                'data-rel': 'clipboard',
-                'name': 'Clipboard',
-                'type': 'button',
-                'class': 'ui-icon-list-ul ui-btn-icon-left ',
-                'text': translation_list[5]
-              }));
+              if (gadget.state.editable) {
+                // Add Do button
+                // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
+                div_element_list.push(domsugar('button', {
+                  'disabled': gadget.state.disabled,
+                  'data-rel': 'clipboard',
+                  'name': 'Clipboard',
+                  'type': 'button',
+                  'class': 'ui-icon-list-ul ui-btn-icon-left ',
+                  'text': translation_list[5]
+                }));
+              }
 
-              // Add Select button
-              // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
-              div_element_list.push(domsugar('button', {
-                'disabled': gadget.state.disabled,
-                'data-rel': 'hide',
-                'name': 'Hide',
-                'type': 'button',
-                'class': 'ui-icon-check-square-o ui-btn-icon-left ' + gadget.state.hide_class,
-                'text': translation_list[1]
-              }));
+              if (gadget.state.show_select) {
+                // Add Select button
+                // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
+                div_element_list.push(domsugar('button', {
+                  'disabled': gadget.state.disabled,
+                  'data-rel': 'hide',
+                  'name': 'Hide',
+                  'type': 'button',
+                  'class': 'ui-icon-check-square-o ui-btn-icon-left ' + gadget.state.hide_class,
+                  'text': translation_list[1]
+                }));
+              }
             }
 
             if (gadget.state.show_anchor) {
