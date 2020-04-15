@@ -12,7 +12,7 @@
               <list>
                 <string>all_columns</string>
                 <string>columns</string>
-                <string>default_params</string>
+                <string>count_method</string>
                 <string>domain_root_list</string>
                 <string>domain_tree</string>
                 <string>editable</string>
@@ -21,7 +21,8 @@
                 <string>lines</string>
                 <string>list_method</string>
                 <string>portal_types</string>
-                <string>search_columns</string>
+                <string>search</string>
+                <string>select</string>
                 <string>sort</string>
                 <string>sort_columns</string>
                 <string>title</string>
@@ -72,10 +73,6 @@
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_params</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -260,10 +257,8 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
@@ -341,6 +336,14 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>search</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>select</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
