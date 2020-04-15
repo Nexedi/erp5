@@ -1,5 +1,3 @@
-import json
-import base64
 from datetime import datetime
 
 def getElementFromContent(key, content):
@@ -18,8 +16,6 @@ portal_catalog = portal.portal_catalog
 date = datetime.now().strftime("%c")
 
 try:
-
-  hateoas_appcache = context.getLayoutProperty("hateoas_appcache", default="hateoas_appcache")
 
   router_file_reference = context.getLayoutProperty("configuration_router_gadget_url", default="")
   if router_file_reference is "":
@@ -47,7 +43,7 @@ try:
   url_list = context.WebSection_getBase64ConfigurationUrlList(batch_mode=0)
   configuration_element_lines_string = ""
   for path in url_list:
-    configuration_element_lines_string += hateoas_appcache + "/definition_view/" + path + "\n"
+    configuration_element_lines_string += path + "\n"
   content = "CONFIGURATION MANIFEST\n# generated on %s\nCACHE:\n\n" % date
   content += configuration_element_lines_string
   content += "\nNETWORK:\n*"
