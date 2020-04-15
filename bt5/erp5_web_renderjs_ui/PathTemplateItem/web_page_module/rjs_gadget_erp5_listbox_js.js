@@ -797,28 +797,29 @@
               }));
 
             } else {
+              if (gadget.state.form_id && gadget.state.form_id.indexOf("form_list_sr") === -1) {
+                // Add Configure button
+                // <button {{disabled}} data-rel="configure_columns" data-i18n="Configure" name="Configure" type="button" class="ui-icon-wrench ui-btn-icon-left {{configure_class}}"></button>
+                div_element_list.push(domsugar('button', {
+                  'disabled': gadget.state.disabled,
+                  'data-rel': 'configure_columns',
+                  'name': 'Configure',
+                  'type': 'button',
+                  'class': 'ui-icon-wrench ui-btn-icon-left ' + gadget.state.configure_class,
+                  'text': translation_list[2]
+                }));
 
-              // Add Configure button
-              // <button {{disabled}} data-rel="configure_columns" data-i18n="Configure" name="Configure" type="button" class="ui-icon-wrench ui-btn-icon-left {{configure_class}}"></button>
-              div_element_list.push(domsugar('button', {
-                'disabled': gadget.state.disabled,
-                'data-rel': 'configure_columns',
-                'name': 'Configure',
-                'type': 'button',
-                'class': 'ui-icon-wrench ui-btn-icon-left ' + gadget.state.configure_class,
-                'text': translation_list[2]
-              }));
-
-              // Add Sort button
-              // <button {{disabled}} data-rel="Sort" data-i18n="Sort" name="Sort" type="button" class="ui-icon-sort-amount-desc ui-btn-icon-left {{sort_class}}"></button>
-              div_element_list.push(domsugar('button', {
-                'disabled': gadget.state.disabled,
-                'data-rel': 'Sort',
-                'name': 'Sort',
-                'type': 'button',
-                'class': 'ui-icon-sort-amount-desc ui-btn-icon-left ' + gadget.state.sort_class,
-                'text': translation_list[3]
-              }));
+                // Add Sort button
+                // <button {{disabled}} data-rel="Sort" data-i18n="Sort" name="Sort" type="button" class="ui-icon-sort-amount-desc ui-btn-icon-left {{sort_class}}"></button>
+                div_element_list.push(domsugar('button', {
+                  'disabled': gadget.state.disabled,
+                  'data-rel': 'Sort',
+                  'name': 'Sort',
+                  'type': 'button',
+                  'class': 'ui-icon-sort-amount-desc ui-btn-icon-left ' + gadget.state.sort_class,
+                  'text': translation_list[3]
+                }));;
+              }
 
               if (gadget.state.editable) {
                 // Add Do button
