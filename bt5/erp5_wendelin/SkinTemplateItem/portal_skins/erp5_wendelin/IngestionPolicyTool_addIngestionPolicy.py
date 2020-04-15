@@ -16,6 +16,7 @@ ingestion_policy.validate()
 
 use_category = context.restrictedTraverse("portal_categories/use/big_data/ingestion")
 quantity_category = context.restrictedTraverse("portal_categories/quantity_unit/unit/piece")
+# XXX: hard-coded dependency to object from erp5_wendelin_data, remove!
 data_operation = context.restrictedTraverse("data_operation_module/wendelin_1")
 
 # create Data Product
