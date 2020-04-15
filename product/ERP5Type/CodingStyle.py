@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.ObjectMessage import ObjectMessage
 from Products.ERP5Type import Permissions
 
@@ -36,19 +37,11 @@ def getLegacyCallableIdItemList(self):
       ('WebSection_getPermanentURLForView', 'getPermanentURL'),
     )
 
-# Define acceptable prefix list for skin folder items
-skin_prefix_list = None
+
+@transactional_cached()
 def getSkinPrefixList(self):
+  """Return the list of acceptable prefixes for skins.
   """
-  Return the list of acceptable prefix. Cache the result.
-
-  TODO: make the cache more efficient (read-only transaction
-  cache)
-  """
-  global skin_prefix_list
-  if skin_prefix_list:
-    return skin_prefix_list
-
   portal = self.getPortalObject()
 
   # Add portal types prefix
@@ -65,14 +58,15 @@ def getSkinPrefixList(self):
   skin_prefix_list.extend(self.portal_types.getMixinTypeList())
 
   # Add interfaces prefix
-  skin_prefix_list.extend(self.portal_types.getInterfaceTypeList())
-  # XXX getInterfaceTypeList seems empty ... keep this low-level way for now.
+  # XXX getInterfaceTypeList does not include file system interfaces ... keep this low-level way for now.
   from Products.ERP5Type import interfaces
-  for interface_name in interfaces.__dict__.keys():
+  for interface_name in (
+      list(interfaces.__dict__.keys())
+      + list(self.portal_types.getInterfaceTypeList())):
     if interface_name.startswith('I'):
       skin_prefix_list.append(interface_name[1:])
-      # XXX do we really add with the I prefix ?
-      skin_prefix_list.append(interface_name)
+    # XXX do we really add with the I prefix ?
+    skin_prefix_list.append(interface_name)
 
   # Add other prefix
   skin_prefix_list.extend((
@@ -181,6 +175,7 @@ ignored_skin_id_set = {
   'TaskListOverviewGadget_setPreferences',
   'TaskListsGadgetListbox_getLineCss',
   'InventoryModule_reindexMovementList',
+  'DeliveryModule_mergeDeliveryList',
 }
 
 # Generic method to check consistency of a skin item
