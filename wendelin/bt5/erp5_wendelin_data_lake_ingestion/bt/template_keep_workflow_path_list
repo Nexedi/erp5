@@ -6,5 +6,4 @@ data_product_module/fif_descriptor
 data_supply_module/embulk
 data_supply_module/embulk/**
 portal_ingestion_policies/wendelin_embulk
-portal_categories/function/**
 portal_categories/use/**
