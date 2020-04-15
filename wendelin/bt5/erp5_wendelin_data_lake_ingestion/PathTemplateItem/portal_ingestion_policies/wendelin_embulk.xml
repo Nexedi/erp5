@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>data_operation_script_id</string> </key>
-            <value> <string>IngestionPolicy_getIngestionOperationAndParameterDictEmbulk</string> </value>
+            <value> <string>IngestionPolicy_getIngestionOperationAndParameterDictEbulk</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -152,7 +152,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.7345.1194.25002</string> </value>
+                      <value> <string>983.12768.14725.3720</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -170,7 +170,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1586847373.47</float>
+                              <float>1586946559.16</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
