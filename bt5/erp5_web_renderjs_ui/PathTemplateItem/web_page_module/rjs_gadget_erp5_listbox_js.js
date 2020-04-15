@@ -774,28 +774,29 @@
               div_element.appendChild(button_element);
 
             } else {
+              if (gadget.state.form_id.indexOf("form_list_sr") === -1) {
+                // Add Configure button
+                // <button {{disabled}} data-rel="configure_columns" data-i18n="Configure" name="Configure" type="button" class="ui-icon-wrench ui-btn-icon-left {{configure_class}}"></button>
+                button_element = document.createElement('button');
+                button_element.disabled = gadget.state.disabled;
+                button_element.setAttribute('data-rel', 'configure_columns');
+                button_element.setAttribute('name', 'Configure');
+                button_element.type = 'button';
+                button_element.setAttribute('class', 'ui-icon-wrench ui-btn-icon-left ' + gadget.state.configure_class);
+                button_element.textContent = translation_list[2];
+                div_element.appendChild(button_element);
 
-              // Add Configure button
-              // <button {{disabled}} data-rel="configure_columns" data-i18n="Configure" name="Configure" type="button" class="ui-icon-wrench ui-btn-icon-left {{configure_class}}"></button>
-              button_element = document.createElement('button');
-              button_element.disabled = gadget.state.disabled;
-              button_element.setAttribute('data-rel', 'configure_columns');
-              button_element.setAttribute('name', 'Configure');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-wrench ui-btn-icon-left ' + gadget.state.configure_class);
-              button_element.textContent = translation_list[2];
-              div_element.appendChild(button_element);
-
-              // Add Sort button
-              // <button {{disabled}} data-rel="Sort" data-i18n="Sort" name="Sort" type="button" class="ui-icon-sort-amount-desc ui-btn-icon-left {{sort_class}}"></button>
-              button_element = document.createElement('button');
-              button_element.disabled = gadget.state.disabled;
-              button_element.setAttribute('data-rel', 'Sort');
-              button_element.setAttribute('name', 'Sort');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-sort-amount-desc ui-btn-icon-left ' + gadget.state.sort_class);
-              button_element.textContent = translation_list[3];
-              div_element.appendChild(button_element);
+                // Add Sort button
+                // <button {{disabled}} data-rel="Sort" data-i18n="Sort" name="Sort" type="button" class="ui-icon-sort-amount-desc ui-btn-icon-left {{sort_class}}"></button>
+                button_element = document.createElement('button');
+                button_element.disabled = gadget.state.disabled;
+                button_element.setAttribute('data-rel', 'Sort');
+                button_element.setAttribute('name', 'Sort');
+                button_element.type = 'button';
+                button_element.setAttribute('class', 'ui-icon-sort-amount-desc ui-btn-icon-left ' + gadget.state.sort_class);
+                button_element.textContent = translation_list[3];
+                div_element.appendChild(button_element);
+              }
 
               if (gadget.state.editable) {
                 // Add Do button
