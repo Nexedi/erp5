@@ -797,26 +797,30 @@
               button_element.textContent = translation_list[3];
               div_element.appendChild(button_element);
 
-              // Add Do button
-              // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
-              button_element = document.createElement('button');
-              button_element.setAttribute('data-rel', 'clipboard');
-              button_element.setAttribute('name', 'Clipboard');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-list-ul ui-btn-icon-left ');
-              button_element.textContent = translation_list[5];
-              div_element.appendChild(button_element);
+              if (gadget.state.editable) {
+                // Add Do button
+                // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
+                button_element = document.createElement('button');
+                button_element.setAttribute('data-rel', 'clipboard');
+                button_element.setAttribute('name', 'Clipboard');
+                button_element.type = 'button';
+                button_element.setAttribute('class', 'ui-icon-list-ul ui-btn-icon-left ');
+                button_element.textContent = translation_list[5];
+                div_element.appendChild(button_element);
+              }
 
-              // Add Select button
-              // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
-              button_element = document.createElement('button');
-              button_element.disabled = gadget.state.disabled;
-              button_element.setAttribute('data-rel', 'hide');
-              button_element.setAttribute('name', 'Hide');
-              button_element.type = 'button';
-              button_element.setAttribute('class', 'ui-icon-check-square-o ui-btn-icon-left ' + gadget.state.hide_class);
-              button_element.textContent = translation_list[1];
-              div_element.appendChild(button_element);
+              if (gadget.state.show_select) {
+                // Add Select button
+                // <button {{disabled}} data-rel="hide" data-i18n="Select" name="Hide" type="button" class="ui-icon-check-square-o ui-btn-icon-left {{hide_class}}"></button>
+                button_element = document.createElement('button');
+                button_element.disabled = gadget.state.disabled;
+                button_element.setAttribute('data-rel', 'hide');
+                button_element.setAttribute('name', 'Hide');
+                button_element.type = 'button';
+                button_element.setAttribute('class', 'ui-icon-check-square-o ui-btn-icon-left ' + gadget.state.hide_class);
+                button_element.textContent = translation_list[1];
+                div_element.appendChild(button_element);
+              }
             }
             fragment.appendChild(div_element);
 
