@@ -93,3 +93,12 @@ class InventoryCell(DeliveryCell):
     no inventory was defined.
     """
     return self.getInventory() # XXX quantity unit is missing
+
+  def reindexObject(self, *args, **kw):
+    """
+    Reindex Inventory too
+    """
+    DeliveryCell.reindexObject(self, *args, **kw)
+    # No need to reindex recursively as Delivery does, so call
+    # _reindexObject() directly
+    self.getRootDeliveryValue()._reindexObject(*args, **kw)

@@ -113,6 +113,15 @@ class InventoryLine(DeliveryLine):
     """
     return Movement.getInventoriatedQuantity(self)
 
+  def reindexObject(self, *args, **kw):
+    """
+    Reindex Inventory too
+    """
+    DeliveryLine.reindexObject(self, *args, **kw)
+    # No need to reindex recursively as Delivery does, so call
+    # _reindexObject() directly
+    self.getRootDeliveryValue()._reindexObject(*args, **kw)
+
   # XXX: Dirty but required for erp5_banking_core
   getBaobabSourceUid = lambda x: x.getSourceUid()
   getBaobabSourceUid__roles__ = PermissionRole(Permissions.View)
