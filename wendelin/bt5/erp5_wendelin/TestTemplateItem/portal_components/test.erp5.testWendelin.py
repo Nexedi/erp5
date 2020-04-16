@@ -60,7 +60,7 @@ class Test(ERP5TypeTestCase):
 
     # add brand new ingestion
     reference = getRandomString()
-    ingestion_policy, data_supply, data_product = portal.portal_ingestion_policies.IngestionPolicyTool_addIngestionPolicy(
+    ingestion_policy, data_supply, _ = portal.portal_ingestion_policies.IngestionPolicyTool_addIngestionPolicy(
       reference = reference, 
       title = reference, 
       batch_mode=1)
