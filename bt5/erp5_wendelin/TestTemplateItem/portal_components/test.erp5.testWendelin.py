@@ -276,8 +276,14 @@ class Test(ERP5TypeTestCase):
     """
       Test that nobody accidently removes needed by HowTo's default configurations.
     """
-    # the default json ingestion is usde in HowTo/ Docs
+    # the default json ingestion is usde in HowTo / Docs
     self.assertNotEqual(None, 
            getattr(self.portal.portal_ingestion_policies, "default_http_json", None))
     self.assertNotEqual(None, 
            getattr(self.portal.data_supply_module, "default_http_json", None))
+    
+    # test default ebuk ingestion exists
+    self.assertNotEqual(None, 
+           getattr(self.portal.portal_ingestion_policies, "wendelin_embulk", None))
+    self.assertNotEqual(None, 
+           getattr(self.portal.data_supply_module, "embulk", None))
