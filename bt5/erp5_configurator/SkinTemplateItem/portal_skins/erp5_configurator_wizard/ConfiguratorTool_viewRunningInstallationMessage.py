@@ -13,7 +13,10 @@ is_bt5_installation_running = installation_status['bt5']['all']!=0 and \
 if not is_bt5_building_running:
   all_bt5s = float(installation_status['bt5']['all'])
   current_bt5s = float(installation_status['bt5']['current'])
-  bt5_percent_of_total = current_bt5s / all_bt5s
+  if all_bt5s:
+    bt5_percent_of_total = current_bt5s / all_bt5s
+  else:
+    bt5_percent_of_total = 0
   calc_percentage = calc_percentage + building_bt5_part_percentage + \
                     bt5_percent_of_total*installation_bt5_part_percentage
 
