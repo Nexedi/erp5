@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>State of a document that has been validated in ERP5</string> </value>
+            <value> <string>A previous version of a document, that has been archived by a user. </string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validated</string> </value>
+            <value> <string>archived</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -22,21 +22,12 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Validated</string> </value>
+            <value> <string>Archived</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>invalidate</string>
-                <string>invalidate_action</string>
-                <string>publish</string>
-                <string>publish_action</string>
-                <string>release</string>
-                <string>release_action</string>
-                <string>share</string>
-                <string>share_action</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -62,11 +53,9 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
-                        <string>Anonymous</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
-                        <string>Auditor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -75,9 +64,16 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Associate</string>
+                        <string>Manager</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Change local roles</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -86,9 +82,6 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
@@ -97,11 +90,9 @@
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
-                        <string>Anonymous</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
-                        <string>Auditor</string>
                         <string>Manager</string>
                       </tuple>
                     </value>
