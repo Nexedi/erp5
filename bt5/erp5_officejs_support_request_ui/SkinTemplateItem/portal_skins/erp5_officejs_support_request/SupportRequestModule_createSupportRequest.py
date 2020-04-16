@@ -6,7 +6,19 @@ logged_in_user_value = portal.portal_membership.getAuthenticatedMember().getUser
 
 now = DateTime()
 
-project_object = portal.project_module[project]
+project_object = portal.portal_catalog.getResultValue(portal_type="Project", id=project)
+
+default_causality_value = None
+
+if visa_file_reference:
+  visa_file_list = portal.portal_catalog(
+    portal_type="Visa File",
+    reference={'query': visa_file_reference, 'key': 'ExactMatch'},
+    limit=1
+  )
+
+  if visa_file_list:
+    default_causality_value = visa_file_list[0].getObject()
 
 support_request = portal.support_request_module.newContent(
   portal_type='Support Request',
@@ -33,7 +45,7 @@ if description is not None or file is not None:
     source_reference=source_reference,
   )
 
-return support_request.Base_redirect('officejs_support_request_view',
+return support_request.Base_redirect('view',
   keep_items={
     'portal_status_message': translateString(
       'New Support Request created.',
