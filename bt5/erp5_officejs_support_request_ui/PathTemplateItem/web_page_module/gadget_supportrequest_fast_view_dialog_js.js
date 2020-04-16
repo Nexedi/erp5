@@ -66,6 +66,9 @@
         for (j = 0; j < sp_list.length; j += 1) {
           sp_select.options[j] = new Option(sp_list[j][0], sp_list[j][1]);
         }
+        if (sp_select.options.length === 2) {
+          sp_select.selectedIndex = 1;
+        }
       });
     })
     .onEvent('change', function (evt) {
