@@ -52,18 +52,21 @@
 
         return gadget.jio_getAttachment(
           'support_request_module',
-          gadget.hateoas_url + 'support_request_module'
-            + "/SupportRequest_getSupportTypeList"
-            + "?project_id=" + evt.target.value + "&json_flag=True"
+          gadget.hateoas_url + 'support_request_module' +
+            "/SupportRequest_getSupportTypeList" +
+            "?project_id=" + evt.target.value + "&json_flag=True"
         ).push(function (sp_list) {
           var i, j,
-            sp_select = document.getElementById('field_your_resource');
+            sp_select = gadget.element.querySelector('#field_your_resource');
           for (i = sp_select.options.length - 1; i >= 0; i -= 1) {
             sp_select.remove(i);
           }
 
           for (j = 0; j < sp_list.length; j += 1) {
             sp_select.options[j] = new Option(sp_list[j][0], sp_list[j][1]);
+          }
+          if (sp_select.options.length === 2) {
+            sp_select.selectedIndex = 1;
           }
         });
       }
