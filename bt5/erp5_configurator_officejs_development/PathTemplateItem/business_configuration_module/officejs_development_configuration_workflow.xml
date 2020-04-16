@@ -61,6 +61,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>resource/workflow_module/officejs_development_configuration_workflow</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>comment</string> </key>
             <value>
               <none/>
