@@ -1,3 +1,49 @@
+context.edit(preferred_event_resource=None)
+return "ok"
+
+context.getPortalObject().web_site_module.renderjs_runner.edit()
+return 'OK'
+
+return context.portal_catalog(reference= {'query': 'aa', 'key':'ExactMatch'}, src__=1)
+
+# return context.getPortalObject().portal_catalog(reference='', src__=1)
+# return 'ok'
+context.log('--- traverse')
+section = context.getPortalObject().restrictedTraverse('web_site_module/3/1')
+context.log('--- document')
+result = section.getDefaultDocumentValue()
+context.log('--- result: %s', result)
+return 'couscous'
+
+raise NotImplementedError(context.getPortalObject().restrictedTraverse('web_site_module/3/2//'))
+
+
+REQUEST = context.REQUEST
+raise NotImplementedError(REQUEST.environ.get('HTTP_USER_AGENT'))
+
+from urlparse import urlparse
+parse_dict = urlparse(REQUEST.other.get('ACTUAL_URL'))
+print parse_dict
+
+print "%s %s %s %s" % (parse_dict.scheme, parse_dict.port, parse_dict.hostname, parse_dict.path)
+
+import urllib
+print REQUEST.other.get('SERVER_URL')
+
+print '---'
+
+# request.other
+
+for key, value in REQUEST.items():
+  if key.startswith('HTTP') or key.startswith('BASE') or key.startswith('REMOTE') or key.startswith('SERVER') or ('PORT' in key) or ('PATH' in key) or ('URL' in key):
+    print "%s: %s" % (key, value)
+
+return printed
+return "host%s \n%s %s" % (REQUEST.environ.get('HTTP_HOST'), '', '')
+
+
+
+
 result = ''# '---<br>'
 i = 0
 for brain in context.getPortalObject().portal_catalog(portal_type='Action Information', sort_on=[['relative_url', 'ASC']]):
