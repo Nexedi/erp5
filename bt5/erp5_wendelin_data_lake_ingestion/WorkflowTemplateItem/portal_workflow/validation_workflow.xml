@@ -48,6 +48,7 @@
                 <string>Modify portal content</string>
                 <string>View</string>
                 <string>Add portal content</string>
+                <string>Change local roles</string>
               </tuple>
             </value>
         </item>
