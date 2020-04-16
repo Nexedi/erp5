@@ -297,13 +297,13 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
 
   def afterSetUp(self):
     super(ERP5TypeFunctionalTestCase, self).afterSetUp()
-    # create browser_id_manager
     self.setTimeZoneToUTC()
+    # create browser_id_manager
     if not "browser_id_manager" in self.portal.objectIds():
       self.portal.manage_addProduct['Sessions'].constructBrowserIdManager()
     self.commit()
     self.setSystemPreference()
-    # non-recursive results clean of portal_tests/ or portal_tests/``run_only`` 
+    # non-recursive results clean of portal_tests/ or portal_tests/``run_only``
     self.portal.portal_tests.TestTool_cleanUpTestResults(self.run_only or None)
     self.tic()
     host, port = self.startZServer()
