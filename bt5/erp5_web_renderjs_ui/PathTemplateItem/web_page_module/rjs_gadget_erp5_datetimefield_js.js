@@ -31,6 +31,28 @@
     ["GMT+12", "+1200"]
   ];
 
+  function formatDateToLocaleFormatString(date, language) {
+    /* Ideally we would like to use {timeStyle: "short"} as option
+     * to hide seconds. Unfortunately it doesn't work in older
+     * versions of firefox. Luckily, by using
+     *   {hour: "numeric", minute: "numeric"}
+     * it hides seconds, and still respects the locale.
+     * >> date = new Date(2019, 1, 1, 1, 1)
+     * >> date.toLocaleTimeString(
+     *      'en', {hour: "numeric", minute: "numeric"}
+     *    )
+     *    "1:01 AM"
+     * >> date.toLocaleTimeString(
+     *      'fr', {hour: "numeric", minute: "numeric"}
+     *    )
+     *    "01:01"
+     */
+    return date.toLocaleTimeString(
+      language,
+      {hour: "numeric", minute: "numeric"}
+    );
+  }
+
   rJS(window)
     .declareAcquiredMethod('getSelectedLanguage', 'getSelectedLanguage')
     .declareMethod('render', function (options) {
@@ -232,33 +254,14 @@
               gadget_list = result_list[1],
               text_content = "",
               state_date,
-              locale_formatted_state_date,
               offset_time_zone;
             if (gadget.state.value) {
               state_date = new Date(gadget.state.value);
-              /* Ideally we would like to use {timeStyle: "short"} as option
-               * to hide seconds. Unfortunately it doesn't work in older
-               * versions of firefox. Luckily, by using
-               *   {hour: "numeric", minute: "numeric"}
-               * it hides seconds, and still respects the locale.
-               * >> date = new Date(2019, 1, 1, 1, 1)
-               * >> date.toLocaleTimeString(
-               *      'en', {hour: "numeric", minute: "numeric"}
-               *    )
-               *    "1:01 AM"
-               * >> date.toLocaleTimeString(
-               *      'fr', {hour: "numeric", minute: "numeric"}
-               *    )
-               *    "01:01"
-               */
-              locale_formatted_state_date = state_date.toLocaleTimeString(
-                language,
-                {hour: "numeric", minute: "numeric"}
-              );
               if (gadget.state.timezone_style) {
                 text_content = state_date.toLocaleDateString(language);
                 if (!gadget.state.date_only) {
-                  text_content += " " + locale_formatted_state_date;
+                  text_content += " " +
+                    formatDateToLocaleFormatString(state_date, language);
                 }
               } else {
                 //get timezone difference between server and local browser
@@ -269,7 +272,8 @@
                                        offset_time_zone);
                 text_content = state_date.toLocaleDateString(language);
                 if (!gadget.state.date_only) {
-                  text_content += " " + locale_formatted_state_date;
+                  text_content += " " +
+                    formatDateToLocaleFormatString(state_date, language);
                 }
               }
             }
