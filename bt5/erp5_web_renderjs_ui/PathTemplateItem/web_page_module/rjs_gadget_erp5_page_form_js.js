@@ -1,10 +1,10 @@
-/*global window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean */
+/*global window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean, ensureArray */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 /**
 Page Form is a top-level gadget (a "Page") taking care of rendering form
 and handling data send&receive.
 */
-(function (window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean) {
+(function (window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean, ensureArray) {
   "use strict";
 
   /*jslint regexp: true*/
@@ -233,7 +233,7 @@ and handling data send&receive.
                 .push(function (result2) {
                   return gadget.redirect({command: 'display_with_history', options: {
                     jio_key: options.jio_key,
-                    view: result2._links.view[0].href
+                    view: ensureArray(result2._links.view)[0].href
                   }});
                 });
             }
@@ -656,4 +656,4 @@ and handling data send&receive.
     });
 
 
-}(window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean));
+}(window, document, rJS, URI, RSVP, jIO, Blob, URL, asBoolean, ensureArray));
