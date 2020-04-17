@@ -183,10 +183,6 @@
                           <string>creation_date</string>
                           <string>descending</string>
                         </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>reference</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
