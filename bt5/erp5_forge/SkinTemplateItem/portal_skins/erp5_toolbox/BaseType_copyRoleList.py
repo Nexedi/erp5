@@ -18,7 +18,9 @@ for ti in portal_type_list:
             destination_portal_type.contentValues(portal_type='Role Information')])
 
   destination_portal_type.manage_pasteObjects(cb_data)
- 
+  if update_local_roles:
+    destination_portal_type.updateRoleMapping()
+
 return context.Base_redirect(form_id,
   keep_items=dict(portal_status_message=translateString('Roles copied in ${type_list}',
                           mapping=dict(type_list=', '.join(portal_type_list)))))
