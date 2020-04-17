@@ -83,6 +83,19 @@
 </tr>
 
 <tr>
+  <td>assertElementPresent</td>
+  <!-- Known bug, in non-editable mode the dates are translated to the client timezone as the timezone selector is not shown -->
+  <td>//div[@data-gadget-scope='field_my_stop_date']//div[@data-gadget-scope='field']//p[contains(text(), '7:00')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//div[@data-gadget-scope='field']//p[@data-date='2016-12-21T12:00:00']</td>
+  <td></td>
+</tr>
+
+<tr>
   <td>storeLocation</td>
   <td>url</td>
   <td></td>
@@ -125,6 +138,12 @@
   <td></td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
+
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//div[@data-gadget-scope='field']//p[contains(text(), '12:00')]</td>
+  <td></td>
+</tr>
 
 <tr>
   <td>assertElementPresent</td>
