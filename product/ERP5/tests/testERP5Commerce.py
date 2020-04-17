@@ -641,7 +641,7 @@ class TestCommerce(ERP5TypeTestCase):
     shipping_url = product_line.shipping.getRelativeUrl()
     self.portal.product_module.newContent(portal_type='Product',
                                           title='shipping',
-                                          product_line=shipping_url)
+                                          product_line=shipping_url).validate()
     self.tic()
     self.assertEqual(2,
                len(self.portal.SaleOrder_getAvailableShippingResourceList()))
