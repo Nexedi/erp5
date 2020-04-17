@@ -34,6 +34,8 @@ import time
 import re
 import subprocess
 import shutil
+import tempfile
+import textwrap
 import transaction
 from ZPublisher.HTTPResponse import HTTPResponse
 from zExceptions.ExceptionFormatter import format_exception
@@ -185,6 +187,7 @@ class FunctionalTestRunner:
     )
 
   def test(self, debug=0):
+    firefox_wrapper = None
     xvfb = Xvfb(self.instance_home)
     try:
       if not (debug and os.getenv('DISPLAY')):
@@ -204,7 +207,16 @@ class FunctionalTestRunner:
       firefox_bin = os.environ.get('firefox_bin')
       if firefox_bin:
         geckodriver = os.path.join(os.path.dirname(firefox_bin), 'geckodriver')
-        kw.update(firefox_binary=firefox_bin, executable_path=geckodriver)
+        # generate a firefox wrapper to force timezone in firefox
+        with tempfile.NamedTemporaryFile(delete=False) as f:
+          f.write(textwrap.dedent('''\
+            #!/bin/sh
+            export TZ=Europe/Paris
+            exec {firefox_bin} $@
+          ''').format(firefox_bin=firefox_bin))
+          firefox_wrapper = f.name
+        os.chmod(firefox_wrapper, 0o700)
+        kw.update(firefox_binary=firefox_wrapper, executable_path=geckodriver)
       browser = webdriver.Firefox(**kw)
       start_time = time.time()
       browser.get(self._getTestBaseURL() + '/login_form')
@@ -245,6 +257,8 @@ class FunctionalTestRunner:
       browser.quit()
     finally:
       xvfb.quit()
+      if firefox_wrapper and os.path.exists(firefox_wrapper):
+        os.remove(firefox_wrapper)
     return iframe
 
   def processResult(self, iframe):
