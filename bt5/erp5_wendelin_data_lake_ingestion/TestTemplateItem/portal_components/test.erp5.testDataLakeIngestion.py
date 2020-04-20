@@ -178,3 +178,13 @@ class TestDataIngestion(SecurityTestCase):
     # check resulting Data Stream
     data_stream = self.getDataStream(ingestion_reference)
     self.assertEqual(data_chunk, data_stream.getData())
+
+  def test_03_DefaultWendelinConfigurationExistency(self):
+    """
+      Test that nobody accidently removes needed by HowTo's default configurations.
+    """ 
+    # test default ebuk ingestion exists
+    self.assertNotEqual(None, 
+           getattr(self.portal.portal_ingestion_policies, "wendelin_embulk", None))
+    self.assertNotEqual(None, 
+           getattr(self.portal.data_supply_module, "embulk", None))
