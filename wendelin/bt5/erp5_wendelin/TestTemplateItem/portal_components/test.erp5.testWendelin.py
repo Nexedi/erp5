@@ -281,9 +281,3 @@ class Test(ERP5TypeTestCase):
            getattr(self.portal.portal_ingestion_policies, "default_http_json", None))
     self.assertNotEqual(None, 
            getattr(self.portal.data_supply_module, "default_http_json", None))
-    
-    # test default ebuk ingestion exists
-    self.assertNotEqual(None, 
-           getattr(self.portal.portal_ingestion_policies, "wendelin_embulk", None))
-    self.assertNotEqual(None, 
-           getattr(self.portal.data_supply_module, "embulk", None))
