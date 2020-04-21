@@ -7,6 +7,24 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -49,7 +67,24 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
                 <string>Owner</string>
+                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -324,7 +359,9 @@ WebSection_getTextEditorPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>configuration_service_worker_url</string> </key>
-            <value> <string>gadget_erp5_serviceworker.js</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_webapp_manifest_url</string> </key>
@@ -414,7 +451,7 @@ WebSection_getTextEditorPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -504,9 +541,7 @@ WebSection_getTextEditorPrecacheManifestList</string> </value>
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value>
-                        <none/>
-                      </value>
+                      <value> <string>publish</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -532,7 +567,7 @@ WebSection_getTextEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1568971064.5</float>
+                              <float>1586527837.76</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -541,7 +576,7 @@ WebSection_getTextEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>embedded</string> </value>
+                      <value> <string>published</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -581,7 +616,7 @@ WebSection_getTextEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.59901.56531.35276</string> </value>
+                      <value> <string>983.22977.51036.31539</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -599,7 +634,7 @@ WebSection_getTextEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585743319.3</float>
+                              <float>1587461481.78</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

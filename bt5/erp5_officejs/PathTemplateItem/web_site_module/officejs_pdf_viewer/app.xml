@@ -418,7 +418,9 @@ WebSection_getPDFViewerPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>configuration_service_worker_url</string> </key>
-            <value> <string>gadget_erp5_serviceworker.js</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -633,7 +635,7 @@ WebSection_getPDFViewerPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>979.3226.30420.13465</string> </value>
+                      <value> <string>982.60098.16178.3771</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -651,7 +653,7 @@ WebSection_getPDFViewerPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585755014.81</float>
+                              <float>1587462390.41</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
