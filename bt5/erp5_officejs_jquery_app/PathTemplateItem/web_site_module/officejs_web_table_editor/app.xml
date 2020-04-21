@@ -418,7 +418,9 @@ WebSection_getWebTableEditorPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>configuration_service_worker_url</string> </key>
-            <value> <string>gadget_erp5_serviceworker.js</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -673,7 +675,7 @@ WebSection_getWebTableEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.22379.33675.47718</string> </value>
+                      <value> <string>982.61514.63609.50124</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -691,7 +693,7 @@ WebSection_getWebTableEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585755364.31</float>
+                              <float>1587462400.14</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
