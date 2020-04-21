@@ -4,21 +4,32 @@
   "use strict";
 
   rJS(window)
+    
     .declareAcquiredMethod("notifySubmit", "notifySubmit")
     .declareJob("deferNotifySubmit", function () {
       // Ensure error will be correctly handled
       return this.notifySubmit();
     })
+    
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareJob("deferNotifyChange", function () {
       // Ensure error will be correctly handled
       return this.notifyChange();
     })
+    
     .ready(function () {
       var context = this;
       context.deferNotifyChangeBinded = context.deferNotifyChange.bind(context);
       var table = jexcel(this.element.querySelector(".spreadsheet"), {
-          minDimensions: [20, 20],
+          minDimensions: [26, 200],
+          defaultColWidth: 100,
+          fullscreen: true,
+          allowComments: true,
+          search: true,
+          tableOverflow: true,
+          lazyLoading: true,
+          loadingSpin: true,
+          onchange: context.deferNotifyChangeBinded,
           toolbar: [
             {
               type: 'i',
@@ -37,12 +48,12 @@
             {
               type: 'select',
               k: 'font-family',
-              v: ['Arial', 'Verdana']
+              v: ['Arial', 'Arial Black', 'Verdana', 'Impact', 'Comic Sans MS', 'Tahoma', 'Trebuchet MS']
             },
             {
               type: 'select',
               k: 'font-size',
-              v: ['9px', '10px', '11px', '12px', '13px', '14px', '15px', '16px', '17px', '18px', '19px', '20px']
+              v: ['20px', '21px', '22px', '23px', '24px', '25px', '26px', '27px', '28px', '29px', '30px', '32px', '34px', '36px', '38px', '40px']
             },
             {
               type: 'i',
@@ -82,8 +93,30 @@
         });
       this.table = table;
     })
-    .declareMethod("render", function (option_dict) {
+    
+    .declareMethod("render", function (options) {
       var gadget = this;
+      var state_dict = {
+          key: options.key,
+          editable: options.editable === undefined ? true : options.editable
+        };
+      state_dict.value = options.value || "";
+      return this.changeState(state_dict);
+    })
+  
+    .onStateChange(function (modification_dict) {
+      if (modification_dict.hasOwnProperty('value')) {
+        this.table.setData(this.state.value);
+      }
+    })
+    
+    .declareMethod('getContent', function () {
+      var form_data = {};
+      if (this.state.editable) {
+        form_data[this.state.key] = this.table.getData();
+        this.state.value = form_data[this.state.key];
+      }
+      return form_data;
     })
   
     ;
