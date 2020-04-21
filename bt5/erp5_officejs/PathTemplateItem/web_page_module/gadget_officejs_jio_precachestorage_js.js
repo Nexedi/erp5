@@ -1,6 +1,6 @@
 /*jslint indent:2, maxlen: 80, nomen: true */
-/*global jIO, RSVP, window, Rusha, Blob, URL */
-(function (window, jIO, RSVP, Rusha, Blob, URL) {
+/*global jIO, RSVP, window, Rusha, Blob, URL, console */
+(function (window, jIO, RSVP, Rusha, Blob, URL, console) {
   "use strict";
 
   var rusha = new Rusha();
@@ -25,8 +25,9 @@
         this._prefix + "gadget_officejs_bootloader_serviceworker.js",
         this._prefix + "gadget_erp5_nojqm.css",
         this._prefix + "officejs_logo.png",
-        this._prefix + "jio_appcachestorage.js",
-        this._prefix + "jio_precachestorage.js"
+        this._prefix + "jio_precachestorage.js",
+        //backward compatibility with appcache apps
+        this._prefix + "jio_appcachestorage.js"
       ];
     } else {
       this._relative_url_list = [this._prefix + "/"];
@@ -35,13 +36,6 @@
       this._version = 'app/';
     }
     this._version = this._prefix + this._version;
-    if (spec.service_worker) {
-      if (this._take_installer) {
-        this._relative_url_list.push(this._version + spec.service_worker);
-      } else {
-        this._relative_url_list.push(this._prefix + spec.service_worker);
-      }
-    }
   }
 
   PreCacheStorage.prototype.get = function (id) {
@@ -109,6 +103,7 @@
         var base_manifest_text = response.target.responseText,
           relative_url_list,
           i,
+          //TODO: this hash won't change ! work with header request's date
           hash = rusha.digestFromString(base_manifest_text);
         relative_url_list = Object.keys(JSON.parse(base_manifest_text));
         storage._relative_url_list.push(storage._version);
@@ -119,6 +114,8 @@
           //remove url parameters due to special chars issue in server
           url = relative_url_list[i];
           if (url.includes('?')) {
+            console.warn("Parameters on url '" + url + "' were removed." +
+                         "Precache storage can't store urls with parameters");
             url = url.substring(0, url.indexOf('?'));
           }
           storage._relative_url_list.push(
@@ -128,11 +125,12 @@
       })
       .push(undefined, function (error) {
         if (!error.message) {
-          error.message = "Couldn't get one of the precache manifests";
+          error.message = "Couldn't get the precache manifest '" +
+            storage._precache_manifest_script + "'";
         }
         throw error;
       });
   };
 
   jIO.addStorage('precache', PreCacheStorage);
-}(window, jIO, RSVP, Rusha, Blob, URL));
+}(window, jIO, RSVP, Rusha, Blob, URL, console));
