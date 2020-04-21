@@ -2,7 +2,7 @@
 /*global window, rJS, RSVP, jexcel*/
 (function (window, rJS, RSVP, jexcel) {
   "use strict";
-
+  
   rJS(window)
     
     .declareAcquiredMethod("notifySubmit", "notifySubmit")
@@ -18,9 +18,10 @@
     })
     
     .ready(function () {
-      var context = this;
-      context.deferNotifyChangeBinded = context.deferNotifyChange.bind(context);
+      var gadget = this;
+      gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
       var table = jexcel(this.element.querySelector(".spreadsheet"), {
+          sheetName: "Tab 1",
           minDimensions: [26, 200],
           defaultColWidth: 100,
           fullscreen: true,
@@ -29,8 +30,15 @@
           tableOverflow: true,
           lazyLoading: true,
           loadingSpin: true,
-          onchange: context.deferNotifyChangeBinded,
+          onchange: gadget.deferNotifyChangeBinded,
           toolbar: [
+            {
+              type: 'i',
+              content: 'add',
+              onclick: function () {
+                gadget.addSheet();
+              }
+            },
             {
               type: 'i',
               content: 'undo',
@@ -102,6 +110,16 @@
         };
       state_dict.value = options.value || "";
       return this.changeState(state_dict);
+    })
+  
+    .declareMethod("addSheet", function () {
+      var gadget = this;
+      var sheets = [];
+      sheets.push({
+          sheetName: 'New tab ' + gadget.element.querySelector('.spreadsheet').jexcel.length,
+          minDimensions: [26, 200]
+        });
+      jexcel.tabs(gadget.element.querySelector('.spreadsheet'), sheets);
     })
   
     .onStateChange(function (modification_dict) {
