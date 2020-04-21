@@ -403,7 +403,7 @@
         </item>
         <item>
             <key> <string>configuration_cache_file</string> </key>
-            <value> <string>gadget_ooffice_text.appcache</string> </value>
+            <value> <string>WebSection_getPrecacheManifest</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
@@ -724,7 +724,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.57135.22608.35276</string> </value>
+                      <value> <string>982.59878.3068.53913</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -742,7 +742,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585741802.8</float>
+                              <float>1587472038.4</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
