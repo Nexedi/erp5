@@ -103,8 +103,8 @@
         var base_manifest_text = response.target.responseText,
           relative_url_list,
           i,
-          //TODO: this hash won't change ! work with header request's date
-          hash = rusha.digestFromString(base_manifest_text);
+          hash = rusha.digestFromString(base_manifest_text +
+                                        response.timeStamp.toString());
         relative_url_list = Object.keys(JSON.parse(base_manifest_text));
         storage._relative_url_list.push(storage._version);
         storage._relative_url_list.push(storage._version +
