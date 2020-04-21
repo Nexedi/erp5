@@ -26,17 +26,12 @@ class TestDataIngestion(SecurityTestCase):
   def getTitle(self):
     return "DataIngestionTest"
 
-  def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_web', 'erp5_ingestion_mysql_innodb_catalog', 'erp5_ingestion', 'erp5_dms',
-            'erp5_wendelin', 'erp5_callables', 'erp5_core')
-
   def afterSetUp(self):
-    self.context = self.portal
     self.assertEqual(self.REFERENCE_SEPARATOR, self.portal.getIngestionReferenceDictionary()["reference_separator"])
     self.assertEqual(self.INVALID, self.portal.getIngestionReferenceDictionary()["invalid_suffix"])
     self.assertEqual(self.EOF, self.REFERENCE_SEPARATOR + self.portal.getIngestionReferenceDictionary()["split_end_suffix"])
-    self.assertEqual(self.SINGLE_INGESTION_END, self.REFERENCE_SEPARATOR)
     self.assertEqual(self.PART_1, self.REFERENCE_SEPARATOR + self.portal.getIngestionReferenceDictionary()["split_first_suffix"])
+    # XXX: create default users    
 
   def getRandomReference(self):
     random_string = ''.join([random.choice(string.ascii_letters + string.digits) for _ in xrange(10)])
