@@ -418,7 +418,9 @@ WebSection_getSvgEditorPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>configuration_service_worker_url</string> </key>
-            <value> <string>gadget_erp5_serviceworker.js</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -673,7 +675,7 @@ WebSection_getSvgEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.60040.831.8004</string> </value>
+                      <value> <string>982.60053.22857.50926</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -691,7 +693,7 @@ WebSection_getSvgEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585752320.92</float>
+                              <float>1587462393.98</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
