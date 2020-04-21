@@ -38,7 +38,7 @@ def getLegacyCallableIdItemList(self):
     )
 
 
-@transactional_cached()
+@transactional_cached(key_method=lambda *args, **kw: None)
 def getSkinPrefixList(self):
   """Return the list of acceptable prefixes for skins.
   """
