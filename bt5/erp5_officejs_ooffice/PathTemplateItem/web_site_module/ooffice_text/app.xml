@@ -419,7 +419,9 @@ WebSection_getOOfficeTextEditorPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>configuration_service_worker_url</string> </key>
-            <value> <string>gadget_erp5_serviceworker.js</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -674,7 +676,7 @@ WebSection_getOOfficeTextEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.59922.57150.55142</string> </value>
+                      <value> <string>983.7485.8037.42291</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -692,7 +694,7 @@ WebSection_getOOfficeTextEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1586530387.36</float>
+                              <float>1587462402.88</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
