@@ -223,7 +223,9 @@ class SelectionTool( BaseTool, SimpleItem ):
         warnings.warn('DEPRECATED: _redirectToOriginalForm got called with a query_string. The variables must be passed in REQUEST.form.',
                       DeprecationWarning)
       context = REQUEST['PARENTS'][0]
-      form_id = dialog_id or REQUEST.get('dialog_id', None) or form_id or REQUEST.get('form_id', 'view')
+      form_id = dialog_id or REQUEST.get('dialog_id', None) or form_id or REQUEST.get('form_id', None)
+      if form_id is None:
+        return context()
       return getattr(context, form_id)()
 
     security.declareProtected(ERP5Permissions.View, 'getSelectionNameList')
