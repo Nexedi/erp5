@@ -21,15 +21,15 @@
       var gadget = this;
       gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
       var table = jexcel(this.element.querySelector(".spreadsheet"), {
-          sheetName: "Tab 1",
-          minDimensions: [26, 200],
+          minDimensions: [2, 2],
           defaultColWidth: 100,
-          fullscreen: true,
+          //fullscreen: true,
           allowComments: true,
-          search: true,
+          //search: true,
           tableOverflow: true,
           lazyLoading: true,
           loadingSpin: true,
+          parseFormulas: false,
           onchange: gadget.deferNotifyChangeBinded,
           toolbar: [
             {
