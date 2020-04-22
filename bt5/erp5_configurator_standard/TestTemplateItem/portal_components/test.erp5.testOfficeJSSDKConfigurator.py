@@ -92,7 +92,7 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
 
   def getBusinessConfiguration(self):
     return self.portal.business_configuration_module[\
-                          "officejs_development_configuration_workflow"]
+                          "default_officejs_sdk_configuration"]
 
   def launchConfigurator(self):
     self.logMessage('OfficeJS Development launchConfigurator')
