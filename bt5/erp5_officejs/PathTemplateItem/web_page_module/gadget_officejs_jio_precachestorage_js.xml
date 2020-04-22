@@ -62,6 +62,12 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -69,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_bootloader.js</string> </value>
+            <value> <string>jio_precachestorage.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -79,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_bootloader_js</string> </value>
+            <value> <string>gadget_officejs_jio_precachestorage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -97,7 +103,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Officejs BootLoader Gadget JS</string> </value>
+            <value> <string>jio_precachestorage.js</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -191,7 +197,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1485781629.44</float>
+                              <float>1586165638.67</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -240,7 +246,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.27330.42899.26726</string> </value>
+                      <value> <string>983.46175.933.7662</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -258,7 +264,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1587734784.31</float>
+                              <float>1588765387.52</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -319,7 +325,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1485769967.8</float>
+                              <float>1586165299.65</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
