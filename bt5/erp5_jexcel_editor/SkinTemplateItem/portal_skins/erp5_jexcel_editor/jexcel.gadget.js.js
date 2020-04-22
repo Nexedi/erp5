@@ -2,43 +2,57 @@
 /*global window, rJS, RSVP, jexcel*/
 (function (window, rJS, RSVP, jexcel) {
   "use strict";
-  
+
   rJS(window)
-    
+
     .declareAcquiredMethod("notifySubmit", "notifySubmit")
     .declareJob("deferNotifySubmit", function () {
       // Ensure error will be correctly handled
       return this.notifySubmit();
     })
-    
+
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareJob("deferNotifyChange", function () {
       // Ensure error will be correctly handled
+      console.log(this.table.getConfig());
       return this.notifyChange();
     })
-    
-    .ready(function () {
+
+    .declareMethod("render", function (options) {
       var gadget = this;
+      var state_dict = {
+          key: options.key,
+          editable: options.editable === undefined ? true : options.editable,
+          value: options.value === undefined ? "" : options.value
+        };
+      return this.changeState(state_dict);
+    })
+  
+    .onStateChange(function (modification_dict) {
+      var gadget = this;
+      var table;
       gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
-      var table = jexcel(this.element.querySelector(".spreadsheet"), {
+      if (modification_dict.hasOwnProperty('value') && modification_dict.value !== "") {
+        modification_dict.value.editable = this.state.editable;
+        this.state.value.onchange = gadget.deferNotifyChangeBinded;
+        table = jexcel(gadget.element.querySelector(".spreadsheet"), this.state.value);
+        this.table = table;
+      }
+      else {
+        table = jexcel(this.element.querySelector(".spreadsheet"), {
+          editable: this.state.editable,
           minDimensions: [26, 200],
           defaultColWidth: 100,
           fullscreen: true,
           allowComments: true,
-          //search: true,
+          search: true,
+          rowResize: true,
           tableOverflow: true,
           lazyLoading: true,
           loadingSpin: true,
           parseFormulas: false,
           onchange: gadget.deferNotifyChangeBinded,
           toolbar: [
-            {
-              type: 'i',
-              content: 'add',
-              onclick: function () {
-                gadget.addSheet();
-              }
-            },
             {
               type: 'i',
               content: 'undo',
@@ -99,39 +113,14 @@
             }
           ]
         });
-      this.table = table;
-    })
-    
-    .declareMethod("render", function (options) {
-      var gadget = this;
-      var state_dict = {
-          key: options.key,
-          editable: options.editable === undefined ? true : options.editable
-        };
-      state_dict.value = options.value || "";
-      return this.changeState(state_dict);
-    })
-  
-    .declareMethod("addSheet", function () {
-      var gadget = this;
-      var sheets = [];
-      sheets.push({
-          sheetName: 'New tab ' + gadget.element.querySelector('.spreadsheet').jexcel.length,
-          minDimensions: [26, 200]
-        });
-      jexcel.tabs(gadget.element.querySelector('.spreadsheet'), sheets);
-    })
-  
-    .onStateChange(function (modification_dict) {
-      if (modification_dict.hasOwnProperty('value')) {
-        this.table.setData(this.state.value);
+        this.table = table;
       }
     })
-    
+
     .declareMethod('getContent', function () {
       var form_data = {};
       if (this.state.editable) {
-        form_data[this.state.key] = this.table.getData();
+        form_data[this.state.key] = this.table.getConfig();
         this.state.value = form_data[this.state.key];
       }
       return form_data;
