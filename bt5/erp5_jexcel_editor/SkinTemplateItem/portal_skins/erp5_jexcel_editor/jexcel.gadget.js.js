@@ -21,9 +21,9 @@
       var gadget = this;
       gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
       var table = jexcel(this.element.querySelector(".spreadsheet"), {
-          minDimensions: [2, 2],
+          minDimensions: [26, 200],
           defaultColWidth: 100,
-          //fullscreen: true,
+          fullscreen: true,
           allowComments: true,
           //search: true,
           tableOverflow: true,
