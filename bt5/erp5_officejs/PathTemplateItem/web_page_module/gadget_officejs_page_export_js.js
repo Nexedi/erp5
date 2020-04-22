@@ -6,12 +6,13 @@
 
   var origin_url = (window.location.origin + window.location.pathname)
     .replace("officejs_export/", ""),
+    precache_manifest = "WebSection_getPrecacheManifest",
     //TODO get rid of this old HARDCODED app dict and get everything from config
     application_dict = {
       "Text Editor": {
         "url": "officejs_text_editor/",
         "storage_type": "precache",
-        "cache": "WebSection_getPrecacheManifest"
+        "cache": precache_manifest
       },
       "Smart Assistant": {
         "url": "officejs_smart_assistant/",
@@ -27,11 +28,13 @@
       },
       "Illustration Editor": {
         "url": "officejs_svg_editor/",
-        "cache": "gadget_officejs_illustration.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "PDF Viewer": {
         "url": "officejs_pdf_viewer/",
-        "cache": "gadget_officejs_pdf_viewer.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "Cribjs": {
         "url": "officejs_cribjs/",
@@ -43,28 +46,33 @@
       },
       "Onlyoffice Text": {
         "url": "ooffice_text/",
-        "cache": "gadget_ooffice_text.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "Onlyoffice Spreadsheet": {
         "url": "ooffice_spreadsheet/",
-        "cache": "gadget_ooffice_spreadsheet.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "Onlyoffice Presentation": {
         "url": "ooffice_presentation/",
-        "cache": "gadget_ooffice_presentation.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "Web Table Editor": {
         "url": "officejs_web_table_editor/",
-        "cache": "gadget_officejs_web_table.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "Image Editor": {
         "url": "officejs_image_editor/",
-        "cache": "gadget_officejs_image_editor.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "Awesome Free Software Publisher List": {
         "url": "afs/",
         "storage_type": "precache",
-        "cache": "WebSection_getPrecacheManifest",
+        "cache": precache_manifest,
         "no_installer": true
       },
       "Jabber Client": {
@@ -111,7 +119,8 @@
       },
       "Javascript editor (CodeMirror)": {
         "url": "officejs_codemirror/",
-        "cache": "gadget_officejs_codemirror.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       }
     };
 
