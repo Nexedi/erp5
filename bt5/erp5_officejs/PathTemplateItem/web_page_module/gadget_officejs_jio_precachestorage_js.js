@@ -25,9 +25,7 @@
         this._prefix + "gadget_officejs_bootloader_serviceworker.js",
         this._prefix + "gadget_erp5_nojqm.css",
         this._prefix + "officejs_logo.png",
-        this._prefix + "jio_precachestorage.js",
-        //backward compatibility with appcache apps
-        this._prefix + "jio_appcachestorage.js"
+        this._prefix + "jio_precachestorage.js"
       ];
     } else {
       this._relative_url_list = [this._prefix + "/"];
