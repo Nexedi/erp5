@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.ERP5Type.Globals import InitializeClass
 from ZODB.POSException import ConflictError
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 import os
@@ -120,6 +121,7 @@ class DiscoverableMixin(CachedConvertableMixin):
   ### Metadata disovery and ingestion methods
   security.declareProtected(Permissions.ModifyPortalContent,
                             'discoverMetadata')
+  @UnrestrictedMethod
   def discoverMetadata(self, filename=None, user_login=None,
                        input_parameter_dict=None):
     """
