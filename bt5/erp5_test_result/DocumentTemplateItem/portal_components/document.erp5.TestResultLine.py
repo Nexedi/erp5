@@ -27,23 +27,19 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions
 
 from Products.ERP5.Document.Delivery import Delivery
 
 class TestResultLine(Delivery):
-    """Result of one single test run"""
+  """Result of one single test run"""
+  # CMF Type Definition
+  meta_type = 'ERP5 Test Result Line'
+  portal_type = 'Test Result Line'
+  add_permission = Permissions.AddPortalContent
 
-    # CMF Type Definition
-    meta_type = 'ERP5 Test Result Line'
-    portal_type = 'Test Result Line'
-    add_permission = Permissions.AddPortalContent
+  isIndexable = 0
 
-    isIndexable = 0
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-
-
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
