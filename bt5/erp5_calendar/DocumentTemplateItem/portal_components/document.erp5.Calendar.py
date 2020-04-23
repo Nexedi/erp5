@@ -31,25 +31,25 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Delivery import Delivery
 
 class Calendar(Delivery):
-    """
-     Calendar contains Calendar Lines.
-    """
-    # CMF Type Definition
-    meta_type = 'ERP5 Calendar'
-    portal_type = 'Calendar'
+  """
+  Calendar contains Calendar Lines.
+  """
+  # CMF Type Definition
+  meta_type = 'ERP5 Calendar'
+  portal_type = 'Calendar'
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Movement
-                      , PropertySheet.Delivery
-                      , PropertySheet.Path
-                      )
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Movement
+                    , PropertySheet.Delivery
+                    , PropertySheet.Path
+                    )

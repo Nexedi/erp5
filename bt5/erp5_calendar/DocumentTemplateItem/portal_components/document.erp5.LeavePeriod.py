@@ -1,5 +1,6 @@
 ##############################################################################
 #
+
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Courteaud Romain <romain@nexedi.com>
 #
@@ -30,7 +31,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.PresencePeriod import PresencePeriod
+from erp5.component.document.PresencePeriod import PresencePeriod
 
 class LeavePeriod(PresencePeriod):
   """
