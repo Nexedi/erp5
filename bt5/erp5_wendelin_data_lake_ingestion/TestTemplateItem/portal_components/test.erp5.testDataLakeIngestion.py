@@ -3,6 +3,7 @@ import string
 import random
 import csv
 import os
+import time
 import numpy as np
 import base64
 
@@ -30,6 +31,7 @@ class TestDataIngestion(SecurityTestCase):
     self.assertEqual(self.INVALID, self.portal.getIngestionReferenceDictionary()["invalid_suffix"])
     self.assertEqual(self.EOF, self.REFERENCE_SEPARATOR + self.portal.getIngestionReferenceDictionary()["split_end_suffix"])
     self.assertEqual(self.PART_1, self.REFERENCE_SEPARATOR + self.portal.getIngestionReferenceDictionary()["split_first_suffix"])
+    # XXX: create default users    
 
   def getRandomReference(self):
     random_string = ''.join([random.choice(string.ascii_letters + string.digits) for _ in xrange(10)])
@@ -74,6 +76,7 @@ class TestDataIngestion(SecurityTestCase):
     request.set('data_chunk', encoded_data_chunk)
     ingestion_policy.ingest()
     self.tic()
+    return
 
   def ingest(self, data_chunk, reference, extension, eof):
     ingestion_reference = self.getIngestionReference(reference, extension)
@@ -82,7 +85,7 @@ class TestDataIngestion(SecurityTestCase):
     ingestion_policy = self.portal.portal_ingestion_policies.wendelin_embulk
     
     self.ingestRequest(ingestion_reference, eof, data_chunk, ingestion_policy)
-    _, ingestion_reference = self.sanitizeReference(ingestion_reference)
+    ingestion_id, ingestion_reference = self.sanitizeReference(ingestion_reference)
 
     return ingestion_reference     
 
@@ -148,15 +151,19 @@ class TestDataIngestion(SecurityTestCase):
     reference = self.getRandomReference()
     
     ingestion_reference = self.ingest(data_chunk_1, reference, self.FIF, self.PART_1)
+    time.sleep(1)
     self.tic()
     
-    ingestion_reference = self.ingest(data_chunk_2, reference, self.FIF, self.PART_2)   
+    ingestion_reference = self.ingest(data_chunk_2, reference, self.FIF, self.PART_2)
+    time.sleep(1)    
     self.tic()
     
-    ingestion_reference = self.ingest(data_chunk_3, reference, self.FIF, self.PART_3)   
+    ingestion_reference = self.ingest(data_chunk_3, reference, self.FIF, self.PART_3)
+    time.sleep(1)    
     self.tic()
     
-    ingestion_reference = self.ingest(data_chunk_4, reference, self.FIF, self.EOF)  
+    ingestion_reference = self.ingest(data_chunk_4, reference, self.FIF, self.EOF)
+    time.sleep(1)    
     self.tic()
     
     # call explicitly alarm so all 4 Data Streams can be concatenated to one
