@@ -36,11 +36,73 @@
       var table;
       gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
       if (modification_dict.hasOwnProperty('value') && modification_dict.value !== "") {
-        modification_dict.value.editable = this.state.editable;
-        this.state.value.onchange = gadget.deferNotifyChangeBinded;
-        this.state.value.onafterchanges = gadget.updateValue;
-        this.state.value.toolbar = null;
-        table = jexcel(gadget.element.querySelector(".spreadsheet"), this.state.value);
+        table = jexcel(gadget.element.querySelector(".spreadsheet"), Object.assign(this.state.value, {
+          editable: gadget.state.editable,
+          onchange: gadget.deferNotifyChangeBinded, 
+          onafterchanges: gadget.updateValue, 
+          toolbar: [
+            {
+              type: 'i',
+              content: 'undo',
+              id: "undo",
+              onclick: function () {
+                console.log("aaa");
+                table.undo();
+              }
+            },
+            {
+              type: 'i',
+              content: 'redo',
+              onclick: function () {
+                  table.redo();
+                }
+            },
+            {
+              type: 'select',
+              k: 'font-family',
+              v: ['Arial', 'Arial Black', 'Verdana', 'Impact', 'Comic Sans MS', 'Tahoma', 'Trebuchet MS']
+            },
+            {
+              type: 'select',
+              k: 'font-size',
+              v: ['20px', '21px', '22px', '23px', '24px', '25px', '26px', '27px', '28px', '29px', '30px', '32px', '34px', '36px', '38px', '40px']
+            },
+            {
+              type: 'i',
+              content: 'format_align_left',
+              k: 'text-align',
+              v: 'left'
+            },
+            {
+              type: 'i',
+              content: 'format_align_center',
+              k: 'text-align',
+              v: 'center'
+            },
+            {
+              type: 'i',
+              content: 'format_align_right', 
+              k: 'text-align',
+              v: 'right'
+            },
+            {
+              type: 'i',
+              content: 'format_bold',
+              k: 'font-weight',
+              v: 'bold'
+            },
+            {
+              type: 'color',
+              content: 'format_color_text',
+              k: 'color'
+            },
+            {
+              type: 'color',
+              content: 'format_color_fill',
+              k: 'background-color'
+            }
+          ]
+        }));
         jexcel(gadget.element.querySelector(".spreadsheet"), this.state.value);
         this.table = table;
       }
@@ -63,13 +125,18 @@
             {
               type: 'i',
               content: 'undo',
-              id: "undo"
-              //onclick: table.undo
+              id: "undo",
+              onclick: function () {
+                console.log("aaa");
+                table.undo();
+              }
             },
             {
               type: 'i',
               content: 'redo',
-              //onclick: table.redo
+              onclick: function () {
+                  table.redo();
+                }
             },
             {
               type: 'select',
@@ -118,17 +185,6 @@
           ]
         });
         this.table = table;
-      }
-    })
-  
-    .onEvent("click", function (event) {
-      var gadget = this;
-      var element = event.target;
-      if (element == gadget.element.querySelector(".jexcel_toolbar").childNodes[0]) {
-        this.table.undo();
-      }
-      else if (element == gadget.element.querySelector(".jexcel_toolbar").childNodes[1]) {
-        this.table.redo();
       }
     })
 
