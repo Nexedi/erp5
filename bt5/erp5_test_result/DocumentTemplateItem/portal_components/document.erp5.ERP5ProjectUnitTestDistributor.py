@@ -25,15 +25,9 @@
 #
 ##############################################################################
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Tool.TaskDistributionTool import TaskDistributionTool
 from DateTime import DateTime
-from datetime import datetime
 import json
-import sys
-import itertools
-from copy import deepcopy
 import random
-import string
 from zLOG import LOG,DEBUG,ERROR
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
@@ -208,7 +202,6 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     which test suite migh be removed on test node with too many test suites
   """
     test_suite_module = self._getTestSuiteModule()
-    portal = self.getPortalObject()
     test_suite_list = test_suite_module.searchFolder(validation_state="validated",
                                                specialise_uid=self.getUid())
     all_test_suite_list = []
@@ -276,10 +269,10 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
       if len(test_node_list) == 1:
         test_node = test_node_list[0].getObject()
         if test_node.getValidationState() != 'validated':
-           try:
+          try:
             test_node.validate()
-           except e:
-             LOG('Test Node Validate',ERROR,'%s' %e)
+          except Exception, e:
+            LOG('Test Node Validate',ERROR,'%s' %e)
       if test_node is None:
         test_node = test_node_module.newContent(portal_type="Test Node", title=title, computer_guid=computer_guid,
                                       specialise=self.getRelativeUrl(),
@@ -346,7 +339,6 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     startTestSuite doc
     """
     test_node_module = self._getTestNodeModule()
-    test_suite_module =  self._getTestSuiteModule()
     portal = self.getPortalObject()
     config_list = []
     tag = "%s_%s" % (self.getRelativeUrl(), title)
@@ -389,7 +381,8 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
           vcs_repository_list.append(repository_dict)
         config["vcs_repository_list"] = vcs_repository_list
         to_delete_key_list = [x for x,y in config.items() if y==None]
-        [config.pop(x) for x in to_delete_key_list]
+        for x in to_delete_key_list:
+          config.pop(x)
         config_list.append(config)
     LOG('ERP5ProjectUnitTestDistributor.startTestSuite, config_list',DEBUG,config_list)
     if batch_mode:
