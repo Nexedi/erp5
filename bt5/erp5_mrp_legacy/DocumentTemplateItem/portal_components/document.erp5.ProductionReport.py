@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 
-from Products.ERP5.Document.Delivery import Delivery
+from erp5.component.document.Delivery import Delivery
 
 class ProductionReport(Delivery):
     """
