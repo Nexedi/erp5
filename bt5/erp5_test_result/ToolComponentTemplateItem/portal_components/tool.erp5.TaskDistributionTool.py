@@ -26,10 +26,9 @@
 #
 ##############################################################################
 
-import random
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
+from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, NegatedQuery
 from zLOG import LOG, DEBUG
@@ -141,10 +140,10 @@ class TaskDistributionTool(BaseTool):
                                       title=test_name,
                                       int_index=index)
     reference_list_string = None
-    if type(revision) is str and '=' in revision:
+    if isinstance(revision, str) and '=' in revision:
       reference_list_string = revision
       int_index, reference = None, revision
-    elif type(revision) is str:
+    elif isinstance(revision, str):
       # backward compatibility
       int_index, reference = revision, None
     else:
@@ -230,7 +229,6 @@ class TaskDistributionTool(BaseTool):
     test_result = portal.restrictedTraverse(test_result_path)
     if test_result.getSimulationState() != 'started':
       return
-    started_list = []
     for line in test_result.objectValues(portal_type="Test Result Line",
                                          sort_on=[("int_index","ascending")]):
       test = line.getTitle()
