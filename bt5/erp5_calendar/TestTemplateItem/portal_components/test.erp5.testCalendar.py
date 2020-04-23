@@ -30,7 +30,6 @@ import unittest
 from unittest import skip
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
-from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
 
@@ -62,7 +61,7 @@ class TestCalendar(ERP5ReportTestCase):
     cal_type_category_list = ['type1', 'type2', 'type3']
     if len(self.category_tool.calendar_period_type.contentValues()) == 0 :
       for category_id in cal_type_category_list:
-        o = self.category_tool.calendar_period_type.newContent(
+        self.category_tool.calendar_period_type.newContent(
                          portal_type='Category',
                          id=category_id)
 
@@ -175,13 +174,6 @@ class TestCalendar(ERP5ReportTestCase):
         group_presence_period=group_presence_period,
     )
 
-  def stepSetGroupPresencePeriodValues(self, sequence=None,
-                                         sequence_list=None, **kw):
-    """
-    Set values on personal calendar period
-    """
-    group_presence_period = sequence.get('group_presence_period')
-
   def stepSetGroupPresencePeriodDates(self, sequence=None,
                                         sequence_list=None, **kw):
     """
@@ -287,13 +279,6 @@ class TestCalendar(ERP5ReportTestCase):
     """
     personal_leave_period = sequence.get('personal_leave_period')
     sequence.edit(obj_to_check=personal_leave_period)
-
-  def stepSetPersonalLeavePeriodValues(self, sequence=None,
-                                       sequence_list=None, **kw):
-    """
-    Set values on personal calendar event
-    """
-    personal_leave_period = sequence.get('personal_leave_period')
 
   def stepSetPersonalLeavePeriodDates(self, sequence=None,
                                       sequence_list=None, **kw):
@@ -429,13 +414,6 @@ class TestCalendar(ERP5ReportTestCase):
     personal_presence_period = sequence.get('personal_presence_period')
     sequence.edit(obj_to_check=personal_presence_period)
 
-  def stepSetPersonalPresencePeriodValues(self, sequence=None,
-                                       sequence_list=None, **kw):
-    """
-    Set values on personal calendar event
-    """
-    personal_presence_period = sequence.get('personal_presence_period')
-
   def stepSetPersonalPresencePeriodDates(self, sequence=None,
                                       sequence_list=None, **kw):
     """
@@ -485,7 +463,6 @@ class TestCalendar(ERP5ReportTestCase):
               CreateGroupCalendar \
               SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
-              SetGroupPresencePeriodValues \
               Tic \
               SetGroupCalendarAssignmentToCheck \
               CheckNotCatalogued \
@@ -512,7 +489,6 @@ class TestCalendar(ERP5ReportTestCase):
               CreateLeaveRequest \
               SetLeaveRequestDestination \
               CreatePersonalLeavePeriod \
-              SetPersonalLeavePeriodValues \
               Tic \
               SetPersonalLeavePeriodToCheck \
               CheckNotCatalogued \
@@ -540,7 +516,6 @@ class TestCalendar(ERP5ReportTestCase):
               CreateLeaveRequest
               SetLeaveRequestDestination
               CreatePersonalLeavePeriod
-              SetPersonalLeavePeriodValues
               Tic
               SetPersonalLeavePeriodToCheck
               CheckNotCatalogued
@@ -686,7 +661,6 @@ class TestCalendar(ERP5ReportTestCase):
               CreateGroupCalendar \
               SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
-              SetGroupPresencePeriodValues \
               Tic \
               SetGroupCalendarAssignmentToCheck \
               SetGroupPresencePeriodDates \
@@ -705,7 +679,6 @@ class TestCalendar(ERP5ReportTestCase):
               CreateGroupCalendar \
               SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
-              SetGroupPresencePeriodValues \
               Tic \
               SetGroupCalendarAssignmentToCheck \
               SetGroupPresencePeriodDates \
@@ -725,7 +698,6 @@ class TestCalendar(ERP5ReportTestCase):
               CreateGroupCalendar \
               SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
-              SetGroupPresencePeriodValues \
               Tic \
               SetGroupCalendarAssignmentToCheck \
               PlanGroupCalendar \
@@ -745,7 +717,6 @@ class TestCalendar(ERP5ReportTestCase):
               CreateLeaveRequest \
               SetLeaveRequestDestination \
               CreatePersonalLeavePeriod \
-              SetPersonalLeavePeriodValues \
               Tic \
               SetPersonalLeavePeriodToCheck \
               PlanLeaveRequest \
@@ -765,7 +736,6 @@ class TestCalendar(ERP5ReportTestCase):
               CreateGroupCalendar \
               SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
-              SetGroupPresencePeriodValues \
               Tic \
               SetGroupCalendarAssignmentToCheck \
               SetGroupPresencePeriodDates \
@@ -778,7 +748,6 @@ class TestCalendar(ERP5ReportTestCase):
               CreateLeaveRequest \
               SetLeaveRequestDestination \
               CreatePersonalLeavePeriod \
-              SetPersonalLeavePeriodValues \
               Tic \
               PlanLeaveRequest \
               ConfirmLeaveRequest \
@@ -790,13 +759,11 @@ class TestCalendar(ERP5ReportTestCase):
 
     sequence_list.play(self)
 
+  @skip("Not Implemented")
   def test_04_getCapacityAvailability(self):
     """
     Test getCapacityAvailability
     """
-    return # XXX this test is disabled
-    raise NotImplementedError
-
     # Test that calendar group increase time availability
     sequence_list = SequenceList()
     sequence_string = '\
@@ -804,7 +771,6 @@ class TestCalendar(ERP5ReportTestCase):
               CreateGroupCalendar \
               SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
-              SetGroupPresencePeriodValues \
               Tic \
               SetGroupCalendarAssignmentToCheck \
               ConfirmGroupCalendar \
@@ -823,7 +789,6 @@ class TestCalendar(ERP5ReportTestCase):
               CreateGroupCalendar \
               SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
-              SetGroupPresencePeriodValues \
               Tic \
               SetGroupCalendarAssignmentToCheck \
               ConfirmGroupCalendar \
@@ -843,7 +808,6 @@ class TestCalendar(ERP5ReportTestCase):
               CreateGroupCalendar \
               SetGroupCalendarAssignment \
               CreateGroupPresencePeriod \
-              SetGroupPresencePeriodValues \
               Tic \
               SetGroupCalendarAssignmentToCheck \
               ConfirmGroupCalendar \
@@ -2116,7 +2080,6 @@ class TestCalendar(ERP5ReportTestCase):
     my_default_leave_request_period_stop_date = LeaveRequest_view.\
       my_default_leave_request_period_stop_date
     my_start_date = LeaveRequest_view.my_start_date
-    my_stop_date = LeaveRequest_view.my_stop_date
     listbox = LeaveRequest_view.listbox
     checkDisplayedAsSimple()
     self.assertEqual(
@@ -2210,7 +2173,7 @@ class TestCalendar(ERP5ReportTestCase):
     my_default_presence_request_period_stop_date = PresenceRequest_view.\
       my_default_presence_request_period_stop_date
     my_start_date = PresenceRequest_view.my_start_date
-    my_stop_date = PresenceRequest_view.my_stop_date
+
     listbox = PresenceRequest_view.listbox
     checkDisplayedAsSimple()
     self.assertEqual(

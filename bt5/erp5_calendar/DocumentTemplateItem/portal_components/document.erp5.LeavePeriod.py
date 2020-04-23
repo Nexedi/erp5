@@ -30,7 +30,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.PresencePeriod import PresencePeriod
+from erp5.component.document.PresencePeriod import PresencePeriod
 
 class LeavePeriod(PresencePeriod):
   """
