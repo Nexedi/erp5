@@ -101,7 +101,7 @@
 
     .declareMethod('updateConfiguration', function (appcache_storage, origin_url,
                                                     migration_version, current_version,
-                                                    storage_name) {
+                                                    storage_name, dev_mode) {
       if (!appcache_storage) { return; }
       var gadget = this,
         document_id_list = [origin_url,
@@ -119,6 +119,7 @@
                             "portal_types/Web Page Module/text_editor_view",
                             "portal_types/Web Page/text_editor_clone"],
         promise_list = [],
+        storage_parameter = current_version,
         i = 0;
       if (migration_version !== current_version) {
         //clean storage if app version changed
@@ -131,7 +132,11 @@
           return RSVP.all(promise_list);
         })
         .push(function () {
-          return appcache_storage.repair(current_version);
+          if (dev_mode) {
+            console.warn("DEVELOPER MODE activated: forces appcache storage update");
+            storage_parameter = current_version + Math.random();
+          }
+          return appcache_storage.repair(storage_parameter);
         })
         .push(function () {
           return gadget.setSettingList({"migration_version": current_version,
@@ -148,15 +153,18 @@
         selected_storage_name,
         previous_storage_name,
         index,
+        dev_mode,
         origin_url = window.location.href;
       return gadget.getSettingList(['configuration_manifest',
                                     'jio_storage_name',
                                     'previous_storage_name',
-                                    'migration_version'])
+                                    'migration_version',
+                                    'dev_mode'])
         .push(function (result_list) {
           selected_storage_name = result_list[1];
           previous_storage_name = result_list[2];
           migration_version = result_list[3];
+          dev_mode = result_list[4];
           var jio_appchache_options = {
             type: "replicate",
             parallel_operation_attachment_amount: 10,
@@ -210,10 +218,11 @@
           current_version = window.location.href.replace(window.location.hash, "");
           index = current_version.indexOf(window.location.host) + window.location.host.length;
           current_version = current_version.substr(index);
-          if (migration_version !== current_version ||
+          //dev mode forces storage update
+          if (dev_mode || migration_version !== current_version ||
               previous_storage_name !== selected_storage_name) {
             return gadget.updateConfiguration(appcache_storage, origin_url, migration_version,
-                                              current_version, selected_storage_name);
+                                              current_version, selected_storage_name, dev_mode);
           }
         })
         .push(undefined, function (error) {
