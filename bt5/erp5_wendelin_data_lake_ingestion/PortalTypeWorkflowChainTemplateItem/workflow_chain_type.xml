@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>Data Set</type>
+  <workflow>-validation_workflow, data_validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Data Stream</type>
+  <workflow>-validation_workflow, data_validation_workflow</workflow>
+ </chain>
+</workflow_chain>
