@@ -1,4 +1,8 @@
+document.erp5.DeliveryCell
+document.erp5.DeliveryLine
 document.erp5.Inventory
+document.erp5.InventoryCell
+document.erp5.InventoryLine
 document.erp5.InvoiceCell
 document.erp5.InvoiceLine
 document.erp5.Item

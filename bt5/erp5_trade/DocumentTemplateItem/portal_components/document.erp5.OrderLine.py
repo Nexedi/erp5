@@ -1,8 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2002, 2004 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
-#                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -30,16 +29,14 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.DeliveryCell import DeliveryCell
+from erp5.component.document.DeliveryLine import DeliveryLine
 
-class OrderCell(DeliveryCell):
+class OrderLine(DeliveryLine):
   """
-  A OrderCell allows to define specific quantities
-  for each variation of a resource in a delivery line.
+  A order line defines quantity and price
   """
-  meta_type = 'ERP5 Order Cell'
-  portal_type = 'Order Cell'
-  isCell = 1
+  meta_type = 'ERP5 Order Line'
+  portal_type = 'Order Line'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -47,43 +44,14 @@ class OrderCell(DeliveryCell):
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
-                    , PropertySheet.Arrow
                     , PropertySheet.Amount
                     , PropertySheet.Task
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Arrow
                     , PropertySheet.Movement
                     , PropertySheet.Price
-                    , PropertySheet.Predicate
-                    , PropertySheet.MappedValue
+                    , PropertySheet.VariationRange
                     , PropertySheet.ItemAggregation
                     )
-
-  def reindexObject(self, *k, **kw):
-    """
-    Reindex children and simulation
-    """
-    self.recursiveReindexObject(*k,**kw)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'isMovement')
-  def isMovement(self):
-    """
-    should be considered as a movement if the parent does not have sub lines
-    """
-    return not self.getParentValue().hasLineContent()
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-        'getTotalPrice')
-  def getTotalPrice(self, default=0.0, *args, **kw):
-    "only return a value if self is a movement"
-    if not self.isMovement():
-      return default
-    return DeliveryCell.getTotalPrice(self, default=default, *args, **kw)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getTotalQuantity')
-  def getTotalQuantity(self, default=0.0, *args, **kw):
-    "only return a value if self is a movement"
-    if not self.isMovement():
-      return default
-    return DeliveryCell.getTotalQuantity(self, default=default, *args, **kw)

@@ -26,21 +26,21 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
-from AccessControl.PermissionRole import PermissionRole
 from Acquisition import aq_base
+from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.DeliveryLine import DeliveryLine
-from Products.ERP5.Document.Movement import Movement
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
-class InventoryLine(DeliveryLine):
+from erp5.component.document.DeliveryCell import DeliveryCell
+
+class InventoryCell(DeliveryCell):
   """
-  An Inventory Line describe the inventory of a resource, by variations.
+  An InventoryCell allows to define specific inventory
+  for each variation of a resource in an inventory line.
   """
-  meta_type = 'ERP5 Inventory Line'
-  portal_type = 'Inventory Line'
+  meta_type = 'ERP5 Inventory Cell'
+  portal_type = 'Inventory Cell'
   add_permission = Permissions.AddPortalContent
   isInventoryMovement = ConstantGetter('isInventoryMovement', value=True)
 
@@ -50,33 +50,25 @@ class InventoryLine(DeliveryLine):
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.Amount
                     , PropertySheet.InventoryMovement
                     , PropertySheet.Task
-                    , PropertySheet.Arrow
                     , PropertySheet.Movement
-                    , PropertySheet.VariationRange
+                    , PropertySheet.Price
+                    , PropertySheet.Predicate
+                    , PropertySheet.MappedValue
                     , PropertySheet.ItemAggregation
                     )
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTotalInventory')
   def getTotalInventory(self):
     """
-    Returns the inventory if no cell or the total inventory if cells
+    Returns the inventory, as cells are not supposed to contain more cells.
     """
-    if not self.hasCellContent():
-      return self.getInventory()
-    else:
-      total_quantity = 0.0
-      for cell in self.getCellValueList(base_id='movement'):
-        if cell.getInventory() is not None:
-          total_quantity += cell.getInventory()
-      return total_quantity
+    return self.getInventory()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getQuantity')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getQuantity')
   def getQuantity(self):
     """
     Computes a quantity which allows to reach inventory
@@ -84,19 +76,17 @@ class InventoryLine(DeliveryLine):
     if not self.hasCellContent():
       # First check if quantity already exists
       quantity = self._baseGetQuantity()
-      if quantity not in (0.0,0,None):
+      if quantity not in (0.0, 0, None):
         return quantity
       # Make sure inventory is defined somewhere (here or parent)
-      inventory = getattr(aq_base(self), 'inventory', None)
-      if inventory is not None:
-        return inventory
-      return quantity
+      if getattr(aq_base(self), 'inventory', None) is None:
+        return 0.0 # No inventory defined, so no quantity
+      return self.getInventory()
     else:
       return None
 
   # Inventory cataloging
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConvertedInventory')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getConvertedInventory')
   def getConvertedInventory(self):
     """
     provides a default inventory value - None since
@@ -104,51 +94,11 @@ class InventoryLine(DeliveryLine):
     """
     return self.getInventory() # XXX quantity unit is missing
 
-  # Required for indexing
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getInventoriatedQuantity')
-  def getInventoriatedQuantity(self):
-    """
-    Take into account efficiency in converted target quantity
-    """
-    return Movement.getInventoriatedQuantity(self)
-
   def reindexObject(self, *args, **kw):
     """
     Reindex Inventory too
     """
-    DeliveryLine.reindexObject(self, *args, **kw)
+    DeliveryCell.reindexObject(self, *args, **kw)
     # No need to reindex recursively as Delivery does, so call
     # _reindexObject() directly
     self.getRootDeliveryValue()._reindexObject(*args, **kw)
-
-  # XXX: Dirty but required for erp5_banking_core
-  getBaobabSourceUid = lambda x: x.getSourceUid()
-  getBaobabSourceUid__roles__ = PermissionRole(Permissions.View)
-
-  getBaobabDestinationUid = lambda x: x.getDestinationUid()
-  getBaobabDestinationUid__roles__ = PermissionRole(Permissions.View)
-
-  getBaobabSourceSectionUid = lambda x: x.getSourceSectionUid()
-  getBaobabSourceSectionUid__roles__ = PermissionRole(Permissions.View)
-
-  getBaobabDestinationSectionUid = lambda x: x.getDestinationSectionUid()
-  getBaobabDestinationSectionUid__roles__ = PermissionRole(Permissions.View)
-
-  getBaobabSourcePaymentUid = lambda x: x.getSourcePaymentUid()
-  getBaobabSourcePaymentUid__roles__ = PermissionRole(Permissions.View)
-
-  getBaobabDestinationPaymentUid = lambda x: x.getDestinationPaymentUid()
-  getBaobabDestinationPaymentUid__roles__ = PermissionRole(Permissions.View)
-
-  getBaobabSourceFunctionUid = lambda x: x.getSourceFunctionUid()
-  getBaobabSourceFunctionUid__roles__ = PermissionRole(Permissions.View)
-
-  getBaobabDestinationFunctionUid = lambda x: x.getDestinationFunctionUid()
-  getBaobabDestinationFunctionUid__roles__ = PermissionRole(Permissions.View)
-
-  getBaobabSourceProjectUid = lambda x: x.getSourceProjectUid()
-  getBaobabSourceProjectUid__roles__ = PermissionRole(Permissions.View)
-
-  getBaobabDestinationProjectUid = lambda x: x.getDestinationProjectUid()
-  getBaobabDestinationProjectUid__roles__ = PermissionRole(Permissions.View)

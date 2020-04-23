@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from erp5.component.document.CashDeliveryLine import CashDeliveryLine
-from Products.ERP5.Document.InventoryLine import InventoryLine
+from erp5.component.document.InventoryLine import InventoryLine
 from zope.interface import implements
 
 class CashInventoryLine(InventoryLine, CashDeliveryLine):

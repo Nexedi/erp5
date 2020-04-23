@@ -6,6 +6,8 @@ document.erp5.ContainerLine
 document.erp5.DeliveryRootSimulationRule
 document.erp5.DeliverySimulationRule
 document.erp5.DuplicateInventoryConstraint
+document.erp5.OrderCell
+document.erp5.OrderLine
 document.erp5.OrderRootSimulationRule
 document.erp5.PaymentCondition
 document.erp5.TradeCondition
