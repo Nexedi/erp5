@@ -27,7 +27,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Delivery import Delivery
+from erp5.component.document.Delivery import Delivery
 from erp5.component.document.AccountingTransaction import AccountingTransaction
 from Products.ERP5Type.Utils import convertToMixedCase, convertToUpperCase
 from erp5.component.module.BaobabMixin import BaobabMixin
