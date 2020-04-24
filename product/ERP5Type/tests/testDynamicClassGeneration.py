@@ -2233,6 +2233,10 @@ class FooBar(ValidationFailed):
 
 # Transforms for Zope which should ideally be upstream'ed
 from AccessControl.PermissionRole import rolesForPermissionOn, PermissionRole, imPermissionRole, _what_not_even_god_should_do # pylint: disable=unused-import
+
+# Monkey patch of astroid 1.3.8: it raised 'no-name-in-module' because
+# Shared.DC was not considered a namespace package
+from Shared.DC.ZRDB.Results import Results # pylint: disable=unused-import
 """ % (dict(namespace=namespace,
             reference1=imported_reference1,
             module2=imported_module2,
