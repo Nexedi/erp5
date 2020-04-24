@@ -341,7 +341,9 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs_text_editor.appcache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
@@ -616,7 +618,7 @@ WebSection_getTextEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.22977.51036.31539</string> </value>
+                      <value> <string>983.23003.23790.12492</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -634,7 +636,7 @@ WebSection_getTextEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1587461481.78</float>
+                              <float>1587727032.87</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

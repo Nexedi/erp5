@@ -401,7 +401,9 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs_illustration.appcache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
@@ -675,7 +677,7 @@ WebSection_getSvgEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.60053.22857.50926</string> </value>
+                      <value> <string>983.23018.37121.33467</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -693,7 +695,7 @@ WebSection_getSvgEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1587462393.98</float>
+                              <float>1587729706.53</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
