@@ -7,9 +7,9 @@ var repair = false;
   function createStorage(gadget) {
     var cache_storage_type = "precache";
     //backward compatibility with appcache apps
-    if (gadget.props.cache_file.endsWith(".appcache")) {
+    /*if (gadget.props.cache_file.endsWith(".appcache")) {
       cache_storage_type = "appcache";
-    }
+    }*/
     return jIO.createJIO({
       type: "replicate",
       parallel_operation_attachment_amount: 10,
