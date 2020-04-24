@@ -5,11 +5,6 @@ var repair = false;
   "use strict";
 
   function createStorage(gadget) {
-    var cache_storage_type = "precache";
-    //backward compatibility with appcache apps
-    /*if (gadget.props.cache_file.endsWith(".appcache")) {
-      cache_storage_type = "appcache";
-    }*/
     return jIO.createJIO({
       type: "replicate",
       parallel_operation_attachment_amount: 10,
@@ -41,7 +36,7 @@ var repair = false;
         }
       },
       remote_sub_storage: {
-        type: cache_storage_type,
+        type: "precache",
         manifest: gadget.props.cache_file,
         version: gadget.props.version_url,
         take_installer: true
