@@ -239,7 +239,6 @@ url_list = [
   "pdf_js/cmaps/KSC-EUC-H.bcmap",
   "pdf_js/cmaps/EUC-V.bcmap",
   "pdf_js/debugger.js"
-
 ]
 
 return url_list
