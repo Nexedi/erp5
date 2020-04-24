@@ -449,7 +449,9 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs_image_editor.appcache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
@@ -723,7 +725,7 @@ WebSection_getImageEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.60090.15662.9216</string> </value>
+                      <value> <string>983.23018.40435.64631</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -741,7 +743,7 @@ WebSection_getImageEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1587462396.99</float>
+                              <float>1587729701.4</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
