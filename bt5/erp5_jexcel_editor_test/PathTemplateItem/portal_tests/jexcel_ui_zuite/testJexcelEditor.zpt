@@ -1,0 +1,66 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test My Module UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Jexcel Editor UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/3/</td>
+  <td></td>
+</tr>
+<!-- Wait for gadget to be loaded -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/3/jexcel.gadget.html']</td>
+  <td></td>
+</tr>
+<!-- Wait for spreadsheet to be rendered by the gadget -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='spreadsheet']</td>
+  <td></td>
+</tr>
+<!-- Verify maximize button is present -->
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[contains(@class, 'ui-icon-expand ui-btn-icon-notext')]</td>
+  <td></td>
+</tr>
+<!-- Verify editor has been maximized -->
+<tr>
+  <td>click</td>
+  <td>//button[contains(@class, 'ui-icon-expand ui-btn-icon-notext')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, 'editor-maximize') and @data-gadget-url='${base_url}/web_site_module/3/gadget_editor.html']</td>
+  <td></td>
+</tr>
+<!-- Verify searchbar is present -->
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, 'jexcel_filter')]</td>
+  <td></td>
+</tr>
+<!-- Verify toolbar is present -->
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, 'jexcel_toolbar')]</td>
+  <td></td>
+</tr>
+<!-- Verify body is present, draggable and resizable -->
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//tbody[contains(@class, 'draggable resizable')]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body></html>
