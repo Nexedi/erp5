@@ -401,7 +401,9 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs_web_table.appcache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
@@ -675,7 +677,7 @@ WebSection_getWebTableEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.61514.63609.50124</string> </value>
+                      <value> <string>983.23018.43853.17715</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -693,7 +695,7 @@ WebSection_getWebTableEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1587462400.14</float>
+                              <float>1587729708.72</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
