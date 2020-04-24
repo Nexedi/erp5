@@ -33,12 +33,13 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5.Document.Movement import Movement
-from Products.ERP5.ExpandPolicy import policy_dict, TREE_DELIVERED_CACHE_KEY
+from erp5.component.module.ExpandPolicy import policy_dict, TREE_DELIVERED_CACHE_KEY
 
 from zLOG import LOG, WARNING
 
 from Products.ERP5.mixin.property_recordable import PropertyRecordableMixin
-from Products.ERP5.mixin.explainable import ExplainableMixin
+from erp5.component.mixin.ExplainableMixin import ExplainableMixin
+from erp5.component.interface.IExpandable import IExpandable
 
 # XXX Do we need to create groups ? (ie. confirm group include confirmed, getting_ready and ready
 
@@ -118,7 +119,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
                     )
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IExpandable,
+  zope.interface.implements(IExpandable,
                             interfaces.IPropertyRecordable)
 
   def tpValues(self) :
@@ -656,25 +657,25 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       empty; a movement is only yielded if its causality value is in this set
       """
       object_id_list = document.objectIds()
-      for id in object_id_list:
-        if id not in tree_node.visited_movement_dict:
+      for id_ in object_id_list:
+        if id_ not in tree_node.visited_movement_dict:
           # we had not visited it in step #2
-          subdocument = document._getOb(id)
+          subdocument = document._getOb(id_)
           if subdocument.getPortalType() == "Simulation Movement":
             path = subdocument.getCausalityValue(portal_type='Business Link')
             t = (subdocument, path)
-            tree_node.visited_movement_dict[id] = t
+            tree_node.visited_movement_dict[id_] = t
             if path in path_set_to_check:
               yield t
           else:
             # it must be an Applied Rule
-            subtree = tree_node.get(id, treeNode())
+            subtree = tree_node.get(id_, treeNode())
             for d in descendantGenerator(subdocument,
                                          subtree,
                                          path_set_to_check):
               yield d
 
-      for id, t in tree_node.visited_movement_dict.iteritems():
+      for id_, t in tree_node.visited_movement_dict.iteritems():
         subdocument, path = t
         to_check = path_set_to_check
         # do we need to change/copy the set?
@@ -684,7 +685,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
             continue
           to_check = to_check.copy()
           to_check.remove(path)
-        subtree = tree_node.get(id, treeNode())
+        subtree = tree_node.get(id_, treeNode())
         for d in descendantGenerator(subdocument, subtree, to_check):
           yield d
 

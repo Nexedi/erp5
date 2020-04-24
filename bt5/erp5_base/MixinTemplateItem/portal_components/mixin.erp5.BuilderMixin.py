@@ -33,7 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.MovementGroup import MovementGroupNode
+from erp5.component.module.MovementGroup import MovementGroupNode
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.ExplanationCache import _getExplanationCache

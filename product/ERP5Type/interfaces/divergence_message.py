@@ -27,7 +27,7 @@
 #
 ##############################################################################
 """
-Products.ERP5Type.interfaces.divergence_message
+erp5.component.interface.IDivergenceMessage
 """
 from zope.interface import Interface
 

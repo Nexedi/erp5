@@ -43,8 +43,6 @@ from MySQLdb import ProgrammingError
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
-from Products.ERP5.Tool.SimulationTool import MYSQL_MIN_DATETIME_RESOLUTION
-
 
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
@@ -2913,6 +2911,7 @@ class TestInventoryCacheTable(InventoryAPITestCase):
     min_lag = cache_lag / 2
     self.NOW = now = DateTime(DateTime().strftime("%Y-%m-%d %H:%M:%S UTC"))
     self.CACHE_DATE = cache_date = now - min_lag
+    from erp5.component.tool.SimulationTool import MYSQL_MIN_DATETIME_RESOLUTION
     self.LAST_CACHED_MOVEMENT_DATE = last_cached_movement_date = \
       cache_date - MYSQL_MIN_DATETIME_RESOLUTION
     # First movement, won't be into cache

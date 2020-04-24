@@ -35,7 +35,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Globals import PersistentMapping
 from erp5.component.mixin.SolverMixin import SolverMixin
 from erp5.component.mixin.ConfigurableMixin import ConfigurableMixin
-from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
+from erp5.component.module.MovementCollectionDiff import _getPropertyAndCategoryList
 from erp5.component.interface.ISolver import ISolver
 from erp5.component.interface.IConfigurable import IConfigurable
 

@@ -29,10 +29,11 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type import Permissions, interfaces
-from Products.ERP5.MovementCollectionDiff import (
+from Products.ERP5Type import Permissions
+from erp5.component.module.MovementCollectionDiff import (
   MovementCollectionDiff, _getPropertyAndCategoryList)
-from Products.ERP5.mixin.rule import _compare
+from erp5.component.mixin.RuleMixin import _compare
+from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
 
 class MovementCollectionUpdaterMixin:
   """Movement Collection Updater.
@@ -49,7 +50,7 @@ class MovementCollectionUpdaterMixin:
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IMovementCollectionUpdater,)
+  zope.interface.implements(IMovementCollectionUpdater,)
 
   # Implementation of IMovementCollectionUpdater
   security.declareProtected(Permissions.AccessContentsInformation,

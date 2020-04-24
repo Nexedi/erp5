@@ -1,1 +1,4 @@
+mixin.erp5.ExplainableMixin
+mixin.erp5.MovementCollectionUpdaterMixin
+mixin.erp5.RuleMixin
 mixin.erp5.SimulableMixin

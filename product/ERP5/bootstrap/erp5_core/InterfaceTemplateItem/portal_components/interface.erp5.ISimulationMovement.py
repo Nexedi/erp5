@@ -27,14 +27,13 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.simulation_movement
+erp5.component.interface.ISimulationMovement
 """
 
 from Products.ERP5.interfaces.property_recordable import IPropertyRecordable
 from Products.ERP5.interfaces.movement import IMovement
-from Products.ERP5.interfaces.divergence_controller import IDivergenceController
+from erp5.component.interface.IDivergenceController import IDivergenceController
 from Products.ERP5.interfaces.explainable import IExplainable
-from zope.interface import Interface
 
 class ISimulationMovement(IMovement, IPropertyRecordable, IDivergenceController, IExplainable):
   """Simulation Movement interface specification

@@ -34,15 +34,17 @@ import zope.interface
 from zExceptions import ExceptionFormatter
 from ZODB.POSException import ConflictError
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5.ExpandPolicy import TREE_DELIVERED_CACHE_KEY
-from Products.ERP5.mixin.explainable import ExplainableMixin
-from Products.ERP5.mixin.rule import RuleMixin
+from erp5.component.module.ExpandPolicy import TREE_DELIVERED_CACHE_KEY
+from erp5.component.mixin.ExplainableMixin import ExplainableMixin
+from erp5.component.mixin.RuleMixin import RuleMixin
+from erp5.component.interface.IExpandable import IExpandable
+from erp5.component.interface.IMovementCollection import IMovementCollection
 
 class AppliedRule(XMLObject, ExplainableMixin):
   """
@@ -80,8 +82,8 @@ class AppliedRule(XMLObject, ExplainableMixin):
                     )
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IExpandable,
-                            interfaces.IMovementCollection)
+  zope.interface.implements(IExpandable,
+                            IMovementCollection)
 
   def tpValues(self) :
     """ show the content in the left pane of the ZMI """
@@ -170,6 +172,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
     """
     return self.objectValues(portal_type=RuleMixin.movement_type)
 
+  # pylint: disable=cell-var-from-loop
   def _migrateSimulationTree(self,
                              get_matching_key,
                              get_original_property_dict,
@@ -370,8 +373,8 @@ class AppliedRule(XMLObject, ExplainableMixin):
       for delivery, sm_dict in deleted:
         if not sm_dict:
           del old_dict[delivery]
-      from Products.ERP5.Document.SimulationMovement import SimulationMovement
-      from Products.ERP5.mixin.movement_collection_updater import \
+      from erp5.component.document.SimulationMovement import SimulationMovement
+      from erp5.component.mixin.MovementCollectionUpdaterMixin import \
           MovementCollectionUpdaterMixin as mixin
       # Patch is already protected by WorkflowMethod.disable lock.
       orig_updateMovementCollection = mixin.__dict__['updateMovementCollection']
@@ -404,8 +407,8 @@ class AppliedRule(XMLObject, ExplainableMixin):
         document = object_list.popleft()
         portal_type = document.getPortalType()
         document_dict = {'portal_type': portal_type}
-        for property in property_dict[portal_type]:
-          document_dict[property] = document.getProperty(property)
+        for property_ in property_dict[portal_type]:
+          document_dict[property_] = document.getProperty(property_)
         rule_dict[document.getRelativeUrl()] = document_dict
         object_list += document.objectValues()
       return rule_dict
