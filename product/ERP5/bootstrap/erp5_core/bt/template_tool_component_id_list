@@ -1,2 +1,3 @@
 tool.erp5.CallableTool
 tool.erp5.DiffTool
+tool.erp5.SimulationTool

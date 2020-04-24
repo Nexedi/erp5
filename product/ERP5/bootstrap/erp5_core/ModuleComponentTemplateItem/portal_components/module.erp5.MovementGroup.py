@@ -41,7 +41,7 @@ class MovementGroupNode:
   # a separate method requests separating movements.
   def __init__(self, movement_group_list=None, movement_list=None,
                last_line_movement_group=None,
-               separate_method_name_list=[], movement_group=None,
+               separate_method_name_list=(), movement_group=None,
                merge_delivery=None):
     self._movement_list = []
     self._group_list = []
@@ -332,7 +332,7 @@ class FakeMovement:
         return True
     return False
 
-  def _setDelivery(self, object):
+  def _setDelivery(self, object): # pylint: disable=redefined-builtin
     """
       Set Delivery value for each movement
     """
@@ -508,85 +508,3 @@ class FakeMovement:
                                               id(self),
                                               self.getMovementList())
     return repr_str
-
-# The following classes are not ported to Document/XxxxMovementGroup.py yet.
-
-class RootMovementGroup(MovementGroupNode):
-  pass
-
-class SplitResourceMovementGroup(RootMovementGroup):
-
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    self.resource = movement.getResource()
-
-  def test(self, movement):
-    return movement.getResource() == self.resource
-
-allow_class(SplitResourceMovementGroup)
-
-class OptionMovementGroup(RootMovementGroup):
-
-  def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    option_base_category_list = movement.getPortalOptionBaseCategoryList()
-    self.option_category_list = movement.getVariationCategoryList(
-                                  base_category_list=option_base_category_list)
-    if self.option_category_list is None:
-      self.option_category_list = []
-    self.option_category_list.sort()
-    # XXX This is very bad, but no choice today.
-    self.setGroupEdit(industrial_phase_list = self.option_category_list)
-
-  def test(self,movement):
-    option_base_category_list = movement.getPortalOptionBaseCategoryList()
-    movement_option_category_list = movement.getVariationCategoryList(
-                              base_category_list=option_base_category_list)
-    if movement_option_category_list is None:
-      movement_option_category_list = []
-    movement_option_category_list.sort()
-    return movement_option_category_list == self.option_category_list
-
-allow_class(OptionMovementGroup)
-
-# XXX This should not be here
-# I (seb) have commited this because movement groups are not
-# yet configurable through the zope web interface
-class IntIndexMovementGroup(RootMovementGroup):
-
-  def getIntIndex(self,movement):
-    order_value = movement.getOrderValue()
-    int_index = 0
-    if order_value is not None:
-      if "Line" in order_value.getPortalType():
-        int_index = order_value.getIntIndex()
-      elif "Cell" in order_value.getPortalType():
-        int_index = order_value.getParentValue().getIntIndex()
-    return int_index
-
-  def __init__(self,movement,**kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    int_index = self.getIntIndex(movement)
-    self.int_index = int_index
-    self.setGroupEdit(
-        int_index=int_index
-    )
-
-  def test(self,movement):
-    return self.getIntIndex(movement) == self.int_index
-
-allow_class(IntIndexMovementGroup)
-
-class ParentExplanationMovementGroup(RootMovementGroup): pass
-
-class ParentExplanationCausalityMovementGroup(ParentExplanationMovementGroup):
-  """
-  Like ParentExplanationMovementGroup, and set the causality.
-  """
-  def __init__(self, movement, **kw):
-    ParentExplanationMovementGroup.__init__(self, movement=movement, **kw)
-    self.updateGroupEdit(
-        causality_value = self.explanation_value
-    )
-
-allow_class(ParentExplanationCausalityMovementGroup)

@@ -30,7 +30,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 
 from Products.ERP5.Document.Movement import Movement
@@ -39,6 +39,8 @@ from Products.ERP5.Document.ImmobilisationMovement import ImmobilisationMovement
 from inspect import getargspec
 from Products.ERP5Type.Base import Base
 edit_args_list = getargspec(Base._edit).args
+
+from erp5.component.interface.IDivergenceController import IDivergenceController
 
 class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
   """
@@ -70,7 +72,7 @@ class DeliveryLine(Movement, XMLMatrix, ImmobilisationMovement):
                     )
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IDivergenceController,)
+  zope.interface.implements(IDivergenceController,)
 
   # Multiple inheritance definition
   updateRelatedContent = XMLMatrix.updateRelatedContent

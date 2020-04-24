@@ -28,11 +28,14 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.mixin.rule import RuleMixin
+from Products.ERP5Type import Permissions, PropertySheet
+from erp5.component.mixin.RuleMixin import RuleMixin
 from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
-from Products.ERP5.mixin.movement_collection_updater import \
+from erp5.component.mixin.MovementCollectionUpdaterMixin import \
      MovementCollectionUpdaterMixin
+from erp5.component.interface.IRule import IRule
+from erp5.component.interface.IDivergenceController import IDivergenceController
+from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
 
 class OrderRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
   """
@@ -50,9 +53,9 @@ class OrderRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IRule,
-                            interfaces.IDivergenceController,
-                            interfaces.IMovementCollectionUpdater,)
+  zope.interface.implements(IRule,
+                            IDivergenceController,
+                            IMovementCollectionUpdater,)
 
   # Default Properties
   property_sheets = (
