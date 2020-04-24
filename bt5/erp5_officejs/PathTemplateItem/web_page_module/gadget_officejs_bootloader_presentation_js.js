@@ -69,7 +69,7 @@
     })
     .onStateChange(function (modification_dict) {
       var skip_link, error_div, app_name_div, message, error_text,
-        gadget = this;
+        error_collapsible, gadget = this;
       if (modification_dict.app_name) {
         app_name_div = gadget.element.querySelector(".app-name");
         app_name_div.textContent = gadget.state.app_name +
@@ -80,6 +80,8 @@
         app_name_div.textContent = "Retry: " + gadget.state.error_amount;
       }
       if (modification_dict.error) {
+        error_collapsible = gadget.element.querySelector(".error-collapsible");
+        error_collapsible.classList.remove("ui-screen-hidden");
         error_div = gadget.element.querySelector(".error-message");
         message = "Last Error: ";
         error_text = displayError(gadget.state.error);

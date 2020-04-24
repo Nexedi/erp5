@@ -5,7 +5,6 @@ var repair = false;
   "use strict";
 
   function createStorage(gadget) {
-    if (!gadget.props.cache_file) { return; }
     var cache_storage_type = "precache";
     //backward compatibility with appcache apps
     if (gadget.props.cache_file.endsWith(".appcache")) {
@@ -156,7 +155,6 @@ var repair = false;
     .declareMethod("install", function () {
       var gadget = this,
         storage = createStorage(gadget);
-      if (!storage) { return; }
       if (navigator.serviceWorker !== undefined) {
         return storage.repair()
           .push(function () {
