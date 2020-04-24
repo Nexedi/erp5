@@ -64,16 +64,6 @@ url_list = [
   "miniPaint/vendor/menu/menu.min.js",
   "miniPaint/vendor/translate/jquery.translate.js",
   "miniPaint/vendor/translate/jquery.translate.min.js",
-
-  #app_configuration_resources
-  #CONFIGURATION ELEMENTS generated on Wed Apr 01 14:45:53 2020. Same as in configuration manifest
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdl",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlL2ltYWdlX2VkaXRvcl92aWV3",
-  "hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfaW1hZ2VfZWRpdG9yL0ltYWdlX3ZpZXdBc0ppb0ZvckltYWdlRWRpdG9y",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlIE1vZHVsZQ==",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0ltYWdlIE1vZHVsZS9pbWFnZV9lZGl0b3Jfdmlldw==",
-  "hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfaW1hZ2VfZWRpdG9yL0ltYWdlTW9kdWxlX3ZpZXdJbWFnZUxpc3RBc0ppb0ZvckltYWdlRWRpdG9y",
-  #/app_configuration_resources
 ]
 
 return url_list

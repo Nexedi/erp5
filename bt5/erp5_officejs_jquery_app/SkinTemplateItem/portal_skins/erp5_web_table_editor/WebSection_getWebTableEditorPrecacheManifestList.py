@@ -41,17 +41,6 @@ url_list = [
   "jquery-sheets/images/italic3.svg",
   "jquery-sheets/images/bold13.svg",
   "jquery-sheets/bootstrap.css",
-
-  #app_configuration_resources
-  #CONFIGURATION ELEMENTS generated on Thu Apr 02 20:31:13 2019. Same as in configuration manifest
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS93ZWJfdGFibGVfdmlldw==",
-  "hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9XZWJQYWdlTW9kdWxlX3ZpZXdXZWJUYWJsZUxpc3RBc0ppb0ZvcldlYlRhYmxlRWRpdG9y",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZQ==",
-  "hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZS93ZWJfdGFibGVfdmlldw==",
-  "hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9XZWJUYWJsZV92aWV3QXNKaW9Gb3JXZWJUYWJsZUVkaXRvcg==",
-  #/app_configuration_resources
-
 ]
 
 return url_list
