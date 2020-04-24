@@ -429,7 +429,9 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_ooffice_spreadsheet.appcache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
@@ -732,7 +734,7 @@ WebSection_getOOfficeSpreadsheetEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>982.59923.23634.27972</string> </value>
+                      <value> <string>983.23018.50323.27528</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -750,7 +752,7 @@ WebSection_getOOfficeSpreadsheetEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1587462406.07</float>
+                              <float>1587729712.71</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
