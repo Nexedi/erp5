@@ -33,11 +33,12 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from AccessControl.PermissionRole import PermissionRole
 
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.MappedValue import MappedValue
 from Products.ERP5.Document.ImmobilisationMovement import ImmobilisationMovement
+from erp5.component.interface.IDivergenceController import IDivergenceController
 
 class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
   """
@@ -66,7 +67,7 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
                     )
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IDivergenceController,)
+  zope.interface.implements(IDivergenceController,)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isPredicate')
   def isPredicate(self):

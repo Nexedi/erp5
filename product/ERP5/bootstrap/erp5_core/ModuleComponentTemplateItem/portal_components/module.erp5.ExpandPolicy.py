@@ -130,7 +130,7 @@ class VerticalTimeBound(_Policy):
     super(VerticalTimeBound, self).__init__(**kw)
     self.stop = transaction.get().start_time + VERTICAL_EXPAND_TIMEOUT
 
-  def test(self, context):
+  def test(self, context): # pylint: disable=method-hidden
     if time() < self.stop:
       return True
     self.deferAll()

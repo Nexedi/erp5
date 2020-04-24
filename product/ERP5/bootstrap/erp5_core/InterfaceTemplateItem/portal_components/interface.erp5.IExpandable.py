@@ -26,7 +26,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.expandable
+erp5.component.interface.IExpandable
 """
 from zope.interface import Interface
 

@@ -1,3 +1,4 @@
+document.erp5.AppliedRule
 document.erp5.Delivery
 document.erp5.DeliveryCell
 document.erp5.DeliveryLine
@@ -10,3 +11,4 @@ document.erp5.Item
 document.erp5.Order
 document.erp5.PackingList
 document.erp5.ScriptConstraint
+document.erp5.SimulationMovement

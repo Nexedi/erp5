@@ -1,0 +1,7 @@
+interface.erp5.IDivergenceController
+interface.erp5.IExpandable
+interface.erp5.IMovementCollection
+interface.erp5.IMovementCollectionDiff
+interface.erp5.IMovementCollectionUpdater
+interface.erp5.IRule
+interface.erp5.ISimulationMovement
