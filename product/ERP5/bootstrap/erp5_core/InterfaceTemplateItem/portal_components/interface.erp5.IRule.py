@@ -27,9 +27,9 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.rule
+erp5.component.interface.IRule
 """
-from Products.ERP5.interfaces.movement_collection_updater import IMovementCollectionUpdater
+from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
 
 class IRule(IMovementCollectionUpdater):
   """Rule interface specification

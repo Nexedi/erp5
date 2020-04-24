@@ -35,17 +35,13 @@ from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 import sys, Permissions
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
-from Products.PythonScripts.Utility import allow_class
 from AccessControl import ModuleSecurityInfo
-
-import MovementGroup
-allow_class(MovementGroup)
 
 from Products.ERP5Type.Globals import package_home
 product_path = package_home( globals() )
 
 # Define object classes and tools
-from Tool import CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool,\
+from Tool import CategoryTool, RuleTool, IdTool, TemplateTool,\
                  TestTool, DomainTool, AlarmTool, OrderTool, DeliveryTool,\
                  TrashTool, ContributionTool, NotificationTool, PasswordTool,\
                  GadgetTool, ContributionRegistryTool, IntrospectionTool,\
@@ -59,7 +55,6 @@ object_classes = ( ERP5Site.ERP5Site,
                    SQLMethod.SQLMethod,
                  )
 portal_tools = ( CategoryTool.CategoryTool,
-                 SimulationTool.SimulationTool,
                  RuleTool.RuleTool,
                  IdTool.IdTool,
                  TemplateTool.TemplateTool,

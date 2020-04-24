@@ -29,9 +29,12 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type import Permissions, interfaces
+from Products.ERP5Type import Permissions
 from Products.ERP5Type.Core.Predicate import Predicate
-from Products.ERP5.ExpandPolicy import policy_dict
+from erp5.component.module.ExpandPolicy import policy_dict
+from erp5.component.interface.IRule import IRule
+from erp5.component.interface.IDivergenceController import IDivergenceController
+from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
 
 def _compare(tester_list, prevision_movement, decision_movement):
   for tester in tester_list:
@@ -49,9 +52,9 @@ class RuleMixin(Predicate):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IRule,
-                            interfaces.IDivergenceController,
-                            interfaces.IMovementCollectionUpdater,)
+  zope.interface.implements(IRule,
+                            IDivergenceController,
+                            IMovementCollectionUpdater,)
 
   # Portal Type of created children
   movement_type = 'Simulation Movement'
@@ -83,13 +86,13 @@ class RuleMixin(Predicate):
         # Rules have a workflow - make sure applicable rule system works
         # if you wish, add a test here on workflow state to prevent using
         # rules which are no longer applicable
-   def test(self, *args, **kw):
-    """
-    If no test method is defined, return False, to prevent infinite loop
-    """
-    if not self.getTestMethodId():
-      return False
-    return super(RuleMixin, self).test(*args, **kw)
+    def test(self, *args, **kw):
+      """
+      If no test method is defined, return False, to prevent infinite loop
+      """
+      if not self.getTestMethodId():
+        return False
+      return super(RuleMixin, self).test(*args, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'expand')
@@ -128,7 +131,7 @@ class RuleMixin(Predicate):
   # Implementation of IDivergenceController # XXX-JPS move to IDivergenceController only mixin for
   security.declareProtected( Permissions.AccessContentsInformation,
                             'isDivergent')
-  def isDivergent(self, movement, ignore_list=[]):
+  def isDivergent(self, movement, ignore_list=()):
     """
     Returns true if the Simulation Movement is divergent comparing to
     the delivery value
@@ -179,12 +182,16 @@ class RuleMixin(Predicate):
                          quantity divergence testers
     """
     if exclude_quantity:
-      return filter(lambda x:x.isDivergenceProvider() and \
-                    'quantity' not in x.getTestedPropertyList(), self.objectValues(
-        portal_type=self.getPortalDivergenceTesterTypeList()))
+      return [
+        x for x in self.objectValues(
+          portal_type=self.getPortalDivergenceTesterTypeList())
+        if (x.isDivergenceProvider() and
+            'quantity' not in x.getTestedPropertyList())]
     else:
-      return filter(lambda x:x.isDivergenceProvider(), self.objectValues(
-        portal_type=self.getPortalDivergenceTesterTypeList()))
+      return [
+        x for x in self.objectValues(
+          portal_type=self.getPortalDivergenceTesterTypeList())
+        if x.isDivergenceProvider()]
 
   def _getMatchingTesterList(self):
     """
@@ -192,8 +199,10 @@ class RuleMixin(Predicate):
     be used to match movements and build the diff (ie.
     not all divergence testers of the Rule)
     """
-    return filter(lambda x:x.isMatchingProvider(), self.objectValues(
-      portal_type=self.getPortalDivergenceTesterTypeList()))
+    return [
+      x for x in self.objectValues(
+        portal_type=self.getPortalDivergenceTesterTypeList())
+      if x.isMatchingProvider()]
 
   def _getUpdatingTesterList(self, exclude_quantity=False):
     """
@@ -204,12 +213,16 @@ class RuleMixin(Predicate):
                         quantity divergence testers
     """
     if exclude_quantity:
-      return filter(lambda x:x.isUpdatingProvider() and \
-                    'quantity' not in x.getTestedPropertyList(), self.objectValues(
-        portal_type=self.getPortalDivergenceTesterTypeList()))
+      return [
+        x for x in self.objectValues(
+          portal_type=self.getPortalDivergenceTesterTypeList())
+        if (x.isUpdatingProvider() and
+            'quantity' not in x.getTestedPropertyList())]
     else:
-      return filter(lambda x:x.isUpdatingProvider(), self.objectValues(
-        portal_type=self.getPortalDivergenceTesterTypeList()))
+      return [
+        x for x in self.objectValues(
+          portal_type=self.getPortalDivergenceTesterTypeList())
+        if x.isUpdatingProvider()]
 
   def _getQuantityTesterList(self):
     """

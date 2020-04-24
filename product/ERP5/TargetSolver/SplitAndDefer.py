@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 from Products.ERP5Type.Globals import PersistentMapping
 from CopyToTarget import CopyToTarget
 from Acquisition import aq_base
@@ -64,6 +63,7 @@ class SplitAndDefer(CopyToTarget):
         split_index += 1
         new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
       # Adopt different dates for deferred movements
+      from erp5.component.module.MovementCollectionDiff import _getPropertyAndCategoryList
       movement_dict = _getPropertyAndCategoryList(simulation_movement)
       # new properties
       movement_dict.update(

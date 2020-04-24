@@ -30,7 +30,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.DivergenceMessage import DivergenceMessage
+from erp5.component.module.DivergenceMessage import DivergenceMessage
 from Products.ERP5Type.Message import Message
 from Products.PythonScripts.standard import html_quote as h
 from zLOG import LOG, WARNING

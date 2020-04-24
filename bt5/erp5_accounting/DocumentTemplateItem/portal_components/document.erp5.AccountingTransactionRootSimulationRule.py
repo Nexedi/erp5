@@ -28,8 +28,8 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 
-from Products.ERP5.mixin.rule import RuleMixin
-from Products.ERP5.mixin.movement_collection_updater import MovementCollectionUpdaterMixin
+from erp5.component.mixin.RuleMixin import RuleMixin
+from erp5.component.mixin.MovementCollectionUpdaterMixin import MovementCollectionUpdaterMixin
 class AccountingTransactionRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
   """
   Accounting Transaction Root Simulation Rule is a root level rule for

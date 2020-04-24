@@ -44,6 +44,8 @@ from Products.ERP5.mixin.composition import CompositionMixin
 from erp5.component.mixin.SimulableMixin import SimulableMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, \
     unrestricted_apply
+from erp5.component.interface.IMovementCollection import IMovementCollection
+from erp5.component.interface.IDivergenceController import IDivergenceController
 
 class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
                CompositionMixin, AmountGeneratorMixin):
@@ -75,8 +77,8 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
 
   # Declarative interfaces
   zope.interface.implements(interfaces.IAmountGenerator,
-                            interfaces.IDivergenceController,
-                            interfaces.IMovementCollection)
+                            IDivergenceController,
+                            IMovementCollection)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
   def isAccountable(self):

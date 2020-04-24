@@ -40,6 +40,7 @@ from Products.ERP5.mixin.composition import _getEffectiveModel
 from Products.ERP5.Document.MappedValue import MappedValue
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.variated import VariatedMixin
+from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
 
 class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
   """
@@ -74,7 +75,7 @@ class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
 
   zope.interface.implements(interfaces.IAmountGenerator,
                             interfaces.IMovementGenerator,
-                            interfaces.IMovementCollectionUpdater,)
+                            IMovementCollectionUpdater,)
 
 
   # Mapped Value implementation
