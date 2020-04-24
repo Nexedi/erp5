@@ -64,7 +64,7 @@
               "key": "field_listbox",
               "lines": 15,
               "list_method": "portal_catalog",
-              "query": "urn:jio:allDocs?query=portal_type%3A%22Data+Stream%22+AND+validation_state%3A%22validated%22+AND+reference%3A%22" + dataset + "%2F%25%22",
+              "query": "urn:jio:allDocs?query=portal_type%3A%22Data+Stream%22+AND+validation_state%3A%22published%22+AND+reference%3A%22" + dataset + "%2F%25%22",
               "portal_type": [],
               "search_column_list": column_list,
               "sort_column_list": column_list,

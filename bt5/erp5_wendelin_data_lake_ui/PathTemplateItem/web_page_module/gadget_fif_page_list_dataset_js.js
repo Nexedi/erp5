@@ -60,7 +60,7 @@
                 "key": "field_listbox",
                 "lines": 15,
                 "list_method": "portal_catalog",
-                "query": "urn:jio:allDocs?query=portal_type%3A%22Data+Set%22+AND+validation_state%3A%22validated%22+AND+NOT+reference%3A%22%25_invalid%22",
+                "query": "urn:jio:allDocs?query=portal_type%3A%22Data+Set%22+AND+validation_state%3A%22published%22+AND+NOT+reference%3A%22%25_invalid%22",
                 "portal_type": [],
                 "search_column_list": column_list,
                 "sort_column_list": column_list,
