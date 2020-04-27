@@ -22,7 +22,6 @@ class ERP5TypeTestSuite(TestSuite):
     instance_home = self.instance and 'unit_test.%u' % self.instance \
                                    or 'unit_test'
     if self.instance:
-      instance_home = 'unit_test.%u' % self.instance
       args = ('--instance_home', instance_home,) + args
       if self.log_directory:
         log_directory = os.path.join(self.log_directory, args[-1].replace(':', '_'))
