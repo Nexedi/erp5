@@ -1,0 +1,13 @@
+<p tal:content="here/getDescription">
+</p>
+<div class="product-detail">
+  <p tal:condition="here/getBaseWidth">
+        <b i18n:translate="" i18n:domain="ui">Width:</b> <span tal:replace="python: here.getBaseWidth() * 100"/> cm
+  </p>
+  <p tal:condition="here/getBaseHeight">
+    <b i18n:translate="" i18n:domain="ui">Height:</b> <span tal:replace="python: here.getBaseHeight() * 100"/> cm
+  </p>
+  <p tal:condition="here/getBaseWeight">
+    <b i18n:translate="" i18n:domain="ui">Weight:</b> <span tal:replace="python: here.getBaseWeight() * 1000"/> g
+  </p>
+</div>

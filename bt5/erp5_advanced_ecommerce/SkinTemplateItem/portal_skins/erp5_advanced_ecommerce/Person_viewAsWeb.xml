@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ERP5 Form" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>action</string> </key>
+            <value> <string>Person_editPersonalInformation</string> </value>
+        </item>
+        <item>
+            <key> <string>action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>enctype</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <list>
+                <string>left (Personal Informations)</string>
+                <string>right (Contact Informations)</string>
+                <string>bottom</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>groups</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list>
+                        <string>submit_buttom</string>
+                        <string>your_login_come_from_url</string>
+                        <string>your_edit_portal_status_message</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left (Personal Informations)</string> </key>
+                    <value>
+                      <list>
+                        <string>my_first_name</string>
+                        <string>my_last_name</string>
+                        <string>loyalty_number</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right (Contact Informations)</string> </key>
+                    <value>
+                      <list>
+                        <string>my_default_email_text</string>
+                        <string>my_default_telephone_text</string>
+                        <string>my_default_address_street_address</string>
+                        <string>my_default_address_zip_code</string>
+                        <string>my_default_address_city</string>
+                        <string>my_default_address_region</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Person_viewAsWeb</string> </value>
+        </item>
+        <item>
+            <key> <string>method</string> </key>
+            <value> <string>POST</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>General</string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view_editable</string> </value>
+        </item>
+        <item>
+            <key> <string>row_length</string> </key>
+            <value> <int>4</int> </value>
+        </item>
+        <item>
+            <key> <string>stored_encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Person</string> </value>
+        </item>
+        <item>
+            <key> <string>unicode_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
