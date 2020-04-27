@@ -1,0 +1,375 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Front Page</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Front Page</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/login_as_super_user" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/PurchasePackingList_deliver</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/logout" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/reset_shopcart" />
+
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="header_login"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[contains(@href, "test_colour_variation_product")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//option[@value="colour/red" and contains(text(), 'Red (In Stock)')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//option[@value="colour/blue" and contains(text(), 'Blue (Sold Out)')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//select[@name="field_variation_box_your_category"]</td>
+  <td>Red (In Stock)</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Add to cart"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Added to cart.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//select[@name="field_variation_box_your_category"]</td>
+  <td>Red (In Stock)</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Add to cart"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Added to cart.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//td[@class="cart_top"]//span[contains(text(), "2 x")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//select[@name="field_variation_box_your_category"]</td>
+  <td>Blue (Sold Out)</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Add to cart"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Added to cart.</td>
+  <td></td>
+</tr>
+<!-- cart -->
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[1]//div[contains(@class, "cart_left")]//span[contains(text(), "2 x")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[1]//div[contains(@class, "cart_left")]//span[contains(text(), "Kroshma Sarong")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[1]//div[contains(@class, "cart_left")]//span[contains(text(), "Jade")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[1]//div[contains(@class, "cart_left")]//span[contains(text(), "Red")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[1]//div[contains(@class, "cart_left")]//a[contains(@href, "test_colour_variation_product")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[1]//div[contains(@class, "cart_right")]//span[contains(text(), "22")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[2]//div[contains(@class, "cart_left")]//span[contains(text(), "1 x")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[2]//div[contains(@class, "cart_left")]//span[contains(text(), "Kroshma Sarong")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[2]//div[contains(@class, "cart_left")]//span[contains(text(), "Jade")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[2]//div[contains(@class, "cart_left")]//span[contains(text(), "Blue")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[2]//div[contains(@class, "cart_left")]//a[contains(@href, "test_colour_variation_product")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[2]//div[contains(@class, "cart_right")]//span[contains(text(), "10")]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[3]//div[contains(@class, "cart_right") and contains(text(), "32")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[3]//div[contains(@class, "cart_left") and contains(text(), "Total")]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//tbody//tr[4]//div[contains(@class, "cart_left")]//a[contains(@href, "cart")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@class="left"]//div[contains(@class, "checkout")]//a[contains(@href, "cart")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@class="left"]//div[contains(@class, "checkout")]//a[contains(@href, "cart")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[1]//th[text()='Product']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[1]//th[text()='Quantity']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[1]//th[text()='Unit Price']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[1]//th[text()='Total']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[2]//td[@class="shipping_cart_resource"]//a[contains(@href, "test_colour_variation") and contains(text(), "Kroshma Sarong")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[2]//td[@class="shipping_cart_resource"]//span[text()="Jade"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[2]//td[@class="shipping_cart_resource"]//span[text()="Red"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[2]//td[@class="shipping_cart_resource"]//div[@class="shopping_cart_renderer_remove"]//a[contains(@href, "SaleOrder_deleteShoppingCartItem")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[2]//td[@class="shipping_cart_quantity"]//select[@name="field_my_buy_quantity"]</td>
+  <td>2</td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[2]//td[contains(text(), "11")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[2]//td[contains(text(), "22")]</td>
+  <td></td>
+</tr>
+  
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[3]//td[@class="shipping_cart_resource"]//a[contains(@href, "test_colour_variation") and contains(text(), "Kroshma Sarong")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[3]//td[@class="shipping_cart_resource"]//span[text()="Jade"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[3]//td[@class="shipping_cart_resource"]//span[text()="Blue"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[3]//td[@class="shipping_cart_resource"]//div[@class="shopping_cart_renderer_remove"]//a[contains(@href, "SaleOrder_deleteShoppingCartItem")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[3]//td[@class="shipping_cart_quantity"]//select[@name="field_my_buy_quantity"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[3]//td[contains(text(), "10")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[3]//td[contains(text(), "10")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//div[@class="shopping_cart_end_lines"]//td[contains(text(), 32)]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[2]//td[@class="shipping_cart_resource"]//div[@class="shopping_cart_renderer_remove"]//a[contains(@href, "SaleOrder_deleteShoppingCartItem")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Successfully removed from shopping cart</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//div[@class="shopping_cart_end_lines"]//td[contains(text(), "10")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]//tr[2]//td[@class="shipping_cart_resource"]//div[@class="shopping_cart_renderer_remove"]//a[contains(@href, "SaleOrder_deleteShoppingCartItem")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Successfully removed from shopping cart</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Your shopping cart is empty</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
