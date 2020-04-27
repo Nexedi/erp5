@@ -1,0 +1,17 @@
+<tal:block tal:define="current_web_site python:request.get('current_web_site', here);
+                       current_web_section python:request.get('current_web_section', here);
+                       current_main_section here/WebSite_getMainSection;
+                       subsection_list python:current_web_site.getSubsectionList();
+                       is_root python:current_web_site is current_web_section;
+">
+
+<tal:block tal:define="menu_item_list_list python: [context.restrictedTraverse(x).WebSection_getSiteMapTree(depth=1) for x in subsection_list] if (is_root or len(current_web_section.WebSection_getSiteMapTree(depth=1))==0) else [current_web_section.WebSection_getSiteMapTree(depth=1)]">
+  <ul tal:repeat="menu_item_list menu_item_list_list">
+    <li tal:repeat="menu_item menu_item_list">
+      <a href="" tal:attributes="href menu_item/url"
+         tal:content="menu_item/translated_title"></a>
+    </li>
+  </ul>
+</tal:block>
+
+</tal:block>
