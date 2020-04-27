@@ -16,11 +16,13 @@
       },
       "Smart Assistant": {
         "url": "officejs_smart_assistant/",
-        "cache": "gadget_smart_assistant.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "Media Player": {
         "url": "officejs_media_player/",
-        "cache": "gadget_officejs_media_player.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "Notebook": {
         "url": "officejs_notebook/",
@@ -42,7 +44,8 @@
       },
       "Bookmark Manager": {
         "url": "officejs_bookmark_manager/",
-        "cache" : "gadget_officejs_bookmark_manager.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "Onlyoffice Text": {
         "url": "ooffice_text/",
@@ -110,7 +113,8 @@
       },
       "Drive App": {
         "url": "officejs_drive_app/",
-        "cache": "gadget_officejs_drive_app.appcache"
+        "storage_type": "precache",
+        "cache": precache_manifest
       },
       "Travel Expense": {
         "url": "officejs_hr/",
