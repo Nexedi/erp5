@@ -170,13 +170,14 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
     self.assertEqual(memcached_tool.persistent_memcached_plugin.getUrlString(),
                       url_string)
 
-  def testConfiguredConversionServer(self):
-    """ Make sure Conversion Server (Cloudooo) is
-        well configured """
-    # set preference
-    preference_tool = self.portal.portal_preferences
-    conversion_url = "https://cloudooo.erp5.net/"
-    self.assertEqual(preference_tool.getPreferredDocumentConversionServerUrl(), conversion_url)
+  # XXX The configurator doesn't setup cloudooo
+  # def testConfiguredConversionServer(self):
+  #   """ Make sure Conversion Server (Cloudooo) is
+  #       well configured """
+  #   # set preference
+  #   preference_tool = self.portal.portal_preferences
+  #   conversion_url = "https://cloudooo.erp5.net/"
+  #   self.assertEqual(preference_tool.getPreferredDocumentConversionServerUrl(), conversion_url)
 
   def testConfiguredBusinessTemplateList(self):
     """ Make sure Installed business Templates are
