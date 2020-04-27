@@ -120,9 +120,8 @@
             storage._version + url
           );
         }
-      })
-      .push(undefined, function (error) {
-        if (!error.message) {
+      }, function (error) {
+        if (error.target.status === 404 && !error.message) {
           error.message = "Couldn't get the precache manifest '" +
             storage._precache_manifest_script + "'";
         }
