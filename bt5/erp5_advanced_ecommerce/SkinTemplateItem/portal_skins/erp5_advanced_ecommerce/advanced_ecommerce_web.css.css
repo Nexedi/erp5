@@ -875,9 +875,6 @@ div.content fieldset.registration {
   float:left;
   width: 340px;
 }
-div.content .product_list:first-child {
-    display: none;
-}
 
 div.dynamic-content div.content fieldset.registration div.field label {
   float: none;

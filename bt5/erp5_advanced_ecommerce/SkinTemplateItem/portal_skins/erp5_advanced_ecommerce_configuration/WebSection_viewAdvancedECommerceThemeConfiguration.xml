@@ -104,7 +104,7 @@
                         <string>my_site_delivery_message_template</string>
                         <string>my_site_return_message_template</string>
                         <string>my_specialise_title_list</string>
-                        <string>my_site_loyalty_agreement_template</string>
+                        <string>my_site_loyalty_explanation_template</string>
                       </list>
                     </value>
                 </item>
