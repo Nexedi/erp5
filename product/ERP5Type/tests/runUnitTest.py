@@ -771,7 +771,7 @@ def main(argument_list=None):
   debug = 0
   run_only = None
   instance_home = os.path.join(real_instance_home, 'unit_test')
-  _log_directory = instance_home
+  _log_directory = None
 
   bt5_path_list = []
 
@@ -901,7 +901,7 @@ def main(argument_list=None):
                          real_instance_home,
                          instance_home)
   global log_directory
-  log_directory = _log_directory or test_home
+  log_directory = _log_directory or tests_home
 
   result = runUnitTestList(test_list=args,
                            verbosity=verbosity,
