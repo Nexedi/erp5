@@ -1,0 +1,22 @@
+<tal:block tal:define="current_payment_mode here/WebSection_getCurrentPaymentMode">
+  <tal:block tal:repeat="payment_mode python:here.getWebSiteValue().getLayoutProperty('ecommerce_payment_mode_list', '')[::-1]">
+
+
+    <input tal:condition="python:current_payment_mode == payment_mode"
+          type="radio" 
+          tal:attributes="value payment_mode"
+          name="field_my_payment_mode" checked="checked" />
+
+    <input tal:condition="python:current_payment_mode != payment_mode"
+          type="radio" 
+          tal:attributes="value payment_mode"
+          name="field_my_payment_mode" />
+
+
+      <img tal:attributes="src string:advanced_ecommerce_image/${payment_mode}_image.png;
+                           class string:shipping_${payment_mode}_image">
+  </tal:block>
+</tal:block>
+
+<br>
+<input type="hidden" value="" name="default_field_my_payment_mode" />

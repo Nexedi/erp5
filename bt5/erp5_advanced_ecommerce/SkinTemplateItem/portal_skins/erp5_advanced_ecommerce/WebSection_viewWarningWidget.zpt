@@ -1,0 +1,6 @@
+<tal:block tal:condition="python: here.getSiteMessageTemplate()">
+  <div class="site_warning_message" id="site_warning_message"
+        tal:define="message python:here.getDocumentValue(here.getSiteMessageTemplate()).asStrippedHTML()"
+        tal:content="structure message">
+  </div>
+</tal:block>
