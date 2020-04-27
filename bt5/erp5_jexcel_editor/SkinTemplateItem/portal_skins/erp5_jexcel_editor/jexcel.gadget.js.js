@@ -4,6 +4,17 @@
   "use strict";
 
   rJS(window)
+  
+    //////////// WIP
+    .declareService(function () {
+      var gadget = this;
+      console.log("aaa");
+      return gadget.getDeclaredGadget("model")
+      .push(function (model) {
+        model.getSheet();
+      });
+    })
+    /////////////////
 
     .declareAcquiredMethod("notifySubmit", "notifySubmit")
     .declareJob("deferNotifySubmit", function () {
@@ -19,12 +30,7 @@
 
     .declareMethod("render", function (options) {
       var gadget = this;
-      var state_dict = {
-          key: options.key,
-          editable: options.editable === undefined ? true : options.editable,
-          value: options.value === undefined ? "" : options.value
-        };
-      return this.changeState(state_dict);
+      return this.changeState(options);
     })
 
     .declareMethod("updateValue", function () {
@@ -46,7 +52,6 @@
               content: 'undo',
               id: "undo",
               onclick: function () {
-                console.log("aaa");
                 table.undo();
               }
             },
@@ -127,7 +132,6 @@
               content: 'undo',
               id: "undo",
               onclick: function () {
-                console.log("aaa");
                 table.undo();
               }
             },
