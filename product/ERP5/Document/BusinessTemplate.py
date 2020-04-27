@@ -6547,40 +6547,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
         seen_module_set = set()
         # 'Module Component': Only handle Product top-level modules
-        for name, obj in inspect.getmembers(product_obj):
-          if (name[0] == '_' or
-              name in ('this_module', 'Permissions') or
-              obj is product_obj or
-              # Base cannot be migrated (InitGhostBase)
-              (product_name == 'ERP5Type' and name == 'Base')):
-            continue
-
-          if inspect.ismodule(obj):
-            source_reference = obj.__name__
-            submodule_name = name
-          else:
-            try:
-              source_reference = obj.__module__
-            except AttributeError:
-              continue
-            try:
-              submodule_name = source_reference.rsplit('.', 1)[1]
-            except IndexError:
-              continue
-
-          if (source_reference == product_obj.__name__ or
-              not source_reference.startswith(product_obj.__name__) or
-              source_reference in seen_module_set):
-            continue
-          seen_module_set.add(source_reference)
-
-          try:
-            submodule_filepath = inspect.getsourcefile(obj)
-          except TypeError:
-            # No file, builtin?
-            continue
-
-          if submodule_filepath and submodule_filepath.rsplit('/', 1)[0] == product_base_path:
+        for submodule_filepath in glob.iglob(product_obj.__path__[0] + '/*.py'):
+          submodule_name = os.path.splitext(os.path.basename(submodule_filepath))[0]
+          source_reference = "%s.%s" % (product_obj.__name__, submodule_name)
+          if (submodule_name not in ('__init__', 'Permissions') and
+              source_reference not in seen_module_set):
+            seen_module_set.add(source_reference)
             migrate = submodule_filepath in portal_type_module_filepath_set
             obj = __newTempComponent(portal_type='Module Component',
                                      reference=submodule_name,
