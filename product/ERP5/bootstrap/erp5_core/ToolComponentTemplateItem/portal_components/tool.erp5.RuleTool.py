@@ -31,9 +31,8 @@ from collections import defaultdict
 from zLOG import LOG, INFO
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
-from Products.ERP5 import _dtmldir
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class RuleTool(BaseTool):
@@ -84,9 +83,6 @@ class RuleTool(BaseTool):
 
   # Declarative Security
   security = ClassSecurityInfo()
-
-  security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-  manage_overview = DTMLFile( 'explainRuleTool', _dtmldir )
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'searchRuleList')
