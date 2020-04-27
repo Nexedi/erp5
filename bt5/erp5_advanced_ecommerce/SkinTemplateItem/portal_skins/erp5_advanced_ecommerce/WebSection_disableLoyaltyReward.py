@@ -1,4 +1,4 @@
-context.REQUEST.RESPONSE.setCookie("loyalty_reward", "disable")
+context.REQUEST.RESPONSE.setCookie("loyalty_reward", "disable", path='/')
 
 context.REQUEST.set("loyalty_reward", "disable")
 

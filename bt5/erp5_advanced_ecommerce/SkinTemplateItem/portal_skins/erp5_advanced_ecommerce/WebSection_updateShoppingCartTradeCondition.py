@@ -5,19 +5,18 @@ if payment_mode is None and preserve:
   current_trade_condition = shopping_cart.getSpecialiseValue()
   if current_trade_condition is not None:
     payment_mode = current_trade_condition.getPaymentConditionPaymentMode()
-
-if context.REQUEST.get("loyalty_reward", "") != "disable":
+# Loyalty is enabled and user want to use it
+if context.REQUEST.get("loyalty_reward", "") != "disable" and context.getSiteLoyaltyExplanationTemplate():
   reference= 'loyalty_reward'
 else:
   reference='no_loyalty_reward'
 
 if payment_mode:
   reference = '%s_%s' % (reference, payment_mode.lower())
-
 sale_trade_condition = context.portal_catalog.getResultValue(
   portal_type='Sale Trade Condition',
-  reference=reference,
-  validation_state='validated',
+  reference='%' + reference + '%',
+  validation_state='published',
   limit=1,
   sort_on=(('version', 'descending'),))
 

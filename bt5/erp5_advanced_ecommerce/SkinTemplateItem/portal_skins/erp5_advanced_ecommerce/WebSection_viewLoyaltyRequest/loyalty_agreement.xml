@@ -299,11 +299,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python: context.Base_translateString("I agree with the <a href=%s>Loyalty Program Rules </a>" % here.getSiteLoyaltyAgreementTemplate())
-
-]]></string> </value>
+            <value> <string>python: context.Base_translateString("I agree with those Loyalty Program Rules")</string> </value>
         </item>
       </dictionary>
     </pickle>

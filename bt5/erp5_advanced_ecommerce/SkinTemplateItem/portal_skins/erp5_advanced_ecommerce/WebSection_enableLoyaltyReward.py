@@ -1,4 +1,4 @@
-context.REQUEST.RESPONSE.expireCookie("loyalty_reward")
+context.REQUEST.RESPONSE.setCookie("loyalty_reward", "enable", path='/')
 
 context.REQUEST.set("loyalty_reward", "enable")
 
