@@ -1,4 +1,7 @@
+tool.erp5.BuilderTool
 tool.erp5.CallableTool
+tool.erp5.DeliveryTool
 tool.erp5.DiffTool
+tool.erp5.OrderTool
 tool.erp5.RuleTool
 tool.erp5.SimulationTool
