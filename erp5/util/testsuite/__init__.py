@@ -301,7 +301,7 @@ def runTestSuite():
                       default=None)
   parser.add_argument('--log_directory',
                       help='Directory to store logs',
-                      default=None)
+                      default='')
   parser.add_argument('--python_interpreter',
                       help='Path to python interpreter used to run the test suite',
                       default='python')
