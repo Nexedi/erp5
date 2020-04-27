@@ -28,26 +28,17 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile
-from Products.ERP5.Tool.BuilderTool import BuilderTool
-from Products.ERP5Type import Permissions
+from Products.ERP5Type.Globals import InitializeClass
+from erp5.component.tool.BuilderTool import BuilderTool
 
-from Products.ERP5 import _dtmldir
-
-class OrderTool(BuilderTool):
+class DeliveryTool(BuilderTool):
   """
-    OrderTool is a container for Order Builders.
+  The DeliveryTool implements portal object
+  deliveries building policies.
   """
-  id = 'portal_orders'
-  meta_type = 'ERP5 Order Tool'
-  portal_type = 'Order Tool'
-  allowed_types = ('ERP5 Order Buider',)
+  id = 'portal_deliveries'
+  meta_type = 'ERP5 Delivery Tool'
+  portal_type = 'Delivery Tool'
+  allowed_types = ('ERP5 Delivery Buider',)
 
-  # Declarative Security
-  security = ClassSecurityInfo()
-
-  security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-  manage_overview = DTMLFile( 'explainOrderTool', _dtmldir )
-
-InitializeClass(OrderTool)
+InitializeClass(DeliveryTool)
