@@ -1,0 +1,25 @@
+<tal:block replace="nothing">
+  <!--
+  This widget displays the breadcrumbs of the current context.
+
+  TODO:
+    - make sure translation is possible or working
+  -->
+</tal:block>
+
+<tal:block tal:define="current_web_section python:request.get('current_web_section', here);
+                       current_web_document python:request.get('current_web_document', here);
+                       is_web_section_default_document python:request.get('is_web_section_default_document',False);
+                       breadcrumb_list python: current_web_section.getBreadcrumbItemList(current_web_document);">
+<div class="breadcrumb">
+<p>
+  <tal:block tal:repeat="breadcrumb python:breadcrumb_list[:(is_web_section_default_document and -1 or None)]">
+    <a href="#" tal:attributes="href python:breadcrumb[1].absolute_url();
+                                title python:breadcrumb[2];"
+                tal:content="python:breadcrumb[0]">Title</a>
+  <tal:block tal:condition="not:repeat/breadcrumb/end"> - </tal:block>
+  </tal:block>
+</p>
+</div>
+
+</tal:block>
