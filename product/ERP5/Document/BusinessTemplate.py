@@ -6454,6 +6454,53 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
           seen_cls_set.add(cls)
 
+    _migrate_exception_set = set([
+      ## Bootstrap
+      'Products.ERP5.Document.BusinessTemplate',
+      'Products.ERP5.ERP5Site',
+      'Products.ERP5.genbt5list',
+      'Products.ERP5.Tool.CategoryTool',
+      'Products.ERP5.Tool.TemplateTool',
+      'Products.ERP5Type.Base',
+      'Products.ERP5Type.Cache',
+      'Products.ERP5Type.ERP5Type',
+      'Products.ERP5Type.Globals',
+      'Products.ERP5Type.id_as_reference',
+      'Products.ERP5Type.TransactionalVariable',
+      'Products.ERP5Type.UnrestrictedMethod',
+      'Products.ERP5Type.Utils',
+      'Products.ERP5Type.XMLObject',
+      'Products.ERP5Type.ZopePatch',
+      'Products.ERP5Type.interfaces.component',
+      'Products.ERP5Type.interfaces.type_provider',
+      'Products.ERP5Type.interfaces.types_tool',
+      'Products.ERP5Type.mixin.component',
+      'Products.ERP5Type.mixin.temporary',
+      'Products.ERP5Type.Tool.BaseTool',
+      'Products.ERP5Type.Tool.ComponentTool',
+      'Products.ERP5Type.Tool.PropertySheetTool',
+      'Products.ERP5Type.tests.testDynamicClassGeneration',
+      ## Used by SolverTool (TypeProvider)
+      'Products.ERP5.interfaces.delivery_solver_factory',
+      ## Unit Tests
+      'Products.ERP5Type.tests.custom_zodb',
+      'Products.ERP5Type.tests.ERP5TypeFunctionalTestCase',
+      'Products.ERP5Type.tests.ERP5TypeLiveTestCase',
+      'Products.ERP5Type.tests.ERP5TypeTestCase',
+      'Products.ERP5Type.tests.ERP5TypeTestSuite',
+      'Products.ERP5Type.tests.runTestSuite',
+      'Products.ERP5Type.tests.runUnitTest',
+      'Products.ERP5Type.tests.SecurityTestCase',
+      'Products.ERP5Type.tests.Sequence',
+      # No need to migrate
+      'Products.PloneHotfix20121106.allow_module',
+      'Products.PloneHotfix20121106.atat',
+      'Products.PloneHotfix20121106.ftp',
+      'Products.PloneHotfix20121106.get_request_var_or_attr',
+      'Products.PloneHotfix20121106.safe_html',
+      'Products.PloneHotfix20121106.setHeader',
+    ])
+
     security.declareProtected(Permissions.ManagePortal,
                               'getMigratableSourceCodeFromFilesystemList')
     def getMigratableSourceCodeFromFilesystemList(self,
@@ -6551,6 +6598,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
           submodule_name = os.path.splitext(os.path.basename(submodule_filepath))[0]
           source_reference = "%s.%s" % (product_obj.__name__, submodule_name)
           if (submodule_name not in ('__init__', 'Permissions') and
+              source_reference not in self._migrate_exception_set and
               source_reference not in seen_module_set):
             seen_module_set.add(source_reference)
             migrate = submodule_filepath in portal_type_module_filepath_set
@@ -6573,8 +6621,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
             if subsubmodule_name == '__init__':
               continue
 
-            subsubmodule_portal_type = component_portal_type
             source_reference = "%s.%s" % (submodule_name, subsubmodule_name)
+            if source_reference in self._migrate_exception_set:
+              continue
+
+            subsubmodule_portal_type = component_portal_type
             migrate = filepath in portal_type_module_filepath_set
             if component_portal_type in ('Document Component',
                                          'Tool Component'):
