@@ -37,6 +37,8 @@ implements_tuple_list = [
   (('erp5.component.document.RoleDefinition', 'RoleDefinition'), 'ILocalRoleGenerator'),
   (('erp5.component.document.BusinessLink','BusinessLink'), 'IBusinessLink'),
   (('erp5.component.document.BusinessLink','BusinessLink'), 'ICategoryAccessProvider'),
+  (('erp5.component.module.DivergenceMessage', 'DivergenceMessage'), 'IDivergenceMessage'),
+  (('erp5.component.module.DivergenceMessage', 'DivergenceMessage'), 'IObjectMessage'),
   (('erp5.component.document.TradeCondition','TradeCondition'), 'IAmountGenerator'),
   (('erp5.component.document.TradeModelCell','TradeModelCell'), 'IAmountGenerator'),
   (('erp5.component.document.TradeModelCell','TradeModelCell'), 'IVariated'),
