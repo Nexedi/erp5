@@ -1,0 +1,15 @@
+<tal:block tal:define="variation python:request.get('variation', None);
+                       inventory_status python: here.Resource_getInventoryStatus(variation=variation)">
+
+  <tal:block tal:condition="python: inventory_status == 'STOCK'">
+    <div class="in_stock" i18n:translate="" i18n:domain="ui"> In Stock </div>
+  </tal:block>
+  <tal:block tal:condition="python: inventory_status == 'AVAILABLE'">
+    <div class="available_stock" i18n:translate="" i18n:domain="ui"> Available </div>
+  </tal:block>
+  <tal:block tal:condition="python: inventory_status == 'UNAVAILABLE'">
+    <div class="unavailable_stock" i18n:translate="" i18n:domain="ui"> Sold Out </div>
+  </tal:block>
+
+
+</tal:block>
