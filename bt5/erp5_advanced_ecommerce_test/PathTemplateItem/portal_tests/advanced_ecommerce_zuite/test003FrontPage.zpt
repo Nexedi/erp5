@@ -1,0 +1,104 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Front Page</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Front Page</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="header_login"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@id='wrapper_navigation']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@id='wrapper_left']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Virginie Monroe</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//fieldset[@class='product_list new viewable']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//fieldset[@class='product_list new viewable']//div[@class="product_view"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//span[@class="new_price" and contains(text(), '11')]</td>
+  <td></td>
+</tr>
+  
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//span[@class="old_price" and contains(text(), '149.95')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//span[@class="new_price" and contains(text(), '12')]</td>
+  <td></td>
+</tr>
+  
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//span[@class="old_price" and contains(text(), '69.95')]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//span[@class="new_price" and (contains(text(), '15') or contains(text(), '14'))]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//span[@class="old_price" and contains(text(), '23')]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//span[@class="price" and contains(text(), '140')]</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
