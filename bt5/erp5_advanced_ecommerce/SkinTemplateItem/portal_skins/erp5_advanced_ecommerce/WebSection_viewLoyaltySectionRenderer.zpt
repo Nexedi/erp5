@@ -1,0 +1,11 @@
+<tal:block tal:define="isAnon here/portal_membership/isAnonymousUser">
+  <tal:block tal:condition="not: isAnon">
+    <h1 i18n:translate="" i18n:domain="ui">Welcome to Loyalty Program</h1>
+    <p i18n:translate="" i18n:domain="ui" tal:content="python: 'Loyalty Program gives you %s discount for your purchase after %s %s purchased.' %
+                                                       (-context.portal_preferences.getPreferredLoyaltyRewardPrice(),
+                                                        context.portal_preferences.getPreferredLoyaltyRewardThreshold(),
+                                                        context.restrictedTraverse(context.portal_preferences.getPreferredLoyaltyRewardCurrency()).getTitle(),
+                                                       )"></p>
+    <br />
+  </tal:block>
+</tal:block>

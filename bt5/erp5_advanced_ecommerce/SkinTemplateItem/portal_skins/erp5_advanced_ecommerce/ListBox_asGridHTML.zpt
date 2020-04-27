@@ -1,0 +1,75 @@
+<tal:block
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+   tal:define="field_id here/getId;
+              form_id python: here.getForm().id;
+              selection_name here/getSelectionName;
+              selection here/getSelection;
+              selection_key here/getSelectionKey;
+              real_context here/getContext;
+              global portal_url_string here/getPortalUrlString;
+              context_url real_context/absolute_url;
+              global is_gadget_mode request/is_gadget_mode | nothing;
+              is_web_mode real_context/isWebMode | nothing;
+              is_dialog_mode request/dialog_mode | nothing;
+              display_style_list here/getDisplayStyleList;
+              list_style here/getListboxDisplayStyle;
+              global_search_column here/getGlobalSearchColumn;
+              global_search_column_script string:Base_doSelect;
+              show_global_search python: global_search_column not in ('', None);
+              line_list here/query;
+              listbox_max_lines  python: int(here.getMaxLineNumber());
+              total_line         python: int(here.total_size);
+              current_page       python: int(here.current_page) + 1;
+              current_page_max   python: listbox_max_lines * current_page;
+              current_page_start python: (listbox_max_lines * (current_page - 1)) + 1;
+              current_page_stop  python: (total_line < current_page_max) and total_line or current_page_max;
+              form_url string:${context_url}/${form_id};
+              need_pagination python: total_line > listbox_max_lines;
+              page_navigation_template python: request.get('page_navigation_template', here.getPageNavigationTemplate());
+              is_slider_mode python:  'Slider' in page_navigation_template;
+              is_default_listbox_field python: field_id=='listbox';
+              field_prefix python: '';">
+  <div class="new_art_header">
+
+    <!--Page navigation -->
+    <div class="listbox-header-box" id="nav_list" tal:condition="python: need_pagination">
+          <tal:block metal:use-macro="container/ListBox_asHTMLLibrary/macros/listbox_navigation"/>
+    </div>
+    <div class="clear">&nbsp;</div>
+  </div>
+  <div class="new_article">
+    <tal:block tal:repeat="line line_list">
+      <tal:block tal:define="number line/index">
+        <div class="product_view">
+          <div class="product_content">
+            <tal:block tal:define="render_result line/render">
+              <tal:block tal:repeat="value render_result">
+                <tal:block tal:define="html python:value[0];
+                                      field_id python:getattr(value[3], 'id', None);">
+                  <div class="product_image"
+                       tal:condition="python:field_id.endswith('product_list_thumbnail')">
+                    <tal:block tal:replace="structure html"/>
+                  </div>
+                  <p class="article_descp"
+                      tal:condition="python:field_id.endswith('product_list_decoratedPrice')">
+                    <tal:block tal:replace="structure html"/>
+                  </p>
+                <div tal:content="field_id"
+                     tal:condition="python:not field_id.endswith('product_list_decoratedPrice')
+                                       and not field_id.endswith('product_list_thumbnail')"/>
+                </tal:block>
+              </tal:block>
+            </tal:block>
+          </div>
+          <div class="product_promo"><span tal:replace="string:">50%</span></div>
+          <div class="clear">&nbsp;</div>
+        </div>
+        <div class="clear" tal:condition="python: not int(number+1)%3"> &nbsp;</div>
+      </tal:block>
+    </tal:block>
+    <div class="clear">&nbsp;</div>
+  </div>
+  <div class="clear">&nbsp;</div>
+</tal:block>

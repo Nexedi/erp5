@@ -1,0 +1,97 @@
+<tal:block tal:define="shopping_cart here/SaleOrder_getShoppingCart;
+                       web_site here/getWebSiteValue;
+                       currency_code web_site/WebSite_getShoppingCartDefaultCurrencyCode;
+                       shopping_cart_item_list shopping_cart/SaleOrder_getShoppingCartItemList;
+                       shipping here/SaleOrder_getSelectedShippingResource;
+                       discount shopping_cart/SaleOrder_getTotalDiscount;
+                       total_price python: shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_currency=False);">
+
+   <div class="shopping_cart_item_list">
+    <table cellpadding="0" cellspacing="0">
+     <tr>
+       <th tal:content="python: here.Base_translateString('Product')"/>
+       <th tal:content="python: here.Base_translateString('Quantity')"/>
+       <th tal:content="python: here.Base_translateString('Unit Price')"/>
+       <th tal:content="python: here.Base_translateString('Total')"/>
+     </tr>
+
+     <tal:block tal:repeat="order_line shopping_cart_item_list">
+       <tr tal:define="resource python: here.restrictedTraverse(order_line.getResource());
+                       quantity python: int(order_line.getQuantity());
+                       price    python: order_line.getPrice();
+                       order_line_id python: order_line.getId();">
+          <td class="shipping_cart_resource">
+              <div tal:attributes="class string: shopping_cart_renderer_title"
+                   tal:define="variation_dict python: order_line.DeliveryLine_getVarationDict();
+                               variation python: variation_dict.pop('variation', None);
+                               variation_title python: variation_dict.pop('variation_title', None);
+                               option_title python: getattr(order_line, 'get%sTitle' % resource.getVariationBaseCategory().title())() if resource.getVariationBaseCategory() else ''">
+                <a tal:condition="python: variation" href="" tal:attributes="href python: '%s/%s?variation=%s' %
+                                           (resource.absolute_url(), 'Resource_viewAsShop', variation);">
+                  <span tal:replace="resource/getTitle"/>
+                </a>
+                <a tal:condition="python: not variation" href="" tal:attributes="href python: '%s/%s' %
+                                           (resource.absolute_url(), 'Resource_viewAsShop');">
+                  <span tal:replace="resource/getTitle"/>
+                </a>
+                <span tal:content="variation_title" tal:condition="variation_title"/>
+                <span tal:content="option_title" tal:condition="option_title"/>
+              </div>
+              <div class="shopping_cart_renderer_remove">
+                <a tal:attributes="href python: '%s/SaleOrder_deleteShoppingCartItem?field_my_order_line_id=%s&form_id=WebSection_viewShoppingCart'
+                                                 %(here.absolute_url(), order_line_id)">
+                   <img src="mf54_image/icon_remove.gif" title="Remove from shopping cart"/>
+                </a>
+              </div>
+          </td>
+          <td class="shipping_cart_quantity">
+            <select name="field_my_buy_quantity">
+              <tal:block tal:repeat="index python: range(1,31)">
+                <option tal:condition="python: index!= quantity" tal:content="index" tal:attributes="value index"/>
+                <option SELECTED tal:condition="python: index==quantity" tal:content="index" tal:attributes="value index"/>
+              </tal:block>
+            </select>
+          </td>
+          <td>
+            <span tal:replace="price"/> <span tal:replace="currency_code"/>
+          </td>
+          <td>
+            <span tal:replace="python: (price or 0)*(quantity or 0)"/> <span tal:replace="currency_code"/>
+          </td>
+       </tr>
+      </tal:block>
+     </table>
+     </div>
+     <div class="shopping_cart_end_lines">
+       <table cellpadding="0" cellspacing="0">
+         <tr>
+           <td><span tal:replace="python: here.Base_translateString('Sub Total')"/></td>
+           <td> <span tal:replace="python: '%s %s' % (total_price, currency_code)"/> </td>
+         </tr>
+         <tr tal:condition="python:discount < 0">
+           <td><span tal:replace="python: here.Base_translateString('Discount')"/></td>
+           <td> <span tal:replace="python: '%s %s' % (discount, currency_code)"/> </td>
+         </tr>
+         <tr>
+           <td><span tal:replace="python: here.Base_translateString('Shipping Price')"/></td>
+           <td>
+             <tal:block tal:condition="python: shipping is not None">
+               <span tal:replace="python: '%s %s' % (shipping.Resource_getShopPrice(), currency_code)"/>
+             </tal:block>
+             <tal:block tal:condition="python: shipping is None">
+               <span tal:replace="python: here.Base_translateString('Your current cart selection requires shipping.')"/>
+             </tal:block>
+           </td>
+         </tr>
+         <tr tal:condition="python: shipping is not None"
+             tal:define="total_price_with_discount python:shopping_cart.SaleOrder_getShoppingCartTotalPrice(include_shipping=1, discount=1)">
+           <td><span tal:replace="python: here.Base_translateString('Total')"/></td>
+           <td><span tal:replace="python: '%s %s' % (total_price_with_discount, currency_code)"/></td>
+         </tr>
+         <tr tal:condition="python: shipping is None">
+           <td></td>
+           <td></td>
+         </tr>
+       </table>
+     </div>
+</tal:block>
