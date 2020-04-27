@@ -361,7 +361,8 @@
         </item>
         <item>
             <key> <string>configuration_precache_manifest_script_list</string> </key>
-            <value> <string>WebSection_getOfficeJsPrecacheManifestList</string> </value>
+            <value> <string>WebSection_getOfficeJsPrecacheManifestList\n
+WebSection_getBookmarkManagerPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
@@ -616,7 +617,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.27418.28971.14626</string> </value>
+                      <value> <string>983.27429.10249.37171</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -634,7 +635,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1587727029.38</float>
+                              <float>1587974231.45</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
