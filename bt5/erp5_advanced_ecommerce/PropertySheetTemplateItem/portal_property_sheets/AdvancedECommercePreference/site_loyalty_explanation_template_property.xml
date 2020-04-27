@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>site_loyalty_agreement_template_property</string> </value>
+            <value> <string>site_loyalty_explanation_template_property</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

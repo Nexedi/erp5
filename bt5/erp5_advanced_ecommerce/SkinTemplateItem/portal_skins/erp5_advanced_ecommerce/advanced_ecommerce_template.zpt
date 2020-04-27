@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
-<title>Zawee web page 1</title>
+<title></title>
 <meta name="content-language" content="fr">
 <meta name="description" content="">
 <meta name="keywords" content="">
@@ -22,7 +22,6 @@
                             current_language python:here.Localizer.get_selected_language();
                             list_mode list_mode | nothing;
                             dialog_mode dialog_mode | nothing;
-                            disable_reward_discount python: request.get('loyalty_reward', '') == 'disable';
                             has_no_layout python: layout_form is None;
                             aggregate python: has_no_layout or layout_form.Form_getGroupList(
                                              ['navigation', 'left', 'product_list', ]);
@@ -92,29 +91,19 @@
     <input type="text" name="SearchableText" id="search" value=""><input type="submit" name="WebSection_redirectToSearch:method" value="Search" tal:attributes="value python:here.Base_translateString('Search')">
   </fieldset>
  </div>
- <div class="promotional_information" tal:condition="python: not isAnon and here.ERP5Site_getAuthenticatedMemberPersonValue()">
-   <tal:block tal:condition="python: here.ERP5Site_getAuthenticatedMemberPersonValue().Person_getTotalLoyaltyPoint() > 0">
-     <span i18n:translate="" i18n:domain="ui">You have a Loyalty Reward.</span>
-     <br />
-     <span i18n:translate="" i18n:domain="ui" tal:content="python: 'You can benefit fromdiscount.'" ></span>
-     <br />
-     <span i18n:translate="" i18n:domain="ui">on your next order.</span>
-     <br />
-      <a tal:condition="python: not disable_reward_discount"
-        href="WebSection_disableLoyaltyReward" i18n:translate="" i18n:domain="ui">
-        (Click to Disable Discount for now.)
-      </a>
-      <a tal:condition="python: disable_reward_discount"
-        href="WebSection_enableLoyaltyReward" i18n:translate="" i18n:domain="ui">
-        (Click to Enable Your Discount)
-      </a>
-    </tal:block>
- </div>
+
+<tal:block tal:replace="structure here/WebSection_viewLoyaltyReward"> Loyalty Reward </tal:block>
 
 </div>
+
 <div class="clear"></div>
 </div>
-<tal:block tal:replace="structure here/WebSection_viewWarningWidget"> Message </tal:block>
+<tal:block tal:condition="python: here.getSiteMessageTemplate()">
+  <div class="site_warning_message" id="site_warning_message"
+        tal:define="message python:here.getDocumentValue(here.getSiteMessageTemplate()).asStrippedHTML()"
+        tal:content="structure message">
+  </div>
+</tal:block>
 <div class="clear"></div>
 
 
