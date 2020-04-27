@@ -42,7 +42,7 @@ product_path = package_home( globals() )
 
 # Define object classes and tools
 from Tool import CategoryTool, IdTool, TemplateTool,\
-                 TestTool, DomainTool, AlarmTool, OrderTool, DeliveryTool,\
+                 TestTool, DomainTool, AlarmTool,\
                  TrashTool, ContributionTool, NotificationTool, PasswordTool,\
                  GadgetTool, ContributionRegistryTool, IntrospectionTool,\
                  AcknowledgementTool, SolverTool,\
@@ -60,8 +60,6 @@ portal_tools = ( CategoryTool.CategoryTool,
                  AlarmTool.AlarmTool,
                  DomainTool.DomainTool,
                  TestTool.TestTool,
-                 OrderTool.OrderTool,
-                 DeliveryTool.DeliveryTool,
                  TrashTool.TrashTool,
                  PasswordTool.PasswordTool,
                  ContributionTool.ContributionTool,
