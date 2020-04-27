@@ -1,0 +1,22 @@
+<registered_skin_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_advanced_ecommerce</skin_folder>
+  <skin_selection>E-Commerce</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_commerce_multiflex_layout</skin_folder>
+  <skin_selection>E-Commerce</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_jquery</skin_folder>
+  <skin_selection>E-Commerce</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_web_multiflex5_theme</skin_folder>
+  <skin_selection>E-Commerce</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_xhtml_style</skin_folder>
+  <skin_selection>E-Commerce</skin_selection>
+ </skin_folder_selection>
+</registered_skin_selection>
