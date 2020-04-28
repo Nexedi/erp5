@@ -23,12 +23,13 @@ try:
   router_file_reference = context.getLayoutProperty("configuration_router_gadget_url", default="")
   if router_file_reference is "":
     raise ValueError("Router Gadget Layout Property is missing")
-  router_file = portal_catalog.getResultValue(
-      portal_type = 'Web Page',
-      reference = router_file_reference)
-  if router_file is None:
+  result_list = portal_catalog.getDocumentValueList(
+    portal_type = 'Web Page',
+    reference = router_file_reference,
+    validation_state = 'published%')
+  if len(result_list) == 0:
     raise ValueError("Router web page '%s' not found" % router_file_reference)
-  router_content = router_file.getTextContent()
+  router_content = result_list[0].getTextContent()
 
   portal_skin = getElementFromContent("portal_skin_folder", router_content)
   if portal_skin is None:
