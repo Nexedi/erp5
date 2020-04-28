@@ -32,33 +32,31 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Ticket import Ticket
 
 class Bug(Ticket):
-    """Bug means a bug report, a feature request or an issue.
-    """
+  """Bug means a bug report, a feature request or an issue.
+  """
+  meta_type = 'ERP5 Bug'
+  portal_type = 'Bug'
+  add_permission = Permissions.AddPortalContent
 
-    meta_type = 'ERP5 Bug'
-    portal_type = 'Bug'
-    add_permission = Permissions.AddPortalContent
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Amount
+                    , PropertySheet.Arrow
+                    , PropertySheet.Price
+                    , PropertySheet.Movement
+                    , PropertySheet.Bug
+                    )
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Amount
-                      , PropertySheet.Arrow
-                      , PropertySheet.Price
-                      , PropertySheet.Movement
-                      , PropertySheet.Bug
-                      )
-
-    security.declarePrivate('manage_afterClone')
-    def manage_afterClone(self, item):
-      Ticket.manage_afterClone(self, item)
-      # delete existing bug lines
-      self.manage_delObjects(list(self.contentIds(
-                              filter=dict(portal_type='Bug Line'))))
-
+  security.declarePrivate('manage_afterClone')
+  def manage_afterClone(self, item):
+    Ticket.manage_afterClone(self, item)
+    # delete existing bug lines
+    self.manage_delObjects(list(self.contentIds(
+                           filter=dict(portal_type='Bug Line'))))
