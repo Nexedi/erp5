@@ -1,4 +1,7 @@
 <base_category_list>
+ <portal_type id="Internet Message Post">
+  <item>source</item>
+ </portal_type>
  <portal_type id="Internet Message Post Module">
   <item>business_application</item>
  </portal_type>
