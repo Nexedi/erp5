@@ -38,7 +38,13 @@ class _ERP5(ERP5TypeTestSuite):
         #glob('%s/product/*/tests/test*.py' % path) +
         #glob('%s/bt5/*/TestTemplateItem/test*.py' % path) +
         #glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
-        glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*OfficeJS*.py' % path)):
+        #glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*OfficeJS*.py' % path)):
+        glob('%s/bt5/erp5_hal_json_style/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_monaco_editor_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_travel_expense_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_gadget_interface_validator_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_officejs_*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
       component_re_match = component_re.match(test_path)
       if component_re_match is not None:
         test_case = "%s:%s" % (component_re_match.group(1),
@@ -233,7 +239,11 @@ class RJS_Only(_ERP5):
     test_list = []
     path = "%s/../" % HERE
     for business_template_path in (
-            #glob('%s/../bt5/*' % HERE)
-            #+ glob('%s/../product/ERP5/bootstrap/*' % HERE)):
-            glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*OfficeJS*.py' % path)):
+      glob('%s/bt5/erp5_hal_json_style/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+      glob('%s/bt5/erp5_web_renderjs_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+      glob('%s/bt5/erp5_monaco_editor_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+      glob('%s/bt5/erp5_travel_expense_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+      glob('%s/bt5/erp5_gadget_interface_validator_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+      glob('%s/bt5/erp5_officejs_*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+      #glob('%s/bt5/erp5_officejs_ui_test/TestTemplateItem/portal_components/test.*.test*OfficeJS*.py' % path)):
     return test_list
