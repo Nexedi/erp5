@@ -1,0 +1,184 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Login</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Login</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/reset_shopcart" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/login_as_super_user" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example/WebSection_viewAdvancedECommerceThemeConfiguration?ignore_layout:int=1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_my_site_loyalty_explanation_template"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="field_my_site_loyalty_explanation_template"]</td>
+  <td>test_loyalty_explanation</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@class="save"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Data updated</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Person_invalidateLoyaltyAccount</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/logout" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/disable_loyalty_reward_by_default" />
+
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="header_login"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//div[@class="promotional_information"]//a[@href="WebSection_enableLoyaltyReward"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//div[@class="promotional_information"]//a[@href="WebSection_disableLoyaltyReward"]</td>
+  <td></td>
+</tr>
+
+ <!-- now login and set loyalty reward to enable -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@class="header_login"]//a</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="__ac_name"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="__ac_password"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Login"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@class="promotional_information"]//a[@href="WebSection_enableLoyaltyReward"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Your discount was enabled</td>
+  <td></td>
+</tr>
+
+<!-- logout -->
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@class="header_login"]//a</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[contains(@href, "test_colour_variation_product")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//option[@value="colour/red" and contains(text(), 'Red (In Stock)')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//option[@value="colour/blue" and contains(text(), 'Blue (Sold Out)')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//select[@name="field_variation_box_your_category"]</td>
+  <td>Red (In Stock)</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Add to cart"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Added to cart.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//div[@class="cart_right" and contains(text(), "-1.1")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//div[@class="cart_left" and contains(text(), "Discount")]</td>
+  <td></td>
+</tr>
+
+
+
+
+</tbody></table>
+</body>
+</html>
