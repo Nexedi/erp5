@@ -53,6 +53,16 @@
      <td></td>
     </tr>
   </tal:block>
-
-
+   <tal:block metal:define-macro="disable_loyalty_reward_by_default">
+     <tr>
+       <td>openAndWait</td>
+       <td>${base_url}/web_site_module/ecommerce_example/WebSection_disableLoyaltyRewardByDefault</td>
+       <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Done</td>
+      <td></td>
+    </tr>
+  </tal:block>
 </tal:block>
