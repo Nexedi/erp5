@@ -33,50 +33,49 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5.Document.Project import Project
 
 class Ticket(Project):
+  """
+  A Ticket allows to track a sales process involving
+  multilple Person and Organisations. It is a placeholder for
+  documents, events, etc.
+
+  Tickets behave both a movements and as projects:
+
+  - as movements because they relate to an amount
+    of resource exchanged between multiple parties
+
+  - as a project because it acts as a reporting
+    node for other movements (ex. accounting,
+    task reports)
+
+  Ticket are a good example of documents which may require
+  synchronisation process accross multiple sites and
+  for which acquisition properties such as source_title
+  may be useful to provide a simple way to synchronise
+  data with relations.
+  """
+  meta_type = 'ERP5 Ticket'
+  portal_type = 'Ticket'
+  add_permission = Permissions.AddPortalContent
+  isDelivery = ConstantGetter('isDelivery', value=True)
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Arrow
+                    , PropertySheet.Price
+                    , PropertySheet.Movement
+                    , PropertySheet.Amount
+                    , PropertySheet.Ticket
+                    )
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
+  def isAccountable(self):
+    """Tickets are accountable.
     """
-    A Ticket allows to track a sales process involving
-    multilple Person and Organisations. It is a placeholder for
-    documents, events, etc.
-
-    Tickets behave both a movements and as projects:
-
-    - as movements because they relate to an amount
-      of resource exchanged between multiple parties
-
-    - as a project because it acts as a reporting
-      node for other movements (ex. accounting,
-      task reports)
-
-    Ticket are a good example of documents which may require
-    synchronisation process accross multiple sites and
-    for which acquisition properties such as source_title
-    may be useful to provide a simple way to synchronise
-    data with relations.
-    """
-
-    meta_type = 'ERP5 Ticket'
-    portal_type = 'Ticket'
-    add_permission = Permissions.AddPortalContent
-    isDelivery = ConstantGetter('isDelivery', value=True)
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Arrow
-                      , PropertySheet.Price
-                      , PropertySheet.Movement
-                      , PropertySheet.Amount
-                      , PropertySheet.Ticket
-                      )
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
-    def isAccountable(self):
-      """Tickets are accountable.
-      """
-      return 1
+    return 1

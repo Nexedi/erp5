@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Ticket import Ticket
+from erp5.component.document.Ticket import Ticket
 
 class Bug(Ticket):
   """Bug means a bug report, a feature request or an issue.
