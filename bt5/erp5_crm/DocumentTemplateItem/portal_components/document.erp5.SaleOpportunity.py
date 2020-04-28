@@ -29,31 +29,30 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Ticket import Ticket
+from erp5.component.document.Ticket import Ticket
 
 class SaleOpportunity(Ticket):
-    """
-    LEGACY
+  """
+  LEGACY
 
-    This class is superceded by the Ticket class. Legacy
-    sale opportunity data should still be usable.
-    """
+  This class is superceded by the Ticket class. Legacy
+  sale opportunity data should still be usable.
+  """
+  meta_type = 'ERP5 Sale Opportunity'
+  portal_type = 'Sale Opportunity'
+  add_permission = Permissions.AddPortalContent
 
-    meta_type = 'ERP5 Sale Opportunity'
-    portal_type = 'Sale Opportunity'
-    add_permission = Permissions.AddPortalContent
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Amount
-                      , PropertySheet.Arrow
-                      , PropertySheet.Price
-                      , PropertySheet.Movement
-                      )
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Amount
+                    , PropertySheet.Arrow
+                    , PropertySheet.Price
+                    , PropertySheet.Movement
+                    )

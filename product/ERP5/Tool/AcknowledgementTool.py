@@ -31,7 +31,6 @@ from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
-from Products.ERP5.Document.Acknowledgement import Acknowledgement
 from zLOG import LOG
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
