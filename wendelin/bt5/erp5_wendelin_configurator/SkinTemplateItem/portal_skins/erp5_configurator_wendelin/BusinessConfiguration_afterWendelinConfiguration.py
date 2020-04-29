@@ -35,7 +35,7 @@ if default_security_model_business_template is not None:
   for portal_type in default_security_model_business_template.getTemplatePortalTypeRoleList():
     portal_type_instance = getattr(portal.portal_types, portal_type)
     print "Updated Role Mappings for %s" %portal_type
-    portal_type_instance.updateLocalRolesOnSecurityGroups()
+    portal_type_instance.updateRoleMapping()
       
 # updata local roles (if any)
 business_template = context.getSpecialiseValue()
