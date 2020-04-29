@@ -13,8 +13,7 @@
     "jquery-sheets": {"url": "jquery-sheets.gadget.html"},
     "pdf": {"url": "pdf_js/pdfjs.gadget.html"},
     "notebook_editor": {"url": "gadget_notebook.html"},
-    "jsmd_editor": {"url": "gadget_jsmd_viewer.html"},
-    "jexcel": {"url": "jexcel.gadget.html"}
+    "jsmd_editor": {"url": "gadget_jsmd_viewer.html"}
   };
 
 
@@ -73,7 +72,7 @@
         queue = new RSVP.Queue();
 
       if ((modification_dict.hasOwnProperty('editable')) ||
-          (modification_dict.hasOwnProperty('editor')) ||
+          (modification_dict.hasOwnProperty('editor')) || 
           (gadget.state.editor === 'notebook_editor')) {
         // Clear first to DOM, append after to reduce flickering/manip
         while (element.firstChild) {
@@ -123,7 +122,7 @@
                 url,
                 {
                   scope: 'editor',
-                  sandbox: 'iframe',  
+                  sandbox: 'iframe',
                   element: div
                 }
               );

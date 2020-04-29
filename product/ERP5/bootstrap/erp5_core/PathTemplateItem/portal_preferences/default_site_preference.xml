@@ -262,13 +262,7 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
         </item>
         <item>
             <key> <string>preferred_date_order</string> </key>
-            <value> <string>dmy</string> </value>
-        </item>
-        <item>
-            <key> <string>preferred_diff_filter_script_id</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <value> <string>ymd</string> </value>
         </item>
         <item>
             <key> <string>preferred_document_file_name_regular_expression</string> </key>
@@ -299,28 +293,12 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
             </value>
         </item>
         <item>
-            <key> <string>preferred_git_author</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-Mikolaï Krol <mikolai.krol@nexedi.com>
-
-]]></string> </value>
-        </item>
-        <item>
-            <key> <string>preferred_html_style_access_tab</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>preferred_html_style_acknowledgeable_message</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
             <key> <string>preferred_html_style_contextual_help</string> </key>
             <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>preferred_html_style_developper_mode</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>preferred_html_style_translator_mode</string> </key>
@@ -333,10 +311,6 @@ Mikolaï Krol <mikolai.krol@nexedi.com>
         <item>
             <key> <string>preferred_listbox_view_mode_line_count</string> </key>
             <value> <int>15</int> </value>
-        </item>
-        <item>
-            <key> <string>preferred_medium_image_height</string> </key>
-            <value> <int>480</int> </value>
         </item>
         <item>
             <key> <string>preferred_meeting_resource</string> </key>
@@ -365,16 +339,8 @@ Mikolaï Krol <mikolai.krol@nexedi.com>
             </value>
         </item>
         <item>
-            <key> <string>preferred_source_code_editor</string> </key>
-            <value>
-              <tuple>
-                <string>codemirror</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>preferred_string_field_width</string> </key>
-            <value> <int>30</int> </value>
+            <value> <string>30</string> </value>
         </item>
         <item>
             <key> <string>preferred_subversion_user_name</string> </key>
@@ -396,25 +362,16 @@ Mikolaï Krol <mikolai.krol@nexedi.com>
         </item>
         <item>
             <key> <string>preferred_textarea_height</string> </key>
-            <value> <int>4</int> </value>
+            <value> <string>4</string> </value>
         </item>
         <item>
             <key> <string>preferred_textarea_width</string> </key>
-            <value> <int>80</int> </value>
+            <value> <string>80</string> </value>
         </item>
         <item>
             <key> <string>preferred_visible_module</string> </key>
             <value>
               <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>preferred_working_copy</string> </key>
-            <value>
-              <tuple>
-                <string>/srv/slapgrid/slappart41/srv/runner/instance/slappart5/srv/erp5shared/erp5/bt5</string>
-                <string>/srv/slapgrid/slappart41/srv/runner/instance/slappart5/srv/erp5shared/erp5/product/ERP5/bootstrap</string>
-              </tuple>
             </value>
         </item>
         <item>
