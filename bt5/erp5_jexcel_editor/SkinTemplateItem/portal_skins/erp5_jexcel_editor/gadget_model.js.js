@@ -17,7 +17,7 @@
        });
     })
 
-    .declareMethod("getSheets", function () {
+    .declareMethod("getSheet", function () {
         var gadget = this;
         var sheet = {};
         var id_save;
