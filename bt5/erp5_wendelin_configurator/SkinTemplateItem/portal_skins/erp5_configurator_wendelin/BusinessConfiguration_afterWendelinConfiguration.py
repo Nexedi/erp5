@@ -28,6 +28,14 @@ if portal.portal_templates.getInstalledBusinessTemplate("erp5_wendelin_data_lake
                                           'accept_submitted_credentials', None)
     if accept_submitted_credentials is not None:
       accept_submitted_credentials.setPeriodicityMinuteFrequency(1)
+
+# update local roles from defautl security model of Wendelin's Data Lake
+default_security_model_business_template = portal.portal_templates.getInstalledBusinessTemplate("erp5_wendelin_data_lake_ingestion_default_security_model", strict=True)
+if default_security_model_business_template is not None:
+  for portal_type in default_security_model_business_template.getTemplatePortalTypeRoleList():
+    portal_type_instance = getattr(portal.portal_types, portal_type)
+    print "Updated Role Mappings for %s" %portal_type
+    portal_type_instance.updateLocalRolesOnSecurityGroups()
       
 # updata local roles (if any)
 business_template = context.getSpecialiseValue()
