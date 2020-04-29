@@ -238,7 +238,7 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
 
 class RJS_Only(_ERP5):
   def getTestList(self):
-    return [test for test in self._getAllTestList()]
+    return [test for test in self._getAllTestList() if test.find('erp5_officejs_')>0]
     
     rjs_officejs_bt_list = ["erp5_officejs_",
                             "renderjs_ui_test",
