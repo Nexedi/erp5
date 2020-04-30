@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jexcel_storage_gadget.js</string> </value>
+            <value> <string>18</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -193,7 +193,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1588165812.13</float>
+                              <float>1588238008.87</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -242,7 +242,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.35887.21153.46114</string> </value>
+                      <value> <string>983.35941.20704.62190</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -260,7 +260,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1588234883.51</float>
+                              <float>1588237886.13</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -323,7 +323,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1588165781.34</float>
+                              <float>1588237725.64</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

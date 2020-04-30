@@ -7,6 +7,24 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -49,7 +67,24 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
                 <string>Owner</string>
+                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -98,7 +133,7 @@
                     <key>
                       <tuple>
                         <int>99</int>
-                        <string>ERP5 Web Site/jexcel_site</string>
+                        <string>ERP5 Web Site/playground</string>
                       </tuple>
                     </key>
                     <value>
@@ -398,11 +433,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>RenderJS Gadget ERP5 Clone</string> </value>
+            <value> <string>RenderJS Gadget ERP5</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jexcel_site</string> </value>
+            <value> <string>playground</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -452,7 +487,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>RenderJS Runner Clone</string> </value>
+            <value> <string>Jexcel Playground</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -568,9 +603,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value>
-                        <none/>
-                      </value>
+                      <value> <string>publish</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -596,7 +629,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1586852792.1</float>
+                              <float>1588238904.93</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -605,7 +638,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>embedded</string> </value>
+                      <value> <string>published</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -645,7 +678,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.24345.25665.11724</string> </value>
+                      <value> <string>983.35960.27251.17066</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -663,7 +696,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1588161385.94</float>
+                              <float>1588239017.08</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
