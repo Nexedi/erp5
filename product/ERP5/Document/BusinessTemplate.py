@@ -1559,7 +1559,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           if update_dict.has_key(widget_path) and update_dict[widget_path] in ('remove', 'save_and_remove'):
             continue
           widget_in_form = 0
-          for group_id, group_value_list in new_groups_dict.iteritems():
+          for group_value_list in new_groups_dict.values():
             if widget_id in group_value_list:
               widget_in_form = 1
               break
@@ -1715,7 +1715,7 @@ class PathTemplateItem(ObjectTemplateItem):
     if len(id_list) == 0:
       return ['/'.join(relative_url_list)]
     id = id_list[0]
-    if re.search('[\*\?\[\]]', id) is None:
+    if re.search(r'[\*\?\[\]]', id) is None:
       # If the id has no meta character, do not have to check all objects.
       obj = folder._getOb(id, None)
       if obj is None:
@@ -1772,7 +1772,7 @@ class PathTemplateItem(ObjectTemplateItem):
       # Ignore any object without PortalType (non-ERP5 objects)
       try:
         portal_type = aq_base(obj).getPortalType()
-      except Exception, e:
+      except Exception:
         pass
       else:
         if portal_type not in p.portal_types:
