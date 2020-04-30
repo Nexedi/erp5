@@ -543,7 +543,7 @@ class DummyTaskDistributor(object):
         self.test_name_list = test_name_list[:]
         return None, revision
 
-    def startUnitTest(self, test_result_path, exclude_list=()):
+    def startUnitTest(self, test_result_path, exclude_list=(), *args):
         with self._lock:
             for i, test in enumerate(self.test_name_list):
                 if test not in exclude_list:
