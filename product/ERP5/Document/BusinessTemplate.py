@@ -1295,7 +1295,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       if uid is None:
         return 0
       else:
-        document.uid = uid
+        if getattr(aq_base(document), 'uid', None) != uid:
+          document.uid = uid
         return 1
     groups = {}
     old_groups = {}
