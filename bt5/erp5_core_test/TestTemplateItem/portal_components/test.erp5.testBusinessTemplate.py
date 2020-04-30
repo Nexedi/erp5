@@ -6909,6 +6909,60 @@ class TestBusinessTemplate(BusinessTemplateMixin):
          ('Removed but should be kept', 'CatalogMethod')},
        new_bt.preinstall())
 
+  def test_update_business_template_with_broken_objects(self):
+    """Edge case test for a folder containing broken objects being updated.
+
+    In this scenario, a document containing random broken objects that are
+    not part of business template is being installed. The broken objects
+    are kept and do not prevent installing the business template.
+    """
+    types_tool = self.portal.portal_types
+    types_tool.newContent('Geek Object', 'Base Type', type_class='Person')
+
+    types_tool.newContent(
+        'Geek Module',
+        'Base Type',
+        type_class='Folder',
+        type_filter_content_type=1,
+        type_allowed_content_type_list=('Geek Object',),
+    )
+
+    self.portal.newContent(portal_type='Geek Module', id='geek_module')
+    module_content = self.portal.geek_module.newContent(
+        portal_type='Geek Object',
+        id='1',
+        title='kept',
+    )
+    module_content_uid = module_content.getUid()
+    self.tic()
+
+    bt = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title=self.id(),
+        template_path_list=['geek_module'])
+    self.tic()
+    bt.build()
+    self.tic()
+
+    types_tool['Geek Object'].setTypeClass(' not exists - broken')
+    self.tic()
+    self.assertIsInstance(self.portal.geek_module['1'], ERP5BaseBroken)
+
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      new_bt = self.portal.portal_templates.download(
+          url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+    new_bt.install()
+
+    # our broken document is still here and its properties have been kept
+    self.assertIsInstance(self.portal.geek_module['1'], ERP5BaseBroken)
+    self.assertEqual(module_content_uid, self.portal.geek_module['1'].uid)
+    self.assertEqual('kept', self.portal.geek_module['1'].title)
+
   def test_BusinessTemplateWithTest(self):
     sequence_list = SequenceList()
     sequence_string = '\
