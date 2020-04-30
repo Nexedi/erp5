@@ -1,4 +1,5 @@
 Data Set | -validation_workflow
+Data Set | data_set_interaction_workflow
 Data Set | data_validation_workflow
 Data Stream | -validation_workflow
 Data Stream | data_validation_workflow
