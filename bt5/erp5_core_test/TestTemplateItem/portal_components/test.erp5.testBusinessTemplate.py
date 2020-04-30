@@ -6854,6 +6854,74 @@ class TestBusinessTemplate(BusinessTemplateMixin):
        {'test_document': ('Removed but should be kept', 'Path')},
        new_bt.preinstall())
 
+  def test_update_business_template_with_category_having_subcategory_tree_modified(self):
+    """Tries to reproduce the bug of having portal/portal_categories/test_category/foo with
+      two sub-categories for which one of them is deleted and another - which contain
+      subobjects - is updated.
+    """
+    portal_categories = self.portal.portal_categories
+    base_category_id = 'test_category'
+    if base_category_id in portal_categories.objectIds():
+      portal_categories.manage_delObjects([base_category_id])
+    base_category = portal_categories.newContent(portal_type='Base Category', id=base_category_id)
+
+    parent_category = base_category.newContent(portal_type='Category', id='modified')
+    parent_category.newContent(portal_type='Category', id='container_in_which_child_is_added')
+    parent_category.newContent(portal_type='Category', id='removed')
+    parent_category.container_in_which_child_is_added.newContent(portal_type='Category', id='child_kept')
+    business_template = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title=self.id(),
+      template_path_list=(
+        'portal_categories/' + base_category_id,
+        'portal_categories/' + base_category_id + '/**'
+      ),
+      template_base_category_list=[base_category_id],
+    )
+    self.tic()
+    business_template.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      business_template.export(path=export_dir, local=True)
+      self.tic()
+      new_business_template_version_1 = self.portal.portal_templates.download(
+         url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    # Modify parent category
+    parent_category.setTitle('modified')
+    # Add a child to 'kept'
+    parent_category.container_in_which_child_is_added.newContent(portal_type='Category', id='added')
+    # Delete 'removed'
+    parent_category.manage_delObjects(['removed'])
+
+    business_template = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title=self.id(),
+      template_path_list=(
+        'portal_categories/' + base_category_id,
+        'portal_categories/' + base_category_id + '/**'
+      ),
+      template_base_category_list=[base_category_id],
+    )
+    self.tic()
+    business_template.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      business_template.export(path=export_dir, local=True)
+      self.tic()
+      self.portal.portal_categories.manage_delObjects([base_category_id])
+      new_business_template_version_1.install()
+      self.tic()
+      self.portal.portal_templates.updateBusinessTemplateFromUrl(
+        download_url='file://%s' % export_dir
+      )
+    finally:
+      shutil.rmtree(export_dir)
+
   def test_update_business_template_with_template_keep_path_list_catalog_method(self):
     """Tests for `template_keep_path_list` feature for the special case of catalog methods
     """

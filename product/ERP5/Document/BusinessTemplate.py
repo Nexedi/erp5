@@ -1091,22 +1091,28 @@ class ObjectTemplateItem(BaseTemplateItem):
 
     # update _p_jar property of objects cleaned by removeProperties
     transaction.savepoint(optimistic=True)
-    for path, old_object in upgrade_list:
-      # compare object to see it there is changes
-      new_object = self._objects[path]
-      new_io = StringIO()
-      old_io = StringIO()
-      OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, new_io)
-      new_obj_xml = new_io.getvalue()
-      try:
-        OFS.XMLExportImport.exportXML(old_object._p_jar, old_object._p_oid, old_io)
-        old_obj_xml = old_io.getvalue()
-      except (ImportError, UnicodeDecodeError), e: # module is already
-                                                   # removed etc.
-        old_obj_xml = '(%s: %s)' % (e.__class__.__name__, e)
-      new_io.close()
-      old_io.close()
-      if new_obj_xml != old_obj_xml:
+    for path, old_object in sorted(upgrade_list):
+      # if parent was modified, all child are also considered as modified,
+      # because we XXX
+      parent_path = '/'.join(path.split('/')[:-1])
+      is_modified = parent_path in modified_object_list
+      if not is_modified:
+        # compare object to see it there is changes
+        new_object = self._objects[path]
+        new_io = StringIO()
+        old_io = StringIO()
+        OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, new_io)
+        new_obj_xml = new_io.getvalue()
+        try:
+          OFS.XMLExportImport.exportXML(old_object._p_jar, old_object._p_oid, old_io)
+          old_obj_xml = old_io.getvalue()
+        except (ImportError, UnicodeDecodeError), e: # module is already
+                                                    # removed etc.
+          old_obj_xml = '(%s: %s)' % (e.__class__.__name__, e)
+        new_io.close()
+        old_io.close()
+        is_modified = new_obj_xml != old_obj_xml
+      if is_modified:
         if context.isKeepObject(path):
           modified_object_list[path] = 'Modified but should be kept', type_name
         else:
