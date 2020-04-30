@@ -8,10 +8,12 @@
     defaultColWidth: 100,
     fullscreen: true,
     allowComments: true,
-    search: true,
+    //search: true,
+    loadindSPin: true,
     rowResize: true,
-    tableOverflow: true,
-    lazyLoading: true,
+    columnDrag: true,
+    //tableOverflow: true,
+    //lazyLoading: true,
     loadingSpin: true,
     parseFormulas: false
   };
