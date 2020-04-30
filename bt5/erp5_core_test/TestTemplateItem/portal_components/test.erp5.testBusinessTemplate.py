@@ -212,7 +212,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       Get a business template at portal_templates
     """
     template_tool = self.getTemplateTool()
-    for bt in template_tool.objectValues(filter={'portal_type':'Business Template'}):
+    for bt in template_tool.objectValues(filter={'portal_type': 'Business Template'}):
       if bt.getTitle() == title:
         return bt
     return None
@@ -2640,7 +2640,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     import_bt = sequence.get('import_bt')
     pc = self.getCatalogTool()
     catalog_id = pc.getSQLCatalog().id
-    object_to_update = {'portal_catalog/'+catalog_id+'/z_another_fake_method':'install'}
+    object_to_update = {'portal_catalog/'+catalog_id+'/z_another_fake_method': 'install'}
     import_bt.install(object_to_update=object_to_update)
 
   def stepCreateNewBusinessTemplate(self, sequence=None, **kw):
@@ -2822,7 +2822,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
                  'template_portal_type_hidden_content_type_list',
                  'template_portal_type_property_sheet_list',
                  'template_portal_type_base_category_list'):
-          continue
+        continue
       if prop_type == 'text' or prop_type == 'string':
         prop_dict[pid] = ''
       elif prop_type == 'int':
@@ -3141,7 +3141,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     python_script_id = 'ERP5Site_dummyScriptWhichRandomId%s' % grain_of_sand
     skin_folder_id = 'custom'
     if getattr(self.portal.portal_skins, skin_folder_id, None) is None:
-        self.portal.portal_skins.manage_addProduct['OFSP'].manage_addFolder(skin_folder_id)
+      self.portal.portal_skins.manage_addProduct['OFSP'].manage_addFolder(skin_folder_id)
     skin_folder = self.portal.portal_skins[skin_folder_id]
     skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(
                                                                  id=python_script_id)
@@ -6570,7 +6570,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     finally:
       shutil.rmtree(export_dir)
 
-    new_bt.install(force=0, object_to_update={'dummy_type_provider':'remove'})
+    new_bt.install(force=0, object_to_update={'dummy_type_provider': 'remove'})
     self.assertNotEquals(None, types_tool.getTypeInfo('Base Category'))
     self.assertNotIn('dummy_type_provider', types_tool.type_provider_list)
 
