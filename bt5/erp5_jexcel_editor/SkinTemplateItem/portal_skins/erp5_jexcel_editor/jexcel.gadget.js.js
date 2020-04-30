@@ -3,17 +3,18 @@
 (function (window, rJS, RSVP, jexcel) {
   "use strict";
 
-  var template = {editable: this.state.editable,
-                  minDimensions: [26, 200],
-                  defaultColWidth: 100,
-                  fullscreen: true,
-                  allowComments: true,
-                  search: true,
-                  rowResize: true,
-                  tableOverflow: true,
-                  lazyLoading: true,
-                  loadingSpin: true,
-                  parseFormulas: false};
+  var template = {
+    minDimensions: [26, 200],
+    defaultColWidth: 100,
+    fullscreen: true,
+    allowComments: true,
+    search: true,
+    rowResize: true,
+    tableOverflow: true,
+    lazyLoading: true,
+    loadingSpin: true,
+    parseFormulas: false
+  };
 
   rJS(window)
 
@@ -37,13 +38,11 @@
       return gadget.changeState(options);
     })
 
-    // Initialize the jexcel sheet, didn't find the way to not duplicate the sheet config
-    // because jexcel need the "table" var fot the toolbar config that is initializing
+    // Initialize the jexcel sheet
     .onStateChange(function (modification_dict) {
       var gadget = this;
       var table;
       gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
-      // if the value key is set in the options dict of render method
       if (modification_dict.hasOwnProperty('value')) {
         var tmp = Object.assign({}, template);
         Object.assign(tmp, gadget.state.value);
