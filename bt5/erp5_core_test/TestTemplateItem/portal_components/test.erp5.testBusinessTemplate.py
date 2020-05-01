@@ -6854,6 +6854,97 @@ class TestBusinessTemplate(BusinessTemplateMixin):
        {'test_document': ('Removed but should be kept', 'Path')},
        new_bt.preinstall())
 
+  def test_update_business_template_with_category_having_subcategory_tree_modified(self):
+    """Non regression test for a case where some categories in a subtrees are added and
+    some are removed.
+
+    Updating from:
+
+        portal_categories/test_category/modified
+        portal_categories/test_category/modified/container_in_which_child_is_added
+        portal_categories/test_category/modified/container_in_which_child_is_added/child_kept
+        portal_categories/test_category/modified/removed
+
+    to:
+
+        portal_categories/test_category/modified   <-- this will be modified
+        portal_categories/test_category/modified/container_in_which_child_is_added
+        portal_categories/test_category/modified/container_in_which_child_is_added/child_kept
+        portal_categories/test_category/modified/container_in_which_child_is_added/added
+
+    was causing when test_category was added both as a base category and as paths.
+
+    This was the cause of KeyError when updating erp5_accounting_l10n_fr
+    """
+    portal_categories = self.portal.portal_categories
+    if 'test_category' in portal_categories.objectIds():
+      portal_categories.manage_delObjects(['test_category'])
+    base_category = portal_categories.newContent(portal_type='Base Category', id='test_category')
+
+    parent_category = base_category.newContent(portal_type='Category', id='modified')
+    parent_category.newContent(portal_type='Category', id='container_in_which_child_is_added')
+    parent_category.newContent(portal_type='Category', id='removed')
+    parent_category.container_in_which_child_is_added.newContent(portal_type='Category', id='child_kept')
+    business_template = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title=self.id(),
+      template_path_list=(
+        'portal_categories/test_category/**'
+      ),
+      template_base_category_list=['test_category'],
+    )
+    self.tic()
+    business_template.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      business_template.export(path=export_dir, local=True)
+      self.tic()
+      new_business_template_version_1 = self.portal.portal_templates.download(
+         url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    # Modify parent category
+    parent_category.setTitle('modified')
+    # Add a child to 'kept'
+    parent_category.container_in_which_child_is_added.newContent(portal_type='Category', id='added')
+    # Delete 'removed'
+    parent_category.manage_delObjects(['removed'])
+
+    business_template = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title=self.id(),
+      template_path_list=(
+        'portal_categories/test_category/**'
+      ),
+      template_base_category_list=['test_category'],
+    )
+    self.tic()
+    business_template.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      business_template.export(path=export_dir, local=True)
+      self.tic()
+      self.portal.portal_categories.manage_delObjects(['test_category'])
+      new_business_template_version_1.install()
+      self.tic()
+      portal_categories.test_category.modified.container_in_which_child_is_added.setTitle(
+          'This path should not be reinstalled during update'
+      )
+      self.tic()
+      self.portal.portal_templates.updateBusinessTemplateFromUrl(
+        download_url='file://%s' % export_dir
+      )
+    finally:
+      shutil.rmtree(export_dir)
+    self.tic()
+    self.assertEqual(
+      'This path should not be reinstalled during update',
+      portal_categories.test_category.modified.container_in_which_child_is_added.getTitle())
+
+
   def test_update_business_template_with_template_keep_path_list_catalog_method(self):
     """Tests for `template_keep_path_list` feature for the special case of catalog methods
     """
