@@ -29,6 +29,7 @@
 
 import unittest
 import logging
+import functools
 from unittest import expectedFailure, skip
 
 from AccessControl import getSecurityManager
@@ -7042,6 +7043,88 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     self.assertIsInstance(self.portal.geek_module['1'], ERP5BaseBroken)
     self.assertEqual(module_content_uid, self.portal.geek_module['1'].uid)
     self.assertEqual('kept', self.portal.geek_module['1'].title)
+
+  def test_update_business_template_keep_action_uids(self):
+    """Non regression test for TODO
+    """
+    types_tool = self.portal.portal_types
+    types_tool.newContent('Geek Object', 'Base Type', type_class='Person')
+    types_tool.newContent('Geek Module', 'Base Type', type_class='Folder')
+    newAction = functools.partial(
+        types_tool['Geek Object'].newContent, portal_type='Action Information', action_type_value=self.portal.portal_categories.action_type.object_view)
+    newRoleInformation = functools.partial(
+        types_tool['Geek Object'].newContent,
+        role_name_list=('Assignor',),
+        portal_type='Role Information')
+
+    action_information_by_reference = {}
+    role_information_by_reference = {}
+    action_count = 1000
+    for i in range(action_count):
+      action_reference = 'action_%s' % i
+      action_information_by_reference[action_reference] = newAction(
+          title='Action %s' % i, reference=action_reference)
+      role_reference = 'role_%s' % i
+      role_information_by_reference[role_reference] = newRoleInformation(
+          title='Role %s' % i, reference=role_reference)
+
+    business_template = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title=self.id(),
+        template_portal_type_id_list=['Geek Object'],
+        template_action_path_list=[
+            'Geek Object | %s' % reference
+            for reference in action_information_by_reference
+        ],
+        template_portal_type_role_list=['Geek Object'],
+    )
+    self.tic()
+    business_template.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      business_template.export(path=export_dir, local=True)
+      self.tic()
+      new_business_template_version_1 = self.portal.portal_templates.download(
+         url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    # Apply the changes and build a second version of business template
+    for action in action_information_by_reference.values():
+      action.setTitle('Updated %s' % action.getTitle())
+    for role in role_information_by_reference.values():
+      role.setTitle('Updated %s' % role.getTitle())
+    types_tool['Geek Object'].setTitle('modified')
+
+    business_template.build()
+    self.tic()
+    initial_uid_mapping = {}
+    export_dir = tempfile.mkdtemp()
+    try:
+      business_template.export(path=export_dir, local=True)
+      self.tic()
+      types_tool.manage_delObjects(ids=['Geek Object'])
+      self.tic()
+      types_tool.newContent('Geek Object', 'Base Type', type_class='Person')
+      self.tic()
+      new_business_template_version_1.install()
+      self.tic()
+      assert types_tool['Geek Object'].getTitle() == 'Geek Object'
+      for action in types_tool['Geek Object'].contentValues(portal_type='Action Information'):
+        initial_uid_mapping[action.getReference()] = action.getUid()
+      assert len(initial_uid_mapping) == action_count
+      self.portal.portal_templates.updateBusinessTemplateFromUrl(
+        download_url='file://%s' % export_dir
+      )
+    finally:
+      shutil.rmtree(export_dir)
+    self.tic()
+    after_upgrade_uid_mapping = {}
+    for action in types_tool['Geek Object'].contentValues(portal_type='Action Information'):
+      after_upgrade_uid_mapping[action.getReference()] = action.getUid()
+    self.maxDiff = None
+    self.assertEqual(initial_uid_mapping, after_upgrade_uid_mapping)
 
   def test_BusinessTemplateWithTest(self):
     sequence_list = SequenceList()
