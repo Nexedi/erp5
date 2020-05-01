@@ -1950,6 +1950,17 @@ class CategoryTemplateItem(ObjectTemplateItem):
       # reset accessors if we installed a new category
       self.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
 
+  def install(self, context, trashbin, **kw):
+    # Only update base categories, the category they contain will be installed/updated
+    # as PathTemplateItem.install
+    kw['object_to_update'] = {
+        path: action
+        for (path, action) in kw['object_to_update'].items()
+        if path.split('/')[:-1] == ['portal_categories']
+    }
+    return super(CategoryTemplateItem, self).install(context, trashbin, **kw)
+
+
 class SkinTemplateItem(ObjectTemplateItem):
 
   def __init__(self, id_list, tool_id='portal_skins', **kw):
