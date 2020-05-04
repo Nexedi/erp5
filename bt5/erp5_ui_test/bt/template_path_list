@@ -3,6 +3,8 @@ portal_categories/foo_category/**
 portal_domains/foo_domain
 portal_tests/access_tab_zuite
 portal_tests/access_tab_zuite/**
+portal_tests/anonymous_access_zuite
+portal_tests/anonymous_access_zuite/**
 portal_tests/business_template_zuite
 portal_tests/business_template_zuite/**
 portal_tests/check_box_field_zuite
