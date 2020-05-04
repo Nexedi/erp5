@@ -20,10 +20,10 @@ data_set = portal.data_set_module.get(data_set_reference)
 if data_set is None:
   return []
 
+# XXX: use DataSet_getDataStreamList instead!
 query_dict = {
   "portal_type": "Data Stream",
-  "reference": data_set.getReference() + reference_separator + "%",
-  "validation_state": 'validated'}
+  "reference": data_set.getReference() + reference_separator + "%"}
 
 data_stream_list = []
 
