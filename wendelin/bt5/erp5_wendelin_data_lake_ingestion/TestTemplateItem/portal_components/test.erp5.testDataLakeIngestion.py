@@ -31,14 +31,19 @@ class TestDataIngestion(SecurityTestCase):
     self.assertEqual(self.INVALID, self.portal.getIngestionReferenceDictionary()["invalid_suffix"])
     self.assertEqual(self.EOF, self.REFERENCE_SEPARATOR + self.portal.getIngestionReferenceDictionary()["split_end_suffix"])
     self.assertEqual(self.PART_1, self.REFERENCE_SEPARATOR + self.portal.getIngestionReferenceDictionary()["split_first_suffix"])
-    # XXX: create default users    
 
   def getRandomReference(self):
     random_string = ''.join([random.choice(string.ascii_letters + string.digits) for _ in xrange(10)])
     return 'UNIT-TEST-' + random_string
 
-  def getIngestionReference(self, reference, extension):
-    return self.REF_PREFIX + reference + extension
+  def getIngestionReference(self, reference, extension, randomize_ingestion_reference=False):
+    if not randomize_ingestion_reference:
+      # return hard coded which results in one Data Set and multiple Data Streams (in context of test)
+      return self.REF_PREFIX + reference + extension
+    else:
+      # create random one
+      random_string = self.getRandomReference()
+      return "%s/%s/%s/csv//fake-size/fake-hash" %(random_string, random_string, random_string)
 
   def sanitizeReference(self, reference):
     ingestion_reference = self.REFERENCE_SEPARATOR.join(reference.split(self.REFERENCE_SEPARATOR)[1:])
@@ -76,20 +81,20 @@ class TestDataIngestion(SecurityTestCase):
     request.set('data_chunk', encoded_data_chunk)
     ingestion_policy.ingest()
     self.tic()
-    return
 
-  def ingest(self, data_chunk, reference, extension, eof):
-    ingestion_reference = self.getIngestionReference(reference, extension)
+  def ingest(self, data_chunk, reference, extension, eof, randomize_ingestion_reference=False):
+    ingestion_reference = self.getIngestionReference(reference, extension, randomize_ingestion_reference)
+    self.portal.log(ingestion_reference)
     
     # use default ebulk policy
     ingestion_policy = self.portal.portal_ingestion_policies.wendelin_embulk
     
     self.ingestRequest(ingestion_reference, eof, data_chunk, ingestion_policy)
-    ingestion_id, ingestion_reference = self.sanitizeReference(ingestion_reference)
+    _, ingestion_reference = self.sanitizeReference(ingestion_reference)
 
     return ingestion_reference     
 
-  def stepIngest(self, extension, delimiter):
+  def stepIngest(self, extension, delimiter, randomize_ingestion_reference=False):
     file_name = "file_name.csv"
     reference = self.getRandomReference()
     array = [[random.random() for i in range(self.CHUNK_SIZE_CSV + 10)] for j in range(self.CHUNK_SIZE_CSV + 10)]
@@ -105,7 +110,7 @@ class TestDataIngestion(SecurityTestCase):
         else:
           break
 
-    ingestion_reference = self.ingest(data_chunk, reference, extension, self.SINGLE_INGESTION_END)
+    ingestion_reference = self.ingest(data_chunk, reference, extension, self.SINGLE_INGESTION_END, randomize_ingestion_reference=randomize_ingestion_reference)
     
     if os.path.exists(file_name):
       os.remove(file_name)
@@ -116,16 +121,18 @@ class TestDataIngestion(SecurityTestCase):
     
     data_ingestion_line = [x for x in data_ingestion.objectValues() \
                             if x.getReference() == 'out_stream'][0]
-
+    data_set = data_ingestion_line.getAggregateValue(portal_type='Data Set')
     data_stream = data_ingestion_line.getAggregateValue(portal_type='Data Stream')
     self.assertNotEqual(None, data_stream)
 
     data_stream_data = data_stream.getData()
     self.assertEqual(data_chunk, data_stream_data)
 
-    # check Data Stream and Data Set
+    # check Data Stream and Data Set are validated
     self.assertEqual('validated', data_stream.getValidationState())
-    
+
+    return data_set, [data_stream]
+
   def test_01_DefaultEbulkIngestion(self):
     """
       Test default ingestion with ebulk too.
@@ -155,15 +162,15 @@ class TestDataIngestion(SecurityTestCase):
     self.tic()
     
     ingestion_reference = self.ingest(data_chunk_2, reference, self.FIF, self.PART_2)
-    time.sleep(1)    
+    time.sleep(1)  
     self.tic()
     
     ingestion_reference = self.ingest(data_chunk_3, reference, self.FIF, self.PART_3)
-    time.sleep(1)    
+    time.sleep(1)  
     self.tic()
     
     ingestion_reference = self.ingest(data_chunk_4, reference, self.FIF, self.EOF)
-    time.sleep(1)    
+    time.sleep(1)
     self.tic()
     
     # call explicitly alarm so all 4 Data Streams can be concatenated to one
@@ -183,3 +190,26 @@ class TestDataIngestion(SecurityTestCase):
            getattr(self.portal.portal_ingestion_policies, "wendelin_embulk", None))
     self.assertNotEqual(None, 
            getattr(self.portal.data_supply_module, "embulk", None))
+
+  def test_04_DefaultModelSecurityModel(self):
+    """
+      Test default security model : 'All can download, only contributors can upload.'
+    """
+    data_set, data_stream_list = self.stepIngest(self.CSV, ",", randomize_ingestion_reference=True)
+    self.tic()
+    
+    # publish data set and have all Data Streams publsihed automatically
+    data_set.publish()
+    self.tic()
+    self.assertEqual('published', data_set.getValidationState())
+    self.assertSameSet(['published' for x in data_stream_list], 
+                       [x.getValidationState() for x in data_stream_list])
+
+    # invalidate Data Set should invalidate related Data Streams
+    data_set.invalidate()
+    self.tic()
+    self.assertEqual('invalidated', data_set.getValidationState())
+    self.assertSameSet(['invalidated' for x in data_stream_list], 
+                       [x.getValidationState() for x in data_stream_list])
+
+  # XXX: new test which simulates download / upload of Data Set and increase DS version
