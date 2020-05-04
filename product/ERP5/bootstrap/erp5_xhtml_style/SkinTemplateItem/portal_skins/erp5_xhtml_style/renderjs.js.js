@@ -745,6 +745,27 @@ if (typeof document.contains !== 'function') {
                        Event, URL) {
   "use strict";
 
+  // Error propagation in jschannel uses JSON.stringify
+  // Sadly, ...
+  // JSON.stringify(new TypeError('lala')) -> '{}'
+  // Change the browser default behaviour to propagate at least the message
+  // See https://stackoverflow.com/a/18391400
+  if (!Error.prototype.hasOwnProperty('toJSON')) {
+    Object.defineProperty(Error.prototype, 'toJSON', {
+      value: function () {
+        var alt = {};
+
+        Object.getOwnPropertyNames(this).forEach(function (key) {
+          alt[key] = this[key];
+        }, this);
+
+        return alt;
+      },
+      configurable: true,
+      writable: true
+    });
+  }
+
   /////////////////////////////////////////////////////////////////
   // Error
   /////////////////////////////////////////////////////////////////
