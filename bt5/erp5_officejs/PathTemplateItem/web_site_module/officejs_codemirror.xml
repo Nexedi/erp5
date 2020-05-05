@@ -427,7 +427,7 @@
         </item>
         <item>
             <key> <string>configuration_cache_file</string> </key>
-            <value> <string>WebSection_getPrecacheManifest</string> </value>
+            <value> <string>WebSection_getOfficeJsPrecacheManifest</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
@@ -752,7 +752,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>979.3226.30420.13465</string> </value>
+                      <value> <string>983.23179.4886.750</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -770,7 +770,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1587472024.47</float>
+                              <float>1588679665.18</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

@@ -1,6 +1,11 @@
 url_list = [
   "favicon.ico",
   "font-awesome/font-awesome.css",
+  'font-awesome/font-awesome-webfont.eot',
+  'font-awesome/font-awesome-webfont.woff',
+  'font-awesome/font-awesome-webfont.woff2',
+  'font-awesome/font-awesome-webfont.ttf',
+  'font-awesome/font-awesome-webfont.svg',
   "URI.js",
   "dygraph.js",
   "handlebars.js",
