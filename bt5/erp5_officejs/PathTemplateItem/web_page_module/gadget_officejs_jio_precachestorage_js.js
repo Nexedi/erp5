@@ -102,7 +102,8 @@
           relative_url_list,
           i,
           hash = rusha.digestFromString(base_manifest_text +
-                                        response.target.getResponseHeader("Last-Modified"));
+                                        response.target
+                                        .getResponseHeader("Web-Section-Last-Modified"));
         relative_url_list = Object.keys(JSON.parse(base_manifest_text));
         storage._relative_url_list.push(storage._version);
         storage._relative_url_list.push(storage._version +
