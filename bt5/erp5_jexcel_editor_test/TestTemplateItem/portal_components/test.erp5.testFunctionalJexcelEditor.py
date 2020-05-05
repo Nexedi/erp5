@@ -29,7 +29,7 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
 
-class TestRenderJSUICore(ERP5TypeFunctionalTestCase):
+class TestJexcelEditorUI(ERP5TypeFunctionalTestCase):
   foreground = 0
   run_only = "jexcel_ui_zuite"
 
@@ -44,5 +44,5 @@ class TestRenderJSUICore(ERP5TypeFunctionalTestCase):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestRenderJSUICore))
+  suite.addTest(unittest.makeSuite(TestJexcelEditorUI))
   return suite
