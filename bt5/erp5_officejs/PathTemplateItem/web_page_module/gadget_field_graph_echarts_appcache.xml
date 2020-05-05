@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>DELETEgadget_field_graph_echarts.appcache</string> </value>
+            <value> <string>gadget_field_graph_echarts.appcache</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -265,7 +265,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.35926.21884.62754</string> </value>
+                      <value> <string>962.25486.15124.29883</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -283,8 +283,8 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1588580767.06</float>
-                              <string>UTC</string>
+                              <float>1538646068.83</float>
+                              <string>GMT+9</string>
                             </tuple>
                           </state>
                         </object>
