@@ -102,12 +102,12 @@ if dataset_reference is not None:
     if data_set is None:
       data_set = portal.data_set_module.newContent(
         portal_type = "Data Set",
-        title = "Data set " + dataset_reference,
+        title = dataset_reference,
         reference = dataset_reference,
-        id = dataset_reference,
-        description = "Default description.",
-        version = "000"
-      )
+        id = dataset_reference, # XXX: is it really needed ?
+        version = "000")
+      # when a data set is uploaded from ebulk this means that "validation" is done at client side
+      # thus set set accordingly
       data_set.validate()
   except:
     data_set = portal.data_set_module.get(dataset_reference)
