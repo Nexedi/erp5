@@ -41,6 +41,8 @@ from .Utils import deunicodeData
 from .Utils import rmtree
 from .. import taskdistribution
 
+MAX_LOG_TIME = 15 # time in days we should keep logs that we can see through
+                  # httd
 MAX_TEMP_TIME = 0.01 # time in days we should keep temp files
 
 PROFILE_PATH_KEY = 'profile_path'
@@ -52,13 +54,14 @@ test_type_registry = {
 
 class TestNode(object):
 
-  def __init__(self, config, max_temp_time=MAX_TEMP_TIME):
+  def __init__(self, config, max_log_time=MAX_LOG_TIME,
+               max_temp_time=MAX_TEMP_TIME):
     self.config = config or {}
     self.process_manager = ProcessManager()
     self.working_directory = config['working_directory']
     self.node_test_suite_dict = {}
     self.file_handler = None
-    self.max_log_time = float(config.get('keep_log_days', 15))
+    self.max_log_time = max_log_time
     self.max_temp_time = max_temp_time
     self.url_access = "https://[0::0]:0123" # Ipv6 + port of the node
 

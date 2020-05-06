@@ -253,27 +253,5 @@ _what_not_even_god_should_do = []
 register_module_extender(MANAGER, 'AccessControl.PermissionRole',
                          AccessControl_PermissionRole_transform)
 
-# Properly search for namespace packages: original astroid (as of 1.3.8) only
-# checks at top-level and it doesn't work for Shared.DC.ZRDB (defined in
-# Products.ZSQLMethods; Shared and Shared.DC being a namespace package defined
-# in Zope2) as Shared (rather than Shared.DC) is considered...
-from astroid import modutils
-modutils__module_file = modutils._module_file
-def _module_file(modpath, path=None):
-    if modutils.pkg_resources is not None:
-        i = len(modpath) - 1
-        while i > 0:
-            package = '.'.join(modpath[0:i])
-            if (package in modutils.pkg_resources._namespace_packages and
-                    package in sys.modules):
-                modpath = modpath[i:]
-                path = sys.modules[package].__path__
-                break
-
-            i -= 1
-
-    return modutils__module_file(modpath, path)
-modutils._module_file = _module_file
-
 if sys.modules['isort'] is None:
     del sys.modules['isort']

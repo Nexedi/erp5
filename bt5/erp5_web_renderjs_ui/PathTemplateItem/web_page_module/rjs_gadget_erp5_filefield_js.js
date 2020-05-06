@@ -27,23 +27,31 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function () {
+    .onStateChange(function (modification_dict) {
       var element = this.element,
         gadget = this,
-        url;
-      if (gadget.state.editable) {
-        url = 'gadget_html5_input.html';
+        url,
+        result;
+      if (modification_dict.hasOwnProperty('editable')) {
+        if (gadget.state.editable) {
+          url = 'gadget_html5_input.html';
+        } else {
+          url = 'gadget_html5_element.html';
+        }
+        result = this.declareGadget(url, {scope: 'sub'})
+          .push(function (input) {
+            // Clear first to DOM, append after to reduce flickering/manip
+            while (element.firstChild) {
+              element.removeChild(element.firstChild);
+            }
+            element.appendChild(input.element);
+            return input;
+          });
       } else {
-        url = 'gadget_html5_element.html';
+        result = this.getDeclaredGadget('sub');
       }
-      return this.declareGadget(url, {scope: 'sub'})
+      return result
         .push(function (input) {
-          // Clear first to DOM, append after to reduce flickering/manip
-          while (element.firstChild) {
-            element.removeChild(element.firstChild);
-          }
-          element.appendChild(input.element);
-
           return input.render(gadget.state);
         });
     })

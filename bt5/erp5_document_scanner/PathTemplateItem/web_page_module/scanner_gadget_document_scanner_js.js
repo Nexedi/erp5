@@ -1047,8 +1047,7 @@
         });
       }
 
-      // throw new Error('Unhandled button: ' + evt.target.textContent);
-      return;
+      throw new Error('Unhandled button: ' + evt.target.textContent);
     }, false, false)
 
     //////////////////////////////////////////////////

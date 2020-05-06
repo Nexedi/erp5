@@ -105,7 +105,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     # to manage containers here, this not the job of this test
     def isPacked(self):
       return 1
-    from erp5.component.document.PackingList import PackingList
+    from Products.ERP5Type.Document.PackingList import PackingList
     PackingList.isPacked = isPacked
     self.createCurrency()
     self.setUpPreferences()

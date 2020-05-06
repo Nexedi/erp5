@@ -25,7 +25,7 @@
 #
 ##############################################################################
 
-from erp5.component.document.ERP5ProjectUnitTestDistributor import ERP5ProjectUnitTestDistributor
+from Products.ERP5.Document.ERP5ProjectUnitTestDistributor import ERP5ProjectUnitTestDistributor
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions

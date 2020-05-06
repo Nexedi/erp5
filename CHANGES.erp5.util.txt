@@ -1,17 +1,6 @@
 Changes
 =======
 
-0.4.67 (2020-04-27)
--------------------
-
-  * erp5.util:
-
-    - testnode: pass --log_directory to runTestSuite
-    - EggTestSuite: support --log_directory
-    - testnode: include a link to snapshot dir in log viewer
-    - testnode: don't crash log viewer app on network error
-    - testnode: make the number of days to keep log configurable
-
 0.4.66 (2020-01-30)
 -------------------
 

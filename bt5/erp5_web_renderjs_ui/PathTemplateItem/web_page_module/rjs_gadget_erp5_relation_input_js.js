@@ -1,9 +1,8 @@
 /*jslint indent: 2, maxerr: 3, nomen: true, maxlen: 80 */
 /*global window, rJS, RSVP, URI,
- SimpleQuery, ComplexQuery, Query, QueryFactory, document, XMLHttpRequest,
- console*/
+ SimpleQuery, ComplexQuery, Query, QueryFactory, document*/
 (function (window, rJS, RSVP, URI, document,
-  SimpleQuery, ComplexQuery, Query, QueryFactory, XMLHttpRequest, console) {
+  SimpleQuery, ComplexQuery, Query, QueryFactory) {
   "use strict";
 
   function displayNonEditableLink(gadget) {
@@ -420,24 +419,6 @@
                     return gadget.notifyInvalid(translation_list[0]);
                   });
               }
-              // do not crash interface if allDocs fails
-              if (error.target instanceof XMLHttpRequest) {
-                console.warn(error);
-                return gadget.getTranslationList([
-                  "You are offline",
-                  "Unexpected server error"
-                ])
-                  .push(function (translation_list) {
-                    if (error.target.status === 0) {
-                      return gadget.notifyInvalid(translation_list[0]);
-                    }
-                    if (error.target.status >= 500) {
-                      return gadget.notifyInvalid(translation_list[1]);
-                    }
-                    throw error;
-                  });
-              }
-              // Crash by default
               throw error;
             });
         });
@@ -587,4 +568,4 @@
     }, true, false);
 
 }(window, rJS, RSVP, URI, document,
-  SimpleQuery, ComplexQuery, Query, QueryFactory, XMLHttpRequest, console));
+  SimpleQuery, ComplexQuery, Query, QueryFactory));

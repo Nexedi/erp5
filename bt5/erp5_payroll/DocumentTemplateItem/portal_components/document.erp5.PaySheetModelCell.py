@@ -29,7 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from erp5.component.document.TradeModelCell import TradeModelCell
+from Products.ERP5.Document.TradeModelCell import TradeModelCell
 from Products.ERP5Type.Core.Predicate import Predicate
 
 class PaySheetModelCell(TradeModelCell):

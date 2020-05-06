@@ -34,7 +34,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Path import Path
 from Products.ERP5.ExplanationCache import _getExplanationCache
-from erp5.component.interface.ITradeModelPath import ITradeModelPath
 
 import zope.interface
 
@@ -95,7 +94,7 @@ class TradeModelPath(Path):
   # Declarative interfaces
   zope.interface.implements(interfaces.ICategoryAccessProvider,
                             interfaces.IArrowBase,
-                            ITradeModelPath,
+                            interfaces.ITradeModelPath,
                             interfaces.IPredicate,
                             )
 

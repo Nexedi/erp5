@@ -35,7 +35,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.runUnitTest import tests_home
 from Products.ERP5Type.tests.utils import FileUpload
 from erp5.component.module.ConfiguratorTestMixin import \
-    TestLiveConfiguratorWorkflowMixin
+                                             TestLiveConfiguratorWorkflowMixin
 
 class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
   """
@@ -556,7 +556,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     """
     # XXX FIXME (Lucas): this is not possible yet, because the Account does not have
     # the id set like that, we probably gonna use reference.
-    """
+    return
     account_id_list = [
       'capital', 'profit_loss', 'equipments',
       'inventories', 'bank', 'receivable',
@@ -566,8 +566,6 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       account = self.portal.account_module._getOb(account_id)
       self.assertNotEquals(account, None,
                      "%s account is not Found." % account_id)
-    """
-    return
 
   def stepCheckSolver(self, sequence=None, sequence_list=None, **kw):
     """
@@ -947,6 +945,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                                                            'Business Process')
     self.assertEqual(len(business_process_list), 1)
 
+    business_process = business_process_list[0]
     destination_decision = portal.portal_catalog.getResultValue(
                                        portal_type='Person',
                                        reference=self.sales_manager_reference)

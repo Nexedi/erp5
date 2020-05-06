@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from erp5.component.document.TradeModelLine import TradeModelLine
+from Products.ERP5.Document.TradeModelLine import TradeModelLine
 
 class PaySheetModelLine(TradeModelLine):
   """

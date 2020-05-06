@@ -32,7 +32,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from erp5.component.document.AccountingTransactionLine import \
                       AccountingTransactionLine
-from erp5.component.document.InventoryLine import InventoryLine
+from Products.ERP5.Document.InventoryLine import InventoryLine
 
 
 class BalanceTransactionLine(AccountingTransactionLine, InventoryLine):

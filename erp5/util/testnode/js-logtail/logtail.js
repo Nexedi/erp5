@@ -120,10 +120,10 @@ function get_log() {
                 log_data = "";
                 show_log();
 
+                setTimeout(get_log, poll);
             } else {
-                console.error("Unknown AJAX Error (status " + xhr.status + ")");
+                throw "Unknown AJAX Error (status " + xhr.status + ")";
             }
-            setTimeout(get_log, poll);
         }
     });
 }

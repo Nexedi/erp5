@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from erp5.component.document.DeliveryCell import DeliveryCell
+from Products.ERP5.Document.DeliveryCell import DeliveryCell
 from erp5.component.module.BaobabMixin import BaobabMixin
 from zope.interface import implements
 

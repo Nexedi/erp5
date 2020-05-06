@@ -14,11 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>WebSection_createAppConfigurationManifest</string> </value>
-        </item>
-        <item>
-            <key> <string>action_title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Base_createAppConfigurationManifest</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -78,6 +74,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_appcache_manifest</string>
                         <string>my_router_gadget</string>
                       </list>
                     </value>

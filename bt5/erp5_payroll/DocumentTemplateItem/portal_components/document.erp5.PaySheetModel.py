@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from erp5.component.document.TradeCondition import TradeCondition
+from Products.ERP5.Document.TradeCondition import TradeCondition
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 
 class PaySheetModel(TradeCondition, XMLMatrix):

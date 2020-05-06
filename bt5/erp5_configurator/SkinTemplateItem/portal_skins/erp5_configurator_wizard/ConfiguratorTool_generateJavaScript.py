@@ -24,7 +24,7 @@ js_string = """
     }
 
     function checkClientInstallation() {
-       time_out = window.setTimeout( "checkClientInstallation()", 10000 );
+       time_out = window.setTimeout( "checkClientInstallation()", 5000 );
        var xhr_object = null;
        xhr_object = getNewXMLHTTP();
        xhr_object.onreadystatechange = function()

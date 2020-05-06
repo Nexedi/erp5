@@ -1,9 +1,12 @@
 """ This script will be called to apply the customization. """
+from AccessControl import getSecurityManager
 from Products.ERP5Type.Log import log
 
 portal = context.getPortalObject()
 portal_preferences = portal.portal_preferences
 business_template = context.getSpecialiseValue()
+N_ = context.Base_translateString
+isTransitionPossible = portal.portal_workflow.isTransitionPossible
 
 if business_template is not None:
   # update role settings for modules which exists already
@@ -26,12 +29,12 @@ if business_template is not None:
 
       if obj.getPortalType() in ('Person', 'Organisation'):
         for period in obj.contentValues(filter={'portal_type':'Accounting Period'}):
-          period.updateLocalRolesOnSecurityGroups()
-          print "\tOpen (Accounting Period): ", period.getRelativeUrl()
+            period.updateLocalRolesOnSecurityGroups()
+            print "\tOpen (Accounting Period): ", period.getRelativeUrl()
 
         for assignment in obj.contentValues(filter={'portal_type':'Assignment'}):
-          assignment.updateLocalRolesOnSecurityGroups()
-          print "\tOpen (assignment): ", assignment.getRelativeUrl()
+            assignment.updateLocalRolesOnSecurityGroups()
+            print "\tOpen (assignment): ", assignment.getRelativeUrl()
 
   for gadget in context.portal_gadgets.objectValues():
     if gadget.getValidationState() == 'invisible':

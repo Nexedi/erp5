@@ -6,23 +6,18 @@
 
   var origin_url = (window.location.origin + window.location.pathname)
     .replace("officejs_export/", ""),
-    precache_manifest = "WebSection_getPrecacheManifest",
-    //TODO get rid of this old HARDCODED app dict and get everything from config
     application_dict = {
       "Text Editor": {
         "url": "officejs_text_editor/",
-        "storage_type": "precache",
-        "cache": precache_manifest
+        "cache": "gadget_officejs_text_editor.appcache"
       },
       "Smart Assistant": {
         "url": "officejs_smart_assistant/",
-        "storage_type": "precache",
-        "cache": precache_manifest
+        "cache": "gadget_smart_assistant.appcache"
       },
       "Media Player": {
         "url": "officejs_media_player/",
-        "storage_type": "precache",
-        "cache": precache_manifest
+        "cache": "gadget_officejs_media_player.appcache"
       },
       "Notebook": {
         "url": "officejs_notebook/",
@@ -30,13 +25,11 @@
       },
       "Illustration Editor": {
         "url": "officejs_svg_editor/",
-        "storage_type": "precache",
-        "cache": precache_manifest
+        "cache": "gadget_officejs_illustration.appcache"
       },
       "PDF Viewer": {
         "url": "officejs_pdf_viewer/",
-        "storage_type": "precache",
-        "cache": precache_manifest
+        "cache": "gadget_officejs_pdf_viewer.appcache"
       },
       "Cribjs": {
         "url": "officejs_cribjs/",
@@ -44,38 +37,31 @@
       },
       "Bookmark Manager": {
         "url": "officejs_bookmark_manager/",
-        "storage_type": "precache",
-        "cache": precache_manifest
+        "cache" : "gadget_officejs_bookmark_manager.appcache"
       },
       "Onlyoffice Text": {
         "url": "ooffice_text/",
-        "storage_type": "precache",
-        "cache": precache_manifest
+        "cache": "gadget_ooffice_text.appcache"
       },
       "Onlyoffice Spreadsheet": {
         "url": "ooffice_spreadsheet/",
-        "storage_type": "precache",
-        "cache": precache_manifest
+        "cache": "gadget_ooffice_spreadsheet.appcache"
       },
       "Onlyoffice Presentation": {
         "url": "ooffice_presentation/",
-        "storage_type": "precache",
-        "cache": precache_manifest
+        "cache": "gadget_ooffice_presentation.appcache"
       },
       "Web Table Editor": {
         "url": "officejs_web_table_editor/",
-        "storage_type": "precache",
-        "cache": precache_manifest
+        "cache": "gadget_officejs_web_table.appcache"
       },
       "Image Editor": {
         "url": "officejs_image_editor/",
-        "storage_type": "precache",
-        "cache": precache_manifest
+        "cache": "gadget_officejs_image_editor.appcache"
       },
       "Awesome Free Software Publisher List": {
         "url": "afs/",
-        "storage_type": "precache",
-        "cache": precache_manifest,
+        "cache": "gadget_erp5_afs.appcache",
         "no_installer": true
       },
       "Jabber Client": {
@@ -113,8 +99,7 @@
       },
       "Drive App": {
         "url": "officejs_drive_app/",
-        "storage_type": "precache",
-        "cache": precache_manifest
+        "cache": "gadget_officejs_drive_app.appcache"
       },
       "Travel Expense": {
         "url": "officejs_hr/",
@@ -123,8 +108,7 @@
       },
       "Javascript editor (CodeMirror)": {
         "url": "officejs_codemirror/",
-        "storage_type": "precache",
-        "cache": precache_manifest
+        "cache": "gadget_officejs_codemirror.appcache"
       }
     };
 
@@ -141,8 +125,7 @@
     app = application_dict[form_result.web_site];
     zip_name = form_result.filename;
 
-    return gadget.fillZip(app.storage_type, app.cache, origin_url + app.url,
-                          app.no_installer)
+    return gadget.fillZip(app.cache, origin_url + app.url, app.no_installer)
       .push(function (zip_file) {
         var element = gadget.element,
           a = document.createElement("a"),
@@ -163,8 +146,7 @@
     .ready(function (g) {
       g.props = {};
     })
-    .declareMethod("fillZip", function (storage_type, cache_file, site_url,
-                                        no_installer) {
+    .declareMethod("fillZip", function (cache_file, site_url, no_installer) {
       var file_storage = jIO.createJIO({
           type: "replicate",
           conflict_handling: 2,
@@ -178,8 +160,7 @@
             type: "filesystem",
             document: site_url,
             sub_storage: {
-              //keep appcache as default for backward compatibility
-              type: storage_type || "appcache",
+              type: "appcache",
               take_installer: no_installer === undefined,
               manifest: cache_file,
               origin_url: site_url,

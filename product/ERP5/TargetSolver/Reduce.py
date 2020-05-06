@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+
+#from Products.ERP5.Tool.SimulationTool import registerTargetSolver
 from TargetSolver import TargetSolver
 
 class Reduce(TargetSolver):
@@ -39,3 +41,5 @@ class Reduce(TargetSolver):
     """
     # We should access the previous_target globaly
     #previous_target = self.getPreviousTarget(movement)
+
+#registerTargetSolver(Reduce)

@@ -36,7 +36,6 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Path import Path
 from Products.ERP5.ExplanationCache import _getExplanationCache, _getBusinessLinkClosure
 from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
-from erp5.component.interface.IBusinessProcess import IBusinessProcess
 
 import zope.interface
 
@@ -117,7 +116,7 @@ class BusinessProcess(Path, XMLObject):
                     )
 
   # Declarative interfaces
-  zope.interface.implements(IBusinessProcess,
+  zope.interface.implements(interfaces.IBusinessProcess,
                             interfaces.IArrowBase)
 
   # ITradeModelPathProcess implementation

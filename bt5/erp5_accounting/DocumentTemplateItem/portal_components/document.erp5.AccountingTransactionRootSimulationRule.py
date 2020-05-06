@@ -26,11 +26,11 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions
+from Products.ERP5.Document.DeliveryRootSimulationRule \
+     import DeliveryRootSimulationRule, DeliveryRuleMovementGenerator
 
-from Products.ERP5.mixin.rule import RuleMixin
-from Products.ERP5.mixin.movement_collection_updater import MovementCollectionUpdaterMixin
-class AccountingTransactionRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
+class AccountingTransactionRootSimulationRule(DeliveryRootSimulationRule):
   """
   Accounting Transaction Root Simulation Rule is a root level rule for
   Accounting Transaction.
@@ -50,52 +50,7 @@ class AccountingTransactionRootSimulationRule(RuleMixin, MovementCollectionUpdat
     return AccountingTransactionRuleMovementGenerator(applied_rule=context,
                                                       rule=self)
 
-  ## XXX: From here on, copy/paste from DeliveryRootSimulationRule to avoid a
-  ##      dependency on erp5_trade. Is this Rule really actually used/useful?
-  #
-  # Default Properties
-  property_sheets = (
-    PropertySheet.Base,
-    PropertySheet.XMLObject,
-    PropertySheet.CategoryCore,
-    PropertySheet.DublinCore,
-    PropertySheet.Task,
-    PropertySheet.Predicate,
-    PropertySheet.Reference,
-    PropertySheet.Version,
-    PropertySheet.Rule
-    )
-  def _isProfitAndLossMovement(self, movement):
-    # For a kind of trade rule, a profit and loss movement lacks source
-    # or destination.
-    return (movement.getSource() is None or movement.getDestination() is None)
-
-from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
-class AccountingTransactionRuleMovementGenerator(MovementGeneratorMixin):
+class AccountingTransactionRuleMovementGenerator(DeliveryRuleMovementGenerator):
 
   def _getPortalDeliveryMovementTypeList(self):
     return self._rule.getPortalObject().getPortalAccountingMovementTypeList()
-
-  def _getInputMovementList(self, movement_list=None, rounding=None):
-    """
-    Input movement list comes from delivery
-
-    XXX: Copy/paste from DeliveryRootSimulationRule to avoid a dependency on
-         erp5_trade. Is this Rule really actually used/useful?
-    """
-    delivery = self._applied_rule.getDefaultCausalityValue()
-    if delivery is None:
-      return []
-    else:
-      result = []
-      movement_kw = {}
-      movement_type_list = self._getPortalDeliveryMovementTypeList()
-      if movement_type_list:
-        movement_kw["portal_type"] = movement_type_list
-      for movement in delivery.getMovementList(**movement_kw):
-        simulation_movement_list = movement.getDeliveryRelatedValueList()
-        if not simulation_movement_list or self._applied_rule in (
-            simulation_movement.getParentValue()
-            for simulation_movement in simulation_movement_list):
-          result.append(movement)
-      return result
