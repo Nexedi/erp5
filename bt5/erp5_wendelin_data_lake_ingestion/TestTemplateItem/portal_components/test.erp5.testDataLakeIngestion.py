@@ -84,7 +84,6 @@ class TestDataIngestion(SecurityTestCase):
 
   def ingest(self, data_chunk, reference, extension, eof, randomize_ingestion_reference=False):
     ingestion_reference = self.getIngestionReference(reference, extension, randomize_ingestion_reference)
-    self.portal.log(ingestion_reference)
     
     # use default ebulk policy
     ingestion_policy = self.portal.portal_ingestion_policies.wendelin_embulk
@@ -197,6 +196,9 @@ class TestDataIngestion(SecurityTestCase):
     """
     data_set, data_stream_list = self.stepIngest(self.CSV, ",", randomize_ingestion_reference=True)
     self.tic()
+
+    # check data relation between Data Set and Data Streams work
+    self.assertSameSet(data_stream_list, data_set.DataSet_getDataStreamList())
     
     # publish data set and have all Data Streams publsihed automatically
     data_set.publish()

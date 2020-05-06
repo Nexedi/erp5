@@ -1,3 +1,8 @@
+"""
+This script is called from ebulk client to get list of Data Streams for a 
+Data set.
+"""
+
 import re
 import json
 from Products.ERP5Type.Log import log
@@ -20,14 +25,8 @@ data_set = portal.data_set_module.get(data_set_reference)
 if data_set is None:
   return []
 
-# XXX: use DataSet_getDataStreamList instead!
-query_dict = {
-  "portal_type": "Data Stream",
-  "reference": data_set.getReference() + reference_separator + "%"}
-
 data_stream_list = []
-
-for stream in portal_catalog(**query_dict):
+for stream in data_set.DataSet_getDataStreamList():
   if stream.getVersion() == "":
     return { "status_code": 2, "result": [] }
   data_stream_list.append({ 'id': 'data_stream_module/'+stream.getId(),
