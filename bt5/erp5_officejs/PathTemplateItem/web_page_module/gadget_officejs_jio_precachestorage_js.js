@@ -102,19 +102,18 @@
           relative_url_list,
           i,
           hash = rusha.digestFromString(base_manifest_text +
-                                        response.target.getResponseHeader("Last-Modified"));
+                                        response.target
+                                        .getResponseHeader("ETag"));
         relative_url_list = Object.keys(JSON.parse(base_manifest_text));
         storage._relative_url_list.push(storage._version);
         storage._relative_url_list.push(storage._version +
                                         storage._precache_manifest_script);
         storage._documents[storage._origin_url] = {'hash': hash};
         for (i = 0; i < relative_url_list.length; i += 1) {
-          //remove url parameters due to special chars issue in server
           url = relative_url_list[i];
           if (url.includes('?')) {
-            console.warn("Parameters on url '" + url + "' were removed." +
-                         "Precache storage can't store urls with parameters");
-            url = url.substring(0, url.indexOf('?'));
+            throw new Error("It is not allow to cache urls with parameters." +
+                            " url: " + url);
           }
           storage._relative_url_list.push(
             storage._version + url
