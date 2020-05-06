@@ -1,5 +1,16 @@
 web_section = context
 
+if REQUEST is not None:
+  modification_date_string = web_section.getModificationDate().rfc822()
+  weak_etag_header = 'W/"%s"' % modification_date_string
+  REQUEST.RESPONSE.setHeader('ETag', weak_etag_header)
+  if_none_match = REQUEST.getHeader('If-None-Match', '')
+  #using 'in' instead of '==' because the header value may contain a suffix
+  #for the server HTTP compression. e.g. "-gzip" suffix for DeflateAlterETag on apache
+  if weak_etag_header[:-1] in if_none_match:
+    REQUEST.RESPONSE.setStatus(304)
+    return ""
+
 # Add all ERP5JS gadget
 url_list = [
   'favicon.ico',
