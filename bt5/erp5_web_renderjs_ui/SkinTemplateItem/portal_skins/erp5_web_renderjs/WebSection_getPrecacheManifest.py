@@ -1,5 +1,16 @@
 web_section = context
 
+if REQUEST is not None:
+  modification_date_string = web_section.getModificationDate().rfc822()
+  weak_etag_header = 'W/"%s"' % modification_date_string
+  REQUEST.RESPONSE.setHeader('ETag', weak_etag_header)
+  if_none_match = REQUEST.getHeader('If-None-Match', '')
+  #using 'in' instead of '==' because the header value may contain a suffix
+  #for the server HTTP compression. e.g. "-gzip" suffix for DeflateAlterETag on apache
+  if weak_etag_header[:-1] in if_none_match:
+    REQUEST.RESPONSE.setStatus(304)
+    return ""
+
 # Add all ERP5JS gadget
 url_list = [
   'favicon.ico',
@@ -8,7 +19,7 @@ url_list = [
   'font-awesome/font-awesome-webfont.woff2',
   'font-awesome/font-awesome-webfont.ttf',
   'font-awesome/font-awesome-webfont.svg',
-  'gadget_erp5_worklist_empty.svg?format=svg',
+  'gadget_erp5_worklist_empty.svg',
   'erp5_launcher_nojqm.js',
   'gadget_erp5_nojqm.css',
   'gadget_erp5_configure_editor.html',
@@ -99,7 +110,7 @@ url_list = [
   'gadget_erp5_page_worklist.js',
   'gadget_erp5_panel.html',
   'gadget_erp5_panel.js',
-  'gadget_erp5_panel.png?format=png',
+  'gadget_erp5_panel.png',
   'gadget_erp5_pt_embedded_form_render.html',
   'gadget_erp5_pt_embedded_form_render.js',
   'gadget_erp5_pt_form_dialog.html',
