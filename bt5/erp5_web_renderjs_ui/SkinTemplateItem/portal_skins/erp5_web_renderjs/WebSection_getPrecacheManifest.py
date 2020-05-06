@@ -180,8 +180,12 @@ for precache_manifest_script_id in precache_manifest_url_list:
 if REQUEST is not None:
   import json
   REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
-  modification_date = web_section.getModificationDate().strftime("%m/%d/%Y-%H:%M:%S.%f")
-  REQUEST.RESPONSE.setHeader('ETag', 'W/"%s"' % modification_date)
+  modification_date_string = web_section.getModificationDate().rfc822()
+  weak_etag_header = 'W/"%s"' % modification_date_string
+  REQUEST.RESPONSE.setHeader('ETag', weak_etag_header)
+  if_none_match = REQUEST.getHeader('If-None-Match', '').replace("-gzip", "")
+  if if_none_match == weak_etag_header:
+    REQUEST.RESPONSE.setStatus(304)
   return json.dumps(dict.fromkeys(url_list), indent=2)
 
 return list(set(url_list))
