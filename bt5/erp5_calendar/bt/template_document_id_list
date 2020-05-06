@@ -1,1 +1,5 @@
+document.erp5.Calendar
+document.erp5.CalendarException
 document.erp5.GroupCalendarAssignment
+document.erp5.LeavePeriod
+document.erp5.PresencePeriod

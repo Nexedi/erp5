@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.Document.InventoryCell import InventoryCell
+from erp5.component.document.InventoryCell import InventoryCell
 from erp5.component.document.CashDeliveryCell import CashDeliveryCell
 from zope.interface import implements
 

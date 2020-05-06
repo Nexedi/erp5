@@ -125,13 +125,13 @@ for row in context.ConfigurationTemplate_readOOCalcFile('standard_currency_list.
 #
 # Output
 #
-def format(string):
+def formatText(string):
   line_list = string.split('\n')
   length = len(line_list)
   if length==1:
     return '"%s"' % string
   else:
-    return '\n'.join(['""']+[format(i) for i in line_list])
+    return '\n'.join(['""']+[formatText(i) for i in line_list])
 
 
 MESSAGE_TEMPLATE = '''\
@@ -145,7 +145,7 @@ for message in message_list:
   comment_list = message_dict[message]
   comment_list.sort()
   comment = '\n'.join([('#: %s' % i) for i in comment_list])
-  print MESSAGE_TEMPLATE % (comment, format(message))
+  print MESSAGE_TEMPLATE % (comment, formatText(message))
 
 context.REQUEST.RESPONSE.setHeader('Content-Type', 'text/plain')
 

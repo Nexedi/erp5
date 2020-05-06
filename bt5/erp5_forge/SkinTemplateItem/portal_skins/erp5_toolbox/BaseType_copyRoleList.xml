@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>remove_existing_roles, portal_type_list, portal_type_group_list=None, form_id=\'view\', **kw</string> </value>
+            <value> <string>remove_existing_roles, portal_type_list, portal_type_group_list=None, form_id=\'view\', update_local_roles=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

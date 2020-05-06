@@ -2903,13 +2903,6 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                             resource_value=resource,
                             quantity=10,
                             price=3)
-
-    # see TODO above
-    #tax_line = order.newContent(portal_type='Tax Line',
-    #                            resource_value=tax,
-    #                            quantity=30,
-    #                            price=.26)
-
     order.confirm()
     self.tic()
 

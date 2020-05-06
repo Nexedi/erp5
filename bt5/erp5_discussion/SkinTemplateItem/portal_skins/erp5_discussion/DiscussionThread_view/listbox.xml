@@ -82,12 +82,16 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>source_title</string>
+                          <string>Author</string>
                         </tuple>
                         <tuple>
                           <string>creation_date</string>
                           <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>text_content</string>
+                          <string>Content</string>
                         </tuple>
                       </list>
                     </value>
@@ -152,10 +156,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>

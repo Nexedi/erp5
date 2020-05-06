@@ -28,7 +28,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5.Document.PresencePeriod import PresencePeriod
+from erp5.component.document.PresencePeriod import PresencePeriod
 
 class GroupCalendarAssignment(PresencePeriod):
   # CMF Type Definition

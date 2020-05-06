@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.DeliveryCell import DeliveryCell
+from erp5.component.document.DeliveryCell import DeliveryCell
 
 class PaySheetModelSlice(DeliveryCell):
   """

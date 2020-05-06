@@ -1,5 +1,12 @@
 Invoice Line | Invoice Cell
 Invoice Line | Invoice Line
+Invoice Root Simulation Rule | Category Membership Divergence Tester
+Invoice Root Simulation Rule | DateTime Divergence Tester
+Invoice Root Simulation Rule | Float Divergence Tester
+Invoice Root Simulation Rule | Net Converted Quantity Divergence Tester
+Invoice Root Simulation Rule | Specialise Divergence Tester
+Invoice Root Simulation Rule | String Divergence Tester
+Invoice Root Simulation Rule | Variation Divergence Tester
 Invoice Simulation Rule | Category Membership Divergence Tester
 Invoice Simulation Rule | DateTime Divergence Tester
 Invoice Simulation Rule | Float Divergence Tester
@@ -14,6 +21,7 @@ Invoice Transaction Simulation Rule | Net Converted Quantity Divergence Tester
 Invoice Transaction Simulation Rule | Specialise Divergence Tester
 Invoice Transaction Simulation Rule | String Divergence Tester
 Invoice Transaction Simulation Rule | Variation Divergence Tester
+Rule Tool | Invoice Root Simulation Rule
 Rule Tool | Invoice Simulation Rule
 Rule Tool | Invoice Transaction Simulation Rule
 Rule Tool | Trade Model Simulation Rule
