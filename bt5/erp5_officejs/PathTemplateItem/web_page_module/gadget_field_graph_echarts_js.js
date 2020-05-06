@@ -1,5 +1,5 @@
 /*global window, rJS, RSVP, echarts, loopEventListener */
-/*jslint nomen: true, indent: 2 */
+/*jslint nomen: true, indent: 2, unparam: true */
 (function (window, rJS, RSVP, echarts, loopEventListener) {
   "use strict";
 
@@ -143,6 +143,77 @@
   /////////////////////////////////////////////////////////////////
   // some methods
   /////////////////////////////////////////////////////////////////
+  function promiseChartEventListener(chart, type) {
+    //////////////////////////
+    // Resolve the promise as soon as the event is triggered
+    // eventListener is removed when promise is cancelled/resolved/rejected
+    //////////////////////////
+    var handle_event_callback;
+
+    function canceller() {
+      chart.off(type, handle_event_callback);
+    }
+
+    function resolver(resolve) {
+      handle_event_callback = function (params) {
+        canceller();
+        resolve(params);
+        return false;
+      };
+
+      chart.on(type, handle_event_callback);
+    }
+    return new RSVP.Promise(resolver, canceller);
+  }
+
+  function loopChartEventListener(chart, type, callback) {
+    //////////////////////////
+    // Infinite event listener (promise is never resolved)
+    // eventListener is removed when promise is cancelled/rejected
+    //////////////////////////
+    var handle_event_callback,
+      callback_promise;
+
+    function cancelResolver() {
+      if ((callback_promise !== undefined) &&
+          (typeof callback_promise.cancel === "function")) {
+        callback_promise.cancel();
+      }
+    }
+
+    function canceller() {
+      if (handle_event_callback !== undefined) {
+        chart.off(type, handle_event_callback);
+      }
+      cancelResolver();
+    }
+    function itsANonResolvableTrap(resolve, reject) {
+      var result;
+      handle_event_callback = function handleEventCallback(params) {
+
+        cancelResolver();
+
+        try {
+          result = callback(params);
+        } catch (e) {
+          return reject(e);
+        }
+
+        callback_promise = new RSVP.Queue(result)
+          .push(undefined, function handleEventCallbackError(error) {
+            // Prevent rejecting the loop, if the result cancelled itself
+            if (!(error instanceof RSVP.CancellationError)) {
+              canceller();
+              reject(error);
+            }
+          });
+      };
+
+      chart.on(type, handle_event_callback);
+    }
+    return new RSVP.Promise(itsANonResolvableTrap, canceller);
+  }
+
 
   gadget_klass
     .declareAcquiredMethod("chartItemClick", "chartItemClick")
@@ -162,68 +233,63 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function (option_dict) {
-      var gadget = this;
       //delegate rendering to onStateChange to avoid redrawing the graph
       //every time render is called (a form might call render every time
       //some other fields needs update)
-      gadget.changeState({ value: option_dict.value });
+      return this.changeState({
+        value: option_dict.value,
+        clickHandlerReady: false
+      });
     })
     .onStateChange(function (modification_dict) {
       var gadget = this,
-        graph_data_and_parameter,
         chart;
       // the gadget is ready when both the graph is rendered and the click handler is attached.
-      if (
-        modification_dict.hasOwnProperty("clickHandlerReady") ||
-          modification_dict.hasOwnProperty("chartRendered")
-      ) {
-        if (gadget.state.clickHandlerReady && gadget.state.chartRendered) {
+      if (modification_dict.hasOwnProperty("clickHandlerReady")) {
+        if (gadget.state.clickHandlerReady) {
           gadget.element.querySelector(".graph-content").removeAttribute("disabled");
         } else {
-          gadget.element.querySelector(".graph-content").setAttribute("disabled");
+          gadget.element.querySelector(".graph-content").setAttribute("disabled", "disabled");
         }
       }
+
       if (modification_dict.hasOwnProperty("value")) {
-        chart = echarts.getInstanceByDom(
+        chart = echarts.init(
           gadget.element.querySelector(".graph-content")
         );
-        graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(
-          modification_dict.value
-        );
-        chart.on("finished", function onFinished() {
-          gadget.changeState({ chartRendered: true });
-          chart.off("finish", onFinished);
-        });
-        chart.setOption(graph_data_and_parameter);
-        gadget.changeState({ chartRendered: false });
 
-        this.listenToClickEventOnTheChart(chart);
+        return new RSVP.Queue(RSVP.all([
+          promiseChartEventListener(chart, 'finished'),
+          chart.setOption(getGraphDataAndParameterFromConfiguration(
+            modification_dict.value
+          ))
+        ]))
+          .push(function () {
+            gadget.listenToWindowResize(chart);
+            gadget.listenToClickEventOnTheChart(chart);
+          });
+
       }
     })
-    .declareService(function () {
-      var gadget = this,
-        chart = echarts.init(gadget.element.querySelector(".graph-content"));
+    .declareJob("listenToWindowResize", function (chart) {
       return loopEventListener(
         window,
         "resize",
         { passive: true },
         function () {
-          chart.resize();
+          return chart.resize();
         },
         false
       );
     })
 
     .declareJob("listenToClickEventOnTheChart", function (chart) {
-      var gadget = this,
-        defer = RSVP.defer();
-      // XXX https://lab.nexedi.com/nexedi/renderjs/blob/master/renderjs.js#L25
-      chart.on("click", function (params) {
-        return gadget
-          .chartItemClick([params.name, params.seriesName])
-          .push(undefined, defer.reject);
-      });
-      gadget.changeState({ clickHandlerReady: true });
-      return defer.promise;
+      var gadget = this;
+      return RSVP.all([
+        loopChartEventListener(chart, "click", function (params) {
+          return gadget.chartItemClick([params.name, params.seriesName]);
+        }),
+        gadget.changeState({clickHandlerReady: true})
+      ]);
     });
 }(window, rJS, RSVP, echarts, loopEventListener));
