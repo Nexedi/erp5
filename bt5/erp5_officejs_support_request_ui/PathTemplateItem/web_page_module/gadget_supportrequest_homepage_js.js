@@ -181,9 +181,9 @@
             graph_gadget_1 = result_list[1],
             graph_gadget_2 = result_list[2],
             count_by_state_and_date_range = sp_data.count_by_state_and_date_range;
-          gadget.property_dict.graph_widget = graph_gadget_1;
-          return RSVP.all([graph_gadget_1.render(
-            {
+          return RSVP.all([
+            // render first graph
+            graph_gadget_1.render({
               value: {
                 data: [
                   {
@@ -222,48 +222,44 @@
                   title: "Support Request Pipe"
                 }
               }
-            }
-          ),
-            sp_data,
-            graph_gadget_2
-            ]);
-        })
-        .push(function (result_list) {
-          var sp_data = result_list[1], graph_gadget = result_list[2];
-          gadget.property_dict.graph_widget = graph_gadget;
-          return graph_gadget.render({
-            value:
-              {
-                data: [
-                  {
-                    value_dict: {
-                      0: [
-                        sp_data.state_title_by_state_id.validated,
-                        sp_data.state_title_by_state_id.submitted,
-                        sp_data.state_title_by_state_id.suspended,
-                        sp_data.state_title_by_state_id.invalidated
-                      ],
-                      1: [
-                        sp_data.count_by_state.validated || 0,
-                        sp_data.count_by_state.submitted || 0,
-                        sp_data.count_by_state.suspended || 0,
-                        sp_data.count_by_state.invalidated || 0
-                      ],
+            }),
+
+            // render second graph
+            graph_gadget_2.render({
+              value:
+                {
+                  data: [
+                    {
+                      value_dict: {
+                        0: [
+                          sp_data.state_title_by_state_id.validated,
+                          sp_data.state_title_by_state_id.submitted,
+                          sp_data.state_title_by_state_id.suspended,
+                          sp_data.state_title_by_state_id.invalidated
+                        ],
+                        1: [
+                          sp_data.count_by_state.validated || 0,
+                          sp_data.count_by_state.submitted || 0,
+                          sp_data.count_by_state.suspended || 0,
+                          sp_data.count_by_state.invalidated || 0
+                        ]
+                      },
+                      colors: ['#d48265', '#61a0a8', '#c23531', '#2f4554'],
+                      type: "pie",
+                      title: "Support Request"
+                    }
+                  ],
+                  layout: {
+                    axis_dict : {
+                      0: {"title": "date"},
+                      1: {"title": "value",  "value_type": "number"}
                     },
-                    colors: ['#d48265', '#61a0a8', '#c23531', '#2f4554'],
-                    type: "pie",
-                    title: "Support Request"
+                    title: "Last Month Activity"
                   }
-                ],
-                layout: {
-                  axis_dict : {
-                    0: {"title": "date"},
-                    1: {"title": "value",  "value_type": "number"}
-                  },
-                  title: "Last Month Activity"
                 }
-              }
-          });
+            })
+
+          ]);
         });
     })
     .declareService(function () {
