@@ -38,11 +38,11 @@
         </item>
         <item>
             <key> <string>expand</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ListBox_viewTextPageNavigationRenderer</string> </value>
+            <value> <string>testTextPagination</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

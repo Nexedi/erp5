@@ -294,7 +294,7 @@
   <!-- Show list of direct listbox page selection -->
   <tal:block metal:define-macro="text_link_page_navigation">
     <tal:block tal:repeat="page_index page_index_list ">
-      <a tal:attributes="href python: '%s_setPage?%s_page_start=%s&list_selection_name=%s&listbox_uid:list=[]' %(field_id, field_id, page_index, selection_name);
+      <a tal:attributes="href python: '%s_setPage?%s_page_start=%s&list_selection_name=%s&listbox_uid:list=[]&selection_key=%s' %(field_id, field_id, page_index, selection_name, selection_key);
                          class python: test(page_index==current_page, 'selected', '');
                          title string:Page ${page_index}"
          tal:content="page_index"/>
