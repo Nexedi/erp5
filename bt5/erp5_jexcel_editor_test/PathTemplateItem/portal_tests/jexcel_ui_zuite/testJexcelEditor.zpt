@@ -12,13 +12,13 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/3/</td>
+  <td>${base_url}/web_site_module/playground/</td>
   <td></td>
 </tr>
 <!-- Wait for gadget to be loaded -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/3/jexcel.gadget.html']</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/playground/jexcel.gadget.html']</td>
   <td></td>
 </tr>
 <!-- Wait for spreadsheet to be rendered by the gadget -->
@@ -41,7 +41,7 @@
 </tr>
 <tr>
   <td>verifyElementPresent</td>
-  <td>//div[contains(@class, 'editor-maximize') and @data-gadget-url='${base_url}/web_site_module/3/gadget_editor.html']</td>
+  <td>//div[contains(@class, 'editor-maximize') and @data-gadget-url='${base_url}/web_site_module/playground/gadget_editor.html']</td>
   <td></td>
 </tr>
 <!-- Verify searchbar is present -->
