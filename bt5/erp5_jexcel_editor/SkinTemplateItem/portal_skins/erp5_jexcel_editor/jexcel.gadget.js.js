@@ -26,7 +26,8 @@
     lazyLoading: true,
     loadingSpin: true,
     tableOverflow: true,
-    autoIncrement: true
+    autoIncrement: true,
+    parseFormulas: true
   };
 
   rJS(window)
