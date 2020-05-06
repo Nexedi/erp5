@@ -18,11 +18,6 @@ doc = context.Base_contribute(file=file_object,
                               **kw)
 
 if publication_state == "shared":
-  action_list = ["share",]
+  doc.share()
 elif publication_state == "released":
-  action_list = ["share", "release"]
-else:
-  action_list = []
-
-for action in action_list:
-  getattr(doc, action)()
+  doc.release()
