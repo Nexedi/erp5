@@ -4,8 +4,8 @@ if REQUEST is not None:
   modification_date_string = web_section.getModificationDate().rfc822()
   weak_etag_header = 'W/"%s"' % modification_date_string
   REQUEST.RESPONSE.setHeader('ETag', weak_etag_header)
-  if_none_match = REQUEST.getHeader('If-None-Match', '').replace("-gzip", "")
-  if if_none_match == weak_etag_header:
+  if_none_match = REQUEST.getHeader('If-None-Match', '')
+  if weak_etag_header[:-1] in if_none_match:
     REQUEST.RESPONSE.setStatus(304)
     return ""
 
