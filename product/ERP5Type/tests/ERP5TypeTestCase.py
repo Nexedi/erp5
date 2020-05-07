@@ -1534,21 +1534,6 @@ def optimize():
       self._filepath = self.get_filepath()
   PythonScript._makeFunction = _makeFunction
 
-  # Do not reindex portal types sub objects by default
-  # We will probably disable reindexing for other types later
-  full_indexing_set = set(os.environ.get('enable_full_indexing', '').split(','))
-  if not 'portal_types' in full_indexing_set:
-    from Products.ERP5Type.Core.ActionInformation import ActionInformation
-    from Products.ERP5Type.Core.RoleInformation import RoleInformation
-    ActionInformation.isIndexable = RoleInformation.isIndexable = \
-      ConstantGetter('isIndexable', value=False)
-  if not 'portal_property_sheets' in full_indexing_set:
-    from Products.ERP5Type.Core.StandardProperty import StandardProperty
-    from Products.ERP5Type.Core.CategoryProperty import CategoryProperty
-    from Products.ERP5Type.mixin.constraint import ConstraintMixin
-    StandardProperty.isIndexable = CategoryProperty.isIndexable = \
-      ConstraintMixin.isIndexable = ConstantGetter('isIndexable', value=False)
-
 optimize()
 
 @onsetup
