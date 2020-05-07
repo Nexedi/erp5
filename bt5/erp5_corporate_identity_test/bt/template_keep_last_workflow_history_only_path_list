@@ -2,3 +2,6 @@ image_module/template_test_image*
 portal_categories/group/template*
 web_page_module/template_test_illustration*
 web_page_module/template_test_book_embeddable_document_html
+web_site_module/template_test_web_site
+product_module/template_test_product
+web_page_module/template_test_web_*
