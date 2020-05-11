@@ -66,6 +66,7 @@
             <value>
               <tuple>
                 <string>follow_up/product_module/template_test_product</string>
+                <string>group/demo_group/sub2</string>
               </tuple>
             </value>
         </item>
@@ -252,7 +253,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.53296.30314.12458</string> </value>
+                      <value> <string>983.53296.56989.62498</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -270,7 +271,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1589192684.51</float>
+                              <float>1589213098.06</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
