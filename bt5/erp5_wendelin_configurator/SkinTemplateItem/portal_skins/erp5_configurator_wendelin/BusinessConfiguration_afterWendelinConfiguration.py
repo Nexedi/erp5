@@ -13,6 +13,9 @@ if default_site_preference is not None:
   if default_site_preference.getPreferenceState() == "disabled":
     default_site_preference.enable()
 
+# set title of portal
+portal.setTitle("Wendelin")
+
 # enable automatic approval of Credential Requests only if erp5_wendelin_data_lake is installed
 if portal.portal_templates.getInstalledBusinessTemplate("erp5_wendelin_data_lake_ingestion", strict=True) is not None:
   default_system_preference = getattr(portal.portal_preferences,
