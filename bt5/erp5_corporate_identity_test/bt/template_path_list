@@ -12,3 +12,4 @@ portal_tests/template_test_zuite
 portal_tests/template_test_zuite/testAndUpdateTest*
 support_request_module/template_test_*
 web_page_module/template_test_*
+web_site_module/template_test_web_site
