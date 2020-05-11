@@ -48,8 +48,8 @@ def getDetails(my_content):
 def getDetailsList(my_slide):
   return re.findall(r'<details.*?>.*?<\/details>', my_slide, re.S)
 
-def getNestedSection(my_content):
-  return my_content.find("<section") > -1
+#def getNestedSection(my_content):
+#  return my_content.find("<section") > -1
 
 def splitMultipleDetails(my_content):
   for slide in getSlideDetailsList(my_content):
