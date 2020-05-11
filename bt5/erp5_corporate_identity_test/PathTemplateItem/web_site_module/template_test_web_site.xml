@@ -150,6 +150,23 @@
             </value>
         </item>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>layout_logo_reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_range_criterion</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
@@ -207,6 +224,10 @@
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
             <value> <string>WebSection_viewDefaultThemeConfiguration</string> </value>
+        </item>
+        <item>
+            <key> <string>layout_logo_reference</string> </key>
+            <value> <string>images/favourite.png</string> </value>
         </item>
         <item>
             <key> <string>membership_criterion_base_category</string> </key>
@@ -425,7 +446,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.53244.43852.18397</string> </value>
+                      <value> <string>983.53255.28055.63095</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -443,7 +464,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1589190205.68</float>
+                              <float>1589200038.89</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
