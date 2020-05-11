@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>upper_limit=4, publication_section_list=[]</string> </value>
+            <value> <string>upper_limit=4, publication_section_list=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

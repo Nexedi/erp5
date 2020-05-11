@@ -48,8 +48,8 @@ def getDetails(my_content):
 def getDetailsList(my_slide):
   return re.findall(r'<details.*?>.*?<\/details>', my_slide, re.S)
 
-def getNestedSection(my_content):
-  return my_content.find("<section") > -1
+#def getNestedSection(my_content):
+#  return my_content.find("<section") > -1
 
 def splitMultipleDetails(my_content):
   for slide in getSlideDetailsList(my_content):
@@ -63,13 +63,13 @@ def splitMultipleDetails(my_content):
           my_content = my_content.replace(detail, ''.join([detail, details_separator]))
   return my_content
 
-def removeSlidesWithoutDetailsFromNotes(my_content):
-  for slide in getSlideList(my_content):
-    if getNestedSection(slide) == False:
-      my_content = my_content.replace(slide, blank)
-  content = my_content.replace('<section></section>', blank)
-  content = re.sub(r'<section class="[^"]*"></section>', blank, content)
-  return content
+#def removeSlidesWithoutDetailsFromNotes(my_content):
+#  for slide in getSlideList(my_content):
+#    if getNestedSection(slide) == False:
+#      my_content = my_content.replace(slide, blank)
+#  content = my_content.replace('<section></section>', blank)
+#  content = re.sub(r'<section class="[^"]*"></section>', blank, content)
+#  return content
 
 #def removeSectionTags(my_content):
 #  content = re.sub(r'<section class="[^"]*">', blank, my_content)
