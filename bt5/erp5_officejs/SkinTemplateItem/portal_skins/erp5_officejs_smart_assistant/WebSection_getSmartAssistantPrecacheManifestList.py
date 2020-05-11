@@ -47,7 +47,7 @@ url_list = [
   "gadget_erp5_page_ojs_linshare_configurator.js",
   "gadget_erp5_page_ojs_sync.html",
   "gadget_erp5_page_ojs_sync.js",
-	"gadget_erp5_page_ojs_smart_assistant_document_list.html",
+  "gadget_erp5_page_ojs_smart_assistant_document_list.html",
   "gadget_erp5_page_ojs_smart_assistant_document_list.js",
   "gadget_ojs_configurator_access.html",
   "gadget_ojs_configurator_access.js",
