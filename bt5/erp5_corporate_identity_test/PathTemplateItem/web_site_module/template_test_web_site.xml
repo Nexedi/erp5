@@ -168,6 +168,7 @@
             <value>
               <tuple>
                 <string>caching_policy/no-cache</string>
+                <string>aggregate/web_page_module/template_test_web_home_page</string>
               </tuple>
             </value>
         </item>
@@ -424,7 +425,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.53224.3912.39150</string> </value>
+                      <value> <string>983.53244.43852.18397</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -442,7 +443,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1589189560.14</float>
+                              <float>1589190205.68</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
