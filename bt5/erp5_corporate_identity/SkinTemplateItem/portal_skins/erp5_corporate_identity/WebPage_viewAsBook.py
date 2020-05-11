@@ -90,9 +90,6 @@ book_title = html_quote(override_document_title) if override_document_title else
 if isinstance(book_content, unicode):
   book_content = book_content.encode("UTF-8")
 
-# backcompat
-book_history_section_list = re.findall('<section*?>.+?</section>', book_content, re.S)
-
 # override for tests
 if override_batch_mode:
   book_modification_date = DateTime("1976-11-04")
