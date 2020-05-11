@@ -32,7 +32,7 @@ url_list = [
   "gadget_ojs_jio.js",
   "gadget_erp5_page_ojs_controller.html",
   "gadget_erp5_page_ojs_controller.js",
-	"gadget_erp5_page_ojs_add_document.html",
+  "gadget_erp5_page_ojs_add_document.html",
   "gadget_erp5_page_ojs_add_document.js",
   "gadget_erp5_page_ojs_configurator.html",
   "gadget_erp5_page_ojs_configurator.js",
