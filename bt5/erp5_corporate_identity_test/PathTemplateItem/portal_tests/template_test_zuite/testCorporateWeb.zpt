@@ -54,6 +54,24 @@
   <td></td>
 </tr>
 
+<tr>
+  <td colspan="3"><b>Check embedded list</b></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//ul/li[1]/a[text()='Template Test Web Howto 1' and @href='Template.Test.Web.Howto1']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//ul/li[1]/a[text()='Template Test Web FAQ 1' and @href='Template.Test.Web.FAQ1']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//ul/li[2]/a[text()='Template Test Web FAQ 2' and @href='Template.Test.Web.FAQ2']</td>
+  <td></td>
+</tr>
 
 </tbody></table>
 </body>
