@@ -12,17 +12,15 @@ category_relative_url_list = [
   'group/demo_group/sub2'
 ]
 
-follow_up_relative_url = context.getFollowUp()
 web_site_value = context.getWebSiteValue()
 
 result = {}
 
-if (web_site_value is not None) and (follow_up_relative_url is not None):
+if (web_site_value is not None):
   for category_relative_url in category_relative_url_list:
     base_category, _ = category_relative_url.split('/', 1)
 
     result[category_relative_url.replace('/', '__')] = '<ul>%s</ul>' % ''.join(['<li><a href="%s">%s</a></li>' % (escapeAttributeProperty(x.getReference()), escapeInnerHTML(x.getTitle())) for x in web_site_value.getDocumentValueList(
-      follow_up__relative_url=follow_up_relative_url,
       sort_on=[['title', 'ASC']],
       **{'%s__relative_url' % base_category: category_relative_url}
     )])
