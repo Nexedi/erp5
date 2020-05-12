@@ -8,8 +8,8 @@ def escapeAttributeProperty(string_to_escape):
 
 # XXX HARDCODED
 category_relative_url_list = [
-  'group/demo_group/sub1',
-  'group/demo_group/sub2'
+  'group/template_test_group',
+  'function/company/executive'
 ]
 
 web_site_value = context.getWebSiteValue()
