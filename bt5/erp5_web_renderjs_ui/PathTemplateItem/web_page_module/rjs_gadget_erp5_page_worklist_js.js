@@ -98,7 +98,7 @@
             domsugar(gadget.element.querySelector('.document_list'), [
               domsugar('div', {class: 'worklist-empty'}, [
                 domsugar('h2', {text: result_list[0]}),
-                domsugar('img', {src: 'gadget_erp5_worklist_empty.svg?format=svg'})
+                domsugar('img', {src: 'gadget_erp5_worklist_empty.svg'})
               ])
             ]);
           }
