@@ -53,6 +53,7 @@
       var gadget = this;
       var table;
       gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
+      gadget.deferNotifySubmitBinded = gadget.deferNotifySubmit.bind(gadget);
       if (modification_dict.hasOwnProperty('value')) {
         var tmp = Object.assign({}, template);
         Object.assign(tmp, template);
@@ -127,7 +128,7 @@
     .declareMethod('getContent', function () {
       var gadget = this;
       var form_data = {};
-      if (this.state.editable) {
+      if (this.state.editable || true) {
         form_data[this.state.key] = JSON.stringify(gadget.table.getConfig());
         this.state.value = form_data[this.state.key];
       }

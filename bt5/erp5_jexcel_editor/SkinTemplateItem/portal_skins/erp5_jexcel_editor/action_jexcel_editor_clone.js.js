@@ -5,6 +5,7 @@
     .declareAcquiredMethod("jio_post", "jio_post")
     .declareMethod("preRenderDocument", function (parent_options) {
       var gadget = this;
+      console.log(parent_options);
       return gadget.jio_get(parent_options.jio_key)
       .push(function (parent_document) {
         return parent_document;
@@ -34,6 +35,7 @@
         }
         return gadget.jio_post(document)
           .push(function (jio_key) {
+            console.log(document);
             return_submit_dict.notify.message = "Document Cloned";
             return_submit_dict.notify.status = "success";
             return_submit_dict.redirect.options = {
