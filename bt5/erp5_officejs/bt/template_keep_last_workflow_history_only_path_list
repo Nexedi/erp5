@@ -40,4 +40,7 @@ web_site_module/officejs_todomvc
 web_site_module/officejs_wallsearch
 web_site_module/officejs_wallsearch/**
 web_site_module/officejs_whiteboard
-web_site_module/officejs_media_player/**
+web_site_module/gadget_officejs_media_player/**
+web_page_module/officejs_jexcel_editor_*
+web_site_module/officejs_jexcel_editor
+web_site_module/officejs_jexcel_editor/**

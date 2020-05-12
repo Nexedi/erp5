@@ -6,6 +6,9 @@ image_module/officejs_audioplayer_*
 image_module/officejs_todomvc_*
 image_module/wallsearch_icon_svg
 portal_types/Document Module/pdf_viewer_view
+portal_types/Jexcel Sheet Module/jexcel_editor_view
+portal_types/Jexcel Sheet/jexcel_editor_clone
+portal_types/Jexcel Sheet/jexcel_editor_view
 portal_types/PDF/pdf_viewer_view
 portal_types/Web Illustration/svg_editor_view
 portal_types/Web Page Module/codemirror_view
@@ -18,6 +21,7 @@ web_page_module/dhtmlx_gantt_*
 web_page_module/fb_sdk_js
 web_page_module/gadget_field_*
 web_page_module/gadget_officejs_*
+web_page_module/gadget_officejs_jexcel_editor_*
 web_page_module/jio_*
 web_page_module/officejs_audioplayer_*
 web_page_module/officejs_todomvc_*
@@ -34,6 +38,8 @@ web_site_module/officejs_cribjs/**
 web_site_module/officejs_drive_app
 web_site_module/officejs_drive_app/**
 web_site_module/officejs_export
+web_site_module/officejs_jexcel_editor
+web_site_module/officejs_jexcel_editor/**
 web_site_module/officejs_media_player
 web_site_module/officejs_media_player/**
 web_site_module/officejs_notebook
