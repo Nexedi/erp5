@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2 */
 /*global window, rJS, RSVP, jexcel*/
-(function (window, rJS, RSVP, jexcel) {
+(function (window, rJS, jexcel) {
   "use strict";
 
   var template = {
@@ -32,6 +32,8 @@
 
   rJS(window)
 
+    .setState({saveStyle: false})
+
     .declareAcquiredMethod("notifySubmit", "notifySubmit")
     .declareJob("deferNotifySubmit", function () {
       // Ensure error will be correctly handled
@@ -50,30 +52,37 @@
     })
 
     .onStateChange(function (modification_dict) {
-      var gadget = this;
-      var table;
+      var gadget = this, tmp = Object.assign({}, template), table;
       gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
-      gadget.deferNotifySubmitBinded = gadget.deferNotifySubmit.bind(gadget);
       if (modification_dict.hasOwnProperty('value')) {
-        var tmp = Object.assign({}, template);
+        gadget.state.value = gadget.state.value === "" ? gadget.state.value : JSON.parse(gadget.state.value);
         Object.assign(tmp, template);
         Object.assign(tmp, gadget.state.value);
         table = jexcel(gadget.element.querySelector(".spreadsheet"), Object.assign(tmp, {
-          onchange: gadget.deferNotifyChangeBinded,
+          onevent: function (ev) {
+            var exluded_events = ["onload", "onfocus", "onblur", "onselection"];
+            if (!exluded_events.includes(ev)) {
+              if ((ev === "onchangestyle" && gadget.state.saveStyle) || ev !== "onchangestyle") {
+                gadget.deferNotifyChangeBinded();
+              } else {
+                gadget.state.saveStyle = true;
+              }
+            }
+          },
           toolbar: [
             {
               type: 'i',
               content: 'undo',
               onclick: function () {
-                  table.undo();
-                }
+                table.undo();
+              }
             },
             {
               type: 'i',
               content: 'redo',
               onclick: function () {
-                  table.redo();
-                }
+                table.redo();
+              }
             },
             {
               type: 'select',
@@ -99,7 +108,7 @@
             },
             {
               type: 'i',
-              content: 'format_align_right', 
+              content: 'format_align_right',
               k: 'text-align',
               v: 'right'
             },
@@ -126,8 +135,7 @@
     })
 
     .declareMethod('getContent', function () {
-      var gadget = this;
-      var form_data = {};
+      var gadget = this, form_data = {};
       if (this.state.editable || true) {
         form_data[this.state.key] = JSON.stringify(gadget.table.getConfig());
         this.state.value = form_data[this.state.key];
@@ -135,4 +143,4 @@
       return form_data;
     });
 
-}(window, rJS, RSVP, jexcel));
+}(window, rJS, jexcel));
