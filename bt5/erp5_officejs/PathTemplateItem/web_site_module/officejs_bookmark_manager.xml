@@ -449,7 +449,7 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs_bookmark_manager.appcache</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
