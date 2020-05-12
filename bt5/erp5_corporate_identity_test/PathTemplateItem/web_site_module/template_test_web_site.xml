@@ -163,6 +163,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>layout_substitution_category_document_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>text</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -223,11 +233,16 @@
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
-            <value> <string>WebSection_viewDefaultThemeConfiguration</string> </value>
+            <value> <string>WebSection_viewCorporateIdentifyThemeConfiguration</string> </value>
         </item>
         <item>
             <key> <string>layout_logo_reference</string> </key>
             <value> <string>images/favourite.png</string> </value>
+        </item>
+        <item>
+            <key> <string>layout_substitution_category_document_list</string> </key>
+            <value> <string>group/template_test_group\n
+function/company/executive</string> </value>
         </item>
         <item>
             <key> <string>membership_criterion_base_category</string> </key>
@@ -267,6 +282,12 @@
             <key> <string>string_index</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>subject</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -446,7 +467,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.53255.28055.63095</string> </value>
+                      <value> <string>983.54904.47334.17664</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -464,7 +485,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1589200038.89</float>
+                              <float>1589289170.93</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
