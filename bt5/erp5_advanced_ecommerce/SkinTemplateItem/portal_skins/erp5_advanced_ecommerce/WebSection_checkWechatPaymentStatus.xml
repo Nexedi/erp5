@@ -50,20 +50,19 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>batch_mode=False</string> </value>
+            <value> <string>trade_no,**kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_finalizeShopping</string> </value>
+            <value> <string>WebSection_checkWechatPaymentStatus</string> </value>
         </item>
       </dictionary>
     </pickle>
