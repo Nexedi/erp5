@@ -1,0 +1,73 @@
+<tal:block tal:define="payment_url python: request.get('payment_url', '');
+                       price python: int(request.get('price', '0')) / 100.0;
+                       trade_no python: request.get('trade_no', '')
+                       " >
+    <p>请使用微信扫描下方二维码来完成支付</p>
+    <input id='trade_no' type="hidden" tal:attributes="value python: trade_no">
+    <h2 style="float:left;">支付 <span tal:content="python: price"></span> 元</h2>
+    <div style="clear:both"></div>
+    <div style="position:absolute;left:50%;">
+      <div class='qr_code' position='relative'>
+        <div class="qr_code_wrapper" style="line-height: 300px;
+                    display:none;
+                    text-align: center;
+                    position: absolute;
+                    font-size: 14px;
+                    color: #fff;
+                    background: rgba(0,0,0,.6);
+                    width: 300px;
+                    height: 300px;
+                    cursor: pointer;">
+          <span style='display: block;font-size: 14px;color: #fff;margin-top: 10px;'>请点击继续</span>
+        </div>
+        <img class="wechat_qrcode" width="294" style="border: 1px solid grey;"
+           tal:attributes="src python:'Base_generateBarcodeImage?barcode_type=qrcode&data=%s' % payment_url">
+      </div>
+       <img src="advanced_ecommerce_image/wechat_description.png" width="300">
+    </div>
+    <script>
+  $(document).ready(function() {
+    var timer = 0,
+      wrapper = $(".qr_code_wrapper"),
+      trade_no = $('#trade_no').val(),
+      loop;
+    function restartCheckingIfNeeded() {
+      timer += 1;
+      if (timer > 40) {
+        wrapper.css("display", "block");
+      } else {
+        console.log('restart')
+        setTimeout(checkPaymentStatus, 3000);
+      }
+    }
+    function checkPaymentStatus(){
+      $.ajax({
+           url:'WebSection_checkWechatPaymentStatus',
+           data:{
+             trade_no: trade_no
+           },
+           success:function(result_dict){
+             result_dict = JSON.parse(result_dict);
+             if (result_dict['status'] == 'success') {
+               window.location.href="SaleOrder_viewThankYouMessage";
+             } else if (result_dict['status'] == 'cancelled') {
+               window.location.href="?portal_status_message=订单已取消"
+             } else {
+               restartCheckingIfNeeded();
+             }
+           },
+          error: function (error){
+            console.log(error);
+            restartCheckingIfNeeded();
+          }
+         });
+    }
+    checkPaymentStatus()
+    wrapper.click(function() {
+      timer = 0;
+      wrapper.css("display", "none");
+      setTimeout(checkPaymentStatus, 3000)
+    });
+  });
+  </script>
+</tal:block>

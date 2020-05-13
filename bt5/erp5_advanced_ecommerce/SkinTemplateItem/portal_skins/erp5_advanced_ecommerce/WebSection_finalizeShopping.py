@@ -38,4 +38,5 @@ for amount in sale_order.getAggregatedAmountList():
 # clean up shopping cart
 context.WebSection_resetShoppingCart()
 # Display nice message
-context.Base_redirect('SaleOrder_viewThankYouMessage')
+if not batch_mode:
+  context.Base_redirect('SaleOrder_viewThankYouMessage')
