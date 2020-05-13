@@ -257,23 +257,20 @@
               offset_time_zone;
             if (gadget.state.value) {
               state_date = new Date(gadget.state.value);
+              //get timezone difference between server and local browser
+              offset_time_zone = timezone +
+                                  (state_date.getTimezoneOffset() / 60);
+              //adjust hour in order to get correct date time string
+              state_date.setUTCHours(state_date.getUTCHours() +
+                                      offset_time_zone);
+              text_content = state_date.toLocaleDateString(language);
+              if (!gadget.state.date_only) {
+                text_content += " " +
+                  formatDateToLocaleFormatString(state_date, language);
+              }
               if (gadget.state.timezone_style) {
-                text_content = state_date.toLocaleDateString(language);
                 if (!gadget.state.date_only) {
-                  text_content += " " +
-                    formatDateToLocaleFormatString(state_date, language);
-                }
-              } else {
-                //get timezone difference between server and local browser
-                offset_time_zone = timezone +
-                                   (state_date.getTimezoneOffset() / 60);
-                //adjust hour in order to get correct date time string
-                state_date.setUTCHours(state_date.getUTCHours() +
-                                       offset_time_zone);
-                text_content = state_date.toLocaleDateString(language);
-                if (!gadget.state.date_only) {
-                  text_content += " " +
-                    formatDateToLocaleFormatString(state_date, language);
+                  text_content += " " + ZONE_LIST[timezone + 12][0];
                 }
               }
             }
