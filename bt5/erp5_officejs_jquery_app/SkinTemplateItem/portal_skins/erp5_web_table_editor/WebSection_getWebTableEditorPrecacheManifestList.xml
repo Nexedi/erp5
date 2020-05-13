@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>batch_mode=0</string> </value>
+            <value> <string>REQUEST=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_createAppConfigurationManifest</string> </value>
+            <value> <string>WebSection_getWebTableEditorPrecacheManifestList</string> </value>
         </item>
       </dictionary>
     </pickle>
