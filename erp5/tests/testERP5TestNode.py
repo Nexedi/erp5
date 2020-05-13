@@ -578,46 +578,46 @@ shared = true
       call_parameter_list.append(args)
 
     test_node = self.getTestNode()
-    test_node.process_manager.spawn = spawn
-    runner = test_type_registry[my_test_type](test_node)
-    # Create and initialise/regenerate a nodetestsuite
-    node_test_suite = test_node.getNodeTestSuite('foo')
-    self.updateNodeTestSuiteData(node_test_suite)
-    node_test_suite.revision_list = ('dummy', (0, '')),
+    with mock.patch.object(test_node.process_manager, 'spawn', side_effect=spawn):
+      runner = test_type_registry[my_test_type](test_node)
+      # Create and initialise/regenerate a nodetestsuite
+      node_test_suite = test_node.getNodeTestSuite('foo')
+      self.updateNodeTestSuiteData(node_test_suite)
+      node_test_suite.revision_list = ('dummy', (0, '')),
 
-    path = runner.getInstanceRoot(node_test_suite) + '/a/bin/runTestSuite'
-    os.makedirs(os.path.dirname(path))
-    os.close(os.open(path, os.O_CREAT))
-
-    expected_parameter_list = [path,
-      '--master_url', 'http://foo.bar',
-      '--revision', 'dummy=0-',
-      '--test_suite', 'Foo',
-      '--test_suite_title', 'Foo-Test',
-    ]
-    def checkRunTestSuiteParameters():
-      runner.runTestSuite(node_test_suite, "http://foo.bar")
-      self.assertEqual(list(call_parameter_list.pop()), expected_parameter_list)
-      self.assertFalse(call_parameter_list)
-
-    checkRunTestSuiteParameters()
-
-    def part(path): # in "bar" SR
-      path = test_node.config['slapos_directory'] \
-        + '/soft/37b51d194a7513e45b56f6524f2d51f2/parts/' + path
+      path = runner.getInstanceRoot(node_test_suite) + '/a/bin/runTestSuite'
       os.makedirs(os.path.dirname(path))
       os.close(os.open(path, os.O_CREAT))
-      return path
-    for option in (
-        ('--firefox_bin', part('firefox/firefox-slapos')),
-        ('--frontend_url', 'http://frontend/'),
-        ('--node_quantity', '3'),
-        ('--xvfb_bin', part('xserver/bin/Xvfb')),
-        ('--shared_part_list', "/not/exists:/not/exists_either:%s/shared" % node_test_suite.working_directory),
-      ):
-      parser.add_argument(option[0])
-      expected_parameter_list += option
+
+      expected_parameter_list = [path,
+        '--master_url', 'http://foo.bar',
+        '--revision', 'dummy=0-',
+        '--test_suite', 'Foo',
+        '--test_suite_title', 'Foo-Test',
+      ]
+      def checkRunTestSuiteParameters():
+        runner.runTestSuite(node_test_suite, "http://foo.bar")
+        self.assertEqual(list(call_parameter_list.pop()), expected_parameter_list)
+        self.assertFalse(call_parameter_list)
+
       checkRunTestSuiteParameters()
+
+      def part(path): # in "bar" SR
+        path = test_node.config['slapos_directory'] \
+          + '/soft/37b51d194a7513e45b56f6524f2d51f2/parts/' + path
+        os.makedirs(os.path.dirname(path))
+        os.close(os.open(path, os.O_CREAT))
+        return path
+      for option in (
+          ('--firefox_bin', part('firefox/firefox-slapos')),
+          ('--frontend_url', 'http://frontend/'),
+          ('--node_quantity', '3'),
+          ('--xvfb_bin', part('xserver/bin/Xvfb')),
+          ('--shared_part_list', "/not/exists:/not/exists_either:%s/shared" % node_test_suite.working_directory),
+        ):
+        parser.add_argument(option[0])
+        expected_parameter_list += option
+        checkRunTestSuiteParameters()
 
   def test_10_prepareSlapOS(self, my_test_type='UnitTest'):
     test_node = self.getTestNode()
