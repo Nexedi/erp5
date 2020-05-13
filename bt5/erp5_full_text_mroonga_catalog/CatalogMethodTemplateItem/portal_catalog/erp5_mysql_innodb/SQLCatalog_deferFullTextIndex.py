@@ -6,7 +6,7 @@ for document, root_document_path in zip(getPath, getRootDocumentPath):
   getattr(
     activateObject(
       document,
-      activity='SQLQueue',
+      activity='SQLDict',
       priority=4,
       node='same',
       group_method_id=GROUP_METHOD_ID,
