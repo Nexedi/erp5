@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>action</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>action_type/object_onlyjio_view</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>category</string> </key>
+            <value> <string>object_onlyjio_view</string> </value>
+        </item>
+        <item>
+            <key> <string>condition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Check the form_list page template on a document</string> </value>
+        </item>
+        <item>
+            <key> <string>icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>view_formlist</string> </value>
+        </item>
+        <item>
+            <key> <string>permissions</string> </key>
+            <value>
+              <tuple>
+                <string>View</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>priority</string> </key>
+            <value> <float>36.0</float> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Form List</string> </value>
+        </item>
+        <item>
+            <key> <string>visible</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>string:${object_url}/Foo_viewSearchableContentList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
