@@ -26,7 +26,7 @@
             <key> <string>expression</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: len(object.getFollowUpList()) > 0 \t              or len(object.getGroupList()) > 0 or \t\t      object.getValidationState() in ("embedded", "cancelled", "deleted")
+python: len(object.getFollowUpList()) > 0 \t              or len(object.getGroupList()) > 0 or \t\t      object.getValidationState() in ("embedded", "cancelled", "deleted") or object.isTemplate()
 
 ]]></string> </value>
         </item>
