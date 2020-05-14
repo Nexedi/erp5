@@ -22,6 +22,7 @@ sale_trade_condition_module/test_loyalty_reward_paypal/**
 sale_trade_condition_module/test_sale_trade_condition
 sale_trade_condition_module/test_sale_trade_condition/**
 sale_trade_condition_module/test_wechat_sale_trade_condition
+sale_trade_condition_module/test_wechat_sale_trade_condition/**
 service_module/test_deliver_mode
 service_module/test_deliver_mode/**
 service_module/test_loyalty_collect_point
