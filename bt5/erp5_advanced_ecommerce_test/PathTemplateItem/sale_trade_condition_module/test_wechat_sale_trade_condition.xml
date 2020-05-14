@@ -90,8 +90,6 @@
               <tuple>
                 <string>price_currency/currency_module/test_eur</string>
                 <string>specialise/business_process_module/erp5_default_business_process</string>
-                <string>source_section/organisation_module/test_sale_order_supplier</string>
-                <string>source/organisation_module/test_sale_order_supplier</string>
               </tuple>
             </value>
         </item>
@@ -103,7 +101,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>loyalty_reward_paypal</string> </value>
+            <value> <string>no_loyalty_reward_wechat</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -113,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_loyalty_reward_paypal</string> </value>
+            <value> <string>test_wechat_sale_trade_condition</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -121,11 +119,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>test_loyalty_reward_paypal</string> </value>
+            <value> <string>test_wechat_sale_trade_condition</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>2</string> </value>
+            <value> <string>1</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -255,7 +253,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1588084846.77</float>
+                              <float>1589444740.33</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -304,7 +302,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.57486.40881.52155</string> </value>
+                      <value> <string>983.57497.44062.42103</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -322,7 +320,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1589446600.14</float>
+                              <float>1589446595.34</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

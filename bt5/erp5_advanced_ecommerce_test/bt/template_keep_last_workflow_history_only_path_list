@@ -29,3 +29,5 @@ sale_trade_condition_module/test_loyalty_reward_paypal/**
 service_module/test_loyalty_discount
 service_module/test_loyalty_using_point
 service_module/test_loyalty_collect_point
+sale_trade_condition_module/test_wechat_sale_trade_condition
+sale_trade_condition_module/test_wechat_sale_trade_condition/**

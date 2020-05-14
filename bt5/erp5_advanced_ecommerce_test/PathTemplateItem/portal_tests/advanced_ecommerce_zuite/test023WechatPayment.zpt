@@ -1,0 +1,187 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Front Page</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Front Page</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/login_as_super_user" />
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/PurchasePackingList_deliver</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/logout" />
+
+<tal:block metal:use-macro="here/ZuiteAdvancedECommerce_CommonTemplate/macros/reset_shopcart" />
+
+<tr>
+  <td>setTimeout</td>
+  <td>300000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_site_module/ecommerce_example</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="header_login"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[contains(@href, "test_normal_product")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//select[@name="field_your_buy_quantity"]</td>
+  <td>2</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Add to cart"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Added to cart.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//td[@class="cart_middle"]//div[contains(text(), "280")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//div[@class="left"]//div[contains(@class, "checkout")]//a[contains(@href, "cart")]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[contains(@class, "shopping_cart_renderer")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="wechat"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyTextPresent</td>
+  <td>Shopping Cart Updated</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Update Shipping Method"]</td>
+  <td>
+</tr>
+
+<tr>
+  <td>check</td>
+  <td>//input[@value="service_module/test_deliver_mode"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Update Shipping Method"]</td>
+  <td>
+</tr>
+
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Confirm Order"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="__ac_name"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>//input[@name="__ac_password"]</td>
+  <td>1</td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Login"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>clickAndWait</td>
+  <td>//input[@value="Proceed to Payment"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//img[@class="wechat_qrcode"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//span[contains(text(), '282.0')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='qr_code_wrapper' and contains(@style,'display: block')]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//div[@class='qr_code_wrapper' and contains(@style,'display: block')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@class='qr_code_wrapper' and contains(@style,'display: block')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='qr_code_wrapper' and contains(@style,'display: none')]</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>
