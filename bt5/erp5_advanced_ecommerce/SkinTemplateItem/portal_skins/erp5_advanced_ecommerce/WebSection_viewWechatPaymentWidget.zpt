@@ -1,10 +1,10 @@
 <tal:block tal:define="payment_url python: request.get('payment_url', '');
-                       price python: int(request.get('price', '0')) / 100;
+                       price python: int(request.get('price', '0')) / 100.0;
                        trade_no python: request.get('trade_no', '')
                        " >
     <p>请使用微信扫描下方二维码来完成支付</p>
     <input id='trade_no' type="hidden" tal:attributes="value python: trade_no">
-    <h2 style="float:left;">支付 <span tal:content="python: '%s' % price"></span> 元</h2>
+    <h2 style="float:left;">支付 <span tal:content="python: price"></span> 元</h2>
     <div style="clear:both"></div>
     <div style="position:absolute;left:50%;">
       <div class='qr_code' position='relative'>
