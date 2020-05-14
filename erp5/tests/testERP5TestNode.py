@@ -617,7 +617,7 @@ shared = true
     parser.add_argument('--hello_world', help='Hello world!')
     def spawn(*args, **kw):
       if args[1] == '--help':
-        return {'stdout': parser.format_help()}
+        return {'stdout': parser.format_help().encode()}
       call_parameter_list.append(args)
 
     test_node = self.getTestNode()

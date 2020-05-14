@@ -196,8 +196,9 @@ class ProcessManager(object):
     return result
 
   def getSupportedParameterList(self, program_path):
-    return re.findall(r'^  (--\w+)',
-      self.spawn(program_path, '--help')['stdout'], re.M)
+    # type: (str) -> Sequence[str]
+    return (parameter.decode('utf-8') for parameter in
+        re.findall(br'^  (--\w+)', self.spawn(program_path, '--help')['stdout'], re.M))
 
   def killall(self, path):
     """
