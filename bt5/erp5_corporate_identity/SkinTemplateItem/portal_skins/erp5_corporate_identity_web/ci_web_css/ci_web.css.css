@@ -215,7 +215,9 @@ ci-web-header-bar-search-right
   width: 100%;
 }
 .ci-web .ci-web-page-content a {
-  text-decoration: none;
+  /* As header h* and link a use the same color,
+     keep the underline to differenciate links */
+  text-decoration: underline;
 }
 
 /* prevent inline code elements to break page width */
