@@ -563,6 +563,49 @@ shared = true
     test_node.purgeOldTestSuite(test_suite_data) # should not fail
     self.assertEqual([], os.listdir(self.working_directory))
 
+  def test_distributor_url_obfuscated_in_logs(self):
+    test_node = self.getTestNode()
+
+    runner = test_type_registry['UnitTest'](test_node)
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite)
+    node_test_suite.revision_list = ('dummy', (0, '')),
+
+    path = runner.getInstanceRoot(node_test_suite) + '/a/bin/runTestSuite'
+    os.makedirs(os.path.dirname(path))
+    with tempfile.NamedTemporaryFile(mode='r') as temp_file:
+      with open(path, 'w') as f:
+        f.write("""#!/bin/sh
+        echo runTestSuite called with: "$@" | tee {}
+        """.format(temp_file.name))
+      os.chmod(path, 0o700)
+
+      with mock.patch.object(logger, '_log') as http_logger,\
+          mock.patch.object(logging.getLogger(), '_log') as root_logger,\
+          mock.patch.object(logging.getLogger(), 'isEnabledFor', return_value=True):
+        runner.runTestSuite(node_test_suite, "https://user:secret@example.com/portal_distributions")
+      http_logger.assert_called()
+      logged_messages = [str(logged) for logged in http_logger.mock_calls]
+
+      # distributor URL is not displayed in logs
+      self.assertFalse([m for m in logged_messages if "https://user:secret@example.com/portal_distributions" in m])
+      # instead we display obfuscated $DISTRIBUTOR_URL
+      self.assertTrue([m for m in logged_messages if "--master_url $DISTRIBUTOR_URL" in m])
+
+      # but the runTestSuite program is called with the actual distributor URL
+      self.assertEqual(
+        'runTestSuite called with: --master_url https://user:secret@example.com/portal_distributions'
+        ' --revision dummy=0- --test_suite Foo --test_suite_title Foo-Test',
+        temp_file.read().strip())
+
+      # The root logger (which logs only in var/log/erp5testnode.log) contain the non obfuscated
+      # command, because it's sometimes useful for debugging.
+      root_logger.assert_called()
+      self.assertIn(
+          '--master_url https://user:secret@example.com/portal_distributions',
+          str(root_logger.mock_calls[-1]))
+
+
   def test_09_runTestSuite(self, my_test_type='UnitTest'):
     """
     Check parameters passed to runTestSuite
