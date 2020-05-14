@@ -1,4 +1,7 @@
 <module>
+ <category_list>
+  <category>business_application/big_data</category>
+ </category_list>
  <id>data_ingestion_batch_module</id>
  <permission_list>
   <permission type='tuple'>
