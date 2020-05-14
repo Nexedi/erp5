@@ -100,6 +100,10 @@
             </value>
         </item>
         <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>no_loyalty_reward_paypal</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
@@ -114,10 +118,12 @@
             <value> <string>Sale Trade Condition</string> </value>
         </item>
         <item>
+            <key> <string>title</string> </key>
+            <value> <string>test_sale_trade_condition</string> </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>2</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -296,7 +302,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.31553.28432.33262</string> </value>
+                      <value> <string>983.57486.40881.52155</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -314,7 +320,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1587975634.77</float>
+                              <float>1589446592.66</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
