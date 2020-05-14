@@ -1,4 +1,16 @@
 <base_category_list>
+ <portal_type id="Data Acquisition Unit Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data Aggregation Unit Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data Analysis Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data Array Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Data Configuration Module">
   <item>business_application</item>
  </portal_type>
@@ -10,6 +22,42 @@
   <item>destination</item>
   <item>resource</item>
   <item>source</item>
+ </portal_type>
+ <portal_type id="Data Event Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data Ingestion Batch Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data Ingestion Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data License Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data Notebook Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data Operation Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data Order Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data Product Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data Release Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data Set Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data Stream Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Data Supply Module">
+  <item>business_application</item>
  </portal_type>
  <portal_type id="Data Transformation Module">
   <item>business_application</item>

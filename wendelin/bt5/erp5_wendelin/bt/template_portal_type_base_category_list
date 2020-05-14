@@ -1,9 +1,25 @@
+Data Acquisition Unit Module | business_application
+Data Aggregation Unit Module | business_application
+Data Analysis Module | business_application
+Data Array Module | business_application
 Data Configuration Module | business_application
 Data Descriptor Module | business_application
+Data Event Module | business_application
 Data Event | aggregate
 Data Event | destination
 Data Event | resource
 Data Event | source
+Data Ingestion Batch Module | business_application
+Data Ingestion Module | business_application
+Data License Module | business_application
+Data Notebook Module | business_application
+Data Operation Module | business_application
+Data Order Module | business_application
+Data Product Module | business_application
+Data Release Module | business_application
+Data Set Module | business_application
+Data Stream Module | business_application
+Data Supply Module | business_application
 Data Transformation Module | business_application
 Device Configuration Module | business_application
 Progress Indicator Module | business_application
