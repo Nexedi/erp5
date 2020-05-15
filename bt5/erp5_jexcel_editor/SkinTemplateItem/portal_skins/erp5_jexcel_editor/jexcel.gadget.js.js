@@ -3,44 +3,17 @@
 (function (window, rJS, jexcel) {
   "use strict";
 
-  var template = {
-    minDimensions: [26, 200],
-    defaultColWidth: 100,
-    allowExport: true,
-    columnSorting: true,
-    columnDrag: true,
-    columnResize: true,
-    rowResize: true,
-    rowDrag: true,
-    editable: true,
-    allowInsertRow: true,
-    allowManualInsertRow: true,
-    allowInsertColumn: true,
-    allowManualInsertColumn: true,
-    allowDeleteRow: true,
-    allowRenameColumn: true,
-    allowComments: true,
-    selectionCopy: true,
-    search: true,
-    fullscreen: true,
-    lazyLoading: true,
-    loadingSpin: true,
-    tableOverflow: true,
-    autoIncrement: true,
-    parseFormulas: true
-  };
-
   rJS(window)
 
     .setState({saveStyle: false})
 
     .declareAcquiredMethod("notifySubmit", "notifySubmit")
+    .declareAcquiredMethod("notifyChange", "notifyChange")
+
     .declareJob("deferNotifySubmit", function () {
       // Ensure error will be correctly handled
       return this.notifySubmit();
     })
-
-    .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareJob("deferNotifyChange", function () {
       // Ensure error will be correctly handled
       return this.notifyChange();
@@ -51,8 +24,43 @@
       return gadget.changeState(options);
     })
 
+    .declareMethod('getContent', function () {
+      var gadget = this, form_data = {};
+      if (this.state.editable || true) {
+        form_data[this.state.key] = JSON.stringify(gadget.table.getConfig());
+        this.state.value = form_data[this.state.key];
+      }
+      return form_data;
+    })
+
     .onStateChange(function (modification_dict) {
-      var gadget = this, tmp = Object.assign({}, template), table;
+      var template = {
+        minDimensions: [26, 200],
+        defaultColWidth: 100,
+        allowExport: true,
+        columnSorting: true,
+        columnDrag: true,
+        columnResize: true,
+        rowResize: true,
+        rowDrag: true,
+        editable: true,
+        allowInsertRow: true,
+        allowManualInsertRow: true,
+        allowInsertColumn: true,
+        allowManualInsertColumn: true,
+        allowDeleteRow: true,
+        allowRenameColumn: true,
+        allowComments: true,
+        selectionCopy: true,
+        search: true,
+        fullscreen: true,
+        lazyLoading: true,
+        loadingSpin: true,
+        tableOverflow: true,
+        autoIncrement: true,
+        parseFormulas: true
+      },
+      gadget = this, tmp = Object.assign({}, template), table;
       gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
       if (modification_dict.hasOwnProperty('value')) {
         gadget.state.value = gadget.state.value === "" ? gadget.state.value : JSON.parse(gadget.state.value);
@@ -138,15 +146,6 @@
         }));
         this.table = table;
       }
-    })
-
-    .declareMethod('getContent', function () {
-      var gadget = this, form_data = {};
-      if (this.state.editable || true) {
-        form_data[this.state.key] = JSON.stringify(gadget.table.getConfig());
-        this.state.value = form_data[this.state.key];
-      }
-      return form_data;
     });
 
 }(window, rJS, jexcel));
