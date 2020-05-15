@@ -631,7 +631,10 @@ CREATE TABLE %s (
         method = activity_tool.invokeGroup
         args = (group_method_id, message_list, self.__class__.__name__,
                 hasattr(self, 'generateMessageUID'))
-        activity_runtime_environment = ActivityRuntimeEnvironment(None)
+        activity_runtime_environment = ActivityRuntimeEnvironment(
+          None,
+          priority=min(x.line.priority for x in message_list),
+        )
       else:
         method = activity_tool.invoke
         message, = message_list
