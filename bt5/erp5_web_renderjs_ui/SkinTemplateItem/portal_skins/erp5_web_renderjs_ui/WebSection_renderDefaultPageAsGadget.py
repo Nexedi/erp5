@@ -61,6 +61,7 @@ mapping_dict = {
   "website_url_set": json.dumps(website_url_set),
   "site_description": web_section.getLayoutProperty("description", default=""),
   "site_keywords": web_section.getLayoutProperty("subject", default=""),
+  "full_link_icon_tag": web_section.getLayoutPropert("link_icon", default='<link rel="shortcut icon" href="%sfavicon.ico">' % (base_prefix,),)
 }
 
 configuration_manifest_url = web_section.getLayoutProperty("configuration_manifest_url", default=None)
