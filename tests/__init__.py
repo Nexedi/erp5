@@ -227,6 +227,14 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
   def run(self, full_test):
     return self.runUnitTest('CodingStyleTest', TESTED_BUSINESS_TEMPLATE=full_test)
 
+  def getLogDirectoryPath(self, *args, **kw):
+    log_directory = os.path.join(
+        self.log_directory,
+        '{}-{}'.format(args[-1] , kw['TESTED_BUSINESS_TEMPLATE']))
+    os.mkdir(log_directory)
+    return log_directory
+
+
 class RJS_Only(_ERP5):
   def getTestList(self):
     rjs_officejs_bt_list = ["erp5_officejs_",

@@ -18,15 +18,18 @@ class ERP5TypeTestSuite(TestSuite):
   def run(self, test):
     return self.runUnitTest(test)
 
+  def getLogDirectoryPath(self, *args, **kw):
+    log_directory = os.path.join(self.log_directory, args[-1].replace(':', '_'))
+    os.mkdir(log_directory)
+    return log_directory
+
   def runUnitTest(self, *args, **kw):
     instance_home = self.instance and 'unit_test.%u' % self.instance \
                                    or 'unit_test'
     if self.instance:
       args = ('--instance_home', instance_home,) + args
       if self.log_directory:
-        log_directory = os.path.join(self.log_directory, args[-1].replace(':', '_'))
-        os.mkdir(log_directory)
-        args = ('--log_directory', log_directory, ) + args
+        args = ('--log_directory', self.getLogDirectoryPath(*args, **kw), ) + args
 
     if self.__dict__.has_key("bt5_path"):
       args = ("--bt5_path=%s" % self.bt5_path,) + args
