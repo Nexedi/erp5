@@ -20,7 +20,8 @@ class ERP5TypeTestSuite(TestSuite):
 
   def getLogDirectoryPath(self, *args, **kw):
     log_directory = os.path.join(self.log_directory, args[-1].replace(':', '_'))
-    os.mkdir(log_directory)
+    if not os.path.exists(log_directory):
+      os.mkdir(log_directory)
     return log_directory
 
   def runUnitTest(self, *args, **kw):
