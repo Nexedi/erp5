@@ -181,6 +181,7 @@ url_list.extend([
   web_section.getLayoutProperty("configuration_jio_gadget_url", default=default_url),
   web_section.getLayoutProperty("configuration_translation_gadget_url", default=default_url),
   web_section.getLayoutProperty("configuration_stylesheet_url", default=default_url),
+  web_section.getLayoutProperty("configuration_icon_url", default=default_url),
 ])
 
 # Add all extra dependencies
