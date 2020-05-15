@@ -242,7 +242,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com data: *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\'; style-src \'self\' \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_jio_document_page_gadget_url</string> </key>
@@ -495,7 +495,7 @@ WebSection_getNiceEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.47654.63613.34935</string> </value>
+                      <value> <string>983.59162.40749.238</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -513,7 +513,7 @@ WebSection_getNiceEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1588857992.05</float>
+                              <float>1589546497.39</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
