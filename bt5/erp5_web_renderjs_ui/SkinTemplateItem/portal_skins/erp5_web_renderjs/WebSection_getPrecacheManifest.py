@@ -183,6 +183,11 @@ url_list.extend([
   web_section.getLayoutProperty("configuration_stylesheet_url", default=default_url),
 ])
 
+# Add the icon
+url_list.append(
+  web_section.getLayoutProperty("configuration_icon_url", default="favicon.ico")
+)
+
 # Add all extra dependencies
 precache_manifest_url_list = web_section.getLayoutProperty("configuration_precache_manifest_script_list", default='').splitlines()
 for precache_manifest_script_id in precache_manifest_url_list:
