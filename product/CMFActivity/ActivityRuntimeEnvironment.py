@@ -41,8 +41,9 @@ class BaseMessage:
 class ActivityRuntimeEnvironment(object):
   security = ClassSecurityInfo()
 
-  def __init__(self, message):
+  def __init__(self, message, priority=None):
     self._message = message
+    self._priority = priority
 
   def __enter__(self):
     assert not hasattr(_activity_runtime_environment, 'value')
@@ -55,6 +56,15 @@ class ActivityRuntimeEnvironment(object):
   security.declarePublic('getTag')
   def getTag(self, default=None):
     return self._message.activity_kw.get('tag', default)
+
+  security.declarePublic('getPriority')
+  def getPriority(self, default=None):
+    result = self._priority
+    if result is None:
+      result = self._message.line.priority
+    if result is None:
+      result = default
+    return result
 
   security.declarePublic('edit')
   def edit(self, **kw):
