@@ -10,6 +10,7 @@ for document, root_document_path in zip(getPath, getRootDocumentPath):
       priority=4,
       node='same',
       group_method_id=GROUP_METHOD_ID,
+      priority=context.getActivityRuntimeEnvironment().getPriority(),
       serialization_tag='full_text_' + root_document_path,
     ),
     METHOD_ID,
