@@ -1331,7 +1331,7 @@ class Folder(FolderMixIn, CopyContainer, ObjectManager, Base, OFSFolder2, CMFBTr
         kw,
         activate_kw,
       )
-      activate_kw['group_method_cost'] = 0.01
+      activate_kw.setdefault('group_method_cost', 0.01)
       self._recurseCallMethod(
         'immediateReindexObject',
         method_kw=kw,
