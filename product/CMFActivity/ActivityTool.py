@@ -251,6 +251,10 @@ class Message(BaseMessage):
       group_method_id = 'portal_activities/dummyGroupMethod/' + self.method_id
     return group_method_id + '\0' + get('group_id', '')
 
+  def getGroupMethodCost(self):
+    # Meaningless if called on a non-grouped message
+    return self.activity_kw.get('group_method_cost', .01)
+
   def _getObject(self, activity_tool):
     obj = activity_tool.getPhysicalRoot()
     for id in self.object_path[1:]:

@@ -555,7 +555,7 @@ CREATE TABLE %s (
         group_method_id = m.line.group_method_id
         if group_method_id[0] != '\0':
           # Count the number of objects to prevent too many objects.
-          cost = m.activity_kw.get('group_method_cost', .01)
+          cost = m.getGroupMethodCost()
           assert 0 < cost <= 1, (self.sql_table, uid)
           count = m.getObjectCount(activity_tool)
           # this is heuristic (messages with same group_method_id
@@ -584,7 +584,7 @@ CREATE TABLE %s (
                 continue
               uid_to_duplicate_uid_list_dict[uid] = uid_list
               cost += m.getObjectCount(activity_tool) * \
-                      m.activity_kw.get('group_method_cost', .01)
+                      m.getGroupMethodCost()
               message_list.append(m)
               if cost >= 1:
                 # Unreserve extra messages as soon as possible.
