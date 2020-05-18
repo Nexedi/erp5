@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>JexcelSheetsModule_viewForJexcelEditor</string> </value>
+            <value> <string>JexcelSheetModule_viewForJexcelEditor</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
