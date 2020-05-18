@@ -73,7 +73,7 @@ def manage_addToolForm(self, REQUEST):
 
     """ Show the add tool form.
     """
-    from Products.ERP5.ERP5Site import getSite
+    from Products.ERP5Type.ERP5Site import getSite
     import erp5.component.tool
     seen_tool_component_set = set()
     for tool_component in getSite().portal_components.objectValues(portal_type='Tool Component'):

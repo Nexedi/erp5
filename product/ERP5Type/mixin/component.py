@@ -34,7 +34,7 @@ from __future__ import absolute_import
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5.mixin.property_recordable import PropertyRecordableMixin
+from Products.ERP5Type.mixin.property_recordable import PropertyRecordableMixin
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter

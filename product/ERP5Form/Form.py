@@ -58,7 +58,7 @@ class FieldValueCacheDict(dict):
   def clear(self):
     super(FieldValueCacheDict, self).clear()
 
-    from Products.ERP5.ERP5Site import getSite
+    from Products.ERP5Type.ERP5Site import getSite
     try:
       portal = getSite()
     except IndexError:
@@ -68,7 +68,7 @@ class FieldValueCacheDict(dict):
       self._last_sync = portal.getCacheCookie('form_field_value_cache')
 
   def __getitem__(self, cache_id):
-    from Products.ERP5.ERP5Site import getSite
+    from Products.ERP5Type.ERP5Site import getSite
     try:
       portal = getSite()
     except IndexError:

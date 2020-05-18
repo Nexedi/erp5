@@ -66,7 +66,7 @@ else:
   # must be cleared of data from previous execution if any
   _print("Catalog will be recreated to clear data (if any) from previous execution")
   import Products.ZMySQLDA.db
-  from Products.ERP5.ERP5Site import default_sql_connection_string
+  from Products.ERP5Type.ERP5Site import default_sql_connection_string
   sql_db = Products.ZMySQLDA.db.DB(os.environ.get('erp5_sql_connection_string',
                                                   default_sql_connection_string))
 

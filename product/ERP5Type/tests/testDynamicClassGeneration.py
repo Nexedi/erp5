@@ -1183,7 +1183,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     con = db.open(transaction_manager=tm)
     app = con.root()['Application'].__of__(self.app.aq_parent)
     portal = app[self.getPortalName()]
-    from Products.ERP5.ERP5Site import getSite, setSite
+    from Products.ERP5Type.ERP5Site import getSite, setSite
     old_site = getSite()
     setSite(portal)
 
@@ -2885,7 +2885,7 @@ class Test(ERP5TypeTestCase):
       """
       ret = ERP5TypeTestLoader_loadTestsFromNames(self, *args, **kwargs)
 
-      from Products.ERP5.ERP5Site import getSite
+      from Products.ERP5Type.ERP5Site import getSite
       getSite().portal_components.reset(force=True)
 
       # Simulate a new REQUEST while the old one has been GC'ed

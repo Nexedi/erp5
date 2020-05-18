@@ -29,7 +29,7 @@
 import os, shutil, tempfile, unittest
 from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5.ERP5Site import addERP5Tool
+from Products.ERP5Type.ERP5Site import addERP5Tool
 
 class TestInotifyTool(ERP5TypeTestCase):
   def test_inotify(self):

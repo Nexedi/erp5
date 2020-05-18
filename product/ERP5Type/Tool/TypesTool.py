@@ -123,7 +123,7 @@ class TypesTool(TypeProvider):
     return False
 
   def _bootstrap(self):
-    from Products.ERP5.ERP5Site import ERP5Generator
+    from Products.ERP5Type.ERP5Site import ERP5Generator
     ERP5Generator.bootstrap(self, 'erp5_core', 'PortalTypeTemplateItem', (
       'Business Template',
       'Standard Property',
@@ -158,7 +158,14 @@ class TypesTool(TypeProvider):
     for provider in self.type_provider_list:
       provider_value = _getOb(provider, None)
       if provider_value is not None:
-        type_info_list += listTypeInfo(provider_value, container=container)
+        try:
+          type_info_list += listTypeInfo(provider_value, container=container)
+        except TypeError:
+          # DO NOT COMMIT: Products.ERP5.Tool.SolverTool, should be there
+          # after installing ERP5 products later or should it be moved to
+          # Products.ERP5Type?
+          pass
+
     return type_info_list
 
   def _aq_dynamic(self, id):

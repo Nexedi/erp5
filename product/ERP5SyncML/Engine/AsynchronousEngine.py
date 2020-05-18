@@ -29,7 +29,7 @@ from logging import getLogger
 
 from Products.ERP5SyncML.Engine.EngineMixin import EngineMixin
 from Products.ERP5SyncML.SyncMLConstant import ACTIVITY_PRIORITY
-from Products.ERP5.ERP5Site import getSite
+from Products.ERP5Type.ERP5Site import getSite
 
 syncml_logger = getLogger('ERP5SyncML')
 

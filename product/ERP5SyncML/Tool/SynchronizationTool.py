@@ -38,7 +38,7 @@ from Products.ERP5SyncML.SyncMLConstant import ACTIVITY_PRIORITY, \
 from Products.ERP5SyncML.SyncMLMessage import SyncMLRequest
 from Products.ERP5SyncML.Engine.SynchronousEngine import SyncMLSynchronousEngine
 from Products.ERP5SyncML.Engine.AsynchronousEngine import SyncMLAsynchronousEngine
-from Products.ERP5.ERP5Site import getSite
+from Products.ERP5Type.ERP5Site import getSite
 
 synchronous_engine = SyncMLSynchronousEngine()
 asynchronous_engine = SyncMLAsynchronousEngine()

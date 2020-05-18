@@ -38,7 +38,7 @@ from ERP5Diff import ERP5Diff
 from DateTime import DateTime
 
 from SyncMLConstant import SYNCML_NAMESPACE, NSMAP, MAX_LEN
-from Products.ERP5.ERP5Site import getSite
+from Products.ERP5Type.ERP5Site import getSite
 
 E = ElementMaker(namespace=SYNCML_NAMESPACE, nsmap=NSMAP)
 parser = etree.XMLParser(remove_blank_text=True)

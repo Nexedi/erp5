@@ -343,7 +343,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
                            " class hierarchy")
 
     portal_type = klass.__name__
-    from Products.ERP5.ERP5Site import getSite
+    from Products.ERP5Type.ERP5Site import getSite
     site = getSite()
     with aq_method_lock:
       try:

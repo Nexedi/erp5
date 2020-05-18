@@ -59,7 +59,7 @@ class PortalTypeClassInteractor(Interactor):
     """
     Call resetDynamicDocuments at the end of the transaction
     """
-    from Products.ERP5.ERP5Site import getSite
+    from Products.ERP5Type.ERP5Site import getSite
     # method_call_object might be an unwrapped DCWorflowDefinition method,
     # no even belonging to a container.
     portal = getSite()

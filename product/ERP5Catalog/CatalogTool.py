@@ -387,7 +387,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       parent = self.aq_parent
       portal_types = parent.portal_types
       portal_property_sheets = parent.portal_property_sheets
-      from Products.ERP5.ERP5Site import ERP5Generator
+      from Products.ERP5Type.ERP5Site import ERP5Generator
       ERP5Generator.bootstrap(portal_types, 'erp5_core', 'PortalTypeTemplateItem', (
         'Catalog',
         'Catalog Tool',

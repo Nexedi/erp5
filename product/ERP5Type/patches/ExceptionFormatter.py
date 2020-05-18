@@ -65,7 +65,7 @@ def formatLine(self, tb, *args, **kwargs):
   f_globals = f.f_globals
   line_str = HTMLExceptionFormatter_formatLine(self, tb, *args, **kwargs)
 
-  from Products.ERP5.ERP5Site import getSite
+  from Products.ERP5Type.ERP5Site import getSite
   try:
     portal_absolute_url = getSite().absolute_url()
 

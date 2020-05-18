@@ -34,7 +34,7 @@ import sys
 import imp
 import collections
 
-from Products.ERP5.ERP5Site import getSite
+from Products.ERP5Type.ERP5Site import getSite
 from . import aq_method_lock
 from types import ModuleType
 from zLOG import LOG, BLATHER, WARNING

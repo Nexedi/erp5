@@ -54,7 +54,7 @@ def ERP5Site_createModuleScribus(self,
   from Products.ERP5Form.CreatePropertySheet import LocalGenerator
   # importing module to get an access to the 'searchFolder' method
   # needed to be able to list the objects in 'list_object_view' form
-  from Products.ERP5.ERP5Site import ERP5Site
+  from Products.ERP5Type.ERP5Site import ERP5Site
   from zLOG import LOG, TRACE, WARNING, ERROR, INFO
 
   # CREATING MODULES INSTANCES

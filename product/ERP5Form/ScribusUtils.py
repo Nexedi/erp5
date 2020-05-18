@@ -41,7 +41,7 @@ import random
 import getopt, sys, os, re
 from urllib import quote
 
-from Products.ERP5.ERP5Site import ERP5Site
+from Products.ERP5Type.ERP5Site import ERP5Site
 from Products.Formulator.TALESField import TALESMethod
 from Products.Formulator.MethodField import Method
 from Products.ERP5Type.Utils import convertToUpperCase

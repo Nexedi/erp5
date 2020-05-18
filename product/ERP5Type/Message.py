@@ -134,7 +134,7 @@ class Message(Persistent):
           message = message.encode('utf-8')
         message = Template(message).substitute(self.mapping)
     else:
-      from Products.ERP5.ERP5Site import getSite
+      from Products.ERP5Type.ERP5Site import getSite
       request = Globals.get_request()
       translation_service = getGlobalTranslationService()
       if self.mapping:

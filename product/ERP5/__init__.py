@@ -41,21 +41,18 @@ from Products.ERP5Type.Globals import package_home
 product_path = package_home( globals() )
 
 # Define object classes and tools
-from Tool import CategoryTool, IdTool, TemplateTool,\
+from Tool import IdTool, TemplateTool,\
                  TestTool, DomainTool, AlarmTool,\
                  TrashTool, ContributionTool, NotificationTool, PasswordTool,\
                  GadgetTool, ContributionRegistryTool, IntrospectionTool,\
                  AcknowledgementTool, SolverTool,\
                  UrlRegistryTool, InterfaceTool,\
                  CertificateAuthorityTool, InotifyTool
-import ERP5Site
 from Document import PythonScript, SQLMethod
-object_classes = ( ERP5Site.ERP5Site,
-                   PythonScript.PythonScriptThroughZMI,
+object_classes = ( PythonScript.PythonScriptThroughZMI,
                    SQLMethod.SQLMethod,
                  )
-portal_tools = ( CategoryTool.CategoryTool,
-                 IdTool.IdTool,
+portal_tools = ( IdTool.IdTool,
                  TemplateTool.TemplateTool,
                  AlarmTool.AlarmTool,
                  DomainTool.DomainTool,

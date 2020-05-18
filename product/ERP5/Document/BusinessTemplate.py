@@ -5451,7 +5451,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # update tools if necessary
       if self.getTitle() == 'erp5_core' and self.getTemplateUpdateTool():
-        from Products.ERP5.ERP5Site import ERP5Generator
+        from Products.ERP5Type.ERP5Site import ERP5Generator
         gen = getattr(site, '_generator_class', ERP5Generator)()
         LOG('Business Template', 0, 'Updating Tools')
         gen.setup(site, 0, update=1)
@@ -6457,9 +6457,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
     _migrate_exception_set = set([
       ## Bootstrap
       'Products.ERP5.Document.BusinessTemplate',
-      'Products.ERP5.ERP5Site',
+      'Products.ERP5Type.ERP5Site',
       'Products.ERP5.genbt5list',
-      'Products.ERP5.Tool.CategoryTool',
+      'Products.ERP5Type.Tool.CategoryTool',
       'Products.ERP5.Tool.TemplateTool',
       'Products.ERP5Type.Base',
       'Products.ERP5Type.Cache',

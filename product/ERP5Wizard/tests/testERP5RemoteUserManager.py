@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5.ERP5Site import ERP5Site
+from Products.ERP5Type.ERP5Site import ERP5Site
 from Products import ERP5Security
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase

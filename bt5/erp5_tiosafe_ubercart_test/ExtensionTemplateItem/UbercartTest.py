@@ -107,7 +107,7 @@ class UbercartTestConnector:
   def __init__(self):
     """
     """
-    from Products.ERP5.ERP5Site import getSite
+    from Products.ERP5Type.ERP5Site import getSite
     self.context = getSite()
 
   def validateXMLScheme(self, xml, xsd_filename):

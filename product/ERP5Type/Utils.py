@@ -1097,7 +1097,7 @@ def registerDocumentClass(module_name, class_name):
         LOG('Utils', WARNING,
             "Ignoring replacement of %s by %s" % (old_value, new_value))
         return
-      assert module_name == 'Products.ERP5.Tool.CategoryTool', module_name
+      assert module_name == 'Products.ERP5Type.Tool.CategoryTool', module_name
       LOG('Utils', WARNING, "Replacing %s by %s" % (old_value, new_value))
     else:
       raise Exception("Class %s and %s from different products have the "

@@ -90,14 +90,15 @@ def initialize( context ):
   # Import Product Components
   from Tool import (CacheTool, MemcachedTool, SessionTool,
                     TypesTool, WebServiceTool, PropertySheetTool,
-                    ComponentTool)
+                    ComponentTool, CategoryTool)
   import Document
   from Base import Base
   import XMLObject
   from ERP5Type import ERP5TypeInformation
   import CodingStyle
   # Define documents, classes, constructors and tools
-  object_classes = ()
+  import ERP5Site
+  object_classes = (ERP5Site.ERP5Site,)
   content_constructors = ()
   content_classes = ( Base,
                       XMLObject.XMLObject,
@@ -108,7 +109,8 @@ def initialize( context ):
                    TypesTool.TypesTool,
                    WebServiceTool.WebServiceTool,
                    PropertySheetTool.PropertySheetTool,
-                   ComponentTool.ComponentTool
+                   ComponentTool.ComponentTool,
+                   CategoryTool.CategoryTool
                   )
   # Do initialization step
   initializeProduct(context, this_module, globals(),

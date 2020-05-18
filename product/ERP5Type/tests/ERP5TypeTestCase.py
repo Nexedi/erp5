@@ -1192,7 +1192,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                 ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
 
               kw = self._getSiteCreationParameterDict()
-              factory = app.manage_addProduct['ERP5']
+              factory = app.manage_addProduct['ERP5Type']
               factory.manage_addERP5Site(portal_name,
                                        erp5_catalog_storage=erp5_catalog_storage,
                                        light_install=light_install,
@@ -1319,7 +1319,7 @@ class ERP5TypeTestCase(ERP5TypeCommandLineTestCase):
     This TestCase setups an ERP5Site and installs business templates.
     """
 
-from Products.ERP5 import ERP5Site
+from Products.ERP5Type import ERP5Site
 ERP5Site.getBootstrapBusinessTemplateUrl = lambda bt_title: \
   ERP5TypeCommandLineTestCase._getBTPathAndIdList((bt_title,))[0][0]
 

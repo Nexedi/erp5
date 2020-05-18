@@ -82,7 +82,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       if self.portal is not None:
         return self.portal
 
-      from Products.ERP5.ERP5Site import getSite
+      from Products.ERP5Type.ERP5Site import getSite
       site = getSite()
       # reconstruct the acquistion chain with an independant request.
       #   RequestContainer -> Application -> Site

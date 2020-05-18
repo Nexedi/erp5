@@ -353,7 +353,7 @@ def _aq_reset():
 
   # Callers expect to re-generates accessors right now, so call
   # resetDynamicDocuments to maintain backward-compatibility
-  from Products.ERP5.ERP5Site import getSite
+  from Products.ERP5Type.ERP5Site import getSite
   getSite().portal_types.resetDynamicDocuments()
 
 class PropertyHolder(object):

@@ -10,3 +10,5 @@ from value_access_provider import IValueAccessProvider
 from constraint import IConstraint
 from role_provider import ILocalRoleAssignor, ILocalRoleGenerator
 from types_tool import ITypesTool, ITypeProvider
+from property_recordable import IPropertyRecordable
+from predicate import IPredicate

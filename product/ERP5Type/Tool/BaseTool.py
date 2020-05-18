@@ -80,7 +80,7 @@ class BaseTool (UniqueObject, Folder):
       # Tools are causing problems: they used to have no type_class, or wrong
       # type_class, or sometimes have no type definitions at all.
       # Fix type definition if possible before any migration.
-      from Products.ERP5.ERP5Site import getSite
+      from Products.ERP5Type.ERP5Site import getSite
       types_tool = getSite().portal_types
       type_definition = getattr(types_tool, portal_type, None)
       if type_definition is not None and \

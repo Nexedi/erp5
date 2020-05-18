@@ -406,7 +406,7 @@ class ERP5TypeTestLoader(unittest.TestLoader):
           """
           template_tool = self.portal.portal_templates
 
-          from Products.ERP5.ERP5Site import getBootstrapDirectory
+          from Products.ERP5Type.ERP5Site import getBootstrapDirectory
           bt5_path_list = [os.environ.get('erp5_tests_bootstrap_path') or
                            getBootstrapDirectory()]
           for path in os.environ['erp5_tests_bt5_path'].split(','):

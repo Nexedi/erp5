@@ -232,7 +232,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     @param kind: 'min' or 'max'
     @type kind: string
     @param portal: Portal object
-    @type portal: Products.ERP5.ERP5Site.ERP5Site
+    @type portal: Products.ERP5Type.ERP5Site.ERP5Site
     """
     property_dict['reference'] = '%s_range_%s' % (property_dict['reference'],
                                                   kind)
@@ -281,7 +281,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     @param accessor_holder: Accessor holder to applied the accessors on
     @type accessor_holder: Products.ERP5Type.dynamic.accessor_holder.AccessorHolderType
     @param portal: Portal object
-    @type portal: Products.ERP5.ERP5Site.ERP5Site
+    @type portal: Products.ERP5Type.ERP5Site.ERP5Site
     """
     try:
       localizer = portal._getOb('Localizer')
@@ -498,7 +498,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     @param accessor_holder: Accessor holder to applied the accessors on
     @type accessor_holder: Products.ERP5Type.dynamic.accessor_holder.AccessorHolderType
     @param portal: Portal object
-    @type portal: Products.ERP5.ERP5Site.ERP5Site
+    @type portal: Products.ERP5Type.ERP5Site.ERP5Site
     @param do_register: Register the property in the Zope property map
     @type do_register: bool
     """
@@ -637,7 +637,7 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     @param expression_context: Expression context for TALES Expression
     @type expression_context: Products.PageTemplates.Expressions.ZopeContext
     @param portal: Portal object
-    @type portal: Products.ERP5.ERP5Site.ERP5Site
+    @type portal: Products.ERP5Type.ERP5Site.ERP5Site
 
     @see applyDefinitionOnAccessorHolder
     """

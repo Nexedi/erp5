@@ -115,7 +115,7 @@ MANAGER.register_transform(nodes.Module,
                            lambda n: n.name == 'erp5')
 
 def _buildAstroidModuleFromComponentModuleName(modname):
-    from Products.ERP5.ERP5Site import getSite
+    from Products.ERP5Type.ERP5Site import getSite
     from Acquisition import aq_base
     portal = getSite()
     component_tool = aq_base(portal.portal_components)

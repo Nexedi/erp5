@@ -101,7 +101,7 @@ def super_user():
         uf = user.aq_inner.aq_parent
       except AttributeError:
         # XXX: local imports are bad, getSite should be moved to ERP5Type.
-        from Products.ERP5.ERP5Site import getSite
+        from Products.ERP5Type.ERP5Site import getSite
         uf = getSite().acl_users
       role_list = uf.valid_roles()
       if anonymous:

@@ -27,11 +27,11 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.predicate import IPredicate
+from Products.ERP5Type import interfaces
 
 _MARKER = []
 
-class IMappedValue(IPredicate):
+class IMappedValue(interfaces.IPredicate):
   """Mapped Value document interface specification
 
   A Mapped Value provides

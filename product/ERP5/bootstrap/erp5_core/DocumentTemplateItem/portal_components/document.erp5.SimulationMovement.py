@@ -37,7 +37,7 @@ from erp5.component.module.ExpandPolicy import policy_dict, TREE_DELIVERED_CACHE
 
 from zLOG import LOG, WARNING
 
-from Products.ERP5.mixin.property_recordable import PropertyRecordableMixin
+from Products.ERP5Type.mixin.property_recordable import PropertyRecordableMixin
 from erp5.component.mixin.ExplainableMixin import ExplainableMixin
 from erp5.component.interface.IExpandable import IExpandable
 

@@ -78,7 +78,7 @@ class PropertySheetTool(BaseTool):
 
   def _bootstrap(self):
     bt_name = 'erp5_property_sheets'
-    from Products.ERP5.ERP5Site import ERP5Generator
+    from Products.ERP5Type.ERP5Site import ERP5Generator
     content_path_list = [
       'BaseType',
       'BusinessTemplate',
@@ -103,7 +103,7 @@ class PropertySheetTool(BaseTool):
       template_tool = portal.aq_base.__of__(portal.aq_parent.__of__(
         RequestContainer(REQUEST=get_request()))).portal_templates
       if template_tool.getInstalledBusinessTemplate(bt_name) is None:
-        from Products.ERP5.ERP5Site import getBootstrapBusinessTemplateUrl
+        from Products.ERP5Type.ERP5Site import getBootstrapBusinessTemplateUrl
         url = getBootstrapBusinessTemplateUrl(bt_name)
         template_tool.download(url).install()
     transaction.get().addBeforeCommitHook(unrestricted_apply, (install,))

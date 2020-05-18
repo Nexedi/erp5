@@ -30,7 +30,7 @@
 erp5.component.interface.ISimulationMovement
 """
 
-from Products.ERP5.interfaces.property_recordable import IPropertyRecordable
+from Products.ERP5Type.interfaces.property_recordable import IPropertyRecordable
 from Products.ERP5.interfaces.movement import IMovement
 from erp5.component.interface.IDivergenceController import IDivergenceController
 from Products.ERP5.interfaces.explainable import IExplainable

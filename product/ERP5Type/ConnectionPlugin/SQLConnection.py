@@ -27,7 +27,7 @@
 ##############################################################################
 
 from Products.ERP5Type.Tool.WebServiceTool import ConnectionError
-from Products.ERP5.ERP5Site import getSite
+from Products.ERP5Type.ERP5Site import getSite
 
 class MethodWrapper(object):
 

@@ -156,7 +156,7 @@ class PickleUpdater(ObjectReader, ObjectWriter, object):
 
 if 1:
   from Products.ERP5Type.Core.Folder import Folder
-  from Products.ERP5.Tool.CategoryTool import CategoryTool
+  from Products.ERP5Type.Tool.CategoryTool import CategoryTool
 
   Base__setstate__ = Base.__setstate__
 
