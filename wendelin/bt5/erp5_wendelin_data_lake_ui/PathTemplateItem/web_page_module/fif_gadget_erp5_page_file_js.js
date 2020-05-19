@@ -112,7 +112,7 @@
         });
     })
     .declareMethod("getDescriptorContent", function (descriptorReference) {
-      var url = "/erp5/getDescriptorHTMLContent?reference=" + descriptorReference,
+      var url = "/ERP5_getDescriptorHTMLContent?reference=" + descriptorReference,
           xmlHttp = new XMLHttpRequest();
       try {
           xmlHttp.open("GET", url, false);
