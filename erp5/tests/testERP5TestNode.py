@@ -338,9 +338,10 @@ shared = true
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEqual(3, len(rev_list))
     self.assertEqual(3, len(node_test_suite.vcs_repository_list))
-    rep2_clone_path = [x['repository_path'] for x in \
-                       node_test_suite.vcs_repository_list \
-                       if x['repository_path'].endswith("rep2")][0]
+    rep2_clone_path = next(
+        x['repository_path']
+        for x in node_test_suite.vcs_repository_list
+        if x['repository_path'].endswith("rep2"))
     call = self.getCaller(cwd=rep2_clone_path)
     output = call("git branch".split()).strip()
     self.assertTrue("* foo" in output.split('\n'))
@@ -395,9 +396,10 @@ shared = true
       # change the url of the first repository
       vcs_repository_info = node_test_suite.vcs_repository_list[0]
       vcs_repository_info["url"] = self.remote_repository2
-      rep0_clone_path = [x['repository_path'] for x in \
-                         node_test_suite.vcs_repository_list \
-                         if x['repository_path'].endswith("rep0")][0]
+      rep0_clone_path = next(
+          x['repository_path']
+          for x in node_test_suite.vcs_repository_list
+          if x['repository_path'].endswith("rep0"))
       call = self.getCaller(cwd=rep0_clone_path)
       self.assertEqual(call("git config --get remote.origin.url".split()).strip(),
                         self.remote_repository0)
@@ -422,9 +424,10 @@ shared = true
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEqual(2, len(rev_list))
     self.assertEqual(2, len(node_test_suite.vcs_repository_list))
-    rep0_clone_path = [x['repository_path'] for x in \
-                   node_test_suite.vcs_repository_list \
-                   if x['repository_path'].endswith("rep0")][0]
+    rep0_clone_path = next(
+        x['repository_path']
+        for x in node_test_suite.vcs_repository_list
+        if x['repository_path'].endswith("rep0"))
     my_file = open(os.path.join(rep0_clone_path, 'first_file'), 'w')
     my_file.write("next_content")
     my_file.close()
@@ -466,9 +469,10 @@ shared = true
     self.updateNodeTestSuiteData(node_test_suite)
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertTrue(rev_list is not None)
-    rep0_clone_path = [x['repository_path'] for x in \
-                   node_test_suite.vcs_repository_list \
-                   if x['repository_path'].endswith("rep0")][0]
+    rep0_clone_path = next(
+        x['repository_path']
+        for x in node_test_suite.vcs_repository_list
+        if x['repository_path'].endswith("rep0"))
     # simulate a data corruption on rep0's index
     with open(os.path.join(rep0_clone_path, '.git', 'index'), 'wb') as index_file:
       index_file.write(
@@ -499,9 +503,10 @@ shared = true
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEqual(3, len(rev_list))
     self.assertEqual(3, len(node_test_suite.vcs_repository_list))
-    rep2_remote_path = [x['url'] for x in \
-                       node_test_suite.vcs_repository_list \
-                       if x['url'].endswith("rep2")][0]
+    rep2_remote_path = next(
+        x['url']
+        for x in node_test_suite.vcs_repository_list
+        if x['url'].endswith("rep2"))
     call = self.getCaller(cwd=rep2_remote_path)
 
     # make a branch and merge it, to have a topology like this:
