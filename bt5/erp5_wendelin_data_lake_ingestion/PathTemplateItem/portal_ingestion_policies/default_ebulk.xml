@@ -10,6 +10,7 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
@@ -44,6 +45,7 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
+                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
@@ -58,15 +60,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>wendelin_ebulk</string> </value>
+            <value> <string>default_ebulk</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>[OBSOLETE - Kept for old ebulk clients] Handles ingestion of raw files bytes sent to us from ebulk.</string> </value>
+            <value> <string>Handles ingestion of raw files bytes sent to us from ebulk.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>wendelin_embulk</string> </value>
+            <value> <string>default_ebulk</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -78,7 +80,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>[OBSOLETE] Wendelin Ebulk Ingestion Policy</string> </value>
+            <value> <string>Default Ebulk Ingestion Policy</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -152,7 +154,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.63603.62266.8260</string> </value>
+                      <value> <string>984.990.49194.19609</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -170,7 +172,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1589986571.48</float>
+                              <float>1589986625.99</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -223,7 +225,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1489669293.19</float>
+                              <float>1589898672.1</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
