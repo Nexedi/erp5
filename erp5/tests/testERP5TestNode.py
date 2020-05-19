@@ -470,9 +470,17 @@ shared = true
                    node_test_suite.vcs_repository_list \
                    if x['repository_path'].endswith("rep0")][0]
     # simulate a data corruption on rep0's index
-    with open(os.path.join(rep0_clone_path, '.git', 'index'), 'ab') as index_file:
-      index_file.seek(10, os.SEEK_END)
-      index_file.truncate()
+    with open(os.path.join(rep0_clone_path, '.git', 'index'), 'wb') as index_file:
+      index_file.write(
+        # magic
+        b'\x44\x49\x52\x43'
+        # version
+        b'\x00\x00\x00\x02'
+        # number of entries (1)
+        b'\x00\x00\x00\x01'
+        # nothing more, the index entry is missing from this currupted file.
+      )
+
     # we get rev list with corrupted repository, we get None, but in the same
     # time the bad repository is deleted
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
