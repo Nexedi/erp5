@@ -143,7 +143,7 @@ class Updater(object):
     if not path_list:
       path_list = self._path_list
     if self.getRepositoryType() == GIT_TYPE:
-      h = self._git('log', '-1', '--format=%H', '--', *path_list)
+      h = self._git('log', '-1', '--format=%H', '--full-history', '--', *path_list)
       return self._git_find_rev(h)
     elif self.getRepositoryType() == SVN_TYPE:
       stdout = self.spawn('svn', 'info', *path_list)['stdout']

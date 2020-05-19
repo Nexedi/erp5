@@ -489,6 +489,48 @@ shared = true
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertTrue(rev_list is not None)
 
+  def test_update_revision_with_head_at_merge(self):
+    """Test update revision when the head of the branch is a merge commit.
+    """
+    self.generateTestRepositoryList(add_third_repository=True)
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertEqual(3, len(rev_list))
+    self.assertEqual(3, len(node_test_suite.vcs_repository_list))
+    rep2_remote_path = [x['url'] for x in \
+                       node_test_suite.vcs_repository_list \
+                       if x['url'].endswith("rep2")][0]
+    call = self.getCaller(cwd=rep2_remote_path)
+
+    # make a branch and merge it, to have a topology like this:
+    #
+    # o1 -- o2 -- o4
+    #        \   /
+    #          o3
+    call("git checkout -b test_branch".split())
+    with open(os.path.join(rep2_remote_path, 'test_file'), 'w') as test_file:
+      test_file.write("test file !")
+    call("git add test_file".split())
+    call("git commit -m added".split())
+    call("git checkout master".split())
+    call("git merge --no-ff test_branch".split())
+    expected_revision = call("git rev-parse HEAD".split()).strip()
+    # Including the merge, we have 4 commits on this branch, because master is at o4
+    self.assertEqual(
+        '4',
+        call('git rev-list --topo-order --count HEAD'.split()).strip())
+
+    vcs_repository_info = node_test_suite.vcs_repository_list[0]
+    vcs_repository_info['branch'] = 'master'
+    rev_list = [
+        rev.split('=') for rev
+        in self.getAndUpdateFullRevisionList(test_node, node_test_suite)]
+    self.assertEqual(
+      ["4-" + expected_revision],
+      [revision for (repository, revision) in rev_list if repository == 'rep2'])
+
   def test_06_checkRevision(self):
     """
     Check if we are able to restore older commit hash if master decide so
