@@ -331,7 +331,7 @@ shared = true
     It could happen that the branch is changed for a repository. Testnode must
     be able to reset correctly the branch
     """
-    commit_dict = self.generateTestRepositoryList(add_third_repository=True)
+    self.generateTestRepositoryList(add_third_repository=True)
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
@@ -376,7 +376,7 @@ shared = true
     change of username and password). testnode must be able to erase and clone
     again the repository
     """
-    commit_dict = self.generateTestRepositoryList(add_third_repository=True)
+    self.generateTestRepositoryList(add_third_repository=True)
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
@@ -415,7 +415,7 @@ shared = true
     Testnode must be able reset the repository to make sure we have no failures
     when updating repository
     """
-    commit_dict = self.generateTestRepositoryList(add_third_repository=True)
+    self.generateTestRepositoryList(add_third_repository=True)
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
@@ -443,7 +443,7 @@ shared = true
     crendentials), the testnode should not block forever and should work on
     other test suites. This method should be able to run
     """
-    commit_dict = self.generateTestRepositoryList()
+    self.generateTestRepositoryList()
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_broken_repository=True)
@@ -460,7 +460,7 @@ shared = true
     repository's index, then we call updateRevisionList to check that it can
     recover from this corruption.
     """
-    commit_dict = self.generateTestRepositoryList()
+    self.generateTestRepositoryList()
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
@@ -539,7 +539,7 @@ shared = true
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
-    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     def getRepInfo(count=0, hash=0):
       assert count or hash
       info_list = []
@@ -926,7 +926,6 @@ shared = true
       return "Certificate"
     def patch_getSlaposUrl(self, *args, **kw):
       return "http://Foo"
-      return "Certificate"
     def patch_getSlaposHateoasUrl(self, *args, **kw):
       return "http://Foo"
     def patch_generateConfiguration(self, *args, **kw):
@@ -961,7 +960,7 @@ shared = true
       test_node.node_test_suite_dict
       rand_part_set = set()
       self.assertEqual(2, len(test_node.node_test_suite_dict))
-      for ref, suite in test_node.node_test_suite_dict.items():
+      for suite in test_node.node_test_suite_dict.values():
         self.assertTrue('var/log/testnode/%s' % suite.reference in \
                          suite.suite_log_path,
                          "Incorrect suite log path : %r" % suite.suite_log_path)
@@ -1122,7 +1121,7 @@ shared = true
       self.assertRaises(SubprocessError, callPrepareSlapOS)
 
     self.assertEqual(node_test_suite.retry_software_count, 0)
-    for x in range(11):
+    for _ in range(11):
       callRaisingPrepareSlapos()
     self.assertEqual(len(init_call_kw_list), 11)
     self.assertEqual(init_call_kw_list[-1]['reset_software'], False)
