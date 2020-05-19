@@ -743,7 +743,7 @@ shared = true
 
   def test_11_run(self, my_test_type='UnitTest', grade='master'):
     def doNothing(self, *args, **kw):
-        pass
+      pass
     # Used in case of 'ScalabilityTest'
     def patch_getTestType(self, *args, **kw):
       return my_test_type
@@ -813,7 +813,7 @@ shared = true
         return TestResultProxy(self._proxy, self._retry_time,
                 logger, test_result_path, node_title, revision)
     def patch_runTestSuite(self, *argv, **kw):
-      return {'status_code':0}
+      return {'status_code': 0}
     original_sleep = time.sleep
     time.sleep = doNothing
     self.generateTestRepositoryList()
@@ -851,7 +851,7 @@ shared = true
     test_node = self.getTestNode()
     # Modify class UnitTestRunner(or more after) method
     def patch_prepareSlapOS(*args, **kw):
-      return {'status_code':0}
+      return {'status_code': 0}
     original_prepareSlapOS = RunnerClass._prepareSlapOS
     original_runTestSuite = RunnerClass.runTestSuite
     RunnerClass._prepareSlapOS = patch_prepareSlapOS
@@ -955,7 +955,7 @@ shared = true
       return TestResultProxy(self._proxy, self._retry_time,
                 logger, test_result_path, node_title, revision)
     def patch_runTestSuite(self,*argv, **kw):
-      return {'status_code':0}
+      return {'status_code': 0}
     def checkTestSuite(test_node):
       test_node.node_test_suite_dict
       rand_part_set = set()
@@ -1019,7 +1019,7 @@ shared = true
       RunnerClass.runTestSuite = doNothing
 
     def patch_prepareSlapOS(*args, **kw):
-      return {'status_code':0}
+      return {'status_code': 0}
     RunnerClass._prepareSlapOS = patch_prepareSlapOS
     SlapOSControler.initializeSlapOSControler = doNothing
     test_node.run()
@@ -1188,11 +1188,11 @@ shared = true
     def patch_isMasterTestnode(self, *args, **kw):
       return True
     def patch_generateConfiguration(self, *args, **kw):
-      return json.dumps({"configuration_list": [{"ok":"ok"}], "involved_nodes_computer_guid"\
+      return json.dumps({"configuration_list": [{"ok": "ok"}], "involved_nodes_computer_guid"\
 : ["COMP1", "COMP2", "COMP3"], "error_message": "No error.", "launcher_nodes_computer_guid": ["COMP1"], \
 "launchable": True, "randomized_path" : "azertyuiop"})
     def doNothing(self, *args, **kw):
-        pass
+      pass
     def patch_getSlaposAccountKey(self, *args, **kw):
       return "key"
     def patch_getSlaposAccountCertificate(self, *args, **kw):
@@ -1204,7 +1204,7 @@ shared = true
     def patch_getTestType(self, *args, **kw):
       return "ScalabilityTest"
     def patch_runTestSuite(self, *args, **kw):
-      return {'status_code':0}
+      return {'status_code': 0}
     def patch_generateProfilePasswordAccess(self, *args, **kw):
       return "user", "pass"
     def patch_getDictionaryFromFile(self, *args, **kw):
