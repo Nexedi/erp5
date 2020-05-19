@@ -1,7 +1,7 @@
 from Products.ERP5Type.Log import log
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
-complex_files = portal.getIngestionReferenceDictionary()["complex_files_extensions"]
+complex_files = portal.ERP5Site_getIngestionReferenceDictionary()["complex_files_extensions"]
 
 for data_analysis in portal_catalog(portal_type = "Data Analysis",
                                     simulation_state = "planned"):

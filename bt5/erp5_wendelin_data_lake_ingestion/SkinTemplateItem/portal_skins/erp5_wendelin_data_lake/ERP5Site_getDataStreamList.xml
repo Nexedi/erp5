@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>getDataStreamList</string> </value>
+            <value> <string>ERP5Site_getDataStreamList</string> </value>
         </item>
       </dictionary>
     </pickle>

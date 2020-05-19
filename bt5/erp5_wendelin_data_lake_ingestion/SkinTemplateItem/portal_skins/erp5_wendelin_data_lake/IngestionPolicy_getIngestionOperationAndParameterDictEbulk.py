@@ -6,9 +6,9 @@ now_string = now.strftime('%Y%m%d-%H%M%S-%f')[:-3]
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
 
-reference_separator = portal.getIngestionReferenceDictionary()["reference_separator"]
-reference_end_single = portal.getIngestionReferenceDictionary()["single_end_suffix"]
-none_extension = portal.getIngestionReferenceDictionary()["none_extension"]
+reference_separator = portal.ERP5Site_getIngestionReferenceDictionary()["reference_separator"]
+reference_end_single = portal.ERP5Site_getIngestionReferenceDictionary()["single_end_suffix"]
+none_extension = portal.ERP5Site_getIngestionReferenceDictionary()["none_extension"]
 
 # remove supplier, eof, size and hash from reference
 reference = reference_separator.join(reference.split(reference_separator)[1:-3])
@@ -111,8 +111,8 @@ if dataset_reference is not None:
       data_set.validate()
   except:
     data_set = portal.data_set_module.get(dataset_reference)
-  if portal.IsReferenceInvalidated(data_set):
-    portal.RevalidateReference(data_set)
+  if portal.ERP5Site_checkReferenceInvalidated(data_set):
+    portal.ERP5Site_revalidateReference(data_set)
   if data_set.getValidationState() == "invalidated":
     data_set.validate()
   input_line.setDefaultAggregateValue(data_set)

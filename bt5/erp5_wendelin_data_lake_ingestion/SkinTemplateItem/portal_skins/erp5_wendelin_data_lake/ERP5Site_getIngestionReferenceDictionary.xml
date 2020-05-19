@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>id, start_offset, end_offset</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>getDataStreamChunk</string> </value>
+            <value> <string>ERP5Site_getIngestionReferenceDictionary</string> </value>
         </item>
       </dictionary>
     </pickle>
