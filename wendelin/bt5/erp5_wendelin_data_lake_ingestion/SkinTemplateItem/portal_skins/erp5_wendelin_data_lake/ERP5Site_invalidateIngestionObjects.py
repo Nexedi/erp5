@@ -13,7 +13,7 @@ kw_dict = {"query": portal_type_query,
            "reference": reference}
 
 for document in portal_catalog(**kw_dict):
-  portal.InvalidateReference(document)
+  portal.ERP5Site_invalidateReference(document)
   try:
     document.invalidate()
   except:
