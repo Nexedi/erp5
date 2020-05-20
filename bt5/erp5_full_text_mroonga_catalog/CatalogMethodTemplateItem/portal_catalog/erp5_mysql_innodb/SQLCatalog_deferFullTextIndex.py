@@ -3,6 +3,10 @@ METHOD_ID = script.id + 'Activity'
 GROUP_METHOD_ID = context.getPath() + '/' + METHOD_ID
 activateObject = context.getPortalObject().portal_activities.activateObject
 priority = context.getActivityRuntimeEnvironment().getPriority()
+# Optimise cache usage by reducing the likelyhood of a processing node
+# including activities spawned by others into its activity group.
+# But prevent the group from going below 10 activities, for better throughput.
+group_methd_cost = min(.1, 1. / len(document))
 for document, root_document_path in zip(getPath, getRootDocumentPath):
   getattr(
     activateObject(
@@ -11,6 +15,7 @@ for document, root_document_path in zip(getPath, getRootDocumentPath):
       priority=priority,
       node='same',
       group_method_id=GROUP_METHOD_ID,
+      group_methd_cost=group_methd_cost,
       serialization_tag='full_text_' + root_document_path,
     ),
     METHOD_ID,
