@@ -10,7 +10,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>portal_type</string>
                 <string>selection_name</string>
                 <string>title</string>
               </list>

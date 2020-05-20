@@ -495,7 +495,7 @@ WebSection_getJexcelAppPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.54939.10432.17800</string> </value>
+                      <value> <string>983.65050.48835.6314</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -513,7 +513,7 @@ WebSection_getJexcelAppPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1589538110.06</float>
+                              <float>1589960046.85</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
