@@ -14,7 +14,7 @@ except KeyError:
 # including activities spawned by others into its activity group.
 # But prevent the group from going below 10 activities, for better throughput.
 group_method_cost = min(.1, 1. / len(getPath))
-for document, root_document_path in zip(getPath, getRootDocumentPath):
+for document in getPath:
   getattr(
     activateObject(
       document,
@@ -23,7 +23,7 @@ for document, root_document_path in zip(getPath, getRootDocumentPath):
       node='same',
       group_method_id=GROUP_METHOD_ID,
       group_method_cost=group_method_cost,
-      serialization_tag='full_text_' + root_document_path,
+      serialization_tag='full_text_' + document,
     ),
     METHOD_ID,
   )()
