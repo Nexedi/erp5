@@ -37,7 +37,7 @@ from erp5.component.test.testERP5BankingCheckPayment \
       import TestERP5BankingCheckPaymentMixin
 from erp5.component.test.testERP5BankingMoneyDeposit \
       import TestERP5BankingMoneyDepositMixin
-from Products.ERP5Form.PreferenceTool import Priority
+from Products.ERP5Type.Tool.PreferenceTool import Priority
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')

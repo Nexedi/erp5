@@ -26,14 +26,14 @@
 #
 ##############################################################################
 
-from Products.ERP5Form.Document.PreferenceType import PreferenceType
+from Products.ERP5Type.Core.PreferenceType import PreferenceType
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.dynamic.accessor_holder import AccessorHolderType
 
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Form.PreferenceTool import PreferenceMethod
+from Products.ERP5Type.Tool.PreferenceTool import PreferenceMethod
 
 def _generatePreferenceToolAccessorHolder(portal_type_name,
                                           accessor_holder_list):

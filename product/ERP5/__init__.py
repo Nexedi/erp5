@@ -45,7 +45,7 @@ from Tool import IdTool, TemplateTool,\
                  TestTool, DomainTool, AlarmTool,\
                  TrashTool, ContributionTool, NotificationTool, PasswordTool,\
                  GadgetTool, ContributionRegistryTool, IntrospectionTool,\
-                 AcknowledgementTool, SolverTool,\
+                 AcknowledgementTool,\
                  UrlRegistryTool, InterfaceTool,\
                  CertificateAuthorityTool, InotifyTool
 from Document import PythonScript, SQLMethod
@@ -65,7 +65,6 @@ portal_tools = ( IdTool.IdTool,
                  ContributionRegistryTool.ContributionRegistryTool,
                  IntrospectionTool.IntrospectionTool,
                  AcknowledgementTool.AcknowledgementTool,
-                 SolverTool.SolverTool,
                  UrlRegistryTool.UrlRegistryTool,
                  CertificateAuthorityTool.CertificateAuthorityTool,
                  InotifyTool.InotifyTool,

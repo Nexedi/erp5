@@ -59,7 +59,7 @@ from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5Form.PreferenceTool import Priority
+from Products.ERP5Type.Tool.PreferenceTool import Priority
 from zLOG import LOG, DEBUG
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError

@@ -47,7 +47,6 @@ import OOoChart, PDFTemplate, Report, PDFForm, ParallelListField
 import PlanningBox, POSBox, FormBox, EditorField, ProxyField, DurationField
 import RelationField, ImageField, MultiRelationField, MultiLinkField, InputButtonField
 import CaptchaField
-import PreferenceTool
 
 from Products.Formulator.FieldRegistry import FieldRegistry
 from Products.Formulator import StandardFields, HelperFields
@@ -56,7 +55,7 @@ from Products.CMFCore.utils import registerIcon
 
 object_classes = ( Form.ERP5Form, FSForm.ERP5FSForm, PDFTemplate.PDFTemplate,
                    Report.ERP5Report, PDFForm.PDFForm)
-portal_tools = ( SelectionTool.SelectionTool, PreferenceTool.PreferenceTool )
+portal_tools = ( SelectionTool.SelectionTool, )
 content_classes = ( )
 content_constructors = ()
 

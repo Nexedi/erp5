@@ -27,7 +27,7 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5OOo.tests.testDms import makeFileUpload
-from Products.ERP5Form.PreferenceTool import Priority
+from Products.ERP5Type.Tool.PreferenceTool import Priority
 
 
 class TestOOoConversionServerRetry(ERP5TypeTestCase):

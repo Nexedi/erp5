@@ -299,7 +299,7 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
       if pref.getPreferenceState() == 'global':
         break
     else:
-      from Products.ERP5Form.PreferenceTool import Priority
+      from Products.ERP5Type.Tool.PreferenceTool import Priority
       pref = preference_tool.newContent(id, portal_type,
         priority=Priority.SITE, title='Default ' + portal_type)
       pref.enable()

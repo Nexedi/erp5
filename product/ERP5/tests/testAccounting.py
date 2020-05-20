@@ -38,7 +38,7 @@ from Products.ERP5Type.tests.utils import reindex
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Form.PreferenceTool import Priority
+from Products.ERP5Type.Tool.PreferenceTool import Priority
 
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 

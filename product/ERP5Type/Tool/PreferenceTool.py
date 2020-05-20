@@ -40,7 +40,6 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5Form import _dtmldir
 from BTrees.OIBTree import OIBTree
 
 _marker = object()
@@ -104,10 +103,6 @@ class PreferenceTool(BaseTool):
   security      = ClassSecurityInfo()
 
   aq_preference_generated = False
-
-  security.declareProtected(
-       Permissions.ManagePortal, 'manage_overview' )
-  manage_overview = DTMLFile( 'explainPreferenceTool', _dtmldir )
 
   security.declarePrivate('manage_afterAdd')
   def manage_afterAdd(self, item, container) :

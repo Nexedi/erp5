@@ -39,7 +39,7 @@ from DateTime import DateTime
 
 from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-from Products.ERP5Form.PreferenceTool import Priority
+from Products.ERP5Type.Tool.PreferenceTool import Priority
 
 # should match what's configured by default in HtmlStylePreference
 default_large_image_height = 768
