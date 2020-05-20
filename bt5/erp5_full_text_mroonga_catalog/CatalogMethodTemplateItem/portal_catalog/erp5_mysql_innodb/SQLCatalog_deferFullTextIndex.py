@@ -10,6 +10,10 @@ except KeyError:
   # Strictly, this could also look-up default activate parameters, but on
   # which document ? Traversing is expensive. So keep things fast by default.
   priority = 1
+# Optimise cache usage by reducing the likelyhood of a processing node
+# including activities spawned by others into its activity group.
+# But prevent the group from going below 10 activities, for better throughput.
+group_method_cost = min(.1, 1. / len(getPath))
 for document, root_document_path in zip(getPath, getRootDocumentPath):
   getattr(
     activateObject(
@@ -18,6 +22,7 @@ for document, root_document_path in zip(getPath, getRootDocumentPath):
       priority=priority,
       node='same',
       group_method_id=GROUP_METHOD_ID,
+      group_method_cost=group_method_cost,
       serialization_tag='full_text_' + root_document_path,
     ),
     METHOD_ID,
