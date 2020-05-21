@@ -153,6 +153,7 @@ class ComponentTool(BaseTool):
           package.reset()
           component_package_list.append(package.__name__)
 
+      erp5.component.filesystem_import_dict = None
       erp5.component.ref_manager.gc()
 
       # Clear pylint cache
