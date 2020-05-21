@@ -178,7 +178,11 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     'description': BaseAccessor.Getter('getDescription',
                                        'description',
                                        'string',
-                                       default='')
+                                       default=''),
+    'source_reference': BaseAccessor.Getter('getSourceReference',
+	                                    'source_reference',
+	                                    'string',
+		                            storage_id='default_source_reference'),
     }
 
   _message_invalid_id = "ID is invalid, should be '${id_prefix}.VERSION.REFERENCE'"
