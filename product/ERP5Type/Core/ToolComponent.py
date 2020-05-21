@@ -61,8 +61,8 @@ class ToolComponent(DocumentComponent):
     # Should we really use ERP5 Product and not ERP5Type considering that ERP5
     # may be gone at some point? Or the other way around? For now, all tools
     # have meta_type='ERP5 ...' so just use ERP5 Product.
-    import Products.ERP5
-    toolinit = Products.ERP5.__FactoryDispatcher__.toolinit
+    import Products.ERP5Type
+    toolinit = Products.ERP5Type.__FactoryDispatcher__.toolinit
     # Products.CMFCore.utils.ToolInit.initialize()
     tool_class.__factory_meta_type__ = toolinit.meta_type
     tool_class.icon = 'misc_/%s/%s' % ('ERP5', toolinit.icon)

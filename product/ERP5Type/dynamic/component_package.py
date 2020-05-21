@@ -34,6 +34,7 @@ import sys
 import imp
 import collections
 
+from Products.ERP5Type import product_path as ERP5Type_product_path
 from Products.ERP5Type.ERP5Site import getSite
 from . import aq_method_lock
 from types import ModuleType
@@ -109,11 +110,27 @@ class ComponentDynamicPackage(ModuleType):
     perhaps because the Finder of another Component Package could do it or
     because this is a filesystem module...
     """
-    # Ignore imports with a path which are filesystem-only and any
-    # absolute imports which does not start with this package prefix,
-    # None there means that "normal" sys.path will be used
-    if path or not fullname.startswith(self._namespace_prefix):
-      return None
+    # ZODB Components
+    if not path:
+      if not fullname.startswith(self._namespace_prefix):
+        return None
+    # FS import backward compatibility
+    else:
+      if not [p for p in path
+              if (not p.startswith(ERP5Type_product_path)
+                  # TODO-BEFORE-MERGE: Would not work for customer Products...
+                  # and p.startswith(os.path.realpath(ERP5Type_product_path + '/..'))
+                  )]:
+        return None
+
+      import erp5.component
+      try:
+        fullname = erp5.component.filesystem_import_dict[fullname]
+      except Exception:
+        return None
+      else:
+        if not fullname.startswith(self._namespace_prefix):
+          return None
 
     import_lock_held = True
     try:
@@ -219,6 +236,14 @@ class ComponentDynamicPackage(ModuleType):
     module for any reason...
     """
     site = getSite()
+
+    if fullname.startswith('Products.'):
+      module_fullname_filesystem = fullname
+      import erp5.component
+      fullname = erp5.component.filesystem_import_dict[module_fullname_filesystem]
+    else:
+      module_fullname_filesystem = None
+
     name = fullname[len(self._namespace_prefix):]
 
     # if only Version package (erp5.component.XXX.VERSION_version) is
@@ -288,6 +313,8 @@ class ComponentDynamicPackage(ModuleType):
       sys.modules[module_fullname] = module
       if module_fullname_alias:
         sys.modules[module_fullname_alias] = module
+      if module_fullname_filesystem:
+        sys.modules[module_fullname_filesystem] = module
 
       # This must be set for imports at least (see PEP 302)
       module.__file__ = '<' + relative_url + '>'
@@ -308,6 +335,8 @@ class ComponentDynamicPackage(ModuleType):
         del sys.modules[module_fullname]
         if module_fullname_alias:
           del sys.modules[module_fullname_alias]
+        if module_fullname_filesystem:
+          del sys.modules[module_fullname_filesystem]
 
         raise ImportError(
           "%s: cannot load Component %s (%s)" % (fullname, name, error)), \
@@ -442,8 +471,8 @@ class ToolComponentDynamicPackage(ComponentDynamicPackage):
     """
     Reset CMFCore list of Tools (manage_addToolForm)
     """
-    import Products.ERP5
-    toolinit = Products.ERP5.__FactoryDispatcher__.toolinit
+    import Products.ERP5Type
+    toolinit = Products.ERP5Type.__FactoryDispatcher__.toolinit
     reset_tool_set = set()
     for tool in toolinit.tools:
       if not tool.__module__.startswith(self._namespace_prefix):

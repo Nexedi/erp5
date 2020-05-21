@@ -226,7 +226,7 @@ class _site(threading.local):
     self.site = [x for x in self.site if x[0] is not app]
 
 getSite, setSite = _site()
-
+all_product_installed_portal_id_set = set()
 
 class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
   """
@@ -403,6 +403,44 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
         # This should only happen before erp5_core is installed
         synchronizeDynamicModules(self)
       else:
+        global all_product_installed_portal_id_set
+        from Products.ERP5Type.dynamic import aq_method_lock
+        if self.id not in all_product_installed_portal_id_set:
+          with aq_method_lock:
+            all_product_installed_portal_id_set.add(self.id)
+
+            LOG('ERP5Site', INFO, '===> Creating mapping of old FS to new ZODB Components imports')
+            import erp5.component
+            if not getattr(erp5.component, 'filesystem_import_dict', None):
+              filesystem_import_dict = {}
+              for component in component_tool.objectValues():
+                if (component.getValidationState() == 'validated' and
+                    component.getSourceReference() is not None):
+                  if component.getReference() == 'CompositionMixin':
+                    continue
+
+                  filesystem_import_dict[component.getSourceReference()] = '%s.%s' % (
+                    component._getDynamicModuleNamespace(),
+                    component.getReference())
+              erp5.component.filesystem_import_dict = filesystem_import_dict
+
+            LOG('ERP5Site', INFO, '===> Importing all Products')
+            from OFS.Application import import_products
+            import_products(everything=True)
+
+            LOG('ERP5Site', INFO, '===> Installing all Products')
+            from OFS.Application import install_products
+            install_products(self.aq_parent, everything=True)
+            # TODO-BEFORE-MERGE: Fill document_class_registry to load
+            # classes. It should probably be done in initializeProduct()....
+            from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
+            initializeProductDocumentRegistry()
+
+            LOG('ERP5Site', INFO, '===> Reset all ZODB Components and Portal Type classes')
+            component_tool.reset(force=True)
+
+            LOG('ERP5Site', INFO, '===> All Products installed')
+
         if not component_tool.reset():
           # Portal Types may have been reset even if Components haven't
           # (change of Interaction Workflow...)
