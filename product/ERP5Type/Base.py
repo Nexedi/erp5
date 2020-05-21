@@ -3243,7 +3243,7 @@ class Base(
         try:
           return min(history[0]['time']
             for history in history_list.itervalues()
-            if history)
+            if history and 'time' in history[0])
         except ValueError:
           pass
     if getattr(aq_base(self), 'CreationDate', None) is not None:
