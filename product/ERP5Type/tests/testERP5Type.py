@@ -33,6 +33,7 @@ of Portal Type as Classes and ZODB Components
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from AccessControl.ZopeGuards import guarded_import
 from Products.ERP5Type.tests.utils import LogInterceptor
 
 class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
@@ -204,6 +205,41 @@ class TestERP5Type(ERP5TypeTestCase, LogInterceptor):
       subdocument = folder[final_id][subdocument_id]
       subdocument_record = sql_catalog.getRecordForUid(subdocument.uid)
       self.assertEqual(subdocument.getPath(), subdocument_record.path)
+
+    def test_products_document_legacy(self):
+      """check document classes defined in Products/*/Document/*.py
+      """
+      # note: this assertion below checks Alarm is really a legacy document class.
+      # if one day Alarm is moved to component, then this test needs to be updated
+      # with another module that lives on the file system.
+      import Products.ERP5.Document.Alarm
+      self.assertIn('product/ERP5/Document/Alarm.py', Products.ERP5.Document.Alarm.__file__)
+
+      # document classes are also dynamically loaded in Products.ERP5Type.Document module
+      from Products.ERP5Type.Document.Alarm import Alarm as Alarm_from_ERP5Type  # pylint:disable=import-error,no-name-in-module
+      self.assertIs(Alarm_from_ERP5Type, Products.ERP5.Document.Alarm.Alarm)
+
+      # a new temp constructor is created
+      from Products.ERP5Type.Document import newTempAlarm  # pylint:disable=import-error,no-name-in-module
+      self.assertIn(Alarm_from_ERP5Type, newTempAlarm(self.portal, '').__class__.mro())
+
+      # temp constructors are deprecated, they issue a warning when called
+      import mock
+      with mock.patch('Products.ERP5Type.Utils.warnings.warn') as warn:
+          newTempAlarm(self.portal, '')
+      warn.assert_called_with(
+          'newTemp*(self, ID) will be removed, use self.newContent(temp_object=True, id=ID, portal_type=...)',
+          DeprecationWarning, 2)
+
+    def test_03_NewTempObject(self):
+      # Products.ERP5Type.Document.newTempBase is another (not recommended) way
+      # of creating temp objects
+      import Products.ERP5Type.Document
+      o = Products.ERP5Type.Document.newTempBase(self.portal, 'id')
+      self.assertEqual(o.getId(), 'id')
+      self.assertEqual(o.getPortalType(), 'Base Object')
+      self.assertTrue(o.isTempObject())
+      self.assertTrue(guarded_import("Products.ERP5Type.Document", fromlist=["newTempBase"]))
 
 def test_suite():
   suite = unittest.TestSuite()

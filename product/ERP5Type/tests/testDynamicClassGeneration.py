@@ -2655,25 +2655,11 @@ def foobar(self, a, b="portal_type"):
 
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 
-class TestZodbDocumentComponent(_TestZodbComponent):
+class _TestZodbDocumentComponentMixin(_TestZodbComponent):
   """
-  Tests specific to ZODB Document Component. This is only for Document
-  previously defined in bt5 and installed on the filesystem in
-  $INSTANCE_HOME/Document. Later on, Product Documents will also be migrated
+  Common to all Component class inheriting from Document Component (so
+  Interface and Mixin)
   """
-  _portal_type = 'Document Component'
-  _document_class = DocumentComponent
-
-  def _getValidSourceCode(self, class_name):
-    return '''from erp5.component.document.Person import Person
-
-class %sAnything:
-  pass
-
-class %s(Person):
-  pass
-''' % (class_name, class_name)
-
   def testAtLeastOneClassNamedAfterReference(self):
     component = self._newComponent(
       self._generateReference('TestClassNamedAfterReference'))
@@ -2921,6 +2907,124 @@ class TestGC(XMLObject):
        'gc: collectable <Implements 0x%x>\n' % Implements_id],
       sorted(found_line_list))
 
+class TestZodbDocumentComponent(_TestZodbDocumentComponentMixin):
+  """
+  Tests specific to ZODB Document Component. This is only for Document
+  previously defined in bt5 and installed on the filesystem in
+  $INSTANCE_HOME/Document. Later on, Product Documents will also be migrated
+  """
+  _portal_type = 'Document Component'
+  _document_class = DocumentComponent
+
+  def _getValidSourceCode(self, class_name):
+    return '''from erp5.component.document.Person import Person
+
+class %sAnything:
+  pass
+
+class %s(Person):
+  pass
+''' % (class_name, class_name)
+
+  def testProductsERP5DocumentCompatibility(self):
+    """Check that document class also exist in its original namespace (source_reference)
+
+    Document Component that were moved from file system Products/*/Document needs
+    to be still importable from their initial location, as there might be classes
+    in the database of these instances.
+
+    There is no such test for Mixin/Interface/Tool because the code is the
+    same for all of them (component_package.py).
+    """
+    self.failIfModuleImportable('TestProductsERP5DocumentCompatibility')
+
+    test_component = self._newComponent(
+        'TestProductsERP5DocumentCompatibility',
+        """\
+from Products.ERP5Type.Base import Base
+class TestProductsERP5DocumentCompatibility(Base):
+  portal_type = 'Test ProductsERP5Document Compatibility'
+  test_attribute = 'TestProductsERP5DocumentCompatibility'
+"""
+    )
+    test_component.setSourceReference('Products.ERP5.Document.TestProductsERP5DocumentCompatibility')
+    test_component.validate()
+    self.tic()
+
+    self.assertModuleImportable('TestProductsERP5DocumentCompatibility')
+
+    from Products.ERP5.Document.TestProductsERP5DocumentCompatibility import TestProductsERP5DocumentCompatibility  # pylint:disable=import-error,no-name-in-module
+    self.assertEqual(TestProductsERP5DocumentCompatibility.test_attribute, 'TestProductsERP5DocumentCompatibility')
+
+    # this also exist in Products.ERP5Type.Document
+    from Products.ERP5Type.Document.TestProductsERP5DocumentCompatibility import TestProductsERP5DocumentCompatibility as TestProductsERP5DocumentCompatibility_from_ProductsERP5Type  # pylint:disable=import-error,no-name-in-module
+    self.assertIs(TestProductsERP5DocumentCompatibility_from_ProductsERP5Type, TestProductsERP5DocumentCompatibility)
+
+    # another component can also import the migrated component from its original name
+    test_component_importing = self._newComponent(
+        'TestComponentImporting',
+        """\
+from Products.ERP5.Document.TestProductsERP5DocumentCompatibility import TestProductsERP5DocumentCompatibility
+class TestComponentImporting(TestProductsERP5DocumentCompatibility):
+  pass
+"""
+    )
+    test_component_importing.validate()
+    self.tic()
+
+    self.assertModuleImportable('TestComponentImporting')
+    from erp5.component.document.TestComponentImporting import TestComponentImporting  # pylint:disable=import-error,no-name-in-module
+
+    from Products.ERP5.Document.TestProductsERP5DocumentCompatibility import TestProductsERP5DocumentCompatibility  # pylint:disable=import-error,no-name-in-module
+    self.assertTrue(issubclass(TestComponentImporting, TestProductsERP5DocumentCompatibility))
+
+    test_component.invalidate()
+    self.tic()
+
+    # after invalidating the component, the legacy modules are no longer importable
+    with self.assertRaises(ImportError):
+      from Products.ERP5.Document.TestProductsERP5DocumentCompatibility import TestProductsERP5DocumentCompatibility  # pylint:disable=import-error,no-name-in-module
+    with self.assertRaises(ImportError):
+      from Products.ERP5Type.Document.TestProductsERP5DocumentCompatibility import TestProductsERP5DocumentCompatibility  # pylint:disable=import-error,no-name-in-module
+
+  def testProductsERP5TypeDocumentCompatibility(self):
+    """Check that document class also exist in Products.ERP5Type.Document namespace
+    for compatibility.
+
+    We also check that this module is properly reloaded when a document component
+    is modified.
+    """
+    self.failIfModuleImportable('TestProductsERP5TypeDocumentCompatibility')
+
+    test_component = self._newComponent(
+        'TestProductsERP5TypeDocumentCompatibility',
+        """\
+from Products.ERP5Type.Base import Base
+class TestProductsERP5TypeDocumentCompatibility(Base):
+  portal_type = 'Test ProductsERP5TypeDocument Compatibility'
+  generation = 1
+"""
+    )
+    test_component.validate()
+    self.tic()
+
+    self.assertModuleImportable('TestProductsERP5TypeDocumentCompatibility')
+
+    from Products.ERP5Type.Document.TestProductsERP5TypeDocumentCompatibility import TestProductsERP5TypeDocumentCompatibility  # pylint:disable=import-error,no-name-in-module
+    self.assertEqual(TestProductsERP5TypeDocumentCompatibility.generation, 1)
+
+    test_component.setTextContent(
+        """\
+from Products.ERP5Type.Base import Base
+class TestProductsERP5TypeDocumentCompatibility(Base):
+  portal_type = 'Test ProductsERP5TypeDocument Compatibility'
+  generation = 2
+""")
+    self.tic()
+    self.assertModuleImportable('TestProductsERP5TypeDocumentCompatibility')
+    from Products.ERP5Type.Document.TestProductsERP5TypeDocumentCompatibility import TestProductsERP5TypeDocumentCompatibility  # pylint:disable=import-error,no-name-in-module
+    self.assertEqual(TestProductsERP5TypeDocumentCompatibility.generation, 2)
+
 from Products.ERP5Type.Core.TestComponent import TestComponent
 
 class TestZodbTestComponent(_TestZodbComponent):
@@ -3091,7 +3195,7 @@ class Test(ERP5TypeTestCase):
       self.commit()
 
 from Products.ERP5Type.Core.InterfaceComponent import InterfaceComponent
-class TestZodbInterfaceComponent(TestZodbDocumentComponent):
+class TestZodbInterfaceComponent(_TestZodbDocumentComponentMixin):
   """
   Tests specific to ZODB Interface Component.
   """
