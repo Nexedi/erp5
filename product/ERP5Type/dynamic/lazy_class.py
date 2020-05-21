@@ -379,7 +379,9 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       # skip this during the early Base Type / Types Tool generation
       # because they dont have accessors, and will mess up
       # workflow methods. We KNOW that we will re-load this type anyway
-      if len(base_tuple) > 1:
+      #
+      # TODO-BEFORE-MERGE: [klass, GetAcquireLocalRolesMixIn]
+      if len(base_tuple) > 2:
         klass.generatePortalTypeAccessors(site, portal_type_category_list)
         # need to set %s__roles__ for generated methods
         cls.setupSecurity()
