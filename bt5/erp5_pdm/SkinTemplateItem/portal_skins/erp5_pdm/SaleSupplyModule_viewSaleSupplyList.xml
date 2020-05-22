@@ -70,8 +70,8 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_start_date_range_max</string>
-                        <string>listbox_start_date_range_min</string>
+                        <string>listbox_predicate_start_date_range_max</string>
+                        <string>listbox_predicate_start_date_range_min</string>
                       </list>
                     </value>
                 </item>
