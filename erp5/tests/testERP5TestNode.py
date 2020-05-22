@@ -331,16 +331,17 @@ shared = true
     It could happen that the branch is changed for a repository. Testnode must
     be able to reset correctly the branch
     """
-    commit_dict = self.generateTestRepositoryList(add_third_repository=True)
+    self.generateTestRepositoryList(add_third_repository=True)
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEqual(3, len(rev_list))
     self.assertEqual(3, len(node_test_suite.vcs_repository_list))
-    rep2_clone_path = [x['repository_path'] for x in \
-                       node_test_suite.vcs_repository_list \
-                       if x['repository_path'].endswith("rep2")][0]
+    rep2_clone_path = next(
+        x['repository_path']
+        for x in node_test_suite.vcs_repository_list
+        if x['repository_path'].endswith("rep2"))
     call = self.getCaller(cwd=rep2_clone_path)
     output = call("git branch".split()).strip()
     self.assertTrue("* foo" in output.split('\n'))
@@ -376,7 +377,7 @@ shared = true
     change of username and password). testnode must be able to erase and clone
     again the repository
     """
-    commit_dict = self.generateTestRepositoryList(add_third_repository=True)
+    self.generateTestRepositoryList(add_third_repository=True)
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
@@ -395,9 +396,10 @@ shared = true
       # change the url of the first repository
       vcs_repository_info = node_test_suite.vcs_repository_list[0]
       vcs_repository_info["url"] = self.remote_repository2
-      rep0_clone_path = [x['repository_path'] for x in \
-                         node_test_suite.vcs_repository_list \
-                         if x['repository_path'].endswith("rep0")][0]
+      rep0_clone_path = next(
+          x['repository_path']
+          for x in node_test_suite.vcs_repository_list
+          if x['repository_path'].endswith("rep0"))
       call = self.getCaller(cwd=rep0_clone_path)
       self.assertEqual(call("git config --get remote.origin.url".split()).strip(),
                         self.remote_repository0)
@@ -415,16 +417,17 @@ shared = true
     Testnode must be able reset the repository to make sure we have no failures
     when updating repository
     """
-    commit_dict = self.generateTestRepositoryList(add_third_repository=True)
+    self.generateTestRepositoryList(add_third_repository=True)
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEqual(2, len(rev_list))
     self.assertEqual(2, len(node_test_suite.vcs_repository_list))
-    rep0_clone_path = [x['repository_path'] for x in \
-                   node_test_suite.vcs_repository_list \
-                   if x['repository_path'].endswith("rep0")][0]
+    rep0_clone_path = next(
+        x['repository_path']
+        for x in node_test_suite.vcs_repository_list
+        if x['repository_path'].endswith("rep0"))
     my_file = open(os.path.join(rep0_clone_path, 'first_file'), 'w')
     my_file.write("next_content")
     my_file.close()
@@ -443,7 +446,7 @@ shared = true
     crendentials), the testnode should not block forever and should work on
     other test suites. This method should be able to run
     """
-    commit_dict = self.generateTestRepositoryList()
+    self.generateTestRepositoryList()
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_broken_repository=True)
@@ -460,19 +463,28 @@ shared = true
     repository's index, then we call updateRevisionList to check that it can
     recover from this corruption.
     """
-    commit_dict = self.generateTestRepositoryList()
+    self.generateTestRepositoryList()
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertTrue(rev_list is not None)
-    rep0_clone_path = [x['repository_path'] for x in \
-                   node_test_suite.vcs_repository_list \
-                   if x['repository_path'].endswith("rep0")][0]
+    rep0_clone_path = next(
+        x['repository_path']
+        for x in node_test_suite.vcs_repository_list
+        if x['repository_path'].endswith("rep0"))
     # simulate a data corruption on rep0's index
-    with open(os.path.join(rep0_clone_path, '.git', 'index'), 'ab') as index_file:
-      index_file.seek(10, os.SEEK_END)
-      index_file.truncate()
+    with open(os.path.join(rep0_clone_path, '.git', 'index'), 'wb') as index_file:
+      index_file.write(
+        # magic
+        b'\x44\x49\x52\x43'
+        # version
+        b'\x00\x00\x00\x02'
+        # number of entries (1)
+        b'\x00\x00\x00\x01'
+        # nothing more, the index entry is missing from this corrupted file.
+      )
+
     # we get rev list with corrupted repository, we get None, but in the same
     # time the bad repository is deleted
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
@@ -480,6 +492,49 @@ shared = true
     # So next update should go fine
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertTrue(rev_list is not None)
+
+  def test_update_revision_with_head_at_merge(self):
+    """Test update revision when the head of the branch is a merge commit.
+    """
+    self.generateTestRepositoryList(add_third_repository=True)
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.assertEqual(3, len(rev_list))
+    self.assertEqual(3, len(node_test_suite.vcs_repository_list))
+    rep2_remote_path = next(
+        x['url']
+        for x in node_test_suite.vcs_repository_list
+        if x['url'].endswith("rep2"))
+    call = self.getCaller(cwd=rep2_remote_path)
+
+    # make a branch and merge it, to have a topology like this:
+    #
+    # o1 -- o2 -- o4
+    #        \   /
+    #          o3
+    call("git checkout -b test_branch".split())
+    with open(os.path.join(rep2_remote_path, 'test_file'), 'w') as test_file:
+      test_file.write("test file !")
+    call("git add test_file".split())
+    call("git commit -m added".split())
+    call("git checkout master".split())
+    call("git merge --no-ff test_branch".split())
+    expected_revision = call("git rev-parse HEAD".split()).strip()
+    # Including the merge, we have 4 commits on this branch, because master is at o4
+    self.assertEqual(
+        '4',
+        call('git rev-list --topo-order --count HEAD'.split()).strip())
+
+    vcs_repository_info = node_test_suite.vcs_repository_list[0]
+    vcs_repository_info['branch'] = 'master'
+    rev_list = [
+        rev.split('=') for rev
+        in self.getAndUpdateFullRevisionList(test_node, node_test_suite)]
+    self.assertEqual(
+      ["4-" + expected_revision],
+      [revision for (repository, revision) in rev_list if repository == 'rep2'])
 
   def test_06_checkRevision(self):
     """
@@ -489,7 +544,7 @@ shared = true
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
-    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     def getRepInfo(count=0, hash=0):
       assert count or hash
       info_list = []
@@ -693,7 +748,7 @@ shared = true
 
   def test_11_run(self, my_test_type='UnitTest', grade='master'):
     def doNothing(self, *args, **kw):
-        pass
+      pass
     # Used in case of 'ScalabilityTest'
     def patch_getTestType(self, *args, **kw):
       return my_test_type
@@ -763,7 +818,7 @@ shared = true
         return TestResultProxy(self._proxy, self._retry_time,
                 logger, test_result_path, node_title, revision)
     def patch_runTestSuite(self, *argv, **kw):
-      return {'status_code':0}
+      return {'status_code': 0}
     original_sleep = time.sleep
     time.sleep = doNothing
     self.generateTestRepositoryList()
@@ -801,7 +856,7 @@ shared = true
     test_node = self.getTestNode()
     # Modify class UnitTestRunner(or more after) method
     def patch_prepareSlapOS(*args, **kw):
-      return {'status_code':0}
+      return {'status_code': 0}
     original_prepareSlapOS = RunnerClass._prepareSlapOS
     original_runTestSuite = RunnerClass.runTestSuite
     RunnerClass._prepareSlapOS = patch_prepareSlapOS
@@ -876,7 +931,6 @@ shared = true
       return "Certificate"
     def patch_getSlaposUrl(self, *args, **kw):
       return "http://Foo"
-      return "Certificate"
     def patch_getSlaposHateoasUrl(self, *args, **kw):
       return "http://Foo"
     def patch_generateConfiguration(self, *args, **kw):
@@ -906,12 +960,12 @@ shared = true
       return TestResultProxy(self._proxy, self._retry_time,
                 logger, test_result_path, node_title, revision)
     def patch_runTestSuite(self,*argv, **kw):
-      return {'status_code':0}
+      return {'status_code': 0}
     def checkTestSuite(test_node):
       test_node.node_test_suite_dict
       rand_part_set = set()
       self.assertEqual(2, len(test_node.node_test_suite_dict))
-      for ref, suite in test_node.node_test_suite_dict.items():
+      for suite in test_node.node_test_suite_dict.values():
         self.assertTrue('var/log/testnode/%s' % suite.reference in \
                          suite.suite_log_path,
                          "Incorrect suite log path : %r" % suite.suite_log_path)
@@ -970,7 +1024,7 @@ shared = true
       RunnerClass.runTestSuite = doNothing
 
     def patch_prepareSlapOS(*args, **kw):
-      return {'status_code':0}
+      return {'status_code': 0}
     RunnerClass._prepareSlapOS = patch_prepareSlapOS
     SlapOSControler.initializeSlapOSControler = doNothing
     test_node.run()
@@ -1072,7 +1126,7 @@ shared = true
       self.assertRaises(SubprocessError, callPrepareSlapOS)
 
     self.assertEqual(node_test_suite.retry_software_count, 0)
-    for x in range(11):
+    for _ in range(11):
       callRaisingPrepareSlapos()
     self.assertEqual(len(init_call_kw_list), 11)
     self.assertEqual(init_call_kw_list[-1]['reset_software'], False)
@@ -1139,11 +1193,11 @@ shared = true
     def patch_isMasterTestnode(self, *args, **kw):
       return True
     def patch_generateConfiguration(self, *args, **kw):
-      return json.dumps({"configuration_list": [{"ok":"ok"}], "involved_nodes_computer_guid"\
+      return json.dumps({"configuration_list": [{"ok": "ok"}], "involved_nodes_computer_guid"\
 : ["COMP1", "COMP2", "COMP3"], "error_message": "No error.", "launcher_nodes_computer_guid": ["COMP1"], \
 "launchable": True, "randomized_path" : "azertyuiop"})
     def doNothing(self, *args, **kw):
-        pass
+      pass
     def patch_getSlaposAccountKey(self, *args, **kw):
       return "key"
     def patch_getSlaposAccountCertificate(self, *args, **kw):
@@ -1155,7 +1209,7 @@ shared = true
     def patch_getTestType(self, *args, **kw):
       return "ScalabilityTest"
     def patch_runTestSuite(self, *args, **kw):
-      return {'status_code':0}
+      return {'status_code': 0}
     def patch_generateProfilePasswordAccess(self, *args, **kw):
       return "user", "pass"
     def patch_getDictionaryFromFile(self, *args, **kw):
