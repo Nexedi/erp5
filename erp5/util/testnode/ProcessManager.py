@@ -68,7 +68,7 @@ def format_command(*args, **kw):
     cmdline.append(v)
   return ' '.join(cmdline)
 
-def subprocess_capture(p, log_prefix, get_output=True):
+def subprocess_capture(p, log_prefix, get_output=True, output_replacers=()):
   log = logger.info
   if log_prefix:
     log_prefix += ': '
@@ -77,6 +77,8 @@ def subprocess_capture(p, log_prefix, get_output=True):
       data = input.readline()
       if not data:
         break
+      for replacer in output_replacers:
+        data = replacer(data)
       if get_output:
         buffer.append(data)
       log(log_prefix + (data if str is bytes else
@@ -158,6 +160,8 @@ class ProcessManager(object):
     log_prefix = kw.pop('log_prefix', '')
     new_session = kw.pop('new_session', True)
     subprocess_kw = {}
+
+    output_replacers = kw.pop('output_replacers', ())
     cwd = kw.pop('cwd', None)
     if cwd:
       subprocess_kw['cwd'] = cwd
@@ -166,6 +170,9 @@ class ProcessManager(object):
     raise_error_if_fail = kw.pop('raise_error_if_fail', True)
     env = dict(os.environ, **kw) if kw else None
     command = format_command(*args, **kw)
+    # obfuscate secrets from command, assuming command is utf-8
+    for replacer in output_replacers:
+      command = replacer(command.encode('utf-8')).decode('utf-8')
     logger.info('subprocess_kw : %r', subprocess_kw)
     logger.info('$ %s', command)
     sys.stdout.flush()
@@ -176,7 +183,7 @@ class ProcessManager(object):
     timer = threading.Timer(self.max_timeout, timeoutExpired, args=(p,))
     self.timer_set.add(timer)
     timer.start()
-    stdout, stderr = subprocess_capture(p, log_prefix, get_output=get_output)
+    stdout, stderr = subprocess_capture(p, log_prefix, get_output=get_output, output_replacers=output_replacers)
     timer.cancel()
     self.timer_set.discard(timer)
     result = dict(status_code=p.returncode, command=command,
@@ -189,8 +196,9 @@ class ProcessManager(object):
     return result
 
   def getSupportedParameterList(self, program_path):
-    return re.findall(r'^  (--\w+)',
-      self.spawn(program_path, '--help')['stdout'], re.M)
+    # type: (str) -> Sequence[str]
+    return (parameter.decode('utf-8') for parameter in
+        re.findall(br'^  (--\w+)', self.spawn(program_path, '--help')['stdout'], re.M))
 
   def killall(self, path):
     """

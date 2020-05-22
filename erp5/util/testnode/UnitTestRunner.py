@@ -27,8 +27,10 @@
 import os
 import glob
 import json
+import logging
+
 from . import logger
-from .ProcessManager import SubprocessError
+from .ProcessManager import SubprocessError, format_command
 from .SlapOSControler import SlapOSControler
 from .Utils import createFolder
 from slapos.grid.utils import md5digest
@@ -180,9 +182,22 @@ class UnitTestRunner(object):
     # result. We only do cleanup if the test runner itself is not able
     # to run.
     createFolder(node_test_suite.test_suite_directory, clean=True)
+
+    # Log the actual command with root logger
+    root_logger = logging.getLogger()
+    root_logger.info(
+        "Running test suite with: %s",
+        format_command(*invocation_list, PATH=PATH))
+
+    def hide_distributor_url(s):
+      # type: (bytes) -> bytes
+      return s.replace(portal_url.encode('utf-8'), b'$DISTRIBUTOR_URL')
+
     self.testnode.process_manager.spawn(*invocation_list, PATH=PATH,
                           cwd=node_test_suite.test_suite_directory,
-                          log_prefix='runTestSuite', get_output=False)
+                          log_prefix='runTestSuite',
+                          output_replacers=(hide_distributor_url,),
+                          get_output=False)
 
   def getRelativePathUsage(self):
     """
