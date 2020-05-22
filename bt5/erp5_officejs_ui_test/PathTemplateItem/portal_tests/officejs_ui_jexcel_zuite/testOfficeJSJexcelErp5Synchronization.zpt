@@ -292,7 +292,7 @@
   <td>title</td>
   <td>${title}</td>
 </tr>
-<tr>
+<!--<tr>
   <td>verifyValue</td>
   <td>reference</td>
   <td>${reference}</td>
@@ -301,7 +301,7 @@
   <td>verifyValue</td>
   <td>description</td>
   <td>${description}</td>
-</tr>
+</tr>-->
 <tr>
   <td>openAndWait</td>
   <td>${base_url}/jexcel_sheet_module/Zuite_waitForActivities</td>
