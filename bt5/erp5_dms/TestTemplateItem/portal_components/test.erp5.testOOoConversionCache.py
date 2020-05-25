@@ -31,24 +31,12 @@
 import unittest
 from DateTime import DateTime
 
-from testDms import TestDocumentMixin
-from Products.ERP5Type.tests.utils import FileUpload
-import os
+from erp5.component.test.testDms import TestDocumentMixin, makeFileUpload
 
 try:
   import magic
 except ImportError:
   magic = None
-
-def makeFilePath(name):
-  return os.path.join(os.path.dirname(__file__), 'test_document', name)
-
-def makeFileUpload(name, as_name=None):
-  if as_name is None:
-    as_name = name
-  path = makeFilePath(name)
-  return FileUpload(path, as_name)
-
 
 class TestDocumentConversionCache(TestDocumentMixin):
   """
@@ -71,34 +59,34 @@ class TestDocumentConversionCache(TestDocumentMixin):
 
   def test_image_conversion(self):
     filename = 'TEST-en-002.doc'
-    file = makeFileUpload(filename)
-    document = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_)
     self.tic()
-    format = 'png'
+    format_ = 'png'
 
-    self.assertFalse(document.hasConversion(format=format))
-    document.convert(format)
-    self.assertTrue(document.hasConversion(format=format))
+    self.assertFalse(document.hasConversion(format=format_))
+    document.convert(format_)
+    self.assertTrue(document.hasConversion(format=format_))
 
-    self.assertFalse(document.hasConversion(format=format, display='large'))
-    document.convert(format, display='large')
-    self.assertTrue(document.hasConversion(format=format, display='large'))
+    self.assertFalse(document.hasConversion(format=format_, display='large'))
+    document.convert(format_, display='large')
+    self.assertTrue(document.hasConversion(format=format_, display='large'))
 
-    self.assertFalse(document.hasConversion(format=format,
+    self.assertFalse(document.hasConversion(format=format_,
                                            display='large',
                                            quality=40))
-    document.convert(format, display='large', quality=40)
-    self.assertTrue(document.hasConversion(format=format,
+    document.convert(format_, display='large', quality=40)
+    self.assertTrue(document.hasConversion(format=format_,
                                            display='large',
                                            quality=40))
     if magic is not None:
       mime_detector = magic.Magic(mime=True)
-      self.assertEqual(mime_detector.from_buffer(document.getConversion(format=format)[1]),
+      self.assertEqual(mime_detector.from_buffer(document.getConversion(format=format_)[1]),
                         'image/png')
-      self.assertEqual(mime_detector.from_buffer(document.getConversion(format=format,
+      self.assertEqual(mime_detector.from_buffer(document.getConversion(format=format_,
                                                                          display='large')[1]),
                         'image/png')
-      self.assertEqual(mime_detector.from_buffer(document.getConversion(format=format,
+      self.assertEqual(mime_detector.from_buffer(document.getConversion(format=format_,
                                                                          display='large',
                                                                          quality=40)[1]),
                         'image/png')
@@ -108,69 +96,69 @@ class TestDocumentConversionCache(TestDocumentMixin):
       Test Conversion Cache mechanism
     """
     filename = 'TEST-en-002.doc'
-    file = makeFileUpload(filename)
-    document = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_)
     self.tic()
     document_url = document.getRelativeUrl()
     document = self.portal.restrictedTraverse(document_url)
-    format_list = [format for format in document.getTargetFormatList() if format not in self.failed_format_list]
+    format_list = [format_ for format_ in document.getTargetFormatList() if format_ not in self.failed_format_list]
     if not format_list:
       self.fail('Target format list is empty')
     #Test Conversion Cache
-    for format in format_list:
-      document.convert(format=format)
+    for format_ in format_list:
+      document.convert(format=format_)
       self.commit()
-      self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
-      self.assertEqual(DateTime().Date(), document.getConversionDate(format=format).Date())
-      self.assertTrue(document.getConversionMd5(format=format))
-      self.assertTrue(document.getConversionSize(format=format))
+      self.assertTrue(document.hasConversion(format=format_), 'Cache Storage failed for %s' % (format_))
+      self.assertEqual(DateTime().Date(), document.getConversionDate(format=format_).Date())
+      self.assertTrue(document.getConversionMd5(format=format_))
+      self.assertTrue(document.getConversionSize(format=format_))
     document.edit(title='Foo')
     self.commit()
     #Test Cache is cleared
-    for format in format_list:
-      self.assertFalse(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
-      self.assertRaises(KeyError, document.getConversionSize, format=format)
+    for format_ in format_list:
+      self.assertFalse(document.hasConversion(format=format_), 'Cache Storage failed for %s' % (format_))
+      self.assertRaises(KeyError, document.getConversionSize, format=format_)
     document.edit(title='Bar')
     self.tic()
     #Test Conversion Cache after editing
-    for format in format_list:
-      document.convert(format=format)
+    for format_ in format_list:
+      document.convert(format=format_)
       self.commit()
-      self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
-      self.assertTrue(document.getConversionSize(format=format))
+      self.assertTrue(document.hasConversion(format=format_), 'Cache Storage failed for %s' % (format_))
+      self.assertTrue(document.getConversionSize(format=format_))
 
   def test_02_VolatileCacheConversionOfTempObject(self):
     filename = 'TEST-en-002.doc'
-    file = makeFileUpload(filename)
-    document = self.portal.portal_contributions.newContent(file=file, temp_object=1)
+    file_ = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_, temp_object=1)
     document.uploadFile()
     document.processFile()
     document.convertToBaseFormat()
-    format_list = [format for format in document.getTargetFormatList() if format not in self.failed_format_list]
+    format_list = [format_ for format_ in document.getTargetFormatList() if format_ not in self.failed_format_list]
     if not format_list:
       self.fail('Target format list is empty')
     #Test Conversion Cache
-    for format in format_list:
-      document.convert(format=format)
+    for format_ in format_list:
+      document.convert(format=format_)
       self.commit()
-      self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
-      self.assertEqual(DateTime().Date(), document.getConversionDate(format=format).Date())
-      self.assertTrue(document.getConversionMd5(format=format))
-      self.assertTrue(document.getConversionSize(format=format))
+      self.assertTrue(document.hasConversion(format=format_), 'Cache Storage failed for %s' % (format_))
+      self.assertEqual(DateTime().Date(), document.getConversionDate(format=format_).Date())
+      self.assertTrue(document.getConversionMd5(format=format_))
+      self.assertTrue(document.getConversionSize(format=format_))
     document.edit(title='Foo')
     self.commit()
     #Test Cache is cleared
-    for format in format_list:
-      self.assertFalse(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
-      self.assertRaises(KeyError, document.getConversionSize, format=format)
+    for format_ in format_list:
+      self.assertFalse(document.hasConversion(format=format_), 'Cache Storage failed for %s' % (format_))
+      self.assertRaises(KeyError, document.getConversionSize, format=format_)
     document.edit(title='Bar')
     self.tic()
     #Test Conversion Cache after editing
-    for format in format_list:
-      document.convert(format=format)
+    for format_ in format_list:
+      document.convert(format=format_)
       self.commit()
-      self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
-      self.assertTrue(document.getConversionSize(format=format))
+      self.assertTrue(document.hasConversion(format=format_), 'Cache Storage failed for %s' % (format_))
+      self.assertTrue(document.getConversionSize(format=format_))
 
   def test_03_CacheConversionOfTempObjectIsNotMixed(self):
     filename1 = 'TEST-en-002.doc'
@@ -185,11 +173,11 @@ class TestDocumentConversionCache(TestDocumentMixin):
     document2.uploadFile()
     document2.processFile()
     document2.convertToBaseFormat()
-    format = 'pdf'
-    document1.convert(format=format)
-    document2.convert(format=format)
-    self.assertNotEqual(document1.getConversion(format=format),
-                        document2.getConversion(format=format))
+    format_ = 'pdf'
+    document1.convert(format=format_)
+    document2.convert(format=format_)
+    self.assertNotEqual(document1.getConversion(format=format_),
+                        document2.getConversion(format=format_))
     self.tic()
 
   def test_04_PersistentCacheConversionWithFlare(self):
@@ -199,44 +187,44 @@ class TestDocumentConversionCache(TestDocumentMixin):
     self.portal.portal_caches.clearAllCache()
     self.tic()
     filename = 'TEST-en-002.doc'
-    file = makeFileUpload(filename)
-    document = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_)
     self.tic()
     document_url = document.getRelativeUrl()
     document = self.portal.restrictedTraverse(document_url)
-    format_list = [format for format in document.getTargetFormatList()\
-                                      if format not in self.failed_format_list]
+    format_list = [format_ for format_ in document.getTargetFormatList()\
+                                      if format_ not in self.failed_format_list]
     if not format_list:
       self.fail('Target format list is empty')
     #Test Conversion Cache
-    for format in format_list:
-      document.convert(format=format)
-      self.assertTrue(document.hasConversion(format=format),
-                                      'Cache Storage failed for %s' % (format))
-      self.assertTrue(document.getConversionSize(format=format))
+    for format_ in format_list:
+      document.convert(format=format_)
+      self.assertTrue(document.hasConversion(format=format_),
+                                      'Cache Storage failed for %s' % (format_))
+      self.assertTrue(document.getConversionSize(format=format_))
     document.edit(title='Foo')
     self.commit()
     #Test Cache is cleared
-    for format in format_list:
-      self.assertFalse(document.hasConversion(format=format),
-                                      'Cache Storage failed for %s' % (format))
-      self.assertRaises(KeyError, document.getConversionSize, format=format)
+    for format_ in format_list:
+      self.assertFalse(document.hasConversion(format=format_),
+                                      'Cache Storage failed for %s' % (format_))
+      self.assertRaises(KeyError, document.getConversionSize, format=format_)
     document.edit(title='Bar')
     self.tic()
     #Test Conversion Cache after editing
-    for format in format_list:
-      document.convert(format=format)
-      self.assertTrue(document.hasConversion(format=format),
-                                      'Cache Storage failed for %s' % (format))
-      self.assertTrue(document.getConversionSize(format=format))
+    for format_ in format_list:
+      document.convert(format=format_)
+      self.assertTrue(document.hasConversion(format=format_),
+                                      'Cache Storage failed for %s' % (format_))
+      self.assertTrue(document.getConversionSize(format=format_))
 
   def test_05_checksum_conversion(self):
     """
       Test Conversion Cache return expected value with checksum
     """
     filename = 'TEST-en-002.doc'
-    file = makeFileUpload(filename)
-    document = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_)
     self.tic()
     document_url = document.getRelativeUrl()
     document = self.portal.restrictedTraverse(document_url)
@@ -264,8 +252,8 @@ class TestDocumentConversionCache(TestDocumentMixin):
     Check that md5 checksum is well updated when upload a file
     """
     filename = 'TEST-en-002.doc'
-    file = makeFileUpload(filename)
-    document = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_)
     self.tic()
     document_url = document.getRelativeUrl()
     document = self.portal.restrictedTraverse(document_url)
@@ -287,11 +275,11 @@ class TestDocumentConversionCache(TestDocumentMixin):
     self.portal.portal_caches.clearAllCache()
     self.tic()
     filename = 'TEST-en-002.doc'
-    file = makeFileUpload(filename)
+    file_ = makeFileUpload(filename)
     document_id = 'an id with spaces'
     portal_type = 'Text'
     module = self.portal.getDefaultModule(portal_type)
-    document = module.newContent(id=document_id, file=file,
+    document = module.newContent(id=document_id, file=file_,
                                  portal_type=portal_type)
     self.tic()
     document_url = document.getRelativeUrl()

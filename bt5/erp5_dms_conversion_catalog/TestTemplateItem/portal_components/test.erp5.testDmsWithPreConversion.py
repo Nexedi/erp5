@@ -28,15 +28,13 @@
 ##############################################################################
 
 import unittest
-from testDms import TestDocument, makeFileUpload
+from erp5.component.test.testDms import TestDocument, makeFileUpload
 
 class TestDocumentWithPreConversion(TestDocument):
   """
     Test basic document - related operations
     with Flare
   """
-  business_template_list = TestDocument.business_template_list + ["erp5_dms_conversion_catalog"]
-
   def getTitle(self):
     return "DMS with Preconversion"
 

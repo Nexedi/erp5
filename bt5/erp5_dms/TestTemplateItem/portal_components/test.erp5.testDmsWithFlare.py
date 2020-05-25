@@ -28,7 +28,7 @@
 ##############################################################################
 
 import unittest
-from testDms import TestDocument
+from erp5.component.test.testDms import TestDocument
 from Products.ERP5Type.tests.ERP5TypeTestCase import _getPersistentMemcachedServerDict
 
 

@@ -26,7 +26,7 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5OOo.tests.testDms import makeFileUpload
+from erp5.component.test.testDms import makeFileUpload
 from Products.ERP5Form.PreferenceTool import Priority
 
 
@@ -63,12 +63,12 @@ class TestOOoConversionServerRetry(ERP5TypeTestCase):
     self.retry_count = 2
   
   def getDefaultSystemPreference(self):
-    id = 'default_system_preference'
+    id_ = 'default_system_preference'
     tool = self.getPreferenceTool()
     try:
-      pref = tool[id]
+      pref = tool[id_]
     except KeyError:
-      pref = tool.newContent(id, 'System Preference')
+      pref = tool.newContent(id_, 'System Preference')
       pref.setPriority(Priority.SITE)
       pref.enable()
     return pref
@@ -80,9 +80,9 @@ class TestOOoConversionServerRetry(ERP5TypeTestCase):
     self.tic()
     
     filename = 'monochrome_sample.tiff'
-    file = makeFileUpload(filename)
+    file_ = makeFileUpload(filename)
     document = self.portal.document_module.newContent(portal_type='Text')
-    document.edit(file = file)
+    document.edit(file = file_)
     message = document.Document_tryToConvertToBaseFormat()
     self.assertEqual(message.count('Error converting document to base format'), 1)
 
@@ -95,8 +95,8 @@ class TestOOoConversionServerRetry(ERP5TypeTestCase):
     system_pref.setPreferredDocumentConversionServerUrlList(['https://broken.url'])
     self.tic()
     filename = 'TEST-en-002.doc'
-    file = makeFileUpload(filename)
-    document = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_)
     
     message = document.Document_tryToConvertToBaseFormat()
     self.assertEqual(message.count('broken.url: Connection refused'), self.retry_count + 1) 
@@ -110,8 +110,8 @@ class TestOOoConversionServerRetry(ERP5TypeTestCase):
     system_pref.setPreferredOoodocServerTimeout(1)
     self.tic()
     filename = 'TEST-en-002.doc'
-    file = makeFileUpload(filename)
-    document = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_)
 
     message = document.Document_tryToConvertToBaseFormat()
     if 'Socket Error: SSLError' in message:

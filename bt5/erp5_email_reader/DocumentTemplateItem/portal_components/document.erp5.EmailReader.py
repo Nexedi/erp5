@@ -30,7 +30,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.ExternalSource import ExternalSource
+from erp5.component.document.ExternalSource import ExternalSource
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Cache import transactional_cached
 

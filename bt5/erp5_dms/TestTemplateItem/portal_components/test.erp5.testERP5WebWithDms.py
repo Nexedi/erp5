@@ -68,7 +68,8 @@ gg==''')
 
 
 def makeFilePath(name):
-  return os.path.join(os.path.dirname(__file__), 'test_data', name)
+  from Products.ERP5 import tests
+  return os.path.join(tests.__path__[0], 'test_data', name)
 
 def makeFileUpload(name, as_name=None):
   if as_name is None:
@@ -1319,7 +1320,7 @@ return True
           ("image/png", "", pngmessage, png, XSMALL_PNG_IMAGE_ICON_DATA),
           ("image/png", "png", svgtopngmessage, svg, None),
         ]:
-      __traceback_info__ = (content_type, "?format=" + ext)
+      __traceback_info__ = (content_type, "?format=" + ext) # pylint: disable=unused-variable
       self.assertEqual(
         message.get("Content-Location"),
         obj.absolute_url() + "?format=" + ext,
@@ -1479,7 +1480,7 @@ return True
     image_module = self.portal.getDefaultModule(portal_type="Image")
     page = web_page_module.newContent(portal_type="Web Page")
     text_content_list = ["<p>Hello</p>"]
-    for i in range(0, 1000, 5):
+    for _ in range(0, 1000, 5):
       svg = image_module.newContent(portal_type="Image")
       svg.edit(content_type="image/svg+xml", data=XSMALL_SVG_IMAGE_ICON_DATA)
       svg.publish()
@@ -1505,7 +1506,7 @@ return True
     image_module = self.portal.getDefaultModule(portal_type="Image")
     page = web_page_module.newContent(portal_type="Web Page")
     text_content_list = ["<p>Hello</p>"]
-    for i in range(0, 1000, 5):
+    for _ in range(0, 1000, 5):
       svg = image_module.newContent(portal_type="Image")
       svg.edit(content_type="image/svg+xml", data=XSMALL_SVG_IMAGE_ICON_DATA)
       svg.publish()
@@ -1603,7 +1604,7 @@ return True
   def test_WebPageImplicitSuccessorValueList(self):
     # Test init part
     # XXX use web site domain properties instead of @customScript
-    web_site = self.setupWebSite()
+    self.setupWebSite()
     web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
     image_module = self.portal.getDefaultModule(portal_type="Image")
     img_list = []

@@ -57,7 +57,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5OOo.OOoUtils import OOoBuilder
-from Products.CMFCore.utils import getToolByName
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
 from Products.ERP5.Document.Document import NotConvertedError
@@ -77,12 +76,13 @@ from ZTUtils import make_query
 
 QUIET = 0
 
-TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
+from Products.ERP5OOo import tests
+TEST_FILES_HOME = os.path.join(tests.__path__[0], 'test_document')
 FILENAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
 def makeFilePath(name):
-  return os.path.join(os.path.dirname(__file__), 'test_document', name)
+  return os.path.join(TEST_FILES_HOME, name)
 
 def makeFileUpload(name, as_name=None):
   if as_name is None:
@@ -120,14 +120,14 @@ class TestDocumentMixin(ERP5TypeTestCase):
 
   def setSystemPreference(self):
     pref = self.getDefaultSystemPreference()
-    id = self.__class__.__name__
-    if pref.getPreferredConversionCacheFactory() != id:
+    id_ = self.__class__.__name__
+    if pref.getPreferredConversionCacheFactory() != id_:
       try:
-        self.portal.portal_caches[id]
+        self.portal.portal_caches[id_]
       except KeyError:
         self.setCacheFactory(
-          self.portal.portal_caches.newContent(id, 'Cache Factory'))
-      pref.setPreferredConversionCacheFactory(id)
+          self.portal.portal_caches.newContent(id_, 'Cache Factory'))
+      pref.setPreferredConversionCacheFactory(id_)
     pref.setPreferredDocumentFilenameRegularExpression(FILENAME_REGULAR_EXPRESSION)
     pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
 
@@ -209,13 +209,13 @@ class TestDocument(TestDocumentMixin):
     doctext.setLanguage(language)
     return doctext
 
-  def getDocument(self, id):
+  def getDocument(self, id_):
     """
       Returns a document with given ID in the
       document module.
     """
     document_module = self.portal.document_module
-    return getattr(document_module, id)
+    return getattr(document_module, id_)
 
   def getPreferences(self, image_display):
     preference_tool = self.portal.portal_preferences
@@ -228,10 +228,10 @@ class TestDocument(TestDocumentMixin):
   def getURLSizeList(self, uri, **kw):
     # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
     url = '%s?%s&__ac=%s' %(uri, make_query(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
-    format=kw.get('format', 'jpeg')
+    format_=kw.get('format', 'jpeg')
     infile = urllib.urlopen(url)
     # save as file with proper incl. format filename (for some reasons PIL uses this info)
-    filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format)
+    filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format_)
     f = open(filename, "w")
     image_data = infile.read()
     f.write(image_data)
@@ -245,8 +245,7 @@ class TestDocument(TestDocumentMixin):
     except ImportError:
       identify_output = Popen(['identify', filename],
                               stdout=PIPE).communicate()[0]
-      image_size = tuple(map(lambda x:int(x),
-                             identify_output.split()[2].split('x')))
+      image_size = tuple([int(x) for x in identify_output.split()[2].split('x')])
     os.remove(filename)
     return image_size, file_size
 
@@ -277,20 +276,20 @@ class TestDocument(TestDocumentMixin):
     # the same document should now have revision 4 (because it should have done mergeRevision)
     # getRevisionList should return (1, 2, 3, 4)
     filename = 'TEST-en-002.doc'
-    file = makeFileUpload(filename)
-    document = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_)
     self.tic()
     document_url = document.getRelativeUrl()
     def getTestDocument():
       return self.portal.restrictedTraverse(document_url)
     self.assertEqual(getTestDocument().getRevision(), '1')
-    getTestDocument().edit(file=file)
+    getTestDocument().edit(file=file_)
     self.tic()
     self.assertEqual(getTestDocument().getRevision(), '2')
     getTestDocument().edit(title='Hey Joe')
     self.tic()
     self.assertEqual(getTestDocument().getRevision(), '3')
-    another_document = self.portal.portal_contributions.newContent(file=file)
+    self.portal.portal_contributions.newContent(file=file_)
     self.tic()
     self.assertEqual(getTestDocument().getRevision(), '4')
     self.assertEqual(getTestDocument().getRevisionList(), ['1', '2', '3', '4'])
@@ -307,7 +306,6 @@ class TestDocument(TestDocumentMixin):
     # run isVersionUnique on 1, 2, 3  (should return True)
     # run getLatestVersionValue on all (should return 3)
     # run getVersionValueList on 2 (should return [3, 2, 1])
-    document_module = self.getDocumentModule()
     docs = {}
     docs[1] = self.createTestDocument(reference='TEST', version='002', language='en')
     docs[2] = self.createTestDocument(reference='TEST', version='002', language='en')
@@ -401,7 +399,6 @@ class TestDocument(TestDocumentMixin):
     # reference, version, language
     kw = {'portal_type': 'Drawing'}
     document1 = self.portal.document_module.newContent(**kw)
-    document2 = self.portal.document_module.newContent(**kw)
     document3 = self.portal.document_module.newContent(**kw)
     document4 = self.portal.document_module.newContent(**kw)
     document5 = self.portal.document_module.newContent(**kw)
@@ -491,44 +488,39 @@ class TestDocument(TestDocumentMixin):
     # create docs to be referenced:
     # (1) TEST, 002, en
     filename = 'TEST-en-002.odt'
-    file = makeFileUpload(filename)
-    document1 = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document1 = self.portal.portal_contributions.newContent(file=file_)
 
     # (2) TEST, 002, fr
     as_name = 'TEST-fr-002.odt'
-    file = makeFileUpload(filename, as_name)
-    document2 = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename, as_name)
+    document2 = self.portal.portal_contributions.newContent(file=file_)
 
     # (3) TEST, 003, en
     as_name = 'TEST-en-003.odt'
-    file = makeFileUpload(filename, as_name)
-    document3 = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename, as_name)
+    document3 = self.portal.portal_contributions.newContent(file=file_)
 
     # create docs to contain references in text_content:
-    # REF, 001, en; "I use reference to look up TEST"
-    filename = 'REF-en-001.odt'
-    file = makeFileUpload(filename)
-    document4 = self.portal.portal_contributions.newContent(file=file)
-
     # REF, 002, en; "I use reference to look up TEST"
     filename = 'REF-en-002.odt'
-    file = makeFileUpload(filename)
-    document5 = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document5 = self.portal.portal_contributions.newContent(file=file_)
 
     # REFLANG, 001, en: "I use reference and language to look up TEST-fr"
     filename = 'REFLANG-en-001.odt'
-    file = makeFileUpload(filename)
-    document6 = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document6 = self.portal.portal_contributions.newContent(file=file_)
 
     # REFVER, 001, en: "I use reference and version to look up TEST-002"
     filename = 'REFVER-en-001.odt'
-    file = makeFileUpload(filename)
-    document7 = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document7 = self.portal.portal_contributions.newContent(file=file_)
 
     # REFVERLANG, 001, en: "I use reference, version and language to look up TEST-002-en"
     filename = 'REFVERLANG-en-001.odt'
-    file = makeFileUpload(filename)
-    document8 = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document8 = self.portal.portal_contributions.newContent(file=file_)
 
     self.tic()
     # the implicit predecessor will find documents by reference.
@@ -691,8 +683,8 @@ class TestDocument(TestDocumentMixin):
     is not draft
     """
     filename = 'TEST-en-002.doc'
-    file = makeFileUpload(filename)
-    document = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_)
 
     self.assertEqual('converting', document.getExternalProcessingState())
     self.commit()
@@ -756,8 +748,8 @@ class TestDocument(TestDocumentMixin):
     document.
     """
     filename = 'EmbeddedImage-en-002.odt'
-    file = makeFileUpload(filename)
-    document = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file_)
 
     self.tic()
 
@@ -1255,9 +1247,9 @@ class TestDocument(TestDocumentMixin):
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEqual('PDF', document.getPortalType())
 
-    content_type, image_data = document.convert(format='png',
-                                                frame=0,
-                                                display='thumbnail')
+    _, image_data = document.convert(format='png',
+                                     frame=0,
+                                     display='thumbnail')
     # it's a valid PNG
     self.assertEqual('PNG', image_data[1:4])
 
@@ -1328,12 +1320,9 @@ class TestDocument(TestDocumentMixin):
 
   def test_upload_bad_pdf_file(self):
     """ Test that pypdf2 handle wrong formatted PDF """
-    path = os.path.join(os.path.dirname(__file__), 'test_document',
-      'FEUILLE BLANCHE.pdf')
-    file_upload = FileUpload(path, 'FEUILLE BLANCHE.pdf')
     pdf = self.portal.document_module.newContent(
       portal_type='PDF',
-      file=file_upload,
+      file=makeFileUpload('FEUILLE BLANCHE.pdf'),
       title='Bad PDF')
     self.tic()
     pdf.share()
@@ -1572,7 +1561,7 @@ class TestDocument(TestDocumentMixin):
           .newContent(portal_type=web_page_portal_type)
     html_content = '<p>%s</p>' % string_to_test
     web_page.edit(text_content=html_content)
-    mime_type, pdf_data = web_page.convert('pdf')
+    _, pdf_data = web_page.convert('pdf')
     text_content = self.portal.portal_transforms.\
                                       convertToData('text/plain',
                                           str(pdf_data),
@@ -1610,7 +1599,7 @@ class TestDocument(TestDocumentMixin):
     self.tic()
 
     # convert web_page into odt
-    mime_type, odt_archive = web_page.convert('odt')
+    _, odt_archive = web_page.convert('odt')
     builder = OOoBuilder(odt_archive)
     image_count = builder._image_count
     failure_message = 'Expected image not found in ODF zipped archive'
@@ -1624,11 +1613,11 @@ class TestDocument(TestDocumentMixin):
     html_content = '<p><img src="%s?format=jpeg&amp;display=%s&amp;quality=75"/></p>' % \
                                               (image_reference, image_display)
     web_page.edit(text_content=html_content)
-    mime_type, odt_archive = web_page.convert('odt')
+    _, odt_archive = web_page.convert('odt')
     builder = OOoBuilder(odt_archive)
     image_count = builder._image_count
     # compute resized image for comparison
-    mime, converted_image = image.convert(format='jpeg', display=image_display)
+    _, converted_image = image.convert(format='jpeg', display=image_display)
     # fetch image from zipped archive content
     # then compare with resized ERP5 Image
     self.assertEqual(builder.extract('Pictures/%s.jpeg' % image_count),
@@ -1644,11 +1633,11 @@ class TestDocument(TestDocumentMixin):
     html_content = '<p><img src="%s?format=png&amp;display=%s&amp;quality=75"/></p>' % \
                                               (image_reference, image_display)
     web_page.edit(text_content=html_content)
-    mime_type, odt_archive = web_page.convert('odt')
+    _, odt_archive = web_page.convert('odt')
     builder = OOoBuilder(odt_archive)
     image_count = builder._image_count
     # compute resized image for comparison
-    mime, converted_image = document.convert(format='png',
+    _, converted_image = document.convert(format='png',
                                              display=image_display,
                                              quality=75)
     # fetch image from zipped archive content
@@ -1784,10 +1773,10 @@ class TestDocument(TestDocumentMixin):
     self.assertTrue('7CcvP/PS8U90/wv0LRSL/rwEwgAAAABJRU5ErkJggg=="' in safe_html)
 
     # now check converted value is stored in cache
-    format = 'html'
-    self.assertTrue(web_page.hasConversion(format=format))
+    format_ = 'html'
+    self.assertTrue(web_page.hasConversion(format=format_))
     web_page.edit(text_content=None)
-    self.assertFalse(web_page.hasConversion(format=format))
+    self.assertFalse(web_page.hasConversion(format=format_))
 
     # test with not well-formed html document
     html_content = r"""
@@ -1851,7 +1840,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     filename = 'broken_html.html'
     file_object = makeFileUpload(filename)
     web_page.edit(file=file_object)
-    converted = web_page.convert('html')[1]
+    assert web_page.convert('html')[1]
 
   def test_safeHTML_impossible_conversion(self):
     """Some html are not parsable.
@@ -1908,10 +1897,6 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     document.edit(file=upload_file)
     pages_number = int(document.getContentInformation()['Pages'])
     self.tic()
-
-    preference_tool = getToolByName(self.portal, 'portal_preferences')
-    image_size = preference_tool.getPreferredThumbnailImageHeight(),\
-                              preference_tool.getPreferredThumbnailImageWidth()
     convert_kw = {'format': 'png',
                   'quality': 75,
                   'display': 'thumbnail',
@@ -1957,7 +1942,8 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
       instance.start()
 
     # Wait until threads finishing
-    [tested.join() for tested in tested_list]
+    for tested in tested_list:
+      tested.join()
 
     self.tic()
 
@@ -2054,7 +2040,6 @@ return 1
 
     self.createRestrictedSecurityHelperScript()
 
-    from AccessControl import Unauthorized
     # check that it is not possible to access document in original format
     self.assertRaises(Unauthorized, document.convert, format=None)
     # check that it is possible to convert document to text format
@@ -2168,7 +2153,7 @@ return 1
     self.tic()
 
     web_page_document_url = '%s/%s' %(self.portal.absolute_url(), web_page_document.getRelativeUrl())
-    web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
+    web_page_image_size, _ = self.getURLSizeList(web_page_document_url, **convert_kw)
     self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= 1)
 
     # images from same instance accessed by reference and wrong conversion arguments (dispay NOT display)
@@ -2185,7 +2170,7 @@ return 1
     web_page_document.setTextContent('''<b> test </b><img src="Embedded-XXX?format=jpeg&amp;dispay=medium&amp;quality=50"/>''')
     self.tic()
     web_page_document_url = '%s/%s' %(self.portal.absolute_url(), web_page_document.getRelativeUrl())
-    web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
+    web_page_image_size, _ = self.getURLSizeList(web_page_document_url, **convert_kw)
     self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= 1)
 
     # external images
@@ -2198,7 +2183,7 @@ return 1
 ''')
     self.tic()
     web_page_document_url = '%s/%s' %(self.portal.absolute_url(), web_page_document.getRelativeUrl())
-    web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
+    web_page_image_size, _ = self.getURLSizeList(web_page_document_url, **convert_kw)
     self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= 1)
 
     # XXX: how to simulate the case when web page contains (through reference) link to document for which based conversion failed?
@@ -2241,33 +2226,33 @@ return 1
     for display in ('nano', 'micro', 'thumbnail', 'xsmall', 'small', 'medium', 'large', 'xlarge',):
       max_tollerance_px = 1
       preffered_size_for_display = self.getPreferences(display)
-      for format in ('png', 'jpeg', 'gif',):
+      for format_ in ('png', 'jpeg', 'gif',):
         convert_kw = {'display':display, \
-                      'format':format, \
+                      'format':format_, \
                       'quality':100}
         # Note: due to some image interpolations it's possssible that we have a difference of max_tollerance_px
         # so allow some tollerance which is produced by respective portal_transform command
 
         # any OOo based portal type
-        ooo_document_image_size, ooo_document_file_size = self.getURLSizeList(ooo_document_url, **convert_kw)
+        ooo_document_image_size, _ = self.getURLSizeList(ooo_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(ooo_document_image_size) <= max_tollerance_px)
 
         # PDF
-        pdf_document_image_size, pdf_document_file_size = self.getURLSizeList(pdf_document_url, **convert_kw)
+        pdf_document_image_size, _ = self.getURLSizeList(pdf_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(pdf_document_image_size) <= max_tollerance_px)
 
         # Image
-        image_document_image_size, image_document_file_size = self.getURLSizeList(image_document_url, **convert_kw)
+        image_document_image_size, _ = self.getURLSizeList(image_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(image_document_image_size) <= max_tollerance_px)
         self.assertTrue(abs(min(preffered_size_for_display) - min(image_document_image_size)) >= max_tollerance_px)
 
-        cropped_image_document_image_size, cropped_image_document_file_size = \
+        cropped_image_document_image_size, _ = \
             self.getURLSizeList(image_document_url, crop = 1, **convert_kw)
         self.assertEqual(max(preffered_size_for_display), max(cropped_image_document_image_size))
         self.assertEqual(min(preffered_size_for_display), min(cropped_image_document_image_size))
 
         # Web Page
-        web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
+        web_page_image_size, _ = self.getURLSizeList(web_page_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= max_tollerance_px)
 
 
@@ -2379,28 +2364,28 @@ return 1
     doc.publish()
     self.tic()
 
-    default_conversion_failure_image_size, default_conversion_failure_image_file_size = \
+    default_conversion_failure_image_size, _ = \
                             self.getURLSizeList('%s/default_conversion_failure_image' %self.portal.absolute_url())
 
     doc_url = '%s/%s' %(self.portal.absolute_url(), doc.getPath())
-    converted_image_size_70, converted_file_size_70 = self.getURLSizeList(doc_url, \
+    converted_image_size_70, _ = self.getURLSizeList(doc_url, \
                                                              **{'format':'png', 'quality':70.0})
     self.assertTrue(doc.hasConversion(**{'format': 'png', 'quality': 70.0}))
 
     # try with new quality and pre_converted_only now a default image
     # with content "No image available" should be returned
-    failure_image_size, failure_file_size = self.getURLSizeList(doc_url, \
+    failure_image_size, _ = self.getURLSizeList(doc_url, \
                                                    **{'format':'png', 'quality':80.0, 'pre_converted_only':1})
     self.assertSameSet(failure_image_size, default_conversion_failure_image_size)
 
 
-    converted_image_size_80, converted_file_size_80 = self.getURLSizeList(doc_url, \
+    converted_image_size_80, _ = self.getURLSizeList(doc_url, \
                                                              **{'format':'png', 'quality':80.0})
     self.assertSameSet(converted_image_size_80, converted_image_size_70)
     self.assertTrue(doc.hasConversion(**{'format': 'png', 'quality': 80.0}))
 
     # as conversion is cached we should get it
-    converted_image_size_80n, converted_file_size_80n = self.getURLSizeList(doc_url,
+    converted_image_size_80n, _ = self.getURLSizeList(doc_url,
                                                                **{'format':'png', 'quality':80.0, 'pre_converted_only':1})
     self.assertSameSet(converted_image_size_80n, converted_image_size_70)
 
@@ -2442,7 +2427,7 @@ return 1
     self.tic()
     self.assertEqual(0, len(document1.Document_getOtherVersionDocumentList()))
 
-    kw['version'] == '002'
+    kw['version'] = '002'
     document2 = portal.document_module.newContent(portal_type="Spreadsheet", **kw)
     self.tic()
 
@@ -2497,8 +2482,6 @@ return 1
     """
       Test various cases of contributing to an existing document
     """
-    request = get_request()
-    portal = self.portal
     # contribute a document, then make it not editable and check we can not contribute to it
     upload_file = makeFileUpload('TEST-en-002.doc')
     kw = dict(file=upload_file, synchronous_metadata_discovery=True)
@@ -2523,8 +2506,6 @@ return 1
     """
       Test various cases of merging to an existing document
     """
-    request = get_request()
-    portal = self.portal
     # contribute a document, then make it not editable and check we can not contribute to it
     kw=dict(synchronous_metadata_discovery=True)
     upload_file = makeFileUpload('TEST-en-002.doc')
@@ -2769,8 +2750,6 @@ return 1
     """ Test "visible" instances of a doc are auto archived when a new
     instance is made "visible" except when they have a future effective date.
     """
-    portal = self.portal
-
     upload_file = makeFileUpload('TEST-en-002.doc')
     kw = dict(file=upload_file, synchronous_metadata_discovery=True)
     document_002 = self.portal.Base_contribute(**kw)
@@ -2849,7 +2828,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
   def getTitle(self):
     return "DMS with security"
 
-  def login(self):
+  def login(self, *args, **kw):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Auditor', 'Author'], [])
     user = uf.getUserById(self.username).__of__(uf)
@@ -2895,7 +2874,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     self.assertFalse(text_document.hasConversion(format='pdf'))
 
     # call pdf conversion, in this way, the result should be cached
-    mime_type, pdf_data = text_document.convert(format='pdf')
+    _, pdf_data = text_document.convert(format='pdf')
     pdf_size = len(pdf_data)
 
 

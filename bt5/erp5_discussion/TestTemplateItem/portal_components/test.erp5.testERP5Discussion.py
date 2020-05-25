@@ -32,7 +32,7 @@
 import unittest
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5OOo.tests.testDms import makeFileUpload
+from erp5.component.test.testDms import makeFileUpload
 
 
 class TestERP5Discussion(ERP5TypeTestCase):
@@ -59,7 +59,7 @@ class TestERP5Discussion(ERP5TypeTestCase):
             'erp5_jquery',
             'erp5_discussion', )
 
-  def login(self):
+  def login(self, *args, **kw):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
     user = uf.getUserById(self.manager_username).__of__(uf)
@@ -87,7 +87,7 @@ class TestERP5Discussion(ERP5TypeTestCase):
   def test_01_createDiscussionThread(self):
     """Create a new discussion thread"""
 
-    self.stepCreateThread();
+    self.stepCreateThread()
     self.tic()
 
   def test_02_createDiscussionPost(self):
@@ -143,8 +143,8 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.assertEqual(0, len(attachment_list))
 
     # check attachment creation
-    file = makeFileUpload('TEST-en-002.doc')
-    web_section1.WebSection_createNewDiscussionThread('test1-new-with-attachment', 'test1 body', file=file)
+    file_ = makeFileUpload('TEST-en-002.doc')
+    web_section1.WebSection_createNewDiscussionThread('test1-new-with-attachment', 'test1 body', file=file_)
     discussion_thread, = [x for x in self.portal.discussion_thread_module.objectValues() \
                           if x.getId() not in discussion_thread_id_set]
     discussion_thread_id_set.add(discussion_thread.getId())

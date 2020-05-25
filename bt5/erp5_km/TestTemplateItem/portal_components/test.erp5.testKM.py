@@ -31,8 +31,7 @@ import unittest
 from unittest import expectedFailure
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.Base import TempBase
-from Products.ERP5OOo.tests.testDms import makeFileUpload
-from Products.ERP5OOo.tests.testDms import TestDocumentMixin
+from erp5.component.test.testDms import makeFileUpload, TestDocumentMixin
 
 def _getGadgetInstanceUrlFromKnowledgePad(knowledge_pad,  gadget):
   """ Get Knowledge Box's relative URL specialising a gadget in a Knowledge Pad."""
@@ -65,7 +64,6 @@ class TestKMMixIn(TestDocumentMixin):
 
   def afterSetUp(self):
     self.login()
-    portal = self.getPortal()
     self.website = self.setupWebSite(skin_selection_name='KM',
                                      container_layout='erp5_km_minimal_layout',
                                      content_layout='erp5_km_minimal_content_layout',
@@ -87,7 +85,7 @@ class TestKMMixIn(TestDocumentMixin):
     self.tic()
     return website
 
-  def login(self):
+  def login(self, *args, **kw):
     uf = self.getPortal().acl_users
     uf._doAddUser('ivan', '', ['Manager'], [])
     uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
@@ -230,14 +228,14 @@ class TestKM(TestKMMixIn):
                         mode='web_section',
                         default_pad_group = pad_group)
     self.tic()
-    base_websection_pad, websection_pads = \
+    base_websection_pad, _ = \
              websection.ERP5Site_getActiveKnowledgePadForUser(default_pad_group = pad_group)
 
     # Check stick
     websection.WebSection_stickKnowledgePad(
                     base_websection_pad.getRelativeUrl(), '')
     self.tic()
-    current_websection_pad, websection_pads = \
+    current_websection_pad, _ = \
              websection.ERP5Site_getActiveKnowledgePadForUser(mode='web_section',
                                                               default_pad_group = pad_group )
     self.assertNotEqual(base_websection_pad.getObject(),
@@ -245,7 +243,7 @@ class TestKM(TestKMMixIn):
 
     # check unstick
     websection.WebSection_unStickKnowledgePad(current_websection_pad.getRelativeUrl(), '')
-    current_websection_pad, websection_pads = \
+    current_websection_pad, _ = \
              websection.ERP5Site_getActiveKnowledgePadForUser(default_pad_group = pad_group)
     self.assertEqual(base_websection_pad.getObject(),
                      current_websection_pad.getObject())
@@ -820,7 +818,6 @@ class TestKM(TestKMMixIn):
   def test_17AddGadgets(self):
     """ Check Latest Content Gadgets """
     portal = self.getPortal()
-    portal_selections = portal.portal_selections
     km_my_documents_gadget = portal.portal_gadgets.km_my_documents
     km_my_contacts_gadget = portal.portal_gadgets.km_my_contacts
 
@@ -854,7 +851,6 @@ class TestKM(TestKMMixIn):
     # change to KM skins which is defined in erp5_km
     self.changeSkin('KM')
 
-    assigned_member_list = websection.WebSection_searchAssignmentList(portal_type='Assignment')
     self.assertEqual(0, len(websection.WebSection_searchAssignmentList(portal_type='Assignment')))
     project = portal.project_module.newContent(portal_type='Project', \
                                                id='test_project')
@@ -868,8 +864,8 @@ class TestKM(TestKMMixIn):
     person = portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type= 'Assignment',
                                    destination_project = project.getRelativeUrl())
-    another_assignment = person.newContent(portal_type= 'Assignment',
-                                   destination_project = another_project.getRelativeUrl())
+    person.newContent(portal_type= 'Assignment',
+                      destination_project = another_project.getRelativeUrl())
     assignment.open()
     self.tic()
 
@@ -941,7 +937,6 @@ class TestKMSearch(TestKMMixIn):
       See http://www.erp5.org/HowToUseSphinxSE
     """
     self.setupSphinx()
-    portal = self.portal
     website = self.portal.web_site_module.km_test_web_site
     self.changeSkin('KM')
     # in search mode we do NOT access a ZODB object
@@ -1006,54 +1001,46 @@ class TestKMSearch(TestKMMixIn):
     self.setupSphinx()
     self.changeSkin('KM')
 
-    portal = self.portal
-    website = self.portal.web_site_module.km_test_web_site
-    web_page = self.web_page
-
     def sqlresult_to_document_list(result):
       return [i.getObject() for i in result]
 
     # create docs to be referenced:
+    # create docs to be referenced:
     # (1) TEST, 002, en
     filename = 'TEST-en-002.odt'
-    file = makeFileUpload(filename)
-    document1 = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    self.portal.portal_contributions.newContent(file=file_)
 
     # (2) TEST, 002, fr
     as_name = 'TEST-fr-002.odt'
-    file = makeFileUpload(filename, as_name)
-    document2 = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename, as_name)
+    document2 = self.portal.portal_contributions.newContent(file=file_)
 
     # (3) TEST, 003, en
     as_name = 'TEST-en-003.odt'
-    file = makeFileUpload(filename, as_name)
-    document3 = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename, as_name)
+    document3 = self.portal.portal_contributions.newContent(file=file_)
 
     # create docs to contain references in text_content:
-    # REF, 001, en; "I use reference to look up TEST"
-    filename = 'REF-en-001.odt'
-    file = makeFileUpload(filename)
-    document4 = self.portal.portal_contributions.newContent(file=file)
-
     # REF, 002, en; "I use reference to look up TEST"
     filename = 'REF-en-002.odt'
-    file = makeFileUpload(filename)
-    document5 = self.portal.portal_contributions.newContent(file=file)
+    file_ = makeFileUpload(filename)
+    document5 = self.portal.portal_contributions.newContent(file=file_)
 
     # REFLANG, 001, en: "I use reference and language to look up TEST-fr"
-    filename = 'REFLANG-en-001.odt'
-    file = makeFileUpload(filename)
-    document6 = self.portal.portal_contributions.newContent(file=file)
+    #filename = 'REFLANG-en-001.odt'
+    #file = makeFileUpload(filename)
+    #document6 = self.portal.portal_contributions.newContent(file=file)
 
     # REFVER, 001, en: "I use reference and version to look up TEST-002"
-    filename = 'REFVER-en-001.odt'
-    file = makeFileUpload(filename)
-    document7 = self.portal.portal_contributions.newContent(file=file)
+    #filename = 'REFVER-en-001.odt'
+    #file = makeFileUpload(filename)
+    #document7 = self.portal.portal_contributions.newContent(file=file)
 
     # REFVERLANG, 001, en: "I use reference, version and language to look up TEST-002-en"
-    filename = 'REFVERLANG-en-001.odt'
-    file = makeFileUpload(filename)
-    document8 = self.portal.portal_contributions.newContent(file=file)
+    #filename = 'REFVERLANG-en-001.odt'
+    #file = makeFileUpload(filename)
+    #document8 = self.portal.portal_contributions.newContent(file=file)
 
     self.tic()
     # the implicit predecessor will find documents by reference.

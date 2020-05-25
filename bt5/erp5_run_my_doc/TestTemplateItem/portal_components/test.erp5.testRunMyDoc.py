@@ -27,7 +27,7 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5OOo.tests.testDms import makeFileUpload
+from erp5.component.test.testDms import makeFileUpload
 from time import time
 
 class TestRunMyDoc(ERP5TypeTestCase):
