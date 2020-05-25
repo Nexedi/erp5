@@ -752,11 +752,6 @@ class Base(
   isDocument = ConstantGetter('isDocument', value=False)
   isTempDocument = ConstantGetter('isTempDocument', value=False)
 
-  # Dynamic method acquisition system (code generation)
-  aq_method_generated = set()
-  aq_method_generating = []
-  aq_portal_type = {}
-  aq_related_generated = 0
   # These sets are generated when dynamically making a portal type class to
   # short-cut guarded_getattr in edit/getProperty. For classes that are not
   # dynamically generated from portal type, we always check security.
