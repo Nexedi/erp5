@@ -35,7 +35,7 @@
 
     .onStateChange(function (modification_dict) {
       var template = {
-        minDimensions: [26, 200],
+        minDimensions: [52, 300],
         defaultColWidth: 100,
         allowExport: true,
         columnSorting: true,
@@ -53,10 +53,10 @@
         allowComments: true,
         selectionCopy: true,
         search: true,
-        fullscreen: true,
-        lazyLoading: true,
-        loadingSpin: true,
-        tableOverflow: true,
+        //fullscreen: true,
+        //lazyLoading: true,
+        //loadingSpin: true,
+        //tableOverflow: true,
         autoIncrement: true,
         parseFormulas: true
       },
@@ -144,7 +144,9 @@
             }
           ]
         }));
-        this.table = table;
+        gadget.table = table;
+        var filter = gadget.element.querySelector(".jexcel_filter");
+        gadget.element.querySelector(".jexcel_toolbar").appendChild(filter);
       }
     });
 

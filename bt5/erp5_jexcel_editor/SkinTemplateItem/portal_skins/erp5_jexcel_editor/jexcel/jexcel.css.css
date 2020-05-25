@@ -552,12 +552,12 @@
 {
     display:flex;
     justify-content:space-between;
-    margin-bottom:4px;
+    /**margin-bottom:4px;**/
 }
 
 .jexcel_filter > div
 {
-    padding:8px;
+    padding:4px;
     align-items:center;
 }
 
