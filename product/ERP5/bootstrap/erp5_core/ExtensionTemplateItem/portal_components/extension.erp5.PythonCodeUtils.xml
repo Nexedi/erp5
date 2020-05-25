@@ -45,7 +45,12 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>W:145, 12: Unused variable \'mypy_err\' (unused-variable)</string>
+                <string>W:156, 29: Unused variable \'error_type\' (unused-variable)</string>
+                <string>W:  8,  0: Unused import erp5.portal_type (unused-import)</string>
+                <string>W:  9,  0: Unused import typing (unused-import)</string>
+              </tuple>
             </value>
         </item>
         <item>
