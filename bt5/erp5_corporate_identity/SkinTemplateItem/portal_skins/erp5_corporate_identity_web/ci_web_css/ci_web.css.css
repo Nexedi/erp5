@@ -16,9 +16,9 @@ fieldset {
 .ci-web .ci-web-page-content h2,
 .ci-web .ci-web-page-content h3,
 .ci-web .ci-web-page-banner h1,
-.ci-web .ci-web-page-banner h2, 
+.ci-web .ci-web-page-banner h2,
 .ci-web .ci-web-page-banner h3,
-.ci-web details, 
+.ci-web details,
 .ci-web menu,
 .ci-web .ci-web-page-banner .breadcrumb a,
 .ci-web .ci-web-page-banner .widget {
@@ -112,7 +112,7 @@ fieldset {
   font-weight: bold;
 }
 @media(max-width: 45em) {
-  
+
   .ci-web .ci-web-header-bar-logo-left span {
     display: block;
     width: auto;
@@ -197,26 +197,38 @@ ci-web-header-bar-search-right
   margin-top: .5em;
 }
 .ci-web .ci-web-page-content table {
-  border-collapse: collapse;
+  margin: auto;
   border: 1px solid #808080;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 .ci-web .ci-web-page-content table thead {
   background: #F0F0F0;
 }
 .ci-web .ci-web-page-content table thead th,
 .ci-web .ci-web-page-content table thead td {
-  padding: 1em .25em;
+  /* padding: 1em .25em; */
+  padding: 1em 0.5em;
+  border-bottom: 1px solid;
 }
 .ci-web .ci-web-page-content table tbody th,
 .ci-web .ci-web-page-content table tbody td {
-  padding: 0 .25em;
+  /* padding: 0 .25em; */
+  padding: .25em 0.5em;
+  border-bottom: 1px solid;
 }
+.ci-web .ci-web-page-content table tbody tr:last-child th,
+.ci-web .ci-web-page-content table  tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
 .ci-web .ci-web-page-content img {
   width: 100%;
 }
+/* As header h* and link a use the same color,
+   keep the underline to differenciate links */
 .ci-web .ci-web-page-content a {
-  /* As header h* and link a use the same color,
-     keep the underline to differenciate links */
   text-decoration: underline;
 }
 
@@ -247,6 +259,12 @@ ci-web-header-bar-search-right
   .ci-web .ci-web-page-content tr { 
 		display: block; 
 	}
+  .ci-web .ci-web-page-content table thead th,
+  .ci-web .ci-web-page-content table thead td,
+  .ci-web .ci-web-page-content table tbody th,
+  .ci-web .ci-web-page-content table tbody td {
+    border-bottom: 0 none;
+  }
 	.ci-web .ci-web-page-content thead tr { 
 		position: absolute !important;
   	height: 1px;
