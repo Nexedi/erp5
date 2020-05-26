@@ -992,6 +992,11 @@ def importLocalDocument(class_id, path=None, class_path=None):
     assert path is None
     module_path = class_path.rsplit('.', 1)[0]
     module = __import__(module_path, {}, {}, (module_path,))
+    try:
+      klass = getattr(module, class_id)
+    except AttributeError:
+      assert hasattr(module, 'kept_for_backward_compatibility_only')
+      return
   else:
     # local document in INSTANCE_HOME/Document/
     # (created by ClassTool?)
@@ -1022,7 +1027,6 @@ def importLocalDocument(class_id, path=None, class_path=None):
   ### newTempFoo
   temp_document_constructor_name = "newTemp%s" % class_id
   from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-  klass = getattr(module, class_id)
   temp_document_constructor = deprecated(
     ('newTemp*(self, ID) will be removed, use self.newContent('
      'temp_object=True, id=ID, portal_type=...)'))(

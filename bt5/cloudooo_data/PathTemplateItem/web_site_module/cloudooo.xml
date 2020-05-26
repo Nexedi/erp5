@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="WebSite" module="Products.ERP5.Document.WebSite"/>
-        <tuple/>
-      </tuple>
+      <global name="Web Site" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -244,10 +241,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="WebSiteTraversalHook" module="Products.ERP5.Document.WebSite"/>
-        <tuple/>
-      </tuple>
+      <global name="WebSiteTraversalHook" module="Products.ERP5.Document.WebSite"/>
     </pickle>
     <pickle>
       <dictionary/>
