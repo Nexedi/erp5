@@ -6642,6 +6642,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Form.VideoField',
       'Products.ERP5Form.ZGDChart',
       'Products.ERP5Form.ZPyChart',
+      'Products.ERP5.Document.WebSection',
+      'Products.ERP5.Document.WebSite',
       # ERP5 Objects use Interaction Workflows...
       'Products.ERP5Form.Interactor.FieldValueCacheInteractor',
       ## No need to migrate
