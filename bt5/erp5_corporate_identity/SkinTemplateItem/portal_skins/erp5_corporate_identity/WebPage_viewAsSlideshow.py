@@ -21,24 +21,27 @@ MAIN FILE: generate presentation in different output formats
 # display_note:             display slide notes (1) or not (0)*
 # display_svg:              display svg-images as svg or png*
 # ------
-# flag_ooo:                 convert legacy odp, sxi formats (not active)
+# remote_content:           convert legacy odp, sxi formats (not active)
 
 import re
 
 from base64 import b64encode
 
 blank = ''
+flags = re.MULTILINE|re.DOTALL|re.IGNORECASE
 details_separator = '</section><section class="ci-notes-continue"><section><h1>cont.</h1></section>'
 pref = context.getPortalObject().portal_preferences
 
 # ------------------ HTML cleanup/converter methods ----------------------------
+def getHeaderSlideTitle(my_doc):
+  return '<h1>' + my_doc.getTitle() + '</h1>'
+
 def getSlideList(my_content):
   return re.findall(r'<section[^>]*?>(.*?)</section>', my_content, re.S)
 
 #def getSectionSlideList(my_content):
 #  return re.findall(r'(<section[^>]*?>.*?</section>)', my_content, re.S)
 
-# https://regex101.com/r/8F8GTx/1/
 def getSlideDetailsList(my_content):
   return re.findall(r'<section.*?>\s?<section>.*?</details>\s?</section>', my_content, re.S)
 
@@ -50,6 +53,54 @@ def getDetailsList(my_slide):
 
 #def getNestedSection(my_content):
 #  return my_content.find("<section") > -1
+
+# please look the other direction until we can use beautifulsoup
+def getSlideFront(my_content):
+
+  # is there an image on the slide?
+  img = re.search(r'(<img.*?/>)', slide_content, flags=flags)
+  if img:
+    return img.group()
+
+  # is there another tag on the slide?
+  tag = re.search(r'<(.*?)( |>)', slide_content, flags=flags)
+  if tag:
+    key = tag.group(1)
+    element = re.search(r'(<%s.*?</%s>)'%(key, key), my_content, flags=flags)
+    if element:
+      return element.group()
+
+  # empty slide
+  return None
+
+# opinionated
+# TODO h1: chapter, h2:slide ?
+def setH1AndH2AsSlideHeaders(my_content):
+  for start_tag in re.findall(r'<h2', my_content, flags=flags):
+    my_content = my_content.replace(start_tag, '<h1')
+  for end_tag in re.findall(r'\/h2>', my_content, flags=flags):
+    my_content = my_content.replace(end_tag, '/h1>')
+  return my_content
+
+def removePlaceholders(my_content):
+  if my_content.find('${') > -1:
+    for substitution_string in re.findall(r'(\${.*})', my_content):
+      my_content = my_content.replace(substitution_string, blank)
+  return my_content
+
+def removeComments(my_content):
+  for comment_string in re.findall(r'(<!--.*?-->)', my_content, flags=flags):
+    my_content = my_content.replace(comment_string, blank)
+  return my_content
+
+def removeImageWrappers(my_content):
+  img_list = re.findall(r'(<p style=\"text-align: center;\">(.*?)</p>)', my_content, flags=flags)
+  for wrapped_image in img_list:
+    my_content = my_content.replace(wrapped_image[0], wrapped_image[1])
+  return my_content
+
+def removeLineBreaks(my_content):
+  return my_content.replace('\n', '').replace('\r', '')
 
 def splitMultipleDetails(my_content):
   for slide in getSlideDetailsList(my_content):
@@ -86,118 +137,101 @@ def splitMultipleDetails(my_content):
 def removeEmptyDetails(my_content):
   content = my_content.replace('<details open="open"></details>', blank)
   content = content.replace('<details></details>', blank)
+  content = content.replace('<details open=""></details>', blank)
   content = content.replace('<details>&nbsp;</details>', blank)
   content = content.replace('<details> </details>', blank)
   return content
 
-def getPageList(my_content):
-  return re.findall(r'<html>(.*?)</html>', my_content, re.S)
-
-def getPageTitle(my_full_page):
-  result = re.search('<title>(.+?)</title>', my_full_page)
-  if result:
-    return result.group(1)
-
-def getPageContent(my_full_page):
-  result_list = my_full_page.split("</center><br>")
-  if len(result_list) == 2:
-    return result_list[1].replace("</body>", blank)
-
-def addSlideContent(my_content, my_notes):
-  return ''.join([
-    '<section>',
-    my_content,
-    '<details open="open">',
-    my_notes,
-    '</details></section>'
-  ])
-
-def sortContent(my_page_list):
-  try:
-    page_content_list = []
-    page_tuple_first = None
-    page_tuple_last = None
-    for page in my_page_list:
-      page_title = getPageTitle(page)
-
-      # Note cloudooo default html transformation mixes slide order. dirty fix
-      if page_title.find("Commercial") > -1:
-        page_content = getPageContent(page)
-        if page_content.find("<center>") > -1:
-          page_tuple_last = (page_title, page_content, "first")
-      elif page_title.find("ERP5") > -1:
-        page_content = getPageContent(page)
-        if page_content.find("<center>") > -1:
-          page_tuple_first = (page_title, page_content, "last")
-      else:
-        page_content = getPageContent(page)
-        if page_title.find("Slide") > -1:
-          slide_number = int(page_title.replace("Slide ", ""))
-          page_content_list.append((slide_number, page_content, None))
-        else:
-          if page_content.find("<center>") > -1:
-            page_tuple_first = (page_title, page_content, "first")
-      sort_content_list = sorted(page_content_list, key=lambda page_foo: page_foo[0])
-    if page_tuple_last is not None:
-      sort_content_list.append(page_tuple_last)
-    if page_tuple_first is not None:
-      sort_content_list = [page_tuple_first] + sort_content_list
-    return sort_content_list
-
-  except Exception as e:
-    raise e
+def addLastSlide(my_last_slide):
+  if my_last_slide.count("<div") != 2:
+    last_slide_relative_url = pref.getPreferredCorporateIdentityTemplateSlideLastSlideRelativeUrl() or None
+    if last_slide_relative_url:
+      # try:
+      last_slide = doc.restrictedTraverse(last_slide_relative_url) or None
+      if last_slide is not None:
+        return last_slide.getTextContent()
+      #except AttributeError:
+      #  last_slide_content = blank
+  return blank
 
 # -------------------------- Setup ---------------------------------------------
 doc = context
 doc_prefix = pref.getPreferredCorporateIdentityTemplateSlideDocumentPrefix() or "Slideshow."
-doc_converted_content = None
+doc_upgraded_content = None
+doc_slide_iter = None
 doc_format = kw.get('format') or 'html'
 doc_display_notes = int(kw.get('display_note') or 0)
 doc_display_svg = kw.get('display_svg') or 'png'
 doc_download = int(kw.get('document_download') or 0)
 doc_save = int(kw.get('document_save') or 0)
-doc_ooo = int(kw.get('flag_ooo') or 0)
+doc_ooo = kw.get('remote_content') or None
+doc_content = doc_ooo or doc.getTextContent()
+doc_is_slideshow = getSlideList(doc_content) or None
 
 override_logo_reference = kw.get('override_logo_reference', None)
 override_source_organisation_title = kw.get("override_source_organisation_title", None)
 override_batch_mode = kw.get('batch_mode')
 override_source_person_title = None
 
-# ---------- backward compatability with legacy odp/sxi presentations ----------
-# note: this has to come first to convert file into html and then continue
-if doc_ooo:
-  doc_portal = doc.getPortalObject()
-  if doc.getPortalType() in ["Presentation"]:
-    raw_data = doc_portal.portal_transforms.convertToData(
-      "text/html",
-      str(doc.getData() or blank),
-      context=context,
-      mimetype=doc.getContentType()
-    )
-    if raw_data is None:
-      raise ValueError("Failed to convert to %r" % "text/html")
+# --------------------- Convert any page into a slideshow ----------------------
+# Note: mileage varies depending on the cleanliness of the HTML page
+if doc_is_slideshow is None:
 
-    # got something
-    page_list = getPageList(raw_data)
-    if len(page_list) > 0:
-      page_content = sortContent(page_list)
-      doc_converted_content = blank
-      for slide in page_content:
-        if slide[1].find("<center>") > -1:
-          slide_content_list = slide[1].split("<h3>Notes:</h3>")
-          if len(slide_content_list) != 2:
-            slide_content = slide[1]
-            slide_notes = blank
-          else:
-            slide_content = slide_content_list[0]
-            slide_content = slide_content.replace("<center>", "")
-            slide_content = slide_content.replace("</center>", "")
-            slide_notes = slide_content_list[1]
-          doc_converted_content += addSlideContent(slide_content, slide_notes)
+  doc_upgraded_content = removePlaceholders(doc_content)
+  doc_upgraded_content = removeComments(doc_upgraded_content)
+  doc_upgraded_content = removeImageWrappers(doc_upgraded_content)
+  doc_upgraded_content = setH1AndH2AsSlideHeaders(doc_upgraded_content)
+  doc_upgraded_content = removeLineBreaks(doc_upgraded_content)
+
+  doc_content = blank
+  last_slide_content = blank
+  section_start = '<section>'
+  details_start = '<details open="open">'
+  details_end = '</details>'
+  section_end = '</section>'
+
+  # separate by <h1>, these will be our slide headers
+  fake_slide_list = re.split(r'(<h1.*?/h1>)', doc_upgraded_content, flags=flags)
+
+  # insert page title if first element isn't a <h1>
+  if '<h1' not in fake_slide_list[0]:
+    fake_slide_list.insert(0, getHeaderSlideTitle(doc))
+
+  # opinionated add of a "Thank you" slide if the last slide doesn't
+  # contain the default two <div> columns
+  last_slide_content = addLastSlide(fake_slide_list[-1])
+
+  # fake_slide_list will be <h1>,<content>,<h1>,<content> so we need to go
+  # over two items at a time
+  doc_slide_iter = iter(fake_slide_list)
+  for x in doc_slide_iter:
+    slide_header = x
+
+    # remove whitespace so we don't end up with empty <details>
+    slide_content = " ".join(next(doc_slide_iter).split())
+
+    # build slides assuming the first element after the header is on the slide
+    # (an img, a paragraph, a list, whatever). The rest goes into details. If
+    # there is an img on the slide, move it to the top
+    slide_front = getSlideFront(slide_content)
+    if slide_front:
+      slide_content = slide_content.replace(slide_front, blank)
+    else:
+      slide_front = blank
+
+    # build a new doc from slides
+    doc_content = doc_content + section_start + slide_header + slide_front \
+      + details_start + slide_content + details_end + section_end \
+
+# other case: we have a slideshow, doc_is_slideshow contains the slides
+else:
+  last_slide_content = addLastSlide(doc_is_slideshow[-1])
+
+# add last slide if required
+doc_content = doc_content + last_slide_content
 
 # -------------------------- Document Parameters  ------------------------------
-doc_dirty_content = doc_converted_content or doc.getTextContent()
-doc_content = removeEmptyDetails(doc_dirty_content)
+doc_content = removeEmptyDetails(doc_content)
 doc_title = doc.getShortTitle() or doc.getTitle()
 doc_language = doc.getLanguage()
 doc_description = doc.getDescription()
@@ -271,9 +305,9 @@ for image in re.findall('(<img.*?/>)', doc_content):
 #
 #  for link in re.findall('(<a.*?<\/a>)', document_content):
 #    doc_content = doc_content.replace(link, doc.WebPage_validateLink(link_string=link, link_toc=true))
-#
 
-# ------------- backwards compatability with old slideshow ---------------------
+
+# ------------- backcompat: old slideshow -------------------------------------
 # requires to wrap content of slides that contain <details> into nested
 # <section> tags. Done here, after book, because it adds more complexity
 if getDetails(doc_content) > -1:
