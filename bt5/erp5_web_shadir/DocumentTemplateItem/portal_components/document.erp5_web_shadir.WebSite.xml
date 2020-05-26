@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>document.erp5.WebSite</string> </value>
+            <value> <string>document.erp5_web_shadir.WebSite</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>erp5</string> </value>
+            <value> <string>erp5_web_shadir</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
