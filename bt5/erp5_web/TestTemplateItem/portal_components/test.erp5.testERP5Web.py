@@ -109,7 +109,7 @@ class TestWebSiteTraversalHook(WebTraversalHookTestMixin, ERP5TypeTestCase):
     self.web_section = self.portal.web_site_module.newContent(
       portal_type='Web Site',
     )
-    from Products.ERP5Type.Document.WebSite import WebSiteTraversalHook
+    from erp5.component.document.WebSite import WebSiteTraversalHook
     self.traversal_hook_class = WebSiteTraversalHook
 
 
@@ -121,7 +121,7 @@ class TestWebSectionTraversalHook(WebTraversalHookTestMixin, ERP5TypeTestCase):
     )
     self.web_section = web_site.newContent(portal_type='Web Section')
 
-    from Products.ERP5Type.Document.WebSection import WebSectionTraversalHook
+    from erp5.component.document.WebSection import WebSectionTraversalHook
     self.traversal_hook_class = WebSectionTraversalHook
 
 
@@ -248,7 +248,7 @@ class TestERP5Web(ERP5TypeTestCase):
     portal_catalog = self.getCatalogTool()
     try:
       portal_catalog.catalog_object(web_site)
-    except:
+    except Exception:
       self.fail('Cataloging of the Web Site failed.')
 
 
@@ -346,10 +346,10 @@ Hé Hé Hé!""", page.asText().strip())
       current user selected language in browser.
     """
     portal = self.getPortal()
-    website = self.setupWebSite()
+    self.setupWebSite()
     websection = self.setupWebSection()
     page_reference = 'default-webpage'
-    webpage_list = self.setupWebSitePages(prefix=page_reference)
+    self.setupWebSitePages(prefix=page_reference)
 
     # set default web page for section
     found_by_reference = portal.portal_catalog(reference=page_reference,
@@ -420,7 +420,7 @@ Hé Hé Hé!""", page.asText().strip())
       Note: due to generic ERP5 Web implementation this test highly depends
       on WebSection_geDefaulttDocumentValueList
     """
-    website = self.setupWebSite()
+    self.setupWebSite()
     websection = self.setupWebSection()
     publication_section_category_id_list = ['documentation', 'administration']
 
@@ -487,7 +487,7 @@ Hé Hé Hé!""", page.asText().strip())
     """ Check getting getDocumentValueList from Web Section.
     """
     portal = self.getPortal()
-    website = self.setupWebSite()
+    self.setupWebSite()
     websection = self.setupWebSection()
     publication_section_category_id_list = ['documentation', 'administration']
 
@@ -717,7 +717,7 @@ Hé Hé Hé!""", page.asText().strip())
     web_page_list = self.setupWebSitePages('test1',
             language_list=('en',),
             publication_section_list=('my_test_category',))
-    web_page_list2 = self.setupWebSitePages('test2',
+    self.setupWebSitePages('test2',
             language_list=('en',),
             publication_section_list=('my_test_category',))
 
@@ -1091,10 +1091,9 @@ Hé Hé Hé!""", page.asText().strip())
     request['PARENTS'] = [self.app]
     website = self.setupWebSite()
     web_section_portal_type = 'Web Section'
-    web_section = website.newContent(portal_type=web_section_portal_type)
+    website.newContent(portal_type=web_section_portal_type)
 
     content = '<p>initial text</p>'
-    new_content = '<p>modified text<p>'
     document = portal.web_page_module.newContent(portal_type='Web Page',
             id='document_original_cache',
             reference='NXD-Document.Cache',
@@ -1234,7 +1233,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.login()
     self.tic()
 
-    web_site = self.setupWebSite()
+    self.setupWebSite()
     websection = self.setupWebSection()
 
     websection_url = '%s/%s' % (self.portal.getId(), websection.getRelativeUrl())
@@ -1263,7 +1262,7 @@ Hé Hé Hé!""", page.asText().strip())
     """
     website = self.setupWebSite()
     web_section_portal_type = 'Web Section'
-    web_section = website.newContent(portal_type=web_section_portal_type)
+    website.newContent(portal_type=web_section_portal_type)
 
     content = '<p>initial text</p>'
     document = self.portal.web_page_module.newContent(portal_type='Web Page',
@@ -1320,7 +1319,6 @@ Hé Hé Hé!""", page.asText().strip())
     request['PARENTS'] = [self.app]
     website = self.setupWebSite()
     path = website.absolute_url_path() + '/a_non_existing_page'
-    absolute_url = website.absolute_url() + '/a_non_existing_page'
     request = portal.REQUEST
 
     # Check a Not Found page is returned
@@ -1475,10 +1473,7 @@ Hé Hé Hé!""", page.asText().strip())
     """
       Test Web Site map script.
     """
-    request = self.app.REQUEST
     website = self.setupWebSite()
-    kw = {'depth': 5,
-          'include_subsection': 1}
 
     website.setSiteMapSectionParent(1)
     websection1 = website.newContent(portal_type='Web Section',
@@ -1601,7 +1596,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   def getTitle(self):
     return "Web"
 
-  def createUser(self, name, role_list):
+  def createUser(self, name, role_list): # pylint: disable=arguments-differ
     user_folder = self.getPortal().acl_users
     user_folder._doAddUser(name, 'password', role_list, [])
 
@@ -1875,7 +1870,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
     # test for admin
     try:
-      site_1 = web_site_module.newContent(portal_type='Web Site', id='site_1')
+      web_site_module.newContent(portal_type='Web Site', id='site_1')
     except Unauthorized:
       self.fail("Admin should be able to create a Web Site.")
 
@@ -1927,7 +1922,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
     # test for admin
     try:
-      base_category_1 = portal_categories.newContent(portal_type='Base Category', id='base_category_1')
+      portal_categories.newContent(portal_type='Base Category', id='base_category_1')
     except Unauthorized:
       self.fail("Admin should be able to create a Base Category.")
     try:
@@ -1947,7 +1942,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     # test as a web user (assignor)
     self.loginByUserName('webmaster')
     try:
-      base_category_2 = portal_categories.newContent(portal_type='Base Category', id='base_category_2')
+      portal_categories.newContent(portal_type='Base Category', id='base_category_2')
       self.fail("A webmaster should not be able to create a Base Category.")
     except Unauthorized:
       pass
@@ -1981,7 +1976,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
     # test for admin
     try:
-      new_base_category_1 = portal_categories.newContent(portal_type='Base Category', id='new_base_category_1')
+      portal_categories.newContent(portal_type='Base Category', id='new_base_category_1')
     except Unauthorized:
       self.fail("Admin should be able to create a Base Category.")
     try:
@@ -1992,14 +1987,14 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       self.fail("Admin should be able to create a Category.")
     self.tic()
     try:
-      new_cat_1_renamed = new_category_1.edit(id='new_cat_1_renamed')
-      new_cat_2_renamed = new_category_2.edit(id='new_cat_2_renamed')
+      new_category_1.edit(id='new_cat_1_renamed')
+      new_category_2.edit(id='new_cat_2_renamed')
     except Unauthorized:
       self.fail("Admin should be able to rename a Category.")
     # test as a web user (assignor)
     self.loginByUserName('webmaster')
     try:
-      base_category_2 = portal_categories.newContent(portal_type='Base Category', id='base_category_2')
+      portal_categories.newContent(portal_type='Base Category', id='base_category_2')
       self.fail("A webmaster should not be able to create a Base Category.")
     except Unauthorized:
       pass
@@ -2012,8 +2007,8 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       self.fail("A webmaster should be able to create a Category.")
     self.tic()
     try:
-      new_cat_3_renamed = new_category_3.edit(id='new_cat_3_renamed')
-      new_cat_4_renamed = new_category_4.edit(id='new_cat_4_renamed')
+      new_category_3.edit(id='new_cat_3_renamed')
+      new_category_4.edit(id='new_cat_4_renamed')
     except Unauthorized:
       self.fail("A webmaster should be able to rename a Category.")
 
@@ -2162,7 +2157,7 @@ class ERP5WebUpgraderMixin(object):
 
 class TestERP5WebSiteUpgrader(ERP5WebUpgraderMixin, ERP5TypeTestCase):
   def afterSetUp(self):
-    super(ERP5WebUpgraderMixin, self).afterSetUp()
+    super(TestERP5WebSiteUpgrader, self).afterSetUp()
     self.upgraded = self.portal.web_site_module.newContent(
         portal_type='Web Site',
     )
@@ -2170,7 +2165,7 @@ class TestERP5WebSiteUpgrader(ERP5WebUpgraderMixin, ERP5TypeTestCase):
 
 class TestERP5WebSectionUpgrader(ERP5WebUpgraderMixin, ERP5TypeTestCase):
   def afterSetUp(self):
-    super(ERP5WebUpgraderMixin, self).afterSetUp()
+    super(TestERP5WebSectionUpgrader, self).afterSetUp()
     self.upgraded = self.portal.web_site_module.newContent(
         portal_type='Web Site',
     ).newContent(
@@ -2179,7 +2174,7 @@ class TestERP5WebSectionUpgrader(ERP5WebUpgraderMixin, ERP5TypeTestCase):
 
 class TestERP5StaticWebSiteUpgrader(ERP5WebUpgraderMixin, ERP5TypeTestCase):
   def afterSetUp(self):
-    super(ERP5WebUpgraderMixin, self).afterSetUp()
+    super(TestERP5StaticWebSiteUpgrader, self).afterSetUp()
     self.upgraded = self.portal.web_site_module.newContent(
         portal_type='Static Web Site',
     )
@@ -2187,7 +2182,7 @@ class TestERP5StaticWebSiteUpgrader(ERP5WebUpgraderMixin, ERP5TypeTestCase):
 
 class TestERP5StaticWebSectionUpgrader(ERP5WebUpgraderMixin, ERP5TypeTestCase):
   def afterSetUp(self):
-    super(ERP5WebUpgraderMixin, self).afterSetUp()
+    super(TestERP5StaticWebSectionUpgrader, self).afterSetUp()
     self.upgraded = self.portal.web_site_module.newContent(
         portal_type='Web Site',
     ).newContent(
