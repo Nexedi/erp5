@@ -70,7 +70,6 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
     """
       Setup Web Site
     """
-    portal = self.getPortal()
     website = self.getPortal().web_site_module.newContent(portal_type='Web Site',
                                                           **kw)
     websection = website.newContent(portal_type='Web Section', **kw)
@@ -145,7 +144,6 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
     web_section.WebSection_addWebMessage(**form_kw)
     transaction.commit()
     # here we check a random bug caused by the ordering of activities
-    should_stop = [None]
     event_module_path_prefix = self.portal.event_module.getPath() + '/'
     deprioritize_message_list = []
     # we'll stop whenever we find the message that reindex the newly created
@@ -159,7 +157,8 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
           return True
       return False
     self.tic(stop_condition=stop_condition)
-    web_message_reindex_message, = deprioritize_message_list
+    assert len(deprioritize_message_list) == 1
+    web_message_reindex_message = deprioritize_message_list[0]
     web_message_path = web_message_reindex_message.object_path
     self.assertTrue(
       self.portal.unrestrictedTraverse(web_message_path).getPortalType(),

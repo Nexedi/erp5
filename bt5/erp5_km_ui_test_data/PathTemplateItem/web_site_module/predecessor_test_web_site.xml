@@ -298,7 +298,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <global name="WebSiteTraversalHook" module="Products.ERP5.Document.WebSite"/>
+      <global name="WebSiteTraversalHook" module="erp5.component.document.WebSite"/>
     </pickle>
     <pickle>
       <dictionary/>
@@ -306,7 +306,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="WebSiteTraversalHook" module="Products.ERP5.Document.WebSite"/>
+      <global name="WebSiteTraversalHook" module="erp5.component.document.WebSite"/>
     </pickle>
     <pickle>
       <dictionary/>
