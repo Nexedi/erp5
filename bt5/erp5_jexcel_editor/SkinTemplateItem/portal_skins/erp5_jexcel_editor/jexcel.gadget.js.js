@@ -78,6 +78,7 @@
             }
           },
           toolbar: [
+            //undo
             {
               type: 'i',
               content: 'undo',
@@ -85,6 +86,7 @@
                 table.undo();
               }
             },
+            //redo
             {
               type: 'i',
               content: 'redo',
@@ -92,51 +94,121 @@
                 table.redo();
               }
             },
+            //merge cells
+            {
+              type: 'i',
+              content: 'table_chart',
+              onclick: function () {
+                var cell = gadget.element.querySelector("td.highlight-selected");
+                var selected = table.getJson(true);
+                var colspan = Object.keys(selected[0]).length;
+                var rowspan = selected.length;
+                var letter = String.fromCharCode(97 + Number(cell.dataset.x)).toUpperCase();
+                var coor = letter + (Number(cell.dataset.y) + 1).toString();
+                table.setMerge(coor, colspan, rowspan);
+              }
+            },
+            //unmerge cell
+            {
+              type: 'i',
+              content: 'close',
+              onclick: function () {
+                var cell = gadget.element.querySelector("td.highlight-selected");
+                var letter = String.fromCharCode(97 + Number(cell.dataset.x)).toUpperCase();
+                var coor = letter + (Number(cell.dataset.y) + 1).toString();
+                table.removeMerge(coor);
+              }
+            },
+            //destroy all merged cells
+            {
+              type: 'i',
+              content: 'cancel',
+              onclick: function () {
+                table.destroyMerged();
+              }
+            },
+            //font style
             {
               type: 'select',
               k: 'font-family',
               v: ['Arial', 'Comic Sans MS', 'Verdana', 'Calibri', 'Tahoma', 'Helvetica', 'DejaVu Sans', 'Times New Roman', 'Georgia', 'Antiqua']
             },
+            //font size
             {
               type: 'select',
               k: 'font-size',
               v: ['9px', '10px', '11px', '12px', '13px', '14px', '15px', '16px', '17px', '18px', '19px', '20px', '22px', '24px', '26px', '28px', '30px']
             },
+            //text align left
             {
               type: 'i',
               content: 'format_align_left',
               k: 'text-align',
               v: 'left'
             },
+            //text align center
             {
               type: 'i',
               content: 'format_align_center',
               k: 'text-align',
               v: 'center'
             },
+            //text align right
             {
               type: 'i',
               content: 'format_align_right',
               k: 'text-align',
               v: 'right'
             },
+            //vertical align top
+            {
+              type: 'i',
+              content: 'vertical_align_top',
+              k: 'vertical-align',
+              v: 'top'
+            },
+            //vertical align middle
+            {
+              type: 'i',
+              content: 'vertical_align_center',
+              k: 'vertical-align',
+              v: 'middle'
+            },
+            //vertical align bottom
+            {
+              type: 'i',
+              content: 'vertical_align_bottom',
+              k: 'vertical-align',
+              v: 'bottom'
+            },
+            //style bold
             {
               type: 'i',
               content: 'format_bold',
               k: 'font-weight',
               v: 'bold'
             },
+            //style underlined
+            {
+              type: 'i',
+              content: 'format_underlined',
+              k: 'text-decoration',
+              v: 'underline'
+            },
+            //style italic
             {
               type: 'i',
               content: 'format_italic',
               k: 'font-style',
               v: 'italic'
             },
+            //text color
             {
               type: 'color',
               content: 'format_color_text',
               k: 'color'
             },
+            //background color
             {
               type: 'color',
               content: 'format_color_fill',
