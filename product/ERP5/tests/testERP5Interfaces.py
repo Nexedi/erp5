@@ -45,9 +45,9 @@ implements_tuple_list = [
   (('erp5.component.document.TradeModelLine','TradeModelLine'), 'IAmountGenerator'),
   (('erp5.component.document.TradeModelLine','TradeModelLine'), 'IVariated'),
   (('erp5.component.document.TradeModelPath','TradeModelPath'), 'IArrowBase'),
-  (('Products.ERP5.Document.Transformation','Transformation'), 'IAmountGenerator'),
-  (('Products.ERP5.Document.Transformation','Transformation'), 'IVariated'),
-  (('Products.ERP5.Document.TransformedResource','TransformedResource'), 'IVariated'),
+  (('erp5.component.document.Transformation','Transformation'), 'IAmountGenerator'),
+  (('erp5.component.document.Transformation','Transformation'), 'IVariated'),
+  (('erp5.component.document.TransformedResource','TransformedResource'), 'IVariated'),
   #IDocument
   (('Products.ERP5.Document.Document', 'Document'), 'IDocument'),
   (('erp5.component.document.Image', 'Image'), 'IDocument'),

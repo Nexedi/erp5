@@ -28,19 +28,16 @@
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, Constraint
+from Products.ERP5Type import Permissions, Constraint
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5.Document.AmountGeneratorLine import AmountGeneratorLine
-from Products.ERP5.Document.TransformedResource import TransformedResource
-from Products.ERP5Type.Base import TempBase
+from erp5.component.document.TransformedResource import TransformedResource
 
 from Products.CMFCore.Expression import Expression
 
-import operator
-
 class AssortedResource(TransformedResource):
-    """
+  """
         This code was copied from TransformedResource very stupidly.
         Therefore it is necessaery to review all the code. -yo
 
@@ -105,18 +102,18 @@ class AssortedResource(TransformedResource):
       setValueUids could be overriden to provide quick and dirty
       behaviour of range update
 
-    """
+  """
 
-    meta_type = 'ERP5 Assorted Resource'
-    portal_type = 'Assorted Resource'
-    add_permission = Permissions.AddPortalContent
+  meta_type = 'ERP5 Assorted Resource'
+  portal_type = 'Assorted Resource'
+  add_permission = Permissions.AddPortalContent
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Local property sheet
-    _properties = (
+  # Local property sheet
+  _properties = (
       { 'id'          : 'variation_base_category',
         'storage_id'  : 'variation_base_category_list', # Coramy Compatibility
         'description' : "",
@@ -128,373 +125,375 @@ class AssortedResource(TransformedResource):
         'acquisition_accessor_id'   : 'getVariationBaseCategoryList', ### XXX BUG
         'acquisition_depends'       : None,
         'mode'        : 'w' },
-    )
+  )
 
-    getCellAggregateKey = AmountGeneratorLine.getCellAggregateKey
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getAssortedVariationCategoryList')
-    def getAssortedVariationCategoryList(self, cell_index):
-      """
+  getCellAggregateKey = AmountGeneratorLine.getCellAggregateKey
+  security.declareProtected(Permissions.AccessContentsInformation, 'getAssortedVariationCategoryList')
+  def getAssortedVariationCategoryList(self, cell_index):
+    """
         Nice for A
-      """
-      transformation = self.getParentValue()
-      transformation_category_list = transformation.getVariationCategoryList()
-      variation_category_list = []
-      for p in cell_index:
-        if p is not None and p not in transformation_category_list:
-          variation_category_list.append(p)
-      #LOG('getAssortedVariationCategoryList', 0, repr(cell_index))
-      #LOG('getAssortedVariationCategoryList', 0, repr(variation_category_list))
-      return variation_category_list
+    """
+    transformation = self.getParentValue()
+    transformation_category_list = transformation.getVariationCategoryList()
+    variation_category_list = []
+    for p in cell_index:
+      if p is not None and p not in transformation_category_list:
+        variation_category_list.append(p)
+    #LOG('getAssortedVariationCategoryList', 0, repr(cell_index))
+    #LOG('getAssortedVariationCategoryList', 0, repr(variation_category_list))
+    return variation_category_list
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getAssortedVariationBaseCategoryList')
-    def getAssortedVariationBaseCategoryList(self):
-      """
+  security.declareProtected(Permissions.AccessContentsInformation, 'getAssortedVariationBaseCategoryList')
+  def getAssortedVariationBaseCategoryList(self):
+    """
         Nice for A
-      """
-      return self.getQVariationBaseCategoryList()
+    """
+    return self.getQVariationBaseCategoryList()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getAssortmentVariationCategoryList')
-    def getAssortmentVariationCategoryList(self, cell_index):
-      """
+  security.declareProtected(Permissions.AccessContentsInformation, 'getAssortmentVariationCategoryList')
+  def getAssortmentVariationCategoryList(self, cell_index):
+    """
         Nice for C
-      """
-      transformation = self.getParentValue()
-      transformation_category_list = transformation.getVariationCategoryList()
-      variation_category_list = []
-      for p in cell_index:
-        if p is not None and p in transformation_category_list:
-          variation_category_list.append(p)
-      #LOG('getAssortmentVariationCategoryList', 0, repr(cell_index))
-      #LOG('getAssortmentVariationCategoryList', 0, repr(variation_category_list))
-      return variation_category_list
+    """
+    transformation = self.getParentValue()
+    transformation_category_list = transformation.getVariationCategoryList()
+    variation_category_list = []
+    for p in cell_index:
+      if p is not None and p in transformation_category_list:
+        variation_category_list.append(p)
+    #LOG('getAssortmentVariationCategoryList', 0, repr(cell_index))
+    #LOG('getAssortmentVariationCategoryList', 0, repr(variation_category_list))
+    return variation_category_list
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getAssortmentVariationBaseCategoryList')
-    def getAssortmentVariationBaseCategoryList(self):
-      """
+  security.declareProtected(Permissions.AccessContentsInformation, 'getAssortmentVariationBaseCategoryList')
+  def getAssortmentVariationBaseCategoryList(self):
+    """
         Nice for C
-      """
-      #LOG('getAssortmentVariationBaseCategoryList', 0, repr(self))
-      transformation = self.getParentValue()
-      return transformation.getVariationBaseCategoryList()
+    """
+    #LOG('getAssortmentVariationBaseCategoryList', 0, repr(self))
+    transformation = self.getParentValue()
+    return transformation.getVariationBaseCategoryList()
 
-    # XXX Should be moved to somewhere more global, as this is general.
-    #     This does not depend even on self.
-    #
-    # Return a sorted list of base categories. This makes views of matrices consistent.
-    # Use the global variables, 'column_base_category_list' and 'line_base_category_list'
-    # (but not 'tab_base_category_list' at the moment).
-    def _getSortedBaseCategoryList(self, base_category_list):
-      base_category_list = base_category_list[:]  # Work on a copy.
-      base_category_list.sort()
-      column = None
-      line = None
-      sorted_list = [None, None]
-      for category in self.getPortalColumnBaseCategoryList():
-        if category in base_category_list:
-          if column is None:
-            column = category
-          else:
-            sorted_list.append(category)
-          base_category_list.remove(category)
-      for category in self.getPortalLineBaseCategoryList():
-        if category in base_category_list:
-          if line is None:
-            line = category
-          else:
-            sorted_list.append(category)
-          base_category_list.remove(category)
-      sorted_list.extend(base_category_list)
-      sorted_list[0] = line
-      sorted_list[1] = column
-      return sorted_list
-
-    # Update the range of cells according to the currently selected base categories.
-    def _updateCellRange(self, base=1, current_category=None):
-      transformation = self.getParentValue()
-      kwd = {'base_id': 'quantity'}
-      kw = []
-      base_category_list = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())
-      for base_category in base_category_list:
-        # FIXME: Actually, getVariationRangeCategoryList should be used here.
-        #        But getVariationRangeCategoryList is inconsistent with
-        #        getVariationRangeCategoryItemList, because getVariationRangeCategoryItemList
-        #        is overrided in Amount and Resource. -yo
-        if base_category is None:
-          category_item_list = [(None,'')]
+  # XXX Should be moved to somewhere more global, as this is general.
+  #     This does not depend even on self.
+  #
+  # Return a sorted list of base categories. This makes views of matrices consistent.
+  # Use the global variables, 'column_base_category_list' and 'line_base_category_list'
+  # (but not 'tab_base_category_list' at the moment).
+  def _getSortedBaseCategoryList(self, base_category_list):
+    base_category_list = base_category_list[:]  # Work on a copy.
+    base_category_list.sort()
+    column = None
+    line = None
+    sorted_list = [None, None]
+    for category in self.getPortalColumnBaseCategoryList():
+      if category in base_category_list:
+        if column is None:
+          column = category
         else:
-          category_item_list = self.getVariationRangeCategoryItemList(base_category_list = [base_category],
-                                                                      base=1)
-        category_list = []
-        for item in category_item_list:
-          category_list.append(item[0])
-        kw.append(category_list)
-      kw.append(transformation.getVariationCategoryList())
-      #LOG('_updateCellRange', 20, str(kw))
-      self.setCellRange(*kw, **kwd)
+          sorted_list.append(category)
+        base_category_list.remove(category)
+    for category in self.getPortalLineBaseCategoryList():
+      if category in base_category_list:
+        if line is None:
+          line = category
+        else:
+          sorted_list.append(category)
+        base_category_list.remove(category)
+    sorted_list.extend(base_category_list)
+    sorted_list[0] = line
+    sorted_list[1] = column
+    return sorted_list
 
-    ### Variation matrix definition
-    #
-    security.declareProtected(Permissions.ModifyPortalContent, '_setQVariationBaseCategoryList')
-    def _setQVariationBaseCategoryList(self, value):
-      """
+  # Update the range of cells according to the currently selected base categories.
+  def _updateCellRange(self, base=1, current_category=None, *args, **kw):
+    transformation = self.getParentValue()
+    kwd = {'base_id': 'quantity'}
+    kw = []
+    base_category_list = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())
+    for base_category in base_category_list:
+      # FIXME: Actually, getVariationRangeCategoryList should be used here.
+      #        But getVariationRangeCategoryList is inconsistent with
+      #        getVariationRangeCategoryItemList, because getVariationRangeCategoryItemList
+      #        is overrided in Amount and Resource. -yo
+      if base_category is None:
+        category_item_list = [(None,'')]
+      else:
+        category_item_list = self.getVariationRangeCategoryItemList(base_category_list = [base_category],
+                                                                    base=1)
+      category_list = []
+      for item in category_item_list:
+        category_list.append(item[0])
+      kw.append(category_list)
+    kw.append(transformation.getVariationCategoryList())
+    #LOG('_updateCellRange', 20, str(kw))
+    self.setCellRange(*kw, **kwd)
+
+  ### Variation matrix definition
+  #
+  security.declareProtected(Permissions.ModifyPortalContent, '_setQVariationBaseCategoryList')
+  def _setQVariationBaseCategoryList(self, value):
+    """
         Defines the possible base categories which Quantity value (Q)
         variate on
-      """
-      self._baseSetQVariationBaseCategoryList(value)
-      self._updateCellRange()
-      # And fix it in case the cells are not renamed (XXX this will be removed in the future)
-      self._checkConsistency(fixit=1)
+    """
+    self._baseSetQVariationBaseCategoryList(value)
+    self._updateCellRange()
+    # And fix it in case the cells are not renamed (XXX this will be removed in the future)
+    self._checkConsistency(fixit=1)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'setQVariationBaseCategoryList')
-    def setQVariationBaseCategoryList(self, value):
-      """
+  security.declareProtected(Permissions.ModifyPortalContent, 'setQVariationBaseCategoryList')
+  def setQVariationBaseCategoryList(self, value):
+    """
         Defines the possible base categories which Quantity value (Q)
         variate on and reindex the object
-      """
-      self._setQVariationBaseCategoryList(value)
-      self.reindexObject()
+    """
+    self._setQVariationBaseCategoryList(value)
+    self.reindexObject()
 
-    security.declareProtected(Permissions.ModifyPortalContent, '_setVVariationBaseCategoryList')
-    def _setVVariationBaseCategoryList(self, value):
-      """
+  security.declareProtected(Permissions.ModifyPortalContent, '_setVVariationBaseCategoryList')
+  def _setVVariationBaseCategoryList(self, value):
+    """
         Defines the possible base categories which Variation value (V)
         variate on
-      """
-      self._baseSetVVariationBaseCategoryList(value)
-      kwd = {}
-      kwd['base_id'] = 'variation'
-      kw = []
-      transformation = self.getParentValue()
-      line_id = transformation.getVariationBaseCategoryLine()
-      column_id = transformation.getVariationBaseCategoryColumn()
-      line = [[None]]
-      column = [[None]]
-      for v in value:
-        if v == line_id:
-          line = [transformation.getCategoryMembershipList(v,base=1)]
-        elif v == column_id:
-          column = [transformation.getCategoryMembershipList(v,base=1)]
-        else:
-          kw += [transformation.getCategoryMembershipList(v,base=1)]
-      kw = line + column + kw
-      self.setCellRange(*kw, **kwd)
-      # Empty cells if no variation
-      if line == [[None]] and column == [[None]]:
-        self.delCells(base_id='variation')
-      # And fix it in case the cells are not renamed (XXX this will be removed in the future)
-      self._checkConsistency(fixit=1)
+    """
+    self._baseSetVVariationBaseCategoryList(value)
+    kwd = {}
+    kwd['base_id'] = 'variation'
+    kw = []
+    transformation = self.getParentValue()
+    line_id = transformation.getVariationBaseCategoryLine()
+    column_id = transformation.getVariationBaseCategoryColumn()
+    line = [[None]]
+    column = [[None]]
+    for v in value:
+      if v == line_id:
+        line = [transformation.getCategoryMembershipList(v,base=1)]
+      elif v == column_id:
+        column = [transformation.getCategoryMembershipList(v,base=1)]
+      else:
+        kw += [transformation.getCategoryMembershipList(v,base=1)]
+    kw = line + column + kw
+    self.setCellRange(*kw, **kwd)
+    # Empty cells if no variation
+    if line == [[None]] and column == [[None]]:
+      self.delCells(base_id='variation')
+    # And fix it in case the cells are not renamed (XXX this will be removed in the future)
+    self._checkConsistency(fixit=1)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'setVVariationBaseCategoryList')
-    def setVVariationBaseCategoryList(self, value):
-      """
+  security.declareProtected(Permissions.ModifyPortalContent, 'setVVariationBaseCategoryList')
+  def setVVariationBaseCategoryList(self, value):
+    """
         Defines the possible base categories which Variation value (V)
         variate on and reindex the object
-      """
-      self._setVVariationBaseCategoryList(value)
-      self.reindexObject()
+    """
+    self._setVVariationBaseCategoryList(value)
+    self.reindexObject()
 
-    # Methods for matrix UI widgets
-    security.declareProtected(Permissions.AccessContentsInformation, 'getQLineItemList')
-    def getQLineItemList(self, display_id='getTitle', base=1, current_category=None):
-      """
-      """
-      line_category = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())[0]
-      #LOG('getQLineItemList', 0, "%s" % str(line_category))
-      if line_category is None:
-        result = [(None,'')]
-      else:
-        result = self.getVariationRangeCategoryItemList(base_category_list = [line_category],
-                                                        display_id=display_id,
-                                                        base=base,
-                                                        current_category=current_category)
-      #LOG('getQLineItemList', 10, "%s" % str(result))
-      return result
+  # Methods for matrix UI widgets
+  security.declareProtected(Permissions.AccessContentsInformation, 'getQLineItemList')
+  def getQLineItemList(self, display_id='getTitle', base=1, current_category=None):
+    """
+    """
+    line_category = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())[0]
+    #LOG('getQLineItemList', 0, "%s" % str(line_category))
+    if line_category is None:
+      result = [(None,'')]
+    else:
+      result = self.getVariationRangeCategoryItemList(base_category_list = [line_category],
+                                                      display_id=display_id,
+                                                      base=base,
+                                                      current_category=current_category)
+    #LOG('getQLineItemList', 10, "%s" % str(result))
+    return result
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getQColumnItemList')
-    def getQColumnItemList(self, display_id='getTitle', base=1, current_category=None):
-      """
-      """
-      column_category = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())[1]
-      #LOG('getQColumnItemList', 0, "%s" % str(column_category))
-      if column_category is None:
-        result = [(None,'')]
-      else:
-        result = self.getVariationRangeCategoryItemList(base_category_list = [column_category],
-                                                        display_id=display_id,
-                                                        base=base,
-                                                        current_category=current_category)
-      #LOG('getQColumnItemList', 0, "%s" % str(result))
-      return result
+  security.declareProtected(Permissions.AccessContentsInformation, 'getQColumnItemList')
+  def getQColumnItemList(self, display_id='getTitle', base=1, current_category=None):
+    """
+    """
+    column_category = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())[1]
+    #LOG('getQColumnItemList', 0, "%s" % str(column_category))
+    if column_category is None:
+      result = [(None,'')]
+    else:
+      result = self.getVariationRangeCategoryItemList(base_category_list = [column_category],
+                                                      display_id=display_id,
+                                                      base=base,
+                                                      current_category=current_category)
+    #LOG('getQColumnItemList', 0, "%s" % str(result))
+    return result
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getQTabItemList')
-    def getQTabItemList(self, display_id='getTitle', base=1, current_category=None):
-      """
+  security.declareProtected(Permissions.AccessContentsInformation, 'getQTabItemList')
+  def getQTabItemList(self, display_id='getTitle', base=1, current_category=None):
+    """
         Returns a list of items which can be used as index for
         each tab of a matrix or to define a cell range.
-      """
-      tab_category_list = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())[2:]
-      tab_category_item_list_list = []
-      for tab_category in tab_category_list:
-        tab_category_item_list = self.getVariationRangeCategoryItemList(base_category_list = [tab_category],
-                                                                        display_id=display_id,
-                                                                        base=base,
-                                                                        current_category=current_category)
-        tab_category_item_list_list.append(tab_category_item_list)
-      transformation = self.getParentValue()
-      transformation_category_item_list = transformation.getVariationCategoryItemList(
-                                                          display_id=display_id,
-                                                          base=base,
-                                                          current_category=current_category)
-      tab_category_item_list_list.append(transformation_category_item_list)
-      if len(tab_category_item_list_list) > 0:
-        product_list = cartesianProduct(tab_category_item_list_list)
-        result = []
-        for item_list in product_list:
-          value_list = []
-          label_list = []
-          for item in item_list:
-            value_list.append(item[0])
-            label_list.append(item[1])
-          result.append((value_list, label_list))
-      else:
-        result = [(None,'')]
-      return result
+    """
+    tab_category_list = self._getSortedBaseCategoryList(self.getQVariationBaseCategoryList())[2:]
+    tab_category_item_list_list = []
+    for tab_category in tab_category_list:
+      tab_category_item_list = self.getVariationRangeCategoryItemList(base_category_list = [tab_category],
+                                                                      display_id=display_id,
+                                                                      base=base,
+                                                                      current_category=current_category)
+      tab_category_item_list_list.append(tab_category_item_list)
+    transformation = self.getParentValue()
+    transformation_category_item_list = transformation.getVariationCategoryItemList(
+                                                        display_id=display_id,
+                                                        base=base,
+                                                        current_category=current_category)
+    tab_category_item_list_list.append(transformation_category_item_list)
+    if len(tab_category_item_list_list) > 0:
+      product_list = cartesianProduct(tab_category_item_list_list)
+      result = []
+      for item_list in product_list:
+        value_list = []
+        label_list = []
+        for item in item_list:
+          value_list.append(item[0])
+          label_list.append(item[1])
+        result.append((value_list, label_list))
+    else:
+      result = [(None,'')]
+    return result
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getVLineItemList')
-    def getVLineItemList(self):
-      base_category = self.getParentValue().getVariationBaseCategoryLine()
-      if base_category in self.getVVariationBaseCategoryList():
-        clist = self.getParentValue().getCategoryMembershipList(base_category, base=1)
-      else:
-        clist = [None]
+  security.declareProtected(Permissions.AccessContentsInformation, 'getVLineItemList')
+  def getVLineItemList(self):
+    base_category = self.getParentValue().getVariationBaseCategoryLine()
+    if base_category in self.getVVariationBaseCategoryList():
+      clist = self.getParentValue().getCategoryMembershipList(base_category, base=1)
+    else:
+      clist = [None]
+    result = []
+    for c in clist:
+      result += [(c,c)]
+    return result
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getVColumnItemList')
+  def getVColumnItemList(self):
+    base_category = self.getParentValue().getVariationBaseCategoryColumn()
+    if base_category in self.getVVariationBaseCategoryList():
+      clist = self.getParentValue().getCategoryMembershipList(base_category, base=1)
+    else:
+      clist = [None]
+    result = []
+    for c in clist:
+      result += [(c,c)]
+
+    result.sort() # XXX Temp until set / list issue solved
+
+    return result
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getVTabItemList')
+  def getVTabItemList(self):
+    transformation = self.getParentValue()
+    line_id = transformation.getVariationBaseCategoryLine()
+    column_id = transformation.getVariationBaseCategoryColumn()
+    base_category_list = transformation.getVariationBaseCategoryList()
+    base_category = []
+    for c in base_category_list:
+      if not c in (line_id, column_id):
+        if c in self.getVVariationBaseCategoryList():
+          base_category += [transformation.getCategoryMembershipList(c, base=1)]
+    if len(base_category) > 0:
+      clist = cartesianProduct(base_category)
       result = []
       for c in clist:
         result += [(c,c)]
-      return result
+    else:
+      result = [(None,'')]
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getVColumnItemList')
-    def getVColumnItemList(self):
-      base_category = self.getParentValue().getVariationBaseCategoryColumn()
-      if base_category in self.getVVariationBaseCategoryList():
-        clist = self.getParentValue().getCategoryMembershipList(base_category, base=1)
-      else:
-        clist = [None]
-      result = []
-      for c in clist:
-        result += [(c,c)]
+    result.sort() # XXX Temp until set / list issue solved
 
-      result.sort() # XXX Temp until set / list issue solved
+    return result
 
-      return result
+  security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
+  def newCell(self, *kw, **kwd):
+    result = XMLMatrix.newCell(self, *kw, **kwd)
+    result._setPredicateOperator("SUPERSET_OF")
+    membership_list = []
+    for c in kw:
+      if c is not None:
+        membership_list += [c]
+    result._setPredicateValueList(membership_list)
+    base_id = kwd.get('base_id', 'cell')
+    if base_id == 'quantity':
+      result._setDomainBaseCategoryList(self.getQVariationBaseCategoryList())
+    elif base_id == 'variation':
+      result._setDomainBaseCategoryList(self.getVVariationBaseCategoryList())
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getVTabItemList')
-    def getVTabItemList(self):
-      transformation = self.getParentValue()
-      line_id = transformation.getVariationBaseCategoryLine()
-      column_id = transformation.getVariationBaseCategoryColumn()
-      base_category_list = transformation.getVariationBaseCategoryList()
-      base_category = []
-      for c in base_category_list:
-        if not c in (line_id, column_id):
-          if c in self.getVVariationBaseCategoryList():
-            base_category += [transformation.getCategoryMembershipList(c, base=1)]
-      if len(base_category) > 0:
-        clist = cartesianProduct(base_category)
-        result = []
-        for c in clist:
-          result += [(c,c)]
-      else:
-        result = [(None,'')]
+    return result
 
-      result.sort() # XXX Temp until set / list issue solved
+  security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
+  def newCellContent(self, id, portal_type='Set Mapped Value', **kw): # pylint: disable=redefined-builtin
+    """Overriden to specify default portal type
+    """
+    return self.newContent(id=id, portal_type=portal_type, **kw)
 
-      return result
-
-    security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
-    def newCell(self, *kw, **kwd):
-      result = XMLMatrix.newCell(self, *kw, **kwd)
-      result._setPredicateOperator("SUPERSET_OF")
-      membership_list = []
-      for c in kw:
-        if c is not None:
-          membership_list += [c]
-      result._setPredicateValueList(membership_list)
-      base_id = kwd.get('base_id', 'cell')
-      if base_id == 'quantity':
-        result._setDomainBaseCategoryList(self.getQVariationBaseCategoryList())
-      elif base_id == 'variation':
-        result._setDomainBaseCategoryList(self.getVVariationBaseCategoryList())
-
-      return result
-
-    security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent' )
-    def newCellContent(self, id, portal_type='Set Mapped Value', **kw):
-      """Overriden to specify default portal type
-      """
-      return self.newContent(id=id, portal_type=portal_type, **kw)
-
-    security.declarePrivate('_checkConsistency')
-    def _checkConsistency(self, fixit=0):
-      """
+  security.declarePrivate('_checkConsistency')
+  def _checkConsistency(self, fixit=0):
+    """
         Check the constitency of transformation elements
-      """
-      transformation = self.getParentValue()
-      transformation_category_list = transformation.getVariationCategoryList()
+    """
+    transformation = self.getParentValue()
+    transformation_category_list = transformation.getVariationCategoryList()
 
-      error_list = XMLMatrix._checkConsistency(self, fixit=fixit)
+    error_list = XMLMatrix._checkConsistency(self, fixit=fixit)
 
-      # Quantity should be empty if no variation
-      q_range = self.getCellRange(base_id = 'quantity')
-      if q_range is not None:
-        range_is_empty = 1
-        for q_list in q_range:
-          if q_list is not None:
-            range_is_empty = 0
-            break
-        if range_is_empty:
-          matrix_is_not_empty = 0
-          for k in self.getCellIds(base_id = 'quantity'):
-            if hasattr(self, k):matrix_is_not_empty = 1
-          if matrix_is_not_empty:
-            if fixit:
-              self.delCells(base_id = 'quantity')
-              error_message =  "Variation cells for quantity should be empty (fixed)"
-            else:
-              error_message =  "Variation cells for quantity should be empty"
-            error_list += [(self.getRelativeUrl(),
-                          'TransformedResource inconsistency', 100, error_message)]
-
-      # First quantity
-      # We build an attribute equality and look at all cells
-      q_constraint = Constraint.AttributeEquality(
-        domain_base_category_list = self.getQVariationBaseCategoryList(),
-        predicate_operator = 'SUPERSET_OF',
-        mapped_value_property_list = ['quantity'] )
-      for kw in self.getCellKeys(base_id = 'quantity'):
-        kwd={'base_id': 'quantity'}
-        c = self.getCell(*kw, **kwd)
-        if c is not None:
-          predicate_value_list = []
-          categories_list = []
-          for p in kw:
-            if p is not None:
-              if p in transformation_category_list:
-                if p not in predicate_value_list:
-                  predicate_value_list.append(p)
-              else:
-                if p not in categories_list:
-                  categories_list.append(p)
-          q_constraint.edit(predicate_value_list = predicate_value_list,
-                            categories_list = categories_list)
+    # Quantity should be empty if no variation
+    q_range = self.getCellRange(base_id = 'quantity')
+    if q_range is not None:
+      range_is_empty = 1
+      for q_list in q_range:
+        if q_list is not None:
+          range_is_empty = 0
+          break
+      if range_is_empty:
+        matrix_is_not_empty = 0
+        for k in self.getCellIds(base_id = 'quantity'):
+          if hasattr(self, k):matrix_is_not_empty = 1
+        if matrix_is_not_empty:
           if fixit:
-            error_list += q_constraint.fixConsistency(c)
+            self.delCells(base_id = 'quantity')
+            error_message =  "Variation cells for quantity should be empty (fixed)"
           else:
-            error_list += q_constraint.checkConsistency(c)
+            error_message =  "Variation cells for quantity should be empty"
+          error_list += [(self.getRelativeUrl(),
+                        'TransformedResource inconsistency', 100, error_message)]
 
-      return error_list
+    # First quantity
+    # We build an attribute equality and look at all cells
+    q_constraint = Constraint.AttributeEquality(
+      domain_base_category_list = self.getQVariationBaseCategoryList(),
+      predicate_operator = 'SUPERSET_OF',
+      mapped_value_property_list = ['quantity'] )
+    for kw in self.getCellKeys(base_id = 'quantity'):
+      kwd={'base_id': 'quantity'}
+      c = self.getCell(*kw, **kwd)
+      if c is not None:
+        predicate_value_list = []
+        categories_list = []
+        for p in kw:
+          if p is not None:
+            if p in transformation_category_list:
+              if p not in predicate_value_list:
+                predicate_value_list.append(p)
+            else:
+              if p not in categories_list:
+                categories_list.append(p)
+        q_constraint.edit(predicate_value_list = predicate_value_list,
+                          categories_list = categories_list)
+        if fixit:
+          error_list += q_constraint.fixConsistency(c)
+        else:
+          error_list += q_constraint.checkConsistency(c)
 
+    return error_list
+"""
     if 0: # obsolete
+     from Products.ERP5Type.Base import TempBase
+     import operator
+
      def getAggregatedAmountList(self, REQUEST):
       # First, we set initial values for quantity and variation
       # Currently, we only consider discrete variations
@@ -726,3 +725,4 @@ class AssortedResource(TransformedResource):
             reduce(operator.add, total_variated_base_price_list, 0), \
             reduce(operator.add, total_variated_source_base_price_list, 0), \
             duration
+"""

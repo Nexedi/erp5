@@ -30,7 +30,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Variation import Variation
+from erp5.component.document.Variation import Variation
 from erp5.component.document.Image import Image
 
 class VariationImage(Image, Variation):

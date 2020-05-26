@@ -35,24 +35,23 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 #class Variation(XMLObject, Variation):
 class Variation(XMLObject):
-    """
-      A Variation
-    """
+  """
+  A Variation
+  """
+  meta_type = 'ERP5 Variation'
+  portal_type = 'Variation'
+  add_permission = Permissions.AddPortalContent
 
-    meta_type = 'ERP5 Variation'
-    portal_type = 'Variation'
-    add_permission = Permissions.AddPortalContent
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Price
-                      , PropertySheet.Variation
-                      , PropertySheet.VariationRange
-                      , PropertySheet.Reference
-                      )
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Price
+                    , PropertySheet.Variation
+                    , PropertySheet.VariationRange
+                    , PropertySheet.Reference
+                    )
