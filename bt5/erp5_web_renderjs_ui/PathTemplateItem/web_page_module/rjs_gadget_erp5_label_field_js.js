@@ -47,6 +47,8 @@
       field_url = 'gadget_erp5_field_file.html';
     } else if (field_type === 'IntegerField') {
       field_url = 'gadget_erp5_field_integer.html';
+    } else if (field_type === 'LabelField') {
+      field_url = 'gadget_erp5_field_label.html';
     } else if (field_type === 'ListBox') {
       field_url = 'gadget_erp5_field_listbox.html';
     } else if (field_type === 'EditorField') {
