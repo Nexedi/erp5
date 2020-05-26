@@ -76,6 +76,7 @@ class _ERP5(ERP5TypeTestSuite):
         glob('%s/bt5/erp5_monaco_editor_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_web_project_ui_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         glob('%s/bt5/erp5_corporate_identity_test/TestTemplateItem/portal_components/test.*.test*.py' % path) +
+        glob('%s/bt5/erp5_run_my_doc/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         # glob('%s/bt5/erp5_oauth*/TestTemplateItem/portal_components/test.*.test*.py' % path) +
         []
       ):
@@ -264,6 +265,7 @@ class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
         glob('%s/../bt5/erp5_configu*' % HERE) +
         glob('%s/../bt5/erp5_upgrader*' % HERE) +
         glob('%s/../bt5/erp5_corporate_identity*' % HERE) +
+        glob('%s/../bt5/erp5_run_my_doc*' % HERE) +
         []
       ):
       # we skip coding style check for business templates having this marker
