@@ -46,7 +46,7 @@
               </div>
               <div class="ui-field-contain">
                 <label i18n:domain="ui" i18n:translate="" >Password</label>
-                <div><input type="password" name="__ac_password" value="" required=""></div>
+                <div><input type="password" name="__ac_password" value="" required="" autocomplete="off" /></div>
               </div>
               <div class="ui-field-contain">
                 <label></label>

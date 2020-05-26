@@ -31,7 +31,7 @@
             </div>
             <div class="field">
               <label for="password" i18n:translate="" i18n:domain="ui">Password</label>
-              <div class="input"><input type="password" name="__ac_password" id="password" /></div>
+              <div class="input"><input type="password" name="__ac_password" id="password" autocomplete="off" /></div>
               <p class="clear"></p>
             </div>
             <div class="field">
