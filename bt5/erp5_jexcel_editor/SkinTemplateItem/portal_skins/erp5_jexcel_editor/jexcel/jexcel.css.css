@@ -90,7 +90,7 @@
 
 .with-toolbar .jexcel > thead > tr > td
 {
-    top:42px;
+    /**top:42px;**/
 }
 
 .jexcel > thead > tr > td.dragging

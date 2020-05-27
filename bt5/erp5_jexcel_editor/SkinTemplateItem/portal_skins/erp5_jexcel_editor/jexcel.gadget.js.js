@@ -5,7 +5,7 @@
 
   rJS(window)
 
-    .setState({saveStyle: false})
+    .setState({saveConfig: false})
 
     .declareAcquiredMethod("notifySubmit", "notifySubmit")
     .declareAcquiredMethod("notifyChange", "notifyChange")
@@ -53,7 +53,7 @@
         allowComments: true,
         selectionCopy: true,
         search: true,
-        //fullscreen: true,
+        fullscreen: true,
         //lazyLoading: true,
         //loadingSpin: true,
         //tableOverflow: true,
@@ -70,10 +70,10 @@
           onevent: function (ev) {
             var exluded_events = ["onload", "onfocus", "onblur", "onselection"];
             if (!exluded_events.includes(ev)) {
-              if ((ev === "onchangestyle" && gadget.state.saveStyle) || ev !== "onchangestyle") {
+              if ((ev === "onchangestyle" && gadget.state.saveConfig) || ev !== "onchangestyle") {
                 gadget.deferNotifyChangeBinded();
               } else {
-                gadget.state.saveStyle = true;
+                gadget.state.saveConfig = true;
               }
             }
           },
@@ -100,10 +100,18 @@
               content: 'table_chart',
               onclick: function () {
                 var cell = gadget.element.querySelector("td.highlight-selected");
+                var x = Number(cell.dataset.x);
                 var selected = table.getJson(true);
                 var colspan = Object.keys(selected[0]).length;
                 var rowspan = selected.length;
-                var letter = String.fromCharCode(97 + Number(cell.dataset.x)).toUpperCase();
+                var letter = "";
+                if (x <= 25) {
+                  letter += String.fromCharCode(97 + x).toUpperCase();
+                }
+                else {
+                  letter += String.fromCharCode(97 + Math.trunc(x / 25) - 1).toUpperCase();
+                  letter += String.fromCharCode(97 + (x % 26)).toUpperCase();
+                }
                 var coor = letter + (Number(cell.dataset.y) + 1).toString();
                 table.setMerge(coor, colspan, rowspan);
               }
@@ -114,7 +122,15 @@
               content: 'close',
               onclick: function () {
                 var cell = gadget.element.querySelector("td.highlight-selected");
-                var letter = String.fromCharCode(97 + Number(cell.dataset.x)).toUpperCase();
+                var x = Number(cell.dataset.x);
+                var letter = "";
+                if (x <= 25) {
+                  letter += String.fromCharCode(97 + x).toUpperCase();
+                }
+                else {
+                  letter += String.fromCharCode(97 + Math.trunc(x / 25) - 1).toUpperCase();
+                  letter += String.fromCharCode(97 + (x % 26)).toUpperCase();
+                }
                 var coor = letter + (Number(cell.dataset.y) + 1).toString();
                 table.removeMerge(coor);
               }
@@ -159,6 +175,13 @@
               content: 'format_align_right',
               k: 'text-align',
               v: 'right'
+            },
+            //text align justify
+            {
+              type: 'i',
+              content: 'format_align_justify',
+              k: 'text-align',
+              v: 'justify'
             },
             //vertical align top
             {
