@@ -27,11 +27,9 @@
 ##############################################################################
 
 import errno, glob, os, threading
-from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.TransactionalVariable import TransactionalResource
-from Products.ERP5Type import Permissions
 from Products.ERP5.mixin.timer_service import TimerServiceMixin
 from AccessControl.SecurityManagement import newSecurityManager, \
   getSecurityManager, setSecurityManager
@@ -61,7 +59,7 @@ class InotifyTool(TimerServiceMixin, BaseTool):
     except AttributeError:
       pass
 
-  def process_timer(self, tick, interval, prev="", next=""):
+  def process_timer(self, tick, interval, prev="", next=""): # pylint: disable=redefined-builtin
     if timerservice_lock.acquire(0):
       try:
         try:
