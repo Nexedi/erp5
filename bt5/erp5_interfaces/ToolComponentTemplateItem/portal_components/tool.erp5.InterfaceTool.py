@@ -30,12 +30,11 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 
 class InterfaceTool(BaseTool):
-    """
-    Placeholder for SOAP Interfaces
-    """
-
-    id = 'portal_interfaces'
-    meta_type = 'ERP5 Interface Tool'
-    portal_type = 'Interface Tool'
+  """
+  Placeholder for SOAP Interfaces
+  """
+  id = 'portal_interfaces'
+  meta_type = 'ERP5 Interface Tool'
+  portal_type = 'Interface Tool'
 
 InitializeClass(InterfaceTool)

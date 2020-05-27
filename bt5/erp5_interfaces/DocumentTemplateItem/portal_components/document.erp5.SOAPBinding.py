@@ -30,7 +30,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.Permissions import AccessContentsInformation
 from Products.ERP5Type.Base import Base
-from Products.ERP5Type.Cache import transactional_cached
 try:
   from spyne import MethodContext
 except ImportError:
@@ -60,13 +59,13 @@ class SOAPBinding(Base):
   security.declarePrivate('registerServiceClass')
   @classmethod
   def registerServiceClass(cls, service_class):
-      path = '%s.%s' % (service_class.__module__, service_class.__name__)
-      cls._service_class_dict[path] = service_class
+    path = '%s.%s' % (service_class.__module__, service_class.__name__)
+    cls._service_class_dict[path] = service_class
 
   @classmethod
   def getRegisteredServiceClassItemList(cls):
-      return sorted(('%s (%s)' % (v.__name__, v.__module__), k)
-                    for k, v in cls._service_class_dict.iteritems())
+    return sorted(('%s (%s)' % (v.__name__, v.__module__), k)
+                  for k, v in cls._service_class_dict.iteritems())
 
   security.declarePrivate('getListItemUrl')
   def getListItemUrl(self, *args):
@@ -74,7 +73,7 @@ class SOAPBinding(Base):
 
   def _getServer(self):
     try:
-      serial, server = self._v_server
+      serial, server = self._v_server # pylint: disable=access-member-before-definition
       if serial == self._p_serial:
         return server
     except AttributeError:
@@ -86,7 +85,7 @@ class SOAPBinding(Base):
     self._v_server = self._p_serial, server
     return server
 
-  def __call__(self, REQUEST):
+  def __call__(self, REQUEST): # pylint: disable=arguments-differ
     server = self._getServer()
     if REQUEST.method == 'GET':
       wsdl = Wsdl11(server.app.interface)
@@ -96,7 +95,7 @@ class SOAPBinding(Base):
     if hasattr(MethodContext, 'SERVER'):
       ctx = MethodContext(server, MethodContext.SERVER)
     else: # BBB spyne < 2.12
-      ctx = MethodContext(server)
+      ctx = MethodContext(server) # pylint: disable=no-value-for-parameter
     ctx.in_string = REQUEST.stdin
     ctx, = server.generate_contexts(ctx)
     ctx.udc = self
@@ -116,7 +115,7 @@ except ImportError:
 else:
   class HelloWorldService(ServiceBase):
     @rpc(Unicode, Integer, _returns=Iterable(Unicode))
-    def say_hello(ctx, name, times):
+    def say_hello(ctx, name, times): # pylint: disable=no-self-argument
       '''
       Docstrings for service methods appear as documentation in the wsdl
       <b>what fun</b>

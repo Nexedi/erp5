@@ -46,7 +46,7 @@ from Tool import CategoryTool, IdTool, TemplateTool,\
                  TrashTool, ContributionTool, NotificationTool, PasswordTool,\
                  GadgetTool, ContributionRegistryTool, IntrospectionTool,\
                  AcknowledgementTool, SolverTool,\
-                 UrlRegistryTool, InterfaceTool,\
+                 UrlRegistryTool,\
                  CertificateAuthorityTool, InotifyTool
 import ERP5Site
 from Document import PythonScript, SQLMethod
@@ -72,7 +72,6 @@ portal_tools = ( CategoryTool.CategoryTool,
                  UrlRegistryTool.UrlRegistryTool,
                  CertificateAuthorityTool.CertificateAuthorityTool,
                  InotifyTool.InotifyTool,
-                 InterfaceTool.InterfaceTool,
                 )
 content_classes = ()
 content_constructors = ()
