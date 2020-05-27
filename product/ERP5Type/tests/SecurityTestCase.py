@@ -140,17 +140,17 @@ class SecurityTestCase(ERP5TypeTestCase):
       newSecurityManager(None, user.__of__(uf))
 
   # Permission methods
-  failIfUserCanViewDocument = AssertNoPermissionMethod(
+  failIfUserCanViewDocument = assertUserCanNotViewDocument = AssertNoPermissionMethod(
                                      Permissions.View)
-  failIfUserCanAccessDocument = AssertNoPermissionMethod(
+  failIfUserCanAccessDocument = assertUserCanNotAccessDocument = AssertNoPermissionMethod(
                                      Permissions.AccessContentsInformation)
-  failIfUserCanModifyDocument = AssertNoPermissionMethod(
+  failIfUserCanModifyDocument = assertUserCanNotModifyDocument = AssertNoPermissionMethod(
                                      Permissions.ModifyPortalContent)
-  failIfUserCanAddDocument = AssertNoPermissionMethod(
+  failIfUserCanAddDocument = assertUserCanNotAddDocument = AssertNoPermissionMethod(
                                      Permissions.AddPortalContent)
-  failIfUserCanChangeLocalRoles = AssertNoPermissionMethod(
+  failIfUserCanChangeLocalRoles = assertUserCanNotChangeLocalRoles = AssertNoPermissionMethod(
                                      Permissions.ChangeLocalRoles)
-  failIfUserCanDeleteDocument = AssertNoPermissionMethod(
+  failIfUserCanDeleteDocument = assertUserCanNotDeleteDocument = AssertNoPermissionMethod(
                                      Permissions.DeleteObjects)
 
   def failIfUserHavePermissionOnDocument(self, permission_name, username, document):
@@ -197,6 +197,8 @@ class SecurityTestCase(ERP5TypeTestCase):
                   ", ".join(user.getRolesInContext(document))))
     finally:
       setSecurityManager(sm)
+
+  assertUserCanNotPassWorkflowTransition = failIfUserCanPassWorkflowTransition
 
   def failUnlessUserCanPassWorkflowTransition(self, username,
                                               transition, document):
@@ -291,6 +293,8 @@ class SecurityTestCase(ERP5TypeTestCase):
           username, role, document.getPortalType(), document.getRelativeUrl()))
     finally:
       setSecurityManager(sm)
+
+  assertUserDoesNotHaveRoleOnDocument = failIfUserHaveRoleOnDocument
 
   def failUnlessUserHaveRoleOnDocument(self, username, role, document):
     """Fails if the user does not have the role on the document."""
