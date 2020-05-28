@@ -1,0 +1,63 @@
+div[data-gadget-url$="slideeditor.gadget.html"] {
+
+  // XXX Move to listbox css
+  & > .document_table {
+    button:disabled {
+      color: #999999;
+    }
+  }
+
+  & > .slide_list {
+    display: flex;
+    flex-wrap: wrap;
+
+    & > section {
+      flex: 0 1 auto;
+      &[data-slide-index] {
+        cursor: move;
+      }
+
+      width: 9em;
+      height: 9em;
+      overflow: hidden;
+      background-color:#FFFFFF;
+      border: 1px solid #000000;
+      padding: 0.5em;
+      vertical-align: middle;
+      text-align: center;
+      // color:#000000;
+
+      &.drag {
+        opacity: 0.4;
+      }
+      &.over {
+        // border: 2px solid #000000;
+        border-style: dashed;
+      }
+
+      // Spacing between every section
+      margin-right: 2em;
+      margin-bottom: 2em;
+
+      display: flex;
+      flex-direction: column;
+      button {
+        padding: 3pt;
+        border: 1px solid rgba(0, 0, 0, 0.14);
+        border-radius: 0.325em;
+        background-color: #FFFFFF;
+
+        width: 2em;
+        overflow: hidden;
+        text-indent: -9999px;
+        white-space: nowrap;
+        &::before {
+          float: left;
+          text-indent: 0;
+        }
+      }
+
+    }
+  }
+
+}
