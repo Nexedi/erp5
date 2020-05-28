@@ -88,8 +88,8 @@ for failing_method in [
     'test_erp5.component.document.BusinessLink_BusinessLink_implements_ICategoryAccessProvider',
     'test_erp5.component.document.TradeModelCell_TradeModelCell_implements_IVariated',
     'test_erp5.component.document.TradeModelLine_TradeModelLine_implements_IVariated',
-    'test_Products.ERP5.Document.Transformation_Transformation_implements_IVariated',
-    'test_Products.ERP5.Document.TransformedResource_TransformedResource_implements_IVariated',
+    'test_erp5.component.document.Transformation_Transformation_implements_IVariated',
+    'test_erp5.component.document.TransformedResource_TransformedResource_implements_IVariated',
   ]:
   setattr(TestERP5Interfaces, failing_method,
       expectedFailure(getattr(TestERP5Interfaces,failing_method)))
