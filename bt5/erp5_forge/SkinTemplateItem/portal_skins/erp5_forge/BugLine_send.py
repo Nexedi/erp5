@@ -23,7 +23,8 @@ if reply_url is None:
   reply_url = context.portal_preferences.getPreferredEventSenderEmail()
 additional_headers = None
 if reply_url:
-  additional_headers = {'Return-Path':reply_url}
+  # TODO: this is not implemented
+  additional_headers = {'Return-Path':reply_url} # pylint: disable=unused-variable
 
 # To (multiple)
 recipient_list = context.BugLine_getRecipientValueList()
@@ -44,7 +45,6 @@ elif same_type(to_url, ''):
 # Attachments
 if attachment_list is None:
   attachment_list = []
-document_type_list = context.getPortalDocumentTypeList()
 for attachment in context.getAggregateValueList():
   mime_type, content = attachment.getMimeTypeAndContent()
   name = attachment.getReference()

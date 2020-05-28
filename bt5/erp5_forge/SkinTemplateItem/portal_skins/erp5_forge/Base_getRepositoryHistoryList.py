@@ -1,4 +1,3 @@
-from erp5.component.module.SubversionClient import SubversionSSLTrustError
 from Products.ERP5Type.Document import newTempBase
 
 portal = context.getPortalObject()
