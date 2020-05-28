@@ -7,13 +7,8 @@
 
     .setState({saveConfig: false})
 
-    .declareAcquiredMethod("notifySubmit", "notifySubmit")
     .declareAcquiredMethod("notifyChange", "notifyChange")
 
-    .declareJob("deferNotifySubmit", function () {
-      // Ensure error will be correctly handled
-      return this.notifySubmit();
-    })
     .declareJob("deferNotifyChange", function () {
       // Ensure error will be correctly handled
       return this.notifyChange();
