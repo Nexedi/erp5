@@ -471,6 +471,41 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
         "sub_select_key": traversed_document.Field_getSubFieldKeyDict(field, 'default:list', key=result["key"]),
         "sub_input_key": "default_" + traversed_document.Field_getSubFieldKeyDict(field, 'default:list:int', key=result["key"])
       })
+
+    if meta_type == "ParallelListField":
+      # Keep all other keys (like items) even if huge
+      # This allows to support client without the parallelistfield JS implementation
+      hash_script_id = field.get_value('hash_script_id')
+      if hash_script_id:
+        result.update({"subfield_list": getattr(field, hash_script_id)(
+                [x for x in result['items'] if (x[1] and x[0])],
+                # Drop empty values
+                result['default'],
+                default_sub_field_property_dict={
+                  'key': 'default',
+                  'field_type': 'MultiListField',
+                  'item_list': [],
+                  'value': [],
+                  'is_right_display': 0,
+                  'title': result['title'],
+                  'required': result['required'],
+                  'editable': result['editable']
+                },
+                is_right_display=0
+        )})
+        for subdict in result['subfield_list']:
+          if subdict['title'] == '&nbsp;':
+            subdict['title'] = ''
+          subdict['items'] = subdict['item_list']
+          del subdict['item_list']
+          subdict['key'] = field.generate_subfield_key(
+                                     subdict['key'], key=result['key'])
+
+      else:
+        result['subfield_list'] = [result.copy()]
+        result['subfield_list'][0]['field_type'] = 'MultiListField'
+      result['title'] = ''
+
     return result
 
   if meta_type in ("StringField", "FloatField", "EmailField", "TextAreaField",
