@@ -74,10 +74,10 @@ for i in form_list:
   if (i.getId().endswith('FieldLibrary')):
     continue
   add_message(i.title, portal_url.getRelativeContentURL(i))
-  for group, list in i.groups.items():
+  for group, list_ in i.groups.items():
     if group == 'hidden':
       continue
-    for j in (i[x] for x in list):
+    for j in (i[x] for x in list_):
       add_message(j.get_value('title'), portal_url.getRelativeContentURL(j))
       if j.get_value('editable'):
         add_message(j.get_value('description'), portal_url.getRelativeContentURL(j))
@@ -104,20 +104,19 @@ for i in page_template_list:
 #
 # Workflow
 #
-s_title_list = []
 for i in context.portal_workflow.objectValues():
   add_message(i.title_or_id(), portal_url.getRelativeContentURL(i))
   
   if not i.states:
     continue
   for s in i.states.values():
-     s_title = s.title
-     if s_title:
-       # adding a context in msg_id for more precise translation
-       msg_id = getMessageIdWithContext(s_title,'state',i.id)      
-       add_message(msg_id, portal_url.getRelativeContentURL(s))
-       # also use state title as msg_id for compatibility
-       add_message(s_title, portal_url.getRelativeContentURL(s))
+    s_title = s.title
+    if s_title:
+      # adding a context in msg_id for more precise translation
+      msg_id = getMessageIdWithContext(s_title,'state',i.id)
+      add_message(msg_id, portal_url.getRelativeContentURL(s))
+      # also use state title as msg_id for compatibility
+      add_message(s_title, portal_url.getRelativeContentURL(s))
   
   if not i.transitions:
     continue
@@ -164,13 +163,13 @@ for property_sheet in context.portal_property_sheets.objectValues():
 #
 # Output
 #
-def format(string):
+def formatString(string):
   line_list = string.split('\n')
   length = len(line_list)
   if length==1:
     return '"%s"' % string.replace('"', '\\"')
   else:
-    return '\n'.join(['""']+[format(i) for i in line_list])
+    return '\n'.join(['""']+[formatString(i) for i in line_list])
 
 print '''msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
@@ -188,7 +187,7 @@ for message in message_list:
   comment_list = message_dict[message]
   comment_list.sort()
   comment = '\n'.join([('#: %s' % i) for i in comment_list])
-  print MESSAGE_TEMPLATE % (comment, format(message))
+  print MESSAGE_TEMPLATE % (comment, formatString(message))
 
 RESPONSE = context.REQUEST.RESPONSE
 RESPONSE.setHeader('Content-disposition', 'attachment;filename=translation.pot')
