@@ -9,7 +9,6 @@ portal_types/Document Module/pdf_viewer_view
 portal_types/Jexcel Sheet Module/jexcel_editor_view
 portal_types/Jexcel Sheet/jexcel_editor_clone
 portal_types/Jexcel Sheet/jexcel_editor_view
-portal_types/Jexcel Sheet/jio_view
 portal_types/PDF/pdf_viewer_view
 portal_types/Web Illustration/svg_editor_view
 portal_types/Web Page Module/codemirror_view
