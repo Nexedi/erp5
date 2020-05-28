@@ -80,7 +80,7 @@ class SubversionLoginError(SubversionError):
   """
   # Declarative Security
   security = ClassSecurityInfo()
-  def __init__(self, realm = None):
+  def __init__(self, realm = None):  # pylint:disable=super-init-not-called
     self._realm = realm
 
   security.declarePublic('getRealm')
@@ -96,7 +96,7 @@ class SubversionSSLTrustError(SubversionError):
   # Declarative Security
   security = ClassSecurityInfo()
 
-  def __init__(self, trust_dict = None):
+  def __init__(self, trust_dict = None):  # pylint:disable=super-init-not-called
     self._trust_dict = trust_dict
 
   security.declarePublic('getTrustDict')
@@ -134,7 +134,7 @@ try:
       return False, ''
 
   class GetLoginCallback(Callback):
-    def __call__(self, realm, username, may_save):
+    def __call__(self, realm, username, may_save):  # pylint:disable=arguments-differ
       user, password = self.client.getLogin(realm)
       if not username or not password:
         self.client.setException(SubversionLoginError(realm))
@@ -147,12 +147,12 @@ try:
       return True, user, password, False
 
   class NotifyCallback(Callback):
-    def __call__(self, event_dict):
+    def __call__(self, event_dict):  # pylint:disable=arguments-differ
       # FIXME: should accumulate information for the user
       pass
 
   class SSLServerTrustPromptCallback(Callback):
-    def __call__(self, trust_dict):
+    def __call__(self, trust_dict):  # pylint:disable=arguments-differ
       if not self.client.trustSSLServer(trust_dict):
         self.client.setException(SubversionSSLTrustError(trust_dict))
         return False, 0, False

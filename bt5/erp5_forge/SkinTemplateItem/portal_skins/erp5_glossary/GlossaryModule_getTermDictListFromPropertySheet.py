@@ -17,20 +17,20 @@ for i in property_sheet_list:
 
 dic = {}
 for i in all_field_list:
-  id = i.getId()
+  id_ = i.getId()
   title = i.get_value('title') or ''
   skin_id = i.aq_parent.aq_parent.getId()
   prefix = 'erp5_'
   if skin_id.startswith(prefix):
     skin_id = skin_id[len(prefix):]
-  if id.startswith('my_'):
+  if id_.startswith('my_'):
     for p in properties:
-      if id=='my_%s' % p:
+      if id_=='my_%s' % p:
         key = (p, skin_id, title)
         dic[key] = i
-  if id.startswith('your_'):
+  if id_.startswith('your_'):
     for p in properties:
-      if id=='your_%s' % p:
+      if id_=='your_%s' % p:
         key = (p, skin_id, title)
         dic[key] = i
 

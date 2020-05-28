@@ -1,6 +1,3 @@
-from erp5.component.module.SubversionClient import SubversionSSLTrustError, SubversionLoginError
-from Products.ERP5Type.Document import newTempBase
-
 # get selected business templates
 p = context.getPortalObject()
 selection_name = 'business_template_selection' # harcoded because we can also get delete_selection

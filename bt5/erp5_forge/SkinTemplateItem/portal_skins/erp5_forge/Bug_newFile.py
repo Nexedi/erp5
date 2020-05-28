@@ -2,6 +2,9 @@
   This script creates a new event with given metadata and
   attaches it to the current ticket.
 """
+# pylint:disable=redefined-builtin
+# this script uses file= argument
+
 translateString = context.Base_translateString
 
 default_bug_line = getattr(context, "default_bug_line", None)
