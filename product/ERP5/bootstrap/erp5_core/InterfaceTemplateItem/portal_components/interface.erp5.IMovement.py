@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.production_movement import IProductionMovement
+from erp5.component.interface.IProductionMovement import IProductionMovement
 from Products.ERP5.interfaces.arrow_base import IArrowBase
 
 class IMovement(IProductionMovement, IArrowBase):
@@ -56,5 +56,5 @@ class IMovement(IProductionMovement, IArrowBase):
     """
 
 # For backward compatibility only
-from Products.ERP5.interfaces.accounting_movement import IAccountingMovement
-from Products.ERP5.interfaces.asset_movement import IAssetMovement
+from erp5.component.interface.IAccountingMovement import IAccountingMovement # pylint: disable=unused-import
+from erp5.component.interface.IAssetMovement import IAssetMovement # pylint: disable=unused-import

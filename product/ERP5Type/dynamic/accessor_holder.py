@@ -113,6 +113,53 @@ class AccessorHolderModuleType(ModuleType):
 
         delattr(self, klass.__name__)
 
+# For backward compatibility only: define provideIFoo() method where Foo has
+# been migrated from filesystem to ZODB Components. Needed until bt5 shipping
+# these Interfaces have been upgraded as these are called here and there (for
+# example on cataloging...).
+migrated_interface_list = [
+  'IAccountingMovement',
+  'IAmountGenerator',
+  'IAmountGeneratorLine',
+  'IAssetMovement',
+  'IBuildableBusinessLinkProcess',
+  'IBusinessLink',
+  'IBusinessLinkProcess',
+  'IBusinessProcess',
+  'IBusinessProcessUnionProvider',
+  'IConfigurable',
+  'IConfiguratorItem',
+  'ICoordinate',
+  'IDeliverySolver',
+  'IDivergenceController',
+  'IDivergenceMessage',
+  'IEncryptedPassword',
+  'IEquivalenceTester',
+  'IExpandable',
+  'IImmobilisationItem',
+  'ILoginAccountProvider',
+  'IMovement',
+  'IMovementCollection',
+  'IMovementCollectionDiff',
+  'IMovementCollectionUpdater',
+  'IMovementGenerator',
+  'IMovementGroup',
+  'IMovementList',
+  'IProductionMovement',
+  'IRoundingTool',
+  'IRule',
+  'ISimulationMovement',
+  'ISimulationMovementProcess',
+  'ISmsReceivingGateway',
+  'ISmsSendingGateway',
+  'ISolver',
+  'ITradeModelPath',
+  'ITradeModelPathProcess',
+  'ITradePhaseProcess',
+  'ITradeStateProcess',
+  'IWatermarkable',
+  ]
+
 def _generateBaseAccessorHolder(portal):
   """
   Create once an accessor holder that contains all accessors common to
@@ -156,7 +203,8 @@ def _generateBaseAccessorHolder(portal):
     accessor_name = 'provides' + class_id
     setattr(accessor_holder, accessor_name, lambda self: self.provides(class_id))
     accessor_holder.security.declarePublic(accessor_name)
-  for class_id in portal.portal_types.getInterfaceTypeList():
+  for class_id in set(portal.portal_types.getInterfaceTypeList() +
+                      migrated_interface_list):
     provides(class_id)
 
   erp5.accessor_holder.registerAccessorHolder(accessor_holder)

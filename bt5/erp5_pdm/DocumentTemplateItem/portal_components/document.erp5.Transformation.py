@@ -38,7 +38,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.Document.MappedValue import MappedValue
 
-from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
+from erp5.component.mixin.AmountGeneratorMixin import AmountGeneratorMixin
 from Products.ERP5.mixin.variated import VariatedMixin
 
 # XXX Give priority to VariatedMixin (over Amount) due to conflicting

@@ -40,9 +40,9 @@ from Products.ERP5Type.DateUtils import getAccountableYearFraction
 from Products.ERP5.Document.Amount import Amount
 from erp5.component.document.Item import Item
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5.Document.ImmobilisationMovement import (
+from erp5.component.document.ImmobilisationMovement import (
     UNIMMOBILISING_METHOD, NO_CHANGE_METHOD, AMORTISATION_METHOD_PREFIX )
-from Products.ERP5.Document.ImmobilisationMovement import (
+from erp5.component.document.ImmobilisationMovement import (
     IMMOBILISATION_NEEDED_PROPERTY_LIST,
     IMMOBILISATION_UNCONTINUOUS_NEEDED_PROPERTY_LIST,
     IMMOBILISATION_FACULTATIVE_PROPERTY_LIST )

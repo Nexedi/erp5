@@ -35,7 +35,7 @@ from DateTime import DateTime
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
-from Products.ERP5.Document.Movement import Movement
+from erp5.component.document.Movement import Movement
 from Products.ERP5Type.DateUtils import addToDate
 
 class PresencePeriod(Movement, PeriodicityMixin):

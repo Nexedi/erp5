@@ -70,7 +70,7 @@ class AccountingTransactionRootSimulationRule(RuleMixin, MovementCollectionUpdat
     # or destination.
     return (movement.getSource() is None or movement.getDestination() is None)
 
-from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
+from erp5.component.mixin.MovementGeneratorMixin import MovementGeneratorMixin
 class AccountingTransactionRuleMovementGenerator(MovementGeneratorMixin):
 
   def _getPortalDeliveryMovementTypeList(self):

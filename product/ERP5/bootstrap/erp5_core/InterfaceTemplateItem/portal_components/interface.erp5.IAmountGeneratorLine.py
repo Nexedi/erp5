@@ -28,7 +28,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.amount_generator_line
+erp5.component.interface.IAmountGeneratorLine
 """
 
 from zope.interface import Interface

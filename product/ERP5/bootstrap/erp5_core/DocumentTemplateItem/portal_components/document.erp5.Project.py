@@ -34,41 +34,40 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5.Document.Node import Node
-from Products.ERP5.Document.Movement import Movement
+from erp5.component.document.Movement import Movement
+from erp5.component.interface.IMovement import IMovement
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 
 class Project(Node, Movement, XMLMatrix):
-    """
-    Project is a class which describes a typical project in consulting firm.
-    A project has a client, an invoiced client. A project has also a start
-    date and a stop date. It is composed of several tasks.
+  """
+  Project is a class which describes a typical project in consulting firm.
+  A project has a client, an invoiced client. A project has also a start
+  date and a stop date. It is composed of several tasks.
 
-    Each task has a person to perform it, a certain amount of time, a date,
-    a place, a description. For each person and each task, there is dedicated
-    time rate.
-    """
+  Each task has a person to perform it, a certain amount of time, a date,
+  a place, a description. For each person and each task, there is dedicated
+  time rate.
+  """
+  meta_type = 'ERP5 Project'
+  portal_type = 'Project'
+  add_permission = Permissions.AddPortalContent
+  # XXX to index start_date and stop_date in delivery table:
+  isDelivery = ConstantGetter('isDelivery', value=True)
+  isAccountable = ConstantGetter('isAccountable', value=False)
 
-    meta_type = 'ERP5 Project'
-    portal_type = 'Project'
-    add_permission = Permissions.AddPortalContent
-    # XXX to index start_date and stop_date in delivery table:
-    isDelivery = ConstantGetter('isDelivery', value=True)
-    isAccountable = ConstantGetter('isAccountable', value=False)
+  zope.interface.implements(interfaces.INode, IMovement)
 
-    zope.interface.implements(interfaces.INode, interfaces.IMovement)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Default Properties
-    property_sheets = (
-                       PropertySheet.Base,
-                       PropertySheet.DublinCore,
-                       PropertySheet.XMLObject,
-                       PropertySheet.CategoryCore,
-                       PropertySheet.Arrow,
-                       PropertySheet.Task,
-                       PropertySheet.Reference,
-                       )
-
+  # Default Properties
+  property_sheets = (
+                     PropertySheet.Base,
+                     PropertySheet.DublinCore,
+                     PropertySheet.XMLObject,
+                     PropertySheet.CategoryCore,
+                     PropertySheet.Arrow,
+                     PropertySheet.Task,
+                     PropertySheet.Reference,
+                     )

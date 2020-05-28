@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -27,7 +28,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.asset_movement import IAssetMovement
+from erp5.component.interface.IAssetMovement import IAssetMovement
 
 class IAccountingMovement(IAssetMovement):
   """

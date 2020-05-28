@@ -33,7 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.CMFActivity.ActiveProcess import ActiveProcess
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5.interfaces.movement import IMovement
+from erp5.component.interface.IMovement import IMovement
 from erp5.component.interface.ISolver import ISolver
 from erp5.component.interface.IConfigurable import IConfigurable
 

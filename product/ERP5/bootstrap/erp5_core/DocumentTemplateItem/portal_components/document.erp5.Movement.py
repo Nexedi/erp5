@@ -38,12 +38,13 @@ from Products.ERP5Type.Base import Base
 #from Products.ERP5.Core import MetaNode, MetaResource
 
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
-from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
+from erp5.component.mixin.AmountGeneratorMixin import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.Document.Amount import Amount
 from Products.ERP5Type.Cache import transactional_cached
+from erp5.component.interface.IAmountGenerator import IAmountGenerator
+from erp5.component.interface.IMovement import IMovement
 
 from zLOG import LOG, WARNING
 
@@ -204,9 +205,9 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IAmountGenerator,
+  zope.interface.implements(IAmountGenerator,
                             interfaces.IVariated,
-                            interfaces.IMovement)
+                            IMovement)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

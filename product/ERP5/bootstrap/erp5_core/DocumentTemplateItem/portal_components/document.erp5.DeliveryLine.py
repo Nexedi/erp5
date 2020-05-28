@@ -33,8 +33,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 
-from Products.ERP5.Document.Movement import Movement
-from Products.ERP5.Document.ImmobilisationMovement import ImmobilisationMovement
+from erp5.component.document.Movement import Movement
+from erp5.component.document.ImmobilisationMovement import ImmobilisationMovement
 
 from inspect import getargspec
 from Products.ERP5Type.Base import Base

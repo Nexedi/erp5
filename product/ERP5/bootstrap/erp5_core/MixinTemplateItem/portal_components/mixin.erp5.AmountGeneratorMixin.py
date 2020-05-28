@@ -33,9 +33,10 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_base, Implicit
 from Products.ERP5.GeneratedAmountList import GeneratedAmountList
-from Products.ERP5Type import Permissions, interfaces
+from Products.ERP5Type import Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5.Document.MappedValue import MappedValue
+from erp5.component.interface.IAmountGenerator import IAmountGenerator
 
 # XXX What should be done when there is no base_application ?
 #     There are 2 options:
@@ -174,7 +175,7 @@ class BaseAmountResolver(BaseAmountDict):
 
     contribution_dict = None
 
-    def __init__(self, property_dict, contribution_dict):
+    def __init__(self, property_dict, contribution_dict): # pylint: disable=super-init-not-called
       self.property_dict = property_dict
       self.contribution_dict = contribution_dict
 
@@ -187,7 +188,7 @@ class BaseAmountResolver(BaseAmountDict):
             self |= node()
       return self
 
-  def __init__(self, cache, method_kw):
+  def __init__(self, cache, method_kw): # pylint: disable=super-init-not-called
     self._dict = cache.setdefault(None, {})
     self._cache = cache
     self._method_kw = method_kw
@@ -256,7 +257,7 @@ class AmountGeneratorMixin:
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IAmountGenerator,)
+  zope.interface.implements(IAmountGenerator,)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getGeneratedAmountList')

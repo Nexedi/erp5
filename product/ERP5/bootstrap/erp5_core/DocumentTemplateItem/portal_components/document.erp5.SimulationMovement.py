@@ -32,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5.Document.Movement import Movement
+from erp5.component.document.Movement import Movement
 from erp5.component.module.ExpandPolicy import policy_dict, TREE_DELIVERED_CACHE_KEY
 
 from zLOG import LOG, WARNING

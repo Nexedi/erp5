@@ -1,4 +1,5 @@
 ##############################################################################
+
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
@@ -31,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5.Document.Movement import Movement
+from erp5.component.document.Movement import Movement
 from Products.ERP5.Document.EmailDocument import EmailDocument
 
 class AcknowledgeableMixin:

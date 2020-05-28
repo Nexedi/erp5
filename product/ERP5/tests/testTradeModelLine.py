@@ -881,7 +881,7 @@ return context""" % (base_amount, base_amount))
       sum((x.getTotalPrice() for x in amount_list), total_price))
 
   def test_05_dependencyResolution(self):
-    from Products.ERP5.mixin.amount_generator import BaseAmountResolver
+    from erp5.component.mixin.AmountGeneratorMixin import BaseAmountResolver
     delivery_amount = self.portal.newContent(temp_object=True, portal_type='Amount', id='')
     trade_model_line = self.portal.newContent(temp_object=True, portal_type='Trade Model Line', id='')
     def case(*lines):

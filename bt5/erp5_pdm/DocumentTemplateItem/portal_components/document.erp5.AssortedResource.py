@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, Constraint
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.Utils import cartesianProduct
-from Products.ERP5.Document.AmountGeneratorLine import AmountGeneratorLine
+from erp5.component.document.AmountGeneratorLine import AmountGeneratorLine
 from erp5.component.document.TransformedResource import TransformedResource
 
 from Products.CMFCore.Expression import Expression

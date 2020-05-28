@@ -34,7 +34,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
 from zLOG import LOG
-from Products.ERP5.Document.ImmobilisationMovement import UNIMMOBILISING_METHOD, NO_CHANGE_METHOD
+from erp5.component.document.ImmobilisationMovement import UNIMMOBILISING_METHOD, NO_CHANGE_METHOD
 
 
 class TestImmobilisationMixin(ERP5TypeTestCase):

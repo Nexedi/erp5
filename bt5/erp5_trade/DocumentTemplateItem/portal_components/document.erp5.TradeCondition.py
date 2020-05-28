@@ -35,12 +35,14 @@ import zope.interface
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.composition import _getEffectiveModel
 from Products.ERP5.Document.MappedValue import MappedValue
-from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
+from erp5.component.mixin.AmountGeneratorMixin import AmountGeneratorMixin
 from Products.ERP5.mixin.variated import VariatedMixin
 from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
+from erp5.component.interface.IAmountGenerator import IAmountGenerator
+from erp5.component.interface.IMovementGenerator import IMovementGenerator
 
 class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
   """
@@ -73,8 +75,8 @@ class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
                            # if not present. Cleaning required.
                     )
 
-  zope.interface.implements(interfaces.IAmountGenerator,
-                            interfaces.IMovementGenerator,
+  zope.interface.implements(IAmountGenerator,
+                            IMovementGenerator,
                             IMovementCollectionUpdater,)
 
 

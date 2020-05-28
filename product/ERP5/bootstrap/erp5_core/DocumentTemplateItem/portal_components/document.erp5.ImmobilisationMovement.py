@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Document.Movement import Movement
+from erp5.component.document.Movement import Movement
 
 from string import capitalize
 
@@ -119,17 +119,19 @@ class ImmobilisationMovement(Movement, XMLObject):
     def checkValue(variable,
                    forbidden_value_list=None,
                    authorized_value_list=None,
-                   error_message=["Error Type", 0, "Error message"]):
+                   error_message=None):
+      if error_message is None:
+        error_message = ["Error Type", 0, "Error message"]
       if forbidden_value_list is not None:
-        if type(forbidden_value_list) != type([]):
+        if not isinstance(forbidden_value_list, list):
           forbidden_value_list = [forbidden_value_list]
         if variable in forbidden_value_list:
-          return [ tuple([relative_url] + error_message) ]
+          return [relative_url] + error_message
       if authorized_value_list is not None:
-        if type(authorized_value_list) != type([]):
+        if not isinstance(authorized_value_list, list):
           authorized_value_list = [authorized_value_list]
         if variable not in authorized_value_list:
-          return [ tuple([relative_url] + error_message) ]
+          return [relative_url] + error_message
       return []
 
     errors = []
@@ -262,7 +264,7 @@ class ImmobilisationMovement(Movement, XMLObject):
     'item' can be None to access parameters on a movement whose method is not NO_CHANGE_METHOD nor None
     """
     parameter_dict = {}
-    if type(parameter_list) == type(""):
+    if isinstance(parameter_list, str):
       parameter_list = [parameter_list]
     for parameter in parameter_list:
       parameter_dict[parameter] = None
@@ -279,7 +281,7 @@ class ImmobilisationMovement(Movement, XMLObject):
         param_list = parameter_dict[key]
         if param_list is None:
           new_parameter_dict[key] = []
-        if type(param_list) != type([]) and type(param_list) != type(()):
+        if not isinstance(param_list, (list, tuple)):
           param_list = [param_list]
         new_param_list = []
         for param in param_list:
@@ -287,7 +289,7 @@ class ImmobilisationMovement(Movement, XMLObject):
             if param.find(split_char) != -1:
               param = param.split(split_char)
               param = [x.strip() for x in param]
-            if type(param) != type([]) and type(param) != type(()):
+            if not isinstance(param, (list, tuple)):
               param = [param]
             if len(param) > split_qty:
               param = param[:split_qty]

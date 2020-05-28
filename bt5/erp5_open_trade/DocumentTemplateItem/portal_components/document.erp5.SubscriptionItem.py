@@ -30,13 +30,14 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.Item import Item
 from Products.ERP5.mixin.composition import CompositionMixin
 from erp5.component.mixin.SimulableMixin import SimulableMixin
-from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
+from erp5.component.mixin.MovementGeneratorMixin import MovementGeneratorMixin
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
 from Products.ERP5Type.Base import Base
+from erp5.component.interface.IMovementGenerator import IMovementGenerator
 
 class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
                        SimulableMixin, PeriodicityMixin):
@@ -67,7 +68,7 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
                     )
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IMovementGenerator,
+  zope.interface.implements(IMovementGenerator,
                            )
 
   def _createRootAppliedRule(self):

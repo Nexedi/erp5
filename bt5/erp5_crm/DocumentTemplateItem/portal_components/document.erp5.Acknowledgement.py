@@ -31,7 +31,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 from Products.ERP5.Document.EmailDocument import EmailDocumentProxyMixin
-from Products.ERP5.Document.Event import Event
+from erp5.component.document.Event import Event
 
 class Acknowledgement(EmailDocumentProxyMixin, Event):
   """

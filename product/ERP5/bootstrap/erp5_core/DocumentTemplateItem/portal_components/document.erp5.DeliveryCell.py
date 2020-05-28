@@ -35,9 +35,9 @@ from AccessControl.PermissionRole import PermissionRole
 
 from Products.ERP5Type import Permissions, PropertySheet
 
-from Products.ERP5.Document.Movement import Movement
+from erp5.component.document.Movement import Movement
 from Products.ERP5.Document.MappedValue import MappedValue
-from Products.ERP5.Document.ImmobilisationMovement import ImmobilisationMovement
+from erp5.component.document.ImmobilisationMovement import ImmobilisationMovement
 from erp5.component.interface.IDivergenceController import IDivergenceController
 
 class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):

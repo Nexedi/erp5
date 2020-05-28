@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5.Document.Project import Project
+from erp5.component.document.Project import Project
 
 class Ticket(Project):
   """

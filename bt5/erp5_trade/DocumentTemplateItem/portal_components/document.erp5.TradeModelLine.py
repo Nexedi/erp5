@@ -30,7 +30,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.AmountGeneratorLine import AmountGeneratorLine
+from erp5.component.document.AmountGeneratorLine import AmountGeneratorLine
 
 class TradeModelLine(AmountGeneratorLine):
   """Trade Model Line is a way to represent trade transformation for movements"""

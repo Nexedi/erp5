@@ -28,8 +28,10 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.TradeModelLine import TradeModelLine
+from erp5.component.interface.IAmountGenerator import IAmountGenerator
+
 import zope.interface
 
 class TradeModelCell(TradeModelLine):
@@ -46,7 +48,7 @@ class TradeModelCell(TradeModelLine):
   # Declarative interfaces
   #    interfaces.IVariated as soon as interfaces.IVariated will be zope3
   zope.interface.implements(
-      interfaces.IAmountGenerator
+      IAmountGenerator
   )
 
   # Declarative properties

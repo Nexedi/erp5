@@ -31,7 +31,7 @@ from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from erp5.component.mixin.RuleMixin import RuleMixin
-from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
+from erp5.component.mixin.MovementGeneratorMixin import MovementGeneratorMixin
 from erp5.component.mixin.MovementCollectionUpdaterMixin import \
      MovementCollectionUpdaterMixin
 

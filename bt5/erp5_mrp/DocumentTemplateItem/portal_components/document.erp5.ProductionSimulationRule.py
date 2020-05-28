@@ -1,5 +1,5 @@
 from erp5.component.document.DeliverySimulationRule import DeliverySimulationRule
-from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
+from erp5.component.mixin.MovementGeneratorMixin import MovementGeneratorMixin
 
 class ProductionSimulationRule(DeliverySimulationRule):
   """

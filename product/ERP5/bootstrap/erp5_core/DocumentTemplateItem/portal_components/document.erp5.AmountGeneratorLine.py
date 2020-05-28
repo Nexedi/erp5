@@ -28,12 +28,12 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.Document.MappedValue import MappedValue
-from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
-
+from erp5.component.mixin.AmountGeneratorMixin import AmountGeneratorMixin
+from erp5.component.interface.IAmountGeneratorLine import IAmountGeneratorLine
 
 class AmountGeneratorLine(MappedValue, XMLMatrix, Amount,
                           AmountGeneratorMixin):
@@ -46,7 +46,7 @@ class AmountGeneratorLine(MappedValue, XMLMatrix, Amount,
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IAmountGeneratorLine)
+  zope.interface.implements(IAmountGeneratorLine)
 
   # Declarative properties
   property_sheets = (PropertySheet.DublinCore,

@@ -35,7 +35,7 @@ from Products.ERP5Type.DateUtils import getDecimalNumberOfYearsBetween
 from Products.ERP5Type import Permissions
 from erp5.component.mixin.RuleMixin import RuleMixin
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5.Document.ImmobilisationMovement import NO_CHANGE_METHOD
+from erp5.component.document.ImmobilisationMovement import NO_CHANGE_METHOD
 
 class AmortisationRule(RuleMixin):
     """

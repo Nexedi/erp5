@@ -32,7 +32,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.AmountGeneratorLine import AmountGeneratorLine
+from erp5.component.document.AmountGeneratorLine import AmountGeneratorLine
 
 
 class TransformedResource(AmountGeneratorLine):

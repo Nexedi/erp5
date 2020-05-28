@@ -55,7 +55,7 @@ implements_tuple_list = [
   (('erp5.component.document.OOoDocument', 'OOoDocument'), 'IDocument'),
   (('Products.ERP5.Document.TextDocument', 'TextDocument'), 'IDocument'),
   (('Products.ERP5.Document.EmailDocument', 'EmailDocument'), 'IDocument'),
-  (('Products.ERP5.Document.Event', 'Event'), 'IDocument'),
+  (('erp5.component.document.Event', 'Event'), 'IDocument'),
   # IAmountList
   (('Products.ERP5.GeneratedAmountList', 'GeneratedAmountList'), 'IAmountList'),
 ]

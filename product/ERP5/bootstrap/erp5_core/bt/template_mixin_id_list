@@ -1,4 +1,6 @@
+mixin.erp5.AmountGeneratorMixin
 mixin.erp5.ExplainableMixin
 mixin.erp5.MovementCollectionUpdaterMixin
+mixin.erp5.MovementGeneratorMixin
 mixin.erp5.RuleMixin
 mixin.erp5.SimulableMixin

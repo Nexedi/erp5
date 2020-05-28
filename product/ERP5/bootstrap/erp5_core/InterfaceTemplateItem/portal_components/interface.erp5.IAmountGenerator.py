@@ -28,7 +28,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.amount_generator
+erp5.component.interface.IAmountGenerator
 """
 
 from zope.interface import Interface
@@ -84,4 +84,4 @@ class IAmountGenerator(Interface):
     """
 
 # For backward compatibility only
-from Products.ERP5.interfaces.amount_generator_line import IAmountGeneratorLine
+from erp5.component.interface.IAmountGeneratorLine import IAmountGeneratorLine # pylint: disable=unused-import

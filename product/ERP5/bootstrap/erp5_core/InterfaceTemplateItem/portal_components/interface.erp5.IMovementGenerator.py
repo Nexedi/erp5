@@ -28,7 +28,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.movement_generator
+erp5.component.interface.IMovementGenerator
 """
 
 from zope.interface import Interface
