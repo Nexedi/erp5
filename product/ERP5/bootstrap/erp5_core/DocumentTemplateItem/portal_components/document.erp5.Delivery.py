@@ -38,8 +38,8 @@ from AccessControl.PermissionRole import PermissionRole
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
+from erp5.component.document.ImmobilisationDelivery import ImmobilisationDelivery
 from Products.ERP5.mixin.composition import CompositionMixin
 from erp5.component.mixin.SimulableMixin import SimulableMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, \

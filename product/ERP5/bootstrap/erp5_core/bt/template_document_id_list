@@ -2,6 +2,8 @@ document.erp5.AppliedRule
 document.erp5.Delivery
 document.erp5.DeliveryCell
 document.erp5.DeliveryLine
+document.erp5.ImmobilisationDelivery
+document.erp5.ImmobilisableItem
 document.erp5.Inventory
 document.erp5.InventoryCell
 document.erp5.InventoryLine
