@@ -1,11 +1,9 @@
 """Return a po file from a spreadsheet of categories."""
-from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Document import newTempBase
 
 # Initialise some general variables
 detailed_report_result = []
 detailed_report_append = detailed_report_result.append
-category_dict = {}
 translation_dict = {}
 translated_attributes_list = ["title", "description", "short_title"]
 import_filename = getattr(import_file, 'filename', '?')
@@ -31,10 +29,7 @@ def invalid_category_spreadsheet_handler(message):
 category_list_mapping = context.Base_getCategoriesSpreadSheetMapping(import_file,
                                     invalid_spreadsheet_error_handler=invalid_category_spreadsheet_handler)
 
-if category_list_mapping.has_key('error_list'):
-  context.REQUEST.other['category_import_report'] = initial_category_list_mapping['error_list']
-  return context.CategoryTool_viewImportReport()
-
+assert 'error_list' not in category_list_mapping
 
 
 #Process on each category

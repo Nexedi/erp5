@@ -2,9 +2,11 @@ result = context.GlossaryModule_getTermDictListFromWorkflow(template_list)
 
 if export_tsv:
   for i in result:
-    print '\t'.join(map(lambda x:'"%s"'%x, (i['reference'], i['language'],
+
+    print '\t'.join(['"%s"' % x for x in (i['reference'], i['language'],
                                             i['business_field'],
-                                            i['title'], i['description'], i['workflow_id'])))
+                                            i['title'], i['description'],
+                                            i['workflow_id'])])
   return printed
 else:
   portal_catalog = context.portal_catalog
