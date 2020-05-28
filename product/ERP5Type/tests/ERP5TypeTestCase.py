@@ -19,6 +19,7 @@ import sys
 import time
 import traceback
 import urllib
+import unittest
 import ConfigParser
 from contextlib import contextmanager
 from cStringIO import StringIO
@@ -221,7 +222,7 @@ except ImportError:
     pass
 
 
-class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
+class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase, unittest.TestCase, object):
     """Mixin class for ERP5 based tests.
     """
     def dummy_test(self):
