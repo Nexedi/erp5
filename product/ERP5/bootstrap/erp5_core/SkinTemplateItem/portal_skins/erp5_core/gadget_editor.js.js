@@ -123,7 +123,7 @@
                 url,
                 {
                   scope: 'editor',
-                  sandbox: 'iframe',  
+                  sandbox: 'iframe',
                   element: div
                 }
               );
