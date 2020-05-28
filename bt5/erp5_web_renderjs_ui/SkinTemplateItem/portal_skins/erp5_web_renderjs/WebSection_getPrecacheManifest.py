@@ -60,6 +60,8 @@ url_list = [
   'gadget_erp5_field_multicheckbox.js',
   'gadget_erp5_field_multilist.html',
   'gadget_erp5_field_multilist.js',
+  'gadget_erp5_field_parallellist.html',
+  'gadget_erp5_field_parallellist.js',
   'gadget_erp5_field_multirelationstring.html',
   'gadget_erp5_field_multirelationstring.js',
   'gadget_erp5_field_radio.html',
