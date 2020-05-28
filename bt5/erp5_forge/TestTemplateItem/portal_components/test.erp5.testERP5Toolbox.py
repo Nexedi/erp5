@@ -81,3 +81,81 @@ class TestBusinessTemplateScripts(ERP5TypeTestCase):
             'Foo Module | dummy_report_report'),
         self.business_template.getTemplateActionPathList(),
     )
+
+  def test_BusinessTemplate_createSkinFolder(self):
+    self.business_template.setTemplateSkinIdList(['existing'])
+    resp = self.business_template.BusinessTemplate_createSkinFolder(
+        skin_folder_name='dummy_skin_folder',
+        skin_layer_priority=None,
+        skin_layer_list=self.portal.portal_skins.getSkinSelections(),
+    )
+    resp_url = urlparse.urlparse(resp)
+    self.assertEqual(
+        ['Skin folder created.'],
+        urlparse.parse_qs(resp_url.query)['portal_status_message'])
+
+    self.assertIn('dummy_skin_folder', self.portal.portal_skins.objectIds())
+    # skin is added to business template
+    self.assertEqual(
+        ('dummy_skin_folder', 'existing'),
+        self.business_template.getTemplateSkinIdList())
+
+  def test_BusinessTemplate_createSkinFolder_priority(self):
+    resp = self.business_template.BusinessTemplate_createSkinFolder(
+        skin_folder_name='dummy_skin_folder',
+        skin_layer_priority=99,
+        skin_layer_list=self.portal.portal_skins.getSkinSelections(),
+    )
+    resp_url = urlparse.urlparse(resp)
+    self.assertEqual(
+        ['Skin folder created.'],
+        urlparse.parse_qs(resp_url.query)['portal_status_message'])
+
+    self.assertIn('dummy_skin_folder', self.portal.portal_skins.objectIds())
+    self.assertEqual(
+        99,
+        self.portal.portal_skins.dummy_skin_folder.getProperty(
+            'business_template_skin_layer_priority'))
+
+  def test_BusinessTemplate_createSkinFolder_skin_selection(self):
+    self.business_template.setTemplateRegisteredSkinSelectionList(
+        ['existing | SelectedSkinSelection'])
+    self.portal.portal_skins.addSkinSelection(
+        'SelectedSkinSelection', 'erp5_core')
+    self.portal.portal_skins.addSkinSelection(
+        'NotSelectedSkinSelection', 'erp5_core')
+
+    resp = self.business_template.BusinessTemplate_createSkinFolder(
+        skin_folder_name='dummy_skin_folder',
+        skin_layer_priority=99,
+        skin_layer_list=['View', 'SelectedSkinSelection'])
+    resp_url = urlparse.urlparse(resp)
+    self.assertEqual(
+        ['Skin folder created.'],
+        urlparse.parse_qs(resp_url.query)['portal_status_message'])
+
+    self.assertIn('dummy_skin_folder', self.portal.portal_skins.objectIds())
+    skin_folders_by_skin_selection = {
+        k: v.split(',') for (k, v) in self.portal.portal_skins.getSkinPaths()
+    }
+
+    self.assertIn('dummy_skin_folder', skin_folders_by_skin_selection['View'])
+    self.assertIn(
+        'dummy_skin_folder',
+        skin_folders_by_skin_selection['SelectedSkinSelection'])
+    self.assertNotIn(
+        'dummy_skin_folder',
+        skin_folders_by_skin_selection['NotSelectedSkinSelection'])
+    self.assertEqual(
+        ['SelectedSkinSelection', 'View'],
+        sorted(
+            self.portal.portal_skins.dummy_skin_folder.getProperty(
+                'business_template_registered_skin_selections')))
+
+    # skin is added to business template
+    self.assertEqual(
+        (
+            'dummy_skin_folder | SelectedSkinSelection',
+            'dummy_skin_folder | View',
+            'existing | SelectedSkinSelection',
+        ), self.business_template.getTemplateRegisteredSkinSelectionList())
