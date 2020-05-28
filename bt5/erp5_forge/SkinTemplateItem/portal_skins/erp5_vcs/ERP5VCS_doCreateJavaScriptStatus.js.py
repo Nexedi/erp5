@@ -1,8 +1,3 @@
-if "files" in context.REQUEST.keys():
-  files = context.REQUEST["files"];
-else:
-  files = None;
-
 return '''
     var tree = null;
     var business_template;

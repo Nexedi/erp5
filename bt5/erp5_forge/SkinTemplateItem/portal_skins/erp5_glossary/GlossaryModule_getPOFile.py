@@ -14,13 +14,13 @@ msgstr %s
   return MESSAGE_TEMPLATE % dict(english=english, translation=translation)
 
 
-def format(string):
+def formatString(string):
   line_list = string.splitlines(True)
   length = len(line_list)
   if length==1:
     return '"%s"' % string.replace('"', '\\"').replace('\n', '\\n')
   else:
-    return '\n'.join(['""']+[format(i) for i in line_list])
+    return '\n'.join(['""']+[formatString(i) for i in line_list])
 
 # po header
 now = DateTime().toZone('UTC').strftime("%Y-%m-%d %H:%M+0000")
@@ -43,7 +43,6 @@ for i in catalog(portal_type='Glossary Term',
                  language_id=language):
   term = i.getObject()
   reference = term.getReference()
-  business_field = term.getBusinessField()
 
   english_term = catalog.getResultValue(portal_type='Glossary Term',
                                         validation_state='validated',
@@ -52,7 +51,6 @@ for i in catalog(portal_type='Glossary Term',
                                         business_field_uid=term.getBusinessFieldUid())
   if english_term is None:
     continue
-    raise ValueError, 'Corresponding English term to "%s" does not exist in glossary.' % term.Title()
 
   translated_title = term.getTitle()
   translated_description = term.getDescription()
@@ -65,8 +63,8 @@ for i in catalog(portal_type='Glossary Term',
     if not english_title:
       raise ValueError, 'Title of corresponding English term(%s) to "%s" is empty.' % (english_relative_url, translated_title)
     if translated_title!=english_title:
-      print formatMessage(english=format(english_title),
-                          translation=format(translated_title),
+      print formatMessage(english=formatString(english_title),
+                          translation=formatString(translated_title),
                           term=term)
 
   if translated_description:
@@ -74,8 +72,8 @@ for i in catalog(portal_type='Glossary Term',
       raise ValueError, 'Description of corresponding English term(%s) to "%s" is empty.' % (english_relative_url, translated_description)
 
     if translated_description!=english_description:
-      print formatMessage(english=format(english_description),
-                          translation=format(translated_description),
+      print formatMessage(english=formatString(english_description),
+                          translation=formatString(translated_description),
                           term=term)
 
 RESPONSE = context.REQUEST.RESPONSE

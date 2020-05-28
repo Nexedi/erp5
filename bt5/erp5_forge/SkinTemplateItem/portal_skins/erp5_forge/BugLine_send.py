@@ -18,10 +18,10 @@ if from_url is None:
     user = context.portal_membership.getAuthenticatedMember().getUserName()
     from_url = '"%s" <%s>' % (user,
                               context.email_from_address)
-# Return-Path
+# Return-Path. TODO: this is not implemented
 if reply_url is None:
   reply_url = context.portal_preferences.getPreferredEventSenderEmail()
-additional_headers = None
+additional_headers = None  # pylint: disable=unused-variable
 if reply_url:
   additional_headers = {'Return-Path':reply_url}
 
@@ -44,7 +44,6 @@ elif same_type(to_url, ''):
 # Attachments
 if attachment_list is None:
   attachment_list = []
-document_type_list = context.getPortalDocumentTypeList()
 for attachment in context.getAggregateValueList():
   mime_type, content = attachment.getMimeTypeAndContent()
   name = attachment.getReference()
