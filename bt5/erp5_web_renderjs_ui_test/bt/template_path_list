@@ -36,6 +36,8 @@ portal_tests/renderjs_ui_page_templates_zuite
 portal_tests/renderjs_ui_page_templates_zuite/**
 portal_tests/renderjs_ui_page_zuite
 portal_tests/renderjs_ui_page_zuite/**
+portal_tests/renderjs_ui_parallel_list_field_zuite
+portal_tests/renderjs_ui_parallel_list_field_zuite/**
 portal_tests/renderjs_ui_radio_field_zuite
 portal_tests/renderjs_ui_radio_field_zuite/**
 portal_tests/renderjs_ui_recover_password_zuite
