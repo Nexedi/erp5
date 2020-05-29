@@ -20,9 +20,10 @@
     var field_url = 'gadget_erp5_field_readonly.html';
     if (field_type === 'ListField') {
       field_url = 'gadget_erp5_field_list.html';
-    } else if ((field_type === 'ParallelListField') ||
-               (field_type === 'MultiListField')) {
+    } else if (field_type === 'MultiListField') {
       field_url = 'gadget_erp5_field_multilist.html';
+    } else if (field_type === 'ParallelListField') {
+      field_url = 'gadget_erp5_field_parallellist.html';
     } else if (field_type === 'CheckBoxField') {
       field_url = 'gadget_erp5_field_checkbox.html';
     } else if (field_type === 'MultiCheckBoxField') {
