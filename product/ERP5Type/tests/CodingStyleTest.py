@@ -104,6 +104,9 @@ def test_suite():
       testXHTML.validator,
       (tested_business_template,),
       expected_failure_list=(
+          # this view needs VCS preference set (this test suite does not support
+          # setting preferences, but this might be a way to fix this).
+          'test_erp5_forge_Business_Template_BusinessTemplate_viewVcsStatus',
           # this view only works when solver decision has a relation to a solver.
           # One way to fix this would be to allow a custom "init script" to be called
           # on a portal type.
