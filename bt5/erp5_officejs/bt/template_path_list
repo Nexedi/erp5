@@ -6,6 +6,9 @@ image_module/officejs_audioplayer_*
 image_module/officejs_todomvc_*
 image_module/wallsearch_icon_svg
 portal_types/Document Module/pdf_viewer_view
+portal_types/Jexcel Sheet Module/jexcel_editor_view
+portal_types/Jexcel Sheet/jexcel_editor_clone
+portal_types/Jexcel Sheet/jexcel_editor_view
 portal_types/PDF/pdf_viewer_view
 portal_types/Web Illustration/svg_editor_view
 portal_types/Web Page Module/codemirror_view
@@ -34,6 +37,8 @@ web_site_module/officejs_cribjs/**
 web_site_module/officejs_drive_app
 web_site_module/officejs_drive_app/**
 web_site_module/officejs_export
+web_site_module/officejs_jexcel_editor
+web_site_module/officejs_jexcel_editor/**
 web_site_module/officejs_media_player
 web_site_module/officejs_media_player/**
 web_site_module/officejs_notebook
