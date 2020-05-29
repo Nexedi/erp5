@@ -1,4 +1,5 @@
 Action Information | definition_view
 Base Type | definition_view
 ERP5 Form | definition_view
+Jexcel Sheet | jio_view
 Web Section | create_app_configuration_manifest
