@@ -1,4 +1,5 @@
 image_module/fif_*
+web_page_module/*_wendelin_*
 web_page_module/*fif_*
 web_page_module/fif_*
 web_page_module/gadget_fif_*
