@@ -269,7 +269,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Base_getPreferredCategoryChildItemList(here.portal_categories.group, base=True)</string> </value>
+            <value> <string>context/Base_getDialogSectionCategoryItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
