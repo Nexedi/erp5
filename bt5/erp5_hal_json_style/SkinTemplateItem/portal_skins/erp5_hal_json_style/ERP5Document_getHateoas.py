@@ -471,6 +471,29 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
         "sub_select_key": traversed_document.Field_getSubFieldKeyDict(field, 'default:list', key=result["key"]),
         "sub_input_key": "default_" + traversed_document.Field_getSubFieldKeyDict(field, 'default:list:int', key=result["key"])
       })
+
+    if meta_type == "ParallelListField":
+      hash_script_id = field.get_value('hash_script_id')
+      if hash_script_id:
+        result.update({"couscous": getattr(field, hash_script_id)(
+                [x for x in result['items'] if (x[1] and x[0])],
+                # Drop empty values
+                result['default'],
+                default_sub_field_property_dict={
+                  'key': 'default',
+                  'field_type': 'MultiListField',
+                  'item_list': [],
+                  'value': [],
+                  'is_right_display': 0,
+                  'title': result['title'],
+                  'required': result['required'],
+                  'editable': result['editable']
+                },
+                is_right_display=0
+        )})
+      # else:
+      #   result['']
+
     return result
 
   if meta_type in ("StringField", "FloatField", "EmailField", "TextAreaField",
