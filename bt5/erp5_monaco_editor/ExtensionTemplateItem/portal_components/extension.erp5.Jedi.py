@@ -414,6 +414,62 @@ def ERP5Site_getPythonSourceCodeCompletionList(self, data, REQUEST=None):
     logger.info(
         "jedi got %d completions in %.2fs", len(completions),
         (time.time() - start))
+
+    if data.get('xxx_definition'):
+      completions = []  # XXX this is not "completions" ...
+      # TODO: only follow imports for classes, methods or functions ?
+      for definition in script.goto_definitions(
+          #          follow_imports=True,
+          #     only_stubs=False,
+          #     prefer_stubs=False,
+      ):
+        definition_line = definition.line
+        definition_column = definition.column
+        definition_uri = definition.module_path
+        definition_code = None
+
+        if script.path == definition.module_path:
+          definition_uri = None  # client side will understand this as "current file"
+          if is_python_script:
+            # If we are in a python script and symbol is defined in the python script,
+            # we have to account for the 3 lines headers we added and the 2 columns of
+            # indentation
+            definition_line = definition_line - 3
+            definition_column = definition_column - 2
+        else:
+          if os.path.exists(definition.module_path):
+            with open(definition.module_path) as f:
+              definition_code = f.read()
+
+          # strip common prefix from Products or eggs directory
+          products_base_dir = os.path.join(
+              Products.ERP5Type.__file__, '..', '..')
+          prefix = os.path.commonprefix(
+              (products_base_dir, definition.module_path))
+          if prefix:
+            definition_uri = definition.module_path[len(prefix):]
+            if definition_uri.startswith('eggs/'):
+              definition_uri = definition_uri[len('eggs/'):]
+            elif definition_uri.startswith('develop-eggs/'):
+              definition_uri = definition_uri[len('develop-eggs/'):]
+
+        completions.append(
+            {
+                "range":
+                    {
+                        'startColumn':
+                            1 + definition_column,
+                        'endColumn':
+                            1 + definition_column + len(definition.name),
+                        'startLineNumber':
+                            definition_line,
+                        'endLineNumber':
+                            definition_line,
+                    },
+                'uri': definition_uri,
+                'code': definition_code,
+            })
+
     if data.get('xxx_hover'):
       completions = ''  # XXX this is not "completions" ...
       for definition in script.goto_definitions():
