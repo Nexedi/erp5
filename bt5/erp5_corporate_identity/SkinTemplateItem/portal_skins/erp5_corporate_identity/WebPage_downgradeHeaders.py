@@ -5,17 +5,15 @@ Downgrade headers in passed content by 1 or number of levels specified
 """
 import re
 
-def pushDown(level):
-  return ''.join(["h", str(level), ">"])
+REGEXP = re.compile('<h([1-6]).*>.*</h([1-6])>')
 
-for header in re.findall("<h[1-6].*</h[1-6]>", content or ""):
-  header_list = re.findall("<(h[1-6]>)", header)
-  if len(header_list):
-    tag = header_list[0] #h2>
-    key = tag[1]
-    content = content.replace(
-      header,
-      header.replace(tag, pushDown(int(key) + (downgrade or 1)))
-    )
+def pushDown(regexp_match):
+  text = '%r' % regexp_match.group()
+  start_level = regexp_match.group(1)
+  stop_level = regexp_match.group(2)
+  if (start_level == stop_level):
+    next_level = "%i" % (int(start_level) + downgrade)
+    text = '<h' + next_level + text[4:-3] + next_level + '>'
+  return text
 
-return content
+return REGEXP.sub(pushDown, content)
