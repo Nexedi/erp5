@@ -309,6 +309,71 @@ $script.onload = function() {
       'python',
       yapfDocumentFormattingProvider)
 
+  monaco.languages.registerDefinitionProvider('python', {
+      provideDefinition: async function(model, position, token) {
+        const controller = new AbortController();
+        token.onCancellationRequested(() => {controller.abort()})
+        const data = new FormData();
+        const complete_parameters = {
+            code: model.getValue(),
+            position: {line: position.lineNumber, column: position.column}
+        };
+        // ZMI python scripts pass extra parameters to linter
+        if (bound_names) {
+          complete_parameters["script_name"] = script_name;
+          complete_parameters["bound_names"] = JSON.parse(bound_names);
+          complete_parameters["params"] = document.querySelector(
+            'input[name="params"]'
+          ).value;
+        }
+
+        complete_parameters['xxx_definition'] = true;
+        data.append("data", JSON.stringify(complete_parameters));
+
+        return fetch(portal_url + "/ERP5Site_getPythonSourceCodeCompletionList", {
+          method: "POST",
+          body: data,
+          signal: controller.signal
+        })
+          .then(response => response.json())
+          .then(data => {
+            var definitions = [];
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].code) {
+                // TODO: these models are not refreshed, if the file they refefer is modified,
+                // they show outdated content.
+                let definition_uri = monaco.Uri.from({
+                  scheme: 'file',
+                  path: data[i].uri,
+                });
+                let definition_model = monaco.editor.getModel(
+                  definition_uri
+                );
+
+                if (!definition_model) {
+                  definition_model = monaco.editor.createModel(
+                    data[i].code,
+                    'python',
+                    definition_uri
+                  );
+                }
+                data[i].uri = definition_model.uri;
+              }
+              definitions.push({
+                range: data[i].range,
+                uri: data[i].uri ? data[i].uri : model.uri,
+              });
+            }
+            return definitions;
+          }, e => {
+            if (!(e instanceof DOMException) /* AbortError */ ) {
+              throw e;
+            }
+            /* ignore aborted requests */
+        });
+        
+      }
+  });
 
   monaco.languages.registerCompletionItemProvider('python', {
     provideCompletionItems: async function(model, position, context, token) {
