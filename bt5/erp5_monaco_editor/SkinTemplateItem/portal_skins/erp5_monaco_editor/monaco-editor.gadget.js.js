@@ -31,10 +31,19 @@
         {
           /* because Alt+Click is LeftClick on ChromeOS */
           multiCursorModifier: 'ctrlCmd',
-          automaticLayout: true,
           autoIndent: true,
+          /*
+          until we update monaco to > 0.20.0 we cannot use automaticLayout and have a workaround
+          resize event handler.
+          https://github.com/microsoft/monaco-editor/issues/1884
+          */
+          //  automaticLayout: true,
         }
       );
+      window.addEventListener('resize', () => {
+        editor.layout();
+      });
+
       editor.addAction({
         id: 'save',
         label: 'Save',
