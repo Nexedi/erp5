@@ -82,8 +82,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
     </td>
   </tr>
   <tr>
-    <td>Current node is <b><dtml-var getCurrentNode></b></td>
-    <dtml-if expr="getCurrentNode() not in getNodeList()">
+    <td>Current node is <b><dtml-var _getCurrentNode></b></td>
+    <dtml-if expr="_getCurrentNode() not in getNodeList()">
       <td align="left" valign="top" colspan=2>
         <p style="color: #F00"><b>Warning: Current node is not known to distribution system.</b></p>
         <p>
