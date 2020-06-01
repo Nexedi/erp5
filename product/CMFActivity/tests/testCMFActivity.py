@@ -27,7 +27,7 @@
 ##############################################################################
 
 import inspect
-import unittest
+import warnings
 from functools import wraps
 from itertools import product
 from Products.ERP5Type.tests.utils import LogInterceptor
@@ -2656,8 +2656,11 @@ return [x.getObject() for x in context.portal_catalog(limit=100)]
       [message],
     )
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestCMFActivity))
-  return suite
-
+  def test_zmi_views(self):
+    # we can render ZMI view without errors or warnings
+    with warnings.catch_warnings(record=True) as catched_warnings:
+      self.portal.portal_activities.manage_overview()
+      self.portal.portal_activities.manageActivities()
+      self.portal.portal_activities.manageActivitiesAdvanced()
+      self.portal.portal_activities.manageLoadBalancing()
+    self.assertEqual(catched_warnings, [])

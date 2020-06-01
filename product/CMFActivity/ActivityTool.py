@@ -653,7 +653,7 @@ class ActivityTool (BaseTool):
     manage_overview = DTMLFile( 'dtml/explainActivityTool', globals() )
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'manageLoadBalancing' )
-    manageLoadBalancing = DTMLFile( 'dtml/manageLoadBalancing', globals() )
+    manageLoadBalancing = DTMLFile( 'dtml/manageLoadBalancing', globals(), _getCurrentNode=getCurrentNode)
 
     distributingNode = ''
     _nodes = ()
