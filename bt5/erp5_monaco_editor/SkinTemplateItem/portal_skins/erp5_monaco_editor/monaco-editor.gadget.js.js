@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2 */
 /*global window, rJS, monaco, JSLINT */
-(function(window, rJS, monaco) {
+(function (window, rJS, monaco) {
   'use strict';
 
   // globals
@@ -10,16 +10,16 @@
 
   rJS(window)
     .declareAcquiredMethod('notifySubmit', 'notifySubmit')
-    .declareJob('deferNotifySubmit', function() {
+    .declareJob('deferNotifySubmit', function () {
       // Ensure error will be correctly handled
       return this.notifySubmit();
     })
     .declareAcquiredMethod('notifyChange', 'notifyChange')
-    .declareJob('deferNotifyChange', function() {
+    .declareJob('deferNotifyChange', function () {
       // Ensure error will be correctly handled
       return this.notifyChange();
     })
-    .ready(function(context) {
+    .ready(function (context) {
       var editor;
       function deferNotifyChange() {
         if (!context.state.ignoredChangeDuringInitialization) {
@@ -43,12 +43,12 @@
         keybindingContext: null,
         contextMenuGroupId: 'navigation',
         contextMenuOrder: 1.5,
-        run: context.deferNotifySubmit.bind(context)
+        run: context.deferNotifySubmit.bind(context),
       });
 
       editor.getModel().updateOptions({
         tabSize: 2,
-        insertSpaces: true
+        insertSpaces: true,
       });
       editor.getModel().onDidChangeContent(deferNotifyChange);
     })
@@ -56,7 +56,9 @@
     .declareJob('runJsLint', function () {
       var context = this;
       return new RSVP.Queue()
-        .push(function () { return RSVP.delay(500); })
+        .push(function () {
+          return RSVP.delay(500);
+        })
         .push(function () {
           if (context.state.model_language === 'javascript') {
             JSLINT(context.editor.getValue(), {});
@@ -65,25 +67,25 @@
               'jslint',
               JSLINT.data()
                 .errors.filter(Boolean)
-                .map(err => ({
+                .map((err) => ({
                   startLineNumber: err.line,
                   startColumn: err.character,
                   message: err.reason,
                   severity: monaco.MarkerSeverity.Error,
-                  source: 'jslint'
+                  source: 'jslint',
                 }))
             );
           }
         });
     })
-    .declareJob('runPyLint', function() {
+    .declareJob('runPyLint', function () {
       var context = this;
-      return (function(controller) {
+      return (function (controller) {
         return new RSVP.Queue()
-          .push(function() {
+          .push(function () {
             return RSVP.delay(2000);
           })
-          .push(function() {
+          .push(function () {
             if (
               context.state.model_language === 'python' &&
               context.state.language_support_url
@@ -91,7 +93,7 @@
               const data = new FormData();
               const checker_parameters = {
                 code: context.editor.getValue(),
-                portal_type: context.state.portal_type
+                portal_type: context.state.portal_type,
               };
 
               data.append('data', JSON.stringify(checker_parameters));
@@ -101,16 +103,16 @@
                 {
                   method: 'POST',
                   body: data,
-                  signal: controller.signal
+                  signal: controller.signal,
                 }
               )
-                .then(response => response.json())
+                .then((response) => response.json())
                 .then(
-                  data => {
+                  (data) => {
                     monaco.editor.setModelMarkers(
                       context.editor.getModel(),
                       'pylint',
-                      data['annotations'].map(annotation => {
+                      data['annotations'].map((annotation) => {
                         return {
                           startLineNumber: annotation.row + 1,
                           endLineNumber: annotation.row + 1,
@@ -120,12 +122,12 @@
                           severity:
                             annotation.type === 'error'
                               ? monaco.MarkerSeverity.Error
-                              : monaco.MarkerSeverity.Warning
+                              : monaco.MarkerSeverity.Warning,
                         };
                       })
                     );
                   },
-                  e => {
+                  (e) => {
                     if (!(e instanceof DOMException) /* AbortError */) {
                       throw e;
                     }
@@ -134,7 +136,7 @@
                 );
             }
           })
-          .push(undefined, function(e) {
+          .push(undefined, function (e) {
             if (e instanceof RSVP.CancellationError) {
               controller.abort();
             }
@@ -142,13 +144,16 @@
           });
       })(new AbortController());
     })
-    .declareMethod('render', function(options) {
+    .declareMethod('render', function (options) {
       var model_language,
         state_dict = {
           key: options.key,
-          editable: options.editable === undefined ? true : options.editable
+          editable: options.editable === undefined ? true : options.editable,
         };
-      if (options.portal_type === 'Web Page' || options.content_type == 'text/html') {
+      if (
+        options.portal_type === 'Web Page' ||
+        options.content_type == 'text/html'
+      ) {
         model_language = 'html';
       } else if (options.portal_type === 'Web Script') {
         model_language = 'javascript';
@@ -173,8 +178,9 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function(modification_dict) {
-      var queue = new RSVP.Queue(), gadget = this;
+    .onStateChange(function (modification_dict) {
+      var queue = new RSVP.Queue(),
+        gadget = this;
       if (modification_dict.hasOwnProperty('value')) {
         // Do not notify the UI when initializing the value
         this.state.ignoredChangeDuringInitialization = true;
@@ -203,16 +209,16 @@
                   plugins: [prettierPlugins.babel],
                   // see http://json.schemastore.org/prettierrc for supported options.
                   singleQuote: true,
-                  tabWidth: 2
+                  tabWidth: 2,
                 });
 
                 return [
                   {
                     range: model.getFullModelRange(),
-                    text
-                  }
+                    text,
+                  },
                 ];
-              }
+              },
             }
           );
 
@@ -223,7 +229,7 @@
           // lint with typescript compiler
           monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
             noSemanticValidation: false,
-            noSyntaxValidation: false
+            noSyntaxValidation: false,
           });
 
           monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
@@ -231,17 +237,17 @@
             allowNonTsExtensions: true,
             checkJs: true,
             allowJs: true,
-            module: monaco.languages.typescript.ModuleKind.UMD
+            module: monaco.languages.typescript.ModuleKind.UMD,
           });
 
           // Type mapping for Nexedi libraries
-          const addExtraLibrary = function(script_name, lib_name) {
+          const addExtraLibrary = function (script_name, lib_name) {
             return () => {
               return fetch(script_name)
-                .then(function(resp) {
+                .then(function (resp) {
                   return resp.text();
                 })
-                .then(function(script_code) {
+                .then(function (script_code) {
                   monaco.languages.typescript.javascriptDefaults.addExtraLib(
                     script_code,
                     lib_name
@@ -254,14 +260,14 @@
             .push(addExtraLibrary('./monaco-renderjs.d.ts', 'renderjs'))
             .push(addExtraLibrary('./monaco-jio.d.ts', 'jio'));
         }
-        if (modification_dict.hasOwnProperty('editable')){
-          this.editor.updateOptions({readOnly: !this.state.editable});
+        if (modification_dict.hasOwnProperty('editable')) {
+          this.editor.updateOptions({ readOnly: !this.state.editable });
         }
         if (this.state.model_language === 'python') {
           this.editor.getModel().onDidChangeContent(this.runPyLint.bind(this));
 
           const yapfDocumentFormattingProvider = {
-            _provideFormattingEdits: function(model, range, options, token) {
+            _provideFormattingEdits: function (model, range, options, token) {
               const controller = new AbortController();
               token.onCancellationRequested(() => {
                 controller.abort();
@@ -277,12 +283,12 @@
                 {
                   method: 'POST',
                   body: data,
-                  signal: controller.signal
+                  signal: controller.signal,
                 }
               )
-                .then(response => response.json())
+                .then((response) => response.json())
                 .then(
-                  data => {
+                  (data) => {
                     if (data.error) {
                       this.editor.revealLine(data.error_line);
                       return;
@@ -291,12 +297,12 @@
                       return [
                         {
                           range: model.getFullModelRange(),
-                          text: data.formatted_code
-                        }
+                          text: data.formatted_code,
+                        },
                       ];
                     }
                   },
-                  e => {
+                  (e) => {
                     if (!(e instanceof DOMException) /* AbortError */) {
                       throw e;
                     }
@@ -304,7 +310,7 @@
                   }
                 );
             },
-            provideDocumentRangeFormattingEdits: function(
+            provideDocumentRangeFormattingEdits: function (
               model,
               range,
               options,
@@ -312,9 +318,9 @@
             ) {
               return this._provideFormattingEdits(model, range, options, token);
             },
-            provideDocumentFormattingEdits: function(model, options, token) {
+            provideDocumentFormattingEdits: function (model, options, token) {
               return this._provideFormattingEdits(model, null, options, token);
-            }
+            },
           };
 
           monaco.languages.registerDocumentFormattingEditProvider(
@@ -327,7 +333,7 @@
           );
 
           monaco.languages.registerCompletionItemProvider('python', {
-            provideCompletionItems: async function(
+            provideCompletionItems: async function (
               model,
               position,
               context,
@@ -340,7 +346,10 @@
               const data = new FormData();
               const complete_parameters = {
                 code: model.getValue(),
-                position: { line: position.lineNumber, column: position.column }
+                position: {
+                  line: position.lineNumber,
+                  column: position.column,
+                },
               };
 
               data.append('data', JSON.stringify(complete_parameters));
@@ -350,29 +359,29 @@
                 {
                   method: 'POST',
                   body: data,
-                  signal: controller.signal
+                  signal: controller.signal,
                 }
               )
-                .then(response => response.json())
+                .then((response) => response.json())
                 .then(
-                  data => {
+                  (data) => {
                     return {
-                      suggestions: data.map(c => {
+                      suggestions: data.map((c) => {
                         c.kind = monaco.languages.CompletionItemKind[c._kind];
                         // this makes monaco render documentation as markdown.
                         c.documentation = { value: c.documentation };
                         return c;
-                      })
+                      }),
                     };
                   },
-                  e => {
+                  (e) => {
                     if (!(e instanceof DOMException) /* AbortError */) {
                       throw e;
                     }
                     /* ignore aborted requests */
                   }
                 );
-            }
+            },
           });
 
           this.runPyLint();
@@ -381,7 +390,7 @@
       return queue;
     })
 
-    .declareMethod('getContent', function() {
+    .declareMethod('getContent', function () {
       var form_data = {};
       if (this.state.editable) {
         form_data[this.state.key] = this.editor.getValue();
