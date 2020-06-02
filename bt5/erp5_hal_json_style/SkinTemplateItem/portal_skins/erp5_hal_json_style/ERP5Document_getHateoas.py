@@ -475,6 +475,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
     if meta_type == "ParallelListField":
       hash_script_id = field.get_value('hash_script_id')
       if hash_script_id:
+        result['title'] = ''
         result.update({"couscous": getattr(field, hash_script_id)(
                 [x for x in result['items'] if (x[1] and x[0])],
                 # Drop empty values
@@ -491,6 +492,10 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
                 },
                 is_right_display=0
         )})
+        for subdict in result['couscous']:
+          subdict['key'] = field.generate_subfield_key(
+                                     subdict['key'], key=result['key'])
+
       # else:
       #   result['']
 
