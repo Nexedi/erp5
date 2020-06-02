@@ -220,6 +220,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>empty</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
                           <string>Base_hashCategoryList</string>
                           <string>Base_hashCategoryList</string>
                         </tuple>
@@ -236,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
