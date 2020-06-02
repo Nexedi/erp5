@@ -51,7 +51,10 @@ Selenium.prototype.doSetFile = function(locator, url_and_filename) {
       })
       .then(
         function() {
-          promiseState = 'resolved';
+          // Wait a bit, to address some random failures in tests with firefox.
+          setTimeout(() => {
+            promiseState = 'resolved';
+          }, 10000);
         },
         function(error) {
           console.error(error);
