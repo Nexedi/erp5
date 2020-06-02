@@ -1,135 +1,136 @@
-/*global window, rJS, document, RSVP, isEmpty, ensureArray */
-/*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80, unparam: true */
+/*global window, rJS, document, RSVP, isEmpty, ensureArray, console */
+/*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 200, unparam: true */
 (function (window, rJS, document, RSVP, isEmpty, ensureArray, getFirstNonEmpty) {
   'use strict';
 
-  function appendListField(gadget, value, item_list) {
-    var div = document.createElement('div');
-    gadget.element.appendChild(div);
-    return new RSVP.Queue()
-      .push(function () {
-        return gadget.declareGadget('gadget_erp5_field_list.html',
-                                    {element: div});
-      })
-      .push(function (result) {
-        var state = {
-            value: value,
-            items: item_list,
-            editable: gadget.state.editable,
-            // Single listfield is never mandatory.
-            // Check requirement globally instead
-            required: 0,
-            key: gadget.state.key,
-            title: gadget.state.title,
-            hidden: gadget.state.hidden
-          };
-        return result.render({field_json: state});
-      });
+  var SCOPE_PREFIX = 'PARALLEL_SUB_FIELD_';
+
+  function endsWith(str, suffix) {
+    // http://simonwillison.net/2006/Jan/20/escape/
+    suffix = suffix.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
+    return (new RegExp(suffix + '$', 'i')).test(str);
   }
 
   rJS(window)
+    .setState({
+      previous_field_length: 0,
+      field_list: []
+    })
     .declareMethod('render', function (options) {
-      console.log(options);
+      console.log('start render');
       var field_json = options.field_json || {},
-        item_list = ensureArray(field_json.items).map(function (item) {
-          if (Array.isArray(item)) {return item; }
-          else {return [item, item]; }
-        }),
         state_dict = {
-          value_list: JSON.stringify(
-            ensureArray(
-              getFirstNonEmpty(field_json.value, field_json['default'], []))
-          ),
-          editable: field_json.editable,
-          required: field_json.required,
-          name: field_json.key,
-          title: field_json.title,
-          key: field_json.key,
-          sub_select_key: field_json.sub_select_key,
-          sub_input_key: field_json.sub_input_key,
-          hidden: field_json.hidden,
+          field_list: field_json.couscous,
+          previous_field_length: this.state.field_list.length,
           // Force calling subfield render
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
         };
-      if ((item_list.length === 0) || (item_list[0][0] !== "")) {
-        item_list.unshift(["", ""]);
-      }
-      state_dict.item_list = JSON.stringify(item_list);
-      return this.changeState(state_dict);
+      return this.changeState(state_dict)
+        .push(function (error) {
+          console.log('stop render');
+          return error;
+        });
     })
 
     .onStateChange(function () {
-      var i,
-        value_list = JSON.parse(this.state.value_list),
-        item_list = JSON.parse(this.state.item_list),
-        queue = new RSVP.Queue(),
-        element = this.element,
-        gadget = this;
+      console.log('change state', this.state);
+      var gadget = this,
+        promise_list = [],
+        element = gadget.element,
+        i,
+        div;
 
-      // Always display an empty value at the end
-      value_list.push("");
-
-      // Clear first to DOM, append after to reduce flickering/manip
-      while (element.firstChild) {
-        element.removeChild(element.firstChild);
+      // First update/create needed gadgets
+      for (i = 0; i < gadget.state.field_list.length; i += 1) {
+        if (i < gadget.state.previous_field_length) {
+          console.log('get', i);
+          // Only need to get the existing gadget
+          promise_list.push(gadget.getDeclaredGadget(SCOPE_PREFIX + i));
+        } else {
+          console.log('declare', i);
+          div = document.createElement('div');
+          gadget.element.appendChild(div);
+          promise_list.push(gadget.declareGadget('gadget_erp5_label_field.html',
+                            {element: div, scope: SCOPE_PREFIX + i}));
+        }
       }
 
-      value_list.forEach(function (value) {
-        queue
-          .push(function () {
-            return appendListField(gadget, value, item_list);
-          });
-      });
+      // And remove all subgadgets not requested anymore
+      for (i = gadget.state.previous_field_length - 1; i >= gadget.state.field_list.length; i -= 1) {
+        console.log('drop', i);
+        promise_list.push(gadget.dropGadget(SCOPE_PREFIX + i));
+        element.removeChild(element.lastChild);
+      }
+      console.log(promise_list);
+      return new RSVP.Queue(RSVP.all(promise_list))
+        .push(function (gadget_list) {
+          console.log(gadget_list, gadget.state.field_list);
+          var sub_state;
+          promise_list = [];
+          for (i = 0; i < gadget.state.field_list.length; i += 1) {
+            console.log('render', i);
+            sub_state = gadget.state.field_list[i];
 
-      return queue;
+            // Compatibility
+            if (!sub_state.hasOwnProperty('items')) {
+              sub_state.items = sub_state.item_list;
+            }
+            promise_list.push(gadget_list[i].render({
+              field_json: sub_state,
+              field_type: sub_state.field_type
+            }));
+          }
+          return RSVP.all(promise_list);
+        })
+        .push(function () {
+          console.log('stop change state');
+        });
     })
 
     .declareMethod('getContent', function () {
-      var i,
-        element = this.element,
-        queue = new RSVP.Queue(),
-        final_result = {},
-        result_list = [],
-        gadget = this;
+      var gadget = this,
+        i,
+        promise_list = [];
 
-      function calculateSubContent(node) {
-        queue
-          .push(function () {
-            var scope = node.getAttribute('data-gadget-scope');
-            if (scope !== null) {
-              return gadget.getDeclaredGadget(
-                node.getAttribute('data-gadget-scope')
-              )
-                .push(function (result) {
-                  return result.getContent();
-                })
-                .push(function (result) {
-                  result_list.push(result[gadget.state.key]);
-                });
-            }
-          });
+      for (i = 0; i < gadget.state.field_list.length; i += 1) {
+        promise_list.push(gadget.getDeclaredGadget(SCOPE_PREFIX + i));
       }
 
-      if (this.state.editable) {
-        for (i = 0; i < element.childNodes.length; i += 1) {
-          calculateSubContent(element.childNodes[i]);
-        }
-        return queue
-          .push(function () {
-            if (result_list[result_list.length - 1] === "") {
-              result_list.pop();
+      return new RSVP.Queue(RSVP.all(promise_list))
+        .push(function (gadget_list) {
+          promise_list = [];
+          for (i = 0; i < gadget_list.length; i += 1) {
+            promise_list.push(gadget_list[i].getContent());
+          }
+          return RSVP.all(promise_list);
+        })
+        .push(function (content_list) {
+          console.log('contnent', content_list);
+          var result = {},
+            key,
+            j,
+            concat_list;
+          for (i = 0; i < content_list.length; i += 1) {
+            for (key in content_list[i]) {
+              if (content_list[i].hasOwnProperty(key)) {
+                if (result.hasOwnProperty(key) && endsWith(key, ':list')) {
+                  result[key] = ensureArray(result[key]);
+                  concat_list = ensureArray(content_list[i][key]);
+                  for (j = 0; j < concat_list.length; j += 1) {
+                    result[key].push(concat_list[j]);
+                  }
+                  // XXX
+                } else {
+                  result[key] = content_list[i][key];
+                }
+              }
             }
-            final_result[gadget.state.key] = result_list;
-            // Automatically add default_%s:int:0
-            //   https://lab.nexedi.com/nexedi/erp5/blob/8ae0706177/product/Formulator/Widget.py#L1185
-            final_result["default_" + gadget.state.key + ":int"] = 0;
-            final_result[gadget.state.sub_select_key] = result_list;
-            final_result[gadget.state.sub_input_key] = 0;
-            return final_result;
-          });
-      }
-      return final_result;
+          }
+          console.log('result', result);
+          return result;
+        });
+
     }, {mutex: 'changestate'})
 
     .allowPublicAcquisition('notifyValid', function () {
@@ -138,37 +139,10 @@
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
-    .declareAcquiredMethod("notifyChange", "notifyChange")
-    .allowPublicAcquisition('notifyChange', function (argument_list, scope) {
-      // An empty listfield should be created when the last one is modified
-      // An empty listfield should be removed
-
-      var gadget = this,
-        sub_gadget;
-      return gadget.getDeclaredGadget(scope)
-        .push(function (result) {
-          sub_gadget = result;
-          return sub_gadget.getContent();
-        })
-        .push(function (result) {
-          var value = result[gadget.state.key];
-          if (sub_gadget.element === gadget.element.lastChild) {
-            if (value) {
-              return appendListField(gadget, "",
-                                     JSON.parse(gadget.state.item_list));
-            }
-          } else {
-            if (!value) {
-              gadget.element.removeChild(sub_gadget.element);
-            }
-          }
-        })
-        .push(function () {
-          return gadget.notifyChange();
-        });
-    }, {mutex: 'changestate'})
 
     .declareMethod('checkValidity', function () {
+      return true;
+
       var gadget = this,
         empty = true;
       if (this.state.editable && this.state.required) {
