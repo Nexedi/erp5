@@ -212,7 +212,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       Get a business template at portal_templates
     """
     template_tool = self.getTemplateTool()
-    for bt in template_tool.objectValues(filter={'portal_type':'Business Template'}):
+    for bt in template_tool.objectValues(filter={'portal_type': 'Business Template'}):
       if bt.getTitle() == title:
         return bt
     return None
@@ -2640,7 +2640,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     import_bt = sequence.get('import_bt')
     pc = self.getCatalogTool()
     catalog_id = pc.getSQLCatalog().id
-    object_to_update = {'portal_catalog/'+catalog_id+'/z_another_fake_method':'install'}
+    object_to_update = {'portal_catalog/'+catalog_id+'/z_another_fake_method': 'install'}
     import_bt.install(object_to_update=object_to_update)
 
   def stepCreateNewBusinessTemplate(self, sequence=None, **kw):
@@ -2822,7 +2822,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
                  'template_portal_type_hidden_content_type_list',
                  'template_portal_type_property_sheet_list',
                  'template_portal_type_base_category_list'):
-          continue
+        continue
       if prop_type == 'text' or prop_type == 'string':
         prop_dict[pid] = ''
       elif prop_type == 'int':
@@ -3141,7 +3141,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     python_script_id = 'ERP5Site_dummyScriptWhichRandomId%s' % grain_of_sand
     skin_folder_id = 'custom'
     if getattr(self.portal.portal_skins, skin_folder_id, None) is None:
-        self.portal.portal_skins.manage_addProduct['OFSP'].manage_addFolder(skin_folder_id)
+      self.portal.portal_skins.manage_addProduct['OFSP'].manage_addFolder(skin_folder_id)
     skin_folder = self.portal.portal_skins[skin_folder_id]
     skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(
                                                                  id=python_script_id)
@@ -6570,7 +6570,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     finally:
       shutil.rmtree(export_dir)
 
-    new_bt.install(force=0, object_to_update={'dummy_type_provider':'remove'})
+    new_bt.install(force=0, object_to_update={'dummy_type_provider': 'remove'})
     self.assertNotEquals(None, types_tool.getTypeInfo('Base Category'))
     self.assertNotIn('dummy_type_provider', types_tool.type_provider_list)
 
@@ -6854,6 +6854,86 @@ class TestBusinessTemplate(BusinessTemplateMixin):
        {'test_document': ('Removed but should be kept', 'Path')},
        new_bt.preinstall())
 
+  def test_update_business_template_with_category_having_subcategory_tree_modified(self):
+    """Non regression test for a case where some categories in a subtrees are added and
+    some are removed.
+
+    Updating from:
+
+        portal_categories/test_category/modified
+        portal_categories/test_category/modified/container_in_which_child_is_added
+        portal_categories/test_category/modified/container_in_which_child_is_added/child_kept
+        portal_categories/test_category/modified/removed
+
+    to:
+
+        portal_categories/test_category/modified   <-- this will be modified
+        portal_categories/test_category/modified/container_in_which_child_is_added
+        portal_categories/test_category/modified/container_in_which_child_is_added/child_kept
+        portal_categories/test_category/modified/container_in_which_child_is_added/added
+
+    was causing when test_category was added both as a base category and as paths.
+
+    This was the cause of KeyError when updating erp5_accounting_l10n_fr
+    """
+    portal_categories = self.portal.portal_categories
+    if 'test_category' in portal_categories.objectIds():
+      portal_categories.manage_delObjects(['test_category'])
+    base_category = portal_categories.newContent(portal_type='Base Category', id='test_category')
+
+    parent_category = base_category.newContent(portal_type='Category', id='modified')
+    parent_category.newContent(portal_type='Category', id='container_in_which_child_is_added')
+    parent_category.newContent(portal_type='Category', id='removed')
+    parent_category.container_in_which_child_is_added.newContent(portal_type='Category', id='child_kept')
+    business_template = self.portal.portal_templates.newContent(
+      portal_type='Business Template',
+      title=self.id(),
+      template_path_list=(
+        'portal_categories/test_category/**'
+      ),
+      template_base_category_list=['test_category'],
+    )
+    self.tic()
+    business_template.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      business_template.export(path=export_dir, local=True)
+      self.tic()
+      new_business_template_version_1 = self.portal.portal_templates.download(
+         url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    # Apply the changes and build a second version of business template
+    parent_category.setTitle('modified')
+    parent_category.container_in_which_child_is_added.newContent(portal_type='Category', id='added')
+    parent_category.manage_delObjects(['removed'])
+
+    business_template.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      business_template.export(path=export_dir, local=True)
+      self.tic()
+      self.portal.portal_categories.manage_delObjects(['test_category'])
+      self.tic()
+      new_business_template_version_1.install()
+      self.tic()
+      portal_categories.test_category.modified.container_in_which_child_is_added.setTitle(
+          'This path should not be reinstalled during update'
+      )
+      self.tic()
+      self.portal.portal_templates.updateBusinessTemplateFromUrl(
+        download_url='file://%s' % export_dir
+      )
+    finally:
+      shutil.rmtree(export_dir)
+    self.tic()
+    self.assertEqual(
+      'This path should not be reinstalled during update',
+      portal_categories.test_category.modified.container_in_which_child_is_added.getTitle())
+
   def test_update_business_template_with_template_keep_path_list_catalog_method(self):
     """Tests for `template_keep_path_list` feature for the special case of catalog methods
     """
@@ -6908,6 +6988,60 @@ class TestBusinessTemplate(BusinessTemplateMixin):
        {'portal_catalog/erp5_mysql_innodb/z_fake_method':
          ('Removed but should be kept', 'CatalogMethod')},
        new_bt.preinstall())
+
+  def test_update_business_template_with_broken_objects(self):
+    """Edge case test for a folder containing broken objects being updated.
+
+    In this scenario, a document containing random broken objects that are
+    not part of business template is being installed. The broken objects
+    are kept and do not prevent installing the business template.
+    """
+    types_tool = self.portal.portal_types
+    types_tool.newContent('Geek Object', 'Base Type', type_class='Person')
+
+    types_tool.newContent(
+        'Geek Module',
+        'Base Type',
+        type_class='Folder',
+        type_filter_content_type=1,
+        type_allowed_content_type_list=('Geek Object',),
+    )
+
+    self.portal.newContent(portal_type='Geek Module', id='geek_module')
+    module_content = self.portal.geek_module.newContent(
+        portal_type='Geek Object',
+        id='1',
+        title='kept',
+    )
+    module_content_uid = module_content.getUid()
+    self.tic()
+
+    bt = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title=self.id(),
+        template_path_list=['geek_module'])
+    self.tic()
+    bt.build()
+    self.tic()
+
+    types_tool['Geek Object'].setTypeClass(' not exists - broken')
+    self.tic()
+    self.assertIsInstance(self.portal.geek_module['1'], ERP5BaseBroken)
+
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      new_bt = self.portal.portal_templates.download(
+          url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+    new_bt.install()
+
+    # our broken document is still here and its properties have been kept
+    self.assertIsInstance(self.portal.geek_module['1'], ERP5BaseBroken)
+    self.assertEqual(module_content_uid, self.portal.geek_module['1'].uid)
+    self.assertEqual('kept', self.portal.geek_module['1'].title)
 
   def test_BusinessTemplateWithTest(self):
     sequence_list = SequenceList()

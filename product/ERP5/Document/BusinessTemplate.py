@@ -1295,7 +1295,8 @@ class ObjectTemplateItem(BaseTemplateItem):
       if uid is None:
         return 0
       else:
-        document.uid = uid
+        if getattr(aq_base(document), 'uid', None) != uid:
+          document.uid = uid
         return 1
     groups = {}
     old_groups = {}
@@ -1559,7 +1560,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           if update_dict.has_key(widget_path) and update_dict[widget_path] in ('remove', 'save_and_remove'):
             continue
           widget_in_form = 0
-          for group_id, group_value_list in new_groups_dict.iteritems():
+          for group_value_list in new_groups_dict.values():
             if widget_id in group_value_list:
               widget_in_form = 1
               break
@@ -1715,7 +1716,7 @@ class PathTemplateItem(ObjectTemplateItem):
     if len(id_list) == 0:
       return ['/'.join(relative_url_list)]
     id = id_list[0]
-    if re.search('[\*\?\[\]]', id) is None:
+    if re.search(r'[\*\?\[\]]', id) is None:
       # If the id has no meta character, do not have to check all objects.
       obj = folder._getOb(id, None)
       if obj is None:
@@ -1772,7 +1773,7 @@ class PathTemplateItem(ObjectTemplateItem):
       # Ignore any object without PortalType (non-ERP5 objects)
       try:
         portal_type = aq_base(obj).getPortalType()
-      except Exception, e:
+      except Exception:
         pass
       else:
         if portal_type not in p.portal_types:
@@ -1948,6 +1949,17 @@ class CategoryTemplateItem(ObjectTemplateItem):
     if self._installed_new_category:
       # reset accessors if we installed a new category
       self.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
+
+  def install(self, context, trashbin, **kw):
+    # Only update base categories, the category they contain will be installed/updated
+    # as PathTemplateItem.install
+    kw['object_to_update'] = {
+        path: action
+        for (path, action) in kw['object_to_update'].items()
+        if path.split('/')[:-1] == ['portal_categories'] or path in self._objects
+    }
+    return super(CategoryTemplateItem, self).install(context, trashbin, **kw)
+
 
 class SkinTemplateItem(ObjectTemplateItem):
 
