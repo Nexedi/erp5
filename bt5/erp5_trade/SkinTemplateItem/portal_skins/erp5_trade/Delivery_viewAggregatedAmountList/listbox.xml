@@ -201,7 +201,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(x[0], None) for x in field.get_orig_value(\'columns\')]</string> </value>
+            <value> <string>python:[(x[0], \'\') for x in field.get_orig_value(\'columns\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
