@@ -1,5 +1,3 @@
-from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery, ComplexQuery
-
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
 
@@ -38,10 +36,8 @@ try:
         portal.ERP5Site_invalidateReference(data_ingestion)
       data_ingestion.deliver()
     for data_stream in portal_catalog(portal_type = "Data Stream",
-                                         validation_state = "draft",
-                                         reference = reference):
+                                      reference = reference):
       if not portal.ERP5Site_checkReferenceInvalidated(data_stream):
         portal.ERP5Site_invalidateReference(data_stream)
 except Exception as e:
   context.logEntry("ERROR in ERP5Site_invalidateSplitIngestions: " + str(e))
-  pass
