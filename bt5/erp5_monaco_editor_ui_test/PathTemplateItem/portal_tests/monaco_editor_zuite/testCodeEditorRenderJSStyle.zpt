@@ -101,8 +101,8 @@
     <td>//div[@data-gadget-scope="editor"]//iframe</td><td></td></tr>
 <tr><td>waitForText</td>
     <td>//body</td>
-    <!-- the "1" is because we have line number -->
-    <td>glob:1*Syntax:Error</td></tr>
+    <!-- the "1" is because we have line number. We have a * at the end because monaco has some hidden text -->
+    <td>glob:1*Syntax:Error*</td></tr>
 <tr><td>selectFrame</td>
     <td>relative=top</td><td></td></tr>
 

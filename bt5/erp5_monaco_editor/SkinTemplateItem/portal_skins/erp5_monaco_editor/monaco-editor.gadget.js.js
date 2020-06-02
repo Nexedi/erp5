@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2 */
 /*global window, rJS, monaco, JSLINT */
-(function(window, rJS, monaco) {
+(function (window, rJS, monaco) {
   'use strict';
 
   // globals
@@ -10,16 +10,16 @@
 
   rJS(window)
     .declareAcquiredMethod('notifySubmit', 'notifySubmit')
-    .declareJob('deferNotifySubmit', function() {
+    .declareJob('deferNotifySubmit', function () {
       // Ensure error will be correctly handled
       return this.notifySubmit();
     })
     .declareAcquiredMethod('notifyChange', 'notifyChange')
-    .declareJob('deferNotifyChange', function() {
+    .declareJob('deferNotifyChange', function () {
       // Ensure error will be correctly handled
       return this.notifyChange();
     })
-    .ready(function(context) {
+    .ready(function (context) {
       let editor;
       function deferNotifyChange() {
         if (!context.state.ignoredChangeDuringInitialization) {
@@ -31,10 +31,19 @@
         {
           /* because Alt+Click is LeftClick on ChromeOS */
           multiCursorModifier: 'ctrlCmd',
-          automaticLayout: true,
-          autoIndent: true
+          autoIndent: true,
+          /*
+          until we update monaco to > 0.20.0 we cannot use automaticLayout and have a workaround
+          resize event handler.
+          https://github.com/microsoft/monaco-editor/issues/1884
+          */
+          //  automaticLayout: true,
         }
       );
+      window.addEventListener('resize', () => {
+        editor.layout();
+      });
+
       editor.addAction({
         id: 'save',
         label: 'Save',
@@ -43,12 +52,12 @@
         keybindingContext: null,
         contextMenuGroupId: 'navigation',
         contextMenuOrder: 1.5,
-        run: context.deferNotifySubmit.bind(context)
+        run: context.deferNotifySubmit.bind(context),
       });
 
       editor.getModel().updateOptions({
         tabSize: 2,
-        insertSpaces: true
+        insertSpaces: true,
       });
       editor.getModel().onDidChangeContent(deferNotifyChange);
     })
@@ -56,7 +65,9 @@
     .declareJob('runJsLint', function () {
       var context = this;
       return new RSVP.Queue()
-        .push(function () { return RSVP.delay(500); })
+        .push(function () {
+          return RSVP.delay(500);
+        })
         .push(function () {
           if (context.state.model_language === 'javascript') {
             JSLINT(context.editor.getValue(), {});
@@ -65,24 +76,27 @@
               'jslint',
               JSLINT.data()
                 .errors.filter(Boolean)
-                .map(err => ({
+                .map((err) => ({
                   startLineNumber: err.line,
                   startColumn: err.character,
                   message: err.reason,
                   severity: monaco.MarkerSeverity.Error,
-                  source: 'jslint'
+                  source: 'jslint',
                 }))
             );
           }
         });
     })
-    .declareMethod('render', function(options) {
+    .declareMethod('render', function (options) {
       var model_language,
         state_dict = {
           key: options.key,
-          editable: options.editable === undefined ? true : options.editable
+          editable: options.editable === undefined ? true : options.editable,
         };
-      if (options.portal_type === 'Web Page' || options.content_type == 'text/html') {
+      if (
+        options.portal_type === 'Web Page' ||
+        options.content_type == 'text/html'
+      ) {
         model_language = 'html';
       } else if (options.portal_type === 'Web Script') {
         model_language = 'javascript';
@@ -105,7 +119,7 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function(modification_dict) {
+    .onStateChange(function (modification_dict) {
       var queue = new RSVP.Queue();
       if (modification_dict.hasOwnProperty('value')) {
         // Do not notify the UI when initializing the value
@@ -131,20 +145,20 @@
             {
               provideDocumentFormattingEdits(model, options, token) {
                 const text = prettier.format(model.getValue(), {
-                  parser: 'babylon',
-                  plugins: [prettierPlugins.babylon],
+                  parser: 'babel',
+                  plugins: [prettierPlugins.babel],
                   // see http://json.schemastore.org/prettierrc for supported options.
                   singleQuote: true,
-                  tabWidth: 2
+                  tabWidth: 2,
                 });
 
                 return [
                   {
                     range: model.getFullModelRange(),
-                    text
-                  }
+                    text,
+                  },
                 ];
-              }
+              },
             }
           );
 
@@ -155,7 +169,7 @@
           // lint with typescript compiler
           monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
             noSemanticValidation: false,
-            noSyntaxValidation: false
+            noSyntaxValidation: false,
           });
 
           monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
@@ -163,17 +177,17 @@
             allowNonTsExtensions: true,
             checkJs: true,
             allowJs: true,
-            module: monaco.languages.typescript.ModuleKind.UMD
+            module: monaco.languages.typescript.ModuleKind.UMD,
           });
 
           // Type mapping for Nexedi libraries
-          const addExtraLibrary = function(script_name, lib_name) {
+          const addExtraLibrary = function (script_name, lib_name) {
             return () => {
               return fetch(script_name)
-                .then(function(resp) {
+                .then(function (resp) {
                   return resp.text();
                 })
-                .then(function(script_code) {
+                .then(function (script_code) {
                   monaco.languages.typescript.javascriptDefaults.addExtraLib(
                     script_code,
                     lib_name
@@ -186,14 +200,14 @@
             .push(addExtraLibrary('./monaco-renderjs.d.ts', 'renderjs'))
             .push(addExtraLibrary('./monaco-jio.d.ts', 'jio'));
         }
-        if (modification_dict.hasOwnProperty('editable')){
-          this.editor.updateOptions({readOnly: !this.state.editable});
+        if (modification_dict.hasOwnProperty('editable')) {
+          this.editor.updateOptions({ readOnly: !this.state.editable });
         }
       }
       return queue;
     })
 
-    .declareMethod('getContent', function() {
+    .declareMethod('getContent', function () {
       var form_data = {};
       if (this.state.editable) {
         form_data[this.state.key] = this.editor.getValue();
