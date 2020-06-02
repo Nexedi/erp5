@@ -1450,7 +1450,7 @@ class TemplateTool (BaseTool):
           if bt.title in keep_bt5_id_set:
             continue
           append("Uninstall business template %s" % bt.title)
-          if not(dry_run):
+          if not dry_run:
             # XXX Here is missing parameters to really remove stuff
             bt.uninstall()
       update_bt5_list = self.getRepositoryBusinessTemplateList(
@@ -1463,7 +1463,7 @@ class TemplateTool (BaseTool):
           continue
         append("Update %s business template in state %s%s" % \
           (bt5.title, bt5.version_state, (reinstall and ' (reinstall)') or ''))
-        if not(dry_run):
+        if not dry_run:
           bt5_url = "%s/%s" % (bt5.repository, bt5.title)
           self.updateBusinessTemplateFromUrl(bt5_url, reinstall=reinstall,
                                              update_catalog=update_catalog)
