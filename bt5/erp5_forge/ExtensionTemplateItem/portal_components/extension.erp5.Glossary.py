@@ -49,7 +49,7 @@ def getActionTitleListFromAllActionProvider(portal):
 
   for provider in provider_list:
     for action in provider.listActions():
-        result.append((action.title, provider.getId()))
+      result.append((action.title, provider.getId()))
   return result
 
 
@@ -60,10 +60,10 @@ from zope.tal.talgenerator import TALGenerator
 from zope.tal.dummyengine import name_match
 def findStaticTranslationText(page_template, func_name_list):
   def iterate(node, target_name, function):
-    if type(node) is list:
+    if isinstance(node, list):
       for i in node:
         iterate(i, target_name, function)
-    elif type(node) is tuple and node:
+    elif isinstance(node, tuple) and node:
       if node[0]==target_name:
         function(node)
       else:
@@ -100,8 +100,8 @@ def findStaticTranslationText(page_template, func_name_list):
     tal_expression = tal_expression[1:-1]
     match = name_match(tal_expression)
     if match:
-      type, expression = match.group(1, 2)
-      if type=='python':
+      type_, expression = match.group(1, 2)
+      if type_=='python':
         # clean up expression
         expression = expression.strip()
         expression = expression.replace('\n', ' ')
@@ -139,7 +139,7 @@ class MyDummyTALInterpreter(TALInterpreter):
   _i18n_message_id_dict = None
   _currentTag = None
 
-  def translate(self, msgid, default=None, i18ndict=None, obj=None):
+  def translate(self, msgid, default=None, i18ndict=None, obj=None): # pylint:disable=arguments-differ
     try:
       self._i18n_message_id_dict[msgid] = None
     except TypeError:

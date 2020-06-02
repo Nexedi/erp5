@@ -36,7 +36,7 @@ from AccessControl import Unauthorized
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Acquisition import aq_base, Implicit
-from App.config import getConfiguration
+from App.config import getConfiguration # pylint:disable=no-name-in-module,import-error
 from DateTime import DateTime
 from ZTUtils import make_query
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder

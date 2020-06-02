@@ -168,6 +168,8 @@ ignored_skin_id_set = {
   'TaskListsGadgetListbox_getLineCss',
   'InventoryModule_reindexMovementList',
   'DeliveryModule_mergeDeliveryList',
+  'ERP5VCS_doCreateJavaScriptDiff.js',
+  'ERP5VCS_doCreateJavaScriptStatus.js',
 }
 
 # Generic method to check consistency of a skin item

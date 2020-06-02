@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>user, password, auth, caller, caller_kw={}, added=(), modified=(), removed=(), changelog=None, **kw</string> </value>
+            <value> <string>user, password, auth, caller, caller_kw=None, added=(), modified=(), removed=(), changelog=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

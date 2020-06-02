@@ -1,6 +1,5 @@
 prefix = 'field_listbox_term_'
 prefix_length = len(prefix)
-portal_types = context.portal_types
 portal_catalog = context.portal_catalog
 
 for i in kw.keys():
