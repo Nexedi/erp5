@@ -1467,7 +1467,12 @@ class TemplateTool (BaseTool):
           bt5_url = "%s/%s" % (bt5.repository, bt5.title)
           self.updateBusinessTemplateFromUrl(bt5_url, reinstall=reinstall,
                                              update_catalog=update_catalog)
-
+      if not dry_run and (
+        update_bt5_list or
+        (delete_orphaned and to_remove_bt5_list)
+      ):
+        append("Update translation table")
+        self.ERP5Site_updateTranslationTable()
       return message_list
 
 InitializeClass(TemplateTool)
