@@ -34,8 +34,6 @@
                 <string>solve_automatically</string>
                 <string>solve_divergence</string>
                 <string>solve_divergence_action</string>
-                <string>split_and_defer</string>
-                <string>split_and_defer_action</string>
                 <string>start_building</string>
               </tuple>
             </value>
