@@ -17,6 +17,7 @@
       field_list: []
     })
     .declareMethod('render', function (options) {
+      console.log('start render');
       var field_json = options.field_json || {},
         state_dict = {
           field_list: field_json.couscous,
@@ -25,15 +26,15 @@
           // as user may have modified the input value
           render_timestamp: new Date().getTime()
         };
-      return this.changeState(state_dict)/*
-        .push(undefined, function (error) {
-          console.warn(error);
-          throw error;
-        })*/;
+      return this.changeState(state_dict)
+        .push(function (error) {
+          console.log('stop render');
+          return error;
+        });
     })
 
     .onStateChange(function () {
-      console.log(this.state);
+      console.log('change state', this.state);
       var gadget = this,
         promise_list = [],
         element = gadget.element,
@@ -81,6 +82,9 @@
             }));
           }
           return RSVP.all(promise_list);
+        })
+        .push(function () {
+          console.log('stop change state');
         });
     })
 
