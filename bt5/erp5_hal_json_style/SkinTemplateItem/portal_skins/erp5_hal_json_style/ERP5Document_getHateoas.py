@@ -473,10 +473,11 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
       })
 
     if meta_type == "ParallelListField":
+      # Keep all other keys (like items) even if huge
+      # This allows to support client without the parallelistfield JS implementation
       hash_script_id = field.get_value('hash_script_id')
-      result['hash_script_id'] = hash_script_id
       if hash_script_id:
-        result.update({"couscous": getattr(field, hash_script_id)(
+        result.update({"subfield_list": getattr(field, hash_script_id)(
                 [x for x in result['items'] if (x[1] and x[0])],
                 # Drop empty values
                 result['default'],
@@ -492,14 +493,17 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
                 },
                 is_right_display=0
         )})
-        for subdict in result['couscous']:
+        for subdict in result['subfield_list']:
+          if subdict['title'] == '&nbsp;':
+            subdict['title'] = ''
+          subdict['items'] = subdict['item_list']
+          del subdict['item_list']
           subdict['key'] = field.generate_subfield_key(
                                      subdict['key'], key=result['key'])
 
       else:
-        result['couscous'] = [result.copy()]
-        result['couscous'][0]['field_type'] = 'MultiListField'
-        result['couscous'][0]['XXX'] = ':('
+        result['subfield_list'] = [result.copy()]
+        result['subfield_list'][0]['field_type'] = 'MultiListField'
       result['title'] = ''
 
     return result
