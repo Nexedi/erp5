@@ -127,6 +127,7 @@
                         <string>my_internal_supply_line_quantity_step_list</string>
                         <string>my_internal_supply_line_base_price_per_slice</string>
                         <string>my_internal_supply_line_comment</string>
+                        <string>my_internal_supply_line_web_site_link_url_string</string>
                       </list>
                     </value>
                 </item>
