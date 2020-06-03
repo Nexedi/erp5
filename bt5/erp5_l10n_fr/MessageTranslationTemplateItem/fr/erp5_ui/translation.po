@@ -46,10 +46,10 @@ msgid "${number} item(s) selected"
 msgstr "${number} élément(s) sélectionné(s)"
 
 msgid "${number} record(s)"
-msgstr "${number} enregistrements "
+msgstr "${number} enregistrements"
 
 msgid "${number} records"
-msgstr "${number} enregistrements "
+msgstr "${number} enregistrements"
 
 msgid "${page} of ${total_pages}"
 msgstr "${page} sur ${total_pages}"
@@ -64,7 +64,7 @@ msgid "${portal_type} updated successfully."
 msgstr "${portal_type} mis à jour avec succès."
 
 msgid "${sample} ${number} records"
-msgstr "${sample} ${number} enregistrements "
+msgstr "${sample} ${number} enregistrements"
 
 msgid "${tax_category_title} (Amount or Percent)"
 msgstr "${tax_category_title} (Montant ou Taux)"
@@ -812,7 +812,7 @@ msgid "Adopt prevision"
 msgstr "Adoptez la prévision"
 
 msgid "Advanced Document Search"
-msgstr "Recherche avancée "
+msgstr "Recherche avancée"
 
 msgid "Advanced Search"
 msgstr "Recherche avancée"
@@ -2687,7 +2687,7 @@ msgid "Close Accounting Period [transition in accounting_period_workflow]"
 msgstr "Clôturer la période comptable"
 
 msgid "Close Accounting Transaction"
-msgstr "Clôturer la transaction "
+msgstr "Clôturer la transaction"
 
 msgid "Close Action"
 msgstr "Fermer (action)"
@@ -2990,7 +2990,7 @@ msgid "Confirm [transition in packing_list_workflow]"
 msgstr "Confirmer"
 
 msgid "Confirmation"
-msgstr "Confirmer "
+msgstr "Confirmer"
 
 msgid "Confirmed"
 msgstr "Confirmé"
@@ -3917,7 +3917,7 @@ msgid "Default Quantity of a resource in ERP5. It can be a product or it can be 
 msgstr "Définit la quantité concernée."
 
 msgid "Default Section Layout"
-msgstr "Mise en page par défaut "
+msgstr "Mise en page par défaut"
 
 msgid "Default Service"
 msgstr "Service par défaut"
@@ -3962,7 +3962,7 @@ msgid "Define Account Balance"
 msgstr "Valider l'écriture des à nouveaux"
 
 msgid "Define Hours"
-msgstr "Définir le salaire de base "
+msgstr "Définir le salaire de base"
 
 msgid "Define Sort Order"
 msgstr "Définir l'ordre de tri"
@@ -4265,7 +4265,7 @@ msgid "Deliver [transition in bug_event_workflow]"
 msgstr "Déclarer livré"
 
 msgid "Deliver to"
-msgstr "Livrez à "
+msgstr "Livrez à"
 
 msgid "Deliverable to"
 msgstr "Destinataire"
@@ -5183,7 +5183,7 @@ msgid "Entity Role"
 msgstr "Rôle du tiers"
 
 msgid "Equal to"
-msgstr "Égal à "
+msgstr "Égal à"
 
 msgid "Equals To"
 msgstr "Égal à"
@@ -5921,7 +5921,7 @@ msgid "Generation Web Section Structure from Category"
 msgstr "Générer une structure de sections web à partir des catégories"
 
 msgid "Geographic Address"
-msgstr "Adresse "
+msgstr "Adresse"
 
 msgid "Geographic Incorporate Code"
 msgstr "Code géographique incorporé"
@@ -6110,7 +6110,7 @@ msgid "Hiring Date"
 msgstr "Date d'embauche"
 
 msgid "Historical Comparision"
-msgstr "Comparaison de l'historique "
+msgstr "Comparaison de l'historique"
 
 msgid "History"
 msgstr "Historique"
@@ -6734,7 +6734,7 @@ msgid "Invoice View"
 msgstr "Facture"
 
 msgid "Invoice to"
-msgstr "Facturé à "
+msgstr "Facturé à"
 
 msgid "Invoiced Price"
 msgstr "Prix facturé"
@@ -7355,7 +7355,7 @@ msgid "Medical Exit Module"
 msgstr "Module des fiches de sortie"
 
 msgid "Medical Exit Module View"
-msgstr "Module des fiches de sortie "
+msgstr "Module des fiches de sortie"
 
 msgid "Medical Functional Exploration Type"
 msgstr "Type d'exploration fonctionnelle"
@@ -7418,7 +7418,7 @@ msgid "Medical Operational Report"
 msgstr "Fiches de compte rendu opératoire"
 
 msgid "Medical Operational Report Module"
-msgstr "Module des fiches de compte rendu opératoire "
+msgstr "Module des fiches de compte rendu opératoire"
 
 msgid "Medical Operational Report Module View"
 msgstr "Module des fiches de compte rendu opératoire"
@@ -10163,7 +10163,7 @@ msgid "Read more"
 msgstr "Lire la suite"
 
 msgid "Ready"
-msgstr "Prêt "
+msgstr "Prêt"
 
 msgid "Ready [state in packing_list_workflow]"
 msgstr "Prêt"
@@ -11231,7 +11231,7 @@ msgid "Sale Proposals to Approve"
 msgstr "Propositions de ventes à approuver"
 
 msgid "Sale Proposals to Approve "
-msgstr "Propositions de ventes à approuver "
+msgstr "Propositions de ventes à approuver"
 
 msgid "Sale Supplies"
 msgstr "Tarifs de vente"
@@ -12455,7 +12455,7 @@ msgid "Supplier"
 msgstr "Fournisseur"
 
 msgid "Supplier / Worker"
-msgstr "Origine / Personnel "
+msgstr "Origine / Personnel"
 
 msgid "Supplier Account"
 msgstr "Compte pour le fournisseur"
@@ -13601,7 +13601,7 @@ msgid "The username this person will use to log in the system. The system will c
 msgstr "Le nom d'utilisateur utilisé par une personne pour se connecter à ERP5."
 
 msgid "The values above are the parameters of the transaction list displayed below.<br/>Those parameters have a portal wide scope and can be edited in the <a href='${url}'>preference screen</a>."
-msgstr "Les <a href='${url}'>préférences comptables</a> permettent de modifier les paramètres de filtrage de la liste de transactions ci-dessous. "
+msgstr "Les <a href='${url}'>préférences comptables</a> permettent de modifier les paramètres de filtrage de la liste de transactions ci-dessous."
 
 msgid "The width in pixel of a thumbnail image"
 msgstr "La largeur en pixel des aperçus d'images."
@@ -13826,7 +13826,7 @@ msgid "Title of the third party"
 msgstr "Le nom du tiers."
 
 msgid "Title:"
-msgstr "Titre: "
+msgstr "Titre:"
 
 msgid "To"
 msgstr "À"
