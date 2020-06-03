@@ -1,6 +1,7 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal">
-  <tal:block metal:define-macro="init">
+  <tal:block metal:define-macro="init"
+             tal:define="resource_relative_url resource_relative_url | string:product_module/erp5_pdm_ui_test_product">
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>open</td>
@@ -57,7 +58,7 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/web_site_module/renderjs_runner/#/product_module/erp5_pdm_ui_test_product</td>
+      <td>${base_url}/web_site_module/renderjs_runner/#/<tal:block tal:replace="resource_relative_url"></tal:block></td>
       <td></td>
     </tr>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_app_loaded" />
