@@ -379,6 +379,9 @@ msgstr "Accepter la traduction"
 msgid "Accept decision"
 msgstr "Accepter la décision"
 
+msgid "Accept new value"
+msgstr "Accepter la nouvelle valeur"
+
 msgid "Accepted"
 msgstr "Accepté"
 
@@ -1240,6 +1243,9 @@ msgstr "Documents Applicables"
 msgid "Application preferences"
 msgstr "Préférences pour l'application"
 
+msgid "Applied Model Lines"
+msgstr "Lignes de modèle appliquées"
+
 msgid "Applied Rule"
 msgstr "Règle appliquée"
 
@@ -1780,6 +1786,9 @@ msgstr "Explication du budget"
 msgid "Budget Line"
 msgstr "Ligne Budgétaire"
 
+msgid "Budget Line Type"
+msgstr "Type de ligne budgétaire"
+
 msgid "Budget Lines"
 msgstr "Lignes Budgétaires"
 
@@ -1833,6 +1842,9 @@ msgstr "Intitule du budget"
 
 msgid "Budget to Submit"
 msgstr "Budgets à soumettre"
+
+msgid "Budget to Validate"
+msgstr "Budgets à valider"
 
 msgid "Budget transactions"
 msgstr "Transactions budgétaires"
@@ -1974,6 +1986,9 @@ msgstr "Greffons de cache"
 
 msgid "Cache Tool"
 msgstr "Outil de cache"
+
+msgid "Calculate"
+msgstr "Calculer"
 
 msgid "Calculate Packing [transition in packing_list_container_workflow]"
 msgstr "Calculer le contenu"
@@ -2425,6 +2440,9 @@ msgstr "Causes (Factures ...)"
 msgid "Causality State"
 msgstr "État de causalité"
 
+msgid "Causality State is not \"Solved\". Please wait or take action for causality state to reach \"Solved\"."
+msgstr "L'état de causalité n'est pas Résolu. Attendez ou résolvez les divergences pour que l'état de causalité devienne Résolu."
+
 msgid "Causality Workflow"
 msgstr "Workflow de causalité"
 
@@ -2646,6 +2664,9 @@ msgstr "Horloge"
 
 msgid "Clone"
 msgstr "Cloner"
+
+msgid "Clone Document"
+msgstr "Cloner le document"
 
 msgid "Clone Ticket and Events"
 msgstr "Cloner le ticket et les évènements"
@@ -3345,6 +3366,9 @@ msgstr "Créer un nouveau module"
 
 msgid "Create New Web Page"
 msgstr "Créer une nouvelle page web"
+
+msgid "Create PDF"
+msgstr "Créer un PDF"
 
 msgid "Create Pay Sheet Line"
 msgstr "Créer la ligne de feuille de paye"
@@ -4576,8 +4600,14 @@ msgstr "Divergent"
 msgid "Diverged [state in delivery_causality_workflow]"
 msgstr "Divergent"
 
+msgid "Divergence Description"
+msgstr "Description de la divergence"
+
 msgid "Divergence Messages"
 msgstr "Messages de divergence"
+
+msgid "Divergence Resolution"
+msgstr "Résolution de la divergence"
 
 msgid "Divergence Scope"
 msgstr "Niveau de la divergence"
@@ -4590,6 +4620,9 @@ msgstr "Tests de la divergence"
 
 msgid "Divergent [transition in delivery_causality_workflow]"
 msgstr "Divergent"
+
+msgid "Do Nothing"
+msgstr "Ne rien faire"
 
 msgid "Do not forget to logout or exit your browser when you are done."
 msgstr "Pensez à vous déconnecter ou à fermer votre navigateur lorsque vous aurez terminé."
@@ -5152,6 +5185,9 @@ msgstr "Rôle du tiers"
 msgid "Equal to"
 msgstr "Égal à "
 
+msgid "Equals To"
+msgstr "Égal à"
+
 msgid "Equity"
 msgstr "Capital"
 
@@ -5623,6 +5659,9 @@ msgstr "Terminer le travail"
 msgid "First"
 msgstr "Premier"
 
+msgid "First In, First Out"
+msgstr "Premier entré, premier sorti"
+
 msgid "First Name"
 msgstr "Prénom"
 
@@ -5902,6 +5941,9 @@ msgstr "Contacter un prospect"
 msgid "Get Contacted [transition in sale_opportunity_workflow]"
 msgstr "Contacter"
 
+msgid "Get Contacted by Prospect"
+msgstr "Déclaré contacté par le prospect"
+
 msgid "Get Contacted by Prospect [transition in sale_opportunity_workflow]"
 msgstr "Être contacté par un prospect"
 
@@ -5934,6 +5976,9 @@ msgstr "Calendrier Google"
 
 msgid "Government"
 msgstr "Gouvernement"
+
+msgid "Greater Than"
+msgstr "Plus grand que"
 
 msgid "Greater than"
 msgstr "Supérieur à"
@@ -6457,6 +6502,9 @@ msgstr "Écriture interne"
 msgid "Internal Invoice Transaction Line"
 msgstr "Ligne d'écriture interne"
 
+msgid "Internal Invoices to Close"
+msgstr "Ecritures internes à clôturer"
+
 msgid "Internal Money Deposit"
 msgstr "Dépôt sur compte d'ordre"
 
@@ -6901,6 +6949,9 @@ msgstr "Largeur des grandes images."
 msgid "Last"
 msgstr "Dernier"
 
+msgid "Last In, First Out"
+msgstr "Dernier entré, premier sorti"
+
 msgid "Last Name"
 msgstr "Nom"
 
@@ -6958,6 +7009,9 @@ msgstr "Apprendre"
 msgid "Learn about new ERP5 releases,technical articles, events and more."
 msgstr "Restez au courant des dernières nouveautés, des événements autour d'ERP5 et bien plus."
 
+msgid "Ledger"
+msgstr "Journal"
+
 msgid "Legal Form"
 msgstr "Forme juridique"
 
@@ -6972,6 +7026,9 @@ msgstr "Longueur (m)"
 
 msgid "Length quantity"
 msgstr "Longueur équivalente"
+
+msgid "Less Than"
+msgstr "Moins que"
 
 msgid "Less than"
 msgstr "Inférieur à"
@@ -7504,6 +7561,9 @@ msgstr "Minimum de commande"
 msgid "Minimal quantity to use on a movement."
 msgstr "La quantité minimale à utiliser sur un mouvement."
 
+msgid "Minimise Price"
+msgstr "Minimiser le prix"
+
 msgid "Minimize"
 msgstr "Minimiser"
 
@@ -7530,6 +7590,9 @@ msgstr "Manquant"
 
 msgid "Mobile Telephone"
 msgstr "Téléphone portable"
+
+msgid "Model"
+msgstr "Modèle"
 
 msgid "Model Line"
 msgstr "Ligne de modèle"
@@ -7753,6 +7816,9 @@ msgstr "Ajouter %s"
 msgid "New Blog Message created."
 msgstr "Nouvel article de blog créé."
 
+msgid "New Delivery Date"
+msgstr "Nouvelle date de livraison"
+
 msgid "New Event"
 msgstr "Nouvel évènement"
 
@@ -7773,6 +7839,9 @@ msgstr "Nouveau lien"
 
 msgid "New Page"
 msgstr "Nouveau page"
+
+msgid "New Shipping Date"
+msgstr "Nouvelle date d'expédition"
 
 msgid "New User Registration"
 msgstr "Enregistrement d'un nouvel utilisateur"
@@ -7936,6 +8005,9 @@ msgstr "Valeurs normales"
 msgid "Normal Working Hours"
 msgstr "Heures normales"
 
+msgid "Not Greater Than"
+msgstr "Pas plus grand que"
+
 msgid "Not Grouped Lines in Beginning Balance"
 msgstr "Lignes non lettrées du solde initial"
 
@@ -7944,6 +8016,9 @@ msgstr "Pas installé"
 
 msgid "Not Installed [state in business_template_installation_workflow]"
 msgstr "Pas installé"
+
+msgid "Not Less Than"
+msgstr "Pas moins que"
 
 msgid "Not Payed"
 msgstr "Non payé"
@@ -8545,6 +8620,9 @@ msgstr "Contenu de la page"
 msgid "Paid vacation (in days)"
 msgstr "Congés payés (en jours)"
 
+msgid "Parameters"
+msgstr "Paramètres"
+
 msgid "Particular Instruction"
 msgstr "Instructions particulières"
 
@@ -9090,6 +9168,9 @@ msgstr "Ne fermez pas cette page tant que l'installation n'est pas terminée. L'
 
 msgid "Please choose your desired way of payment."
 msgstr "Sélectionnez votre mode de paiement"
+
+msgid "Please click \"Update\" first and confirm that all parameters are fine before clicking \"Solve Divergences\"."
+msgstr "Cliquez d'abord sur \"Actualiser\" et confirmez que tous les paramètres sont OK avant de cliquer sur \"Résoudre les divergences\"."
 
 msgid "Please click link below. You will be redirected to a form in which you can login using one of yours newly created ERP5 user accounts."
 msgstr "Cliquez sur le lien ci-dessous. Vers serez redirigé vers un formulaire d'identification à partir duquel vous pouvez vous connecter en utilisant un des utilisateurs que vous venez de créer."
@@ -9969,6 +10050,9 @@ msgstr "Axes de variation de la quantité"
 
 msgid "Quantity axes"
 msgstr "Quantité variable selon"
+
+msgid "Quantity is different from prevision"
+msgstr "La quantité reçue est différente de la quantité prévue"
 
 msgid "Quantity must be defined in lines"
 msgstr "La quantité doit être définie sur les lignes"
@@ -11215,6 +11299,12 @@ msgstr "Sauvegarder le Business Template"
 msgid "Saved in ${path} ."
 msgstr "Sauvé dans ${path} ."
 
+msgid "Scan Document"
+msgstr "Scanner un document"
+
+msgid "Scan Document on Mobile"
+msgstr "Scanner un document sur mobile"
+
 msgid "Scenarii"
 msgstr "Scénarii"
 
@@ -11348,6 +11438,9 @@ msgid "Select non reconciled transcations finished"
 msgstr "Selection des écritures non rapprochées terminée"
 
 msgid "Select the Number of User Accounts you Want to Configure"
+msgstr "Sélectionnez le nombre de comptes utilisateur à configurer"
+
+msgid "Select the number of user accounts you want to configure"
 msgstr "Sélectionnez le nombre de comptes utilisateur à configurer"
 
 msgid "Sell"
@@ -11740,6 +11833,12 @@ msgstr "Vendu"
 msgid "Solve Alarm"
 msgstr "Résoudre l'alarme"
 
+msgid "Solve Automatically"
+msgstr "Résoudre automatiquement"
+
+msgid "Solve Decisions"
+msgstr "Décisions de résolution"
+
 msgid "Solve Divergence"
 msgstr "Solutionner la divergence"
 
@@ -12015,6 +12114,9 @@ msgstr "Ouvrir l'affectation"
 
 msgid "Start Assignment [transition in assignment_workflow]"
 msgstr "Démarrer l'affectation"
+
+msgid "Start Building"
+msgstr "Démarrer la construction"
 
 msgid "Start Career Step"
 msgstr "Démarrer l'étape de carrière"
@@ -14248,6 +14350,9 @@ msgstr "Date et heure de sortie"
 msgid "Url of the document"
 msgstr "Url du document"
 
+msgid "Use"
+msgstr "Utilisation"
+
 msgid "Use Case"
 msgstr "Cas D'usage"
 
@@ -14677,7 +14782,22 @@ msgstr "Quel nom souhaitez vous utiliser pour cette période?"
 msgid "What is the Name of your Company?"
 msgstr "Quel est le nom de votre entreprise?"
 
+msgid "What is the begin date of your current accounting period?"
+msgstr "A quelle date a débuté votre exercice en cours?"
+
+msgid "What is the currency used in your company?"
+msgstr "Quelle devise souhaitez vous utiliser?"
+
+msgid "What is the name of this period?"
+msgstr "Quel nom souhaitez vous utiliser pour cette période?"
+
+msgid "What is the name of your company?"
+msgstr "Quel est le nom de votre entreprise?"
+
 msgid "What will be the End Date of your Current Accounting Period?"
+msgstr "Quelle est la date de fin de votre exercice en cours?"
+
+msgid "What will be the end date of your current accounting period?"
 msgstr "Quelle est la date de fin de votre exercice en cours?"
 
 msgid "When a user of ERP5 wants to materialize a purchase that has been done by his company, he or she should use a purchase order. Purchase orders contain some general information about the buyer and the seller, and contain purchase order lines."
@@ -14696,6 +14816,15 @@ msgid "Which Date Format do you Use?"
 msgstr "Quel format souhaitez vous utiliser pour vos dates?"
 
 msgid "Which Translations do you Want to Use?"
+msgstr "Quelles langues souhaitez vous utiliser?"
+
+msgid "Which accouting plan do you use?"
+msgstr "Quel plan comptable souhaitez vous utiliser?"
+
+msgid "Which date format do you use?"
+msgstr "Quel format souhaitez vous utiliser pour vos dates?"
+
+msgid "Which translations do you want to use?"
 msgstr "Quelles langues souhaitez vous utiliser?"
 
 msgid "Width"
