@@ -19,7 +19,7 @@
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
-          field_list: field_json.couscous,
+          field_list: field_json.subfield_list,
           previous_field_length: this.state.field_list.length,
           // Force calling subfield render
           // as user may have modified the input value
@@ -64,10 +64,6 @@
           for (i = 0; i < gadget.state.field_list.length; i += 1) {
             sub_state = gadget.state.field_list[i];
 
-            // Compatibility
-            if (!sub_state.hasOwnProperty('items')) {
-              sub_state.items = sub_state.item_list;
-            }
             promise_list.push(gadget_list[i].render({
               field_json: sub_state,
               field_type: sub_state.field_type
