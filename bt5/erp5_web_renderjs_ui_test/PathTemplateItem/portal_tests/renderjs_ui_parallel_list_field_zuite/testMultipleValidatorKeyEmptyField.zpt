@@ -50,12 +50,22 @@
 </tr>
 <tr>
   <td>assertSelected</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[1]//select</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div//select</td>
   <td>label=</td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[2]//select</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[2]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div//select</td>
+  <td>label=</td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div[2]</td>
   <td></td>
 </tr>
 <tr>
@@ -69,7 +79,7 @@
 </tr>
 <tr>
   <td>select</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[1]//select</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div//select</td>
   <td>label=c1</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
@@ -80,17 +90,27 @@
 </tr>
 <tr>
   <td>assertSelected</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[1]//select</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[1]//select</td>
   <td>label=c1</td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[2]//select</td>
-  <td></td>
+  <td>assertSelected</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[2]//select</td>
+  <td>label=</td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[3]//select</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div//select</td>
+  <td>label=</td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div[2]</td>
   <td></td>
 </tr>
 
@@ -99,7 +119,7 @@
 </tr>
 <tr>
   <td>select</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[2]//select</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div//select</td>
   <td>label=a</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
@@ -110,22 +130,82 @@
 </tr>
 <tr>
   <td>assertSelected</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[1]//select</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[1]//select</td>
   <td>label=c1</td>
 </tr>
 <tr>
   <td>assertSelected</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[2]//select</td>
-  <td>label=a</td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[3]//select</td>
-  <td></td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[2]//select</td>
+  <td>label=</td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[4]//select</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div[1]//select</td>
+  <td>label=a</td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div[2]//select</td>
+  <td>label=</td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div[3]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Set third value</b></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[2]//select</td>
+  <td>label=c22</td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+<tr>
+  <td>assertText</td>
+  <td>//p[@id="field_category_list"]</td>
+  <td>foo_big_category/c1 foo_big_category/c22 foo_category/a</td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[1]//select</td>
+  <td>label=c1</td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[2]//select</td>
+  <td>label=c22</td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[3]//select</td>
+  <td>label=</td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[4]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div[1]//select</td>
+  <td>label=a</td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div[2]//select</td>
+  <td>label=</td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div[3]</td>
   <td></td>
 </tr>
 
@@ -134,28 +214,43 @@
 </tr>
 <tr>
   <td>select</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[1]//select</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[1]//select</td>
   <td>label=</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 <tr>
   <td>assertText</td>
   <td>//p[@id="field_category_list"]</td>
-  <td>foo_category/a</td>
+  <td>foo_big_category/c22 foo_category/a</td>
 </tr>
 <tr>
   <td>assertSelected</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[1]//select</td>
-  <td>label=a</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[1]//select</td>
+  <td>label=c22</td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[2]//select</td>
-  <td></td>
+  <td>assertSelected</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[2]//select</td>
+  <td>label=</td>
 </tr>
 <tr>
   <td>assertElementNotPresent</td>
-  <td>//div[@data-gadget-scope='field_my_category_list']//div[3]//select</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_0']//div[3]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div[1]//select</td>
+  <td>label=a</td>
+</tr>
+<tr>
+  <td>assertSelected</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div[2]//select</td>
+  <td>label=</td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_category_list']//div[@data-gadget-scope='PARALLEL_SUB_FIELD_1']//div[3]</td>
   <td></td>
 </tr>
 
