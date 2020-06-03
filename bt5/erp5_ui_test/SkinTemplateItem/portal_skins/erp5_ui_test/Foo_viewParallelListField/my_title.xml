@@ -146,7 +146,9 @@
                 </item>
                 <item>
                     <key> <string>items</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>orientation</string> </key>
@@ -218,20 +220,7 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>empty</string>
-                          <string></string>
-                        </tuple>
-                        <tuple>
-                          <string>Base_hashCategoryList</string>
-                          <string>Base_hashCategoryList</string>
-                        </tuple>
-                        <tuple>
-                          <string>Base_getMultiListFieldPropertyDictList</string>
-                          <string>Base_getMultiListFieldPropertyDictList</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -256,6 +245,19 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(\'empty\', here.getId()), (\'Base_hashCategoryList\', \'Base_hashCategoryList\'), (\'Base_getMultiListFieldPropertyDictList\', \'Base_getMultiListFieldPropertyDictList\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
