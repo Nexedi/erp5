@@ -9,6 +9,7 @@ Component | purchase_price_view
 Component | sale_price_view
 Component | view
 Component | view_measure
+Component | view_movement_history
 Component | view_stock
 Internal Supply Line | additional_price
 Internal Supply Line | base_price
