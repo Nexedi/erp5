@@ -7,6 +7,7 @@ Component | Purchase Supply Line
 Component | Sale Supply Line
 Component | Supply Line
 Internal Supply Line | Internal Supply Cell
+Internal Supply Line | Link
 Internal Supply Line | Predicate
 Internal Supply Module | Internal Supply
 Internal Supply | Internal Supply Line
