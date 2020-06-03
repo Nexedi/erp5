@@ -175,6 +175,8 @@ ignored_skin_id_set = {
   'PdmZuite_createDelivery',
   'PdmZuite_deleteData',
   'PdmZuite_reset',
+  'PdmZuite_CommonTemplateForRenderjsUi',
+  'PdmZuite_checkStockBrowserForRenderjsUi',
 }
 
 # Generic method to check consistency of a skin item
