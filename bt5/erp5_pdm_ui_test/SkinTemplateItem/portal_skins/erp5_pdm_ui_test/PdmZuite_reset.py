@@ -1,5 +1,4 @@
 portal = context.getPortalObject()
-self = context
 
 resource_portal_type = "Product"
 node_portal_type = "Organisation"
@@ -42,7 +41,7 @@ resource.validate()
 base_category = portal.restrictedTraverse('portal_categories/site')
 for site_id, site_title in ((source_site_id, source_site_title),
                 (destination_site_id, destination_site_title)):
-  site = base_category.newContent(
+  base_category.newContent(
     portal_type=site_portal_type,
     id=site_id,
     title=site_title
@@ -52,7 +51,7 @@ for site_id, site_title in ((source_site_id, source_site_title),
 for node_id, node_title, site_url in ((source_node_id, source_node_title, source_site_id),
                           (destination_node_id, destination_node_title, destination_site_id)):
   module = portal.getDefaultModule(node_portal_type)
-  node = module.newContent(
+  module.newContent(
     portal_type=node_portal_type,
     id=node_id,
     title=node_title,

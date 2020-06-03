@@ -2,8 +2,6 @@ portal = context.getPortalObject()
 
 resource_portal_type = "Product"
 node_portal_type = "Organisation"
-site_portal_type = "Category"
-
 resource_id = "erp5_pdm_ui_test_product"
 
 source_node_id = "erp5_pdm_ui_test_source_node"
