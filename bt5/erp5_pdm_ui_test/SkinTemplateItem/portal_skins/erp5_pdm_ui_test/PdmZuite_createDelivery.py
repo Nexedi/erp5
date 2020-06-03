@@ -12,7 +12,6 @@ delivery_title = "erp5_pdm_ui_test_delivery_title"
 source_node_id = "erp5_pdm_ui_test_source_node"
 destination_node_id = "erp5_pdm_ui_test_destination_node"
 
-resource_id = "erp5_pdm_ui_test_product"
 business_process_id = 'erp5_default_business_process'
 
 business_process_module = portal.getDefaultModule("Business Process")
@@ -40,7 +39,7 @@ if state in ['planned', 'ordered']:
   )
   order.newContent(
     portal_type=order_line_portal_type,
-    resource='product_module/%s' % resource_id,
+    resource=resource_relative_url,
     quantity=1,
   )
   order.portal_workflow.doActionFor(order, 'plan_action')
@@ -63,7 +62,7 @@ else:
   )
   delivery.newContent(
     portal_type=delivery_line_portal_type,
-    resource='product_module/%s' % resource_id,
+    resource=resource_relative_url,
     quantity=1,
   )
   for next_state, transition in [

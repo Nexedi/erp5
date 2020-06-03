@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state, delivery_type="Sale"</string> </value>
+            <value> <string>state, delivery_type="Sale", resource_relative_url="product_module/erp5_pdm_ui_test_product"</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -1,10 +1,7 @@
 portal = context.getPortalObject()
 
-resource_portal_type = "Product"
 node_portal_type = "Organisation"
 site_portal_type = "Category"
-resource_id = "erp5_pdm_ui_test_product"
-resource_title = "erp5_pdm_ui_test_product_title"
 source_node_id = "erp5_pdm_ui_test_source_node"
 source_node_title = "erp5_pdm_ui_test_source_node_title"
 destination_node_id = "erp5_pdm_ui_test_destination_node"
@@ -21,21 +18,25 @@ for rule in portal.portal_rules.objectValues():
   if rule.getValidationState() != 'validated':
     rule.validate()
 
-# Create resource
+# Create resources
 if getattr(quantity_unit_category, "unit", None) is None:
   quantity_unit_category.newContent(
     portal_type="Category",
     id="unit"
   )
-module = portal.getDefaultModule(resource_portal_type)
-
-resource = module.newContent(
-  portal_type=resource_portal_type,
-  id=resource_id,
-  title=resource_title,
+portal.product_module.newContent(
+  portal_type='Product',
+  id='erp5_pdm_ui_test_product',
+  title='erp5_pdm_ui_test_product_title',
   quantity_unit='unit',
-)
-resource.validate()
+).validate()
+portal.component_module.newContent(
+  portal_type='Component',
+  id='erp5_pdm_ui_test_component',
+  title='erp5_pdm_ui_test_component_title',
+  quantity_unit='unit',
+).validate()
+
 
 # Create site categories
 base_category = portal.restrictedTraverse('portal_categories/site')
