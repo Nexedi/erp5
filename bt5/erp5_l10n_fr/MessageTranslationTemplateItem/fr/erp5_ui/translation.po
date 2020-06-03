@@ -5185,6 +5185,9 @@ msgstr "Égal à"
 msgid "Equals To"
 msgstr "Égal à"
 
+msgid "Equals To"
+msgstr "Égal à"
+
 msgid "Equity"
 msgstr "Capital"
 
