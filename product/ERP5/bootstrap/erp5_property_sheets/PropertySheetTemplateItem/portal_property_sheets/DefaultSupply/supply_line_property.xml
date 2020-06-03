@@ -71,6 +71,7 @@
                 <string>source_reference</string>
                 <string>destination_reference</string>
                 <string>p_variation_base_category_list</string>
+                <string>default_link_url_string</string>
               </tuple>
             </value>
         </item>
