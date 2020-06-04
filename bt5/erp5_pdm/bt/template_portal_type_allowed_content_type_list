@@ -24,6 +24,7 @@ Product | Quantity Unit Conversion Group
 Product | Sale Supply Line
 Product | Supply Line
 Property Sheet | Resource Measures Consistency Constraint
+Purchase Supply Line | Link
 Purchase Supply Line | Predicate
 Purchase Supply Line | Purchase Supply Cell
 Purchase Supply Module | Purchase Supply
@@ -31,6 +32,7 @@ Purchase Supply | Purchase Supply Line
 Purchase Supply | Supply Line
 Quantity Unit Conversion Group | Quantity Unit Conversion Definition
 Quantity Unit Conversion Module | Quantity Unit Conversion Group
+Sale Supply Line | Link
 Sale Supply Line | Predicate
 Sale Supply Line | Sale Supply Cell
 Sale Supply Module | Sale Supply
@@ -43,6 +45,7 @@ Service | Purchase Supply Line
 Service | Sale Supply Line
 Service | Service Individual Variation
 Service | Supply Line
+Supply Line | Link
 Supply Line | Predicate
 Supply Line | Supply Cell
 Transformation Module | Transformation

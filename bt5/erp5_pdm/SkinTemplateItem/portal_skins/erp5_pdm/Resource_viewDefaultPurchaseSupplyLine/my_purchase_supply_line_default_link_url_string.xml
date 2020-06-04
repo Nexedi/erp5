@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_internal_supply_line_web_site_link_url_string</string> </value>
+            <value> <string>my_purchase_supply_line_default_link_url_string</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
