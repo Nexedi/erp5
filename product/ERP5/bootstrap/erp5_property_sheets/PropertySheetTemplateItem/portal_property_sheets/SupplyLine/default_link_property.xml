@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>acquisition_accessor_id</string> </key>
-            <value> <string>getWebSiteLinkUrlString</string> </value>
+            <value> <string>getDefaultLinkUrlString</string> </value>
         </item>
         <item>
             <key> <string>acquisition_base_category</string> </key>
@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>web_site_link_property</string> </value>
+            <value> <string>default_link_property</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>storage_id</string> </key>
-            <value> <string>web_site_link</string> </value>
+            <value> <string>default_link</string> </value>
         </item>
       </dictionary>
     </pickle>
