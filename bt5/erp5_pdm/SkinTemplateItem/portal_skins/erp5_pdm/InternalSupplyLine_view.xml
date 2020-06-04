@@ -131,6 +131,7 @@
                         <string>my_non_discountable_additional_price</string>
                         <string>my_surcharge_ratio</string>
                         <string>my_comment</string>
+                        <string>my_default_link_url_string</string>
                       </list>
                     </value>
                 </item>
