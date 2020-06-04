@@ -35,9 +35,6 @@
  <portal_type id="Data License Module">
   <item>business_application</item>
  </portal_type>
- <portal_type id="Data Notebook Module">
-  <item>business_application</item>
- </portal_type>
  <portal_type id="Data Operation Module">
   <item>business_application</item>
  </portal_type>

@@ -12,7 +12,6 @@ Data Event | source
 Data Ingestion Batch Module | business_application
 Data Ingestion Module | business_application
 Data License Module | business_application
-Data Notebook Module | business_application
 Data Operation Module | business_application
 Data Order Module | business_application
 Data Product Module | business_application
