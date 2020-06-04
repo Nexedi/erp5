@@ -1,0 +1,16 @@
+div.jexcel_formula img{
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+input.jexcel_formula {
+  margin-left: 2px;
+  width: 97%;
+  position:sticky;
+  top:0px;
+  z-index:21;
+  display: inline-block;
+}
