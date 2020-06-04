@@ -7946,7 +7946,7 @@ msgid "No quantity is defined on this line."
 msgstr "Aucune quantité n'est indiquée !"
 
 msgid "No records"
-msgstr "Aucune Résult"
+msgstr "Aucun enregistrement"
 
 msgid "No related documents found."
 msgstr "Aucun document correspondant n'a été trouvé."
@@ -10289,7 +10289,7 @@ msgid "Reconfigure Portal"
 msgstr "Configurer l'application"
 
 msgid "Records"
-msgstr "Résult"
+msgstr "Enregistrements"
 
 msgid "Reference"
 msgstr "Référence"
