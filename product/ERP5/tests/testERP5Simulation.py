@@ -394,18 +394,18 @@ class TestERP5Simulation(TestPackingListMixin, SecurityTestCase):
     self.assertEqual(len(packing_list.getSolverValueList()), 1)
     self.assertEqual(len(packing_list.Delivery_getSolverDecisionList()), 0)
 
-    packing_list.REQUEST['listbox'] = {
+    listbox = {
       solver_decision.getPath():
       {'comment': '',
        'solver_configuration': DummySolverConfiguration(),
        'solver': 'portal_solvers/Adopt Solver'}}
 
     self.assertEqual(
-      self._getPortalStatusMessage(packing_list.Delivery_updateSolveDivergenceDialog()),
+      self._getPortalStatusMessage(packing_list.Delivery_updateSolveDivergenceDialog(listbox)),
       'Workflow state may have been updated by other user. Please try again.')
 
     self.assertEqual(
-      self._getPortalStatusMessage(packing_list.Delivery_submitSolveDivergenceDialog()),
+      self._getPortalStatusMessage(packing_list.Delivery_submitSolveDivergenceDialog(listbox)),
       'Workflow state may have been updated by other user. Please try again.')
 
     self.tic()
