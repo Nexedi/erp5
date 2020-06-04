@@ -359,17 +359,17 @@ class TestERP5Simulation(TestPackingListMixin, SecurityTestCase):
 
     # Choose 'Divergence Resolution' (Adopt Prevision)
     solver_decision = solver_decision_list[0]
-    packing_list.REQUEST['listbox'] = {
+    listbox = {
       solver_decision.getPath():
       {'comment': '',
        'solver_configuration': DummySolverConfiguration(),
        'solver': 'portal_solvers/Adopt Solver'}}
 
-    packing_list.Delivery_updateSolveDivergenceDialog()
+    packing_list.Delivery_updateSolveDivergenceDialog(listbox=listbox)
 
     # Solve Divergences
     self.assertEqual(
-      self._getPortalStatusMessage(packing_list.Delivery_submitSolveDivergenceDialog()),
+      self._getPortalStatusMessage(packing_list.Delivery_submitSolveDivergenceDialog(listbox=listbox)),
       'Divergence solvers started in background.')
 
     # SolverProcess.solve() called
@@ -394,18 +394,18 @@ class TestERP5Simulation(TestPackingListMixin, SecurityTestCase):
     self.assertEqual(len(packing_list.getSolverValueList()), 1)
     self.assertEqual(len(packing_list.Delivery_getSolverDecisionList()), 0)
 
-    packing_list.REQUEST['listbox'] = {
+    listbox = {
       solver_decision.getPath():
       {'comment': '',
        'solver_configuration': DummySolverConfiguration(),
        'solver': 'portal_solvers/Adopt Solver'}}
 
     self.assertEqual(
-      self._getPortalStatusMessage(packing_list.Delivery_updateSolveDivergenceDialog()),
+      self._getPortalStatusMessage(packing_list.Delivery_updateSolveDivergenceDialog(listbox=listbox)),
       'Workflow state may have been updated by other user. Please try again.')
 
     self.assertEqual(
-      self._getPortalStatusMessage(packing_list.Delivery_submitSolveDivergenceDialog()),
+      self._getPortalStatusMessage(packing_list.Delivery_submitSolveDivergenceDialog(listbox=listbox)),
       'Workflow state may have been updated by other user. Please try again.')
 
     self.tic()
