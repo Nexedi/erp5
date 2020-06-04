@@ -21,7 +21,7 @@
 .jexcel_container.fullscreen .jexcel_content {
     overflow:auto;
     width:100%;
-    height:100%;
+    height:96.5%;
     background-color:#ffffff;
 }
 
@@ -609,7 +609,7 @@
     background-color:#f3f3f3;
     border:1px solid #ccc;
     padding:4px;
-    margin:0px 2px 4px 1px;
+    margin:0px 2px 1px 1px;
     position:sticky;
     top:0px;
     z-index:21;

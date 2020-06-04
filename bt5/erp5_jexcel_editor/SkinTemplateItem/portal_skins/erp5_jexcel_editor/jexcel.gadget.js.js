@@ -16,7 +16,13 @@
 
     .declareMethod("render", function (options) {
       var gadget = this;
-      return gadget.changeState(options);
+      return gadget.getDeclaredGadget("toolbar_gadget")
+      .push(function (toolbar_gadget) {
+        gadget.toolbar_gadget = toolbar_gadget;
+      })
+      .push(function () {
+        return gadget.changeState(options);
+      });
     })
 
     .declareMethod('getContent', function () {
@@ -49,195 +55,153 @@
         selectionCopy: true,
         search: true,
         fullscreen: true,
-        //lazyLoading: true,
-        //loadingSpin: true,
-        //tableOverflow: true,
         autoIncrement: true,
         parseFormulas: true
       },
-      gadget = this, tmp = Object.assign({}, template), table;
+      gadget = this, tmp = Object.assign({}, template), table, toolbar_list;
       gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
       if (modification_dict.hasOwnProperty('value')) {
         gadget.state.value = gadget.state.value === "" ? gadget.state.value : JSON.parse(gadget.state.value);
         Object.assign(tmp, template);
         Object.assign(tmp, gadget.state.value);
-        table = jexcel(gadget.element.querySelector(".spreadsheet"), Object.assign(tmp, {
-          onevent: function (ev) {
-            var exluded_events = ["onload", "onfocus", "onblur", "onselection"];
-            if (!exluded_events.includes(ev)) {
-              if ((ev === "onchangestyle" && gadget.state.saveConfig) || ev !== "onchangestyle") {
-                gadget.deferNotifyChangeBinded();
-              } else {
-                gadget.state.saveConfig = true;
-              }
-            }
-          },
-          toolbar: [
-            //undo
-            {
-              type: 'i',
-              content: 'undo',
-              onclick: function () {
-                table.undo();
-              }
-            },
-            //redo
-            {
-              type: 'i',
-              content: 'redo',
-              onclick: function () {
-                table.redo();
-              }
-            },
-            //merge cells
-            {
-              type: 'i',
-              content: 'table_chart',
-              onclick: function () {
+        return gadget.toolbar_gadget.getToolbarList({
+            text_font: true,
+            text_position: true,
+            color_picker: true
+          })
+        .push(function (list) {
+            toolbar_list = list;
+          })
+        .push(function () {
+            table = jexcel(gadget.element.querySelector(".spreadsheet"), Object.assign(tmp, {
+              onevent: function (ev) {
+                var exluded_events = ["onload", "onfocus", "onblur", "onselection"];
+                if (!exluded_events.includes(ev)) {
+                  if ((ev === "onchangestyle" && gadget.state.saveConfig) || ev !== "onchangestyle") {
+                    gadget.deferNotifyChangeBinded();
+                  } else {
+                    gadget.state.saveConfig = true;
+                  }
+                }
+              },
+              onselection: function (ev) {
                 var cell = gadget.element.querySelector("td.highlight-selected");
-                var x = Number(cell.dataset.x);
-                var selected = table.getJson(true);
-                var colspan = Object.keys(selected[0]).length;
-                var rowspan = selected.length;
-                var letter = "";
-                if (x <= 25) {
-                  letter += String.fromCharCode(97 + x).toUpperCase();
+                var formula = gadget.element.querySelector("input.jexcel_formula");
+                formula.value = cell.textContent;
+              },
+              toolbar: [
+                //undo
+                {
+                  type: 'i',
+                  content: 'undo',
+                  onclick: function () {
+                    table.undo();
+                  }
+                },
+                //redo
+                {
+                  type: 'i',
+                  content: 'redo',
+                  onclick: function () {
+                    table.redo();
+                  }
+                },
+                //merge cells
+                {
+                  type: 'i',
+                  content: 'table_chart',
+                  onclick: function () {
+                    var cell = gadget.element.querySelector("td.highlight-selected");
+                    var x = Number(cell.dataset.x);
+                    var selected = table.getJson(true);
+                    var colspan = Object.keys(selected[0]).length;
+                    var rowspan = selected.length;
+                    var letter = "";
+                    if (x <= 25) {
+                      letter += String.fromCharCode(97 + x).toUpperCase();
+                    }
+                    else {
+                      letter += String.fromCharCode(97 + Math.trunc(x / 25) - 1).toUpperCase();
+                      letter += String.fromCharCode(97 + (x % 26)).toUpperCase();
+                    }
+                    var coor = letter + (Number(cell.dataset.y) + 1).toString();
+                    table.setMerge(coor, colspan, rowspan);
+                  }
+                },
+                //unmerge cell
+                {
+                  type: 'i',
+                  content: 'close',
+                  onclick: function () {
+                    var cell = gadget.element.querySelector("td.highlight-selected");
+                    var x = Number(cell.dataset.x);
+                    var letter = "";
+                    if (x <= 25) {
+                      letter += String.fromCharCode(97 + x).toUpperCase();
+                    }
+                    else {
+                      letter += String.fromCharCode(97 + Math.trunc(x / 25) - 1).toUpperCase();
+                      letter += String.fromCharCode(97 + (x % 26)).toUpperCase();
+                    }
+                    var coor = letter + (Number(cell.dataset.y) + 1).toString();
+                    table.removeMerge(coor);
+                  }
+                },
+                //destroy all merged cells
+                {
+                  type: 'i',
+                  content: 'cancel',
+                  onclick: function () {
+                    table.destroyMerged();
+                  }
                 }
-                else {
-                  letter += String.fromCharCode(97 + Math.trunc(x / 25) - 1).toUpperCase();
-                  letter += String.fromCharCode(97 + (x % 26)).toUpperCase();
-                }
-                var coor = letter + (Number(cell.dataset.y) + 1).toString();
-                table.setMerge(coor, colspan, rowspan);
-              }
-            },
-            //unmerge cell
-            {
-              type: 'i',
-              content: 'close',
-              onclick: function () {
-                var cell = gadget.element.querySelector("td.highlight-selected");
-                var x = Number(cell.dataset.x);
-                var letter = "";
-                if (x <= 25) {
-                  letter += String.fromCharCode(97 + x).toUpperCase();
-                }
-                else {
-                  letter += String.fromCharCode(97 + Math.trunc(x / 25) - 1).toUpperCase();
-                  letter += String.fromCharCode(97 + (x % 26)).toUpperCase();
-                }
-                var coor = letter + (Number(cell.dataset.y) + 1).toString();
-                table.removeMerge(coor);
-              }
-            },
-            //destroy all merged cells
-            {
-              type: 'i',
-              content: 'cancel',
-              onclick: function () {
-                table.destroyMerged();
-              }
-            },
-            //font style
-            {
-              type: 'select',
-              k: 'font-family',
-              v: ['Arial', 'Comic Sans MS', 'Verdana', 'Calibri', 'Tahoma', 'Helvetica', 'DejaVu Sans', 'Times New Roman', 'Georgia', 'Antiqua']
-            },
-            //font size
-            {
-              type: 'select',
-              k: 'font-size',
-              v: ['9px', '10px', '11px', '12px', '13px', '14px', '15px', '16px', '17px', '18px', '19px', '20px', '22px', '24px', '26px', '28px', '30px']
-            },
-            //text align left
-            {
-              type: 'i',
-              content: 'format_align_left',
-              k: 'text-align',
-              v: 'left'
-            },
-            //text align center
-            {
-              type: 'i',
-              content: 'format_align_center',
-              k: 'text-align',
-              v: 'center'
-            },
-            //text align right
-            {
-              type: 'i',
-              content: 'format_align_right',
-              k: 'text-align',
-              v: 'right'
-            },
-            //text align justify
-            {
-              type: 'i',
-              content: 'format_align_justify',
-              k: 'text-align',
-              v: 'justify'
-            },
-            //vertical align top
-            {
-              type: 'i',
-              content: 'vertical_align_top',
-              k: 'vertical-align',
-              v: 'top'
-            },
-            //vertical align middle
-            {
-              type: 'i',
-              content: 'vertical_align_center',
-              k: 'vertical-align',
-              v: 'middle'
-            },
-            //vertical align bottom
-            {
-              type: 'i',
-              content: 'vertical_align_bottom',
-              k: 'vertical-align',
-              v: 'bottom'
-            },
-            //style bold
-            {
-              type: 'i',
-              content: 'format_bold',
-              k: 'font-weight',
-              v: 'bold'
-            },
-            //style underlined
-            {
-              type: 'i',
-              content: 'format_underlined',
-              k: 'text-decoration',
-              v: 'underline'
-            },
-            //style italic
-            {
-              type: 'i',
-              content: 'format_italic',
-              k: 'font-style',
-              v: 'italic'
-            },
-            //text color
-            {
-              type: 'color',
-              content: 'format_color_text',
-              k: 'color'
-            },
-            //background color
-            {
-              type: 'color',
-              content: 'format_color_fill',
-              k: 'background-color'
+              ].concat(toolbar_list)
+            }));
+            gadget.table = table;
+            var filter = gadget.element.querySelector(".jexcel_filter");
+            gadget.element.querySelector(".jexcel_toolbar").appendChild(filter);
+            var formula_div = document.createElement("div");
+            formula_div.classList.add("jexcel_formula");
+            var img = document.createElement("img");
+            img.src = "fx.png";
+            var formula_input = document.createElement("input");
+            formula_input.classList.add("jexcel_formula");
+            formula_div.appendChild(img);
+            formula_div.appendChild(formula_input);
+            gadget.element.querySelector("div.jexcel_toolbar").parentNode.insertBefore(formula_div, gadget.element.querySelector("div.jexcel_toolbar").nextSibling);
+            console.log(gadget.element.querySelectorAll("i"));
+            var icon_title = {
+              "undo": "Undo",
+              "redo": "Redo",
+              "table_chart": "Merge cells",
+              "close": "Destroy merge",
+              "cancel": "Destroy all merges",
+              "format_bold": "Bold",
+              "format_italic": "Italic",
+              "format_underlined": "Underline",
+              "format_align_left": "Align left",
+              "format_align_center": "Align center",
+              "format_align_right": "Align right",
+              "format_align_justify": "Align justify",
+              "vertical_align_top": "Align top",
+              "vertical_align_center": "Align middle",
+              "vertical_align_bottom": "Align bottom",
             }
-          ]
-        }));
-        gadget.table = table;
-        var filter = gadget.element.querySelector(".jexcel_filter");
-        gadget.element.querySelector(".jexcel_toolbar").appendChild(filter);
+            gadget.element.querySelectorAll("i").forEach(i => {
+              if (i.dataset.k === "color") {i.title = "Color"}
+              else if (i.dataset.k === "background-color") {i.title = "Background color"}
+              else {i.title = icon_title[i.textContent]}
+            });
+          });
       }
-    });
+    })
+
+    .onEvent("input", function (ev) {
+        var gadget = this;
+        var formula = gadget.element.querySelector("input.jexcel_formula");
+        if (ev.target == gadget.element.querySelector("td.highlight-selected input")) {
+          formula.value = ev.target.value;
+        }
+      }, false, false)
 
 }(window, rJS, jexcel));
