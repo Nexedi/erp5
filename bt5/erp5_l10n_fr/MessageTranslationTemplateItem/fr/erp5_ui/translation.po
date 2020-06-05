@@ -10517,7 +10517,7 @@ msgid "Related Persons"
 msgstr "Interlocuteurs"
 
 msgid "Related Purchase Invoice"
-msgstr "Facture correspondante"
+msgstr "Facture d'achat correspondante"
 
 msgid "Related Purchase Order"
 msgstr "Commande d'achat correspondante"
