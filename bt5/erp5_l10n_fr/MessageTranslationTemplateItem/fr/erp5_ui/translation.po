@@ -8215,6 +8215,9 @@ msgstr "Sans comptes soldés"
 msgid "Omit empty accounts"
 msgstr "Sans comptes non mouvementés"
 
+msgid "On <a href=\"${decision_url}\">${decision_type} ${decision_title}</a> of <a href=\"${delivery_url}\">${delivery_title}</a> :"
+msgstr "<a href=\"${decision_url}\">${decision_type} ${decision_title}</a> de <a href=\"${delivery_url}\">${delivery_title}</a>: "
+
 msgid "Online Content:"
 msgstr "Contenu en ligne:"
 
@@ -13119,6 +13122,9 @@ msgstr "La catégorie de section par défaut pour les rapports."
 
 msgid "The default width of text area fields"
 msgstr "La largeur par défaut des champs de type TextArea"
+
+msgid "The difference of ${property_name} between decision       ${decision_value} and prevision ${prevision_value} is larger than ${value}."
+msgstr "Différence de ${property_name} entre la prévision ${prevision_value} et la réalité ${decision_value}"
 
 msgid "The discount ratio applied to the supply line price"
 msgstr "Le taux de remise appliquée à la ligne tarifaire."
