@@ -569,6 +569,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     stepCheckInvoiceIsDiverged
     stepSplitAndDeferInvoice
     stepTic
+    stepInvoiceBuilderAlarm
+    stepTic
 
     stepCheckInvoiceIsNotDivergent
     stepCheckInvoiceIsSolved
@@ -821,6 +823,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     stepStopInvoice
     stepTic
     stepDeliverInvoice
+    stepTic
+    stepInvoiceBuilderAlarm
     stepTic
     stepCheckInvoiceIsNotDivergent
     stepCheckInvoiceIsSolved

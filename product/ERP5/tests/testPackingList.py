@@ -336,19 +336,18 @@ class TestPackingListMixin(TestOrderMixin):
 
   def stepSplitAndDeferDoNothingPackingList(self, sequence=None, sequence_list=None, **kw):
     """
-      Do the split and defer action, but choose "do nothing" for divergences
+      Do the solve divrgence action, but choose "do nothing" for divergences
     """
     packing_list = sequence.get('packing_list')
-    kw = {'listbox':[
-      {'listbox_key':line.getRelativeUrl(),
-       'choice':'ignore'} for line in packing_list.getMovementList()
-      if line.isDivergent()]}
-    self.portal.portal_workflow.doActionFor(
-      packing_list,
-      'split_and_defer_action',
-      start_date=self.datetime + 15,
-      stop_date=self.datetime + 25,
-      **kw)
+    solver_process = self.portal.portal_solver_processes.newSolverProcess(packing_list)
+    quantity_solver_decision, = [x for x in solver_process.contentValues()
+      if x.getCausalityValue().getTestedProperty() == 'quantity']
+    # use no solver
+    quantity_solver_decision.setSolverValue(None)
+    # and no configure
+    quantity_solver_decision.updateConfiguration()
+    solver_process.buildTargetSolverList()
+    solver_process.solve()
 
   def stepCheckPackingListSplitted(self, sequence=None, sequence_list=None, **kw):
     """
