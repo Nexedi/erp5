@@ -7892,7 +7892,7 @@ msgid "No Apparel Model Colour Variation found."
 msgstr "Pas de coloris de gamme trouvé."
 
 msgid "No Payment Transaction related."
-msgstr "Pas d'écriture de règlement correspondante"
+msgstr "Pas d'écriture de trésorerie correspondante"
 
 msgid "No Sale Invoice Transaction related."
 msgstr "Pas d'écriture de vente correspondante"
@@ -8861,13 +8861,13 @@ msgid "Payment Transaction Lines"
 msgstr "Lignes comptables"
 
 msgid "Payment Transaction in Confirmed state"
-msgstr "Écritures de paiement en état Confirmé"
+msgstr "Écritures de trésorerie à l'état Confirmé"
 
 msgid "Payment Transaction in confirmed state"
-msgstr "Écritures de paiement en état confirmé"
+msgstr "Écritures de trésorerie à l'état confirmé"
 
 msgid "Payment Transaction in stopped state"
-msgstr "Écritures de paiement en état brouillard"
+msgstr "Écritures de trésorerie à l'état brouillard"
 
 msgid "Payment Transaction related to Sale Invoice Transaction."
 msgstr "Écriture de paiement liée à l'écriture de vente."
@@ -10502,7 +10502,7 @@ msgid "Related Organisation"
 msgstr "Organisation liée"
 
 msgid "Related Payment Created"
-msgstr "Écriture de payement correspondante créée"
+msgstr "Écriture de trésorerie correspondante créée"
 
 msgid "Related Payment Transaction"
 msgstr "Écriture de trésorerie correspondante"
