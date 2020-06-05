@@ -1978,25 +1978,25 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           url_parameter_dict = None
           if select in url_column_dict:
             # Check if we get URL parameters using listbox field `url_columns`
-            try:
-              # XXX call on aq_base?
-              url_column_method = getattr(brain, url_column_dict[select])
-              # Result of `url_column_method` must be a dictionary in the format
-              # {'command': <command_name, ex: 'raw', 'push_history'>,
-              #  'options': {'url': <Absolute URL>, 'jio_key': <Relative URL of object>, 'view': <id of the view>}}
-              url_parameter_dict = url_column_method(url_dict=True,
-                                                     brain=brain,
-                                                     selection=catalog_kw['selection'],
-                                                     selection_name=catalog_kw['selection_name'],
-                                                     column_id=select)
-            except AttributeError:
-              # In case the URL method is invalid or empty, we expect to have no link
-              # for the column to maintain compatibility with old UI, hence we create
-              # an empty url_parameter_dict for these cases.
-              url_parameter_dict = {}
-              if url_column_dict[select]:
+            url_parameter_dict = {}
+            url_column_method_id = url_column_dict[select]
+            if url_column_method_id:
+              try:
+                url_column_method = getattr(brain, url_column_method_id)
+              except AttributeError:
+                # In case the URL method is invalid or empty, we expect to have no link
+                # for the column to maintain compatibility with old UI, hence we create
+                # an empty url_parameter_dict for these cases.
                 log("Invalid URL method {!s} on column {}".format(url_column_dict[select], select), level=800)
-
+              else:
+                # Result of `url_column_method` must be a dictionary in the format
+                # {'command': <command_name, ex: 'raw', 'push_history'>,
+                #  'options': {'url': <Absolute URL>, 'jio_key': <Relative URL of object>, 'view': <id of the view>}}
+                url_parameter_dict = url_column_method(url_dict=True,
+                                                      brain=brain,
+                                                      selection=catalog_kw['selection'],
+                                                      selection_name=catalog_kw['selection_name'],
+                                                      column_id=select)
           else:
             if not is_getListItemUrlDict_calculated:
               # XXX If only available on brains, maybe better to call on aq_self
