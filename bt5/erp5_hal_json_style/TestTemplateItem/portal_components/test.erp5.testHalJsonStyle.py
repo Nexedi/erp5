@@ -1679,7 +1679,6 @@ return '%s/Base_viewMetadata?reset:int=1' % context.getRelativeUrl()
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_different_view(self):
     self._makeDocument()
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['modification_date | Base_getUrl',])
 
@@ -1729,7 +1728,6 @@ return url
 """)
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_absolute_url_with_field_rendering(self):
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['modification_date | Base_getUrl',])
 
@@ -1774,7 +1772,6 @@ return url
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_absolute_url_without_field_rendering(self):
     self._makeDocument()
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['title | Base_getUrl',])
 
@@ -1816,7 +1813,6 @@ return url
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_no_url(self):
     self._makeDocument()
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['title|',])
 
@@ -1861,7 +1857,6 @@ return url
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_option_parameters(self):
     self._makeDocument()
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['title | Base_getUrl',])
 
