@@ -8849,13 +8849,13 @@ msgid "Payment Transaction"
 msgstr "Écriture de trésorerie"
 
 msgid "Payment Transaction Group"
-msgstr "Groupe d'écriture de trésorerie"
+msgstr "Groupe d'écritures de trésorerie"
 
 msgid "Payment Transaction Group Type"
-msgstr "Type de groupe d'écriture de trésorerie"
+msgstr "Type de groupe d'écritures de trésorerie"
 
 msgid "Payment Transaction Groups"
-msgstr "Groupes d'écriture de trésorerie"
+msgstr "Groupes d'écritures de trésorerie"
 
 msgid "Payment Transaction Lines"
 msgstr "Lignes comptables"
