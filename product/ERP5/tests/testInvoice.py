@@ -888,19 +888,19 @@ class TestInvoiceMixin(TestPackingListMixin):
 
   def stepSplitAndDeferInvoice(self, sequence=None, sequence_list=None,
       **kw):
-    """
-    split and defer at the invoice level
-    """
     invoice = sequence.get('invoice')
-    kw = {'listbox':[
-      {'listbox_key':line.getRelativeUrl(),
-       'choice':'SplitAndDefer'} for line in invoice.getMovementList()]}
-    self.portal.portal_workflow.doActionFor(
-      invoice,
-      'split_and_defer_action',
-      start_date=self.datetime + 15,
-      stop_date=self.datetime + 25,
-      **kw)
+    solver_process = self.portal.portal_solver_processes.newSolverProcess(invoice)
+    quantity_solver_decision, = [x for x in solver_process.contentValues()
+      if x.getCausalityValue().getTestedProperty() == 'quantity']
+    # use Quantity Split Solver.
+    quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Quantity Split Solver'])
+    # configure for Quantity Split Solver.
+    kw = {'delivery_solver':'FIFO Delivery Solver',
+          'start_date':self.datetime + 15,
+          'stop_date':self.datetime + 25}
+    quantity_solver_decision.updateConfiguration(**kw)
+    solver_process.buildTargetSolverList()
+    solver_process.solve()
 
   def stepUnifyStartDateWithDecisionInvoice(self, sequence=None,
                                             sequence_list=None):
@@ -3000,6 +3000,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepTic
     stepCheckInvoiceIsDiverged
     stepSplitAndDeferInvoice
+    stepTic
+    stepInvoiceBuilderAlarm
     stepTic
 
     stepCheckInvoiceIsNotDivergent
