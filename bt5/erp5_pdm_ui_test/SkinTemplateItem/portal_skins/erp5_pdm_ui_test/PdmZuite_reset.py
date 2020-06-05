@@ -1,11 +1,7 @@
 portal = context.getPortalObject()
-self = context
 
-resource_portal_type = "Product"
 node_portal_type = "Organisation"
 site_portal_type = "Category"
-resource_id = "erp5_pdm_ui_test_product"
-resource_title = "erp5_pdm_ui_test_product_title"
 source_node_id = "erp5_pdm_ui_test_source_node"
 source_node_title = "erp5_pdm_ui_test_source_node_title"
 destination_node_id = "erp5_pdm_ui_test_destination_node"
@@ -22,27 +18,31 @@ for rule in portal.portal_rules.objectValues():
   if rule.getValidationState() != 'validated':
     rule.validate()
 
-# Create resource
+# Create resources
 if getattr(quantity_unit_category, "unit", None) is None:
   quantity_unit_category.newContent(
     portal_type="Category",
     id="unit"
   )
-module = portal.getDefaultModule(resource_portal_type)
-
-resource = module.newContent(
-  portal_type=resource_portal_type,
-  id=resource_id,
-  title=resource_title,
+portal.product_module.newContent(
+  portal_type='Product',
+  id='erp5_pdm_ui_test_product',
+  title='erp5_pdm_ui_test_product_title',
   quantity_unit='unit',
-)
-resource.validate()
+).validate()
+portal.component_module.newContent(
+  portal_type='Component',
+  id='erp5_pdm_ui_test_component',
+  title='erp5_pdm_ui_test_component_title',
+  quantity_unit='unit',
+).validate()
+
 
 # Create site categories
 base_category = portal.restrictedTraverse('portal_categories/site')
 for site_id, site_title in ((source_site_id, source_site_title),
                 (destination_site_id, destination_site_title)):
-  site = base_category.newContent(
+  base_category.newContent(
     portal_type=site_portal_type,
     id=site_id,
     title=site_title
@@ -52,7 +52,7 @@ for site_id, site_title in ((source_site_id, source_site_title),
 for node_id, node_title, site_url in ((source_node_id, source_node_title, source_site_id),
                           (destination_node_id, destination_node_title, destination_site_id)):
   module = portal.getDefaultModule(node_portal_type)
-  node = module.newContent(
+  module.newContent(
     portal_type=node_portal_type,
     id=node_id,
     title=node_title,
