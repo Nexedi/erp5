@@ -1408,7 +1408,13 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
   @changeSkin('Hal')
   def test_getHateoas_query_param(self):
     fake_request = do_fake_request("GET")
-    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search", query="ANIMPOSSIBLECOUSCOUSVALUEFOOTOFINDINDATA")
+
+    # we want a query that will never match any document, but if we have it as a string literal in
+    # the test, because the test code is also a document, it would be returned by the query, so we
+    # build a query a bit dynamically
+    query = "ANIMPOSSIBLECOUSCOUSVALUE" + "FOOTOFINDINDATA"
+
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="search", query=query)
     self.assertEquals(fake_request.RESPONSE.status, 200)
     self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
       "application/hal+json"
@@ -1418,7 +1424,7 @@ class TestERP5Document_getHateoas_mode_search(ERP5HALJSONStyleSkinsMixin):
 
     self.assertEqual(result_dict['_debug'], "search")
     self.assertEqual(result_dict['_limit'], 10)
-    self.assertEqual(result_dict['_query'], "ANIMPOSSIBLECOUSCOUSVALUEFOOTOFINDINDATA")
+    self.assertEqual(result_dict['_query'], query)
     self.assertEqual(result_dict['_local_roles'], None)
     self.assertEqual(result_dict['_select_list'], [])
 

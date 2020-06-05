@@ -795,13 +795,15 @@ class TestDocument(TestDocumentMixin):
                             title='Super nova organisation')
     self.tic()
 
+    test_document_set = {document_1, document_2, document_3, person, web_page, organisation}
     def getAdvancedSearchTextResultList(searchable_text, portal_type=None,src__=0):
       kw = {'full_text': searchable_text}
       if portal_type is not None:
         kw['portal_type'] = portal_type
       if src__==1:
         print portal.portal_catalog(src__=src__,**kw)
-      return [x.getObject() for x in portal.portal_catalog(**kw)]
+      result_list = [x.getObject() for x in portal.portal_catalog(**kw)]
+      return [x for x in result_list if x in test_document_set]
 
     # full text search
     self.assertSameSet([document_1], \
