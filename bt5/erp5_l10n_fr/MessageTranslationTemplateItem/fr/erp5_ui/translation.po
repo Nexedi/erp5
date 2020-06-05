@@ -527,7 +527,7 @@ msgid "Accounting Transaction Title"
 msgstr "Libellé"
 
 msgid "Accounting Transaction can only be deleted in draft or cancelled states."
-msgstr "La transaction comptable ne peut être supprimée que lorsqu'elle est en état brouillon ou annulée."
+msgstr "La transaction comptable ne peut être supprimée que lorsqu'elle est à l'état brouillon ou annulée."
 
 msgid "Accounting Transaction in draft state"
 msgstr "Écritures des opérations diverses dans l'état brouillon"
@@ -8771,10 +8771,10 @@ msgid "Pay Sheet Transaction Lines"
 msgstr "Lignes comptables"
 
 msgid "Pay Sheet Transaction in confirmed state"
-msgstr "Ecritures de salaire en état confirmé"
+msgstr "Ecritures de salaire à l'état confirmé"
 
 msgid "Pay Sheet Transaction in planned state"
-msgstr "Écritures de salaire en état plannifé"
+msgstr "Écritures de salaire à l'état plannifé"
 
 msgid "Pay Sheet Transaction updated."
 msgstr "Écriture de paye modifiée."
@@ -9854,16 +9854,16 @@ msgid "Purchase Invoice Transaction Lines"
 msgstr "Ligne comptable d'achat"
 
 msgid "Purchase Invoice Transaction in confirmed state"
-msgstr "Ecritures d'achats en état confirmé"
+msgstr "Ecritures d'achats à l'état confirmé"
 
 msgid "Purchase Invoice Transaction in draft state"
-msgstr "Ecritures d'achats en état brouillon"
+msgstr "Ecritures d'achats à l'état brouillon"
 
 msgid "Purchase Invoice Transaction in planned state"
-msgstr "Ecritures d'achats en état plannifé"
+msgstr "Ecritures d'achats à l'état plannifé"
 
 msgid "Purchase Invoice Transaction in stopped state"
-msgstr "Ecritures d'achats en état brouillard"
+msgstr "Ecritures d'achats à l'état brouillard"
 
 msgid "Purchase Invoice Transaction related to Purchase Packing List."
 msgstr "Facture correspondant à la livraison."
