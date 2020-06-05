@@ -3838,9 +3838,6 @@ msgstr "Déclarer reçu (action)"
 msgid "Declares a packing list as packed, ready for shipment"
 msgstr "La livraison de vente est prête à être expédiée."
 
-msgid "Declares a packing list as received and creates the related accounting transaction"
-msgstr "La commande a été reçue par les destinataires."
-
 msgid "Declares a packing list as shipped"
 msgstr "Déclare la livraison comme expédiée"
 
@@ -6872,7 +6869,7 @@ msgid "Jump to Bank Accounts"
 msgstr "Aller aux comptes en banque"
 
 msgid "Jump to Related Payment"
-msgstr "Aller au payement"
+msgstr "Aller au règlement correspondant"
 
 msgid "Jump..."
 msgstr "Aller à ..."
@@ -7895,13 +7892,13 @@ msgid "No Apparel Model Colour Variation found."
 msgstr "Pas de coloris de gamme trouvé."
 
 msgid "No Payment Transaction related."
-msgstr "Pas d'écriture de payment liée"
+msgstr "Pas d'écriture de règlement correspondante"
 
 msgid "No Sale Invoice Transaction related."
-msgstr "Pas de facture liée"
+msgstr "Pas de facture correspondante"
 
 msgid "No Sale Packing List Line related."
-msgstr "Pas de livraison liée"
+msgstr "Pas de livraison correspondante"
 
 msgid "No Trade Condition."
 msgstr "Conditions de vente non définies."
@@ -10526,19 +10523,19 @@ msgid "Related Purchase Packing List"
 msgstr "Livraison d'achat correspondante"
 
 msgid "Related Purchase Trade Condition"
-msgstr "Conditions d'achat"
+msgstr "Conditions d'achat correspondante"
 
 msgid "Related Sale Invoice Transaction"
-msgstr "Écriture de vente liée"
+msgstr "Écriture de vente correspondante"
 
 msgid "Related Sale Order"
-msgstr "Commande de vente liée"
+msgstr "Commande de vente correspondante"
 
 msgid "Related Sale Packing List"
-msgstr "Livraison de vente liée"
+msgstr "Livraison de vente correspondante"
 
 msgid "Related Sale Trade Condition"
-msgstr "Conditions de vente"
+msgstr "Conditions de vente correspondante"
 
 msgid "Related Task Reports"
 msgstr "Rapport de tâche correspondant"
@@ -10556,7 +10553,7 @@ msgid "Related Trash Bin"
 msgstr "Corbeille correspondante"
 
 msgid "Related payment created."
-msgstr "Écriture de trésorerie liée créée."
+msgstr "Écriture de trésorerie correspondante créée."
 
 msgid "Relation Results"
 msgstr "Résultats de la recherche de relations"
@@ -11084,7 +11081,7 @@ msgid "Sale Invoice Transaction in planned state"
 msgstr "Factures prévues"
 
 msgid "Sale Invoice Transaction related to Sale Packing List."
-msgstr "Facture lié au séjour."
+msgstr "Facture de vente correspondante à la livraison de vente."
 
 msgid "Sale Invoices to Solve"
 msgstr "Factures de vente à résoudre"
@@ -11189,7 +11186,7 @@ msgid "Sale Packing List Workflow"
 msgstr "Workflow des livraisons de vente"
 
 msgid "Sale Packing List related to Sale Order."
-msgstr "Séjour lié au rendez-vous."
+msgstr "Livraison de vente correspondant à la commande de vente."
 
 msgid "Sale Packing List to Confirm"
 msgstr "Livraisons de vente à confirmer"
@@ -14660,7 +14657,7 @@ msgid "View Planning Report"
 msgstr "Rapport du planning"
 
 msgid "View Related Documents"
-msgstr "Documents correspondant"
+msgstr "Documents correspondants"
 
 msgid "View SVN History"
 msgstr "Historique SVN"
