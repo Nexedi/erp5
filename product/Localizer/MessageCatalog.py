@@ -267,6 +267,26 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         message = self.get_message_key(message) or message
         del self._messages[message]
 
+    security.declareProtected('Manage messages', 'get_translated_messages_signature')
+    def get_translated_messages_signature(self, language_list=None):
+        """Compute a signature of all translated messages from this catalog.
+
+        This is useful in administation scripts, to detect if new messages have been
+        added.
+
+        This method is expensive on large catalogs.
+        """
+        if not language_list:
+            language_list = [l['code'] for l in self.get_languages_mapping()]
+
+        hasher = md5()
+        hasher_update = hasher.update
+
+        for message_key, messages in self._messages.iteritems():
+            for language, translation in messages.iteritems():
+                if translation and language in language_list:
+                    hasher_update('%r:%r:%r' % (message_key, language, translation))
+        return hasher.hexdigest()
 
     security.declarePublic('gettext')
     def gettext(self, message, lang=None, add=None, default=None):
