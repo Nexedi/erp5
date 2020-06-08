@@ -11161,15 +11161,6 @@ msgstr "Détails de la livraison d'achat"
 msgid "Sale Packing List Line"
 msgstr "Ligne de livraison de vente"
 
-msgid "Sale Packing List Line related to Medical Consultation"
-msgstr "Séjour lié à la consultation médicale"
-
-msgid "Sale Packing List Line related to Medical Exit"
-msgstr "Séjour lié à la fiche de sortie"
-
-msgid "Sale Packing List Line related to Pathologic Anatomy Examination"
-msgstr "Séjour lié à l'examen d'anatomie pathologique"
-
 msgid "Sale Packing List Lines"
 msgstr "Lignes de livraison d'achat"
 
