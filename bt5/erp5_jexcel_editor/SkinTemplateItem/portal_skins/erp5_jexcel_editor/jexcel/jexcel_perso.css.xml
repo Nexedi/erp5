@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>jexcel.webcomponent.js</string> </value>
+            <value> <string>jexcel_perso.css</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/javascript</string> </value>
+            <value> <string>text/css</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
