@@ -119,3 +119,23 @@ class TestRenderJSUpgrade(ERP5TypeTestCase):
         [
           'Error: Web Site %s references a non existant appcache %s' % (self.web_site.getRelativeUrl(), non_existant_appcache)
         ], [str(m.getMessage()) for m in self.web_site.checkConsistency()])
+
+  def test_upgrade_site_translation(self):
+    self.web_site.setProperty(
+        'configuration_translation_gadget_url', 'gadget_translation.html')
+    self.web_site.setAvailableLanguageList(['en', 'fa'])
+    self.portal.web_page_module.rjs_gadget_translation_data_js.setVersion('wrong')
+    self.tic()
+
+    self.assertEqual(
+        ['Translation data gadget_translation_data.js has different version from Localizer'],
+        [str(m.getMessage()) for m in self.web_site.checkConsistency()])
+    self.web_site.fixConsistency()
+    self.tic()
+
+    self.assertEqual(
+        [],
+        [str(m.getMessage()) for m in self.web_site.checkConsistency()])
+    self.assertNotEqual(
+        self.portal.web_page_module.rjs_gadget_translation_data_js.getVersion(),
+        'wrong')
