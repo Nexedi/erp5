@@ -18,7 +18,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-sale_packing_list_module/view?causality_state=diverged&portal_type=Sale+Packing+List&local_roles:list=Assignor&reset=1
+sale_packing_list_module/view?causality_state=diverged&portal_type=Sale+Packing+List&local_roles:list=Assignor&&simulation_state:list=planned&simulation_state:list=confirmed&simulation_state:list=ready&simulation_state:list=started&simulation_state:list=stopped&simulation_state:list=delivered&reset=1
 
 ]]></string> </value>
         </item>
@@ -85,6 +85,19 @@ sale_packing_list_module/view?causality_state=diverged&portal_type=Sale+Packing+
                     <value>
                       <tuple>
                         <string>Sale Packing List</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>simulation_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>planned</string>
+                        <string>confirmed</string>
+                        <string>ready</string>
+                        <string>started</string>
+                        <string>stopped</string>
+                        <string>delivered</string>
                       </tuple>
                     </value>
                 </item>
