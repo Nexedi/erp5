@@ -46,6 +46,8 @@ url_list = [
   'gadget_erp5_field_image.js',
   'gadget_erp5_field_integer.html',
   'gadget_erp5_field_integer.js',
+  'gadget_erp5_field_label.html',
+  'gadget_erp5_field_label.js',
   'gadget_erp5_field_list.html',
   'gadget_erp5_field_list.js',
   'gadget_erp5_field_lines.html',
@@ -58,6 +60,8 @@ url_list = [
   'gadget_erp5_field_multicheckbox.js',
   'gadget_erp5_field_multilist.html',
   'gadget_erp5_field_multilist.js',
+  'gadget_erp5_field_parallellist.html',
+  'gadget_erp5_field_parallellist.js',
   'gadget_erp5_field_multirelationstring.html',
   'gadget_erp5_field_multirelationstring.js',
   'gadget_erp5_field_radio.html',
@@ -181,6 +185,7 @@ url_list.extend([
   web_section.getLayoutProperty("configuration_jio_gadget_url", default=default_url),
   web_section.getLayoutProperty("configuration_translation_gadget_url", default=default_url),
   web_section.getLayoutProperty("configuration_stylesheet_url", default=default_url),
+  web_section.getLayoutProperty("configuration_icon_url", default=default_url),
 ])
 
 # Add all extra dependencies

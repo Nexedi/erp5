@@ -38,8 +38,12 @@
             <value> <string>Base_edit</string> </value>
         </item>
         <item>
-            <key> <string>description</string> </key>
+            <key> <string>action_title</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Display a parallel list field for selenium tests</string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -53,7 +57,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string>multipart/form-data</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -62,6 +66,8 @@
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -70,27 +76,29 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_configuration_content_security_policy</string>
-                        <string>my_configuration_x_frame_options</string>
-                      </list>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_configuration_default_view_action_reference</string>
-                        <string>my_configuration_view_action_category</string>
-                        <string>my_configuration_application_title</string>
-                        <string>my_configuration_hateoas_url</string>
-                        <string>my_configuration_frontpage_gadget_url</string>
-                        <string>my_configuration_default_jio_document_page_gadget_url</string>
-                        <string>my_configuration_stylesheet_url</string>
-                        <string>my_configuration_wallpaper_url</string>
-                        <string>my_configuration_icon_url</string>
+                        <string>my_title</string>
+                        <string>my_category_list</string>
                       </list>
                     </value>
                 </item>
@@ -98,16 +106,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_configuration_panel_gadget_url</string>
-                        <string>my_configuration_jio_gadget_url</string>
-                        <string>my_configuration_translation_gadget_url</string>
-                        <string>my_configuration_router_gadget_url</string>
-                        <string>my_configuration_header_gadget_url</string>
-                        <string>my_configuration_manifest_url</string>
-                        <string>my_configuration_webapp_manifest_url</string>
-                        <string>my_configuration_service_worker_url</string>
-                        <string>my_modification_date</string>
-                        <string>my_configuration_precache_manifest_script_list</string>
+                        <string>category_list</string>
                       </list>
                     </value>
                 </item>
@@ -116,7 +115,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_viewRenderJSPreference</string> </value>
+            <value> <string>Foo_viewParallelListField</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -124,7 +123,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>WebSection_viewHateoasPreference</string> </value>
+            <value> <string>Foo_viewParallelListField</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -140,7 +139,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Web Section Preference</string> </value>
+            <value> <string>Foo_viewParallelListField</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
