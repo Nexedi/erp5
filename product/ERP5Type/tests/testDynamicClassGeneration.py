@@ -2319,10 +2319,68 @@ undefined()
     self.assertEqual(
       component.getTextContentErrorMessageList(),
       ["E:  2,  0: No name 'undefined' in module '%s' (no-name-in-module)" %
-       imported_module2,
+       imported_module2_with_version,
        "E:  3,  0: No name 'undefined' in module '%s' (no-name-in-module)" %
        imported_module2_with_version])
     self.assertEqual(component.getTextContentWarningMessageList(), [])
+
+  def testPylintAstroidModuleGeneratedOnce(self):
+    imported_reference = self._generateReference('TestPylintAstroidModuleGeneratedOnceImported')
+    imported_component = self._newComponent(imported_reference)
+    self.portal.portal_workflow.doActionFor(imported_component, 'validate_action')
+    imported_component.setTextContent(imported_component.getTextContent() + """
+def hoge():
+  return 'OK'
+""")
+    self.tic()
+    self.assertEqual(imported_component.getValidationState(), 'validated')
+    self.assertEqual(imported_component.getTextContentErrorMessageList(), [])
+    self.assertEqual(imported_component.getTextContentWarningMessageList(), [])
+
+    priority_tuple = self.portal.getVersionPriorityList()
+    try:
+      self.portal.setVersionPriorityList(('bar | 42.0',) + priority_tuple)
+      self.tic()
+
+      imported_module_with_bar_version = self._getComponentFullModuleName(
+        imported_reference, version='erp5')
+      imported_bar_component = self._newComponent(imported_reference, version='bar')
+      self.portal.portal_workflow.doActionFor(imported_bar_component, 'validate_action')
+      imported_bar_component.setTextContent(imported_component.getTextContent())
+      self.tic()
+      self.assertEqual(imported_bar_component.getValidationState(), 'validated')
+      self.assertEqual(imported_bar_component.getTextContentErrorMessageList(), [])
+      self.assertEqual(imported_bar_component.getTextContentWarningMessageList(), [])
+
+      reference = self._generateReference('TestPylintAstroidModuleGeneratedOnce')
+      component = self._newComponent(reference)
+      component.setTextContent(component.getTextContent() + """
+from %(namespace)s import %(reference)s
+from %(namespace)s.bar_version import %(reference)s
+from %(namespace)s.erp5_version import %(reference)s
+
+# To avoid 'unused-import' warning...
+%(reference)s.hoge()
+""" % dict(namespace=self._document_class._getDynamicModuleNamespace(),
+           reference=imported_reference))
+      self.portal.portal_workflow.doActionFor(component, 'validate_action')
+      self.tic()
+      self.assertEqual(component.getValidationState(), 'validated')
+      self.assertEqual(component.getTextContentErrorMessageList(), [])
+      self.assertEqual(component.getTextContentWarningMessageList(), [])
+
+      from astroid.builder import MANAGER
+      imported_module = self._getComponentFullModuleName(imported_reference)
+      self.assertEqual(
+        MANAGER.astroid_cache[self._getComponentFullModuleName(imported_reference, version='bar')],
+        MANAGER.astroid_cache[imported_module])
+      self.assertNotEqual(
+        MANAGER.astroid_cache[self._getComponentFullModuleName(imported_reference, version='erp5')],
+        MANAGER.astroid_cache[imported_module])
+
+    finally:
+      self.portal.setVersionPriorityList(priority_tuple)
+      self.tic()
 
   def testPylintNamedtupleUnicodeLiteralsRegression(self):
     # regression for a bug with our pylint patches on guess encoding

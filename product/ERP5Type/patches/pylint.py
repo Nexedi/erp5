@@ -108,7 +108,6 @@ def erp5_package_transform(node):
     # Cannot call string_build() as this would be called again and again
     erp5_package_node = nodes.Module('erp5', None)
     erp5_package_node.package = True
-    erp5_package_node._absolute_import_activated = True
     return erp5_package_node
 MANAGER.register_transform(nodes.Module,
                            erp5_package_transform,
@@ -145,8 +144,14 @@ def _buildAstroidModuleFromComponentModuleName(modname):
                 continue
 
             if obj.getValidationState() in ('modified', 'validated'):
-                component_obj = obj
-                break
+                version_modname = 'erp5.component.%s.%s_version.%s' % (package,
+                                                                       version,
+                                                                       reference)
+                module = MANAGER.astroid_cache.get(
+                    version_modname,
+                    _buildAstroidModuleFromComponentModuleName(version_modname))
+                MANAGER.astroid_cache[modname] = module
+                return module
 
     if component_obj is None:
         raise AstroidBuildingException
@@ -179,7 +184,6 @@ def fail_hook_erp5_component(modname):
     else:
         module = _buildAstroidModuleFromComponentModuleName(modname)
 
-    module._absolute_import_activated = True
     return module
 MANAGER.register_failed_import_hook(fail_hook_erp5_component)
 
@@ -223,6 +227,19 @@ def _getattr(self, name, *args, **kw):
         self.locals[name] = [ast]
         return [ast]
 Module.getattr = _getattr
+
+if sys.version_info < (2, 8):
+    def _absolute_import_activated(self):
+        if (self.name.startswith('checkPythonSourceCode') or
+            self.name.startswith('erp5')):
+            import pdb; pdb.set_trace()
+            return True
+        for stmt in self.locals.get('absolute_import', ()):
+            if isinstance(stmt, From) and stmt.modname == '__future__':
+                return True
+        return False
+    from logilab.common.decorators import cachedproperty
+    Module._absolute_import_activated = cachedproperty(_absolute_import_activated)
 
 from astroid import register_module_extender
 def AccessControl_PermissionRole_transform():
