@@ -184,6 +184,10 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>causality_reference</string>
+                          <string>Visa File Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>resource__translated__title</string>
                           <string>Support Request Type</string>
                         </tuple>
