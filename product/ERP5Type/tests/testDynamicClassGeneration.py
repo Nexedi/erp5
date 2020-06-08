@@ -2206,8 +2206,7 @@ def hoge():
     imported_module2_with_version = self._getComponentFullModuleName(
       imported_reference2, version='erp5')
 
-    component.setTextContent(
-      """# -*- coding: utf-8 -*-
+    component_text_content = ("""# -*- coding: utf-8 -*-
 # Source code with non-ASCII character should not fail: éàホゲ
 from %(namespace)s import %(reference1)s
 from %(namespace)s.erp5_version import %(reference1)s
@@ -2242,6 +2241,7 @@ from Shared.DC.ZRDB.Results import Results # pylint: disable=unused-import
             module2=imported_module2,
             module2_with_version=imported_module2_with_version)) +
       component.getTextContent())
+    component.setTextContent(component_text_content)
     self.tic()
     self._assertAstroidCacheContent(
       must_be_in_cache_set={'%s' % namespace,
@@ -2323,6 +2323,101 @@ undefined()
        "E:  3,  0: No name 'undefined' in module '%s' (no-name-in-module)" %
        imported_module2_with_version])
     self.assertEqual(component.getTextContentWarningMessageList(), [])
+
+    # Check that astroid cache is properly cleaned up when a Component is modified
+    component.setTextContent(component_text_content)
+    self.tic()
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertEqual(component.getTextContentErrorMessageList(), [])
+    self.assertEqual(component.getTextContentWarningMessageList(), [])
+
+    imported_component2.setTextContent(imported_component2.getTextContent() + '\n')
+    self.tic()
+    self.assertEqual(imported_component2.getValidationState(), 'validated')
+    self.assertEqual(imported_component2.getTextContentErrorMessageList(), [])
+    self.assertEqual(imported_component2.getTextContentWarningMessageList(), [])
+    self._assertAstroidCacheContent(
+      must_be_in_cache_set={'%s' % namespace,
+                            '%s.erp5_version' % namespace,
+                            imported_module1,
+                            imported_module1_with_version},
+      must_not_be_in_cache_set={imported_module2,
+                                imported_module2_with_version})
+
+    imported_component2.invalidate()
+    self.tic()
+    self.assertEqual(imported_component2.getValidationState(), 'invalidated')
+    self._assertAstroidCacheContent(
+      must_be_in_cache_set={'%s' % namespace,
+                            '%s.erp5_version' % namespace,
+                            imported_module1,
+                            imported_module1_with_version},
+      must_not_be_in_cache_set={imported_module2,
+                                imported_module2_with_version})
+
+    imported_component2.validate()
+    self.tic()
+    self.assertEqual(imported_component2.getValidationState(), 'validated')
+    self.assertEqual(imported_component2.getTextContentErrorMessageList(), [])
+    self.assertEqual(imported_component2.getTextContentWarningMessageList(), [])
+
+    # And when version_priority is changed
+    priority_tuple = self.portal.getVersionPriorityList()
+    imported_module2_with_bar_version = self._getComponentFullModuleName(
+      imported_reference2, version='bar')
+    try:
+      self.portal.setVersionPriorityList(('bar | 42.0',) + priority_tuple)
+      self.tic()
+      self._assertAstroidCacheContent(
+        must_be_in_cache_set=set(),
+        must_not_be_in_cache_set={'%s' % namespace,
+                                  '%s.erp5_version' % namespace,
+                                  '%s.bar_version' % namespace,
+                                  imported_module1,
+                                  imported_module1_with_version,
+                                  imported_module2,
+                                  imported_module2_with_version,
+                                  imported_module2_with_bar_version,
+                                  '%s.bar_version' % namespace})
+
+      imported_component2.setId(imported_component2.getId().replace('erp5', 'bar'))
+      imported_component2.setVersion('bar')
+      self.tic()
+      self.assertEqual(imported_component2.getValidationState(), 'validated')
+      self.assertEqual(imported_component2.getTextContentErrorMessageList(), [])
+      self.assertEqual(imported_component2.getTextContentWarningMessageList(), [])
+
+      component.setTextContent(component.getTextContent().replace(
+        imported_module2_with_version, imported_module2_with_bar_version))
+      self.tic()
+      self.assertEqual(imported_component2.getValidationState(), 'validated')
+      self.assertEqual(imported_component2.getTextContentErrorMessageList(), [])
+      self.assertEqual(imported_component2.getTextContentWarningMessageList(), [])
+      self._assertAstroidCacheContent(
+        must_be_in_cache_set={'%s' % namespace,
+                              '%s.erp5_version' % namespace,
+                              '%s.bar_version' % namespace,
+                              imported_module1,
+                              imported_module1_with_version,
+                              imported_module2,
+                              imported_module2_with_bar_version,
+                              '%s.bar_version' % namespace},
+        must_not_be_in_cache_set={imported_module2_with_version})
+
+    finally:
+      self.portal.setVersionPriorityList(priority_tuple)
+      self.tic()
+      self._assertAstroidCacheContent(
+        must_be_in_cache_set=set(),
+        must_not_be_in_cache_set={'%s' % namespace,
+                                  '%s.erp5_version' % namespace,
+                                  '%s.bar_version' % namespace,
+                                  imported_module1,
+                                  imported_module1_with_version,
+                                  imported_module2,
+                                  imported_module2_with_version,
+                                  imported_module2_with_bar_version,
+                                  '%s.bar_version' % namespace})
 
   def testPylintAstroidModuleGeneratedOnce(self):
     imported_reference = self._generateReference('TestPylintAstroidModuleGeneratedOnceImported')

@@ -528,6 +528,18 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
     XXX-arnau: must be written through an interaction workflow when ERP5Site
                will become a real ERP5 object...
     """
+    # Clear completely astroid cache: could be more efficient to clear only
+    # the deleted versions and all their associated ZODB Components packages,
+    # but it's probably enough as this is not done often after all...
+    try:
+      from astroid.builder import MANAGER
+    except ImportError:
+      pass
+    else:
+      for k in MANAGER.astroid_cache.keys():
+        if k.startswith('erp5.component.'):
+          del MANAGER.astroid_cache[k]
+
     if not isinstance(version_priority_tuple, tuple):
       version_priority_tuple = tuple(version_priority_tuple)
 

@@ -311,6 +311,30 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     """
     return checkPythonSourceCode(self.getTextContent(), self.getPortalType())
 
+  security.declareProtected(Permissions.ResetDynamicClasses, 'reset')
+  def reset(self):
+    """
+    Called on validate/invalidate
+    """
+    # Clear pylint cache
+    try:
+      from astroid.builder import MANAGER
+    except ImportError:
+      pass
+    else:
+      namespace = self._getDynamicModuleNamespace()
+      reference = self.getReference()
+      # Clear the main module (erp5.component.document.foo_version.Bar)
+      version_module_name = '%s.%s_version.%s' % (namespace,
+                                                  self.getVersion(),
+                                                  reference)
+      module_name = '%s.%s' % (namespace, reference)
+      version_astroid_module = MANAGER.astroid_cache.pop(version_module_name, None)
+      # And its alias (erp5.component.document.Bar)
+      if (version_astroid_module is not None and
+          MANAGER.astroid_cache.get(module_name) is version_astroid_module):
+        del MANAGER.astroid_cache[module_name]
+
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
   def PUT(self, REQUEST, RESPONSE):
     """
