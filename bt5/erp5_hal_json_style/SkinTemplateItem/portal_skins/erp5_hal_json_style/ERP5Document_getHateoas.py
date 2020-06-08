@@ -477,7 +477,9 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
       # This allows to support client without the parallelistfield JS implementation
       hash_script_id = field.get_value('hash_script_id')
       if hash_script_id:
-        result.update({"subfield_list": getattr(field, hash_script_id)(
+        # Copy the dict, as some hashscript cache the result,
+        # which should not in this case be modified
+        result.update({"subfield_list": [x.copy() for x in getattr(field, hash_script_id)(
                 [x for x in result['items'] if (x[1] and x[0])],
                 # Drop empty values
                 result['default'],
@@ -492,7 +494,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
                   'editable': result['editable']
                 },
                 is_right_display=0
-        )})
+        )]})
         for subdict in result['subfield_list']:
           if subdict['title'] == '&nbsp;':
             subdict['title'] = ''
