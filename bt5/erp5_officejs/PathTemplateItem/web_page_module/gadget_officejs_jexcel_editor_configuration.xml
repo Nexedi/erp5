@@ -23,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -41,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -91,7 +94,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CONFIGURATION MANIFEST\n
-# generated on Wed May 20 07:34:04 2020\n
+# generated on Mon Jun  8 12:15:39 2020\n
 CACHE:\n
 \n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL0pleGNlbCBTaGVldCBNb2R1bGU=\n
@@ -162,7 +165,7 @@ NETWORK:\n
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish</string> </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -188,7 +191,7 @@ NETWORK:\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1589183907.5</float>
+                              <float>1591606144.31</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -197,7 +200,7 @@ NETWORK:\n
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
