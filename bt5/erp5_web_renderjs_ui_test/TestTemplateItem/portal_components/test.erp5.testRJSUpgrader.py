@@ -119,3 +119,63 @@ class TestRenderJSUpgrade(ERP5TypeTestCase):
         [
           'Error: Web Site %s references a non existant appcache %s' % (self.web_site.getRelativeUrl(), non_existant_appcache)
         ], [str(m.getMessage()) for m in self.web_site.checkConsistency()])
+
+  def test_upgrade_site_translation(self):
+    test_upgrade_site_translation_data_js = self.portal.web_page_module.newContent(
+        portal_type='Web Script',
+        reference='test_upgrade_site_translation_data.js',
+        text_content='// will be filled',
+    )
+    test_upgrade_site_translation_data_js.publish()
+    test_upgrade_site_translation_data_js_modification_date = test_upgrade_site_translation_data_js.getModificationDate()
+
+    test_upgrade_site_translation_data_html = self.portal.web_page_module.newContent(
+        portal_type='Web Page',
+        reference='test_upgrade_site_translation.html',
+        content_type='text/html',
+        text_content=textwrap.dedent('''
+            <!DOCTYPE html>
+              <html>
+                <head>
+                  <meta charset="utf-8" />
+                  <meta name="viewport" content="width=device-width" />
+                  <title>Translation Gadget</title>
+                  <link rel="http://www.renderjs.org/rel/interface" href="interface_translation.html">
+
+                  <!-- renderjs -->
+                  <script src="rsvp.js" type="text/javascript"></script>
+                  <script src="renderjs.js" type="text/javascript"></script>
+
+                  <!-- custom script -->
+                  <script src="test_upgrade_site_translation_data.js" type="text/javascript"></script>
+                  <script src="gadget_translation.js" type="text/javascript"></script>
+
+                  </head>
+                <body>
+                </body>
+              </html>
+              '''),
+      )
+    test_upgrade_site_translation_data_html.publish()
+
+    self.web_site.setProperty(
+        'configuration_translation_gadget_url',
+        'test_upgrade_site_translation.html',
+    )
+    self.web_site.setAvailableLanguageList(['en', 'fa'])
+    self.tic()
+    self.assertEqual(
+        ['Translation data script content is not up to date'],
+        [str(m.getMessage()) for m in self.web_site.checkConsistency()])
+    self.web_site.fixConsistency()
+    self.tic()
+
+    self.assertEqual(
+        [],
+        [str(m.getMessage()) for m in self.web_site.checkConsistency()])
+    self.assertIn(
+        "window.translation_data = ",
+        test_upgrade_site_translation_data_js.getTextContent())
+    self.assertGreater(
+        test_upgrade_site_translation_data_js.getModificationDate(),
+        test_upgrade_site_translation_data_js_modification_date)
