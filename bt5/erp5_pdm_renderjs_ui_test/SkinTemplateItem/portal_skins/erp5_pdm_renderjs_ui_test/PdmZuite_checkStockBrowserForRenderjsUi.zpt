@@ -1,18 +1,30 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal">
-  <tal:block metal:define-macro="check_inventory" tal:define="base_url python: '/' + here.getPortalObject().getId()">
+  <tal:block
+    metal:define-macro="check_inventory"
+    tal:define="base_url python: '/' + here.getPortalObject().getId();
+                select_node_category select_node_category | python: True">
 
-    <tr>
-      <td colspan="3"><b>Select node category in dialog</b></td>
-    </tr>
-    <tr>
-      <td>select</td>
-      <td>//select[@name="field_your_node_category"]</td>
-      <td tal:content='node_category'></td>
-    </tr>
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
-    <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+    <tal:block tal:condition="select_node_category">
+      <tr>
+        <td colspan="3"><b>Select node category in dialog</b></td>
+      </tr>
+      <tr>
+        <td>select</td>
+        <td>//select[@name="field_your_node_category"]</td>
+        <td tal:content='node_category'></td>
+      </tr>
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
+    </tal:block>
+    <tal:block tal:condition="not: select_node_category">
+      <tr>
+        <td>assertSelected</td>
+        <td>//select[@name="field_your_node_category"]</td>
+        <td tal:content='node_category'></td>
+      </tr>
+    </tal:block>
 
     <!-- Check inventory total records -->
     <tal:block tal:define="pagination_configuration python: {'header': '(%s)' % movement_count, 'footer': '%s Records' % movement_count}">
