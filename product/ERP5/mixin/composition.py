@@ -119,19 +119,14 @@ class asComposedDocument(object):
   This class should be seen as a function, and it is named accordingly.
   It is out of CompositionMixin class to avoid excessive indentation.
   """
-  # Cache created classes to make other caches (like Base.aq_portal_type)
-  # useful and avoid memory leaks.
-  __class_cache = {}
 
   def __new__(cls, orig_self, portal_type_list=None):
     self = orig_self.asContext(_portal_type_list=portal_type_list) # XXX-JPS orig_self -> original_self - please follow conventions
     base_class = self.__class__
-    try:
-      self.__class__ = cls.__class_cache[base_class]
-    except KeyError:
-      from erp5.component.document.BusinessProcess import BusinessProcess
-      cls.__class_cache[base_class] = self.__class__ = \
-        type(base_class.__name__, (cls, base_class, BusinessProcess), {})
+    from erp5.component.document.BusinessProcess import BusinessProcess
+    self.__class__ = BusinessProcess.asComposedDocument(
+      base_class.__name__, (cls, base_class)
+    )
               # here we could inherit many "useful" classes dynamically - héhé
               # that would be a "real" abstract composition system
     self._effective_model_list, specialise_value_list = \
