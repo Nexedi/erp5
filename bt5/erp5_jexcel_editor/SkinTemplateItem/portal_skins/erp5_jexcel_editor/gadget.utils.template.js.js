@@ -3,6 +3,12 @@
 (function (window, rJS, jexcel) {
   "use strict";
 
+  var getCoordsFromCell = function (cell) {
+    var x = Number(cell.dataset.x);
+    var y = Number(cell.dataset.y) + 1;
+    return (x >= 26 ? numberToLetter((x / 26 >> 0) - 1) : '') +  'ABCDEFGHIJKLMNOPQRSTWXYZ'[x % 26 >> 0] + y.toString();
+  };
+
   var template = {
     minDimensions: [26, 100],
     defaultColWidth: 100,
@@ -24,7 +30,8 @@
     search: true,
     fullscreen: true,
     autoIncrement: true,
-    parseFormulas: true
+    parseFormulas: true,
+    wordWrap: true
   };
 
   var undo = {
@@ -47,21 +54,12 @@
     type: 'i',
     content: 'table_chart',
     onclick: function (a, b, c) {
-      var cell = document.querySelector("td.highlight");
-      var x = Number(cell.dataset.x);
+      var cell = a.querySelector("td.highlight");
       var selected = b.getJson(true);
       var colspan = Object.keys(selected[0]).length;
       var rowspan = selected.length;
-      var letter = "";
-      if (x <= 25) {
-        letter += String.fromCharCode(97 + x).toUpperCase();
-      }
-      else {
-        letter += String.fromCharCode(97 + Math.trunc(x / 25) - 1).toUpperCase();
-        letter += String.fromCharCode(97 + (x % 26)).toUpperCase();
-      }
-      var coor = letter + (Number(cell.dataset.y) + 1).toString();
-      b.setMerge(coor, colspan, rowspan);
+      var coor = getCoordsFromCell(cell);
+      confirm("Data in merged cells will be erased. Confirm merge ?") ? b.setMerge(coor, colspan, rowspan) : null;
     }
   };
 
@@ -71,15 +69,7 @@
     onclick: function (a, b, c) {
       var cell = document.querySelector("td.highlight-selected");
       var x = Number(cell.dataset.x);
-      var letter = "";
-      if (x <= 25) {
-        letter += String.fromCharCode(97 + x).toUpperCase();
-      }
-      else {
-        letter += String.fromCharCode(97 + Math.trunc(x / 25) - 1).toUpperCase();
-        letter += String.fromCharCode(97 + (x % 26)).toUpperCase();
-      }
-      var coor = letter + (Number(cell.dataset.y) + 1).toString();
+      var coor = getCoordsFromCell(cell);
       b.removeMerge(coor);
     }
   };
@@ -92,15 +82,44 @@
     }
   };
 
+  var remove = {
+    type: 'i',
+    content: 'delete',
+    onclick: function (a, b, c) {
+      var tab_link = document.querySelector('.jexcel_tab_link.selected');
+      var index = tab_link.getAttribute("data-spreadsheet");
+      if (document.querySelector('.spreadsheet').jexcel.length > 1) {
+        tab_link.remove();
+        var to_remove;
+        document.querySelectorAll(".jexcel_container").forEach(tab => {tab.style.display === "block" ? to_remove = tab : null});
+        to_remove.remove();
+        document.querySelector('.spreadsheet').jexcel.splice(index, 1);
+        var sheets = document.querySelectorAll('.jexcel_container');
+        sheets[sheets.length - 1].style.display = "block";
+        document.querySelectorAll('.jexcel_tab_link').forEach((tab, i) => {
+          i == sheets.length - 1 ? tab.classList.add("selected") : null;
+          tab.dataset.spreadsheet = i;
+          tab.textContent = tab.textContent.substring(0, 5) === "Sheet" ? "Sheet " + (i + 1) : tab.textContent;
+        });
+      }
+      else {
+        document.querySelector('.jexcel_tab_link').textContent = "Sheet 1";
+        a.querySelector("input.jexcel_formula").value = "";
+        b.setData(Array(100).fill(0, 99, Array(26).fill(0, 26, "")));
+      }
+    }
+  };
+
   var font_style = {
     type: 'select',
     k: 'font-family',
     v: ['Arial', 'Comic Sans MS', 'Verdana', 'Calibri', 'Tahoma', 'Helvetica', 'DejaVu Sans', 'Times New Roman', 'Georgia', 'Antiqua']
   };
+
   var font_size = {
     type: 'select',
     k: 'font-size',
-    v: ['9px', '10px', '11px', '12px', '13px', '14px', '15px', '16px', '17px', '18px', '19px', '20px', '22px', '24px', '26px', '28px', '30px']
+    v: ['8px', '10px', '12px', '14px', '16px', '18px', '20px', '22px', '24px', '26px', '28px', '30px', '34px', '38px', '42px', '46px', '50px']
   };
 
   var text_align_left = {
@@ -183,6 +202,139 @@
     k: 'background-color'
   };
 
+  var image = {
+    type: "i",
+    content: "image",
+    onclick: function (a, b, c) {
+      var cell = a.querySelector("td.highlight-selected");
+      if (cell) {
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
+        instance.options.columns[Number(cell.dataset.x)].type = "image";
+      }
+    }
+  };
+
+  var checkbox = {
+    type: "i",
+    content: "checkbox",
+    onclick: function (a, b, c) {
+      var cell = a.querySelector("td.highlight-selected");
+      if (cell) {
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
+        var column = instance.el.querySelectorAll("td[data-x='"+cell.dataset.x+"']");
+        var array = [...column];
+        array.shift();
+        array.forEach(cell => {
+          instance.setValue(getCoordsFromCell(cell), "");
+          cell.innerHTML = "<input type='checkbox' name='c"+cell.dataset.x+"'>"
+        });
+        instance.options.columns[Number(cell.dataset.x)].type = "checkbox";
+      }
+    }
+  };
+
+  var radio = {
+    type: "i",
+    content: "radio",
+    onclick: function (a, b, c) {
+      var cell = a.querySelector("td.highlight-selected");
+      if (cell) {
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
+        var column = instance.el.querySelectorAll("td[data-x='"+cell.dataset.x+"']");
+        var array = [...column];
+        array.shift();
+        array.forEach(cell => {
+          instance.setValue(getCoordsFromCell(cell), "");
+          cell.innerHTML = "<input type='radio'>";
+        });
+        instance.options.columns[Number(cell.dataset.x)].type = "radio";
+      }
+    }
+  };
+
+  var text = {
+    type: "i",
+    content: "title",
+    onclick: function (a, b, c) {
+      var cell = a.querySelector("td.highlight-selected");
+      if (cell) {
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
+        var column = instance.el.querySelectorAll("td[data-x='"+cell.dataset.x+"']");
+        var array = [...column];
+        instance.options.columns[Number(cell.dataset.x)].type = "text";
+        array.shift();
+        array.forEach(cell => {
+          cell.innerHTML = "";
+          instance.setValue(getCoordsFromCell(cell), "");
+        });
+      }
+    }
+  };
+
+  var html = {
+    type: "i",
+    content: "list",
+    onclick: function (a, b, c) {
+      var cell = a.querySelector("td.highlight-selected");
+      if (cell) {
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
+        var column = instance.el.querySelectorAll("td[data-x='"+cell.dataset.x+"']");
+        var array = [...column];
+        instance.options.columns[Number(cell.dataset.x)].type = "html";
+        array.shift();
+        array.forEach(cell => {
+          cell.innerHTML = "";
+          instance.setValue(getCoordsFromCell(cell), "");
+        });
+      }
+    }
+  };
+
+  var calendar = {
+    type: "i",
+    content: "calendar_today",
+    onclick: function (a, b, c) {
+      var cell = a.querySelector("td.highlight-selected");
+      if (cell) {
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
+        var column = instance.el.querySelectorAll("td[data-x='"+cell.dataset.x+"']");
+        var array = [...column];
+        instance.options.columns[Number(cell.dataset.x)].type = "calendar";
+        array.shift();
+        array.forEach(cell => {
+          cell.innerHTML = "";
+          instance.setValue(getCoordsFromCell(cell), "");
+        });
+      }
+    }
+  };
+
+  var color = {
+    type: "i",
+    content: "color_lens",
+    onclick: function (a, b, c) {
+      var cell = a.querySelector("td.highlight-selected");
+      if (cell) {
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
+        var column = instance.el.querySelectorAll("td[data-x='"+cell.dataset.x+"']");
+        var array = [...column];
+        array.shift();
+        array.forEach(cell => {
+          instance.setValue(getCoordsFromCell(cell), "");
+          cell.innerHTML = ""
+        });
+        instance.options.columns[Number(cell.dataset.x)].type = "color";
+      }
+    }
+  };
+
   rJS(window)
 
     .declareMethod("getToolbarList", function (add_function, dict) {
@@ -196,7 +348,7 @@
           content: 'add',
           onclick : add_function
         };
-        list.push(add);
+        list.push(add, remove);
       }
       if (dict.hasOwnProperty("merge") && dict.merge) {
         list.push(merge, unmerge, destroy_merge);
@@ -210,9 +362,25 @@
       if (dict.hasOwnProperty("color_picker") && dict.color_picker) {
         list.push(text_color, background_color);
       }
+      if (dict.hasOwnProperty("type") && dict.type) {
+        list.push(text, image, checkbox, html, calendar, color);
+      }
       var res = Object.assign({}, template);
       res.toolbar = list;
       return res;
+    })
+
+    .declareMethod("buildOptions", function() {
+      var str = "";
+      var formulas = ["SUM", "MIN", "MAX", "COUNT", "AVERAGE", "FLOOR", "ABS", "SQRT", "ISEVEN", "ISODD", "TODAY", "UPPER", "LOWER", "TRUNC", "TYPE", "TRIM",
+                     "SIN", "COS", "TAN", "ARCSIN", "ARCCOS", "ARCTAN", "ROUND", "RAND", "RANDBETWEEN", "RADIANS", "POWER", "PI", "PHI", "MOD", "LEN", "LN",
+                      "LOG", "LOG10", "FACT", "TRUE", "FALSE", "AND", "OR", "XOR", "EVEN", "ODD", "EXP", "CONCATENATE", "BITAND", "BITOR", "BIN2DEC", "BIN2HEX",
+                     "BIN2OCT", "DEC2BIN", "DEC2HEX", "DEC2OCT", "HEX2BIN", "HEX2DEC", "HEX2OCT", "NOT", "OCT2BIN", "OCT2DEC", "OCT2HEX", "PRODUCT", "QUOTIENT",
+                     "COLUMN", "ROW", "CELL"].sort();
+      formulas.forEach(value => {
+        str += "<option class='formula_option' value=" + value + ">" + value + "()" + "</option>";
+      })
+      return str;
     });
 
 }(window, rJS, jexcel));

@@ -1,4 +1,3 @@
-
 /**
  * (c) jSuites Javascript Web Components (v2.7)
  *
@@ -1460,6 +1459,7 @@ jSuites.calendar.now = function(date, dateOnly) {
 
 // Helper to extract date from a string
 jSuites.calendar.extractDateFromString = function(date, format) {
+    format = "DD/MM/YYYY";
     var v1 = '' + date;
     var v2 = format.replace(/[0-9]/g,'');
 
