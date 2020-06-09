@@ -1,7 +1,7 @@
-<tal:block tal:define="information_list here/getAttachmentInformationList">
+<tal:block tal:define="information_list python: [x for x in here.getAttachmentInformationList() if x['filename'] != x['uid']]">
   <ul>
     <li tal:repeat="information information_list">
-      <a target="_blank" tal:content="information/filename | information/uid" tal:attributes="href python:'%s/getAttachmentData?index:int=%s' % (context.absolute_url(), information['index'])"/>
+      <a target="_blank" rel="noopener noreferrer" tal:content="information/filename | information/uid" tal:attributes="href python:'%s/getAttachmentData?index:int=%s' % (context.absolute_url(), information['index'])"/>
       (<tal:block tal:content="information/content_type" />)
     </li>
   </ul>
