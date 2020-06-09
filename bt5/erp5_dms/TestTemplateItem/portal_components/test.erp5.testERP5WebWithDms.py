@@ -1654,6 +1654,15 @@ return True
       sorted([i.getReference() for i in img_list]),
     )
 
+    # same with the web page retrieved with getDocumentValue
+    successor_list = self.portal.web_site_module.test.getDocumentValue(
+        "P-WP-implicit.successor.value.list.test"
+    ).getImplicitSuccessorValueList()
+    self.assertEqual(
+      sorted([s.getReference() for s in successor_list]),
+      sorted([i.getReference() for i in img_list]),
+    )
+
   def checkWebSiteDocumentViewConsistency(self, portal_type, module_id="document_module"):
     """
       Checks that the default view action of a <portal_type>, viewing from a web site,
