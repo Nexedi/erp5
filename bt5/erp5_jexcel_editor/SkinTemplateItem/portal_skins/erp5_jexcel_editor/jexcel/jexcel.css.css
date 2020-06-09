@@ -7,11 +7,12 @@
     padding-right:2px;
     box-sizing: border-box;
     overscroll-behavior: contain;
+    padding-bottom: 40px;
 }
 
 .jexcel_container.fullscreen {
     position:fixed;
-    top:0px;
+    top:38px;
     left:0px;
     width:100%;
     height:100%;
@@ -21,12 +22,8 @@
 .jexcel_container.fullscreen .jexcel_content {
     overflow:auto;
     width:100%;
-    height:100%;
+    height:96.5%;
     background-color:#ffffff;
-}
-
-.jexcel_container.with-toolbar .jexcel > thead > tr > td {
-    top: 0;
 }
 
 .jexcel_container.fullscreen.with-toolbar {
@@ -94,7 +91,7 @@
 
 .with-toolbar .jexcel > thead > tr > td
 {
-    top:42px;
+    /**top:42px;**/
 }
 
 .jexcel > thead > tr > td.dragging
@@ -126,7 +123,8 @@
 
 .jexcel > tbody > tr > td:first-child
 {
-    position:relative;
+    position:sticky;
+    left:0;
     background-color:#f3f3f3;
     text-align:center;
 }
@@ -556,12 +554,12 @@
 {
     display:flex;
     justify-content:space-between;
-    margin-bottom:4px;
+    /**margin-bottom:4px;**/
 }
 
 .jexcel_filter > div
 {
-    padding:8px;
+    padding:4px;
     align-items:center;
 }
 
@@ -613,7 +611,7 @@
     background-color:#f3f3f3;
     border:1px solid #ccc;
     padding:4px;
-    margin:0px 2px 4px 1px;
+    margin:0px 2px 1px 1px;
     position:sticky;
     top:0px;
     z-index:21;
@@ -670,11 +668,9 @@
 .jexcel_tabs .jexcel_tab_link
 {
     display:inline-block;
-    padding:10px;
-    padding-left:20px;
-    padding-right:20px;
-    margin-right:5px;
-    margin-bottom:5px;
+    padding:5px;
+    margin-right:2px;
+    margin-bottom:2px;
     background-color:#f3f3f3;
     cursor:pointer;
 }
