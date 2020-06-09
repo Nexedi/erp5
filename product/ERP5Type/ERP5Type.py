@@ -290,6 +290,7 @@ class ERP5TypeInformation(XMLObject,
       'document', 'web_document', 'file_document', 'embedded_document',
       'recent_document', 'my_document', 'template_document',
       'crawler_index',
+      'post',
       # Solvers and simulation
       'divergence_tester', 'target_solver', 'delivery_solver',
       'amount_generator',  'amount_generator_line', 'amount_generator_cell',
