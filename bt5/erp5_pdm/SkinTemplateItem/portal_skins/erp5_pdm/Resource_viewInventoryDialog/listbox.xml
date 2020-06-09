@@ -570,7 +570,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'group_by_section\', 0), (\'group_by_node\', 1), (\'group_by_variation\', 1)]</string> </value>
+            <value> <string>python:[(\'node_category\', request.get(\'node_category\', preferences.getPreferredNodeCategory()))]</string> </value>
         </item>
       </dictionary>
     </pickle>
