@@ -886,3 +886,15 @@ class BusinessProcess(Path, XMLObject):
           phase_set.discard(phase)
           phase_set |= next_set
     return result
+
+  # Cache created classes to avoid memory leaks.
+  __class_cache = {}
+
+  @classmethod
+  def getComposedType(cls, class_name, base_class_list):
+    try:
+      return cls.__class_cache[class_name]
+    except KeyError:
+      composed_class = type(class_name, base_class_list + (cls,), {})
+      cls.__class_cache[class_name] = composed_class
+      return composed_class
