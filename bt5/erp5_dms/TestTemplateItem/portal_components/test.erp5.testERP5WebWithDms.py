@@ -1642,13 +1642,15 @@ return True
     )
     page.publish()
     self.tic()
+
     # Test part
+    self.maxDiff = None
     successor_list = self.portal.web_site_module.test\
       .restrictedTraverse("P-WP-implicit.successor.value.list.test")\
       .getImplicitSuccessorValueList()
     self.assertEqual(
-      sorted([s.getUid() for s in successor_list]),
-      sorted([i.getUid() for i in img_list]),
+      sorted([s.getReference() for s in successor_list]),
+      sorted([i.getReference() for i in img_list]),
     )
 
   def checkWebSiteDocumentViewConsistency(self, portal_type, module_id="document_module"):
