@@ -24,7 +24,8 @@
     search: true,
     fullscreen: true,
     autoIncrement: true,
-    parseFormulas: true
+    parseFormulas: true,
+    wordWrap: true
   };
 
   var undo = {
@@ -100,7 +101,7 @@
   var font_size = {
     type: 'select',
     k: 'font-size',
-    v: ['9px', '10px', '11px', '12px', '13px', '14px', '15px', '16px', '17px', '18px', '19px', '20px', '22px', '24px', '26px', '28px', '30px']
+    v: ['8px', '10px', '12px', '14px', '16px', '18px', '20px', '22px', '24px', '26px', '28px', '30px', '34px', '38px', '42px', '46px', '50px']
   };
 
   var text_align_left = {

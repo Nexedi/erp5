@@ -52,9 +52,10 @@
       })
       .push(function (dict) {
         dict.sheetName = "Sheet " + (gadget.element.querySelector('.spreadsheet').jexcel.length + 1);
-        jexcel.tabs(gadget.element.querySelector(".spreadsheet"), [dict]);
+        return gadget.bindEvents(dict);
       })
-      .push(function () {
+      .push(function (dict) {
+        jexcel.tabs(gadget.element.querySelector(".spreadsheet"), [dict]);
         return gadget.changeState({newSheet: true});
       });
     })
@@ -74,7 +75,7 @@
       var icon_title = {
         "undo": "Undo",
         "redo": "Redo",
-        "add": "Add",
+        "add": "Add sheet",
         "table_chart": "Merge cells",
         "close": "Destroy merge",
         "cancel": "Destroy all merges",
@@ -95,6 +96,26 @@
         else {i.title = icon_title[i.textContent]}
       });
       gadget.state.newSheet = false;
+    })
+
+    .declareMethod("bindEvents", function (sheet) {
+      var gadget = this;
+      sheet.onevent = function (ev) {
+        var exluded_events = ["onload", "onfocus", "onblur", "onselection"];
+        if (!exluded_events.includes(ev)) {
+          if ((ev === "onchangestyle" && gadget.state.saveConfig) || ev !== "onchangestyle") {
+            gadget.deferNotifyChangeBinded();
+          }
+        }
+      };
+      sheet.onselection = function (ev) {
+        gadget.state.saveConfig = true;
+        var tab = gadget.element.querySelectorAll(".jexcel_container")[gadget.element.querySelector("div.jexcel_tab_link.selected").getAttribute("data-spreadsheet")];
+        var cell = tab.querySelector("td.highlight-selected");
+        var formula = tab.querySelector("input.jexcel_formula");
+        formula.value = cell.textContent;
+      };
+      return sheet;
     })
 
     .onStateChange(function (modification_dict) {
@@ -127,23 +148,7 @@
             }
             gadget.state.value.map((sheet, i) => {
               sheet.sheetName = "Sheet " + (i + 1);
-              sheet.onEvent = function (ev) {
-                console.log("event");
-                var exluded_events = ["onload", "onfocus", "onblur", "onselection"];
-                if (!exluded_events.includes(ev)) {
-                  if ((ev === "onchangestyle" && gadget.state.saveConfig) || ev !== "onchangestyle") {
-                    gadget.deferNotifyChangeBinded();
-                  } else {
-                    gadget.state.saveConfig = true;
-                  }
-                }
-                return sheet;
-              };
-              //sheet.onselection = function (ev) {
-                //var cell = gadget.element.querySelector("td.highlight-selected");
-                //var formula = gadget.element.querySelector("input.jexcel_formula");
-                //formula.value = cell.textContent;
-              //};
+              return gadget.bindEvents(sheet);
           });
           return gadget.state.value;
         })
@@ -158,10 +163,11 @@
 
     .onEvent("input", function (ev) {
         var gadget = this;
-        var formula = gadget.element.querySelector("input.jexcel_formula");
-        if (ev.target == gadget.element.querySelector("td.highlight-selected input")) {
-          //formula.value = ev.target.value;
+        var tab = gadget.element.querySelectorAll(".jexcel_container")[gadget.element.querySelector("div.jexcel_tab_link.selected").getAttribute("data-spreadsheet")];
+        var formula = tab.querySelector("input.jexcel_formula");
+        if (ev.target == tab.querySelector("textarea")) {
+          formula.value = ev.target.value;
         }
-      }, false, false)
+      }, false, false);
 
 }(window, rJS, jexcel));

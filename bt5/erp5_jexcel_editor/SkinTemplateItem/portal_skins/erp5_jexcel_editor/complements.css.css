@@ -11,6 +11,6 @@ input.jexcel_formula {
   width: 97%;
   position:sticky;
   top:0px;
-  z-index:21;
+  z-index:0;
   display: inline-block;
 }
