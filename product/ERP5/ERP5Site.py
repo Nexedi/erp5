@@ -1280,6 +1280,14 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
     return self._getPortalGroupedTypeList('domain')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalPostTypeList')
+  def getPortalPostypeList(self):
+    """
+      Return post types.
+    """
+    return self._getPortalGroupedTypeList('post')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalCurrentInventoryStateList')
   def getPortalCurrentInventoryStateList(self):
     """
