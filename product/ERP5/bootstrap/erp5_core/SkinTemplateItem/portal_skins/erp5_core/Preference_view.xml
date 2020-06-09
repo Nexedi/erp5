@@ -81,6 +81,7 @@
                     <value>
                       <list>
                         <string>my_preferred_section_category</string>
+                        <string>my_preferred_node_category</string>
                         <string>my_preferred_section</string>
                         <string>my_preferred_user_interface_language_list</string>
                         <string>my_translated_preference_state_title</string>
