@@ -48,6 +48,11 @@ for site_id, site_title in ((source_site_id, source_site_title),
     title=site_title
   )
 
+# configure preference
+portal.portal_preferences.getActivePreference().setPreferredNodeCategory(
+    'site/' + destination_site_id if set_node_category_preference else None
+)
+
 # Create nodes
 for node_id, node_title, site_url in ((source_node_id, source_node_title, source_site_id),
                           (destination_node_id, destination_node_title, destination_site_id)):
