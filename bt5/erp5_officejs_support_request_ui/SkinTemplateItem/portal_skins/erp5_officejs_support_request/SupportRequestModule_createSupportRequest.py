@@ -1,3 +1,5 @@
+# pylint:disable=redefined-builtin
+# this script uses file= argument
 portal = context.getPortalObject()
 logged_in_user_value = portal.portal_membership.getAuthenticatedMember().getUserValue()
 
