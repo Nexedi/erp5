@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2020-03-19 14:03+UTC\n"
-"PO-Revision-Date: 2020-03-19 14:03+UTC\n"
+"POT-Creation-Date: 2020-06-08 14:03+UTC\n"
+"PO-Revision-Date: 2020-06-08 14:03+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: zh <>\n"
 "MIME-Version: 1.0\n"
@@ -71,7 +71,7 @@ msgid "A Meeting document defines the participants and the purpose of a meeting 
 msgstr "会议文件定义了会议的参与者，会议目的以及交易相关的信息。它同时也是跟进与该组织相关的会议信息的一种方式。"
 
 msgid "A Note is an event which can be used to track project or tickets besides formal communication based on email, fax, etc."
-msgstr "笔记是可以用来跟进项目或集合的，除了基于邮件，传真等正式沟通形式之外的事件"
+msgstr "笔记是可以用来跟进项目或工单的，除了基于邮件，传真等正式沟通形式之外的事件"
 
 msgid "A Phone Call represents an incoming or outgoing phone call. It is used to track customer relation or project processes."
 msgstr "“电话”可以记录拨进和拨出的电话，用来跟进客户关系以及项目进程"
@@ -926,7 +926,7 @@ msgid "Assign for Translation"
 msgstr "指派进行翻译"
 
 msgid "Assign to Ticket"
-msgstr "指派至集合"
+msgstr "指派至工单"
 
 msgid "Assigned"
 msgstr "已指派"
@@ -958,8 +958,11 @@ msgstr "在重新开始前已更新的分配"
 msgid "Associated Servers"
 msgstr "相关联的服务器"
 
+msgid "Associated Persons"
+msgstr "相关联的人员"
+
 msgid "Associated Tickets"
-msgstr "相关联的集合"
+msgstr "相关联的工单"
 
 msgid "At Date"
 msgstr "结束日期"
@@ -1279,7 +1282,7 @@ msgid "Cancel Task"
 msgstr "取消任务"
 
 msgid "Cancel Ticket"
-msgstr "取消集合"
+msgstr "取消工单"
 
 msgid "Cancel Transaction"
 msgstr "取消交易"
@@ -1468,7 +1471,7 @@ msgid "Clone"
 msgstr "复制"
 
 msgid "Clone Ticket and Events"
-msgstr "复制集合与事件"
+msgstr "复制工单与事件"
 
 msgid "Close"
 msgstr "终止"
@@ -1495,10 +1498,10 @@ msgid "Close Task"
 msgstr "终止任务"
 
 msgid "Close Ticket"
-msgstr "终止集合"
+msgstr "终止工单"
 
 msgid "Close Ticket Action"
-msgstr "终止集合操作"
+msgstr "终止工单操作"
 
 msgid "Close:"
 msgstr "终止："
@@ -1577,6 +1580,12 @@ msgstr "部件变量"
 
 msgid "Components"
 msgstr "元件"
+
+msgid "Computer"
+msgstr "计算机"
+
+msgid "Computer:"
+msgstr "计算机:"
 
 msgid "Computer Network"
 msgstr "计算机网络"
@@ -1670,6 +1679,9 @@ msgstr "连接参数"
 
 msgid "Connection String to be used to run Unit Tests"
 msgstr "用于运行单元测试的连接字符串"
+
+msgid "Connect"
+msgstr "登录"
 
 msgid "Constraints"
 msgstr "约束"
@@ -1837,7 +1849,7 @@ msgid "Create Document"
 msgstr "创建文件"
 
 msgid "Create Follow Up Ticket"
-msgstr "创建跟进集合"
+msgstr "创建跟进工单"
 
 msgid "Create Initial Balance Transaction"
 msgstr "创建初始结余处理"
@@ -1847,6 +1859,9 @@ msgstr "创建模块"
 
 msgid "Create New"
 msgstr "添加"
+
+msgid "Create New Account"
+msgstr "创建新用户"
 
 msgid "Create New Bug"
 msgstr "创建新错误"
@@ -1974,6 +1989,9 @@ msgstr "当前"
 
 msgid "Current Editing State"
 msgstr "当前编辑状态"
+
+msgid "Current Location"
+msgstr "当前地点"
 
 msgid "Current Organisation"
 msgstr "当前组织"
@@ -2785,7 +2803,7 @@ msgid "Events in this state are incoming events or carbon copies of outgoing eve
 msgstr "该状态下的事件是指接收后已回复的事件，或者已得到回复的已发出事件的复印件，不再需要任务分配进行进一步处理"
 
 msgid "Events in this state are incoming or carbon copies of outgoing events which have been assigned (linked) to a ticket, a project or a person and which still need to be acknowledged."
-msgstr "该状态下的事件是指接收或发出事件的复印件，已被指派（链接）到一个集合，一个项目或一个人，但仍然需要被受理"
+msgstr "该状态下的事件是指接收或发出事件的复印件，已被指派（链接）到一个工单，一个项目或一个人，但仍然需要被受理"
 
 msgid "Events in this state are new incoming events or carbon copies of new outgoing events received through the email interface of ERP5 CRM."
 msgstr "该状态事件是指新的接收的事件，或是新的通过ERP5 CRM的邮件界面收到的发出事件的复印件"
@@ -2929,7 +2947,7 @@ msgid "Follow Up"
 msgstr "跟进"
 
 msgid "Follow Up Ticket"
-msgstr "跟进集合"
+msgstr "跟进工单"
 
 msgid "Follow up"
 msgstr "跟进"
@@ -2999,6 +3017,9 @@ msgstr "将来"
 
 msgid "Future Organisation"
 msgstr "将来的组织"
+
+msgid "Future Location"
+msgstr "将来的地点"
 
 msgid "Future Project"
 msgstr "将来的项目"
@@ -3375,6 +3396,9 @@ msgstr "安装状态"
 msgid "Installed"
 msgstr "已安装"
 
+msgid "Instances"
+msgstr "实例"
+
 msgid "Instance Parameter"
 msgstr "实例参数"
 
@@ -3672,6 +3696,9 @@ msgstr "项目已剪切"
 msgid "Items paste in progress."
 msgstr "项目正在被粘帖"
 
+msgid "I forgot my password!"
+msgstr "忘记密码"
+
 msgid "Journal"
 msgstr "日记账"
 
@@ -3822,7 +3849,7 @@ msgid "List of all events related to the causality event"
 msgstr "起源事件相关的所有事件列表"
 
 msgid "List of all events related to the follow up ticket"
-msgstr "被跟进集合相关的所有事件列表"
+msgstr "被跟进工单相关的所有事件列表"
 
 msgid "List of criterion properties used for predicate"
 msgstr "用于谓词的标准属性列表"
@@ -3856,6 +3883,9 @@ msgstr "登入用户："
 
 msgid "Login"
 msgstr "登录"
+
+msgid "Login and/or password is incorrect."
+msgstr "账号或密码错误。"
 
 msgid "Login Account"
 msgstr "登录账号"
@@ -4165,6 +4195,9 @@ msgstr "纳米图像宽度"
 msgid "Nationality"
 msgstr "国籍"
 
+msgid "Network"
+msgstr "网络"
+
 msgid "Network is Deleted."
 msgstr "网络已删除。"
 
@@ -4220,13 +4253,13 @@ msgid "New Software Installation created."
 msgstr "新的软件安装已创建。"
 
 msgid "New Ticket"
-msgstr "新的集合"
+msgstr "新的工单"
 
 msgid "New Ticket created."
-msgstr "新的集合已创建。"
+msgstr "新的工单已创建。"
 
 msgid "New Ticket related to"
-msgstr "新的集合关联至"
+msgstr "新的工单关联至"
 
 msgid "New User Login created"
 msgstr "新用户登录已创建"
@@ -4415,10 +4448,10 @@ msgid "Open Public"
 msgstr "开启（公开）"
 
 msgid "Open Ticket"
-msgstr "开启集合"
+msgstr "开启工单"
 
 msgid "Open Ticket Action"
-msgstr "开启集合操作"
+msgstr "开启工单操作"
 
 msgid "Open for Friends only"
 msgstr "开启（仅朋友）"
@@ -5521,6 +5554,9 @@ msgstr "已记录属性"
 msgid "Records"
 msgstr "记录"
 
+msgid "Recover your account"
+msgstr "找回您的账号"
+
 msgid "Recur every periodicity hours (ex, at 10 and at 16 )"
 msgstr "每小时周期复发（例如，在10小时和16小时复发）"
 
@@ -6450,6 +6486,12 @@ msgstr "显示全部"
 msgid "Show All Tickets"
 msgstr "显示所有工单"
 
+msgid "Sign in or Login with Google"
+msgstr "使用谷歌账号登录或注册"
+
+msgid "Sign in or Login with Facebook"
+msgstr "使用脸书账号登录或注册"
+
 msgid "Similar Documents"
 msgstr "类似文件"
 
@@ -6819,6 +6861,12 @@ msgstr "递交支持请求"
 msgid "Subscribe"
 msgstr "注册"
 
+msgid "Subscription"
+msgstr "订阅"
+
+msgid "Subscriptions"
+msgstr "订阅"
+
 msgid "Success..."
 msgstr "成功..."
 
@@ -6901,7 +6949,7 @@ msgid "Suspend Project"
 msgstr "暂停项目"
 
 msgid "Suspend Ticket"
-msgstr "暂停集合"
+msgstr "暂停工单"
 
 msgid "Suspended"
 msgstr "已暂停"
@@ -7063,7 +7111,7 @@ msgid "Tell when we need to notify users of alarm's result"
 msgstr "说明何时需要通知用户警报结果"
 
 msgid "Tells who requested the ticket"
-msgstr "一个集合的申请人"
+msgstr "一个工单的申请人"
 
 msgid "Template Tool"
 msgstr "模板工具"
@@ -7302,10 +7350,10 @@ msgid "The date at which the event was created"
 msgstr "事件创建的日期"
 
 msgid "The date at which the ticket is supposed to stop."
-msgstr "集合预计结束的日期"
+msgstr "工单预计结束的日期"
 
 msgid "The date at which the ticket was created."
-msgstr "一项集合开始的日期"
+msgstr "一项工单开始的日期"
 
 msgid "The date from which the offer is valid."
 msgstr "订单生效的日期"
@@ -7578,7 +7626,7 @@ msgid "The person or organisation who is responsible of handling all administrat
 msgstr "负责客户所有行政文书事宜的人或组织"
 
 msgid "The person who is handling the ticket."
-msgstr "运行集合的管理人"
+msgstr "运行工单的管理人"
 
 msgid "The person's gender."
 msgstr "该人的性别"
@@ -7754,7 +7802,7 @@ msgid "The text format used by default"
 msgstr "默认的文本格式"
 
 msgid "The ticket workflow keeps track of ticket processing. A ticket is created in draft state. It is then submitted by its author (Owner) or operator (Assignee) and waits for further approval. The ticket manager (Assignor) eventually approves the ticket. The ticket is then open. The ticket can be closed by the ticket manager or by the ticket operator."
-msgstr "集合流程记录了集合操作流程。一个集合文件创建于草拟状态，然后由其创建人（所有人）或操作人（受指派人）递交，以等待进一步的批准。集合管理人（指派人）最终决定是否批准该集合。集合可以由集合管理人或操作人关闭。"
+msgstr "工单流程记录了工单操作流程。一个工单文件创建于草拟状态，然后由其创建人（所有人）或操作人（受指派人）递交，以等待进一步的批准。工单管理人（指派人）最终决定是否批准该工单。工单可以由工单管理人或操作人关闭。"
 
 msgid "The title of the Invoice."
 msgstr "发票名称"
@@ -7922,19 +7970,19 @@ msgid "Thumbnail Image Width"
 msgstr "缩略图图像宽度"
 
 msgid "Ticket"
-msgstr "集合"
+msgstr "工单"
 
 msgid "Ticket Preview"
 msgstr "票据预览"
 
 msgid "Ticket Type"
-msgstr "集合类型"
+msgstr "工单类型"
 
 msgid "Ticket Workflow"
-msgstr "集合流程"
+msgstr "工单流程"
 
 msgid "Ticket and events are cloned."
-msgstr "集合和事件已复制"
+msgstr "工单和事件已复制"
 
 msgid "Tickets"
 msgstr "工单"
@@ -7967,7 +8015,7 @@ msgid "Title of the entity which is responsible for issuing the requirement."
 msgstr "负责提出要求的单位名称"
 
 msgid "Title of the entity which is responsible of accepting the ticket request"
-msgstr "负责接受所要求集合的单位名称"
+msgstr "负责接受所要求工单的单位名称"
 
 msgid "Title of the entity who has interest to have informations about the project."
 msgstr "对该项目的信息感兴趣的单位名称"
@@ -8096,7 +8144,7 @@ msgid "Transactions to Reconcile"
 msgstr "待核对交易"
 
 msgid "Transfer"
-msgstr "传递"
+msgstr "转移"
 
 msgid "Transfer Computer"
 msgstr "转移计算机"
@@ -8572,6 +8620,9 @@ msgstr "可见"
 msgid "Visit"
 msgstr "访问"
 
+msgid "Virtual Machines"
+msgstr "虚拟机"
+
 msgid "Volume (m&#179;)"
 msgstr "体积(m&#179;)"
 
@@ -8864,7 +8915,7 @@ msgid "portal type"
 msgstr "门户类型"
 
 msgid "project related to ticket"
-msgstr "集合相关的项目"
+msgstr "工单相关的项目"
 
 msgid "requested"
 msgstr "已要求"
