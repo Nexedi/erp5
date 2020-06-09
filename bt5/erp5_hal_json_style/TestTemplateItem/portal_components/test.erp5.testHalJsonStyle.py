@@ -1679,7 +1679,6 @@ return '%s/Base_viewMetadata?reset:int=1' % context.getRelativeUrl()
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_different_view(self):
     self._makeDocument()
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['modification_date | Base_getUrl',])
 
@@ -1729,7 +1728,6 @@ return url
 """)
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_absolute_url_with_field_rendering(self):
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['modification_date | Base_getUrl',])
 
@@ -1774,7 +1772,6 @@ return url
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_absolute_url_without_field_rendering(self):
     self._makeDocument()
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['title | Base_getUrl',])
 
@@ -1816,7 +1813,6 @@ return url
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_no_url(self):
     self._makeDocument()
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['title|',])
 
@@ -1847,6 +1843,41 @@ return url
       'return "http://example.org/bar"')
   @simulate('Base_getRequestHeader', '*args, **kwargs',
             'return "application/hal+json"')
+  @changeSkin('Hal')
+  def test_getHateoasDocument_listbox_check_url_column_no_url_None(self):
+    # variation of test_getHateoasDocument_listbox_check_url_column_no_url here the
+    # "no url" is done by setting `None` in TALES expression, instead of '' that get
+    # set by formulator `key | value` syntax.
+    self._makeDocument()
+    self.portal.foo_module.FooModule_viewFooList.listbox.manage_tales_xmlrpc(
+        dict(url_columns='python: [("title", None), ]'))
+
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+                  REQUEST=fake_request,
+                  mode="search",
+                  list_method='contentValues',
+                  relative_url='foo_module',
+                  select_list=['id', 'title', 'creation_date', 'modification_date'],
+                  form_relative_url='portal_skins/erp5_ui_test/FooModule_viewFooList/listbox')
+    result_dict = json.loads(result)
+
+    # Test the listbox_uid parameter
+    self.assertEqual(result_dict['_embedded']['contents'][0]['listbox_uid:list']['key'], 'listbox_uid:list')
+
+    # Test the URL value
+    self.assertEqual(result_dict['_embedded']['contents'][0]['title']['url_value'], {})
+
+    # Test if the value of the column is with right key
+    self.assertTrue(result_dict['_embedded']['contents'][0]['title']['default'])
+
+    # Reset the url_columns of the listbox
+    self.portal.foo_module.FooModule_viewFooList.listbox.manage_tales_xmlrpc(dict(url_columns=''))
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
   @simulate('Base_getUrl', 'url_dict=False, *args, **kwargs', """
 url =  "https://officejs.com"
 if url_dict:
@@ -1861,7 +1892,6 @@ return url
   @changeSkin('Hal')
   def test_getHateoasDocument_listbox_check_url_column_option_parameters(self):
     self._makeDocument()
-    # pass custom list method which expect input arguments
     self.portal.foo_module.FooModule_viewFooList.listbox.ListBox_setPropertyList(
       field_url_columns = ['title | Base_getUrl',])
 
