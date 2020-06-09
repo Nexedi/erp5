@@ -8,9 +8,30 @@ div.jexcel_formula img{
 
 input.jexcel_formula {
   margin-left: 2px;
-  width: 97%;
+  width: 92.8%;
   position:sticky;
   top:0px;
-  z-index:21;
+  z-index:0;
   display: inline-block;
+}
+
+input.cell_input {
+  display: inline-block;
+  width: 4%;
+}
+
+input.jexcel_search {
+  width: 40px;
+}
+
+.jexcel_toolbar select.minimize {
+  width: 90px;
+}
+
+td {
+  cursor: cell;
+}
+
+input.readonly {
+  cursor: not-allowed;
 }
