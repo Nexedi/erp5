@@ -1,5 +1,3 @@
-from Products.ERP5Type.Log import log
-from Products.ZSQLCatalog.SQLCatalog import Query
 import hashlib
 
 CHUNK_SIZE = 200000
@@ -88,25 +86,11 @@ for data_ingestion in portal_catalog(portal_type = "Data Ingestion",
   if not portal.ERP5Site_checkReferenceInvalidated(data_ingestion):
     if isFinishedSplitIngestion(data_ingestion.getReference()):
       try:
-        query = Query(portal_type="Data Stream", reference=data_ingestion.getReference(), validation_state="draft")
-        ingestion_data_stream_list = portal_catalog(query=query, sort_on=(('creation_date', 'ascending'),))
-        full_file_size = 0
-        for data_stream in ingestion_data_stream_list:
-          full_file_size += data_stream.getSize()
-          hash_value = getHash(data_stream)
-          data_stream.setVersion(hash_value)
-          if data_stream.getValidationState() != "validated":
-            data_stream.validate()
-          if data_stream.getId().endswith(reference_end_split):
-            if data_stream.getValidationState() != "published":
-              data_stream.publish()
-            last_data_stream_id = data_stream.getId()
-            #TODO: set full_file_size for EOF data stream to display the size of the full file
         related_split_ingestions = portal_catalog(portal_type = "Data Ingestion",
                                                   simulation_state = "started",
                                                   reference = data_ingestion.getReference())
         for ingestion in related_split_ingestions:
-          if ingestion.getId() == last_data_stream_id:
+          if ingestion.getId().endswith(reference_end_split):
             if ingestion.getSimulationState() == "started":
               ingestion.stop()
           else:
