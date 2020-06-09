@@ -1608,7 +1608,7 @@ return True
     web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
     image_module = self.portal.getDefaultModule(portal_type="Image")
     img_list = []
-    for i in range(13):
+    for i in range(14):
       img = image_module.newContent(
         data=XSMALL_SVG_IMAGE_ICON_DATA,
         reference="P-IMG-implicit.successor.value.list.test.%d" % i,
@@ -1638,6 +1638,7 @@ return True
         '<img src="P-IMG-implicit.successor.value.list.test.10?format=" />',
         '<iframe src="/%s" />' % img_list[11].getRelativeUrl(),
         '<style>body { background-image: url("P-IMG-implicit.successor.value.list.test.12?format=png"); }</style>',
+        '<script src="P-IMG-implicit.successor.value.list.test.13" type="text/javascript"></script>',
       ]),
     )
     page.publish()
