@@ -179,6 +179,7 @@ def fail_hook_erp5_component(modname):
     else:
         module = _buildAstroidModuleFromComponentModuleName(modname)
 
+    module._absolute_import_activated = True
     return module
 MANAGER.register_failed_import_hook(fail_hook_erp5_component)
 
@@ -222,10 +223,6 @@ def _getattr(self, name, *args, **kw):
         self.locals[name] = [ast]
         return [ast]
 Module.getattr = _getattr
-
-# A temporary file is created to run pylint so this is not needed per se but
-# it avoids useless checking for relative imports
-Module.absolute_import_activated = lambda self: False
 
 from astroid import register_module_extender
 def AccessControl_PermissionRole_transform():
