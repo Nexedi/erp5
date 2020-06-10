@@ -73,7 +73,7 @@ for a in range(0, len(inventory_tuple_list)):
   data = inventory_tuple_list[a]
   return_list.append(
       portal.newContent(
-          portal_type='Base',
+          portal_type='Amount',
           temp_object=True,
           id=str(a),
           title='title %s'%(a,),
