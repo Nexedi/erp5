@@ -33,6 +33,8 @@ from copy import copy
 import warnings
 import types
 import thread, threading
+import os
+from lib2to3.pgen2.parse import ParseError
 
 from BTrees.OOBTree import OOBTree
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
@@ -43,6 +45,7 @@ from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.ZopeGuards import guarded_getattr
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 from DateTime import DateTime
+from my2to3.trace import apply_fixers
 import OFS.History
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
@@ -862,6 +865,27 @@ class Base(
     if uid is not None :
       self.uid = uid # Else it will be generated when we need it
     self.sid = sid
+
+  def __setstate__(self, state):
+    if os.environ.get("MY2TO3_ACTION") == "trace" and \
+      self.getPortalType() in [
+        "Document Component", "Extension Component", "Interface Component",
+        "Mixin Component", "Module Component", "Test Component",
+        "Tool Component",
+      ]:
+      # See Products.ERP5Type.patches.my2to3_patch
+      # Apply "trace" fixers on the fly
+      # Note: The modifications are not saved (unless it is done explicitly,
+      # e.g. the user saves manually).
+      text_content = state.get('text_content')
+      if text_content:
+        try:
+          state['text_content'] = apply_fixers(text_content, state['id'])
+        except ParseError:
+          # text_content is not valid code
+          pass
+
+    super(Base, self).__setstate__(state)
 
   # XXX This is necessary to override getId which is also defined in SimpleItem.
   security.declareProtected( Permissions.AccessContentsInformation, 'getId' )

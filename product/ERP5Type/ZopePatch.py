@@ -23,6 +23,7 @@
 from Products.ERP5Type import WITH_LEGACY_WORKFLOW
 
 # Load all monkey patches
+from Products.ERP5Type.patches import my2to3_patch
 from Products.ERP5Type.patches import WSGIPublisher
 from Products.ERP5Type.patches import HTTPRequest
 from Products.ERP5Type.patches import AccessControl_patch
