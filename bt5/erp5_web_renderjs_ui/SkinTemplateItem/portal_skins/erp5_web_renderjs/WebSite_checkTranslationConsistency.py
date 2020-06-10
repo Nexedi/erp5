@@ -39,4 +39,8 @@ if signature not in gadget_translation_data_js_version:
         translation_data_file=gadget_translation_data_js.getReference(),
         batch_mode=True)
     gadget_translation_data_js.edit(version=signature)
+    # since we might have modified some cached files, check again the modification date
+    # consistency.
+    error_list.extend(context.WebSite_checkCacheModificationDateConsistency(fixit=True))
+
 return error_list
