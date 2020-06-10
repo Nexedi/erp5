@@ -2242,7 +2242,15 @@ from Shared.DC.ZRDB.Results import Results # pylint: disable=unused-import
             module2=imported_module2,
             module2_with_version=imported_module2_with_version)) +
       component.getTextContent())
-    self.tic()
+
+    self._assertAstroidCacheContent(
+      must_be_in_cache_set={'%s' % namespace},
+      must_not_be_in_cache_set={'%s.erp5_version' % namespace,
+                                imported_module1,
+                                imported_module1_with_version,
+                                imported_module2,
+                                imported_module2_with_version})
+    component.checkSourceCode()
     self._assertAstroidCacheContent(
       must_be_in_cache_set={'%s' % namespace,
                             '%s.erp5_version' % namespace},
@@ -2250,6 +2258,8 @@ from Shared.DC.ZRDB.Results import Results # pylint: disable=unused-import
                                 imported_module1_with_version,
                                 imported_module2,
                                 imported_module2_with_version})
+
+    self.tic()
     self.assertEqual(component.getValidationState(), 'modified')
     self.assertEqual(
       component.getTextContentErrorMessageList(),
@@ -2288,9 +2298,8 @@ from Shared.DC.ZRDB.Results import Results # pylint: disable=unused-import
     self.assertEqual(imported_component1.getValidationState(), 'validated')
     self.assertEqual(imported_component2.getValidationState(), 'validated')
 
-    # 2) Then modify the main one so that it automatically 'validate'
-    component.setTextContent(component.getTextContent() + '\n')
-    self.tic()
+    message_list = component.checkSourceCode()
+    self.assertEqual(message_list, [])
     self._assertAstroidCacheContent(
       must_be_in_cache_set={'%s' % namespace,
                             '%s.erp5_version' % namespace,
@@ -2299,6 +2308,17 @@ from Shared.DC.ZRDB.Results import Results # pylint: disable=unused-import
                             imported_module2,
                             imported_module2_with_version},
       must_not_be_in_cache_set=set())
+
+    # 2) Then modify the main one so that it automatically 'validate'
+    component.setTextContent(component.getTextContent() + '\n')
+    self.tic()
+    self._assertAstroidCacheContent(
+      must_be_in_cache_set={'%s' % namespace},
+      must_not_be_in_cache_set={'%s.erp5_version' % namespace,
+                                imported_module1,
+                                imported_module1_with_version,
+                                imported_module2,
+                                imported_module2_with_version})
     self.assertEqual(component.getValidationState(), 'validated')
     self.assertEqual(component.getTextContentErrorMessageList(), [])
     self.assertEqual(component.getTextContentWarningMessageList(), [])
@@ -2363,12 +2383,8 @@ from %(namespace)s.erp5_version import %(reference)s
 %(reference)s.hoge()
 """ % dict(namespace=self._document_class._getDynamicModuleNamespace(),
            reference=imported_reference))
-      self.portal.portal_workflow.doActionFor(component, 'validate_action')
-      self.tic()
-      self.assertEqual(component.getValidationState(), 'validated')
-      self.assertEqual(component.getTextContentErrorMessageList(), [])
-      self.assertEqual(component.getTextContentWarningMessageList(), [])
 
+      component.checkSourceCode()
       from astroid.builder import MANAGER
       imported_module = self._getComponentFullModuleName(imported_reference)
       self.assertEqual(
@@ -2377,6 +2393,12 @@ from %(namespace)s.erp5_version import %(reference)s
       self.assertNotEqual(
         MANAGER.astroid_cache[self._getComponentFullModuleName(imported_reference, version='erp5')],
         MANAGER.astroid_cache[imported_module])
+
+      self.portal.portal_workflow.doActionFor(component, 'validate_action')
+      self.tic()
+      self.assertEqual(component.getValidationState(), 'validated')
+      self.assertEqual(component.getTextContentErrorMessageList(), [])
+      self.assertEqual(component.getTextContentWarningMessageList(), [])
 
     finally:
       self.portal.setVersionPriorityList(priority_tuple)
