@@ -2687,6 +2687,8 @@ class Base(
     """
     # currently only 'id' and 'reference', 'constraint_type' are supported.
     constraints = self.constraints
+    if self.getPortalType() == 'Web Site':
+      print ("_filteredConstraintList", self.getPath(), [c.getPath() for c in constraints])
     if filt is not None:
       if 'id' in filt:
         id_list = filt.get('id', None)
