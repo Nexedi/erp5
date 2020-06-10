@@ -35,7 +35,7 @@
           sheets.push(sheet.getConfig());
         });
         form_data[this.state.key] = JSON.stringify(sheets);
-        this.state.value = form_data[this.state.key];
+        this.state.value = sheets;
       }
       return form_data;
     })
@@ -76,6 +76,7 @@
         "undo": "Undo",
         "redo": "Redo",
         "add": "Add sheet",
+        "delete": "Delete sheet",
         "table_chart": "Merge cells",
         "close": "Destroy merge",
         "cancel": "Destroy all merges",
@@ -100,6 +101,7 @@
 
     .declareMethod("bindEvents", function (sheet) {
       var gadget = this;
+      gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
       sheet.onevent = function (ev) {
         var exluded_events = ["onload", "onfocus", "onblur", "onselection"];
         if (!exluded_events.includes(ev)) {
@@ -120,7 +122,6 @@
 
     .onStateChange(function (modification_dict) {
       var gadget = this, tmp;
-      gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
       if (modification_dict.hasOwnProperty('newSheet') && modification_dict.newSheet) {
         var tabs = (gadget.element.querySelectorAll(".jexcel_container"));
         return gadget.setupTable(tabs[tabs.length - 1]);
@@ -147,7 +148,7 @@
               });
             }
             gadget.state.value.map((sheet, i) => {
-              sheet.sheetName = "Sheet " + (i + 1);
+              if (!sheet.hasOwnProperty("sheetName")) {sheet.sheetName = "Sheet " + (i + 1)};
               return gadget.bindEvents(sheet);
           });
           return gadget.state.value;
@@ -168,6 +169,23 @@
         if (ev.target == tab.querySelector("textarea")) {
           formula.value = ev.target.value;
         }
-      }, false, false);
+      }, false, false)
+
+     .onEvent("dblclick", function (ev) {
+        var gadget = this;
+        gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
+        if (ev.target.classList[0] === "jexcel_tab_link") {
+          var name = prompt("Sheet name :", ev.target.textContent);
+          ev.target.textContent = name !== null ? name : ev.target.textContent;
+          return gadget.getContent()
+          .push(function () {
+            var tabs = gadget.element.querySelectorAll(".jexcel_tab_link");
+            gadget.state.value.forEach((sheet, i) => {
+              sheet.sheetName = tabs[i].textContent;
+            });
+            gadget.deferNotifyChangeBinded();
+          })
+        }
+      }, true, false);
 
 }(window, rJS, jexcel));

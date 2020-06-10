@@ -93,6 +93,24 @@
     }
   };
 
+  var remove = {
+    type: 'i',
+    content: 'delete',
+    onclick: function (a, b, c) {
+      var tab_link = document.querySelector('.jexcel_tab_link.selected');
+      var index = tab_link.getAttribute("data-spreadsheet");
+      if (document.querySelector('.spreadsheet').jexcel.length > 1) {
+        tab_link.remove();
+        var to_remove;
+        document.querySelectorAll(".jexcel_container").forEach(tab => {tab.style.display === "block" ? to_remove = tab : null});
+        to_remove.remove();
+        document.querySelector('.spreadsheet').jexcel.splice(index, 1);
+        document.querySelector('.jexcel_tab_link').classList.add("selected");
+        document.querySelector('.jexcel_container').style.display = "block";
+      }
+    }
+  };
+
   var font_style = {
     type: 'select',
     k: 'font-family',
@@ -197,7 +215,7 @@
           content: 'add',
           onclick : add_function
         };
-        list.push(add);
+        list.push(add, remove);
       }
       if (dict.hasOwnProperty("merge") && dict.merge) {
         list.push(merge, unmerge, destroy_merge);
