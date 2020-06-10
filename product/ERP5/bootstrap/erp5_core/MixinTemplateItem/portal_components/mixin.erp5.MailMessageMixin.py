@@ -84,29 +84,28 @@ class MailMessageMixin:
 
     Based on rfc: http://tools.ietf.org/html/rfc2046#section-5.1.4)
     """
-    # Default value if no text is found
-    found_part = None
-
     part_list = [self._getMessage()]
+    found_part_list = []
+    preferred_content_type = self.getPortalObject().portal_preferences.getPreferredTextFormat('text/html')
     while part_list:
       part = part_list.pop(0)
       if part.is_multipart():
-        if part.get_content_subtype() == 'alternative':
+        if part.get_content_subtype() in ('alternative', 'mixed', 'related'):
           # Try to get the favourite text format defined on preference
-          preferred_content_type = self.getPortalObject().portal_preferences.\
-                                         getPreferredTextFormat('text/html')
+          favourite_part = None
           for subpart in part.get_payload():
-            if subpart.get_content_type() == preferred_content_type:
-              part_list.insert(0, subpart)
+            if subpart.get_content_maintype() == 'text' and not subpart.get_filename():
+              if subpart.get_content_type() == preferred_content_type:
+                found_part_list.insert(0, subpart)
+                break
+              elif not found_part_list:
+                found_part_list.append(subpart)
             else:
-              part_list.append(subpart)
-        else:
-          part_list.extend(part.get_payload())
+              part_list.extend(part.get_payload())
       elif part.get_content_maintype() == 'text':
-        found_part = part
-        break
-  
-    return found_part
+        found_part_list.append(part)
+    if found_part_list:
+      return found_part_list[0]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
   def getContentInformation(self):
