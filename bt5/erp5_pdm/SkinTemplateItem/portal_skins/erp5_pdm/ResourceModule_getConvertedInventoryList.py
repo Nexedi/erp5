@@ -1,9 +1,37 @@
-kw['resource_uid'] = context.ResourceModule_getSelection().getUidList()
+from Products.PythonScripts.standard import Object
+portal = context.getPortalObject()
 
-if kw.setdefault('inventory_list', 1):
-  kw.update(group_by_node = 1, group_by_resource = 0)
-else:
-  kw.update(ignore_group_by = 1)
+resource_uid = context.ResourceModule_getSelection().getUidList()
+kw.update(group_by_node=1, group_by_resource=0, resource_uid=resource_uid)
 
-return context.getPortalObject().portal_simulation \
-              .getConvertedInventoryList(simulation_period='All', **kw)
+
+def makeResultLine(brain):
+  def getCurrentInventory():
+    return portal.portal_simulation.getCurrentInventory(
+        node_uid=brain.node_uid,
+        resource_uid=resource_uid,
+        quantity_unit=kw['quantity_unit'],
+        metric_type=kw['metric_type'],
+    )
+
+  def getAvailableInventory():
+    return portal.portal_simulation.getAvailableInventory(
+        node_uid=brain.node_uid,
+        resource_uid=resource_uid,
+        quantity_unit=kw['quantity_unit'],
+        metric_type=kw['metric_type'],
+    )
+  return Object(
+      uid='new_',
+      node_title=brain.node_title,
+      converted_quantity=brain.converted_quantity,
+      getCurrentInventory=getCurrentInventory,
+      getAvailableInventory=getAvailableInventory,
+  )
+
+
+result_list = []
+for brain in portal.portal_simulation.getFutureInventoryList(**kw):
+  result_list.append(makeResultLine(brain))
+
+return result_list
