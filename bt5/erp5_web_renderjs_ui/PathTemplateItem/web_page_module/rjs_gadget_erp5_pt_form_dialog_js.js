@@ -181,6 +181,7 @@
             form_definition: options.form_definition,
             erp5_form: options.erp5_form || {},
             // editable: true,  // ignore global editable state (be always editable)
+            has_action: Boolean(options.form_definition.action),
             action_title: options.form_definition.action_title,
             has_update_action: Boolean(options.form_definition.update_action),
             update_action_title: options.form_definition.update_action_title,
@@ -249,15 +250,17 @@
                   );
                 }
 
-                dom_list.push(
-                  domsugar('input', {disabled: true,
-                                     name: 'action_confirm',
-                                     class: 'dialogconfirm',
-                                     type: 'submit',
-                                     value: translation_list[1]}),
-                  domsugar('a', {class: 'dialogcancel',
-                                 text: translation_list[2]})
-                );
+                if (form_gadget.state.has_action) {
+                  dom_list.push(
+                    domsugar('input', {disabled: true,
+                                       name: 'action_confirm',
+                                       class: 'dialogconfirm',
+                                       type: 'submit',
+                                       value: translation_list[1]}),
+                    domsugar('a', {class: 'dialogcancel',
+                                   text: translation_list[2]})
+                  );
+                }
 
                 domsugar(form_gadget.element
                                     .querySelector('.dialog_button_container'),
@@ -275,10 +278,12 @@
         })
         .push(function (translated_title_list) {
           var action_confirm = form_gadget.element.querySelector('input.dialogconfirm');
-          if (form_gadget.state.action_title) {
-            action_confirm.value = form_gadget.state.action_title;
-          } else {
-            action_confirm.value = translated_title_list[1];
+          if (action_confirm !== null) {
+            if (form_gadget.state.action_title) {
+              action_confirm.value = form_gadget.state.action_title;
+            } else {
+              action_confirm.value = translated_title_list[1];
+            }
           }
 
           selector.textContent = "\u00A0" + translated_title_list[0];
@@ -311,7 +316,10 @@
           ]);
         })
         .push(function (all_result) {
-          form_gadget.element.querySelector('a.dialogcancel').href = all_result[0];
+          var action_cancel = form_gadget.element.querySelector('a.dialogcancel');
+          if (action_cancel !== null) {
+            action_cancel.href = all_result[0];
+          }
           form_gadget.enableButtonAsJob();
           return form_gadget.updateHeader({
             cancel_url: all_result[0],
@@ -347,7 +355,9 @@
             gadget.element.querySelector('.dialog_button_container'),
         update_button = button_container.querySelector('button'),
         submit_input = button_container.querySelector('input');
-      submit_input.disabled = false;
+      if (submit_input !== null) {
+        submit_input.disabled = false;
+      }
       if (update_button !== null) {
         update_button.disabled = false;
       }
