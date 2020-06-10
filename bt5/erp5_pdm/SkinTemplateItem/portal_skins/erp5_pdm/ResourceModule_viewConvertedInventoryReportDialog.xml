@@ -80,7 +80,11 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_getAvailableInventory</string>
+                        <string>listbox_getCurrentInventory</string>
+                        <string>listbox_converted_quantity</string>
+                      </list>
                     </value>
                 </item>
                 <item>

@@ -10,13 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
+                <string>editable</string>
+                <string>enabled</string>
                 <string>list_method</string>
                 <string>stat_method</string>
-                <string>stat_columns</string>
-                <string>enabled</string>
-                <string>editable</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -118,19 +119,34 @@
                           <string>Site or Warehouse</string>
                         </tuple>
                         <tuple>
-                          <string>current_converted_quantity</string>
+                          <string>getCurrentInventory</string>
                           <string>Current</string>
                         </tuple>
                         <tuple>
-                          <string>available_converted_quantity</string>
+                          <string>getAvailableInventory</string>
                           <string>Available</string>
                         </tuple>
                         <tuple>
-                          <string>future_converted_quantity</string>
+                          <string>converted_quantity</string>
                           <string>Future</string>
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>site</string>
+                          <string>Site</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -152,25 +168,6 @@
                     <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>stat_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>current_converted_quantity</string>
-                          <string>current_converted_quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>available_converted_quantity</string>
-                          <string>available_converted_quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>future_converted_quantity</string>
-                          <string>future_converted_quantity</string>
-                        </tuple>
-                      </list>
                     </value>
                 </item>
                 <item>
