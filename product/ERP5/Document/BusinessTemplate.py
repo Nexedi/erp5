@@ -6468,6 +6468,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     _migrate_exception_set = set([
       ## Bootstrap
+      'Products.ERP5.Tool.TrashTool',
       'Products.ERP5.Document.BusinessTemplate',
       'Products.ERP5.ERP5Site',
       'Products.ERP5.genbt5list',
@@ -6492,7 +6493,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.Tool.ComponentTool',
       'Products.ERP5Type.Tool.PropertySheetTool',
       'Products.ERP5Type.tests.testDynamicClassGeneration',
-      ## Used by SolverTool (TypeProvider)
+      # Upgrader
+      'Products.ERP5.Tool.AlarmTool',
+      ## TypeProvider
+      'Products.ERP5.Tool.SolverTool',
       'Products.ERP5.interfaces.delivery_solver_factory',
       ## Unit Tests
       'Products.ERP5Type.tests.custom_zodb',
@@ -6504,13 +6508,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.tests.runUnitTest',
       'Products.ERP5Type.tests.SecurityTestCase',
       'Products.ERP5Type.tests.Sequence',
-      # No need to migrate
+      ## No need to migrate
       'Products.PloneHotfix20121106.allow_module',
       'Products.PloneHotfix20121106.atat',
       'Products.PloneHotfix20121106.ftp',
       'Products.PloneHotfix20121106.get_request_var_or_attr',
       'Products.PloneHotfix20121106.safe_html',
       'Products.PloneHotfix20121106.setHeader',
+      # Backward compatibility
+      'Products.ERP5.Tool.Category',
     ])
 
     security.declareProtected(Permissions.ManagePortal,
