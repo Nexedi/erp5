@@ -108,6 +108,12 @@ div[data-gadget-url$="slideeditor.gadget.html"] {
 div[data-gadget-url$="slideeditor.gadget.html"] button {
   border: red 1px solid;
 }
+div[data-gadget-url$="slideeditor.gadget.html"] .field_container .bottom iframe {
+  height: 40vh;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] .field_container .bottom .editor-maximize iframe {
+  height: 100%;
+}
 div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list {
   display: flex;
   flex-wrap: wrap;

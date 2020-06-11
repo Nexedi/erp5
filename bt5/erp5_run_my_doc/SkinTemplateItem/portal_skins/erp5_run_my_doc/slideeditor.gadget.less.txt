@@ -3,6 +3,13 @@ div[data-gadget-url$="slideeditor.gadget.html"] {
     border: red 1px solid;
   }
 
+  .field_container .bottom iframe {
+    height: 40vh;
+  }
+  .field_container .bottom .editor-maximize iframe {
+    height: 100%;
+  }
+
   & > .slide_list {
     display: flex;
     flex-wrap: wrap;
