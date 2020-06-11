@@ -3,11 +3,21 @@
 (function (window, rJS, jexcel) {
   "use strict";
 
+  var toolbar_dict = {
+    undo_redo: true,
+    add: true,
+    merge: true,
+    text_font: true,
+    text_position: true,
+    color_picker: true
+  };
+
   rJS(window)
 
     .setState({
       saveConfig: false,
-      newSheet: false
+      newSheet: false,
+      updateSelection: true
     })
 
     .declareAcquiredMethod("notifyChange", "notifyChange")
@@ -41,16 +51,15 @@
       return form_data;
     })
 
+    .declareMethod("getCurrentSheet", function () {
+      var gadget = this;
+      var worksheet = gadget.element.querySelector('.selected').getAttribute('data-spreadsheet');
+      return gadget.element.querySelector('.spreadsheet').jexcel[worksheet];
+    })
+
     .declareMethod("addSheet", function () {
       var gadget = this;
-      return gadget.template_gadget.getToolbarList(() => gadget.addSheet(), {
-        undo_redo: true,
-        add: true,
-        merge: true,
-        text_font: true,
-        text_position: true,
-        color_picker: true
-      })
+      return gadget.template_gadget.getToolbarList(() => gadget.addSheet(), toolbar_dict)
       .push(function (dict) {
         dict.sheetName = "Sheet " + (gadget.element.querySelector('.spreadsheet').jexcel.length + 1);
         return gadget.bindEvents(dict);
@@ -75,7 +84,33 @@
       formula_div.appendChild(img);
       formula_div.appendChild(formula_input);
       element.querySelector("div.jexcel_toolbar").parentNode.insertBefore(formula_div, element.querySelector("div.jexcel_toolbar").nextSibling);
-      var icon_title = {
+      return gadget.template_gadget.buildOptions()
+      .push(function (options) {
+        var select = document.createElement("select");
+        select.innerHTML = options;
+        select.onclick = function () {
+          var select = this;
+          var cell = gadget.element.querySelector("td.highlight-selected");
+          if (cell) {
+            return gadget.getCurrentSheet()
+            .push(function (sheet) {
+              var x = Number(cell.dataset.x);
+              var y = Number(cell.dataset.y);
+              var currentValue = sheet.getValueFromCoords(x, y);
+              var value;
+              if (currentValue === "" || currentValue[0] !== "="){
+                value = "=" + select.options[select.selectedIndex].value + "()";
+              }
+              else {
+                value = "=" + select.options[select.selectedIndex].value + "(" + currentValue.substring(1, currentValue.length) + ")";
+              }
+              sheet.setValueFromCoords(x, y, value);
+              formula_input.value = value;
+            })
+          }
+        }
+        element.querySelector(".jexcel_toolbar").insertBefore(select, filter);
+        var icon_title = {
         "undo": "Undo",
         "redo": "Redo",
         "add": "Add sheet",
@@ -101,6 +136,7 @@
       });
       gadget.element.querySelectorAll(".jexcel_tab_link").forEach(tab => tab.title = "Right click to rename");
       gadget.state.newSheet = false;
+      });
     })
 
     .declareMethod("bindEvents", function (sheet) {
@@ -114,12 +150,16 @@
         }
       };
       sheet.onselection = function (ev) {
-        gadget.state.saveConfig = true;
-        var tab = gadget.element.querySelectorAll(".jexcel_container")[gadget.element.querySelector("div.jexcel_tab_link.selected").getAttribute("data-spreadsheet")];
-        var cell = tab.querySelector("td.highlight-selected");
-        var formula = tab.querySelector("input.jexcel_formula");
-        formula.value = cell.textContent;
-      };
+        return gadget.getCurrentSheet()
+        .push(function (instance) {
+          var tab = gadget.element.querySelectorAll(".jexcel_container")[gadget.element.querySelector("div.jexcel_tab_link.selected").getAttribute("data-spreadsheet")];
+          var cell = tab.querySelector("td.highlight-selected");
+          var formula = tab.querySelector("input.jexcel_formula");
+          var x = Number(cell.dataset.x);
+          var y = Number(cell.dataset.y);
+          formula.value = instance.getValueFromCoords(x, y);
+        })
+      }
       return sheet;
     })
 
@@ -130,14 +170,7 @@
         return gadget.setupTable(tabs[tabs.length - 1]);
       }
       if (modification_dict.hasOwnProperty('value')) {
-        return gadget.template_gadget.getToolbarList(() => gadget.addSheet(), {
-            undo_redo: true,
-            add: true,
-            merge: true,
-            text_font: true,
-            text_position: true,
-            color_picker: true
-        })
+        return gadget.template_gadget.getToolbarList(() => gadget.addSheet(), toolbar_dict)
         .push(function (config) {
             tmp = Object.assign({}, config);
             if (gadget.state.value === "") {

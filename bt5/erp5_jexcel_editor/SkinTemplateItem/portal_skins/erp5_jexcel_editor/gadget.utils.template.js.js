@@ -3,6 +3,16 @@
 (function (window, rJS, jexcel) {
   "use strict";
 
+  var numberToLetter = function (i) {
+    return (i >= 26 ? numberToLetter((i / 26 >> 0) - 1) : '') +  'ABCDEFGHIJKLMNOPQRSTWXYZ'[i % 26 >> 0];
+  };
+
+  var getCoordsFromCell = function (cell) {
+    var x = Number(cell.dataset.x);
+    var y = cell.dataset.y;
+    return numberToLetter(x) + y;
+  };
+
   var template = {
     minDimensions: [26, 100],
     defaultColWidth: 100,
@@ -49,19 +59,10 @@
     content: 'table_chart',
     onclick: function (a, b, c) {
       var cell = document.querySelector("td.highlight");
-      var x = Number(cell.dataset.x);
       var selected = b.getJson(true);
       var colspan = Object.keys(selected[0]).length;
       var rowspan = selected.length;
-      var letter = "";
-      if (x <= 25) {
-        letter += String.fromCharCode(97 + x).toUpperCase();
-      }
-      else {
-        letter += String.fromCharCode(97 + Math.trunc(x / 25) - 1).toUpperCase();
-        letter += String.fromCharCode(97 + (x % 26)).toUpperCase();
-      }
-      var coor = letter + (Number(cell.dataset.y) + 1).toString();
+      var coor = getCoordsFromCell(cell);
       b.setMerge(coor, colspan, rowspan);
     }
   };
@@ -72,15 +73,7 @@
     onclick: function (a, b, c) {
       var cell = document.querySelector("td.highlight-selected");
       var x = Number(cell.dataset.x);
-      var letter = "";
-      if (x <= 25) {
-        letter += String.fromCharCode(97 + x).toUpperCase();
-      }
-      else {
-        letter += String.fromCharCode(97 + Math.trunc(x / 25) - 1).toUpperCase();
-        letter += String.fromCharCode(97 + (x % 26)).toUpperCase();
-      }
-      var coor = letter + (Number(cell.dataset.y) + 1).toString();
+      var coor = getCoordsFromCell(cell);
       b.removeMerge(coor);
     }
   };
@@ -124,6 +117,7 @@
     k: 'font-family',
     v: ['Arial', 'Comic Sans MS', 'Verdana', 'Calibri', 'Tahoma', 'Helvetica', 'DejaVu Sans', 'Times New Roman', 'Georgia', 'Antiqua']
   };
+
   var font_size = {
     type: 'select',
     k: 'font-size',
@@ -240,6 +234,15 @@
       var res = Object.assign({}, template);
       res.toolbar = list;
       return res;
+    })
+
+    .declareMethod("buildOptions", function() {
+      var str = "";
+      var formulas = ["SUM", "MIN", "MAX"];
+      formulas.forEach(value => {
+        str += "<option class='formula_option' value=" + value + ">" + value + "()" + "</option>";
+      })
+      return str;
     });
 
 }(window, rJS, jexcel));
