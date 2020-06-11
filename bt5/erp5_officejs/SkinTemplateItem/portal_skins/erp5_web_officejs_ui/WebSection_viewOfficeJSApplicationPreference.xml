@@ -86,7 +86,9 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_configuration_translation_gadget_url</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
