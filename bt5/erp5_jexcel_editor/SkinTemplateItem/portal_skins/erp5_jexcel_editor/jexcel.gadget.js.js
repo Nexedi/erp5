@@ -18,6 +18,7 @@
 
     .declareMethod("render", function (options) {
       var gadget = this;
+      gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
       return gadget.getDeclaredGadget("template_gadget")
       .push(function (template_gadget) {
         gadget.template_gadget = template_gadget;
@@ -56,11 +57,13 @@
       })
       .push(function (dict) {
         jexcel.tabs(gadget.element.querySelector(".spreadsheet"), [dict]);
+        gadget.deferNotifyChangeBinded()
         return gadget.changeState({newSheet: true});
       });
     })
 
     .declareMethod("setupTable", function (element) {
+      var gadget = this;
       var filter = element.querySelector(".jexcel_filter");
       element.querySelector(".jexcel_toolbar").appendChild(filter);
       var formula_div = document.createElement("div");
@@ -96,12 +99,12 @@
         else if (i.dataset.k === "background-color") {i.title = "Background color"}
         else {i.title = icon_title[i.textContent]}
       });
+      gadget.element.querySelectorAll(".jexcel_tab_link").forEach(tab => tab.title = "Right click to rename");
       gadget.state.newSheet = false;
     })
 
     .declareMethod("bindEvents", function (sheet) {
       var gadget = this;
-      gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
       sheet.onevent = function (ev) {
         var exluded_events = ["onload", "onfocus", "onblur", "onselection"];
         if (!exluded_events.includes(ev)) {
@@ -171,9 +174,8 @@
         }
       }, false, false)
 
-     .onEvent("dblclick", function (ev) {
+     .onEvent("contextmenu", function (ev) {
         var gadget = this;
-        gadget.deferNotifyChangeBinded = gadget.deferNotifyChange.bind(gadget);
         if (ev.target.classList[0] === "jexcel_tab_link") {
           var name = prompt("Sheet name :", ev.target.textContent);
           ev.target.textContent = name !== null ? name : ev.target.textContent;
@@ -186,6 +188,13 @@
             gadget.deferNotifyChangeBinded();
           })
         }
-      }, true, false);
+      }, false, true)
+
+    .onEvent("click", function (ev) {
+      var gadget = this;
+      if (ev.target.title === "Delete sheet") {
+        gadget.deferNotifyChangeBinded();
+      }
+    }, false, false);
 
 }(window, rJS, jexcel));

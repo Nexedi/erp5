@@ -105,8 +105,16 @@
         document.querySelectorAll(".jexcel_container").forEach(tab => {tab.style.display === "block" ? to_remove = tab : null});
         to_remove.remove();
         document.querySelector('.spreadsheet').jexcel.splice(index, 1);
-        document.querySelector('.jexcel_tab_link').classList.add("selected");
         document.querySelector('.jexcel_container').style.display = "block";
+        document.querySelectorAll('.jexcel_tab_link').forEach((tab, i) => {
+          i == 0 ? tab.classList.add("selected") : null;
+          tab.dataset.spreadsheet = i;
+          tab.textContent = tab.textContent.substring(0, 5) === "Sheet" ? "Sheet " + (i + 1) : tab.textContent;
+        });
+      }
+      else {
+        document.querySelector('.jexcel_tab_link').textContent = "Sheet 1"
+        document.querySelector('.spreadsheet').jexcel[0].setData(Array(100).fill(0, 99, Array(26).fill(0, 26, "")));
       }
     }
   };
