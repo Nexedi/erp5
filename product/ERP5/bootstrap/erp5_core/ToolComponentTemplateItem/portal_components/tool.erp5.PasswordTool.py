@@ -27,17 +27,13 @@
 #
 ##############################################################################
 
-import socket
 import uuid
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
+from Products.ERP5Type.Globals import InitializeClass, get_request
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
-from Products.ERP5 import _dtmldir
 from zLOG import LOG, INFO
-import time, random
-from hashlib import md5
 from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Globals import PersistentMapping
@@ -65,12 +61,10 @@ class PasswordTool(BaseTool):
 
   # Declarative Security
   security = ClassSecurityInfo()
-  security.declareProtected(Permissions.ManagePortal, 'manage_overview')
-  manage_overview = DTMLFile('explainPasswordTool', _dtmldir)
 
   _expiration_day = 1
 
-  def __init__(self, id=None):
+  def __init__(self, id=None): # pylint: disable=redefined-builtin
     super(PasswordTool, self).__init__(id)
     self._password_request_dict = OOBTree()
 
@@ -239,8 +233,7 @@ class PasswordTool(BaseTool):
     if not portal.portal_preferences.isAuthenticationPolicyEnabled():
       return []
     try:
-      register_user_login, expiration_date = self._password_request_dict[
-        password_key]
+      register_user_login, _ = self._password_request_dict[password_key]
     except KeyError:
       return []
     user_dict_list = portal.acl_users.searchUsers(

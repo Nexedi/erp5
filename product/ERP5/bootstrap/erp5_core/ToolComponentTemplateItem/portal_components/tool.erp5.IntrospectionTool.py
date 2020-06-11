@@ -33,20 +33,18 @@ import tempfile
 import json
 import tarfile
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from AccessControl.SecurityManagement import setSecurityManager
-from Products.ERP5 import _dtmldir
 from Products.ERP5Type.Utils import _setSuperSecurityManager
 from App.config import getConfiguration
-from AccessControl import Unauthorized
 from Products.ERP5Type.Cache import CachingMethod
 from cgi import escape
 
 import logging
 
-_MARKER = []
+_MARKER = ()
 
 event_log = logging.getLogger()
 access_log = logging.getLogger("access")
@@ -120,9 +118,6 @@ class IntrospectionTool(LogMixin, BaseTool):
 
   security = ClassSecurityInfo()
 
-  security.declareProtected(Permissions.ManagePortal, 'manage_overview')
-  manage_overview = DTMLFile('explainIntrospectionTool', _dtmldir )
-
   #
   #   Remote menu management
   #
@@ -151,7 +146,7 @@ class IntrospectionTool(LogMixin, BaseTool):
     # Unlazyfy URLs and other lazy values so that it can be marshalled
     result = {}
     for key, action_list in erp5_menu_dict.items():
-      result[key] = map(lambda action:dict(action), action_list)
+      result[key] = [ dict(action) for action in action_list ]
 
     return result
 
@@ -463,7 +458,7 @@ class IntrospectionTool(LogMixin, BaseTool):
     """
     business_template_dict = {}
     for installed in self.portal_templates.getInstalledBusinessTemplateList():
-       business_template_dict[installed.getTitle()] = installed.getRevision()
+      business_template_dict[installed.getTitle()] = installed.getRevision()
     return business_template_dict
 
   security.declareProtected(Permissions.ManagePortal,

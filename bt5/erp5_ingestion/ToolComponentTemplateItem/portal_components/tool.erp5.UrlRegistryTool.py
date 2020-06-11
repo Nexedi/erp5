@@ -51,7 +51,7 @@ class UrlRegistryTool(BaseTool):
 
   _url_reference_mapping = 'url_reference_mapping'
 
-  def __init__(self, id=None):
+  def __init__(self, id=None): # pylint: disable=redefined-builtin, super-init-not-called
     if id is not None:
       self.id = id
     self._initBTree()

@@ -2821,7 +2821,11 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
                  'template_portal_type_allowed_content_type_list',
                  'template_portal_type_hidden_content_type_list',
                  'template_portal_type_property_sheet_list',
-                 'template_portal_type_base_category_list'):
+                 'template_portal_type_base_category_list',
+                 # test_20_checkUpdateTool recreates portal_simulation
+                 'template_tool_component_id_list',
+                 'template_keep_path_list',
+                 'template_tool_id_list'):
         continue
       if prop_type == 'text' or prop_type == 'string':
         prop_dict[pid] = ''

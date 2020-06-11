@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Test Tool" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary/>
+    </pickle>
+  </record>
+</ZopeData>

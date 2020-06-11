@@ -27,11 +27,9 @@
 #
 ##############################################################################
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
-from Products.ERP5 import _dtmldir
-from zLOG import LOG
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
 
@@ -60,7 +58,6 @@ class AcknowledgementTool(BaseTool):
   allowed_types = ('ERP5 Acknowledgement',)
   # Declarative Security
   security = ClassSecurityInfo()
-
 
   security.declarePublic('countUnread')
   def countUnread(self, *args, **kw):

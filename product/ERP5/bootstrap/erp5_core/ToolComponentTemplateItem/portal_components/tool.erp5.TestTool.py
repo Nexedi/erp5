@@ -26,24 +26,17 @@
 #
 ##############################################################################
 
-import cStringIO
-from webdav.client import Resource
-from Products.CMFCore.utils import UniqueObject
-
-from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type import Permissions
-
-from Products.ERP5 import _dtmldir
-
-from zLOG import LOG
 
 try:
+  from Products.ERP5Type.CopySupport import CopyContainer
   from Products.Zelenium.zuite import Zuite
-
-  class TestTool (Zuite, BaseTool):
+  # CopyContainer must be before Zuite otherwise manage_afterAdd() is not
+  # called on upgrade and uid is not set. See ERP5Type Folder import order
+  # comments.
+  class TestTool (CopyContainer, Zuite, BaseTool):
     """
       Container for fonctionnal tests.
     """
@@ -55,9 +48,6 @@ try:
     # Declarative Security
     security = ClassSecurityInfo()
 
-    security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-    manage_overview = DTMLFile( 'explainTestTool', _dtmldir )
-
     security.declarePublic('getZeleniumVersion')
     def getZeleniumVersion(self):
       """Returns the version of the zelenium product
@@ -66,9 +56,9 @@ try:
 
     # Override this method to force Zuite objects are recursed.
     def _recurseListTestCases( self, result, prefix, ob ):
-        for tcid, test_case in ob.objectItems():
-            if isinstance( test_case, Zuite ):
-                result.extend( test_case.listTestCases(
+      for tcid, test_case in ob.objectItems():
+        if isinstance( test_case, Zuite ):
+          result.extend( test_case.listTestCases(
                                         prefix=prefix + ( tcid, ) ) )
 
     # Override this method to produce ERP5-style reports.
@@ -96,8 +86,5 @@ except ImportError:
 
     # Declarative Security
     security = ClassSecurityInfo()
-
-    security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-    manage_overview = DTMLFile( 'explainTestTool', _dtmldir )
 
 InitializeClass(TestTool)
