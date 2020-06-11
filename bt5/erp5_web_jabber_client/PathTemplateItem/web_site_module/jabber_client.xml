@@ -171,10 +171,6 @@
                 </dictionary>
                 <dictionary>
                   <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_translation_gadget_url</string> </value>
-                  </item>
-                  <item>
                       <key> <string>type</string> </key>
                       <value> <string>string</string> </value>
                   </item>
@@ -370,10 +366,6 @@
         <item>
             <key> <string>configuration_stylesheet_url</string> </key>
             <value> <string>gadget_jabberclient.css</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_translation.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_webapp_manifest_url</string> </key>
