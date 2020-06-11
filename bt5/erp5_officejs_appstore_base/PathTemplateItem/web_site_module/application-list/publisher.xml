@@ -207,16 +207,6 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_translation_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>configuration_frontpage_gadget_url</string> </value>
                   </item>
                   <item>
@@ -309,10 +299,6 @@
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
             <value> <string>gadget_ojs_appstore_panel.html</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_translation.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
