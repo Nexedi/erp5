@@ -60,6 +60,7 @@ class TestZeleniumKM(ERP5TypeFunctionalTestCase):
                 'erp5_km', 'erp5_km_ui_test_data', 'erp5_km_ui_test',
                 'erp5_l10n_fr', 'erp5_crm',
                 'erp5_forge',
+                'erp5_hal_json_style',
                 'erp5_web_renderjs_ui',
                 'erp5_web_renderjs_ui_test',
                 )
