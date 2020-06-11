@@ -29,16 +29,6 @@
     <script type="text/javascript" src="pivottable/gchart_renderers.js"></script>
     <script type="text/javascript" src="pivottable/c3_renderers.js"></script>
 
-    <!-- monaco editor from erp5_monaco_editor bt -->
-    <script>
-      /*
-       This is understood by our build of monaco-editor
-       https://lab.nexedi.com/jerome/monaco-editor-erp5/blob/master/public-path.js
-      */
-      window.monacoEditorWebPackResourceBaseUrl = "monaco-editor/";
-    </script>
-    <script src="monaco-editor/app.bundle.min.js"></script>
-
     <style>
       body {font-family: Verdana;}
       .c3-line {stroke-width: 3px;}
@@ -202,5 +192,15 @@
     </div>
 
   </body>
+
+  <!-- monaco editor from erp5_monaco_editor bt -->
+  <script>
+    /*
+      This is understood by our build of monaco-editor
+      https://lab.nexedi.com/jerome/monaco-editor-erp5/blob/master/public-path.js
+    */
+    window.monacoEditorWebPackResourceBaseUrl = "monaco-editor/";
+  </script>
+  <script src="monaco-editor/app.bundle.min.js"></script>
 
 </html>
