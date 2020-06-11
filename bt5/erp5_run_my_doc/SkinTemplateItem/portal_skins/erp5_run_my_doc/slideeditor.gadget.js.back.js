@@ -3,6 +3,12 @@
 (function () {
   "use strict";
 
+  var DISPLAY_LIST = 'display_list',
+    DISPLAY_SLIDE = 'display_slide',
+    DIALOG_SLIDE = 'dialog_slide',
+    DIALOG_COMMENT = 'dialog_comment',
+    DIALOG_METADATA = 'dialog_metadata';
+
   ///////////////////////////////////////////////////
   // Slide format handling
   ///////////////////////////////////////////////////
@@ -387,7 +393,7 @@
     })
 
     .setState({
-      display_step: 'display_list',//'display_list',
+      display_step: DISPLAY_LIST,
       display_index: null,
       slide_dialog: null
     })
@@ -415,7 +421,7 @@
         display_step = gadget.state.display_step,
         slide_dialog = gadget.state.slide_dialog;
 
-      if (display_step === 'display_list') {
+      if (display_step === DISPLAY_LIST) {
         return renderSlideList(gadget);
       }
 /*
@@ -424,14 +430,14 @@
       }
 */
 
-      if (display_step === 'display_slide') {
-        if (slide_dialog === 'slide') {
+      if (display_step === DISPLAY_SLIDE) {
+        if (slide_dialog === DIALOG_SLIDE) {
           return renderSlideDialog(gadget, modification_dict.hasOwnProperty('display_step'));
         }
-        if (slide_dialog === 'comment') {
+        if (slide_dialog === DIALOG_COMMENT) {
           return renderCommentDialog(gadget, modification_dict.hasOwnProperty('display_step'));
         }
-        if (slide_dialog === 'metadata') {
+        if (slide_dialog === DIALOG_METADATA) {
           return renderMetadataDialog(gadget, modification_dict.hasOwnProperty('display_step'));
         }
         // Ease developper work by raising for not handled cases
@@ -446,12 +452,28 @@
       // Only handle click on BUTTON and IMG element
       var gadget = this,
         tag_name = evt.target.tagName,
-        state_dict;
+        state_dict,
+        queue,
+        display_step = gadget.state.display_step,
+        slide_dialog = gadget.state.slide_dialog;
 
       if (tag_name !== 'BUTTON') {
         return;
       }
 
+      queue = new RSVP.Queue();
+
+      // First, check if the current display contains a dialog
+      // and modify the slide as expected
+      if (display_step === DISPLAY_SLIDE) {
+        throw new Error('Dialog not handled: ' + slide_dialog);
+      } else if ([DISPLAY_LIST].indexOf(display_step) === -1) {
+        throw new Error('Display form not handled: ' + display_step);
+      }
+
+      // Actions from slide list
+
+      // Actions from a slide dialog
       if (evt.target.className.indexOf("next-btn") !== -1) {
         return gadget.changeState({
           display_index: gadget.state.display_index + 1
@@ -466,27 +488,27 @@
 
       if (evt.target.className.indexOf("list-btn") !== -1) {
         return gadget.changeState({
-          display_step: 'display_list'
+          display_step: DISPLAY_LIST
         });
       }
 
       if (evt.target.className.indexOf("display-slide") !== -1) {
         return gadget.changeState({
-          display_step: 'display_slide',
+          display_step: DISPLAY_SLIDE,
           display_index: parseInt(evt.target.getAttribute('data-slide-index'), 10),
-          slide_dialog: gadget.state.slide_dialog || 'slide'
+          slide_dialog: gadget.state.slide_dialog || DIALOG_SLIDE
         });
       }
 
       if (evt.target.className.indexOf("dialog-metadata") !== -1) {
         return gadget.changeState({
-          slide_dialog: 'metadata'
+          slide_dialog: DIALOG_METADATA
         });
       }
 
       if (evt.target.className.indexOf("dialog-comment") !== -1) {
         return gadget.changeState({
-          slide_dialog: 'comment'
+          slide_dialog: DIALOG_COMMENT
         });
       }
 
@@ -501,7 +523,7 @@
         // XXX notifyChange
         return gadget.changeState({
           display_index: domsugar('div', {html: gadget.state.value}).querySelectorAll('section').length,
-          display_step: 'display_slide',
+          display_step: DISPLAY_SLIDE,
           value: gadget.state.value + "<section><h1></h1><details></details></section>"
         });
       }
