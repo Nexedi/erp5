@@ -105,7 +105,7 @@ class IIdTool(Interface):
        # this can returns ['154', '155', '156']
     """
 
-  def initializeGenerator(id_generator=None, all=False):
+  def initializeGenerator(id_generator=None, all=False): # pylint: disable=redefined-builtin
     """
     Initialize generators. This is mostly used when a new ERP5 site
     is created. Some generators will need to do some initialization like
@@ -118,7 +118,7 @@ class IIdTool(Interface):
        do initialization for all generators
     """
 
-  def clearGenerator(id_generator=None, all=False):
+  def clearGenerator(id_generator=None, all=False): # pylint: disable=redefined-builtin
     """
     Clear generators data. This can be usefull when working on a
     development instance or in some other rare cases. This will

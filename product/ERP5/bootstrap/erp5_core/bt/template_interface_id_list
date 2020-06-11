@@ -4,6 +4,7 @@ interface.erp5.IAmountGeneratorLine
 interface.erp5.IAssetMovement
 interface.erp5.IDivergenceController
 interface.erp5.IExpandable
+interface.erp5.IIdTool
 interface.erp5.IImmobilisationItem
 interface.erp5.IMovement
 interface.erp5.IMovementCollection

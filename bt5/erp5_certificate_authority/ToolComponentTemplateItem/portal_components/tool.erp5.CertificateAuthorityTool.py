@@ -28,6 +28,7 @@
 ##############################################################################
 
 import glob, os, subprocess, sys
+import Products.ERP5
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -36,10 +37,10 @@ from Products.ERP5Type import Permissions
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zLOG import LOG, INFO
 
-def popenCommunicate(command_list, input=None, **kwargs):
+def popenCommunicate(command_list, input_=None, **kwargs):
   kwargs.update(stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
   popen = subprocess.Popen(command_list, **kwargs)
-  result = popen.communicate(input)[0]
+  result = popen.communicate(input_)[0]
   if popen.returncode is None:
     popen.kill()
   if popen.returncode != 0:
@@ -150,8 +151,8 @@ class CertificateAuthorityTool(BaseTool):
 
   #'Edit' option form
   manage_editCertificateAuthorityToolForm = PageTemplateFile(
-      '../www/CertificateAuthorityTool_editPropertyList',
-      globals(),
+      os.path.join(os.path.dirname(Products.ERP5.__file__), 'www',
+                   'CertificateAuthorityTool_editPropertyList'),
       __name__='manage_editCertificateAuthorityToolForm')
 
   security.declareProtected(Permissions.ManageProperties,
@@ -224,7 +225,7 @@ class CertificateAuthorityTool(BaseTool):
           for p in key, csr, cert:
             if os.path.exists(p):
               os.unlink(p)
-        except:
+        except Exception:
           # do not raise during cleanup
           pass
         raise e[0], e[1], e[2]
@@ -267,7 +268,7 @@ class CertificateAuthorityTool(BaseTool):
           for p in created:
             if os.path.exists(p):
               os.unlink(p)
-        except:
+        except Exception:
           # do not raise during cleanup
           pass
         raise e[0], e[1], e[2]

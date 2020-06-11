@@ -31,12 +31,12 @@ import zope.interface
 
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
+from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Cache import caching_instance_method
-from Products.ERP5Type import Permissions, interfaces
-from zLOG import LOG, WARNING, INFO, ERROR
-from Products.ERP5 import _dtmldir
+from Products.ERP5Type import Permissions
+from erp5.component.interface.IIdTool import IIdTool
+from zLOG import LOG, WARNING, ERROR
 
 from BTrees.Length import Length
 
@@ -46,16 +46,13 @@ class IdTool(BaseTool):
   """
     This tools handles the generation of IDs.
   """
-  zope.interface.implements(interfaces.IIdTool)
+  zope.interface.implements(IIdTool)
   id = 'portal_ids'
   meta_type = 'ERP5 Id Tool'
   portal_type = 'Id Tool'
 
   # Declarative Security
   security = ClassSecurityInfo()
-
-  security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-  manage_overview = DTMLFile( 'explainIdTool', _dtmldir )
 
   def newContent(self, *args, **kw):
     """
@@ -69,7 +66,7 @@ class IdTool(BaseTool):
         raise ValueError('Failed to gererate id')
     return BaseTool.newContent(self, *args, **kw)
 
-  def _get_id(self, id):
+  def _get_id(self, id): # pylint: disable=redefined-builtin
     """
       _get_id is overrided to not use generateNewId
       It is used for example when an object is cloned
@@ -107,6 +104,7 @@ class IdTool(BaseTool):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'generateNewId')
+  # pylint: disable=arguments-differ
   def generateNewId(self, id_group=None, default=None, method=_marker,
                     id_generator=None, poison=False):
     """
@@ -236,7 +234,7 @@ class IdTool(BaseTool):
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'initializeGenerator')
-  def initializeGenerator(self, id_generator=None, all=False):
+  def initializeGenerator(self, id_generator=None, all=False): # pylint: disable=redefined-builtin
     """
     Initialize generators. This is mostly used when a new ERP5 site
     is created. Some generators will need to do some initialization like
@@ -255,7 +253,7 @@ class IdTool(BaseTool):
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'clearGenerator')
-  def clearGenerator(self, id_generator=None, all=False):
+  def clearGenerator(self, id_generator=None, all=False): # pylint: disable=redefined-builtin
     """
     Clear generators data. This can be usefull when working on a
     development instance or in some other rare cases. This will
@@ -348,15 +346,15 @@ class IdTool(BaseTool):
   security.declareProtected(Permissions.AccessContentsInformation,
                            'generateNewLengthId')
   def generateNewLengthId(self, id_group=None, default=None, store=_marker):
-     """Generates an Id using a conflict free id generator. Deprecated.
-     """
-     warnings.warn('generateNewLengthId is deprecated.\n'
-                   'Use generateNewIdList with a sql id_generator',
-                   DeprecationWarning)
-     if store is not _marker:
-       return self.generateNewIdList(id_group=id_group,
+    """Generates an Id using a conflict free id generator. Deprecated.
+    """
+    warnings.warn('generateNewLengthId is deprecated.\n'
+                  'Use generateNewIdList with a sql id_generator',
+                  DeprecationWarning)
+    if store is not _marker:
+      return self.generateNewIdList(id_group=id_group,
                         id_count=1, default=default, store=store)[0]
-     return self.generateNewIdList(id_group=id_group,
+    return self.generateNewIdList(id_group=id_group,
                         id_count=1, default=default)[0]
 
   security.declareProtected(Permissions.AccessContentsInformation,
