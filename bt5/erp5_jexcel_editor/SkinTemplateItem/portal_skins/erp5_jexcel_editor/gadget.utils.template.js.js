@@ -98,16 +98,18 @@
         document.querySelectorAll(".jexcel_container").forEach(tab => {tab.style.display === "block" ? to_remove = tab : null});
         to_remove.remove();
         document.querySelector('.spreadsheet').jexcel.splice(index, 1);
-        document.querySelector('.jexcel_container').style.display = "block";
+        var sheets = document.querySelectorAll('.jexcel_container');
+        sheets[sheets.length - 1].style.display = "block";
         document.querySelectorAll('.jexcel_tab_link').forEach((tab, i) => {
-          i == 0 ? tab.classList.add("selected") : null;
+          i == sheets.length - 1 ? tab.classList.add("selected") : null;
           tab.dataset.spreadsheet = i;
           tab.textContent = tab.textContent.substring(0, 5) === "Sheet" ? "Sheet " + (i + 1) : tab.textContent;
         });
       }
       else {
-        document.querySelector('.jexcel_tab_link').textContent = "Sheet 1"
-        document.querySelector('.spreadsheet').jexcel[0].setData(Array(100).fill(0, 99, Array(26).fill(0, 26, "")));
+        document.querySelector('.jexcel_tab_link').textContent = "Sheet 1";
+        a.querySelector("input.jexcel_formula").value = "";
+        b.setData(Array(100).fill(0, 99, Array(26).fill(0, 26, "")));
       }
     }
   };
@@ -238,7 +240,10 @@
 
     .declareMethod("buildOptions", function() {
       var str = "";
-      var formulas = ["SUM", "MIN", "MAX"];
+      var formulas = ["SUM", "MIN", "MAX", "COUNT", "AVERAGE", "FLOOR", "ABS", "SQRT", "ISEVEN", "ISODD", "TODAY", "UPPER", "LOWER", "TRUNC", "TYPE", "TRIM",
+                     "SIN", "COS", "TAN", "ARCSIN", "ARCCOS", "ARCTAN", "ROUND", "RAND", "RANDBETWEEN", "RADIANS", "POWER", "PI", "PHI", "MOD", "LEN", "LN",
+                      "LOG", "LOG10", "FACT", "TRUE", "FALSE", "AND", "OR", "XOR", "EVEN", "ODD", "EXP", "CONCATENATE", "BITAND", "BITOR", "BIN2DEC", "BIN2HEX",
+                     "BIN2OCT", "DEC2BIN", "DEC2HEX", "DEC2OCT", "HEX2BIN", "HEX2DEC", "HEX2OCT", "NOT", "OCT2BIN", "OCT2DEC", "OCT2HEX", "PRODUCT", "QUOTIENT"].sort();
       formulas.forEach(value => {
         str += "<option class='formula_option' value=" + value + ">" + value + "()" + "</option>";
       })

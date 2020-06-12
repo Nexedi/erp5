@@ -99,7 +99,7 @@
               var currentValue = sheet.getValueFromCoords(x, y);
               var value;
               if (currentValue === "" || currentValue[0] !== "="){
-                value = "=" + select.options[select.selectedIndex].value + "()";
+                value = "=" + select.options[select.selectedIndex].value + "(" + currentValue + ")";
               }
               else {
                 value = "=" + select.options[select.selectedIndex].value + "(" + currentValue.substring(1, currentValue.length) + ")";
@@ -210,6 +210,7 @@
      .onEvent("contextmenu", function (ev) {
         var gadget = this;
         if (ev.target.classList[0] === "jexcel_tab_link") {
+          ev.preventDefault();
           var name = prompt("Sheet name :", ev.target.textContent);
           ev.target.textContent = name !== null ? name : ev.target.textContent;
           return gadget.getContent()
@@ -221,7 +222,7 @@
             gadget.deferNotifyChangeBinded();
           })
         }
-      }, false, true)
+      }, false, false)
 
     .onEvent("click", function (ev) {
       var gadget = this;
