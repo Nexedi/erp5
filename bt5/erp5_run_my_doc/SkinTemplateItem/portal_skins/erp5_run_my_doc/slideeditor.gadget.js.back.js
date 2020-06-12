@@ -403,15 +403,16 @@
       // and modify the slide as expected
       if (display_step === DISPLAY_SLIDE) {
         // Save the slide modification
-        // XXX Protect with the onstatechange mutex
         queue = gadget.getDeclaredGadget(FORMBOX_SCOPE)
           .push(function (formbox_gadget) {
             return formbox_gadget.getContent();
           })
           .push(function (formbox_content_dict) {
-            gadget.state.value = updateSlideDict(gadget.state.value, formbox_content_dict, gadget.state.display_index);
-            // console.log(formbox_content_dict);
-            // throw new Error('Dialog not handled: ' + slide_dialog + formbox_content_dict);
+            gadget.state.value = updateSlideDict(
+              gadget.state.value,
+              formbox_content_dict,
+              gadget.state.display_index
+            );
           });
       } else if ([DISPLAY_LIST].indexOf(display_step) === -1) {
         throw new Error('Display form not handled: ' + display_step);
@@ -427,8 +428,8 @@
           }
           console.log('getcontent', result);
           return result;
-        })
-    })
+        });
+    }, {mutex: 'statechange'})
 
     .onStateChange(function (modification_dict) {
       var gadget = this,
@@ -438,11 +439,6 @@
       if (display_step === DISPLAY_LIST) {
         return renderSlideList(gadget);
       }
-/*
-      if (display_step === 'display_new_slide') {
-        return renderNewSlideDialog(gadget);
-      }
-*/
 
       if (display_step === DISPLAY_SLIDE) {
         if (slide_dialog === DIALOG_SLIDE) {
@@ -479,8 +475,6 @@
       // is checked and content propagated to the gadget state value
       queue = gadget.getContent();
 
-      // Actions from slide list
-
       // Actions from a slide dialog
       if (evt.target.className.indexOf("next-btn") !== -1) {
         return queue
@@ -514,7 +508,10 @@
           .push(function () {
             return gadget.changeState({
               display_step: DISPLAY_SLIDE,
-              display_index: parseInt(evt.target.getAttribute('data-slide-index'), 10),
+              display_index: parseInt(
+                evt.target.getAttribute('data-slide-index'),
+                10
+              ),
               slide_dialog: gadget.state.slide_dialog || DIALOG_SLIDE
             });
           });
@@ -548,8 +545,6 @@
       }
 
       if (evt.target.className.indexOf("display-new") !== -1) {
-        // XXX add <section><h1></h1><details></details></section>
-        // XXX notifyChange
         return queue
           .push(function () {
             return gadget.changeState({
@@ -561,16 +556,6 @@
           });
       }
 
-/*
-      if (evt.target.className.indexOf("add-slide") !== -1) {
-        return addSlide(gadget)
-          .push(function () {
-            return gadget.changeState({
-              display_step: 'display_list'
-            });
-          });
-      }
-*/
       throw new Error('Unhandled button: ' + evt.target.textContent);
     }, false, false);
 
