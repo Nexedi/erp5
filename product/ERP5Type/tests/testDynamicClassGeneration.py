@@ -3152,6 +3152,67 @@ class TestZodbMixinComponent(TestZodbInterfaceComponent):
       person_type.setTypeMixinList(person_original_mixin_type_list)
       self.commit()
 
+
+class TestZodbDocumentComponentReload(TestZodbDocumentComponent):
+  def getBusinessTemplateList(self):
+    return (
+      'erp5_core',
+      'erp5_base',
+      'erp5_pdm',
+      'erp5_simulation',
+      'erp5_trade',
+    )
+
+  def testAsComposedDocumentDoesntLeakTypes(self):
+    from pympler import muppy
+    import types
+
+    all_object_list = muppy.get_objects()
+    class_object_list = muppy.filter(all_object_list, Type=types.ClassType)
+    type_object_list = muppy.filter(all_object_list, Type=types.TypeType)
+
+    movement = self.portal.newContent(portal_type='Movement')
+    for _ in range(10):
+      movement.asComposedDocument()
+      self.tic()
+
+    all_object_list = muppy.get_objects()
+    self.assertEqual(
+      class_object_list, 
+      muppy.filter(all_object_list, Type=types.ClassType),
+    )
+    self.assertEqual(
+      type_object_list,
+      muppy.filter(all_object_list, Type=types.TypeType)
+    )
+
+  def testAsComposedDocumentCacheIsCorrectlyFlushed(self):
+    bp_component = self.portal.portal_components['document.erp5.BusinessProcess']
+    bp_original_text_content = bp_component.getTextContent()
+
+    bp_component.setTextContent(
+      bp_original_text_content + """
+  def getVersion(self):
+    return 1
+      """
+    )
+    self.tic()
+
+    movement = self.portal.newContent(portal_type='Movement')
+    composed_movement = movement.asComposedDocument()
+    self.assertEqual(composed_movement.getVersion(), 1)
+
+    bp_component.setTextContent(
+      bp_original_text_content + """
+  def getVersion(self):
+    return 2
+      """
+    )
+    self.tic()
+
+    composed_movement = movement.asComposedDocument()
+    self.assertEqual(composed_movement.getVersion(), 2)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPortalTypeClass))
@@ -3161,4 +3222,5 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestZodbTestComponent))
   suite.addTest(unittest.makeSuite(TestZodbInterfaceComponent))
   suite.addTest(unittest.makeSuite(TestZodbMixinComponent))
+  suite.addTest(unittest.makeSuite(TestZodbDocumentComponentReload))
   return suite
