@@ -5496,7 +5496,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
         site.ERP5Site_updateTranslationTable()
 
       # Clear cache to avoid reusing cached values with replaced objects.
-      site.portal_caches.clearAllCache()
+      try:
+        cache_tool = site.portal_caches
+      except AttributeError:
+        # Only happen when installing erp5_core shipping portal_caches
+        pass
+      else:
+        cache_tool.clearAllCache()
 
     security.declareProtected(Permissions.ManagePortal, 'install')
     install = _install
