@@ -14,15 +14,15 @@ Test stock browser for draft state
 <!-- }}} -->
 
 <!-- Check source -->
-<tal:block tal:define="link_title python: 'erp5_pdm_ui_test_source_site';
+<tal:block tal:define="node_category python: 'erp5_pdm_ui_test_source_site_title';
                        movement_count python: 0;">
-  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/init" />
+  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/check_inventory" />
 </tal:block>
 
 <!-- Check destination -->
-<tal:block tal:define="link_title python: 'erp5_pdm_ui_test_destination_site';
+<tal:block tal:define="node_category python: 'erp5_pdm_ui_test_destination_site_title';
                        movement_count python: 0;">
-  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/init" />
+  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/check_inventory" />
 </tal:block>
 
 
