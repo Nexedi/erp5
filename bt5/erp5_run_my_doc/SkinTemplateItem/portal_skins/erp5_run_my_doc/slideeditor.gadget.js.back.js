@@ -40,11 +40,8 @@
 
     // Clone the slide,
     // as we will remove the h1/details to calculate the content
-    console.log(slide);
-
     slide = slide.cloneNode(true);
-    console.log(slide);
-    // console.log(slide.outerHTML);
+
     // XXX drop img handling for now
     // As it seems it was a hack to allow image upload
     // which is not working anymore in xhtml style
@@ -74,7 +71,6 @@
     // Finally, extract the slide
     result.slide_html = slide.innerHTML;
 
-    console.log('slide_dict', result);
     return result;
   }
 
@@ -94,7 +90,6 @@
       class_string,
       key;
 
-    console.log("XXX", slide_dict, value_dict);
     // Hack: remove keys sent to erp5
     delete value_dict['default_type:int'];
     for (key in value_dict) {
@@ -176,97 +171,84 @@
     return button_list;
   }
 
-  function renderCommentDialog(gadget) {
-    var formbox;
-
-    return gadget.declareGadget('gadget_erp5_form.html', {
-      scope: FORMBOX_SCOPE
-    })
-      .push(function (result) {
-        formbox = result;
-        return formbox.render({
-          erp5_document: {"_embedded": {"_view": {
-
+  ///////////////////////////////////////////////////
+  // Page view handling
+  ///////////////////////////////////////////////////
+  function getCKEditorJSON(key, value) {
+    return {
+      erp5_document: {
+        "_embedded": {
+          "_view": {
             "your_slide_content": {
               "title": "XXX Slide Text",
               "type": "GadgetField",
               "url": "gadget_editor.html",
-              "renderjs_extra": '{"portal_type": "Web Page", "content_type": "text/html", "editor": "fck_editor", "maximize": true}',
+              "renderjs_extra": JSON.stringify({
+                "portal_type": "Web Page",
+                "content_type": "text/html",
+                "editor": "fck_editor",
+                "maximize": true
+              }),
               "editable": 1,
-              "key": "comment_html",
-              "default": getSlideDict(gadget.state.value, gadget.state.display_index).comment_html//slide.querySelector('details').innerHTML
+              "key": key,
+              "default": value
             }
-          }},
-            "_links": {
-              "type": {
-                // form_list display portal_type in header
-                name: ""
-              }
-            }},
-          form_definition: {
-            group_list: [
-              ["bottom",
-                 [["your_slide_content"]
-                  ]
-              ]
-            ]
           }
-        });
-      })
-      .push(function () {
-        domsugar(gadget.element, [
-          buildPageTitle(gadget, 'Slide'),
-          formbox.element,
-          domsugar('div', {'class': 'edit-picture'}, buildSlideButtonList(gadget)),
-          // domsugar('button', {type: "button", text: "Add", class: "add-slide"})
-        ]);
-      });
+        },
+        "_links": {
+          "type": {
+            // form_list display portal_type in header
+            name: ""
+          }
+        }
+      },
+      form_definition: {
+        group_list: [
+          ["bottom", [["your_slide_content"]]]
+        ]
+      }
+    };
   }
 
+  function renderXXXSlideDialog(gadget, slide_dialog, is_updated) {
+    var formbox,
+      render_dict;
 
-  function renderSlideDialog(gadget) {
-    var formbox;
+    if (slide_dialog === DIALOG_SLIDE) {
+      render_dict = getCKEditorJSON(
+        "slide_html",
+        getSlideDict(gadget.state.value,
+                     gadget.state.display_index).slide_html
+      );
+    } else if (slide_dialog === DIALOG_COMMENT) {
+      render_dict = getCKEditorJSON(
+        "comment_html",
+        getSlideDict(gadget.state.value,
+                     gadget.state.display_index).comment_html
+      );
+    } else {
+      // Ease developper work by raising for not handled cases
+      throw new Error('Unhandled dialog: ' + slide_dialog);
+    }
+    /*
+    if (slide_dialog === DIALOG_METADATA) {
+      return renderMetadataDialog(gadget, modification_dict.hasOwnProperty('display_step'));
+    }
+    */
 
     return gadget.declareGadget('gadget_erp5_form.html', {
       scope: FORMBOX_SCOPE
     })
       .push(function (result) {
         formbox = result;
-        return formbox.render({
-          erp5_document: {"_embedded": {"_view": {
-
-            "your_slide_content": {
-              "title": "XXX Slide Text",
-              "type": "GadgetField",
-              "url": "gadget_editor.html",
-              "renderjs_extra": '{"portal_type": "Web Page", "content_type": "text/html", "editor": "fck_editor", "maximize": true}',
-              "editable": 1,
-              "key": "slide_html",
-              "default": getSlideDict(gadget.state.value, gadget.state.display_index).slide_html//slide.querySelector('details').innerHTML
-            }
-          }},
-            "_links": {
-              "type": {
-                // form_list display portal_type in header
-                name: ""
-              }
-            }},
-          form_definition: {
-            group_list: [
-              ["bottom",
-                 [["your_slide_content"]
-                  ]
-              ]
-            ]
-          }
-        });
+        return formbox.render(render_dict);
       })
       .push(function () {
         domsugar(gadget.element, [
           buildPageTitle(gadget, 'Slide'),
-          formbox.element,
-          domsugar('div', {'class': 'edit-picture'}, buildSlideButtonList(gadget)),
-          // domsugar('button', {type: "button", text: "Add", class: "add-slide"})
+          domsugar('div', {'class': 'edit-picture'},
+                   buildSlideButtonList(gadget)),
+          formbox.element
         ]);
       });
   }
@@ -345,9 +327,6 @@
       });
   }
 
-  ///////////////////////////////////////////////////
-  // Page view handling
-  ///////////////////////////////////////////////////
   function renderSlideList(gadget) {
     // Get the full HTML
     var text_content = gadget.state.value,
@@ -368,10 +347,12 @@
                           'class': 'display-new'})
     ]));
 
-    console.log(text_content);
     domsugar(gadget.element, [div]);
   }
 
+  ///////////////////////////////////////////////////
+  // Gadget
+  ///////////////////////////////////////////////////
   rJS(window)
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareJob("deferNotifyChange", function () {
@@ -426,7 +407,6 @@
           if (gadget.state.editable) {
             result[gadget.state.key] = gadget.state.value;
           }
-          console.log('getcontent', result);
           return result;
         });
     }, {mutex: 'statechange'})
@@ -441,17 +421,11 @@
       }
 
       if (display_step === DISPLAY_SLIDE) {
-        if (slide_dialog === DIALOG_SLIDE) {
-          return renderSlideDialog(gadget, modification_dict.hasOwnProperty('display_step'));
-        }
-        if (slide_dialog === DIALOG_COMMENT) {
-          return renderCommentDialog(gadget, modification_dict.hasOwnProperty('display_step'));
-        }
-        if (slide_dialog === DIALOG_METADATA) {
-          return renderMetadataDialog(gadget, modification_dict.hasOwnProperty('display_step'));
-        }
-        // Ease developper work by raising for not handled cases
-        throw new Error('Unhandled dialog: ' + slide_dialog);
+        return renderXXXSlideDialog(
+          gadget,
+          slide_dialog,
+          modification_dict.hasOwnProperty('display_step')
+        );
       }
 
       // Ease developper work by raising for not handled cases
