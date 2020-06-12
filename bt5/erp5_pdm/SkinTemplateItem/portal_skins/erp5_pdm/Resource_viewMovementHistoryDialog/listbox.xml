@@ -165,10 +165,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -178,9 +174,7 @@
                 </item>
                 <item>
                     <key> <string>default_params</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -195,15 +189,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -271,19 +257,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>stat_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>stat_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>url_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -296,16 +274,7 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>section_title</string>
-                          <string>Owner</string>
-                        </tuple>
-                        <tuple>
-                          <string>variation_text</string>
-                          <string>Variation</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -327,33 +296,43 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>date</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>getExplanationText</string>
+                          <string>Explanation</string>
+                        </tuple>
+                        <tuple>
                           <string>node_title</string>
-                          <string>Site or Warehouse</string>
+                          <string>Stock</string>
+                        </tuple>
+                        <tuple>
+                          <string>section_title</string>
+                          <string>Owner</string>
                         </tuple>
                         <tuple>
                           <string>variation_category_item_list</string>
                           <string>Variation</string>
                         </tuple>
                         <tuple>
-                          <string>getCurrentInventory</string>
-                          <string>Current</string>
+                          <string>total_quantity</string>
+                          <string>Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>getAvailableInventory</string>
-                          <string>Available</string>
+                          <string>running_total_quantity</string>
+                          <string>Total Quantity</string>
                         </tuple>
                         <tuple>
-                          <string>inventory</string>
-                          <string>Future</string>
+                          <string>getTranslatedSimulationStateTitle</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>count_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -364,6 +343,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>default_display_style</string> </key>
+                    <value> <string>table</string> </value>
+                </item>
+                <item>
                     <key> <string>default_params</string> </key>
                     <value>
                       <list/>
@@ -372,6 +355,12 @@
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_style_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
@@ -397,16 +386,16 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>getCurrentInventory</string>
-                          <string>Current</string>
+                          <string>date</string>
+                          <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>getAvailableInventory</string>
-                          <string>Available</string>
+                          <string>variation_text</string>
+                          <string>Variation</string>
                         </tuple>
                         <tuple>
-                          <string>inventory</string>
-                          <string>Future</string>
+                          <string>total_quantity</string>
+                          <string>Quantity</string>
                         </tuple>
                         <tuple>
                           <string>variation_category_item_list</string>
@@ -430,7 +419,15 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>global_search_column</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
@@ -439,12 +436,12 @@
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
-                    <value> <string>Resource_viewInventory</string> </value>
+                    <value> <string>Resource_viewInventoryDialog</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -452,6 +449,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_navigation_template</string> </key>
+                    <value> <string>ListBox_viewSliderPageNavigationRenderer</string> </value>
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
@@ -474,6 +475,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>row_css_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>search</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -494,7 +499,12 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>date</string>
+                          <string>Date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -512,12 +522,24 @@
                 <item>
                     <key> <string>stat_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>style_columns</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Stock per Variation</string> </value>
+                    <value> <string>Movements</string> </value>
+                </item>
+                <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
@@ -533,19 +555,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:[(\'group_by_section\', 0), (\'group_by_node\', 1), (\'group_by_variation\', 1)]</string> </value>
+            <key> <string>method_name</string> </key>
+            <value> <string>getMovementHistoryList</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -558,33 +574,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>getFutureInventoryCount</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>getFutureInventoryList</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>Resource_statInventory</string> </value>
+            <value> <string>Resource_getMovementHistoryStat</string> </value>
         </item>
       </dictionary>
     </pickle>

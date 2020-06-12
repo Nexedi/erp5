@@ -67,9 +67,9 @@
 
   <tal:block metal:define-macro="go_to_stock_view">
     <tr>
-      <td colspan="3"><b>Go to Stock view</b></td>
+      <td colspan="3"><b>Go to Stock report</b></td>
     </tr>
-    <tal:block tal:define="click_configuration python: {'text': 'Views'}">
+    <tal:block tal:define="click_configuration python: {'text': 'Export'}">
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
     </tal:block>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
