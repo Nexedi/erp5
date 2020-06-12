@@ -3232,6 +3232,60 @@ class TestZodbMixinComponent(TestZodbInterfaceComponent):
       person_type.setTypeMixinList(person_original_mixin_type_list)
       self.commit()
 
+
+class TestZodbDocumentComponentReload(TestZodbDocumentComponent):
+  def getBusinessTemplateList(self):
+    return (
+      'erp5_core',
+      'erp5_base',
+      'erp5_pdm',
+      'erp5_simulation',
+      'erp5_trade',
+    )
+
+  def _setBusinessProcessComponentTextContent(self, value):
+    component = self.portal.portal_components['document.erp5.BusinessProcess']
+    component.setTextContent(value)
+    self.tic()
+
+  def testAsComposedDocumentCacheIsCorrectlyFlushed(self):
+    component = self.portal.portal_components['document.erp5.BusinessProcess']
+    component_original_text_content = component.getTextContent()
+
+    # Use try/finally to restore the content of
+    # document.erp5.BusinessProcess as using addCleanup function here raises
+    # with :
+    #   ConnectionStateError: Shouldn't load state for
+    #   Products.DCWorkflow.Scripts.Scripts 0x099ad38a68606074
+    #   when the connection is closed
+    try:
+      self._setBusinessProcessComponentTextContent(
+        component_original_text_content + """
+  def getVersion(self):
+    return 1
+        """
+      )
+
+      movement = self.portal.newContent(portal_type='Movement')
+      composed_movement = movement.asComposedDocument()
+      self.assertEqual(composed_movement.getVersion(), 1)
+
+      self._setBusinessProcessComponentTextContent(
+        component_original_text_content + """
+  def getVersion(self):
+    return 2
+        """
+      )
+
+      composed_movement = movement.asComposedDocument()
+      self.assertEqual(composed_movement.getVersion(), 2)
+
+    finally:
+      self._setBusinessProcessComponentTextContent(
+        component_original_text_content
+      )
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPortalTypeClass))
@@ -3241,4 +3295,5 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestZodbTestComponent))
   suite.addTest(unittest.makeSuite(TestZodbInterfaceComponent))
   suite.addTest(unittest.makeSuite(TestZodbMixinComponent))
+  suite.addTest(unittest.makeSuite(TestZodbDocumentComponentReload))
   return suite

@@ -120,6 +120,12 @@ class BusinessProcess(Path, XMLObject):
   zope.interface.implements(IBusinessProcess,
                             interfaces.IArrowBase)
 
+  # Cache used by composition mixin (as a composed document always inherit
+  # from BusinessProcess. The cache avoids memory leak, and has been moved
+  # here to be automatically flushed when BusinessProcess class is reseted
+  # by portal_components
+  asComposedDocument__class_cache = {}
+
   # ITradeModelPathProcess implementation
   security.declareProtected(Permissions.AccessContentsInformation, 'getTradeModelPathValueList')
   def getTradeModelPathValueList(self, trade_phase=None, context=None, **kw):
