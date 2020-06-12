@@ -11,30 +11,112 @@ source_site_title = "erp5_pdm_ui_test_source_site_title"
 destination_site_id = "erp5_pdm_ui_test_destination_site"
 destination_site_title = "erp5_pdm_ui_test_destination_site_title"
 
-quantity_unit_category = portal.portal_categories.quantity_unit
 
 # validate rules
 for rule in portal.portal_rules.objectValues():
   if rule.getValidationState() != 'validated':
     rule.validate()
 
-# Create resources
+# create categories
+quantity_unit_category = portal.portal_categories.quantity_unit
 if getattr(quantity_unit_category, "unit", None) is None:
   quantity_unit_category.newContent(
     portal_type="Category",
-    id="unit"
+    id="unit",
+    title="Unit",
   )
+if getattr(quantity_unit_category.unit, "piece", None) is None:
+  quantity_unit_category.unit.newContent(
+    portal_type="Category",
+    id="piece",
+    title="Piece",
+  )
+if getattr(quantity_unit_category, "mass", None) is None:
+  quantity_unit_category.newContent(
+    portal_type="Category",
+    id="mass",
+    title="Mass",
+  )
+if getattr(quantity_unit_category.mass, "kilogram", None) is None:
+  quantity_unit_category.mass.newContent(
+    portal_type="Category",
+    id="kilogram",
+    title="Kilogram",
+  )
+if getattr(quantity_unit_category.mass, "ton", None) is None:
+  quantity_unit_category.mass.newContent(
+    portal_type="Category",
+    id="ton",
+    title="Ton",
+  )
+
+metric_type_category = portal.portal_categories.metric_type
+if getattr(metric_type_category, "unit", None) is None:
+  metric_type_category.newContent(
+    portal_type="Category",
+    id="unit",
+    title="Unit",
+  )
+if getattr(metric_type_category.unit, "abstract_unit", None) is None:
+  metric_type_category.unit.newContent(
+    portal_type="Category",
+    id="abstract_unit",
+    title="Abstract Unit",
+  )
+if getattr(metric_type_category, "mass", None) is None:
+  metric_type_category.newContent(
+    portal_type="Category",
+    id="mass",
+    title="Mass",
+  )
+
+# create default quantity unit conversion groups
+if getattr(portal.quantity_unit_conversion_module, 'unit_conversion_group', None) is None:
+  portal.quantity_unit_conversion_module.newContent(
+      portal_type='Quantity Unit Conversion Group',
+      id='unit_conversion_group',
+      quantity_unit_value=quantity_unit_category.unit.piece,
+  ).validate()
+if getattr(portal.quantity_unit_conversion_module, 'mass_conversion_group', None) is None:
+  portal.quantity_unit_conversion_module.newContent(
+      portal_type='Quantity Unit Conversion Group',
+      id='mass_conversion_group',
+      quantity_unit_value=quantity_unit_category.mass.kilogram,
+  ).validate()
+if getattr(portal.quantity_unit_conversion_module.mass_conversion_group, 'ton', None) is None:
+  portal.quantity_unit_conversion_module.mass_conversion_group.newContent(
+      portal_type='Quantity Unit Conversion Definition',
+      id='ton',
+      quantity_unit_value=quantity_unit_category.mass.ton,
+      quantity=1000,
+  ).validate()
+  # unit conversions are cached, so reset cache if we changed them
+  portal.portal_caches.clearCacheFactory(('erp5_content_long', ))
+
+# Create resources
 portal.product_module.newContent(
   portal_type='Product',
   id='erp5_pdm_ui_test_product',
   title='erp5_pdm_ui_test_product_title',
-  quantity_unit='unit',
+  quantity_unit_value=quantity_unit_category.unit.piece,
 ).validate()
+portal.product_module.erp5_pdm_ui_test_product.newContent(
+  portal_type='Measure',
+  metric_type_value=metric_type_category.mass,
+  quantity_unit_value=quantity_unit_category.mass.kilogram,
+  quantity=1500,
+)
+portal.product_module.erp5_pdm_ui_test_product.newContent(
+  portal_type='Measure',
+  metric_type_value=metric_type_category.unit.abstract_unit,
+  quantity_unit_value=quantity_unit_category.unit.piece,
+  quantity=3,
+)
 portal.component_module.newContent(
   portal_type='Component',
   id='erp5_pdm_ui_test_component',
   title='erp5_pdm_ui_test_component_title',
-  quantity_unit='unit',
+  quantity_unit_value=quantity_unit_category.unit.piece,
 ).validate()
 
 

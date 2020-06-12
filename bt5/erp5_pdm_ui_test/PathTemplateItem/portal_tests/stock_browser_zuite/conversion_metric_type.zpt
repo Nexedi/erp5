@@ -1,0 +1,38 @@
+<html>
+<head><title>Test stock browser for metric type conversion</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Test stock browser for metric type conversion
+</td></tr>
+</thead>
+<tbody tal:define="init_method string:PdmZuite_createDelivery?state=delivered">
+
+<tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/init" />
+
+<!-- Check source -->
+<tal:block tal:define="node_category python: 'erp5_pdm_ui_test_source_site_title';
+                       metric_type string: Unit/Abstract Unit;
+                       inventory_list_count python: 1;
+                       current_inventory python: -3.0;
+                       available_inventory python: -3.0;
+                       future_inventory python: -3.0;
+                       ">
+  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/check_inventory" />
+</tal:block>
+
+<!-- Check destination -->
+<tal:block tal:define="node_category python: 'erp5_pdm_ui_test_destination_site_title';
+                       metric_type string: Unit/Abstract Unit;
+                       inventory_list_count python: 1;
+                       current_inventory python: 3.0;
+                       available_inventory python: 3.0;
+                       future_inventory python: 3.0;
+                       ">
+  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/check_inventory" />
+</tal:block>
+
+</tbody></table>
+</body>
+</html>
