@@ -464,12 +464,39 @@
     })
 
     .declareMethod('getContent', function () {
-      var result = {};
-      if (this.state.editable) {
-        result[this.state.key] = this.state.value;
+      var gadget = this,
+        display_step = gadget.state.display_step,
+        queue;
+
+      // First, check if the current display contains a dialog
+      // and modify the slide as expected
+      if (display_step === DISPLAY_SLIDE) {
+        // Save the slide modification
+        // XXX Protect with the onstatechange mutex
+        queue = gadget.getDeclaredGadget(FORMBOX_SCOPE)
+          .push(function (formbox_gadget) {
+            return formbox_gadget.getContent();
+          })
+          .push(function (formbox_content_dict) {
+            gadget.state.value = updateSlideDict(gadget.state.value, formbox_content_dict, gadget.state.display_index);
+            // console.log(formbox_content_dict);
+            // throw new Error('Dialog not handled: ' + slide_dialog + formbox_content_dict);
+          });
+      } else if ([DISPLAY_LIST].indexOf(display_step) === -1) {
+        throw new Error('Display form not handled: ' + display_step);
+      } else {
+        queue = new RSVP.Queue();
       }
-      console.log('getcontent', result);
-      return result;
+
+      return queue
+        .push(function () {
+          var result = {};
+          if (gadget.state.editable) {
+            result[gadget.state.key] = gadget.state.value;
+          }
+          console.log('getcontent', result);
+          return result;
+        })
     })
 
     .onStateChange(function (modification_dict) {
@@ -517,25 +544,9 @@
         return;
       }
 
-      // First, check if the current display contains a dialog
-      // and modify the slide as expected
-      if (display_step === DISPLAY_SLIDE) {
-        // Save the slide modification
-        // XXX Protect with the onstatechange mutex
-        queue = gadget.getDeclaredGadget(FORMBOX_SCOPE)
-          .push(function (formbox_gadget) {
-            return formbox_gadget.getContent();
-          })
-          .push(function (formbox_content_dict) {
-            gadget.state.value = updateSlideDict(gadget.state.value, formbox_content_dict, gadget.state.display_index);
-            // console.log(formbox_content_dict);
-            // throw new Error('Dialog not handled: ' + slide_dialog + formbox_content_dict);
-          });
-      } else if ([DISPLAY_LIST].indexOf(display_step) === -1) {
-        throw new Error('Display form not handled: ' + display_step);
-      } else {
-        queue = new RSVP.Queue();
-      }
+      // Always get content to ensure the possible displayed form
+      // is checked and content propagated to the gadget state value
+      queue = gadget.getContent();
 
       // Actions from slide list
 
