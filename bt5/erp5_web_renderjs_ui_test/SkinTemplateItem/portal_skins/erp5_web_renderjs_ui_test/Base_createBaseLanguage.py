@@ -83,6 +83,6 @@ for tmp in param_dict:
   context.Base_addUITestTranslation(message = tmp['message'], translation = tmp['translation'], language = tmp['language'])
 
 context.web_site_module.renderjs_runner.setAvailableLanguageSet(['en', 'fr', 'wo'])
-context.web_site_module.renderjs_runner.Base_createTranslateData(translation_data_file='gadget_translation_data.js',batch_mode=1)
+context.web_site_module.renderjs_runner.WebSite_updateTranslationData()
 context.ERP5Site_updateTranslationTable()
 return 'done'
