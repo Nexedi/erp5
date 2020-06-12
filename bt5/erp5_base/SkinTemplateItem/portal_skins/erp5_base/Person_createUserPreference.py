@@ -23,5 +23,8 @@ for assignment in context.contentValues(portal_type='Assignment'):
   if group:
     preference.setPreferredSectionCategory(group)
     preference.setPreferredAccountingTransactionSectionCategory(group)
+  site = assignment.getSite(base=True)
+  if site:
+    preference.setPreferredNodeCategory(site)
 
 return preference
