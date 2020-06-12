@@ -7,6 +7,7 @@ tool.erp5.DiffTool
 tool.erp5.DomainTool
 tool.erp5.IdTool
 tool.erp5.IntrospectionTool
+tool.erp5.NotificationTool
 tool.erp5.OrderTool
 tool.erp5.PasswordTool
 tool.erp5.RuleTool

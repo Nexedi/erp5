@@ -27,13 +27,10 @@
 #
 ##############################################################################
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import DTMLFile
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from AccessControl import ModuleSecurityInfo
 from zExceptions import Unauthorized
-from Products.ERP5 import _dtmldir
 
 from mimetypes import guess_type
 from email.mime.multipart import MIMEMultipart
@@ -48,7 +45,7 @@ from email import encoders
 class ConversionError(Exception): pass
 class MimeTypeException(Exception): pass
 
-security = ModuleSecurityInfo('Products.ERP5.Tool.NotificationTool')
+security = ModuleSecurityInfo(__name__)
 security.declarePublic('buildEmailMessage',)
 
 def buildAttachmentDictList(document_list, document_type_list=()):
@@ -57,7 +54,6 @@ def buildAttachmentDictList(document_list, document_type_list=()):
   for attachment in document_list:
     mime_type = None
     content = None
-    name = None
     if not attachment.getPortalType() in document_type_list:
       mime_type = 'application/pdf'
       content = attachment.asPDF() # XXX - Not implemented yet
@@ -149,7 +145,7 @@ def buildEmailMessage(from_url, to_url, msg=None,
 
     # try to guess the mime type
     if not attachment.has_key('mime_type'):
-      mime_type, encoding = guess_type( attachment_name )
+      mime_type, _ = guess_type( attachment_name )
       if mime_type is not None:
         attachment['mime_type'] = mime_type
       else:
@@ -207,9 +203,6 @@ class NotificationTool(BaseTool):
 
   # Declarative Security
   security = ClassSecurityInfo()
-
-  security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-  manage_overview = DTMLFile( 'explainNotificationTool', _dtmldir )
 
   # low-level interface
   def _sendEmailMessage(self, from_url, to_url, body=None, subject=None,
@@ -396,48 +389,48 @@ class NotificationTool(BaseTool):
     # NOTE: this implementation should also make sure that the current
     # buildEmailMessage method defined here and the Event.send method
     # are merged once for all
-
-    if self.getNotifierList():
-      # CRM is installed - so we can lookup notification preferences
-      if notifier_list is None:
-        # Find which notifier to use on preferences
-        if priority_level not in ('low', 'medium', 'high'): # XXX Better naming required here
-          priority_level = 'high'
-        notifier_list = self.preferences.getPreference(
-              'preferred_%s_priority_nofitier_list' % priority_level)
-      event_list = []
-      for notifier in notifier_list:
-        event_module = self.getDefaultModule(notifier)
-        new_event = event_module.newContent(portal_type=notifier, temp_object=store_as_event)
-        event_list.append(new_event)
-    else:
-      # CRM is not installed - only notification by email is possible
-      # So create a temp object directly
-      new_event = self.newContent(temp_object=True, portal_type='Event', id='_')
-      event_list = [new_event]
-
-    if event in event_list:
-      # We try to build events using the same parameters as the one
-      # we were provided for notification.
-      # The handling of attachment is still an open question:
-      # either use relation (to prevent duplication) or keep
-      # a copy inside. It is probably a good idea to
-      # make attachment_list polymorphic in order to be able
-      # to provide different kinds of attachments can be provided
-      # Either document references or binary data.
-      event.build(sender=sender, recipient=recipient, subject=subject,
-                  message=message, attachment_list=attachment_list,) # Rename here and add whatever
-                                                                     # parameter makes sense such
-                                                                     # as text format
-      event.send() # Make sure workflow transition is invoked if this is
-                   # a persistent notification
-
-      # Aggregation could be handled by appending the notification
-      # to an existing message rather than creating a new one.
-      # Sending the message should be handled by the alarm based
-      # on a date value stored on the event. This probably required
-      # a new workflow state to represent events which are waiting
-      # for being sent automatically. (ie. scheduled sending)
+    #
+    #if self.getNotifierList():
+    #  # CRM is installed - so we can lookup notification preferences
+    #  if notifier_list is None:
+    #    # Find which notifier to use on preferences
+    #    if priority_level not in ('low', 'medium', 'high'): # XXX Better naming required here
+    #      priority_level = 'high'
+    #    notifier_list = self.preferences.getPreference(
+    #          'preferred_%s_priority_nofitier_list' % priority_level)
+    #  event_list = []
+    #  for notifier in notifier_list:
+    #    event_module = self.getDefaultModule(notifier)
+    #    new_event = event_module.newContent(portal_type=notifier, temp_object=store_as_event)
+    #    event_list.append(new_event)
+    #else:
+    #  # CRM is not installed - only notification by email is possible
+    #  # So create a temp object directly
+    #  new_event = self.newContent(temp_object=True, portal_type='Event', id='_')
+    #  event_list = [new_event]
+    #
+    #if event in event_list:
+    #  # We try to build events using the same parameters as the one
+    #  # we were provided for notification.
+    #  # The handling of attachment is still an open question:
+    #  # either use relation (to prevent duplication) or keep
+    #  # a copy inside. It is probably a good idea to
+    #  # make attachment_list polymorphic in order to be able
+    #  # to provide different kinds of attachments can be provided
+    #  # Either document references or binary data.
+    #  event.build(sender=sender, recipient=recipient, subject=subject,
+    #              message=message, attachment_list=attachment_list,) # Rename here and add whatever
+    #                                                                 # parameter makes sense such
+    #                                                                 # as text format
+    #  event.send() # Make sure workflow transition is invoked if this is
+    #               # a persistent notification
+    #
+    #  # Aggregation could be handled by appending the notification
+    #  # to an existing message rather than creating a new one.
+    #  # Sending the message should be handled by the alarm based
+    #  # on a date value stored on the event. This probably required
+    #  # a new workflow state to represent events which are waiting
+    #  # for being sent automatically. (ie. scheduled sending)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getNotifierList')
   def getNotifierList(self):

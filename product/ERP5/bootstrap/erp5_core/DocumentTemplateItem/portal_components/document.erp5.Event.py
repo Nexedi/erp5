@@ -33,7 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass
 from erp5.component.document.Movement import Movement
-from Products.ERP5.Document.EmailDocument import EmailDocument
+from erp5.component.document.EmailDocument import EmailDocument
 
 class AcknowledgeableMixin:
   """
