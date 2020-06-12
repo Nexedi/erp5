@@ -31,7 +31,7 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.Tool.SessionTool import SESSION_CACHE_FACTORY
+from erp5.component.tool.SessionTool import SESSION_CACHE_FACTORY
 from string import letters as LETTERS
 from random import choice
 import time

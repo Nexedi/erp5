@@ -111,7 +111,6 @@ class DistributedSession(Session):
 
   def _updateStorage(self):
     """ Update backend storage. """
-    global storage_plugin
     storage_plugin.set(self.session_id, \
                        SESSION_SCOPE, \
                        value = self, \
@@ -130,7 +129,7 @@ class DistributedSession(Session):
     Session.clear(self)
     self._updateStorage()
 
-  def update(self, dict=None, **kwargs):
+  def update(self, dict=None, **kwargs): # pylint: disable=redefined-builtin
     Session.update(self, dict, **kwargs)
     self._updateStorage()
 
@@ -198,13 +197,13 @@ class SessionTool(BaseTool):
   security.declarePrivate('getSession')
   def getSession(self, session_id, session_duration=None):
     """ Return session object. """
-    storage_plugin = self._getStoragePlugin()
+    storage_plugin_ = self._getStoragePlugin()
     # expire explicitly as each session can have a different life duration
-    storage_plugin.expireOldCacheEntries(forceCheck=1)
-    session = storage_plugin.get(session_id, SESSION_SCOPE, None)
+    storage_plugin_.expireOldCacheEntries(forceCheck=1)
+    session = storage_plugin_.get(session_id, SESSION_SCOPE, None)
     if session is None:
       # init it in cache and use different Session types based on cache plugin type used as a storage
-      storage_plugin_type = storage_plugin.__class__.__name__
+      storage_plugin_type = storage_plugin_.__class__.__name__
       if storage_plugin_type in ("RamCache",):
         session = RamSession()
       elif storage_plugin_type in ("DistributedRamCache",):
@@ -215,14 +214,14 @@ class SessionTool(BaseTool):
         cache_plugin = self.portal_caches[SESSION_CACHE_FACTORY].objectValues()[0]
         session_duration = cache_plugin.getCacheDuration()
       session._updateSessionDuration(session_duration)
-      storage_plugin.set(session_id, SESSION_SCOPE, session, session_duration)
+      storage_plugin_.set(session_id, SESSION_SCOPE, session, session_duration)
     else:
       # cache plugin returns wrapper (CacheEntry instance)
       session = session.getValue()
     return session
 
   security.declarePublic('newContent')
-  def newContent(self, id, **kw):
+  def newContent(self, id, **kw): # pylint: disable=redefined-builtin
     """ Create new session object. """
     session =  self.getSession(id)
     session._updatecontext(self)
@@ -230,16 +229,16 @@ class SessionTool(BaseTool):
     return session
 
   security.declareProtected(Permissions.AccessContentsInformation, 'manage_delObjects')
-  def manage_delObjects(self, ids=[], REQUEST=None):
+  def manage_delObjects(self, ids=(), REQUEST=None, *args, **kw):
     """ Delete session object. """
-    storage_plugin = self._getStoragePlugin()
+    storage_plugin_ = self._getStoragePlugin()
     if not isinstance(ids, (list, tuple)):
       ids = [ids]
     for session_id in ids:
-      storage_plugin.delete(session_id, SESSION_SCOPE)
+      storage_plugin_.delete(session_id, SESSION_SCOPE)
 
   def _getStoragePlugin(self):
     """ Get cache storage plugin."""
-    global storage_plugin
+    global storage_plugin # pylint: disable=global-statement
     storage_plugin = self.portal_caches.getRamCacheRoot()[SESSION_CACHE_FACTORY].getCachePluginList()[0]
     return storage_plugin
