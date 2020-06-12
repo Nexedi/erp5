@@ -27,25 +27,19 @@
 #
 ##############################################################################
 
-import re, types
-from email.utils import formataddr
+import re
 from DateTime import DateTime
-from AccessControl import ClassSecurityInfo, Unauthorized
+from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.TextDocument import TextDocument
 from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5.mixin.mail_message import MailMessageMixin, testCharsetAndConvert
 from Products.ERP5.mixin.document_proxy import DocumentProxyMixin, DocumentProxyError
-from Products.ERP5.Tool.NotificationTool import buildEmailMessage
-from Products.ERP5Type.Utils import guessEncodingFromText
 from MethodObject import Method
-from zLOG import LOG, INFO
 
 try:
-  from Products.MimetypesRegistry.common import MimeTypeException
+  from Products.MimetypesRegistry.common import MimeTypeException # pylint: disable=unused-import
 except ImportError:
   class MimeTypeException(Exception):
     """
@@ -54,12 +48,11 @@ except ImportError:
     """
 
 from email import message_from_string
-from email.header import decode_header, HeaderParseError
 from email.utils import parsedate_tz, mktime_tz
 
 DEFAULT_TEXT_FORMAT = 'text/html'
 COMMASPACE = ', '
-_MARKER = []
+_MARKER = ()
 
 filename_regexp = 'name="([^"]*)"'
 
@@ -255,11 +248,11 @@ class EmailDocument(TextDocument, MailMessageMixin):
       else:
         part_encoding = part.get_content_charset()
         message_text = part.get_payload(decode=1)
-        text_result, encoding = testCharsetAndConvert(message_text,
+        text_result, _ = testCharsetAndConvert(message_text,
                                                       part.get_content_type(),
                                                       part_encoding)
         if part.get_content_type() == 'text/html':
-          mime, text_result = self.convert(format='html',
+          _, text_result = self.convert(format='html',
                                            text_content=text_result,
                                            charset=part_encoding)
 
@@ -287,7 +280,7 @@ class EmailDocument(TextDocument, MailMessageMixin):
       else:
         return part.get_content_type()
 
-  email_parser = re.compile('[ ;,<>\'"]*([^<> ;,\'"]+?\@[^<> ;,\'"]+)[ ;,<>\'"]*', re.IGNORECASE)
+  email_parser = re.compile(r'[ ;,<>\'"]*([^<> ;,\'"]+?\@[^<> ;,\'"]+)[ ;,<>\'"]*', re.IGNORECASE)
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentURLList')
   def getContentURLList(self):
     """

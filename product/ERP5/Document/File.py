@@ -201,7 +201,7 @@ class File(Document, CMFFile):
   security.declareProtected(Permissions.AccessContentsInformation, 'getMimeTypeAndContent')
   def getMimeTypeAndContent(self):
     """This method returns a tuple which contains mimetype and content."""
-    from Products.ERP5.Document.EmailDocument import MimeTypeException
+    from erp5.component.document.EmailDocument import MimeTypeException
     # return a tuple (mime_type, data)
     content = None
     mime_type = self.getContentType()
