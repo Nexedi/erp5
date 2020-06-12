@@ -104,21 +104,6 @@
       <td>regexp:.*view_movement_history.*</td>
     </tr>
     <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[1]/a</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>verifyValue</td>
-      <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[1]/a/@href</td>
-      <td>regexp:.*push_history.*</td>
-    </tr>
-    <tr>
-      <td>verifyValue</td>
-      <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[1]/a/@href</td>
-      <td>regexp:.*view_movement_history.*</td>
-    </tr>
-    <tr>
       <td colspan="3"><p></p></td>
     </tr>
   </tal:block>
