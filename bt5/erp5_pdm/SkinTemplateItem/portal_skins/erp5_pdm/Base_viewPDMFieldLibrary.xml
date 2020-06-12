@@ -229,6 +229,7 @@
                         <string>my_base_price_per_slice</string>
                         <string>my_report_mode_listbox_variation_category_item_list</string>
                         <string>my_view_mode_read_only_title</string>
+                        <string>my_dialog_mode_node_category</string>
                       </list>
                     </value>
                 </item>
