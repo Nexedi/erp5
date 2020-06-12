@@ -55,11 +55,11 @@
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Agriculture & forestry
+Agriculture &amp; forestry
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -89,19 +89,19 @@ Agriculture & forestry
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Agriculture & Hunting
+Agriculture &amp; Hunting
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Agriculture & hunting
+Agriculture &amp; hunting
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -169,11 +169,11 @@ Agriculture & hunting
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Fishing & aquaculture
+Fishing &amp; aquaculture
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -207,11 +207,11 @@ Fishing & aquaculture
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Mining & quarrying
+Mining &amp; quarrying
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -241,19 +241,19 @@ Mining & quarrying
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Coal & Lignite
+Coal &amp; Lignite
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Coal & lignite
+Coal &amp; lignite
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -283,19 +283,19 @@ Coal & lignite
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Petroleum & Gas
+Petroleum &amp; Gas
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Petroleum & gas
+Petroleum &amp; gas
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -465,11 +465,11 @@ Petroleum & gas
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Food products & beverages
+Food products &amp; beverages
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -605,11 +605,11 @@ Food products & beverages
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Tanning & dressing of leather
+Tanning &amp; dressing of leather
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -745,11 +745,11 @@ Tanning & dressing of leather
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Coke, refined petroleum & nuclear fuel
+Coke, refined petroleum &amp; nuclear fuel
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -817,11 +817,11 @@ Coke, refined petroleum & nuclear fuel
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Rubber & plastics
+Rubber &amp; plastics
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -957,11 +957,11 @@ Rubber & plastics
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Machinery & equipment
+Machinery &amp; equipment
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -995,11 +995,11 @@ Machinery & equipment
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Office, accounting & computing machinery
+Office, accounting &amp; computing machinery
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -1033,11 +1033,11 @@ Office, accounting & computing machinery
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Electrical machinery & apparatus
+Electrical machinery &amp; apparatus
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -1071,11 +1071,11 @@ Electrical machinery & apparatus
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Radio,TV & communication equipment
+Radio,TV &amp; communication equipment
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -1105,19 +1105,19 @@ Radio,TV & communication equipment
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Medical & Optical
+Medical &amp; Optical
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Medical, precision & optical instruments
+Medical, precision &amp; optical instruments
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -1151,11 +1151,11 @@ Medical, precision & optical instruments
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Motor vehicles & trailers
+Motor vehicles &amp; trailers
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -1287,19 +1287,19 @@ Motor vehicles & trailers
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Energy & Water
+Energy &amp; Water
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Electricity, gas & water
+Electricity, gas &amp; water
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -1329,19 +1329,19 @@ Electricity, gas & water
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Energy & Hot Water
+Energy &amp; Hot Water
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Electricity, gas, steam & hot water supply
+Electricity, gas, steam &amp; hot water supply
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -1375,11 +1375,11 @@ Electricity, gas, steam & hot water supply
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Collection, purification & distribution of water
+Collection, purification &amp; distribution of water
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -1447,11 +1447,11 @@ Collection, purification & distribution of water
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Wholesale & retail trade; motor vehicles
+Wholesale &amp; retail trade; motor vehicles
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -1481,19 +1481,19 @@ Wholesale & retail trade; motor vehicles
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Motor Vehicles & Fuel
+Motor Vehicles &amp; Fuel
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Sale & maintenance of motor vehicles
+Sale &amp; maintenance of motor vehicles
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -1591,19 +1591,19 @@ Sale & maintenance of motor vehicles
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Hotels & restaurants
+Hotels &amp; restaurants
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Hotels & restaurants
+Hotels &amp; restaurants
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -1633,19 +1633,19 @@ Hotels & restaurants
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Transport & Telco
+Transport &amp; Telco
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Transport, storage & communications
+Transport, storage &amp; communications
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -1781,11 +1781,11 @@ Transport, storage & communications
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Supporting & auxiliary activities
+Supporting &amp; auxiliary activities
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -1815,11 +1815,11 @@ Supporting & auxiliary activities
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Telco & Post
+Telco &amp; Post
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -1921,19 +1921,19 @@ Telco & Post
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Insurance & Pension
+Insurance &amp; Pension
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Insurance & pension funding
+Insurance &amp; pension funding
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -2001,11 +2001,11 @@ Insurance & pension funding
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Real estate, renting & business activities
+Real estate, renting &amp; business activities
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -2107,11 +2107,11 @@ Real estate, renting & business activities
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Computer & related activities
+Computer &amp; related activities
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -2141,11 +2141,11 @@ Computer & related activities
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-R&D
+R&amp;D
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -2213,19 +2213,19 @@ R&D
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Public & Defence
+Public &amp; Defence
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Public administration & defence
+Public administration &amp; defence
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -2289,19 +2289,19 @@ Public administration & defence
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Health & Social
+Health &amp; Social
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Health & social work
+Health &amp; social work
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -2335,11 +2335,11 @@ Health & social work
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Other community, social & personal services
+Other community, social &amp; personal services
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -2373,11 +2373,11 @@ Other community, social & personal services
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Sewage & refuse disposal, sanitation
+Sewage &amp; refuse disposal, sanitation
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -2445,11 +2445,11 @@ Sewage & refuse disposal, sanitation
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Recreational, cultural & sporting activities
+Recreational, cultural &amp; sporting activities
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -2653,11 +2653,11 @@ Recreational, cultural & sporting activities
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Extraterritorial organizations & bodies
+Extraterritorial organizations &amp; bodies
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                       </list>
@@ -4584,11 +4584,11 @@ Extraterritorial organizations & bodies
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-R&D Agent
+R&amp;D Agent
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -4622,11 +4622,11 @@ R&D Agent
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Project Management & Implementation
+Project Management &amp; Implementation
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -4802,19 +4802,19 @@ Project Management & Implementation
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Accounting & Finance
+Accounting &amp; Finance
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Accounting & Finance
+Accounting &amp; Finance
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -4844,11 +4844,11 @@ Accounting & Finance
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Accounting & Finance Manager
+Accounting &amp; Finance Manager
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -8288,11 +8288,11 @@ Accounting & Finance Manager
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-T&C Islander
+T&amp;C Islander
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -10846,11 +10846,11 @@ T&C Islander
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Australia & New Zealand
+Australia &amp; New Zealand
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -11691,11 +11691,11 @@ Australia & New Zealand
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Mineral & Textile
+Mineral &amp; Textile
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -11725,11 +11725,11 @@ Mineral & Textile
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Chemical & Gas
+Chemical &amp; Gas
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -11759,11 +11759,11 @@ Chemical & Gas
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Plastic & Elastic
+Plastic &amp; Elastic
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -11875,11 +11875,11 @@ Plastic & Elastic
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Mining & Drilling
+Mining &amp; Drilling
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -11909,11 +11909,11 @@ Mining & Drilling
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Farming & Fishing
+Farming &amp; Fishing
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -11973,11 +11973,11 @@ Farming & Fishing
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Manufacturing & Processing
+Manufacturing &amp; Processing
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -12007,11 +12007,11 @@ Manufacturing & Processing
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Handling & Conditioning
+Handling &amp; Conditioning
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -12101,11 +12101,11 @@ Handling & Conditioning
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Tools & General Machinery
+Tools &amp; General Machinery
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -12131,11 +12131,11 @@ Tools & General Machinery
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Equipment Components & Supplies
+Equipment Components &amp; Supplies
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -12281,11 +12281,11 @@ Equipment Components & Supplies
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Distribution & Conditioning
+Distribution &amp; Conditioning
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -12315,11 +12315,11 @@ Distribution & Conditioning
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Measuring & Testing
+Measuring &amp; Testing
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -12401,11 +12401,11 @@ Measuring & Testing
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-IT & Telecommunications
+IT &amp; Telecommunications
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -12465,11 +12465,11 @@ IT & Telecommunications
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Printing & Multimedia
+Printing &amp; Multimedia
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -12499,11 +12499,11 @@ Printing & Multimedia
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Defense & Security
+Defense &amp; Security
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -12593,11 +12593,11 @@ Defense & Security
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Sports & Leisure
+Sports &amp; Leisure
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -12627,11 +12627,11 @@ Sports & Leisure
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Food & Tobacco
+Food &amp; Tobacco
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -12721,11 +12721,11 @@ Food & Tobacco
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Apparel & Luggage
+Apparel &amp; Luggage
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -12897,11 +12897,11 @@ Apparel & Luggage
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Farming & Fishing
+Farming &amp; Fishing
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -12931,11 +12931,11 @@ Farming & Fishing
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Mining, Oil & Gas
+Mining, Oil &amp; Gas
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -12995,11 +12995,11 @@ Mining, Oil & Gas
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Production & Manufacturing
+Production &amp; Manufacturing
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -13089,11 +13089,11 @@ Production & Manufacturing
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Transport, Storage & Mail
+Transport, Storage &amp; Mail
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -13123,11 +13123,11 @@ Transport, Storage & Mail
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Management & Business
+Management &amp; Business
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -13217,11 +13217,11 @@ Management & Business
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Utilities & Public Sector
+Utilities &amp; Public Sector
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -13251,11 +13251,11 @@ Utilities & Public Sector
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Financial & Insurance
+Financial &amp; Insurance
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -13315,11 +13315,11 @@ Financial & Insurance
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Education & Training
+Education &amp; Training
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -13349,11 +13349,11 @@ Education & Training
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Tourism & Entertainment
+Tourism &amp; Entertainment
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -13383,11 +13383,11 @@ Tourism & Entertainment
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Personal & Domestic
+Personal &amp; Domestic
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -13417,11 +13417,11 @@ Personal & Domestic
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Defense & Security
+Defense &amp; Security
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -13451,11 +13451,11 @@ Defense & Security
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Politics & Civic Affairs
+Politics &amp; Civic Affairs
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -13890,11 +13890,11 @@ Politics & Civic Affairs
                           </item>
                           <item>
                               <key> <string>description</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Documents related to R&D
+Documents related to R&amp;D
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>id</string> </key>
@@ -13914,11 +13914,11 @@ Documents related to R&D
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-R&D
+R&amp;D
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
@@ -19946,19 +19946,19 @@ R&D
                           </item>
                           <item>
                               <key> <string>short_title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Australia & New Zealand
+Australia &amp; New Zealand
 
-]]></string> </value>
+</string> </value>
                           </item>
                           <item>
                               <key> <string>title</string> </key>
-                              <value> <string encoding="cdata"><![CDATA[
+                              <value> <string encoding="cdata">
 
-Australia & New Zealand
+Australia &amp; New Zealand
 
-]]></string> </value>
+</string> </value>
                           </item>
                         </dictionary>
                         <dictionary>
@@ -24213,114 +24213,122 @@ EAAQADYEAABjzAAAAAA=</string> </value>
   </record>
   <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
     <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1512558250.41</float>
-                        <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>0.0.0.0</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1512558250.41</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
     </pickle>
   </record>
   <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
     <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1512558250.41</float>
-                        <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-            <item>
-                <key> <string>validation_state</string> </key>
-                <value> <string>embedded</string> </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
+      <dictionary>
+        <item>
+            <key> <string>_log</string> </key>
+            <value>
+              <list>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass>
+                            <global name="DateTime" module="DateTime.DateTime"/>
+                          </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1512558250.41</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>embedded</string> </value>
+                  </item>
+                </dictionary>
+              </list>
+            </value>
+        </item>
+      </dictionary>
     </pickle>
   </record>
 </ZopeData>
