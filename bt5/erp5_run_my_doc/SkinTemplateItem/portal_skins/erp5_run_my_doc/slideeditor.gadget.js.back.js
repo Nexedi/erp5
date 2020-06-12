@@ -80,7 +80,9 @@
 
   function getSlideDict(presentation_html, slide_index) {
     var slide_list = getSlideElementList(presentation_html);
-    return getSlideDictFromSlideElement(getSlideFromList(slide_list, slide_index));
+    return getSlideDictFromSlideElement(
+      getSlideFromList(slide_list, slide_index)
+    );
   }
 
   function updateSlideDict(presentation_html, value_dict, slide_index) {
@@ -109,8 +111,10 @@
       class_string += ' ' + slide.classList[i];
     }
     slide.className = class_string;
-    slide.innerHTML = '<h1>' + slide_dict.title_html + '</h1>' + '<details>' + slide_dict.comment_html + '</details>' + slide_dict.slide_html;
-    console.log(slide);
+    slide.innerHTML = '<h1>' + slide_dict.title_html + '</h1>' +
+                      '<details>' + slide_dict.comment_html + '</details>' +
+                      slide_dict.slide_html;
+
     for (i = 0; i < slide_list.length; i += 1) {
       result += slide_list[i].outerHTML;
     }
@@ -125,7 +129,8 @@
     if (gadget.state.display_index !== null) {
       element_list.push(
         ' ' + (gadget.state.display_index + 1)
-        // domsugar('label', {'class': 'page-number', text: gadget.state.display_index})
+        // domsugar('label', {'class': 'page-number',
+        //                    text: gadget.state.display_index})
       );
     }
     return domsugar('div', {'class': 'camera-header'}, [
@@ -343,90 +348,16 @@
   ///////////////////////////////////////////////////
   // Page view handling
   ///////////////////////////////////////////////////
-  function addSlide(gadget) {
-    return gadget.getDeclaredGadget('formbox')
-      .push(function (formbox) {
-        return formbox.getContent();
-      })
-      .push(function (result) {
-        console.log(gadget.state);
-        console.log(result);
-        var section = domsugar('section', {
-          class: result.field_your_slide_type,
-          html: result.field_your_slide_content
-        });
-        section.insertBefore(
-          domsugar('h1', {html: result.field_your_chapter_title}),
-          section.firstChild
-        );
-        section.appendChild(domsugar(null, [
-          domsugar('details', {open: "true", html: result.field_your_text_content})
-        ]));
-        gadget.state.value += section.outerHTML;
-/*
-        $('input[name="field_your_upload_image"]', addSlideIframeContents).click(function() {updateUploadImageInput(addSlideIframeContents);});
-        $('select[name="field_your_slide_type"]', addSlideIframeContents).change(function() {updateImageInput(addSlideIframeContents);});
-        var submit_button = $("#dialog_submit_button", addSlideIframeContents).click(function(){
-          var section = document.createElement("section");
-          var className = $('select[name="field_your_slide_type"]', addSlideIframeContents).val();
-          $(section).addClass(className.toLowerCase());
-          var title = document.createElement("h1");
-          $(title).html($('input[name="field_your_chapter_title"]', addSlideIframeContents).val());
-          var details = document.createElement("details");
-          $(details).attr("open", "true")
-          $(details).html($('textarea[name="field_your_text_content"]', addSlideIframeContents).val());
-          $(section).append($(title));
-          var image_id = "";
-          var isScreenshot = className == 'Screenshot';
-          
-          // Append a new slide, update HTML Code
-          function appendSection(){
-            $(section).append($('textarea[name="field_your_slide_content"]', addSlideIframeContents).val());
-            $(section).append($(details));
-            var isTested = $('input[name="field_your_tested"]', addSlideIframeContents).attr('checked');
-            if((isTested == 'checked' || isTested) && (image_id != "")){
-              var test = createTest();
-              appendTestLine(test, "selectAndWait", "name=select_module", "label=Test Pages");
-              appendTestLine(test, "verifyTextPresent", "Test Pages", "");            
-              if(isScreenshot){
-                appendTestLine(test, "captureEntirePageScreenshot", image_id, "");
-              }
-              $(section).append(test);
-            } 
-            slideList.append($(section));
-            var i = 0;
-            if ($('#list > .edit_slide_button').length > 0) {
-              var i = parseInt($('#list > .edit_slide_button').filter(':last').attr('id').split('_')[2]) + 1;
-            }
-            appendSlideButtons(section, i);
-            $('#remove_slide_' + i).click(function() {removeClick(this);});
-            $('#edit_slide_' + i).click(function() {editClick(this);});
-            $(section).hover(function() {slideHover(this);}, function(){slideOut(this);}).mousedown(function() {slideOut(this);});
-            updateTextContent();
-          }
-          if(isScreenshot || className == 'Illustration') {
-            image = createNewImageTag(addSlideIframeContents);
-            image_id = "";
-            if (!isUrl(image.attr('src'))) {
-              image_id = image.attr('src');
-            }
-            $(section).append(image);
-          }
-          appendSection();
-*/
-      });
-  }
-
   function renderSlideList(gadget) {
     // Get the full HTML
     var text_content = gadget.state.value,
-      div = domsugar('div', {class: 'slide_list', html: text_content}),
+      div = domsugar('div', {'class': 'slide_list', html: text_content}),
       section_list = div.querySelectorAll(':scope > section'),
       i;
     for (i = 0; i < section_list.length; i += 1) {
       section_list[i].appendChild(
         domsugar('button', {type: 'button', text: 'XXX Edit',
-                 class: 'display-slide',
+                 'class': 'display-slide',
                  'data-slide-index': i})
       );
     }
@@ -434,7 +365,7 @@
     // div.appendChild(domsugar('section', {text: 'Add Slide'}));
     div.appendChild(domsugar('section', [
       domsugar('button', {type: 'button', text: 'XXX Add slide',
-                          class: 'display-new'})
+                          'class': 'display-new'})
     ]));
 
     console.log(text_content);
