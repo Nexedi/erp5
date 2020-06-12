@@ -5,7 +5,7 @@
 skins_tool = context.portal_skins
 selection_name_dict = {}
 
-ok_to_share_selection_form_list = ['Resource_viewInventory', 'Resource_viewMovementHistory']
+ok_to_share_selection_form_list = ['Resource_viewInventoryDialog', 'Resource_viewMovementHistoryDialog']
 
 for skin_name, skin_path_list in skins_tool.getSkinPaths():
   skins_tool.changeSkin(skin_name)
