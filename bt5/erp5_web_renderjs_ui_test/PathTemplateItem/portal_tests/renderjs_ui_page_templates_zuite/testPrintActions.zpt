@@ -47,7 +47,7 @@
 </tal:block>
 
 <tr><td>waitForText</td>
-    <td>//p[@id='field_last_form_id']</td>
+    <td>//div[@data-gadget-scope='field_last_form_id']//div[@data-gadget-scope='field']</td>
     <td>Foo_viewRelationField</td></tr>
 </tbody></table>
 </body>
