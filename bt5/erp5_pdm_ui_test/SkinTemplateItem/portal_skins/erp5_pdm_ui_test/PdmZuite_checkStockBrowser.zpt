@@ -10,28 +10,8 @@
     </tr>
   </tal:block>
 
-  <!--
-    Macro to check inventory displayed in stock browser.
-
-    This selects the node category and check each of the current, available and future
-    inventory match. Then for each value, it will click to "drill down" and check that the
-    movement history list show the expected number of lines.
-
-    Required parameters:
-      - node_category: the label of the node category to select in the dialog
-      - inventory_list_count: the number of "invenvory list" lines expected in the first dialog.
-      - current_inventory: the quantity for the current inventory
-      - available_inventory: the quantity for the available inventory
-      - future_inventory: the quantity for the future inventory
-
-    Optional parameters:
-      - select_node_category: if True (the default) the node category will be selected
-  -->
-  <tal:block
-    metal:define-macro="check_inventory"
-    tal:define="base_url python: '/' + here.getPortalObject().getId();
-                select_node_category select_node_category | python: True">
-
+  <!-- Internal macro to apply filter in dialog. -->
+  <tal:block metal:define-macro="_set_dialog_parameters">
     <tal:block tal:condition="select_node_category">
       <!-- Select node category in dialog -->
       <tr>
@@ -52,6 +32,66 @@
         <td tal:content='node_category'></td>
       </tr>
     </tal:block>
+
+    <tal:block tal:condition="quantity_unit">
+      <!-- Select quantity unit in dialog -->
+      <tr>
+        <td>select</td>
+        <td>//select[@name="field_your_quantity_unit"]</td>
+        <td tal:content='quantity_unit'></td>
+      </tr>
+      <tr>
+        <td>clickAndWait</td>
+        <td>Base_callDialogMethod:method</td>
+        <td></td>
+      </tr>
+    </tal:block>
+
+    <tal:block tal:condition="metric_type">
+      <!-- Select metric type in dialog -->
+      <tr>
+        <td>select</td>
+        <td>//select[@name="field_your_metric_type"]</td>
+        <td tal:content='metric_type'></td>
+      </tr>
+      <tr>
+        <td>clickAndWait</td>
+        <td>Base_callDialogMethod:method</td>
+        <td></td>
+      </tr>
+    </tal:block>
+
+  </tal:block>
+
+  <!--
+    Macro to check inventory displayed in stock browser.
+
+    This selects the node category and check each of the current, available and future
+    inventory match. Then for each value, it will click to "drill down" and check that the
+    movement history list show the expected number of lines.
+
+    Required parameters:
+      - node_category: the label of the node category to select in the dialog
+      - inventory_list_count: the number of "invenvory list" lines expected in the first dialog.
+      - current_inventory: the quantity for the current inventory
+      - available_inventory: the quantity for the available inventory
+      - future_inventory: the quantity for the future inventory
+
+    Optional parameters:
+      - select_node_category: if True (the default) the node category will be selected
+      - quantity_unit: the label of the quantity unit to select in dialog, to enable
+        quantity unit conversion
+      - metric_type: the label of the metric type to select in dialog, to enable
+        metric type conversion
+  -->
+  <tal:block
+    metal:define-macro="check_inventory"
+    tal:define="base_url python: '/' + here.getPortalObject().getId();
+                select_node_category select_node_category | python: True;
+                quantity_unit quantity_unit | python: False;
+                metric_type metric_type | python: False;">
+
+    <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/_set_dialog_parameters" />
 
     <!-- Check inventory -->
     <tr>
@@ -103,26 +143,9 @@
           <td></td>
         </tr>
 
-        <tal:block tal:condition="select_node_category">
-          <!-- Select node category in dialog (again) -->
-          <tr>
-            <td>select</td>
-            <td>//select[@name="field_your_node_category"]</td>
-            <td tal:content='node_category'></td>
-          </tr>
-          <tr>
-            <td>clickAndWait</td>
-            <td>Base_callDialogMethod:method</td>
-            <td></td>
-          </tr>
-        </tal:block>
-        <tal:block tal:condition="not: select_node_category">
-          <tr>
-            <td>assertSelected</td>
-            <td>//select[@name="field_your_node_category"]</td>
-            <td tal:content='node_category'></td>
-          </tr>
-        </tal:block>
+        <!-- apply dialog parameters again -->
+        <tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/_set_dialog_parameters" />
+
       </tal:block>
     </tal:block>
   </tal:block>

@@ -231,6 +231,8 @@
                         <string>my_view_mode_read_only_title</string>
                         <string>my_dialog_mode_node_category</string>
                         <string>my_dialog_mode_section_category</string>
+                        <string>my_dialog_mode_quantity_unit</string>
+                        <string>my_dialog_mode_metric_type</string>
                       </list>
                     </value>
                 </item>
