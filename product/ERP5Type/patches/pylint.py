@@ -210,19 +210,32 @@ def _getattr(self, name, *args, **kw):
         except AttributeError:
             raise e
 
-        # XXX: What about int, str or bool not having __module__?
         try:
             origin_module_name = attr.__module__
         except AttributeError:
-            raise e
-        if self.name == origin_module_name:
-            raise
+            from astroid import nodes
+            if isinstance(attr, dict):
+                ast = nodes.Dict(attr)
+            elif isinstance(attr, list):
+                ast = nodes.List(attr)
+            elif isinstance(attr, tuple):
+                ast = nodes.Tuple(attr)
+            elif isinstance(attr, set):
+                ast = nodes.Set(attr)
+            else:
+                try:
+                    ast = nodes.Const(attr)
+                except Exception:
+                    raise e
+        else:
+            if self.name == origin_module_name:
+                raise
 
-        # ast_from_class() actually works for any attribute of a Module
-        try:
-            ast = MANAGER.ast_from_class(attr)
-        except AstroidBuildingException:
-            raise e
+            # ast_from_class() actually works for any attribute of a Module
+            try:
+                ast = MANAGER.ast_from_class(attr)
+            except AstroidBuildingException:
+                raise e
 
         self.locals[name] = [ast]
         return [ast]
