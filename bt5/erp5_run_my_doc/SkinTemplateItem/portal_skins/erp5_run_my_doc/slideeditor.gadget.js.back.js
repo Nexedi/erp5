@@ -40,6 +40,8 @@
 
     // Clone the slide,
     // as we will remove the h1/details to calculate the content
+    console.log(slide);
+
     slide = slide.cloneNode(true);
     console.log(slide);
     // console.log(slide.outerHTML);
@@ -107,7 +109,7 @@
       class_string += ' ' + slide.classList[i];
     }
     slide.className = class_string;
-    slide.innerHTML = '<h1>' + slide_dict.title_html + '</h1>' + slide_dict.slide_html + '<details>' + slide_dict.comment_html + '</details>';
+    slide.innerHTML = '<h1>' + slide_dict.title_html + '</h1>' + '<details>' + slide_dict.comment_html + '</details>' + slide_dict.slide_html;
     console.log(slide);
     for (i = 0; i < slide_list.length; i += 1) {
       result += slide_list[i].outerHTML;
