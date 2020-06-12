@@ -2049,17 +2049,6 @@ class ERP5Generator(PortalGenerator):
       os.path.join(bt_path, 'PortalTypeAllowedContentTypeTemplateItem', 'allowed_content_types.xml')
       ).iterfind("portal_type[@id='%s']/*" % portal_type)]
 
-  def setupLastTools(self, p, **kw):
-    """
-    Set up finals tools
-    We want to set the activity tool only at the end to
-    make sure that we do not put un the queue the full reindexation
-    """
-    addERP5Tool(p, 'portal_rules', 'Rule Tool')
-    addERP5Tool(p, 'portal_simulation', 'Simulation Tool')
-    addERP5Tool(p, 'portal_deliveries', 'Delivery Tool')
-    addERP5Tool(p, 'portal_orders', 'Order Tool')
-
   def setupTemplateTool(self, p, **kw):
     """
     Setup the Template Tool. Security must be set strictly.
@@ -2098,16 +2087,10 @@ class ERP5Generator(PortalGenerator):
 
     # Add ERP5 Tools
     addERP5Tool(p, 'portal_categories', 'Category Tool')
-    addERP5Tool(p, 'portal_ids', 'Id Tool')
     if not p.hasObject('portal_templates'):
       self.setupTemplateTool(p)
     addERP5Tool(p, 'portal_trash', 'Trash Tool')
     addERP5Tool(p, 'portal_alarms', 'Alarm Tool')
-    addERP5Tool(p, 'portal_domains', 'Domain Tool')
-    addERP5Tool(p, 'portal_tests', 'Test Tool')
-    addERP5Tool(p, 'portal_password', 'Password Tool')
-    addERP5Tool(p, 'portal_introspections', 'Introspection Tool')
-    addERP5Tool(p, 'portal_acknowledgements', 'Acknowledgement Tool')
 
     # Add ERP5Type Tool
     addERP5Tool(p, 'portal_caches', 'Cache Tool')
@@ -2393,8 +2376,6 @@ class ERP5Generator(PortalGenerator):
 
     # Make sure the cache is initialized
     p.portal_caches.updateCache()
-
-    self.setupLastTools(p, **kw)
 
     # Make sure tools are cleanly indexed with a uid before creating children
     # XXX for some strange reason, member was indexed 5 times
