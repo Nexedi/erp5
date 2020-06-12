@@ -11,30 +11,71 @@ source_site_title = "erp5_pdm_ui_test_source_site_title"
 destination_site_id = "erp5_pdm_ui_test_destination_site"
 destination_site_title = "erp5_pdm_ui_test_destination_site_title"
 
-quantity_unit_category = portal.portal_categories.quantity_unit
 
 # validate rules
 for rule in portal.portal_rules.objectValues():
   if rule.getValidationState() != 'validated':
     rule.validate()
 
-# Create resources
+# create categories
+quantity_unit_category = portal.portal_categories.quantity_unit
 if getattr(quantity_unit_category, "unit", None) is None:
   quantity_unit_category.newContent(
     portal_type="Category",
-    id="unit"
+    id="unit",
+    title="Unit"
   )
+if getattr(quantity_unit_category.unit, "piece", None) is None:
+  quantity_unit_category.unit.newContent(
+    portal_type="Category",
+    id="piece",
+    title="Piece"
+  )
+if getattr(quantity_unit_category, "weight", None) is None:
+  quantity_unit_category.newContent(
+    portal_type="Category",
+    id="weight",
+    title="Weight"
+  )
+if getattr(quantity_unit_category.weight, "kilogram", None) is None:
+  quantity_unit_category.weight.newContent(
+    portal_type="Category",
+    id="kilogram",
+    title="Kilogram"
+  )
+
+metric_type_category = portal.portal_categories.metric_type
+if getattr(metric_type_category, "unit", None) is None:
+  metric_type_category.newContent(
+    portal_type="Category",
+    id="unit",
+    title="Unit"
+  )
+if getattr(metric_type_category, "weight", None) is None:
+  metric_type_category.newContent(
+    portal_type="Category",
+    id="weight",
+    title="Weight"
+  )
+
+# Create resources
 portal.product_module.newContent(
   portal_type='Product',
   id='erp5_pdm_ui_test_product',
   title='erp5_pdm_ui_test_product_title',
-  quantity_unit='unit',
+  quantity_unit_value=quantity_unit_category.unit.piece,
 ).validate()
+portal.product_module.erp5_pdm_ui_test_product.newContent(
+  portal_type='Measure',
+  metric_type_value=metric_type_category.weight,
+  quantity_unit_value=quantity_unit_category.weight.kilogram,
+  quantity=3,
+)
 portal.component_module.newContent(
   portal_type='Component',
   id='erp5_pdm_ui_test_component',
   title='erp5_pdm_ui_test_component_title',
-  quantity_unit='unit',
+  quantity_unit_value=quantity_unit_category.unit.piece,
 ).validate()
 
 
