@@ -33,7 +33,7 @@ import transaction
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
+from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5Type import _dtmldir
 from Products.ERP5Type.Cache import CacheFactory
 from Products.ERP5Type.Cache import CachingMethod
@@ -69,9 +69,9 @@ class CacheTool(BaseTool):
 
     def getRamCachePlugin(cp):
       cp_meta_type = cp.meta_type
-      id = cp.getCacheId()
+      id_ = cp.getCacheId()
       if cp_meta_type == 'ERP5 Ram Cache':
-        return RamCache(id)
+        return RamCache(id_)
       if cp_meta_type == 'ERP5 Distributed Ram Cache':
         ## even thougn we have such plugin in ZODB that doens't mean
         ## we have corresponding memcache module installed
@@ -85,7 +85,7 @@ class CacheTool(BaseTool):
               'server_max_key_length': memcached_plugin.getServerMaxKeyLength(),
               'server_max_value_length': memcached_plugin.getServerMaxValueLength(),
               'key_prefix': getattr(self, 'erp5_site_global_id', '')}
-            return DistributedRamCache(id, init_dict)
+            return DistributedRamCache(id_, init_dict)
 
     rd = {}
     for cf in self.objectValues('ERP5 Cache Factory'):
@@ -184,7 +184,6 @@ class CacheTool(BaseTool):
       assert REQUEST is None
       transaction.get().addBeforeCommitHook(self.clearCache,
                                             (cache_factory_list,))
-    ram_cache_root = self.getRamCacheRoot()
     for cf_key in cache_factory_list:
       self.clearCacheFactory(cf_key)
     if REQUEST is not None:

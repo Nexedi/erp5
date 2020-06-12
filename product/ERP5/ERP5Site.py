@@ -2093,7 +2093,6 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_alarms', 'Alarm Tool')
 
     # Add ERP5Type Tool
-    addERP5Tool(p, 'portal_caches', 'Cache Tool')
     addERP5Tool(p, 'portal_memcached', 'Memcached Tool')
 
     # Add erp5 catalog tool

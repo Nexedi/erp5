@@ -1,5 +1,6 @@
 mimetypes_registry
 portal_acknowledgements
+portal_caches
 portal_callables
 portal_contribution_registry
 portal_deliveries
