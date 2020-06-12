@@ -1,3 +1,6 @@
+bin/*
+buildout.cfg
+rewrite.py
 *.pyc
 *.pyo
 *.swp
