@@ -1,11 +1,16 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal">
-  <tal:block metal:define-macro="init" tal:define="base_url python: '/' + here.getPortalObject().getId()">
+  <tal:block metal:define-macro="check_inventory" tal:define="base_url python: '/' + here.getPortalObject().getId()">
 
-    <!-- Click on + link -->
+    <!-- Select node category in dialog -->
+    <tr>
+      <td>select</td>
+      <td>//select[@name="field_your_node_category"]</td>
+      <td tal:content='node_category'></td>
+    </tr>
     <tr>
       <td>clickAndWait</td>
-      <td tal:content='string://button[@value="site/${link_title}.0"]'>link=node</td>
+      <td>Base_callDialogMethod:method</td>
       <td></td>
     </tr>
 
@@ -48,6 +53,18 @@
         <tr>
           <td>clickAndWait</td>
           <td>//a[@class="listbox_title"]</td>
+          <td></td>
+        </tr>
+
+        <!-- Select node category in dialog (again) -->
+        <tr>
+          <td>select</td>
+          <td>//select[@name="field_your_node_category"]</td>
+          <td tal:content='node_category'></td>
+        </tr>
+        <tr>
+          <td>clickAndWait</td>
+          <td>Base_callDialogMethod:method</td>
           <td></td>
         </tr>
       </tal:block>

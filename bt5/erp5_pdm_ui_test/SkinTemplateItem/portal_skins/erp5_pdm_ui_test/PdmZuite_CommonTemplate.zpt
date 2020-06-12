@@ -70,11 +70,6 @@
       <td>//button[@name="Base_doReport:method"]</td>
       <td></td>
     </tr>
-    <tr>
-      <td>clickAndWait</td>
-      <td>//input[@class="listbox-tree-domain-tree-mode"]</td>
-      <td></td>
-    </tr>
   </tal:block>
 
   <tal:block metal:define-macro="toggleSaleSupplyLineBasePricePerSlice">
