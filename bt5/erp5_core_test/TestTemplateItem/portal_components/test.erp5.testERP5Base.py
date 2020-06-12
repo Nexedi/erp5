@@ -1153,7 +1153,8 @@ class TestERP5Base(ERP5TypeTestCase):
   def test_user_creation(self):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment',
-                                   group='nexedi/storever')
+                                   group='nexedi/storever',
+                                   site='distibution/tokyo')
     self.assertNotEquals(None, assignment.getGroupValue())
     assignment.open()
     self.portal.portal_workflow.doActionFor(person, 'create_user_action',
@@ -1182,6 +1183,9 @@ class TestERP5Base(ERP5TypeTestCase):
     # for his assignment group
     self.assertEqual('group/nexedi/storever',
         self.portal.portal_preferences.getPreferredSectionCategory())
+    # and assignment function
+    self.assertEqual('site/distibution/tokyo',
+        self.portal.portal_preferences.getPreferredNodeSectionCategory())
 
   def test_default_address_acquisition(self):
     # more complete version of test_04_SubordinationAndAddress
