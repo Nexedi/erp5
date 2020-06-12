@@ -261,7 +261,7 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
       if cname_id in ('transformed_resource_title', ):
         return resource.absolute_url()
        # A resource is defined, so try to display the movement list
-      form_id = 'Resource_viewMovementHistory'
+      form_id = 'Resource_viewMovementHistoryDialog'
       query_kw = self.getListItemParamDict(cname_id,
                                            selection_index,
                                            selection_name

@@ -62,7 +62,12 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/product_module/erp5_pdm_ui_test_product/Resource_viewInventory</td>
+      <td>${base_url}/product_module/erp5_pdm_ui_test_product/</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@name="Base_doReport:method"]</td>
       <td></td>
     </tr>
     <tr>
@@ -71,6 +76,7 @@
       <td></td>
     </tr>
   </tal:block>
+
   <tal:block metal:define-macro="toggleSaleSupplyLineBasePricePerSlice">
     <tr>
       <td>click</td>

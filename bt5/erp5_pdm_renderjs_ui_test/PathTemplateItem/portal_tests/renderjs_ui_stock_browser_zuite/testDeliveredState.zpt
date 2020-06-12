@@ -76,7 +76,7 @@ Test stock browser for confirmed state
 
 <tal:block metal:use-macro="here/PdmZuite_CommonTemplateForRenderjsUi/macros/check_links" />
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_listbox_loaded" />
-<tal:block metal:use-macro="here/PdmZuite_CommonTemplateForRenderjsUi/macros/go_to_stock_view" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 
 <tr>
   <td>assertElementPresent</td>
