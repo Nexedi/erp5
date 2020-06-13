@@ -50,7 +50,7 @@
             <value>
               <list>
                 <string>left</string>
-                <string>center</string>
+                <string>right</string>
               </list>
             </value>
         </item>
@@ -59,7 +59,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>center</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_predecessor_title_list</string>
@@ -69,9 +69,12 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_implicit_predecessor_title_list</string>
+                        <string>my_implicit_successor_title_list</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
