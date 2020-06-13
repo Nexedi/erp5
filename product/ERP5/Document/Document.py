@@ -476,7 +476,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitSuccessorValueList')
-  def getImplicitSuccessorValueList(self):
+  def getImplicitSuccessorValueList(self, portal_type=None, filter=None):
     """
       Find objects which we are referencing (if our text_content contains
       references of other documents). The whole implementation is delegated to
@@ -500,7 +500,14 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
 
       NOTE: passing a group_by parameter may be useful at a
       later stage of the implementation.
+      NOTE: portal_type and filter arguments are provided for compatibility
+      with relation field but are not taken into account at this point.
     """
+    if portal_type is not None and set(portal_type) != set(self.getPortalDocumentTypeList()):
+      raise NotImplementedError()
+    if filter:
+      raise NotImplementedError()
+
     tv = getTransactionalVariable() # XXX Performance improvement required
     cache_key = ('getImplicitSuccessorValueList', self.getPhysicalPath())
     try:
@@ -514,7 +521,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitPredecessorValueList')
-  def getImplicitPredecessorValueList(self):
+  def getImplicitPredecessorValueList(self, portal_type=None, filter=None):
     """
       This function tries to find document which are referencing us - by reference only, or
       by reference/language etc. Implementation is passed to
@@ -532,7 +539,13 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
 
       NOTE: passing a group_by parameter may be useful at a
       later stage of the implementation.
+      NOTE: portal_type and filter arguments are provided for compatibility
+      with relation field but are not taken into account at this point.
     """
+    if portal_type is not None and set(portal_type) != set(self.getPortalDocumentTypeList()):
+      raise NotImplementedError()
+    if filter:
+      raise NotImplementedError()
     return self._getTypeBasedMethod('getImplicitPredecessorValueList')()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getImplicitSimilarValueList')
