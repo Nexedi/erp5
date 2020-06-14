@@ -9,6 +9,6 @@ if not short_portal_type:
 id_group = ('reference', short_portal_type)
 default = 1
 new_id = portal.portal_ids.generateNewId(id_group=id_group, default=default)
-reference = '%s-%s' % (short_portal_type, new_id)
+reference = '%s-%06d' % (short_portal_type, new_id)
 
 context.setReference(reference)
