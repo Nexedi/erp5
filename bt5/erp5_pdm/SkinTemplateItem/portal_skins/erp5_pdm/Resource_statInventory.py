@@ -2,6 +2,8 @@ from Products.PythonScripts.standard import Object
 inventory_kw = {
   'selection_domain': selection_domain
 }
+if section_category:
+  inventory_kw['section_category'] = section_category
 if node_category:
   inventory_kw['node_category'] = node_category
 
