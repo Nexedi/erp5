@@ -2,20 +2,23 @@ div[data-gadget-url$="slideeditor.gadget.html"] {
   button {
     border: red 1px solid;
   }
-
+/*
   .field_container .bottom iframe {
     height: 40vh;
   }
   .field_container .bottom .editor-maximize iframe {
     height: 100%;
   }
-
+*/
   & > .slide_list {
     display: flex;
     flex-wrap: wrap;
 
     & > section {
       flex: 0 1 auto;
+      &[data-slide-index] {
+        cursor: move;
+      }
 
 
       // Display the section as block
@@ -33,6 +36,14 @@ div[data-gadget-url$="slideeditor.gadget.html"] {
       vertical-align: middle;
       text-align: center;
       color:#000000;
+
+      &.drag {
+        opacity: 0.4;
+      }
+      &.over {
+        // border: 2px solid #000000;
+        border-style: dotted;
+      }
 
       // Spacing between every section
       margin-right: 2em;

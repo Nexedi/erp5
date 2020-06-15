@@ -14,10 +14,11 @@
   // Slide format handling
   ///////////////////////////////////////////////////
   function getSlideElementList(presentation_html) {
-    return domsugar('div', {
+    // Convert to an Array so that array methods can be used to reorder slides
+    return Array.prototype.slice.call(domsugar('div', {
       'class': 'slide_list',
       html: presentation_html
-    }).querySelectorAll(':scope > section');
+    }).querySelectorAll(':scope > section'));
   }
 
   function getSlideFromList(slide_list, slide_index) {
@@ -81,12 +82,20 @@
     );
   }
 
+  function slideListAsHTML(slide_list) {
+    var i,
+      result = '';
+    for (i = 0; i < slide_list.length; i += 1) {
+      result += slide_list[i].outerHTML;
+    }
+    return result;
+  }
+
   function updateSlideDict(presentation_html, value_dict, slide_index) {
     var slide_list = getSlideElementList(presentation_html),
       slide = getSlideFromList(slide_list, slide_index),
       slide_dict = getSlideDictFromSlideElement(slide),
       i,
-      result = '',
       class_string,
       key;
 
@@ -110,10 +119,7 @@
                       '<details>' + slide_dict.comment_html + '</details>' +
                       slide_dict.slide_html;
 
-    for (i = 0; i < slide_list.length; i += 1) {
-      result += slide_list[i].outerHTML;
-    }
-    return result;
+    return slideListAsHTML(slide_list);
   }
 
   ///////////////////////////////////////////////////
@@ -336,6 +342,8 @@
       section_list = div.querySelectorAll(':scope > section'),
       i;
     for (i = 0; i < section_list.length; i += 1) {
+      section_list[i].draggable = true;
+      section_list[i].setAttribute('data-slide-index', i);
       section_list[i].appendChild(
         domsugar('button', {type: 'button', text: 'XXX Edit',
                  'class': 'display-slide',
@@ -531,6 +539,106 @@
       }
 
       throw new Error('Unhandled button: ' + evt.target.textContent);
+    }, false, false)
+
+    ///////////////////////////////////////////////////
+    // Drag / drop management
+    ///////////////////////////////////////////////////
+    .onEvent("dragstart", function (evt) {
+      var tag_name = evt.target.tagName;
+      if (tag_name !== 'SECTION') {
+        return;
+      }
+      // Store index of the dragged slide
+      evt.target.classList.add('drag');
+
+      evt.dataTransfer.effectAllowed = 'move';
+      evt.dataTransfer.setData('application/x-dragged-slide',
+                               evt.target.getAttribute('data-slide-index'));
+    }, false, false)
+
+    .onEvent("dragend", function (evt) {
+      var tag_name = evt.target.tagName;
+      if (tag_name !== 'SECTION') {
+        return;
+      }
+      evt.target.classList.remove('drag');
+    }, false, false)
+
+    .onEvent("dragover", function (evt) {
+      var tag_name = evt.target.tagName;
+      if (tag_name !== 'SECTION') {
+        return;
+      }
+      if (evt.preventDefault) {
+        evt.preventDefault(); // Necessary. Allows us to drop.
+      }
+      evt.dataTransfer.dropEffect = 'move';
+    }, false, false)
+
+    .onEvent("dragenter", function (evt) {
+      var tag_name = evt.target.tagName;
+      if (tag_name !== 'SECTION') {
+        return;
+      }
+
+      // Provide a visual feedback to the user
+      // Showing where the slide can be dropped
+      if (evt.target.getAttribute('data-slide-index')) {
+        evt.target.classList.add('over');
+      }
+    }, false, false)
+
+    .onEvent("dragleave", function (evt) {
+      var tag_name = evt.target.tagName;
+      if (tag_name !== 'SECTION') {
+        return;
+      }
+      evt.target.classList.remove('over');
+    }, false, false)
+
+    .onEvent("drop", function (evt) {
+      var gadget = this,
+        tag_name = evt.target.tagName,
+        slide_list,
+        source_index,
+        destination_index;
+
+      if (tag_name !== 'SECTION') {
+        return;
+      }
+
+      if (evt.preventDefault) {
+        evt.preventDefault(); // Necessary. Allows us to drop.
+      }
+
+      // Remove the over class
+      evt.target.classList.remove('over');
+
+      source_index = evt.dataTransfer.getData('application/x-dragged-slide');
+      if (source_index && evt.target.getAttribute('data-slide-index')) {
+        source_index = parseInt(
+          source_index,
+          10
+        );
+        destination_index = parseInt(
+          evt.target.getAttribute('data-slide-index'),
+          10
+        );
+
+        slide_list = getSlideElementList(gadget.state.value);
+        if (source_index !== destination_index) {
+          slide_list.splice(
+            destination_index,
+            0,
+            slide_list.splice(source_index, 1)[0]
+          );
+          return RSVP.all([
+            gadget.changeState({value: slideListAsHTML(slide_list)}),
+            gadget.notifyChange()
+          ]);
+        }
+      }
     }, false, false);
 
 

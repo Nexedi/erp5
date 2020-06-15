@@ -1,5 +1,13 @@
 div[data-gadget-url$="slideeditor.gadget.html"] {
   /*
+  .field_container .bottom iframe {
+    height: 40vh;
+  }
+  .field_container .bottom .editor-maximize iframe {
+    height: 100%;
+  }
+*/
+  /*
 #list {
   padding:0px;
   margin: 0px;
@@ -108,12 +116,6 @@ div[data-gadget-url$="slideeditor.gadget.html"] {
 div[data-gadget-url$="slideeditor.gadget.html"] button {
   border: red 1px solid;
 }
-div[data-gadget-url$="slideeditor.gadget.html"] .field_container .bottom iframe {
-  height: 40vh;
-}
-div[data-gadget-url$="slideeditor.gadget.html"] .field_container .bottom .editor-maximize iframe {
-  height: 100%;
-}
 div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list {
   display: flex;
   flex-wrap: wrap;
@@ -130,6 +132,15 @@ div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section {
   color: #000000;
   margin-right: 2em;
   margin-bottom: 2em;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section[data-slide-index] {
+  cursor: move;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section.drag {
+  opacity: 0.4;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section.over {
+  border-style: dotted;
 }
 div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section * {
   display: none;
