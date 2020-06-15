@@ -75,13 +75,6 @@
     return result;
   }
 
-  function getSlideDict(presentation_html, slide_index) {
-    var slide_list = getSlideElementList(presentation_html);
-    return getSlideDictFromSlideElement(
-      getSlideFromList(slide_list, slide_index)
-    );
-  }
-
   function slideListAsHTML(slide_list) {
     var i,
       result = '';
@@ -139,7 +132,7 @@
     ]);
   }
 
-  function buildSlideButtonList(gadget) {
+  function buildSlideButtonList(disable_previous, disable_next) {
     var button_list = [];
     button_list.push(
       domsugar('button', {
@@ -159,7 +152,7 @@
       }),
       domsugar('button', {
         type: 'button',
-        disabled: (gadget.state.display_index === 0),
+        disabled: disable_previous,
         'class': 'previous-btn ui-icon-fast-forward ui-btn-icon-left',
         text: 'Previous'
       }),
@@ -170,6 +163,7 @@
       }),
       domsugar('button', {
         type: 'button',
+        disabled: disable_next,
         'class': 'next-btn ui-icon-fast-forward ui-btn-icon-left',
         text: 'Next'
       })
@@ -279,24 +273,23 @@
   function renderSlideDialog(gadget, slide_dialog, is_updated) {
     var formbox,
       render_dict,
-      slide_dict,
+      slide_list = getSlideElementList(gadget.state.value),
+      slide_dict = getSlideDictFromSlideElement(
+        getSlideFromList(slide_list, gadget.state.display_index)
+      ),
       queue;
 
     if (slide_dialog === DIALOG_SLIDE) {
       render_dict = getCKEditorJSON(
         "slide_html",
-        getSlideDict(gadget.state.value,
-                     gadget.state.display_index).slide_html
+        slide_dict.slide_html
       );
     } else if (slide_dialog === DIALOG_COMMENT) {
       render_dict = getCKEditorJSON(
         "comment_html",
-        getSlideDict(gadget.state.value,
-                     gadget.state.display_index).comment_html
+        slide_dict.comment_html
       );
     } else if (slide_dialog === DIALOG_METADATA) {
-      slide_dict = getSlideDict(gadget.state.value,
-                                gadget.state.display_index);
       render_dict = getMetadataJSON(slide_dict.title_html, slide_dict.type);
     } else {
       // Ease developper work by raising for not handled cases
@@ -323,12 +316,18 @@
           );
           domsugar(gadget.element.querySelector('div.edit-picture'),
                    {'class': 'edit-picture'},
-                   buildSlideButtonList(gadget));
+                   buildSlideButtonList(
+              gadget.state.display_index === 0,
+              gadget.state.display_index === slide_list.length - 1
+            ));
         } else {
           domsugar(gadget.element, [
             buildPageTitle(gadget, 'Slide'),
             domsugar('div', {'class': 'edit-picture'},
-                     buildSlideButtonList(gadget)),
+                     buildSlideButtonList(
+                gadget.state.display_index === 0,
+                gadget.state.display_index === slide_list.length - 1
+              )),
             formbox.element
           ]);
         }
