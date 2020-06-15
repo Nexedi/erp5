@@ -668,19 +668,24 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.checkTradeModelRuleSimulationExpand(order)
     self.copyExpectedAmountDict(packing_list,
         self.modified_packing_list_line_quantity_ratio)
-
-    listbox = [{'listbox_key':line.getRelativeUrl(),
-                'choice':'SplitAndDefer'}
-               for line in packing_list.getMovementList()
-               if line.isDivergent()]
-    self.assertEqual(len(order), len(listbox))
-    self.portal.portal_workflow.doActionFor(
-      packing_list,
-      'split_and_defer_action',
-      start_date=packing_list.getStartDate() + 15,
-      stop_date=packing_list.getStopDate() + 25,
-      listbox=listbox)
-
+    solver_process = self.portal.portal_solver_processes.newSolverProcess(packing_list)
+    quantity_solver_decision_list = [x for x in solver_process.contentValues()
+        if x.getCausalityValue().getTestedProperty() == 'quantity']
+    self.assertTrue(quantity_solver_decision_list)
+    for quantity_solver_decision in quantity_solver_decision_list:
+      # use Quantity Split Solver.
+      quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Quantity Split Solver'])
+      # configure for Quantity Split Solver.
+      kw = {
+          'delivery_solver': 'FIFO Delivery Solver',
+          'start_date': packing_list.getStartDate() + 15,
+          'stop_date': packing_list.getStopDate() + 25,
+      }
+      quantity_solver_decision.updateConfiguration(**kw)
+    solver_process.buildTargetSolverList()
+    solver_process.solve()
+    self.tic()
+    self.buildPackingLists()
     self.tic()
     self.checkCausalityState(packing_list, 'solved')
     new_packing_list, = [x for x in order.getCausalityRelatedValueList(
