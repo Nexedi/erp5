@@ -1,0 +1,39 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>testImplicitSuccessor</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">testImplicitSuccessor</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/web_page_module/test-DMS.UI.Test.Web.Page/Document_viewRelated</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyText</td>
+  <td>//label[normalize-space(text()) = "Implicitly Related Documents"]/../div/a</td>
+  <td>Image for DMS UI Test</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//label[normalize-space(text()) = "Implicitly Related Documents"]/../div/a</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>field_my_title</td>
+  <td>Image for DMS UI Test</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

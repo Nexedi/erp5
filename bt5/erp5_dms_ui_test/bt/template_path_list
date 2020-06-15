@@ -1,3 +1,5 @@
+image_module/test-DMS.UI.Test.Image
 portal_categories/classification/**
 portal_tests/dms_zuite
 portal_tests/dms_zuite/**
+web_page_module/test-DMS.UI.Test.Web.Page
