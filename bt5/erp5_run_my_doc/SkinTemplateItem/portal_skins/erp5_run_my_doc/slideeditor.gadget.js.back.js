@@ -270,10 +270,11 @@
 
   }
 
-  function renderXXXSlideDialog(gadget, slide_dialog, is_updated) {
+  function renderSlideDialog(gadget, slide_dialog, is_updated) {
     var formbox,
       render_dict,
-      slide_dict;
+      slide_dict,
+      queue;
 
     if (slide_dialog === DIALOG_SLIDE) {
       render_dict = getCKEditorJSON(
@@ -296,20 +297,35 @@
       throw new Error('Unhandled dialog: ' + slide_dialog);
     }
 
-    return gadget.declareGadget('gadget_erp5_form.html', {
-      scope: FORMBOX_SCOPE
-    })
+    if (is_updated) {
+      queue = gadget.getDeclaredGadget(FORMBOX_SCOPE);
+    } else {
+      queue = gadget.declareGadget('gadget_erp5_form.html', {
+        scope: FORMBOX_SCOPE
+      });
+    }
+
+    return queue
       .push(function (result) {
         formbox = result;
         return formbox.render(render_dict);
       })
       .push(function () {
-        domsugar(gadget.element, [
-          buildPageTitle(gadget, 'Slide'),
-          domsugar('div', {'class': 'edit-picture'},
-                   buildSlideButtonList(gadget)),
-          formbox.element
-        ]);
+        if (is_updated) {
+          gadget.element.firstChild.replaceWith(
+            buildPageTitle(gadget, 'Slide')
+          );
+          domsugar(gadget.element.querySelector('div.edit-picture'),
+                   {'class': 'edit-picture'},
+                   buildSlideButtonList(gadget));
+        } else {
+          domsugar(gadget.element, [
+            buildPageTitle(gadget, 'Slide'),
+            domsugar('div', {'class': 'edit-picture'},
+                     buildSlideButtonList(gadget)),
+            formbox.element
+          ]);
+        }
       });
   }
 
@@ -407,10 +423,11 @@
       }
 
       if (display_step === DISPLAY_SLIDE) {
-        return renderXXXSlideDialog(
+        return renderSlideDialog(
           gadget,
           slide_dialog,
-          modification_dict.hasOwnProperty('display_step')
+          !(modification_dict.hasOwnProperty('display_step') ||
+            modification_dict.hasOwnProperty('slide_dialog'))
         );
       }
 
