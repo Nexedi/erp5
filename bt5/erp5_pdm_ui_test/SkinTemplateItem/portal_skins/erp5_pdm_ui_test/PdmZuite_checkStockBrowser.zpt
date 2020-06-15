@@ -1,6 +1,15 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal">
 
+  <tal:block metal:define-macro="init">
+    <tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init" />
+    <tr>
+      <td>clickAndWait</td>
+      <td>//button[@name="Base_doReport:method"]</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
   <tal:block
     metal:define-macro="check_inventory"
     tal:define="base_url python: '/' + here.getPortalObject().getId();
