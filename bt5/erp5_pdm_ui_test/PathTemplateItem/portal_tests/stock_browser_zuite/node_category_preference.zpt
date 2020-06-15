@@ -11,7 +11,7 @@ Test stock browser with node category preference
                    set_node_category_preference python: True">
 
 <!-- Setup {{{ -->
-<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init" />
+<tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/init" />
 <!-- }}} -->
 
 <!-- Check destination -->

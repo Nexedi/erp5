@@ -10,7 +10,7 @@ Test stock browser for draft state
 <tbody tal:define="init_method string:PdmZuite_createDelivery?state=draft">
 
 <!-- Setup {{{ -->
-<tal:block metal:use-macro="here/PdmZuite_CommonTemplate/macros/init" />
+<tal:block metal:use-macro="here/PdmZuite_checkStockBrowser/macros/init" />
 <!-- }}} -->
 
 <!-- Check source -->
