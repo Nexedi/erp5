@@ -1,15 +1,19 @@
 div[data-gadget-url$="slideeditor.gadget.html"] {
-  button {
-    border: red 1px solid;
+
+  & > .edit-picture {
+    button {
+      color: #212529;
+      padding: 3pt;
+      border: 1px solid rgba(0, 0, 0, 0.14);
+      border-radius: 0.325em;
+      display: inline-block;
+      margin-right: 6pt;
+      &:disabled {
+        color: #999999;
+      }
+    }
   }
-/*
-  .field_container .bottom iframe {
-    height: 40vh;
-  }
-  .field_container .bottom .editor-maximize iframe {
-    height: 100%;
-  }
-*/
+
   & > .slide_list {
     display: flex;
     flex-wrap: wrap;
@@ -18,6 +22,9 @@ div[data-gadget-url$="slideeditor.gadget.html"] {
       flex: 0 1 auto;
       &[data-slide-index] {
         cursor: move;
+      }
+      button {
+        border: red 1px solid;
       }
 
 

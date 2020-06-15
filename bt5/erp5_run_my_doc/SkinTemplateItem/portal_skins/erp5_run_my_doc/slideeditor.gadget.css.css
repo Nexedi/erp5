@@ -1,13 +1,5 @@
 div[data-gadget-url$="slideeditor.gadget.html"] {
   /*
-  .field_container .bottom iframe {
-    height: 40vh;
-  }
-  .field_container .bottom .editor-maximize iframe {
-    height: 100%;
-  }
-*/
-  /*
 #list {
   padding:0px;
   margin: 0px;
@@ -113,8 +105,16 @@ div[data-gadget-url$="slideeditor.gadget.html"] {
 }
 */
 }
-div[data-gadget-url$="slideeditor.gadget.html"] button {
-  border: red 1px solid;
+div[data-gadget-url$="slideeditor.gadget.html"] > .edit-picture button {
+  color: #212529;
+  padding: 3pt;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 0.325em;
+  display: inline-block;
+  margin-right: 6pt;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .edit-picture button:disabled {
+  color: #999999;
 }
 div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list {
   display: flex;
@@ -135,6 +135,9 @@ div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section {
 }
 div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section[data-slide-index] {
   cursor: move;
+}
+div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section button {
+  border: red 1px solid;
 }
 div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section.drag {
   opacity: 0.4;

@@ -132,39 +132,42 @@
     ]);
   }
 
-  function buildSlideButtonList(disable_previous, disable_next) {
+  function buildSlideButtonList(slide_dialog, disable_previous, disable_next) {
     var button_list = [];
     button_list.push(
       domsugar('button', {
         type: 'button',
-        'class': 'dialog-metadata ui-icon-fast-forward ui-btn-icon-left',
+        disabled: (slide_dialog === DIALOG_METADATA),
+        'class': 'dialog-metadata ui-icon-info-circle ui-btn-icon-left',
         text: 'Metadata'
       }),
       domsugar('button', {
         type: 'button',
-        'class': 'dialog-slide ui-icon-fast-forward ui-btn-icon-left',
+        disabled: (slide_dialog === DIALOG_SLIDE),
+        'class': 'dialog-slide ui-icon-file-image-o ui-btn-icon-left',
         text: 'Text'
       }),
       domsugar('button', {
         type: 'button',
-        'class': 'dialog-comment ui-icon-fast-forward ui-btn-icon-left',
+        disabled: (slide_dialog === DIALOG_COMMENT),
+        'class': 'dialog-commenting ui-icon-comment ui-btn-icon-left',
         text: 'Comments'
       }),
       domsugar('button', {
         type: 'button',
         disabled: disable_previous,
-        'class': 'previous-btn ui-icon-fast-forward ui-btn-icon-left',
+        'class': 'previous-btn ui-icon-backward ui-btn-icon-left',
         text: 'Previous'
       }),
       domsugar('button', {
         type: 'button',
-        'class': 'list-btn ui-icon-fast-forward ui-btn-icon-left',
+        'class': 'list-btn ui-icon-th ui-btn-icon-left',
         text: 'List'
       }),
       domsugar('button', {
         type: 'button',
         disabled: disable_next,
-        'class': 'next-btn ui-icon-fast-forward ui-btn-icon-left',
+        'class': 'next-btn ui-icon-forward ui-btn-icon-left',
         text: 'Next'
       })
     );
@@ -317,6 +320,7 @@
           domsugar(gadget.element.querySelector('div.edit-picture'),
                    {'class': 'edit-picture'},
                    buildSlideButtonList(
+              slide_dialog,
               gadget.state.display_index === 0,
               gadget.state.display_index === slide_list.length - 1
             ));
@@ -325,6 +329,7 @@
             buildPageTitle(gadget, 'Slide'),
             domsugar('div', {'class': 'edit-picture'},
                      buildSlideButtonList(
+                slide_dialog,
                 gadget.state.display_index === 0,
                 gadget.state.display_index === slide_list.length - 1
               )),
