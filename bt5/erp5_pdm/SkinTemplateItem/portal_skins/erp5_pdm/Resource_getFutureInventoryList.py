@@ -11,5 +11,7 @@ inventory_kw = {
 
 if node_category:
   inventory_kw['node_category'] = node_category
+if section_category:
+  inventory_kw['section_category'] = section_category
 
 return portal.portal_simulation.getFutureInventoryList(**inventory_kw)
