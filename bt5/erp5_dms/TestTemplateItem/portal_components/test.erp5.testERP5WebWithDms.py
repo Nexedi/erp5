@@ -1608,7 +1608,7 @@ return True
     web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
     image_module = self.portal.getDefaultModule(portal_type="Image")
     img_list = []
-    for i in range(13):
+    for i in range(14):
       img = image_module.newContent(
         data=XSMALL_SVG_IMAGE_ICON_DATA,
         reference="P-IMG-implicit.successor.value.list.test.%d" % i,
@@ -1638,17 +1638,29 @@ return True
         '<img src="P-IMG-implicit.successor.value.list.test.10?format=" />',
         '<iframe src="/%s" />' % img_list[11].getRelativeUrl(),
         '<style>body { background-image: url("P-IMG-implicit.successor.value.list.test.12?format=png"); }</style>',
+        '<script src="P-IMG-implicit.successor.value.list.test.13" type="text/javascript"></script>',
       ]),
     )
     page.publish()
     self.tic()
+
     # Test part
+    self.maxDiff = None
     successor_list = self.portal.web_site_module.test\
       .restrictedTraverse("P-WP-implicit.successor.value.list.test")\
       .getImplicitSuccessorValueList()
     self.assertEqual(
-      sorted([s.getUid() for s in successor_list]),
-      sorted([i.getUid() for i in img_list]),
+      sorted([s.getReference() for s in successor_list]),
+      sorted([i.getReference() for i in img_list]),
+    )
+
+    # same with the web page retrieved with getDocumentValue
+    successor_list = self.portal.web_site_module.test.getDocumentValue(
+        "P-WP-implicit.successor.value.list.test"
+    ).getImplicitSuccessorValueList()
+    self.assertEqual(
+      sorted([s.getReference() for s in successor_list]),
+      sorted([i.getReference() for i in img_list]),
     )
 
   def checkWebSiteDocumentViewConsistency(self, portal_type, module_id="document_module"):
