@@ -210,9 +210,70 @@
     };
   }
 
+  function getMetadataJSON(title_html, type) {
+    return {
+      erp5_document: {
+        "_embedded": {
+          "_view": {
+            "your_chapter_title": {
+              "title": "XXX Chapter Title",
+              "type": "StringField",
+              "editable": 1,
+              "required": 1,
+              "key": "title_html",
+              "value": title_html
+            },
+            "your_slide_type": {
+              "title": "XXX Type of Slide",
+              "type": "ListField",
+              "editable": 1,
+              "key": "type",
+              items: [["", ""],
+                      ["Chapter", "chapter"],
+                      ["Screenshot", "screenshot"],
+                      ["Illustration", "illustration"],
+                      ["Code", "code"],
+                      ["Master", "master"]
+                     ],
+              value: type
+              /*
+            },
+            "your_tested": {
+              "title": "XXX Does it Contain a Test?",
+              "type": "CheckBoxField",
+              "editable": 1,
+              "key": "field_your_tested",
+              "default": "eee",
+              "required": 0,
+              "hidden": 0
+              */
+            }
+          }
+        },
+        "_links": {
+          "type": {
+            // form_list display portal_type in header
+            name: ""
+          }
+        }
+      },
+      form_definition: {
+        group_list: [
+          ["left", [
+            ["your_chapter_title"],
+            ["your_slide_type"]
+            // ["your_tested"]
+          ]]
+        ]
+      }
+    };
+
+  }
+
   function renderXXXSlideDialog(gadget, slide_dialog, is_updated) {
     var formbox,
-      render_dict;
+      render_dict,
+      slide_dict;
 
     if (slide_dialog === DIALOG_SLIDE) {
       render_dict = getCKEditorJSON(
@@ -226,15 +287,14 @@
         getSlideDict(gadget.state.value,
                      gadget.state.display_index).comment_html
       );
+    } else if (slide_dialog === DIALOG_METADATA) {
+      slide_dict = getSlideDict(gadget.state.value,
+                                gadget.state.display_index);
+      render_dict = getMetadataJSON(slide_dict.title_html, slide_dict.type);
     } else {
       // Ease developper work by raising for not handled cases
       throw new Error('Unhandled dialog: ' + slide_dialog);
     }
-    /*
-    if (slide_dialog === DIALOG_METADATA) {
-      return renderMetadataDialog(gadget, modification_dict.hasOwnProperty('display_step'));
-    }
-    */
 
     return gadget.declareGadget('gadget_erp5_form.html', {
       scope: FORMBOX_SCOPE
@@ -249,80 +309,6 @@
           domsugar('div', {'class': 'edit-picture'},
                    buildSlideButtonList(gadget)),
           formbox.element
-        ]);
-      });
-  }
-
-  function renderMetadataDialog(gadget) {
-    var formbox;
-
-    return gadget.declareGadget('gadget_erp5_form.html', {
-      scope: FORMBOX_SCOPE
-    })
-      .push(function (result) {
-        formbox = result;
-        var slide_dict = getSlideDict(gadget.state.value, gadget.state.display_index);
-        return formbox.render({
-          erp5_document: {"_embedded": {"_view": {
-            "your_chapter_title": {
-              "title": "XXX Chapter Title",
-              "type": "StringField",
-              "editable": 1,
-              "required": 1,
-              "key": "title_html",
-              "value": slide_dict.title_html
-            },
-            "your_slide_type": {
-              "title": "XXX Type of Slide",
-              "type": "ListField",
-              "editable": 1,
-              "key": "type",
-              items: [["", ""],
-                      ["Chapter", "chapter"],
-                      ["Screenshot", "screenshot"],
-                      ["Illustration", "illustration"],
-                      ["Code", "code"],
-                      ["Master", "master"]
-                     ],
-              value: slide_dict.type
-              /*
-            },
-            "your_tested": {
-              "title": "XXX Does it Contain a Test?",
-              "type": "CheckBoxField",
-              "editable": 1,
-              "key": "field_your_tested",
-              "default": "eee",
-              "required": 0,
-              "hidden": 0
-              */
-            }
-          }},
-            "_links": {
-              "type": {
-                // form_list display portal_type in header
-                name: ""
-              }
-            }},
-          form_definition: {
-            group_list: [
-              ["left",
-                 [["your_chapter_title"],
-                  ["your_slide_type"],
-                  // ["your_tested"]
-                  ]
-              ]
-            ]
-          }
-        });
-
-      })
-      .push(function () {
-        domsugar(gadget.element, [
-          buildPageTitle(gadget, 'Slide'),
-          formbox.element,
-          domsugar('div', {'class': 'edit-picture'}, buildSlideButtonList(gadget)),
-          // domsugar('button', {type: "button", text: "Add", class: "add-slide"})
         ]);
       });
   }
@@ -395,10 +381,10 @@
               gadget.state.display_index
             );
           });
-      } else if ([DISPLAY_LIST].indexOf(display_step) === -1) {
-        throw new Error('Display form not handled: ' + display_step);
-      } else {
+      } else if ([DISPLAY_LIST].indexOf(display_step) !== -1) {
         queue = new RSVP.Queue();
+      } else {
+        throw new Error('Display form not handled: ' + display_step);
       }
 
       return queue
@@ -436,10 +422,7 @@
       // Only handle click on BUTTON and IMG element
       var gadget = this,
         tag_name = evt.target.tagName,
-        state_dict,
-        queue,
-        display_step = gadget.state.display_step,
-        slide_dialog = gadget.state.slide_dialog;
+        queue;
 
       if (tag_name !== 'BUTTON') {
         return;
