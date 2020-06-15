@@ -8,9 +8,15 @@ div.jexcel_formula img{
 
 input.jexcel_formula {
   margin-left: 2px;
-  width: 97%;
+  width: 92.8%;
   position:sticky;
   top:0px;
   z-index:0;
   display: inline-block;
 }
+
+input.cell_input {
+  display: inline-block;
+  width: 4%;
+}
+

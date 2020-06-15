@@ -12,6 +12,12 @@
     color_picker: true
   };
 
+  var getCoordsFromCell = function (cell) {
+    var x = Number(cell.dataset.x);
+    var y = Number(cell.dataset.y) + 1;
+    return (x >= 26 ? numberToLetter((x / 26 >> 0) - 1) : '') +  'ABCDEFGHIJKLMNOPQRSTWXYZ'[x % 26 >> 0] + y.toString();
+  };
+
   rJS(window)
 
     .setState({
@@ -84,6 +90,9 @@
       formula_div.appendChild(img);
       formula_div.appendChild(formula_input);
       element.querySelector("div.jexcel_toolbar").parentNode.insertBefore(formula_div, element.querySelector("div.jexcel_toolbar").nextSibling);
+      var cell_input = document.createElement("input");
+      cell_input.classList.add("cell_input");
+      formula_div.insertBefore(cell_input, img);
       return gadget.template_gadget.buildOptions()
       .push(function (options) {
         var select = document.createElement("select");
@@ -91,9 +100,10 @@
         select.onclick = function () {
           var select = this;
           var cell = gadget.element.querySelector("td.highlight-selected");
-          if (cell) {
-            return gadget.getCurrentSheet()
-            .push(function (sheet) {
+          return gadget.getCurrentSheet()
+          .push(function (sheet) {
+            var cell = sheet.el.querySelector("td.highlight-selected");
+            if (cell) {
               var x = Number(cell.dataset.x);
               var y = Number(cell.dataset.y);
               var currentValue = sheet.getValueFromCoords(x, y);
@@ -106,8 +116,8 @@
               }
               sheet.setValueFromCoords(x, y, value);
               formula_input.value = value;
-            })
-          }
+            }
+          })
         }
         element.querySelector(".jexcel_toolbar").insertBefore(select, filter);
         var icon_title = {
@@ -154,12 +164,27 @@
         .push(function (instance) {
           var tab = gadget.element.querySelectorAll(".jexcel_container")[gadget.element.querySelector("div.jexcel_tab_link.selected").getAttribute("data-spreadsheet")];
           var cell = tab.querySelector("td.highlight-selected");
+          var cell_input = tab.querySelector("input.cell_input");
           var formula = tab.querySelector("input.jexcel_formula");
+          cell_input.value = getCoordsFromCell(cell);
           var x = Number(cell.dataset.x);
           var y = Number(cell.dataset.y);
           formula.value = instance.getValueFromCoords(x, y);
         })
-      }
+      };
+      sheet.oneditionend = function (a, b, c, d, e) {
+        if (e[0] === "=" && e[e.length - 1] !== ")") {
+          var numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+          if (numbers.includes(e[e.length - 1])){
+            var worksheet = gadget.element.querySelector('.selected').getAttribute('data-spreadsheet');
+            var tab = gadget.element.querySelector('.spreadsheet').jexcel[worksheet];
+            tab.setValueFromCoords(c, d, e);
+          }
+          else {
+            b.textContent = e;
+          }
+        }
+      };
       return sheet;
     })
 
@@ -200,11 +225,14 @@
 
     .onEvent("input", function (ev) {
         var gadget = this;
-        var tab = gadget.element.querySelectorAll(".jexcel_container")[gadget.element.querySelector("div.jexcel_tab_link.selected").getAttribute("data-spreadsheet")];
-        var formula = tab.querySelector("input.jexcel_formula");
-        if (ev.target == tab.querySelector("textarea")) {
-          formula.value = ev.target.value;
-        }
+        return gadget.getCurrentSheet()
+        .push(function (sheet) {
+          var formula = sheet.el.querySelector("input.jexcel_formula");
+          var td = sheet.el.querySelector("td.highlight-selected");
+          if (td && ev.target == td.childNodes[0]) {
+            formula.value = ev.target.value;
+          }
+        })
       }, false, false)
 
      .onEvent("contextmenu", function (ev) {

@@ -3,14 +3,10 @@
 (function (window, rJS, jexcel) {
   "use strict";
 
-  var numberToLetter = function (i) {
-    return (i >= 26 ? numberToLetter((i / 26 >> 0) - 1) : '') +  'ABCDEFGHIJKLMNOPQRSTWXYZ'[i % 26 >> 0];
-  };
-
   var getCoordsFromCell = function (cell) {
     var x = Number(cell.dataset.x);
-    var y = cell.dataset.y;
-    return numberToLetter(x) + y;
+    var y = Number(cell.dataset.y) + 1;
+    return (x >= 26 ? numberToLetter((x / 26 >> 0) - 1) : '') +  'ABCDEFGHIJKLMNOPQRSTWXYZ'[x % 26 >> 0] + y.toString();
   };
 
   var template = {
@@ -63,7 +59,7 @@
       var colspan = Object.keys(selected[0]).length;
       var rowspan = selected.length;
       var coor = getCoordsFromCell(cell);
-      b.setMerge(coor, colspan, rowspan);
+      confirm("Data in merged cells will be erased. Confirm merge ?") ? b.setMerge(coor, colspan, rowspan) : null;
     }
   };
 
