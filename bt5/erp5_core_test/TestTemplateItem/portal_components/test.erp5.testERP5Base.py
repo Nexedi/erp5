@@ -1784,7 +1784,93 @@ class TestERP5Base(ERP5TypeTestCase):
           except KeyError:
             pass
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Base))
-  return suite
+
+class Base_getDialogSectionCategoryItemListTest(ERP5TypeTestCase):
+  """tests for Base_getDialogSectionCategoryItemList script.
+
+  Users, if they are persons, can only select groups that are "included" in their
+  assignments.
+
+  """
+  def afterSetUp(self):
+    super(ERP5TypeTestCase, self).afterSetUp()
+    self.user_id = self.id()
+    self.portal.acl_users.zodb_roles.doAssignRoleToPrincipal(self.user_id, 'Auditor')
+    self.person = self.portal.person_module.newContent(
+        portal_type='Person',
+        user_id=self.user_id,
+    )
+    group_base_category = self.portal.portal_categories.group
+    group_base_category.manage_delObjects(list(group_base_category.objectIds()))
+    main_group = group_base_category.newContent(
+        id='main_group',
+        title='Main Group',
+        int_index=1,
+    )
+    main_group.newContent(
+        id='sub_group',
+        title='Sub Group',
+        int_index=1,
+    )
+    main_group.newContent(
+        id='another_sub_group',
+        title='Another Sub Group',
+        int_index=2,
+    )
+    main_group = group_base_category.newContent(
+        id='main_group_2',
+        title='Another Top Level Group',
+        int_index=2,
+    )
+    # XXX group categories are cached
+    self.portal.portal_caches.clearAllCache()
+
+  def test_person_on_main_group(self):
+    self.person.newContent(portal_type='Assignment', group='main_group').open()
+    self.tic()
+    self.login(self.user_id)
+    self.assertEqual(
+        self.portal.Base_getDialogSectionCategoryItemList(), [
+            ['', ''],
+            ['Main Group', 'group/main_group'],
+            ['Main Group/Sub Group', 'group/main_group/sub_group'],
+            [
+                'Main Group/Another Sub Group',
+                'group/main_group/another_sub_group'
+            ],
+        ])
+
+  def test_person_on_sub_group_user(self):
+    self.person.newContent(portal_type='Assignment', group='main_group/sub_group').open()
+    self.tic()
+    self.login(self.user_id)
+    self.assertEqual(
+        self.portal.Base_getDialogSectionCategoryItemList(), [
+            ['', ''],
+            ['Main Group/Sub Group', 'group/main_group/sub_group'],
+        ])
+
+  def test_only_valid_assignments_are_considered(self):
+    self.person.newContent(portal_type='Assignment', group='main_group/sub_group').open()
+    self.person.newContent(portal_type='Assignment', group='main_group', stop_date=DateTime(1970, 1, 1)).open()
+    self.person.newContent(portal_type='Assignment', group='main_group') # left as draft
+    self.tic()
+    self.login(self.user_id)
+    self.assertEqual(
+        self.portal.Base_getDialogSectionCategoryItemList(), [
+            ['', ''],
+            ['Main Group/Sub Group', 'group/main_group/sub_group'],
+        ])
+
+  def test_non_person_user(self):
+    self.assertEqual(
+        self.portal.Base_getDialogSectionCategoryItemList(), [
+            ['', ''],
+            ['Main Group', 'group/main_group'],
+            ['Main Group/Sub Group', 'group/main_group/sub_group'],
+            [
+                'Main Group/Another Sub Group',
+                'group/main_group/another_sub_group'
+            ],
+            ['Another Top Level Group', 'group/main_group_2'],
+        ])
