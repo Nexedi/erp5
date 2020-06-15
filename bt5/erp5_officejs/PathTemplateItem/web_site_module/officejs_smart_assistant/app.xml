@@ -391,9 +391,7 @@ WebSection_getSmartAssistantPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>gadget_officejs_smart_assistant_translation.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_webapp_manifest</string> </key>
@@ -664,8 +662,8 @@ WebSection_getSmartAssistantPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1587729410.45</float>
-                              <string>UTC</string>
+                              <float>1592182961.5</float>
+                              <string>GMT+2</string>
                             </tuple>
                           </state>
                         </object>
