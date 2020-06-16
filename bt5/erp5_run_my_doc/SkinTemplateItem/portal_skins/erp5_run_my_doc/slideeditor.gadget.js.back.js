@@ -337,26 +337,10 @@
 
   function renderSlideList(gadget) {
     // Get the full HTML
-    var text_content = gadget.state.value,
-      header_element,
-      div = domsugar('div', {'class': 'slide_list', html: text_content}),
-      section_list = div.querySelectorAll(':scope > section'),
+    var header_element,
+      section_list = getSlideElementList(gadget.state.value),
+      draggable_element_list = [],
       i;
-    for (i = 0; i < section_list.length; i += 1) {
-      section_list[i].draggable = true;
-      section_list[i].setAttribute('data-slide-index', i);
-      section_list[i].appendChild(
-        domsugar('button', {type: 'button', text: 'XXX Edit',
-                 'class': 'display-slide',
-                 'data-slide-index': i})
-      );
-    }
-    // Add the "Add slide" button
-    // div.appendChild(domsugar('section', {text: 'Add Slide'}));
-    div.appendChild(domsugar('section', [
-      domsugar('button', {type: 'button', text: 'XXX Add slide',
-                          'class': 'display-new'})
-    ]));
 
     // Clone listbox header structure to reuse the css
     header_element = domsugar('div', {'class': 'document_table'}, [
@@ -365,7 +349,36 @@
       ])
     ]);
 
-    domsugar(gadget.element, [header_element, div]);
+    for (i = 0; i < section_list.length; i += 1) {
+      draggable_element_list.push(domsugar('section', {
+        draggable: true,
+        'data-slide-index': i
+      }, [
+        domsugar('button', {type: 'button', text: 'Edit',
+                 'class': 'display-slide ui-icon-pencil ui-btn-icon-left',
+                 'data-slide-index': i}),
+        domsugar('h1', {
+          html: getSlideDictFromSlideElement(section_list[i]).title_html
+        })
+      ]));
+    }
+    // Add the "Add slide" button
+    // div.appendChild(domsugar('section', {text: 'Add Slide'}));
+    draggable_element_list.push(domsugar('section', [
+      domsugar('button', {
+        type: 'button',
+        text: 'New slide',
+        'class': 'display-new ui-icon-plus-circle ui-btn-icon-left'
+      }),
+      domsugar('h1', {
+        text: 'New slide'
+      })
+    ]));
+
+    domsugar(gadget.element, [
+      header_element,
+      domsugar('div', {'class': 'slide_list'}, draggable_element_list)
+    ]);
   }
 
   ///////////////////////////////////////////////////
