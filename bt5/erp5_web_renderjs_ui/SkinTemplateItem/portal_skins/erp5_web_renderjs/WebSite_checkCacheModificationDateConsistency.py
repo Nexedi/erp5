@@ -1,4 +1,12 @@
 from DateTime import DateTime
+
+# OfficeJS web sites have been using another layout property (configuration_cache_file)
+# to set the cache manifest.
+# We support only ERP5JS style cache manifest for now, so if this is an officejs site,
+# we ignore cache manifest check.
+if context.getLayoutProperty("configuration_cache_file"):
+  return []
+
 appcache_reference = context.getLayoutProperty("configuration_manifest_url")
 
 getDocumentValue = context.getDocumentValue
