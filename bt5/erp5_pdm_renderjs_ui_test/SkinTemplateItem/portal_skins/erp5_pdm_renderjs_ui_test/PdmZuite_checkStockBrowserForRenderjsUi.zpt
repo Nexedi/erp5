@@ -1,5 +1,26 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+  <!--
+    Macro to check inventory displayed in stock browser.
+
+    This selects the node category and check each of the current, available and future
+    inventory match. Then for each value, it will click to "drill down" and check that the
+    movement history list show the expected number of lines.
+    TODO: this is not yet the case for renderjs version of this test, the drill down is
+    still only covered in erp5_xhtml_style
+
+    Required parameters:
+      - node_category: the label of the node category to select in the dialog
+      - node_title: the label of the node organisation expected in the listbox
+      - inventory_list_count: the number of "invenvory list" lines expected in the first dialog.
+      - current_inventory: the quantity for the current inventory
+      - available_inventory: the quantity for the available inventory
+      - future_inventory: the quantity for the future inventory
+
+    Optional parameters:
+      - select_node_category: if True (the default) the node category will be selected
+  -->
   <tal:block
     metal:define-macro="check_inventory"
     tal:define="base_url python: '/' + here.getPortalObject().getId();
@@ -27,7 +48,7 @@
     </tal:block>
 
     <!-- Check inventory total records -->
-    <tal:block tal:define="pagination_configuration python: {'header': '(%s)' % movement_count, 'footer': '%s Records' % movement_count}">
+    <tal:block tal:define="pagination_configuration python: {'header': '(%s)' % inventory_list_count, 'footer': '%s Records' % inventory_list_count}">
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_listbox_pagination_text" />
     </tal:block>
 
@@ -46,7 +67,7 @@
       <tr>
         <td>assertText</td>
         <td tal:content="python: '//div[@data-gadget-scope=\'field_listbox\']//table/tbody/tr[1]/td[%s]' % (inventory_tuple[1])">inventory value</td>
-        <td tal:content="python: int(inventory_tuple[0])"></td>
+        <td tal:content="python: inventory_tuple[0]"></td>
       </tr>
     </tal:block>
     <tr>
@@ -60,17 +81,17 @@
     <tr>
       <td>assertText</td>
       <td>//div[@data-gadget-scope='field_listbox']//table/tfoot/tr[1]/td[3]</td>
-      <td tal:content="python: int(current_inventory)"></td>
+      <td tal:content="python: current_inventory"></td>
     </tr>
     <tr>
       <td>assertText</td>
       <td>//div[@data-gadget-scope='field_listbox']//table/tfoot/tr[1]/td[4]</td>
-      <td tal:content="python: int(available_inventory)"></td>
+      <td tal:content="python: available_inventory"></td>
     </tr>
     <tr>
       <td>assertText</td>
       <td>//div[@data-gadget-scope='field_listbox']//table/tfoot/tr[1]/td[5]</td>
-      <td tal:content="python: int(future_inventory)"></td>
+      <td tal:content="python: future_inventory"></td>
     </tr>
 
     <tr>

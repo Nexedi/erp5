@@ -16,10 +16,10 @@ Test stock browser for stopped state
 <!-- Check source -->
 <tal:block tal:define="node_category python: 'erp5_pdm_ui_test_source_site_title';
                        node_title string: erp5_pdm_ui_test_source_node_title;
-                       movement_count python: 1;
-                       current_inventory python: -1.0;
-                       available_inventory python: -1.0;
-                       future_inventory python: -1.0;
+                       inventory_list_count python: 1;
+                       current_inventory python: -1;
+                       available_inventory python: -1;
+                       future_inventory python: -1;
                        ">
   <tal:block metal:use-macro="here/PdmZuite_checkStockBrowserForRenderjsUi/macros/check_inventory" />
 </tal:block>
@@ -27,10 +27,10 @@ Test stock browser for stopped state
 <!-- Check destination -->
 <tal:block tal:define="node_category python: 'erp5_pdm_ui_test_destination_site_title';
                        node_title string: erp5_pdm_ui_test_destination_node_title;
-                       movement_count python: 1;
-                       current_inventory python: 1.0;
-                       available_inventory python: 1.0;
-                       future_inventory python: 1.0;
+                       inventory_list_count python: 1;
+                       current_inventory python: 1;
+                       available_inventory python: 1;
+                       future_inventory python: 1;
                        ">
   <tal:block metal:use-macro="here/PdmZuite_checkStockBrowserForRenderjsUi/macros/check_inventory" />
 </tal:block>
