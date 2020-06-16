@@ -15,7 +15,7 @@ Test stock browser for started state
 
 <!-- Check source -->
 <tal:block tal:define="node_category python: 'erp5_pdm_ui_test_source_site_title';
-                       movement_count python: 1;
+                       inventory_list_count python: 1;
                        current_inventory python: -1.0;
                        available_inventory python: -1.0;
                        future_inventory python: -1.0;
@@ -25,7 +25,7 @@ Test stock browser for started state
 
 <!-- Check destination -->
 <tal:block tal:define="node_category python: 'erp5_pdm_ui_test_destination_site_title';
-                       movement_count python: 1;
+                       inventory_list_count python: 1;
                        current_inventory python: 0.0;
                        available_inventory python: 0.0;
                        future_inventory python: 1.0;
