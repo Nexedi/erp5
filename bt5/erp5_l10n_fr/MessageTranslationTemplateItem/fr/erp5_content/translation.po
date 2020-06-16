@@ -231,6 +231,9 @@ msgstr "Contribue à"
 msgid "Base Salary"
 msgstr "Salaire de base"
 
+msgid "Base amounts useful for reporting in France"
+msgstr "Montants utilisés pour les déclarations en France"
+
 msgid "Basic Metal"
 msgstr "Métallurgie"
 
@@ -684,6 +687,9 @@ msgstr "Developpeur pour un projet"
 msgid "Discounted"
 msgstr "Remisé"
 
+msgid "Discounts"
+msgstr "Remises"
+
 msgid "Distribution and Conditioning Systems and Equipment and Components"
 msgstr "Équipements, composants et systèmes de conditionnement et de distribution de fluides"
 
@@ -851,6 +857,9 @@ msgstr "Ex Works (EXW)"
 
 msgid "Executive"
 msgstr "Cadre"
+
+msgid "Exempted Tariff"
+msgstr "Tarif exempté"
 
 msgid "Expense"
 msgstr "Charges"
@@ -1056,6 +1065,9 @@ msgstr "Grenade"
 msgid "Grenadian"
 msgstr "Grenadien"
 
+msgid "Gross Price"
+msgstr "Prix toutes taxes comprises"
+
 msgid "Gross Salary"
 msgstr "Salaire Brut"
 
@@ -1256,6 +1268,9 @@ msgstr "Fonctionnalités du module de gestion de l'inventaire"
 
 msgid "Invoice"
 msgstr "Facture"
+
+msgid "Invoice Amounts"
+msgstr "Montants des factures"
 
 msgid "Iran, Islamic Republic of"
 msgstr "République Islamique d'Iran"
@@ -1716,6 +1731,9 @@ msgstr "Népal"
 msgid "Nepalese"
 msgstr "Népalais"
 
+msgid "Net Price"
+msgstr "Prix hors taxes"
+
 msgid "Net Salary"
 msgstr "Salaire net"
 
@@ -1796,6 +1814,9 @@ msgstr "Norfolkais"
 
 msgid "Normal"
 msgstr "Normal"
+
+msgid "Normal Tariff"
+msgstr "Tarif normal"
 
 msgid "North Korean"
 msgstr "Nord-Coréen"
@@ -2159,6 +2180,9 @@ msgstr "Activités créatives, artistiques et de spectacle"
 
 msgid "Recycling"
 msgstr "Réparation et installation de machines et d'équipements"
+
+msgid "Reduced Tariff"
+msgstr "Tarif réduit"
 
 msgid "Refundable VAT"
 msgstr "TVA déductible"
@@ -2559,6 +2583,9 @@ msgstr "Industrie du cuir et de la chaussure"
 msgid "Tanzanian"
 msgstr "Tanzanien"
 
+msgid "Tariff and customs"
+msgstr "Tarifs et douanes"
+
 msgid "Tax Category"
 msgstr "Catégorie de Taxe"
 
@@ -2633,6 +2660,9 @@ msgstr "Total retenues"
 
 msgid "Total Income"
 msgstr "Total gains"
+
+msgid "Trade"
+msgstr "Commerce"
 
 msgid "Trade Receivables"
 msgstr "Créances clients"
@@ -2747,6 +2777,36 @@ msgstr "Ouzbek "
 
 msgid "Uzbekistan"
 msgstr "Ouzbékistan"
+
+msgid "VAT"
+msgstr "TVA"
+
+msgid "VAT Exempted"
+msgstr "Exempté de TVA"
+
+msgid "VAT Normal Rate"
+msgstr "TVA taux normal"
+
+msgid "VAT Reduced Rate"
+msgstr "TVA taux réduit"
+
+msgid "VAT Super Reduced Rate"
+msgstr "TVA taux super réduit"
+
+msgid "VAT on EU purchase or sales"
+msgstr "TVA sur opérations intracommunataires"
+
+msgid "VAT on immobilisations"
+msgstr "TVA sur immobilisations"
+
+msgid "VAT on import or export outside EU"
+msgstr "TVA sur achats et ventes hors EU"
+
+msgid "VAT on national purchase or sales"
+msgstr "TVA sur achats et ventes locales"
+
+msgid "VAT on purchase or sales"
+msgstr "TVA sur achats et ventes"
 
 msgid "Vanuatu"
 msgstr "Vanuatu"
