@@ -21,23 +21,23 @@
 
 
 from ZServer.medusa.http_server import http_request
-from ZPublisher.HTTPRequest import trusted_proxies
+import ZPublisher.HTTPRequest
 import string
 import base64
 import time
 from urllib import quote
 
 def log (self, bytes):
-    # The purpose of this patch is to emit original IP addresses in Z2.log
-    # even when a reverse proxy is used. A similar thing is implemented
-    # in the ZPublisher, but not in the ZServer.
+    addr = self.channel.addr[0]
+    # Frontend-facing proxy is responsible for sanitising
+    # HTTP_X_FORWARDED_FOR, and only trusted accesses should bypass
+    # that proxy. So trust first entry.
     #
     # <patch>
-    addr = self.channel.addr[0]
-    if trusted_proxies and addr in trusted_proxies:
-        original_addr = self.get_header('x-forwarded-for')
-        if original_addr:
-            addr = original_addr.split(', ')[0]
+    if ZPublisher.HTTPRequest.trusted_proxies == ('0.0.0.0',): # Magic value to enable this functionality
+      forwarded_for = (self.get_header('x-forwarded-for') or '').split(',', 1)[0].strip()
+      if forwarded_for:
+        addr = forwarded_for
     # </patch>
 
     user_agent=self.get_header('user-agent')
