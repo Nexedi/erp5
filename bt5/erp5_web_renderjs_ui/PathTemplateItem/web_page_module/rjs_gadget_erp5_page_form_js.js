@@ -17,8 +17,6 @@ and handling data send&receive.
       'gadget_erp5_form.html',
       'gadget_erp5_field_float.html',
       'gadget_erp5_field_listbox.html',
-      // Used in panel
-      'gadget_translation.html',
       'gadget_erp5_panel.html',
       'gadget_erp5_header.html',
       'gadget_erp5_searchfield.html',
