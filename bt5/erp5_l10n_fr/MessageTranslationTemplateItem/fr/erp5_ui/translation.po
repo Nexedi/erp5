@@ -1642,6 +1642,9 @@ msgstr "Forme de base"
 msgid "Base Application"
 msgstr "Appliqué sur"
 
+msgid "Base Applications"
+msgstr "Appliqué sur"
+
 msgid "Base Categories"
 msgstr "Catégories de base"
 
@@ -1653,6 +1656,9 @@ msgstr "Contribue à"
 
 msgid "Base Contribution must be defined"
 msgstr "La contribution doit être définie"
+
+msgid "Base Contributions"
+msgstr "Contribue à"
 
 msgid "Base Domain"
 msgstr "Domaine de base"
@@ -12610,6 +12616,9 @@ msgstr "Pris sur cette période"
 msgid "Target Conversion Format"
 msgstr "Format de destination"
 
+msgid "Target Delivery"
+msgstr "Cible la livraison"
+
 msgid "Target Format"
 msgstr "Format de conversion"
 
@@ -13956,6 +13965,21 @@ msgstr "Désignation commerciale"
 
 msgid "Trade Line"
 msgstr "Ligne commerciale"
+
+msgid "Trade Model"
+msgstr "Modèle commercial"
+
+msgid "Trade Model Line"
+msgstr "Ligne de modèle commercial"
+
+msgid "Trade Model Lines"
+msgstr "Lignes de modèle commercial"
+
+msgid "Trade Phase"
+msgstr "Phase commerciale"
+
+msgid "Trade Phases"
+msgstr "Phases commerciale"
 
 msgid "Trade condition Title"
 msgstr "Libellé"
