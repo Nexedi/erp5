@@ -135,6 +135,11 @@
     button_list.push(
       domsugar('button', {
         type: 'button',
+        'class': 'dialog-delete ui-icon-trash-o ui-btn-icon-left',
+        text: 'Delete'
+      }),
+      domsugar('button', {
+        type: 'button',
         disabled: (slide_dialog === DIALOG_METADATA),
         'class': 'dialog-metadata ui-icon-info-circle ui-btn-icon-left',
         text: 'Metadata'
@@ -544,6 +549,21 @@
             return gadget.changeState({
               slide_dialog: DIALOG_SLIDE
             });
+          });
+      }
+
+      if (evt.target.className.indexOf("dialog-delete") !== -1) {
+        return queue
+          .push(function () {
+            var slide_list = getSlideElementList(gadget.state.value);
+            slide_list.splice(gadget.state.display_index, 1);
+            return RSVP.all([
+              gadget.changeState({
+                value: slideListAsHTML(slide_list),
+                display_step: DISPLAY_LIST
+              }),
+              gadget.notifyChange()
+            ]);
           });
       }
 
