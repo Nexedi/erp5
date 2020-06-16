@@ -33,6 +33,8 @@ except ImportError: # BBB: ZODB < 4
 import unittest
 import sys
 import mock
+import os
+import requests
 
 import transaction
 from random import randint
@@ -53,6 +55,7 @@ from AccessControl.ZopeGuards import guarded_getattr, guarded_hasattr
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.tests.runUnitTest import log_directory
 
 class PropertySheetTestCase(ERP5TypeTestCase):
   """Base test case class for property sheets tests.
@@ -3317,6 +3320,79 @@ return [
           '<Organisation at /%s/organisation_module/organisation_id>' % self.portal.getId(),
           repr(document))
 
+    def test_request_with_x_forwarded_for(self):
+      script_container = self.portal.portal_skins.custom
+      script_id = 'ERP5Site_getClientAddr'
+      createZODBPythonScript(script_container, script_id, '', 'return context.REQUEST.getClientAddr()')
+      self.commit()
+      z2_log_path = os.path.join(log_directory, 'Z2.log')
+      import ZPublisher.HTTPRequest
+
+      # test without configuration
+      ZPublisher.HTTPRequest.trusted_proxies = []
+      response = requests.get(
+        '%s/%s' % (self.portal.absolute_url(), script_id),
+        headers={'X-Forwarded-For': '1.2.3.4'},
+      )
+      self.assertNotEqual(response.text, '1.2.3.4')
+      f = open(z2_log_path, 'rb')
+      f.seek(-256, os.SEEK_END) # Assumes last line is not longer than 256 chars (it should be about 130)
+      last_line = f.readlines()[-1]
+      f.close()
+      self.assertFalse(last_line.startswith('1.2.3.4 - '), last_line)
+      response = requests.get(
+        '%s/%s' % (self.portal.absolute_url(), script_id),
+        headers={'X-Forwarded-For': '1.2.3.4, 5.6.7.8'},
+      )
+      self.assertNotEqual(response.text, '1.2.3.4')
+      self.assertNotEqual(response.text, '5.6.7.8')
+      f = open(z2_log_path, 'rb')
+      f.seek(-256, os.SEEK_END)
+      last_line = f.readlines()[-1]
+      f.close()
+      self.assertFalse(last_line.startswith('1.2.3.4 - '), last_line)
+      self.assertFalse(last_line.startswith('5.6.7.8 - '), last_line)
+      response = requests.get(
+        '%s/%s' % (self.portal.absolute_url(), script_id),
+      )
+      self.assertNotEqual(response.text, '1.2.3.4')
+      f = open(z2_log_path, 'rb')
+      f.seek(-256, os.SEEK_END)
+      last_line = f.readlines()[-1]
+      f.close()
+      self.assertFalse(last_line.startswith('1.2.3.4 - '), last_line)
+
+      # test with configuration
+      ZPublisher.HTTPRequest.trusted_proxies = ['0.0.0.0']
+      response = requests.get(
+        '%s/%s' % (self.portal.absolute_url(), script_id),
+        headers={'X-Forwarded-For': '1.2.3.4'},
+      )
+      self.assertEqual(response.text, '1.2.3.4')
+      f = open(z2_log_path, 'rb')
+      f.seek(-256, os.SEEK_END)
+      last_line = f.readlines()[-1]
+      f.close()
+      self.assertTrue(last_line.startswith('1.2.3.4 - '), last_line)
+      response = requests.get(
+        '%s/%s' % (self.portal.absolute_url(), script_id),
+        headers={'X-Forwarded-For': '1.2.3.4, 5.6.7.8'},
+      )
+      self.assertEqual(response.text, '1.2.3.4')
+      f = open(z2_log_path, 'rb')
+      f.seek(-256, os.SEEK_END)
+      last_line = f.readlines()[-1]
+      f.close()
+      self.assertTrue(last_line.startswith('1.2.3.4 - '), last_line)
+      response = requests.get(
+        '%s/%s' % (self.portal.absolute_url(), script_id),
+      )
+      self.assertNotEqual(response.text, '1.2.3.4')
+      f = open(z2_log_path, 'rb')
+      f.seek(-256, os.SEEK_END)
+      last_line = f.readlines()[-1]
+      f.close()
+      self.assertFalse(last_line.startswith('1.2.3.4 - '), last_line)
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
