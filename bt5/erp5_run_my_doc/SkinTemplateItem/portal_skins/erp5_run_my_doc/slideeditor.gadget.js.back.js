@@ -8,7 +8,43 @@
     DIALOG_SLIDE = 'dialog_slide',
     DIALOG_COMMENT = 'dialog_comment',
     DIALOG_METADATA = 'dialog_metadata',
-    FORMBOX_SCOPE = 'formbox';
+    FORMBOX_SCOPE = 'formbox',
+    TRANSLATABLE_WORD_LIST = [
+      'Slides',
+      'Edit',
+      'New slide',
+      'Slide',
+      'Delete',
+      'Metadata',
+      'Text',
+      'Comments',
+      'Previous',
+      'List',
+      'Next',
+      'Chapter Title',
+      'Type of Slide',
+      'Slide Text',
+      'Chapter',
+      'Screenshot',
+      'Illustration',
+      'Code',
+      'Master'
+    ];
+
+  ///////////////////////////////////////////////////
+  // translation
+  ///////////////////////////////////////////////////
+  function getTranslationDict(gadget) {
+    return gadget.getTranslationList(TRANSLATABLE_WORD_LIST)
+      .push(function (word_list) {
+        var result_dict = {},
+          i;
+        for (i = 0; i < TRANSLATABLE_WORD_LIST.length; i += 1) {
+          result_dict[TRANSLATABLE_WORD_LIST[i]] = word_list[i];
+        }
+        return result_dict;
+      });
+  }
 
   ///////////////////////////////////////////////////
   // Slide format handling
@@ -130,48 +166,49 @@
     return domsugar('h1', element_list);
   }
 
-  function buildSlideButtonList(slide_dialog, disable_previous, disable_next) {
+  function buildSlideButtonList(slide_dialog, translation_dict,
+                                disable_previous, disable_next) {
     var button_list = [];
     button_list.push(
       domsugar('button', {
         type: 'button',
         'class': 'dialog-delete ui-icon-trash-o ui-btn-icon-left',
-        text: 'Delete'
+        text: translation_dict.Delete
       }),
       domsugar('button', {
         type: 'button',
         disabled: (slide_dialog === DIALOG_METADATA),
         'class': 'dialog-metadata ui-icon-info-circle ui-btn-icon-left',
-        text: 'Metadata'
+        text: translation_dict.Metadata
       }),
       domsugar('button', {
         type: 'button',
         disabled: (slide_dialog === DIALOG_SLIDE),
         'class': 'dialog-slide ui-icon-file-image-o ui-btn-icon-left',
-        text: 'Text'
+        text: translation_dict.Text
       }),
       domsugar('button', {
         type: 'button',
         disabled: (slide_dialog === DIALOG_COMMENT),
         'class': 'dialog-commenting ui-icon-comment ui-btn-icon-left',
-        text: 'Comments'
+        text: translation_dict.Comments
       }),
       domsugar('button', {
         type: 'button',
         disabled: disable_previous,
         'class': 'previous-btn ui-icon-backward ui-btn-icon-left',
-        text: 'Previous'
+        text: translation_dict.Previous
       }),
       domsugar('button', {
         type: 'button',
         'class': 'list-btn ui-icon-th ui-btn-icon-left',
-        text: 'List'
+        text: translation_dict.List
       }),
       domsugar('button', {
         type: 'button',
         disabled: disable_next,
         'class': 'next-btn ui-icon-forward ui-btn-icon-left',
-        text: 'Next'
+        text: translation_dict.Next
       })
     );
     return button_list;
@@ -180,13 +217,13 @@
   ///////////////////////////////////////////////////
   // Page view handling
   ///////////////////////////////////////////////////
-  function getCKEditorJSON(key, value) {
+  function getCKEditorJSON(translation_dict, key, value) {
     return {
       erp5_document: {
         "_embedded": {
           "_view": {
             "your_slide_content": {
-              "title": "XXX Slide Text",
+              "title": translation_dict["Slide Text"],
               "type": "GadgetField",
               "url": "gadget_editor.html",
               "renderjs_extra": JSON.stringify({
@@ -216,13 +253,13 @@
     };
   }
 
-  function getMetadataJSON(title_html, type) {
+  function getMetadataJSON(translation_dict, title_html, type) {
     return {
       erp5_document: {
         "_embedded": {
           "_view": {
             "your_chapter_title": {
-              "title": "XXX Chapter Title",
+              "title": translation_dict["Chapter Title"],
               "type": "StringField",
               "editable": 1,
               "required": 1,
@@ -230,16 +267,16 @@
               "value": title_html
             },
             "your_slide_type": {
-              "title": "XXX Type of Slide",
+              "title": translation_dict["Type of Slide"],
               "type": "ListField",
               "editable": 1,
               "key": "type",
               items: [["", ""],
-                      ["Chapter", "chapter"],
-                      ["Screenshot", "screenshot"],
-                      ["Illustration", "illustration"],
-                      ["Code", "code"],
-                      ["Master", "master"]
+                      [translation_dict.Chapter, "chapter"],
+                      [translation_dict.Screenshot, "screenshot"],
+                      [translation_dict.Illustration, "illustration"],
+                      [translation_dict.Code, "code"],
+                      [translation_dict.Master, "master"]
                      ],
               value: type
               /*
@@ -276,7 +313,8 @@
 
   }
 
-  function renderSlideDialog(gadget, slide_dialog, is_updated) {
+  function renderSlideDialog(gadget, translation_dict, slide_dialog,
+                             is_updated) {
     var formbox,
       render_dict,
       slide_list = getSlideElementList(gadget.state.value),
@@ -287,16 +325,19 @@
 
     if (slide_dialog === DIALOG_SLIDE) {
       render_dict = getCKEditorJSON(
+        translation_dict,
         "slide_html",
         slide_dict.slide_html
       );
     } else if (slide_dialog === DIALOG_COMMENT) {
       render_dict = getCKEditorJSON(
+        translation_dict,
         "comment_html",
         slide_dict.comment_html
       );
     } else if (slide_dialog === DIALOG_METADATA) {
-      render_dict = getMetadataJSON(slide_dict.title_html, slide_dict.type);
+      render_dict = getMetadataJSON(translation_dict, slide_dict.title_html,
+                                    slide_dict.type);
     } else {
       // Ease developper work by raising for not handled cases
       throw new Error('Unhandled dialog: ' + slide_dialog);
@@ -319,10 +360,11 @@
         // Clone listbox header structure to reuse the css
         var header_element = domsugar('div', {'class': 'document_table'}, [
           domsugar('div', {'class': 'ui-table-header'}, [
-            buildPageTitle(gadget, 'Slide'),
+            buildPageTitle(gadget, translation_dict.Slide),
             domsugar('null',
                      buildSlideButtonList(
                 slide_dialog,
+                translation_dict,
                 gadget.state.display_index === 0,
                 gadget.state.display_index === slide_list.length - 1
               ))
@@ -340,7 +382,7 @@
       });
   }
 
-  function renderSlideList(gadget) {
+  function renderSlideList(gadget, translation_dict) {
     // Get the full HTML
     var header_element,
       section_list = getSlideElementList(gadget.state.value),
@@ -350,7 +392,8 @@
     // Clone listbox header structure to reuse the css
     header_element = domsugar('div', {'class': 'document_table'}, [
       domsugar('div', {'class': 'ui-table-header'}, [
-        domsugar('h1', {text: section_list.length + ' Slides'})
+        domsugar('h1', {text: section_list.length + ' ' +
+                              translation_dict.Slides})
       ])
     ]);
 
@@ -359,7 +402,7 @@
         draggable: true,
         'data-slide-index': i
       }, [
-        domsugar('button', {type: 'button', text: 'Edit',
+        domsugar('button', {type: 'button', text: translation_dict.Edit,
                  'class': 'display-slide ui-icon-pencil ui-btn-icon-left',
                  'data-slide-index': i}),
         domsugar('h1', {
@@ -372,11 +415,11 @@
     draggable_element_list.push(domsugar('section', [
       domsugar('button', {
         type: 'button',
-        text: 'New slide',
+        text: translation_dict['New slide'],
         'class': 'display-new ui-icon-plus-circle ui-btn-icon-left'
       }),
       domsugar('h1', {
-        text: 'New slide'
+        text: translation_dict['New slide']
       })
     ]));
 
@@ -391,6 +434,8 @@
   ///////////////////////////////////////////////////
   rJS(window)
     .declareAcquiredMethod("notifyChange", "notifyChange")
+    .declareAcquiredMethod("getTranslationList", "getTranslationList")
+
     .declareJob("deferNotifyChange", function () {
       // Ensure error will be correctly handled
       return this.notifyChange();
@@ -450,19 +495,27 @@
     .onStateChange(function (modification_dict) {
       var gadget = this,
         display_step = gadget.state.display_step,
-        slide_dialog = gadget.state.slide_dialog;
+        slide_dialog = gadget.state.slide_dialog,
+        queue = getTranslationDict(gadget);
 
       if (display_step === DISPLAY_LIST) {
-        return renderSlideList(gadget);
+        return queue
+          .push(function (translation_dict) {
+            return renderSlideList(gadget, translation_dict);
+          });
       }
 
       if (display_step === DISPLAY_SLIDE) {
-        return renderSlideDialog(
-          gadget,
-          slide_dialog,
-          !(modification_dict.hasOwnProperty('display_step') ||
-            modification_dict.hasOwnProperty('slide_dialog'))
-        );
+        return queue
+          .push(function (translation_dict) {
+            return renderSlideDialog(
+              gadget,
+              translation_dict,
+              slide_dialog,
+              !(modification_dict.hasOwnProperty('display_step') ||
+                modification_dict.hasOwnProperty('slide_dialog'))
+            );
+          });
       }
 
       // Ease developper work by raising for not handled cases
