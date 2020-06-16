@@ -10,6 +10,23 @@
     </tr>
   </tal:block>
 
+  <!--
+    Macro to check inventory displayed in stock browser.
+
+    This selects the node category and check each of the current, available and future
+    inventory match. Then for each value, it will click to "drill down" and check that the
+    movement history list show the expected number of lines.
+
+    Required parameters:
+      - node_category: the label of the node category to select in the dialog
+      - inventory_list_count: the number of "invenvory list" lines expected in the first dialog.
+      - current_inventory: the quantity for the current inventory
+      - available_inventory: the quantity for the available inventory
+      - future_inventory: the quantity for the future inventory
+
+    Optional parameters:
+      - select_node_category: if True (the default) the node category will be selected
+  -->
   <tal:block
     metal:define-macro="check_inventory"
     tal:define="base_url python: '/' + here.getPortalObject().getId();
@@ -40,9 +57,9 @@
     <tr>
       <td>verifyText</td>
       <td>//span[@class="listbox-current-page-total-number"]</td>
-      <td tal:content="python: '%s records' % movement_count">number of record(s)</td>
+      <td tal:content="python: '%s records' % inventory_list_count">number of record(s)</td>
     </tr>
-    <tal:block tal:condition="python: movement_count != 0">
+    <tal:block tal:condition="python: inventory_list_count != 0">
 
       <!-- Check that inventory and movement list are consistent -->
       <tal:block tal:repeat="inventory_tuple python: [(current_inventory, 3),
@@ -66,11 +83,19 @@
           <td tal:content="python: '//tr[@class=\'listbox-data-line-0 DataA\']/td[%s]/a[1]' % inventory_tuple[1]">link</td>
           <td></td>
         </tr>
-        <tr>
+
+        <!-- we expect to have one movement, except if the inventory was 0, then we should have 0 movements. -->
+        <tr tal:condition="python: inventory_tuple[0]">
           <td>verifyText</td>
           <td>//span[@class="listbox-current-page-total-number"]</td>
-          <td tal:content="python: '%s records' % int(abs(inventory_tuple[0]))">number of movement(s)</td>
+          <td>1 records</td>
         </tr>
+        <tr tal:condition="python: not inventory_tuple[0]">
+          <td>verifyText</td>
+          <td>//span[@class="listbox-current-page-total-number"]</td>
+          <td>0 records</td>
+        </tr>
+
         <!-- Go back to inventory view -->
         <tr>
           <td>clickAndWait</td>

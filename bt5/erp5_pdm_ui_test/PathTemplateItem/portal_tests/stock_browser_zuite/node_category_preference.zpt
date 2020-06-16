@@ -17,7 +17,7 @@ Test stock browser with node category preference
 <!-- Check destination -->
 <tal:block tal:define="node_category python: 'erp5_pdm_ui_test_destination_site_title';
                        select_node_category python:False;
-                       movement_count python: 1;
+                       inventory_list_count python: 1;
                        current_inventory python: 1.0;
                        available_inventory python: 1.0;
                        future_inventory python: 1.0;
