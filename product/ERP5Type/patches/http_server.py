@@ -31,13 +31,16 @@ def log (self, bytes):
     # The purpose of this patch is to emit original IP addresses in Z2.log
     # even when a reverse proxy is used. A similar thing is implemented
     # in the ZPublisher, but not in the ZServer.
+    # Frontend-facing proxy is responsible for sanitising
+    # HTTP_X_FORWARDED_FOR, and only trusted accesses should bypass
+    # that proxy. So trust first entry.
     #
     # <patch>
-    addr = self.channel.addr[0]
-    if trusted_proxies and addr in trusted_proxies:
-        original_addr = self.get_header('x-forwarded-for')
-        if original_addr:
-            addr = original_addr.split(', ')[0]
+    forwarded_for = (self.get_header('x-forwarded-for') or '').split(',', 1)[0].strip()
+    if forwarded_for:
+      addr = forwarded_for
+    else:
+      addr = self.channel.addr[0]
     # </patch>
 
     user_agent=self.get_header('user-agent')
