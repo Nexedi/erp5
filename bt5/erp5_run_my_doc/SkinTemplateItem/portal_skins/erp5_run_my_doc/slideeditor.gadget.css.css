@@ -105,15 +105,7 @@ div[data-gadget-url$="slideeditor.gadget.html"] {
 }
 */
 }
-div[data-gadget-url$="slideeditor.gadget.html"] > .edit-picture button {
-  color: #212529;
-  padding: 3pt;
-  border: 1px solid rgba(0, 0, 0, 0.14);
-  border-radius: 0.325em;
-  display: inline-block;
-  margin-right: 6pt;
-}
-div[data-gadget-url$="slideeditor.gadget.html"] > .edit-picture button:disabled {
+div[data-gadget-url$="slideeditor.gadget.html"] > .document_table button:disabled {
   color: #999999;
 }
 div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list {

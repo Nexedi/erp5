@@ -127,9 +127,7 @@
         //                    text: gadget.state.display_index})
       );
     }
-    return domsugar('div', {'class': 'camera-header'}, [
-      domsugar('h4', element_list)
-    ]);
+    return domsugar('h1', element_list);
   }
 
   function buildSlideButtonList(slide_dialog, disable_previous, disable_next) {
@@ -313,26 +311,24 @@
         return formbox.render(render_dict);
       })
       .push(function () {
-        if (is_updated) {
-          gadget.element.firstChild.replaceWith(
-            buildPageTitle(gadget, 'Slide')
-          );
-          domsugar(gadget.element.querySelector('div.edit-picture'),
-                   {'class': 'edit-picture'},
-                   buildSlideButtonList(
-              slide_dialog,
-              gadget.state.display_index === 0,
-              gadget.state.display_index === slide_list.length - 1
-            ));
-        } else {
-          domsugar(gadget.element, [
+        // Clone listbox header structure to reuse the css
+        var header_element = domsugar('div', {'class': 'document_table'}, [
+          domsugar('div', {'class': 'ui-table-header'}, [
             buildPageTitle(gadget, 'Slide'),
-            domsugar('div', {'class': 'edit-picture'},
+            domsugar('null',
                      buildSlideButtonList(
                 slide_dialog,
                 gadget.state.display_index === 0,
                 gadget.state.display_index === slide_list.length - 1
-              )),
+              ))
+          ])
+        ]);
+
+        if (is_updated) {
+          gadget.element.firstChild.replaceWith(header_element);
+        } else {
+          domsugar(gadget.element, [
+            header_element,
             formbox.element
           ]);
         }
@@ -342,6 +338,7 @@
   function renderSlideList(gadget) {
     // Get the full HTML
     var text_content = gadget.state.value,
+      header_element,
       div = domsugar('div', {'class': 'slide_list', html: text_content}),
       section_list = div.querySelectorAll(':scope > section'),
       i;
@@ -361,7 +358,14 @@
                           'class': 'display-new'})
     ]));
 
-    domsugar(gadget.element, [div]);
+    // Clone listbox header structure to reuse the css
+    header_element = domsugar('div', {'class': 'document_table'}, [
+      domsugar('div', {'class': 'ui-table-header'}, [
+        domsugar('h1', {text: section_list.length + ' Slides'})
+      ])
+    ]);
+
+    domsugar(gadget.element, [header_element, div]);
   }
 
   ///////////////////////////////////////////////////
