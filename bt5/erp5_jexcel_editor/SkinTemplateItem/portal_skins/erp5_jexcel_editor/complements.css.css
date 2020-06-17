@@ -20,3 +20,11 @@ input.cell_input {
   width: 4%;
 }
 
+input.jexcel_search {
+  width: 40px;
+}
+
+.jexcel_toolbar select.minimize {
+  width: 90px;
+}
+

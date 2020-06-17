@@ -9,13 +9,14 @@
     merge: true,
     text_font: true,
     text_position: true,
-    color_picker: true
+    color_picker: true,
+    type: true
   };
 
   var getCoordsFromCell = function (cell) {
     var x = Number(cell.dataset.x);
     var y = Number(cell.dataset.y) + 1;
-    return (x >= 26 ? numberToLetter((x / 26 >> 0) - 1) : '') +  'ABCDEFGHIJKLMNOPQRSTWXYZ'[x % 26 >> 0] + y.toString();
+    return (x >= 26 ? numberToLetter((x / 26 >> 0) - 1) : '') + 'ABCDEFGHIJKLMNOPQRSTWXYZ'[x % 26 >> 0] + y.toString();
   };
 
   rJS(window)
@@ -81,6 +82,7 @@
       var gadget = this;
       var filter = element.querySelector(".jexcel_filter");
       element.querySelector(".jexcel_toolbar").appendChild(filter);
+      document.querySelector("select.jexcel_toolbar_item").classList.add("minimize");
       var formula_div = document.createElement("div");
       formula_div.classList.add("jexcel_formula");
       var img = document.createElement("img");
@@ -97,6 +99,7 @@
       .push(function (options) {
         var select = document.createElement("select");
         select.innerHTML = options;
+        select.classList.add("minimize");
         select.onclick = function () {
           var select = this;
           var cell = gadget.element.querySelector("td.highlight-selected");
@@ -121,23 +124,30 @@
         }
         element.querySelector(".jexcel_toolbar").insertBefore(select, filter);
         var icon_title = {
-        "undo": "Undo",
-        "redo": "Redo",
-        "add": "Add sheet",
-        "delete": "Delete sheet",
-        "table_chart": "Merge cells",
-        "close": "Destroy merge",
-        "cancel": "Destroy all merges",
-        "format_bold": "Bold",
-        "format_italic": "Italic",
-        "format_underlined": "Underline",
-        "format_align_left": "Align left",
-        "format_align_center": "Align center",
-        "format_align_right": "Align right",
-        "format_align_justify": "Align justify",
-        "vertical_align_top": "Align top",
-        "vertical_align_center": "Align middle",
-        "vertical_align_bottom": "Align bottom",
+          "undo": "Undo",
+          "redo": "Redo",
+          "add": "Add sheet",
+          "delete": "Delete sheet",
+          "table_chart": "Merge cells",
+          "close": "Destroy merge",
+          "cancel": "Destroy all merges",
+          "format_bold": "Bold",
+          "format_italic": "Italic",
+          "format_underlined": "Underline",
+          "format_align_left": "Align left",
+          "format_align_center": "Align center",
+          "format_align_right": "Align right",
+          "format_align_justify": "Align justify",
+          "vertical_align_top": "Align top",
+          "vertical_align_center": "Align middle",
+          "vertical_align_bottom": "Align bottom",
+          "image": "Set column type : Image",
+          "radio": "Set column type: Radio button",
+          "checkbox": "Set column type: Checkbox",
+          "title": "Set column type: Text",
+          "list": "Set column type: HTML",
+          "calendar_today": "Set column type: Calendar",
+          "color_lens": "Set column type: Color"
       }
       element.querySelectorAll("i").forEach(i => {
         if (i.dataset.k === "color") {i.title = "Color"}
@@ -169,7 +179,7 @@
           cell_input.value = getCoordsFromCell(cell);
           var x = Number(cell.dataset.x);
           var y = Number(cell.dataset.y);
-          formula.value = instance.getValueFromCoords(x, y);
+          formula.value = ["text", "calendar", "checkbox", "color"].includes(instance.options.columns[x].type) ? instance.getValueFromCoords(x, y) : "";
         })
       };
       sheet.oneditionend = function (a, b, c, d, e) {

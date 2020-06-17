@@ -54,7 +54,7 @@
     type: 'i',
     content: 'table_chart',
     onclick: function (a, b, c) {
-      var cell = document.querySelector("td.highlight");
+      var cell = a.querySelector("td.highlight");
       var selected = b.getJson(true);
       var colspan = Object.keys(selected[0]).length;
       var rowspan = selected.length;
@@ -202,6 +202,139 @@
     k: 'background-color'
   };
 
+  var image = {
+    type: "i",
+    content: "image",
+    onclick: function (a, b, c) {
+      var cell = a.querySelector("td.highlight-selected");
+      if (cell) {
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
+        instance.options.columns[Number(cell.dataset.x)].type = "image";
+      }
+    }
+  };
+
+  var checkbox = {
+    type: "i",
+    content: "checkbox",
+    onclick: function (a, b, c) {
+      var cell = a.querySelector("td.highlight-selected");
+      if (cell) {
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
+        var column = instance.el.querySelectorAll("td[data-x='"+cell.dataset.x+"']");
+        var array = [...column];
+        array.shift();
+        array.forEach(cell => {
+          instance.setValue(getCoordsFromCell(cell), "");
+          cell.innerHTML = "<input type='checkbox' name='c"+cell.dataset.x+"'>"
+        });
+        instance.options.columns[Number(cell.dataset.x)].type = "checkbox";
+      }
+    }
+  };
+
+  var radio = {
+    type: "i",
+    content: "radio",
+    onclick: function (a, b, c) {
+      var cell = a.querySelector("td.highlight-selected");
+      if (cell) {
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
+        var column = instance.el.querySelectorAll("td[data-x='"+cell.dataset.x+"']");
+        var array = [...column];
+        array.shift();
+        array.forEach(cell => {
+          instance.setValue(getCoordsFromCell(cell), "");
+          cell.innerHTML = "<input type='radio'>";
+        });
+        instance.options.columns[Number(cell.dataset.x)].type = "radio";
+      }
+    }
+  };
+
+  var text = {
+    type: "i",
+    content: "title",
+    onclick: function (a, b, c) {
+      var cell = a.querySelector("td.highlight-selected");
+      if (cell) {
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
+        var column = instance.el.querySelectorAll("td[data-x='"+cell.dataset.x+"']");
+        var array = [...column];
+        instance.options.columns[Number(cell.dataset.x)].type = "text";
+        array.shift();
+        array.forEach(cell => {
+          cell.innerHTML = "";
+          instance.setValue(getCoordsFromCell(cell), "");
+        });
+      }
+    }
+  };
+
+  var html = {
+    type: "i",
+    content: "list",
+    onclick: function (a, b, c) {
+      var cell = a.querySelector("td.highlight-selected");
+      if (cell) {
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
+        var column = instance.el.querySelectorAll("td[data-x='"+cell.dataset.x+"']");
+        var array = [...column];
+        instance.options.columns[Number(cell.dataset.x)].type = "html";
+        array.shift();
+        array.forEach(cell => {
+          cell.innerHTML = "";
+          instance.setValue(getCoordsFromCell(cell), "");
+        });
+      }
+    }
+  };
+
+  var calendar = {
+    type: "i",
+    content: "calendar_today",
+    onclick: function (a, b, c) {
+      var cell = a.querySelector("td.highlight-selected");
+      if (cell) {
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
+        var column = instance.el.querySelectorAll("td[data-x='"+cell.dataset.x+"']");
+        var array = [...column];
+        instance.options.columns[Number(cell.dataset.x)].type = "calendar";
+        array.shift();
+        array.forEach(cell => {
+          cell.innerHTML = "";
+          instance.setValue(getCoordsFromCell(cell), "");
+        });
+      }
+    }
+  };
+
+  var color = {
+    type: "i",
+    content: "color_lens",
+    onclick: function (a, b, c) {
+      var cell = a.querySelector("td.highlight-selected");
+      if (cell) {
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
+        var column = instance.el.querySelectorAll("td[data-x='"+cell.dataset.x+"']");
+        var array = [...column];
+        array.shift();
+        array.forEach(cell => {
+          instance.setValue(getCoordsFromCell(cell), "");
+          cell.innerHTML = ""
+        });
+        instance.options.columns[Number(cell.dataset.x)].type = "color";
+      }
+    }
+  };
+
   rJS(window)
 
     .declareMethod("getToolbarList", function (add_function, dict) {
@@ -229,6 +362,9 @@
       if (dict.hasOwnProperty("color_picker") && dict.color_picker) {
         list.push(text_color, background_color);
       }
+      if (dict.hasOwnProperty("type") && dict.type) {
+        list.push(text, image, checkbox, html, calendar, color);
+      }
       var res = Object.assign({}, template);
       res.toolbar = list;
       return res;
@@ -239,7 +375,8 @@
       var formulas = ["SUM", "MIN", "MAX", "COUNT", "AVERAGE", "FLOOR", "ABS", "SQRT", "ISEVEN", "ISODD", "TODAY", "UPPER", "LOWER", "TRUNC", "TYPE", "TRIM",
                      "SIN", "COS", "TAN", "ARCSIN", "ARCCOS", "ARCTAN", "ROUND", "RAND", "RANDBETWEEN", "RADIANS", "POWER", "PI", "PHI", "MOD", "LEN", "LN",
                       "LOG", "LOG10", "FACT", "TRUE", "FALSE", "AND", "OR", "XOR", "EVEN", "ODD", "EXP", "CONCATENATE", "BITAND", "BITOR", "BIN2DEC", "BIN2HEX",
-                     "BIN2OCT", "DEC2BIN", "DEC2HEX", "DEC2OCT", "HEX2BIN", "HEX2DEC", "HEX2OCT", "NOT", "OCT2BIN", "OCT2DEC", "OCT2HEX", "PRODUCT", "QUOTIENT"].sort();
+                     "BIN2OCT", "DEC2BIN", "DEC2HEX", "DEC2OCT", "HEX2BIN", "HEX2DEC", "HEX2OCT", "NOT", "OCT2BIN", "OCT2DEC", "OCT2HEX", "PRODUCT", "QUOTIENT",
+                     "COLUMN", "ROW", "CELL"].sort();
       formulas.forEach(value => {
         str += "<option class='formula_option' value=" + value + ">" + value + "()" + "</option>";
       })
