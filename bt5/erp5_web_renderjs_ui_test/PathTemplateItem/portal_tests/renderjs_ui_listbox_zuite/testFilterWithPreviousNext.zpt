@@ -79,7 +79,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//a[text()='Foo Module']</td>
+  <td>//a[text()='Foos']</td>
   <td></td>
 </tr>
 
