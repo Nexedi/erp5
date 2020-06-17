@@ -4,7 +4,9 @@ data_supply_module/default_http_json
 data_supply_module/default_http_json/**
 portal_alarms/wendelin_handle_analysis
 portal_callables/DataIngestionLine_writeFluentdIngestionToDataStream
+portal_callables/DataIngestionLine_writeIngestionToDataStream
 portal_callables/IngestionPolicy_parseSimpleFluentdTag
+portal_callables/IngestionPolicy_parseSimpleIngestionTag
 portal_categories/business_application
 portal_categories/business_application/**
 portal_categories/quantity_unit
@@ -19,5 +21,6 @@ portal_gadgets/WendelinInformationGadget
 portal_gadgets/WendelinInformationGadget/**
 portal_ingestion_policies/default_http_json
 portal_ingestion_policies/default_http_json/**
+portal_ingestion_policies/wendelin-ingestion
 web_page_module/wendelin_information_gadget.html
 web_page_module/wendelin_js
