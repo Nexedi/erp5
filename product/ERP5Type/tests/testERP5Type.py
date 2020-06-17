@@ -3331,20 +3331,30 @@ return [
         headers={'X-Forwarded-For': '1.2.3.4'},
       )
       self.assertEqual(response.text, '1.2.3.4')
-      f = open(z2_log_path)
-      f.seek(-256, 2)
+      f = open(z2_log_path, 'rb')
+      f.seek(-256, os.SEEK_END) # Assumes last line is no longer than 256 chars (it should be about 130)
       last_line = f.readlines()[-1]
       f.close()
-      self.assertTrue(last_line.startswith('1.2.3.4 - '))
+      self.assertTrue(last_line.startswith('1.2.3.4 - '), last_line)
+      response = requests.get(
+        '%s/%s' % (self.portal.absolute_url(), script_id),
+        headers={'X-Forwarded-For': '1.2.3.4, 5.6.7.8'},
+      )
+      self.assertEqual(response.text, '1.2.3.4')
+      f = open(z2_log_path, 'rb')
+      f.seek(-256, os.SEEK_END)
+      last_line = f.readlines()[-1]
+      f.close()
+      self.assertTrue(last_line.startswith('1.2.3.4 - '), last_line)
       response = requests.get(
         '%s/%s' % (self.portal.absolute_url(), script_id),
       )
       self.assertNotEqual(response.text, '1.2.3.4')
-      f = open(z2_log_path)
-      f.seek(-256, 2)
+      f = open(z2_log_path, 'rb')
+      f.seek(-256, os.SEEK_END)
       last_line = f.readlines()[-1]
       f.close()
-      self.assertFalse(last_line.startswith('1.2.3.4 - '))
+      self.assertFalse(last_line.startswith('1.2.3.4 - '), last_line)
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
