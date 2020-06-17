@@ -98,8 +98,8 @@
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Foo Module']</td>
+  <td>assertElementPresent</td>
+  <td>//a[text()='Foos']</td>
   <td></td>
 </tr>
 

@@ -44,7 +44,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//a[text()='Foo Module' and contains(@href, '#!cancel_dialog_with_history') and contains(@href, 'p.cancel=%7B%22extended_search')]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Foos' and contains(@href, '#!cancel_dialog_with_history') and contains(@href, 'p.cancel=%7B%22extended_search')]</td>
   <td></td>
 </tr>
 
