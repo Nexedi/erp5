@@ -66,5 +66,9 @@ bt5_installation_list = bt5_update_catalog_list + ('erp5_xhtml_style',
                                                    'erp5_officejs_afs_directory_ui_test',
                                                    'erp5_travel_expense_ui_test',
                                                    'erp5_http_proxy',
+                                                   'erp5_corporate_identity_test',
+                                                   'erp5_run_my_doc',
+                                                   'erp5_run_my_doc_renderjs_ui_test',
+                                                   'erp5_no_style'
                                                    )
 return bt5_installation_list, []
