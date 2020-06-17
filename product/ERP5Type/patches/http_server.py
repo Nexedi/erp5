@@ -21,7 +21,6 @@
 
 
 from ZServer.medusa.http_server import http_request
-from ZPublisher.HTTPRequest import trusted_proxies
 import string
 import base64
 import time
