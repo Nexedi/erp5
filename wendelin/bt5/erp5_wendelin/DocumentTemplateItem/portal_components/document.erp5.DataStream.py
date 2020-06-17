@@ -26,6 +26,9 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+import msgpack
+import struct
+import numpy as np
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.BigFile import BigFile
@@ -56,6 +59,33 @@ class DataStream(BigFile):
     data = self._baseGetData()
     for chunk in data.iterate(start_offset, end_offset - start_offset):
       yield chunk
+
+  def readMsgpackChunkList(self, start_offset, end_offset):
+    """
+      Read chunks of msgpack data from a Data Stream and return (unpacked_data list, offset)
+    """
+    unpacker = msgpack.Unpacker()
+    data = self._baseGetData()
+    pos = start_offset
+    data_list = []
+    for chunk in data.iterate(start_offset, end_offset - start_offset):
+      unpacker.feed(chunk)
+      while True:
+        pos = start_offset + unpacker.tell()
+        try:
+          #yield unpacker.unpack()
+          data_list.append(unpacker.unpack())
+        except msgpack.exceptions.OutOfData:
+          break
+    #raise StopIteration(pos)
+    return data_list, pos
+
+  def extractDateTime(self, date_time_holder):
+    if isinstance(date_time_holder, int):
+      return np.datetime64(date_time_holder, 's')
+    # if it is not in, we Expect msgpack.ExtType
+    s, ns = struct.unpack(">II", date_time_holder.data)
+    return np.datetime64(s, 's') + np.timedelta64(ns, 'ns')
 
   def readChunkList(self, start_offset, end_offset):
     """
