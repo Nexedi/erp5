@@ -27,9 +27,9 @@
       <div class="gadget-content">
         <article>
           <section>
-            <tal:block tal:condition="exists: request/portal_status_message">
-              <span tal:attributes="data-i18n request/portal_status_message"><span tal:content="request/portal_status_message"></span></span>
-            </tal:block>
+            <div class="visible" data-gadget-scope="notification" tal:condition="exists: request/portal_status_message">
+              <button type="submit" class="error" tal:attributes="data-i18n request/portal_status_message"><span tal:content="request/portal_status_message"></span></button>
+            </div>
           </section>
 
           <section tal:condition="not: portal/portal_membership/isAnonymousUser">
