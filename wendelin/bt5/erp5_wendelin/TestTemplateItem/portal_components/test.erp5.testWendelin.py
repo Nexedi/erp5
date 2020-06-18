@@ -281,3 +281,43 @@ class Test(ERP5TypeTestCase):
            getattr(self.portal.portal_ingestion_policies, "default_http_json", None))
     self.assertNotEqual(None, 
            getattr(self.portal.data_supply_module, "default_http_json", None))
+
+  def test_07_LinkedDataStreamList(self):
+    """
+      Test linked Data Streams
+    """
+    data_stream_1 = self.portal.data_stream_module.newContent(title = "Data Stream 1")
+    data_stream_2 = self.portal.data_stream_module.newContent(title = "Data Stream 2")
+    data_stream_3 = self.portal.data_stream_module.newContent(title = "Data Stream 3")
+    data_stream_4 = self.portal.data_stream_module.newContent(title = "Data Stream 4")
+    data_stream_5 = self.portal.data_stream_module.newContent(title = "Data Stream 5")
+
+    # test nothing linked
+    self.assertSameSet([], data_stream_2.getRecursiveSuccessorValueList())
+    self.assertSameSet([], data_stream_2.getRecursivePredecessorValueList())
+
+    # set linked data streams (1 <--> 2 <--> 3 <--> 4 <--> 5)
+    data_stream_1.setSuccessorValue(data_stream_2)
+    data_stream_2.setSuccessorValue(data_stream_3)
+    data_stream_3.setSuccessorValue(data_stream_4)
+    data_stream_4.setSuccessorValue(data_stream_5)
+    
+    # set predecessor
+    data_stream_2.setPredecessorValue(data_stream_1)
+    data_stream_3.setPredecessorValue(data_stream_2)
+    data_stream_4.setPredecessorValue(data_stream_3)
+    data_stream_5.setPredecessorValue(data_stream_4)
+
+    # test successor
+    self.assertSameSet(data_stream_2.getRecursiveSuccessorValueList(), \
+                       [data_stream_3, data_stream_4, data_stream_5])
+    self.assertSameSet(data_stream_5.getRecursiveSuccessorValueList(), \
+                       [])
+    
+    # test predecessor
+    self.assertSameSet(data_stream_1.getRecursivePredecessorValueList(), \
+                       [])
+    self.assertSameSet(data_stream_2.getRecursivePredecessorValueList(), \
+                       [data_stream_1])
+    self.assertSameSet(data_stream_5.getRecursivePredecessorValueList(), \
+                       [data_stream_4, data_stream_3, data_stream_2, data_stream_1])

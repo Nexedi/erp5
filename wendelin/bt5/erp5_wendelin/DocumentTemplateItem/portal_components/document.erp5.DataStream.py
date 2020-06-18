@@ -68,3 +68,26 @@ class DataStream(BigFile):
       chunk_list.append(chunk)
 
     return chunk_list
+
+  def getRecursiveSuccessorValueList(self):
+    """
+      Return list of all successors (Data Streams) for a Data Stream.
+    """
+    successor_list = []
+    successor = self.getSuccessorValue()
+    while successor is not None:
+      successor_list.append(successor)
+      successor = successor.getSuccessorValue()
+    return successor_list
+
+  def getRecursivePredecessorValueList(self):
+    """
+      Return list of all predecessor (Data Streams) for a Data Stream.
+    """
+    predecessor_list = []
+    predecessor = self.getPredecessorValue()
+    while predecessor is not None:
+      predecessor_list.append(predecessor)
+      predecessor = predecessor.getPredecessorValue()
+    return predecessor_list
+  
