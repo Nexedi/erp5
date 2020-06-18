@@ -41,12 +41,12 @@
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>Foo Module</td>
+  <td>Foos</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextNotPresent</td>
-  <td>Bar Module</td>
+  <td>Bars</td>
   <td></td>
 </tr>
 <tr>
@@ -67,12 +67,12 @@
 </tr>
 <tr>
   <td>assertTextNotPresent</td>
-  <td>Foo Module</td>
+  <td>Foos</td>
   <td></td>
 </tr>
 <tr>
   <td>assertTextPresent</td>
-  <td>Bar Module</td>
+  <td>Bars</td>
   <td></td>
 </tr>
 <tr>
