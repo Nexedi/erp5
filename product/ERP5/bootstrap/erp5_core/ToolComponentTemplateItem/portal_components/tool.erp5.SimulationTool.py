@@ -1651,25 +1651,6 @@ class SimulationTool(BaseTool):
     )
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConvertedInventoryList')
-  def getConvertedInventoryList(self, simulation_period='', **kw):
-    """
-    Return list of inventory with a 'converted_quantity' additional column,
-    which contains the sum of measurements for the specified metric type,
-    expressed in the 'quantity_unit' unit.
-
-    metric_type   - category
-    quantity_unit - category
-    """
-
-    warn('getConvertedInventoryList is Deprecated, use ' \
-         'getInventory instead.', DeprecationWarning)
-
-    method = getattr(self,'get%sInventoryList' % simulation_period)
-
-    return method(**kw)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
                             'getAllInventoryList')
   def getAllInventoryList(self, src__=0, **kw):
     """
