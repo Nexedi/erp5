@@ -12,9 +12,6 @@ def _(string_to_escape):
 def __(string_to_escape):
   return cgi.escape("%s" % string_to_escape, quote=True)
 
-# http://tools.ietf.org/html/draft-kelly-json-hal-03
-forbidden_property_list = ('_links', '_embedded', '_forms')
-
 
 def dumpshtml(web_section, hal_json):
   result = ""
@@ -67,6 +64,7 @@ def dumpshtml(web_section, hal_json):
   result += '</ul><footer>'
 
 
+  # XXX Drop hardcoded portal_skins path
 
   result = '<html><head>' \
       '<meta name="viewport"\n' \
@@ -76,6 +74,9 @@ def dumpshtml(web_section, hal_json):
       'label {display: block;}\n' \
       'input:not([type=submit]):not([type=file]) {width: 100%%;}\n' \
       'textarea {height: 15em;width: 100%%;}</style>' \
+      '<script src="portal_skins/erp5_xhtml_style/rsvp.js"></script>' \
+      '<script src="portal_skins/erp5_xhtml_style/renderjs.js"></script>' \
+      '<script src="portal_skins/erp5_no_style/nostyle.js"></script>' \
       '</head><body>%(body)s</body></html>' % {'body': result}
   return result
 
