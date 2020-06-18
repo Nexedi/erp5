@@ -39,27 +39,30 @@
           </section>
 
           <section tal:condition="portal/portal_membership/isAnonymousUser">
-            <form method="post" tal:attributes="action python: '%s/' % context.absolute_url()">
+            <form method="post" tal:attributes="action python: '%s/' % context.absolute_url()" class="field_container">
 
-              <div class="ui-field-contain">
-                <label i18n:domain="ui" i18n:translate="" >Name</label>
-                <div><input autofocus type="text" name="__ac_name" value="" required=""></div>
-              </div>
-              <div class="ui-field-contain">
-                <label i18n:domain="ui" i18n:translate="" >Password</label>
-                <div><input type="password" name="__ac_password" value="" required="" autocomplete="off" /></div>
-              </div>
-              <div class="ui-field-contain">
-                <label></label>
-                <div tal:define="absolute_url python:context.absolute_url()">
-                  <a  i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+              <div>
+                <div>
+                  <div class="ui-field-contain">
+                    <label i18n:domain="ui" i18n:translate="" >Name</label>
+                    <div><input autofocus type="text" name="__ac_name" value="" required=""></div>
+                  </div>
+                  <div class="ui-field-contain">
+                    <label i18n:domain="ui" i18n:translate="" >Password</label>
+                    <div><input type="password" name="__ac_password" value="" required="" autocomplete="off" /></div>
+                  </div>
+                  <div class="ui-field-contain">
+                    <label></label>
+                    <div tal:define="absolute_url python:context.absolute_url()">
+                      <a  i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+                    </div>
+                  </div><br/>
+                  <div class="ui-field-contain">
+                    <label></label>
+                    <div><input type="submit" value='Login' i18n:attributes="value" i18n:domain="ui"  tal:attributes="name python: '%s:method' % (form_action, )"/></div>
+                  </div>
                 </div>
-              </div><br/>
-              <div class="ui-field-contain">
-                <label></label>
-                <div><input type="submit" value='Login' i18n:attributes="value" i18n:domain="ui"  tal:attributes="name python: '%s:method' % (form_action, )"/></div>
               </div>
-
 
               <input type="hidden" name="url" tal:attributes="value python: context.absolute_url()" />
               <input tal:condition="exists: request/came_from"
