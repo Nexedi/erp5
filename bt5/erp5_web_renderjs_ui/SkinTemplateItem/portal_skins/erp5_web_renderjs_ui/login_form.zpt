@@ -11,7 +11,7 @@
 
     <div data-gadget-scope='header'>
       <div class="ui-header">
-        <h1><span i18n:domain="ui" i18n:translate="">Connect</span></h1>
+        <h1><span i18n:domain="ui" i18n:translate="">Log in</span></h1>
       </div>
     </div>
 
@@ -41,7 +41,7 @@
             <form method="post" tal:attributes="action python: '%s/' % context.absolute_url()">
 
               <div class="ui-field-contain">
-                <label i18n:domain="ui" i18n:translate="" >Login</label>
+                <label i18n:domain="ui" i18n:translate="" >Name</label>
                 <div><input autofocus type="text" name="__ac_name" value="" required=""></div>
               </div>
               <div class="ui-field-contain">
