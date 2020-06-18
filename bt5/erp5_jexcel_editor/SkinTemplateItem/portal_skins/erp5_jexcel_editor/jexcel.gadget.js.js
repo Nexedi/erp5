@@ -82,7 +82,7 @@
       var gadget = this;
       var filter = element.querySelector(".jexcel_filter");
       element.querySelector(".jexcel_toolbar").appendChild(filter);
-      document.querySelector("select.jexcel_toolbar_item").classList.add("minimize");
+      element.querySelector("select.jexcel_toolbar_item").classList.add("minimize");
       var formula_div = document.createElement("div");
       formula_div.classList.add("jexcel_formula");
       var img = document.createElement("img");
