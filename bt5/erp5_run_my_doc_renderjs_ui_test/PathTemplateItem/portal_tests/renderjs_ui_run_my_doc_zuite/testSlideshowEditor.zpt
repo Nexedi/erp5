@@ -73,8 +73,8 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Slide 1</td>
+  <td>waitForElementPresent</td>
+  <td>title_html</td>
   <td></td>
 </tr>
 
@@ -96,8 +96,8 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Slide 1</td>
+  <td>waitForElementNotPresent</td>
+  <td>title_html</td>
   <td></td>
 </tr>
 
@@ -117,8 +117,8 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Slide 1</td>
+  <td>waitForElementPresent</td>
+  <td>title_html</td>
   <td></td>
 </tr>
 
@@ -154,8 +154,8 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Slide 1</td>
+  <td>waitForElementPresent</td>
+  <td>title_html</td>
   <td></td>
 </tr>
 
