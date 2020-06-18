@@ -78,7 +78,7 @@
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//h1/a[@data-i18n="Support Request Module"]</td>
+  <td>//h1/a[@data-i18n="Support Requests"]</td>
   <td></td>
 </tr>
 
