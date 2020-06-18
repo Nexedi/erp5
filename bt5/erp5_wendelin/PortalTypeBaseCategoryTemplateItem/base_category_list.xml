@@ -50,6 +50,10 @@
  <portal_type id="Data Set Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Data Stream">
+  <item>predecessor</item>
+  <item>successor</item>
+ </portal_type>
  <portal_type id="Data Stream Module">
   <item>business_application</item>
  </portal_type>

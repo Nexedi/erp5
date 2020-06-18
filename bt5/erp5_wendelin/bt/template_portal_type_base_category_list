@@ -18,6 +18,8 @@ Data Product Module | business_application
 Data Release Module | business_application
 Data Set Module | business_application
 Data Stream Module | business_application
+Data Stream | predecessor
+Data Stream | successor
 Data Supply Module | business_application
 Data Transformation Module | business_application
 Device Configuration Module | business_application
