@@ -954,7 +954,7 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
       "script_id": script.id
     },
     "name": getRealRelativeUrl(traversed_document),
-    "title": ensureUTF8(traversed_document.getTitle())
+    "title": ensureUTF8(traversed_document.getTranslatedTitle())
   }
 
   form_relative_url = getFormRelativeUrl(form)
