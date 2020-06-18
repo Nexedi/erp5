@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from ZPublisher.HTTPRequest import HTTPRequest, sane_environment
+import ipaddress
 import sys
 import weakref
 import thread
@@ -15,6 +16,10 @@ def __init__(self, stdin, environ, response, clean=0):
     if not clean else
     environ
   ).get('HTTP_X_FORWARDED_FOR', '').split(',', 1)[0].strip()
+  try:
+    ipaddress.ip_address(unicode(forwarded_for))
+  except (ValueError, UnicodeDecodeError):
+    forwarded_for = None
 
   HTTPRequest__init__(self, stdin=stdin, environ=environ, response=response, clean=clean)
 

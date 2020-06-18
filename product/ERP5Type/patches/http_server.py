@@ -21,6 +21,7 @@
 
 
 from ZServer.medusa.http_server import http_request
+import ipaddress
 import string
 import base64
 import time
@@ -36,6 +37,10 @@ def log (self, bytes):
     #
     # <patch>
     forwarded_for = (self.get_header('x-forwarded-for') or '').split(',', 1)[0].strip()
+    try:
+      ipaddress.ip_address(unicode(forwarded_for))
+    except (ValueError, UnicodeDecodeError):
+      forwarded_for = None
     if forwarded_for:
       addr = forwarded_for
     else:
