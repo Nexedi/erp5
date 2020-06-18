@@ -1658,6 +1658,11 @@ class SimulationTool(BaseTool):
     Performs 1 SQL request for each simulation state, and merge the results.
     Rename relevant columns with a '${simulation}_' prefix
     (ex: 'total_price' -> 'current_total_price').
+
+    Warning: this method is not convered by any test and does not return actual
+    InventoryListBrain ( because mergeZRDBResults does not support them ), so
+    the available attribute on result items are different from a traditional
+    getInventoryList result.
     """
     columns = ('total_quantity', 'total_price', 'converted_quantity')
 
