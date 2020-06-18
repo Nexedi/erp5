@@ -136,7 +136,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@value='Validate']</td>
+  <td>//input[@value='Recover your Account']</td>
   <td></td>
 </tr>
 <tr>
@@ -154,7 +154,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//input[@value='Validate']</td>
+  <td>//input[@value='Recover your Account']</td>
   <td></td>
 </tr>
 <tr>
