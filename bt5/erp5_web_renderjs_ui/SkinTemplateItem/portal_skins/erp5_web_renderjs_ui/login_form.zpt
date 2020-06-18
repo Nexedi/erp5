@@ -12,7 +12,7 @@
 
     <div data-gadget-scope='header'>
       <div class="ui-header">
-        <h1><span i18n:domain="ui" i18n:translate="">Connect</span></h1>
+        <h1><span i18n:domain="ui" i18n:translate="">Log in</span></h1>
       </div>
     </div>
 
