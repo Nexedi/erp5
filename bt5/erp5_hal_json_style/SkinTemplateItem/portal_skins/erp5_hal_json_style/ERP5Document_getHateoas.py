@@ -1322,7 +1322,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     action_dict = {}  # actions available on current `traversed_document`
     last_form_id = None  # will point to the previous form so we can obtain previous selection
 
-    result_dict['title'] = ensureUTF8(traversed_document.getTitle())
+    result_dict['title'] = ensureUTF8(traversed_document.getTranslatedTitle())
 
     # extra_param_json should be base64 encoded JSON at this point
     # only for mode == 'form' it is already a dictionary
