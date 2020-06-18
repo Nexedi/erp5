@@ -39,25 +39,23 @@
           </section>
 
           <section tal:condition="portal/portal_membership/isAnonymousUser">
-            <form method="post" tal:attributes="action python: '%s/' % absolute_url">
+            <form method="post" tal:attributes="action python: '%s/' % absolute_url" class="field_container">
 
-              <div class="ui-field-contain">
-                <label i18n:domain="ui" i18n:translate="" >Username</label>
-                <div><input autofocus type="text" name="__ac_name" value="" required=""></div>
-              </div>
-              <div class="ui-field-contain">
-                <label i18n:domain="ui" i18n:translate="" >Password</label>
-                <div><input type="password" name="__ac_password" value="" required="" autocomplete="off" /></div>
-              </div>
-              <div class="ui-field-contain">
-                <label></label>
+              <div>
                 <div>
-                  <a  i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+                  <div class="ui-field-contain">
+                    <label i18n:domain="ui" i18n:translate="" >Username</label>
+                    <div><input autofocus type="text" name="__ac_name" value="" required=""></div>
+                  </div>
+                  <div class="ui-field-contain">
+                    <label i18n:domain="ui" i18n:translate="" >Password</label>
+                    <div><input type="password" name="__ac_password" value="" required="" autocomplete="off" /></div>
+                  </div>
+                  <div class="dialog_button_container">
+                    <input type="submit" value="Validate" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
+                    <a i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+                  </div>
                 </div>
-              </div><br/>
-              <div class="ui-field-contain">
-                <label></label>
-                <div><input type="submit" value='Login' i18n:attributes="value" i18n:domain="ui"  tal:attributes="name python: '%s:method' % (form_action, )"/></div>
               </div>
 
 
