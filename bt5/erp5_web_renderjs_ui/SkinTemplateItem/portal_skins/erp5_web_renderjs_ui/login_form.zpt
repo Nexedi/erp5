@@ -1,11 +1,16 @@
 <html tal:define="form_action string:WebSite_login;
                   absolute_url context/absolute_url;
-                  portal context/getPortalObject">
+                  portal context/getPortalObject;
+                  available_oauth_login_list python: portal.ERP5Site_getAvailableOAuthLoginList();
+                  enable_google_login python: 'google' in available_oauth_login_list;
+                  enable_facebook_login python: 'facebook' in available_oauth_login_list;
+                  ">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title tal:content="portal/getTitle"></title>
     <link rel="stylesheet" href="gadget_erp5_nojqm.css">
+    <link tal:condition="available_oauth_login_list" rel="stylesheet" tal:attributes="href string:${portal/portal_url}/zocial.min.css">
   </head>
 
   <body>
@@ -55,9 +60,22 @@
                     <input type="submit" value="Validate" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
                     <a i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
                   </div>
+                  <div class="dialog_button_container">
+                    <a tal:attributes="href string:${here/portal_url}/ERP5Site_redirectToGoogleLoginPage"
+                      i18n:translate=""
+                      i18n:domain="ui"
+                      class="zocial google"
+                      >Login with Google</a>
+                  </div>
+                  <div class="dialog_button_container">
+                    <a tal:attributes="href string:${here/portal_url}/ERP5Site_redirectToFacebookLoginPage"
+                      i18n:translate=""
+                      i18n:domain="ui"
+                      class="zocial facebook"
+                    >Login with Facebook</a>
+                  </div>
                 </div>
               </div>
-
 
               <input type="hidden" name="url" tal:attributes="value absolute_url" />
               <input tal:condition="exists: request/came_from"
