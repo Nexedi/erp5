@@ -1,13 +1,14 @@
-<html>
+<html tal:define="form_action string:WebSite_login;
+                  absolute_url context/absolute_url;
+                  portal context/getPortalObject">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title tal:content="python: here.getPortalObject().getTitle()"></title>
+    <title tal:content="portal/getTitle"></title>
     <link rel="stylesheet" href="gadget_erp5_nojqm.css">
   </head>
 
-  <body tal:define="form_action string:WebSite_login;
-                    portal here/getPortalObject">
+  <body>
 
     <div data-gadget-scope='header'>
       <div class="ui-header">
@@ -38,7 +39,7 @@
           </section>
 
           <section tal:condition="portal/portal_membership/isAnonymousUser">
-            <form method="post" tal:attributes="action python: '%s/' % context.absolute_url()">
+            <form method="post" tal:attributes="action python: '%s/' % absolute_url">
 
               <div class="ui-field-contain">
                 <label i18n:domain="ui" i18n:translate="" >Username</label>
@@ -50,7 +51,7 @@
               </div>
               <div class="ui-field-contain">
                 <label></label>
-                <div tal:define="absolute_url python:context.absolute_url()">
+                <div>
                   <a  i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
                 </div>
               </div><br/>
@@ -60,7 +61,7 @@
               </div>
 
 
-              <input type="hidden" name="url" tal:attributes="value python: context.absolute_url()" />
+              <input type="hidden" name="url" tal:attributes="value absolute_url" />
               <input tal:condition="exists: request/came_from"
                      type="hidden" name="came_from"
                      tal:attributes="value request/came_from" />
