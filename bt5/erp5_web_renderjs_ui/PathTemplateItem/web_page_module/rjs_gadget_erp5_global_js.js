@@ -10,9 +10,11 @@
   ///////////////////////////////
   function calculateSynchronousPageTitle(gadget, erp5_document) {
     var title = erp5_document.title,
-      portal_type = erp5_document._links.type.name;
+      portal_type = erp5_document._links.type.name,
+      is_module = / Module$/.test(erp5_document._links.type.href);
 
-    if (erp5_document.hasOwnProperty('_embedded') &&
+    if ((!is_module) &&
+        erp5_document.hasOwnProperty('_embedded') &&
         erp5_document._embedded.hasOwnProperty('_view') &&
         erp5_document._embedded._view.hasOwnProperty('_links') &&
         erp5_document._embedded._view._links.hasOwnProperty('traversed_document')) {
@@ -21,7 +23,7 @@
       // Get the title value from the calculated form if possible
       title = erp5_document._embedded._view._links.traversed_document.title;
     }
-    if (/ Module$/.test(erp5_document._links.type.href)) {
+    if (is_module) {
       return title;
     }
     return portal_type + ': ' + title;
