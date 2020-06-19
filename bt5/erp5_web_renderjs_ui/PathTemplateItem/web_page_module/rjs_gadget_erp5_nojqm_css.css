@@ -393,7 +393,8 @@ textarea {
   color: #575757;
 }
 input[type=submit],
-button {
+button,
+a.ui-button {
   margin: 0;
   padding: 0;
   border: none;
@@ -413,14 +414,17 @@ button {
   cursor: pointer;
 }
 input[type=submit]::-moz-focus-inner,
-button::-moz-focus-inner {
+button::-moz-focus-inner,
+a.ui-button::-moz-focus-inner {
   border: 0px;
   padding: 0px;
 }
 input[type=submit]:hover,
 button:hover,
+a.ui-button:hover,
 input[type=submit]:focus,
-button:focus {
+button:focus,
+a.ui-button:focus {
   outline: none;
 }
 /**********************************************
@@ -1044,6 +1048,34 @@ div[data-gadget-scope='header'] .ui-header ul {
 }
 .gadget-content button[name='action_update']:active {
   background-color: #a9a9a9;
+}
+.gadget-content a.ui-button {
+  padding: 6pt;
+  margin-top: 30pt;
+  margin-right: 12pt;
+  background-color: #FF6600;
+  color: #FFFFFF;
+  border-radius: 0.325em;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #FF6600;
+  min-width: 8em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+}
+.gadget-content a.ui-button:hover,
+.gadget-content a.ui-button:focus {
+  background-color: #ff8533;
+}
+.gadget-content a.ui-button:active {
+  background-color: #ffa366;
+}
+.gadget-content .zocial {
+  line-height: 1.5;
+  padding-top: 6pt;
+  margin-right: 12pt;
+  margin-top: 6pt;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 @media not screen and (max-width: 85em) {
   div[data-role='page']:not(.desktop-panel-hidden) .gadget-content {
