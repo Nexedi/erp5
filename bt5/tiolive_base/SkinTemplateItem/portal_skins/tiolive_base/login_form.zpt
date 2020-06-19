@@ -22,7 +22,7 @@
                  tal:attributes="value request/came_from" />
           <fieldset>
             <div class="field">
-              <label for="name" class="required" i18n:translate="" i18n:domain="ui">Name</label>
+              <label for="name" class="required" i18n:translate="" i18n:domain="ui">Username</label>
               <div class="input"><input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get('__ac_name') or ''" /></div>
               <p class="clear"></p>
             </div>
