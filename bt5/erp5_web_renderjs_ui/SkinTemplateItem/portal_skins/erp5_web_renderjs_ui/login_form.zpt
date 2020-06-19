@@ -1,20 +1,14 @@
 <!DOCTYPE html>
-<html tal:define="form_action string:WebSite_login;
-                  absolute_url context/absolute_url;
-                  portal context/getPortalObject;
-                  available_oauth_login_list python: portal.ERP5Site_getAvailableOAuthLoginList();
-                  enable_google_login python: 'google' in available_oauth_login_list;
-                  enable_facebook_login python: 'facebook' in available_oauth_login_list;
-                  ">
+<html>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title tal:content="python: here.getPortalObject().getTitle()"></title>
     <link rel="stylesheet" href="gadget_erp5_nojqm.css">
-    <link tal:condition="available_oauth_login_list" rel="stylesheet" tal:attributes="href string:${portal/portal_url}/zocial.min.css">
   </head>
 
-  <body>
+  <body tal:define="form_action string:WebSite_login;
+                    portal here/getPortalObject">
 
     <div data-gadget-scope='header'>
       <div class="ui-header">
@@ -29,17 +23,15 @@
         </div>
       </div>
     </div>
-
     <div data-role="page">
       <div class="gadget-content">
         <article>
-
           <section>
             <div class="visible" data-gadget-scope="notification" tal:condition="exists: request/portal_status_message">
               <button type="submit" class="error" tal:attributes="data-i18n request/portal_status_message"><span tal:content="request/portal_status_message"></span></button>
             </div>
           </section>
-  
+
           <section tal:condition="not: portal/portal_membership/isAnonymousUser">
               <p i18n:domain="ui" i18n:translate="" >It seems you're already authenticated.</p>
               <p><a tal:condition="exists: request/came_from"
@@ -59,32 +51,16 @@
                     <label i18n:domain="ui" i18n:translate="" >Password</label>
                     <div><input type="password" name="__ac_password" value="" required="" autocomplete="off" /></div>
                   </div>
-
-                  <div xclass="ui-field-contain" class="dialog_button_container">
-                    <input type="submit" class="ui-btn-icon-left ui-icon-google" value='Login' i18n:attributes="value" i18n:domain="ui"  tal:attributes="name python: '%s:method' % (form_action, )"/>
-                    <a class="dialogcancel" i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+                  <div class="ui-field-contain">
+                    <label></label>
+                    <div tal:define="absolute_url python:context.absolute_url()">
+                      <a  i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+                    </div>
+                  </div><br/>
+                  <div class="ui-field-contain">
+                    <label></label>
+                    <div><input type="submit" value='Login' i18n:attributes="value" i18n:domain="ui"  tal:attributes="name python: '%s:method' % (form_action, )"/></div>
                   </div>
-
-                  <div class="dialog_button_container">
-                    <a 
-                        tal:attributes="href string:${here/portal_url}/ERP5Site_redirectToGoogleLoginPage"
-                        i18n:translate=""
-                         i18n:domain="ui"
-                         class="zocial google"
-                         xclass="ui-btn-icon-left ui-icon-google"
-                         name="ERP5Site_redirectToGoogleLoginPage:method"
-                         >Login with Google</a>
-                  </div>
-                  <div class="dialog_button_container">
-                        <a
-                            tal:attributes="href string:${here/portal_url}/ERP5Site_redirectToGoogleLoginPage"
-                            i18n:translate="" 
-                            i18n:domain="ui"
-                            class="zocial facebook"
-                            class="ui-btn-icon-left ui-icon-facebook"
-                        >Login with Facebook</a>
-                  </div>
-
                 </div>
               </div>
 

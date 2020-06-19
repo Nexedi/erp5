@@ -514,7 +514,7 @@ textarea {
    color: @colortextboxplaceholder;  
 }
 
-input[type=submit], button, a.ui-button {
+input[type=submit], button {
   &::-moz-focus-inner {
     border : 0px;
     padding: 0px;
@@ -1198,22 +1198,6 @@ div[data-gadget-scope='header'] .ui-header {
   // Dialog page template update button 
   button[name='action_update'] {
     .renderPageSubmitButton(@grey);
-  }
-  // Dialog page template cancel button
-  // TODO
-
-  a.ui-button {
-    .renderPageSubmitButton(@coloraccent);
-    text-decoration: none;
-  }
-
-  // Google/Facebook login buttons on login_form    
-  .zocial {
-    line-height: 1.5;
-    padding-top: 6pt;
-    margin-right: 12pt;
-    margin-top: @margin-size;
-    box-shadow: @button-box-shadow;
   }
 
   @media @desktop {
