@@ -1200,6 +1200,15 @@ div[data-gadget-scope='header'] .ui-header {
     .renderPageSubmitButton(@grey);
   }
 
+  // Fixes for zocial.css Google/Facebook login buttons on login_form
+  .zocial {
+    line-height: 1.5;
+    padding-top: 6pt;
+    margin-right: 12pt;
+    margin-top: @margin-size;
+    box-shadow: @button-box-shadow;
+  }
+
   @media @desktop {
     div[data-role='page']:not(.desktop-panel-hidden) & {
       // Keep the panel always visible
