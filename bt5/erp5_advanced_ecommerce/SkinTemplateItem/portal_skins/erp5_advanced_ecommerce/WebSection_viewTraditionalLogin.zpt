@@ -15,7 +15,7 @@
    <div class="login_side">
      <span class="group_title" i18n:translate="" i18n:domain="ui"> Login </span>
      <div class="field">
-         <label class="required" i18n:translate="" i18n:domain="ui">Login</label>
+         <label class="required" i18n:translate="" i18n:domain="ui">Username</label>
          <input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get('__ac_name') or ''" />
          <p class="clear"></p>
       </div>
