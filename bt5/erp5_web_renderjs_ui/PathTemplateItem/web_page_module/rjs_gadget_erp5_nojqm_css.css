@@ -1045,6 +1045,13 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content button[name='action_update']:active {
   background-color: #a9a9a9;
 }
+.gadget-content .zocial {
+  line-height: 1.5;
+  padding-top: 6pt;
+  margin-right: 12pt;
+  margin-top: 6pt;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 @media not screen and (max-width: 85em) {
   div[data-role='page']:not(.desktop-panel-hidden) .gadget-content {
     margin-left: 180pt;
