@@ -1045,6 +1045,19 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content button[name='action_update']:active {
   background-color: #a9a9a9;
 }
+.gadget-content .sign_in_with_google {
+  height: 46px;
+  width: 191px;
+  display: inline-block;
+  overflow: hidden;
+  margin-top: 6pt;
+}
+.gadget-content .sign_in_with_google img:hover {
+  margin-top: -46px;
+}
+.gadget-content .sign_in_with_google img:active {
+  margin-top: -92px;
+}
 @media not screen and (max-width: 85em) {
   div[data-role='page']:not(.desktop-panel-hidden) .gadget-content {
     margin-left: 180pt;
