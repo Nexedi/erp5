@@ -41,7 +41,7 @@
             <form method="post" tal:attributes="action python: '%s/' % context.absolute_url()">
 
               <div class="ui-field-contain">
-                <label i18n:domain="ui" i18n:translate="" >Login</label>
+                <label i18n:domain="ui" i18n:translate="" >Username</label>
                 <div><input autofocus type="text" name="__ac_name" value="" required=""></div>
               </div>
               <div class="ui-field-contain">

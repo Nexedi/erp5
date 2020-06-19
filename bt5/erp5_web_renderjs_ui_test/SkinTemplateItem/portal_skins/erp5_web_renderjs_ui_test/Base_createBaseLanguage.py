@@ -1,3 +1,4 @@
+# coding: utf-8
 context.Base_createUITestLanguages()
 param_dict = [
   { 'message': 'History', 'translation': 'lishi', 'language': 'wo'},
@@ -28,6 +29,7 @@ param_dict = [
   { 'message': 'All criterions (AND)', 'translation': 'fuheshuoyou', 'language': 'wo'},
   { 'message': 'Logout', 'translation': 'tuichu', 'language': 'wo'},
   { 'message': 'User', 'translation': 'yonghu', 'language': 'wo'},
+  { 'message': 'Username', 'translation': 'turu jëfandikookat', 'language': 'wo'},
   { 'message': 'Sort Editor', 'translation': 'paixubianyiqi', 'language': 'wo'},
   { 'message': 'Home', 'translation': 'zhuye', 'language': 'wo'},
   { 'message': 'State', 'translation': 'zhuangtai', 'language': 'wo'},

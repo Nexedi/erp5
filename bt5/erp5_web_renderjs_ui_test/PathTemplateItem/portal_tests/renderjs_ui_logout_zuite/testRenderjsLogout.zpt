@@ -74,7 +74,7 @@
 
 <tr>
   <td>assertTextPresent</td>
-  <td>Login</td>
+  <td>Username</td>
   <td></td>
 </tr>
 <tr>
@@ -171,7 +171,7 @@
 
 <tr>
   <td>assertTextPresent</td>
-  <td>Login</td>
+  <td>Username</td>
   <td></td>
 </tr>
 <tr>
