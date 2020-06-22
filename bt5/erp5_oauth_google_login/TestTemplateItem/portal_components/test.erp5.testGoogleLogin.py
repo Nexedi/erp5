@@ -300,3 +300,7 @@ return credential_request
     person = credential_request.getDestinationDecisionValue()
     google_login = person.objectValues(portal_types="Google Login")[0]
     self.assertEqual(getUserId(None), google_login.getReference())
+
+  def test_logout(self):
+    resp = self.publish(self.portal.getId() + '/logout')
+    self.assertEqual(resp.getCookie("__ac_google_hash")['value'], 'deleted')
