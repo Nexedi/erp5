@@ -1809,6 +1809,20 @@ class ToolTemplateItem(PathTemplateItem):
     return PathTemplateItem._backupObject(self, action, None, container_path,
                                           object_id, **kw)
 
+  def preinstall(self, context, installed_item, **kw):
+    object_dict = ObjectTemplateItem.preinstall(self, context, installed_item, **kw)
+    portal_base = aq_base(context.getPortalObject())
+    for path, (action, type_name) in object_dict.items():
+      obj = getattr(portal_base, path, None)
+      if obj is not None:
+        if action == 'New':
+          del object_dict[path]
+        elif action == 'Modified':
+          object_dict[path] = 'Modified but should be kept', type_name
+        elif action == 'Removed':
+          object_dict[path] = 'Removed but should be kept', type_name
+    return object_dict
+
   def install(self, context, trashbin, **kw):
     """ When we install a tool that is a type provider not
     registered on types tool, register it into the type provider.
