@@ -285,7 +285,9 @@ return credential_request
 
     google_hash = self.portal.REQUEST.RESPONSE.cookies.get("__ac_google_hash")["value"]
     self.assertEqual("b01533abb684a658dc71c81da4e67546", google_hash)
-    self.assertEqual(self.portal.absolute_url(), response)
+    absolute_url = self.portal.absolute_url()
+    self.assertNotEqual(absolute_url[-1], '/')
+    self.assertEqual(absolute_url + '/', response)
     cache_dict = self.portal.Base_getBearerToken(google_hash, "google_server_auth_token_cache_factory")
     self.assertEqual(CLIENT_ID, cache_dict["client_id"])
     self.assertEqual(ACCESS_TOKEN, cache_dict["access_token"])
