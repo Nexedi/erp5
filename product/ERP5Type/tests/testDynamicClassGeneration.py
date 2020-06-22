@@ -3165,25 +3165,38 @@ class TestZodbDocumentComponentReload(TestZodbDocumentComponent):
 
   def testAsComposedDocumentDoesntLeakTypes(self):
     from pympler import muppy
+    import gc
     import types
 
+    movement = self.portal.newContent(portal_type='Movement')
+    movement.asComposedDocument()
+
+    gc.collect()
     all_object_list = muppy.get_objects()
     class_object_list = muppy.filter(all_object_list, Type=types.ClassType)
     type_object_list = muppy.filter(all_object_list, Type=types.TypeType)
+    self.assertEqual(
+      sorted(class_object_list),
+      sorted(class_object_list),
+    )
+    self.assertEqual(
+      sorted(type_object_list),
+      sorted(type_object_list),
+    )
 
-    movement = self.portal.newContent(portal_type='Movement')
     for _ in range(10):
       movement.asComposedDocument()
       self.tic()
 
+    gc.collect()
     all_object_list = muppy.get_objects()
     self.assertEqual(
-      class_object_list, 
+      class_object_list,
       muppy.filter(all_object_list, Type=types.ClassType),
     )
     self.assertEqual(
-      type_object_list,
-      muppy.filter(all_object_list, Type=types.TypeType)
+      sorted(type_object_list),
+      sorted(muppy.filter(all_object_list, Type=types.TypeType))
     )
 
   def _setBusinessProcessComponentTextContent(self, value):
