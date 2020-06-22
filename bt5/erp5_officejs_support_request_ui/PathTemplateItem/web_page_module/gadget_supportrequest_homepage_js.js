@@ -108,7 +108,7 @@
           throw error;
         })
         .push(function () {
-          var restore_filter_input = gadget.element.querySelectorAll("input")[2];
+          var restore_filter_input = gadget.element.querySelectorAll("input")[1];
           restore_filter_input.disabled = false;
           restore_filter_input.classList.remove("ui-disabled");
         });
@@ -264,7 +264,7 @@
     })
     .declareService(function () {
       var gadget = this,
-        restore_filter_input = gadget.element.querySelectorAll("input")[2];
+        restore_filter_input = gadget.element.querySelectorAll("input")[1];
       return gadget.getUrlParameter('extended_search')
         .push(function (result) {
           if (result !== undefined) {
@@ -277,29 +277,8 @@
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
-          var generate_rss_input = gadget.element.querySelectorAll("input")[1],
-            restore_filter_input = gadget.element.querySelectorAll("input")[2],
-            one = new RSVP.Queue().push(function () {
-              return promiseEventListener(generate_rss_input, "click", false);
-            }).push(function () {
-              generate_rss_input.disabled = true;
-              generate_rss_input.classList.add("ui-disabled");
-              return gadget.getSetting("hateoas_url")
-                .push(function (hateoas_url) {
-                  return gadget.jio_getAttachment(
-                    'support_request_module',
-                    hateoas_url + 'support_request_module'
-                      + "/SupportRequestModule_generateRSSLinkAsJson"
-                  );
-                })
-                .push(function (result) {
-                  generate_rss_input.parentNode.href = result.restricted_access_url;
-                  generate_rss_input.value = "RSS Link";
-                  generate_rss_input.disabled = false;
-                  generate_rss_input.classList.remove("ui-disabled");
-                });
-            }),
-            two = loopEventListener(restore_filter_input, "click", false, function () {
+          var restore_filter_input = gadget.element.querySelectorAll("input")[1],
+            one = loopEventListener(restore_filter_input, "click", false, function () {
               restore_filter_input.disabled = true;
               restore_filter_input.classList.add("ui-disabled");
               return gadget.redirect({
@@ -311,9 +290,7 @@
               });
             }, true);
 
-          generate_rss_input.disabled = false;
-          generate_rss_input.classList.remove("ui-disabled");
-          return RSVP.all([one, two]);
+          return one;
         });
     })
     .onStateChange(function () {
