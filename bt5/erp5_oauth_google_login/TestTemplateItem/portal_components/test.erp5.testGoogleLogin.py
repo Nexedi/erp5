@@ -309,26 +309,3 @@ return credential_request
   def test_logout(self):
     resp = self.publish(self.portal.getId() + '/logout')
     self.assertEqual(resp.getCookie("__ac_google_hash")['value'], 'deleted')
-
-
-class TestERP5JSGoogleLogin(GoogleLoginTestCase):
-  def _getWebSite(self):
-    return self.portal.web_site_module.renderjs_runner
-
-  def test_login_form(self):
-    resp = self.publish(self._getWebSite().getPath() + '/login_form')
-    tree = lxml.etree.fromstring(resp.getBody(), parser=lxml.etree.HTMLParser())
-    google_login_link, = [
-        img.getparent().attrib['href']
-        for img in tree.findall('.//a/img')
-        if img.attrib['alt'] == 'Sign in with Google'
-    ]
-    self.assertIn('/ERP5Site_redirectToGoogleLoginPage', google_login_link)
-    resp = self.publish(urlparse.urlparse(google_login_link).path)
-    # this request redirects to google
-    self.assertEqual(resp.getStatus(), httplib.FOUND)
-    self.assertIn('google.com', resp.getHeader('Location'))
-
-  def test_logout(self):
-    resp = self.publish(self._getWebSite().getPath() + '/WebSite_logout')
-    self.assertEqual(resp.getCookie("__ac_google_hash")['value'], 'deleted')
