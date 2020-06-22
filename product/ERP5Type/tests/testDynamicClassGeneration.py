@@ -3186,32 +3186,48 @@ class TestZodbDocumentComponentReload(TestZodbDocumentComponent):
       muppy.filter(all_object_list, Type=types.TypeType)
     )
 
-  def testAsComposedDocumentCacheIsCorrectlyFlushed(self):
-    bp_component = self.portal.portal_components['document.erp5.BusinessProcess']
-    bp_original_text_content = bp_component.getTextContent()
+  def _setBusinessProcessComponentTextContent(self, value):
+    component = self.portal.portal_components['document.erp5.BusinessProcess']
+    component.setTextContent(value)
+    self.tic()
 
-    bp_component.setTextContent(
-      bp_original_text_content + """
+  def testAsComposedDocumentCacheIsCorrectlyFlushed(self):
+    component = self.portal.portal_components['document.erp5.BusinessProcess']
+    component_original_text_content = component.getTextContent()
+
+    # Use try/finally to restore the content of
+    # document.erp5.BusinessProcess as using addCleanup function here raises
+    # with :
+    #   ConnectionStateError: Shouldn't load state for
+    #   Products.DCWorkflow.Scripts.Scripts 0x099ad38a68606074
+    #   when the connection is closed
+    try:
+      self._setBusinessProcessComponentTextContent(
+        component_original_text_content + """
   def getVersion(self):
     return 1
-      """
-    )
-    self.tic()
+        """
+      )
 
-    movement = self.portal.newContent(portal_type='Movement')
-    composed_movement = movement.asComposedDocument()
-    self.assertEqual(composed_movement.getVersion(), 1)
+      movement = self.portal.newContent(portal_type='Movement')
+      composed_movement = movement.asComposedDocument()
+      self.assertEqual(composed_movement.getVersion(), 1)
 
-    bp_component.setTextContent(
-      bp_original_text_content + """
+      self._setBusinessProcessComponentTextContent(
+        component_original_text_content + """
   def getVersion(self):
     return 2
-      """
-    )
-    self.tic()
+        """
+      )
 
-    composed_movement = movement.asComposedDocument()
-    self.assertEqual(composed_movement.getVersion(), 2)
+      composed_movement = movement.asComposedDocument()
+      self.assertEqual(composed_movement.getVersion(), 2)
+
+    finally:
+      self._setBusinessProcessComponentTextContent(
+        component_original_text_content
+      )
+
 
 def test_suite():
   suite = unittest.TestSuite()
