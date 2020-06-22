@@ -14371,6 +14371,9 @@ msgstr "Utile pour les lignes intermédiaires. Par défaut, les ligne de feuille
 msgid "User"
 msgstr "Utilisateur"
 
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
 msgid "User ${user} does not exist."
 msgstr "L'utilisateur ${user} n'existe pas."
 
