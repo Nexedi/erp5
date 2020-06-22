@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_web_content_layout</string> </value>
+            <value> <string>WebSite_generateNavigationHTML</string> </value>
         </item>
       </dictionary>
     </pickle>
