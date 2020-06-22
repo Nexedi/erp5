@@ -28,6 +28,12 @@
 
           <section>
             <form method="post" tal:attributes="action python: context.absolute_url()" class="field_container">
+              <section class="ui-content-header-plain">
+                <h3 class="ui-content-title ui-body-c">
+                    <span class="ui-icon ui-icon-custom ui-icon-life-ring"></span>
+                    <tal:block  i18n:domain="ui" i18n:translate="">Recover your Account</tal:block>
+                </h3>
+              </section>
               <div>
                 <div>
                   <div class="ui-field-contain">
