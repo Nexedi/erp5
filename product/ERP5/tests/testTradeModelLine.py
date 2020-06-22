@@ -38,6 +38,7 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import simple_decorator
 from DateTime import DateTime
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5OOo.tests.utils import Validator
 
 
 def save_result_as(name):
@@ -92,6 +93,8 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
 
   def afterSetUp(self):
     UserDict.__init__(self)
+    self.portal.portal_preferences.getActiveSystemPreference().setPreferredTaxUseList(['use/tax'])
+    self.tic()
     return super(TestTradeModelLineMixin, self).afterSetUp()
 
   def beforeTearDown(self):
@@ -963,6 +966,7 @@ return lambda *args, **kw: 1""")
            price=.15,
            resource_value=tax,
            trade_phase='default/tax',
+           use='tax',
            base_application='base_amount/tax'),
       ))
     source = self.createNode()
@@ -976,10 +980,50 @@ return lambda *args, **kw: 1""")
       source_section_value=source,
       destination_section_value=destination)
 
+    def checkVATOnOrderPrintout(order):
+      # BBB invoice printout has been improved to display
+      # tax in a table grouping each tax togetherr, but order printout
+      # not yet and uses a sligthly different data model
+      data_dict = order._getTypeBasedMethod('getODTDataDict')()
+      self.assertEqual(data_dict['total_price'], 1000.0)
+      self.assertEqual(data_dict['total_price_novat'], 1000.0)
+      self.assertEqual(
+          [vat.getTotalPrice() for vat in data_dict['vat_list']], [150.0])
+      # rendering template does not fail and is valid ODF
+      self.assertFalse(
+          Validator().validate(order._getTypeBasedMethod('viewAsODT')()))
+
+    def checkVATOnInvoicePrintout(invoice):
+      data_dict = invoice._getTypeBasedMethod('getODTDataDict')()
+      self.assertEqual(data_dict['total_price_exclude_tax'], 1000.0)
+      self.assertEqual(data_dict['total_tax_price'], 150.0)
+      self.assertEqual(data_dict['total_price'], 1150.0)
+      self.assertEqual(
+          [
+              (
+                  line_tax['total_quantity'],
+                  line_tax['base_price'],
+                  line_tax['total_price'],
+              ) for line_tax in data_dict['line_not_tax']
+          ], [(10.0, 100.0, 1000.0)])
+      self.assertEqual(
+          [
+              (
+                  line_tax['total_quantity'],
+                  line_tax['base_price'],
+                  line_tax['total_price'],
+              ) for line_tax in data_dict['line_tax']
+          ], [(1000.0, 0.15, 150.0)])
+      # rendering template does not fail and is valid ODF
+      self.assertFalse(
+          Validator().validate(order._getTypeBasedMethod('viewAsODT')()))
+
+    checkVATOnOrderPrintout(order)
     order.plan()
     order.confirm()
     self.tic()
     self.buildPackingLists()
+    checkVATOnOrderPrintout(order)
 
     packing_list = order.getCausalityRelatedValue(
                       portal_type=self.packing_list_portal_type)
@@ -999,9 +1043,10 @@ return lambda *args, **kw: 1""")
     self.assertEqual(1150, invoice.getTotalPrice())
     self.assertEqual([], invoice.getDivergenceList())
 
+    checkVATOnInvoicePrintout(invoice)
     invoice.start()
     self.tic()
-
+    checkVATOnInvoicePrintout(invoice)
     self.assertEqual([], invoice.getDivergenceList())
     accounting_line_list = invoice.getMovementList(
              portal_type=self.invoice_transaction_line_portal_type)
