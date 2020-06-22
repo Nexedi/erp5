@@ -39,8 +39,13 @@
           </section>
 
           <section tal:condition="portal/portal_membership/isAnonymousUser">
+            <section class="ui-content-header-plain">
+                <h3 class="ui-content-title ui-body-c">
+                    <span class="ui-icon ui-icon-custom ui-icon-sign-in"></span>
+                    <tal:block  i18n:domain="ui" i18n:translate="">Log in</tal:block>
+                </h3>
+            </section>
             <form method="post" tal:attributes="action python: '%s/' % absolute_url" class="field_container">
-
               <div>
                 <div>
                   <div class="ui-field-contain">
