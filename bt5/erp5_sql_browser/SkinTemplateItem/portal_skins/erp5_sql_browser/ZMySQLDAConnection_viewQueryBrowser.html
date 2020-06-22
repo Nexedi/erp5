@@ -97,6 +97,7 @@
 
         $(function() {
           
+          let editor_backup = document.querySelector("textarea[name='editor_backup']");
           editor = monaco.editor.create(
             document.querySelector('#query'),
             {
@@ -108,6 +109,14 @@
             editor.getModel(),
             "sql"
           );
+          document.addEventListener('readystatechange', () => {
+            if (document.readyState === 'complete') {
+              editor.getModel().setValue(editor_backup.value);
+            }
+          });
+          editor.getModel().onDidChangeContent(event => {
+            editor_backup.value = editor.getValue();
+          });
           editor.addAction({
             id: 'execute-query',
             label: 'Execute Query',
@@ -189,6 +198,9 @@
     <!-- TODO: debug saved configuration -->
     <div style="display: none">
       <pre id="config_json"></pre>
+    </div>
+    <div style="display: none">
+      <textarea name="editor_backup"></textarea>
     </div>
 
   </body>
