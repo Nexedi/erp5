@@ -27,6 +27,9 @@
 
 import uuid
 import mock
+import lxml
+import urlparse
+import httplib
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 
@@ -89,7 +92,7 @@ def getUserEntry(access_token):
   }
 
 
-class TestGoogleLogin(ERP5TypeTestCase):
+class GoogleLoginTestCase(ERP5TypeTestCase):
 
   def afterSetUp(self):
     """
@@ -122,6 +125,9 @@ class TestGoogleLogin(ERP5TypeTestCase):
       connector.validate()
     self.tic()
     self.logout()
+
+
+class TestGoogleLogin(GoogleLoginTestCase):
 
   def test_redirect(self):
     """
@@ -303,4 +309,27 @@ return credential_request
 
   def test_logout(self):
     resp = self.publish(self.portal.getId() + '/logout')
+    self.assertEqual(resp.getCookie("__ac_google_hash")['value'], 'deleted')
+
+
+class TestERP5JSGoogleLogin(GoogleLoginTestCase):
+  def _getWebSite(self):
+    return self.portal.web_site_module.renderjs_runner
+
+  def test_login_form(self):
+    resp = self.publish(self._getWebSite().getPath() + '/login_form')
+    tree = lxml.etree.fromstring(resp.getBody(), parser=lxml.etree.HTMLParser())
+    google_login_link, = [
+        a.attrib['href']
+        for a in tree.findall('.//a')
+        if a.text == 'Login with Google'
+    ]
+    self.assertIn('/ERP5Site_redirectToGoogleLoginPage', google_login_link)
+    resp = self.publish(urlparse.urlparse(google_login_link).path)
+    # this requests redirects to google
+    self.assertEqual(resp.getStatus(), httplib.FOUND)
+    self.assertIn('google.com', resp.getHeader('Location'))
+
+  def test_logout(self):
+    resp = self.publish(self._getWebSite().getPath() + '/WebSite_logout')
     self.assertEqual(resp.getCookie("__ac_google_hash")['value'], 'deleted')
