@@ -1,12 +1,10 @@
-import json
-
 absolute_url = context.absolute_url()
 request_url = "%s/SupportRequestModule_viewLastSupportRequestListAsRss" % (absolute_url,)
 portal = context.getPortalObject()
 person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 
 if person is None:
-  return json.dumps({'restricted_access_url': request_url})
+  return request_url
 
 access_token = None
 
@@ -35,4 +33,4 @@ url = "%s?access_token=%s&access_token_secret=%s" % (
         access_token.getId(),
         reference)
 
-return json.dumps({'restricted_access_url': url})
+return url
