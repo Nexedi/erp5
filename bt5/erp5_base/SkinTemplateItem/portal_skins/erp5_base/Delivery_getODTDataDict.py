@@ -1,6 +1,9 @@
 # coding: utf-8
-translateString = context.Base_translateString
+portal = context.getPortalObject()
+translateString = portal.Base_translateString
 request = context.REQUEST
+
+tax_use_list = portal.portal_preferences.getPreferredTaxUseList() or ["use/trade/tax"]
 
 # display only title line instead of description
 use_line_title =  request.get('use_line_title', 0)
@@ -62,8 +65,7 @@ def getSocialCapital(reg_cap):
     s += '%s: %s€' % (translateString('Social Capital'), reg_cap)
   return s
 
-preferred_date_order = context.getPortalObject().portal_preferences\
-                                          .getPreferredDateOrder() or 'ymd'
+preferred_date_order = portal.portal_preferences.getPreferredDateOrder() or 'ymd'
 def getOrderedDate(date):
   if date is None:
     return ''
@@ -147,11 +149,7 @@ for line in getSubLineList(context):
         display_id = 'title'
       variation_description = ', '.join([x[0] for x in line.getVariationCategoryItemList(display_id=display_id)])
       desc = ('%s %s' % (desc[0], variation_description), )
-    is_tax = 0
-    for tax_use in (context.getPortalObject().portal_preferences.getPreferredTaxUseList() or ["use/trade/tax"]):
-      if line.isMemberOf(tax_use):
-        is_tax = 1
-        break
+    is_tax = any(line.isMemberOf(tax_use) for tax_use in tax_use_list)
 
     #set the not_tax_line with the tax_number and the tax_line with the tax_name
     tax_number=''
@@ -285,7 +283,7 @@ destination_decision = context.getDestinationDecisionValue()
 if destination_decision is None:
   destination_decision = EmptyOrganisation()
 
-if context.getPortalType() in context.getPortalObject().getPortalOrderTypeList():
+if context.getPortalType() in portal.getPortalOrderTypeList():
   report_title = context.getSimulationState() == "draft" and "Draft Order" or "Order"
 else:
   report_title = context.getSimulationState() == "draft" and "Draft Packing List" or "Packing List"
