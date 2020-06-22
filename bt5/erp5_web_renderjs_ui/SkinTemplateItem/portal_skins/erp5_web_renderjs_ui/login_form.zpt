@@ -52,7 +52,7 @@
                     <div><input type="password" name="__ac_password" value="" required="" autocomplete="off" /></div>
                   </div>
                   <div class="dialog_button_container">
-                    <input type="submit" value="Validate" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
+                    <input type="submit" value="Login" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
                     <a i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
                   </div>
                 </div>
