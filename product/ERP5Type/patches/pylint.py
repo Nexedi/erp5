@@ -288,6 +288,30 @@ _what_not_even_god_should_do = []
 register_module_extender(MANAGER, 'AccessControl.PermissionRole',
                          AccessControl_PermissionRole_transform)
 
+## No name 'OOBTree' in module 'BTrees.OOBTree' (no-name-in-module)
+##
+## When the corresponding C Extension (BTrees._Foo) is available, update
+## BTrees.Foo namespace from the C extension, otherwise use Python definitions
+## by dropping the `Py` suffix in BTrees.Foo symbols.
+import BTrees
+import inspect
+# astroid/brain/ added dynamically to sys.path by astroid __init__
+from py2gi import _gi_build_stub as build_stub
+for module_name, module in inspect.getmembers(BTrees, inspect.ismodule):
+    if module_name[0] != '_':
+        continue
+    try:
+        extended_module = BTrees.__dict__[module_name[1:]]
+    except KeyError:
+        continue
+    else:
+        def _create_transform_function(module):
+            def transform():
+                return AstroidBuilder(MANAGER).string_build(build_stub(module))
+            return transform
+        register_module_extender(MANAGER, extended_module.__name__,
+                                 _create_transform_function(module))
+
 # Properly search for namespace packages: original astroid (as of 1.3.8) only
 # checks at top-level and it doesn't work for Shared.DC.ZRDB (defined in
 # Products.ZSQLMethods; Shared and Shared.DC being a namespace package defined
