@@ -1,10 +1,10 @@
 <html>
-<head><title>Test stock browser for stopped state</title></head>
+<head><title>Test stock browser for quantity unit conversions</title></head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
 <tr><td rowspan="1" colspan="4">
-Test stock browser for stopped state
+Test stock browser for quantity unit conversions
 </td></tr>
 </thead>
 <tbody tal:define="init_method string:PdmZuite_createDelivery?state=stopped">
@@ -15,22 +15,44 @@ Test stock browser for stopped state
 
 <!-- Check source -->
 <tal:block tal:define="node_category python: 'erp5_pdm_ui_test_source_site_title';
+                       quantity_unit string: Mass/Kilogram;
                        node_title string: erp5_pdm_ui_test_source_node_title;
                        inventory_list_count python: 1;
-                       current_inventory python: -1;
-                       available_inventory python: -1;
-                       future_inventory python: -1;
+                       current_inventory string: -1 500;
+                       available_inventory string: -1 500;
+                       future_inventory string: -1 500;
+                       ">
+  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowserForRenderjsUi/macros/check_inventory" />
+</tal:block>
+<tal:block tal:define="node_category python: 'erp5_pdm_ui_test_source_site_title';
+                       quantity_unit string: Mass/Ton;
+                       node_title string: erp5_pdm_ui_test_source_node_title;
+                       inventory_list_count python: 1;
+                       current_inventory string: -1.5;
+                       available_inventory string: -1.5;
+                       future_inventory string: -1.5;
                        ">
   <tal:block metal:use-macro="here/PdmZuite_checkStockBrowserForRenderjsUi/macros/check_inventory" />
 </tal:block>
 
 <!-- Check destination -->
 <tal:block tal:define="node_category python: 'erp5_pdm_ui_test_destination_site_title';
+                       quantity_unit string: Mass/Kilogram;
                        node_title string: erp5_pdm_ui_test_destination_node_title;
                        inventory_list_count python: 1;
-                       current_inventory python: 1;
-                       available_inventory python: 1;
-                       future_inventory python: 1;
+                       current_inventory string: 1 500;
+                       available_inventory string: 1 500;
+                       future_inventory string: 1 500;
+                       ">
+  <tal:block metal:use-macro="here/PdmZuite_checkStockBrowserForRenderjsUi/macros/check_inventory" />
+</tal:block>
+<tal:block tal:define="node_category python: 'erp5_pdm_ui_test_destination_site_title';
+                       quantity_unit string: Mass/Ton;
+                       node_title string: erp5_pdm_ui_test_destination_node_title;
+                       inventory_list_count python: 1;
+                       current_inventory string: 1.5;
+                       available_inventory string: 1.5;
+                       future_inventory string: 1.5;
                        ">
   <tal:block metal:use-macro="here/PdmZuite_checkStockBrowserForRenderjsUi/macros/check_inventory" />
 </tal:block>

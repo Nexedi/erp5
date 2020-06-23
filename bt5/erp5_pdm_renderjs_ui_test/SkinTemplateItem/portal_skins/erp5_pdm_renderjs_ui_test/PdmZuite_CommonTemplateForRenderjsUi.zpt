@@ -1,7 +1,8 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal">
   <tal:block metal:define-macro="init"
-             tal:define="resource_relative_url resource_relative_url | string:product_module/erp5_pdm_ui_test_product">
+             tal:define="resource_relative_url resource_relative_url | string:product_module/erp5_pdm_ui_test_product;
+                         set_node_category_preference set_node_category_preference | python: False">
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>open</td>
@@ -27,7 +28,8 @@
 
     <tr>
       <td>open</td>
-      <td>${base_url}/PdmZuite_reset</td>
+      <td tal:condition="not: set_node_category_preference">${base_url}/PdmZuite_reset</td>
+      <td tal:condition="set_node_category_preference">${base_url}/PdmZuite_reset?set_node_category_preference:bool=True</td>
       <td></td>
     </tr>
     <tr>
@@ -67,9 +69,9 @@
 
   <tal:block metal:define-macro="go_to_stock_view">
     <tr>
-      <td colspan="3"><b>Go to Stock view</b></td>
+      <td colspan="3"><b>Go to Stock report</b></td>
     </tr>
-    <tal:block tal:define="click_configuration python: {'text': 'Views'}">
+    <tal:block tal:define="click_configuration python: {'text': 'Export'}">
       <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_on_header_link" />
     </tal:block>
     <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
@@ -101,21 +103,6 @@
     <tr>
       <td>verifyValue</td>
       <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[1]/td[1]/a/@href</td>
-      <td>regexp:.*view_movement_history.*</td>
-    </tr>
-    <tr>
-      <td>waitForElementPresent</td>
-      <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[1]/a</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>verifyValue</td>
-      <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[1]/a/@href</td>
-      <td>regexp:.*push_history.*</td>
-    </tr>
-    <tr>
-      <td>verifyValue</td>
-      <td>//div[@data-gadget-scope='field_listbox']//table/tbody/tr[2]/td[1]/a/@href</td>
       <td>regexp:.*view_movement_history.*</td>
     </tr>
     <tr>

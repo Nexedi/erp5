@@ -1,6 +1,7 @@
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal">
-  <tal:block metal:define-macro="init">
+  <tal:block metal:define-macro="init"
+             tal:define="set_node_category_preference set_node_category_preference | python: False">
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
     <tr>
       <td>setTimeout</td>
@@ -31,7 +32,8 @@
 
     <tr>
       <td>open</td>
-      <td>${base_url}/PdmZuite_reset</td>
+      <td tal:condition="not: set_node_category_preference">${base_url}/PdmZuite_reset</td>
+      <td tal:condition="set_node_category_preference">${base_url}/PdmZuite_reset?set_node_category_preference:bool=True</td>
       <td></td>
     </tr>
     <tr>
@@ -62,15 +64,11 @@
     </tr>
     <tr>
       <td>open</td>
-      <td>${base_url}/product_module/erp5_pdm_ui_test_product/Resource_viewInventory</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>clickAndWait</td>
-      <td>//input[@class="listbox-tree-domain-tree-mode"]</td>
+      <td>${base_url}/product_module/erp5_pdm_ui_test_product/</td>
       <td></td>
     </tr>
   </tal:block>
+
   <tal:block metal:define-macro="toggleSaleSupplyLineBasePricePerSlice">
     <tr>
       <td>click</td>

@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>set_node_category_preference=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

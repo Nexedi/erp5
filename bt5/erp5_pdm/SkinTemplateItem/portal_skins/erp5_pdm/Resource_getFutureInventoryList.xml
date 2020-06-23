@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Resource_statInventory</string> </value>
+            <value> <string>Resource_getFutureInventoryList</string> </value>
         </item>
       </dictionary>
     </pickle>
