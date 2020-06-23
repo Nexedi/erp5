@@ -48,7 +48,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[text()='New slide']</td>
+  <td>//button[text()='New Slide']</td>
   <td></td>
 </tr>
 <tr>

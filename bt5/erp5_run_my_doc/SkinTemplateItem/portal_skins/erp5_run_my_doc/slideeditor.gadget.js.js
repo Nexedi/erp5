@@ -12,7 +12,7 @@
     TRANSLATABLE_WORD_LIST = [
       'Slides',
       'Edit',
-      'New slide',
+      'New Slide',
       'Slide',
       'Delete',
       'Metadata',
@@ -415,11 +415,11 @@
     draggable_element_list.push(domsugar('section', [
       domsugar('button', {
         type: 'button',
-        text: translation_dict['New slide'],
+        text: translation_dict['New Slide'],
         'class': 'display-new ui-icon-plus-circle ui-btn-icon-left'
       }),
       domsugar('h1', {
-        text: translation_dict['New slide']
+        text: translation_dict['New Slide']
       })
     ]));
 
