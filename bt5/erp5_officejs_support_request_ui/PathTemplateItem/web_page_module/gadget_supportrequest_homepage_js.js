@@ -134,7 +134,7 @@
         })
         .push(function () {
           return gadget.updateHeader({
-            page_title: 'Customer Support Dashboard'
+            page_title: 'Support Requests Dashboard'
           });
         });
     })
