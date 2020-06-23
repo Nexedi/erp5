@@ -1651,25 +1651,6 @@ class SimulationTool(BaseTool):
     )
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getConvertedInventoryList')
-  def getConvertedInventoryList(self, simulation_period='', **kw):
-    """
-    Return list of inventory with a 'converted_quantity' additional column,
-    which contains the sum of measurements for the specified metric type,
-    expressed in the 'quantity_unit' unit.
-
-    metric_type   - category
-    quantity_unit - category
-    """
-
-    warn('getConvertedInventoryList is Deprecated, use ' \
-         'getInventory instead.', DeprecationWarning)
-
-    method = getattr(self,'get%sInventoryList' % simulation_period)
-
-    return method(**kw)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
                             'getAllInventoryList')
   def getAllInventoryList(self, src__=0, **kw):
     """
@@ -1677,6 +1658,11 @@ class SimulationTool(BaseTool):
     Performs 1 SQL request for each simulation state, and merge the results.
     Rename relevant columns with a '${simulation}_' prefix
     (ex: 'total_price' -> 'current_total_price').
+
+    Warning: this method is not convered by any test and does not return actual
+    InventoryListBrain ( because mergeZRDBResults does not support them ), so
+    the available attribute on result items are different from a traditional
+    getInventoryList result.
     """
     columns = ('total_quantity', 'total_price', 'converted_quantity')
 

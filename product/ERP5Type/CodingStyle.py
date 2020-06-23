@@ -118,8 +118,6 @@ ignored_skin_id_set = {
   'resolveUid',
   'IndividualVariation_init',
   'QuantityUnitConversion_getQuantityUnitList',
-  'ResourceModule_getConvertedInventoryList',
-  'ResourceModule_getConvertedInventoryStat',
   'ResourceModule_getSelection',
   'DeliveryModule_getDeliveryLineList',
   'DeliveryModule_getDeliveryLineReportSectionList',

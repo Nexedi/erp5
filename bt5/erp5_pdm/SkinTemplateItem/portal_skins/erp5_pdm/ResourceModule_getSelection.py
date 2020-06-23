@@ -40,8 +40,8 @@ class ResourceSelection:
     """
     traverse = self.portal.portal_categories['metric_type'].restrictedTraverse
     display = getPreferredCategoryDisplayMethodId()
-    return sorted((getattr(traverse(metric_type),display)(), metric_type)
-      for metric_type in self.getCommonMetricTypeList())
+    return sorted([(getattr(traverse(metric_type),display)(), metric_type)
+      for metric_type in self.getCommonMetricTypeList()])
 
   def getCommonQuantityUnitItemList(self):
     """
