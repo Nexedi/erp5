@@ -9,6 +9,7 @@
   <item>Production Reduction Solver</item>
   <item>Quantity Split Move Solver</item>
   <item>Quantity Split Solver</item>
+  <item>Simple Quantity Split Solver</item>
   <item>Trade Model Solver</item>
   <item>Unify Solver</item>
  </portal_type>
