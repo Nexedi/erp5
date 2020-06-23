@@ -6499,6 +6499,9 @@ msgstr "Nombre entier utilisé pour classer l'agent."
 msgid "Interaction Workflow Definition"
 msgstr "Définition du workflow d'interaction"
 
+msgid "Internal"
+msgstr "Interne"
+
 msgid "Internal Invoice Transaction"
 msgstr "Écriture interne"
 
@@ -6576,6 +6579,9 @@ msgstr "Livraisons internes à recevoir"
 
 msgid "Internal Packing Lists to Ship"
 msgstr "Livraisons internes à expédier"
+
+msgid "Internal Price"
+msgstr "Prix Interne"
 
 msgid "Internal Reference"
 msgstr "Référence interne"
@@ -9448,6 +9454,9 @@ msgstr "Prix"
 msgid "Price Currency"
 msgstr "Devise"
 
+msgid "Price Precision"
+msgstr "Précision du prix"
+
 msgid "Price Validity"
 msgstr "Validité du prix"
 
@@ -11721,6 +11730,9 @@ msgstr "Mouvement de simulation"
 
 msgid "Simulation Movement Interaction Workflow"
 msgstr "Workflow d'interaction des mouvements de simulation"
+
+msgid "Simulation Period"
+msgstr "Période de simulation"
 
 msgid "Simulation State"
 msgstr "État de simulation"
@@ -14395,9 +14407,6 @@ msgstr "Utile pour les lignes intermédiaires. Par défaut, les ligne de feuille
 msgid "User"
 msgstr "Utilisateur"
 
-msgid "Username"
-msgstr "Nom d'utilisateur"
-
 msgid "User ${user} does not exist."
 msgstr "L'utilisateur ${user} n'existe pas."
 
@@ -14433,6 +14442,9 @@ msgstr "Compte utilisateur"
 
 msgid "User accounts configuration"
 msgstr "Configuration des comptes utilisateur"
+
+msgid "Username"
+msgstr "Nom d'utilisateur"
 
 msgid "Using category for section is invalid."
 msgstr "Utiliser des catégories comme sections est invalide."
