@@ -135,7 +135,7 @@
             });
         })
         .push(function () {
-          return gadget.translate('Customer Support Dashboard')
+          return gadget.translate('Support Requests Dashboard')
             .push(function (translated_text) {
               return gadget.updateHeader({
                 page_title: translated_text
