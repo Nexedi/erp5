@@ -121,6 +121,8 @@ class WechatService(XMLObject):
     wechat_url = self.getLinkUrlString()
     if self.getWechatMode() == "SANDBOX":
       key = self.getSandboxKey()
+    elif self.getWechatMode() == "UNITTEST":
+      return {"result_code": 'SUCCESS', "code_url": 'weixin://wxpay/bizpayurl?pr=AAAAA'}
     else:
       key = self.getServiceApiKey()
     nonce_str = self.generateRandomStr()
