@@ -2,6 +2,7 @@
  <portal_type id="Solver Process">
   <item>Accept Solver</item>
   <item>Adopt Solver</item>
+  <item>Automatic Accept Solver</item>
   <item>FIFO Delivery Solver</item>
   <item>LIFO Delivery Solver</item>
   <item>Minimise Price Delivery Solver</item>
