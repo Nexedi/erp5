@@ -125,17 +125,17 @@ def _buildAstroidModuleFromComponentModuleName(modname):
             obj = getattr(component_tool,
                           component_id.replace('_version', '', 1))
         except AttributeError:
-            raise AstroidBuildingException
+            raise AstroidBuildingException()
         if obj.getValidationState() in ('modified', 'validated'):
             component_obj = obj
         else:
-            raise AstroidBuildingException
+            raise AstroidBuildingException()
 
     else:
         try:
             package, reference = component_id.split('.', 1)
         except ValueError:
-            raise AstroidBuildingException
+            raise AstroidBuildingException()
         for version in portal.getVersionPriorityNameList():
             try:
                 obj = getattr(component_tool,
@@ -154,7 +154,7 @@ def _buildAstroidModuleFromComponentModuleName(modname):
                 return module
 
     if component_obj is None:
-        raise AstroidBuildingException
+        raise AstroidBuildingException()
 
     # module_build() could also be used but this requires importing
     # the ZODB Component and also monkey-patch it to support PEP-302
@@ -166,7 +166,7 @@ def _buildAstroidModuleFromComponentModuleName(modname):
 
 def fail_hook_erp5_component(modname):
     if not modname.startswith('erp5.'):
-        raise AstroidBuildingException
+        raise AstroidBuildingException()
 
     if (modname in ('erp5.portal_type',
                     'erp5.component',
