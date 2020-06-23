@@ -11,7 +11,6 @@ url_list = [
   "icons.css",
   "jexcel/jexcel.js",
   "jexcel/jexcel.css",
-  "jexcel/jexcel_perso.css",
   "jsuites/jsuites.js",
   "jsuites/jsuites.css",
 ]

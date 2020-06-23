@@ -13,11 +13,23 @@
     type: true
   };
 
-  var getCoordsFromCell = function (cell) {
+  function letterToNumber(str) {
+    var out = 0, len = str.length, pos = len;
+    while (--pos > -1) {
+      out += (str.charCodeAt(pos) - 64) * Math.pow(26, len - 1 - pos);
+    }
+    return out - 1;
+  }
+
+  function numberToLetter(i) {
+    return (i >= 26 ? numberToLetter((i / 26 >> 0) - 1) : '') + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[i % 26 >> 0];
+  }
+
+  function getCoordsFromCell(cell) {
     var x = Number(cell.dataset.x);
     var y = Number(cell.dataset.y) + 1;
-    return (x >= 26 ? numberToLetter((x / 26 >> 0) - 1) : '') + 'ABCDEFGHIJKLMNOPQRSTWXYZ'[x % 26 >> 0] + y.toString();
-  };
+    return numberToLetter(x) + y.toString();
+  }
 
   rJS(window)
 
@@ -66,16 +78,48 @@
 
     .declareMethod("addSheet", function () {
       var gadget = this;
-      return gadget.template_gadget.getToolbarList(() => gadget.addSheet(), toolbar_dict)
-      .push(function (dict) {
-        dict.sheetName = "Sheet " + (gadget.element.querySelector('.spreadsheet').jexcel.length + 1);
-        return gadget.bindEvents(dict);
-      })
-      .push(function (dict) {
-        jexcel.tabs(gadget.element.querySelector(".spreadsheet"), [dict]);
-        gadget.deferNotifyChangeBinded()
-        return gadget.changeState({newSheet: true});
-      });
+      var tabs = gadget.element.querySelectorAll(".jexcel_tab_link");
+      if (tabs.length == 18) alert("Can't add sheets anymore.");
+      else {
+        return gadget.template_gadget.getToolbarList(function () { return gadget.addSheet(); }, function (a, b) { return gadget.deleteSheet(a, b); }, toolbar_dict)
+        .push(function (dict) {
+          dict.sheetName = "Sheet " + (gadget.element.querySelector('.spreadsheet').jexcel.length + 1);
+          return gadget.bindEvents(dict);
+        })
+        .push(function (dict) {
+          jexcel.tabs(gadget.element.querySelector(".spreadsheet"), [dict]);
+          gadget.deferNotifyChangeBinded();
+          return gadget.changeState({newSheet: true});
+        });
+      }
+    })
+
+    .declareMethod("deleteSheet", function (a, b, c) {
+      var gadget = this;
+      if (confirm("Delete this sheet ?")) {
+        var tab_link = gadget.element.querySelector('.jexcel_tab_link.selected');
+        var index = tab_link.getAttribute("data-spreadsheet");
+        if (gadget.element.querySelector('.spreadsheet').jexcel.length > 1) {
+          tab_link.remove();
+          var to_remove;
+          gadget.element.querySelectorAll(".jexcel_container").forEach(function (tab) {tab.style.display === "block" ? to_remove = tab : null});
+          to_remove.remove();
+          gadget.element.querySelector('.spreadsheet').jexcel.splice(index, 1);
+          var sheets = gadget.element.querySelectorAll('.jexcel_container');
+          sheets[sheets.length - 1].style.display = "block";
+          gadget.element.querySelectorAll('.jexcel_tab_link').forEach(function (tab, i) {
+            i == sheets.length - 1 ? tab.classList.add("selected") : null;
+            tab.dataset.spreadsheet = i;
+            tab.textContent = tab.textContent.substring(0, 5) === "Sheet" ? "Sheet " + (i + 1) : tab.textContent;
+          });
+        }
+        else {
+          gadget.element.querySelector('.jexcel_tab_link').textContent = "Sheet 1";
+          a.querySelector("input.jexcel_formula").value = "";
+          b.setData(new Array(100).fill(0, 99, new Array(26).fill(0, 26, "")));
+        }
+        gadget.deferNotifyChangeBinded();
+      }
     })
 
     .declareMethod("setupTable", function (element) {
@@ -94,24 +138,58 @@
       element.querySelector("div.jexcel_toolbar").parentNode.insertBefore(formula_div, element.querySelector("div.jexcel_toolbar").nextSibling);
       var cell_input = document.createElement("input");
       cell_input.classList.add("cell_input");
+      formula_input.onfocus = function () {
+        var worksheet = gadget.element.querySelector('.selected').getAttribute('data-spreadsheet');
+        gadget.element.querySelector('.spreadsheet').jexcel[worksheet].resetSelection(true);
+      };
+      formula_input.oninput = function (ev) {
+        var worksheet = gadget.element.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = gadget.element.querySelector('.spreadsheet').jexcel[worksheet];
+        var e = this.value;
+        if (e[0] === "=" && e[e.length - 1] !== ")") {
+          var numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+          if (numbers.includes(e[e.length - 1])) {
+            instance.setValue(cell_input.value, e);
+          }
+          else {
+            //instance.el.querySelector("td.highlight-selected").textContent = e;
+          }
+        }
+        else {
+          instance.setValue(cell_input.value, e);
+        }
+      };
+      cell_input.onfocus = function () {
+        var worksheet = gadget.element.querySelector('.selected').getAttribute('data-spreadsheet');
+        gadget.element.querySelector('.spreadsheet').jexcel[worksheet].resetSelection(true);
+      };
+      cell_input.onkeypress = function (ev) {
+        if (ev.keyCode == 13) {
+          var worksheet = gadget.element.querySelector('.selected').getAttribute('data-spreadsheet');
+          var y = this.value.match(/(\d+)/)[0];
+          var x = letterToNumber(this.value.substring(0, this.value.length - y.length));
+          var y = parseInt(y) - 1;
+          gadget.element.querySelector('.spreadsheet').jexcel[worksheet].updateSelectionFromCoords(x, y, x, y);
+        }
+      };
       formula_div.insertBefore(cell_input, img);
       return gadget.template_gadget.buildOptions()
       .push(function (options) {
         var select = document.createElement("select");
         select.innerHTML = options;
         select.classList.add("minimize");
-        select.onclick = function () {
+        select.onchange = function () {
           var select = this;
           var cell = gadget.element.querySelector("td.highlight-selected");
           return gadget.getCurrentSheet()
           .push(function (sheet) {
             var cell = sheet.el.querySelector("td.highlight-selected");
-            if (cell) {
+            if (cell && sheet.options.columns[Number(cell.dataset.x)].type === "text") {
               var x = Number(cell.dataset.x);
               var y = Number(cell.dataset.y);
               var currentValue = sheet.getValueFromCoords(x, y);
               var value;
-              if (currentValue === "" || currentValue[0] !== "="){
+              if (currentValue === "" || currentValue[0] !== "=") {
                 value = "=" + select.options[select.selectedIndex].value + "(" + currentValue + ")";
               }
               else {
@@ -120,8 +198,8 @@
               sheet.setValueFromCoords(x, y, value);
               formula_input.value = value;
             }
-          })
-        }
+          });
+        };
         element.querySelector(".jexcel_toolbar").insertBefore(select, filter);
         var icon_title = {
           "undo": "Undo",
@@ -148,14 +226,14 @@
           "list": "Set column type: HTML",
           "calendar_today": "Set column type: Calendar",
           "color_lens": "Set column type: Color"
-      }
-      element.querySelectorAll("i").forEach(i => {
-        if (i.dataset.k === "color") {i.title = "Color"}
-        else if (i.dataset.k === "background-color") {i.title = "Background color"}
-        else {i.title = icon_title[i.textContent]}
-      });
-      gadget.element.querySelectorAll(".jexcel_tab_link").forEach(tab => tab.title = "Right click to rename");
-      gadget.state.newSheet = false;
+        };
+        element.querySelectorAll("i").forEach(function (i) {
+          if (i.dataset.k === "color") {i.title = "Color"; }
+          else if (i.dataset.k === "background-color") {i.title = "Background color"; }
+          else {i.title = icon_title[i.textContent]; }
+        });
+        gadget.element.querySelectorAll(".jexcel_tab_link").forEach(function (tab) { tab.title = "Right click to rename"; });
+        gadget.state.newSheet = false;
       });
     })
 
@@ -180,18 +258,21 @@
           var x = Number(cell.dataset.x);
           var y = Number(cell.dataset.y);
           formula.value = ["text", "calendar", "checkbox", "color"].includes(instance.options.columns[x].type) ? instance.getValueFromCoords(x, y) : "";
-        })
+          instance.options.columns[x].type === "text" ? formula.readOnly = false : formula.readOnly = true;
+        });
       };
       sheet.oneditionend = function (a, b, c, d, e) {
-        if (e[0] === "=" && e[e.length - 1] !== ")") {
-          var numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-          if (numbers.includes(e[e.length - 1])){
-            var worksheet = gadget.element.querySelector('.selected').getAttribute('data-spreadsheet');
-            var tab = gadget.element.querySelector('.spreadsheet').jexcel[worksheet];
-            tab.setValueFromCoords(c, d, e);
-          }
-          else {
-            b.textContent = e;
+        if (e) {
+          if (e[0] === "=" && e[e.length - 1] !== ")") {
+            var numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+            if (numbers.includes(e[e.length - 1])) {
+              var worksheet = gadget.element.querySelector('.selected').getAttribute('data-spreadsheet');
+              var tab = gadget.element.querySelector('.spreadsheet').jexcel[worksheet];
+              tab.setValueFromCoords(c, d, e);
+            }
+            else {
+              b.textContent = e;
+            }
           }
         }
       };
@@ -205,7 +286,7 @@
         return gadget.setupTable(tabs[tabs.length - 1]);
       }
       if (modification_dict.hasOwnProperty('value')) {
-        return gadget.template_gadget.getToolbarList(() => gadget.addSheet(), toolbar_dict)
+        return gadget.template_gadget.getToolbarList(function () { gadget.addSheet(); }, function (a, b) { gadget.deleteSheet(a, b); }, toolbar_dict)
         .push(function (config) {
             tmp = Object.assign({}, config);
             if (gadget.state.value === "") {
@@ -213,23 +294,23 @@
             }
             else {
               gadget.state.value = JSON.parse(gadget.state.value);
-              gadget.state.value.map(sheet => {
+              gadget.state.value.map(function (sheet) {
                 var res = Object.assign(sheet, tmp);
                 return res;
               });
             }
-            gadget.state.value.map((sheet, i) => {
-              if (!sheet.hasOwnProperty("sheetName")) {sheet.sheetName = "Sheet " + (i + 1)};
+            gadget.state.value.map(function (sheet, i) {
+              if (!sheet.hasOwnProperty("sheetName")) {sheet.sheetName = "Sheet " + (i + 1); }
               return gadget.bindEvents(sheet);
-          });
-          return gadget.state.value;
-        })
+            });
+            return gadget.state.value;
+          })
         .push(function (sheets) {
             jexcel.tabs(gadget.element.querySelector(".spreadsheet"), sheets);
-            gadget.element.querySelectorAll(".jexcel_container").forEach(tab => {
+            gadget.element.querySelectorAll(".jexcel_container").forEach(function (tab) {
               return gadget.setupTable(tab);
-            })
-        });
+            });
+          });
       }
     })
 
@@ -242,7 +323,7 @@
           if (td && ev.target == td.childNodes[0]) {
             formula.value = ev.target.value;
           }
-        })
+        });
       }, false, false)
 
      .onEvent("contextmenu", function (ev) {
@@ -254,19 +335,12 @@
           return gadget.getContent()
           .push(function () {
             var tabs = gadget.element.querySelectorAll(".jexcel_tab_link");
-            gadget.state.value.forEach((sheet, i) => {
+            gadget.state.value.forEach(function (sheet, i) {
               sheet.sheetName = tabs[i].textContent;
             });
             gadget.deferNotifyChangeBinded();
-          })
+          });
         }
-      }, false, false)
-
-    .onEvent("click", function (ev) {
-      var gadget = this;
-      if (ev.target.title === "Delete sheet") {
-        gadget.deferNotifyChangeBinded();
-      }
-    }, false, false);
+      }, false, false);
 
 }(window, rJS, jexcel));
