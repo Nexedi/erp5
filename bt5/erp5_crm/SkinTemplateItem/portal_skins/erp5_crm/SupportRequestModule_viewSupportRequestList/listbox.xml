@@ -192,28 +192,20 @@
                           <string>Support Request Type</string>
                         </tuple>
                         <tuple>
-                          <string>causality_translated_portal_type</string>
-                          <string>Channel</string>
-                        </tuple>
-                        <tuple>
                           <string>destination_decision_title</string>
                           <string>Requester</string>
                         </tuple>
                         <tuple>
-                          <string>destination_decision_language</string>
-                          <string>Requester Language</string>
+                          <string>post_start_date</string>
+                          <string>Comment Date</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
-                          <string>Operations Manager</string>
+                          <string>post_user</string>
+                          <string>Comment Author</string>
                         </tuple>
                         <tuple>
                           <string>delivery.start_date</string>
                           <string>Begin Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>End Date</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
