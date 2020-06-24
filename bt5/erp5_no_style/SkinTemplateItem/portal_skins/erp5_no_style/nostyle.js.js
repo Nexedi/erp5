@@ -9,23 +9,22 @@
       this.element.hidden = true;
       this.main_element = this.element.querySelector('main');
     })
-    .allowPublicAcquisition("getMainInnerHTML", function () {
-      return this.main_element.innerHTML;
-    })
-    .allowPublicAcquisition("showPage", function () {
-      this.element.hidden = false;
-
-    })
     .declareService(function () {
       var gadget = this,
+        style_gadget,
         body = gadget.element;
       // Clear the DOM
       while (body.firstChild) {
         body.firstChild.remove();
       }
       return gadget.declareGadget('nostyle_syna.html')
-        .push(function (style_gadget) {
+        .push(function (result) {
+          style_gadget = result;
+          return style_gadget.render(gadget.main_element.innerHTML);
+        })
+        .push(function () {
           body.appendChild(style_gadget.element);
+          gadget.element.hidden = false;
         });
     });
 
