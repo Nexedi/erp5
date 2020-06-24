@@ -151,9 +151,6 @@
           if (numbers.includes(e[e.length - 1])) {
             instance.setValue(cell_input.value, e);
           }
-          else {
-            //instance.el.querySelector("td.highlight-selected").textContent = e;
-          }
         }
         else {
           instance.setValue(cell_input.value, e);
@@ -242,7 +239,7 @@
       sheet.onevent = function (ev) {
         var exluded_events = ["onload", "onfocus", "onblur", "onselection"];
         if (!exluded_events.includes(ev)) {
-          if ((ev === "onchangestyle" && gadget.state.saveConfig) || ev !== "onchangestyle") {
+          if ((["onchangestyle", "onchange", "onbeforechange"].includes(ev) && gadget.state.saveConfig) || !["onchangestyle", "onchange", "onbeforechange"].includes(ev)) {
             gadget.deferNotifyChangeBinded();
           }
         }
@@ -307,6 +304,7 @@
           })
         .push(function (sheets) {
             jexcel.tabs(gadget.element.querySelector(".spreadsheet"), sheets);
+            setTimeout(function () {gadget.state.saveConfig = true; }, 5000);
             gadget.element.querySelectorAll(".jexcel_container").forEach(function (tab) {
               return gadget.setupTable(tab);
             });
