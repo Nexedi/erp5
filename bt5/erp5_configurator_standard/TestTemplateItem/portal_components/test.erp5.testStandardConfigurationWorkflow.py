@@ -916,6 +916,58 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
           resource_uid=resource.getUid(),
           node_uid=node.getUid()))
 
+  def stepCheckMeasureConversion(self, sequence=None, sequence_list=None, **kw):
+    resource = self.portal.product_module.newContent(
+        portal_type='Product',
+        quantity_unit_value=self.portal.portal_categories.quantity_unit.unit.piece)
+    resource.newContent(
+        portal_type='Measure',
+        metric_type_value=self.portal.portal_categories.metric_type.mass,
+        quantity_unit_value=self.portal.portal_categories.quantity_unit.mass.kilogram,
+        quantity=3,
+    )
+    node = self.portal.organisation_module.newContent(portal_type='Organisation')
+    purchase_trade_condition_value, = self.getBusinessConfigurationObjectList(
+        sequence['business_configuration'],
+        'Purchase Trade Condition')
+    delivery = self.portal.purchase_packing_list_module.newContent(
+        portal_type='Purchase Packing List',
+        start_date='2010-01-26',
+        price_currency='currency_module/EUR',
+        destination_value=node,
+        destination_section_value=node,
+        specialise_value=purchase_trade_condition_value)
+    delivery.newContent(
+        portal_type='Purchase Packing List Line',
+        resource_value=resource,
+        quantity=5)
+    delivery.confirm()
+    delivery.start()
+    delivery.stop()
+    self.tic()
+
+    self.assertEqual(5,
+        self.portal.portal_simulation.getCurrentInventory(
+          resource_uid=resource.getUid(),
+          node_uid=node.getUid()))
+
+    self.assertEqual(5,
+        self.portal.portal_simulation.getCurrentInventory(
+          quantity_unit='unit/piece',
+          resource_uid=resource.getUid(),
+          node_uid=node.getUid()))
+
+    self.assertEqual(15,
+        self.portal.portal_simulation.getCurrentInventory(
+          quantity_unit='mass/kilogram',
+          resource_uid=resource.getUid(),
+          node_uid=node.getUid()))
+    self.assertEqual(15000,
+        self.portal.portal_simulation.getCurrentInventory(
+          quantity_unit='mass/gram',
+          resource_uid=resource.getUid(),
+          node_uid=node.getUid()))
+
   def stepConfiguredPropertySheets(self, sequence=None, sequence_list=None, **kw):
     """
       Configurator can configure some PropertySheets.
@@ -1388,6 +1440,7 @@ class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
       stepCheckInstanceIsConfigured%(country)s
       stepTic
       stepCheckQuantityConversion
+      stepCheckMeasureConversion
       """ + \
       StandardConfigurationMixin.AFTER_CONFIGURATION_SEQUENCE + \
       StandardConfigurationMixin.SECURITY_CONFIGURATION_SEQUENCE
