@@ -6401,11 +6401,21 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return
 
     def _getWorkingCopyPathList(self):
-      working_copy_list = self.getPortalObject().portal_preferences.getPreferredWorkingCopyList([])
-      if not working_copy_list:
-        raise RuntimeError("No 'Working Copies' set in Preferences")
+      preference_tool = self.getPortalObject().portal_preferences
+      working_copy_path_list = []
+      for p in preference_tool.getPreferredWorkingCopyList([]):
+        path = os.path.realpath(p)
+        if os.path.isdir(path):
+          working_copy_path_list.append(path)
+        else:
+          LOG('BusinessTemplate', WARNING,
+              "%s: Invalid Preferences Working Copy (realpath=%s)" % (p, path))
 
-      return [ os.path.realpath(p) for p in working_copy_list ]
+      if not working_copy_path_list:
+        raise RuntimeError("No 'Working Copies' set in Preferences or "
+                           "non-existent directory")
+
+      return working_copy_path_list
 
     def _checkFilesystemModulePath(self,
                                    module_obj,
