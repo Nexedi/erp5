@@ -4,24 +4,29 @@
   "use strict";
 
   rJS(window)
+    .ready(function () {
+      // Hide the page as fast as possible
+      this.element.hidden = true;
+      this.main_element = this.element.querySelector('main');
+    })
+    .allowPublicAcquisition("getMainInnerHTML", function () {
+      return this.main_element.innerHTML;
+    })
+    .allowPublicAcquisition("showPage", function () {
+      this.element.hidden = false;
+
+    })
     .declareService(function () {
       var gadget = this,
         body = gadget.element;
-      body.hidden = true;
-      return new RSVP.Queue(RSVP.all([
-          rJS.declareCSS("https://www.fdl-lef.org/material_design_lite.1.3.0.min.css", document.head),
-          rJS.declareCSS("https://www.fdl-lef.org/font-awesome.5.1/font-awesome.5.1.css", document.head),
-          rJS.declareCSS("https://www.fdl-lef.org/fdl_complexity.css", document.head)
-        ]))
-        .push(function () {
-          var main = body.querySelector('main');
-
-          body.innerHTML = '';
-          body.appendChild(main);
-          body.hidden = false;
+      // Clear the DOM
+      while (body.firstChild) {
+        body.firstChild.remove();
+      }
+      return gadget.declareGadget('nostyle_syna.html')
+        .push(function (style_gadget) {
+          body.appendChild(style_gadget.element);
         });
-
-      console.log('aaaa');
     });
 
 }());
