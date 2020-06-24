@@ -4,6 +4,7 @@ related_order = packing_list.getCausalityValue()
 if packing_list.getSimulationState() == 'draft':
   packing_list.edit(
     comment = related_order.getComment(),
+    description=related_order.getDescription(),
     title = related_order.getTitle()
   )
 
