@@ -92,6 +92,7 @@
                         <string>listbox_quantity_unit</string>
                         <string>listbox_variation_category_item_list</string>
                         <string>listbox_aggregate_title_list</string>
+                        <string>listbox_total_price</string>
                       </list>
                     </value>
                 </item>
@@ -103,6 +104,7 @@
                         <string>your_section_category</string>
                         <string>your_at_date</string>
                         <string>your_simulation_period</string>
+                        <string>your_currency</string>
                       </list>
                     </value>
                 </item>
