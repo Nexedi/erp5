@@ -14,34 +14,34 @@ check_stock_availability = False
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
 
-delivery = context
-if delivery.getPortalType() in portal.getPortalContainerTypeList():
-  delivery = context.getExplanationValue()
-
 # Retrieve lines portal type
-line_portal_type_list = [x for x in delivery.getTypeInfo().getTypeAllowedContentTypeList() \
+line_portal_type_list = [x for x in context.getTypeInfo().getTypeAllowedContentTypeList() \
                          if x in portal.getPortalMovementTypeList()]
 line_portal_type = line_portal_type_list[0]
 
 if line_portal_type in portal.getPortalSaleTypeList():
-  section_uid = delivery.getSourceSectionUid()
+  section_uid = context.getSourceSectionUid()
+  node_uid = context.getSourceUid()
   supply_cell_portal_type = "Sale Supply Cell"
   supply_line_id = "default_ssl"
   use_list = portal.portal_preferences.getPreferredSaleUseList()
   check_stock_availability = True
 elif line_portal_type in portal.getPortalPurchaseTypeList():
-  section_uid = delivery.getDestinationSectionUid()
+  section_uid = context.getDestinationSectionUid()
+  node_uid = context.getDestinationUid()
   supply_cell_portal_type = "Purchase Supply Cell"
   supply_line_id = "default_psl"
   use_list = portal.portal_preferences.getPreferredPurchaseUseList()
 elif line_portal_type in portal.getPortalInternalTypeList():
-  section_uid = None
+  section_uid = None # XXX ralf hack, we don't care about stock by ownership
+  node_uid = context.getSourceUid()
   supply_line_id = "default_isl"
   supply_cell_portal_type = "Internal Supply Cell"
   use_list = portal.portal_preferences.getPreferredPurchaseUseList() \
              + portal.portal_preferences.getPreferredSaleUseList()
 elif line_portal_type in portal.getPortalInventoryMovementTypeList():
   section_uid = None
+  node_uid = None
   no_inventory = True
   use_list = portal.portal_preferences.getPreferredPurchaseUseList() \
              + portal.portal_preferences.getPreferredSaleUseList()
@@ -51,6 +51,10 @@ else:
                           portal_status_message=Base_translateString(message)))
 
 request= context.REQUEST
+
+
+### XXX ignore owner
+section_uid=None
 
 total_price = 0.0
 status_message_dict = {}
@@ -82,10 +86,9 @@ for line in listbox:
         continue
       else:
         product = product_list[0].getObject()
-
     # Resource part
     line["resource_relative_url"] = product.getRelativeUrl() #cell.getResource()
-    request.form["field_listbox_resource_relative_url_new_%s"%line_id] = product.getRelativeUrl()
+    request.set("field_listbox_resource_relative_url_new_%s"%line_id, product.getRelativeUrl())
 
     request.form["field_listbox_quantity_unit_new_%s"%line_id] = product.getQuantityUnit()
     variation_list = line['variation_category_list']
@@ -98,32 +101,38 @@ for line in listbox:
       if quantity in (None, ""):
         line["quantity"] = 0.0
       if line['price'] in (None,""):
-        if variation_list:
-          # Retrieve the price from the cell
-          # if we have variation defined
-          try:
-            supply_cell_list = product[supply_line_id].contentValues(portal_type=supply_cell_portal_type)
-          except KeyError:
-            # No price defined
-            supply_cell_list = []
-          for supply_cell in supply_cell_list:
-            if supply_cell.getVariationCategoryList() == variation_list:
-              line['price'] = supply_cell.getBasePrice() or 0
+        if 0: # XXX why not just call getPrice ?????
+          if variation_list:
+            # Retrieve the price from the cell
+            # if we have variation defined
+            try:
+              supply_cell_list = product[supply_line_id].contentValues(portal_type=supply_cell_portal_type)
+            except KeyError:
+              # No price defined
+              supply_cell_list = []
+            for supply_cell in supply_cell_list:
+              if supply_cell.getVariationCategoryList() == variation_list:
+                line['price'] = supply_cell.getBasePrice() or 0
+                line["total_price"] = line['quantity'] * line['price']
+                break
+          else:
+            # Retrieve the price from the line
+            # if we have no variation defined
+            try:
+              supply_line = product[supply_line_id]
+              line['price'] = supply_line.getBasePrice() or 0
               line["total_price"] = line['quantity'] * line['price']
-              break
-        else:
-          # Retrieve the price from the line
-          # if we have no variation defined
-          try:
-            supply_line = product[supply_line_id]
-            line['price'] = supply_line.getBasePrice() or 0
-            line["total_price"] = line['quantity'] * line['price']
-          except KeyError:
-            # No price defined
-            pass
-      else:
-        # Use the price defined by the user
-        line["total_price"] = line['quantity'] * line['price']
+            except KeyError:
+              # No price defined
+              pass
+        if variation_list:
+          line['price'] = -1 # not implemented
+        line['price'] = context.newContent(temp_object=True,
+                                           portal_type=line_portal_type,
+                                           resource_value=product,
+                                           quantity=line['quantity']).getPrice()
+      
+      line["total_price"] = line['quantity'] * (line['price'] or 0)
 
       request.form["field_listbox_price_new_%s"%line_id] = line['price']
       request.form["field_listbox_total_price_new_%s"%line_id] = line['total_price']
@@ -136,17 +145,20 @@ for line in listbox:
         if variation_list:
           available_inv = request.form["field_listbox_available_quantity_new_%s"%line_id] = product.getAvailableInventory(
                                            section_uid=section_uid,
+                                           node_uid=node_uid,
                                            variation_text=variation_list)
-          request.form['field_listbox_inventory_new_%s'%line_id] = product.getInventory(
+          request.form['field_listbox_inventory_new_%s'%line_id] = product.getFutureInventory(
                                            section_uid=section_uid,
+                                           node_uid=node_uid,
                                            variation_text=variation_list)
           request.form["field_listbox_current_quantity_new_%s"%line_id] = product.getCurrentInventory(
                                            section_uid=section_uid,
+                                           node_uid=node_uid,
                                            variation_text=variation_list)
         else:
-          available_inv = request.form["field_listbox_available_quantity_new_%s"%line_id] = product.getAvailableInventory(section_uid=section_uid)
-          request.form['field_listbox_inventory_new_%s'%line_id] = product.getInventory(section_uid=section_uid)
-          request.form["field_listbox_current_quantity_new_%s"%line_id] = product.getCurrentInventory(section_uid=section_uid)
+          available_inv = request.form["field_listbox_available_quantity_new_%s"%line_id] = product.getAvailableInventory(section_uid=section_uid, node_uid=node_uid)
+          request.form['field_listbox_inventory_new_%s'%line_id] = product.getFutureInventory(section_uid=section_uid, node_uid=node_uid)
+          request.form["field_listbox_current_quantity_new_%s"%line_id] = product.getCurrentInventory(section_uid=section_uid, node_uid=node_uid)
 
         # Check if quantity is available
         if check_stock_availability and available_inv < line["quantity"]:
@@ -169,10 +181,14 @@ if status_message_dict:
     status_message_list.append(Base_translateString(message, mapping=mapping))
   portal_status_message = ' -- '.join(status_message_list)
 
-request.form["field_my_total_price"] = total_price
+  #request.set('portal_status_message', ' -- '.join(status_message_list))
 
+request.form["field_my_total_price"] = total_price
 context.Base_updateDialogForm(listbox=listbox,update=1,kw=kw)
 return context.Base_renderForm(
   request.form['dialog_id'],
   message=portal_status_message
 )
+"""
+return getattr(context, request.form['dialog_id'])(listbox=listbox, kw=kw)
+"""
