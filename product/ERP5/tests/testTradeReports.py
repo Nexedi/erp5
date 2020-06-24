@@ -102,6 +102,14 @@ class TestTradeReports(ERP5ReportTestCase):
                                   title=group_id,
                                   reference=group_id,
                                   id=group_id)
+    # currencies
+    if not self.portal.currency_module.has_key('EUR'):
+      self.portal.currency_module.newContent(
+        portal_type='Currency',
+        id='EUR',
+        base_unit_quantity=0.01,
+      ).validate()
+
     # create organisations (with no organisation member of g3)
     if not self.organisation_module.has_key('Organisation_1'):
       org = self.portal.organisation_module.newContent(
@@ -111,6 +119,7 @@ class TestTradeReports(ERP5ReportTestCase):
                               id='Organisation_1',
                               group='g1',
                               site='demo_site_A',
+                              price_currency_value=self.portal.currency_module.EUR,
                               default_email_coordinate_text='organisation1@example.com',
                               default_telephone_coordinate_text='11111',
                               default_address_street_address='1 Organisation Street',
@@ -157,7 +166,10 @@ class TestTradeReports(ERP5ReportTestCase):
           id='product_A',
           title='product_A',
           reference='ref 2',
-          quantity_unit='g'
+          quantity_unit='g',
+          default_purchase_supply_line_base_price=3,
+          default_internal_supply_line_base_price=5,
+          default_sale_supply_line_base_price=7,
           )
     if not module.has_key('product_C'):
       product = module.newContent(
@@ -1398,6 +1410,94 @@ class TestTradeReports(ERP5ReportTestCase):
 
     self.assertEqual(0, len(data_line_list))
 
+  def testStockReport_valuation_method_default_default_purchase_price(self):
+    self._createConfirmedSalePackingListForStockReportTest()
+    request = self.portal.REQUEST
+    request.form['at_date'] = DateTime(2007, 3, 3)
+    request.form['node_category'] = 'site/demo_site_A'
+    request.form['simulation_period'] = 'future'
+    request.form['inventory_valuation_method'] = 'default_purchase_price'
+
+    line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    data_line = data_line_list[0]
+    self.assertEqual(
+        data_line.column_id_list,
+        ['resource_title', 'resource_reference', 'variation_category_item_list', 'inventory', 'quantity_unit', 'total_price'])
+
+    self.checkLineProperties(
+        data_line_list[0],
+        resource_title='product_A',
+        resource_reference='ref 2',
+        variation_category_item_list=[],
+        inventory=1,
+        quantity_unit='G',
+        total_price=3,
+    )
+    # listbox_total_price is an editable field using this for precision
+    self.assertEqual(self.portal.REQUEST.get('precision'), 2)
+
+  def testStockReport_valuation_method_default_default_internal_price(self):
+    self._createConfirmedSalePackingListForStockReportTest()
+    request = self.portal.REQUEST
+    request.form['at_date'] = DateTime(2007, 3, 3)
+    request.form['node_category'] = 'site/demo_site_A'
+    request.form['simulation_period'] = 'future'
+    request.form['inventory_valuation_method'] = 'default_internal_price'
+
+    line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    data_line = data_line_list[0]
+    self.assertEqual(
+        data_line.column_id_list,
+        ['resource_title', 'resource_reference', 'variation_category_item_list', 'inventory', 'quantity_unit', 'total_price'])
+
+    self.checkLineProperties(
+        data_line_list[0],
+        resource_title='product_A',
+        resource_reference='ref 2',
+        variation_category_item_list=[],
+        inventory=1,
+        quantity_unit='G',
+        total_price=5,
+    )
+
+  def testStockReport_valuation_method_default_default_sales_price(self):
+    self._createConfirmedSalePackingListForStockReportTest()
+    request = self.portal.REQUEST
+    request.form['at_date'] = DateTime(2007, 3, 3)
+    request.form['node_category'] = 'site/demo_site_A'
+    request.form['simulation_period'] = 'future'
+    request.form['inventory_valuation_method'] = 'default_sale_price'
+
+    line_list = self.portal.inventory_module.Base_viewStockReportBySite.listbox.\
+        get_value('default',
+                  render_format='list', REQUEST=self.portal.REQUEST)
+
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    data_line = data_line_list[0]
+    self.assertEqual(
+        data_line.column_id_list,
+        ['resource_title', 'resource_reference', 'variation_category_item_list', 'inventory', 'quantity_unit', 'total_price'])
+
+    self.checkLineProperties(
+        data_line_list[0],
+        resource_title='product_A',
+        resource_reference='ref 2',
+        variation_category_item_list=[],
+        inventory=1,
+        quantity_unit='G',
+        total_price=7,
+    )
 
   def test_Folder_generateWorkflowReport(self):
     # Create sales orders
