@@ -73,6 +73,9 @@
                         <string>listbox_delivery_stop_date</string>
                         <string>listbox_delivery_start_date</string>
                         <string>listbox_creation_date</string>
+                        <string>listbox_destination_section_region</string>
+                        <string>listbox_destination_section_default_telephone_coordinate_text</string>
+                        <string>listbox_destination_section_default_address_text</string>
                       </list>
                     </value>
                 </item>

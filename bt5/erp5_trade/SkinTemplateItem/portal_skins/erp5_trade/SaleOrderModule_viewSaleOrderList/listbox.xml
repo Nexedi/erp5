@@ -16,9 +16,7 @@
                 <string>domain_tree</string>
                 <string>editable_columns</string>
                 <string>portal_types</string>
-                <string>search_columns</string>
                 <string>selection_name</string>
-                <string>sort_columns</string>
                 <string>title</string>
               </list>
             </value>
@@ -101,6 +99,14 @@
                           <string>Total Price</string>
                         </tuple>
                         <tuple>
+                          <string>source_decision_title</string>
+                          <string>Seller</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision_title</string>
+                          <string>Buyer</string>
+                        </tuple>
+                        <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
                         </tuple>
@@ -109,7 +115,11 @@
                           <string>Modification Date</string>
                         </tuple>
                         <tuple>
-                          <string>specialise_trade_condition_title</string>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
                           <string>Sale Trade Condition</string>
                         </tuple>
                       </list>
@@ -220,142 +230,8 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>search_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Sender or Provider</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_section_title</string>
-                          <string>Supplier</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_project_title</string>
-                          <string>Supplier Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Recipient or Beneficiary</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_section_title</string>
-                          <string>Client</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_project_title</string>
-                          <string>Client Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.start_date</string>
-                          <string>Shipping Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>Delivery Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_price</string>
-                          <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>specialise_trade_condition_title</string>
-                          <string>Sale Trade Condition</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>sale_order_module_view_sale_order_list_selection</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Sender or Provider</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_section_title</string>
-                          <string>Supplier</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_project_title</string>
-                          <string>Supplier Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Recipient or Beneficiary</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_section_title</string>
-                          <string>Client</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_project_title</string>
-                          <string>Client Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.start_date</string>
-                          <string>Shipping Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.stop_date</string>
-                          <string>Delivery Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                        <tuple>
-                          <string>total_price</string>
-                          <string>Total Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>specialise_trade_condition_title</string>
-                          <string>Sale Trade Condition</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

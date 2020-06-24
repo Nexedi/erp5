@@ -94,6 +94,18 @@
                           <string>Delivery Date</string>
                         </tuple>
                         <tuple>
+                          <string>destination_section_default_address_text</string>
+                          <string>Client Address</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_section_region</string>
+                          <string>Client Region</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_section_default_telephone_coordinate_text</string>
+                          <string>Client Telephone</string>
+                        </tuple>
+                        <tuple>
                           <string>source_project_title</string>
                           <string>Supplier Project</string>
                         </tuple>
@@ -110,8 +122,16 @@
                           <string>Causality State</string>
                         </tuple>
                         <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
+                        <tuple>
                           <string>creation_date</string>
                           <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -280,6 +300,18 @@
                           <string>translated_causality_state_title</string>
                           <string>Causality State</string>
                         </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -357,6 +389,18 @@
                         <tuple>
                           <string>translated_causality_state_title</string>
                           <string>Causality State</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
                         </tuple>
                       </list>
                     </value>
