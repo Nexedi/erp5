@@ -11,16 +11,12 @@
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <html>
   <head>
+  <base tal:attributes="href python: '%s/' % here.getWebSiteValue().absolute_url()" />
   <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" />
-  <style>
-    body {max-width: 40em;}
-    label {display: block;}
-    input:not([type=submit]):not([type=file]) {width: 100%%;}
-    textarea {height: 15em;width: 100%%;}
-  </style>
+  <link rel="stylesheet" href="nostyle.css">
   <script src="portal_skins/erp5_xhtml_style/rsvp.js"></script>
   <script src="portal_skins/erp5_xhtml_style/renderjs.js"></script>
-  <!--script src="nostyle.js"></script-->
+  <script src="nostyle.js"></script>
   </head>
   <body>
     <tal:block tal:content="structure python: here.getWebSiteValue().WebSite_generateNavigationHTML()"></tal:block>
