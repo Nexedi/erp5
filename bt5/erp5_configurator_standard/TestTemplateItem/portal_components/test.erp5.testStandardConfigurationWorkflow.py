@@ -870,20 +870,28 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(currency.getRelativeUrl(),
                       purchase_trade_condition.getPriceCurrency())
 
-  @expectedFailure
   def stepCheckQuantityConversion(self, sequence=None, sequence_list=None, **kw):
+    """Check that standard unit can be converted between each other,
+    ie 1000 grams == 1 kilogram
+    """
     resource = self.portal.product_module.newContent(
                       portal_type='Product',
                       quantity_unit_list=('mass/gram',
                                           'mass/kilogram'),)
     node = self.portal.organisation_module.newContent(
                       portal_type='Organisation')
+    purchase_trade_condition_value_list = self.getBusinessConfigurationObjectList(
+        sequence['business_configuration'],
+        'Purchase Trade Condition')
+    self.assertNotEqual(len(purchase_trade_condition_value_list), 0)
+    purchase_trade_condition_value = purchase_trade_condition_value_list[0]
     delivery = self.portal.purchase_packing_list_module.newContent(
                       portal_type='Purchase Packing List',
                       start_date='2010-01-26',
                       price_currency='currency_module/EUR',
                       destination_value=node,
-                      destination_section_value=node)
+                      destination_section_value=node,
+                      specialise_value=purchase_trade_condition_value)
     delivery.newContent(portal_type='Purchase Packing List Line',
                         resource_value=resource,
                         quantity=10,
@@ -1380,6 +1388,8 @@ class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
       stepStartConfigurationInstallation
       stepTic
       stepCheckInstanceIsConfigured%(country)s
+      stepTic
+      stepCheckQuantityConversion
       """ + \
       StandardConfigurationMixin.AFTER_CONFIGURATION_SEQUENCE + \
       StandardConfigurationMixin.SECURITY_CONFIGURATION_SEQUENCE
