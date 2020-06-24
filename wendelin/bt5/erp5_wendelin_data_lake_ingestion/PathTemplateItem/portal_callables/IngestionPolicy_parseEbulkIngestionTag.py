@@ -1,7 +1,7 @@
 portal = context.getPortalObject()
-reference_separator = portal.getIngestionReferenceDictionary()["reference_separator"]
-reference_length = portal.getIngestionReferenceDictionary()["reference_length"]
-invalid_chars = portal.getIngestionReferenceDictionary()["invalid_chars"]
+reference_separator = portal.ERP5Site_getIngestionReferenceDictionary()["reference_separator"]
+reference_length = portal.ERP5Site_getIngestionReferenceDictionary()["reference_length"]
+invalid_chars = portal.ERP5Site_getIngestionReferenceDictionary()["invalid_chars"]
 
 record = reference.rsplit(reference_separator)
 length = len(record)

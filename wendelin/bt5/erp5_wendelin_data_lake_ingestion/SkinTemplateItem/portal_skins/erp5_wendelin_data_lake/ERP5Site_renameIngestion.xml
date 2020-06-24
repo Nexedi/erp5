@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reference</string> </value>
+            <value> <string>reference, new_reference</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ingestionReferenceExists</string> </value>
+            <value> <string>ERP5Site_renameIngestion</string> </value>
         </item>
       </dictionary>
     </pickle>

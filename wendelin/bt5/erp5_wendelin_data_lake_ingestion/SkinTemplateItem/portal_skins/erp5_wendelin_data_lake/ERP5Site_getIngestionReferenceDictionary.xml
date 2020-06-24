@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>getIngestionReferenceDictionary</string> </value>
+            <value> <string>ERP5Site_getIngestionReferenceDictionary</string> </value>
         </item>
       </dictionary>
     </pickle>

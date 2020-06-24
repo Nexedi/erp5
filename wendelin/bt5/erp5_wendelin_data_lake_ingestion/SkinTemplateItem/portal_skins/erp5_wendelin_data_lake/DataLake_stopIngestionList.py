@@ -40,15 +40,15 @@ def isInterruptedAbandonedSplitIngestion(reference):
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
 
-reference_end_single = portal.getIngestionReferenceDictionary()["single_end_suffix"]
-reference_first_split = portal.getIngestionReferenceDictionary()["split_first_suffix"]
-reference_end_split = portal.getIngestionReferenceDictionary()["split_end_suffix"]
+reference_end_single = portal.ERP5Site_getIngestionReferenceDictionary()["single_end_suffix"]
+reference_first_split = portal.ERP5Site_getIngestionReferenceDictionary()["split_first_suffix"]
+reference_end_split = portal.ERP5Site_getIngestionReferenceDictionary()["split_end_suffix"]
 
 # stop single started ingestion (not split files)
 for data_ingestion in portal_catalog(portal_type = "Data Ingestion",
                                      simulation_state = "started",
                                      id = "%"+reference_end_single):
-  if not portal.IsReferenceInvalidated(data_ingestion):
+  if not portal.ERP5Site_checkReferenceInvalidated(data_ingestion):
     related_split_ingestions = portal_catalog(portal_type = "Data Ingestion",
                                               reference = data_ingestion.getReference())
     if len(related_split_ingestions) == 1:
@@ -67,7 +67,7 @@ for data_ingestion in portal_catalog(portal_type = "Data Ingestion",
 for data_ingestion in portal_catalog(portal_type = "Data Ingestion",
                                      simulation_state = "started",
                                      id = "%"+reference_first_split):
-  if not portal.IsReferenceInvalidated(data_ingestion):
+  if not portal.ERP5Site_checkReferenceInvalidated(data_ingestion):
     if isInterruptedAbandonedSplitIngestion(data_ingestion.getReference()):
       portal.ERP5Site_invalidateSplitIngestions(data_ingestion.getReference(), success=False)
     else:
@@ -102,7 +102,7 @@ for data_ingestion in portal_catalog(portal_type = "Data Ingestion",
               if ingestion.getSimulationState() == "started":
                 ingestion.stop()
             else:
-              portal.InvalidateReference(ingestion)
+              portal.ERP5Site_invalidateReference(ingestion)
               ingestion.deliver()
       except Exception as e:
         context.logEntry("ERROR appending split data streams for ingestion: %s - reference: %s." % (data_ingestion.getId(), data_ingestion.getReference()))

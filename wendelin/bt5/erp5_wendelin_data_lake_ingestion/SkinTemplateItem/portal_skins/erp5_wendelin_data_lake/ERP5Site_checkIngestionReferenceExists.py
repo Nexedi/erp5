@@ -10,9 +10,9 @@ TRUE = "TRUE"
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
 
-reference_separator = portal.getIngestionReferenceDictionary()["reference_separator"]
-reference_end_single = portal.getIngestionReferenceDictionary()["single_end_suffix"]
-reference_end_split = portal.getIngestionReferenceDictionary()["split_end_suffix"]
+reference_separator = portal.ERP5Site_getIngestionReferenceDictionary()["reference_separator"]
+reference_end_single = portal.ERP5Site_getIngestionReferenceDictionary()["single_end_suffix"]
+reference_end_split = portal.ERP5Site_getIngestionReferenceDictionary()["split_end_suffix"]
 
 # remove supplier and eof from reference
 data_ingestion_reference = reference_separator.join(reference.split(reference_separator)[1:-3])
@@ -20,7 +20,7 @@ EOF = reference.split(reference_separator)[-3]
 size = reference.split(reference_separator)[-2]
 
 if data_ingestion_reference is "":
-  context.logEntry("[ERROR] Data Ingestion reference parameter for ingestionReferenceExists script is not well formated")
+  context.logEntry("[ERROR] Data Ingestion reference parameter for ERP5Site_checkIngestionReferenceExists script is not well formated")
   raise ValueError("Data Ingestion reference is not well formated")
 
 # check if there are started ingestions for this reference

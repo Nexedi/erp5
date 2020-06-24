@@ -27,10 +27,10 @@ class TestDataIngestion(SecurityTestCase):
     return "DataIngestionTest"
 
   def afterSetUp(self):
-    self.assertEqual(self.REFERENCE_SEPARATOR, self.portal.getIngestionReferenceDictionary()["reference_separator"])
-    self.assertEqual(self.INVALID, self.portal.getIngestionReferenceDictionary()["invalid_suffix"])
-    self.assertEqual(self.EOF, self.REFERENCE_SEPARATOR + self.portal.getIngestionReferenceDictionary()["split_end_suffix"])
-    self.assertEqual(self.PART_1, self.REFERENCE_SEPARATOR + self.portal.getIngestionReferenceDictionary()["split_first_suffix"])
+    self.assertEqual(self.REFERENCE_SEPARATOR, self.portal.ERP5Site_getIngestionReferenceDictionary()["reference_separator"])
+    self.assertEqual(self.INVALID, self.portal.ERP5Site_getIngestionReferenceDictionary()["invalid_suffix"])
+    self.assertEqual(self.EOF, self.REFERENCE_SEPARATOR + self.portal.ERP5Site_getIngestionReferenceDictionary()["split_end_suffix"])
+    self.assertEqual(self.PART_1, self.REFERENCE_SEPARATOR + self.portal.ERP5Site_getIngestionReferenceDictionary()["split_first_suffix"])
 
   def getRandomReference(self):
     random_string = ''.join([random.choice(string.ascii_letters + string.digits) for _ in xrange(10)])
@@ -70,6 +70,12 @@ class TestDataIngestion(SecurityTestCase):
                     reference = reference)
     return data_stream
 
+  def getDataStreamChunkList(self, reference):
+    data_stream_list = self.portal.portal_catalog(
+                        portal_type = 'Data Stream',
+                        reference = reference)
+    return data_stream_list
+
   def ingestRequest(self, reference, eof, data_chunk, ingestion_policy):
     encoded_data_chunk = base64.b64encode(data_chunk)
     request = self.portal.REQUEST
@@ -84,14 +90,11 @@ class TestDataIngestion(SecurityTestCase):
 
   def ingest(self, data_chunk, reference, extension, eof, randomize_ingestion_reference=False):
     ingestion_reference = self.getIngestionReference(reference, extension, randomize_ingestion_reference)
-    
     # use default ebulk policy
-    ingestion_policy = self.portal.portal_ingestion_policies.wendelin_embulk
-    
+    ingestion_policy = self.portal.portal_ingestion_policies.default_ebulk
     self.ingestRequest(ingestion_reference, eof, data_chunk, ingestion_policy)
     _, ingestion_reference = self.sanitizeReference(ingestion_reference)
-
-    return ingestion_reference     
+    return ingestion_reference
 
   def stepIngest(self, extension, delimiter, randomize_ingestion_reference=False):
     file_name = "file_name.csv"
@@ -108,16 +111,15 @@ class TestDataIngestion(SecurityTestCase):
           chunk.append(line)
         else:
           break
-
     ingestion_reference = self.ingest(data_chunk, reference, extension, self.SINGLE_INGESTION_END, randomize_ingestion_reference=randomize_ingestion_reference)
-    
+
     if os.path.exists(file_name):
       os.remove(file_name)
-    
+
     # test properly ingested
     data_ingestion = self.getDataIngestion(ingestion_reference)
     self.assertNotEqual(None, data_ingestion)
-    
+
     data_ingestion_line = [x for x in data_ingestion.objectValues() \
                             if x.getReference() == 'out_stream'][0]
     data_set = data_ingestion_line.getAggregateValue(portal_type='Data Set')
@@ -127,8 +129,9 @@ class TestDataIngestion(SecurityTestCase):
     data_stream_data = data_stream.getData()
     self.assertEqual(data_chunk, data_stream_data)
 
-    # check Data Stream and Data Set are validated
-    self.assertEqual('validated', data_stream.getValidationState())
+    # check Data Set is validated and Data Stream is published
+    self.assertEqual('validated', data_set.getValidationState())
+    self.assertEqual('published', data_stream.getValidationState())
 
     return data_set, [data_stream]
 
@@ -137,10 +140,10 @@ class TestDataIngestion(SecurityTestCase):
       Test default ingestion with ebulk too.
     """
     self.stepIngest(self.CSV, ",")
-    
+
   def test_02_DefaultSplitIngestion(self):
     """
-      Test multiple uploads from ebulk end up in same Data Stream concatenated 
+      Test multiple uploads from ebulk end up in multiple Data Streams
       (in case of large file upload when ebluk by default splits file to 50MBs
       chunks).
     """
@@ -152,42 +155,48 @@ class TestDataIngestion(SecurityTestCase):
                               for _ in xrange(250)])
     data_chunk_4 = ''.join([random.choice(string.ascii_letters + string.digits) \
                               for _ in xrange(250)])
-    data_chunk = data_chunk_1 + data_chunk_2 + data_chunk_3 + data_chunk_4
-    
+
     reference = self.getRandomReference()
-    
+
     ingestion_reference = self.ingest(data_chunk_1, reference, self.FIF, self.PART_1)
     time.sleep(1)
     self.tic()
-    
+
     ingestion_reference = self.ingest(data_chunk_2, reference, self.FIF, self.PART_2)
-    time.sleep(1)  
+    time.sleep(1)
     self.tic()
-    
+
     ingestion_reference = self.ingest(data_chunk_3, reference, self.FIF, self.PART_3)
-    time.sleep(1)  
+    time.sleep(1)
     self.tic()
-    
+
     ingestion_reference = self.ingest(data_chunk_4, reference, self.FIF, self.EOF)
     time.sleep(1)
     self.tic()
-    
-    # call explicitly alarm so all 4 Data Streams can be concatenated to one
-    self.portal.portal_alarms.wendelin_data_lake_handle_analysis.Alarm_dataLakeHandleAnalysis()
+
+    # call explicitly alarm so all 4 Data Streams are validated and published
+    self.portal.portal_alarms.wendelin_handle_analysis.Alarm_handleAnalysis()
     self.tic()
-    
-    # check resulting Data Stream
-    data_stream = self.getDataStream(ingestion_reference)
-    self.assertEqual(data_chunk, data_stream.getData())
+
+    # check resulting Data Streams
+    data_stream_list = self.getDataStreamChunkList(ingestion_reference)
+    #one data stream per chunk
+    self.assertEqual(len(data_stream_list), 4)
+    #last datastream (EOF) published, the rest validated
+    for stream in data_stream_list:
+      if stream.getId().endswith(self.EOF.replace(self.REFERENCE_SEPARATOR, "")):
+        self.assertEqual('published', stream.getValidationState())
+      else:
+        self.assertEqual('validated', stream.getValidationState())
 
   def test_03_DefaultWendelinConfigurationExistency(self):
     """
       Test that nobody accidently removes needed by HowTo's default configurations.
-    """ 
+    """
     # test default ebuk ingestion exists
-    self.assertNotEqual(None, 
-           getattr(self.portal.portal_ingestion_policies, "wendelin_embulk", None))
-    self.assertNotEqual(None, 
+    self.assertNotEqual(None,
+           getattr(self.portal.portal_ingestion_policies, "default_ebulk", None))
+    self.assertNotEqual(None,
            getattr(self.portal.data_supply_module, "embulk", None))
 
   def test_04_DefaultModelSecurityModel(self):
@@ -199,19 +208,17 @@ class TestDataIngestion(SecurityTestCase):
 
     # check data relation between Data Set and Data Streams work
     self.assertSameSet(data_stream_list, data_set.DataSet_getDataStreamList())
-    
-    # publish data set and have all Data Streams publsihed automatically
-    data_set.publish()
-    self.tic()
-    self.assertEqual('published', data_set.getValidationState())
-    self.assertSameSet(['published' for x in data_stream_list], 
+
+    # check data set and all Data Streams states
+    self.assertEqual('validated', data_set.getValidationState())
+    self.assertSameSet(['published' for x in data_stream_list],
                        [x.getValidationState() for x in data_stream_list])
 
     # invalidate Data Set should invalidate related Data Streams
     data_set.invalidate()
     self.tic()
     self.assertEqual('invalidated', data_set.getValidationState())
-    self.assertSameSet(['invalidated' for x in data_stream_list], 
+    self.assertSameSet(['invalidated' for x in data_stream_list],
                        [x.getValidationState() for x in data_stream_list])
 
   # XXX: new test which simulates download / upload of Data Set and increase DS version
