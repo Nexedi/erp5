@@ -33,7 +33,7 @@ from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from App.Extensions import getBrain
 from lxml import etree
 from zLOG import LOG, ERROR, INFO
-from Products.ERP5Type.Tool.WebServiceTool import ConnectionError
+from erp5.component.tool.WebServiceTool import ConnectionError
 from Products.ERP5Type.Cache import CachingMethod
 
 ID_SEPARATOR="-"
