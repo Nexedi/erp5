@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Ingestion Policy" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -26,15 +25,7 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_Change_local_roles_Permission</string> </key>
-            <value>
-              <tuple>
-                <string>Assignor</string>
+                <string>Associate</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -45,6 +36,7 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
+                <string>Associate</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -59,47 +51,36 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>content_md5</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>data_operation_script_id</string> </key>
+            <value> <string>IngestionPolicy_getIngestionOperationAndParameterDictEbulk</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_fif_page_list_dataset.js</string> </value>
+            <value> <string>default_ebulk</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Handles ingestion of raw files bytes sent to us from ebulk.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_fif_page_list_dataset_js</string> </value>
-        </item>
-        <item>
-            <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value> <string>default_ebulk</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Ingestion Policy</string> </value>
         </item>
         <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>script_id</string> </key>
+            <value> <string>IngestionPolicy_parseEbulkIngestionTag</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>FIF Page List Data Set JS</string> </value>
+            <value> <string>Default Ebulk Ingestion Policy</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -125,21 +106,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>document_publication_workflow</string> </key>
+                    <key> <string>edit_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>edit_workflow</string> </key>
+                    <key> <string>validation_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>processing_status_workflow</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -149,63 +124,6 @@
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_log</string> </key>
-            <value>
-              <list>
-                <dictionary>
-                  <item>
-                      <key> <string>action</string> </key>
-                      <value> <string>publish_alive</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>comment</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>error_message</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass>
-                            <global name="DateTime" module="DateTime.DateTime"/>
-                          </klass>
-                          <tuple>
-                            <none/>
-                          </tuple>
-                          <state>
-                            <tuple>
-                              <float>1493390968.87</float>
-                              <string>UTC</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
-                  </item>
-                  <item>
-                      <key> <string>validation_state</string> </key>
-                      <value> <string>published_alive</string> </value>
-                  </item>
-                </dictionary>
-              </list>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
@@ -236,7 +154,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.63603.62266.8260</string> </value>
+                      <value> <string>984.990.49194.19609</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -254,7 +172,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1589984604.57</float>
+                              <float>1589986625.99</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -268,7 +186,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.Workflow"/>
     </pickle>
@@ -281,7 +199,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value> <string>validate</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -296,14 +214,6 @@
                       <value> <string></string> </value>
                   </item>
                   <item>
-                      <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>serial</string> </key>
-                      <value> <string>0.0.0.0</string> </value>
-                  </item>
-                  <item>
                       <key> <string>time</string> </key>
                       <value>
                         <object>
@@ -315,12 +225,16 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1493390891.29</float>
+                              <float>1589898672.1</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
                         </object>
                       </value>
+                  </item>
+                  <item>
+                      <key> <string>validation_state</string> </key>
+                      <value> <string>validated</string> </value>
                   </item>
                 </dictionary>
               </list>

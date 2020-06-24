@@ -58,11 +58,11 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>wendelin_embulk</string> </value>
+            <value> <string>wendelin_ebulk</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Handles ingestion of raw files bytes sent to us from embulk.</string> </value>
+            <value> <string>[OBSOLETE - Kept for old ebulk clients] Handles ingestion of raw files bytes sent to us from ebulk.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -78,7 +78,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Wendelin Embulk Ingestion Policy</string> </value>
+            <value> <string>[OBSOLETE] Wendelin Ebulk Ingestion Policy</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -152,7 +152,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.12768.14725.3720</string> </value>
+                      <value> <string>983.63603.62266.8260</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -170,7 +170,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1586946559.16</float>
+                              <float>1589986571.48</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
