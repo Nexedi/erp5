@@ -454,6 +454,49 @@
             </table:table-cell>
           </tal:block>
         </table:table-row>
+        
+        
+         <table:table-row table:style-name='Tableau3.2'>
+                <table:table-cell table:style-name='Tableau3.A2' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A2' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <tal:block tal:condition="data_dict/quantity_unit_detail_list | nothing">
+                  <table:table-cell table:number-columns-spanned="2" table:style-name='Tableau1.A2' office:value-type='string'>
+                    <text:p text:style-name='Item_20_Table_20_Title_20_Left' i18n:translate="">Total Quantity of Products</text:p>
+                  </table:table-cell>
+                  <table:covered-table-cell/>
+                </tal:block>
+              </table:table-row>
+              <table:table-row table:style-name='Tableau3.2' tal:repeat="quantity_unit_detail data_dict/quantity_unit_detail_list | python: []">
+                <table:table-cell table:style-name='Tableau3.A2' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A2' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.A1' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Contents'/>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.D2' office:value-type='string'>
+                  <text:p text:style-name='Table_20_Heading'><span tal:replace='quantity_unit_detail/title'/>:</text:p>
+                </table:table-cell>
+                <table:table-cell table:style-name='Tableau3.E2'
+                                  office:value-type='float'
+                                  tal:attributes='office:value quantity_unit_detail/total_quantity'>
+                  <text:p text:style-name='Table_20_Contents_20_Right' tal:content='quantity_unit_detail/total_quantity'>800.000,00</text:p>
+                </table:table-cell>
+              </table:table-row>
+        
+        
+        
+        
+        
         <table:table-row table:style-name='Tableau1.5'>
           <table:table-cell table:style-name='Tableau1.A5'
                             table:number-columns-spanned='9' office:value-type='string'>
