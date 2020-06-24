@@ -29,10 +29,9 @@
 
 from zLOG import LOG, WARNING
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
-from Products.ERP5Type import _dtmldir
 
 class ConnectionError(Exception):
   pass
@@ -84,9 +83,6 @@ class WebServiceTool(BaseTool):
   allowed_content_types = ()
 
   security = ClassSecurityInfo()
-
-  security.declareProtected(Permissions.ManagePortal, 'manage_overview')
-  manage_overview = DTMLFile('explainWebServiceTool', _dtmldir )
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getConnectionPluginList')
