@@ -951,6 +951,12 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
           resource_uid=resource.getUid(),
           node_uid=node.getUid()))
 
+    self.assertEqual(5,
+        self.portal.portal_simulation.getCurrentInventory(
+          quantity_unit='unit/piece',
+          resource_uid=resource.getUid(),
+          node_uid=node.getUid()))
+
     self.assertEqual(15,
         self.portal.portal_simulation.getCurrentInventory(
           quantity_unit='mass/kilogram',
