@@ -115,6 +115,10 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>resource_ean13_code</string>
+                          <string>EAN-13 Code</string>
+                        </tuple>
+                        <tuple>
                           <string>variation_category_item_list</string>
                           <string>Variation</string>
                         </tuple>
@@ -199,7 +203,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.get_orig_value(\'columns\') + (context.REQUEST.form.get("item_stock") == 1 and [(\'aggregate_title_list\', \'Aggregated Items\')] or [])</string> </value>
+            <value> <string>python: field.get_orig_value(\'columns\') + (context.REQUEST.form.get("item_stock") == 1 and [(\'aggregate_title_list\', \'Aggregated Items\')] or []) + (context.REQUEST.form.get("inventory_valuation_method") and [(\'total_price\', \'Inventory Value\')] or [])</string> </value>
         </item>
       </dictionary>
     </pickle>
