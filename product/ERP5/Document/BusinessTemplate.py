@@ -6492,6 +6492,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     _migrate_exception_set = set([
       ## Bootstrap
+      'Products.ERP5.Tool.IdTool',
       'Products.ERP5.Tool.TrashTool',
       'Products.ERP5.Document.BusinessTemplate',
       'Products.ERP5.ERP5Site',
@@ -6514,6 +6515,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.mixin.component',
       'Products.ERP5Type.mixin.temporary',
       'Products.ERP5Type.Tool.BaseTool',
+      'Products.ERP5Type.Tool.CacheTool',
       'Products.ERP5Type.Tool.ComponentTool',
       'Products.ERP5Type.Tool.PropertySheetTool',
       'Products.ERP5Type.tests.testDynamicClassGeneration',
@@ -6524,6 +6526,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
       ## TypeProvider
       'Products.ERP5.Tool.SolverTool',
       'Products.ERP5.interfaces.delivery_solver_factory',
+      ## ERP5TypeInformation
+      'Products.ERP5.Document.DeliveryTypeInformation',
+      'Products.ERP5.Document.PDFTypeInformation',
+      'Products.ERP5.Document.SolverTypeInformation',
+      'Products.ERP5Form.Document.PreferenceType',
       ## Unit Tests
       'Products.ERP5Type.tests.custom_zodb',
       'Products.ERP5Type.tests.ERP5TypeFunctionalTestCase',
