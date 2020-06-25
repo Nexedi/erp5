@@ -66,7 +66,7 @@ class TestNamingConvention(ERP5TypeTestCase):
       'erp5_promise', 'erp5_software_pdm', 'erp5_sso_openam', 'erp5_jquery_plugin_hotkey',
       'erp5_jquery_plugin_jgraduate', 'erp5_jquery_plugin_svgicon', 'erp5_jquery_plugin_jquerybbq',
       'erp5_jquery_plugin_spinbtn', 'erp5_jquery_plugin_svg_editor', 'erp5_svg_editor', 'erp5_syncml',
-      'erp5_system_event', 'erp5_tiosafe_core', 'erp5_workflow', 'erp5_wizard', 'tiolive_base',
+      'erp5_system_event', 'erp5_tiosafe_core', 'erp5_workflow', 'tiolive_base',
       'tiolive_decouple_instance', 'erp5_public_accounting_budget', 'erp5_publication',
       'erp5_social_contracts', 'test_core', 'test_accounting', 'test_web', 'test_html_style',
       'test_xhtml_style', 'cloudooo_data', 'cloudooo_web', 'erp5_configurator',
@@ -102,7 +102,7 @@ class TestNamingConvention(ERP5TypeTestCase):
                             'erp5_calendar', 'erp5_knowledge_pad', 'erp5_km_theme',
                             'erp5_odt_style', 'erp5_run_my_doc', 'erp5_development',
                             'erp5_tax_resource', 'erp5_immobilisation', 'erp5_software_pdm',
-                            'erp5_syncml', 'erp5_workflow', 'erp5_wizard', 'erp5_configurator',
+                            'erp5_syncml', 'erp5_workflow', 'erp5_configurator',
                             'erp5_configurator_wizard', 'erp5_base', 'erp5_pdm',
                             'erp5_core_proxy_field_legacy'):
           if result.startswith(skin_folder):
