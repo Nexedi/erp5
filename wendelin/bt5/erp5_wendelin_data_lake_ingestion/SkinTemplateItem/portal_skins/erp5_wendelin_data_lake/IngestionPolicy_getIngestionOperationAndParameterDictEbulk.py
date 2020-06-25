@@ -117,9 +117,8 @@ data_ingestion.start()
 data_operation = operation_line.getResourceValue()
 data_stream = input_line.getAggregateDataStreamValue()
 
-# if not split (one single ingestion) validate and publish the data stream
+# if not split (one single ingestion) validate the data stream
 if eof == reference_end_single:
   data_stream.validate()
-  data_stream.publish()
 
 return data_operation, {'data_stream': data_stream}
