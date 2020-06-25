@@ -367,6 +367,46 @@ class TestPasswordTool(ERP5TypeTestCase):
     self._assertUserExists('userA-login', 'newA')
     self._assertUserExists('userB-login', 'newB')
 
+  def test_password_reset_user_with_multiple_login(self):
+    personA = self.portal.person_module.newContent(
+        portal_type="Person",
+        reference="userA",
+        default_email_text="userA@example.invalid")
+    assignment = personA.newContent(portal_type='Assignment')
+    assignment.open()
+    login = personA.newContent(
+      portal_type='ERP5 Login',
+      reference='userA-login1',
+      password='password1',
+    )
+    login.validate()
+    login = personA.newContent(
+      portal_type='ERP5 Login',
+      reference='userA-login2',
+      password='password2',
+    )
+    login.validate()
+    self.tic()
+
+    self._assertUserExists('userA-login1', 'password1')
+    self._assertUserExists('userA-login2', 'password2')
+
+    self.assertEqual(0, len(self.portal.portal_password._password_request_dict))
+    self.portal.portal_password.mailPasswordResetRequest(user_login="userA-login1")
+    self.assertEqual(1, len(self.portal.portal_password._password_request_dict))
+    key_a = self.portal.portal_password._password_request_dict.keys()[0]
+    self.tic()
+
+    self.portal.portal_password.changeUserPassword(
+        user_login="userA-login1",
+        password="newA",
+        password_confirmation="newA",
+        password_key=key_a)
+    self.tic()
+
+    self._assertUserExists('userA-login1', 'newA')
+    self._assertUserExists('userA-login2', 'password2')
+
   def test_login_with_trailing_space(self):
     person = self.portal.person_module.newContent(portal_type="Person",
                                     reference="userZ ",
