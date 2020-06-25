@@ -52,7 +52,7 @@ from email.utils import parsedate_tz, mktime_tz
 
 DEFAULT_TEXT_FORMAT = 'text/html'
 COMMASPACE = ', '
-_MARKER = ()
+_MARKER = object()
 
 filename_regexp = 'name="([^"]*)"'
 

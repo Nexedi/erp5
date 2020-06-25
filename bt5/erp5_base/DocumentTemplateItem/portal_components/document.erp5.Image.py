@@ -173,7 +173,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     return self.height
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
-  def getContentType(  # pylint: disable=arguments-differ,dangerous-default-value
+  def getContentType(  # pylint: disable=arguments-differ
       self,
       default=_MARKER,
     ):
@@ -211,7 +211,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     return links
 
   security.declareProtected(Permissions.AccessContentsInformation, 'displayMap')
-  def displayMap(  # pylint: disable=dangerous-default-value
+  def displayMap(
       self,
       exclude=None,
       format=None,  # pylint: disable=redefined-builtin
@@ -414,7 +414,7 @@ class Image(TextConvertableMixin, File, OFSImage):
       return self.getData()
     return self._resize(quality, width, height, format, resolution, frame, crop)
 
-  def _makeDisplayPhoto(  # pylint: disable=dangerous-default-value
+  def _makeDisplayPhoto(
       self,
       format=None,  # pylint: disable=redefined-builtin
       quality=_MARKER,
