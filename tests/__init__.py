@@ -48,10 +48,6 @@ class _ERP5(ERP5TypeTestSuite):
       # don't test 3rd party products
       if product in ('PortalTransforms', 'MailTemplates', 'Zelenium'):
         continue
-      # ERP5TioSafe is disabled for now because it requires external programs
-      # such as php and it has not been updated for Zope >= 2.12
-      if product == 'ERP5TioSafe':
-        continue
       test_list.append(test_case)
     return test_list
 
