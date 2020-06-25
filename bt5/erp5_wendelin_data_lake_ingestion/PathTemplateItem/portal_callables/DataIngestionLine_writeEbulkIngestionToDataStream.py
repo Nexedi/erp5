@@ -30,7 +30,7 @@ portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
 reference_end_split = portal.ERP5Site_getIngestionReferenceDictionary()["split_end_suffix"]
 
-#if last chunk of split ingestion -> validate all related data streams and publish the current one:
+#if last chunk of split ingestion -> validate all related data streams
 if data_stream.getId().endswith(reference_end_split):
   query = Query(portal_type="Data Stream", reference=data_stream.getReference(), validation_state="draft")
   split_ingestion_data_stream_list = portal_catalog(query=query, sort_on=(('creation_date', 'ascending'),))
@@ -41,4 +41,3 @@ if data_stream.getId().endswith(reference_end_split):
       chunk_data_stream.validate()
   if data_stream.getValidationState() != "validated":
     data_stream.validate()
-    data_stream.publish()
