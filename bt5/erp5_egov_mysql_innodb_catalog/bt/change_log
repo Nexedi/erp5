@@ -1,9 +1,0 @@
-2010-06-25 mayoro
-* modify egov table to be generic for erp5_egov bt and catalog methods
-* remove specific portal_type in filter expressions of z_catalog_egov_list
-
-2008-07-01 fabien
-* add birth_detail table to be able to catalog details relative to birth (place and date)
-
-2008-06-10 fabien
-* Initial Release
