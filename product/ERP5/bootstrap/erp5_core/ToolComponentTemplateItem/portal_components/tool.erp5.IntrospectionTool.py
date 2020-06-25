@@ -44,7 +44,7 @@ from cgi import escape
 
 import logging
 
-_MARKER = ()
+_MARKER = object()
 
 event_log = logging.getLogger()
 access_log = logging.getLogger("access")

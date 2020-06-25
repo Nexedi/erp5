@@ -34,7 +34,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 
-_MARKER = ()
+_MARKER = object()
 
 class DomainTool(BaseTool):
   """
