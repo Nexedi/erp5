@@ -33,7 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 
 from erp5.component.document.Event import Event
 
-_MARKER = ()
+_MARKER = object()
 
 class MailMessage(Event):
   """

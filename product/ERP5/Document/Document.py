@@ -52,7 +52,7 @@ from Products.ERP5.mixin.crawlable import CrawlableMixin
 from Products.ERP5.mixin.discoverable import DiscoverableMixin
 from Products.ERP5.mixin.url import UrlMixin
 
-_MARKER = []
+_MARKER = object()
 
 # these property ids are unchangable
 FIXED_PROPERTY_IDS = ('id', 'uid', 'rid', 'sid')
