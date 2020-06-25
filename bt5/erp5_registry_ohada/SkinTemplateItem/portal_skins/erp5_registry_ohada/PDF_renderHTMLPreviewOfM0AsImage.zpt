@@ -1,3 +1,0 @@
-<div>
-<img src="" tal:attributes="src string:${here/thumbnail}/">
-</div>
