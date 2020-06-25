@@ -109,7 +109,6 @@ class TestSpellChecking(ERP5TypeTestCase):
             'erp5_publication',
             'erp5_simulation_performance_test',
             'erp5_ui_test',
-            'erp5_wizard',
             )
 
   def validate_spell(self, sentence):
