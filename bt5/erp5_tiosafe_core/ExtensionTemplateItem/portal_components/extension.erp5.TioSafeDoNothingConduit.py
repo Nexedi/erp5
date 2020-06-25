@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit
+from erp5.component.module.TioSafeBaseConduit import TioSafeBaseConduit
 
 class TioSafeDoNothingConduit(TioSafeBaseConduit):
   """

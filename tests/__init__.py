@@ -10,7 +10,7 @@ class _ERP5(ERP5TypeTestSuite):
   realtime_output = False
   enabled_product_list = ('CMFActivity', 'CMFCategory', 'ERP5', 'ERP5Catalog',
                           'ERP5Form',
-                          'ERP5OOo', 'ERP5Security', 'ERP5SyncML', 'ERP5Type',
+                          'ERP5OOo', 'ERP5Security', 'ERP5Type',
                           'Formulator', 'ERP5Workflow',
                           'HBTreeFolder2', 'MailTemplates',
                           'PortalTransforms', 'TimerService', 'ZLDAPConnection', 
@@ -80,9 +80,7 @@ class ERP5(_ERP5):
          or test_case in ('testERP5LdapCatalog', # XXX (Ivan), until LDAP server is available this test will alway fail
                           # tests reading selenium tables from erp5.com
                           # not maintained
-                          'testAccounting_l10n_fr_m9',
-                          # Not a test
-                          'testERP5SyncMLMixin'
+                          'testAccounting_l10n_fr_m9'
          ):
         continue
       test_list.append(full_test_case)

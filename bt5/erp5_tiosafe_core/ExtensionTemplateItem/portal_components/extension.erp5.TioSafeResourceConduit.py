@@ -28,8 +28,8 @@
 ##############################################################################
 
 from Products.ERP5Type.Utils import cartesianProduct
-from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit
-from Products.ERP5SyncML.Document.SyncMLConflict import SyncMLConflict as Conflict
+from erp5.component.module.TioSafeBaseConduit import TioSafeBaseConduit
+from erp5.component.document.SyncMLConflict import SyncMLConflict as Conflict
 from lxml import etree
 from zLOG import LOG
 class TioSafeResourceConduit(TioSafeBaseConduit):
