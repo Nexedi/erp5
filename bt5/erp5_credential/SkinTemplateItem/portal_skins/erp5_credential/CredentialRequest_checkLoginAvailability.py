@@ -51,11 +51,4 @@ if credential_request_count_result[0][0] > 0:
 if not context.ERP5Site_isLocalLoginAvailable(value):
   return False
 
-if context.ERP5Site_isSingleSignOnEnable():
-  #check username is unique and valid
-  if not context.WizardTool_isPersonReferenceGloballyUnique(editor=value,
-                                                   request=REQUEST, 
-                                                   ignore_users_from_same_instance=0):
-    return False
-
 return True
