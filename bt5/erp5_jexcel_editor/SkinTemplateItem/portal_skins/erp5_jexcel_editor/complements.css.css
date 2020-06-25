@@ -28,3 +28,10 @@ input.jexcel_search {
   width: 90px;
 }
 
+td {
+  cursor: cell;
+}
+
+input.readonly {
+  cursor: not-allowed;
+}

@@ -195,6 +195,7 @@
               sheet.setValueFromCoords(x, y, value);
               formula_input.value = value;
             }
+            select.selectedIndex = 0;
           });
         };
         element.querySelector(".jexcel_toolbar").insertBefore(select, filter);
@@ -255,7 +256,14 @@
           var x = Number(cell.dataset.x);
           var y = Number(cell.dataset.y);
           formula.value = ["text", "calendar", "checkbox", "color"].includes(instance.options.columns[x].type) ? instance.getValueFromCoords(x, y) : "";
-          instance.options.columns[x].type === "text" ? formula.readOnly = false : formula.readOnly = true;
+          if (instance.options.columns[x].type === "text") {
+            formula.readOnly = false;
+            formula.classList.remove("readonly");
+          }
+          else {
+            formula.readOnly = true;
+            formula.classList.add("readonly");
+          }
         });
       };
       sheet.oneditionend = function (a, b, c, d, e) {
@@ -326,6 +334,8 @@
 
      .onEvent("contextmenu", function (ev) {
         var gadget = this;
+        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var instance = document.querySelector('.spreadsheet').jexcel[worksheet];
         if (ev.target.classList[0] === "jexcel_tab_link") {
           ev.preventDefault();
           var name = prompt("Sheet name :", ev.target.textContent);

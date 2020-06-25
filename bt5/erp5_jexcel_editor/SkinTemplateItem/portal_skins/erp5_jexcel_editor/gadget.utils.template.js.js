@@ -314,7 +314,7 @@
         array.shift();
         array.forEach(function (cell) {
           instance.setValue(getCoordsFromCell(cell), "");
-          cell.innerHTML = "";
+          cell.innerHTML = "<div class='color' style='background-color: rgb(0,0,0);'></div>";
         });
         instance.options.columns[Number(cell.dataset.x)].type = "color";
         fireDblClick(cell);
@@ -372,6 +372,7 @@
       formulas.forEach(function (value) {
         str += "<option class='formula_option' value=" + value + ">" + value + "()" + "</option>";
       });
+      str = "<option class='formula_option'>FORMULA</option>" + str;
       return str;
     });
 
