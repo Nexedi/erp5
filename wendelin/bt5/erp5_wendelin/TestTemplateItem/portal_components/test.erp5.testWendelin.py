@@ -286,11 +286,16 @@ class Test(ERP5TypeTestCase):
     """
       Test linked Data Streams
     """
-    data_stream_1 = self.portal.data_stream_module.newContent(title = "Data Stream 1")
-    data_stream_2 = self.portal.data_stream_module.newContent(title = "Data Stream 2")
-    data_stream_3 = self.portal.data_stream_module.newContent(title = "Data Stream 3")
-    data_stream_4 = self.portal.data_stream_module.newContent(title = "Data Stream 4")
-    data_stream_5 = self.portal.data_stream_module.newContent(title = "Data Stream 5")
+    data_stream_1 = self.portal.data_stream_module.newContent(title = "Data Stream 1", \
+                                                              portal_type = "Data Stream")
+    data_stream_2 = self.portal.data_stream_module.newContent(title = "Data Stream 2", \
+                                                              portal_type = "Data Stream")
+    data_stream_3 = self.portal.data_stream_module.newContent(title = "Data Stream 3", \
+                                                              portal_type = "Data Stream")
+    data_stream_4 = self.portal.data_stream_module.newContent(title = "Data Stream 4", \
+                                                              portal_type = "Data Stream")
+    data_stream_5 = self.portal.data_stream_module.newContent(title = "Data Stream 5", \
+                                                              portal_type = "Data Stream")
 
     # test nothing linked
     self.assertSameSet([], data_stream_2.getRecursiveSuccessorValueList())
