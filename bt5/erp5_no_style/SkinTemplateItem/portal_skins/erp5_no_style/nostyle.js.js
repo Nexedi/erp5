@@ -84,6 +84,7 @@
           result_dict.xhr.responseText,
           'text/html'
         );
+        document.title = dom_parser.title;
         return result_dict.style_gadget.render(
           dom_parser.body.querySelector('main').innerHTML
         );

@@ -7,12 +7,14 @@
       dummy python: request.set('is_web_mode', True);
       dummy python: request.set('ignore_layout', False);
       dummy python: request.set('editable_mode', False);
+      web_site python: here.getWebSiteValue();
       global_definitions_macros here/global_definitions/macros;">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
 <html>
   <head>
-  <base tal:attributes="href python: '%s/' % here.getWebSiteValue().absolute_url()" />
+  <base tal:attributes="href python: '%s/' % web_site.absolute_url()" />
   <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1" />
+  <title tal:content="python: here.getTranslatedTitle() or web_site.getTranslatedTitle()"></title>
   <noscript>
     <link rel="stylesheet" href="nostyle.css">
   </noscript>
@@ -22,7 +24,7 @@
   <script src="nostyle.js"></script>
   </head>
   <body>
-    <tal:block tal:content="structure python: here.getWebSiteValue().WebSite_generateNavigationHTML()"></tal:block>
+    <tal:block tal:content="structure python: web_site.WebSite_generateNavigationHTML()"></tal:block>
     <main><tal:block metal:define-slot="main"/></main>
   </body>
 </html>
