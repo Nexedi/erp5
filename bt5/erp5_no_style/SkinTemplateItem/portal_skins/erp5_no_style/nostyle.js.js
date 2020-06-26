@@ -1,6 +1,8 @@
-/*globals window, document, RSVP, rJS*/
+/*globals window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
+          loopEventListener */
 /*jslint indent: 2, maxlen: 80*/
-(function () {
+(function (window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
+          loopEventListener) {
   "use strict";
 
   // XXX Copy/paste from renderjs
@@ -43,27 +45,56 @@
     return new RSVP.Promise(resolver, canceller);
   }
 
+  function removeHash(url) {
+    var index = url.indexOf('#');
+    if (index > 0) {
+      url = url.substring(0, index);
+    }
+    return url;
+  }
+
+  function scrollToHash(hash) {
+    var scroll_element = null;
+
+    if (hash) {
+      hash = hash.split('#', 2)[1];
+      if (hash === undefined) {
+        hash = "";
+      }
+      if (hash) {
+        scroll_element = document.querySelector(hash);
+      }
+    }
+
+    if (scroll_element === null) {
+      window.scrollTo(0, 0);
+    } else {
+      scroll_element.scrollIntoView(true);
+    }
+
+  }
+
+  function renderPage(gadget, page_url) {
+    return new RSVP.Queue(RSVP.hash({
+      xhr: ajax(page_url),
+      style_gadget: gadget.getDeclaredGadget('renderer')
+    }))
+      .push(function (result_dict) {
+        var dom_parser = (new DOMParser()).parseFromString(
+          result_dict.xhr.responseText,
+          'text/html'
+        );
+        return result_dict.style_gadget.render(
+          dom_parser.body.querySelector('main').innerHTML
+        );
+      });
+  }
 
   function listenURLChange() {
     var gadget = this;
 
-    function renderPage(page_url) {
-      return new RSVP.Queue(RSVP.hash({
-        xhr: ajax(page_url),
-        style_gadget: gadget.getDeclaredGadget('renderer')
-      }))
-        .push(function (result_dict) {
-          var dom_parser = (new DOMParser()).parseFromString(result_dict.xhr.responseText,
-                                                             'text/html');
-          return result_dict.style_gadget.render(dom_parser.body.querySelector('main').innerHTML);
-        })
-        .push(function () {
-          window.scrollTo(0, 0);
-        });
-    }
-
     function handlePopState() {
-      return renderPage(window.location.href);
+      return renderPage(gadget, window.location.href);
     }
 
     function handleClick(evt) {
@@ -90,9 +121,23 @@
         return;
       }
 
+      if (link_url.hash) {
+        // If new link has an hash, check if the path/query parts are identical
+        // if so, do not refresh the content and
+        // let browser scroll to the correct element
+        if (removeHash(link_url.href) === removeHash(window.location.href)) {
+          return;
+        }
+      }
+
       evt.preventDefault();
-      return renderPage(target_element.href)
+      return renderPage(gadget, target_element.href)
         .push(function () {
+          scrollToHash(link_url.hash);
+
+          // Important: pushState must be called AFTER the page rendering
+          // to ensure popstate listener is correctly working
+          // when the user will click on back/forward browser buttons
           window.history.pushState(null, null, target_element.href);
         }, function () {
           // Implement support for managed error
@@ -104,7 +149,8 @@
 
     return RSVP.all([
       loopEventListener(window, 'popstate', false, handlePopState, false),
-      loopEventListener(document.documentElement, 'click', false, handleClick, false),
+      loopEventListener(document.documentElement, 'click', false, handleClick,
+                        false)
     ]);
   }
 
@@ -138,10 +184,12 @@
 
           body.appendChild(style_gadget.element);
           gadget.element.hidden = false;
+          scrollToHash(window.location.hash);
         }, function (error) {
           gadget.element.hidden = false;
           throw error;
         });
     });
 
-}());
+}(window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
+  loopEventListener));
