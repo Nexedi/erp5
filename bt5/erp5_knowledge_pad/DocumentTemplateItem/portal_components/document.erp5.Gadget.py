@@ -30,18 +30,17 @@ from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 
 class Gadget(XMLObject):
-    """
+  """
       An Gadget object holds a template information for an ERP5 Gadget (part of ERP5 UI).
-    """
+  """
+  meta_type = 'ERP5 Gadget'
+  portal_type = 'Gadget'
 
-    meta_type = 'ERP5 Gadget'
-    portal_type = 'Gadget'
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.DefaultImage
-                      , PropertySheet.Gadget
-                      )
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.DefaultImage
+                    , PropertySheet.Gadget
+                    )
