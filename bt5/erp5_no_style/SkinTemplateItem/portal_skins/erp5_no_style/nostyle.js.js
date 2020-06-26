@@ -180,7 +180,7 @@
       while (body.firstChild) {
         body.firstChild.remove();
       }
-      return gadget.declareGadget('nostyle_syna.html', {scope: 'renderer'})
+      return gadget.declareGadget('nostyle_fdl.html', {scope: 'renderer'})
         .push(function (result) {
           style_gadget = result;
           return style_gadget.render(gadget.main_element.innerHTML);
