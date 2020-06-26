@@ -139,7 +139,8 @@ def createServer(application, logger, **kw):
     server = create_server(
         TransLogger(application, logger=logger),
         trusted_proxy='*',
-        trusted_proxy_headers=('x-forwarded-for',),
+        # We handle X-Forwarded-For by ourselves. See ERP5Type/patches/WSGITask.py.
+        # trusted_proxy_headers=('x-forwarded-for',),
         clear_untrusted_proxy_headers=True,
         **kw
     )
