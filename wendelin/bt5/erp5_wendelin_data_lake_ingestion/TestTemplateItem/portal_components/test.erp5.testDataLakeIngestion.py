@@ -131,7 +131,7 @@ class TestDataIngestion(SecurityTestCase):
 
     # check Data Set is validated and Data Stream is published
     self.assertEqual('validated', data_set.getValidationState())
-    self.assertEqual('published', data_stream.getValidationState())
+    self.assertEqual('validated', data_stream.getValidationState())
 
     return data_set, [data_stream]
 
@@ -182,12 +182,9 @@ class TestDataIngestion(SecurityTestCase):
     data_stream_list = self.getDataStreamChunkList(ingestion_reference)
     #one data stream per chunk
     self.assertEqual(len(data_stream_list), 4)
-    #last datastream (EOF) published, the rest validated
-    for stream in data_stream_list:
-      if stream.getId().endswith(self.EOF.replace(self.REFERENCE_SEPARATOR, "")):
-        self.assertEqual('published', stream.getValidationState())
-      else:
-        self.assertEqual('validated', stream.getValidationState())
+    #all data streams are validated
+    self.assertSameSet(['validated' for x in data_stream_list],
+                       [x.getValidationState() for x in data_stream_list])
 
   def test_03_DefaultWendelinConfigurationExistency(self):
     """
@@ -211,6 +208,13 @@ class TestDataIngestion(SecurityTestCase):
 
     # check data set and all Data Streams states
     self.assertEqual('validated', data_set.getValidationState())
+    self.assertSameSet(['validated' for x in data_stream_list],
+                       [x.getValidationState() for x in data_stream_list])
+
+    # publish data set and have all Data Streams publsihed automatically
+    data_set.publish()
+    self.tic()
+    self.assertEqual('published', data_set.getValidationState())
     self.assertSameSet(['published' for x in data_stream_list],
                        [x.getValidationState() for x in data_stream_list])
 
