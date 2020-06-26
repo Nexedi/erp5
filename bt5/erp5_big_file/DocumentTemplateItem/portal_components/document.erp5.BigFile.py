@@ -88,7 +88,7 @@ class BigFile(File):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getData')
-  def getData(self):
+  def getData(self, default=None):
     """Read the full btree
     """
     btree = self._baseGetData()
@@ -103,7 +103,7 @@ class BigFile(File):
     """
     self._setContentMd5(None)
 
-  def _read_data(self, file, data=None, serialize=True):
+  def _read_data(self, file, data=None, serialize=True): # pylint: disable=redefined-builtin,arguments-differ
 
     # We might need to make this value configurable. It is important to
     # consider the max quantity of object used in the cache. With a default
@@ -138,11 +138,11 @@ class BigFile(File):
     offset = len(btree)
 
     while pos < end:
-      next = pos + n
-      if next > end:
-        next = end
+      next_ = pos + n
+      if next_ > end:
+        next_ = end
 
-      btree.write(read(next-pos), offset+pos)
+      btree.write(read(next_-pos), offset+pos)
       pos = file.tell()
 
     if serialize:
@@ -160,15 +160,15 @@ class BigFile(File):
   def _range_request_handler(self, REQUEST, RESPONSE):
     # HTTP Range header handling: return True if we've served a range
     # chunk out of our data.
-    range = REQUEST.get_header('Range', None)
+    range_ = REQUEST.get_header('Range', None)
     request_range = REQUEST.get_header('Request-Range', None)
     if request_range is not None:
       # Netscape 2 through 4 and MSIE 3 implement a draft version
       # Later on, we need to serve a different mime-type as well.
-      range = request_range
+      range_ = request_range
     if_range = REQUEST.get_header('If-Range', None)
-    if range is not None:
-      ranges = HTTPRangeSupport.parseRange(range)
+    if range_ is not None:
+      ranges = HTTPRangeSupport.parseRange(range_)
 
       data = self._baseGetData()
 
@@ -186,11 +186,11 @@ class BigFile(File):
           # Date
           date = if_range.split( ';')[0]
           try: mod_since=long(DateTime(date).timeTime())
-          except: mod_since=None
+          except Exception: mod_since=None
           if mod_since is not None:
             last_mod = self._data_mtime()
             if last_mod is None:
-                last_mod = 0
+              last_mod = 0
             last_mod = long(last_mod)
             if last_mod > mod_since:
               # Modified, so send a normal response. We delete
@@ -286,7 +286,7 @@ class BigFile(File):
           return True
 
   security.declareProtected(Permissions.View, 'index_html')
-  def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw):
+  def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw): # pylint: disable=redefined-builtin
     """
       Support streaming
     """
@@ -318,7 +318,7 @@ class BigFile(File):
       inline = False
     if not inline:
       # need to return it as attachment
-      filename = self.getStandardFilename(format=format)
+      filename = self.getStandardFilename(format=format) # pylint: disable=unused-variable
       RESPONSE.setHeader('Accept-Ranges', 'bytes')
 
 
@@ -337,9 +337,9 @@ class BigFile(File):
     self.dav__init(REQUEST, RESPONSE)
     self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
 
-    type=REQUEST.get_header('content-type', None)
+    type_=REQUEST.get_header('content-type', None)
 
-    file=REQUEST['BODYFILE']
+    file_=REQUEST['BODYFILE']
 
     content_range = REQUEST.get_header('Content-Range', None)
     if content_range is None:
@@ -347,10 +347,10 @@ class BigFile(File):
       self._baseSetData(None)
     else:
       current_size = int(self.getSize())
-      query_range = re.compile('bytes \*/\*')
-      append_range = re.compile('bytes (?P<first_byte>[0-9]+)-' \
-                                '(?P<last_byte>[0-9]+)/' \
-                                '(?P<total_content_length>[0-9]+)')
+      query_range = re.compile(r'bytes \*/\*')
+      append_range = re.compile(r'bytes (?P<first_byte>[0-9]+)-' \
+                                 '(?P<last_byte>[0-9]+)/' \
+                                 '(?P<total_content_length>[0-9]+)')
       if query_range.match(content_range):
         RESPONSE.setHeader('X-Explanation', 'Resume incomplete')
         RESPONSE.setHeader('Range', 'bytes 0-%s' % (current_size-1))
@@ -383,7 +383,7 @@ class BigFile(File):
         RESPONSE.setStatus(400) # Partial content
         return RESPONSE
 
-    self._appendData(file, content_type=type)
+    self._appendData(file_, content_type=type_)
 
     RESPONSE.setStatus(204)
     return RESPONSE
