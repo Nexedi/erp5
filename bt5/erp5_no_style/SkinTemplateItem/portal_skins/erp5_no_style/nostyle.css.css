@@ -1,10 +1,8 @@
 body {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-raws: repeat(3, 1fr);
 }
 body > nav#sitemap {
-  grid-column-start: 1;
-  grid-column-end: 4;
   grid-row: 1;
   background-color: #DDD;
   display: flex;
@@ -33,16 +31,12 @@ body > nav#sitemap a:not(:first-child) {
   padding: 0 1em;
 }
 body main {
-  grid-column-start: 1;
-  grid-column-end: 4;
   grid-row: 2;
 }
 body main fieldset {
   border: none;
 }
 body > nav#language {
-  grid-column-start: 1;
-  grid-column-end: 4;
   grid-row: 3;
   background-color: #DDD;
   display: flex;
