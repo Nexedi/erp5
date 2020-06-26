@@ -1,8 +1,8 @@
 /*globals window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
-          loopEventListener */
+          loopEventListener, history */
 /*jslint indent: 2, maxlen: 80*/
 (function (window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
-          loopEventListener) {
+          loopEventListener, history) {
   "use strict";
 
   // XXX Copy/paste from renderjs
@@ -96,6 +96,11 @@
   function listenURLChange() {
     var gadget = this;
 
+    // prevent automatic page location restoration
+    if (history.scrollRestoration) {
+      history.scrollRestoration = 'manual';
+    }
+
     function handlePopState() {
       return renderPage(gadget, window.location.href, window.location.hash);
     }
@@ -139,7 +144,7 @@
           // Important: pushState must be called AFTER the page rendering
           // to ensure popstate listener is correctly working
           // when the user will click on back/forward browser buttons
-          window.history.pushState(null, null, target_element.href);
+          history.pushState(null, null, target_element.href);
         }, function () {
           // Implement support for managed error
           // (like URL is not an HTML document parsable)
@@ -193,4 +198,4 @@
     });
 
 }(window, document, RSVP, rJS, XMLHttpRequest, DOMParser, URL,
-  loopEventListener));
+  loopEventListener, history));
