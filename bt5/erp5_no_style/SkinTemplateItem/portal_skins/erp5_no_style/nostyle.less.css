@@ -43,6 +43,15 @@ body {
 
     fieldset {
       border: none;
+      > div {
+        display: flex;
+        flex-flow: row nowrap;
+        > label {
+          margin-right: 1em;
+          font-weight: bold;
+          min-width: 10%;
+        }
+      }
     }
   }
 
