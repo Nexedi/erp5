@@ -275,7 +275,7 @@
   <td>//input[@title='Title']</td>
   <td>${cloned_title}</td>
 </tr>
-<!--<tr>
+<tr>
   <td>verifyValue</td>
   <td>//input[@title='Reference']</td>
   <td>${reference}</td>
@@ -284,7 +284,7 @@
   <td>verifyValue</td>
   <td>//textarea[@title='Description']</td>
   <td>${description}</td>
-</tr>-->
+</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//div[@class='spreadsheet']</td>
