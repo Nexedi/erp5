@@ -90,6 +90,9 @@ class ERP5(_ERP5):
                           'testERP5SyncMLMixin'
          ):
         continue
+      # XXX temporary change to get testERP5Type result only.
+      if not test_case.startswith('testXForwardedFor'):
+        continue
       test_list.append(full_test_case)
     return test_list
 
