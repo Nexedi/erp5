@@ -36,6 +36,15 @@ body main {
 body main fieldset {
   border: none;
 }
+body main fieldset > div {
+  display: flex;
+  flex-flow: row nowrap;
+}
+body main fieldset > div > label {
+  margin-right: 1em;
+  font-weight: bold;
+  min-width: 10%;
+}
 body > nav#language {
   grid-row: 3;
   background-color: #DDD;
