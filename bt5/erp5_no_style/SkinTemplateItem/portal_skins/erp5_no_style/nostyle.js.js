@@ -74,7 +74,7 @@
 
   }
 
-  function renderPage(gadget, page_url) {
+  function renderPage(gadget, page_url, hash) {
     return new RSVP.Queue(RSVP.hash({
       xhr: ajax(page_url),
       style_gadget: gadget.getDeclaredGadget('renderer')
@@ -87,6 +87,9 @@
         return result_dict.style_gadget.render(
           dom_parser.body.querySelector('main').innerHTML
         );
+      })
+      .push(function () {
+        return scrollToHash(hash);
       });
   }
 
@@ -94,7 +97,7 @@
     var gadget = this;
 
     function handlePopState() {
-      return renderPage(gadget, window.location.href);
+      return renderPage(gadget, window.location.href, window.location.hash);
     }
 
     function handleClick(evt) {
@@ -131,10 +134,8 @@
       }
 
       evt.preventDefault();
-      return renderPage(gadget, target_element.href)
+      return renderPage(gadget, target_element.href, link_url.hash)
         .push(function () {
-          scrollToHash(link_url.hash);
-
           // Important: pushState must be called AFTER the page rendering
           // to ensure popstate listener is correctly working
           // when the user will click on back/forward browser buttons
