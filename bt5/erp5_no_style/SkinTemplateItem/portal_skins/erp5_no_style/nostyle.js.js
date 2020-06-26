@@ -47,36 +47,23 @@
   function listenURLChange() {
     var gadget = this;
 
-    function renderPage() {
-      return new RSVP.Queue(ajax(window.location.href))
-        .push(function (xhr) {
-          console.log(xhr);
-          var doc = (new DOMParser()).parseFromString(xhr.responseText,
-                                                      'text/html');
-          return gadget.getDeclaredGadget('renderer')
-            .push(function (style_gadget) {
-              console.log(doc.documentElement.outerHTML);
-              console.log(doc.body);
-              return style_gadget.render(doc.body.querySelector('main').innerHTML);
-            });
-
-//          console.log('reload page ' + window.location.href);
-//          window.location.reload();
-
+    function renderPage(page_url) {
+      return new RSVP.Queue(RSVP.hash({
+        xhr: ajax(page_url),
+        style_gadget: gadget.getDeclaredGadget('renderer')
+      }))
+        .push(function (result_dict) {
+          var dom_parser = (new DOMParser()).parseFromString(result_dict.xhr.responseText,
+                                                             'text/html');
+          return result_dict.style_gadget.render(dom_parser.body.querySelector('main').innerHTML);
+        })
+        .push(function () {
+          window.scrollTo(0, 0);
         });
     }
 
     function handlePopState() {
-      // console.log(evt);
-      // alert('couscous');
-/*
-      return new RSVP.Queue()
-        .push(function () {
-          return extractHashAndDispatch(evt);
-        });
-*/
-      console.log('pop state reload');
-      return renderPage();
+      return renderPage(window.location.href);
     }
 
     function handleClick(evt) {
@@ -104,27 +91,21 @@
       }
 
       evt.preventDefault();
-      window.history.pushState(null, null, target_element.href);
-      console.log('push state reload');
-      return renderPage();
+      return renderPage(target_element.href)
+        .push(function () {
+          window.history.pushState(null, null, target_element.href);
+        }, function () {
+          // Implement support for managed error
+          // (like URL is not an HTML document parsable)
+          // and redirect in such case
+          window.location = target_element.href;
+        });
     }
 
-    var result = RSVP.all([
+    return RSVP.all([
       loopEventListener(window, 'popstate', false, handlePopState, false),
       loopEventListener(document.documentElement, 'click', false, handleClick, false),
     ]);
-/*
-    window.history.onpushstate(function () {
-      alert('nutnut');
-    });
-*/
-/*
-      event = document.createEvent("Event");
-    event.initEvent('hashchange', true, true);
-    event.newURL = window.location.toString();
-    window.dispatchEvent(event);
-*/
-    return result;
   }
 
   rJS(window)
