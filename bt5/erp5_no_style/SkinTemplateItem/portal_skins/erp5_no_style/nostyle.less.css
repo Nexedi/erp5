@@ -30,20 +30,15 @@
 
 body {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); 
+  grid-template-raws: repeat(3, 1fr); 
 
   > nav#sitemap {
-    // First row, all columns
-    grid-column-start: 1; 
-    grid-column-end: 4;
     grid-row: 1;
 
     .flattenNav();
   }
 
   main {
-    grid-column-start: 1; 
-    grid-column-end: 4; 
     grid-row: 2;
 
     fieldset {
@@ -51,9 +46,7 @@ body {
     }
   }
 
-  > nav#language { 
-    grid-column-start: 1; 
-    grid-column-end: 4; 
+  > nav#language {
     grid-row: 3;
 
     .flattenNav();
