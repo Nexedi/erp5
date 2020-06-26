@@ -69,6 +69,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>external_validator</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -133,7 +137,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.getConfigurationPropertyDict().get(\'stop_date\', here.getDeliveryValue().getDeliveryValue().getStopDate())</string> </value>
+            <value> <string>python:here.getConfigurationPropertyDict().get(\'stop_date\', here.getDeliveryValue().getDeliveryValue().getStopDate()+1)</string> </value>
         </item>
       </dictionary>
     </pickle>
