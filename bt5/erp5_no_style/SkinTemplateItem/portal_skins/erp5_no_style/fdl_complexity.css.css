@@ -437,7 +437,7 @@ body {
 }
 
 .fdl-landing-background {
-	background: url("FDL-Website.Background.Image.Chang.Qing?format=") no-repeat center center;
+	/* background: url("FDL-Website.Background.Image.Chang.Qing?format=") no-repeat center center; */
 	min-height: 50em;
 	background-size: cover;
 	background-color: #fff;
@@ -1334,11 +1334,11 @@ span:first-of-type .material-icons {
 		vertical-align: top;
 	}
 }
-
+/*
 .rjs-card .mdl-card__title-text {
 	color: #eff1f3;
 }
-
+*/
 .rjs-card .mdl-card__title-text {
 	position: absolute;
 }

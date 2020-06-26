@@ -107,12 +107,11 @@
     }
 
     function handleClick(evt) {
-      var target_element = evt.target,
-        target_tag = target_element.tagName,
+      var target_element = evt.target.closest('a'),
         base_uri = document.baseURI,
         link_url;
 
-      if (target_tag !== 'A') {
+      if (!target_element) {
         // Only handle link
         return;
       }
@@ -146,7 +145,7 @@
           // to ensure popstate listener is correctly working
           // when the user will click on back/forward browser buttons
           history.pushState(null, null, target_element.href);
-        }, function () {
+        }, function (error) {
           // Implement support for managed error
           // (like URL is not an HTML document parsable)
           // and redirect in such case
@@ -156,7 +155,7 @@
 
     return RSVP.all([
       loopEventListener(window, 'popstate', false, handlePopState, false),
-      loopEventListener(document.documentElement, 'click', false, handleClick,
+      loopEventListener(gadget.element, 'click', false, handleClick,
                         false)
     ]);
   }
