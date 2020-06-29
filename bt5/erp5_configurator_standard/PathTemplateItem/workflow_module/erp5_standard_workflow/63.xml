@@ -35,6 +35,10 @@
             <value> <string>63</string> </value>
         </item>
         <item>
+            <key> <string>int_index</string> </key>
+            <value> <int>12</int> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>State</string> </value>
         </item>
