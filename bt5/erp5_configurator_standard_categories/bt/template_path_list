@@ -861,6 +861,10 @@ portal_categories/social_form/llp
 portal_categories/social_form/lp
 portal_categories/social_form/npo
 portal_categories/social_form/proprietorship
+portal_categories/social_title/doctor
+portal_categories/social_title/madam
+portal_categories/social_title/miss
+portal_categories/social_title/mister
 portal_categories/trade_phase/payroll
 portal_categories/trade_phase/payroll/accounting
 portal_categories/trade_phase/payroll/delivery
