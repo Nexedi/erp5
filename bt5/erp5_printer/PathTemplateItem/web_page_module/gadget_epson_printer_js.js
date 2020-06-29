@@ -58,6 +58,7 @@
           //example: sale_order_module/356, total price is 30464.8, but return 30464.79999999999
           data_dict.total_price_with_discount = Math.round(data_dict.total_price_with_discount * 100) / 100;
           data_dict.total_price = Math.round(data_dict.total_price * 100) / 100;
+          data_dict.auto_print = options.auto_print;
 
 
           gadget.element.querySelector('.container').innerHTML = epson_print_template(data_dict);

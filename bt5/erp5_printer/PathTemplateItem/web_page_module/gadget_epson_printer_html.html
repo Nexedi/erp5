@@ -168,14 +168,15 @@
     <div class="footer_button">
 
         <button id="print_button"><span>{{Print_by_Epson}}</span></button>
+        {{#if auto_print}}
+          <button class="confirm_return" type="submit" value="SaleOrder_confirmAndReturn">
+             <span>{{Confirm_Order_and_Return}}</span>
+          </button>
 
-        <button class="confirm_return" type="submit" value="SaleOrder_confirmAndReturn">
-           <span>{{Confirm_Order_and_Return}}</span>
-        </button>
-
-        <button class="cancel_return" type="submit" value="SaleOrder_cancelAndReturn">
-          <span>{{Cancel_Order_and_Return}}</span>
-        </button>
+          <button class="cancel_return" type="submit" value="SaleOrder_cancelAndReturn">
+            <span>{{Cancel_Order_and_Return}}</span>
+          </button>
+       {{/if}}
     </div>
       <hr>
       <div id="js_error_log"> </div>

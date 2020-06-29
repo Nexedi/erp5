@@ -253,7 +253,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:{"jio_key": context.getRelativeUrl(), "data_dict": context.Order_getODTDataDict(), "printer_url": context.SaleOrder_getPrinterUrl()}</string> </value>
+            <value> <string>python:{"jio_key": context.getRelativeUrl(), "data_dict": context.Order_getODTDataDict(), "printer_url": context.SaleOrder_getPrinterUrl(), "auto_print": context.REQUEST.get("auto_print", 0)}</string> </value>
         </item>
       </dictionary>
     </pickle>
