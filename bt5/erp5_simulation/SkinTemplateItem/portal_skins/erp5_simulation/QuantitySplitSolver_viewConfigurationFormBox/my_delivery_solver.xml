@@ -12,6 +12,7 @@
               <list>
                 <string>default</string>
                 <string>external_validator</string>
+                <string>first_item</string>
                 <string>items</string>
                 <string>title</string>
               </list>
@@ -111,6 +112,10 @@
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_radio_field</string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
