@@ -47,7 +47,7 @@
       }
       return gadget.jio_post(document)
         .push(function (jio_key) {
-          return_submit_dict.notify.message = "Data Updated";
+          return_submit_dict.notify.message = "Clone Document Created";
           return_submit_dict.notify.status = "success";
           return_submit_dict.redirect.options = {
             jio_key: jio_key,
