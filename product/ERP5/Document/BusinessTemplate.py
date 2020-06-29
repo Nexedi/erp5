@@ -6647,10 +6647,21 @@ Business Template is a set of definitions, such as skins, portal types and categ
           continue
 
         seen_module_set = set()
-        # 'Module Component': Only handle Product top-level modules
-        for submodule_filepath in glob.iglob(product_obj.__path__[0] + '/*.py'):
+        # Module Components
+        for submodule_filepath in (glob.glob(product_obj.__path__[0] + '/*.py') +
+                                   glob.glob(product_obj.__path__[0] + '/*/*.py')):
+          directory = submodule_filepath.rsplit('/', 2)[-2]
+          if directory in ('Document', 'Core', 'interfaces', 'mixin', 'Tool',
+                           'tests', 'PropertySheet', 'patches', 'Extensions',
+                           'bin', 'scripts', 'help', 'Accessor', 'Constraint',
+                           'docs', 'dynamic'):
+            continue
+
           submodule_name = os.path.splitext(os.path.basename(submodule_filepath))[0]
-          source_reference = "%s.%s" % (product_obj.__name__, submodule_name)
+          if directory != product_name:
+            source_reference = "%s.%s.%s" % (product_obj.__name__, directory, submodule_name)
+          else:
+            source_reference = "%s.%s" % (product_obj.__name__, submodule_name)
           if (submodule_name not in ('__init__', 'Permissions') and
               source_reference not in self._migrate_exception_set and
               source_reference not in seen_module_set):
