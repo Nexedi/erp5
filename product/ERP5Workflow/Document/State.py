@@ -58,6 +58,7 @@ class State(XMLObject):
              PropertySheet.XMLObject,
              PropertySheet.CategoryCore,
              PropertySheet.DublinCore,
+             PropertySheet.SortIndex,
              PropertySheet.State,)
 
   def getAvailableTransitionList(self, document):
