@@ -5590,7 +5590,7 @@ msgstr "Fichiers et Images"
 msgid "Files commited successfully."
 msgstr "Fichiers commités avec succès"
 
-msgid "Fill in detailled information for each ERP5 user."
+msgid "Fill in detailed information for each ERP5 user."
 msgstr "Renseignez les informations pour chaque utilisateur."
 
 msgid "Fill your login and new password."
