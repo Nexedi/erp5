@@ -314,9 +314,10 @@
         array.shift();
         array.forEach(function (cell) {
           instance.setValue(getCoordsFromCell(cell), "");
-          cell.innerHTML = "<div class='color' style='background-color: rgb(0,0,0);'></div>";
+          cell.innerHTML = "";
         });
         instance.options.columns[Number(cell.dataset.x)].type = "color";
+        instance.options.columns[Number(cell.dataset.x)].render = "square";
         fireDblClick(cell);
       }
     }
