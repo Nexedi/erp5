@@ -53,6 +53,7 @@ class Transition(XMLObject):
              PropertySheet.XMLObject,
              PropertySheet.CategoryCore,
              PropertySheet.DublinCore,
+             PropertySheet.SortIndex,
              PropertySheet.Transition,
   )
 
