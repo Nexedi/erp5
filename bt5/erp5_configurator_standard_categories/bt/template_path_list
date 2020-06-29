@@ -885,9 +885,12 @@ portal_categories/trade_phase/production/transforming
 portal_categories/trade_phase/trade
 portal_categories/trade_phase/trade/accounting
 portal_categories/trade_phase/trade/delivery
+portal_categories/trade_phase/trade/discount
 portal_categories/trade_phase/trade/invoicing
+portal_categories/trade_phase/trade/order
 portal_categories/trade_phase/trade/payment
 portal_categories/trade_phase/trade/prepayment
+portal_categories/trade_phase/trade/tax
 portal_categories/trade_state/trade
 portal_categories/trade_state/trade/accounted
 portal_categories/trade_state/trade/delivered
