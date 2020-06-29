@@ -29,7 +29,6 @@
 
 
 import os
-from unittest import expectedFailure
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.runUnitTest import tests_home
@@ -870,20 +869,28 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(currency.getRelativeUrl(),
                       purchase_trade_condition.getPriceCurrency())
 
-  @expectedFailure
   def stepCheckQuantityConversion(self, sequence=None, sequence_list=None, **kw):
+    """Check that standard unit can be converted between each other,
+    ie 1000 grams == 1 kilogram
+    """
     resource = self.portal.product_module.newContent(
                       portal_type='Product',
                       quantity_unit_list=('mass/gram',
                                           'mass/kilogram'),)
     node = self.portal.organisation_module.newContent(
                       portal_type='Organisation')
+    purchase_trade_condition_value_list = self.getBusinessConfigurationObjectList(
+        sequence['business_configuration'],
+        'Purchase Trade Condition')
+    self.assertNotEqual(len(purchase_trade_condition_value_list), 0)
+    purchase_trade_condition_value = purchase_trade_condition_value_list[0]
     delivery = self.portal.purchase_packing_list_module.newContent(
                       portal_type='Purchase Packing List',
                       start_date='2010-01-26',
                       price_currency='currency_module/EUR',
                       destination_value=node,
-                      destination_section_value=node)
+                      destination_section_value=node,
+                      specialise_value=purchase_trade_condition_value)
     delivery.newContent(portal_type='Purchase Packing List Line',
                         resource_value=resource,
                         quantity=10,
@@ -907,6 +914,60 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(3.01,
         self.portal.portal_simulation.getCurrentInventory(
           quantity_unit='mass/kilogram',
+          resource_uid=resource.getUid(),
+          node_uid=node.getUid()))
+
+  def stepCheckMeasureConversion(self, sequence=None, sequence_list=None, **kw):
+    resource = self.portal.product_module.newContent(
+        portal_type='Product',
+        quantity_unit_value=self.portal.portal_categories.quantity_unit.unit.piece)
+    resource.newContent(
+        portal_type='Measure',
+        metric_type_value=self.portal.portal_categories.metric_type.mass,
+        quantity_unit_value=self.portal.portal_categories.quantity_unit.mass.kilogram,
+        quantity=3,
+    )
+    node = self.portal.organisation_module.newContent(portal_type='Organisation')
+    purchase_trade_condition_value_list = self.getBusinessConfigurationObjectList(
+        sequence['business_configuration'],
+        'Purchase Trade Condition')
+    self.assertNotEqual(len(purchase_trade_condition_value_list), 0)
+    purchase_trade_condition_value = purchase_trade_condition_value_list[0]
+    delivery = self.portal.purchase_packing_list_module.newContent(
+        portal_type='Purchase Packing List',
+        start_date='2010-01-26',
+        price_currency='currency_module/EUR',
+        destination_value=node,
+        destination_section_value=node,
+        specialise_value=purchase_trade_condition_value)
+    delivery.newContent(
+        portal_type='Purchase Packing List Line',
+        resource_value=resource,
+        quantity=5)
+    delivery.confirm()
+    delivery.start()
+    delivery.stop()
+    self.tic()
+
+    self.assertEqual(5,
+        self.portal.portal_simulation.getCurrentInventory(
+          resource_uid=resource.getUid(),
+          node_uid=node.getUid()))
+
+    self.assertEqual(5,
+        self.portal.portal_simulation.getCurrentInventory(
+          quantity_unit='unit/piece',
+          resource_uid=resource.getUid(),
+          node_uid=node.getUid()))
+
+    self.assertEqual(15,
+        self.portal.portal_simulation.getCurrentInventory(
+          quantity_unit='mass/kilogram',
+          resource_uid=resource.getUid(),
+          node_uid=node.getUid()))
+    self.assertEqual(15000,
+        self.portal.portal_simulation.getCurrentInventory(
+          quantity_unit='mass/gram',
           resource_uid=resource.getUid(),
           node_uid=node.getUid()))
 
@@ -1380,6 +1441,9 @@ class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
       stepStartConfigurationInstallation
       stepTic
       stepCheckInstanceIsConfigured%(country)s
+      stepTic
+      stepCheckQuantityConversion
+      stepCheckMeasureConversion
       """ + \
       StandardConfigurationMixin.AFTER_CONFIGURATION_SEQUENCE + \
       StandardConfigurationMixin.SECURITY_CONFIGURATION_SEQUENCE
