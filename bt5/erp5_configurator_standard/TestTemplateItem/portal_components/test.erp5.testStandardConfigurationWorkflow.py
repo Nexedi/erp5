@@ -1162,7 +1162,7 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
 
   def afterSetUp(self):
     TestLiveConfiguratorWorkflowMixin.afterSetUp(self)
-    categories_file_id = 'standard_category.ods'
+    categories_file_id = 'consulting_configurator_sample_categories.ods'
     self.categories_file_path, self.categories_file_upload = \
                                            self.uploadFile(categories_file_id)
 
