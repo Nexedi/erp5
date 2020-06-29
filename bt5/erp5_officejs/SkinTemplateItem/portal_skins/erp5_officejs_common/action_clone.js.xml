@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>action_texteditor_clone.js</string> </value>
+            <value> <string>action_clone.js</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
