@@ -32,8 +32,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.Document.Path import Path
+from erp5.component.document.Amount import Amount
+from erp5.component.document.Path import Path
 from Products.ERP5Type.Utils import convertToUpperCase
 
 

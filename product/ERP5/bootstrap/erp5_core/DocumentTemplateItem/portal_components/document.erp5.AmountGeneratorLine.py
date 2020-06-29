@@ -30,8 +30,8 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.Document.MappedValue import MappedValue
+from erp5.component.document.Amount import Amount
+from erp5.component.document.MappedValue import MappedValue
 from erp5.component.mixin.AmountGeneratorMixin import AmountGeneratorMixin
 from erp5.component.interface.IAmountGeneratorLine import IAmountGeneratorLine
 

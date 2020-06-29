@@ -37,7 +37,7 @@ from erp5.component.interface.IImmobilisationItem import IImmobilisationItem
 from Products.ERP5Type.DateUtils import addToDate, getClosestDate, roundDate
 from Products.ERP5Type.DateUtils import getRoundedMonthBetween, millis
 from Products.ERP5Type.DateUtils import getAccountableYearFraction
-from Products.ERP5.Document.Amount import Amount
+from erp5.component.document.Amount import Amount
 from erp5.component.document.Item import Item
 from Products.CMFCore.utils import getToolByName
 from erp5.component.document.ImmobilisationMovement import (

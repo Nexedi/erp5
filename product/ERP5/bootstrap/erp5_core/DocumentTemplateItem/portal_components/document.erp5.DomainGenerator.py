@@ -35,36 +35,36 @@ from Products.ERP5Type.XMLObject import XMLObject
 ## # Hand made temp object (rather than ERP5Type generated) because we need
 ## # it now
 class DomainGenerator(XMLObject):
+  """
+  This class defines a predicate as well as all necessary
+  information to generate subdomains.
+
+  Instances are stored in RAM as temp objects
+
+  Generator API - DRAFT
+  """
+  meta_type='ERP5 Domain Generator'
+  portal_type='Domain Generator'
+  isPortalContent = ConstantGetter('isPortalContent', value=False)
+  icon = None
+
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getDomainGeneratorList' )
+  def getDomainGeneratorList(self, depth=0, klass=None, script='', parent=None):
     """
-    This class defines a predicate as well as all necessary
-    information to generate subdomains.
-
-    Instances are stored in RAM as temp objects
-
-    Generator API - DRAFT
     """
-    meta_type='ERP5 Domain Generator'
-    portal_type='Domain Generator'
-    isPortalContent = ConstantGetter('isPortalContent', value=False)
-    icon = None
-
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    security.declareProtected( Permissions.AccessContentsInformation, 'getDomainGeneratorList' )
-    def getDomainGeneratorList(self, depth=0, klass=None, script='', parent=None):
-        """
-        """
-        # check parameters
-        if script == '':
-            return []
-        if parent is None:
-            parent = self
-        if klass is None:
-            # in casre we are not a temp object
-            klass = self
-        # We call a script which builds for us a list DomainGenerator instances
-        # We need a way to know how deep we are in the domain generation
-        # to prevent infinite recursion
-        method = getattr(klass, script)
-        return method(depth=depth, parent=parent)
+    # check parameters
+    if script == '':
+      return []
+    if parent is None:
+      parent = self
+    if klass is None:
+      # in casre we are not a temp object
+      klass = self
+    # We call a script which builds for us a list DomainGenerator instances
+    # We need a way to know how deep we are in the domain generation
+    # to prevent infinite recursion
+    method = getattr(klass, script)
+    return method(depth=depth, parent=parent)

@@ -35,7 +35,7 @@ from Acquisition import aq_base, Implicit
 from Products.ERP5.GeneratedAmountList import GeneratedAmountList
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5.Document.MappedValue import MappedValue
+from erp5.component.document.MappedValue import MappedValue
 from erp5.component.interface.IAmountGenerator import IAmountGenerator
 
 # XXX What should be done when there is no base_application ?

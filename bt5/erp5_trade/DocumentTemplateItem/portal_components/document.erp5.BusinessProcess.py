@@ -33,7 +33,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Document.Path import Path
+from erp5.component.document.Path import Path
 from Products.ERP5.ExplanationCache import _getExplanationCache, _getBusinessLinkClosure
 from erp5.component.module.MovementCollectionDiff import _getPropertyAndCategoryList
 from erp5.component.interface.IBusinessProcess import IBusinessProcess

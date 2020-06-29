@@ -27,7 +27,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from erp5.component.document.Item import Item
-from Products.ERP5.mixin.mail_message import MailMessageMixin
+from erp5.component.mixin.MailMessageMixin import MailMessageMixin
 
 import email
 

@@ -36,7 +36,7 @@ from AccessControl.PermissionRole import PermissionRole
 from Products.ERP5Type import Permissions, PropertySheet
 
 from erp5.component.document.Movement import Movement
-from Products.ERP5.Document.MappedValue import MappedValue
+from erp5.component.document.MappedValue import MappedValue
 from erp5.component.document.ImmobilisationMovement import ImmobilisationMovement
 from erp5.component.interface.IDivergenceController import IDivergenceController
 

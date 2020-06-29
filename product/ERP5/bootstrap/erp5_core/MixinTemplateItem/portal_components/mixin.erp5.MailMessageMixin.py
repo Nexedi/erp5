@@ -30,7 +30,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import guessEncodingFromText
-from Products.ERP5.Document.TextDocument import TextDocument
 from zLOG import LOG, INFO
 
 from email.header import decode_header, HeaderParseError
@@ -45,7 +44,7 @@ def testCharsetAndConvert(text_content, content_type, encoding):
       text_content = text_content.decode(encoding).encode('utf-8')
     else:
       text_content = text_content.decode().encode('utf-8')
-  except (UnicodeDecodeError, LookupError), error_message:
+  except (UnicodeDecodeError, LookupError):
     encoding = guessEncodingFromText(text_content, content_type)
     if encoding is not None:
       try:
@@ -96,7 +95,6 @@ class MailMessageMixin:
           # Try to get the favourite text format defined on preference
           preferred_content_type = self.getPortalObject().portal_preferences.\
                                          getPreferredTextFormat('text/html')
-          favourite_part = None
           for subpart in part.get_payload():
             if subpart.get_content_type() == preferred_content_type:
               part_list.insert(0, subpart)
@@ -210,12 +208,12 @@ class MailMessageMixin:
         if 'text/html' in content_type:
           part_encoding = part.get_content_charset()
           message_text = part.get_payload(decode=1)
-          text_result, encoding = testCharsetAndConvert(message_text,
-                                                        content_type,
-                                                        part_encoding)
+          text_result, _ = testCharsetAndConvert(message_text,
+                                                 content_type,
+                                                 part_encoding)
           # Strip out html content in safe mode.
-          mime, content = self.convert(format='html',
-                                       text_content=text_result,
+          _, content = self.convert(format='html',
+                                    text_content=text_result,
                                        encoding=part_encoding,
                                        index=index) # add index to generate
                                        # a unique cache key per attachment

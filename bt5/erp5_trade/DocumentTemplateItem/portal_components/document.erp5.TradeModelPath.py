@@ -32,7 +32,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.Document.Path import Path
+from erp5.component.document.Path import Path
 from Products.ERP5.ExplanationCache import _getExplanationCache
 from erp5.component.interface.ITradeModelPath import ITradeModelPath
 

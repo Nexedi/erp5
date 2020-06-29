@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.Document.Amount import Amount
+from erp5.component.document.Amount import Amount
 
 
 class Item(XMLObject, Amount):

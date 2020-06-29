@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -26,29 +27,20 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.Core.Predicate import Predicate
 
-from Products.ERP5Type import Permissions, PropertySheet
+TRANSFORMATION_FIX = True
+_MARKER = object()
 
-from Products.ERP5.Document.MappedValue import MappedValue
-from Products.ERP5.Document.Amount import Amount
-
-
-class Path(MappedValue, Amount):
+class MappedValue(Predicate):
   """
-    A Path defines a planning element. A path is the combination of
-
-    - a MappedValue (Paths can hold an undetermined number of properties
-      associated to extra conditions)
-
-    - an Arrow (a path is associated to a source and destination)
-
-    - a Path (which defines the resource involved)
-
-    - a FlowCapacity (which defines the capacities on the Path)
+    A MappedValue allows to associate a value to a predicate
   """
-  meta_type = 'ERP5 Path'
-  portal_type = 'Path'
+  meta_type = 'ERP5 Mapped Value'
+  portal_type = 'Mapped Value'
   add_permission = Permissions.AddPortalContent
 
   # Declarative security
@@ -56,15 +48,28 @@ class Path(MappedValue, Amount):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.Task    # The date determines a validity period for the path
-                    , PropertySheet.Arrow   # The arrow defines the sources and destinations
-                    , PropertySheet.Path    # The path defines the efficiency & resource
-                    , PropertySheet.FlowCapacity    # The capacity defines the max. qty
+  property_sheets = (   PropertySheet.Base
+                      , PropertySheet.SimpleItem
+                      , PropertySheet.CategoryCore
+                      , PropertySheet.Predicate
+                      , PropertySheet.MappedValue
                     )
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IMappedValue,
+                           )
 
-  def _getBaseUnitPrice(self, context=None, **kw):
-    # No base unit price lookup
-    return None
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getMappedValueBaseCategoryList')
+  def getMappedValueBaseCategoryList(self, d=_MARKER):
+    if TRANSFORMATION_FIX:
+      # Fix Mapped Value Objects which forgot to define their Mapped Base Categories
+      if not self._baseGetMappedValueBaseCategoryList():
+        if self.getParentValue().getParentValue().getPortalType() == 'Transformation':
+          base_category_set = set()
+          for category in self.getCategoryList():
+            # XXX-JPS additional test required to prevent taking too much ?
+            base_category_set.add(category.split('/')[0])
+          self._setMappedValueBaseCategoryList(list(base_category_set))
+    if d is _MARKER:
+      return self._baseGetMappedValueBaseCategoryList(d=d)
+    return self._baseGetMappedValueBaseCategoryList()

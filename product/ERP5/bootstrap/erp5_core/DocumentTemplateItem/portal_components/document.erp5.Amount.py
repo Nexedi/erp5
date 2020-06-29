@@ -70,7 +70,7 @@ class Amount(Base, VariatedMixin):
   # THIS MUST BE UPDATE WITH CATEGORY ACQUISITION
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationCategoryList')
-  def getVariationCategoryList(self, default=[], base_category_list=(),
+  def getVariationCategoryList(self, default=None, base_category_list=(), # pylint: disable=arguments-differ
       omit_optional_variation=0, omit_option_base_category=None):
     """
       Returns the possible discrete variations
@@ -130,7 +130,7 @@ class Amount(Base, VariatedMixin):
                                                  **kw).render(object_list)
     return variation_category_item_list
 
-  def _setVariationCategoryList(self, value):
+  def _setVariationCategoryList(self, value): # pylint: disable=arguments-differ
     resource = self.getDefaultResourceValue()
     if resource is not None:
       variation_list = resource.getVariationBaseCategoryList()
@@ -139,13 +139,13 @@ class Amount(Base, VariatedMixin):
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setVariationCategoryList')
-  def setVariationCategoryList(self, value):
+  def setVariationCategoryList(self, value): # pylint: disable=arguments-differ
     self._setVariationCategoryList(value)
     self.reindexObject()
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationBaseCategoryList')
-  def getVariationBaseCategoryList(self, default=[],
+  def getVariationBaseCategoryList(self, default=None,
       omit_optional_variation=0, omit_option_base_category=None):
     """
       Return the list of base_category from all variation related to
@@ -203,7 +203,7 @@ class Amount(Base, VariatedMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation, \
                             'getVariationRangeCategoryList')
-  def getVariationRangeCategoryList(self, default=[], base_category_list=(),
+  def getVariationRangeCategoryList(self, default=None, base_category_list=(),
       base=1, **kw):
     """
       Returns possible variation category values for the
@@ -215,7 +215,7 @@ class Amount(Base, VariatedMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationRangeBaseCategoryList')
-  def getVariationRangeBaseCategoryList(self, default=[],
+  def getVariationRangeBaseCategoryList(self, default=None, # pylint: disable=arguments-differ
       omit_optional_variation=0, omit_option_base_category=None):
     """
         Returns possible variations base categories for this amount ie.
@@ -243,7 +243,7 @@ class Amount(Base, VariatedMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVariationRangeBaseCategoryItemList')
-  def getVariationRangeBaseCategoryItemList(self, omit_optional_variation=0,
+  def getVariationRangeBaseCategoryItemList(self, omit_optional_variation=0, # pylint: disable=arguments-differ
       omit_option_base_category=None, display_id="title",
       display_none_category=0):
     """

@@ -35,8 +35,8 @@ from AccessControl import ClassSecurityInfo
 
 from Products.CMFCategory.Renderer import Renderer
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.Document.MappedValue import MappedValue
+from erp5.component.document.Amount import Amount
+from erp5.component.document.MappedValue import MappedValue
 
 from erp5.component.mixin.AmountGeneratorMixin import AmountGeneratorMixin
 from Products.ERP5.mixin.variated import VariatedMixin

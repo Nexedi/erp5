@@ -85,8 +85,8 @@ class PredicateMatrix(XMLMatrix):
         c.edit( mapped_value_property_list = ( 'title',),
                 predicate_category_list = [self._getOb(k_item).getRelativeUrl()
                                            for k_item in k],
-                title = " * ".join(map(lambda k_item : \
-                        self.unrestrictedTraverse(k_item).getTitle(), k)),
+                title = " * ".join([
+                  self.unrestrictedTraverse(k_item).getTitle() for k_item in k ]),
                 force_update = 1
               )
     else :

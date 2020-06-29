@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.DeliveryLine import DeliveryLine
-from Products.ERP5.Document.Amount import Amount
+from erp5.component.document.Amount import Amount
 
 
 class AccountingTransactionLine(DeliveryLine):

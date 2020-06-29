@@ -76,7 +76,7 @@ class Transition(XMLObject):
     status_dict[state_bc_id] = document.getCategoryMembershipList(state_bc_id)[0]
 
     state_object = document.unrestrictedTraverse(status_dict[state_bc_id])
-    object = workflow.getStateChangeInformation(document, state_object, transition=self)
+    object_ = workflow.getStateChangeInformation(document, state_object, transition=self)
 
     # Update all variables
     for variable in workflow.contentValues(portal_type='Variable'):
@@ -85,15 +85,15 @@ class Transition(XMLObject):
         # otherwise use default
         variable_title = variable.getTitle()
         if variable_title in form_kw:
-           status_dict[variable_title] = form_kw[variable_title]
+          status_dict[variable_title] = form_kw[variable_title]
         else:
-          status_dict[variable_title] = variable.getInitialValue(object=object)
+          status_dict[variable_title] = variable.getInitialValue(object=object_)
 
     # Update all transition variables
     if form_kw is not None:
-      object.REQUEST.other.update(form_kw)
+      object_.REQUEST.other.update(form_kw)
     for variable in self.contentValues(portal_type='Transition Variable'):
-      status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
+      status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object_)
 
     workflow._updateWorkflowHistory(document, status_dict)
 

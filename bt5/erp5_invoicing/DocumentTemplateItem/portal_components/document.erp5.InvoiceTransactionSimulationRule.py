@@ -33,7 +33,7 @@ from erp5.component.mixin.RuleMixin import RuleMixin
 from erp5.component.mixin.MovementGeneratorMixin import MovementGeneratorMixin
 from erp5.component.mixin.MovementCollectionUpdaterMixin import \
      MovementCollectionUpdaterMixin
-from Products.ERP5.Document.PredicateMatrix import PredicateMatrix
+from erp5.component.document.PredicateMatrix import PredicateMatrix
 from erp5.component.interface.IRule import IRule
 from erp5.component.interface.IDivergenceController import IDivergenceController
 from erp5.component.interface.IMovementCollectionUpdater import IMovementCollectionUpdater
