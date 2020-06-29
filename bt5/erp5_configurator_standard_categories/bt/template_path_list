@@ -205,6 +205,13 @@ portal_categories/market_segment/seg2
 portal_categories/market_segment/seg3
 portal_categories/market_segment/seg4
 portal_categories/market_segment/seg5
+portal_categories/metric_type/area
+portal_categories/metric_type/energy
+portal_categories/metric_type/length
+portal_categories/metric_type/mass
+portal_categories/metric_type/time
+portal_categories/metric_type/unit
+portal_categories/metric_type/volume
 portal_categories/nationality/africa
 portal_categories/nationality/africa/eastern_africa
 portal_categories/nationality/africa/eastern_africa/burundian
