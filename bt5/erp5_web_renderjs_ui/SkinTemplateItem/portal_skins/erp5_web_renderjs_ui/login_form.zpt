@@ -1,17 +1,18 @@
-<html>
+<html tal:define="form_action string:WebSite_login;
+                  absolute_url context/absolute_url;
+                  portal context/getPortalObject">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title tal:content="python: here.getPortalObject().getTitle()"></title>
+    <title tal:content="portal/getTitle"></title>
     <link rel="stylesheet" href="gadget_erp5_nojqm.css">
   </head>
 
-  <body tal:define="form_action string:WebSite_login;
-                    portal here/getPortalObject">
+  <body>
 
     <div data-gadget-scope='header'>
       <div class="ui-header">
-        <h1><span i18n:domain="ui" i18n:translate="">Connect</span></h1>
+        <h1><span i18n:domain="ui" i18n:translate="">Log in</span></h1>
       </div>
     </div>
 
@@ -26,9 +27,9 @@
       <div class="gadget-content">
         <article>
           <section>
-            <tal:block tal:condition="exists: request/portal_status_message">
-              <span tal:attributes="data-i18n request/portal_status_message"><span tal:content="request/portal_status_message"></span></span>
-            </tal:block>
+            <div class="visible" data-gadget-scope="notification" tal:condition="exists: request/portal_status_message">
+              <button type="submit" class="error" tal:attributes="data-i18n request/portal_status_message"><span tal:content="request/portal_status_message"></span></button>
+            </div>
           </section>
 
           <section tal:condition="not: portal/portal_membership/isAnonymousUser">
@@ -38,29 +39,32 @@
           </section>
 
           <section tal:condition="portal/portal_membership/isAnonymousUser">
-            <form method="post" tal:attributes="action python: '%s/' % context.absolute_url()">
-
-              <div class="ui-field-contain">
-                <label i18n:domain="ui" i18n:translate="" >Username</label>
-                <div><input autofocus type="text" name="__ac_name" value="" required=""></div>
-              </div>
-              <div class="ui-field-contain">
-                <label i18n:domain="ui" i18n:translate="" >Password</label>
-                <div><input type="password" name="__ac_password" value="" required="" autocomplete="off" /></div>
-              </div>
-              <div class="ui-field-contain">
-                <label></label>
-                <div tal:define="absolute_url python:context.absolute_url()">
-                  <a  i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+            <section class="ui-content-header-plain">
+                <h3 class="ui-content-title ui-body-c">
+                    <span class="ui-icon ui-icon-custom ui-icon-sign-in"></span>
+                    <tal:block  i18n:domain="ui" i18n:translate="">Log in</tal:block>
+                </h3>
+            </section>
+            <form method="post" tal:attributes="action python: '%s/' % absolute_url" class="field_container">
+              <div>
+                <div>
+                  <div class="ui-field-contain">
+                    <label i18n:domain="ui" i18n:translate="" >Username</label>
+                    <div><input autofocus type="text" name="__ac_name" value="" required=""></div>
+                  </div>
+                  <div class="ui-field-contain">
+                    <label i18n:domain="ui" i18n:translate="" >Password</label>
+                    <div><input type="password" name="__ac_password" value="" required="" autocomplete="off" /></div>
+                  </div>
+                  <div class="dialog_button_container">
+                    <input type="submit" value="Login" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
+                    <a i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+                  </div>
                 </div>
-              </div><br/>
-              <div class="ui-field-contain">
-                <label></label>
-                <div><input type="submit" value='Login' i18n:attributes="value" i18n:domain="ui"  tal:attributes="name python: '%s:method' % (form_action, )"/></div>
               </div>
 
 
-              <input type="hidden" name="url" tal:attributes="value python: context.absolute_url()" />
+              <input type="hidden" name="url" tal:attributes="value absolute_url" />
               <input tal:condition="exists: request/came_from"
                      type="hidden" name="came_from"
                      tal:attributes="value request/came_from" />
