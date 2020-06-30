@@ -52,9 +52,11 @@ url_list = [
   "jio_appcachestorage.js",
   "jio_configuration_storage.js",
 
-  #app custom actions
+  #app actions
   "action_clone.html",
-  "action_clone.js"
+  "action_clone.js",
+  "action_clone_attachment.html",
+  "action_clone_attachment.js"
 ]
 
 base64_url_list = context.WebSection_getBase64ConfigurationUrlList(batch_mode=1)
