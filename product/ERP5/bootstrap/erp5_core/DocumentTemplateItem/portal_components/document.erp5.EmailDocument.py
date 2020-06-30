@@ -35,7 +35,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.TextDocument import TextDocument
 from Products.ERP5.Document.File import File
 from erp5.component.mixin.MailMessageMixin import MailMessageMixin, testCharsetAndConvert
-from Products.ERP5.mixin.document_proxy import DocumentProxyMixin, DocumentProxyError
+from erp5.component.mixin.DocumentProxyMixin import DocumentProxyMixin, DocumentProxyError
 from MethodObject import Method
 
 try:

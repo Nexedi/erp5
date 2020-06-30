@@ -32,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.Item import Item
-from Products.ERP5.mixin.composition import CompositionMixin
+from erp5.component.mixin.CompositionMixin import CompositionMixin
 from erp5.component.mixin.SimulableMixin import SimulableMixin
 from erp5.component.mixin.MovementGeneratorMixin import MovementGeneratorMixin
 from Products.ERP5.mixin.periodicity import PeriodicityMixin

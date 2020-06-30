@@ -40,7 +40,7 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.document.ImmobilisationDelivery import ImmobilisationDelivery
 from erp5.component.mixin.AmountGeneratorMixin import AmountGeneratorMixin
-from Products.ERP5.mixin.composition import CompositionMixin
+from erp5.component.mixin.CompositionMixin import CompositionMixin
 from erp5.component.mixin.SimulableMixin import SimulableMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, \
     unrestricted_apply

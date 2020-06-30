@@ -2,6 +2,7 @@ document.erp5.Amount
 document.erp5.AmountGeneratorLine
 document.erp5.AppliedRule
 document.erp5.BaseDomain
+document.erp5.BusinessProcess
 document.erp5.ContributionPredicate
 document.erp5.Delivery
 document.erp5.DeliveryCell

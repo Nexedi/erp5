@@ -32,7 +32,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from OFS.Image import Pdata
 from cStringIO import StringIO
-_MARKER = []
+_MARKER = object()
 
 class BaseConvertableFileMixin:
   """
@@ -96,8 +96,8 @@ class BaseConvertableFileMixin:
     """Wrap value into Pdata
     """
     if not isinstance(data, Pdata) and data is not None:
-      file = StringIO(data)
-      data, size = self._read_data(file)
+      file_ = StringIO(data)
+      data, _ = self._read_data(file_)
     self._baseSetBaseData(data)
 
 InitializeClass(BaseConvertableFileMixin)

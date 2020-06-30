@@ -28,7 +28,7 @@
 ##############################################################################
 
 
-_marker=[]
+_marker=object()
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
@@ -60,7 +60,7 @@ class VirtualFolderMixin:
     return Folder.PUT_factory(self, name, typ, body)
 
   security.declarePrivate('_setObject')
-  def _setObject(self, id, ob, **kw):
+  def _setObject(self, id, ob, **kw): # pylint: disable=redefined-builtin
     """
       XXX
     """
@@ -75,7 +75,7 @@ class VirtualFolderMixin:
     return Folder._setObject(self, id, ob, **kw)
 
   security.declarePrivate('_getOb')
-  def _getOb(self, id, default=_marker, **kw):
+  def _getOb(self, id, default=_marker, **kw): # pylint: disable=redefined-builtin
     """
       XXX
     """

@@ -40,7 +40,7 @@ from string import Template
 
 # Mixin Import
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
-from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
+from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
 from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
 from Products.ERP5Type.Utils import guessEncodingFromText
 

@@ -41,7 +41,7 @@ from Products.ERP5.Document.Document import Document, \
 from Products.ERP5Type.Utils import fill_args_from_request
 
 # Mixin Import
-from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
+from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 from erp5.component.mixin.OOoDocumentExtensibleTraversableMixin import OOoDocumentExtensibleTraversableMixin
 

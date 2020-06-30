@@ -1,7 +1,11 @@
 mixin.erp5.AmountGeneratorMixin
+mixin.erp5.BaseConvertableFileMixin
+mixin.erp5.CompositionMixin
+mixin.erp5.DocumentProxyMixin
 mixin.erp5.ExplainableMixin
 mixin.erp5.MailMessageMixin
 mixin.erp5.MovementCollectionUpdaterMixin
 mixin.erp5.MovementGeneratorMixin
 mixin.erp5.RuleMixin
 mixin.erp5.SimulableMixin
+mixin.erp5.VirtualFolderMixin

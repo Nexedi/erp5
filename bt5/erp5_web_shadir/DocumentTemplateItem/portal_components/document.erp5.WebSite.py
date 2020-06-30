@@ -28,7 +28,7 @@
 ##############################################################################
 
 from Products.ERP5.Document.WebSite import WebSite as SimpleWebSite
-from Products.ERP5.mixin.virtual_folder import VirtualFolderMixin
+from erp5.component.mixin.VirtualFolderMixin import VirtualFolderMixin
 
 class WebSite(VirtualFolderMixin, SimpleWebSite):
   """

@@ -1,5 +1,4 @@
 interface.erp5.IBusinessLink
-interface.erp5.IBusinessProcess
 interface.erp5.ITradeModelPath
 interface.erp5.IBuildableBusinessLinkProcess
 interface.erp5.IBusinessLinkProcess

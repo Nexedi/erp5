@@ -36,7 +36,7 @@ from Products.ERP5Type.Utils import sortValueList
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
-_MARKER = []
+_MARKER = object()
 
 @transactional_cached()
 def _getEffectiveModel(self, start_date, stop_date):
@@ -169,8 +169,7 @@ class asComposedDocument(object):
     if portal_type is not None:
       if isinstance(portal_type, str):
         portal_type = (portal_type,)
-      object_list = filter(lambda x: x.getPortalType() in portal_type,
-                           object_list)
+      object_list = [x for x in object_list if x.getPortalType() in portal_type]
     return sortValueList(object_list, sort_on, sort_order, **kw)
 
   def getProperty(self, key, d=_MARKER, **kw):

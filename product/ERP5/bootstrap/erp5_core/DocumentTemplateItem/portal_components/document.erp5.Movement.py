@@ -40,7 +40,7 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from erp5.component.mixin.AmountGeneratorMixin import AmountGeneratorMixin
-from Products.ERP5.mixin.composition import CompositionMixin
+from erp5.component.mixin.CompositionMixin import CompositionMixin
 from erp5.component.document.Amount import Amount
 from Products.ERP5Type.Cache import transactional_cached
 from erp5.component.interface.IAmountGenerator import IAmountGenerator
