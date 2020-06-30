@@ -252,26 +252,6 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_translation_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_manifest_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>configuration_header_gadget_url</string> </value>
                   </item>
                   <item>
@@ -448,10 +428,6 @@
             <value> <string>development</string> </value>
         </item>
         <item>
-            <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs.appcache</string> </value>
-        </item>
-        <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
             <value> <string>gadget_officejs_application_panel.html</string> </value>
         </item>
@@ -468,10 +444,6 @@
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_translation.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
