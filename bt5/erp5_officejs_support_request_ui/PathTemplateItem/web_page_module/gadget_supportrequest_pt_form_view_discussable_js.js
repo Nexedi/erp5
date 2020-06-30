@@ -24,30 +24,22 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('getImageUrl', function (raw_url) {
-      var gadget = this;
-      return gadget.jio_getAttachment(raw_url, "links")
-          .push(function (links) {
-          var full_size_url = links._links.view[1].href;
-          return gadget.getUrlFor({
-            command: 'display',
-            options: {
-              jio_key: "image_module",
-              view: full_size_url
-            }
-          });
-        });
-    })
     .declareMethod('getDocumentUrl', function (raw_url) {
       var gadget = this;
       return gadget.jio_getAttachment(raw_url, "links")
-          .push(function (links) {
-          var full_size_url = links._links.view[4].href;
+       .push(function (links) {
+          var page = "preview",
+            has_preview = links._links.view.filter(function (i) {
+              return i.name === "preview";
+            }).length > 0;
+          if (!has_preview) {
+            page = "html_view";
+          }
           return gadget.getUrlFor({
-            command: 'display',
+            command: 'display_erp5_action_with_history',
             options: {
-              jio_key: "document_module",
-              view: full_size_url
+              jio_key: raw_url,
+              page: page
             }
           });
         });
@@ -174,14 +166,6 @@
             post.date_relative = moment(post.date).fromNow();
             if (post.attachment_link === null) {
               return post;
-            }
-            if (post.attachment_link.indexOf("image_module") !== -1) {
-              return gadget.getImageUrl(post.attachment_link).push(
-                function (attachment_link) {
-                  post.attachment_link = attachment_link;
-                  return post;
-                }
-              );
             }
             return gadget.getDocumentUrl(post.attachment_link).push(
               function (attachment_link) {
