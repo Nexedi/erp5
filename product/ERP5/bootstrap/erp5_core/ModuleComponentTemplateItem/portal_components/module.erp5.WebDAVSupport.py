@@ -15,20 +15,17 @@
 
 import collections
 import email
-import re
 import transaction
 from lxml import html
 from Products.ERP5Type.Utils import formatRFC822Headers
-from Acquisition import aq_parent, aq_inner, aq_base
+from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type import Permissions, PropertySheet, Constraint
+from Products.ERP5Type import Permissions
 from Products.CMFCore.PortalContent import ResourceLockedError
-from Products.CMFCore.utils import getToolByName
-from zLOG import LOG
 from zExceptions import Forbidden
 
-security = ModuleSecurityInfo( 'Products.ERP5Type.WebDAVSupport' )
+security = ModuleSecurityInfo(__name__)
 
 
 class TextContent:
@@ -82,7 +79,7 @@ class TextContent:
       headers.setdefault('content_type', content_type)
       headers['file'] = body
       self._edit(**headers)
-    except ResourceLockedError, msg:
+    except ResourceLockedError:
       transaction.abort()
       RESPONSE.setStatus(423)
       return RESPONSE
@@ -120,7 +117,7 @@ class TextContent:
           continue
         elif content is not None:
           # XXX - Bad algorithm - we should use getPropertyMap directly
-          if type(content) in (type(()), type([])):
+          if isinstance(content, (list, tuple)):
             for content_item in content:
               hdrtext = '%s\n <meta name="%s" content="%s" />' % (
                          hdrtext, name, content_item)
@@ -152,43 +149,43 @@ from webdav.NullResource import NullResource
 NullResource_PUT = NullResource.PUT
 
 def PUT(self, REQUEST, RESPONSE):
-        """Create a new non-collection resource.
-        """
-        if getattr(self.__parent__, 'PUT_factory', None) is not None: # BBB
-          return NullResource_PUT(self, REQUEST, RESPONSE)
+  """Create a new non-collection resource.
+  """
+  if getattr(self.__parent__, 'PUT_factory', None) is not None: # BBB
+    return NullResource_PUT(self, REQUEST, RESPONSE)
 
-        self.dav__init(REQUEST, RESPONSE)
-        if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
-          raise Forbidden, 'REQUEST_METHOD should be PUT.'
+  self.dav__init(REQUEST, RESPONSE)
+  if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
+    raise Forbidden, 'REQUEST_METHOD should be PUT.'
 
-        name = self.__name__
-        parent = self.__parent__
+  name = self.__name__
+  parent = self.__parent__
 
-        ifhdr = REQUEST.get_header('If', '')
-        if IWriteLock.providedBy(parent) and parent.wl_isLocked():
-            if ifhdr:
-                parent.dav__simpleifhandler(REQUEST, RESPONSE, col=1)
-            else:
-                # There was no If header at all, and our parent is locked,
-                # so we fail here
-                raise Locked
-        elif ifhdr:
-            # There was an If header, but the parent is not locked
-            raise PreconditionFailed
+  ifhdr = REQUEST.get_header('If', '')
+  if IWriteLock.providedBy(parent) and parent.wl_isLocked():
+    if ifhdr:
+      parent.dav__simpleifhandler(REQUEST, RESPONSE, col=1)
+    else:
+      # There was no If header at all, and our parent is locked,
+      # so we fail here
+      raise Locked
+  elif ifhdr:
+    # There was an If header, but the parent is not locked
+    raise PreconditionFailed
 
-        # <ERP5>
-        # XXX: Do we really want to force 'id'
-        #      when PUT is called on Contribution Tool ?
-        kw = {'id': name, 'data': None, 'filename': name}
-        contribution_tool = parent.getPortalObject().portal_contributions
-        if aq_base(contribution_tool) is not aq_base(parent):
-          kw.update(container=parent, discover_metadata=False)
-        ob = contribution_tool.newContent(**kw)
-        # </ERP5>
+  # <ERP5>
+  # XXX: Do we really want to force 'id'
+  #      when PUT is called on Contribution Tool ?
+  kw = {'id': name, 'data': None, 'filename': name}
+  contribution_tool = parent.getPortalObject().portal_contributions
+  if aq_base(contribution_tool) is not aq_base(parent):
+    kw.update(container=parent, discover_metadata=False)
+  ob = contribution_tool.newContent(**kw)
+  # </ERP5>
 
-        ob.PUT(REQUEST, RESPONSE)
-        RESPONSE.setStatus(201)
-        RESPONSE.setBody('')
-        return RESPONSE
+  ob.PUT(REQUEST, RESPONSE)
+  RESPONSE.setStatus(201)
+  RESPONSE.setBody('')
+  return RESPONSE
 
 NullResource.PUT = PUT

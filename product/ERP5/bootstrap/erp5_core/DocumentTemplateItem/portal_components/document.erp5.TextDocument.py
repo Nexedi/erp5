@@ -33,7 +33,7 @@ from zLOG import LOG, WARNING
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Document import Document, ConversionError, _MARKER, DEFAULT_CONTENT_TYPE
 from Products.ERP5.Document.File import File
-from Products.ERP5Type.WebDAVSupport import TextContent
+from erp5.component.module.WebDAVSupport import TextContent
 from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST
 import cStringIO
 from string import Template
