@@ -54,7 +54,7 @@ url_list = [
 
   #app actions
   "action_clone.html",
-  "action_clone.js"
+  "action_clone.js",
   "action_clone_attachment.html",
   "action_clone_attachment.js"
 ]
