@@ -1116,6 +1116,30 @@ class TestERP5Base(ERP5TypeTestCase):
     bank_account.Base_createCloneDocument()
     self.assertEqual(2, len(person))
 
+  def test_CurrencyModule_getCurrencyItemList(self):
+    currency_module = self.portal.currency_module
+    currency_module.newContent(
+        portal_type='Currency',
+        id='validated',
+        title='Validated',
+        reference='VA',
+    ).validate()
+    invalidated = currency_module.newContent(
+        portal_type='Currency',
+        title='Invalidated',
+        reference='INV',
+    )
+    invalidated.validate()
+    invalidated.invalidate()
+    currency_module.newContent(
+        portal_type='Currency',
+        title='Draft',
+        reference='DRAFT',
+    )
+    self.assertEqual(
+        currency_module.CurrencyModule_getCurrencyItemList(),
+        [('', ''), ('VA', 'currency_module/validated')])
+
   def getWorkflowHistory(self, document, workflow_id):
     return self.portal.portal_workflow.getInfoFor(ob=document, name='history',
         wf_id=workflow_id)

@@ -6,6 +6,11 @@ for rule in portal.portal_rules.objectValues():
   if rule.getValidationState() != 'validated':
     rule.validate()
 
+# validate accounts
+for account in portal.account_module.objectValues():
+  if account.getValidationState() != 'validated':
+    account.validate()
+
 # open all accounts, and clear cache if we have validated some new accounts
 validated = False
 for account in portal.account_module.objectValues():
