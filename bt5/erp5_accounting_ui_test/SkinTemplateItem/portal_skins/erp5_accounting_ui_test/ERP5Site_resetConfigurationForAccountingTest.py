@@ -6,16 +6,20 @@ for rule in portal.portal_rules.objectValues():
   if rule.getValidationState() != 'validated':
     rule.validate()
 
-# open all accounts, and clear cache if we have validated some new accounts
+
 validated = False
+# validate currencies and clear cache if we have validated new currencies
+for currency in portal.currency_module.objectValues():
+  if currency.getValidationState() != 'validated':
+    currency.validate()
+    validated = True
+if validated:
+  portal.portal_caches.clearCache(cache_factory_list=('erp5_ui_short', ))
+
+# validate all accounts
 for account in portal.account_module.objectValues():
   if account.getValidationState() != 'validated':
     account.validate()
-    validated = True
-
-if validated:
-  portal.portal_caches.clearCache(cache_factory_list=('erp5_content_long', ))
-
 
 # validate third parties and set them a dummy region, because it's required
 for entity in ( portal.organisation_module.objectValues() +
