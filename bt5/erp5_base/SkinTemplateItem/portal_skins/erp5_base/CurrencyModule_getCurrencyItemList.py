@@ -7,7 +7,7 @@ portal = context.getPortalObject()
 def getCurrencyItemList(include_empty=1, validation_state=validation_state):
   result = []
   if include_empty :
-    result = [['', ''],]
+    result = [('', ''),]
   currency_module = portal.restrictedTraverse(
                              'currency_module',
                              portal.restrictedTraverse('currency', None))
