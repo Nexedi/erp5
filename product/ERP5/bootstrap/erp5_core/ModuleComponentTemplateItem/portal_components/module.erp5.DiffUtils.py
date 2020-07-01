@@ -81,7 +81,7 @@ class DiffFile(object):
     # Splitting the body from the header
     self.body = os.linesep.join(raw_diff.strip().splitlines()[3:])
     if not self.body.startswith('@@'):
-       self.body = os.linesep.join(raw_diff.strip().splitlines()[4:])
+      self.body = os.linesep.join(raw_diff.strip().splitlines()[4:])
     # Now splitting modifications
     first = True
     tmp = []
@@ -192,9 +192,9 @@ class CodeBlock:
     self.body = os.linesep.join(raw_diff.splitlines()[1:])
     self.header = raw_diff.splitlines()[0]
     # Getting modifications lines
-    tmp = re.search('^@@ -\d+', self.header)
+    tmp = re.search(r'^@@ -\d+', self.header)
     self.old_line = tmp.string[tmp.start():tmp.end()][4:]
-    tmp = re.search('\+\d+', self.header)
+    tmp = re.search(r'\+\d+', self.header)
     self.new_line = tmp.string[tmp.start():tmp.end()][1:]
     # Splitting modifications in SubCodeBlocks
     in_modif = False
@@ -340,3 +340,6 @@ class SubCodeBlock:
     if line.startswith('+'):
       return (' ' + line[1:], self.color)
     return (line, self.color)
+
+from AccessControl.SecurityInfo import ModuleSecurityInfo
+ModuleSecurityInfo(__name__).declarePublic('DiffFile')

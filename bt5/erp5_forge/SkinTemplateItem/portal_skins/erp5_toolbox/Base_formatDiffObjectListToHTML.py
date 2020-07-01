@@ -1,4 +1,4 @@
-from Products.ERP5Type.DiffUtils import DiffFile
+from erp5.component.module.DiffUtils import DiffFile
 from Products.PythonScripts.standard import html_quote
 
 def sortDiffObjectList(diff_object_list):

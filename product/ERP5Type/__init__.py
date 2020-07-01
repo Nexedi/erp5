@@ -183,7 +183,6 @@ allow_module('Products.ERP5Type.Log')
 allow_module('Products.ERP5Type.ImmediateReindexContextManager')
 ModuleSecurityInfo('Products.ERP5Type.JSON').declarePublic('dumps', 'loads')
 ModuleSecurityInfo('Products.ERP5Type.Constraint').declarePublic('PropertyTypeValidity')
-ModuleSecurityInfo('Products.ERP5Type.DiffUtils').declarePublic('DiffFile')
 ModuleSecurityInfo('pprint').declarePublic('pformat', 'pprint')
 ModuleSecurityInfo('Products.ERP5Type.XMLUtils').declarePublic('parseStream')
 

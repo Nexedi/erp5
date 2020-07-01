@@ -28,7 +28,7 @@
 from lxml import etree
 from erp5.component.module.XMLSyncUtils import getConduitByName
 from difflib import unified_diff
-from Products.ERP5Type.DiffUtils import DiffFile
+from erp5.component.module.DiffUtils import DiffFile
 
 
 def callAddNodeOnConduit(self, conduit_id, uid):

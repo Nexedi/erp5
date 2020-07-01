@@ -39,7 +39,6 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
-from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type import Permissions
@@ -543,6 +542,7 @@ class TemplateTool (BaseTool):
       """
       Filter the diff using python scripts
       """
+      from erp5.component.module.DiffUtils import DiffFile
       diff_file_object = DiffFile(diff)
       diff_block_list = diff_file_object.getModifiedBlockList()
       if diff_block_list:
@@ -563,6 +563,7 @@ class TemplateTool (BaseTool):
         This is compatible with ERP5VCS look and feel but
         it is preferred in future we use more difflib python library.
       """
+      from erp5.component.module.DiffUtils import DiffFile
       return DiffFile(self.diffObject(REQUEST, **kw)).toHTML()
 
     security.declareProtected(Permissions.ManagePortal, 'diffObject')

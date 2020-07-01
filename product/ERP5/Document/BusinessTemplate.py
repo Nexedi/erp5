@@ -31,7 +31,6 @@ import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
 from collections import defaultdict
 from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
-from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
@@ -6024,6 +6023,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         This is compatible with ERP5VCS look and feel but
         it is preferred in future we use more difflib python library.
       """
+      from erp5.component.module.DiffUtils import DiffFile
       return DiffFile(self.diffObject(REQUEST, **kw)).toHTML()
 
     security.declareProtected(Permissions.ManagePortal, 'diffObject')
