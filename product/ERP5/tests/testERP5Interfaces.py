@@ -57,7 +57,7 @@ implements_tuple_list = [
   (('erp5.component.document.EmailDocument', 'EmailDocument'), 'IDocument'),
   (('erp5.component.document.Event', 'Event'), 'IDocument'),
   # IAmountList
-  (('Products.ERP5.GeneratedAmountList', 'GeneratedAmountList'), 'IAmountList'),
+  (('erp5.component.module.GeneratedAmountList', 'GeneratedAmountList'), 'IAmountList'),
 ]
 # IMovementGroup
 for movement_group_class_name in ['MovementGroup', 'BaseVariantMovementGroup',
@@ -83,7 +83,7 @@ class TestERP5Interfaces(ERP5TypeTestCase):
 addTestMethodDynamically(TestERP5Interfaces, implements_tuple_list)
 
 for failing_method in [
-    'test_Products.ERP5.GeneratedAmountList_GeneratedAmountList_implements_IAmountList',
+    'test_erp5.component.module.GeneratedAmountList_GeneratedAmountList_implements_IAmountList',
     'test_erp5.component.document.BusinessLink_BusinessLink_implements_IBusinessLink',
     'test_erp5.component.document.BusinessLink_BusinessLink_implements_ICategoryAccessProvider',
     'test_erp5.component.document.TradeModelCell_TradeModelCell_implements_IVariated',

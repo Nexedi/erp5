@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -26,37 +26,24 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+"""
+erp5.component.interface.IArrowBase
+"""
 
-from Products.ERP5.interfaces.predicate import IPredicate
+from zope.interface import Interface
 
-_MARKER = []
+class IArrowBase(Interface):
+  """Arrow Base interface specification
 
-class IMappedValue(IPredicate):
-  """Mapped Value document interface specification
-
-  A Mapped Value provides
+  Defines methods to get the list of base categories
+  which define the source and destination of an Arrow
   """
-  def getMappedValuePropertyList():
-    """
-    """
-
-  def getMappedValueBaseCategoryList():
-    """
+  def getSourceArrowBaseCategoryList():
+    """Returns all categories which are used to define the source
+    of this Arrow
     """
 
-  def getProperty(key, d=_MARKER, **kw):
+  def getDestinationArrowBaseCategoryList():
+    """Returns all categories which are used to define the destination
+    of this Arrow
     """
-    """
-
-  def getPropertyList(key, d=None):
-    """
-    XXX- useful ?
-    """
-
-  def getAcquiredCategoryMembershipList(category, spec=(), filter=None,
-      portal_type=(), base=0, keep_default=1, checked_permission=None, **kw):
-    """
-    """
-
-
-

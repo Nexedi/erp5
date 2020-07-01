@@ -28,7 +28,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.divergence_tester
+erp5.component.interface.IDivergenceTester
 """
 
 from zope.interface import Interface

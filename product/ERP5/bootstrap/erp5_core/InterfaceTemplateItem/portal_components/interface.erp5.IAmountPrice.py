@@ -27,7 +27,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.amount_price
+erp5.component.interface.IAmountPrice
 """
 
 from zope.interface import Interface

@@ -32,7 +32,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Acquisition import aq_base, Implicit
-from Products.ERP5.GeneratedAmountList import GeneratedAmountList
+from erp5.component.module.GeneratedAmountList import GeneratedAmountList
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from erp5.component.document.MappedValue import MappedValue

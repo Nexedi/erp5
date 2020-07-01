@@ -27,7 +27,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.explainable
+erp5.component.interface.IExplainable
 """
 
 from zope.interface import Interface

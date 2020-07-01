@@ -32,10 +32,11 @@ from collections import defaultdict
 from math import log
 from AccessControl import ClassSecurityInfo
 from Products.ERP5.mixin.variated import VariatedMixin
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import Base
 from Products.CMFCategory.Renderer import Renderer
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from erp5.component.interface.IAmount import IAmount
 
 from zLOG import LOG, ERROR
 from warnings import warn
@@ -58,7 +59,7 @@ class Amount(Base, VariatedMixin):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IAmount)
+  zope.interface.implements(IAmount)
 
   property_sheets = ( PropertySheet.SimpleItem
                     , PropertySheet.Amount

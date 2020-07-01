@@ -29,8 +29,9 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Core.Predicate import Predicate
+from erp5.component.interface.IMappedValue import IMappedValue
 
 TRANSFORMATION_FIX = True
 _MARKER = object()
@@ -55,7 +56,7 @@ class MappedValue(Predicate):
                       , PropertySheet.MappedValue
                     )
   # Declarative interfaces
-  zope.interface.implements(interfaces.IMappedValue,
+  zope.interface.implements(IMappedValue,
                            )
 
   security.declareProtected(Permissions.AccessContentsInformation,

@@ -30,7 +30,7 @@
 from collections import defaultdict
 import zope.interface
 from AccessControl import allow_class
-from Products.ERP5Type import interfaces
+from erp5.component.interface.IAmountList import IAmountList
 
 class GeneratedAmountList(list):
   """
@@ -44,7 +44,7 @@ class GeneratedAmountList(list):
     2. detailed information on each movement with split(), which would be
        equivalent to call getGeneratedAmountList() on each movement
   """
-  zope.interface.implements(interfaces.IAmountList)
+  zope.interface.implements(IAmountList)
 
   def getTotalPrice(self):
     """

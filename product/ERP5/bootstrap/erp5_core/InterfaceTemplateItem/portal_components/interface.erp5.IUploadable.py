@@ -40,7 +40,7 @@ class IUploadable(Interface):
   can be uploaded into a document.
   """
 
-  def isSourceFormatAllowed(format):
+  def isSourceFormatAllowed(format): # pylint: disable=redefined-builtin
     """
     Checks if a file with the specified format
     can be uploaded into the current document.
@@ -50,7 +50,7 @@ class IUploadable(Interface):
               string (ex. 'text/plain')
     """
 
-  def isSourceFormatPermitted(format):
+  def isSourceFormatPermitted(format): # pylint: disable=redefined-builtin
     """
     Checks if the current user can upload into the current
     document a file with the specified source format.

@@ -28,7 +28,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.amount_list import IAmountList
+from erp5.component.interface.IAmountList import IAmountList
 
 class IMovementList(IAmountList):
   """Movement list interface specification

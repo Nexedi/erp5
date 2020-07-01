@@ -27,7 +27,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.amount_arithmetic
+erp5.component.interface.IAmountArithmetic
 """
 
 from zope.interface import Interface

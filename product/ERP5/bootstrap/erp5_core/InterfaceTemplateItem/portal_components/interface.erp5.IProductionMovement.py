@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.amount import IAmount
+from erp5.component.interface.IAmount import IAmount
 
 class IProductionMovement(IAmount):
   """Production Movement private interface specification

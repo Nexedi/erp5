@@ -29,7 +29,8 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5Type import Permissions, interfaces
+from Products.ERP5Type import Permissions
+from erp5.component.interface.IExplainable import IExplainable
 
 class ExplainableMixin:
   """A mixin which provides common implementation of
@@ -44,7 +45,7 @@ class ExplainableMixin:
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IExplainable,)
+  zope.interface.implements(IExplainable,)
 
   # IExplainable implementation
   security.declareProtected(Permissions.AccessContentsInformation,'getExplanationValueList')

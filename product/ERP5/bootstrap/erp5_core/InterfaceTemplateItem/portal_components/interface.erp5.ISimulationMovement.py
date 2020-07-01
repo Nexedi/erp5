@@ -33,7 +33,7 @@ erp5.component.interface.ISimulationMovement
 from Products.ERP5.interfaces.property_recordable import IPropertyRecordable
 from erp5.component.interface.IMovement import IMovement
 from erp5.component.interface.IDivergenceController import IDivergenceController
-from Products.ERP5.interfaces.explainable import IExplainable
+from erp5.component.interface.IExplainable import IExplainable
 
 class ISimulationMovement(IMovement, IPropertyRecordable, IDivergenceController, IExplainable):
   """Simulation Movement interface specification

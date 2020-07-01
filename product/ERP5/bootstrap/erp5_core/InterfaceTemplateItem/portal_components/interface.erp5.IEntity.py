@@ -27,7 +27,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.entity
+erp5.component.interface.IEntity
 """
 
 from zope.interface import Interface

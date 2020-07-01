@@ -27,7 +27,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.sendable
+erp5.component.interface.ISendable
 """
 
 from zope.interface import Interface

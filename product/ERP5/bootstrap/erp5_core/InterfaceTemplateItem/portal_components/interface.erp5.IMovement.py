@@ -28,7 +28,7 @@
 ##############################################################################
 
 from erp5.component.interface.IProductionMovement import IProductionMovement
-from Products.ERP5.interfaces.arrow_base import IArrowBase
+from erp5.component.interface.IArrowBase import IArrowBase
 
 class IMovement(IProductionMovement, IArrowBase):
   """Movement interface specification

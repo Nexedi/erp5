@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -27,23 +27,33 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.arrow_base
+erp5.component.interface.IAmount
 """
 
-from zope.interface import Interface
+from erp5.component.interface.IAmountCore import IAmountCore
+from erp5.component.interface.IAmountConversion import IAmountConversion
+from erp5.component.interface.IAmountPrice import IAmountPrice
+from erp5.component.interface.IAmountArithmetic import IAmountArithmetic
 
-class IArrowBase(Interface):
-  """Arrow Base interface specification
+class IAmount(IAmountCore, IAmountConversion, IAmountPrice, IAmountArithmetic):
+  """Amount interface specification
 
-  Defines methods to get the list of base categories
-  which define the source and destination of an Arrow
+    An amount represents a quantity of a given resource
+    in a given quantity unit. Optional efficiency can be
+    specified in order to represent a loss ratio to take
+    into account in calculations. Loss ratio is normally
+    used only in Path.
+
+    The Amount interface is useful each time
+    one needs to add or substract amounts of resources
+    independently of a movement. This is the case for example
+    for all Transformation related classes.
+
+    TODO-XXX:
+      1. Try to merge IAmountPrice and IPriceable
+         interface (used for deliveried)
+      2. remove profit_quantity and target_quantity everywhere
+      3. consider how to make Interface compatible
+         with accessor generation (ex. getResource,
+         getQuantity, etc.)
   """
-  def getSourceArrowBaseCategoryList():
-    """Returns all categories which are used to define the source
-    of this Arrow
-    """
-
-  def getDestinationArrowBaseCategoryList():
-    """Returns all categories which are used to define the destination
-    of this Arrow
-    """

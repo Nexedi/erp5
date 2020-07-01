@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -27,31 +27,49 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.mime_sender
+erp5.component.interface.IAmountConversion
 """
 
 from zope.interface import Interface
 
-class IMimeSender(Interface):
+class IAmountConversion(Interface):
+  """Amount Conversion private interface specification
+
+  IAmountConversion defines methods which can be used
+  to convert an amount from one quantity unit and to another,
+  taking into account efficiency.
   """
-    Common Interface for all objects incl. tools which can
-    be invoked to send MIMEMultipart instances.
-  """
 
-  def send(message):
+  def getNetQuantity():
     """
-      Send a MIMEMultipart.
-    """
-    pass
+    Take into account efficiency in quantity. This is
+    only useful in Path which define a loss ratio, such
+    as Transformation.
 
-  def logMIMEMultipart(message, document):
+    Formula:
+      net_quantity = quantity / efficiency
     """
-      Log a MIMEMultipart message for a given document
-    """
-    pass
 
-  def getMIMEMultipartLogList(document=None):
+  def getConvertedQuantity(quantity_unit=None, measure=None):
     """
-      Retrieve the list of messages sent using with this sender
+    Returns the quantity of the resource converted in the
+    default management unit of the resource.
+
+    quantity_unit -- optional quantity unit to use
+                     for conversion.
+
+    measure -- optional quantity unit to use
+               for conversion.
     """
-    pass
+
+  def getNetConvertedQuantity(quantity_unit=None, measure=None):
+    """
+    Returns the net quantity of the resource converted in the
+    default management unit of the resource.
+
+    quantity_unit -- optional quantity unit to use
+                     for conversion.
+
+    measure -- optional quantity unit to use
+               for conversion.
+    """

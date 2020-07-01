@@ -1,8 +1,7 @@
-
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -28,33 +27,31 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.amount
+erp5.component.interface.IMimeSender
 """
 
-from Products.ERP5.interfaces.amount_core import IAmountCore
-from Products.ERP5.interfaces.amount_conversion import IAmountConversion
-from Products.ERP5.interfaces.amount_price import IAmountPrice
-from Products.ERP5.interfaces.amount_arithmetic import IAmountArithmetic
+from zope.interface import Interface
 
-class IAmount(IAmountCore, IAmountConversion, IAmountPrice, IAmountArithmetic):
-  """Amount interface specification
-
-    An amount represents a quantity of a given resource
-    in a given quantity unit. Optional efficiency can be
-    specified in order to represent a loss ratio to take
-    into account in calculations. Loss ratio is normally
-    used only in Path.
-
-    The Amount interface is useful each time
-    one needs to add or substract amounts of resources
-    independently of a movement. This is the case for example
-    for all Transformation related classes.
-
-    TODO-XXX:
-      1. Try to merge IAmountPrice and IPriceable
-         interface (used for deliveried)
-      2. remove profit_quantity and target_quantity everywhere
-      3. consider how to make Interface compatible
-         with accessor generation (ex. getResource,
-         getQuantity, etc.)
+class IMimeSender(Interface):
   """
+    Common Interface for all objects incl. tools which can
+    be invoked to send MIMEMultipart instances.
+  """
+
+  def send(message):
+    """
+      Send a MIMEMultipart.
+    """
+    pass
+
+  def logMIMEMultipart(message, document):
+    """
+      Log a MIMEMultipart message for a given document
+    """
+    pass
+
+  def getMIMEMultipartLogList(document=None):
+    """
+      Retrieve the list of messages sent using with this sender
+    """
+    pass
