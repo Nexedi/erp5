@@ -54,7 +54,7 @@ def transformUrlToDataURI(content):
   discarted = namespace_dict.pop(None, "discard")
   if discarted == SVG_DEFAULT_NAMESPACE or \
        "svg" not in namespace_dict:
-     namespace_dict["svg"] = SVG_DEFAULT_NAMESPACE
+    namespace_dict["svg"] = SVG_DEFAULT_NAMESPACE
 
   # Get all images which uses xlink:href
   image_list = root.xpath("//svg:image[@xlink:href]", namespaces=namespace_dict)

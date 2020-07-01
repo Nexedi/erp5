@@ -49,7 +49,7 @@ from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
 from zLOG import LOG, WARNING
 
-from Products.ERP5Type.ImageUtil import transformUrlToDataURI
+from erp5.component.module.ImageUtil import transformUrlToDataURI
 
 # import mixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
