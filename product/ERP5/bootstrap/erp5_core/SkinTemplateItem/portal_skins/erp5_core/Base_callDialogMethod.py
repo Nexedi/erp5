@@ -2,7 +2,7 @@
 Generic method called when submitting a form in dialog mode.
 Responsible for validating form data and redirecting to the form action.
 """
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 # XXX We should not use meta_type properly,
 # XXX We need to discuss this problem.(yusei)

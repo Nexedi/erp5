@@ -1,6 +1,6 @@
 """ This script will be called to apply the customization. """
 from AccessControl import getSecurityManager
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 portal = context.getPortalObject()
 bt = portal.portal_templates.getInstalledBusinessTemplate("erp5_demo_maxma_sample")

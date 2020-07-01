@@ -1,7 +1,7 @@
 from Products.ERP5Type.Document import newTempBase
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
 from Products.ERP5Type.Message import translateString
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 portal = context.getPortalObject()
 request = portal.REQUEST
 params = portal.ERP5Site_getAccountingSelectionParameterDict(selection_name=selection_name)

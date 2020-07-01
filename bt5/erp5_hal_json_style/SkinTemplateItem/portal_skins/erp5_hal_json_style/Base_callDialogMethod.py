@@ -12,9 +12,8 @@ There are runtime values hidden in every dialog form (injected by getHateoas Scr
   extra_param_json - JSON serialized extra parameters for the dialog script
 """
 
-from Products.ERP5Type.Log import log, DEBUG, INFO, WARNING, ERROR
-from Products.Formulator.Errors import FormValidationError, ValidationError
-from ZTUtils import make_query
+from erp5.component.module.Log import log, WARNING
+from Products.Formulator.Errors import FormValidationError
 import json
 
 DOCUMENT_COUNT_LIMIT = 50

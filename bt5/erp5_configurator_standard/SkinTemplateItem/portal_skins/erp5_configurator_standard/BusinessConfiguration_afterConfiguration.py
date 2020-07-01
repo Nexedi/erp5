@@ -1,6 +1,5 @@
 """ This script will be called to apply the customization. """
-from AccessControl import getSecurityManager
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 portal = context.getPortalObject()
 portal_preferences = portal.portal_preferences

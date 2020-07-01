@@ -1,6 +1,6 @@
 """Obsolete compatibility script.
 """
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 log("Obsolete script, please use BaseType_copyRoleList instead")
 
 print 'cloning role information from'

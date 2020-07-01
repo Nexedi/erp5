@@ -1,4 +1,4 @@
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 after_script_id = context.getResourceValue().getConfigurationAfterScriptId()
 after_script = getattr(context, after_script_id, None)

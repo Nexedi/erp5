@@ -1,4 +1,4 @@
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 log('Launching activities to setup the demo configuration!')
 
 kw = {}

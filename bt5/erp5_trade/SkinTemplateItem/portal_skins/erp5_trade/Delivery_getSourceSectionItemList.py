@@ -1,4 +1,4 @@
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 log('Deprecated: use Base_getPreferredSectionItemList instead.')
 
 section_cat = context.portal_preferences.getPreferredSectionCategory()

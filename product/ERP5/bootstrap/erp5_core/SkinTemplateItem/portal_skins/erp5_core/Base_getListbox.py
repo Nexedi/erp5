@@ -6,7 +6,7 @@ This script should be used to detect a listbox without having to name it "listbo
 
 Christophe Dumez <christophe@nexedi.com>
 """
-from Products.ERP5Type.Log import log, ERROR
+from erp5.component.module.Log import log, ERROR
 
 def isListBox(field):
   if field.meta_type == "ListBox":

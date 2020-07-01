@@ -57,7 +57,7 @@ import time
 from email.Utils import formatdate
 import re
 from zExceptions import Unauthorized
-from Products.ERP5Type.Log import log, DEBUG, INFO, WARNING, ERROR
+from erp5.component.module.Log import log, WARNING, ERROR
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.Utils import UpperCase
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery

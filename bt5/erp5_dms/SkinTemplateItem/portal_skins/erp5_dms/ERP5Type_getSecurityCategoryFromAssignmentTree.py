@@ -9,7 +9,7 @@ Differences to the stock implementation:
   (unless we say it is strict)
 """
 
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 category_list = []
 

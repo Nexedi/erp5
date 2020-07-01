@@ -1,4 +1,4 @@
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 def getRealRelativeUrl(document):
   return '/'.join(context.getPortalObject().portal_url.getRelativeContentPath(document))

@@ -32,7 +32,7 @@ import numpy as np
 from copy import copy
 from math import sqrt
 
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 from Products.CMFActivity.ActiveResult import ActiveResult
 from sklearn.base import clone
 from sklearn.utils import check_random_state
