@@ -4,7 +4,7 @@
 # We wants to get data in order to do a nice summary of items inside the order
 # This report will mainly usefull when the same resource is ordered on many
 # different lines
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 if target_language:
   container.REQUEST['AcceptLanguage'].set(target_language, 10)
 

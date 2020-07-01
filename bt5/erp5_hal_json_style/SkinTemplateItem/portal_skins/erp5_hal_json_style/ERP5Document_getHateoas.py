@@ -57,7 +57,7 @@ import time
 from email.utils import formatdate
 import re
 from zExceptions import Unauthorized
-from Products.ERP5Type.Log import log, WARNING, ERROR
+from erp5.component.module.Log import log, WARNING, ERROR
 from Products.ERP5Type.Message import Message
 from collections import OrderedDict
 from Products.ERP5Form.Selection import Selection

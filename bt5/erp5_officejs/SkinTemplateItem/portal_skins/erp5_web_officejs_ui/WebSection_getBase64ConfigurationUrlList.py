@@ -1,6 +1,6 @@
 import json
 import base64
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 def getElementFromContent(key, content):
   before_template = '"%s" type="text/x-renderjs-configuration">'

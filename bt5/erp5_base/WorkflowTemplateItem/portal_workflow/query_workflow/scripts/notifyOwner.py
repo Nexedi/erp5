@@ -5,7 +5,7 @@ and the getObject API of ERP5Catalog.
 This script has a proxy role to make sure we can find person documents in the
 catalog.
 """
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 document = sci['object']
 portal = document.getPortalObject()

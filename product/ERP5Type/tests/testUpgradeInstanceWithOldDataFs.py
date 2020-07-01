@@ -56,8 +56,9 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
          'erp5_configurator_standard_trade_template',
          'erp5_configurator_standard',
          'erp5_jquery',
-         'erp5_xhtml_style'),
-        ['erp5_upgrader'])""")
+         'erp5_xhtml_style',
+         'erp5_upgrader'),
+         ())""")
     self.tic()
 
     alarm = self.portal.portal_alarms.promise_check_upgrade

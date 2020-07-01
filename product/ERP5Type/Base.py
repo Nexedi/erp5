@@ -74,7 +74,6 @@ from Products.ERP5Type.mixin.property_translatable import PropertyTranslatableBu
 from Products.ERP5Type.XMLExportImport import Base_asXML
 from Products.ERP5Type.Cache import CachingMethod, clearCache, getReadOnlyTransactionCache
 from Accessor import WorkflowState
-from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Accessor.TypeDefinition import type_definition
 
@@ -3187,12 +3186,13 @@ class Base(
   def log(self, *args, **kw):
     """Put a log message
 
-    See the warning in Products.ERP5Type.Log.log
+    See the warning in erp5.component.module.Log.log
     Catchall parameters also make this method not publishable to avoid DoS.
     """
     warnings.warn("The usage of Base.log is deprecated.\n"
-                  "Please use Products.ERP5Type.Log.log instead.",
+                  "Please use erp5.component.module.Log.log instead.",
                   DeprecationWarning)
+    from erp5.component.module.Log import log as unrestrictedLog
     unrestrictedLog(*args, **kw)
 
   # Dublin Core Emulation for CMF interoperatibility

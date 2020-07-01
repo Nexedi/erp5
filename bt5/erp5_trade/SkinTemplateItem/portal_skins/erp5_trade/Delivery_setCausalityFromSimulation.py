@@ -8,7 +8,7 @@ It will also not work if strict security is set on simulation. It's recommended 
 (Delivery) Causality Movement Group as delivery level movement group in the corresponding
 delivery builder.
 """
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 LOG = lambda msg:log(
           "Delivery_setCausalityFromSimulation on %s" % context.getPath(), msg)
 LOG = lambda msg:'DISABLED'

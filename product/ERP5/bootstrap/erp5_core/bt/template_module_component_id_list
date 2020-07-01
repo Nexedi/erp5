@@ -2,5 +2,6 @@ module.erp5.DateUtils
 module.erp5.DiffUtils
 module.erp5.ExpandPolicy
 module.erp5.GeneratedAmountList
+module.erp5.Log
 module.erp5.MovementCollectionDiff
 module.erp5.MovementGroup

@@ -1,7 +1,7 @@
 """
 Used to set properties for Listbox
 """
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 field = context
 d = dict(

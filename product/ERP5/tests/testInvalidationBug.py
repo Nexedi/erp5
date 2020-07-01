@@ -185,7 +185,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
       skin_folder.manage_delObjects(ids=['create_script'])
     skin = createZODBPythonScript(skin_folder, 'create_script', '**kw',
         """
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 id_list = []
 for x in xrange(0, 1):
   organisation = context.newContent()

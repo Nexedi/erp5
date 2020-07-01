@@ -4,7 +4,7 @@
 """
 
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 #log("depth: %s parent: %s kw: %s" % (depth, repr(parent), repr(kw)))
 #log("selection: %s" % repr(context.portal_selections.getSelectionParamsFor('crawled_content_selection')))
 

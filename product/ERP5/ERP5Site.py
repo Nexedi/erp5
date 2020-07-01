@@ -33,7 +33,6 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import caching_instance_method
 from Products.ERP5Type.Cache import CachingMethod, CacheCookieMixin
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -1767,12 +1766,13 @@ class ERP5Site(ResponseHeaderGenerator, FolderMixIn, CMFSite, CacheCookieMixin):
   def log(self, *args, **kw):
     """Put a log message
 
-    See the warning in Products.ERP5Type.Log.log
+    See the warning in erp5.component.module.Log.log
     Catchall parameters also make this method not publishable to avoid DoS.
     """
     warnings.warn("The usage of ERP5Site.log is deprecated.\n"
-                  "Please use Products.ERP5Type.Log.log instead.",
+                  "Please use erp5.component.module.Log.log instead.",
                   DeprecationWarning)
+    from erp5.component.module.Log import log as unrestrictedLog
     unrestrictedLog(*args, **kw)
 
   security.declarePublic('setPlacelessDefaultReindexParameters')

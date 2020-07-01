@@ -1,5 +1,5 @@
 from Products.PythonScripts.standard import newline_to_br
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 log("Event_getTextContentCorrespondToFormat is deprecated, use Event_getEditorFieldTextContent instead", level=100) # WARNING
 
