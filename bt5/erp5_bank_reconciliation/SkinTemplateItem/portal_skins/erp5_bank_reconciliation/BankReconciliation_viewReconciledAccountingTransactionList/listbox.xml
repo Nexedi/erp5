@@ -11,7 +11,6 @@
             <value>
               <list>
                 <string>columns</string>
-                <string>default_params</string>
                 <string>editable_columns</string>
                 <string>list_method</string>
                 <string>portal_types</string>
@@ -63,10 +62,6 @@
               <dictionary>
                 <item>
                     <key> <string>columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default_params</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -167,21 +162,6 @@
                         <tuple>
                           <string>total_quantity</string>
                           <string>Balance</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>checked_permission</string>
-                          <string>View</string>
-                        </tuple>
-                        <tuple>
-                          <string>reconciliation_mode</string>
-                          <string>unreconcile</string>
                         </tuple>
                       </list>
                     </value>
