@@ -1,4 +1,4 @@
-from Products.ERP5Type.DateUtils import addToDate
+from erp5.component.module.DateUtils import addToDate
 
 portal = context.getPortalObject()
 

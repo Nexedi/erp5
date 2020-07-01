@@ -29,33 +29,8 @@
 
 import unittest
 
-# Make it possible to use Globals.get_request
-class DummyRequest(dict):
-  __allow_access_to_unprotected_subobjects__ = 1
-  def set(self, k, v):
-    self[k] = v
-
-global request
-request = DummyRequest()
-
-def get_request():
-  global request
-  return request
-
-# apply patch (before it's imported by other modules)
-from Products.ERP5Type import Globals
-Globals.get_request = get_request
-
-
-# Initialize ERP5Form Product to load monkey patches
-from Testing import ZopeTestCase
-ZopeTestCase.installProduct('CMFCategory')
-ZopeTestCase.installProduct('ERP5Type')
-
-
 from DateTime import DateTime
-
-from Products.ERP5Type.DateUtils import addToDate, getIntervalListBetweenDates, \
+from erp5.component.module.DateUtils import addToDate, getIntervalListBetweenDates, \
     atTheEndOfPeriod, getClosestDate
 
 class TestDateUtils(unittest.TestCase):

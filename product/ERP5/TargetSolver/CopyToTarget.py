@@ -28,7 +28,6 @@
 ##############################################################################
 
 from TargetSolver import TargetSolver
-from Products.ERP5Type.DateUtils import createDateTimeFromMillis
 
 class CopyToTarget(TargetSolver):
   """
@@ -87,6 +86,7 @@ class CopyToTarget(TargetSolver):
     """
       Generate values to save on simulation movement.
     """
+    from erp5.component.module.DateUtils import createDateTimeFromMillis
     value_dict = {}
     # Modify quantity, start_date, stop_date
     start_date = simulation_movement.getStartDate()

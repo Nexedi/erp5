@@ -1,4 +1,4 @@
-from Products.ERP5Type.DateUtils import addToDate
+from erp5.component.module.DateUtils import addToDate
 Base_translateString = context.Base_translateString
 
 

@@ -2909,7 +2909,7 @@ class SimulationTool(BaseTool):
                             activate_kw=kw)
     return active_process
 
-from Products.ERP5Type.DateUtils import addToDate
+from erp5.component.module.DateUtils import addToDate
 
 class SequenceItem:
   """

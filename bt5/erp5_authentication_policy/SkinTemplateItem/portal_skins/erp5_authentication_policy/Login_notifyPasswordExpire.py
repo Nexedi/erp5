@@ -3,7 +3,7 @@
 """
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLCatalog import Query
-from Products.ERP5Type.DateUtils import addToDate
+from erp5.component.module.DateUtils import addToDate
 
 portal = context.getPortalObject()
 portal_preferences = portal.portal_preferences

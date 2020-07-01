@@ -59,7 +59,7 @@ is based on calculation of the frequency_index and creation_date_index.\n
 Documents which their frequency_index and creation_date_index are the\n
 same as those calculated, are updated.\n
 """\n
-from Products.ERP5Type.DateUtils import convertDateToHour\n
+from erp5.component.module.DateUtils import convertDateToHour\n
 date_dict = {}\n
 \n
 #Step1: convert the alarm date into hours\n
@@ -121,7 +121,7 @@ for frequency_reference, creation_date in date_dict.items():\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>Products.ERP5Type.DateUtils</string>
+                            <string>erp5.component.module.DateUtils</string>
                             <string>convertDateToHour</string>
                             <string>date_dict</string>
                             <string>alarm_date</string>

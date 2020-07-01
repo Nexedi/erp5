@@ -30,8 +30,8 @@ from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
 from string import capitalize
 
-from Products.ERP5Type.DateUtils import centis, getClosestDate, addToDate
-from Products.ERP5Type.DateUtils import getDecimalNumberOfYearsBetween
+from erp5.component.module.DateUtils import centis, getClosestDate, addToDate
+from erp5.component.module.DateUtils import getDecimalNumberOfYearsBetween
 from Products.ERP5Type import Permissions
 from erp5.component.mixin.RuleMixin import RuleMixin
 from Products.CMFCore.utils import getToolByName

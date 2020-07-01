@@ -29,7 +29,7 @@
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.SubscriptionItem import SubscriptionItem
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.DateUtils import addToDate, atTheEndOfPeriod
+from erp5.component.module.DateUtils import addToDate, atTheEndOfPeriod
 from DateTime import DateTime
 
 class EmploymentContract(SubscriptionItem):

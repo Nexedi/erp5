@@ -4,7 +4,7 @@ is based on calculation of the frequency_index and creation_date_index.
 Documents which their frequency_index and creation_date_index are the
 same as those calculated, are updated.
 """
-from Products.ERP5Type.DateUtils import convertDateToHour
+from erp5.component.module.DateUtils import convertDateToHour
 date_dict = {}
 
 # Shared function

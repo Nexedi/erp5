@@ -28,7 +28,7 @@
 
 from erp5.component.document.MovementGroup import MovementGroup
 from DateTime import DateTime
-from Products.ERP5Type.DateUtils import atTheEndOfPeriod
+from erp5.component.module.DateUtils import atTheEndOfPeriod
 
 
 class MonthlyRangeMovementGroup(MovementGroup):

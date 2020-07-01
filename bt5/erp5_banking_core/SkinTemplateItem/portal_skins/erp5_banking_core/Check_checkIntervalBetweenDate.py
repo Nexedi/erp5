@@ -1,6 +1,6 @@
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type.Message import Message
-from Products.ERP5Type.DateUtils import getIntervalBetweenDates
+from erp5.component.module.DateUtils import getIntervalBetweenDates
 
 if stop_date is None:
   from DateTime import DateTime

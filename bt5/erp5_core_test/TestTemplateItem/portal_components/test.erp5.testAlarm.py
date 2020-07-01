@@ -34,7 +34,7 @@ from AccessControl.SecurityManagement import newSecurityManager, \
         getSecurityManager, setSecurityManager
 from AccessControl import Unauthorized
 from DateTime import DateTime
-from Products.ERP5Type.DateUtils import addToDate
+from erp5.component.module.DateUtils import addToDate
 
 class TestAlarm(ERP5TypeTestCase):
   """

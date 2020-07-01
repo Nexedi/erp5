@@ -33,9 +33,8 @@ from AccessControl import ModuleSecurityInfo
 from DateTime import DateTime
 from datetime import datetime
 from string import zfill
-from zLOG import LOG
 
-security = ModuleSecurityInfo('Products.ERP5Type.DateUtils')
+security = ModuleSecurityInfo(__name__)
 security.declarePublic('addToDate', 'getClosestDate',
     'getIntervalBetweenDates', 'getMonthAndDaysBetween',
     'getCompletedMonthBetween', 'getRoundedMonthBetween',
@@ -166,8 +165,6 @@ def getClosestDate(date=None, target_date=None,
     date = DateTime('2000/01/01')
     date._tz = target_date._tz
 
-  earlier_target_date = target_date - millis
-
   to_check = { 'day':{'year':1, 'month':1, 'day':1}, 'month':{'year':1, 'month':1}, 'year':{'year':1} }
   diff_value = {}
   diff_value = getIntervalBetweenDates(from_date = date, to_date = target_date, keys=to_check[precision])
@@ -182,6 +179,7 @@ def getClosestDate(date=None, target_date=None,
 
   return return_date
 
+# pylint: disable=dangerous-default-value
 def getIntervalBetweenDates(from_date=None, to_date=None,
                             keys={'year':1, 'month':1, 'day':1}):
   """
@@ -222,6 +220,7 @@ def getIntervalBetweenDates(from_date=None, to_date=None,
       returned_value[key] = value
   return returned_value
 
+# pylint: disable=dangerous-default-value
 def getIntervalListBetweenDates(from_date=None, to_date=None,
                             keys={'year':1, 'month':1, 'week' : 1, 'day':1}):
   """
@@ -451,10 +450,10 @@ def convertDateToHour(date=None):
   # calculate the ordinal date of the creation date and the reference date
   ordinal_date = datetime.toordinal(formatted_creation_date)
   ordinal_reference_date = datetime.toordinal(reference_date)
-  hour = (ordinal_date - ordinal_reference_date) * number_of_hours_in_day + number_of_hours_in_day + date.hour()
-  return int(hour)
+  hour_ = (ordinal_date - ordinal_reference_date) * number_of_hours_in_day + number_of_hours_in_day + date.hour()
+  return int(hour_)
 
-def createDateTimeFromMillis(millis):
+def createDateTimeFromMillis(millis): # pylint: disable=redefined-outer-name
   """
   Returns a DateTime object, build from the number of milliseconds since epoch.
   Parameter should be a int or long.
@@ -530,7 +529,7 @@ def atTheEndOfPeriod(date, period):
   return end
 
 def copyDate(date, year=None, month=None, day=None,
-             hour=None, minute=None, second=None, timezone=None):
+             hour=None, minute=None, second=None, timezone=None): # pylint: disable=redefined-outer-name
   if year is None:
     year = date.year()
   if month is None:

@@ -1,4 +1,4 @@
-from Products.ERP5Type.DateUtils import atTheEndOfPeriod
+from erp5.component.module.DateUtils import atTheEndOfPeriod
 request = container.REQUEST
 portal = context.getPortalObject()
 from_date = request.get('from_date', None)

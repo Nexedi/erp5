@@ -12,6 +12,7 @@ test.erp5.testConstraint
 test.erp5.testContributionRegistryTool
 test.erp5.testCookieCrumbler
 test.erp5.testCopySupport
+test.erp5.testDateUtils
 test.erp5.testERP5Base
 test.erp5.testERP5Category
 test.erp5.testERP5Coordinate

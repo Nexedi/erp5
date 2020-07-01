@@ -1,5 +1,5 @@
 from Products.ZSQLCatalog.SQLCatalog import Query
-from Products.ERP5Type.DateUtils import addToDate
+from erp5.component.module.DateUtils import addToDate
 from DateTime import DateTime
 
 portal = context.getPortalObject()

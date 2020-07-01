@@ -1,7 +1,7 @@
 if context.getPortalType() != 'Person':
   raise TypeError('Person object is required')
 from DateTime import DateTime
-from Products.ERP5Type.DateUtils import addToDate
+from erp5.component.module.DateUtils import addToDate
 
 key = context.Base_getBearerTokenKey()
 if not key:

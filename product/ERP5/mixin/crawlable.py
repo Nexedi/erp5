@@ -31,8 +31,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import normaliseUrl
-from Products.ERP5Type.DateUtils import convertDateToHour,\
-     number_of_hours_in_day, number_of_hours_in_year
 from urlparse import urlsplit, urlunsplit
 from lxml import html as etree_html
 
@@ -65,6 +63,9 @@ class CrawlableMixin:
     """
     frequency_index = self.getFrequencyIndex()
     if not frequency_index: return -1 # If not update frequency is provided, make sure we never update
+
+    from erp5.component.module.DateUtils import convertDateToHour,\
+      number_of_hours_in_day, number_of_hours_in_year
     hour = convertDateToHour(date=self.getCreationDate())
     creation_date_index = hour % frequency_index
     # in the case of bisextile year, we substract 24 hours from the creation date,
