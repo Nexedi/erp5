@@ -47,7 +47,7 @@ from ZODB.POSException import ConflictError
 from DateTime import DateTime
 from Products.CMFActivity.ActivityTool import (
   cancelProcessShutdown, Message, getCurrentNode, getServerAddress)
-from _mysql_exceptions import OperationalError
+from MySQLdb import OperationalError
 from Products.ZMySQLDA.db import DB
 import gc
 import random
