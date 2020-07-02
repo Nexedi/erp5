@@ -46,8 +46,8 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W:102, 34: Unused variable \'i\' (unused-variable)</string>
-                <string>W:102, 76: Unused variable \'j\' (unused-variable)</string>
+                <string>W:104, 34: Unused variable \'i\' (unused-variable)</string>
+                <string>W:104, 76: Unused variable \'j\' (unused-variable)</string>
               </tuple>
             </value>
         </item>
