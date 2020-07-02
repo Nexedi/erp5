@@ -244,7 +244,8 @@ class TestDataIngestion(SecurityTestCase):
     self.tic()
 
     # ingest new file
-    data_set, data_stream_list = self.stepIngest(self.CSV, ",")
+    data_set, data_stream_list = self.stepIngest(self.CSV, ",",
+                                      randomize_ingestion_reference=False, data_set_reference=data_set_reference)
     self.tic()
     second_file_stream = data_stream_list[0]
 
