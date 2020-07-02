@@ -232,7 +232,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <string>ERP5TypeTestCase</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -265,6 +265,8 @@
                           <state>
                             <tuple>
                               <float>1595449693.01</float>
+                              <string>UTC</string>
+                            </tuple>
                           </state>
                         </object>
                       </value>
