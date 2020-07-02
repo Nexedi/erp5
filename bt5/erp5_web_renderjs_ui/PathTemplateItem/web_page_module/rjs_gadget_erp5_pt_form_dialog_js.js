@@ -25,13 +25,17 @@
           gadget.element.querySelector('.dialog_button_container'),
       update_button = button_container.querySelector('button'),
       submit_input = button_container.querySelector('input');
-    submit_input.disabled = true;
+    if (submit_input !== null) {
+      submit_input.disabled = true;
+    }
     if (update_button !== null) {
       update_button.disabled = true;
     }
 
     function enableButton() {
-      submit_input.disabled = false;
+      if (submit_input !== null) {
+        submit_input.disabled = false;
+      }
       if (update_button !== null) {
         update_button.disabled = false;
       }
