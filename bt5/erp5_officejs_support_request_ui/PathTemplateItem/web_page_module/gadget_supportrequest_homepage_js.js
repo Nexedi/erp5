@@ -308,7 +308,7 @@
           var erp5_document = result_list[0],
             worklist_gadget = result_list[1],
             field_listbox_begin_from = result_list[2],
-            view_list = erp5_document._links.action_object_view || [];
+            view_list = erp5_document._links.view || [];
 
           gadget.property_dict.option_dict = {
             // graph_gadget: Keep ending slash to be consistent with the automatically set "base" tag
