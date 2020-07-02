@@ -73,14 +73,14 @@ class ContributionPredicate(Predicate, XMLObject):
     if getattr(aq_base(self), '_identity_criterion', None) is None:
       self._identity_criterion = {}
       self._range_criterion = {}
-    for property_, value in self._identity_criterion.iteritems():
-      result = result and (context.getProperty(property_) in value)
-    for property_, (min_, max_) in self._range_criterion.iteritems():
-      value = context.getProperty(property_)
-      if min_ is not None:
-        result = result and (value >= min_)
-      if max_ is not None:
-        result = result and (value < max_)
+    for property, value in self._identity_criterion.iteritems():
+      result = result and (context.getProperty(property) in value)
+    for property, (min, max) in self._range_criterion.iteritems():
+      value = context.getProperty(property)
+      if min is not None:
+        result = result and (value >= min)
+      if max is not None:
+        result = result and (value < max)
     multimembership_criterion_base_category_list = \
         self.getMultimembershipCriterionBaseCategoryList()
     membership_criterion_base_category_list = \
