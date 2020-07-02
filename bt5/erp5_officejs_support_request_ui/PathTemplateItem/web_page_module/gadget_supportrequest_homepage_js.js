@@ -20,7 +20,7 @@
     result = new Array(name.length);
     for (iname = 0; iname < name.length; iname += 1) {
       for (iaction = 0; iaction < action_object.length; iaction += 1) {
-        if (name[iname] === action_object[iaction].name) {
+        if (action_object[iaction].name.indexOf(name[iname]) !== -1) {
           result[iname] = action_object[iaction];
           break;
         }
