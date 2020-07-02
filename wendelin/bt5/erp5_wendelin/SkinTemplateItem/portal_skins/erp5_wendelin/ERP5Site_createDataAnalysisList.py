@@ -132,14 +132,18 @@ for movement in portal_catalog(query = query):
           # Except if it is a Data Array Line, then it is currently created by
           # data operation itself (probably this exception is inconsistent)
           if item_type not in aggregate_type_set and item_type != "Data Array Line":
-            item = portal.portal_catalog.getResultValue(
+            item_query_dict = dict(
               portal_type=item_type,
               validation_state="validated",
               item_variation_text=transformation_line.getVariationText(),
               item_device_relative_url=movement.getAggregateDevice(),
-              item_project_relative_url=data_analysis.getDestinationProject(),
               item_resource_uid=resource.getUid(),
               item_source_relative_url=data_analysis.getSource())
+
+            if data_analysis.getDestinationProjectValue() is not None:
+              item_query_dict["item_project_relative_url"] = data_analysis.getDestinationProject()
+            item = portal.portal_catalog.getResultValue(**item_query_dict)
+
             if item is None:
               module = portal.getDefaultModule(item_type)
               item = module.newContent(portal_type = item_type,
