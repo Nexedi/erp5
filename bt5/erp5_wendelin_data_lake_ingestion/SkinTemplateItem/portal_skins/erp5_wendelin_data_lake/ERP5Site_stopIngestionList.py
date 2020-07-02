@@ -69,8 +69,6 @@ for data_ingestion in portal_catalog(portal_type = "Data Ingestion",
             data_stream.setVersion(hash_value)
           if data_stream.getValidationState() != "validated" and data_stream.getValidationState() != "published":
             data_stream.validate()
-          if data_stream.getValidationState() != "published":
-            data_stream.publish()
           if data_ingestion.getSimulationState() == "started":
             data_ingestion.stop()
       except Exception as e:
