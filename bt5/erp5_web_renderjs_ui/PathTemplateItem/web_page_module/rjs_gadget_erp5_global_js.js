@@ -157,8 +157,26 @@
   function getListboxClipboardActionList() {
     var action_list = ensureArray(this.state.erp5_document._links.action_object_list_action || []),
       i,
+      pt = this.state.form_definition.pt,
       result_list = [],
       icon;
+    if (pt === 'form_dialog') {
+      return this.getTranslationList(['Select All', 'Unselect All'])
+        .push(function (translation_list) {
+          return [
+            {
+              title: translation_list[0],
+              icon: 'check-square-o',
+              action: 'select_all_document_list'
+            },
+            {
+              title: translation_list[1],
+              icon: 'ban',
+              action: 'unselect_all_document_list'
+            }
+          ];
+        });
+    }
     return this.getTranslationList(['Select All', 'Unselect All', 'Copy'])
       .push(function (translation_list) {
         result_list = [

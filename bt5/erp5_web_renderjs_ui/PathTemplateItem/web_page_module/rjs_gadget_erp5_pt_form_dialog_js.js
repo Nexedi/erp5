@@ -350,5 +350,6 @@
         update_button.disabled = false;
       }
     });
+    declareGadgetClassCanHandleListboxClipboardAction(rJS(window));
 
 }(window, rJS, RSVP, calculatePageTitle, domsugar, ensureArray));
