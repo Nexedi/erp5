@@ -32,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Utils import ScalarMaxConflictResolver
 from Products.ERP5.Document.IdGenerator import IdGenerator
-from _mysql_exceptions import ProgrammingError
+from MySQLdb import ProgrammingError
 from MySQLdb.constants.ER import NO_SUCH_TABLE
 from zLOG import LOG, INFO
 from BTrees.OOBTree import OOBTree
