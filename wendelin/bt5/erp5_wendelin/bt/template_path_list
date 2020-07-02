@@ -9,6 +9,8 @@ portal_categories/business_application
 portal_categories/business_application/**
 portal_categories/quantity_unit
 portal_categories/quantity_unit/**
+portal_categories/resolution
+portal_categories/resolution/**
 portal_categories/trade_phase/data
 portal_categories/trade_phase/data/**
 portal_categories/use
