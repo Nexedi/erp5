@@ -12,12 +12,6 @@ data_set_module/wendelin_**
 data_supply_module/wendelin_**
 organisation_module/wendelin_**
 portal_callables/IngestionPolicy_parseSimpleFluentdTag
-portal_categories/business_application
-portal_categories/business_application/**
-portal_categories/quantity_unit
-portal_categories/quantity_unit/**
-portal_categories/use
-portal_categories/use/**
 portal_ingestion_policies
 portal_ingestion_policies/wendelin_**
 project_module/wendelin_**
