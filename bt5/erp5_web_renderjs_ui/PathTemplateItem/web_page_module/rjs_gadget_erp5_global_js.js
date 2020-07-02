@@ -159,26 +159,41 @@
       i,
       result_list = [],
       icon;
-    result_list.push({
-      title: 'Copy',
-      icon: 'copy',
-      action: 'copy_document_list'
-    });
-    for (i = 0; i < action_list.length; i += 1) {
-      if (action_list[i].name === 'delete_document_list') {
-        icon = 'trash-o';
-      } else if (action_list[i].name === 'paste_document_list') {
-        icon = 'paste';
-      } else {
-        continue;
-      }
-      result_list.push({
-        title: action_list[i].title,
-        icon: icon,
-        action: action_list[i].name
+    return this.getTranslationList(['Select All', 'Unselect All', 'Copy'])
+      .push(function (translation_list) {
+        result_list = [
+          {
+            title: translation_list[0],
+            icon: 'check-square-o',
+            action: 'select_all_document_list'
+          },
+          {
+            title: translation_list[1],
+            icon: 'ban',
+            action: 'unselect_all_document_list'
+          },
+          {
+            title: translation_list[2],
+            icon: 'copy',
+            action: 'copy_document_list'
+          }
+        ];
+        for (i = 0; i < action_list.length; i += 1) {
+          if (action_list[i].name === 'delete_document_list') {
+            icon = 'trash-o';
+          } else if (action_list[i].name === 'paste_document_list') {
+            icon = 'paste';
+          } else {
+            continue;
+          }
+          result_list.push({
+            title: action_list[i].title,
+            icon: icon,
+            action: action_list[i].name
+          });
+        }
+        return result_list;
       });
-    }
-    return result_list;
   }
 
   function createSearchQuery(checked_uid_list, key) {
@@ -219,15 +234,16 @@
       unchecked_uid_list = argument_list[2],
       view,
       i,
+      select_attribute,
+      all_hide_element_list,
       queue;
 
     if (checked_uid_list.length === 0) {
       // If nothing is checked, use all unchecked values (same as xhtml style)
       checked_uid_list = unchecked_uid_list;
     }
-
-    if (action_name !== 'copy_document_list') {
-      // Copy action is only done on javascript side
+    if ((action_name !== 'copy_document_list') && (action_name !== 'select_all_document_list') && (action_name !== 'unselect_all_document_list')) {
+      // Copy, select all, un select all actions are only done on javascript side
       for (i = 0; i < action_list.length; i += 1) {
         if (action_name === action_list[i].name) {
           view = action_list[i].href;
@@ -262,7 +278,17 @@
             "message": "Nothing selected"
           });
         }
-
+        if ((action_name === 'select_all_document_list') || (action_name === 'unselect_all_document_list')) {
+          all_hide_element_list = gadget.element.querySelectorAll(".hide_element");
+          select_attribute = (action_name === 'select_all_document_list' ? true : false);
+          for (i = 0; i < all_hide_element_list.length; i += 1) {
+            all_hide_element_list[i].checked = select_attribute;
+          }
+          return notifyTranslatedMessage(gadget, {
+            "message": (action_name === 'select_all_document_list' ? 'Selected' : 'Unselected'),
+            "status": "success"
+          });
+        }
         if (action_name === 'copy_document_list') {
           return gadget.setSettingClipboardAction('clipboard', checked_uid_list)
             .push(function () {
