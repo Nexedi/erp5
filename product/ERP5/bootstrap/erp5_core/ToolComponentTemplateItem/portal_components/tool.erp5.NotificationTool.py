@@ -45,6 +45,9 @@ from email import encoders
 class ConversionError(Exception): pass
 class MimeTypeException(Exception): pass
 
+from AccessControl.SecurityInfo import allow_module
+allow_module(__name__)
+
 security = ModuleSecurityInfo(__name__)
 security.declarePublic('buildEmailMessage',)
 
