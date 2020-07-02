@@ -28,7 +28,7 @@
 ##############################################################################
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.BigFile import BigFile
+from erp5.component.document.BigFile import BigFile
 from wendelin.bigarray.array_zodb import ZBigArray
 from Products.ERP5.Document.File import _MARKER
 from ZPublisher import HTTPRangeSupport
