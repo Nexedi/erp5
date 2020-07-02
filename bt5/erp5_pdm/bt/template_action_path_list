@@ -10,6 +10,7 @@ Component | view
 Component | view_measure
 Component | view_movement_history
 Component | view_stock
+Component | view_stock_jio
 Internal Supply Line | additional_price
 Internal Supply Line | base_price
 Internal Supply Line | discount_ratio
@@ -50,6 +51,7 @@ Product | view_measure
 Product | view_movement_history
 Product | view_quantities
 Product | view_stock
+Product | view_stock_jio
 Purchase Supply Line | additional_price
 Purchase Supply Line | base_price
 Purchase Supply Line | discount_ratio
