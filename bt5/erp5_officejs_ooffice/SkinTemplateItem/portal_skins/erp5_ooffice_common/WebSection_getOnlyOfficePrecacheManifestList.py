@@ -17,6 +17,8 @@ url_list = [
   "ooffice_download_action.js",
   "gadget_erp5_page_ojs_download_convert.html",
   "gadget_erp5_page_ojs_download_convert.js",
+  "action_onlyoffice_clone.html",
+  "action_onlyoffice_clone.js",
 
   #onlyoffice editor
   "jio.js",
