@@ -343,6 +343,11 @@ def guarded_import(mname, globals=None, locals=None, fromlist=None,
   for fromname in fromlist or ():
     if fromname[:1] == '_':
       raise Unauthorized(fromname)
+
+  # BBB backward compatibility names for modules moved to ZODB components but
+  # used in restricted python
+  if mname == 'Products.ERP5Type.Log':
+    mname = 'erp5.component.module.Log'
   # ZODB Components must be imported beforehand as ModuleSecurityInfo() may be
   # called there and AccessControl secureModule() expects to find the module
   # in _moduleSecurity dict. Also, import loader will fill MNAME_MAP.
