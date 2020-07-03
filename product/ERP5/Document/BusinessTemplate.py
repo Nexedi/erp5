@@ -6509,6 +6509,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
     _migrate_exception_set = set([
       ## Bootstrap
+      'Products.ERP5.ERP5Defaults',
       'Products.ERP5.ERP5Site',
       'Products.ERP5Type.XMLObject',
       'Products.ERP5Type.ImmediateReindexContextManager',
@@ -6516,6 +6517,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.CopySupport',
       'Products.ERP5Type.interfaces.json_representable',
       'Products.ERP5Type.mixin.json_representable',
+      'Products.ERP5Type.XMLExportImport',
       'Products.ERP5Type.Base',
       'Products.ERP5Type.Tool.BaseTool',
       'Products.ERP5Type.ERP5Type',
@@ -6536,6 +6538,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.interfaces.types_tool',
       'Products.ERP5Type.interfaces.object_message',
       'Products.ERP5Type.ObjectMessage',
+      'Products.ERP5Type.interfaces.consistency_message',
       'Products.ERP5Type.ConsistencyMessage',
       'Products.ERP5Type.Tool.ComponentTool',
       'Products.ERP5Type.Tool.PropertySheetTool',
@@ -6558,6 +6561,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5.Document.BaseCategory',
       'Products.ERP5.Document.Node',
       'Products.ERP5.Document.MetaNode',
+      'Products.ERP5Type.XMLMatrix',
       'Products.ERP5.Document.Resource',
       'Products.ERP5.Document.MetaResource',
       'Products.ERP5.Document.Category',
@@ -6572,6 +6576,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5.Document.Alarm',
       'Products.ERP5Type.tests.testUpgradeInstanceWithOldDataFs',
       # Any Constraints may be used by upgrader, right?
+      'Products.ERP5Type.interfaces.constraint',
+      'Products.ERP5Type.mixin.constraint',
       'Products.ERP5.Document.AttributeBlacklistedConstraint',
       'Products.ERP5.Document.AttributeUnicityConstraint',
       'Products.ERP5.Document.CategoryAcquiredMembershipStateConstraint',
@@ -6624,6 +6630,32 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.Interactor.Interactor',
       # For Filesystem modules only
       'Products.ERP5Type.InitGenerator',
+      # ERP5OOo: Going towards HTML and requiring quite a lot of work (for
+      # example still not using Portal Type as Classes for FormPrintout and
+      # OOoTemplate) which is likely to break things, so leave it as it
+      # is. See arnau-RD-Components-ERP5OOo.
+      'Products.ERP5OOo.OOoUtils',
+      'Products.ERP5OOo.FormPrintout',
+      'Products.ERP5OOo.OOoTemplate',
+      'Products.ERP5OOo.transforms.odt_to_pdf',
+      'Products.ERP5OOo.transforms.odt_to_doc',
+      'Products.ERP5OOo.transforms.html_to_odt',
+      'Products.ERP5OOo.transforms.oood_commandtransform',
+      'Products.ERP5OOo.transforms.odt_to_xml',
+      'Products.ERP5OOo.tests.TestFormPrintoutMixin',
+      'Products.ERP5OOo.tests.testOOoImport',
+      'Products.ERP5OOo.tests.test_document.TEST-en-002',
+      'Products.ERP5OOo.tests.testOOoStyle',
+      'Products.ERP5OOo.tests.testOOoBatchMode',
+      'Products.ERP5OOo.tests.testOOoParser',
+      'Products.ERP5OOo.tests.testDeferredStyle',
+      'Products.ERP5OOo.tests.testFormPrintoutAsODG',
+      'Products.ERP5OOo.tests.testIngestionWithFlare',
+      'Products.ERP5OOo.tests.utils',
+      'Products.ERP5OOo.tests.testOOoStyleWithFlare',
+      'Products.ERP5OOo.tests.testFormPrintoutAsODT',
+      'Products.ERP5OOo.tests.testIngestion',
+      'Products.ERP5OOo.tests.testOOoDynamicStyle',
     ])
 
     security.declareProtected(Permissions.ManagePortal,
