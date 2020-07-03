@@ -34,7 +34,7 @@
           id: field_json.key,
           name: field_json.key,
           title: field_json.title,
-          precision: window.parseFloat(field_json.precision),
+          precision: window.parseFloat(field_json.precision > 0 ? field_json.precision : 0),
           // erp5 always put value into "default" (never "value")
           value: window.parseFloat(field_json.default),
           text_content: '',
