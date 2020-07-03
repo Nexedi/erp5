@@ -1,5 +1,29 @@
+Drawing | officejs_support_request_download
+Drawing | officejs_support_request_preview
+Drawing | officejs_support_request_view
+File | officejs_support_request_download
+File | officejs_support_request_preview
+File | officejs_support_request_view
+Image | officejs_support_request_download
+Image | officejs_support_request_preview
+Image | officejs_support_request_view
+PDF | officejs_support_request_download
+PDF | officejs_support_request_preview
+PDF | officejs_support_request_view
+Presentation | officejs_support_request_download
+Presentation | officejs_support_request_preview
+Presentation | officejs_support_request_view
+Spreadsheet | officejs_support_request_download
+Spreadsheet | officejs_support_request_preview
+Spreadsheet | officejs_support_request_view
 Support Request Module | fast_input
+Support Request Module | fast_input_officejs_support_request_view
 Support Request Module | generate_rss_link
 Support Request Module | officejs_support_request_view
 Support Request Module | view_last_support_request
+Support Request Module | view_last_support_request_officejs_support_request_view
+Support Request | officejs_support_request_list
 Support Request | officejs_support_request_view
+Text | officejs_support_request_download
+Text | officejs_support_request_preview
+Text | officejs_support_request_view
