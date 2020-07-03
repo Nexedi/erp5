@@ -18,7 +18,6 @@ import email
 import transaction
 from lxml import html
 from Products.ERP5Type.Utils import formatRFC822Headers
-from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
