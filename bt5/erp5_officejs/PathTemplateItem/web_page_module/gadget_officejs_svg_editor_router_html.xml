@@ -110,7 +110,7 @@
             <value>
               <object>
                 <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
+                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
                 </klass>
                 <tuple>
                   <none/>
@@ -132,6 +132,59 @@
             <key> <string>short_title</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>temp_conversion_data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>17915:1:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>68b329da9893e34099c7d8ad5cb9c940</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="base64">Cg==</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass> <reference id="1.1"/> </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1592599437.27</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>1</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
         <item>
@@ -279,7 +332,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>977.62238.19609.14984</string> </value>
+                      <value> <string>984.44540.291.22579</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -297,7 +350,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1568973476.25</float>
+                              <float>1593803750.69</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
