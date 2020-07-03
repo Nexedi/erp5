@@ -33,7 +33,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5.Document.Document import Document
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.BTreeData import PersistentString
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 class IndexSequence:
   """
