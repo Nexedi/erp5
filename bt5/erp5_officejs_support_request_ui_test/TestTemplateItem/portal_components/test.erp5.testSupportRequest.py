@@ -68,17 +68,17 @@ class SupportRequestTestCase(ERP5TypeTestCase, object):
 
   def createUserAndLogin(self):
     self.user = self.portal.person_module.newContent(
-        first_name=self.id()
+      first_name=self.id()
     )
     self.user.newContent(
-        portal_type='Assignment'
+      portal_type='Assignment'
     ).open()
     self.user_password = self.newPassword()
     self.user.newContent(
-        id='erp5_login',
-        portal_type='ERP5 Login',
-        reference=self.id(),
-        password=self.user_password
+      id='erp5_login',
+      portal_type='ERP5 Login',
+      reference=self.id(),
+      password=self.user_password
     ).validate()
     self.user.validate()
     self.tic()
@@ -94,6 +94,46 @@ class SupportRequestTestCase(ERP5TypeTestCase, object):
 
 
 class TestSupportRequestCreateNewSupportRequest(SupportRequestTestCase):
+
+  def test_existing_portal_type_action_to_support_request(self):
+    portal_type_list = [
+      p for p in self.portal.getPortalDocumentTypeList() \
+      if p not in ("Sound", "Video", "Web Page", 'Video', 'Web Illustration',
+                   'Web Manifest', 'Web Page', 'Web Script', 'Web Style',
+                   'Web Table')]
+    # Should not happens but we never know
+    assert portal_type_list, portal_type_list
+
+    for portal_type_str in portal_type_list:
+      portal_type = self.portal.portal_types[portal_type_str]
+      action_list = portal_type.objectValues(portal_type="Action Information")
+      filtered_action_list = [action.getReference() \
+        for action in sorted(action_list, key=lambda x: x.getFloatIndex()) \
+        if action.getActionType() == "object_officejs_support_request_view"
+      ]
+      self.assertIn("officejs_support_request_preview",
+                    filtered_action_list,
+                    "missing officejs_support_request_preview in {}".format(portal_type_str))
+      self.assertIn("officejs_support_request_view",
+                    filtered_action_list,
+                    "missing officejs_support_request_view in {}".format(portal_type_str))
+      self.assertIn("officejs_support_request_download", filtered_action_list,
+                    "missing officejs_support_request_download in {}".format(portal_type_str))
+      self.assertEqual(filtered_action_list[0], "officejs_support_request_preview",
+                       "Unexpected action to {} => {}".format(portal_type,
+                                                              filtered_action_list[0]))
+
+    for portal_type_str in ["Support Request", "Support Request Module"]:
+      portal_type = self.portal.portal_types[portal_type_str]
+      action_list = portal_type.objectValues(portal_type="Action Information")
+      filtered_action_list = [action.getReference() \
+        for action in sorted(action_list, key=lambda x: x.getFloatIndex()) \
+        if action.getActionType() == "object_officejs_support_request_view"
+      ]
+      self.assertIn("officejs_support_request_view",
+                    filtered_action_list,
+                    "missing officejs_support_request_view in {}".format(portal_type_str))
+
   def test_submit_support_request(self):
     self.getWebSite().SupportRequestModule_createSupportRequest(
         description='<b>Help !!!</b>',
