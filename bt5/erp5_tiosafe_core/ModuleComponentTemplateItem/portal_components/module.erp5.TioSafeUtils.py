@@ -87,7 +87,7 @@ class NewEchoDictTarget:
     #self._current_tag = None
     try:
       if len(self.parser_stack):
-        value , subtag = self.parser_stack[-1][tag]
+        _, subtag = self.parser_stack[-1][tag]
         if subtag:
           if len(self.parser_stack) == 1:
             # This is the end of an object
@@ -162,7 +162,7 @@ class EchoDictTarget:
 
   def end(self, tag):
     try:
-      value , root = self.parser_dict[tag]
+      _, root = self.parser_dict[tag]
       if root:
         self.result_list.append(self._current_object.copy())
     except KeyError:

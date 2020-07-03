@@ -28,14 +28,6 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5TioSafe.Utils import EchoDictTarget
-from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
-from App.Extensions import getBrain
-from lxml import etree
-from zLOG import LOG, ERROR
-from urllib2 import URLError, HTTPError
-
-_MARKER = []
 
 class IntegrationModule(XMLObject):
   # CMF Type Definition
@@ -56,7 +48,7 @@ class IntegrationModule(XMLObject):
                     , PropertySheet.Arrow
                       )
 
-  def checkConsistency(self, fixit=False, filter=None, **kw):
+  def checkConsistency(self, fixit=False, filter=None, **kw): # pylint: disable=redefined-builtin
     """
     consistency is checked through a web service request
     """
