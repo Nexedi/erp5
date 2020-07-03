@@ -334,6 +334,7 @@
   function declareGadgetClassCanHandleListboxClipboardAction(gadget_klass) {
     gadget_klass
       .declareAcquiredMethod("getTranslationClipboardAction", "translate")
+      .declareAcquiredMethod("getTranslationList", "getTranslationList")
       .declareAcquiredMethod("setSettingClipboardAction", "setSetting")
       .declareAcquiredMethod("getSettingClipboardAction", "getSetting")
       .declareAcquiredMethod("redirectClipboardAction", "redirect")
