@@ -61,7 +61,7 @@ for handler_id, module_id in handler_module_dict.iteritems():
   # WebServiceTool.connect .
   try:
     module = __import__(
-      'Products.ERP5Type.ConnectionPlugin.%s' % (module_id, ),
+      'erp5.component.module.%s' % (module_id, ),
       globals(), {}, [module_id])
   except ImportError:
     LOG('WebServiceTool', WARNING,

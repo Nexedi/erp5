@@ -91,7 +91,6 @@ from Products.CMFCore.utils import getToolByName
 from functools import partial
 from xmlrpclib import Fault, ServerProxy, ProtocolError
 from AccessControl import Unauthorized
-from Products.ERP5Type.ConnectionPlugin.TimeoutTransport import TimeoutTransport
 from socket import error as SocketError
 from DateTime import DateTime
 class DocumentConversionServerProxy():
@@ -128,6 +127,7 @@ class DocumentConversionServerProxy():
         raise ConversionError('OOoDocument: cannot proceed with conversion:'
               ' preferred conversion server url is invalid')
 
+      from erp5.component.module.TimeoutTransport import TimeoutTransport
       transport = TimeoutTransport(timeout=timeout, scheme=scheme)
 
       self._serverproxy_list.append((uri, ServerProxy(uri, allow_none=True, transport=transport)))

@@ -28,7 +28,7 @@
 
 import SOAPpy
 from Products.AGProjects.patches import SOAPpy_WSDL as WSDL
-from AccessControl.SecurityInfo import allow_class, allow_module
+from AccessControl.SecurityInfo import allow_class
 import threading
 
 # Exception class.
@@ -40,7 +40,7 @@ class SOAPWSDLException(Exception):
 
   __allow_access_to_unprotected_subobjects__ = 1
 
-  def __init__(self, code, name, info):
+  def __init__(self, code, name, info): # pylint: disable=super-init-not-called
     self.code = code
     self.name = name
     self.info = info

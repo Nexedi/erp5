@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from xmlrpclib import Fault, ProtocolError
+from xmlrpclib import ProtocolError
 from xmlrpclib import Transport
 from xmlrpclib import SafeTransport
 import socket
@@ -47,6 +47,6 @@ class TimeoutTransport(SafeTransport):
   def send_content(self, connection, request_body):
     try:
       return SafeTransport.send_content(self, connection, request_body)
-    except socket.error, e:
+    except socket.error:
       raise ProtocolError(connection.host, -1,
                           "Could not connect to server", None)

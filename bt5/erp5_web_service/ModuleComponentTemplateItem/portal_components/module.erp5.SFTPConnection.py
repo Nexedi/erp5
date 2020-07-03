@@ -76,7 +76,7 @@ class SFTPConnection:
             # May not be easy if name resolution is involved.
             # Try to reconciliate them ?
             sock.bind((self.bind_address, 0))
-          retry_on_signal(lambda: sock.connect((hostname, port)))
+          retry_on_signal(lambda: sock.connect((hostname, port))) # pylint: disable=cell-var-from-loop
           break
       else:
         raise SFTPError('No suitable socket family found')
@@ -114,7 +114,7 @@ class SFTPConnection:
     try:
       self.conn.putfo(StringIO(str(serialized_data)), filepath, confirm=confirm)
     except error, msg:
-      raise SFTPError(str(msg) + ' while writing file %s on %s' % (filepath, path, self.url))
+      raise SFTPError(str(msg) + ' while writing file %s on %s' % (filepath, path))
 
   def _getFile(self, filepath):
     """Retrieve the file"""
