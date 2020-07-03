@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>officejs_support_request_view</string> </value>
+            <value> <string>officejs_support_request_download</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -52,11 +52,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>2.0</float> </value>
+            <value> <float>3.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>View</string> </value>
+            <value> <string>Download</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -73,7 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/SupportRequest_viewForOfficejsSupportRequest</string> </value>
+            <value> <string>string:${object_url}/Document_viewDownloadDialog</string> </value>
         </item>
       </dictionary>
     </pickle>
