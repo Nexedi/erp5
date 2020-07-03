@@ -21,11 +21,6 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@data-i18n="[value]Generate RSS"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
   <td>//div[@id='wrap1']</td>
   <td></td>
 </tr>
