@@ -8,3 +8,4 @@ module.erp5.OrganisationERP5IntegrationConduit
 module.erp5.TioSafeBaseConduit
 module.erp5.TioSafeNodeConduit
 module.erp5.TioSafeResourceConduit
+module.erp5.TioSafeUtils

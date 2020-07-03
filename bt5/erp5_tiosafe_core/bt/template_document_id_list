@@ -1,3 +1,6 @@
-document.erp5.WebServiceRequestGroup
 document.erp5.WebServiceConnector
 document.erp5.WebServiceRequest
+document.erp5.WebServiceRequestGroup
+document.erp5.IntegrationMapping
+document.erp5.IntegrationModule
+document.erp5.IntegrationSite

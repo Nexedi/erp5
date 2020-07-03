@@ -28,7 +28,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5TioSafe.Utils import EchoDictTarget, NewEchoDictTarget
+from erp5.component.module.TioSafeUtils import EchoDictTarget, NewEchoDictTarget
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from App.Extensions import getBrain
 from lxml import etree
