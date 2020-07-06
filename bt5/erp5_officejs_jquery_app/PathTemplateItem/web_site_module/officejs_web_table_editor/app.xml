@@ -433,7 +433,9 @@ WebSection_getJexcelEditorPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>configuration_webapp_manifest_url</string> </key>
-            <value> <string>gadget_officejs_web_table_install.json</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -678,7 +680,7 @@ WebSection_getJexcelEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>984.59943.25702.48622</string> </value>
+                      <value> <string>985.4790.62973.27306</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -696,7 +698,7 @@ WebSection_getJexcelEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1594816416.45</float>
+                              <float>1594063571.26</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
