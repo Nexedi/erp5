@@ -229,7 +229,7 @@ class ParallelListField(ZMIField):
 
 def generateSubForm(self, value, REQUEST):
   item_list = [x for x in self.get_value('items', REQUEST=REQUEST)
-                 if x[0] != '' and x[1]]
+                 if x[0] != '' and x[1] != '']
 
   value_list = value
   if not isinstance(value_list, (list, tuple)):
