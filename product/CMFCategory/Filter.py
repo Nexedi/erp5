@@ -64,32 +64,26 @@ class Filter(Implicit):
     self.filter_node = filter_node
     self.filter_leave = filter_leave
 
+  def _isNode(self, context):
+    return bool(context.contentIds(filter={'portal_type' : 'Category'}))
+
   def test(self, context):
     """
       Test filter on a context
     """
-    #LOG('Filter test', 0, 'context = %s' % repr(context))
-    is_node = None
-    if self.filter_node:
-      is_node = len(context.contentIds(filter={'portal_type' : 'Category'}))
-      if is_node:
-        return 0
-    if self.filter_leave:
-      if is_node is None:
-        # Only recalculate is_node if not already done
-        is_node = len(context.contentIds(filter={'portal_type' : 'Category'}))
-      if not is_node:
-        return 0
+    if self.filter_node and self._isNode(context):
+      return False
+    if self.filter_leave and not self._isNode(context):
+      return False
     for k, v in self.filter_dict.items():
-      #LOG('Filter test', 0, "k = %s, v = %s" % (repr(k), repr(v)))
       if type(v) in (type([]), type(())):
         if context.getProperty(k) not in v:
-          return 0
+          return False
       elif context.getProperty(k) != v:
-        return 0
+        return False
     if self.filter_method is not None:
       return self.filter_method(context)
-    return 1
+    return True
 
 
   def asDict(self):
