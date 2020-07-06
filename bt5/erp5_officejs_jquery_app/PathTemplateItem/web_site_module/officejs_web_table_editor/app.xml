@@ -432,7 +432,9 @@ WebSection_getWebTableEditorPrecacheManifestList</string> </value>
         </item>
         <item>
             <key> <string>configuration_webapp_manifest_url</string> </key>
-            <value> <string>gadget_officejs_web_table_install.json</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -677,7 +679,7 @@ WebSection_getWebTableEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>983.23018.43853.17715</string> </value>
+                      <value> <string>985.4790.62973.27306</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -695,7 +697,7 @@ WebSection_getWebTableEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1587729708.72</float>
+                              <float>1594063571.26</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
