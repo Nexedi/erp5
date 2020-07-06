@@ -23,6 +23,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -41,6 +42,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -59,6 +62,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -69,8 +80,16 @@
             <value> <string>text/html</string> </value>
         </item>
         <item>
+            <key> <string>creators</string> </key>
+            <value>
+              <tuple>
+                <string>cedric.le.ninivin</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_export.html</string> </value>
+            <value> <string>gadget_officejs_slideshow_editor_router.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -80,11 +99,30 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_export_html</string> </value>
+            <value> <string>gadget_officejs_slideshow_editor_router_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>modification_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1455284352.21</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -98,7 +136,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget OfficeJS jIO Export Page</string> </value>
+            <value> <string>OfficeJS Slideshow Editor router Gadget</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -160,7 +204,7 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>publish</string> </value>
+                      <value> <string>publish_alive</string> </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -186,7 +230,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1491395389.96</float>
+                              <float>1593525430.51</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -195,7 +239,7 @@
                   </item>
                   <item>
                       <key> <string>validation_state</string> </key>
-                      <value> <string>published</string> </value>
+                      <value> <string>published_alive</string> </value>
                   </item>
                 </dictionary>
               </list>
@@ -235,7 +279,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>985.28933.8790.47291</string> </value>
+                      <value> <string>985.27452.53555.61064</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -253,7 +297,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1595583478.67</float>
+                              <float>1595421110.02</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -314,7 +358,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1491395255.14</float>
+                              <float>1593525264.08</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
