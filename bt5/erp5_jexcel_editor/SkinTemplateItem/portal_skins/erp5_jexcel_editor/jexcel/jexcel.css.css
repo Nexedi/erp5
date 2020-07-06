@@ -7,7 +7,7 @@
     padding-right:2px;
     box-sizing: border-box;
     overscroll-behavior: contain;
-    padding-bottom: 40px;
+    padding-bottom: 33px;
 }
 
 .jexcel_container.fullscreen {
@@ -66,10 +66,10 @@
     background-color: #fff;
     width: 0;
 
-    border-top: 1px solid transparent;
+    /*border-top: 1px solid transparent;
     border-left: 1px solid transparent;
     border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;*/
 }
 
 .jexcel > thead > tr > td

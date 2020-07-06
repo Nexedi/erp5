@@ -35,3 +35,13 @@ td {
 input.readonly {
   cursor: not-allowed;
 }
+
+body > div.spreadsheet.jexcel_tabs > div:nth-child(1) {
+  position : absolute;
+  bottom: 0;
+}
+
+.jexcel_tab.jexcel_container.fullscreen.with-toolbar {
+  position: absolute;
+  top: 0;
+}

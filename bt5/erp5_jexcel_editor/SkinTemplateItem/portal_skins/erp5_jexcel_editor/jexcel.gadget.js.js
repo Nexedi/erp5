@@ -124,8 +124,8 @@
 
     .declareMethod("setupTable", function (element) {
       var gadget = this;
-      var filter = element.querySelector(".jexcel_filter");
-      element.querySelector(".jexcel_toolbar").appendChild(filter);
+      //var filter = element.querySelector(".jexcel_filter");
+      //element.querySelector(".jexcel_toolbar").appendChild(filter);
       element.querySelector("select.jexcel_toolbar_item").classList.add("minimize");
       var formula_div = document.createElement("div");
       formula_div.classList.add("jexcel_formula");

@@ -37,11 +37,11 @@
     allowRenameColumn: true,
     allowComments: true,
     selectionCopy: true,
-    search: true,
+    search: false,
     fullscreen: true,
     autoIncrement: true,
     parseFormulas: true,
-    wordWrap: true
+    wordWrap: true,
   };
 
   var undo = {
