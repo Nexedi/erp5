@@ -108,9 +108,76 @@
             </value>
         </item>
         <item>
+            <key> <string>temp_conversion_data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>36482:1:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>f3e3614abd66ff5da7f73b91303f0d64</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string>CONFIGURATION MANIFEST # generated on Fri Dec 13 20:31:13 2019 CACHE:\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
+hateoas_appcache/definition_view/\n
+cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZS93ZWJfdGFibGVfdmlldw== hateoas_appcache/\n
+definition_view/\n
+cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9XZWJQYWdlTW9kdWxlX3ZpZXdXZWJUYWJsZUxpc3RBc0ppb0ZvcldlYlRhYmxlRWRpdG9y\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZQ==\n
+hateoas_appcache/definition_view/\n
+cG9ydGFsX3R5cGVzL1dlYiBUYWJsZS93ZWJfdGFibGVfdmlldw== hateoas_appcache/\n
+definition_view/\n
+cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9XZWJUYWJsZV92aWV3QXNKaW9Gb3JXZWJUYWJsZUVkaXRvcg\n
+== NETWORK: *\n
+</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass>
+                                  <global name="DateTime" module="DateTime.DateTime"/>
+                                </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1592599435.23</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>688</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
             <key> <string>text_content</string> </key>
             <value> <string>CONFIGURATION MANIFEST\n
-# generated on Fri Dec 13 20:31:13 2019\n
+# generated on Mon Jul  6 20:12:17 2020\n
 CACHE:\n
 \n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
@@ -119,6 +186,8 @@ hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZQ==\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZS93ZWJfdGFibGVfdmlldw==\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9XZWJUYWJsZV92aWV3QXNKaW9Gb3JXZWJUYWJsZUVkaXRvcg==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZS93ZWJfdGFibGVfY2xvbmU=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9CYXNlX2Nsb25lRG9jdW1lbnRGb3JXZWJUYWJsZUVkaXRvcg==\n
 \n
 NETWORK:\n
 *</string> </value>
