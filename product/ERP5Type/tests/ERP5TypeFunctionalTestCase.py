@@ -200,6 +200,13 @@ class FunctionalTestRunner:
       # https://bugzilla.mozilla.org/show_bug.cgi?id=1338144
       options = webdriver.FirefoxOptions()
       options.set_preference('dom.serviceWorkers.enabled', True)
+      # Allow Clipboard
+      # http://kb.mozillazine.org/Granting_JavaScript_access_to_the_clipboard
+      options.set_preference("capability.policy.policynames", "allowclipboard");
+      options.set_preference("capability.policy.allowclipboard.sites",
+       self._getTestBaseURL());
+      options.set_preference("capability.policy.allowclipboard.Clipboard.cutcopy", "allAccess");
+      options.set_preference("capability.policy.allowclipboard.Clipboard.paste", "allAccess");
       kw = dict(capabilities=capabilities, options=options)
       firefox_bin = os.environ.get('firefox_bin')
       if firefox_bin:
