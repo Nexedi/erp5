@@ -151,6 +151,11 @@ class SavedTestSuite(ERP5TypeTestSuite):
     self._portal_id = 'portal_%i' % (random.randint(0, sys.maxint), )
     super(SavedTestSuite, self).__init__(*args, **kw)
 
+  def getLogDirectoryPath(self, *args, **kw):
+    if '--save' in args:
+      args += ('{}_save_{}'.format(args[-1], self.instance), )
+    return super(SavedTestSuite, self).getLogDirectoryPath(*args, **kw)
+
   def __runUnitTest(self, *args, **kw):
     if self.__dict__.has_key("bt5_path"):
       args = ("--bt5_path=%s" % self.bt5_path,) + args
