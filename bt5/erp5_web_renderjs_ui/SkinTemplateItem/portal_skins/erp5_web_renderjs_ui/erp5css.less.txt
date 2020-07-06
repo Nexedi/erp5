@@ -1200,6 +1200,20 @@ div[data-gadget-scope='header'] .ui-header {
     .renderPageSubmitButton(@grey);
   }
 
+  .sign_in_with_google {
+    height: 46px;
+    width: 191px;
+    display: inline-block;
+    overflow: hidden;
+    margin-top: @margin-size;
+  }
+  .sign_in_with_google img:hover {
+    margin-top: -46px;
+  }
+  .sign_in_with_google img:active {
+    margin-top: -92px;
+  }
+
   @media @desktop {
     div[data-role='page']:not(.desktop-panel-hidden) & {
       // Keep the panel always visible
