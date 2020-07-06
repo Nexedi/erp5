@@ -1182,6 +1182,16 @@ class ObjectTemplateItem(BaseTemplateItem):
     """
     pass
 
+  def onReplaceObject(self, obj):
+    """
+      Installation hook.
+      Called when installation process determined that object to install is
+      to replace an existing object on current site (it's not new).
+      `obj` parameter is the replaced object in its acquisition context.
+      Can be overridden by subclasses.
+    """
+    pass
+
   def setSafeReindexationMode(self, context):
     """
       Postpone indexations after unindexations.
@@ -1425,6 +1435,8 @@ class ObjectTemplateItem(BaseTemplateItem):
         if not object_existed:
           # A new object was added, call the hook
           self.onNewObject(obj)
+        else:
+          self.onReplaceObject(obj)
 
         # mark a business template installation so in 'PortalType_afterClone' scripts
         # we can implement logical for reseting or not attributes (i.e reference).
@@ -4272,6 +4284,10 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
 
       obj.workflow_history[wf_id] = WorkflowHistoryList([wf_history])
 
+  def onNewObject(self, _):
+    self._do_reset = True
+  onReplaceObject = onNewObject
+
   def afterInstall(self):
     """
     Reset component on the fly, because it is possible that those components
@@ -4284,7 +4300,8 @@ class _ZodbComponentTemplateItem(ObjectTemplateItem):
     This reset is called at most 3 times in one business template
     installation. (for Document, Test, Extension)
     """
-    self.portal_components.reset(force=True)
+    if getattr(self, '_do_reset', False):
+      self.portal_components.reset(force=True)
 
   def afterUninstall(self):
     self.portal_components.reset(force=True,
