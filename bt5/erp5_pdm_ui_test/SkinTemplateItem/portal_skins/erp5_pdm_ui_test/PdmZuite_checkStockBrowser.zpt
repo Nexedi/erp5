@@ -21,7 +21,7 @@
       </tr>
       <tr>
         <td>clickAndWait</td>
-        <td>Base_callDialogMethod:method</td>
+        <td>Base_showUpdateDialog:method</td>
         <td></td>
       </tr>
     </tal:block>
@@ -42,7 +42,7 @@
       </tr>
       <tr>
         <td>clickAndWait</td>
-        <td>Base_callDialogMethod:method</td>
+        <td>Base_showUpdateDialog:method</td>
         <td></td>
       </tr>
     </tal:block>
@@ -56,7 +56,7 @@
       </tr>
       <tr>
         <td>clickAndWait</td>
-        <td>Base_callDialogMethod:method</td>
+        <td>Base_showUpdateDialog:method</td>
         <td></td>
       </tr>
     </tal:block>

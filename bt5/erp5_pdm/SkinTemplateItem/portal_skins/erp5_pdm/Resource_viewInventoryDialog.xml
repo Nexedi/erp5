@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Resource_viewInventoryDialog</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>action_title</string> </key>
@@ -156,7 +156,7 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Resource_viewInventoryDialog</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>

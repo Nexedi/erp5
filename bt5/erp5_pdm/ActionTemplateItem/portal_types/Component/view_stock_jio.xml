@@ -16,13 +16,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_report</string>
+                <string>action_type/object_onlyjio_view</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_report</string> </value>
+            <value> <string>object_onlyjio_view</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -30,7 +30,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -38,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>view_stock</string> </value>
+            <value> <string>view_stock_jio</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -50,7 +52,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>3.0</float> </value>
+            <value> <float>4.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
