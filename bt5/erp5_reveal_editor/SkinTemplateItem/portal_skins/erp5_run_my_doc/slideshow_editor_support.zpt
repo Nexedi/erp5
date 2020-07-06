@@ -1,0 +1,16 @@
+<tal:block tal:define="site_root    python: here.getWebSiteValue() or here.getPortalObject();
+                       portal_url   python: site_root.absolute_url();">
+
+  <link rel="stylesheet" type="text/css" tal:attributes="href string:${portal_url}/jquery/ui/css/erp5-theme/jquery-ui.css">
+  <link rel="stylesheet" type="text/css" tal:attributes="href string:${portal_url}/slideshow_editor.css">
+  <script language="javascript" tal:attributes="src string:${portal_url}/slideshow_editor.js"></script>
+  <script language="javascript" tal:attributes="src string:${portal_url}/erp5_run_my_docs.js"></script>
+
+  <div id="list"></div>
+  <div id="add_slide">
+    <section id="add_slide_button"> Add Slide </section>
+  </div>
+  <div id="dialog_add_slide" class="slide_dialog"></div>
+  <div id="dialog_edit_slide" class="slide_dialog"></div>
+
+</tal:block>
