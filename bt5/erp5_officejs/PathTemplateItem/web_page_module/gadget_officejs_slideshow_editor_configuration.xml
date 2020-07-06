@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -65,12 +65,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_export.html</string> </value>
+            <value> <string>gadget_officejs_slideshow_editor.configuration</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -80,15 +76,17 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_export_html</string> </value>
+            <value> <string>gadget_officejs_slideshow_editor_configuration</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -97,12 +95,26 @@
             </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
-            <value> <string>Gadget OfficeJS jIO Export Page</string> </value>
+            <key> <string>text_content</string> </key>
+            <value> <string>CONFIGURATION MANIFEST\n
+# generated on Wed Jul 22 12:45:33 2020\n
+CACHE:\n
+\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Rlc3QgUGFnZQ==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Rlc3QgUGFnZS9zbGlkZXNob3dfZWRpdG9yX3ZpZXc=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc2xpZGVzaG93X2VkaXRvci9UZXN0UGFnZV92aWV3Rm9yU2xpZGVzaG93RWRpdG9y\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Rlc3QgUGFnZSBNb2R1bGU=\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Rlc3QgUGFnZSBNb2R1bGUvc2xpZGVzaG93X2VkaXRvcl92aWV3\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfb2ZmaWNlanNfc2xpZGVzaG93X2VkaXRvci9UZXN0UGFnZU1vZHVsZV92aWV3Rm9yU2xpZGVzaG93RWRpdG9y\n
+\n
+NETWORK:\n
+*</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -186,7 +198,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1491395389.96</float>
+                              <float>1593605055.2</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -235,7 +247,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>985.28933.8790.47291</string> </value>
+                      <value> <string>985.27427.59110.58180</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -253,7 +265,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1595583478.67</float>
+                              <float>1595418608.45</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -280,7 +292,9 @@
                 <dictionary>
                   <item>
                       <key> <string>action</string> </key>
-                      <value> <string>detect_converted_file</string> </value>
+                      <value>
+                        <none/>
+                      </value>
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
@@ -296,7 +310,7 @@
                   </item>
                   <item>
                       <key> <string>external_processing_state</string> </key>
-                      <value> <string>converted</string> </value>
+                      <value> <string>empty</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
@@ -314,7 +328,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1491395255.14</float>
+                              <float>1593605055.2</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

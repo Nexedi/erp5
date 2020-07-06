@@ -7,6 +7,8 @@ image_module/officejs_todomvc_*
 image_module/wallsearch_icon_svg
 portal_types/Document Module/pdf_viewer_view
 portal_types/PDF/pdf_viewer_view
+portal_types/Test Page Module/slideshow_editor_view
+portal_types/Test Page/slideshow_editor_view
 portal_types/Web Illustration/svg_editor_view
 portal_types/Web Page Module/codemirror_view
 portal_types/Web Page Module/svg_editor_view
@@ -40,6 +42,8 @@ web_site_module/officejs_notebook
 web_site_module/officejs_notebook/**
 web_site_module/officejs_pdf_viewer
 web_site_module/officejs_pdf_viewer/**
+web_site_module/officejs_slideshow_editor
+web_site_module/officejs_slideshow_editor/**
 web_site_module/officejs_smart_assistant
 web_site_module/officejs_smart_assistant/**
 web_site_module/officejs_svg_editor
