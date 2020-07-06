@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/css</string> </value>
+            <value> <string>text/less</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>

@@ -174,12 +174,19 @@
     .declareService(function () {
       var gadget = this,
         style_gadget,
-        body = gadget.element;
+        body = gadget.element,
+        style_gadget_url = body.getAttribute("data-nostyle-gadget-url");
+
+      if (!style_gadget_url) {
+        // No style configured, use backend only rendering
+        return rJS.declareCSS("nostyle.css", document.head);
+      }
+
       // Clear the DOM
       while (body.firstChild) {
         body.firstChild.remove();
       }
-      return gadget.declareGadget('nostyle_fdl.html', {scope: 'renderer'})
+      return gadget.declareGadget(style_gadget_url, {scope: 'renderer'})
         .push(function (result) {
           style_gadget = result;
           return style_gadget.render(gadget.main_element.innerHTML);

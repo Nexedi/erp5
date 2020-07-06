@@ -23,7 +23,7 @@
   <script src="gadget_global.js"></script>
   <script src="nostyle.js"></script>
   </head>
-  <body>
+  <body tal:attributes="data-nostyle-gadget-url python: web_site.getLayoutProperty('configuration_style_gadget_url', default='')">
     <tal:block tal:content="structure python: web_site.WebSite_generateNavigationHTML()"></tal:block>
     <main><tal:block metal:define-slot="main"/></main>
   </body>
