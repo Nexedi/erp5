@@ -51,6 +51,10 @@
             <value> <string>62</string> </value>
         </item>
         <item>
+            <key> <string>int_index</string> </key>
+            <value> <int>6</int> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Transition</string> </value>
         </item>
