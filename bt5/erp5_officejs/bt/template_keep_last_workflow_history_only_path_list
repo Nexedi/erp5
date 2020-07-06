@@ -32,6 +32,8 @@ web_site_module/officejs_notebook
 web_site_module/officejs_notebook/**
 web_site_module/officejs_pdf_viewer
 web_site_module/officejs_pdf_viewer/**
+web_site_module/officejs_slideshow_editor
+web_site_module/officejs_slideshow_editor/**
 web_site_module/officejs_svg_editor
 web_site_module/officejs_svg_editor/**
 web_site_module/officejs_text_editor
