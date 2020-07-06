@@ -125,6 +125,11 @@
         "url": "officejs_codemirror/",
         "storage_type": "precache",
         "cache": precache_manifest
+      },
+      "Slideshow Editor": {
+        "url": "officejs_slideshow_editor/",
+        "storage_type": "precache",
+        "cache": precache_manifest
       }
     };
 
