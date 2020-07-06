@@ -140,13 +140,17 @@ class TemplateTool (BaseTool):
           if state == 'installed':
             return bt
           if state == 'not_installed':
-            last_transition = bt.workflow_history \
-              ['business_template_installation_workflow'][-1]
-            if last_transition['action'] == 'uninstall': # There is not uninstalled state !
-              t = last_transition['time']
-              if last_time < t:
-                last_bt = None
-                last_time = t
+            try:
+              last_transition = bt.workflow_history \
+                ['business_template_installation_workflow'][-1]
+            except TypeError:
+              continue
+            else:
+              if last_transition['action'] == 'uninstall': # There is not uninstalled state !
+                t = last_transition['time']
+                if last_time < t:
+                  last_bt = None
+                  last_time = t
           elif state == 'replaced' and not strict:
             t = bt.workflow_history \
               ['business_template_installation_workflow'][-1]['time']
