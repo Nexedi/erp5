@@ -480,7 +480,7 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
         # Copy the dict, as some hashscript cache the result,
         # which should not in this case be modified
         result.update({"subfield_list": [x.copy() for x in getattr(field, hash_script_id)(
-                [x for x in result['items'] if (x[1] and x[0])],
+                [x for x in result['items'] if (x[1] != '' and x[0] != '')],
                 # Drop empty values
                 result['default'],
                 default_sub_field_property_dict={
