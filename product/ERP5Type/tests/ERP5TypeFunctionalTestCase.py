@@ -231,6 +231,15 @@ class FunctionalTestRunner:
     # Service workers are disabled on Firefox 52 ESR:
     # https://bugzilla.mozilla.org/show_bug.cgi?id=1338144
     options.set_preference('dom.serviceWorkers.enabled', True)
+    # Allow Clipboard
+    # http://kb.mozillazine.org/Granting_JavaScript_access_to_the_clipboard
+    options.set_preference("capability.policy.policynames", "allowclipboard")
+    options.set_preference(
+        "capability.policy.allowclipboard.sites",
+        self._getTestBaseURL())
+    options.set_preference("capability.policy.allowclipboard.Clipboard.cutcopy", "allAccess")
+    options.set_preference("capability.policy.allowclipboard.Clipboard.paste", "allAccess")
+
     # output javascript console and errors on stdout to help diagnosing failures
     options.set_preference('devtools.console.stdout.content', True)
 
