@@ -67,29 +67,21 @@ class SupportRequestTestCase(ERP5TypeTestCase, object):
     self.tic()
 
   def createUserAndLogin(self):
-    if not self.portal.portal_catalog(portal_type="ERP5 Login",
-                                      reference=self.id()):
-
-      self.user = self.portal.person_module.newContent(
-        first_name=self.id()
-      )
-      self.user.newContent(
-        portal_type='Assignment'
-      ).open()
-      self.user_password = self.newPassword()
-      self.user.newContent(
-        id='erp5_login',
-        portal_type='ERP5 Login',
-        reference=self.id(),
-        password=self.user_password
-      ).validate()
-      self.user.validate()
-      self.tic()
-    else:
-      self.user = self.portal.portal_catalog.getResultValue(
-        portal_type='ERP5 Login',
-        reference=self.id()
-      ).getParentValue()
+    self.user = self.portal.person_module.newContent(
+      first_name=self.id()
+    )
+    self.user.newContent(
+      portal_type='Assignment'
+    ).open()
+    self.user_password = self.newPassword()
+    self.user.newContent(
+      id='erp5_login',
+      portal_type='ERP5 Login',
+      reference=self.id(),
+      password=self.user_password
+    ).validate()
+    self.user.validate()
+    self.tic()
     # give this user some roles
     for role in ('Assignee', 'Assignor', 'Auditor',):
       self.portal.acl_users.zodb_roles.assignRoleToPrincipal(
