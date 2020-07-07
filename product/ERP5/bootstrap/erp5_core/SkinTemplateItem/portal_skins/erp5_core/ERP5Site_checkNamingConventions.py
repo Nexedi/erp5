@@ -18,7 +18,7 @@ ABBREVIATION_WORD_SET = ((
 ))
 
 # List of words that do not need to be titlecased
-LOWERCASE_WORD_SET = set(('g', 'cm', 'kg', '%', '/', '...', 'm', '-', 'g/m2', 'iCalendar', 'm&#179;', 'kB'))
+LOWERCASE_WORD_SET = set(('g', 'cm', 'kg', '%', '/', '...', 'm', '-', 'g/m2', 'iCalendar', 'm³', 'kB'))
 
 # List of words that should not be modified
 SPECIALCASE_WORD_SET = set(("ChangeLog", "EGov", "iCal", "included",
