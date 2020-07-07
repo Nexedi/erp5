@@ -12,8 +12,5 @@
     <script src="gadget_generate_rss_link.js" type="text/javascript"></script>
   </head>
   <body>
-    <button type="button" class="ui-btn ui-icon-copy ui-btn-icon-notext ui-btn-right" data-i18n="[value]Copy to Clipboard">
-      Copy to Clipboard
-    </button>
   </body>
 </html>

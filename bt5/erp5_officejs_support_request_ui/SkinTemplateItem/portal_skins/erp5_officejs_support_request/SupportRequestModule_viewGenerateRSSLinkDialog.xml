@@ -14,11 +14,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>SupportRequestModule_viewGenerateRSSDialog</string> </value>
+            <value> <string>SupportRequestModule_generateRSSLinkUrl</string> </value>
         </item>
         <item>
             <key> <string>action_title</string> </key>
-            <value> <string>Refresh page</string> </value>
+            <value> <string>Copy to clipboard</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -77,6 +77,7 @@
                     <value>
                       <list>
                         <string>generate_rss_link_gadget</string>
+                        <string>your_rss_url</string>
                       </list>
                     </value>
                 </item>
@@ -95,15 +96,15 @@
         </item>
         <item>
             <key> <string>method</string> </key>
-            <value> <string>GET</string> </value>
+            <value> <string>POST</string> </value>
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SupportRequestModule_generateRSSLink</string> </value>
+            <value> <string>SupportRequestModule_viewGenerateRSSLinkDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>report_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -115,7 +116,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Click the link bellow to obtain it</string> </value>
+            <value> <string>Click below to copy to clipboard</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
