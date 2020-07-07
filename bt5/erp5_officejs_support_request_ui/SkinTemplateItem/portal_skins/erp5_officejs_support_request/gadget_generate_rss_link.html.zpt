@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="gadget_generate_rss_link.css">
     <script src="rsvp.js" type="text/javascript"></script>
     <script src="renderjs.js" type="text/javascript"></script>
+    <script src="domsugar.js" type="text/javascript"></script>
     <script src="gadget_generate_rss_link.js" type="text/javascript"></script>
   </head>
   <body>
-    <button type="button" class="ui-btn ui-icon-copy ui-btn-icon-notext ui-btn-right" data-i18n="[value]Copy to Clipboard">
-      Copy to Clipboard
-    </button>
+    <div data-gadget-url="gadget_html5_input.html" data-gadget-scope="text_field"></div>
+    <button type="button" class="ui-btn-icon-left ui-icon-copy">Copy to Clipboard</button>
   </body>
 </html>
