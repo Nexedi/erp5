@@ -3,21 +3,14 @@
 (function (window, document, RSVP, rJS,
            XMLHttpRequest, location, console) {
   "use strict";
-  function download_tool(context, evt) {
-    var link = document.createElement('a');
-    link.href = window.location.origin + "/erp5/web_site_module/fif_data_runner/#/?page=download";
-    link.click();
-  }
 
   rJS(window)
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .allowPublicAcquisition('setFillStyle', function () {
       return {
         height: '100%',
         width: '100%'
       };
-    })
-    .declareJob('download_tool', function (evt) {
-      return download_tool(this, evt);
     })
     .declareMethod("render", function (reference) {
       var html = "pull <i>" + reference + "</i>";
@@ -26,14 +19,25 @@
       return this.changeState({"dataset_reference" : html});
     })
     .declareService(function () {
+      var gadget = this,
+        url_parameter_list = [];
       document.getElementById("dataset_reference").innerHTML = this.state.dataset_reference;
-    })
-    .onEvent('submit', function (evt) {
-      if (evt.target.name === 'download-tool') {
-        return this.download_tool(evt);
-      } else {
-        throw new Error('Unknown form');
-      }
+      url_parameter_list.push({
+        command: 'display_stored_state',
+        options: {page: 'download'}
+      });
+      url_parameter_list.push({
+        command: 'display_stored_state',
+        options: {page: 'register'}
+      });
+      return gadget.getUrlForList(url_parameter_list)
+        .push(function (url_list) {
+          document.querySelector("#download_link").href = url_list[0];
+          document.querySelector("#register_link").href = url_list[1];
+        })
+        .push(undefined, function (error) {
+          throw error;
+        });
     });
 }(window, document, RSVP, rJS,
   XMLHttpRequest, location, console));
