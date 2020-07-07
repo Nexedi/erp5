@@ -19,8 +19,8 @@
     })*/
     .allowPublicAcquisition('getUrlForList', function (argument_list) {
       var i,
-      options_list = argument_list[0],
-      result_list = [];
+        options_list = argument_list[0],
+        result_list = [];
       for (i = 0; i < options_list.length; i += 1) {
         if (options_list[i].command === 'index') {
           result_list.push({

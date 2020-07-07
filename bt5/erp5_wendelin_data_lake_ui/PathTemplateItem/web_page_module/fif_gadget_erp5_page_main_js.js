@@ -9,14 +9,6 @@
     .declareMethod("render", function () {
       var gadget = this;
       return new RSVP.Queue()
-        /*.push(function () {
-            return gadget.jio_allDocs({
-              query: 'portal_type:"Data Array"' +
-                     ' AND validation_state:"validated"',
-              select_list: ["title", "reference"],
-              limit: [0, 1000000]
-            });
-          })*/
         .push(function () {
           return gadget.getDeclaredGadget("gadget_fif_page_list_dataset");
         })
