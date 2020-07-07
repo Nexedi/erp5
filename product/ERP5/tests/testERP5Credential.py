@@ -36,7 +36,7 @@ import email, re
 from email.header import decode_header, make_header
 from email.utils import parseaddr
 import cgi
-from urlparse import urlparse
+import urlparse
 
 use_verbose_security = 0
 if use_verbose_security:
@@ -783,7 +783,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     url = url.strip()
     self.assertNotEquals(url, None)
     response = self.publish(url)
-    parameters = cgi.parse_qs(urlparse(url)[4])
+    parameters = cgi.parse_qs(urlparse.urlparse(url)[4])
     self.assertTrue('reset_key' in parameters)
     key = parameters['reset_key'][0]
     # before changing, check that the user exists with 'secret' password
@@ -1377,6 +1377,43 @@ class TestERP5Credential(ERP5TypeTestCase):
       "CheckCredentialRecoveryNotEmptyDestinationDecision"
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def test_ERP5Site_newCredentialRecovery_activity_fail_once(self):
+    self.stepSetCredentialRecoveryAutomaticApprovalPreferences()
+    self.login()
+    person = self.portal.person_module.newContent(
+        portal_type='Person',
+        default_email_coordinate_text='nobody@example.com',
+    )
+    assignment = person.newContent(portal_type='Assignment', function='manager')
+    assignment.open()
+    login = person.newContent(
+        portal_type='ERP5 Login',
+        reference=self.id(),
+        password='secret',
+    )
+    login.validate()
+    self.tic()
+
+    ret = self.portal.ERP5Site_newCredentialRecovery(reference=self.id())
+    self.assertEqual(
+      urlparse.parse_qs(urlparse.urlparse(ret).query)['portal_status_message'],
+      ['We have sent you an email to enable you to reset your password. Please check your inbox and your junk/spam mail for this email and follow the link to reset your password.'],
+    )
+    person.setDefaultEmailCoordinateText(None)
+    # Execute alarm, it will fail because this person has no email
+    with self.assertRaisesRegexp(
+        RuntimeError,
+        "User .* does not have an email address, please contact site administrator directly"):
+      self.tic()
+
+    # run alarm again, this does not cause another activity failure.
+    self.portal.portal_alarms.accept_submitted_credentials.activeSense()
+    with self.assertRaises(RuntimeError):
+      self.tic()
+    self.assertEqual(len(self.portal.portal_activities.getMessageList()), 1)
+    self.portal.portal_activities.manageClearActivities()
+    self.commit()
 
   def test_credential_request_properties(self):
     # test to prevent regression with a bug in property sheet definition
