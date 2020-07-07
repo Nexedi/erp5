@@ -8623,8 +8623,8 @@ msgstr "访问"
 msgid "Virtual Machines"
 msgstr "虚拟机"
 
-msgid "Volume (m&#179;)"
-msgstr "体积(m&#179;)"
+msgid "Volume (m³)"
+msgstr "体积(m³)"
 
 msgid "Warehouse"
 msgstr "仓库"
