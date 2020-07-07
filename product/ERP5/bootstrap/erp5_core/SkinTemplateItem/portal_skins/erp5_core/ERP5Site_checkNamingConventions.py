@@ -1,3 +1,4 @@
+# coding: utf-8
 # This script checks for naming validity.
 #
 # NOTE: Do not rely on this script too much! After all, human must take care.
@@ -18,7 +19,7 @@ ABBREVIATION_WORD_SET = ((
 ))
 
 # List of words that do not need to be titlecased
-LOWERCASE_WORD_SET = set(('g', 'cm', 'kg', '%', '/', '...', 'm', '-', 'g/m2', 'iCalendar', 'm&#179;', 'kB'))
+LOWERCASE_WORD_SET = set(('g', 'cm', 'kg', '%', '/', '...', 'm', '-', 'g/m2', 'iCalendar', 'm³', 'kB'))
 
 # List of words that should not be modified
 SPECIALCASE_WORD_SET = set(("ChangeLog", "EGov", "iCal", "included",
@@ -63,7 +64,7 @@ SENTENCE_PART_SET = set(SENTENCE_PART_LIST)
 assert len(SENTENCE_PART_SET) == len(SENTENCE_PART_LIST)
 
 # List of allowed characters, usefull to detect non-english strings
-ALLOWED_CHARS = set("abcdefghijklmnopqrstuvwxyz0123456789%/. ()-_?&'#,;")
+ALLOWED_CHARS = set("abcdefghijklmnopqrstuvwxyz0123456789%/. ()-_?&'#,;²³")
 
 def checkField(folder, form, field):
   """
