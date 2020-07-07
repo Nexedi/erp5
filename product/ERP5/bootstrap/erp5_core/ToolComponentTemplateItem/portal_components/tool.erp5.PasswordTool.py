@@ -295,10 +295,10 @@ class PasswordTool(BaseTool):
       return error("Date has expired.")
     del self._password_request_dict[password_key]
     portal = self.getPortalObject()
-    user_dict, = portal.acl_users.searchUsers(
+    user_dict, = [x for x in portal.acl_users.searchUsers(
       login=register_user_login,
-      exact_match=True,
-    )
+      exact_match=True,) if 'login_list' in x]
+
     login_dict, = user_dict['login_list']
     login = portal.unrestrictedTraverse(login_dict['path'])
     login.setPassword(password) # this will raise if password does not match policy
