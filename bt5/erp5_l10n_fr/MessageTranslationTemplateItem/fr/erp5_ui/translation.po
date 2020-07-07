@@ -1669,6 +1669,9 @@ msgstr "Participation de base"
 msgid "Base Price"
 msgstr "Prix de base"
 
+msgid "Base Price Defined per Slices"
+msgstr "Prix de base défini par tranches"
+
 msgid "Base Price Variation Axes"
 msgstr "Axes de variation du prix de base"
 
@@ -7285,6 +7288,15 @@ msgstr "Critère max"
 msgid "Max. Delay (Day)"
 msgstr "Délai max. (jours)"
 
+msgid "Max. Delay (Time Unit)"
+msgstr "Délai maximum (en unité de temps)"
+
+msgid "Max. Flow (Quantity Unit / Time Unit)"
+msgstr "Flux maximum (en unité de gestion / unité de temps)"
+
+msgid "Max. Stock (Quantity Unit)"
+msgstr "Stock maximum (en unité de gestion)"
+
 msgid "Max. delay (day)"
 msgstr "Délai Max (jours)"
 
@@ -7558,8 +7570,17 @@ msgstr "Critère min"
 msgid "Min. Delay (Day)"
 msgstr "Délai min. (jours)"
 
+msgid "Min. Delay (Time Unit)"
+msgstr "Délai minimum (en unité de temps)"
+
 msgid "Min. Flow"
 msgstr "Débit Minimum"
+
+msgid "Min. Flow (Quantity Unit / Time Unit)"
+msgstr "Flux minimum (en unité de gestion / unité de temps)"
+
+msgid "Min. Stock (Quantity Unit)"
+msgstr "Stock minium (en unité de gestion)"
 
 msgid "Min. delay (day)"
 msgstr "Délai min (jours)"
@@ -7701,6 +7722,9 @@ msgstr "Motif"
 
 msgid "Movement Date"
 msgstr "Date"
+
+msgid "Movement History"
+msgstr "Historique des mouvements"
 
 msgid "Movements"
 msgstr "Mouvements"
