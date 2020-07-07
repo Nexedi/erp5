@@ -105,8 +105,8 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>your_section_category</string>
                         <string>your_node_category</string>
+                        <string>your_section_category</string>
                       </list>
                     </value>
                 </item>
