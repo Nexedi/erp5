@@ -255,7 +255,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [("rss_url", here.SupportRequestModule_generateRSSLinkUrl())]</string> </value>
+            <value> <string>python: [("rss_url", request.get("your_rss_url"))]</string> </value>
         </item>
       </dictionary>
     </pickle>
