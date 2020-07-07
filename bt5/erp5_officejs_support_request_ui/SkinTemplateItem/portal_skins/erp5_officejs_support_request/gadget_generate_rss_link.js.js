@@ -5,28 +5,29 @@
 
   rJS(window)
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
+    .declareAcquiredMethod("nofitySubmited", "nofitySubmited")
     .declareMethod('render', function (options) {
       return this.changeState({
         rss_url: options.rss_url
       });
+    })
+    .declareMethod('getContent', function () {
+      return {"your_rss_url": this.state.rss_url};
     })
     .onEvent(
       'click',
       function (evt) {
         var gadget = this,
           root = this.element,
-          button = evt.target,
           button_text;
         evt.preventDefault();
         return gadget.getTranslationList(["Copied"])
           .push(function (result) {
             button_text = result[0];
-            button.classList.remove("ui-icon-copy");
             return navigator.clipboard.writeText(gadget.state.rss_url);
           })
           .push(function () {
-            button.classList.add("ui-icon-check");
-            button.textContent = " " + button_text;
+            return gadget.nofitySubmited(button_text);
           });
       },
       false,
