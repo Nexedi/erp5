@@ -235,11 +235,11 @@
                 </item>
                 <item>
                     <key> <string>validator_field_id</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>my_core_mode_text_content_validator</string> </value>
                 </item>
                 <item>
                     <key> <string>validator_form_id</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>erp5_core/Base_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -255,7 +255,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [("rss_url", here.SupportRequestModule_generateRSSLinkUrl())]</string> </value>
+            <value> <string>python: [("rss_url", request.get("your_rss_url"))]</string> </value>
         </item>
       </dictionary>
     </pickle>
