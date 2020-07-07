@@ -1,0 +1,112 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_skins/erp5_wendelin_data_lake_test/ERP5Site_createTestDataSet</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Dataset Created</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" /> -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/default_wendelin_data_lake/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/default_wendelin_data_lake/gadget_erp5_page_home.html']</td>
+  <td></td>
+</tr>
+<!-- Check panel -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/default_wendelin_data_lake/fif_gadget_erp5_panel.html']//a[text()='Home']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/default_wendelin_data_lake/fif_gadget_erp5_panel.html']//a[text()='Data Sets' and contains(@href, '#!display') and contains(@href, 'n.page=fifdata')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/default_wendelin_data_lake/fif_gadget_erp5_panel.html']//a[text()='Register' and contains(@href, '#!display') and contains(@href, 'n.page=register')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/default_wendelin_data_lake/fif_gadget_erp5_panel.html']//a[text()='Download Ebulk' and contains(@href, '#!display') and contains(@href, 'n.page=download')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/default_wendelin_data_lake/fif_gadget_erp5_panel.html']//a[text()='Contact us' and contains(@href, '#!display') and contains(@href, 'n.page=contact')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+ <td>//div[@data-gadget-url='${base_url}/web_site_module/default_wendelin_data_lake/fif_gadget_erp5_panel.html']//a[text()='Logout' and contains(@href, '#!display') and contains(@href, 'n.page=logout')]</td>
+  <td></td>
+</tr>
+<!-- Check links -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/default_wendelin_data_lake/gadget_erp5_page_home.html']//a[@id='home_link' and contains(@href, '#!display') and contains(@href, 'p.page=home')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/default_wendelin_data_lake/gadget_erp5_page_home.html']//a[@id='download_link' and contains(@href, '#!display') and contains(@href, 'n.page=download')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/default_wendelin_data_lake/gadget_erp5_page_home.html']//a[@id='download_ebulk_link' and contains(@href, '#!display') and contains(@href, 'n.page=download')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/default_wendelin_data_lake/gadget_erp5_page_home.html']//a[@id='dataset_link' and contains(@href, '#!display') and contains(@href, 'n.page=fifdata')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/default_wendelin_data_lake/gadget_erp5_page_home.html']//a[@id='register_link' and contains(@href, '#!display') and contains(@href, 'n.page=register')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/default_wendelin_data_lake/gadget_erp5_page_home.html']//a[@id='documentation_link' and contains(@href, '#!display') and contains(@href, 'n.page=ebulk_doc')]</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
