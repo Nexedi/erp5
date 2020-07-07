@@ -43,10 +43,13 @@ for movement in portal_catalog(query = query):
       if line.getResourceValue() == movement.getResourceValue() and line.getQuantity() < 0:
         transformation_list.append(transformation)
         break
-  transformation_list += list(portal.portal_catalog(
-    portal_type = "Data Transformation",
-    validation_state = "validated",
-    resource_relative_url = movement.getResource()))
+  for transformation in portal.portal_catalog(
+      portal_type = "Data Transformation",
+      validation_state = "validated",
+      resource_relative_url = movement.getResource()):
+    if transformation.getVariationCategoryList() ==  movement.getVariationCategoryList():
+      transformation_list.append(transformation)
+
   for transformation in transformation_list:
     is_shared_data_analysis = False
     # Check if analysis already exists
