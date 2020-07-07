@@ -85,11 +85,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-Volume (m&#179;)
-
-]]></string> </value>
+                    <value> <string>Volume (m³)</string> </value>
                 </item>
               </dictionary>
             </value>
