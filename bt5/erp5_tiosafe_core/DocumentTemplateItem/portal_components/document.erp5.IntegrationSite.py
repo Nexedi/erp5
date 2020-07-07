@@ -32,7 +32,7 @@
 from Products.ERP5Type.Core.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from zLOG import LOG, INFO, ERROR, WARNING
+from zLOG import LOG, INFO, ERROR
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 
@@ -81,7 +81,7 @@ class IntegrationSite(Folder):
       raise ValueError, "Empty category provided"
 
     # Split the category to have the base and the variation category
-    base_category, variation_category = category.split('/', 1)
+    _, variation_category = category.split('/', 1)
 
     # Check the product variations if exists the product
     if product is not None:
