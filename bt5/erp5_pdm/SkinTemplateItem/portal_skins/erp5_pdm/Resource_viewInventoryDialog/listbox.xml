@@ -328,7 +328,7 @@
                       <list>
                         <tuple>
                           <string>node_title</string>
-                          <string>Site or Warehouse</string>
+                          <string>Warehouse</string>
                         </tuple>
                         <tuple>
                           <string>variation_category_item_list</string>
