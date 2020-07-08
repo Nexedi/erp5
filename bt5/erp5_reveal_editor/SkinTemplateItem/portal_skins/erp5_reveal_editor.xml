@@ -14,11 +14,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_run_my_doc</string> </value>
+            <value> <string>erp5_reveal_editor</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Skin folder used for Test Pages</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
