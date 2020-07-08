@@ -502,11 +502,13 @@ class TestSupportRequestRSSSOneEvent(SupportRequestRSSTestCase, DefaultTestRSSMi
 
   def test_RSS_with_token(self):
     self.login(self.user.getUserId())
-    restricted_access_url = self.portal.support_request_module.SupportRequestModule_generateRSSLinkUrl()
+    # get rss link url
+    self.portal.support_request_module.SupportRequestModule_generateRSSLinkUrl()
+    restricted_access_url = self.portal.REQUEST.form["your_rss_url"]
     parsed_url = urlparse.urlparse(restricted_access_url)
     restricted_access_url = restricted_access_url.replace(
         '%s://%s' % (parsed_url.scheme, parsed_url.netloc), '', 1)
-    # and check it (this time the request is not basic-authenticated)
+    # and check it
     self._checkRSS(self.publish(restricted_access_url))
 
 
