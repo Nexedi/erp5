@@ -1,4 +1,4 @@
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery
 import hashlib
 

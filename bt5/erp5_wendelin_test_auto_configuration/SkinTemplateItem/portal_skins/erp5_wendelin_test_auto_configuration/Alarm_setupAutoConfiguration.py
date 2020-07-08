@@ -2,7 +2,7 @@
 This script will setup the default Wendelin's configuration as saved in erp5_wendelin_scalability_test business template.
 As this modifies your site care must be taken!
 """
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 portal = context.getPortalObject()
 configurator = getattr(portal.business_configuration_module, "default_wendelin_configuration", None)
