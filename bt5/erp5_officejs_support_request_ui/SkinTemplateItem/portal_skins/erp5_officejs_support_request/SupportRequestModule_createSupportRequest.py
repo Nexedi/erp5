@@ -24,12 +24,13 @@ support_request = portal.support_request_module.newContent(
   portal_type='Support Request',
   title=title,
   resource=resource,
-  destination_decision_value=logged_in_user_value,
+  destination_decision_value = logged_in_user_value,
   source_decision_value = project_object.getSourceDecisionValue(),
   source_section_value = project_object.getSourceSectionValue(),
   source_project_value = project_object,
   destination_value = project_object.getDestinationValue(),
   destination_section_value = project_object.getDestinationSectionValue(),
+  default_causality_value = default_causality_value,
   start_date=now,
 )
 
