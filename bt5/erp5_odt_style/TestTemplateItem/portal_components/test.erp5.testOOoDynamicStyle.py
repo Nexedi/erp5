@@ -29,13 +29,14 @@
 
 import os
 import unittest
+import Products.ERP5
 from cStringIO import StringIO
 from zipfile import ZipFile
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5OOo.tests.utils import Validator
-from Products.ERP5OOo.OOoUtils import OOoBuilder
+from erp5.component.module.OOoUtils import OOoBuilder
 
 
 class TestOooDynamicStyle(ERP5TypeTestCase):
@@ -61,15 +62,16 @@ class TestOooDynamicStyle(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
     self.getPortal().Localizer = DummyLocalizer()
-    v12schema_url = os.path.join(os.path.dirname(__file__),
+    v12schema_url = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                                 'test_data',
                                  'OpenDocument-v1.2-os-schema.rng')
     self.validator = Validator(schema_url=v12schema_url)
-    en_file_path = os.path.join(os.path.dirname(__file__),
-                                'test_document',
+    en_file_path = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                                'test_data',
                                 'DYNAMIC_STYLE_en.odt')
     en_file = open(en_file_path, 'rb')
-    ja_file_path = os.path.join(os.path.dirname(__file__),
-                                'test_document',
+    ja_file_path = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                                'test_data',
                                 'DYNAMIC_STYLE_ja.odt')
     ja_file = open(ja_file_path, 'rb')
 
@@ -214,7 +216,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     """
     request = self.app.REQUEST
     filename = 'cmyk_sample.jpg'
-    file_path = os.path.join(os.path.dirname(__file__), 'test_document',
+    file_path = os.path.join(os.path.dirname(Products.ERP5.__file__), 'test_data',
         filename)
     upload_file = FileUpload(file_path)
     document = self.portal.portal_contributions.newContent(file=upload_file)
@@ -240,8 +242,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     cs = StringIO()
     cs.write(body)
     zip_document = ZipFile(cs)
-    picture_list = filter(lambda x: "Pictures" in x.filename,
-        zip_document.infolist())
+    picture_list = [ x for x in zip_document.infolist() if "Pictures" in x.filename ]
     self.assertNotEquals([], picture_list)
     manifest = zip_document.read('META-INF/manifest.xml')
     content = zip_document.read('content.xml')
