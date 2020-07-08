@@ -1,5 +1,5 @@
 from DateTime import DateTime
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 # reference parameter example: supplier/dataset/filename/fif/EOF/size/hash
 # ingestion reference example: dataset/filename/fif

@@ -3,7 +3,7 @@ This script is called from ebulk client to get list of Data Streams for a Data s
 """
 
 import json
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 portal = context.getPortalObject()
 

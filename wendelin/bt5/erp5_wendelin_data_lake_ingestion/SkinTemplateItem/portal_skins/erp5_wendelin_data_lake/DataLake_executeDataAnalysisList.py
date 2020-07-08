@@ -1,4 +1,4 @@
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
 complex_files = portal.ERP5Site_getIngestionReferenceDictionary()["complex_files_extensions"]
