@@ -1,3 +1,0 @@
-This is a very interesting document. It contains something special, namely a magic keyword. It also has an embedded meta information: function:musician/wind/saxophone
-
-

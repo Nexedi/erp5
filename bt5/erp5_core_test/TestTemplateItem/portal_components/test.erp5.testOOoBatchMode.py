@@ -29,6 +29,7 @@
 
 import os
 import unittest
+import Products.ERP5
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5.Document.Document import ConversionError
@@ -43,7 +44,7 @@ class TestOoodResponse(ERP5TypeTestCase):
   def getTitle(self):
     return "TestOOoBatchMode"
 
-  def login(self):
+  def login(self, *args, **kw):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
     user = uf.getUserById(self.manager_username).__of__(uf)
@@ -59,8 +60,8 @@ class TestOoodResponse(ERP5TypeTestCase):
     if pref.getPreferenceState() != 'disabled':
       pref.disable()
     portal_skins = self.getSkinsTool()
-    import_file_path = os.path.join(os.path.dirname(__file__),
-                                    'test_document',
+    import_file_path = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                                    'test_data',
                                     'REF-en-001.odt')# Any text document will
                                                      # feet our needs
     import_file = open(import_file_path, 'rb')

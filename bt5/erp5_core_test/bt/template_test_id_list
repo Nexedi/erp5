@@ -29,6 +29,7 @@ test.erp5.testLocalizer
 test.erp5.testMemcachedTool
 test.erp5.testNotificationMessageModule
 test.erp5.testNotificationTool
+test.erp5.testOOoBatchMode
 test.erp5.testPerson
 test.erp5.testQueryModule
 test.erp5.testRestrictedPythonSecurity
