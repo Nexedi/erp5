@@ -826,7 +826,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
                          "output_encoding": "utf-8",
                          "content_type": "text/html"}
 
-    from Products.ERP5OOo.OOoTemplate import OOoTemplate
+    from erp5.component.module.OOoTemplate import OOoTemplate
     skin_folder._setObject(OOo_template_id,
       OOoTemplate(OOo_template_id, OOo_template_data, content_type=''))
 

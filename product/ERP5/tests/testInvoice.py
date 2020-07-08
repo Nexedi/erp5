@@ -37,7 +37,6 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5OOo.OOoUtils import OOoParser
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from Acquisition import aq_parent
@@ -1712,6 +1711,7 @@ class TestInvoice(TestInvoiceMixin):
       self.fail(''.join(err_list))
 
     # the <draw:image> should not be present, because there's no logo
+    from erp5.component.module.OOoUtils import OOoParser
     parser = OOoParser()
     parser.openFromString(odt)
     style_xml = parser.oo_files['styles.xml']

@@ -31,16 +31,12 @@
 from Acquisition import Implicit
 
 from Products.PythonScripts.Utility import allow_class
-from ZPublisher.HTTPRequest import FileUpload
-from xml.dom import Node
-from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import InitializeClass, get_request
+from Products.ERP5Type.Globals import get_request
 from zipfile import ZipFile, ZIP_DEFLATED
 from cStringIO import StringIO
 import imghdr
 import random
-from Products.ERP5Type import Permissions
-from zLOG import LOG, INFO, DEBUG
+from zLOG import LOG, DEBUG
 
 from OFS.Image import Pdata
 
@@ -142,7 +138,6 @@ class OOoBuilder(Implicit):
         - indent the xml
     """
     content_xml = self.extract(ooo_xml_file_id)
-    output = StringIO()
     content_doc = etree.XML(content_xml)
     root = content_doc.getroottree().getroot()
     #Declare zope namespaces
@@ -160,10 +155,10 @@ class OOoBuilder(Implicit):
 
 
   def addFileEntry(self, full_path, media_type, content=None):
-      """ Add a file entry to the manifest and possibly is content """
-      self.addManifest(full_path, media_type)
-      if content:
-          self.replace(full_path, content)
+    """ Add a file entry to the manifest and possibly is content """
+    self.addManifest(full_path, media_type)
+    if content:
+      self.replace(full_path, content)
 
   def addManifest(self, full_path, media_type):
     """ Add a path to the manifest """
@@ -176,9 +171,9 @@ class OOoBuilder(Implicit):
     meta_infos = self.extract(MANIFEST_FILENAME)
     # prevent some duplicates
     for meta_line in meta_infos.split('\n'):
-        for new_meta_line in self._manifest_additions_list:
-            if meta_line.strip() == new_meta_line:
-                self._manifest_additions_list.remove(new_meta_line)
+      for new_meta_line in self._manifest_additions_list:
+        if meta_line.strip() == new_meta_line:
+          self._manifest_additions_list.remove(new_meta_line)
 
     # add the new lines
     self._manifest_additions_list.append('</manifest:manifest>')
@@ -186,7 +181,7 @@ class OOoBuilder(Implicit):
     self.replace(MANIFEST_FILENAME, meta_infos)
     self._manifest_additions_list = []
 
-  def addImage(self, image, format='png', content_type=None):
+  def addImage(self, image, format='png', content_type=None): # pylint: disable=redefined-builtin
     """
     Add an image to the current document and return its id
     """
@@ -334,7 +329,6 @@ class OOoParser(Implicit):
       document = embedded.get('{%s}href' % embedded.nsmap['xlink'])
       if document:
         try:
-          object_content = etree.XML(self.oo_files[document[3:] + '/content.xml'])
           find_path = './/{%s}table' % self.oo_content_dom.nsmap['table']
           table_list = self.oo_content_dom.findall(find_path)
           if table_list:
@@ -342,7 +336,7 @@ class OOoParser(Implicit):
               spreadsheets.append(table)
           else: # XXX: insert the link to OLE document ?
             pass
-        except XMLSyntaxError:
+        except XMLSyntaxError: # pylint: disable=catching-non-exception
           pass
     return spreadsheets
 
@@ -383,7 +377,7 @@ class OOoParser(Implicit):
       else:
         lines_to_repeat = int(line_group_found)
 
-      for i in range(lines_to_repeat):
+      for _ in range(lines_to_repeat):
         table_line = []
 
         # Get all cells
@@ -413,7 +407,7 @@ class OOoParser(Implicit):
             cells_to_repeat = int(cell_group_found)
 
           # Ungroup repeated cells
-          for j in range(cells_to_repeat):
+          for _ in range(cells_to_repeat):
             # Get the cell content
             cell_data = None
             attribute_type_mapping = {'date': 'date-value',
@@ -433,7 +427,6 @@ class OOoParser(Implicit):
               # instance <text:s/> for a space (or using <text:s text:c="3"/>
               # for multiple spaces) <text:tab/> for a tab and <text:line-break/>
               # for new line
-              text_ns = cell.nsmap['text']
               def format_node(node):
                 if node.tag == '{%s}table-cell' % node.nsmap['table']:
                   return "\n".join(part for part in

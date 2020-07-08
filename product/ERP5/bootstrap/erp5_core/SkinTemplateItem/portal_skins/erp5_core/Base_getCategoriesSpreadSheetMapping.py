@@ -26,7 +26,7 @@ This scripts guarantees that the list of category info is sorted in such a
 way that parent always precedes their children.
 """
 from Products.ERP5Type.Message import translateString
-from Products.ERP5OOo.OOoUtils import OOoParser
+from erp5.component.module.OOoUtils import OOoParser
 parser = OOoParser()
 category_list_spreadsheet_mapping = {}
 error_list = []

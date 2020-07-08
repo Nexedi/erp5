@@ -157,7 +157,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       # Test Validation Relax NG
       self._validate(body)
 
-      from Products.ERP5OOo.OOoUtils import OOoParser
+      from erp5.component.module.OOoUtils import OOoParser
       parser = OOoParser()
       parser.openFromString(body)
       content_xml_view = parser.oo_files['content.xml']
@@ -250,7 +250,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       # Test Validation Relax NG
       self._validate(body)
 
-      from Products.ERP5OOo.OOoUtils import OOoParser
+      from erp5.component.module.OOoUtils import OOoParser
       parser = OOoParser()
       parser.openFromString(body)
       content_xml_view = parser.oo_files['content.xml']

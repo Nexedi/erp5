@@ -5,5 +5,7 @@ module.erp5.GeneratedAmountList
 module.erp5.Log
 module.erp5.MovementCollectionDiff
 module.erp5.MovementGroup
+module.erp5.OOoTemplate
+module.erp5.OOoUtils
 module.erp5.TimeoutTransport
 module.erp5.WebDAVSupport

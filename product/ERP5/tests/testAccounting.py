@@ -3161,7 +3161,7 @@ class TestAccountingExport(AccountingTestCase):
                    quantity=200),))
     ods_data = accounting_transaction.Base_viewAsODS(
                     form_id='AccountingTransaction_view')
-    from Products.ERP5OOo.OOoUtils import OOoParser
+    from erp5.component.module.OOoUtils import OOoParser
     parser = OOoParser()
     parser.openFromString(ods_data)
     content_xml = parser.oo_files['content.xml']

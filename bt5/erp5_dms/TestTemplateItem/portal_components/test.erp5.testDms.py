@@ -56,7 +56,7 @@ import ZPublisher.HTTPRequest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
-from Products.ERP5OOo.OOoUtils import OOoBuilder
+from erp5.component.module.OOoUtils import OOoBuilder
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
 from Products.ERP5.Document.Document import NotConvertedError

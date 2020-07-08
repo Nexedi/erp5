@@ -37,23 +37,22 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.tal.talinterpreter import FasterStringIO
 from Products.ERP5Type import PropertySheet
 from urllib import quote
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
-from OOoUtils import OOoBuilder
+from erp5.component.module.OOoUtils import OOoBuilder
 from zipfile import ZipFile, ZIP_DEFLATED
 from cStringIO import StringIO
 import re
 import itertools
 
 try:
+   # pylint: disable=no-name-in-module,unused-import
   from webdav.Lockable import ResourceLockedError
   from webdav.WriteLockInterface import WriteLockInterface
   SUPPORTS_WEBDAV_LOCKS = 1
 except ImportError:
   SUPPORTS_WEBDAV_LOCKS = 0
-
-from Products.ERP5.Document.Document import ConversionError
 
 from lxml import etree
 from lxml.etree import Element
@@ -61,7 +60,7 @@ from lxml.etree import Element
 # Constructors
 manage_addOOoTemplate = DTMLFile("dtml/OOoTemplate_add", globals())
 
-def addOOoTemplate(self, id, title="", xml_file_id="content.xml", REQUEST=None):
+def addOOoTemplate(self, id, title="", xml_file_id="content.xml", REQUEST=None): # pylint: disable=redefined-builtin
   """Add OOo template to folder.
 
   id     -- the id of the new OOo template to add
@@ -76,12 +75,12 @@ def addOOoTemplate(self, id, title="", xml_file_id="content.xml", REQUEST=None):
     file_ = REQUEST.form.get('file')
     if file_.filename:
       # Get the template in the associated context and upload the file
-      obj.pt_upload(REQUEST, file)
+      obj.pt_upload(REQUEST, file_)
   # respond to the add_and_edit button if necessary
   add_and_edit(self, id, REQUEST)
   return ''
 
-def add_and_edit(self, id, REQUEST):
+def add_and_edit(self, id, REQUEST): # pylint: disable=redefined-builtin
   """Helper method to point to the object's management screen if
   'Add and Edit' button is pressed.
   id -- id of the object we just added
@@ -97,14 +96,18 @@ def add_and_edit(self, id, REQUEST):
   REQUEST.RESPONSE.redirect(u+'/manage_main')
 
 class OOoTemplateStringIO(FasterStringIO):
+  # pylint: disable=method-hidden
   def write(self, s):
-    if type(s) == unicode:
+    if isinstance(s, unicode):
       s = s.encode('utf-8')
     FasterStringIO.write(self, s)
 
 from Products.PageTemplates.Expressions import ZopeContext, createZopeEngine
 
 # On recent Zope, we need an engine to decode non-unicode-strings for us
+#
+# evaluateCode():
+# pylint: disable=abstract-method
 class OOoContext(ZopeContext):
   """ ZopeContext variant that ALWAYS converts standard strings through utf-8,
   as needed by OpenOffice, ignoring the preferred encodings in the request.
@@ -117,9 +120,9 @@ class OOoContext(ZopeContext):
     return ZopeContext._handleText(self, text, expr)
 
 def createOOoZopeEngine():
-    e = createZopeEngine()
-    e._create_context = OOoContext
-    return e
+  e = createZopeEngine()
+  e._create_context = OOoContext
+  return e
 
 _engine = createOOoZopeEngine()
 
@@ -177,7 +180,7 @@ class OOoTemplate(Base, ZopePageTemplate):
                                   __name__='formSettings')
   formSettings._owner = None
 
-  def __init__(self, id, title='', *args, **kw):
+  def __init__(self, id, title='', *args, **kw): # pylint: disable=redefined-builtin
     ZopePageTemplate.__init__(self, id, title, *args, **kw)
     # we store the attachments of the uploaded document
     self.OLE_documents_zipstring = None
@@ -190,12 +193,12 @@ class OOoTemplate(Base, ZopePageTemplate):
   def pt_getEngine(self):
     return _engine
 
-  def pt_upload(self, REQUEST, file=''):
+  def pt_upload(self, REQUEST, file=''): # pylint: disable=redefined-builtin,arguments-differ
     """Replace the document with the text in file."""
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
       raise ResourceLockedError, "File is locked via WebDAV"
 
-    if type(file) is not StringType:
+    if not isinstance(file, StringType):
       if not file: raise ValueError, 'File not specified'
       file = file.read()
 
@@ -217,27 +220,13 @@ class OOoTemplate(Base, ZopePageTemplate):
         except RuntimeError:
           zf = ZipFile(memory_file, mode='w')
         for attached_file in attached_files_list:
-            zf.writestr(attached_file, builder.extract(attached_file) )
+          zf.writestr(attached_file, builder.extract(attached_file) )
         zf.close()
         memory_file.seek(0)
         self.OLE_documents_zipstring = memory_file.read()
       self.content_type = builder.getMimeType()
       file = builder.prepareContentXml(self.getXmlFileId())
     return ZopePageTemplate.pt_upload(self, REQUEST, file)
-
-  if 'pt_edit' not in ZopePageTemplate.__dict__:
-    # Override it only for 2.8 !
-    # ZopePageTemplate v.2.8 inherate pt_edit from
-    # PageTemplate. If method is defined on ZopePageTemplate
-    # means we are under 2.12.
-    # Delete me when we drop support of 2.8
-    security.declareProtected('Change Page Templates', 'pt_edit')
-    def pt_edit(self, text, content_type):
-      if content_type:
-        self.content_type = str(content_type)
-      if hasattr(text, 'read'):
-        text = text.read()
-      self.write(text)
 
   security.declareProtected('Change Page Templates', 'doSettings')
   def doSettings(self, REQUEST, title, xml_file_id, ooo_stylesheet, script_name=None):
@@ -262,7 +251,7 @@ class OOoTemplate(Base, ZopePageTemplate):
 
   def renderIncludes(self, here, text, extra_context, request, sub_document=None):
     attached_files_dict = {}
-    arguments_re = re.compile('''(\S+?)\s*=\s*('|")(.*?)\\2\s*''',re.DOTALL)
+    arguments_re = re.compile(r'''(\S+?)\s*=\s*('|")(.*?)\\2\s*''',re.DOTALL)
     def getLengthInfos( opts_dict, opts_names ):
       ret = []
       for opt_name in opts_names:
@@ -351,6 +340,7 @@ class OOoTemplate(Base, ZopePageTemplate):
         if picture_type is None:
           picture_type = picture.getContentType()
 
+      # pylint: disable=unbalanced-tuple-unpacking
       w, h, maxwidth, maxheight = getLengthInfos(options_dict,
                                   ('width', 'height', 'maxwidth', 'maxheight'))
 
@@ -425,11 +415,13 @@ class OOoTemplate(Base, ZopePageTemplate):
       office_include.getparent().replace(office_include, draw_object)
     text = etree.tostring(xml_doc, encoding='utf-8', xml_declaration=True,
                           pretty_print=False)
-    text = re.sub('<\s*office:include_img\s+(.*?)\s*/\s*>(?s)', replaceIncludesImg, text)
+    text = re.sub(r'<\s*office:include_img\s+(.*?)\s*/\s*>(?s)', replaceIncludesImg, text)
 
     return (text, attached_files_dict)
   # Proxy method to PageTemplate
-  def pt_render(self, source=0, extra_context={}):
+  def pt_render(self, source=0, extra_context=None):
+    if extra_context is None:
+      extra_context = {}
     if source:
       return ZopePageTemplate.pt_render(self, source=source,
                                          extra_context=extra_context)
@@ -448,14 +440,14 @@ class OOoTemplate(Base, ZopePageTemplate):
       ooo_document = ooo_script(self.getOooStylesheet())
     else:
       ooo_document = getattr(here, self.getOooStylesheet())
-    format = request.get('format')
+    format_ = request.get('format')
     try:
       # If style is dynamic, call it
       if getattr(aq_base(ooo_document), '__call__', None) is not None:
         request.set('format', None)
         ooo_document = ooo_document()
     finally:
-      request.set('format', format)
+      request.set('format', format_)
     # Create a new builder instance
     ooo_builder = OOoBuilder(ooo_document)
     # Pass builder instance as extra_context
@@ -550,8 +542,8 @@ class OOoTemplate(Base, ZopePageTemplate):
                  filename=filename,
                  content_type=mimetype,)
 
-    format = opts.get('format', request.get('format', None))
-    if format:
+    format_ = opts.get('format', request.get('format', None))
+    if format_:
       # Performance improvement:
       # We already have OOo format data, so we do not need to call
       # convertToBaseFormat(), but just copy it into base_data property.
@@ -561,19 +553,19 @@ class OOoTemplate(Base, ZopePageTemplate):
     if request is not None and not batch_mode and not source:
       return tmp_ooo.index_html(REQUEST=request,
                                 RESPONSE=request.RESPONSE,
-                                format=format)
-    return tmp_ooo.convert(format)[1]
+                                format=format_)
+    return tmp_ooo.convert(format_)[1]
 
   def om_icons(self):
     """Return a list of icon URLs to be displayed by an ObjectManager"""
     icons = ({'path': 'misc_/ERP5OOo/OOo.png',
               'alt': self.meta_type, 'title': self.meta_type},)
     if not self._v_cooked:
-        self._cook()
+      self._cook()
     if self._v_errors:
-        icons = icons + ({'path': 'misc_/PageTemplates/exclamation.gif',
-                          'alt': 'Error',
-                          'title': 'This template has an error'},)
+      icons = icons + ({'path': 'misc_/PageTemplates/exclamation.gif',
+                        'alt': 'Error',
+                        'title': 'This template has an error'},)
     return icons
 
   def _getFileName(self):

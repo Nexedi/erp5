@@ -74,7 +74,7 @@ def getIdFromString(string):
   return clean_id
 
 def convert(self, filename, data=None):
-  from Products.ERP5OOo.OOoUtils import OOoParser
+  from erp5.component.module.OOoUtils import OOoParser
   OOoParser = OOoParser()
   import_file = read(self, filename, data)
 

@@ -1,4 +1,4 @@
-from Products.ERP5OOo.OOoUtils import OOoParser
+from erp5.component.module.OOoUtils import OOoParser
 import string
 
 request  = container.REQUEST
