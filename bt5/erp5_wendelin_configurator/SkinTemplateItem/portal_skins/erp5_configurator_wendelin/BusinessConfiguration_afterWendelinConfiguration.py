@@ -1,7 +1,7 @@
 """ 
 This script will be called to apply the customization. 
 """
-from Products.ERP5Type.Log import log
+from erp5.component.module.Log import log
 
 # Activate the knowledge pads on portal home to enable later the Wendelin 
 # Information gadget.
