@@ -3543,9 +3543,6 @@ msgstr "无效的日期或时间"
 msgid "Invalid Search Criteria"
 msgstr "无效搜索条件"
 
-msgid "Invalid search criteria"
-msgstr "无效的搜索条件"
-
 msgid "Invalidate"
 msgstr "废止"
 

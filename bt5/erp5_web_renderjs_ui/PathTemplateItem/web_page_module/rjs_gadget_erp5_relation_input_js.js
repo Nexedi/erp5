@@ -414,7 +414,7 @@
                   error.hash.expected.length === 1 &&
                   error.hash.expected[0] === "'QUOTE'") {
                 return gadget.getTranslationList([
-                  "Invalid search criteria"
+                  "Invalid Search Criteria"
                 ])
                   .push(function (translation_list) {
                     return gadget.notifyInvalid(translation_list[0]);
