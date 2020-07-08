@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>all_columns</string>
                 <string>title</string>
               </list>
             </value>
@@ -71,6 +72,73 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>quantity_unit_translated_title</string>
+                          <string>Quantity Unit</string>
+                        </tuple>
+                        <tuple>
+                          <string>product_line_translated_title</string>
+                          <string>Product Line</string>
+                        </tuple>
+                        <tuple>
+                          <string>base_contribution_translated_title</string>
+                          <string>Base Contribution</string>
+                        </tuple>
+                        <tuple>
+                          <string>comment</string>
+                          <string>Comment</string>
+                        </tuple>
+                        <tuple>
+                          <string>purchase_supply_line_base_price</string>
+                          <string>Default Purchase Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>sale_supply_line_base_price</string>
+                          <string>Default Sale Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>purchase_supply_line_destination_account</string>
+                          <string>Client Account</string>
+                        </tuple>
+                        <tuple>
+                          <string>sale_supply_line_source_account</string>
+                          <string>Supplier Account</string>
+                        </tuple>
+                        <tuple>
+                          <string>use_translated_title</string>
+                          <string>Use</string>
+                        </tuple>
+                        <tuple>
+                          <string>ean13_code</string>
+                          <string>EAN-13 Code</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_title</string>
+                          <string>Translated Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_description</string>
+                          <string>Translated Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_resource_module_listbox</string> </value>
