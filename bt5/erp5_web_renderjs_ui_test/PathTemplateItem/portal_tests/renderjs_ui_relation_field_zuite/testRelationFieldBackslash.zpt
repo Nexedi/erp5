@@ -73,7 +73,7 @@
        Actually, this popup is displayed on internal query "syntax" error.
        This error will be fixed later and so the popup won't be shown anymore. -->
   <td>waitForTextPresent</td>
-  <td>Invalid search criteria</td>
+  <td>Invalid Search Criteria</td>
   <td></td>
 </tr>
 
