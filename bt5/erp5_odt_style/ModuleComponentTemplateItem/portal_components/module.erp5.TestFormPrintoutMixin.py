@@ -40,7 +40,7 @@ class TestFormPrintoutMixin(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return ('erp5_base', 'erp5_ui_test', 'erp5_odt_style')
 
-  def login(self):
+  def login(self, *args, **kw):
     uf = self.getPortal().acl_users
     uf._doAddUser('zope', '', ['Manager'], [])
     user = uf.getUserById('zope').__of__(uf)

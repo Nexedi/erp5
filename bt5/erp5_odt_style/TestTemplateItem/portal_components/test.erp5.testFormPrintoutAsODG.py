@@ -28,8 +28,9 @@
 ##############################################################################
 
 import unittest
-from Products.ERP5OOo.tests.TestFormPrintoutMixin import TestFormPrintoutMixin
-from Products.ERP5OOo.OOoUtils import OOoBuilder
+import Products.ERP5
+from erp5.component.module.TestFormPrintoutMixin import TestFormPrintoutMixin
+from erp5.component.module.OOoUtils import OOoBuilder
 from Products.ERP5OOo.tests.utils import Validator
 from Products.ERP5Type.tests.utils import FileUpload
 from lxml import etree
@@ -56,12 +57,13 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
   def afterSetUp(self):
     self.login()
     # XML validator
-    v12schema_url = os.path.join(os.path.dirname(__file__),
+    v12schema_url = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                                 'test_data',
                                  'OpenDocument-v1.2-os-schema.rng')
     self.validator = Validator(schema_url=v12schema_url)
 
-    foo_file_path = os.path.join(os.path.dirname(__file__),
-                                'test_document',
+    foo_file_path = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                                'test_data',
                                 'Foo_001.odg')
     foo_file = open(foo_file_path, 'rb')
     self._validate(foo_file.read())

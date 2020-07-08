@@ -29,11 +29,12 @@
 import unittest
 import os
 
-from Products.ERP5OOo.OOoUtils import OOoParser
+from erp5.component.module.OOoUtils import OOoParser
 
 
 def makeFilePath(name):
-  return os.path.join(os.path.dirname(__file__), 'test_document', name)
+  import Products.ERP5
+  return os.path.join(os.path.dirname(Products.ERP5.__file__), 'test_data', name)
 
 class TestOOoParser(unittest.TestCase):
   """ OOoParser tests
@@ -45,7 +46,7 @@ class TestOOoParser(unittest.TestCase):
     self.assertEqual(['Person'], mapping.keys())
     person_mapping = mapping['Person']
     self.assertTrue(isinstance(person_mapping, list))
-    self.assertTrue(102, len(person_mapping))
+    self.assertEqual(len(person_mapping), 102)
     self.assertEqual(person_mapping[0],
        ['Title', 'First Name', 'Last Name', 'Default Email Text'])
     self.assertEqual(person_mapping[1],
@@ -99,7 +100,7 @@ class TestOOoParser(unittest.TestCase):
     parser.openFile(open(makeFilePath('import_big_spreadsheet.ods'), 'rb'))
     mapping = parser.getSpreadsheetsMapping()
     not_ok = 1
-    for spread, values in mapping.iteritems():
+    for _, values in mapping.iteritems():
       self.assertEqual(len(values), 41001)
       not_ok = 0
     if not_ok:

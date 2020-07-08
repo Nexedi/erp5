@@ -38,7 +38,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import (
   ERP5TypeTestCase, _getConversionServerUrlList)
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
-from Products.ERP5OOo.OOoUtils import OOoBuilder
+from erp5.component.module.OOoUtils import OOoBuilder
 from Products.CMFCore.utils import getToolByName
 from zExceptions import BadRequest
 from unittest import expectedFailure
@@ -49,7 +49,8 @@ import urlparse
 import base64
 
 # test files' home
-TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
+import Products.ERP5
+TEST_FILES_HOME = os.path.join(os.path.dirname(Products.ERP5.__file__), 'test_data')
 FILENAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
@@ -108,7 +109,7 @@ class TestIngestion(ERP5TypeTestCase):
     """.split()
     for module_id in module_id_list:
       module = self.portal[module_id]
-      module.manage_delObjects([id for id in module.objectIds()])
+      module.manage_delObjects([id_ for id_ in module.objectIds()])
     self.tic()
     activity_tool = self.portal.portal_activities
     activity_status = {m.processing_node < -1
@@ -259,8 +260,8 @@ class TestIngestion(ERP5TypeTestCase):
       For every file, this checks is the word "magic"
       is present in both SearchableText and asText.
     """
-    for revision, format in enumerate(format_list):
-      filename = 'TEST-en-002.%s' %format
+    for _, format_ in enumerate(format_list):
+      filename = 'TEST-en-002.%s' %format_
       f = makeFileUpload(filename)
       document.edit(file=f)
       self.tic()
@@ -274,7 +275,7 @@ class TestIngestion(ERP5TypeTestCase):
         # check if SearchableText() does not raise any exception
         document.SearchableText()
 
-  def checkDocumentExportList(self, document, format, asserted_target_list):
+  def checkDocumentExportList(self, document, format, asserted_target_list): # pylint: disable=redefined-builtin
     """
       Upload document ID document_id with
       a test file of given format and assert that the document
@@ -311,17 +312,17 @@ class TestIngestion(ERP5TypeTestCase):
     old_portal_type = ''
     for extension, portal_type in extension_to_type:
       filename = 'TEST-en-002.%s' %extension
-      file = makeFileUpload(filename)
+      file_ = makeFileUpload(filename)
       # if we change portal type we must change version because
       # mergeRevision would fail
       if portal_type != old_portal_type:
         counter += 1
         old_portal_type = portal_type
-      file.filename = 'TEST-en-00%d.%s' % (counter, extension)
+      file_.filename = 'TEST-en-00%d.%s' % (counter, extension)
       if with_portal_type:
-        document = self.portal.portal_contributions.newContent(portal_type=portal_type, file=file)
+        document = self.portal.portal_contributions.newContent(portal_type=portal_type, file=file_)
       else:
-        document = self.portal.portal_contributions.newContent(file=file)
+        document = self.portal.portal_contributions.newContent(file=file_)
       created_documents.append(document)
     self.tic()
     # inspect created objects
@@ -396,18 +397,17 @@ class TestIngestion(ERP5TypeTestCase):
     """
       Create a person with ID "john" if it does not exists already
     """
-    portal_type = 'Person'
     person_id = 'john'
     reference = 'john_doe'
     person_module = self.portal.person_module
     if getattr(person_module, person_id, None) is not None:
       return
-    person = person_module.newContent(portal_type='Person',
-                                      id=person_id,
-                                      reference=reference,
-                                      first_name='John',
-                                      last_name='Doe',
-                                      default_email_text='john@doe.com')
+    person_module.newContent(portal_type='Person',
+                             id=person_id,
+                             reference=reference,
+                             first_name='John',
+                             last_name='Doe',
+                             default_email_text='john@doe.com')
     self.tic()
 
   def stepCreateTextDocument(self, sequence=None, sequence_list=None, **kw):
@@ -700,15 +700,6 @@ class TestIngestion(ERP5TypeTestCase):
     document = self.portal.restrictedTraverse(sequence.get('document_path'))
     self.ingestFormatList(document, format_list)
 
-  def stepIngestPDFFormats(self, sequence=None, sequence_list=None, **kw):
-    """
-      ingest all supported PDF formats
-      make sure they are converted
-    """
-    format_list = ['pdf']
-    document = self.portal.restrictedTraverse(sequence.get('document_path'))
-    self.ingestFormatList(document, format_list)
-
   def stepIngestDrawingFormats(self, sequence=None, sequence_list=None, **kw):
     """
       ingest all supported presentation formats
@@ -798,7 +789,7 @@ class TestIngestion(ERP5TypeTestCase):
     f = makeFileUpload('TEST-en-002.jpg')
     image.edit(file=f)
     self.tic()
-    mime, data = image.convert(None)
+    mime, _ = image.convert(None)
     self.assertEqual(mime, 'image/jpeg')
     mime, small_data = image.convert(None, display='small')
     mime, large_data = image.convert(None, display='xlarge')
@@ -925,7 +916,7 @@ class TestIngestion(ERP5TypeTestCase):
       Email was sent in by someone to ERP5.
     """
     f = open(makeFilePath('email_from.txt'))
-    document = self.receiveEmail(f.read())
+    self.receiveEmail(f.read())
     self.tic()
 
   def stepReceiveMultipleAttachmentsEmail(self, sequence=None,
@@ -934,35 +925,35 @@ class TestIngestion(ERP5TypeTestCase):
       Email was sent in by someone to ERP5.
     """
     f = open(makeFilePath('email_multiple_attachments.eml'))
-    document = self.receiveEmail(f.read())
+    self.receiveEmail(f.read())
     self.tic()
 
   def stepVerifyEmailedMultipleDocumentsInitialContribution(self, sequence=None, sequence_list=None, **kw):
     """
       Verify contributed for initial time multiple document per email.
     """
-    attachment_list, ingested_document = self.verifyEmailedMultipleDocuments()
+    _, ingested_document = self.verifyEmailedMultipleDocuments()
     self.assertEqual('1', ingested_document.getRevision())
 
   def stepVerifyEmailedMultipleDocumentsMultipleContribution(self, sequence=None, sequence_list=None, **kw):
     """
       Verify contributed for initial time multiple document per email.
     """
-    attachment_list, ingested_document = self.verifyEmailedMultipleDocuments()
+    _, ingested_document = self.verifyEmailedMultipleDocuments()
     self.assertTrue(ingested_document.getRevision() > '1')
 
   def stepVerifyEmailedDocumentInitialContribution(self, sequence=None, sequence_list=None, **kw):
     """
       Verify contributed for initial time document per email.
     """
-    attachment_list, ingested_document = self.verifyEmailedDocument()
+    _, ingested_document = self.verifyEmailedDocument()
     self.assertEqual('1', ingested_document.getRevision())
 
   def stepVerifyEmailedDocumentMultipleContribution(self, sequence=None, sequence_list=None, **kw):
     """
       Verify contributed for multiple times document per email.
     """
-    attachment_list, ingested_document = self.verifyEmailedDocument()
+    _, ingested_document = self.verifyEmailedDocument()
     self.assertTrue(ingested_document.getRevision() > '1')
 
   def playSequence(self, step_list):
@@ -1070,8 +1061,8 @@ class TestIngestion(ERP5TypeTestCase):
             'sxd' : 'Drawing',
             'xxx' : 'File',
           }
-    for type, portal_type in correct_type_mapping.items():
-      filename = 'aaa.' + type
+    for type_, portal_type in correct_type_mapping.items():
+      filename = 'aaa.' + type_
       self.assertEqual(reg.findPortalTypeName(filename=filename),
                         portal_type)
 
@@ -1450,10 +1441,9 @@ class TestIngestion(ERP5TypeTestCase):
     contribution_tool = getToolByName(portal, 'portal_contributions')
     # create an user to simulate upload from him
     user = self.createUser(reference='contributor1')
-    assignment = self.createUserAssignment(user, \
-                                           dict(group='anybody',
-                                                function='musician/wind/saxophone',
-                                                site='arctic/spitsbergen'))
+    self.createUserAssignment(user, dict(group='anybody',
+                                         function='musician/wind/saxophone',
+                                         site='arctic/spitsbergen'))
     portal.document_module.manage_setLocalRoles(user.Person_getUserId(), ['Assignor',])
     self.tic()
     file_object = makeFileUpload('TEST-en-002.doc')
@@ -1901,9 +1891,9 @@ return result
     path = makeFilePath('import_region_category.ods')
     data = open(path, 'r').read()
 
-    document = self.portal.portal_contributions.newContent(filename='toto',
-                                                  data=data,
-                                                  reference='Custom.Reference')
+    self.portal.portal_contributions.newContent(filename='toto',
+                                                data=data,
+                                                reference='Custom.Reference')
     self.tic()# Discover metadata will delete first ingested document
     # then reingest new one with appropriate portal_type
     result_list = self.portal.portal_catalog(reference='Custom.Reference')
@@ -1954,7 +1944,7 @@ return result
     path = makeFilePath('import_region_category.xls')
     data = open(path, 'r').read()
 
-    document = self.portal.portal_contributions.newContent(
+    self.portal.portal_contributions.newContent(
                                       filename='import_region_category.xls',
                                       data=data,
                                       content_type='application/vnd.ms-excel',
@@ -1972,7 +1962,7 @@ return result
     path = makeFilePath('import_region_category.xls')
     data = open(path, 'r').read()
 
-    document = self.portal.portal_contributions.newContent(
+    self.portal.portal_contributions.newContent(
                                       id='this_id',
                                       filename='import_region_category.xls',
                                       data=data,

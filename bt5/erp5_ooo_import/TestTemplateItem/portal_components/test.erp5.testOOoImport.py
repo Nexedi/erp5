@@ -34,11 +34,12 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5OOo.OOoUtils import OOoParser
+from erp5.component.module.OOoUtils import OOoParser
 from DateTime import DateTime
 
 def makeFilePath(name):
-  return os.path.join(os.path.dirname(__file__), 'test_document', name)
+  import Products.ERP5
+  return os.path.join(os.path.dirname(Products.ERP5.__file__), 'test_data', name)
 
 def makeFileUpload(name):
   path = makeFilePath(name)
@@ -887,7 +888,7 @@ class TestOOoImport(TestOOoImportMixin):
     parser.openFile(open(makeFilePath('import_big_spreadsheet.ods'), 'rb'))
     mapping = parser.getSpreadsheetsMapping()
     not_ok = 1
-    for spread, values in mapping.iteritems():
+    for _, values in mapping.iteritems():
       self.assertEqual(len(values), 41001)
       not_ok = 0
     if not_ok:

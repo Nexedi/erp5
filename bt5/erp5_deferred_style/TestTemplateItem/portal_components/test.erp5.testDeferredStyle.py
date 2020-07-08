@@ -118,13 +118,13 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_report_view(self):
     self.loginAsUser('bob')
     self.portal.changeSkin('Deferred')
-    response = self.publish(
+    self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
         % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
-    mfrom, mto, message_text = last_message
+    _, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
     for part in mail_message.walk():
@@ -181,7 +181,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self._defineSystemPreference()
     self.loginAsUser('bob')
     self.portal.changeSkin('Deferred')
-    response = self.publish(
+    self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
         % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
     self.tic()
@@ -189,7 +189,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
-    mfrom, mto, message_text = last_message
+    _, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
     for part in mail_message.walk():
@@ -219,7 +219,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self._defineSystemPreference("notification-deferred.report")
     self.loginAsUser('bob')
     self.portal.changeSkin('Deferred')
-    response = self.publish(
+    self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
         % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
     self.tic()
@@ -227,7 +227,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
-    mfrom, mto, message_text = last_message
+    _, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
     for part in mail_message.walk():
@@ -242,7 +242,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self._defineSystemPreference()
     self.loginAsUser('bob')
     self.portal.changeSkin('Deferred')
-    response = self.publish(
+    self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s&format=pdf'
         % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
     self.tic()
@@ -251,7 +251,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
-    mfrom, mto, message_text = last_message
+    _, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
     for part in mail_message.walk():
@@ -266,7 +266,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.loginAsUser('bob')
     # simulate a big request, for which Base_callDialogMethod will not issue a
     # redirect
-    response = self.publish(
+    self.publish(
         '/%s/person_module/pers/Base_callDialogMethod?deferred_portal_skin=%s&'
         'dialog_method=Person_view&dialog_id=Person_view&'
         'deferred_style:int=1&junk=%s'  % (self.portal.getId(),
@@ -276,7 +276,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
-    mfrom, mto, message_text = last_message
+    _, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
     for part in mail_message.walk():
@@ -300,7 +300,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     # User's Accept-Language header is honored in reports.
     self.loginAsUser('bob')
     self.portal.changeSkin('Deferred')
-    response = self.publish(
+    self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
         % (self.portal.getId(), self.skin),
         '%s:%s' % (self.username, self.password),
@@ -325,7 +325,7 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     # User's LOCALIZER_LANGUAGE cookie is honored in reports and have priority over Accept-Language
     self.loginAsUser('bob')
     self.portal.changeSkin('Deferred')
-    response = self.publish(
+    self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
         % (self.portal.getId(), self.skin),
         '%s:%s' % (self.username, self.password),
@@ -366,13 +366,13 @@ class TestODSDeferredStyle(TestDeferredStyle):
     """
     self.loginAsUser('bob')
     self.portal.changeSkin('Deferred')
-    response = self.publish(
+    self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s&sheet_per_report_section:int=1'
         % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
-    mfrom, mto, message_text = last_message
+    _, mto, message_text = last_message
     self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
     mail_message = email.message_from_string(message_text)
     for part in mail_message.walk():

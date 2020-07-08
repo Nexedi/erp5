@@ -30,11 +30,12 @@
 ##############################################################################
 
 import unittest
+import Products.ERP5
 from unittest import skip
-from Products.ERP5OOo.tests.TestFormPrintoutMixin import TestFormPrintoutMixin
+from erp5.component.module.TestFormPrintoutMixin import TestFormPrintoutMixin
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.MimetypesRegistry.mime_types.magic import guessMime
-from Products.ERP5OOo.OOoUtils import OOoBuilder
+from erp5.component.module.OOoUtils import OOoBuilder
 from Products.ERP5OOo.tests.utils import Validator
 from Products.ERP5Type.tests.utils import FileUpload
 from DateTime import DateTime
@@ -52,27 +53,28 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
   def afterSetUp(self):
     self.login()
     # XML validator
-    v12schema_url = os.path.join(os.path.dirname(__file__),
+    v12schema_url = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                                 'test_data',
                                  'OpenDocument-v1.2-os-schema.rng')
     self.validator = Validator(schema_url=v12schema_url)
 
-    foo_file_path = os.path.join(os.path.dirname(__file__),
-                                'test_document',
+    foo_file_path = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                                'test_data',
                                 'Foo_001.odt')
-    foo2_file_path = os.path.join(os.path.dirname(__file__),
-                                  'test_document',
+    foo2_file_path = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                                  'test_data',
                                   'Foo_002.odt')
-    foo3_file_path = os.path.join(os.path.dirname(__file__),
-                                  'test_document',
+    foo3_file_path = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                                  'test_data',
                                   'Foo_003.odt')
-    foo4_file_path = os.path.join(os.path.dirname(__file__),
-                                  'test_document',
+    foo4_file_path = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                                  'test_data',
                                   'Foo_004.odt')
-    foo5_file_path = os.path.join(os.path.dirname(__file__),
-                                  'test_document',
+    foo5_file_path = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                                  'test_data',
                                   'Foo_005.odt')
-    variable_file_path = os.path.join(os.path.dirname(__file__),
-                                  'test_document',
+    variable_file_path = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                                  'test_data',
                                   'Foo_001_with_variable.odt')
     foo_file = open(foo_file_path, 'rb')
     foo2_file = open(foo2_file_path, 'rb')
@@ -154,7 +156,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
                      'inline;filename="Foo_viewAsPrintout.odt"')
     self._validate(odf_document)
-    pdf_document = foo_printout.index_html(REQUEST=request, format='pdf')
+    foo_printout.index_html(REQUEST=request, format='pdf')
     self.assertEqual(request.RESPONSE.getHeader('content-type'),
                      'application/pdf')
     self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
@@ -505,7 +507,6 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     test1 = self.portal.foo_module.test1
     foo_printout = test1.Foo_viewAsPrintout
     foo_form = test1.Foo_view
-    listbox = foo_form.listbox
     request = self.app.REQUEST
     request['here'] = test1
 
@@ -564,7 +565,6 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     test1 = self.portal.foo_module.test1
     foo_printout = test1.Foo_viewAsPrintout
     foo_form = test1.Foo_view
-    listbox = foo_form.listbox
     request = self.app.REQUEST
     request['here'] = test1
 
@@ -685,7 +685,6 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     test1 = self.portal.foo_module.test1
     foo_printout = test1.Foo_viewAsPrintout
     foo_form = test1.Foo_view
-    listbox = foo_form.listbox
     request = self.app.REQUEST
     request['here'] = test1
 

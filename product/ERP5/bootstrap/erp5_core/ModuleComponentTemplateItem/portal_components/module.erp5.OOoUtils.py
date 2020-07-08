@@ -558,3 +558,6 @@ allow_class(CorruptedOOoFile)
 def newOOoParser(container):
   return OOoParser().__of__(container)
 
+from AccessControl import ModuleSecurityInfo
+ModuleSecurityInfo(__name__).declarePublic('OOoParser',)
+ModuleSecurityInfo(__name__).declarePublic('newOOoParser',)

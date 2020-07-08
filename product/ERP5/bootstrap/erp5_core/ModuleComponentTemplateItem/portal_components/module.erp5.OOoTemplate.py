@@ -38,6 +38,7 @@ from zope.tal.talinterpreter import FasterStringIO
 from Products.ERP5Type import PropertySheet
 from urllib import quote
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
+from Products.ERP5 import _dtmldir
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from erp5.component.module.OOoUtils import OOoBuilder
@@ -45,6 +46,8 @@ from zipfile import ZipFile, ZIP_DEFLATED
 from cStringIO import StringIO
 import re
 import itertools
+import os.path
+import Products.ERP5
 
 try:
    # pylint: disable=no-name-in-module,unused-import
@@ -58,7 +61,7 @@ from lxml import etree
 from lxml.etree import Element
 
 # Constructors
-manage_addOOoTemplate = DTMLFile("dtml/OOoTemplate_add", globals())
+manage_addOOoTemplate = DTMLFile("dtml/OOoTemplate_add", _dtmldir)
 
 def addOOoTemplate(self, id, title="", xml_file_id="content.xml", REQUEST=None): # pylint: disable=redefined-builtin
   """Add OOo template to folder.
@@ -145,7 +148,7 @@ class OOoTemplate(Base, ZopePageTemplate):
   """
   meta_type = "ERP5 OOo Template"
   portal_type = "OOo Template"
-  icon = "www/OOo.png"
+  icon = os.path.join(os.path.dirname(Products.ERP5.__file__), "www", "OOo.png")
 
   # NOTE: 100 is just pure random starting number
   # it won't influence the code at all
@@ -176,8 +179,9 @@ class OOoTemplate(Base, ZopePageTemplate):
     )
 
   security.declareProtected('View management screens', 'formSettings')
-  formSettings = PageTemplateFile('www/formSettings', globals(),
-                                  __name__='formSettings')
+  formSettings = PageTemplateFile(
+    os.path.join(os.path.dirname(Products.ERP5.__file__), 'www', 'formSettings'),
+    __name__='formSettings')
   formSettings._owner = None
 
   def __init__(self, id, title='', *args, **kw): # pylint: disable=redefined-builtin
