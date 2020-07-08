@@ -20,3 +20,4 @@ portal_gadgets/WendelinInformationGadget/**
 portal_ingestion_policies/default_http_json
 portal_ingestion_policies/default_http_json/**
 web_page_module/wendelin_information_gadget.html
+web_page_module/wendelin_js
