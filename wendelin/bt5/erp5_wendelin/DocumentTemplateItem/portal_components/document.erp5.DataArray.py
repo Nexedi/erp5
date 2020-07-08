@@ -179,7 +179,6 @@ class DataArray(BigFile):
       ranges = HTTPRangeSupport.parseRange(range)
 
       array = self.getArray()
-      factor = array.nbytes / array.shape[0]
 
       if if_range is not None:
         # Only send ranges if the data isn't modified, otherwise send
@@ -241,8 +240,10 @@ class DataArray(BigFile):
               'bytes %d-%d/%d' % (start, end - 1, self.getSize()))
           RESPONSE.setStatus(206) # Partial content
 
-          # convert ranges from bytes to array indices
-          RESPONSE.write(array[start/factor:end/factor].tobytes())
+          # convert array to bytes
+          data = array[:].view('<b').reshape((-1,))[start:end].tobytes()
+          RESPONSE.setBody(data, lock=True)
+
         else:
           boundary = choose_boundary()
 
@@ -268,16 +269,19 @@ class DataArray(BigFile):
                   draftprefix, boundary))
           RESPONSE.setStatus(206) # Partial content
 
+          data = ''
           for start, end in ranges:
-            RESPONSE.write('\r\n--%s\r\n' % boundary)
-            RESPONSE.write('Content-Type: %s\r\n' %
-                self.content_type)
-            RESPONSE.write(
-                'Content-Range: bytes %d-%d/%d\r\n\r\n' % (
-                    start, end - 1, self.getSize()))
+            data = '{data}\r\n--{boundary}\r\n'\
+                   'Content-Type: {content_type}\r\n'\
+                   'Content-Range: bytes {start:d}-{end:d}/{size:d}\r\n\r\n'\
+                   '{array}'.format(data=data,
+                             boundary=boundary,
+                             content_type=self.content_type,
+                             start=start,
+                             end=end-1,
+                             size=self.getSize(),
+                             array=array[:].view('<b').reshape((-1,))[start:end].tobytes())
 
-            # convert ranges from bytes to array indices
-            RESPONSE.write(array[start/factor:end/factor].tobytes())
-
-          RESPONSE.write('\r\n--%s--\r\n' % boundary)
+          data = '{}\r\n--{}--\r\n'.format(data, boundary)
+          RESPONSE.setBody(data, lock=True)
           return True
