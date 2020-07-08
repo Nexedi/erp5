@@ -82,6 +82,13 @@ def initialize( context ):
   # Make sure InteactionWorkflow is visible in UI
   import Products.ERP5.InteractionWorkflow
 
+  ## OOo-related securities
+  # allow import of various exceptions in restricted environment
+  # so we can catch them in ZODB scripts and inform user nicely
+  from AccessControl.SecurityInfo import allow_module
+  allow_module('xmlrpclib.Fault')
+  allow_module('socket.error')
+
 # backward compatibility names
 XML = None
 UI = None

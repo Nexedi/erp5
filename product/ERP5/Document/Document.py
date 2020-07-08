@@ -30,6 +30,7 @@
 import re
 from zLOG import LOG, WARNING
 from AccessControl import ClassSecurityInfo
+from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.CMFCore.utils import _checkPermission
@@ -73,6 +74,7 @@ DEFAULT_IMAGE_QUALITY = 75.0
 DEFAULT_CONTENT_TYPE = 'text/html'
 
 class ConversionError(Exception):pass
+ModuleSecurityInfo(__name__).declarePublic('ConversionError')
 
 class DocumentProxyError(Exception):pass
 
