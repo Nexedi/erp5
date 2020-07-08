@@ -80,6 +80,8 @@
                         <string>my_reference</string>
                         <string>my_version</string>
                         <string>my_publication_section_list</string>
+                        <string>my_array_dtype</string>
+                        <string>my_array_shape</string>
                       </list>
                     </value>
                 </item>
