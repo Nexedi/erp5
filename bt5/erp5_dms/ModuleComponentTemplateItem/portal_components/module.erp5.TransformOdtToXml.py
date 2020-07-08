@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import itransform
 from zope.interface import implements
-from oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
-from zLOG import LOG
+from erp5.component.module.OOOdCommandTransform import OOOdCommandTransform, OOoDocumentDataStream
+from erp5.component.module.OOoUtils import OOoBuilder
 
-
-class OdtToDoc:
+class OdtToXml:
   """Transforms ODT to Doc by using oood"""
 
   implements(itransform)
 
-  __name__ = 'odt_to_doc'
+  __name__ = 'odt_to_xml'
   inputs   = ('application/vnd.oasis.opendocument.text',)
-  output = 'application/msword'
+  output = 'text/xml'
 
   tranform_engine = OOOdCommandTransform.__module__
 
@@ -29,14 +28,15 @@ class OdtToDoc:
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
     data = str(orig)
     doc = OOOdCommandTransform(context, filename, data, self.inputs[0])
-    msword = doc.convertTo('doc')
+    builder = OOoBuilder(doc)
+    content = builder.extract('content.xml')
     if cache is not None:
-      cache.setData(msword)
+      cache.setData(content)
       return cache
     else:
       stream = OOoDocumentDataStream()
-      stream.setData(msword)
+      stream.setData(content)
       return stream
 
 def register():
-  return OdtToDoc()
+  return OdtToXml()

@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import itransform
 from zope.interface import implements
-from oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
-from zLOG import LOG
+from erp5.component.module.OOOdCommandTransform import OOOdCommandTransform, OOoDocumentDataStream
 
-
-class OdtToPdf:
-  """Transforms ODT to PDF by using oood"""
+class OdtToDoc:
+  """Transforms ODT to Doc by using oood"""
 
   implements(itransform)
 
-  __name__ = 'odt_to_pdf'
+  __name__ = 'odt_to_doc'
   inputs   = ('application/vnd.oasis.opendocument.text',)
-  output = 'application/pdf'
+  output = 'application/msword'
 
   tranform_engine = OOOdCommandTransform.__module__
 
@@ -29,14 +27,14 @@ class OdtToPdf:
   def convert(self, orig, data, cache=None, filename=None, context=None, **kwargs):
     data = str(orig)
     doc = OOOdCommandTransform(context, filename, data, self.inputs[0])
-    pdf = doc.convertTo('pdf')
+    msword = doc.convertTo('doc')
     if cache is not None:
-      cache.setData(pdf)
+      cache.setData(msword)
       return cache
     else:
       stream = OOoDocumentDataStream()
-      stream.setData(pdf)
+      stream.setData(msword)
       return stream
 
 def register():
-  return OdtToPdf()
+  return OdtToDoc()

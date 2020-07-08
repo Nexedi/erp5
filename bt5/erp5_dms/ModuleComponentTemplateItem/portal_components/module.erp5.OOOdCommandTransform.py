@@ -5,9 +5,8 @@ from Products.ERP5.Document.Document import ConversionError
 from Acquisition import aq_base
 from zope.interface import implements
 from OFS.Image import Image as OFSImage
-from zLOG import LOG
 
-from Products.ERP5OOo.OOoUtils import OOoBuilder
+from erp5.component.module.OOoUtils import OOoBuilder
 import re
 from lxml import etree
 from lxml import html
@@ -134,15 +133,15 @@ class OOOdCommandTransform(commandtransform):
         if image is not None:
           odt_content_modified = True
           content_type = image.getContentType()
-          format = image_parameter_dict.pop('format', None)
+          format_ = image_parameter_dict.pop('format', None)
           # convert API accepts only a certail range of arguments
-          for key, value in image_parameter_dict.items():
+          for key, _ in image_parameter_dict.items():
             if key not in ('format', 'display', 'quality', 'resolution',):
               image_parameter_dict.pop(key)
           if getattr(image, 'convert', None) is not None:
             # The document support conversion so perform conversion
             # according given parameters
-            mime, image_data = image.convert(format, **image_parameter_dict)
+            _, image_data = image.convert(format_, **image_parameter_dict)
             # wrapp converted data into OFSImage in order to compute metadatas
             # on converted result
             image = OFSImage(image.getId(), image.getTitle(), image_data)
@@ -155,17 +154,17 @@ class OOOdCommandTransform(commandtransform):
             frame.attrib.update({'{%s}height' % SVG_NAMESPACE: '%.3fcm' % (height * ratio_px_cm)})
           if width:
             frame.attrib.update({'{%s}width' % SVG_NAMESPACE: '%.3fcm' % (width * ratio_px_cm)})
-          if not format:
+          if not format_:
             mimetype_list = self.context.getPortalObject().mimetypes_registry.lookup(content_type)
             # guess a format with help of mimetypes_registry
             for mimetype_object in mimetype_list:
               if mimetype_object.extensions:
-                format = mimetype_object.extensions[0]
+                format_ = mimetype_object.extensions[0]
                 break
               elif mimetype_object.globs:
-                format = mimetype_object.globs[0].strip('*.')
+                format_ = mimetype_object.globs[0].strip('*.')
                 break
-          new_path = builder.addImage(data, format=format)
+          new_path = builder.addImage(data, format=format_)
           image_tag.attrib.update({'{%s}href' % XLINK_NAMESPACE: new_path})
     if odt_content_modified:
       builder.replace('content.xml', etree.tostring(xml_doc, encoding='utf-8',
@@ -181,7 +180,7 @@ class OOOdCommandTransform(commandtransform):
     """
     try:
       xml_doc = etree.XML(data)
-    except ParseError:
+    except ParseError: # pylint: disable=catching-non-exception
       #If not valid xhtml do nothing
       return data
     xpath = '//*[local-name() = "link"][@type = "text/css"]'
@@ -219,13 +218,12 @@ class OOOdCommandTransform(commandtransform):
 
     return xml_output
 
-  def convertTo(self, format):
+  def convertTo(self, format): # pylint: disable=redefined-builtin
     server_proxy = DocumentConversionServerProxy(self.context)
-    response_code, response_dict, message = \
-                           server_proxy.getAllowedTargetItemList(self.mimetype)
+    _, response_dict, _ = server_proxy.getAllowedTargetItemList(self.mimetype)
     allowed_extension_list = response_dict['response_data']
     if format in dict(allowed_extension_list):
-      response_code, response_dict, message = server_proxy.run_generate(
+      _, response_dict, _ = server_proxy.run_generate(
                                                                 '',
                                                                 enc(self.data),
                                                                 None,

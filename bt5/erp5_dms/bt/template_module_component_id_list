@@ -1,8 +1,10 @@
+module.erp5.OOOdCommandTransform
 module.erp5.TransformDocToDocx
 module.erp5.TransformDocToHtml
 module.erp5.TransformDocxToDocy
 module.erp5.TransformDocxToOdt
 module.erp5.TransformDocyToDocx
+module.erp5.TransformHtmlToOdt
 module.erp5.TransformOdpToHtml
 module.erp5.TransformOdpToPdf
 module.erp5.TransformOdpToPptx
@@ -10,6 +12,9 @@ module.erp5.TransformOdpToSxi
 module.erp5.TransformOdsToHtml
 module.erp5.TransformOdsToPdf
 module.erp5.TransformOdsToXlsx
+module.erp5.TransformOdtToDoc
+module.erp5.TransformOdtToPdf
+module.erp5.TransformOdtToXml
 module.erp5.TransformOdtToDocx
 module.erp5.TransformOdtToHtml
 module.erp5.TransformPdfToBmp
