@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>description, file, resource, title, project, source_reference=None, **kwargs</string> </value>
+            <value> <string>description, file, resource, title, project, visa_file_reference=None, source_reference=None, **kwargs</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
