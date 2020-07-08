@@ -33,7 +33,8 @@ from Products.ERP5Form.ListBox import ListBox
 from Products.ERP5Form.FormBox import FormBox
 from Products.ERP5Form.ReportBox import ReportBox
 from Products.ERP5Form.ImageField import ImageField
-from Products.ERP5OOo.OOoUtils import OOoBuilder
+from Products.ERP5 import _dtmldir
+from erp5.component.module.OOoUtils import OOoBuilder
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Acquisition import Implicit, aq_base
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, Persistent
@@ -44,12 +45,13 @@ from OFS.PropertyManager import PropertyManager
 from urllib import quote, quote_plus
 from copy import deepcopy
 from lxml import etree
-from zLOG import LOG, DEBUG, INFO, WARNING
 from mimetypes import guess_extension
 from DateTime import DateTime
 from decimal import Decimal
 from xml.sax.saxutils import escape
 import re
+import Products.ERP5
+import os.path
 
 try:
   from webdav.Lockable import ResourceLockedError
@@ -79,9 +81,9 @@ NSMAP = {
 
 
 # Constructors
-manage_addFormPrintout = DTMLFile("dtml/FormPrintout_add", globals())
+manage_addFormPrintout = DTMLFile("FormPrintout_add", _dtmldir)
 
-def addFormPrintout(self, id, title="", form_name='', template='',
+def addFormPrintout(self, id, title="", form_name='', template='', # pylint: disable=redefined-builtin
                     REQUEST=None, filename='object/title_or_id'):
   """Add form printout to folder.
 
@@ -103,7 +105,7 @@ def addFormPrintout(self, id, title="", form_name='', template='',
   add_and_edit(self, id, REQUEST)
   return ''
 
-def add_and_edit(self, id, REQUEST):
+def add_and_edit(self, id, REQUEST): # pylint: disable=redefined-builtin
   """Helper method to point to the object's management screen if
   'Add and Edit' button is pressed.
 
@@ -141,7 +143,7 @@ class FormPrintout(Base, Implicit, Persistent, RoleManager, Item):
   """
   meta_type = "ERP5 Form Printout"
   portal_type = "Form Printout"
-  icon = "www/form_printout_icon.png"
+  icon = os.path.join(os.path.dirname(Products.ERP5.__file__), "www", "form_printout_icon.png")
 
   # Declarative Security
   security = ClassSecurityInfo()
@@ -161,15 +163,16 @@ class FormPrintout(Base, Implicit, Persistent, RoleManager, Item):
     {'label':'View', 'action': '' }, ) + Item.manage_options)
 
   security.declareProtected('View management screens', 'manage_editFormPrintout')
-  manage_editFormPrintout = PageTemplateFile('www/FormPrintout_manageEdit', globals(),
-                                             __name__='manage_editFormPrintout')
+  manage_editFormPrintout = PageTemplateFile(
+    os.path.join(os.path.dirname(Products.ERP5.__file__), 'www', 'FormPrintout_manageEdit'),
+    __name__='manage_editFormPrintout')
   manage_editFormPrintout._owner = None
 
   # alias definition to do 'add_and_edit'
   security.declareProtected('View management screens', 'manage_main')
   manage_main = manage_editFormPrintout
 
-  def __init__(self, id, title='', form_name='', template='',
+  def __init__(self, id, title='', form_name='', template='', # pylint: disable=redefined-builtin
                filename='object/title_or_id'):
     """Initialize id, title, form_name, template.
 
@@ -193,7 +196,7 @@ class FormPrintout(Base, Implicit, Persistent, RoleManager, Item):
 
   security.declareProtected('View', 'index_html')
   def index_html(self, REQUEST, RESPONSE=None, template_relative_url=None,
-                 format=None, batch_mode=False):
+                 format=None, batch_mode=False): # pylint: disable=redefined-builtin
     """Render and view a printout document.
 
     format: conversion format requested by User.
@@ -254,7 +257,7 @@ class FormPrintout(Base, Implicit, Persistent, RoleManager, Item):
                 % '<br>'.join(self._v_warnings))
     return self.manage_editFormPrintout(manage_tabs_message=message)
 
-  def _createStrategy(slef, content_type=''):
+  def _createStrategy(self, content_type=''):
     if guess_extension(content_type) == '.odt':
       return ODTStrategy()
     if guess_extension(content_type) == '.odg':
@@ -262,7 +265,7 @@ class FormPrintout(Base, Implicit, Persistent, RoleManager, Item):
     raise ValueError, 'Template type: %s is not supported' % content_type
 
   def _oooConvertByFormat(self, printout, content_type, extra_context,
-                          REQUEST, format, batch_mode):
+                          REQUEST, format, batch_mode): # pylint: disable=redefined-builtin
     """
     Convert the ODF document into the given format.
 
@@ -320,7 +323,7 @@ class ODFStrategy(Implicit):
 
   odf_existent_name_list = []
 
-  def render(self, extra_context={}):
+  def render(self, extra_context=None):
     """Render a odf document, form as a content, template as a template.
 
     Keyword arguments:
@@ -330,10 +333,11 @@ class ODFStrategy(Implicit):
       'container' : the object which has a form printout object
       'form' : the form as a content
     """
+    if extra_context is None:
+      extra_context = {}
     here = extra_context['here']
     if here is None:
       raise ValueError, 'Can not create a ODF Document without a parent acquisition context'
-    form = extra_context['form']
     if not extra_context.has_key('printout_template') or \
         extra_context['printout_template'] is None:
       raise ValueError, 'Can not create a ODF Document without a printout template'
@@ -447,7 +451,7 @@ class ODFStrategy(Implicit):
                                              element_tree=element_tree)
     if target_tuple is None:
       return
-    target_xpath, original_target = target_tuple
+    target_xpath, original_target = target_tuple # pylint: disable=unpacking-non-sequence
     office_body = original_target.getparent()
     target_index = office_body.index(original_target)
     temporary_element_tree = deepcopy(original_target)
@@ -473,7 +477,7 @@ class ODFStrategy(Implicit):
       target_index += 1
       report_item.popReport(portal_object, render_prefix=None)
 
-  def _pickUpTargetSection(self, base_name='', report_section_list=[], element_tree=None):
+  def _pickUpTargetSection(self, base_name='', report_section_list=None, element_tree=None):
     """pick up a ODF target object to iterate ReportSection
     base_name -- the target name to replace in an ODF document
     report_section_list -- ERP5Form ReportSection List which was created by a report method
@@ -560,7 +564,6 @@ class ODFStrategy(Implicit):
     """
     Replace an ODF draw:frame using an ERP5Form image field.
     """
-    alt = image_field.get_value('description') or image_field.get_value('title')
     image_xpath = '//draw:frame[@draw:name="%s"]/*' % image_field.id
     image_list = element_tree.xpath(image_xpath, namespaces=element_tree.nsmap)
     if not image_list:
@@ -610,8 +613,8 @@ class ODFStrategy(Implicit):
     if svg_width is None or svg_height is None:
       return ('0cm', '0cm')
     # if not match causes exception
-    width_tuple = re.match("(\d[\d\.]*)(.*)", svg_width).groups()
-    height_tuple = re.match("(\d[\d\.]*)(.*)", svg_height).groups()
+    width_tuple = re.match(r"(\d[\d\.]*)(.*)", svg_width).groups()
+    height_tuple = re.match(r"(\d[\d\.]*)(.*)", svg_height).groups()
     unit = width_tuple[1]
     w = Decimal(width_tuple[0])
     h = Decimal(height_tuple[0])
@@ -664,7 +667,8 @@ class ODFStrategy(Implicit):
     # clear original table
     parent_paragraph = target_table.getparent()
     # clear rows
-    [newtable.remove(table_row) for table_row in table_row_list]
+    for table_row in table_row_list:
+      newtable.remove(table_row)
 
     listboxline_list = listbox.get_value('default',
                                          render_format='list',
@@ -749,7 +753,6 @@ class ODFStrategy(Implicit):
 
   def _updateColumnValue(self, row, listbox_column_list):
     odf_cell_list = row.findall("{%s}table-cell" % TABLE_URI)
-    odf_cell_list_size = len(odf_cell_list)
     listbox_column_size = len(listbox_column_list)
     for (column_index, column) in enumerate(odf_cell_list):
       if column_index >= listbox_column_size:
@@ -765,7 +768,7 @@ class ODFStrategy(Implicit):
     odf_column_span_list = self._getOdfColumnSpanList(row_middle)
     listbox_column_size = len(listbox_column_list)
     listbox_column_index = 0
-    for (column_index, column) in enumerate(odf_cell_list):
+    for (_, column) in enumerate(odf_cell_list):
       if listbox_column_index >= listbox_column_size:
         break
       value = listbox_column_list[listbox_column_index][1]
@@ -780,12 +783,13 @@ class ODFStrategy(Implicit):
     if value is None:
       self._removeColumnValue(column)
     column_value, table_content = self._translateValueIntoColumnContent(value, column)
-    [column.remove(child) for child in column]
+    for child in column:
+      column.remove(child)
     if table_content is not None:
       column.append(table_content)
     value_attribute = self._getColumnValueAttribute(column)
     if value_attribute is not None and column_value is not None:
-       column.set(value_attribute, column_value)
+      column.set(value_attribute, column_value)
 
   def _translateValueIntoColumnContent(self, value, column):
     """translate a value as a table content"""
@@ -836,11 +840,12 @@ class ODFStrategy(Implicit):
       if 'office' in column.nsmap and key.startswith("{%s}" % column.nsmap['office']):
         del attrib[key]
     column.text = None
-    [column.remove(child) for child in column]
+    for child in column:
+      column.remove(child)
 
   def _clearColumnValue(self, column):
     attrib = column.attrib
-    for key in attrib.keys():
+    for _ in attrib.keys():
       value_attribute = self._getColumnValueAttribute(column)
       if value_attribute is not None:
         column.set(value_attribute, '')
@@ -863,7 +868,7 @@ class ODFStrategy(Implicit):
     span_attribute = "{%s}number-columns-spanned" % TABLE_URI
     return int(column.attrib.get(span_attribute, 1))
 
-  def _nextListboxColumnIndex(self, span=0, current_index=0, column_span_list=[]):
+  def _nextListboxColumnIndex(self, span=0, current_index=0, column_span_list=[]): # pylint: disable=dangerous-default-value
     hops = 0
     index = current_index
     while hops < span:
@@ -911,7 +916,7 @@ class ODTStrategy(ODFStrategy):
     """
     field_list = form.get_fields()
     REQUEST = here.REQUEST
-    for (count, field) in enumerate(field_list):
+    for (_, field) in enumerate(field_list):
       if isinstance(field, ListBox):
         self._appendTableByListbox(element_tree, field, REQUEST,
                                    iteration_index=iteration_index)
@@ -919,13 +924,13 @@ class ODTStrategy(ODFStrategy):
         if not hasattr(here, field.get_value('formbox_target_id')):
           continue
         sub_form = getattr(here, field.get_value('formbox_target_id'))
-        content = self._replaceXmlByFormbox(element_tree, field, sub_form,
-                                            extra_context, ooo_builder,
-                                            iteration_index=iteration_index)
+        self._replaceXmlByFormbox(element_tree, field, sub_form,
+                                  extra_context, ooo_builder,
+                                  iteration_index=iteration_index)
       elif isinstance(field, ReportBox):
-         report_method = getattr(field, field.get_value('report_method'), None)
-         self._replaceXmlByReportSection(element_tree, extra_context,
-                                         report_method, field.id, ooo_builder)
+        report_method = getattr(field, field.get_value('report_method'), None)
+        self._replaceXmlByReportSection(element_tree, extra_context,
+                                        report_method, field.id, ooo_builder)
       elif isinstance(field, ImageField):
         self._replaceXmlByImageField(element_tree, field,
                                      ooo_builder, iteration_index=iteration_index)
@@ -1027,7 +1032,9 @@ class ODTStrategy(ODFStrategy):
     #Delete all contents between <text:reference-mark-start/> and <text:reference-mark-end/>
     #Try to fetch style-name
     attr_dict = {}
-    [(attr_dict.update(target_node.attrib), parent_node.remove(target_node)) for target_node in node_to_remove_list]
+    for target_node in node_to_remove_list:
+      attr_dict.update(target_node.attrib)
+      parent_node.remove(target_node)
     new_node = field.render_odt(local_name='span', attr_dict=attr_dict,
                                 as_string=False)
     parent_node.insert(text_reference_position+1, new_node)
@@ -1092,7 +1099,7 @@ class ODGStrategy(ODFStrategy):
   def _replaceXmlByForm(self, element_tree, form, here, extra_context,
                         ooo_builder, iteration_index=0):
     field_list = form.get_fields()
-    for (count, field) in enumerate(field_list):
+    for (_, field) in enumerate(field_list):
       text_xpath = '//draw:frame[@draw:name="%s"]' % field.id
       node_list = element_tree.xpath(text_xpath, namespaces=element_tree.nsmap)
       value = field.get_value('default')
