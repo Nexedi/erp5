@@ -57,7 +57,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[contains(text(), "Copy to clipboard")]</td>
+  <td>//button[contains(text(), "Copy to Clipboard")]</td>
   <td></td>
 </tr>
 <tr>
