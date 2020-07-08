@@ -26,35 +26,14 @@
 #
 ##############################################################################
 
-import unittest
-from testOOoStyle import TestOOoStyle
-
-class TestOOoStyleWithFlare(TestOOoStyle):
-  """Tests ODF styles for ERP5 with Flare."""
-
-  def getTitle(self):
-    return "Test OOo Style with Flare"
-
-  def afterSetUp(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredConversionCacheFactory('dms_cache_factory')
-    if default_pref.getPreferenceState() != 'global':
-      default_pref.enable()
-    TestOOoStyle.afterSetUp(self)
-
-
-class TestODTStyle(TestOOoStyleWithFlare):
-  skin = 'ODT'
-  content_type = 'application/vnd.oasis.opendocument.text'
-
+from erp5.component.module.OOoTestUtil import TestOOoStyleWithFlare
 class TestODSStyle(TestOOoStyleWithFlare):
   skin = 'ODS'
   content_type = 'application/vnd.oasis.opendocument.spreadsheet'
 
-
 def test_suite():
+  import unittest
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestODTStyle))
   suite.addTest(unittest.makeSuite(TestODSStyle))
   return suite
 

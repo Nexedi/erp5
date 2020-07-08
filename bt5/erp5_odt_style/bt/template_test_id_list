@@ -1,3 +1,5 @@
 test.erp5.testFormPrintoutAsODG
 test.erp5.testFormPrintoutAsODT
+test.erp5.testODTStyle
+test.erp5.testODTStyleWithFlare
 test.erp5.testOOoDynamicStyle

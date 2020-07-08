@@ -27,19 +27,101 @@
 #
 ##############################################################################
 
-import unittest
+"""This module provides utilities for testing ODF files.
+
+Validator: a class defining a `validate` method that expects odf file content
+as first argument and returns list of errors.
+
+"""
+
+import os
+import sys
+import tempfile
+import zipfile
+import popen2
+from cStringIO import StringIO
+
+try:
+  import lxml
+except ImportError:
+  lxml = None
+try:
+  import odfpy
+except ImportError:
+  odfpy = None
+
+if lxml:
+  class LXMLValidator:
+    """Validate ODF document using RelaxNG and lxml"""
+    schema_url = \
+      'http://docs.oasis-open.org/office/v1.1/OS/OpenDocument-schema-v1.1.rng'
+
+    def __init__(self, schema_url=schema_url):
+      self.schema_url = schema_url
+      self.schema_path = os.path.join(
+        os.path.dirname(__file__), os.path.basename(schema_url))
+      self.relaxng =  lxml.etree.RelaxNG(lxml.etree.parse(self.schema_path))
+
+    def validate(self, odf_file_content):
+      error_list = []
+      odf_file = StringIO(odf_file_content)
+      for f in ('content.xml', 'meta.xml', 'styles.xml', 'settings.xml'):
+        error_list.extend(self._validateXML(odf_file, f))
+      return error_list
+
+    def _validateXML(self, odf_file, content_file_name):
+      zfd = zipfile.ZipFile(odf_file)
+      lxml.etree.parse(StringIO(zfd.read(content_file_name)))
+      return []
+      """
+      # The following is the past implementation that validates with
+      # RelaxNG schema. But recent LibreOffice uses extended odf
+      # format by default, that does not pass the RelaxNG validation.
+      doc.docinfo.URL = content_file_name
+      self.relaxng.validate(doc)
+      return [error for error in str(self.relaxng.error_log).splitlines(True)]
+      """
+
+  Validator = LXMLValidator
+
+elif odfpy:
+
+  class OdflintValidator:
+    """Validates ODF files using odflint, available on pypi
+    http://opendocumentfellowship.org/development/projects/odfpy
+    """
+    def validate(self, odf_file_content):
+      fd, file_name = tempfile.mkstemp()
+      os.write(fd, odf_file_content)
+      os.close(fd)
+      stdout, stdin = popen2.popen4('odflint %s' % file_name)
+      stdin.close()
+      error_list = ''
+      for line in stdout:
+        if line.startswith('Error: '):
+          error_list += line
+      os.unlink(file_name)
+      return error_list
+
+  Validator = OdflintValidator
+
+else:
+
+  class NoValidator:
+    """Does not actually validate, but keep the interface."""
+    def validate(self, odf_file_content):
+      print >> sys.stderr, 'No validator available'
+
+  Validator = NoValidator
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
-from Products.ERP5OOo.tests.utils import Validator
 import httplib
-
 HTTP_OK = httplib.OK
-
 # setting this to True allows the .publish() calls to provide tracebacks
 debug = False
-
 class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   """Tests ODF styles for ERP5."""
   skin = None
@@ -71,7 +153,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       person_module.pers.newContent(portal_type='Embedded File', id='img')
 
     if person_module._getOb('pers_without_image', None) is None:
-      person = person_module.newContent(
+      person_module.newContent(
                               portal_type='Person',
                               id = 'pers_without_image',
                               first_name = 'Test')
@@ -385,7 +467,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     if self.skin == 'ODT':
       # Is it good to do this only for ODT ?
-      from Products.ERP5OOo.OOoUtils import OOoParser
+      from erp5.component.module.OOoUtils import OOoParser
       parser = OOoParser()
       parser.openFromString(body)
       content_xml = parser.oo_files['content.xml']
@@ -415,7 +497,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     body = response.getBody()
     self._validate(body)
 
-    from Products.ERP5OOo.OOoUtils import OOoParser
+    from erp5.component.module.OOoUtils import OOoParser
     parser = OOoParser()
     parser.openFromString(body)
     content_xml = parser.oo_files['content.xml']
@@ -455,19 +537,14 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertFalse(response.getHeader('content-disposition'))
     self.assertTrue('office:document-content' in response.getBody())
 
-class TestODTStyle(TestOOoStyle):
-  skin = 'ODT'
-  content_type = 'application/vnd.oasis.opendocument.text'
+class TestOOoStyleWithFlare(TestOOoStyle):
+  """Tests ODF styles for ERP5 with Flare."""
+  def getTitle(self):
+    return "Test OOo Style with Flare"
 
-
-class TestODSStyle(TestOOoStyle):
-  skin = 'ODS'
-  content_type = 'application/vnd.oasis.opendocument.spreadsheet'
-
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestODTStyle))
-  suite.addTest(unittest.makeSuite(TestODSStyle))
-  return suite
-
+  def afterSetUp(self):
+    default_pref = self.portal.portal_preferences.default_site_preference
+    default_pref.setPreferredConversionCacheFactory('dms_cache_factory')
+    if default_pref.getPreferenceState() != 'global':
+      default_pref.enable()
+    TestOOoStyle.afterSetUp(self)
