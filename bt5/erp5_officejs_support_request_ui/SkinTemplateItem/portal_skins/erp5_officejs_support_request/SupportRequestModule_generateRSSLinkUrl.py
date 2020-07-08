@@ -33,4 +33,4 @@ else:
           reference)
 
 context.REQUEST.form["your_rss_url"] = url
-return context.Base_renderForm('SupportRequestModule_viewGenerateRSSLinkDialog')
+return context.Base_renderForm('SupportRequestModule_viewGenerateRSSLinkDialog', message='URL generated')

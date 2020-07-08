@@ -14,11 +14,11 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>SupportRequestModule_generateRSSLinkUrl</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>action_title</string> </key>
-            <value> <string>Copy to clipboard</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

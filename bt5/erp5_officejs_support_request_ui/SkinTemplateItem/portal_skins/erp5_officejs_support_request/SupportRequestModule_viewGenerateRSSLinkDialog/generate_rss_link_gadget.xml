@@ -235,11 +235,11 @@
                 </item>
                 <item>
                     <key> <string>validator_field_id</string> </key>
-                    <value> <string>my_core_mode_text_content_validator</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>validator_form_id</string> </key>
-                    <value> <string>erp5_core/Base_viewFieldLibrary</string> </value>
+                    <value> <string></string> </value>
                 </item>
               </dictionary>
             </value>

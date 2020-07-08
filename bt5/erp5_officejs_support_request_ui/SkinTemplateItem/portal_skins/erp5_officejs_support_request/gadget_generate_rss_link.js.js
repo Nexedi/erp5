@@ -5,22 +5,43 @@
 
   rJS(window)
     .declareAcquiredMethod("getTranslationList", "getTranslationList")
-    .declareAcquiredMethod("notifySubmit", "notifySubmit")
+    .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareMethod('render', function (options) {
       return this.changeState({
         rss_url: options.rss_url
       });
     })
-    .declareMethod('getContent', function () {
-      var gadget = this,
+    .onStateChange(function () {
+      var gadget = this;
+      return gadget.getDeclaredGadget('text_field')
+        .push(function (text_gadget) {
+          return text_gadget.render({
+            value: gadget.state.rss_url
+          });
+        });
+    })
+    .onEvent('click', function (evt) {
+      var tag_name = evt.target.tagName,
+        gadget = this,
         button_text;
+
+      if (tag_name !== 'BUTTON') {
+        return;
+      }
+
+      // Disable any button. It must be managed by this gadget
+      evt.preventDefault();
+
       return gadget.getTranslationList(["Copied"])
         .push(function (result) {
           button_text = result[0];
           return navigator.clipboard.writeText(gadget.state.rss_url);
         })
         .push(function () {
-          return gadget.notifySubmit(button_text);
+          return gadget.notifyChange({
+            "message": button_text,
+            "status": "success"
+          });
         });
-    });
+    }, false, false);
 }(rJS, window, navigator));
