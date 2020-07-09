@@ -99,7 +99,10 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_post_start_date</string>
+                        <string>listbox_post_user</string>
+                      </list>
                     </value>
                 </item>
                 <item>

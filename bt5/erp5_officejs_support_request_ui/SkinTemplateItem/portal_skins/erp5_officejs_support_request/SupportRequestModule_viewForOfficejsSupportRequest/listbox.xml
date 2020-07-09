@@ -236,10 +236,6 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
                           <string>causality_reference</string>
                           <string>Visa File Reference</string>
                         </tuple>
@@ -254,6 +250,14 @@
                         <tuple>
                           <string>start_date</string>
                           <string>Begin Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>post_start_date</string>
+                          <string>Comment Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>post_user</string>
+                          <string>Comment Author</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
