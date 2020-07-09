@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2020-03-19 14:03+UTC\n"
-"PO-Revision-Date: 2020-03-19 14:03+UTC\n"
+"POT-Creation-Date: 2020-07-09 14:03+UTC\n"
+"PO-Revision-Date: 2020-07-09 14:03+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: zh <>\n"
 "MIME-Version: 1.0\n"
@@ -8425,9 +8425,6 @@ msgstr "使用值来为销售机会过滤资源列表"
 msgid "User"
 msgstr "用户"
 
-msgid "Username"
-msgstr "用户名"
-
 msgid "User Account Workflow"
 msgstr "用户账户流程"
 
@@ -9046,9 +9043,6 @@ msgstr "删除项目： TEST-SLAPOSJS-PROJECT 0"
 msgid "Project : TEST-SLAPOSJS-PROJECT-INVITATION 0"
 msgstr "项目 : TEST-SLAPOSJS-PROJECT-INVITATION 0"
 
-msgid "Project : TEST-SLAPOSJS-PROJECT-INVITATION 0"
-msgstr "项目 : TEST-SLAPOSJS-PROJECT-INVITATION 0"
-
 msgid "Computer: TEST-SLAPOSJS-COMPUTER 0"
 msgstr "计算机: TEST-SLAPOSJS-COMPUTER 0"
 
@@ -9094,20 +9088,11 @@ msgstr "项目 : TEST-SLAPOSJS-PROJECT-TO-SHARE-SERVICE 0"
 msgid "Hosting Subscription: TEST-SLAPOSJS-SERVICE-SHARED-BY-PROJECT 0"
 msgstr "托管订阅： TEST-SLAPOSJS-SERVICE-SHARED-BY-PROJECT 0"
 
-msgid "Hosting Subscription: TEST-SLAPOSJS-SERVICE-FRONTEND 0"
-msgstr "托管订阅： TEST-SLAPOSJS-SERVICE-FRONTEND 0"
-
-msgid "Destroy Hosting Subscription: TEST-SLAPOSJS-SERVICE-FRONTEND 0"
-msgstr "销毁托管订阅： TEST-SLAPOSJS-SERVICE-FRONTEND 0"
-
 msgid "Delete Site: TEST-SLAPOSJS-SET 0"
 msgstr "删除站点： TEST-SLAPOSJS-SET 0"
 
 msgid "Site : TEST-SLAPOSJS-SET 0"
 msgstr "站点 : TEST-SLAPOSJS-SET 0"
-
-msgid "Hosting Subscription: TEST-SLAPOSJS-SERVICE-FRONTEND 0"
-msgstr "托管订阅： TEST-SLAPOSJS-SERVICE-FRONTEND 0"
 
 msgid "You are not allowed to access this content"
 msgstr "您没有权限查看此内容"
