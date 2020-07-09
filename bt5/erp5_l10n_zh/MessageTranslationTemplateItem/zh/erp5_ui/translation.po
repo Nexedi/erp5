@@ -8434,9 +8434,6 @@ msgstr "用户账户流程"
 msgid "User Login"
 msgstr "用户登陆"
 
-msgid "User Name"
-msgstr "用户名"
-
 msgid "User Password"
 msgstr "用户密码"
 
@@ -9108,3 +9105,6 @@ msgstr "账单：Sun, 20 Oct 2019 00:00:00 GMT"
 
 msgid "Created Clone Web Site"
 msgstr "已创建复制 网站."
+
+msgid "Username"
+msgstr "用户名"
