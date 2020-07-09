@@ -9105,3 +9105,6 @@ msgstr "已创建复制 网站."
 
 msgid "Username"
 msgstr "用户名"
+
+msgid "User Name"
+msgstr "用户名"
