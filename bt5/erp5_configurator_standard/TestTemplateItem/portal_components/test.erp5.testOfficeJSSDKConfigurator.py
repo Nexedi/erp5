@@ -238,6 +238,7 @@ class TestOfficeJSSDKConfigurator(SecurityTestCase):
       'erp5_web',
       'erp5_web_renderjs_ui',
       'erp5_web_renderjs_ui_test',
+      'erp5_web_renderjs_ui_test_core',
       'erp5_web_service',
       'erp5_workflow',
       'erp5_xhtml_style',
