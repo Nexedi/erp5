@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2020-06-08 14:03+UTC\n"
-"PO-Revision-Date: 2020-06-08 14:03+UTC\n"
+"POT-Creation-Date: 2020-07-09 14:03+UTC\n"
+"PO-Revision-Date: 2020-07-09 14:03+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: zh <>\n"
 "MIME-Version: 1.0\n"
@@ -3628,7 +3628,7 @@ msgid "Invoice cells are deeper level of details from invoice lines, eg when the
 msgstr "发票单元是发票明细的进一步详细信息，例如，当一项包含变量的资源被售出，你只可以用一个明细来表示该资源，但可以用单元来表示它的变量。"
 
 msgid "Invoice:"
-msgstr "发票："
+msgstr "账单："
 
 msgid "Invoices"
 msgstr "账单"
@@ -5615,7 +5615,7 @@ msgid "Registered Version Priority Selection"
 msgstr "已注册版本优先选项"
 
 msgid "Regularisation Request:"
-msgstr "正则要求:"
+msgstr "合规化请求:"
 
 msgid "Reject"
 msgstr "否决"
@@ -8425,17 +8425,11 @@ msgstr "使用值来为销售机会过滤资源列表"
 msgid "User"
 msgstr "用户"
 
-msgid "Username"
-msgstr "用户名"
-
 msgid "User Account Workflow"
 msgstr "用户账户流程"
 
 msgid "User Login"
 msgstr "用户登陆"
-
-msgid "User Name"
-msgstr "用户名"
 
 msgid "User Password"
 msgstr "用户密码"
@@ -8985,3 +8979,132 @@ msgstr "当文件转换完成时会自动检测该文件"
 
 msgid "will automatically detect when file is completely uploaded"
 msgstr "当文件上传完成时会自动检测该文件"
+
+msgid "Opened"
+msgstr "已开启"
+
+msgid "Credential Request Created."
+msgstr "凭证请求已创建。"
+
+msgid "An email has been sent to you."
+msgstr "已向您发送邮件。"
+
+msgid "You will receive a confirmation email to activate your account."
+msgstr "您将收到一封激活账号的确认邮件。"
+
+msgid "1 Records"
+msgstr "1 记录"
+
+msgid "2 Records"
+msgstr "2 记录"
+
+msgid "Your Account : Demo User Functional"
+msgstr "您的登录账号 : Demo User Functional"
+
+msgid "Disable Login: demo_functional_user"
+msgstr "关闭登录账号: demo_functional_user"
+
+msgid "Computer Network :TEST-SLAPOSJS-NETWORK 0"
+msgstr "计算机网络 :TEST-SLAPOSJS-NETWORK 0"
+
+msgid "Computer Network :TEST-SLAPOSJS-NETWORK 1"
+msgstr "计算机网络 :TEST-SLAPOSJS-NETWORK 1"
+
+msgid "Delete Network: TEST-SLAPOSJS-NETWORK 1"
+msgstr "删除网络: TEST-SLAPOSJS-NETWORK 1"
+
+msgid "Organisation : TEST-SLAPOSJS-ORGANISATION-TO-SHARE-NETWORK 0"
+msgstr "组织 : TEST-SLAPOSJS-ORGANISATION-TO-SHARE-NETWORK 0"
+
+msgid "Computer Network :TEST-SLAPOSJS-NETWORK-BY-ORGASNISATION 0"
+msgstr "计算机网络 :TEST-SLAPOSJS-NETWORK-BY-ORGASNISATION 0"
+
+msgid "Project : TEST-SLAPOSJS-PROJECT-TO-SHARE-NETWORK 0"
+msgstr "项目 : TEST-SLAPOSJS-PROJECT-TO-SHARE-NETWORK 0"
+
+msgid "Computer Network :TEST-SLAPOSJS-NETWORK-BY-PROJECT 0"
+msgstr "计算机网络 :TEST-SLAPOSJS-NETWORK-BY-PROJECT 0"
+
+msgid "Organisation : demo_test_organisation_from_testSlapOSJSOrganisation"
+msgstr "组织 : demo_test_organisation_from_testSlapOSJSOrganisation"
+
+msgid "Organisation : demo_test_organisation_from_testSlapOSJSOrganisationInvitation"
+msgstr "组织 : demo_test_organisation_from_testSlapOSJSOrganisationInvitation"
+
+msgid "Project : TEST-SLAPOSJS-PROJECT 0"
+msgstr "项目 : TEST-SLAPOSJS-PROJECT 0"
+
+msgid "Delete Project: TEST-SLAPOSJS-PROJECT 0"
+msgstr "删除项目： TEST-SLAPOSJS-PROJECT 0"
+
+msgid "Project : TEST-SLAPOSJS-PROJECT-INVITATION 0"
+msgstr "项目 : TEST-SLAPOSJS-PROJECT-INVITATION 0"
+
+msgid "Computer: TEST-SLAPOSJS-COMPUTER 0"
+msgstr "计算机: TEST-SLAPOSJS-COMPUTER 0"
+
+msgid "Computer: TEST-SLAPOSJS-COMPUTER-SHARED-BY-ORGANISATION 0"
+msgstr "计算机: TEST-SLAPOSJS-COMPUTER-SHARED-BY-ORGANISATION 0"
+
+msgid "Organisation : TEST-SLAPOSJS-ORGANISATION-TO-SHARE-COMPUTER 0"
+msgstr "组织 : TEST-SLAPOSJS-ORGANISATION-TO-SHARE-COMPUTER 0"
+
+msgid "Computer: TEST-SLAPOSJS-COMPUTER-SHARED-BY-PROJECT 0"
+msgstr "计算机: TEST-SLAPOSJS-COMPUTER-SHARED-BY-PROJECT 0"
+
+msgid "Project : TEST-SLAPOSJS-PROJECT-TO-SHARE-COMPUTER 0"
+msgstr "项目 : TEST-SLAPOSJS-PROJECT-TO-SHARE-COMPUTER 0"
+
+msgid "3/3 Request Service: Frontend"
+msgstr "3/3 请求服务： Frontend"
+
+msgid "Hosting Subscription: TEST-SLAPOSJS-SERVICE-FRONTEND 0"
+msgstr "托管订阅： TEST-SLAPOSJS-SERVICE-FRONTEND 0"
+
+msgid "Destroy Hosting Subscription: TEST-SLAPOSJS-SERVICE-FRONTEND 0"
+msgstr "销毁托管订阅： TEST-SLAPOSJS-SERVICE-FRONTEND 0"
+
+msgid "3/3 Request Service: KVM"
+msgstr "3/3 请求服务： KVM"
+
+msgid "Hosting Subscription: TEST-SLAPOSJS-SERVICE-KVM-CLUSTER 0"
+msgstr "托管订阅： TEST-SLAPOSJS-SERVICE-KVM-CLUSTER 0"
+
+msgid "Destroy Hosting Subscription: TEST-SLAPOSJS-SERVICE-KVM-CLUSTER 0"
+msgstr "销毁托管订阅： TEST-SLAPOSJS-SERVICE-KVM-CLUSTER 0"
+
+msgid "Organisation : TEST-SLAPOSJS-ORGANISATION-TO-SHARE-SERVICE 0"
+msgstr "组织 : TEST-SLAPOSJS-ORGANISATION-TO-SHARE-SERVICE 0"
+
+msgid "Hosting Subscription: TEST-SLAPOSJS-SERVICE-SHARED-BY-ORGANISATION 0"
+msgstr "托管订阅： TEST-SLAPOSJS-SERVICE-SHARED-BY-ORGANISATION 0"
+
+msgid "Project : TEST-SLAPOSJS-PROJECT-TO-SHARE-SERVICE 0"
+msgstr "项目 : TEST-SLAPOSJS-PROJECT-TO-SHARE-SERVICE 0"
+
+msgid "Hosting Subscription: TEST-SLAPOSJS-SERVICE-SHARED-BY-PROJECT 0"
+msgstr "托管订阅： TEST-SLAPOSJS-SERVICE-SHARED-BY-PROJECT 0"
+
+msgid "Delete Site: TEST-SLAPOSJS-SET 0"
+msgstr "删除站点： TEST-SLAPOSJS-SET 0"
+
+msgid "Site : TEST-SLAPOSJS-SET 0"
+msgstr "站点 : TEST-SLAPOSJS-SET 0"
+
+msgid "You are not allowed to access this content"
+msgstr "您没有权限查看此内容"
+
+msgid "Support Request : TEST-SLAPOSJS-SUPPORT-REQUEST 0"
+msgstr "客户支持请求 : TEST-SLAPOSJS-SUPPORT-REQUEST 0"
+
+msgid "Invoice:Sun, 20 Oct 2019 00:00:00 GMT"
+msgstr "账单：Sun, 20 Oct 2019 00:00:00 GMT"
+
+msgid "Created Clone Web Site"
+msgstr "已创建复制 网站."
+
+msgid "Username"
+msgstr "用户名"
+
+msgid "User Name"
+msgstr "用户名"
