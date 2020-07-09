@@ -8425,9 +8425,6 @@ msgstr "使用值来为销售机会过滤资源列表"
 msgid "User"
 msgstr "用户"
 
-msgid "Username"
-msgstr "用户名"
-
 msgid "User Account Workflow"
 msgstr "用户账户流程"
 
