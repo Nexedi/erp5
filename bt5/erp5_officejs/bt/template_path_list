@@ -13,6 +13,7 @@ portal_types/Web Page Module/svg_editor_view
 portal_types/Web Page Module/text_editor_view
 portal_types/Web Page/text_editor_clone
 portal_types/Web Page/text_editor_view
+portal_types/Web Script/codemirror_clone
 portal_types/Web Script/codemirror_view
 web_page_module/dhtmlx_gantt_*
 web_page_module/fb_sdk_js
