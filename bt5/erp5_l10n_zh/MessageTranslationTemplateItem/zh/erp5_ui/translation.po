@@ -8425,6 +8425,9 @@ msgstr "使用值来为销售机会过滤资源列表"
 msgid "User"
 msgstr "用户"
 
+msgid "Username"
+msgstr "用户名"
+
 msgid "User Account Workflow"
 msgstr "用户账户流程"
 
@@ -8620,8 +8623,8 @@ msgstr "访问"
 msgid "Virtual Machines"
 msgstr "虚拟机"
 
-msgid "Volume (m³)"
-msgstr "体积(m³)"
+msgid "Volume (m&#179;)"
+msgstr "体积(m&#179;)"
 
 msgid "Warehouse"
 msgstr "仓库"
