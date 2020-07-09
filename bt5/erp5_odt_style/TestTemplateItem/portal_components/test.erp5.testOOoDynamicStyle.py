@@ -35,7 +35,7 @@ from zipfile import ZipFile
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
-from Products.ERP5OOo.tests.utils import Validator
+from erp5.component.module.OOoTestUtil import Validator
 from erp5.component.module.OOoUtils import OOoBuilder
 
 

@@ -36,7 +36,7 @@ from erp5.component.module.TestFormPrintoutMixin import TestFormPrintoutMixin
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.MimetypesRegistry.mime_types.magic import guessMime
 from erp5.component.module.OOoUtils import OOoBuilder
-from Products.ERP5OOo.tests.utils import Validator
+from erp5.component.module.OOoTestUtil import Validator
 from Products.ERP5Type.tests.utils import FileUpload
 from DateTime import DateTime
 from lxml import etree

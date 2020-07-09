@@ -31,7 +31,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5OOo.tests.utils import Validator
+from erp5.component.module.OOoTestUtil import Validator
 from lxml import html
 import email, urlparse, httplib
 

@@ -4552,7 +4552,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
 
     # for now, we simply check that that the report is rendered with no error
     # and it produces valid odf
-    from Products.ERP5OOo.tests.utils import Validator
+    from erp5.component.module.OOoTestUtil import Validator
     odf_validator = Validator()
     odf = self.portal.account_module.AccountModule_viewProfitAndLossReport()
     err_list = odf_validator.validate(odf)
@@ -4573,7 +4573,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
 
     # for now, we simply check that that the report is rendered with no error
     # and it produces valid odf
-    from Products.ERP5OOo.tests.utils import Validator
+    from erp5.component.module.OOoTestUtil import Validator
     odf_validator = Validator()
     odf = self.portal.account_module.AccountModule_viewBalanceSheetReport()
     err_list = odf_validator.validate(odf)

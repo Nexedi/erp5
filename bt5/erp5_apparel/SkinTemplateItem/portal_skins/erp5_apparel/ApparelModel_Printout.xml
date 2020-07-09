@@ -22,7 +22,7 @@
                   <global name="__newobj__" module="copy_reg"/>
                 </klass>
                 <tuple>
-                  <global name="ODGStrategy" module="Products.ERP5OOo.FormPrintout"/>
+                  <global name="ODGStrategy" module="erp5.component.module.FormPrintout"/>
                 </tuple>
                 <state>
                   <dictionary>

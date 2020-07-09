@@ -34,8 +34,8 @@ from unittest import expectedFailure
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5OOo.tests.testIngestion import FILENAME_REGULAR_EXPRESSION
-from Products.ERP5OOo.tests.testIngestion import REFERENCE_REGULAR_EXPRESSION
+from erp5.component.test.testIngestion import FILENAME_REGULAR_EXPRESSION
+from erp5.component.test.testIngestion import REFERENCE_REGULAR_EXPRESSION
 from email.header import decode_header
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase

@@ -64,7 +64,7 @@
         </item>
         <item>
             <key> <string>module</string> </key>
-            <value> <string>Products.ERP5OOo.transforms.odt_to_xml</string> </value>
+            <value> <string>erp5.component.module.TransformOdtToXml</string> </value>
         </item>
         <item>
             <key> <string>output</string> </key>

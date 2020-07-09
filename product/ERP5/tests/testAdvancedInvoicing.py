@@ -392,7 +392,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     self.tic()
 
     odt = invoice.Invoice_viewAsODT()
-    from Products.ERP5OOo.tests.utils import Validator
+    from erp5.component.module.OOoTestUtil import Validator
     odf_validator = Validator()
     err_list = odf_validator.validate(odt)
     if err_list:

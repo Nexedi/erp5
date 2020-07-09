@@ -1789,7 +1789,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self.tic()
 
     odt = packing_list.PackingList_viewAsODT()
-    from Products.ERP5OOo.tests.utils import Validator
+    from erp5.component.module.OOoTestUtil import Validator
     odf_validator = Validator()
     err_list = odf_validator.validate(odt)
     if err_list:

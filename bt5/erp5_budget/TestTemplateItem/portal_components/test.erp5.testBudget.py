@@ -1811,7 +1811,7 @@ class TestBudget(ERP5TypeTestCase):
     self.assertEqual(.5, line_list[3][2]['consumed_ratio'])
 
     # validate report ODF
-    from Products.ERP5OOo.tests.utils import Validator
+    from erp5.component.module.OOoTestUtil import Validator
     odf_validator = Validator()
     odf = budget.Budget_viewBudgetConsumptionReport()
     err_list = odf_validator.validate(odf)

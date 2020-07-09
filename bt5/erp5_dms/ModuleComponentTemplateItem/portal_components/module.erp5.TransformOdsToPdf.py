@@ -1,6 +1,6 @@
 from Products.PortalTransforms.interfaces import itransform
 from zope.interface import implements
-from Products.ERP5OOo.transforms.oood_commandtransform import OOOdCommandTransform, OOoDocumentDataStream
+from erp5.component.module.OOOdCommandTransform import OOOdCommandTransform, OOoDocumentDataStream
 
 
 class OdsToPdf:

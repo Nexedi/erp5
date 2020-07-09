@@ -31,7 +31,7 @@ from DocumentTemplate import String
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Testing import ZopeTestCase
-from Products.ERP5OOo.tests.utils import Validator
+from erp5.component.module.OOoTestUtil import Validator
 from Acquisition import aq_base
 from Products.ERP5Type.Globals import get_request
 from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST

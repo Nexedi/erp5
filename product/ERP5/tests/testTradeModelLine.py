@@ -38,7 +38,7 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import simple_decorator
 from DateTime import DateTime
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-from Products.ERP5OOo.tests.utils import Validator
+from erp5.component.module.OOoTestUtil import Validator
 
 
 def save_result_as(name):

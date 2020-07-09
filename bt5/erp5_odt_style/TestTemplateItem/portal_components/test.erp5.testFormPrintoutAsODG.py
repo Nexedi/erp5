@@ -31,7 +31,7 @@ import unittest
 import Products.ERP5
 from erp5.component.module.TestFormPrintoutMixin import TestFormPrintoutMixin
 from erp5.component.module.OOoUtils import OOoBuilder
-from Products.ERP5OOo.tests.utils import Validator
+from erp5.component.module.OOoTestUtil import Validator
 from Products.ERP5Type.tests.utils import FileUpload
 from lxml import etree
 import os

@@ -1665,7 +1665,7 @@ class TestInvoice(TestInvoiceMixin):
     product_total_price=str(10*3+20*5+60*5+60*3+7*20+130*0.2+300*0.05+20*0.1)
     if text_content.find(product_total_price) == -1 :
       self.fail('fail to get the total price of the products with tax')
-    from Products.ERP5OOo.tests.utils import Validator
+    from erp5.component.module.OOoTestUtil import Validator
     odf_validator = Validator()
     err_list = odf_validator.validate(odt)
     if err_list:
@@ -1704,7 +1704,7 @@ class TestInvoice(TestInvoiceMixin):
     self.tic()
 
     odt = invoice.Invoice_viewAsODT()
-    from Products.ERP5OOo.tests.utils import Validator
+    from erp5.component.module.OOoTestUtil import Validator
     odf_validator = Validator()
     err_list = odf_validator.validate(odt)
     if err_list:
@@ -1756,7 +1756,7 @@ class TestInvoice(TestInvoiceMixin):
     self.tic()
 
     odt = invoice.Invoice_viewAsODT()
-    from Products.ERP5OOo.tests.utils import Validator
+    from erp5.component.module.OOoTestUtil import Validator
     odf_validator = Validator()
     err_list = odf_validator.validate(odt)
     if err_list:
@@ -1803,7 +1803,7 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEqual('0103/12/31', data_dict['stop_date'])
     # rendering is valid odf
     odt = invoice.Invoice_viewAsODT()
-    from Products.ERP5OOo.tests.utils import Validator
+    from erp5.component.module.OOoTestUtil import Validator
     odf_validator = Validator()
     err_list = odf_validator.validate(odt)
     if err_list:
