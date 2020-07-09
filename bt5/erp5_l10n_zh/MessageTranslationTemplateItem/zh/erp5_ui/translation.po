@@ -8425,11 +8425,17 @@ msgstr "使用值来为销售机会过滤资源列表"
 msgid "User"
 msgstr "用户"
 
+msgid "Username"
+msgstr "用户名"
+
 msgid "User Account Workflow"
 msgstr "用户账户流程"
 
 msgid "User Login"
 msgstr "用户登陆"
+
+msgid "User Name"
+msgstr "用户名"
 
 msgid "User Password"
 msgstr "用户密码"
@@ -8994,9 +9000,3 @@ msgstr "您将收到一封激活账号的确认邮件。"
 
 msgid "Created Clone Web Site"
 msgstr "已创建复制 网站."
-
-msgid "Username"
-msgstr "用户名"
-
-msgid "User Name"
-msgstr "用户名"
