@@ -92,7 +92,13 @@ def addFormPrintout(self, id, title="", form_name='', template='',
   template -- the name of a template which describes printout layout
   """
   # add actual object
-  id = self._setObject(id, FormPrintout(id, title, form_name, template, filename))
+  type_info = self.getPortalObject().portal_types.getTypeInfo('Form Printout')
+  type_info.constructInstance(container=self,
+                              id=id,
+                              title=title,
+                              form_name=form_name,
+                              template=template,
+                              filename=filename)
   # respond to the add_and_edit button if necessary
   add_and_edit(self, id, REQUEST)
   return ''
@@ -114,7 +120,8 @@ def add_and_edit(self, id, REQUEST):
     u = "%s/%s" % (u, quote(id))
   REQUEST.RESPONSE.redirect(u+'/manage_main')
 
-class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
+from Products.ERP5Type.Base import Base
+class FormPrintout(Base, Implicit, Persistent, RoleManager, Item):
   """Form Printout
 
   FormPrintout is one of a reporting system in ERP5.
@@ -132,8 +139,8 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
   styles.xml:                supported
   meta.xml:                  not supported yet
   """
-
   meta_type = "ERP5 Form Printout"
+  portal_type = "Form Printout"
   icon = "www/form_printout_icon.png"
 
   # Declarative Security
@@ -141,17 +148,10 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
-                    , PropertySheet.SimpleItem)
+                    , PropertySheet.SimpleItem
+                    , PropertySheet.OOoTemplate
+                    , PropertySheet.FormPrintout)
 
-  _properties = ( {'id': 'template',
-                   'type': 'string',
-                   'mode': 'w'},
-                  {'id': 'form_name',
-                   'type': 'string',
-                   'mode': 'w'},
-                  {'id': 'filename',
-                   'type': 'tales',
-                   'mode': 'w',},)
   # Constructors
   constructors =   (manage_addFormPrintout, addFormPrintout)
 
@@ -168,11 +168,6 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
   # alias definition to do 'add_and_edit'
   security.declareProtected('View management screens', 'manage_main')
   manage_main = manage_editFormPrintout
-
-  # default attributes
-  template = None
-  form_name = None
-  filename = 'object/title_or_id'
 
   def __init__(self, id, title='', form_name='', template='',
                filename='object/title_or_id'):

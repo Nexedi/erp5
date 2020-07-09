@@ -36,4 +36,3 @@ for (section_value, node_uid, mirror_section_uid) in (
           grouping_reference=grouping_reference
       ) or [])
 return list(ungrouped_line_set)
-

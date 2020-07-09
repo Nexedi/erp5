@@ -91,6 +91,7 @@ ExternalDocument
 ExtraLocalRole
 FlowCapacity
 Folder
+FormPrintout
 Gadget
 GeographicAddress
 HtmlStylePreference
@@ -113,6 +114,7 @@ Measure
 MemcachedPlugin
 Movement
 MovementGroup
+OOoTemplate
 OpenOrder
 Order
 Organisation

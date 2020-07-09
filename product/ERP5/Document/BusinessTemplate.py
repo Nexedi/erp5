@@ -136,7 +136,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "File":                (None,   0, "data"),
   "Image":               (None,   0, "data"),
   "Interface Component": ("py",   0, "text_content"),
-  "OOoTemplate":         ("oot",  1, "_text"),
+  "OOo Template":        ("oot",  1, "_text"),
   "Mixin Component":     ("py",   0, "text_content"),
   "Module Component":    ("py",   0, "text_content"),
   "PDF":                 ("pdf",  0, "data"),

@@ -70,13 +70,14 @@ def addOOoTemplate(self, id, title="", xml_file_id="content.xml", REQUEST=None):
   Result -- empty string
   """
   # add actual object
-  id = self._setObject(id, OOoTemplate(id, title, xml_file_id))
+  type_info = self.getPortalObject().portal_types.getTypeInfo('OOo Template')
+  obj = type_info.constructInstance(container=self, id=id, title=title, xml_file_id=xml_file_id)
   if REQUEST is not None:
-    file = REQUEST.form.get('file')
-    if file.filename:
+    file_ = REQUEST.form.get('file')
+    if file_.filename:
       # Get the template in the associated context and upload the file
-      getattr(self,id).pt_upload(REQUEST, file)
-      # respond to the add_and_edit button if necessary
+      obj.pt_upload(REQUEST, file)
+  # respond to the add_and_edit button if necessary
   add_and_edit(self, id, REQUEST)
   return ''
 
@@ -122,7 +123,8 @@ def createOOoZopeEngine():
 
 _engine = createOOoZopeEngine()
 
-class OOoTemplate(ZopePageTemplate):
+from Products.ERP5Type.Base import Base
+class OOoTemplate(Base, ZopePageTemplate):
   """
   A page template which is able to embed and OpenOffice
   file (zip archive) and replace content.xml at render time
@@ -139,6 +141,7 @@ class OOoTemplate(ZopePageTemplate):
     - add interface for Cache (http/RAM)
   """
   meta_type = "ERP5 OOo Template"
+  portal_type = "OOo Template"
   icon = "www/OOo.png"
 
   # NOTE: 100 is just pure random starting number
@@ -155,19 +158,11 @@ class OOoTemplate(ZopePageTemplate):
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
-                    , PropertySheet.SimpleItem)
+                    , PropertySheet.SimpleItem
+                    , PropertySheet.OOoTemplate)
 
   # Constructors
   constructors =   (manage_addOOoTemplate, addOOoTemplate)
-
-  # Default Attributes
-  ooo_stylesheet = 'Base_getODTStyleSheet'
-  ooo_script_name = None
-  ooo_xml_file_id = 'content.xml'
-
-  # Default content type
-  #content_type = 'application/vnd.sun.xml.writer' # Writer type by default
-  content_type = 'text/html' # This is the only for now to produce valid XML
 
   # Management interface
   manage_options =  ( ZopePageTemplate.manage_options +
@@ -177,22 +172,15 @@ class OOoTemplate(ZopePageTemplate):
       )
     )
 
-  _properties= ZopePageTemplate._properties + (
-                                        {'id': 'filename',
-                                         'type': 'tales',
-                                         'mode': 'w',}, )
-  filename = 'object/title_or_id'
-
   security.declareProtected('View management screens', 'formSettings')
   formSettings = PageTemplateFile('www/formSettings', globals(),
                                   __name__='formSettings')
   formSettings._owner = None
 
-  def __init__(self, id, title, xml_file_id='content.xml', *args,**kw):
+  def __init__(self, id, title='', *args, **kw):
     ZopePageTemplate.__init__(self, id, title, *args, **kw)
     # we store the attachments of the uploaded document
     self.OLE_documents_zipstring = None
-    self.ooo_xml_file_id = xml_file_id
 
   # Recent Zope relies on the ZTK implementation of page templates,
   # passing it a special expression evaluation context that converts strings
@@ -234,7 +222,7 @@ class OOoTemplate(ZopePageTemplate):
         memory_file.seek(0)
         self.OLE_documents_zipstring = memory_file.read()
       self.content_type = builder.getMimeType()
-      file = builder.prepareContentXml(self.ooo_xml_file_id)
+      file = builder.prepareContentXml(self.getXmlFileId())
     return ZopePageTemplate.pt_upload(self, REQUEST, file)
 
   if 'pt_edit' not in ZopePageTemplate.__dict__:
@@ -258,9 +246,9 @@ class OOoTemplate(ZopePageTemplate):
     """
     if SUPPORTS_WEBDAV_LOCKS and self.wl_isLocked():
       raise ResourceLockedError, "File is locked via WebDAV"
-    self.ooo_stylesheet = ooo_stylesheet
-    self.ooo_script_name = script_name
-    self.ooo_xml_file_id = xml_file_id
+    self.setOooStylesheet(ooo_stylesheet)
+    self.setOooScriptName(script_name)
+    self.setXmlFileId(xml_file_id)
     self.pt_setTitle(title)
     #REQUEST.set('text', self.read()) # May not equal 'text'!
     message = "Saved changes."
@@ -305,7 +293,7 @@ class OOoTemplate(ZopePageTemplate):
         dir_name = sub_document + '/' + dir_name
 
       # Get the stylesheet of the embedded openoffice document
-      ooo_stylesheet = document.ooo_stylesheet
+      ooo_stylesheet = document.getOooStylesheet()
       if ooo_stylesheet:
         ooo_stylesheet = getattr(here, ooo_stylesheet)
         # If ooo_stylesheet is dynamic, call it
@@ -455,11 +443,11 @@ class OOoTemplate(ZopePageTemplate):
     # Retrieve master document
     ooo_document = None
     # If script is setting, call it
-    if self.ooo_script_name:
-      ooo_script = getattr(here, self.ooo_script_name)
-      ooo_document = ooo_script(self.ooo_stylesheet)
+    if self.getOooScriptName():
+      ooo_script = getattr(here, self.getOooScriptName())
+      ooo_document = ooo_script(self.getOooStylesheet())
     else:
-      ooo_document = getattr(here, self.ooo_stylesheet)
+      ooo_document = getattr(here, self.getOooStylesheet())
     format = request.get('format')
     try:
       # If style is dynamic, call it
@@ -509,7 +497,7 @@ class OOoTemplate(ZopePageTemplate):
                                  content=document_dict['document'])
 
     # Replace content.xml in master openoffice template
-    ooo_builder.replace(self.ooo_xml_file_id, doc_xml)
+    ooo_builder.replace(self.getXmlFileId(), doc_xml)
 
     # Old templates correction
     try:
@@ -598,5 +586,7 @@ class OOoTemplate(ZopePageTemplate):
     if getattr(self, 'getPortalObject', None) is None:
       return self.title_or_id()
     return self.getProperty('filename')
+
+  __call__ = ZopePageTemplate.__call__
 
 InitializeClass(OOoTemplate)

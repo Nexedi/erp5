@@ -48,6 +48,7 @@ ERP5 Form
 Event
 Extension Component
 Folder
+Form Printout
 Id Tool
 Interface Component
 Mapped Value
@@ -57,6 +58,7 @@ Mixin Component
 Module Component
 Movement
 Notification Tool
+OOo Template
 Order Tool
 Password Tool
 Predicate
