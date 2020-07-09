@@ -222,20 +222,20 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
+                          <string>causality_reference</string>
+                          <string>Visa File Reference</string>
                         </tuple>
                         <tuple>
                           <string>resource__translated__title</string>
                           <string>Support Request Type</string>
                         </tuple>
                         <tuple>
-                          <string>causality_reference</string>
-                          <string>Visa File Reference</string>
-                        </tuple>
-                        <tuple>
                           <string>destination_decision_title</string>
                           <string>Requester</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Begin Date</string>
                         </tuple>
                         <tuple>
                           <string>post_start_date</string>
@@ -244,10 +244,6 @@
                         <tuple>
                           <string>post_user</string>
                           <string>Comment Author</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery.start_date</string>
-                          <string>Begin Date</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
