@@ -16,7 +16,12 @@ password_event_list = portal.portal_catalog(
 if password_event_list:
   ONE_HOUR = 1 / 24.0
   portal_preferences = portal.portal_preferences
-  expire_date = password_event_list[0].creation_date + portal_preferences.getPreferredMaxPasswordLifetimeDuration() * ONE_HOUR
+  max_password_life_time = portal_preferences.getPreferredMaxPasswordLifetimeDuration()
+  # If auto created by system, user have to change maximum after one day
+  if password_event_list[0].getTitle().startswith('auto creation'):
+    expire_date = password_event_list[0].creation_date + (24 if 24 < max_password_life_time else max_password_life_time) * ONE_HOUR
+  else:
+    expire_date = password_event_list[0].creation_date + max_password_life_time * ONE_HOUR
   now = DateTime()
   if expire_date < now:
     # password is expired
@@ -25,6 +30,17 @@ if password_event_list:
     password_lifetime_expire_warning_duration = portal_preferences.getPreferredPasswordLifetimeExpireWarningDuration()
     if password_lifetime_expire_warning_duration and now > expire_date - password_lifetime_expire_warning_duration * ONE_HOUR:
       expire_date_warning = expire_date
+else:
+  # No password event means user doesn't yet change password
+  # Auto Create a password event
+  # so we can use passwordExpired functionnality to force user to change it
+  password_event = portal.system_event_module.newContent(portal_type='Password Event',
+                                                         title='auto creation for %s' % context.getReference(),
+                                                         source_value=context,
+                                                         destination_value=context,
+                                                         password=context.getPassword())
+  password_event.confirm(comment='auto creation')
+
 request = portal.REQUEST
 request.set('is_user_account_password_expired', is_password_expired)
 request.set('is_user_account_password_expired_expire_date', expire_date_warning)
