@@ -132,6 +132,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
                               reference=username,
                               password=password)
     login.validate()
+    self.tic()
     return person
 
   def test_BlockLogin(self):
