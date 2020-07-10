@@ -87,6 +87,8 @@
                         <string>listbox_delivery_stop_date</string>
                         <string>listbox_destination_decision_language</string>
                         <string>listbox_causality_translated_portal_type</string>
+                        <string>listbox_post_start_date</string>
+                        <string>listbox_post_user</string>
                       </list>
                     </value>
                 </item>
