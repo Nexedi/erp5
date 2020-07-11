@@ -63,8 +63,9 @@
                     <input type="submit" value="Login" i18n:attributes="value" i18n:domain="ui" tal:attributes="name python: '%s:method' % (form_action, )"/>
                     <a i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
                   </div>
-                  <div class="dialog_button_container" tal:condition="enable_google_login">
-                    <a tal:attributes="href string:${here/portal_url}/ERP5Site_redirectToGoogleLoginPage"
+                  <div class="dialog_button_container" tal:condition="enable_google_login"
+                       tal:define="current_url python: context.getWebSiteValue().absolute_url()">
+                    <a tal:attributes="href string:${current_url}/ERP5Site_redirectToGoogleLoginPage"
                       i18n:translate=""
                       i18n:domain="ui"
                       class="sign_in_with_google"
