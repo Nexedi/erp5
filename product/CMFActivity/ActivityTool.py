@@ -372,7 +372,7 @@ class Message(BaseMessage):
 
   def notifyUser(self, activity_tool, retry=False):
     """Notify the user that the activity failed."""
-    if not self.activity_mail_notification:
+    if not activity_tool.activity_mail_notification:
       return
 
     portal = activity_tool.getPortalObject()
