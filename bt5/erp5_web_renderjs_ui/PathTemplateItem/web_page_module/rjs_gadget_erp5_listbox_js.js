@@ -774,7 +774,7 @@
               div_element.appendChild(button_element);
 
             } else {
-              if (gadget.state.form_id.indexOf("form_list_sr") === -1) {
+              if (gadget.state.form_id && gadget.state.form_id.indexOf("form_list_sr") === -1) {
                 // Add Configure button
                 // <button {{disabled}} data-rel="configure_columns" data-i18n="Configure" name="Configure" type="button" class="ui-icon-wrench ui-btn-icon-left {{configure_class}}"></button>
                 button_element = document.createElement('button');
