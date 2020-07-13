@@ -600,16 +600,3 @@ class OOoTemplate(ZopePageTemplate):
     return self.getProperty('filename')
 
 InitializeClass(OOoTemplate)
-
-class FSOOoTemplate(FSPageTemplate, OOoTemplate):
-
-  meta_type = "ERP5 Filesystem OOo Template"
-  icon = "www/OOo.png"
-
-  def __call__(self, *args, **kwargs):
-    return OOoTemplate.__call__(self, *args, **kwargs)
-
-InitializeClass(FSOOoTemplate)
-
-registerFileExtension('ooot', FSOOoTemplate)
-registerMetaType(OOoTemplate.meta_type, FSOOoTemplate)
