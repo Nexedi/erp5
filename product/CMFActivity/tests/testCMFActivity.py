@@ -2039,7 +2039,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     def failingMethod(self):
       raise activity_unit_test_error
     try:
-      self.portal.portal_activities.activity_mail_notification = False
+      self.portal.portal_activities.activity_failure_mail_notification = False
       Message.notifyUser = failSendingEmail
       Organisation.failingMethod = failingMethod
       self._catch_log_errors()
@@ -2055,7 +2055,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.assertIs(activity_unit_test_error, value)
       self.deleteMessageList(activity, [message])
     finally:
-      self.portal.portal_activities.activity_mail_notification = Tue
+      self.portal.portal_activities.activity_failure_mail_notification = Tue
       Message.notifyUser = original_notifyUser
       del Organisation.failingMethod
       self._ignore_log_errors()

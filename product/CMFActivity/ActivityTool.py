@@ -372,7 +372,7 @@ class Message(BaseMessage):
 
   def notifyUser(self, activity_tool, retry=False):
     """Notify the user that the activity failed."""
-    if not activity_tool.activity_mail_notification:
+    if not activity_tool.activity_failure_mail_notification:
       return
 
     portal = activity_tool.getPortalObject()
@@ -665,7 +665,7 @@ class ActivityTool (BaseTool):
     activity_creation_trace = False
     activity_tracking = False
     activity_timing_log = False
-    activity_mail_notification = True
+    activity_failure_mail_notification = True
     cancel_and_invoke_links_hidden = False
 
     # Filter content (ZMI))
@@ -787,14 +787,14 @@ class ActivityTool (BaseTool):
 
     security.declareProtected(Permissions.manage_properties, 'isActivityMailNotificationEnabled')
     def isActivityMailNotificationEnabled(self):
-      return self.activity_mail_notification
+      return self.activity_failure_mail_notification
 
     security.declareProtected(Permissions.manage_properties, 'manage_enableMailNotification')
     def manage_enableMailNotification(self, REQUEST=None, RESPONSE=None):
         """
           Enable mail notification.
         """
-        self.activity_mail_notification = True
+        self.activity_failure_mail_notification = True
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
           url += urllib.quote('Mail notification enabled')
@@ -805,7 +805,7 @@ class ActivityTool (BaseTool):
         """
           Disable activity tracing.
         """
-        self.activity_mail_notification = False
+        self.activity_failure_mail_notification = False
         if RESPONSE is not None:
           url = '%s/manageActivitiesAdvanced?manage_tabs_message=' % self.absolute_url()
           url += urllib.quote('Mail notification disabled')
