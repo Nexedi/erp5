@@ -26,6 +26,8 @@
     COMMAND_KEEP_HISTORY_AND_DISPLAY_DIALOG_STATE = "display_dialog_with_history",
     // Display the cancellable url (or the current doc default) + the history
     COMMAND_KEEP_HISTORY_AND_CANCEL_DIALOG_STATE = "cancel_dialog_with_history",
+    // Display an action on the jio document + the history
+    COMMAND_KEEP_HISTORY_AND_DISPLAY_ERP5_ACTION = "display_erp5_action_with_history",
     // Store the jio key for the person document of the user
     COMMAND_LOGIN = "login",
     // Display a raw string URL
@@ -65,6 +67,7 @@
   VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_CANCEL_AND_DISPLAY_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_DISPLAY_DIALOG_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_CANCEL_DIALOG_STATE] = null;
+  VALID_URL_COMMAND_DICT[COMMAND_KEEP_HISTORY_AND_DISPLAY_ERP5_ACTION] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STORED_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_CHANGE_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_ERP5_ACTION] = null;
@@ -388,11 +391,10 @@
     );
   }
 
-  function execDisplayERP5ActionCommand(gadget, options) {
-    return gadget.jio_getAttachment(options.jio_key, 'links')
+  function execDisplayERP5ActionCommand(gadget, previous_options, next_options, keep_history) {
+    return gadget.jio_getAttachment(next_options.jio_key, 'links')
       .push(function (document_view) {
-        var action, action_data, action_url, i, j, new_options;
-
+        var queue, action, action_data, action_url, i, j, new_options;
         for (i = 0; i < Object.keys(document_view._links).length; i = i + 1) {
           action = Object.keys(document_view._links)[i];
           if (document_view._links.hasOwnProperty(action)) {
@@ -401,22 +403,20 @@
             }
             for (j = 0;  j < document_view._links[action].length; j = j + 1) {
               action_data = document_view._links[action][j];
-              if (action_data.name === options.page) {
+              if (action_data.name === next_options.page) {
                 new_options = {
-                  jio_key: options.jio_key,
+                  jio_key: next_options.jio_key,
                   view: action_data.href
                 };
-                copyStickyParameterDict(options, new_options);
-                action_url = getDisplayUrlFor(
-                  options.jio_key,
-                  new_options
-                );
-                return synchronousChangeState(action_url);
+                if (keep_history) {
+                  return execPushHistoryCommand(gadget, previous_options, new_options);
+                }
+                return execDisplayCommand(gadget, new_options);
               }
             }
           }
         }
-        throw new Error('Action not found: ' + options.name);
+        throw new Error('Action not found: ' + next_options.name);
       });
   }
 
@@ -433,7 +433,6 @@
     }
 
     display_url = getDisplayUrlFor(jio_key, options);
-
     // Only keep state for the default view
     // otherwise, user will never be able to reset it with the filter panel
     // Do not store state for module subdocument, to not pollute the IDB size
@@ -893,6 +892,9 @@
     if (command_options.path === COMMAND_KEEP_HISTORY_AND_CANCEL_DIALOG_STATE) {
       return execKeepHistoryAndCancelDialogCommand(gadget, previous_options);
     }
+    if (command_options.path === COMMAND_KEEP_HISTORY_AND_DISPLAY_ERP5_ACTION) {
+      return execDisplayERP5ActionCommand(gadget, previous_options, next_options, true);
+    }
     if (command_options.path === COMMAND_DISPLAY_STORED_STATE) {
       return execDisplayStoredStateCommand(gadget, next_options, drop_options);
     }
@@ -903,7 +905,7 @@
       return execChangeCommand(previous_options, next_options, drop_options);
     }
     if (command_options.path === COMMAND_DISPLAY_ERP5_ACTION) {
-      return execDisplayERP5ActionCommand(gadget, next_options);
+      return execDisplayERP5ActionCommand(gadget, previous_options, next_options);
     }
     if (command_options.path === COMMAND_STORE_AND_CHANGE_STATE) {
       return execStoreAndChangeCommand(gadget, previous_options, next_options, drop_options);
