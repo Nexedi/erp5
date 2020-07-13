@@ -87,6 +87,7 @@
                         <string>my_title</string>
                         <string>my_reference</string>
                         <string>my_resource_title</string>
+                        <string>my_variation_category_list</string>
                         <string>my_template_transformation_title_list</string>
                       </list>
                     </value>
