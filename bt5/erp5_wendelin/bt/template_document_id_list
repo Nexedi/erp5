@@ -5,3 +5,4 @@ document.erp5.DataArrayLine
 document.erp5.DataArrayLineExistenceConstraint
 document.erp5.DataBucketStream
 document.erp5.DataStream
+document.erp5.DataTransformation
