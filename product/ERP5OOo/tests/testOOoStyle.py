@@ -276,6 +276,18 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
+  def test_control_character_encoding(self):
+    # XML does not allow certain control characters
+    self.portal.person_module.pers.setFirstName('This character: \x14 is not allowed in XML')
+    response = self.publish('/%s/person_module/pers/Person_view'
+                          % self.portal.getId(), basic=self.auth)
+    self.assertEqual(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEqual('attachment', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
   def test_form_view_category(self):
     self.portal.person_module.pers.setGender('male')
     response = self.publish('/%s/person_module/pers/Person_view'
