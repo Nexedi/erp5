@@ -326,3 +326,19 @@ class Test(ERP5TypeTestCase):
                        [data_stream_1])
     self.assertSameSet(data_stream_5.getRecursivePredecessorValueList(), \
                        [data_stream_4, data_stream_3, data_stream_2, data_stream_1])
+
+  def test_08_ImportSklearn(self):
+    """
+      Test import of Scikit-learn and minimal example of usage.
+    """
+
+    from sklearn.linear_model import LinearRegression
+    X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]])
+
+    # y = 1 * x_0 + 2 * x_1 + 3
+    y = np.dot(X, np.array([1, 2])) + 3
+
+    reg = LinearRegression().fit(X, y)
+    predicted = reg.predict(np.array([[4, 10]]))
+    self.assertEqual(predicted.all(),np.array([27.]).all())
+    
