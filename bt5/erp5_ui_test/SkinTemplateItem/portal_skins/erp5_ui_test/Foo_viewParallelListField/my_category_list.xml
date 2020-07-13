@@ -130,7 +130,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [item for sub_list in [here.portal_categories[base_category].getCategoryChildCompactLogicalPathItemList(base=1) for base_category in [\'foo_category\', \'foo_big_category\']] for item in sub_list]</string> </value>
+            <value> <string>python: [item for sub_list in [here.portal_categories[base_category].getCategoryChildCompactLogicalPathItemList(base=1, disable_node=(here.getReference() == \'disable_node\')) for base_category in [\'foo_category\', \'foo_big_category\']] for item in sub_list]</string> </value>
         </item>
       </dictionary>
     </pickle>
