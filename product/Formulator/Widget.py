@@ -11,6 +11,7 @@ from lxml import etree
 from lxml.etree import Element, SubElement
 from lxml.builder import ElementMaker
 import re
+import sys
 
 DRAW_URI = 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0'
 TEXT_URI = 'urn:oasis:names:tc:opendocument:xmlns:text:1.0'
@@ -28,6 +29,35 @@ NSMAP = {
 
 EForm = ElementMaker(namespace=FORM_URI, nsmap=NSMAP)
 
+
+def convert_to_xml_compatible_string(value):
+  """Convert value to an XML 1.0 compatible string.
+
+  This helper makes sure the value is compatible with this requirement of lxml:
+      All strings must be XML compatible: Unicode or ASCII, no NULL bytes
+  """
+  if not value:
+    return ''
+  if isinstance(value, str):
+    value = value.decode('utf-8')
+
+  # remove control characters as described in the example from
+  # https://bugs.python.org/issue5166#msg95689
+
+  # http://www.w3.org/TR/REC-xml/#NT-Char
+  # Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] |
+  #          [#x10000- #x10FFFF]
+  # (any Unicode character, excluding the surrogate blocks, FFFE, and FFFF)
+  _char_tail = ''
+  if sys.maxunicode > 0x10000:
+    _char_tail = u'%s-%s' % (unichr(0x10000),
+                             unichr(min(sys.maxunicode, 0x10FFFF)))
+  _nontext_sub = re.compile(
+          ur'[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD%s]' % _char_tail,
+          re.U).sub
+  return _nontext_sub(u'\uFFFD', value)
+
+
 RE_OOO_ESCAPE = re.compile(r'([\n\t])?([^\n\t]*)')
 class OOoEscaper:
   """Replacement function to use inside re.sub expression.
@@ -40,13 +70,13 @@ class OOoEscaper:
   def __call__(self, match_object):
     match_value = match_object.group(1)
     if match_value is None:
-      self.parent_node.text = match_object.group(2)
+      self.parent_node.text = convert_to_xml_compatible_string(match_object.group(2))
     elif match_value == '\n':
       line_break = SubElement(self.parent_node, '{%s}%s' % (TEXT_URI, 'line-break'))
-      line_break.tail = match_object.group(2)
+      line_break.tail = convert_to_xml_compatible_string(match_object.group(2))
     elif match_value == '\t':
       line_break = SubElement(self.parent_node, '{%s}%s' % (TEXT_URI, 'tab'))
-      line_break.tail = match_object.group(2)
+      line_break.tail = convert_to_xml_compatible_string(match_object.group(2))
 
 def convertToString(value):
   if not isinstance(value, (str, unicode)):
