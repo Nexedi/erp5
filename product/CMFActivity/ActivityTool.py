@@ -792,7 +792,7 @@ class ActivityTool (BaseTool):
     security.declareProtected(Permissions.manage_properties, 'manage_enableMailNotification')
     def manage_enableMailNotification(self, REQUEST=None, RESPONSE=None):
         """
-          Enable mail notification.
+          Enable mail notification when activity fails.
         """
         self.activity_failure_mail_notification = True
         if RESPONSE is not None:
@@ -803,7 +803,7 @@ class ActivityTool (BaseTool):
     security.declareProtected(Permissions.manage_properties, 'manage_disableMailNotification')
     def manage_disableMailNotification(self, REQUEST=None, RESPONSE=None):
         """
-          Disable activity tracing.
+          Disable mail notification when activity fails.
         """
         self.activity_failure_mail_notification = False
         if RESPONSE is not None:
