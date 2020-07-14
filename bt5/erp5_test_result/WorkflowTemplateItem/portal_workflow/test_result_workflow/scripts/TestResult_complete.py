@@ -8,6 +8,32 @@ def unexpected(test_result):
   # passed if there's no unexpected failures.
   return test_result.getSourceProjectTitle() != "NEO R&D"
 
+def shouldRetry(test_result):
+  """Should the test result be retried ?
+
+  We retry test result line once or twice for known really flaky tests,
+  Unless if there's already another failed test result line, in that
+  Case we don't retry.
+  """
+  if 'ERP5.UnitTest-TestRunner' in test_result.getParentValue().getTitle():
+    retry_count = test_result.getProperty('test_result_retry_count') or 0
+    max_allowed_retry_count = 1
+    # retry more some tests failing a lot
+    if test_result.getTitle() in (
+      'erp5_officejs_ui_test:testFunctionalOfficeJSoOoSpreadsheet',
+      'erp5_advanced_ecommerce_test:testFunctionalAdvancedECommerce',
+    ):
+      max_allowed_retry_count = 2
+    if retry_count < max_allowed_retry_count:
+      another_test_failed = False
+      for other_test_result_line in test_result.getParentValue().contentValues(portal_type='Test Result Line'):
+        if test_result != other_test_result_line and other_test_result_line.getStringIndex() in ('UNKNOWN', 'FAILED'):
+          another_test_failed = True
+      return not another_test_failed
+
+  return False
+
+
 if test_result.getPortalType() == 'Test Result':
   has_unknown_result = False
   edit_kw = dict(duration=0,
@@ -47,12 +73,12 @@ elif test_result.getPortalType() == 'Test Result Line':
   duration = kw.get('duration')
   if duration is None:
     duration = (test_result.getStopDate() - test_result.getStartDate()) * (24*60*60)
-  cmdline = kw.get('command', getattr(test_result, 'cmdline', ''))
+  cmdline = kw.get('command', '')
   if same_type(cmdline, []):
     cmdline = ' '.join(map(repr, cmdline))
-  stdout = kw.get('stdout', getattr(test_result, 'stdout', ''))
-  stderr = kw.get('stderr', getattr(test_result, 'stderr', ''))
-  html_test_result = kw.get('html_test_result', getattr(test_result, 'html_test_result', ''))
+  stdout = kw.get('stdout', '')
+  stderr = kw.get('stderr', '')
+  html_test_result = kw.get('html_test_result', '')
   test_result.edit(cmdline=cmdline,
                    stdout=stdout,
                    stderr=stderr,
@@ -63,5 +89,11 @@ elif test_result.getPortalType() == 'Test Result Line':
                    failures=failures,
                    skips=skips,
                    html_test_result=html_test_result)
+  if status == 'FAILED' and shouldRetry(test_result):
+    test_result.edit(
+        test_result_retry_count=1 + (test_result.getProperty('test_result_retry_count') or 0),
+        string_index='RETRYING',
+    )
+    test_result.redraft(comment="Retried after a first failure")
 else:
   raise NotImplementedError("unknown type : %r" % test_result.getPortalType())

@@ -608,6 +608,38 @@ class TestTaskDistribution(ERP5TypeTestCase):
     test_result_node = test_result.contentValues(portal_type='Test Result Node')[0]
     self.assertEqual(test_result_node.getSpecialiseTitle(), 'Node0')
 
+  def test_retry_flaky_tests(self):
+    # XXX this retry flaky tests feature is only enabled for test suites with
+    # this naming pattern:
+    test_suite, = self.test_suite_module.objectValues()
+    test_suite.setTitle('ERP5.UnitTest-TestRunner-%s' % self.id())
+    self.default_test_title = test_suite.getTitle()
+    self.tic()
+
+    self._createTestNode()
+    self.tic()
+    test_result_path, _ = self._createTestResult(test_list=['testFoo', ])
+    test_result = self.portal.unrestrictedTraverse(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    status_dict = {
+        'test_count': 100,
+        'error_count': 2,
+        'failure_count': 3,
+    }
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    # test failed, but it will be retried
+    test_result_line = self.portal.restrictedTraverse(line_url)
+    self.assertEqual(test_result_line.getStringIndex(), 'RETRYING')
+    self.assertEqual(test_result_line.getSimulationState(), 'draft')
+    # if it fails again ...
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    # ... the test result will be failed.
+    self.assertEqual(test_result_line.getStringIndex(), 'FAILED')
+    self.assertEqual(test_result_line.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getSimulationState(), 'stopped')
+
   def test_06_startStopUnitTest(self):
     """
     We will check methods startUnitTest/stopUnitTest of task distribution tool
