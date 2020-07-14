@@ -1418,6 +1418,90 @@ class TestTaskDistribution(TaskDistributionTestCase):
     self.assertEqual(None, test_suite.getAlarmDate())
 
 
+class TestRetryFailedTest(TaskDistributionTestCase):
+  """Test how failed tests can be automatically retried.
+  """
+
+  def afterSetUp(self):
+    super(TestRetryFailedTest, self).afterSetUp()
+    self.test_suite, = self.test_suite_module.objectValues()
+    self._createTestNode()
+    self.tic()
+
+  def test_failed_test_not_retried_by_default(self):
+    test_result_path, _ = self._createTestResult(test_list=['testFoo', ])
+    test_result = self.portal.unrestrictedTraverse(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    test_result_line = self.portal.restrictedTraverse(line_url)
+    status_dict = {
+        'test_count': 100,
+        'error_count': 2,
+        'failure_count': 3,
+    }
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    self.assertEqual(test_result_line.getStringIndex(), 'FAILED')
+    self.assertEqual(test_result_line.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getStringIndex(), 'FAIL')
+    self.assertEqual(test_result.getSimulationState(), 'stopped')
+
+  def test_failed_retried_once_then_fail(self):
+    self.test_suite.setRetryTestPattern('testF.*')
+    test_result_path, _ = self._createTestResult(test_list=['testFoo', ])
+    test_result = self.portal.unrestrictedTraverse(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    test_result_line = self.portal.restrictedTraverse(line_url)
+    status_dict = {
+        'test_count': 100,
+        'error_count': 2,
+        'failure_count': 3,
+    }
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    # test failed, but it will be retried
+    self.assertEqual(test_result_line.getStringIndex(), 'RETRYING')
+    self.assertEqual(test_result_line.getSimulationState(), 'draft')
+    # if it fails again ...
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    # ... the test result will be fail.
+    self.assertEqual(test_result_line.getStringIndex(), 'FAILED')
+    self.assertEqual(test_result_line.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getStringIndex(), 'FAIL')
+    self.assertEqual(test_result.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getProperty('errors'), 2)
+    self.assertEqual(test_result.getProperty('failures'), 3)
+    self.assertEqual(test_result.getProperty('test_result_retry_count'), 1)
+
+  def test_failed_retried_once_then_pass(self):
+    self.test_suite.setRetryTestPattern('testF.*')
+    test_result_path, _ = self._createTestResult(test_list=['testFoo', ])
+    test_result = self.portal.unrestrictedTraverse(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
+    test_result_line = self.portal.restrictedTraverse(line_url)
+    status_dict = {
+        'test_count': 100,
+        'error_count': 2,
+        'failure_count': 3,
+    }
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    # test failed, but it will be retried
+    self.assertEqual(test_result_line.getStringIndex(), 'RETRYING')
+    self.assertEqual(test_result_line.getSimulationState(), 'draft')
+    # if it succeed next time ...
+    status_dict['error_count'] = 0
+    status_dict['failure_count'] = 0
+    self.tool.stopUnitTest(line_url, status_dict)
+    self.tic()
+    # ... the test result will be successful.
+    self.assertEqual(test_result_line.getStringIndex(), 'PASSED')
+    self.assertEqual(test_result_line.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getStringIndex(), 'PASS')
+    self.assertEqual(test_result.getSimulationState(), 'stopped')
+    self.assertEqual(test_result.getProperty('test_result_retry_count'), 1)
+
+
 class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
   """Tests for Gitlab commits annotations.
   """
