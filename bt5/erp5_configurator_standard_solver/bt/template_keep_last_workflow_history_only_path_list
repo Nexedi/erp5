@@ -1,0 +1,12 @@
+portal_solvers/Accept Solver
+portal_solvers/Adopt Solver
+portal_solvers/Automatic Accept Solver
+portal_solvers/FIFO Delivery Solver
+portal_solvers/LIFO Delivery Solver
+portal_solvers/Minimise Price Delivery Solver
+portal_solvers/Production Reduction Solver
+portal_solvers/Quantity Cancel Solver
+portal_solvers/Quantity Split Move Solver
+portal_solvers/Quantity Split Solver
+portal_solvers/Trade Model Solver
+portal_solvers/Unify Solver
