@@ -409,13 +409,11 @@
                   jio_key: options.jio_key,
                   view: action_data.href
                 };
-                console.log(new_options);
                 if (keep_history) {
                   new_options.selection = options.selection;
                   new_options.history = options.history;
                   new_options.selection_index = options.selection_index;
                 }
-                console.log(new_options);
                 copyStickyParameterDict(options, new_options);
                 action_url = getDisplayUrlFor(
                   options.jio_key,
