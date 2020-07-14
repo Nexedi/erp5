@@ -650,7 +650,7 @@ shared = true
       # but the runTestSuite program is called with the actual distributor URL
       self.assertEqual(
         'runTestSuite called with: --master_url https://user:secret@example.com/portal_distributions'
-        ' --revision dummy=0- --test_suite Foo --test_suite_title Foo-Test',
+        ' --revision dummy=0- --test_node_title Foo-Test-Node --test_suite Foo --test_suite_title Foo-Test',
         temp_file.read().strip())
 
       # The root logger (which logs only in var/log/erp5testnode.log) contain the non obfuscated
@@ -690,6 +690,7 @@ shared = true
       expected_parameter_list = [path,
         '--master_url', 'http://foo.bar',
         '--revision', 'dummy=0-',
+        '--test_node_title', 'Foo-Test-Node',
         '--test_suite', 'Foo',
         '--test_suite_title', 'Foo-Test',
       ]
