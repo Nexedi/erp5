@@ -140,7 +140,6 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "Mixin Component":     ("py",   0, "text_content"),
   "Module Component":    ("py",   0, "text_content"),
   "PDF":                 ("pdf",  0, "data"),
-  "PDFForm":             ("pdf",  0, "data"),
   "PyData Script":       ("py",   0, "_body"),
   "Python Script":       ("py",   0, "_body"),
   "PythonScript":        ("py",   0, "_body"),
@@ -645,9 +644,6 @@ class BaseTemplateItem(Implicit, Persistent):
       if attr in attr_set or attr.startswith('_cache_cookie_'):
         delattr(obj, attr)
 
-    if classname == 'PDFForm':
-      if not obj.getProperty('business_template_include_content', 1):
-        obj.deletePdfContent()
     return obj
 
   def getTemplateTypeName(self):
@@ -6589,7 +6585,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5.interfaces.delivery_solver_factory',
       ## ERP5TypeInformation
       'Products.ERP5.Document.DeliveryTypeInformation',
-      'Products.ERP5.Document.PDFTypeInformation',
       'Products.ERP5.Document.SolverTypeInformation',
       'Products.ERP5Form.Document.PreferenceType',
       ## Unit Tests
