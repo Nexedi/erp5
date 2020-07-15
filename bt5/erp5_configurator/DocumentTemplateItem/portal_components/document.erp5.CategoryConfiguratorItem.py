@@ -1,6 +1,5 @@
 ##############################################################################
 #
-
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Ivan Tyagov <ivan@nexedi.com>
 #
@@ -29,10 +28,11 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+
 
 class CategoryConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """This class is meta build step for customization of ERP5 site."""
@@ -56,7 +56,7 @@ class CategoryConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore)
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     if fixit:
       portal = self.getPortalObject()
       category_root = portal.portal_categories[self.category_root]

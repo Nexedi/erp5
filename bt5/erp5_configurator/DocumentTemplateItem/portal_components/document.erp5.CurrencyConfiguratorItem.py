@@ -1,6 +1,5 @@
 ##############################################################################
 #
-
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Ivan Tyagov <ivan@nexedi.com>
 #
@@ -29,11 +28,12 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Message import translateString
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+
 
 class CurrencyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ Setup currency. """
@@ -60,7 +60,7 @@ class CurrencyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.Resource
                     , PropertySheet.Reference )
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     currency_module = self.getPortalObject().currency_module
     error_list = []
     title = self.getTitle()

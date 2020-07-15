@@ -29,11 +29,12 @@
 from warnings import warn
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Message import translateString
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+
 
 class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """Create default service documents."""
@@ -58,7 +59,7 @@ class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.ConfiguratorItem )
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     portal = self.getPortalObject()
     error_list = []
     for service_id, service_dict in iter(self.getConfigurationListList()):

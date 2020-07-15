@@ -28,14 +28,15 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Message import translateString
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
 
+
 class AdvancedPurchaseTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
-  """ Setup Rules. """
+  """ Setup Purchase Trade Conditions. """
 
   meta_type = 'ERP5 Advanced Purchase Trade Condition Configurator Item'
   portal_type = 'Advanced Purchase Trade Condition Configurator Item'
@@ -58,7 +59,7 @@ class AdvancedPurchaseTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLO
                     , PropertySheet.Reference
                     )
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     if fixit:
       portal = self.getPortalObject()
       business_configuration = self.getBusinessConfigurationValue()
