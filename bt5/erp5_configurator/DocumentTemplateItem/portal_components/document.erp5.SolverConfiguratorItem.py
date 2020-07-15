@@ -28,10 +28,11 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+
 
 class SolverConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ Setup Solvers. """
@@ -55,7 +56,7 @@ class SolverConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     if fixit:
       portal = self.getPortalObject()
       business_configuration = self.getBusinessConfigurationValue()
@@ -77,8 +78,7 @@ class SolverConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
         for information_dict in self.content_list:
           portal_type = information_dict.pop('portal_type')
-          id = information_dict.pop('id')
-          action = solver.newContent(portal_type=portal_type, id=id)
+          action = solver.newContent(portal_type=portal_type, id=information_dict.pop('id'))
           action.edit(**information_dict)
 
       self.install(solver, business_configuration)

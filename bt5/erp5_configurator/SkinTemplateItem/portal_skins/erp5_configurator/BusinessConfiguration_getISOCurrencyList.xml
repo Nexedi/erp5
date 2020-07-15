@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>empty_first_element = True, filter="world"</string> </value>
+            <value> <string>empty_first_element=True</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

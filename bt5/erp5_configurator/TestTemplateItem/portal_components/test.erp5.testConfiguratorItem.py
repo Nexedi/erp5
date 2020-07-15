@@ -120,7 +120,6 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
   def testCategoryConfiguratorItem(self):
     """ Test Category Configurator Item """
     configuration_save = self.createConfigurationSave()
-    bc = configuration_save.getParentValue()
 
     category_id_0 = "test_category_%s" % self.newUniqueUID()
     item0 = configuration_save.addConfigurationItem(
@@ -173,7 +172,6 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
   def testCurrencyConfiguratorItem(self):
     """ Test Category Configurator Item """
     configuration_save = self.createConfigurationSave()
-    bc = configuration_save.getParentValue()
 
     eur_currency_id = "EUR"
     eur_currency_title = "Euro"
@@ -224,7 +222,6 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
             be used for the script oucome. For now it does the minimum.
     """
     configuration_save = self.createConfigurationSave()
-    bc = configuration_save.getParentValue()
 
     expect_script_outcome = (
            ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['function']),
@@ -251,7 +248,6 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
   def testAccountConfiguratorItem(self):
     """ Test Account Configurator Item """
     configuration_save = self.createConfigurationSave()
-    bc = configuration_save.getParentValue()
     account_module = self.portal.account_module
 
     account_dict = {
@@ -303,7 +299,6 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
   def testAlarmConfiguratorItem(self):
     """ Test Alarm Configurator Item """
     configuration_save = self.createConfigurationSave()
-    bc = configuration_save.getParentValue()
 
     property_map = {
       "active_sense_method_id" : "Base_setDummy",
@@ -354,7 +349,6 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
   def testPortalTypeRolesSpreadsheetConfiguratorItem(self):
     """ Test Portal Type Roles Configurator Item """
     configuration_save = self.createConfigurationSave()
-    bc = configuration_save.getParentValue()
     category_tool = self.portal.portal_categories
 
     test_folder_path = '/'.join(test_folder.__file__.split('/')[:-1])
@@ -430,17 +424,13 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
   def testCategoriesSpreadsheetConfiguratorItem(self):
     """ Test Portal Type Roles Configurator Item """
     configuration_save = self.createConfigurationSave()
-    bc = configuration_save.getParentValue()
     category_tool = self.portal.portal_categories
 
     test_folder_path = '/'.join(test_folder.__file__.split('/')[:-1])
 
-    f = open("%s/test_data/test_standard_categories.ods" \
-               % test_folder_path, "r")
-    try:
+    with open("%s/test_data/test_standard_categories.ods" \
+               % test_folder_path, "r") as f:
       data = f.read()
-    finally:
-      f.close()
 
     item = configuration_save.addConfigurationItem(
       "Categories Spreadsheet Configurator Item",
@@ -481,7 +471,6 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
   def testRuleConfiguratorItem(self):
     """ Test Rules Configurator Item """
     configuration_save = self.createConfigurationSave()
-    bc = configuration_save.getParentValue()
     category_tool = self.portal.portal_categories
     rule_tool = self.portal.portal_rules
 
@@ -510,7 +499,6 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     item.fixConsistency()
     self.tic()
 
-    template_id = item.getId()
     rule_list = rule_tool.searchFolder(
           portal_type=self.portal.getPortalRuleTypeList(),
           validation_state="validated", reference=rule_reference)
@@ -520,17 +508,12 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
 
   def testBusinessProcessConfiguratorItem(self):
     configuration_save = self.createConfigurationSave()
-    bc = configuration_save.getParentValue()
-    category_tool = self.portal.portal_categories
 
     test_folder_path = '/'.join(test_folder.__file__.split('/')[:-1])
 
-    f = open("%s/test_data/test_standard_business_process.ods" \
-               % test_folder_path, "r")
-    try:
+    with open("%s/test_data/test_standard_business_process.ods" \
+               % test_folder_path, "r") as f:
       data = f.read()
-    finally:
-      f.close()
 
     reference = "testing_business_process_%s" % self.newUniqueUID()
     item = configuration_save.addConfigurationItem(

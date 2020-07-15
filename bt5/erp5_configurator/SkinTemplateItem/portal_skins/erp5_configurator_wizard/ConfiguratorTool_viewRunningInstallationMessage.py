@@ -7,8 +7,6 @@ calc_percentage = 0.0
 is_activities_running = len(installation_status['activity_list'])!=0
 is_bt5_building_running = installation_status['bt5']['all']==0 and \
                           not is_activities_running
-is_bt5_installation_running = installation_status['bt5']['all']!=0 and \
-                              not is_activities_running 
 
 if not is_bt5_building_running:
   all_bt5s = float(installation_status['bt5']['all'])

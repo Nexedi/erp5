@@ -49,9 +49,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W: 61, 43: Redefining built-in \'filter\' (redefined-builtin)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
