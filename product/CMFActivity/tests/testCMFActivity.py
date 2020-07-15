@@ -1132,6 +1132,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     def failingMethod(self): raise ValueError('This method always fails')
     Organisation.failingMethod = failingMethod
     try:
+      portal_activities.activity_failure_mail_notification = True
       # MESSAGE_NOT_EXECUTED
       obj.activate(activity=activity).failingMethod()
       self.commit()
@@ -1154,6 +1155,41 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(countMessage(path=obj_path), 0)
       self.assertFalse(message_list)
     finally:
+      self.portal.portal_activities.activity_failure_mail_notification = True
+      del Organisation.failingMethod
+
+  @for_each_activity
+  def testTryUserNotificationDisabledOnActivityFailure(self, activity):
+    message_list = self.portal.MailHost._message_list
+    del message_list[:]
+    portal_activities = self.portal.portal_activities
+    countMessage = portal_activities.countMessage
+    obj = self.portal.organisation_module.newContent(portal_type='Organisation')
+    self.tic()
+    def failingMethod(self): raise ValueError('This method always fails')
+    Organisation.failingMethod = failingMethod
+    try:
+      portal_activities.activity_failure_mail_notification = False
+      # MESSAGE_NOT_EXECUTED
+      obj.activate(activity=activity).failingMethod()
+      self.commit()
+      self.assertFalse(message_list)
+      self.flushAllActivities(silent=1, loop_size=100)
+      # Check there is a traceback in the email notification
+      self.assertFalse(message_list)
+      portal_activities.manageClearActivities()
+      # MESSAGE_NOT_EXECUTABLE
+      obj_path = obj.getPath()
+      obj.activate(activity=activity).failingMethod()
+      self.commit()
+      obj.getParentValue()._delObject(obj.getId())
+      self.commit()
+      self.assertGreater(countMessage(path=obj_path), 0)
+      self.tic()
+      self.assertEqual(countMessage(path=obj_path), 0)
+      self.assertFalse(message_list)
+    finally:
+      portal_activities.activity_failure_mail_notification = True
       del Organisation.failingMethod
 
   def test_93_tryUserNotificationRaise(self):
@@ -1997,6 +2033,40 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self._ignore_log_errors()
 
   @for_each_activity
+  def testNotificationFailureIsNotSavedOnEventLogWhenMailNotificationIsDisabled(self, activity):
+    obj = self.portal.organisation_module.newContent(portal_type='Organisation')
+    self.tic()
+    original_notifyUser = Message.notifyUser.im_func
+    def failSendingEmail(self, *args, **kw):
+      raise MailHostError('Mail is not sent')
+    activity_unit_test_error = Exception()
+    def failingMethod(self):
+      raise activity_unit_test_error
+    try:
+      self.portal.portal_activities.activity_failure_mail_notification = False
+      Message.notifyUser = failSendingEmail
+      Organisation.failingMethod = failingMethod
+      self._catch_log_errors()
+      obj.activate(activity=activity, priority=6).failingMethod()
+      self.commit()
+      self.flushAllActivities(silent=1, loop_size=100)
+      message, = self.getMessageList(activity)
+      self.commit()
+      for log_record in self.logged:
+        if log_record.name == 'ActivityTool' and log_record.levelname == 'WARNING':
+          type, value, trace = log_record.exc_info
+      self.commit()
+      self.assertIs(activity_unit_test_error, value)
+      self.deleteMessageList(activity, [message])
+    finally:
+      self.portal.portal_activities.activity_failure_mail_notification = True
+      Message.notifyUser = original_notifyUser
+      del Organisation.failingMethod
+      self._ignore_log_errors()
+
+
+
+  @for_each_activity
   def testTryUserMessageContainingNoTracebackIsStillSent(self, activity):
     # With Message.__call__
     # 1: activity context does not exist when activity is executed
@@ -2332,9 +2402,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     message_list = self.portal.MailHost._message_list
     del message_list[:]
     activity_tool = self.portal.portal_activities
+        
     kw = {}
     self._catch_log_errors(subsystem='CMFActivity')
     try:
+      activity_tool.activity_failure_mail_notification = True
       for kw['activity'] in ActivityTool.activity_dict:
         for kw['group_method_id'] in '', None:
           obj = activity_tool.newActiveProcess()
