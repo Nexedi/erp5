@@ -26,22 +26,20 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod('getDocumentUrl', function (raw_url) {
       var gadget = this;
-      return RSVP.Queue()
-        .push(function () {
+      return gadget.jio_getAttachment(raw_url, "links")
+       .push(function (links) {
+          var page = "preview",
+            has_preview = links._links.view.filter(function (i) {
+              return i.name === "preview";
+            }).length > 0;
+          if (!has_preview) {
+            page = "html_view";
+          }
           return gadget.getUrlFor({
             command: 'display_erp5_action_with_history',
             options: {
               jio_key: raw_url,
-              page: 'preview'
-            }
-          });
-        })
-        .then(function () {
-          return gadget.getUrlFor({
-            command: 'display_erp5_action_with_history',
-            options: {
-              jio_key: raw_url,
-              page: 'web_view'
+              page: page
             }
           });
         });
