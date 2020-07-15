@@ -1,0 +1,47 @@
+div.jexcel_formula img{
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+input.jexcel_formula {
+  margin-left: 2px;
+  width: 92.8%;
+  position:sticky;
+  top:0px;
+  z-index:0;
+  display: inline-block;
+}
+
+input.cell_input {
+  display: inline-block;
+  width: 4%;
+}
+
+input.jexcel_search {
+  width: 40px;
+}
+
+.jexcel_toolbar select.minimize {
+  width: 90px;
+}
+
+td {
+  cursor: cell;
+}
+
+input.readonly {
+  cursor: not-allowed;
+}
+
+body > div.spreadsheet.jexcel_tabs > div:nth-child(1) {
+  position : absolute;
+  bottom: 0;
+}
+
+.jexcel_tab.jexcel_container.fullscreen.with-toolbar {
+  position: absolute;
+  top: 0;
+}
