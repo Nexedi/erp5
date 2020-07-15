@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2020-07-09 14:03+UTC\n"
-"PO-Revision-Date: 2020-07-09 14:03+UTC\n"
+"POT-Creation-Date: 2020-07-15 00:03+UTC\n"
+"PO-Revision-Date: 2020-07-15 00:03+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: zh <>\n"
 "MIME-Version: 1.0\n"
@@ -8425,17 +8425,11 @@ msgstr "使用值来为销售机会过滤资源列表"
 msgid "User"
 msgstr "用户"
 
-msgid "Username"
-msgstr "用户名"
-
 msgid "User Account Workflow"
 msgstr "用户账户流程"
 
 msgid "User Login"
 msgstr "用户登陆"
-
-msgid "User Name"
-msgstr "用户名"
 
 msgid "User Password"
 msgstr "用户密码"
@@ -8989,14 +8983,65 @@ msgstr "当文件上传完成时会自动检测该文件"
 msgid "Opened"
 msgstr "已开启"
 
-msgid "Credential Request Created."
-msgstr "凭证请求已创建。"
-
 msgid "An email has been sent to you."
 msgstr "已向您发送邮件。"
 
 msgid "You will receive a confirmation email to activate your account."
 msgstr "您将收到一封激活账号的确认邮件。"
 
-msgid "Created Clone Web Site"
-msgstr "已创建复制 网站."
+msgid "Computer Network :${title}"
+msgstr "计算机网络 :${title}"
+
+msgid "You are not allowed to access this content"
+msgstr "您没有权限查看此内容"
+
+msgid "${count} Records"
+msgstr "${count} 记录"
+
+msgid "Your Account : ${title}"
+msgstr "您的登录账号 : ${title}"
+
+msgid "Disable Login: ${title}"
+msgstr "关闭登录账号: ${title}"
+
+msgid "Delete Network: ${title}"
+msgstr "删除网络: ${title}"
+
+msgid "Organisation : ${title}"
+msgstr "组织 : ${title}"
+
+msgid "Project : ${title}"
+msgstr "项目 : ${title}"
+
+msgid "Delete Project: ${title}"
+msgstr "删除项目： ${title}"
+
+msgid "Computer: ${title}"
+msgstr "计算机: ${title}"
+
+msgid "Destroy Hosting Subscription: ${title}"
+msgstr "销毁托管订阅： ${title}"
+
+msgid "3/3 Request Service: ${title}"
+msgstr "3/3 请求服务： ${title}"
+
+msgid "Hosting Subscription: ${title}"
+msgstr "托管订阅： ${title}"
+
+msgid "Delete Site: ${title}"
+msgstr "删除站点： ${title}"
+
+msgid "Site : ${title}"
+msgstr "站点 : ${title}"
+
+msgid "Support Request : ${title}"
+msgstr "客户支持请求 : ${title}"
+
+msgid "Invoice:${title}"
+msgstr "账单：${title}"
+
+msgid "${portal_type} Created."
+msgstr "${portal_type}已创建。"
+
+msgid "Credential Request"
+msgstr "凭证请求"
