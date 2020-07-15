@@ -79,7 +79,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CONFIGURATION MANIFEST\n
-# generated on Fri Jul 10 14:42:20 2020\n
+# generated on Wed Jul 15 14:37:48 2020\n
 CACHE:\n
 \n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1Rlc3QgUGFnZQ==\n
