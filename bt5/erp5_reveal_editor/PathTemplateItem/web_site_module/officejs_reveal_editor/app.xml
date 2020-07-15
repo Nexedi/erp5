@@ -680,7 +680,7 @@ WebSection_getRevealEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>985.7455.54211.30720</string> </value>
+                      <value> <string>985.10322.12087.2867</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -698,7 +698,7 @@ WebSection_getRevealEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1594392131.06</float>
+                              <float>1594823874.7</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
