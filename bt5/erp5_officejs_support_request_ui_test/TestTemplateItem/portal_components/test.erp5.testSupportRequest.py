@@ -96,6 +96,8 @@ class SupportRequestTestCase(ERP5TypeTestCase, object):
 class TestSupportRequestCreateNewSupportRequest(SupportRequestTestCase):
 
   def test_existing_portal_type_action_to_support_request(self):
+    view_categorie_list = ["object_view", "object_jio_view",
+                           "object_web_view", "object_jio_search"]
     portal_type_list = [
       p for p in self.portal.getPortalDocumentTypeList() \
       if p not in ("Sound", "Video", "Web Page", 'Video', 'Web Illustration',
@@ -109,26 +111,17 @@ class TestSupportRequestCreateNewSupportRequest(SupportRequestTestCase):
       action_list = portal_type.objectValues(portal_type="Action Information")
       filtered_action_list = [action.getReference() \
         for action in sorted(action_list, key=lambda x: x.getFloatIndex()) \
-        if action.getActionType() == "object_officejs_support_request_view"
+        if action.getActionType() in view_categorie_list
       ]
-      self.assertIn("officejs_support_request_preview",
-                    filtered_action_list,
-                    "missing officejs_support_request_preview in {}".format(portal_type_str))
-      self.assertIn("officejs_support_request_view",
-                    filtered_action_list,
-                    "missing officejs_support_request_view in {}".format(portal_type_str))
-      self.assertIn("officejs_support_request_download", filtered_action_list,
-                    "missing officejs_support_request_download in {}".format(portal_type_str))
-      self.assertEqual(filtered_action_list[0], "officejs_support_request_preview",
-                       "Unexpected action to {} => {}".format(portal_type,
-                                                              filtered_action_list[0]))
+      self.assertTrue(any(a in ("preview", "web_view") for a in filtered_action_list),
+                     "missing preview or web_view in {} {}".format(portal_type_str, filtered_action_list))
 
     for portal_type_str in ["Support Request", "Support Request Module"]:
       portal_type = self.portal.portal_types[portal_type_str]
       action_list = portal_type.objectValues(portal_type="Action Information")
       filtered_action_list = [action.getReference() \
         for action in sorted(action_list, key=lambda x: x.getFloatIndex()) \
-        if action.getActionType() == "object_officejs_support_request_view"
+        if action.getActionType() in view_categorie_list
       ]
       self.assertIn("officejs_support_request_view",
                     filtered_action_list,
