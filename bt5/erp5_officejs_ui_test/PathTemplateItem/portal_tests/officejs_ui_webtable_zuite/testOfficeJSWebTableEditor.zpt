@@ -116,7 +116,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>identifier=jquery_sheet_gadget</td>
+  <td>//div[@class='spreadsheet']</td>
   <td></td>
 </tr>
 <!-- Wait for editor completly loaded, this is workaround, wait for lock in renderjs -->
