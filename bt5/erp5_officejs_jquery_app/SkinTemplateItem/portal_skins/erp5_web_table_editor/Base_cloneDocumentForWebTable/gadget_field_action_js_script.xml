@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_text_content</string> </value>
+            <value> <string>gadget_field_action_js_script</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -209,7 +209,7 @@
                 </item>
                 <item>
                     <key> <string>gadget_url</string> </key>
-                    <value> <string>gadget_editor.html</string> </value>
+                    <value> <string>action_web_table_clone.html</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -222,17 +222,12 @@
                 <item>
                     <key> <string>renderjs_extra</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>{"editor": "jexcel", "maximize": true}</string>
-                          <string>{"editor": "jexcel", "maximize": true}</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>My Text Content</string> </value>
+                    <value> <string>gadget_field_action_js_script</string> </value>
                 </item>
                 <item>
                     <key> <string>validator_field_id</string> </key>

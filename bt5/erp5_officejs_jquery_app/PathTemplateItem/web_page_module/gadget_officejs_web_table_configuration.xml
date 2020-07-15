@@ -110,7 +110,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CONFIGURATION MANIFEST\n
-# generated on Fri Dec 13 20:31:13 2019\n
+# generated on Tue Jul 28 08:56:19 2020\n
 CACHE:\n
 \n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBQYWdlIE1vZHVsZQ==\n
@@ -119,6 +119,8 @@ hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZQ==\n
 hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZS93ZWJfdGFibGVfdmlldw==\n
 hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9XZWJUYWJsZV92aWV3QXNKaW9Gb3JXZWJUYWJsZUVkaXRvcg==\n
+hateoas_appcache/definition_view/cG9ydGFsX3R5cGVzL1dlYiBUYWJsZS93ZWJfdGFibGVfY2xvbmU=\n
+hateoas_appcache/definition_view/cG9ydGFsX3NraW5zL2VycDVfd2ViX3RhYmxlX2VkaXRvci9CYXNlX2Nsb25lRG9jdW1lbnRGb3JXZWJUYWJsZQ==\n
 \n
 NETWORK:\n
 *</string> </value>
