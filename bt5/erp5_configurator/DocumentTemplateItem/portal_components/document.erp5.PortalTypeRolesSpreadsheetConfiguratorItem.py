@@ -28,10 +28,11 @@
 import zope.interface
 from zLOG import LOG, INFO
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+
 
 class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """Import a portal type roles spreadsheet.
@@ -57,7 +58,7 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
                     , PropertySheet.DublinCore
                     , PropertySheet.ConfiguratorItem
                     )
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     portal = self.getPortalObject()
     portal_type_role_dict = self._getPortalTypeRoleDict()
     error_list = []

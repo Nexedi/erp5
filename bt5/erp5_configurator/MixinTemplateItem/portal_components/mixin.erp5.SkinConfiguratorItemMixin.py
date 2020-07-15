@@ -31,12 +31,13 @@
 from zLOG import LOG, INFO
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 
+
 class SkinConfiguratorItemMixin(ConfiguratorItemMixin):
   """ Mixin which allows to create python scripts and/or skin
       elements during the configuration.
   """
 
-  def install(self, skinfolder, business_configuration):
+  def install(self, skinfolder, business_configuration, prefix=''):
     """
     """
     bt5_obj = business_configuration.getSpecialiseValue()

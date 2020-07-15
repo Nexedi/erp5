@@ -28,12 +28,13 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
 from Products.ERP5Type.Cache import CachingMethod
 from zLOG import LOG, INFO
+
 
 class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ This class will install standard ERP5 template from a repository to
@@ -60,7 +61,7 @@ class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.StandardBT5ConfiguratorItem
                     )
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     template_tool = self.getPortalObject().portal_templates
     bt5_id = self.getBt5Id().split('.')[0]
 

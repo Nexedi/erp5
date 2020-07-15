@@ -29,7 +29,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
@@ -57,7 +57,7 @@ class RuleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.Reference )
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     if fixit:
       portal = self.getPortalObject()
       template_id = self.getId()
