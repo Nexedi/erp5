@@ -64,6 +64,7 @@ class PurchaseTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       portal = self.getPortalObject()
       business_configuration = self.getBusinessConfigurationValue()
       business_process_id = \
+        business_configuration.getGlobalConfigurationAttr('purchase_business_process_id') or\
         business_configuration.getGlobalConfigurationAttr('business_process_id')
 
       organisation_id = \
