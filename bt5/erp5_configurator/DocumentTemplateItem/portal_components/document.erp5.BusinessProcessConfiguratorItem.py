@@ -81,7 +81,7 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
         title = path_dict.pop('title')
         trade_phase = path_dict.pop('trade_phase')
         trade_date = path_dict.pop('trade_date')
-        for key in path_dict:
+        for key in list(path_dict):
           if path_dict[key] is None:
             path_dict.pop(key)
         self._addTradeModelPath(business_process=business_process,
@@ -99,9 +99,9 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
         delivery_builder = link_dict.pop('delivery_builder', None)
         predecessor = link_dict.pop('predecessor', None)
         successor = link_dict.pop('successor', None)
-        for key in path_dict:
-          if path_dict[key] is None:
-            path_dict.pop(key)
+        for key in list(link_dict):
+          if link_dict[key] is None:
+            link_dict.pop(key)
 
         self._addBusinessLink(business_process=business_process,
                               title=title,
