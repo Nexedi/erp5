@@ -132,6 +132,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
                               reference=username,
                               password=password)
     login.validate()
+    self.tic()
     return person
 
   def test_BlockLogin(self):
@@ -545,14 +546,32 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.assertTrue(portal.portal_preferences.isAuthenticationPolicyEnabled())
     preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
                                                       title = 'Authentication',)
-    preference.setPreferredMaxPasswordLifetimeDuration(24)
+    # No password event will be created for such configuration
+    preference.setPreferredNumberOfLastPasswordToCheck(0)
+    preference.setPreferredMaxPasswordLifetimeDuration(None)
     self.tic()
     self._clearCache()
 
     person = self.createUser('test-04',
                              password='used_ALREADY_1234')
     login = person.objectValues(portal_type='ERP5 Login')[0]
+    self.assertEqual(login.getDestinationRelatedValue(portal_type='Password Event'), None)
+    self.assertFalse(login.isPasswordExpired())
+    self.assertFalse(request['is_user_account_password_expired'])
 
+    # password is expired if no passwor event
+    preference.setPreferredMaxPasswordLifetimeDuration(24)
+    self.tic()
+    self._clearCache()
+    self.assertEqual(login.getDestinationRelatedValue(portal_type='Password Event'), None)
+    self.assertTrue(login.isPasswordExpired())
+    self.assertTrue(request['is_user_account_password_expired'])
+
+    # now set password to trigger password event creation
+    login.setPassword('used_ALREADY_1234')
+    self.tic()
+    self._clearCache()
+    self.assertTrue(login.getDestinationRelatedValue(portal_type='Password Event') is not None)
     self.assertFalse(login.isPasswordExpired())
     self.assertFalse(request['is_user_account_password_expired'])
 
