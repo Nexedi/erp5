@@ -1,5 +1,0 @@
-ERP5 PDF Editor provides support PDF editing with the combination of Scribus.
-
-You need to have convert from ImageMagick.
-
-Note: this version is not complete yet. For example, the external method will be replaced with a Python Script.

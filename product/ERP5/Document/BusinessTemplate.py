@@ -6589,7 +6589,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5.interfaces.delivery_solver_factory',
       ## ERP5TypeInformation
       'Products.ERP5.Document.DeliveryTypeInformation',
-      'Products.ERP5.Document.PDFTypeInformation',
       'Products.ERP5.Document.SolverTypeInformation',
       'Products.ERP5Form.Document.PreferenceType',
       ## Unit Tests
