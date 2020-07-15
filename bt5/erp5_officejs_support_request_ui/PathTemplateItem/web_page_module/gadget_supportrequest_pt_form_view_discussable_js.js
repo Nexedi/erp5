@@ -41,7 +41,7 @@
             command: 'display_erp5_action_with_history',
             options: {
               jio_key: raw_url,
-              page: 'html_view'
+              page: 'web_view'
             }
           });
         });
