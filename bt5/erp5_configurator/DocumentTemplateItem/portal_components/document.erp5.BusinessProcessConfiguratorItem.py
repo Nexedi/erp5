@@ -71,7 +71,14 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       business_configuration = self.getBusinessConfigurationValue()
       business_configuration.setGlobalConfigurationAttr(\
                     business_process_id=business_process.getId())
-
+      # XXX for the standard cases, also set configuration attributes that
+      # Sale/Purchase Configurator Item will use.
+      if self.getReference() == 'default_erp5_sale_business_process':
+        business_configuration.setGlobalConfigurationAttr(
+            sale_business_process_id=business_process.getId())
+      elif self.getReference() == 'default_erp5_purchase_business_process':
+        business_configuration.setGlobalConfigurationAttr(
+            purchase_business_process_id=business_process.getId())
 
       business_process_dict = self._getBusinessProcessDict()
       int_index = 0
