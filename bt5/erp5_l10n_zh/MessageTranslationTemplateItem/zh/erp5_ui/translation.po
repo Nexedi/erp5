@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2020-07-15 00:03+UTC\n"
-"PO-Revision-Date: 2020-07-15 00:03+UTC\n"
+"POT-Creation-Date: 2020-07-09 14:03+UTC\n"
+"PO-Revision-Date: 2020-07-09 14:03+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: zh <>\n"
 "MIME-Version: 1.0\n"
@@ -8425,11 +8425,17 @@ msgstr "使用值来为销售机会过滤资源列表"
 msgid "User"
 msgstr "用户"
 
+msgid "Username"
+msgstr "用户名"
+
 msgid "User Account Workflow"
 msgstr "用户账户流程"
 
 msgid "User Login"
 msgstr "用户登陆"
+
+msgid "User Name"
+msgstr "用户名"
 
 msgid "User Password"
 msgstr "用户密码"
