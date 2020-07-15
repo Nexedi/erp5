@@ -1,5 +1,4 @@
 web_page_module/gadget_officejs_reveal_editor_configuration
 web_page_module/gadget_officejs_reveal_editor_router_html
-web_site_module/officejs_reveal_editor
 web_site_module/officejs_reveal_editor/app
 web_site_module/officejs_reveal_editor/hateoas_appcache
