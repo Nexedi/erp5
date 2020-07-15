@@ -26,13 +26,25 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod('getDocumentUrl', function (raw_url) {
       var gadget = this;
-      return gadget.getUrlFor({
-        command: 'display_erp5_action_with_history',
-        options: {
-          jio_key: raw_url,
-          page: 'preview'
-        }
-      });
+      return RSVP.Queue()
+        .push(function () {
+          return gadget.getUrlFor({
+            command: 'display_erp5_action_with_history',
+            options: {
+              jio_key: raw_url,
+              page: 'preview'
+            }
+          });
+        })
+        .then(function () {
+          return gadget.getUrlFor({
+            command: 'display_erp5_action_with_history',
+            options: {
+              jio_key: raw_url,
+              page: 'html_view'
+            }
+          });
+        });
     })
     .declareMethod('render', function (options) {
       var gadget = this;
