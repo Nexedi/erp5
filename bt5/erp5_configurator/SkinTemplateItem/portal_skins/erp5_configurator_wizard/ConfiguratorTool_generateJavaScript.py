@@ -1,6 +1,5 @@
 REQUEST = context.REQUEST
 active_process_id = REQUEST.get('active_process_id', None)
-erp5_site_id = context.getPortalObject().getId()
 
 js_string = """
     // Initialisation

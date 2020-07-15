@@ -28,11 +28,12 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.SkinConfiguratorItemMixin import \
                                        SkinConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+
 
 class SecurityCategoryMappingConfiguratorItem(SkinConfiguratorItemMixin,
                                               XMLObject):
@@ -58,11 +59,10 @@ class SecurityCategoryMappingConfiguratorItem(SkinConfiguratorItemMixin,
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     )
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     script_id = 'ERP5Type_getSecurityCategoryMapping'
     error_list = ['%s should be created' % script_id,]
     if fixit:
-      portal_alarms = self.getPortalObject().portal_alarms
       script_content = """return (
   ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['function']),
   ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['follow_up']),

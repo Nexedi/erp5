@@ -29,11 +29,12 @@
 import zope.interface
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
 from zLOG import LOG, INFO
+
 
 class RoleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ Setup role per module basis. """
@@ -57,7 +58,7 @@ class RoleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     error_list = ['Roles should imported and created',]
     if fixit:
       business_configuration = self.getBusinessConfigurationValue()

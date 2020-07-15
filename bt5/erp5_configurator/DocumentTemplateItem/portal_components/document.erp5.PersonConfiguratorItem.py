@@ -29,12 +29,13 @@
 import zope.interface
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Message import translateString
 from DateTime import DateTime
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+
 
 class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
   """ Setup user. """
@@ -61,7 +62,7 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
                     , PropertySheet.Person
                     , PropertySheet.Login)
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     error_list = []
     person_list = self.acl_users.searchUsers(id=self.Person_getUserId(), exact_match=True)
     if not person_list:
