@@ -551,13 +551,8 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(invoicing_path.getTradePhase(), 'trade/invoicing')
     self.assertEqual(invoicing_path.getTradeDate(), 'trade_phase/trade/delivery')
     self.assertEqual(invoicing_path.getTestMethodId(), None)
-
-    accounting_credit_path = getattr(business_process, "accounting_credit_path", None)
-    self.assertNotEquals(accounting_credit_path, None)
-    self.assertEqual(accounting_credit_path.getEfficiency(), -1.0)
-    self.assertEqual(accounting_credit_path.getTradePhase(), 'trade/accounting')
-    self.assertEqual(accounting_credit_path.getTradeDate(), 'trade_phase/trade/invoicing')
-    self.assertEqual(accounting_credit_path.getTestMethodId(), "isAccountingMovementType")
+    self.assertEqual(invoicing_path.getMembershipCriterionBaseCategoryList(), [])
+    self.assertEqual(invoicing_path.getMembershipCriterionCategoryList(), [])
 
     accounting_debit_path = getattr(business_process, "accounting_debit_path", None)
     self.assertNotEquals(accounting_debit_path, None)
@@ -565,6 +560,25 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(accounting_debit_path.getTradePhase(), 'trade/accounting')
     self.assertEqual(accounting_debit_path.getTradeDate(), 'trade_phase/trade/invoicing')
     self.assertEqual(accounting_debit_path.getTestMethodId(), "isAccountingMovementType")
+    self.assertEqual(
+        accounting_debit_path.getMembershipCriterionBaseCategoryList(),
+        ['trade_phase'])
+    self.assertEqual(
+        accounting_debit_path.getMembershipCriterionCategoryList(),
+        ['trade_phase/trade/invoicing', 'trade_phase/trade/delivery',])
+
+    accounting_credit_path = getattr(business_process, "accounting_credit_path", None)
+    self.assertNotEquals(accounting_credit_path, None)
+    self.assertEqual(accounting_credit_path.getEfficiency(), -1.0)
+    self.assertEqual(accounting_credit_path.getTradePhase(), 'trade/accounting')
+    self.assertEqual(accounting_credit_path.getTradeDate(), 'trade_phase/trade/invoicing')
+    self.assertEqual(accounting_credit_path.getTestMethodId(), "isAccountingMovementType")
+    self.assertEqual(
+        accounting_credit_path.getMembershipCriterionBaseCategoryList(),
+        ['trade_phase'])
+    self.assertEqual(
+        accounting_credit_path.getMembershipCriterionCategoryList(),
+        ['trade_phase/trade/delivery',])
 
     order_link = getattr(business_process, "order_link", None)
     self.assertNotEquals(order_link, None)
