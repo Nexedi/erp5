@@ -29,11 +29,12 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Message import translateString
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+
 
 class BankAccountConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ Setup bank account. """
@@ -58,7 +59,7 @@ class BankAccountConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.BankAccount )
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     organisation_module = self.getPortalObject().organisation_module
     error_list = []
 

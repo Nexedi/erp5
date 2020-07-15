@@ -1,6 +1,6 @@
 from Products.ERP5Type.Cache import CachingMethod
 result = []
-if empty_first_element==True:
+if empty_first_element:
   result = [['', ''],]
 
 filename = "standard_currency_list.ods"

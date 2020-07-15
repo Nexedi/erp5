@@ -28,10 +28,11 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+
 
 class PortalTypeConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """Configure Portal Type."""
@@ -55,7 +56,7 @@ class PortalTypeConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     portal = self.getPortalObject()
 
     # Support adding new property sheet to portal type information.

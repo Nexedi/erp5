@@ -28,11 +28,12 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Message import translateString
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+
 
 class AccountConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ Setup an Accounting Account. """
@@ -57,7 +58,7 @@ class AccountConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.Account )
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     account_module = self.getPortalObject().account_module
     account = None
     account_id = getattr(self, 'account_id', None)
