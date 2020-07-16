@@ -1579,6 +1579,7 @@ class TestGitlabRESTConnectorInterface(ERP5TypeTestCase):
                 "test_result_line_pattern": None,
             },
         },
+        "retry_test_pattern": None,
         "test_suite_relative_url": self.test_suite.getRelativeUrl()
       },
       self.test_result.TestResult_getTestSuiteData())
