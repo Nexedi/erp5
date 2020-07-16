@@ -275,7 +275,7 @@ class CachedConvertableMixin:
     """
       Returns a list of acceptable formats for conversion
     """
-    return map(lambda x: x[0], self.getTargetFormatItemList())
+    return [x[0] for x in self.getTargetFormatItemList()]
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTargetFormatList')
@@ -283,11 +283,11 @@ class CachedConvertableMixin:
     """
       Returns a list of acceptable formats for conversion
     """
-    return map(lambda x: x[1], self.getTargetFormatItemList())
+    return [x[1] for x in self.getTargetFormatItemList()]
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'isTargetFormatAllowed')
-  def isTargetFormatAllowed(self, format):
+  def isTargetFormatAllowed(self, format): # pylint: disable=redefined-builtin
     """
       Checks if the current document can be converted
       into the specified target format.

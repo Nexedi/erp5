@@ -26,7 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from AccessControl import ClassSecurityInfo, Unauthorized
+from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import fill_args_from_request
@@ -35,7 +35,7 @@ from Products.CMFCore.utils import getToolByName, _checkConditionalGET, _setCach
 import warnings
 from zExceptions import Forbidden
 
-_MARKER = []
+_MARKER = object()
 
 class DownloadableMixin:
   security = ClassSecurityInfo()
@@ -43,7 +43,7 @@ class DownloadableMixin:
   ### Content processing methods
   security.declareProtected(Permissions.View, 'index_html')
   @fill_args_from_request('display', 'quality', 'resolution', 'frame', 'pre_converted_only')
-  def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw):
+  def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw): # pylint: disable=redefined-builtin
     """
       We follow here the standard Zope API for files and images
       and extend it to support format conversion. The idea
@@ -66,7 +66,7 @@ class DownloadableMixin:
       **kw -- can be various things - e.g. resolution
 
     """
-    from Products.ERP5.Document.Document import VALID_TEXT_FORMAT_LIST,\
+    from erp5.component.document.Document import VALID_TEXT_FORMAT_LIST,\
                                                         VALID_IMAGE_FORMAT_LIST
     if format is _MARKER and not kw:
       # conversion parameters is mandatory to download the converted content.
@@ -133,7 +133,7 @@ class DownloadableMixin:
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getStandardFilename')
-  def getStandardFilename(self, format=None):
+  def getStandardFilename(self, format=None): # pylint: disable=redefined-builtin
     """Returns the document coordinates as a standard file name. This
     method is the reverse of getPropertyDictFromFileName.
     """
@@ -153,7 +153,7 @@ class DownloadableMixin:
   # backward compatibility
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getStandardFileName')
-  def getStandardFileName(self, format=None):
+  def getStandardFileName(self, format=None): # pylint: disable=redefined-builtin
     """(deprecated) use getStandardFilename() instead."""
     warnings.warn('getStandardFileName() is deprecated. '
                   'use getStandardFilename() instead.')

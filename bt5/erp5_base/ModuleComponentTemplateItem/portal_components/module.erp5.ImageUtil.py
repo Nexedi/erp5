@@ -28,7 +28,7 @@
 
 import urllib2
 from lxml import etree
-from Products.ERP5.Document.Document import ConversionError
+from erp5.component.document.Document import ConversionError
 
 SVG_DEFAULT_NAMESPACE = "http://www.w3.org/2000/svg"
 

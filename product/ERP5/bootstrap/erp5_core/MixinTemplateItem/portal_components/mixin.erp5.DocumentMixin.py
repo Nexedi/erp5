@@ -29,11 +29,8 @@
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
-from OFS.Image import Pdata
-from cStringIO import StringIO
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
-_MARKER = []
 LOCK_PERMISSION_KEY = 'TRANSACTIONAL_VARIABLE_FORMAT_PERMISSION_LOCK_FLAG'
 
 class DocumentMixin:
@@ -50,7 +47,7 @@ class DocumentMixin:
   security = ClassSecurityInfo()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'convert')
-  def convert(self, format, **kw):
+  def convert(self, format, **kw): # pylint: disable=redefined-builtin
     """
       Main content conversion function, returns result which should
       be returned and stored in cache.
@@ -94,7 +91,7 @@ class DocumentMixin:
                    fallback_script_id='Document_getFailsafeConversion')
     return method(**kw)
 
-  def _convert(self, format, **kw):
+  def _convert(self, format, **kw): # pylint: disable=redefined-builtin
     """Private method which make the transformation.
     Must be overriden !!!
     """
@@ -102,7 +99,7 @@ class DocumentMixin:
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                              'checkConversionFormatPermission')
-  def checkConversionFormatPermission(self, format, **kw):
+  def checkConversionFormatPermission(self, format, **kw): # pylint: disable=redefined-builtin
     """Public version of _checkConversionFormatPermission
     Without raising return just True or False.
     """
@@ -113,7 +110,7 @@ class DocumentMixin:
     else:
       return True
 
-  def _checkConversionFormatPermission(self, format, lock_checking=False, **kw):
+  def _checkConversionFormatPermission(self, format, lock_checking=False, **kw): # pylint: disable=redefined-builtin
     """Private method to check permission when access specified format.
     This method raises
     """

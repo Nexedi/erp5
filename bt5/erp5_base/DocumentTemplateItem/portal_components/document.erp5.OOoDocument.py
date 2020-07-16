@@ -35,24 +35,24 @@ from zope.contenttype import guess_content_type
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import Document, \
+from erp5.component.document.File import File
+from erp5.component.document.Document import Document, \
        VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
 from Products.ERP5Type.Utils import fill_args_from_request
 
 # Mixin Import
 from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
-from Products.ERP5.mixin.text_convertable import TextConvertableMixin
+from erp5.component.mixin.TextConvertableMixin import TextConvertableMixin
 from erp5.component.mixin.OOoDocumentExtensibleTraversableMixin import OOoDocumentExtensibleTraversableMixin
 
 EMBEDDED_FORMAT = '_embedded'
 
-from Products.ERP5.Document.Document import DocumentConversionServerProxy
+from erp5.component.document.Document import DocumentConversionServerProxy
 # Backward compatibility only
-from Products.ERP5.Document.Document import DOCUMENT_CONVERSION_SERVER_PROXY_TIMEOUT as OOO_SERVER_PROXY_TIMEOUT # pylint: disable=unused-import
-from Products.ERP5.Document.Document import DOCUMENT_CONVERSION_SERVER_RETRY as OOO_SERVER_RETRY # pylint: disable=unused-import
-from Products.ERP5.Document.Document import global_server_proxy_uri_failure_time # pylint: disable=unused-import
-from Products.ERP5.Document.Document import enc, dec
+from erp5.component.document.Document import DOCUMENT_CONVERSION_SERVER_PROXY_TIMEOUT as OOO_SERVER_PROXY_TIMEOUT # pylint: disable=unused-import
+from erp5.component.document.Document import DOCUMENT_CONVERSION_SERVER_RETRY as OOO_SERVER_RETRY # pylint: disable=unused-import
+from erp5.component.document.Document import global_server_proxy_uri_failure_time # pylint: disable=unused-import
+from erp5.component.document.Document import enc, dec
 OOoServerProxy = DocumentConversionServerProxy
 
 class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixin, File,

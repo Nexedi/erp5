@@ -64,6 +64,5 @@ def initialize( context ):
 
 # allow import of various exceptions in restricted environment
 # so we can catch them in ZODB scripts and inform user nicely
-allow_module('Products.ERP5.Document.Document.ConversionError')
 allow_module('xmlrpclib.Fault')
 allow_module('socket.error')

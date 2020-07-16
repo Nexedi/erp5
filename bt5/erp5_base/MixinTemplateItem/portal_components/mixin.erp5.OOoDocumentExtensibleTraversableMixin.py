@@ -30,7 +30,7 @@
 from AccessControl.SecurityManagement import setSecurityManager
 from Products.CMFCore.utils import _checkConditionalGET, _setCacheHeaders, _ViewEmulator
 from OFS.Image import File as OFSFile
-from Products.ERP5.Document.Document import ConversionError, NotConvertedError
+from erp5.component.document.Document import ConversionError, NotConvertedError
 from Products.ERP5.mixin.base_extensible_traversable import BaseExtensibleTraversableMixin
 from Products.ERP5.mixin.document_extensible_traversable import DocumentExtensibleTraversableMixin
 

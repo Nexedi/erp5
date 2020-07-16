@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -27,36 +27,31 @@
 #
 ##############################################################################
 
-from zope.interface import Interface
+from erp5.component.interface.IFormatConvertable import IFormatConvertable
 
-class IDownloadable(Interface):
+class IConvertable(IFormatConvertable):
   """
-  Downloadable interface specification
+  Convertable interface specification
 
-  Documents which implement IDownloadable can be downloaded
-  directly from their URL using any format specified as a parameter.
+  Documents which implement IConvertable can be converted
+  to multiple formats.
   """
 
-  def index_html(REQUEST, RESPONSE, format=None, **kw):
+  def convert(format, **kw): # pylint: disable=redefined-builtin
     """
-    Download the document in the specified format with
-    optional conversion parameters.
+    Converts the current document to the specified format
+    taking into account optional parameters. This method
+    returns a tuple of two values: a mime type string and
+    the converted data.
 
-    REQUEST -- HTTP REQUEST handle
+    This methods raises a ConversionError if the target format
+    is not allowed, or an Unauthorized error if the target format
+    is not permitted.
 
-    REQUEST -- HTTP RESPONSE handle
+    format -- the target conversion format specified either as an
+              extension (ex. 'png') or as a mime type
+              string (ex. 'text/plain')
 
-    format -- optional target format specified as
-              an extension string (ex. doc, png, pdf, etc.)
-
-    kw -- optional conversion parameters
-    """
-
-  def getStandardFilename(format=None):
-    """
-    Returns a standard file name for the document to download.
-    This method is the reverse of
-    IDiscoverable.getPropertyDictFromFilename.
-
-    format -- extension of returned file name
+    kw -- optional parameters which can be passed to the
+          conversion engine
     """

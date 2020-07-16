@@ -2,7 +2,7 @@
 
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
-from Products.ERP5.Document.Document import DocumentConversionServerProxy, ConversionError, enc, dec
+from erp5.component.document.Document import DocumentConversionServerProxy, ConversionError, enc, dec
 class DocumentConversionServerTransform:
   """
   Transformer using Conversion Server

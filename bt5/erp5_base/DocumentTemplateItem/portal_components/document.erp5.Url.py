@@ -33,7 +33,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import deprecated
 from erp5.component.document.Coordinate import Coordinate
-from Products.ERP5.mixin.url import UrlMixin
+from erp5.component.mixin.UrlMixin import UrlMixin
 
 from zLOG import LOG
 

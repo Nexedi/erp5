@@ -6291,59 +6291,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """)
     sequence_list.play(self)
 
-  def test_167_InstanceAndRelatedClassDefinedInSameBT(self):
-    # This test does too much since we don't modify objects anymore during
-    # download. Objects are cleaned up during installation, which does not
-    # require any specific action about garbage collection or pickle cache.
-    from Products.ERP5.Document.BusinessTemplate import BaseTemplateItem
-    portal = self.portal
-    BaseTemplateItem_removeProperties = BaseTemplateItem.removeProperties
-    object_id_list = 'old_file', 'some_file'
-    marker_list = []
-    def removeProperties(self, obj, export):
-      # Check it works if the object is modified during install.
-      if obj.id in object_id_list:
-        obj.int_index = marker_list.pop()
-      return obj
-    import Products.ERP5.tests
-    try:
-      BaseTemplateItem.removeProperties = removeProperties
-      template_tool = portal.portal_templates
-      bt_path = os.path.join(os.path.dirname(Products.ERP5.tests.__file__),
-                             'test_data',
-                             'test_167_InstanceAndRelatedClassDefinedInSameBT')
-      # create a previously existing instance of the overriden document type
-      File = portal.portal_types.getPortalTypeClass('File')
-      portal._setObject('another_file', File('another_file'))
-      self.tic()
-      # logged errors could keep a reference to a traceback having a reference
-      # to 'another_file' object
-      self.logged = []
-      # check its class has not yet been overriden
-      self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
-      for i in (0, 1):
-        marker_list += [i] * len(object_id_list)
-        gc.disable()
-        bt = template_tool.download(bt_path)
-        assert marker_list
-        if i:
-          self.tic()
-        bt.install(force=1)
-        assert not marker_list
-        gc.enable()
-        for id in object_id_list:
-          self.assertEqual(getattr(portal, id).int_index, i)
-        self.tic()
-    finally:
-      BaseTemplateItem.removeProperties = BaseTemplateItem_removeProperties
-      gc.enable()
-    # check the previously existing instance now behaves as the overriden class
-    self.assertTrue(getattr(portal.another_file, 'isClassOverriden', False))
-    # test uninstall is effective
-    self.uninstallBusinessTemplate('test_167_InstanceAndRelatedClassDefinedInSameBT')
-    # check both File instances no longer behave like being overriden
-    self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
-
   def test_168_CheckPortalTypeAndPathInSameBusinessTemplate(self, change_broken_object=False):
     """
     Make sure we can define a portal type and instance of that portal type

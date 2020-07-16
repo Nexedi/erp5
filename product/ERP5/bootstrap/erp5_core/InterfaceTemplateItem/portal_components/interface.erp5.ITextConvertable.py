@@ -1,12 +1,14 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsibility of assessing all potential
+# programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# guarantees and support are strongly advised to contract a Free Software
+# garantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -25,8 +27,20 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.XMLObject import XMLObject
+from erp5.component.interface.ITextConvertableLegacy import ITextConvertableLegacy
 
-class File(XMLObject):
-  portal_type = 'File'
-  isClassOverriden = True
+class ITextConvertable(ITextConvertableLegacy):
+  """
+  Text Convertable interface specification
+
+  Documents which implement the ITextConvertable interface
+  can be converted to plain text.
+  """
+
+  def asText(**kw):
+    """
+    Converts the current document to plain text
+
+    kw -- optional parameters which can be passed to the
+          conversion engine
+    """

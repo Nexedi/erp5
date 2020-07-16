@@ -33,7 +33,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.TextDocument import TextDocument
-from Products.ERP5.Document.File import File
+from erp5.component.document.File import File
 from erp5.component.mixin.MailMessageMixin import MailMessageMixin, testCharsetAndConvert
 from erp5.component.mixin.DocumentProxyMixin import DocumentProxyMixin, DocumentProxyError
 from MethodObject import Method

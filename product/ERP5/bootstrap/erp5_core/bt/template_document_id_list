@@ -7,9 +7,11 @@ document.erp5.ContributionPredicate
 document.erp5.Delivery
 document.erp5.DeliveryCell
 document.erp5.DeliveryLine
+document.erp5.Document
 document.erp5.DomainGenerator
 document.erp5.EmailDocument
 document.erp5.Event
+document.erp5.File
 document.erp5.ImmobilisableItem
 document.erp5.ImmobilisationDelivery
 document.erp5.ImmobilisationMovement

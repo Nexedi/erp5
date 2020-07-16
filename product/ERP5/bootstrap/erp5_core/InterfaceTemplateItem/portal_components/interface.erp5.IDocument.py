@@ -27,7 +27,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.document
+erp5.component.interface.IDocument
 """
 
 from zope.interface import Interface
@@ -185,7 +185,7 @@ class IDocument(Interface):
   (title). Each change generates a new revision.
   """
 
-  def convert(format, **kw):
+  def convert(format, **kw): # pylint: disable=redefined-builtin
     """Call a wrapped function with CachingMethod and
     return always converted result: ie. tuple(content_type, data)
 

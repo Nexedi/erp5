@@ -29,8 +29,8 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.mixin.url import UrlMixin
-from Products.ERP5.mixin.crawlable import CrawlableMixin
+from erp5.component.mixin.UrlMixin import UrlMixin
+from erp5.component.mixin.CrawlableMixin import CrawlableMixin
 
 class ExternalSource(XMLObject, UrlMixin, CrawlableMixin):
   """

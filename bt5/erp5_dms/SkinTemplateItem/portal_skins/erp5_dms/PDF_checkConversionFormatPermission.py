@@ -1,6 +1,6 @@
 # this script has an `format` argument
 # pylint: disable=redefined-builtin
-from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST
+from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST
 
 if format in VALID_IMAGE_FORMAT_LIST:
   # we do not have any data so we can allow conversion to proceed and lead to a 

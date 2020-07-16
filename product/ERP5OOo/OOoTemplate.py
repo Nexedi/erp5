@@ -53,7 +53,6 @@ try:
 except ImportError:
   SUPPORTS_WEBDAV_LOCKS = 0
 
-from Products.ERP5.Document.Document import ConversionError
 from Products.Formulator.Widget import convert_to_xml_compatible_string
 from lxml import etree
 from lxml.etree import Element

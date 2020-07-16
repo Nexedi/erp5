@@ -64,7 +64,7 @@ class OAuthTool(BaseTool):
 InitializeClass(OAuthTool)
 
 import sys
-sys.modules['Products.ERP5TioSafe.Tool.OAuthTool'] = sys.modules[__name__]
+sys.modules['erp5.component.tool.OAuthTool'] = sys.modules[__name__]
 class DummyClassForUnpickle(object):
   def __init__(self, *_, **__):
     pass

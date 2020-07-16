@@ -34,7 +34,6 @@ from Products.Formulator.DummyField import fields
 from Products.Formulator.Field import ZMIField
 from Selection import Selection
 from Products.ERP5Type.Globals import get_request
-from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST
 
 from zLOG import LOG
 
@@ -475,6 +474,7 @@ class OOoChartWidget(Widget.Widget):
       #     not editable (otherwise, REQUEST.form may contain listbox=()).
       url = '%s/%s/%s?%s' % (here.absolute_url(), form.getId(), field.getId(),
                              make_query(query_dict))
+      from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST
       if format in VALID_IMAGE_FORMAT_LIST:
         return '''<div class="OOoChartContent">
           <img class="%s" src="%s" title="%s" alt="%s"/">
