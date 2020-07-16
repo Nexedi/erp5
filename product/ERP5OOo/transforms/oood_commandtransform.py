@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.interfaces import idatastream
-from Products.ERP5.Document.Document import ConversionError
+from erp5.component.document.Document import ConversionError
 from Acquisition import aq_base
 from zope.interface import implements
 from OFS.Image import Image as OFSImage
@@ -16,11 +16,6 @@ from lxml.etree import SubElement
 
 from urllib import unquote
 from urlparse import parse_qsl, urlparse
-
-# XXX Must be replaced by portal_data_adapters soon
-from Products.ERP5.Document.Document import DocumentConversionServerProxy
-from Products.ERP5.Document.Document import enc
-from Products.ERP5.Document.Document import dec
 
 def includeMetaContentType(html_node):
   """XXX Temp workaround time to fix issue
@@ -220,11 +215,17 @@ class OOOdCommandTransform(commandtransform):
     return xml_output
 
   def convertTo(self, format):
+    # XXX Must be replaced by portal_data_adapters soon
+    from erp5.component.document.Document import DocumentConversionServerProxy
+
     server_proxy = DocumentConversionServerProxy(self.context)
     response_code, response_dict, message = \
                            server_proxy.getAllowedTargetItemList(self.mimetype)
     allowed_extension_list = response_dict['response_data']
     if format in dict(allowed_extension_list):
+      # XXX Must be replaced by portal_data_adapters soon
+      from erp5.component.document.Document import enc, dec
+
       response_code, response_dict, message = server_proxy.run_generate(
                                                                 '',
                                                                 enc(self.data),

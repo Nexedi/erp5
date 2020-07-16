@@ -40,8 +40,8 @@ from Acquisition import aq_base
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import fill_args_from_request
-from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import Document, ConversionError,\
+from erp5.component.document.File import File
+from erp5.component.document.Document import Document, ConversionError,\
                      VALID_TEXT_FORMAT_LIST, VALID_TRANSPARENT_IMAGE_FORMAT_LIST,\
                      DEFAULT_DISPLAY_ID_LIST, _MARKER
 from os.path import splitext
@@ -52,7 +52,7 @@ from zLOG import LOG, WARNING
 from erp5.component.module.ImageUtil import transformUrlToDataURI
 
 # import mixin
-from Products.ERP5.mixin.text_convertable import TextConvertableMixin
+from erp5.component.mixin.TextConvertableMixin import TextConvertableMixin
 
 def getDefaultImageQuality(portal, format=None):  # pylint: disable=redefined-builtin
   preference_tool = portal.portal_preferences

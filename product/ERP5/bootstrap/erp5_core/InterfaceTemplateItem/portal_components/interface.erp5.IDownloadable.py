@@ -37,7 +37,7 @@ class IDownloadable(Interface):
   directly from their URL using any format specified as a parameter.
   """
 
-  def index_html(REQUEST, RESPONSE, format=None, **kw):
+  def index_html(REQUEST, RESPONSE, format=None, **kw): # pylint: disable=redefined-builtin
     """
     Download the document in the specified format with
     optional conversion parameters.
@@ -52,7 +52,7 @@ class IDownloadable(Interface):
     kw -- optional conversion parameters
     """
 
-  def getStandardFilename(format=None):
+  def getStandardFilename(format=None): # pylint: disable=redefined-builtin
     """
     Returns a standard file name for the document to download.
     This method is the reverse of

@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="File" module="Products.ERP5Type.Document.File"/>
+        <global name="File" module="erp5.component.document.File"/>
         <tuple/>
       </tuple>
     </pickle>

@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.text_convertable_legacy import ITextConvertableLegacy
+from erp5.component.interface.ITextConvertableLegacy import ITextConvertableLegacy
 
 class ITextConvertable(ITextConvertableLegacy):
   """

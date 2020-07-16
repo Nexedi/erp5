@@ -30,13 +30,11 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Document import Document, VALID_TEXT_FORMAT_LIST
-from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST
-from Products.ERP5.Document.Document import ConversionError
+from erp5.component.document.Document import Document, VALID_TEXT_FORMAT_LIST
+from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST
+from erp5.component.document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
 from Products.CMFDefault.File import File as CMFFile
-from OFS.Image import Pdata
-from cStringIO import StringIO
 from Products.ERP5Type.Utils import deprecated
 
 def _unpackData(data):
@@ -129,7 +127,7 @@ class File(Document, CMFFile):
   security.declareProtected(Permissions.View, 'getcontentlength')
   getcontentlength = get_size
 
-  def _get_content_type(*args, **kw):
+  def _get_content_type(self, *_, **__):
     """Override original implementation from OFS/Image.py
     to disable content_type discovery because
     id of object its used to read the filename value.
@@ -229,7 +227,7 @@ class File(Document, CMFFile):
 
     return (mime_type, content)
 
-  def _convert(self, format, **kw):
+  def _convert(self, format, **kw): # pylint: disable=redefined-builtin
     """File is only convertable if it is an image.
     Only Image conversion, original format and text formats are allowed.
     However this document can migrate to another portal_type which support

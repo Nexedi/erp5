@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.interfaces.format_convertable import IFormatConvertable
+from erp5.component.interface.IFormatConvertable import IFormatConvertable
 
 class IConvertable(IFormatConvertable):
   """
@@ -37,7 +37,7 @@ class IConvertable(IFormatConvertable):
   to multiple formats.
   """
 
-  def convert(format, **kw):
+  def convert(format, **kw): # pylint: disable=redefined-builtin
     """
     Converts the current document to the specified format
     taking into account optional parameters. This method

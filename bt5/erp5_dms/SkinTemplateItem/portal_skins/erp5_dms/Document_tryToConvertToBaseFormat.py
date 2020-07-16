@@ -1,4 +1,4 @@
-from Products.ERP5.Document.Document import ConversionError
+from erp5.component.document.Document import ConversionError
 from erp5.component.module.Log import log
 from ZODB.POSException import ConflictError
 from xmlrpclib import Fault

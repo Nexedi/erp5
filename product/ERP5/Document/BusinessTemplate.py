@@ -66,7 +66,7 @@ from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5.Document.File import File
+from erp5.component.document.File import File
 from OFS.Traversable import NotFound
 from OFS import SimpleItem, XMLExportImport
 from OFS.Image import Pdata
@@ -6548,7 +6548,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Business Template
       'Products.ERP5.Document.TrashBin',
       'Products.ERP5.Tool.TrashTool',
-      'Products.ERP5.Document.File',
       'Products.ERP5.Document.PythonScript',
       'Products.ERP5.Document.BusinessTemplate',
       'Products.ERP5.Tool.TemplateTool',
