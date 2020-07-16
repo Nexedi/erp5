@@ -14,7 +14,8 @@ if test_result.getPortalType() == 'Test Result':
                  all_tests=0,
                  errors=0,
                  failures=0,
-                 skips=0)
+                 skips=0,
+                 test_result_retry_count=0)
   for line in test_result.objectValues(portal_type='Test Result Line'):
     for prop in edit_kw:
       try:
