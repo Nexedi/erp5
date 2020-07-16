@@ -28,11 +28,7 @@
         </item>
         <item>
             <key> <string>tested_property</string> </key>
-            <value>
-              <tuple>
-                <string>destination_project</string>
-              </tuple>
-            </value>
+            <value> <string>destination_project</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

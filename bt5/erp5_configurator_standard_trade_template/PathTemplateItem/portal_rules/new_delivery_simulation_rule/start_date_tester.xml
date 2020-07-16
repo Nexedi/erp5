@@ -63,11 +63,7 @@
         </item>
         <item>
             <key> <string>tested_property</string> </key>
-            <value>
-              <tuple>
-                <string>start_date</string>
-              </tuple>
-            </value>
+            <value> <string>start_date</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
