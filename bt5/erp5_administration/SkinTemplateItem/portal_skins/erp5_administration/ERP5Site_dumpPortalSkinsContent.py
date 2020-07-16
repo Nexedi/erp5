@@ -1,6 +1,14 @@
 import hashlib
 portal = context.getPortalObject()
 
+if ignore_folder_list is None:
+  ignore_folder_list = []
+
+if ignore_skin_list is None:
+  ignore_skin_list = []
+
+if ignore_custom:
+  ignore_folder_list.append("custom")
 
 def getSkinHash(skin, skin_container):
   content = ''
@@ -24,9 +32,11 @@ def getSkinHash(skin, skin_container):
 
 
 for skin_folder in portal.portal_skins.objectValues('Folder'):
-  if ignore_custom and skin_folder.getId() == 'custom':
+  if skin_folder.getId() in ignore_folder_list:
     continue
   for skin in skin_folder.objectValues():
+    if skin.getId() in ignore_skin_list:
+      continue
     print getSkinHash(skin, skin_folder)
 
 if include_workflow_scripts:
