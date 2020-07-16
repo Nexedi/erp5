@@ -372,6 +372,10 @@
                           <string>Skips</string>
                         </tuple>
                         <tuple>
+                          <string>test_result_retry_count</string>
+                          <string>Retries</string>
+                        </tuple>
+                        <tuple>
                           <string>string_index</string>
                           <string>Result</string>
                         </tuple>
