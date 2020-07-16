@@ -8,7 +8,10 @@ if not portal_preferences.isAuthenticationPolicyEnabled():
   # no policy, no sense to file failure
   return 0
 
-activate_kw = {'tag': 'authentication_event_%s' %context.getReference()}
+tag = 'authentication_event_%s' %context.getReference()
+if portal.portal_activities.countMessageWithTag(tag):
+  return
+activate_kw = {'tag': tag}
 authentication_event = portal.system_event_module.newContent(
                                                     portal_type = "Authentication Event",
                                                     activate_kw = activate_kw)

@@ -634,13 +634,16 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       basic=self.id() + ':password',
     )
     # User cannot login
-    response = publish()
+    # fire 5 requests, only 1 credential recovery should be created
+    for i in range(5):
+      response = publish()
     self.assertTrue(response.getHeader("Location").endswith("login_form"))
     self.tic()
 
     # and a credential recovery is created automatically
-    credential_recovery, = person.getDestinationDecisionRelatedValueList(
+    credential_recovery_list = person.getDestinationDecisionRelatedValueList(
         portal_type='Credential Recovery')
+    self.assertEqual(len(credential_recovery_list), 1)
 
     # trying to login again does not create a new credential recovery
     response = publish()
@@ -687,24 +690,40 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       portal.absolute_url_path() + '/view',
       basic='test-05:bad_test',
     )
+    # 5 failed requests in the same time, just ont Authentication failed
+    for i in range(5):
+      publish()
+    self.tic()
+    self.assertFalse(login.isLoginBlocked())
+    authentication_event_list = portal.portal_catalog(portal_type ="Authentication Event",
+                                                 default_destination_uid = login.getUid(),
+                                                 validation_state = "confirmed")
+    self.assertEqual(1, len(authentication_event_list))
+    authentication_event_list[0].expire()
+    self.tic()
+
     # fail request #1
     response = publish()
+    self.tic()
     self.assertTrue(response.getHeader("Location").endswith("login_form"))
     self.assertFalse(login.isLoginBlocked())
 
     # fail request #2
     response = publish()
+    self.tic()
     self.assertTrue(response.getHeader("Location").endswith("login_form"))
     self.assertFalse(login.isLoginBlocked())
 
     # fail request #3
     response = publish()
     self.assertTrue(response.getHeader("Location").endswith("login_form"))
+    # 2 indexed failures, 1 unindexed failures
     self.assertTrue(login.isLoginBlocked())
 
     self.tic()
 
     # test message that account is blocked
+    # 3 indexed failures
     self.assertTrue(login.isLoginBlocked())
     publish = partial(
       self.publish,
