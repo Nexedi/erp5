@@ -618,11 +618,18 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     business_process_list = \
               self.getBusinessConfigurationObjectList(business_configuration,
                                                            'Business Process')
-    self.assertEqual(len(business_process_list), 1)
+    self.assertEqual(len(business_process_list), 3)
 
-    business_process = business_process_list[0]
-    self.assertEqual("default_erp5_business_process",
-                      business_process.getReference())
+    self.assertEqual(
+        ["default_erp5_business_process",
+         "default_erp5_purchase_business_process",
+         "default_erp5_sale_business_process", ],
+        sorted([bp.getReference() for bp in business_process_list])
+    )
+
+    # Check in detail default_erp5_business_process, other business processes we'll only
+    # test they work in high level simulation scenario tests.
+    business_process, = [bp for bp in business_process_list if bp.getReference() == 'default_erp5_business_process']
 
     self.assertEqual("Default Trade Business Process",
                       business_process.getTitle())
@@ -792,14 +799,12 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(None, sale_trade_condition.getExpirationDate())
 
     # Check relation with Business Process
-    business_process_list = \
-              self.getBusinessConfigurationObjectList(business_configuration,
-                                                           'Business Process')
-    self.assertEqual(len(business_process_list), 1)
-
-    business_process = business_process_list[0]
-    self.assertEqual(business_process,
-                      sale_trade_condition.getSpecialiseValue())
+    self.assertIn(
+        sale_trade_condition.getSpecialiseValue(),
+        self.getBusinessConfigurationObjectList(business_configuration, 'Business Process'))
+    self.assertEqual(
+        sale_trade_condition.getSpecialiseReference(),
+        'default_erp5_sale_business_process')
 
     # Check relation with Organisation
     organisation_list = \
@@ -841,14 +846,12 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(None, purchase_trade_condition.getExpirationDate())
 
     # Check relation with Business Process
-    business_process_list = \
-              self.getBusinessConfigurationObjectList(business_configuration,
-                                                           'Business Process')
-    self.assertEqual(len(business_process_list), 1)
-
-    business_process = business_process_list[0]
-    self.assertEqual(business_process,
-                      purchase_trade_condition.getSpecialiseValue())
+    self.assertIn(
+        purchase_trade_condition.getSpecialiseValue(),
+        self.getBusinessConfigurationObjectList(business_configuration, 'Business Process'))
+    self.assertEqual(
+        purchase_trade_condition.getSpecialiseReference(),
+        'default_erp5_purchase_business_process')
 
     # Check relation with Organisation
     organisation_list = \
