@@ -2035,6 +2035,9 @@ msgstr "Types de campagnes"
 msgid "Campaigns"
 msgstr "Campagnes"
 
+msgid "Can't access your account ?"
+msgstr "Impossible d'accéder à votre compte ?"
+
 msgid "Can't find corresponding organisation, it's not possible to update your credentials."
 msgstr "Impossible de trouver l'organisation correspondant à votre login, il n'est pas possible de mettre à jour vos informations."
 
@@ -7837,6 +7840,12 @@ msgstr "Nouveau lien"
 msgid "New Page"
 msgstr "Nouveau page"
 
+msgid "New Password"
+msgstr "Nouveau mot de passe"
+
+msgid "New Password Confirmation"
+msgstr "Confirmation du nouveau mot de passe"
+
 msgid "New Shipping Date"
 msgstr "Nouvelle date d'expédition"
 
@@ -10290,6 +10299,9 @@ msgstr "Configurer l'application"
 
 msgid "Records"
 msgstr "Enregistrements"
+
+msgid "Recover your Account"
+msgstr "Réactiver votre compte"
 
 msgid "Reference"
 msgstr "Référence"
@@ -14820,6 +14832,9 @@ msgstr "Quel plan comptable souhaitez vous utiliser?"
 
 msgid "Which date format do you use?"
 msgstr "Quel format souhaitez vous utiliser pour vos dates?"
+
+msgid "Which did you Forget"
+msgstr "Lequel avez-vous oublié"
 
 msgid "Which translations do you want to use?"
 msgstr "Quelles langues souhaitez vous utiliser?"
