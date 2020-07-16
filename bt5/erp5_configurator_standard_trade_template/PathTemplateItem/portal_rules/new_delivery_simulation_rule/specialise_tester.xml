@@ -33,6 +33,10 @@
             <value> <string>Specialise Divergence Tester</string> </value>
         </item>
         <item>
+            <key> <string>tested_property</string> </key>
+            <value> <string>specialise</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Business Process must be consistent to make good prevision</string> </value>
         </item>
