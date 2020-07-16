@@ -13,6 +13,11 @@
       <tbody>
         <tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
         <tr>
+          <td>setTimeout</td>
+          <td>360000</td> <!-- upload document and run all activities around this upload takes time, so we use a larger timeout -->
+          <td></td>
+        </tr>
+        <tr>
           <td>open</td>
           <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
           <td></td>
