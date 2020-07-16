@@ -75,7 +75,8 @@ class TestDataIngestion(SecurityTestCase):
   def getDataStreamChunkList(self, reference):
     data_stream_list = self.portal.portal_catalog(
                         portal_type = 'Data Stream',
-                        reference = reference)
+                        reference = reference,
+                        sort_on=[('creation_date', 'ascending')])
     return data_stream_list
 
   def ingestRequest(self, reference, eof, data_chunk, ingestion_policy):
@@ -189,6 +190,23 @@ class TestDataIngestion(SecurityTestCase):
     #all data streams are validated
     self.assertSameSet(['validated' for x in data_stream_list],
                        [x.getValidationState() for x in data_stream_list])
+    #data streams are linked
+    data_stream_1 = data_stream_list[0].getObject()
+    data_stream_2 = data_stream_list[1].getObject()
+    data_stream_3 = data_stream_list[2].getObject()
+    data_stream_4 = data_stream_list[3].getObject()
+    # test successor
+    self.assertSameSet(data_stream_2.getRecursiveSuccessorValueList(), \
+                       [data_stream_3, data_stream_4])
+    self.assertSameSet(data_stream_4.getRecursiveSuccessorValueList(), \
+                       [])
+    # test predecessor
+    self.assertSameSet(data_stream_1.getRecursivePredecessorValueList(), \
+                       [])
+    self.assertSameSet(data_stream_2.getRecursivePredecessorValueList(), \
+                       [data_stream_1])
+    self.assertSameSet(data_stream_4.getRecursivePredecessorValueList(), \
+                       [data_stream_3, data_stream_2, data_stream_1])
 
   def test_03_DefaultWendelinConfigurationExistency(self):
     """
