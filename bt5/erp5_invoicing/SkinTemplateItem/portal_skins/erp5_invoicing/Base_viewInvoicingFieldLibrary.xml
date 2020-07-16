@@ -87,6 +87,9 @@
                         <string>my_view_mode_destination_title</string>
                         <string>my_view_mode_source_administration_title</string>
                         <string>my_view_mode_source_section_title</string>
+                        <string>my_dialog_mode_invoice_simulation_state</string>
+                        <string>my_dialog_mode_section_category</string>
+                        <string>my_report_mode_section_category</string>
                       </list>
                     </value>
                 </item>
