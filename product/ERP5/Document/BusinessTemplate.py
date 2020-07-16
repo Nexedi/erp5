@@ -66,7 +66,6 @@ from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from erp5.component.document.File import File
 from OFS.Traversable import NotFound
 from OFS import SimpleItem, XMLExportImport
 from OFS.Image import Pdata
@@ -1520,7 +1519,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           container.getParentValue().updateCache()
         elif obj.__class__.__name__ in ('File', 'Image'):
           if "data" in obj.__dict__:
-            File._setData.__func__(obj, obj.data)
+            obj._setData(obj.data)
         elif (container.meta_type == 'CMF Skins Tool') and \
             (old_obj is not None):
           # Keep compatibility with previous export format of

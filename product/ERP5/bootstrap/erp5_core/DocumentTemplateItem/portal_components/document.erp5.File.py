@@ -165,20 +165,6 @@ class File(Document, CMFFile):
     return self.getPortalObject().portal_contributions.\
       guessMimeTypeFromFilename(fname)
 
-  security.declareProtected(Permissions.ModifyPortalContent, '_setData')
-  def _setData(self, data):
-    """
-    """
-    # update_data use len(data) when size is None, which breaks this method.
-    # define size = 0 will prevent len be use and keep the consistency of
-    # getData() and setData()
-    if data is None:
-      size = 0
-    else:
-      data, size = self._read_data(data)
-    # We call this method to make sure size is set and caches reset
-    self.update_data(data, size=size)
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=None):
     """return Data as str."""
