@@ -11,9 +11,7 @@
             <value>
               <list>
                 <string>default</string>
-                <string>first_item</string>
                 <string>items</string>
-                <string>size</string>
                 <string>title</string>
               </list>
             </value>
@@ -61,10 +59,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -73,10 +67,6 @@
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
-                </item>
-                <item>
-                    <key> <string>size</string> </key>
-                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -98,22 +88,39 @@
                     <value> <string>my_list_field</string> </value>
                 </item>
                 <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string></string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>Fifo</string>
+                          <string>Fifo</string>
+                        </tuple>
+                        <tuple>
+                          <string>Filo</string>
+                          <string>Filo</string>
+                        </tuple>
+                        <tuple>
+                          <string>WeightedAverage</string>
+                          <string>WeightedAverage</string>
+                        </tuple>
+                        <tuple>
+                          <string>MonthlyWeightedAverage</string>
+                          <string>MonthlyWeightedAverage</string>
+                        </tuple>
+                        <tuple>
+                          <string>MovingAverage</string>
+                          <string>MovingAverage</string>
+                        </tuple>
+                      </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>size</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -133,7 +140,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'Fifo\',\'Fifo\'), (\'Filo\',\'Filo\'), (\'WeightedAverage\', \'WeightedAverage\'), (\'MonthlyWeightedAverage\',\'MonthlyWeightedAverage\'), (\'MovingAverage\',\'MovingAverage\')]</string> </value>
+            <value> <string>python: [(context.Base_translateString(label), value) for (label, value) in field.get_orig_value(\'items\')]</string> </value>
         </item>
       </dictionary>
     </pickle>
