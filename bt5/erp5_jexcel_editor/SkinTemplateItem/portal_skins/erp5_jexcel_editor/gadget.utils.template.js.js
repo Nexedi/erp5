@@ -1,10 +1,11 @@
-/*jslint nomen: true, indent: 2 */
+/*jslint nomen: true, indent: 2, maxlen: 80 */
 /*global window, rJS, RSVP, jexcel*/
 (function (window, rJS, jexcel) {
   "use strict";
 
   function numberToLetter(i) {
-    return (i >= 26 ? numberToLetter((i / 26 >> 0) - 1) : '') + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[i % 26 >> 0];
+    return (i >= 26 ? numberToLetter((i / 26 >> 0) - 1) : '') +
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[i % 26 >> 0];
   }
 
   function getCoordsFromCell(cell) {
@@ -18,7 +19,12 @@
     el.dispatchEvent(clickEvent);
   }
 
-  var template, undo, redo, merge, unmerge, destroy_merge, font_style, font_size, text_align_left, text_align_center, text_align_right, text_align_justify, vertical_align_top, vertical_align_middle, vertical_align_bottom, style_bold, style_underlined, style_italic, text_color, background_color, image, checkbox, radio, text, html, calendar, color;
+  var template, undo, redo, merge, unmerge, destroy_merge, font_style,
+    font_size, text_align_left, text_align_center, text_align_right,
+    text_align_justify, vertical_align_top, vertical_align_middle,
+    vertical_align_bottom, style_bold, style_underlined, style_italic,
+    text_color, background_color, image, checkbox, radio, text, html,
+    calendar, color;
 
   template = {
     minDimensions: [26, 100],
@@ -65,8 +71,12 @@
     type: 'i',
     content: 'table_chart',
     onclick: function (a, b) {
-      var cell = a.querySelector("td.highlight"), selected = b.getJson(true), colspan = Object.keys(selected[0]).length, rowspan = selected.length, coor = getCoordsFromCell(cell);
-      if (confirm("Top left selected cell's content will be kept, other will be erased.")) {
+      var cell = a.querySelector("td.highlight"),
+        selected = b.getJson(true),
+        colspan = Object.keys(selected[0]).length,
+        rowspan = selected.length,
+        coor = getCoordsFromCell(cell);
+      if (confirm("Only top left selected cell's content will be kept")) {
         b.setMerge(coor, colspan, rowspan);
       }
     }
@@ -76,7 +86,8 @@
     type: 'i',
     content: 'close',
     onclick: function (a, b) {
-      var cell = document.querySelector("td.highlight-selected"), coor = getCoordsFromCell(cell);
+      var cell = document.querySelector("td.highlight-selected"),
+        coor = getCoordsFromCell(cell);
       b.removeMerge(coor);
     }
   };
@@ -92,13 +103,15 @@
   font_style = {
     type: 'select',
     k: 'font-family',
-    v: ['Arial', 'Comic Sans MS', 'Verdana', 'Calibri', 'Tahoma', 'Helvetica', 'DejaVu Sans', 'Times New Roman', 'Georgia', 'Antiqua']
+    v: ['Arial', 'Comic Sans MS', 'Verdana', 'Calibri', 'Tahoma', 'Helvetica',
+        'DejaVu Sans', 'Times New Roman', 'Georgia', 'Antiqua']
   };
 
   font_size = {
     type: 'select',
     k: 'font-size',
-    v: ['8px', '10px', '12px', '14px', '16px', '18px', '20px', '22px', '24px', '26px', '28px', '30px', '34px', '38px', '42px', '46px', '50px']
+    v: ['8px', '10px', '12px', '14px', '16px', '18px', '20px', '22px', '24px',
+        '26px', '28px', '30px', '34px', '38px', '42px', '46px', '50px']
   };
 
   text_align_left = {
@@ -187,7 +200,8 @@
     onclick: function (a) {
       var cell = a.querySelector("td.highlight-selected"), worksheet, instance;
       if (cell && confirm("Data in this column will be erased.")) {
-        worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        worksheet = document.querySelector('.selected')
+          .getAttribute('data-spreadsheet');
         instance = document.querySelector('.spreadsheet').jexcel[worksheet];
         instance.options.columns[Number(cell.dataset.x)].type = "image";
         fireDblClick(cell);
@@ -199,16 +213,23 @@
     type: "i",
     content: "checkbox",
     onclick: function (a) {
-      var cell = a.querySelector("td.highlight-selected"), worksheet, instance, column, array;
+      var cell = a.querySelector("td.highlight-selected"),
+        worksheet,
+        instance,
+        column,
+        array;
       if (cell && confirm("Data in this column will be erased.")) {
-        worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        worksheet = document.querySelector('.selected')
+          .getAttribute('data-spreadsheet');
         instance = document.querySelector('.spreadsheet').jexcel[worksheet];
-        column = instance.el.querySelectorAll("td[data-x='" + cell.dataset.x + "']");
+        column = instance.el
+          .querySelectorAll("td[data-x='" + cell.dataset.x + "']");
         array = [...column];
         array.shift();
         array.forEach(function (cell) {
           instance.setValue(getCoordsFromCell(cell), "");
-          cell.innerHTML = "<input type='checkbox' name='c" + cell.dataset.x + "'>";
+          cell.innerHTML = "<input type='checkbox' name='c" +
+            cell.dataset.x + "'>";
         });
         instance.options.columns[Number(cell.dataset.x)].type = "checkbox";
       }
@@ -219,11 +240,17 @@
     type: "i",
     content: "title",
     onclick: function (a) {
-      var cell = a.querySelector("td.highlight-selected"), worksheet, instance, column, array;
+      var cell = a.querySelector("td.highlight-selected"),
+        worksheet,
+        instance,
+        column,
+        array;
       if (cell && confirm("Data in this column will be erased.")) {
-        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var worksheet = document.querySelector('.selected')
+          .getAttribute('data-spreadsheet');
         instance = document.querySelector('.spreadsheet').jexcel[worksheet];
-        column = instance.el.querySelectorAll("td[data-x='" + cell.dataset.x + "']");
+        column = instance.el
+          .querySelectorAll("td[data-x='" + cell.dataset.x + "']");
         array = [...column];
         instance.options.columns[Number(cell.dataset.x)].type = "text";
         array.shift();
@@ -240,11 +267,17 @@
     type: "i",
     content: "list",
     onclick: function (a) {
-      var cell = a.querySelector("td.highlight-selected"), worksheet, instance, column, array;
+      var cell = a.querySelector("td.highlight-selected"),
+        worksheet,
+        instance,
+        column,
+        array;
       if (cell && confirm("Data in this column will be erased.")) {
-        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var worksheet = document.querySelector('.selected')
+          .getAttribute('data-spreadsheet');
         instance = document.querySelector('.spreadsheet').jexcel[worksheet];
-        column = instance.el.querySelectorAll("td[data-x='" + cell.dataset.x + "']");
+        column = instance.el
+          .querySelectorAll("td[data-x='" + cell.dataset.x + "']");
         array = [...column];
         instance.options.columns[Number(cell.dataset.x)].type = "html";
         array.shift();
@@ -261,11 +294,17 @@
     type: "i",
     content: "calendar_today",
     onclick: function (a) {
-      var cell = a.querySelector("td.highlight-selected"), worksheet, instance, column, array;
+      var cell = a.querySelector("td.highlight-selected"),
+        worksheet,
+        instance,
+        column,
+        array;
       if (cell && confirm("Data in this column will be erased.")) {
-        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var worksheet = document.querySelector('.selected')
+          .getAttribute('data-spreadsheet');
         instance = document.querySelector('.spreadsheet').jexcel[worksheet];
-        column = instance.el.querySelectorAll("td[data-x='" + cell.dataset.x + "']");
+        column = instance.el
+          .querySelectorAll("td[data-x='" + cell.dataset.x + "']");
         array = [...column];
         instance.options.columns[Number(cell.dataset.x)].type = "calendar";
         array.shift();
@@ -282,11 +321,17 @@
     type: "i",
     content: "color_lens",
     onclick: function (a) {
-      var cell = a.querySelector("td.highlight-selected"), worksheet, instance, column, array;
+      var cell = a.querySelector("td.highlight-selected"),
+        worksheet,
+        instance,
+        column,
+        array;
       if (cell && confirm("Data in this column will be erased.")) {
-        var worksheet = document.querySelector('.selected').getAttribute('data-spreadsheet');
+        var worksheet = document.querySelector('.selected')
+          .getAttribute('data-spreadsheet');
         instance = document.querySelector('.spreadsheet').jexcel[worksheet];
-        column = instance.el.querySelectorAll("td[data-x='" + cell.dataset.x + "']");
+        column = instance.el
+          .querySelectorAll("td[data-x='" + cell.dataset.x + "']");
         array = [...column];
         array.shift();
         array.forEach(function (cell) {
@@ -313,13 +358,17 @@
             dict = JSON.parse(table.dataset.config);
             Object.assign(dict, template);
           }
-          dict.sheetName = table.dataset.sheetName !== undefined ? table.dataset.sheetName : "Sheet " + (i + 1);
+          dict.sheetName = table.dataset.sheetName !== undefined ?
+              table.dataset.sheetName : "Sheet " + (i + 1);
           configs.push(dict);
         });
         return configs;
       })
 
-    .declareMethod("getToolbarList", function (add_function, remove_function, dict) {
+    .declareMethod("getToolbarList",
+                 function (add_function,
+                          remove_function,
+                          dict) {
       var list = [], add, remove;
       if (dict.hasOwnProperty("undo_redo") && dict.undo_redo) {
         list.push(undo, redo);
@@ -341,10 +390,13 @@
         list.push(merge, unmerge, destroy_merge);
       }
       if (dict.hasOwnProperty("text_font") && dict.text_font) {
-        list.push(font_style, font_size, style_bold, style_italic, style_underlined);
+        list.push(font_style, font_size, style_bold, style_italic,
+                style_underlined);
       }
       if (dict.hasOwnProperty("text_position") && dict.text_position) {
-        list.push(text_align_left, text_align_center, text_align_right, text_align_justify, vertical_align_top, vertical_align_middle, vertical_align_bottom);
+        list.push(text_align_left, text_align_center, text_align_right,
+                text_align_justify, vertical_align_top, vertical_align_middle,
+                vertical_align_bottom);
       }
       if (dict.hasOwnProperty("color_picker") && dict.color_picker) {
         list.push(text_color, background_color);
@@ -358,14 +410,21 @@
     })
 
     .declareMethod("buildOptions", function () {
-      var str = "", formulas;
-      formulas = ["SUM", "MIN", "MAX", "COUNT", "AVERAGE", "FLOOR", "ABS", "SQRT", "ISEVEN", "ISODD", "TODAY", "UPPER", "LOWER", "TRUNC", "TYPE", "TRIM",
-                     "SIN", "COS", "TAN", "ARCSIN", "ARCCOS", "ARCTAN", "ROUND", "RAND", "RANDBETWEEN", "RADIANS", "POWER", "PI", "PHI", "MOD", "LEN", "LN",
-                      "LOG", "LOG10", "FACT", "TRUE", "FALSE", "AND", "OR", "XOR", "EVEN", "ODD", "EXP", "CONCATENATE", "BITAND", "BITOR", "BIN2DEC", "BIN2HEX",
-                     "BIN2OCT", "DEC2BIN", "DEC2HEX", "DEC2OCT", "HEX2BIN", "HEX2DEC", "HEX2OCT", "NOT", "OCT2BIN", "OCT2DEC", "OCT2HEX", "PRODUCT", "QUOTIENT",
-                     "COLUMN", "ROW", "CELL"].sort();
+      var str = "",
+        formulas;
+      formulas = ["SUM", "MIN", "MAX", "COUNT", "AVERAGE", "FLOOR", "ABS",
+                "SQRT", "ISEVEN", "ISODD", "TODAY", "UPPER", "LOWER", "TRUNC",
+                "TYPE", "TRIM", "SIN", "COS", "TAN", "ARCSIN", "ARCCOS",
+                "ARCTAN", "ROUND", "RAND", "RANDBETWEEN", "RADIANS", "POWER",
+                "PI", "PHI", "MOD", "LEN", "LN", "LOG", "LOG10", "FACT", "TRUE",
+                "FALSE", "AND", "OR", "XOR", "EVEN", "ODD", "EXP",
+                "CONCATENATE", "BITAND", "BITOR", "BIN2DEC", "BIN2HEX",
+                "BIN2OCT", "DEC2BIN", "DEC2HEX", "DEC2OCT", "HEX2BIN",
+                "HEX2DEC", "HEX2OCT", "NOT", "OCT2BIN", "OCT2DEC", "OCT2HEX",
+                "PRODUCT", "QUOTIENT", "COLUMN", "ROW", "CELL"].sort();
       formulas.forEach(function (value) {
-        str += "<option class='formula_option' value=" + value + ">" + value + "()" + "</option>";
+        str += "<option class='formula_option' value=" + value + ">" + value +
+          "()" + "</option>";
       });
       str = "<option class='formula_option'>FORMULA</option>" + str;
       return str;

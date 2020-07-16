@@ -8263,6 +8263,9 @@ console.log(ret);
                     for (var i = 0; i < content[j].children.length; i++) {
                         // WickedGrid formula compatibility
                         var value = content[j].children[i].getAttribute('formula');
+                        if (!value) {
+                          value = content[j].children[i].getAttribute('data-formula');
+                        }
                         if (value) {
                             if (value.substr(0,1) != '=') {
                                 value = '=' + value;
