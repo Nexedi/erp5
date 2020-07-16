@@ -1,9 +1,20 @@
 configuration_save = context.restrictedTraverse(configuration_save_url)
 
+# business processes
 configuration_save.addConfigurationItem("Business Process Configurator Item",
                          title="Default Trade Business Process" ,
                          configuration_spreadsheet_data = getattr(context, "standard_business_process.ods").data,
                          reference="default_erp5_business_process")
+
+configuration_save.addConfigurationItem("Business Process Configurator Item",
+                         title="Default Sales Business Process" ,
+                         configuration_spreadsheet_data = getattr(context, "standard_sale_business_process.ods").data,
+                         reference="default_erp5_sale_business_process")
+
+configuration_save.addConfigurationItem("Business Process Configurator Item",
+                         title="Default Purchase Business Process" ,
+                         configuration_spreadsheet_data = getattr(context, "standard_purchase_business_process.ods").data,
+                         reference="default_erp5_purchase_business_process")
 
 # setup Sale Trade Condition
 configuration_save.addConfigurationItem("Sale Trade Condition Configurator Item",
