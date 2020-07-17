@@ -64,7 +64,12 @@ def getSkinPrefixList(self):
   skin_prefix_list.extend((
     'ERP5Type',
     'Module',
-    'Brain', # Catalog brains
+    
+    # Catalog brains
+    'Brain',
+    'InventoryListBrain',
+    'TrackingListBrain',
+    'MovementHistoryListBrain',
 
     'DCWorkflow', # some workflow script use this, not sure it's correct.
     'SkinsTool',
