@@ -1,3 +1,0 @@
-context.validateConsistency(state_change)
-context.checkCheckBeforeDelivery(state_change)
-context.createCheckDepositLine(state_change)

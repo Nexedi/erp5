@@ -1,9 +1,0 @@
-Bank Account Inventory Group | site
-Bank Account Inventory Line | destination
-Bank Account Inventory Line | price_currency
-Bank Account Inventory Module | business_application
-Bank Account Inventory | destination
-Cash Inventory Module | business_application
-Cash Inventory | destination
-Cash Inventory | destination_section
-Cash Inventory | price_currency

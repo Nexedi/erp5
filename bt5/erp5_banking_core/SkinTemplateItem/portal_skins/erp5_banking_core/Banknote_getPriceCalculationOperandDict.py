@@ -1,1 +1,0 @@
-return {'price' : context.getBasePrice()}

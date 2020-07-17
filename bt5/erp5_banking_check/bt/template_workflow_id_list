@@ -1,9 +1,0 @@
-check_deposit_workflow
-check_payment_workflow
-checkbook_delivery_workflow
-checkbook_reception_workflow
-checkbook_usual_cash_transfer_workflow
-checkbook_vault_transfer_workflow
-stop_payment_workflow
-traveler_check_purchase_workflow
-traveler_check_sale_workflow
