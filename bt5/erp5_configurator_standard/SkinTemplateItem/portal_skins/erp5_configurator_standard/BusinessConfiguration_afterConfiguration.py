@@ -33,6 +33,9 @@ if business_template is not None:
           assignment.updateLocalRolesOnSecurityGroups()
           print "\tOpen (assignment): ", assignment.getRelativeUrl()
 
+  for solver_type in context.portal_solvers.objectValues():
+    solver.updateLocalRolesOnSecurityGroups()
+
   for gadget in context.portal_gadgets.objectValues():
     if gadget.getValidationState() == 'invisible':
       gadget.visible()
