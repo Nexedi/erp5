@@ -6647,15 +6647,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # ERP5 Objects use Interaction Workflows...
       'Products.ERP5Form.Interactor.FieldValueCacheInteractor',
       ## No need to migrate
-      'Products.PloneHotfix20121106.allow_module',
-      'Products.PloneHotfix20121106.atat',
-      'Products.PloneHotfix20121106.ftp',
-      'Products.PloneHotfix20121106.get_request_var_or_attr',
-      'Products.PloneHotfix20121106.safe_html',
-      'Products.PloneHotfix20121106.setHeader',
-      'Products.MailTemplates.tests.example1',
-      'Products.MailTemplates.tests.example3',
-      'Products.MailTemplates.tests.example4',
       'Products.ERP5Type.PsycoWrapper',
       # Deprecated and used only in SimulationTool._solveMovementOrDelivery()
       'Products.ERP5.DeliverySolver.Copy',
@@ -6715,75 +6706,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5OOo.tests.testFormPrintoutAsODT',
       'Products.ERP5OOo.tests.testIngestion',
       'Products.ERP5OOo.tests.testOOoDynamicStyle',
-      'Products.PortalTransforms.cache',
-      'Products.PortalTransforms.chain',
-      'Products.PortalTransforms.data',
-      'Products.PortalTransforms.interfaces.chain',
-      'Products.PortalTransforms.interfaces.data_stream',
-      'Products.PortalTransforms.interfaces.engine',
-      'Products.PortalTransforms.interfaces.portal_transforms_tool',
-      'Products.PortalTransforms.interfaces.transform',
-      'Products.PortalTransforms.libtransforms.commandtransform',
-      'Products.PortalTransforms.libtransforms.imagemagick_transform',
-      'Products.PortalTransforms.libtransforms.piltransform',
-      'Products.PortalTransforms.libtransforms.retransform',
-      'Products.PortalTransforms.libtransforms.utils',
-      'Products.PortalTransforms.libtransforms.zope27rest',
-      'Products.PortalTransforms.setuphandlers',
-      'Products.PortalTransforms.tests.input.test_python',
-      'Products.PortalTransforms.tests.test_doctests',
-      'Products.PortalTransforms.tests.test_engine',
-      'Products.PortalTransforms.tests.test_graph',
-      'Products.PortalTransforms.tests.testImageMagickPortalTransforms',
-      'Products.PortalTransforms.tests.test_intelligenttext',
-      'Products.PortalTransforms.tests.test_transforms',
-      'Products.PortalTransforms.tests.test_xss',
-      'Products.PortalTransforms.tests.utils',
-      'Products.PortalTransforms.tests.word',
-      'Products.PortalTransforms.Transform',
-      'Products.PortalTransforms.TransformEngine',
-      'Products.PortalTransforms.transforms.broken',
-      'Products.PortalTransforms.TransformsChain',
-      'Products.PortalTransforms.transforms.html_body',
-      'Products.PortalTransforms.transforms.html_to_text',
-      'Products.PortalTransforms.transforms.html_to_web_intelligent_plain_text',
-      'Products.PortalTransforms.transforms.identity',
-      'Products.PortalTransforms.transforms.image_to_gif',
-      'Products.PortalTransforms.transforms.image_to_html',
-      'Products.PortalTransforms.transforms.image_to_jpeg',
-      'Products.PortalTransforms.transforms.image_to_png',
-      'Products.PortalTransforms.transforms.image_to_ppm',
-      'Products.PortalTransforms.transforms.image_to_svg',
-      'Products.PortalTransforms.transforms.image_to_tiff',
-      'Products.PortalTransforms.transforms.lynx_dump',
-      'Products.PortalTransforms.transforms.markdown_to_html',
-      'Products.PortalTransforms.transforms.office_com',
-      'Products.PortalTransforms.transforms.office_uno',
-      'Products.PortalTransforms.transforms.office_wvware',
-      'Products.PortalTransforms.transforms.pdf_to_html',
-      'Products.PortalTransforms.transforms.pdf_to_png',
-      'Products.PortalTransforms.transforms.pdf_to_text',
-      'Products.PortalTransforms.transforms.png_to_text',
-      'Products.PortalTransforms.transforms.python',
-      'Products.PortalTransforms.transforms.rest',
-      'Products.PortalTransforms.transforms.rtf_to_html',
-      'Products.PortalTransforms.transforms.rtf_to_xml',
-      'Products.PortalTransforms.transforms.safe_html',
-      'Products.PortalTransforms.transforms.st',
-      'Products.PortalTransforms.transforms.textile_to_html',
-      'Products.PortalTransforms.transforms.text_pre_to_html',
-      'Products.PortalTransforms.transforms.text_to_html',
-      'Products.PortalTransforms.transforms.tiff_to_text',
-      'Products.PortalTransforms.transforms.uno',
-      'Products.PortalTransforms.transforms.w3m_dump',
-      'Products.PortalTransforms.transforms.web_intelligent_plain_text_to_html',
-      'Products.PortalTransforms.transforms.word_to_html',
-      'Products.PortalTransforms.transforms.xml_to_text',
-      'Products.PortalTransforms.TransformTool',
-      'Products.PortalTransforms.unsafe_transforms.build_transforms',
-      'Products.PortalTransforms.unsafe_transforms.command',
-      'Products.PortalTransforms.unsafe_transforms.xml',
-      'Products.PortalTransforms.utils',
     ])
 
     security.declareProtected(Permissions.ManagePortal,
@@ -6864,11 +6786,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         if (product_name[0] == '_' or
             # Returned by inspect.getmembers()
             product_name == 'this_module' or
-            product_name in (
-              # Probably going to be migrated but at the end and should not be
-              # done for now (especially ActiveObject and HBTreeFolder2
-              # classes found in the MRO of most classes)
-              'CMFActivity', 'HBTreeFolder2')):
+            # Only Portal Type as classes can be migrated and this excludes all non-ERP5 Products
+            not product_name.startswith('ERP5')):
           continue
 
         product_base_path = self._checkFilesystemModulePath(
