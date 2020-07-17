@@ -220,7 +220,6 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     """
       Check created person informations.
     """
-    return # XXX hack re-run test faster don't merge
     business_configuration = sequence.get("business_configuration")
     person_list = self.getBusinessConfigurationObjectList(business_configuration, 'Person')
     self.assertEqual(len(person_list), len(self.user_list))
@@ -386,9 +385,8 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     currency_reference = sequence.get('configuration_currency_reference')
     self.assertEqual('currency_module/%s' % currency_reference,
                      preference_tool.getPreferredAccountingTransactionCurrency())
-    #XXX re-run test
-    #self.assertEqual(sequence.get('configuration_gap') ,
-    #                  preference_tool.getPreferredAccountingTransactionGap())
+    self.assertEqual(sequence.get('configuration_gap') ,
+                      preference_tool.getPreferredAccountingTransactionGap())
 
 
     # accounting
@@ -551,7 +549,6 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     """
       Check is the Account documents are validated
     """
-    return
     business_configuration = sequence.get("business_configuration")
     account_list = self.getBusinessConfigurationObjectList(business_configuration, 'Account')
     self.assertNotEquals(len(account_list), 0)
@@ -775,8 +772,6 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       The configurator prepared an accounting period for 2008, make
       sure it's openned and have correct parameters.
     """
-    # XXX hack to re-run test faster don't merge
-    return
     business_configuration = sequence.get('business_configuration')
     organisation_list = self.getBusinessConfigurationObjectList(business_configuration, 'Organisation')
     self.assertNotEquals(len(organisation_list), 0)
@@ -1553,14 +1548,13 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-
 class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
   """
     Test Live Standard Configuration Workflow.
   """
   CONFIGURATION_WORKFLOW = 'workflow_module/erp5_standard_workflow'
 
-  XDEFAULT_SEQUENCE_LIST = """
+  DEFAULT_SEQUENCE_LIST = """
       stepSet%(country)sCase
       stepCreateBusinessConfiguration
       stepTic
@@ -1600,8 +1594,6 @@ class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
       stepCheckInstallConfiguration
       stepStartConfigurationInstallation
       stepTic
-    """
-  DEFAULT_SEQUENCE_LIST = """
       stepCheckInstanceIsConfigured%(country)s
       stepTic
       stepCheckQuantityConversion
@@ -1615,12 +1607,12 @@ class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
     newId = self.portal.portal_ids.generateNewId
     id_group ='testConfiguratorStandardWorkflow'
 
-    self.sales_manager_reference = 'sales_manager_30' # 'sales_manager_%s' % newId(id_group)
-    self.purchase_manager_reference = 'purchase_manager_31' # 'purchase_manager_%s' % newId(id_group)
-    self.accounting_agent_reference = 'accounting_agent_32' # 'accounting_agent_%s' % newId(id_group)
-    self.accounting_manager_reference = 'accounting_manager_33' # 'accounting_manager_%s' % newId(id_group)
-    self.warehouse_agent_reference = 'warehouse_agent_34' # 'warehouse_agent_%s' % newId(id_group)
-    self.simple_user_reference = 'simple_user_35' # 'simple_user_%s' % newId(id_group)
+    self.sales_manager_reference = 'sales_manager_%s' % newId(id_group)
+    self.purchase_manager_reference = 'purchase_manager_%s' % newId(id_group)
+    self.accounting_agent_reference = 'accounting_agent_%s' % newId(id_group)
+    self.accounting_manager_reference = 'accounting_manager_%s' % newId(id_group)
+    self.warehouse_agent_reference = 'warehouse_agent_%s' % newId(id_group)
+    self.simple_user_reference = 'simple_user_%s' % newId(id_group)
 
     self.accountant_username_list = (self.accounting_agent_reference,
                                      self.accounting_manager_reference,)
