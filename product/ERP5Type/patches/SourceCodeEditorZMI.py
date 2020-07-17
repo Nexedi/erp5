@@ -104,7 +104,6 @@ def manage_page_footer(self):
                               textarea_selector=textarea_selector,
                               portal_url=portal_url,
                               bound_names=bound_names,
-                              script_name=document.getId(),
                               mode=mode).encode('utf-8'))
 
   return default
