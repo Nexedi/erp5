@@ -51,15 +51,10 @@ def formatNameUnion(names):
 Guard.formatNameUnion = formatNameUnion
 
 
-from Products.ERP5Type.Base import Base
-from typing import Callable
-
-
 class AssertPermissionMethod(object):
   """A method object to check that a user have a permission on a document.
   """
   def __init__(self, permission_name):
-    # type: (str) -> None
     self._permission_name = permission_name
 
   def __get__(self, instance, cls=None):
@@ -67,7 +62,6 @@ class AssertPermissionMethod(object):
     return self
 
   def __call__(self, username, document):
-    # type: (str, Base) -> None
     sm = getSecurityManager()
     try:
       self._instance._loginAsUser(username)
@@ -96,7 +90,6 @@ class AssertNoPermissionMethod(object):
   document.
   """
   def __init__(self, permission_name):
-    # type: (str) -> None
     self._permission_name = permission_name
 
   def __get__(self, instance, cls=None):
@@ -104,7 +97,6 @@ class AssertNoPermissionMethod(object):
     return self
 
   def __call__(self, username, document):
-    # type: (str, Base) -> None
     sm = getSecurityManager()
     try:
       self._instance._loginAsUser(username)
@@ -149,20 +141,19 @@ class SecurityTestCase(ERP5TypeTestCase):
 
   # Permission methods
   failIfUserCanViewDocument = assertUserCanNotViewDocument = AssertNoPermissionMethod(
-        Permissions.View)  # type: Callable[[SecurityTestCase, str, Base], None]
+                                     Permissions.View)
   failIfUserCanAccessDocument = assertUserCanNotAccessDocument = AssertNoPermissionMethod(
-        Permissions.AccessContentsInformation)  # type: Callable[[SecurityTestCase, str, Base], None]
+                                     Permissions.AccessContentsInformation)
   failIfUserCanModifyDocument = assertUserCanNotModifyDocument = AssertNoPermissionMethod(
-        Permissions.ModifyPortalContent)  # type: Callable[[SecurityTestCase, str, Base], None]
+                                     Permissions.ModifyPortalContent)
   failIfUserCanAddDocument = assertUserCanNotAddDocument = AssertNoPermissionMethod(
-        Permissions.AddPortalContent)  # type: Callable[[SecurityTestCase, str, Base], None]
+                                     Permissions.AddPortalContent)
   failIfUserCanChangeLocalRoles = assertUserCanNotChangeLocalRoles = AssertNoPermissionMethod(
-        Permissions.ChangeLocalRoles)  # type: Callable[[SecurityTestCase, str, Base], None]
+                                     Permissions.ChangeLocalRoles)
   failIfUserCanDeleteDocument = assertUserCanNotDeleteDocument = AssertNoPermissionMethod(
-        Permissions.DeleteObjects)  # type: Callable[[SecurityTestCase, str, Base], None]
+                                     Permissions.DeleteObjects)
 
   def failIfUserHavePermissionOnDocument(self, permission_name, username, document):
-    # type: (str, str, Base) -> None
     """Fail If the user have a permission on document.
     XXX why isn't it a method object ?
     """
@@ -171,20 +162,19 @@ class SecurityTestCase(ERP5TypeTestCase):
     return method(username, document)
 
   failUnlessUserCanViewDocument = assertUserCanViewDocument =\
-      AssertPermissionMethod(Permissions.View)  # type: Callable[[SecurityTestCase, str, Base], None]
+                AssertPermissionMethod(Permissions.View)
   failUnlessUserCanAccessDocument = assertUserCanAccessDocument =\
-      AssertPermissionMethod(Permissions.AccessContentsInformation)  # type: Callable[[SecurityTestCase, str, Base], None]
+                AssertPermissionMethod(Permissions.AccessContentsInformation)
   failUnlessUserCanModifyDocument = assertUserCanModifyDocument = \
-      AssertPermissionMethod(Permissions.ModifyPortalContent)  # type: Callable[[SecurityTestCase, str, Base], None]
+                AssertPermissionMethod(Permissions.ModifyPortalContent)
   failUnlessUserCanAddDocument = assertUserCanAddDocument =\
-      AssertPermissionMethod(Permissions.AddPortalContent)  # type: Callable[[SecurityTestCase, str, Base], None]
+                AssertPermissionMethod(Permissions.AddPortalContent)
   failUnlessUserCanChangeLocalRoles = assertUserCanChangeLocalRoles =\
-      AssertPermissionMethod(Permissions.ChangeLocalRoles)  # type: Callable[[SecurityTestCase, str, Base], None]
+                AssertPermissionMethod(Permissions.ChangeLocalRoles)
   failUnlessUserCanDeleteDocument = assertUserCanDeleteDocument =\
-      AssertPermissionMethod(Permissions.DeleteObjects)  # type: Callable[[SecurityTestCase, str, Base], None]
+                AssertPermissionMethod(Permissions.DeleteObjects)
 
   def failUnlessUserHavePermissionOnDocument(self, permission_name, username, document):
-    # type: (str, str, Base) -> None
     """Fail Unless the user have a permission on document."""
     method = AssertPermissionMethod(permission_name)
     method._instance = self
@@ -193,7 +183,6 @@ class SecurityTestCase(ERP5TypeTestCase):
 
   # Workflow Transition Methods
   def failIfUserCanPassWorkflowTransition(self, username, transition, document):
-    # type: (str, str, Base) -> None
     """Fails if the user can pass the workflow transition on the document."""
     sm = getSecurityManager()
     try:
@@ -209,11 +198,10 @@ class SecurityTestCase(ERP5TypeTestCase):
     finally:
       setSecurityManager(sm)
 
-  assertUserCanNotPassWorkflowTransition = failIfUserCanPassWorkflowTransition # type: Callable[[SecurityTestCase, str, str, Base], None]
+  assertUserCanNotPassWorkflowTransition = failIfUserCanPassWorkflowTransition
 
   def failUnlessUserCanPassWorkflowTransition(self, username,
                                               transition, document):
-    # type: (str, str, Base) -> None
     """Fails unless the user can pass the workflow transition on the document."""
     sm = getSecurityManager()
     try:
@@ -256,10 +244,9 @@ class SecurityTestCase(ERP5TypeTestCase):
     finally:
       setSecurityManager(sm)
 
-  assertUserCanPassWorkflowTransition = failUnlessUserCanPassWorkflowTransition # type: Callable[[SecurityTestCase, str, str, Base], None]
+  assertUserCanPassWorkflowTransition = failUnlessUserCanPassWorkflowTransition
 
   def assertUserHasWorklist(self, username, worklist_id, document_count):
-    # type: (str, str, int) -> None
     self.portal.portal_workflow.refreshWorklistCache()
     self.portal.portal_caches.clearAllCache()
     sm = getSecurityManager()
@@ -281,7 +268,6 @@ class SecurityTestCase(ERP5TypeTestCase):
       setSecurityManager(sm)
 
   def assertUserHasNoWorklist(self, username, worklist_id):
-    # type: (str, str) -> None
     self.portal.portal_workflow.refreshWorklistCache()
     self.portal.portal_caches.clearAllCache()
     sm = getSecurityManager()
@@ -297,7 +283,6 @@ class SecurityTestCase(ERP5TypeTestCase):
 
   # Simple check for an user Role
   def failIfUserHaveRoleOnDocument(self, username, role, document):
-    # type: (str, str, Base) -> None
     """Fails if the user have the role on the document."""
     sm = getSecurityManager()
     try:
@@ -309,10 +294,9 @@ class SecurityTestCase(ERP5TypeTestCase):
     finally:
       setSecurityManager(sm)
 
-  assertUserDoesNotHaveRoleOnDocument = failIfUserHaveRoleOnDocument  # type: Callable[[SecurityTestCase, str, str, Base], None]
+  assertUserDoesNotHaveRoleOnDocument = failIfUserHaveRoleOnDocument
 
   def failUnlessUserHaveRoleOnDocument(self, username, role, document):
-    # type: (str, str, Base) -> None
     """Fails if the user does not have the role on the document."""
     sm = getSecurityManager()
     try:
@@ -326,4 +310,5 @@ class SecurityTestCase(ERP5TypeTestCase):
     finally:
       setSecurityManager(sm)
 
-  assertUserHaveRoleOnDocument = failUnlessUserHaveRoleOnDocument  # type: Callable[[SecurityTestCase, str, str, Base], None]
+  assertUserHaveRoleOnDocument = failUnlessUserHaveRoleOnDocument
+
