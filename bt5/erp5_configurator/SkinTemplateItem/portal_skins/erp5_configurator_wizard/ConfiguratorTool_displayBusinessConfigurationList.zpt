@@ -17,22 +17,20 @@
                                  bc_default_image python: bc.getResourceValue().getDefaultImageValue();
                                  bc_default_image_absolute_url python: bc.getResourceValue().getDefaultImageAbsoluteUrl();">
                 <td>
-                  <div tal:attributes="id python: 'business_configuration_%s' % bc_id;
-                                       class string:box;">
+                  <div class="box" tal:attributes="id python: 'business_configuration_%s' % bc_id;">
 
-                    <span tal:attributes="id string:business-configuration-title" tal:content="bc_title" />
+                    <span class="business-configuration-title" tal:content="bc_title" />
 
                     <img tal:condition="bc_default_image"
-                         tal:attributes="src python: '%s?format=png' % bc_default_image_absolute_url" />
+                         tal:attributes="alt bc_title;
+                                         src python: '%s?format=png' % bc_default_image_absolute_url" />
 
-                    <span tal:condition="bc_description"
-                          tal:attributes="id string:span-business-configuration-description;
-                                          title bc_description;"
+                    <span class="span-business-configuration-description"
+                          tal:condition="bc_description"
+                          tal:attributes="title bc_description"
                           tal:content="bc_description" />
 
-                    <button id="dialog-submit-button"
-                            accesskey="V"
-                            tal:attributes="value python: bc.getRelativeUrl()"
+                    <button tal:attributes="value python: bc.getRelativeUrl()"
                             type="submit"
                             name="field_your_business_configuration">Configure</button>
                   </div>
