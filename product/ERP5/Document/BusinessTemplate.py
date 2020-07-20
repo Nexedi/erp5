@@ -6670,7 +6670,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.Calendar',
       'Products.ERP5Type.Collections',
       'Products.ERP5Type.Timeout',
-      'Products.ERP5Type.ZipFile'
+      'Products.ERP5Type.ZipFile',
       'Products.ERP5Type.ZopePatch',
       # Replaced by Interaction Workflow for ERP5 object
       'Products.ERP5Form.Interactor.FieldValueCacheInteractor',
