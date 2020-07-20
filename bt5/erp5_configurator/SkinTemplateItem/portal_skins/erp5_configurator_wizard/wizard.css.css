@@ -22,7 +22,7 @@
   overflow: hidden; /* Clear floats */
 }
 
-.box span#business-configuration-title, span#business-configuration-title:hover {
+.box span.business-configuration-title, span.business-configuration-title:hover {
   display: block;
   background-color: transparent;
   width: 100%;
@@ -59,7 +59,7 @@
   border: 2px solid #d4e8ec;
 }
 
-.box span#span-business-configuration-description {
+.box span.span-business-configuration-description {
   background-color: transparent;
   font-size: 10px;
   float: left;
