@@ -33,9 +33,10 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Payment Tool goals are to provide a unique interface to buy/sell on ERP5 instances.\n
+\n
+You need to have a Payement Gateway with reference egal to "default" to make payment.\n
+Other reference can be used for specific purpose.</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>

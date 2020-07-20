@@ -1,6 +1,6 @@
 import zope
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from zLOG import LOG, WARNING
 import random, string, hashlib, urllib2, socket
@@ -15,7 +15,7 @@ class WechatException(Exception):
   def __init__(self, msg):
     super(WechatException, self).__init__(msg)
 
-
+from erp5.component.interface.IPaymentService import IPaymentService
 class WechatService(XMLObject):
   meta_type = 'Wechat Service'
   portal_type = 'Wechat Service'
@@ -23,7 +23,7 @@ class WechatService(XMLObject):
   ORDER_URL = "/pay/unifiedorder" # Wechat unified order API
   QUERY_URL = "/pay/orderquery"
 
-  zope.interface.implements(interfaces.IPaymentService)
+  zope.interface.implements(IPaymentService)
 
   # Declarative security
   security = ClassSecurityInfo()
