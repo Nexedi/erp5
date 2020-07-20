@@ -634,13 +634,16 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       basic=self.id() + ':password',
     )
     # User cannot login
-    response = publish()
+    # fire 5 requests, only 1 credential recovery should be created
+    for i in range(5):
+      response = publish()
     self.assertTrue(response.getHeader("Location").endswith("login_form"))
     self.tic()
 
     # and a credential recovery is created automatically
-    credential_recovery, = person.getDestinationDecisionRelatedValueList(
+    credential_recovery_list = person.getDestinationDecisionRelatedValueList(
         portal_type='Credential Recovery')
+    self.assertEqual(len(credential_recovery_list), 1)
 
     # trying to login again does not create a new credential recovery
     response = publish()
