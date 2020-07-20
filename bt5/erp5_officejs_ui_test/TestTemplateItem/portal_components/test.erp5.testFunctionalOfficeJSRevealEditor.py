@@ -33,13 +33,6 @@ class TestOfficejSUIRevealEditor(ERP5TypeFunctionalTestCase):
   foreground = 0
   run_only = "officejs_ui_reveal_editor_zuite"
 
-  def getBusinessTemplateList(self):
-    return (
-      'erp5_officejs',
-      'erp5_officejs_ui_test',
-      'erp5_ui_test_core',
-      'erp5_reveal_editor'
-      )
 
 def test_suite():
   suite = unittest.TestSuite()
