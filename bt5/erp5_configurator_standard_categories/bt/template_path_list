@@ -205,6 +205,13 @@ portal_categories/market_segment/seg2
 portal_categories/market_segment/seg3
 portal_categories/market_segment/seg4
 portal_categories/market_segment/seg5
+portal_categories/metric_type/area
+portal_categories/metric_type/energy
+portal_categories/metric_type/length
+portal_categories/metric_type/mass
+portal_categories/metric_type/time
+portal_categories/metric_type/unit
+portal_categories/metric_type/volume
 portal_categories/nationality/africa
 portal_categories/nationality/africa/eastern_africa
 portal_categories/nationality/africa/eastern_africa/burundian
@@ -861,6 +868,10 @@ portal_categories/social_form/llp
 portal_categories/social_form/lp
 portal_categories/social_form/npo
 portal_categories/social_form/proprietorship
+portal_categories/social_title/doctor
+portal_categories/social_title/madam
+portal_categories/social_title/miss
+portal_categories/social_title/mister
 portal_categories/trade_phase/payroll
 portal_categories/trade_phase/payroll/accounting
 portal_categories/trade_phase/payroll/delivery
@@ -885,9 +896,12 @@ portal_categories/trade_phase/production/transforming
 portal_categories/trade_phase/trade
 portal_categories/trade_phase/trade/accounting
 portal_categories/trade_phase/trade/delivery
+portal_categories/trade_phase/trade/discount
 portal_categories/trade_phase/trade/invoicing
+portal_categories/trade_phase/trade/order
 portal_categories/trade_phase/trade/payment
 portal_categories/trade_phase/trade/prepayment
+portal_categories/trade_phase/trade/tax
 portal_categories/trade_state/trade
 portal_categories/trade_state/trade/accounted
 portal_categories/trade_state/trade/delivered
