@@ -25,6 +25,7 @@
     //////////////////////////////////////////////
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("getSetting", "getSetting")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -44,7 +45,6 @@
       var g = this;
       return new RSVP.Queue()
         .push(function () {
-          //return g.getUrlFor({command: 'display', options: {page: "logout"}});
           return RSVP.all([
             g.getUrlFor({command: 'display', options: {page: "preference"}}),
             g.getUrlFor({command: 'display', options: {page: "download"}}),
@@ -53,7 +53,7 @@
             g.getUrlFor({command: 'display', options: {page: "logout"}}),
             g.getUrlFor({command: 'display', options: {page: "fifdata"}}),
             g.getUrlFor({command: 'display', options: {page: "register"}}),
-            g.getUrlFor({command: 'display', options: {page: "login"}})
+            g.getSetting('hateoas_url')
           ]);
         })
         .push(function (all_result) {
@@ -68,7 +68,7 @@
               "logout_href": all_result[4],
               "data_download_href": all_result[5],
               "register_href": all_result[6],
-              "login_href": all_result[7]
+              "login_href": all_result[7] + "connection/login_form"
             })
           );
         })
