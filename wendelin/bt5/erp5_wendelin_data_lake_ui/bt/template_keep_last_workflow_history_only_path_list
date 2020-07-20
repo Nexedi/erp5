@@ -1,6 +1,5 @@
 image_module/fif_*
 web_page_module/*fif_*
-web_page_module/*_wendelin_*
 web_site_module/default_wendelin_data_lake
 web_site_module/default_wendelin_data_lake/**
 web_page_module/fif_*
