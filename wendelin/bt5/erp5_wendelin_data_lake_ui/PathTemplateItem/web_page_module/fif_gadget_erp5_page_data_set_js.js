@@ -25,10 +25,10 @@
     .allowPublicAcquisition('updateHeader', function (argument_list) {
       var header_dict = {
           page_title: "Data Set : " + this.state.document_title,
-          selection_url: argument_list[0].selection_url,
+          selection_url: argument_list[0].selection_url
           //next_url: argument_list[0].next_url,
           //previous_url: argument_list[0].previous_url,
-          actions_url: argument_list[0].actions_url
+          //actions_url: argument_list[0].actions_url
         };
       return this.updateHeader(header_dict);
     })

@@ -21,9 +21,14 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
 
-    //.declareMethod("render", function (options) {
-    //})
-
+    .declareMethod("render", function (options) {
+      return this.changeState(options);
+    })
+    .onStateChange(function () {
+      return this.updateHeader({
+        page_title: 'Register'
+      });
+    })
     .onEvent('submit', function (evt) {
       var gadget = this,
           first_name =  document.getElementById("first_name").value,
@@ -34,7 +39,7 @@
           confirm_password =  document.getElementById("confirm_password").value;
 
 
-      if ((validateEmail(email)) && (first_name) && (last_name) && (reference) && (password) && (confirm_password) && (password === confirm_password) ) {
+      if ((validateEmail(email)) && (first_name) && (last_name) && (reference) && (password) && (confirm_password) && (password === confirm_password)) {
           /* send to server */
         var url =  "ERP5Site_newCredentialRequest?batch_mode=1&reference=" + reference + "&default_email_text=" + email + "&first_name=" + first_name + "&last_name=" + last_name + "&password=" + password;
 
@@ -53,7 +58,7 @@
               return gadget.notifySubmitted({message: msg, status: 'success'});
             }
             else {
-              return gadget.notifySubmitted({message: msg, status: 'error'});              
+              return gadget.notifySubmitted({message: msg, status: 'error'});
             }
           }, function (error) {
             return gadget.notifySubmitted({message: 'HTTP ERROR. Registration NOT done.', status: 'error'});
@@ -66,7 +71,7 @@
                 page: "home"
               }
             });
-          })
+          });
       } else {
         return gadget.notifySubmitted({message: 'Misformatted email and / or passwords not matching. Please note that all fields are required!', status: 'error'});
       }

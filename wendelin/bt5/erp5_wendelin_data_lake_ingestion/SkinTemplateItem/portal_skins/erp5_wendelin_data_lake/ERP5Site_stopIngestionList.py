@@ -93,6 +93,16 @@ for data_ingestion in portal_catalog(portal_type = "Data Ingestion",
               ingestion.stop()
           else:
             ingestion.deliver()
+        #link split datastreams
+        related_split_streams = portal_catalog(portal_type = "Data Stream",
+                                               reference = data_ingestion.getReference(),
+                                               sort_on=[('creation_date', 'ascending')])
+        predecessor = None
+        for stream in related_split_streams:
+          if predecessor:
+            predecessor.setSuccessorValue(stream)
+            stream.setPredecessorValue(predecessor)
+          predecessor = stream
       except Exception as e:
         context.log("ERROR handling split data streams for ingestion: %s - reference: %s." % (data_ingestion.getId(), data_ingestion.getReference()))
         context.log(e)
