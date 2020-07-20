@@ -62,8 +62,8 @@
     .declareMethod("render", function () {
       var gadget = this,
         header_dict = {
-          page_title: 'Search',
-          page_icon: 'search',
+          page_title: 'Back',
+          page_icon: 'arrow-up',
           filter_action: true
         };
 
