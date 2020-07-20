@@ -125,7 +125,7 @@ class Test(ERP5TypeTestCase):
 
     # clean up
     data_array.invalidate()
-    data_stream.setData('')
+    data_stream.setData(None)
     self.tic()
 
 
@@ -341,4 +341,117 @@ class Test(ERP5TypeTestCase):
     reg = LinearRegression().fit(X, y)
     predicted = reg.predict(np.array([[4, 10]]))
     self.assertEqual(predicted.all(),np.array([27.]).all())
-    
+
+
+
+  def test_09_IngestionFromFluentdStoreMsgpack(self, old_fluentd=False):
+    """
+    Test ingestion using a POST Request containing a msgpack encoded message
+    simulating input from fluentd.
+    """
+    from datetime import datetime, timedelta
+    import time
+
+    portal = self.portal
+    now = datetime.now()
+
+    reference="test_sensor.test_product"
+    title = reference
+
+    ingestion_policy = portal.portal_ingestion_policies['default']
+
+    # create related data supply and etc.
+    use_category = portal.restrictedTraverse("portal_categories/use/big_data/ingestion/stream")
+
+    data_operation = portal.restrictedTraverse("data_operation_module/wendelin_ingest_data")
+
+    # create Data Product
+    data_product = portal.data_product_module.newContent(
+                     portal_type = "Data Product",
+                     title = "Append to Data Stream",
+                     reference = reference.split('.')[1])
+    data_product.setUseValue(use_category)
+    data_product.setAggregatedPortalTypeList(["Data Stream", "Progress Indicator"])
+    data_product.validate()
+
+    # create Data Supply
+    data_supply_kw = {'title': title,
+                      'reference': reference.split('.')[0],
+                      'version': '001',
+                      'effective_date': now,
+                      'expiration_date': now + timedelta(days=365)}
+    data_supply = portal.data_supply_module.newContent( \
+                    portal_type='Data Supply', **data_supply_kw)
+    data_supply.validate()
+
+    # add ingestion line
+    data_supply_line_kw = {'title': 'Ingest Data',
+                           'reference': 'ingestion_operation',
+                           'int_index': 1,
+                           'quantity': 1.0}
+    data_supply_line = data_supply.newContent(portal_type='Data Supply Line',  **data_supply_line_kw)
+    data_supply_line.setResourceValue(data_operation)
+
+    # add append to Data Stream line
+    data_supply_line_kw = {'title': 'Data Stream',
+                           'reference': 'out_stream',
+                           'int_index': 2,
+                           'quantity': 1.0}
+    data_supply_line = data_supply.newContent(portal_type='Data Supply Line', \
+                                              **data_supply_line_kw)
+    data_supply_line.setResourceValue(data_product)
+    data_supply_line.setUseValue(use_category)
+
+    self.tic()
+
+    data_list = []
+    int_date = int(time.mktime(now.timetuple()))
+    real_data = []
+
+    # create data for ingestion in [date, value]  format
+    for x in range(0, 10001):
+      data_list = []
+      data_list = [int_date, x]
+      real_data.append(data_list)
+      int_date = int_date + 1000
+
+    # simulate fluentd
+    body = msgpack.packb(real_data, use_bin_type=True)
+    env = {'CONTENT_TYPE': 'application/octet-stream'}
+
+    path = ingestion_policy.getPath() + '/ingest?reference=' + reference
+    publish_kw = dict(user='ERP5TypeTestCase', env=env,
+      request_method='POST', stdin=StringIO(body))
+    response = self.publish(path, **publish_kw)
+
+    self.assertEqual(200, response.getStatus())
+
+    self.tic()
+
+    # get related Data ingestion
+    data_ingestion = data_supply.Base_getRelatedObjectList(portal_type='Data Ingestion')[0]
+    self.assertNotEqual(None, data_ingestion)
+    data_ingestion_line = [x for x in data_ingestion.objectValues() if x.getReference() == 'out_stream'][0]
+
+    data_stream = data_ingestion_line.getAggregateValue()
+    self.assertEqual('Data Stream', data_stream.getPortalType())
+
+    data_stream_data = data_stream.getData()
+    # body is msgpacked real data.
+    self.assertEqual(body, data_stream_data)
+
+    # unpack data
+    start = 0
+    end = len(data_stream_data)
+    unpacked, end = data_stream.readMsgpackChunkList(start, end)
+    # compare unpacked data with real data
+    self.assertEqual([real_data], unpacked)
+
+    # extract dates and compare with real dates
+    f = data_stream.extractDateTime
+    for i in range(0, len(unpacked[0])):
+      self.assertEqual(np.datetime64(real_data[i][0], 's'), f(unpacked[0][i][0]))
+
+    # clean up
+    data_stream.setData(None)
+    self.tic()
