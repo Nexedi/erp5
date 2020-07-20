@@ -1,4 +1,6 @@
 image_module/fif_*
+portal_tests/wendelin_data_lake_ui_zuite
+portal_tests/wendelin_data_lake_ui_zuite/**
 web_page_module/*_wendelin_*
 web_page_module/*fif_*
 web_page_module/fif_*

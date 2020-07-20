@@ -1,5 +1,5 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, Handlebars, document, RSVP */
+/*global window, rJS, Handlebars, document, RSVP, jIO, URL */
 (function (window, rJS, Handlebars, document, RSVP) {
   "use strict";
 
@@ -139,28 +139,25 @@
         title_button_name: options.action
       });
     })
-/*
-    .declareMethod('notifyUpdate', function () {
-      return this.render(this.stats.options);
-    })
-*/
+
     .declareMethod('render', function render(options) {
       var state = {
-        error: false,
-        title_text: '',
-        title_icon: undefined,
-        title_url: undefined,
-        left_button_title: undefined,
-        left_button_icon: undefined,
-        left_button_name: undefined,
-        right_link_title: undefined,
-        right_link_icon: undefined,
-        right_link_url: undefined,
-        right_link_class: undefined,
-        right_button_title: undefined,
-        right_button_icon: undefined,
-        right_button_name: undefined
-      },
+          error: false,
+          title_text: '',
+          title_icon: undefined,
+          title_url: undefined,
+          left_button_title: undefined,
+          left_button_icon: undefined,
+          left_button_name: undefined,
+          right_link_title: undefined,
+          right_link_icon: undefined,
+          right_link_url: undefined,
+          right_link_class: undefined,
+          right_button_title: undefined,
+          right_button_icon: undefined,
+          right_button_name: undefined
+        },
+        gadget = this,
         klass,
         sub_header_list = [],
         i;
@@ -232,7 +229,17 @@
       }
       state.sub_header_list = sub_header_list;
 
-      return this.changeState(state);
+      return new RSVP.Queue()
+        .push(function () {
+          return jIO.util.ajax({
+            type: "GET",
+            url: new URL('./ERP5Site_getUserName', window.location.href)
+          });
+        })
+        .push(function (result) {
+          state.user = result.target.response;
+          return gadget.changeState(state);
+        });
     })
 
     .onStateChange(function onStateChange(modification_dict) {
@@ -353,6 +360,12 @@
       } else {
         promise_list.push(null);
       }
+      if (gadget.state.user) {
+        var logged_in_div = document.querySelector("#logged_in_div"),
+          logged_in_user = document.querySelector("#logged_in_user");
+        logged_in_div.classList.remove("ui-screen-hidden");
+        logged_in_user.innerHTML = gadget.state.user;
+      }
 
       return new RSVP.Queue()
         .push(function () {
@@ -385,4 +398,4 @@
       throw new Error("Unsupported button " + name);
     });
 
-}(window, rJS, Handlebars, document, RSVP));
+}(window, rJS, Handlebars, document, RSVP, jIO, URL));

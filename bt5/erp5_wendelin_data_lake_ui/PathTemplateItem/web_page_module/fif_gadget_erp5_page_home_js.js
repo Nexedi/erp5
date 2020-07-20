@@ -1,35 +1,54 @@
-/*global window, rJS, RSVP, URI */
+/*global window, rJS, URI, document */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, document) {
+(function (window, rJS, document) {
   "use strict";
-  function data_lake(context, evt) {
-    var link = document.createElement('a');
-    link.href = window.location.origin + "/erp5/web_site_module/fif_data_runner/#/?page=fifdata";
-    link.click();
-  }
 
   rJS(window)
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareJob('data_lake', function (evt) {
-      return data_lake(this, evt);
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
+    .declareMethod("render", function (options) {
+      return this.changeState(options);
     })
-    .declareMethod("render", function () {
-      var gadget = this;
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.updateHeader({
-            page_title: 'Wendelin Data Lake Sharing Platform'
-          });
+    .onStateChange(function () {
+      return this.updateHeader({
+        page_title: 'Wendelin Data Lake Sharing Platform'
+      });
+    })
+    .declareService(function () {
+      var gadget = this,
+        url_parameter_list = [];
+      url_parameter_list.push({
+        command: 'display'
+      });
+      url_parameter_list.push({
+        command: 'display_stored_state',
+        options: {page: 'download'}
+      });
+      url_parameter_list.push({
+        command: 'display_stored_state',
+        options: {page: 'fifdata'}
+      });
+      url_parameter_list.push({
+        command: 'display_stored_state',
+        options: {page: 'register'}
+      });
+      url_parameter_list.push({
+        command: 'display_stored_state',
+        options: {page: 'ebulk_doc'}
+      });
+      return gadget.getUrlForList(url_parameter_list)
+        .push(function (url_list) {
+          document.querySelector("#home_link").href = url_list[0];
+          document.querySelector("#download_link").href = url_list[1];
+          document.querySelector("#download_ebulk_link").href = url_list[1];
+          document.querySelector("#dataset_link").href = url_list[2];
+          document.querySelector("#dataset_link_img").href = url_list[2];
+          document.querySelector("#register_link").href = url_list[3];
+          document.querySelector("#documentation_link").href = url_list[4];
         })
         .push(undefined, function (error) {
           throw error;
         });
-    })
-    .onEvent('submit', function (evt) {
-      if (evt.target.name === 'data-lake') {
-        return this.data_lake(evt);
-      } else {
-        throw new Error('Unknown form');
-      }
     });
-}(window, rJS, RSVP, document));
+
+}(window, rJS, document));
