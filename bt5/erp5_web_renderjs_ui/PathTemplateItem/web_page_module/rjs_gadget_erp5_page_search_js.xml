@@ -234,7 +234,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>977.27307.1528.37819</string> </value>
+                      <value> <string>985.25208.9499.40925</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +252,11 @@
                           </tuple>
                           <state>
                             <tuple>
+<<<<<<< HEAD
                               <float>1564472688.98</float>
+=======
+                              <float>1595285306.34</float>
+>>>>>>> aa218e1882... erp5_web_renderjs_ui: set a page title more consistent
                               <string>UTC</string>
                             </tuple>
                           </state>
