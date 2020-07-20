@@ -25,12 +25,16 @@ recovery_list = portal.portal_catalog(
   limit=1)
 if recovery_list:
   return
+tag = 'credential_recovery_%s' %context.getReference()
+if portal.portal_activities.countMessageWithTag(tag):
+  return
 
 module = portal.getDefaultModule(portal_type='Credential Recovery')
 credential_recovery = module.newContent(
     portal_type="Credential Recovery",
     reference=username,
     destination_decision_value=user,
-    language=portal.Localizer.get_selected_language())
+    language=portal.Localizer.get_selected_language(),
+    activate_kw={'tag': tag})
 context.serialize()
 credential_recovery.submit()
