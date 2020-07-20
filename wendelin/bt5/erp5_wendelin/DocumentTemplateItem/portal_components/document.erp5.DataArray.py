@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.document.BigFile import BigFile
 from wendelin.bigarray.array_zodb import ZBigArray
-from Products.ERP5.Document.File import _MARKER
+from erp5.component.document.File import _MARKER
 from ZPublisher import HTTPRangeSupport
 from webdav.common import rfc1123_date
 from DateTime import DateTime
