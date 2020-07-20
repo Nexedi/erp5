@@ -32,6 +32,10 @@ td {
   cursor: cell;
 }
 
+div.jexcel_toolbar div.jcolor-content td {
+  cursor: crosshair;
+}
+
 input.readonly {
   cursor: not-allowed;
 }
@@ -44,4 +48,8 @@ body > div.spreadsheet.jexcel_tabs > div:nth-child(1) {
 .jexcel_tab.jexcel_container.fullscreen.with-toolbar {
   position: absolute;
   top: 0;
+}
+
+.jexcel_tabs .jexcel_tab_link, .jexcel_filter > div {
+  font-family: arial;
 }
