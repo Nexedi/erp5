@@ -27,16 +27,10 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type.Permissions import ManagePortal
-
-from Products.ERP5Type.Globals import DTMLFile
-from Products.ERP5SecurePayment import _dtmldir
 from Products import ERP5Security
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
-from zLOG import LOG
 
 class SecurePaymentTool(BaseTool):
   """
@@ -47,11 +41,6 @@ class SecurePaymentTool(BaseTool):
   id = 'portal_secure_payments'
   meta_type = 'ERP5 Secure Payment Tool'
   portal_type = 'Secure Payment Tool'
-
-  # Declarative Security
-  security = ClassSecurityInfo()
-  security.declareProtected(ManagePortal, 'manage_overview')
-  manage_overview = DTMLFile('explainPaymentTool', _dtmldir )
 
   def find(self, service_reference="default"):
     """Search a payment service by reference"""

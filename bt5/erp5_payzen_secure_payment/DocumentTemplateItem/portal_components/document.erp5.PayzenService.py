@@ -1,6 +1,6 @@
 import zope
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 import hashlib
 from zLOG import LOG, WARNING
@@ -258,11 +258,12 @@ finally:
     del(os.environ['TZ'])
   time.tzset()
 
+from erp5.component.interface.IPaymentService import IPaymentService
 class PayzenService(XMLObject, PayzenSOAP):
   meta_type = 'Payzen Service'
   portal_type = 'Payzen Service'
 
-  zope.interface.implements(interfaces.IPaymentService)
+  zope.interface.implements(IPaymentService)
 
   # Declarative security
   security = ClassSecurityInfo()

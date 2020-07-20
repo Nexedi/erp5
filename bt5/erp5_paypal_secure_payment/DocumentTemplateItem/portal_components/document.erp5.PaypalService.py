@@ -31,9 +31,9 @@ from urllib import urlencode
 from urllib2 import urlopen, Request
 from zLOG import LOG, DEBUG
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-
+from erp5.component.interface.IPaymentService import IPaymentService
 
 class PaypalService(XMLObject):
   """Paypal Service for payment"""
@@ -41,7 +41,7 @@ class PaypalService(XMLObject):
   meta_type = 'Paypal Service'
   portal_type = 'Paypal Service'
   security = ClassSecurityInfo()
-  zope.interface.implements(interfaces.IPaymentService)
+  zope.interface.implements(IPaymentService)
 
   # Declarative security
   security = ClassSecurityInfo()

@@ -27,7 +27,7 @@
 #
 ##############################################################################
 """
-Products.ERP5SecurePayment.interfaces.payment_service
+erp5.component.interface.IPaymentService
 """
 
 from zope.interface import Interface
