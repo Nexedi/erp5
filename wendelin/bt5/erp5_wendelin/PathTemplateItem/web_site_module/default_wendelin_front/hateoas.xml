@@ -253,7 +253,7 @@
         </item>
         <item>
             <key> <string>skin_selection_name</string> </key>
-            <value> <string>Hal</string> </value>
+            <value> <string>HalRestricted</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -454,7 +454,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>985.97.35940.15769</string> </value>
+                      <value> <string>985.25715.31532.12936</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -472,7 +472,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1593778793.73</float>
+                              <float>1595315804.13</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
