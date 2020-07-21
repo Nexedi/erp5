@@ -25,6 +25,7 @@
     //////////////////////////////////////////////
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("getSetting", "getSetting")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -44,7 +45,6 @@
       var g = this;
       return new RSVP.Queue()
         .push(function () {
-          //return g.getUrlFor({command: 'display', options: {page: "logout"}});
           return RSVP.all([
             g.getUrlFor({command: 'display', options: {page: "preference"}}),
             g.getUrlFor({command: 'display', options: {page: "download"}}),
@@ -52,7 +52,8 @@
             g.getUrlFor({command: 'display', options: {page: "contact"}}),
             g.getUrlFor({command: 'display', options: {page: "logout"}}),
             g.getUrlFor({command: 'display', options: {page: "fifdata"}}),
-            g.getUrlFor({command: 'display', options: {page: "register"}})
+            g.getUrlFor({command: 'display', options: {page: "register"}}),
+            g.getSetting('hateoas_url')
           ]);
         })
         .push(function (all_result) {
@@ -66,12 +67,14 @@
               "contact_info_href": all_result[3],
               "logout_href": all_result[4],
               "data_download_href": all_result[5],
-              "register_href": all_result[6]
+              "register_href": all_result[6],
+              "login_href": all_result[7] + "connection/login_form"
             })
           );
         })
         .push(function (my_translated_or_plain_html) {
           g.element.querySelector("div").innerHTML = my_translated_or_plain_html;
+          return g.renderLoginLinks();
         });
     })
 
@@ -85,6 +88,24 @@
           this.element.classList.remove('visible');
         }
       }
+    })
+    .declareJob("renderLoginLinks", function () {
+      return new RSVP.Queue()
+        .push(function () {
+          return jIO.util.ajax({
+            type: "GET",
+            url: new URL('./ERP5Site_getUserName', window.location.href)
+          });
+        })
+        .push(function (result) {
+          var login_link = document.querySelector("#login-li"),
+            logout_link = document.querySelector("#logout-li");
+          if (result.target.response) {
+            logout_link.classList.remove("ui-screen-hidden");
+          } else {
+            login_link.classList.remove("ui-screen-hidden");
+          }
+        });
     })
 
     /////////////////////////////////////////////////////////////////
