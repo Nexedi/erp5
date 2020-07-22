@@ -60,17 +60,17 @@
     .declareMethod('getSearchCriteria', function (name, seriesName) {
       var search_criteria, cur_mid_night = new Date(), days_2 = new Date(),
         days_7 = new Date(), days_30 = new Date(), begin_date, end_date;
+      cur_mid_night.setHours(0, 0, 0, 0);
+      cur_mid_night.setDate(cur_mid_night.getDate() + 1);
+      days_30.setDate(cur_mid_night.getDate() - 30);
+      days_30.setHours(0, 0, 0, 0);
+
       if (seriesName !== 'Support Request') {
         // Situation 1: Search Support Request with date.
-        cur_mid_night.setHours(0, 0, 0, 0);
-        cur_mid_night.setDate(cur_mid_night.getDate() + 1);
-
         days_2.setDate(cur_mid_night.getDate() - 2);
         days_7.setDate(cur_mid_night.getDate() - 7);
-        days_30.setDate(cur_mid_night.getDate() - 30);
         days_2.setHours(0, 0, 0, 0);
         days_7.setHours(0, 0, 0, 0);
-        days_30.setHours(0, 0, 0, 0);
 
         if (name === '< 2') {
           begin_date = days_2;
@@ -88,8 +88,8 @@
         }
         search_criteria = '( translated_simulation_state_title: "' + seriesName + '" AND delivery.start_date: >= ' + begin_date.toISOString().slice(0, 10) + ' AND delivery.start_date: < ' + end_date.toISOString().slice(0, 10) + ' )';
       } else {
-        // Situation 2: Search Support Request without date.
-        search_criteria = '( translated_simulation_state_title: "' + name + '")';
+        // Situation 2: Search Support Request by state with limit of 30 days.
+        search_criteria = '( translated_simulation_state_title: "' + name + '" AND delivery.start_date: >= ' + days_30.toISOString().slice(0, 10) + ' )';
       }
       return search_criteria;
     })
