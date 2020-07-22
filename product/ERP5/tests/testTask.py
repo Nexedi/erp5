@@ -121,7 +121,7 @@ class TestTaskMixin:
     return ('erp5_base','erp5_pdm', 'erp5_simulation', 'erp5_trade',
             'erp5_project', 'erp5_simulation_test',
             'erp5_configurator_standard_solver',
-            'erp5_configurator_standard_trade_template',
+            'erp5_simulation_test_trade_template',
             'erp5_core_proxy_field_legacy')
 
 #  def stepLogin(self, **kw):
