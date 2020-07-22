@@ -99,6 +99,7 @@
                         <string>my_reference</string>
                         <string>my_wechat_mode</string>
                         <string>my_service_mch_id</string>
+                        <string>my_wechat_spbill_create_ip</string>
                       </list>
                     </value>
                 </item>
