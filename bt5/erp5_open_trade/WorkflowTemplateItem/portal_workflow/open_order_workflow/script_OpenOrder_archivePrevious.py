@@ -11,4 +11,7 @@ for open_order in sci.getPortal().portal_catalog.searchResults(
                           reference=open_order.getReference(),
                           validation_state='validated'):
   if this_uid != open_order.uid:
-    open_order.getObject().archive()
+    # The object could be already archived on this transaction, and not
+    # reindexed yet.
+    if open_order.getValidationState() != "archived":
+      open_order.getObject().archive()
