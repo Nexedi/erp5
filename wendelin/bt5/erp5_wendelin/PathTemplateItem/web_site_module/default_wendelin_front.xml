@@ -361,7 +361,7 @@
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
-            <value> <string>gadget_erp5_panel.html</string> </value>
+            <value> <string>gadget_wendelin_panel.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
@@ -371,9 +371,7 @@
         </item>
         <item>
             <key> <string>configuration_service_worker_url</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>gadget_erp5_serviceworker.js</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -622,7 +620,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>985.24779.63559.58163</string> </value>
+                      <value> <string>985.25702.63783.11980</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -640,7 +638,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1595259632.28</float>
+                              <float>1595415538.34</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
