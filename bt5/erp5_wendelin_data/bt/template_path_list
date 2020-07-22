@@ -12,7 +12,5 @@ data_set_module/wendelin_**
 data_supply_module/wendelin_**
 organisation_module/wendelin_**
 portal_callables/IngestionPolicy_parseSimpleFluentdTag
-portal_ingestion_policies
-portal_ingestion_policies/wendelin_**
 project_module/wendelin_**
 sensor_module/wendelin_**
