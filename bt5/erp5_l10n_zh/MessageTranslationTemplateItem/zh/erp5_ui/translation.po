@@ -2258,7 +2258,7 @@ msgid "Delete"
 msgstr "删除"
 
 msgid "Delete Network:"
-msgstr "删除网络: "
+msgstr "删除网络:"
 
 msgid "Delete Objects"
 msgstr "删除对象"
