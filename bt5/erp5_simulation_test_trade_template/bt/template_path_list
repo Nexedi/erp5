@@ -1,0 +1,16 @@
+portal_deliveries/internal_packing_list_builder
+portal_deliveries/internal_packing_list_builder/**
+portal_deliveries/purchase_packing_list_builder
+portal_deliveries/purchase_packing_list_builder/**
+portal_deliveries/returned_purchase_packing_list_builder
+portal_deliveries/returned_purchase_packing_list_builder/**
+portal_deliveries/returned_sale_packing_list_builder
+portal_deliveries/returned_sale_packing_list_builder/**
+portal_deliveries/sale_packing_list_builder
+portal_deliveries/sale_packing_list_builder/**
+portal_rules/new_delivery_root_simulation_rule
+portal_rules/new_delivery_root_simulation_rule/**
+portal_rules/new_delivery_simulation_rule
+portal_rules/new_delivery_simulation_rule/**
+portal_rules/new_order_root_simulation_rule
+portal_rules/new_order_root_simulation_rule/**
