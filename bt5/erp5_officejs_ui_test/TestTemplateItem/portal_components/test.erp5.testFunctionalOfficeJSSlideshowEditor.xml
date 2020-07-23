@@ -14,15 +14,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>testFunctionalOfficeJSRevealEditor</string> </value>
+            <value> <string>testFunctionalOfficeJSSlideshowEditor</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Unit test for Reveal Editor</string> </value>
+            <value> <string>Unit test for Slideshow Editor</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test.erp5.testFunctionalOfficeJSRevealEditor</string> </value>
+            <value> <string>test.erp5.testFunctionalOfficeJSSlideshowEditor</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
