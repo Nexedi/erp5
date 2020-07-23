@@ -29,12 +29,12 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import ERP5TypeFunctionalTestCase
 
-class TestOfficejSUIRevealEditor(ERP5TypeFunctionalTestCase):
+class TestOfficejSUISlideshowEditor(ERP5TypeFunctionalTestCase):
   foreground = 0
-  run_only = "officejs_ui_reveal_editor_zuite"
+  run_only = "officejs_ui_slideshow_editor_zuite"
 
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestOfficejSUIRevealEditor))
+  suite.addTest(unittest.makeSuite(TestOfficejSUISlideshowEditor))
   return suite
