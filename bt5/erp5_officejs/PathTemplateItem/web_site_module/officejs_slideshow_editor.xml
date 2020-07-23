@@ -426,7 +426,9 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
@@ -448,7 +450,9 @@
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_translation.html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
@@ -709,7 +713,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>985.5688.57024.42137</string> </value>
+                      <value> <string>985.28933.8790.47291</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -727,7 +731,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1595418701.47</float>
+                              <float>1595511939.13</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
