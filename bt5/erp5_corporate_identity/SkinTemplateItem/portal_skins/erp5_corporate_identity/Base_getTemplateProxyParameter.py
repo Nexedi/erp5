@@ -299,13 +299,20 @@ if pass_parameter is not None and pass_source_data is not None:
       use_language = context.getLanguage() or "en"
     except AttributeError:
       use_language = "en"
-
-    return populateImageDict(portal_object.portal_catalog(
+    logo_list = portal_object.portal_catalog(
       portal_type="Image",
       language=use_language,
       validation_state=validation_state,
       reference=pass_source_data
-    ))
+    )
+    if not logo_list and use_language != "en":
+      logo_list = portal_object.portal_catalog(
+        portal_type="Image",
+        language="en",
+        validation_state=validation_state,
+        reference=pass_source_data
+      )
+    return populateImageDict(logo_list)
 
   # ------------------------- Product (Website) --------------------------------
   if pass_parameter == "product":
