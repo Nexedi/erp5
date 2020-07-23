@@ -7,7 +7,6 @@ test.erp5.testFunctionalOfficeJSDriveApp
 test.erp5.testFunctionalOfficeJSImageEditor
 test.erp5.testFunctionalOfficeJSPDFViewer
 test.erp5.testFunctionalOfficeJSSvgEditor
-test.erp5.testFunctionalOfficeJSRevealEditor
 test.erp5.testFunctionalOfficeJSWebTable
 test.erp5.testFunctionalOfficeJSoOoText
 test.erp5.testFunctionalOfficeJSoOoSpreadsheet
