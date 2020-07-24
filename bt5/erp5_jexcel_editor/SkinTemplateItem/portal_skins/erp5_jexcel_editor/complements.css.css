@@ -53,3 +53,7 @@ body > div.spreadsheet.jexcel_tabs > div:nth-child(1) {
 .jexcel_tabs .jexcel_tab_link, .jexcel_filter > div {
   font-family: arial;
 }
+
+.jexcel_tab_link.selected {
+  cursor: alias;
+}

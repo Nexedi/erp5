@@ -1,6 +1,8 @@
 /**
  * jExcel v4.2.1
  *
+ * Modified version for Jexcel editor
+ *
  * Author: Paul Hodel <paul.hodel@gmail.com>
  * Website: https://bossanova.uk/jexcel/
  * Description: Create amazing web based spreadsheets.
@@ -1485,7 +1487,7 @@ console.log(ret);
                     }
                 }
                 // In the initialization is not necessary keep the history
-                obj.updateSelection(obj.records[cell[1]][cell[0]]);
+                //obj.updateSelection(obj.records[cell[1]][cell[0]]);
     
                 if (! ignoreHistoryAndEvents) {
                     obj.setHistory({
@@ -6299,7 +6301,13 @@ console.log(ret);
                 // History
                 var historyRecord = obj.history[obj.historyIndex--];
     
-                if (historyRecord.action == 'insertRow') {
+                if (historyRecord.action == 'endChangeType') {
+                  obj.options.columns[historyRecord.column].type = historyRecord.oldType;
+                  while (obj.history[obj.historyIndex].action !== "beginChangeType") {
+                    obj.undo();
+                  }
+                  obj.undo();
+                } else if (historyRecord.action == 'insertRow') {
                     obj.historyProcessRow(1, historyRecord);
                 } else if (historyRecord.action == 'deleteRow') {
                     obj.historyProcessRow(0, historyRecord);
@@ -6372,13 +6380,18 @@ console.log(ret);
     
             // Records
             var records = [];
-    
+            
             // Update cells
             if (obj.historyIndex < obj.history.length - 1) {
                 // History
                 var historyRecord = obj.history[++obj.historyIndex];
-    
-                if (historyRecord.action == 'insertRow') {
+                if (historyRecord.action == 'beginChangeType') {
+                  obj.options.columns[historyRecord.column].type = historyRecord.newType;
+                  while (obj.history[obj.historyIndex].action !== "endChangeType") {
+                    obj.redo();
+                  }
+                  //obj.undo();
+                } else if (historyRecord.action == 'insertRow') {
                     obj.historyProcessRow(0, historyRecord);
                 } else if (historyRecord.action == 'deleteRow') {
                     obj.historyProcessRow(1, historyRecord);
