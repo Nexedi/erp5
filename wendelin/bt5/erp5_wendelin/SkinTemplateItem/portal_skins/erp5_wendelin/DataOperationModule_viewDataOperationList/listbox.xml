@@ -101,7 +101,7 @@
                           <string>Version</string>
                         </tuple>
                         <tuple>
-                          <string>data_operation_script_id</string>
+                          <string>script_id</string>
                           <string>Script Id</string>
                         </tuple>
                         <tuple>
