@@ -62,9 +62,19 @@
 </tr>
 
 <tr>
+  <td>fireEvent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[2]//input</td>
+  <td>focus</td>
+</tr>
+<tr>
   <td>type</td>
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[2]//input</td>
   <td>0123456789 0123456789 0123456789 0123456789 0123456789</td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[2]//input</td>
+  <td>blur</td>
 </tr>
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
@@ -89,17 +99,25 @@
   <td>0123456789 0123456789 0123456789 0123456789 0123456789</td>
 </tr>
 <tr>
+  <td>fireEvent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[2]//input</td>
+  <td>focus</td>
+</tr>
+<tr>
   <td>assertText</td>
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[2]//span</td>
   <td>Too much input was given.</td>
 </tr>
-
 <tr>
   <td>type</td>
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[2]//input</td>
   <td>0123456789</td>
 </tr>
-
+<tr>
+  <td>fireEvent</td>
+  <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[2]//input</td>
+  <td>blur</td>
+</tr>
 <tr>
   <td>assertElementNotPresent</td>
   <td>//div[contains(@data-gadget-url, 'gadget_erp5_field_listbox.html')]//tbody/tr[1]/td[2]//span</td>
