@@ -94,6 +94,11 @@
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block-->
 <tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_successor_title']</td>
+  <td>focus</td>
+</tr>
+<tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='field_my_successor_title']//span[text()='No such document was found']</td>
   <td></td>
@@ -106,19 +111,9 @@
   <td></td>
 </tr>
 <tr>
-  <td>fireEvent</td>
-  <td>//input[@name='field_my_successor_title']</td>
-  <td>focus</td>
-</tr>
-<tr>
   <td>waitForElementPresent</td>
   <td>//li[@name='Foo']</td>
   <td></td>
-</tr>
-<tr>
-  <td>fireEvent</td>
-  <td>//input[@name='field_my_successor_title']</td>
-  <td>blur</td>
 </tr>
 <tr>
   <td>click</td>
@@ -130,7 +125,26 @@
   <td>//div[@data-gadget-scope='field_my_successor_title']//a[contains(@class, "ui-icon-plus")]</td>
   <td></td>
 </tr>
-
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_successor_title']</td>
+  <td>blur</td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_successor_title']//span[text()='No such document was found']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='field_my_successor_title']//span[text()='No such document was found']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementNotPresent</td>
+  <td>//input[@name='field_my_successor_title' and @class='is-invalid']</td>
+  <td></td>
+</tr>
 </tbody></table>
 </body>
 </html>
