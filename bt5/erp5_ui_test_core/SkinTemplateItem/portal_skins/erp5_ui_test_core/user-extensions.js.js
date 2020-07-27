@@ -26,6 +26,7 @@ Selenium.prototype.doSetFile = function(locator, url_and_filename) {
     }
     if (promiseState === 'rejected') {
       Assert.fail(rejectionValue);
+      return true;
     }
     promiseState = 'pending';
 
