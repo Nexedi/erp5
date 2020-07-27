@@ -33,16 +33,30 @@
   <td></td>
 </tr>
 <tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_your_custom_workflow_variable']</td>
+  <td>focus</td>
+</tr>
+<tr>
   <td>type</td>
   <td>//input[@name='field_your_custom_workflow_variable']</td>
   <td>AZERTYUIOPQSDFGHJKLMWXCVBNazertyuiopqsdfghjklmwxcvbn</td>
 </tr>
-
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_your_custom_workflow_variable']</td>
+  <td>blur</td>
+</tr>
 <!-- Fill long string to provoke form validation failure -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 <tal:block tal:define="notification_configuration python: {'class': 'error', 'text': 'Input data has errors.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
+<tr>
+  <td>fireEvent</td>
+  <td>field_your_custom_workflow_variable</td>
+  <td>focus</td>
+</tr>
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-scope="field_your_custom_workflow_variable"]/div/span</td><td></td></tr>
 <tr><td>assertText</td>
