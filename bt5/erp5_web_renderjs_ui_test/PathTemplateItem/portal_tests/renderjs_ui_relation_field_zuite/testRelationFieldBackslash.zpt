@@ -59,6 +59,11 @@
 
 <!-- Check the relation field does not crash when typing a backslash -->
 <tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>focus</td>
+</tr>
+<tr>
   <td>type</td>
   <td>//input[@name="field_my_foo_category_title"]</td>
   <td>\</td>
@@ -67,6 +72,21 @@
   <td>fireEvent</td>
   <td>//input[@name='field_my_foo_category_title']</td>
   <td>input</td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>blur</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@class='ui-btn ui-corner-all ui-btn-icon-notext ui-icon-warning ui-shadow-inset ui-btn-inline ui-disabled']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>focus</td>
 </tr>
 <tr>
   <!-- This behavior may change.
@@ -94,14 +114,14 @@
   <td></td>
 </tr>
 <tr>
-  <td>fireEvent</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
-  <td>blur</td>
-</tr>
-<tr>
   <td>click</td>
   <td>//li[@data-relative-url='portal_categories/divergence_scope/quantity']</td>
   <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>blur</td>
 </tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 <tr>
