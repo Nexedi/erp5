@@ -26,9 +26,15 @@
     <td>//input[@name="field_my_quantity"]</td>
     <td>0.0</td></tr>
 
+<tr><td>fireEvent</td>
+    <td>field_my_quantity</td>
+    <td>focus</td></tr>
 <tr><td>type</td>
     <td>field_my_quantity</td>
     <td>1.00</td></tr>
+<tr><td>fireEvent</td>
+    <td>field_my_quantity</td>
+    <td>blur</td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
 <tr><td>waitForElementPresent</td>
     <td>//button[text()="Input data has errors."]</td><td></td></tr>
@@ -36,11 +42,31 @@
                                                            'text': 'Input data has errors.'}">
   <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_notification" />
 </tal:block>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_my_quantity" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_my_quantity" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_my_quantity" and @class="is-invalid"]</td>
+  <td>focus</td>
+</tr>
 <tr><td>assertElementPresent</td>
     <td>//div[@data-gadget-scope="field_my_quantity"]//span[text()='The number you input has too large precision.']</td><td></td></tr>
 <tr><td>type</td>
     <td>field_my_quantity</td>
     <td>1000000000000.0</td></tr>
+<tr><td>fireEvent</td>
+    <td>field_my_quantity</td>
+    <td>blur</td></tr>
+<tr><td>assertElementNotPresent</td>
+    <td>//div[@data-gadget-scope="field_my_quantity"]//span[text()='The number you input has too large precision.']</td><td></td></tr>
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
 
 <tr><td>verifyValue</td>
