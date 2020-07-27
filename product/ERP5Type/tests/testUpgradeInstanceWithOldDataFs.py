@@ -67,6 +67,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
          'erp5_dms',
          'erp5_mrp',
          'erp5_officejs',
+         'erp5_couscous',
          'erp5_web_renderjs_ui'),
          ())""")
     self.tic()
