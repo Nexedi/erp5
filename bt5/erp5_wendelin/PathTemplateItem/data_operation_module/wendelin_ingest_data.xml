@@ -169,8 +169,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This is the standard data operation used for ingestion. \n
-It just appends everything to a data stream without any conversion whatsoever.</string> </value>
+            <value> <string>This data operation can be used to ingest data with fluentd. It assumes data comes in msgpack format.\n
+It just appends everything to a data stream without any conversion whatsoever.\n
+</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -618,6 +619,51 @@ It just appends everything to a data stream without any conversion whatsoever.</
                           <state>
                             <tuple>
                               <float>1595851194.16</float>
+                              <string>UTC</string>
+                            </tuple>
+                          </state>
+                        </object>
+                      </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>action</string> </key>
+                      <value> <string>edit</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>actor</string> </key>
+                      <value> <string>zope</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>comment</string> </key>
+                      <value>
+                        <none/>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>error_message</string> </key>
+                      <value> <string></string> </value>
+                  </item>
+                  <item>
+                      <key> <string>serial</string> </key>
+                      <value> <string>985.34639.59167.4556</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>state</string> </key>
+                      <value> <string>current</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>time</string> </key>
+                      <value>
+                        <object>
+                          <klass> <reference id="3.1"/> </klass>
+                          <tuple>
+                            <none/>
+                          </tuple>
+                          <state>
+                            <tuple>
+                              <float>1595930396.08</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

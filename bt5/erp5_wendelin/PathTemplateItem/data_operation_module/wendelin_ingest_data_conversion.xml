@@ -169,7 +169,13 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This is the standard data operation used for ingestion. It just appends everything to a data stream by first converting it to a string.</string> </value>
+            <value> <string>This data operation can be used to ingest data with fluentd. It assumes data comes in msgpack format.\n
+It will first unpack the msgpack, then remove the timestamp, and convert the data part (usually a dictionary)\n
+to string and append it to Data Stream.\n
+\n
+Note that what is saved to Data Stream might be different from what fluentd was reading initially,\n
+depending on fluentd plugin configuration. For example fluentd might convert json to msgpack then\n
+what is saved in Data Stream might be a string representation of a python dictionary and not json.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -197,7 +203,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Ingest Fluentd Data - "Append mode"</string> </value>
+            <value> <string>Ingest Fluentd Data</string> </value>
         </item>
         <item>
             <key> <string>use_list</string> </key>
