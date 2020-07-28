@@ -26,6 +26,8 @@
 #
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from ZPublisher.HTTPRequest import HTTPRequest
+from ZPublisher.HTTPResponse import HTTPResponse
 import StringIO
 import urllib
 from zope.globalrequest import setRequest #  pylint: disable=no-name-in-module, import-error
