@@ -97,7 +97,6 @@
           }
         }
       }
-
       if (modification_dict.hasOwnProperty("global")) {
         queue
           .push(function () {
@@ -136,7 +135,6 @@
             return context.listenResize();
           });
       }
-
       if ((this.state.global === true) &&
           (modification_dict.hasOwnProperty("desktop") ||
           modification_dict.hasOwnProperty("editable") ||
@@ -251,7 +249,7 @@
         event,
         context = this;
       function extractSizeAndDispatch() {
-        if (window.matchMedia("(min-width: 90em)").matches) {
+        if (window.matchMedia("(min-width: 767px)").matches) {
           return context.changeState({
             desktop: true
           });
