@@ -30,7 +30,7 @@
 from Acquisition import aq_base
 from AccessControl import Unauthorized
 from AccessControl.SecurityManagement import setSecurityManager
-from Products.ERP5.mixin.base_extensible_traversable import BaseExtensibleTraversableMixin
+from erp5.component.mixin.BaseExtensibleTraversableMixin import BaseExtensibleTraversableMixin
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 
 class DocumentExtensibleTraversableMixin(BaseExtensibleTraversableMixin):
