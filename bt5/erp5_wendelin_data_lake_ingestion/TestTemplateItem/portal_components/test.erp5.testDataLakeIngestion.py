@@ -216,11 +216,11 @@ class TestDataIngestion(SecurityTestCase):
     self.assertNotEqual(None,
            getattr(self.portal.portal_ingestion_policies, "default_ebulk", None))
     self.assertNotEqual(None,
-           getattr(self.portal.data_supply_module, "embulk", None))
+           getattr(self.portal.data_supply_module, "default_ebulk", None))
 
-  def test_04_DefaultModelSecurityModel(self):
+  def test_04_DatasetAndDatastreamsConsistency(self):
     """
-      Test default security model : 'All can download, only contributors can upload.'
+      Test that data set state transition also changes its data streams states
     """
     data_set, data_stream_list = self.stepIngest(self.CSV, ",", randomize_ingestion_reference=True)
     self.tic()
