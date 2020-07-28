@@ -70,6 +70,7 @@ class ERP5(_ERP5):
   mysql_db_count = 3
 
   def getTestList(self):
+    return ["testFunctionalKM", "testFunctionalCore",] * 50
     test_list = []
     for full_test_case in self._getAllTestList():
       test_case = (':' in full_test_case and full_test_case.split(':')[1]
