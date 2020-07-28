@@ -90,7 +90,6 @@
           }
         }
       }
-
       if (modification_dict.hasOwnProperty("global")) {
         queue
           .push(function () {
@@ -129,7 +128,6 @@
             return context.listenResize();
           });
       }
-
       if ((this.state.global === true) &&
           (modification_dict.hasOwnProperty("desktop") ||
           modification_dict.hasOwnProperty("editable") ||
@@ -178,7 +176,6 @@
                 result_view_list = [],
                 workflow_list = JSON.parse(gadget.state.workflow_list),
                 view_list = JSON.parse(gadget.state.view_list);
-
               for (i = 0; i < workflow_list.length; i += 1) {
                 result_workflow_list.push({
                   title: workflow_list[i].title,
@@ -219,7 +216,7 @@
         event,
         context = this;
       function extractSizeAndDispatch() {
-        if (window.matchMedia("(min-width: 90em)").matches) {
+        if (window.matchMedia("(min-width: 767px)").matches) {
           return context.changeState({
             desktop: true
           });
