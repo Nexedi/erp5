@@ -26,8 +26,13 @@
 #
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+import StringIO
+import urllib
+import httplib
+
 
 class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
+
   def getBusinessTemplateList(self):
     return ('erp5_core_proxy_field_legacy',
             'erp5_full_text_mroonga_catalog',
@@ -72,9 +77,39 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     self.tic()
 
     alarm = self.portal.portal_alarms.promise_check_upgrade
-    alarm.solve()
+
+    # Ensure it is viewable
+    alarm.view()
+    # Call active sense
+    alarm.activeSense()
     self.tic()
-    self.assertEquals(alarm.getLastActiveProcess().getResultList(), [])
+    # XXX No idea why active sense must be called twice...
+    alarm.activeSense()
+    self.tic()
+
+    self.assertNotEquals([x.detail for x in alarm.getLastActiveProcess().getResultList()], [])
+
+    # Solve divergencies, like called from the form_dialog
+    ret = self.publish(
+      '%s/portal_alarms/promise_check_upgrade' % self.portal.getPath(),
+      basic='%s:current' % self.id(),
+      stdin=StringIO.StringIO(urllib.urlencode({
+        'Base_callDialogMethod:method': '',
+        'dialog_id': 'Alarm_viewSolveDialog',
+        'dialog_method': 'Alarm_solve',
+        'form_id': 'Alarm_view',
+        'selection_name': 'foo_selection',
+      })),
+      request_method="POST",
+      handle_errors=False
+    )
+    self.assertEqual(httplib.FOUND, ret.getStatus())
+
+    alarm.Alarm_solve()
+
+    self.tic()
+
+    self.assertEquals([x.detail for x in alarm.getLastActiveProcess().getResultList()], [])
 
     # Make sure that *all* Portal Type can be loaded after upgrade
     import erp5.portal_type
