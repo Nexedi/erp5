@@ -85,7 +85,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     self.assertNotEquals(alarm.getLastActiveProcess().getResultList(), [])
 
     # Solve divergencies, like called from the form_dialog
-    alarm.Base_callDialogMehod(
+    alarm.Base_callDialogMethod(
       form_id='Alarm_view',
       selection_name='foobar',
       dialog_id='Alarm_viewSolveDialog',
