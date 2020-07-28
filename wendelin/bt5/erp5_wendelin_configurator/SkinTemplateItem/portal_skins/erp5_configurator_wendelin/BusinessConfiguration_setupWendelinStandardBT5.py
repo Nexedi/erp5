@@ -28,7 +28,6 @@ bt5_installation_list = ('erp5_full_text_mroonga_catalog',
                          'erp5_web_renderjs_ui',
                          'erp5_wendelin',
                          'erp5_wendelin_examples',
-                         'erp5_wendelin_data',
                          'erp5_wendelin_development',
                          'erp5_notebook'
                         )
