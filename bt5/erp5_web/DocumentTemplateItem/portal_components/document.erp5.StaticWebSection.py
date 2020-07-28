@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from OFS.Traversable import NotFound
 
-from Products.ERP5.mixin.document_extensible_traversable import DocumentExtensibleTraversableMixin
+from erp5.component.mixin.DocumentExtensibleTraversableMixin import DocumentExtensibleTraversableMixin
 from erp5.component.document.WebSection import WebSection
 from Products.ERP5Type import Permissions
 
