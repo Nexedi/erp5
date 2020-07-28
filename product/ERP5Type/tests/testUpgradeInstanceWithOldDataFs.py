@@ -166,6 +166,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
       form_id='Alarm_view',
     )
     self.assertEqual(fake_request.RESPONSE.status, 302)
+    alarm.Alarm_solve()
 
     # alarm.solve()
     self.tic()
