@@ -2,22 +2,31 @@
  * Selenium extensions for the ERP5 project
  */
 
+ // @ts-check
+
 /**
- * You can set file data to file input field without security error.
- *   <tr>
- *    <td>setFile</td>
- *    <td>field_my_file</td>
- *    <td>/data.jpg myfilename.jpg</td>
- *  </tr>
+ * Wrap a promise to make it usable by selenium commands.
+ *
+ * If the promise is rejected, the command will fail with the promise rejection value.
+ * If the promise is resovled, the resolved value is not used.
+ *
+ * The asynchronicity of do* method is as follow Selenium.prototype.doXXX
+ * returns a function and this function will be called again and again until:
+ *   * function returns true, which means step is successfull
+ *   * function returns false, which means step is not finished and function will be called again
+ *   * an execption is raised, in that case the step is failed
+ *   * global timeout is reached.
+ * we implement the state management with similar approach as what's discussed
+ * https://stackoverflow.com/questions/30564053/how-can-i-synchronously-determine-a-javascript-promises-state
+ *
+ * @param {Promise} promise the promise to check
+ * @returns {() => boolean}
  */
-Selenium.prototype.doSetFile = function(locator, url_and_filename) {
-  var tmpArray = url_and_filename.split(' ', 2);
-  var url = tmpArray[0];
-  var fileName = tmpArray[1];
-  var rejectionValue,
-    promiseState;
-  // same technique as doVerifyImageMatchSnapshot below
-  var assertFileSet = () => {
+function wrapPromise(promise) {
+  /** @type {'pending' | 'resolved' | 'rejected'} */
+  var promiseState = 'pending';
+  var rejectionValue;
+  return () => {
     if (promiseState === 'pending') {
       return false;
     }
@@ -26,13 +35,45 @@ Selenium.prototype.doSetFile = function(locator, url_and_filename) {
     }
     if (promiseState === 'rejected') {
       Assert.fail(rejectionValue);
+      return true
     }
-    promiseState = 'pending';
 
-    if (!fileName) {
-      throw new Error('file name must not be empty.');
-    }
-    var fileField = this.page().findElement(locator);
+    promise.then(
+        function() {
+          promiseState = 'resolved';
+        },
+        function(error) {
+          console.error(error);
+          promiseState = 'rejected';
+          rejectionValue = error;
+        }
+      );
+  }
+}
+
+/**
+ * You can set file data to file input field without security error.
+ *   <tr>
+ *    <td>setFile</td>
+ *    <td>field_my_file</td>
+ *    <td>/data.jpg myfilename.jpg</td>
+ *  </tr>
+ *
+ * @param {string} locator the selenium locator
+ * @param {string} url_and_filename the URL and filename, separated by space
+ * @returns {() => boolean}
+ */
+Selenium.prototype.doSetFile = function(locator, url_and_filename) {
+  var tmpArray = url_and_filename.split(' ', 2);
+  var url = tmpArray[0];
+  var fileName = tmpArray[1];
+
+  if (!fileName) {
+    throw new Error('file name must not be empty.');
+  }
+  var fileField = this.page().findElement(locator);
+
+  return wrapPromise(
     fetch(url)
       .then(function(response) {
         if (!response.ok) {
@@ -48,19 +89,7 @@ Selenium.prototype.doSetFile = function(locator, url_and_filename) {
           new DataTransfer();
         dT.items.add(new File([blob], fileName));
         fileField.files = dT.files;
-      })
-      .then(
-        function() {
-          promiseState = 'resolved';
-        },
-        function(error) {
-          console.error(error);
-          promiseState = 'rejected';
-          rejectionValue = 'Error setting file ' + error;
-        }
-      );
-  }
-  return assertFileSet;
+      }));
 };
 
 
