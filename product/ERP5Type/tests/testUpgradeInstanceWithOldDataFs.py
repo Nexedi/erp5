@@ -26,8 +26,75 @@
 #
 ##############################################################################
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from ZPublisher.HTTPRequest import HTTPRequest
+from ZPublisher.HTTPResponse import HTTPResponse
+import StringIO
+import urllib
+from zope.globalrequest import setRequest #  pylint: disable=no-name-in-module, import-error
+from Acquisition import aq_base
+
+# XXX Copy/pasted from erp5_hal_json_style tests
+def do_fake_request(request_method, headers=None, data=()):
+  __version__ = "0.1"
+  if (headers is None):
+    headers = {}
+  env={}
+  env['SERVER_NAME']='bobo.server'
+  env['SERVER_PORT']='80'
+  env['REQUEST_METHOD']=request_method
+  env['REMOTE_ADDR']='204.183.226.81 '
+  env['REMOTE_HOST']='bobo.remote.host'
+  env['HTTP_USER_AGENT']='Bobo/%s' % __version__
+  env['HTTP_HOST']='127.0.0.1'
+  env['SERVER_SOFTWARE']='Bobo/%s' % __version__
+  env['SERVER_PROTOCOL']='HTTP/1.0 '
+  env['HTTP_ACCEPT']='image/gif, image/x-xbitmap, image/jpeg, */* '
+  env['SERVER_HOSTNAME']='bobo.server.host'
+  env['GATEWAY_INTERFACE']='CGI/1.1 '
+  env['SCRIPT_NAME']='Main'
+  env.update(headers)
+  body_stream = StringIO.StringIO()
+
+  # for some mysterious reason QUERY_STRING does not get parsed into data fields
+  if data and request_method.upper() == 'GET':
+    # see: GET http://www.cgi101.com/book/ch3/text.html
+    env['QUERY_STRING'] = '&'.join(
+      '{}={}'.format(urllib.quote_plus(key), urllib.quote(value))
+      for key, value in data
+    )
+
+  if data and request_method.upper() == 'POST':
+    # see: POST request body https://tools.ietf.org/html/rfc1866#section-8.2.1
+    env['CONTENT_TYPE'] = 'application/x-www-form-urlencoded'
+    for key, value in data:
+      body_stream.write('{}={!s}&'.format(
+        urllib.quote_plus(key), urllib.quote(value)))
+
+  request = HTTPRequest(body_stream, env, HTTPResponse())
+  if data and request_method.upper() == 'POST':
+    for key, value in data:
+      request.form[key] = value
+
+  return request
+
+def replace_request(new_request, context):
+  base_chain = [aq_base(x) for x in context.aq_chain]
+  # Grab existig request (last chain item) and create a copy.
+  request_container = base_chain.pop()
+  # request = request_container.REQUEST
+
+  setRequest(new_request)
+
+  new_request_container = request_container.__class__(REQUEST=new_request)
+  # Recreate acquisition chain.
+  my_self = new_request_container
+  base_chain.reverse()
+  for item in base_chain:
+    my_self = item.__of__(my_self)
+  return my_self
 
 class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
+
   def getBusinessTemplateList(self):
     return ('erp5_core_proxy_field_legacy',
             'erp5_full_text_mroonga_catalog',
@@ -72,9 +139,39 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     self.tic()
 
     alarm = self.portal.portal_alarms.promise_check_upgrade
-    alarm.solve()
+
+    # Ensure it is viewable
+    alarm.view()
+    # Call active sense
+    alarm.activeSense()
     self.tic()
-    self.assertEquals(alarm.getLastActiveProcess().getResultList(), [])
+    # XXX No idea why active sense must be called twice...
+    alarm.activeSense()
+    self.tic()
+
+    self.assertNotEquals([x.detail for x in alarm.getLastActiveProcess().getResultList()], [])
+
+    # Solve divergencies, like called from the form_dialog
+    fake_request = do_fake_request("POST", data=(
+      ('dialog_method', 'Alarm_solve'),
+      ('dialog_id', 'Alarm_viewSolveDialog'),
+      ('form_id', 'Alarm_view'),
+      ('selection_name', 'foo_selection')
+    ))
+    fake_portal = replace_request(fake_request, self.portal)
+
+    result = fake_portal.portal_alarms.promise_check_upgrade.Base_callDialogMethod(
+      dialog_method='Alarm_solve',
+      dialog_id='Alarm_viewSolveDialog',
+      form_id='Alarm_view',
+    )
+    self.assertEqual(fake_request.RESPONSE.status, 302)
+    alarm.Alarm_solve()
+
+    # alarm.solve()
+    self.tic()
+
+    self.assertEquals([x.detail for x in alarm.getLastActiveProcess().getResultList()], [])
 
     # Make sure that *all* Portal Type can be loaded after upgrade
     import erp5.portal_type
