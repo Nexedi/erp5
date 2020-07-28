@@ -7,7 +7,6 @@
     DISPLAY_SLIDE = 'display_slide',
     DIALOG_SLIDE = 'dialog_slide',
     DIALOG_COMMENT = 'dialog_comment',
-    DIALOG_METADATA = 'dialog_metadata',
     FORMBOX_SCOPE = 'formbox',
     TRANSLATABLE_WORD_LIST = [
       'Slides',
@@ -15,7 +14,6 @@
       'New Slide',
       'Slide',
       'Delete',
-      'Metadata',
       'Text',
       'Comments',
       'Previous',
@@ -159,8 +157,6 @@
     if (gadget.state.display_index !== null) {
       element_list.push(
         ' ' + (gadget.state.display_index + 1)
-        // domsugar('label', {'class': 'page-number',
-        //                    text: gadget.state.display_index})
       );
     }
     return domsugar('h1', element_list);
@@ -174,12 +170,6 @@
         type: 'button',
         'class': 'dialog-delete ui-icon-trash-o ui-btn-icon-left',
         text: translation_dict.Delete
-      }),
-      domsugar('button', {
-        type: 'button',
-        disabled: (slide_dialog === DIALOG_METADATA),
-        'class': 'dialog-metadata ui-icon-info-circle ui-btn-icon-left',
-        text: translation_dict.Metadata
       }),
       domsugar('button', {
         type: 'button',
@@ -217,8 +207,8 @@
   ///////////////////////////////////////////////////
   // Page view handling
   ///////////////////////////////////////////////////
-  function getCKEditorJSON(translation_dict, key, value) {
-    return {
+  function getCKEditorJSON(translation_dict, key, value, title_html, type) {
+    var ck_editor_json = {
       erp5_document: {
         "_embedded": {
           "_view": {
@@ -251,66 +241,42 @@
         ]
       }
     };
-  }
+    // Show chapter_title and slide_type inputs only during slide editing
+    if (title_html !== null && type !== null) {
 
-  function getMetadataJSON(translation_dict, title_html, type) {
-    return {
-      erp5_document: {
-        "_embedded": {
-          "_view": {
-            "your_chapter_title": {
-              "title": translation_dict["Chapter Title"],
-              "type": "StringField",
-              "editable": 1,
-              "required": 1,
-              "key": "title_html",
-              "value": title_html
-            },
-            "your_slide_type": {
-              "title": translation_dict["Type of Slide"],
-              "type": "ListField",
-              "editable": 1,
-              "key": "type",
-              items: [["", ""],
+      ck_editor_json.erp5_document._embedded._view.your_chapter_title = {
+        "title": translation_dict["Chapter Title"],
+        "type": "StringField",
+        "editable": 1,
+        "required": 1,
+        "key": "title_html",
+        "value": title_html
+      };
+
+      ck_editor_json.erp5_document._embedded._view.your_slide_type = {
+        "title": translation_dict["Type of Slide"],
+        "type": "ListField",
+        "editable": 1,
+        "key": "type",
+        items: [["", ""],
                       [translation_dict.Chapter, "chapter"],
                       [translation_dict.Screenshot, "screenshot"],
                       [translation_dict.Illustration, "illustration"],
                       [translation_dict.Code, "code"],
                       [translation_dict.Master, "master"]
-                     ],
-              value: type
-              /*
-            },
-            "your_tested": {
-              "title": "XXX Does it Contain a Test?",
-              "type": "CheckBoxField",
-              "editable": 1,
-              "key": "field_your_tested",
-              "default": "eee",
-              "required": 0,
-              "hidden": 0
-              */
-            }
-          }
-        },
-        "_links": {
-          "type": {
-            // form_list display portal_type in header
-            name: ""
-          }
-        }
-      },
-      form_definition: {
-        group_list: [
-          ["left", [
-            ["your_chapter_title"],
-            ["your_slide_type"]
-            // ["your_tested"]
-          ]]
-        ]
-      }
-    };
+                      ],
+        value: type
+      };
 
+      ck_editor_json.form_definition.group_list = [
+        ["left", [
+          ["your_chapter_title"],
+          ["your_slide_type"]
+        ]]
+      ].concat(ck_editor_json.form_definition.group_list);
+    }
+
+    return ck_editor_json;
   }
 
   function renderSlideDialog(gadget, translation_dict, slide_dialog,
@@ -327,17 +293,18 @@
       render_dict = getCKEditorJSON(
         translation_dict,
         "slide_html",
-        slide_dict.slide_html
+        slide_dict.slide_html,
+        slide_dict.title_html,
+        slide_dict.type
       );
     } else if (slide_dialog === DIALOG_COMMENT) {
       render_dict = getCKEditorJSON(
         translation_dict,
         "comment_html",
-        slide_dict.comment_html
+        slide_dict.comment_html,
+        null,
+        null
       );
-    } else if (slide_dialog === DIALOG_METADATA) {
-      render_dict = getMetadataJSON(translation_dict, slide_dict.title_html,
-                                    slide_dict.type);
     } else {
       // Ease developper work by raising for not handled cases
       throw new Error('Unhandled dialog: ' + slide_dialog);
@@ -574,15 +541,6 @@
                 10
               ),
               slide_dialog: gadget.state.slide_dialog || DIALOG_SLIDE
-            });
-          });
-      }
-
-      if (evt.target.className.indexOf("dialog-metadata") !== -1) {
-        return queue
-          .push(function () {
-            return gadget.changeState({
-              slide_dialog: DIALOG_METADATA
             });
           });
       }
