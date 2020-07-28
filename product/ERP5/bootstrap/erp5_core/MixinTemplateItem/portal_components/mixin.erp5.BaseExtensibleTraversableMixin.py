@@ -32,7 +32,7 @@ from base64 import decodestring
 
 from zLOG import LOG
 from AccessControl import ClassSecurityInfo, getSecurityManager
-from AccessControl.SecurityManagement import newSecurityManager, setSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type.ExtensibleTraversable import ExtensibleTraversableMixIn
@@ -117,7 +117,7 @@ class BaseExtensibleTraversableMixin(ExtensibleTraversableMixIn):
                 # The same here as above. unrestrictedTraverse provides
                 # just a plain dict, so request.other does not exist.
                 del request['PUBLISHED']
-          except:
+          except Exception:
             LOG("ERP5 WARNING",0,
                 "Failed to retrieve user in __bobo_traverse__ of WebSection %s" % self.getPath(),
                 error=True)
