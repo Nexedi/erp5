@@ -93,6 +93,9 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     )
     # alarm.solve()
     self.tic()
+    # Call active sense
+    alarm.activeSense()
+    self.tic()
     self.assertEquals(alarm.getLastActiveProcess().getResultList(), [])
 
     # Make sure that *all* Portal Type can be loaded after upgrade
