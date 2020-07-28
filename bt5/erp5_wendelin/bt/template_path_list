@@ -1,4 +1,5 @@
 data_operation_module/wendelin_ingest_data
+data_operation_module/wendelin_ingest_data_conversion
 data_product_module/default_http_json
 data_product_module/default_http_json/**
 data_supply_module/default_http_json

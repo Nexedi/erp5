@@ -13,11 +13,10 @@ ingestion_policy = context.newContent( \
       script_id = 'IngestionPolicy_parseSimpleFluentdTag')
 ingestion_policy.validate()
 
-
 use_category = context.restrictedTraverse("portal_categories/use/big_data/ingestion")
-quantity_category = context.restrictedTraverse("portal_categories/quantity_unit/unit/piece")
-# XXX: hard-coded dependency to object from erp5_wendelin_data, remove!
-data_operation = context.restrictedTraverse("data_operation_module/wendelin_1")
+
+# use by default a Data Operation which will convert data sent from fleuntd
+data_operation = context.restrictedTraverse("data_operation_module/wendelin_ingest_data_conversion")
 
 # create Data Product
 data_product = context.data_product_module.newContent(
