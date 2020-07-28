@@ -597,29 +597,30 @@
     // Drag / drop management
     ///////////////////////////////////////////////////
     .onEvent("dragstart", function (evt) {
-      var tag_name = evt.target.tagName;
-      if (tag_name !== 'SECTION') {
+      console.log(evt);
+      var closest_section = evt.target.closest('section');
+      if (closest_section === null) {
         return;
       }
-      // Store index of the dragged slide
       evt.target.classList.add('drag');
 
+      // Store index of the dragged slide
       evt.dataTransfer.effectAllowed = 'move';
       evt.dataTransfer.setData('application/x-dragged-slide',
                                evt.target.getAttribute('data-slide-index'));
     }, false, false)
 
     .onEvent("dragend", function (evt) {
-      var tag_name = evt.target.tagName;
-      if (tag_name !== 'SECTION') {
+      var closest_section = evt.target.closest('section');
+      if (closest_section === null) {
         return;
       }
       evt.target.classList.remove('drag');
     }, false, false)
 
     .onEvent("dragover", function (evt) {
-      var tag_name = evt.target.tagName;
-      if (tag_name !== 'SECTION') {
+      var closest_section = evt.target.closest('section');
+      if (closest_section === null) {
         return;
       }
       if (evt.preventDefault) {
@@ -629,29 +630,29 @@
     }, false, false)
 
     .onEvent("dragenter", function (evt) {
-      var tag_name = evt.target.tagName;
-      if (tag_name !== 'SECTION') {
+      var closest_section = evt.target.closest('section');
+      if (closest_section === null) {
         return;
       }
 
       // Provide a visual feedback to the user
       // Showing where the slide can be dropped
-      if (evt.target.getAttribute('data-slide-index')) {
-        evt.target.classList.add('over');
+      if (closest_section.getAttribute('data-slide-index')) {
+        closest_section.classList.add('over');
       }
     }, false, false)
 
     .onEvent("dragleave", function (evt) {
-      var tag_name = evt.target.tagName;
-      if (tag_name !== 'SECTION') {
+      var closest_section = evt.target.closest('section');
+      if (closest_section === null) {
         return;
       }
-      evt.target.classList.remove('over');
+      closest_section.classList.remove('over');
     }, false, false)
 
     .onEvent("drop", function (evt) {
       var gadget = this,
-        tag_name = evt.target.tagName,
+        tag_name = evt.target.closest('section').tagName,
         slide_list,
         source_index,
         destination_index;
@@ -668,13 +669,13 @@
       evt.target.classList.remove('over');
 
       source_index = evt.dataTransfer.getData('application/x-dragged-slide');
-      if (source_index && evt.target.getAttribute('data-slide-index')) {
+      if (source_index && evt.target.closest('section').getAttribute('data-slide-index')) {
         source_index = parseInt(
           source_index,
           10
         );
         destination_index = parseInt(
-          evt.target.getAttribute('data-slide-index'),
+          evt.target.closest('section').getAttribute('data-slide-index'),
           10
         );
 
