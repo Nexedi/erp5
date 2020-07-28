@@ -72,7 +72,22 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     self.tic()
 
     alarm = self.portal.portal_alarms.promise_check_upgrade
-    alarm.solve()
+
+    # Ensure it is viewable
+    alarm.view()
+    # Call active sense
+    alarm.activeSense()
+    self.tic()
+    self.assertNotEquals(alarm.getLastActiveProcess().getResultList(), [])
+
+    # Solve divergencies, like called from the form_dialog
+    alarm.Base_callDialogMehod(
+      form_id='Alarm_view',
+      selection_name='foobar',
+      dialog_id='Alarm_viewSolveDialog',
+      dialog_method='Alarm_solve'
+    )
+    # alarm.solve()
     self.tic()
     self.assertEquals(alarm.getLastActiveProcess().getResultList(), [])
 
