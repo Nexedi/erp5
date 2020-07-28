@@ -82,7 +82,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     alarm.activeSense()
     self.tic()
 
-    self.assertNotEquals(alarm.getLastActiveProcess().getResultList(), [])
+    self.assertNotEquals([x.detail for x in alarm.getLastActiveProcess().getResultList()], [])
 
     # Solve divergencies, like called from the form_dialog
     alarm.Base_callDialogMethod(
@@ -96,7 +96,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     # Call active sense
     alarm.activeSense()
     self.tic()
-    self.assertEquals(alarm.getLastActiveProcess().getResultList(), [])
+    self.assertEquals([x.detail for x in alarm.getLastActiveProcess().getResultList()], [])
 
     # Make sure that *all* Portal Type can be loaded after upgrade
     import erp5.portal_type
