@@ -78,6 +78,10 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     # Call active sense
     alarm.activeSense()
     self.tic()
+    # XXX No idea why active sense must be called twice...
+    alarm.activeSense()
+    self.tic()
+
     self.assertNotEquals(alarm.getLastActiveProcess().getResultList(), [])
 
     # Solve divergencies, like called from the form_dialog
