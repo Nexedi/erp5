@@ -183,7 +183,6 @@ allow_module('Products.ERP5Type.ImmediateReindexContextManager')
 ModuleSecurityInfo('Products.ERP5Type.JSON').declarePublic('dumps', 'loads')
 ModuleSecurityInfo('Products.ERP5Type.Constraint').declarePublic('PropertyTypeValidity')
 ModuleSecurityInfo('pprint').declarePublic('pformat', 'pprint')
-ModuleSecurityInfo('Products.ERP5Type.XMLUtils').declarePublic('parseStream')
 
 import zExceptions
 ModuleSecurityInfo('zExceptions').declarePublic(*filter(
