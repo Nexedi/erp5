@@ -32,7 +32,9 @@
     return div.children;
   }
 
-  function letterToNumber(str) {
+  function columnLetterToNumber(str) {
+    // convert a column letter to its corresponding column number :
+    // A -> 0, B -> 1, AA -> 26, AB -> 27 ...
     var out = 0, len = str.length, pos = len;
     while (--pos > -1) {
       out += (str.charCodeAt(pos) - 64) * Math.pow(26, len - 1 - pos);
@@ -40,15 +42,17 @@
     return out - 1;
   }
 
-  function numberToLetter(i) {
-    return (i >= 26 ? numberToLetter((i / 26 >> 0) - 1) : '') +
+  function numberToColumnLetter(i) {
+    // convert a column number to its corresponding column letter :
+    // 0 -> A, 1 -> B, 26 -> AA, 27 -> AB ...
+    return (i >= 26 ? numberToColumnLetter((i / 26 >> 0) - 1) : '') +
       'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[i % 26 >> 0];
   }
 
   function getCoordinatesFromCell(cell) {
     var x = Number(cell.dataset.x),
       y = Number(cell.dataset.y) + 1;
-    return numberToLetter(x) + y.toString();
+    return numberToColumnLetter(x) + y.toString();
   }
 
   function fireDoubleClick(element) {
@@ -141,7 +145,11 @@
       "format_align_justify": "Align justify",
       "vertical_align_top": "Align top",
       "vertical_align_center": "Align middle",
-      "vertical_align_bottom": "Align bottom"
+      "vertical_align_bottom": "Align bottom",
+      "playlist_add": "Add row at the end",
+      "delete_sweep": "Delete last row",
+      "exposure_plus_1": "Add column at the end",
+      "exposure_neg_1": "Delete last column"
     };
     element.querySelectorAll("i").forEach(function (i) {
       if (i.dataset.k === "color") {
@@ -163,13 +171,9 @@
   }
 
   function bindEvents(gadget, sheet) {
-    sheet.onevent = function (event) {
-      return gadget.triggerOnEventSheet(event);
-    };
+    sheet.onevent = gadget.triggerOnEventSheet.bind(gadget);
     sheet.onselection = gadget.triggerOnSelectionSheet.bind(gadget);
-    sheet.oneditionend = function (table, cell, x, y, value) {
-      return gadget.triggerOnEditionEndSheet(cell, x, y, value);
-    };
+    sheet.oneditionend = gadget.triggerOnEditionEndSheet.bind(gadget);
     return sheet;
   }
 
@@ -181,7 +185,7 @@
       dict = {};
       dict = Object.assign(jexcel.createFromTable(table),
                            gadget.state.template);
-      if (!table.classList.contains("jSheet")) {
+      if (table.classList.contains("jexcel")) {
         tmp = JSON.parse(table.dataset.config);
         dict.columns = tmp.columns;
         dict.data = tmp.data;
@@ -202,37 +206,27 @@
       undo: {
         type: 'i',
         content: 'undo',
-        onclick: function (a, b) {
-          return gadget.triggerUndo(b);
-        }
+        onclick: gadget.triggerUndo.bind(gadget)
       },
       redo: {
         type: 'i',
         content: 'redo',
-        onclick: function (a, b) {
-          return gadget.triggerRedo(b);
-        }
+        onclick: gadget.triggerRedo.bind(gadget)
       },
       merge: {
         type: 'i',
         content: 'table_chart',
-        onclick: function (a, b) {
-          return gadget.triggerMerge(a, b);
-        }
+        onclick: gadget.triggerMerge.bind(gadget)
       },
       unmerge: {
         type: 'i',
         content: 'close',
-        onclick: function (a, b) {
-          return gadget.triggerUnmerge(b);
-        }
+        onclick: gadget.triggerUnmerge.bind(gadget)
       },
       destroy_merge: {
         type: 'i',
         content: 'cancel',
-        onclick: function (a, b) {
-          return gadget.triggerDestroyMerge(b);
-        }
+        onclick: gadget.triggerDestroyMerge.bind(gadget)
       },
       font_style: {
         type: 'select',
@@ -326,13 +320,31 @@
       remove: {
         type: "i",
         content: "delete",
-        onclick: function (a, b) {
-          return gadget.triggerDeleteSheet(a, b);
-        }
+        onclick: gadget.triggerDeleteSheet.bind(gadget)
+      },
+      add_row: {
+        type: "i",
+        content: "playlist_add",
+        onclick: gadget.triggerAddRow.bind(gadget)
+      },
+      delete_row: {
+        type: "i",
+        content: "delete_sweep",
+        onclick: gadget.triggerDeleteRow.bind(gadget)
+      },
+      add_column: {
+        type: "i",
+        content: "exposure_plus_1",
+        onclick: gadget.triggerAddColumn.bind(gadget)
+      },
+      delete_column: {
+        type: "i",
+        content: "exposure_neg_1",
+        onclick: gadget.triggerDeleteColumn.bind(gadget)
       },
       contextMenu: function (obj, x, y) {
         var items = [];
-        if (y !== null) {
+        if (y === null) {
            // Insert a new column
           items.push({
             title: obj.options.text.insertANewColumnBefore,
@@ -455,6 +467,11 @@
         toolbar_dict.color_picker) {
       list.push(dict.text_color, dict.background_color);
     }
+    if (toolbar_dict.hasOwnProperty("add_delete_row_column") &&
+        toolbar_dict.add_delete_row_column) {
+      list.push(dict.add_row, dict.delete_row,
+              dict.add_column, dict.delete_column);
+    }
     res = Object.assign({}, dict.options);
     res.toolbar = list;
     res.contextMenu = dict.contextMenu;
@@ -482,10 +499,11 @@
         merge: true,
         text_font: true,
         text_position: true,
-        color_picker: true
+        color_picker: true,
+        add_delete_row_column: true
       },
       options: {
-        minDimensions: [26, 50],
+        minDimensions: [15, 30],
         defaultColWidth: 100,
         defaultColAlign: "left",
         allowExport: true,
@@ -619,11 +637,30 @@
       return this.notifyChange();
     })
 
-    .declareJob("triggerUndo", function (instance) {
+    .declareJob("triggerAddRow", function (sheet, instance) {
+      instance.insertRow();
+    })
+
+    .declareJob("triggerDeleteRow", function (sheet, instance) {
+      instance.deleteRow();
+    })
+
+    .declareJob("triggerAddColumn", function (sheet, instance) {
+      instance.insertColumn();
+      sheet.querySelector("table.jexcel tr").childNodes.forEach(function (td) {
+        td.style.textAlign = "center";
+      });
+    })
+
+    .declareJob("triggerDeleteColumn", function (sheet, instance) {
+      instance.deleteColumn();
+    })
+
+    .declareJob("triggerUndo", function (sheet, instance) {
       instance.undo();
     })
 
-    .declareJob("triggerRedo", function (instance) {
+    .declareJob("triggerRedo", function (sheet, instance) {
       instance.redo();
     })
 
@@ -636,13 +673,13 @@
       instance.setMerge(coor, colspan, rowspan);
     })
 
-    .declareJob("triggerUnmerge", function (instance) {
+    .declareJob("triggerUnmerge", function (sheet, instance) {
       var cell = document.querySelector("td.highlight-selected"),
         coor = getCoordinatesFromCell(cell);
       instance.removeMerge(coor);
     })
 
-    .declareJob("triggerDestroyMerge", function (instance) {
+    .declareJob("triggerDestroyMerge", function (sheet, instance) {
       instance.destroyMerged();
     })
 
@@ -840,8 +877,8 @@
     })
 
     .declareJob("triggerAddSheet", function () {
-      var gadget = this;
-      var tabs = gadget.element.querySelectorAll(".jexcel_tab_link");
+      var gadget = this,
+        tabs = gadget.element.querySelectorAll(".jexcel_tab_link");
       if (tabs.length === 18) {
         alert("Can't add sheets anymore.");
       } else {
@@ -856,15 +893,18 @@
           .forEach(function (td) {
             td.style.textAlign = "left";
           });
-        gadget.state.selectedTabLink = gadget.element.querySelector(".jexcel_tab_link.selected");
+        gadget.state.selectedTabLink = gadget.element
+          .querySelector(".jexcel_tab_link.selected");
         gadget.deferNotifyChange();
         return gadget.changeState({newSheet: true});
       }
     })
 
-    .declareJob("triggerDeleteSheet", function (sheet, instance) {
-      var gadget = this;
-      var tab_link = gadget.element
+    .declareJob("triggerDeleteSheet", function () {
+      var gadget = this,
+        sheet = arguments[0],
+        instance = arguments[1],
+        tab_link = gadget.element
         .querySelector('.jexcel_tab_link.selected'),
         index = tab_link.getAttribute("data-spreadsheet"),
         to_remove,
@@ -908,16 +948,17 @@
     })
 
     .declareJob("triggerOnFocusFormulaInput", function () {
-      var gadget = this;
-      var worksheet = gadget.element.querySelector('.selected')
+      var gadget = this,
+        worksheet = gadget.element.querySelector('.selected')
         .getAttribute('data-spreadsheet');
       gadget.element.querySelector('.spreadsheet').jexcel[worksheet]
         .resetSelection(true);
     })
 
-    .declareJob("triggerOnInputFormulaInput", function (cell_input, formula_input) {
-      var gadget = this;
-      var worksheet = gadget.element.querySelector('.selected')
+    .declareJob("triggerOnInputFormulaInput",
+              function (cell_input, formula_input) {
+      var gadget = this,
+        worksheet = gadget.element.querySelector('.selected')
           .getAttribute('data-spreadsheet'),
         instance = gadget.element.querySelector('.spreadsheet')
           .jexcel[worksheet],
@@ -946,7 +987,7 @@
         var worksheet = gadget.element.querySelector('.selected')
             .getAttribute('data-spreadsheet'),
           y = input.value.match(/(\d+)/)[0],
-          x = letterToNumber(input.value
+          x = columnLetterToNumber(input.value
                                .substring(0, input.value.length - y.length)
                               ),
           ys = parseInt(y, 10) - 1;
@@ -1066,4 +1107,4 @@
       }
     }, false, false);
 
-}(window, rJS, jexcel, domsugar, document, prompt, alert, confirm));
+}(window, rJS, jexcel, domsugar, document, alert, prompt, confirm));
