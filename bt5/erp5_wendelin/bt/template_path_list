@@ -1,9 +1,9 @@
 data_operation_module/wendelin_ingest_data
 data_operation_module/wendelin_ingest_data_conversion
-data_product_module/default_http_json
-data_product_module/default_http_json/**
-data_supply_module/default_http_json
-data_supply_module/default_http_json/**
+data_product_module/default
+data_product_module/default/**
+data_supply_module/default
+data_supply_module/default/**
 portal_alarms/wendelin_handle_analysis
 portal_callables/DataIngestionLine_writeFluentdIngestionToDataStream
 portal_callables/DataIngestionLine_writeIngestionToDataStream
@@ -22,8 +22,6 @@ portal_categories/use/**
 portal_gadgets/WendelinInformationGadget
 portal_gadgets/WendelinInformationGadget/**
 portal_ingestion_policies/default
-portal_ingestion_policies/default_http_json
-portal_ingestion_policies/default_http_json/**
 web_page_module/*_wendelin_*
 web_page_module/rjs_gadget_erp5_pt_callables_html
 web_page_module/rjs_gadget_erp5_pt_callables_js
