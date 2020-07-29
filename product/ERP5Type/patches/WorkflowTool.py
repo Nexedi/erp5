@@ -793,6 +793,18 @@ def WorkflowTool_setStatusOf(self, wf_id, ob, status):
             if wfh is not None and not isinstance(wfh, NewWorkflowHistoryList):
                 wfh = NewWorkflowHistoryList(wfh)
                 ob.workflow_history[wf_id] = wfh
+            elif wfh is not None and isinstance(wfh, NewWorkflowHistoryList):
+                # Verify if the WorkflowHistory isn't corrupted due a bug on migration
+                # to NewWorkflowHistoryList class.
+                if wfh._prev is not None and wfh._next is None:
+                    # If _next is None, we can still use _prev to reconstruct the list
+                    # into its original form, and migrate.
+                    # XXX This is nor entirely optimised but does the job as occurence
+                    # is quite small
+                    wfh = list(reversed(wfh))
+                    wfh.reverse()
+                    wfh = NewWorkflowHistoryList(wfh)
+                    ob.workflow_history[wf_id] = wfh
     if wfh is None:
         wfh = NewWorkflowHistoryList()
         if not has_history:
