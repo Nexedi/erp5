@@ -10,8 +10,5 @@
    <item>Auditor</item>
    <item>Author</item>
   </role>
-  <role id='downloader'>
-   <item>Auditor</item>
-  </role>
  </local_roles>
 </local_roles_item>
