@@ -299,12 +299,19 @@ Selenium.prototype.doVerifyImageMatchSnapshot = (
   /** @type {Promise<HTMLCanvasElement>} */
   var canvasPromise;
 
+  /** @type {HTMLElement} */
   var element = selenium.browserbot.findElement(locator);
 
   if (element.nodeName == 'CANVAS' /* instanceof HTMLCanvasElement XXX ? */) {
     canvasPromise = Promise.resolve(element);
   } else {
-    canvasPromise = html2canvas(element);
+    // create a canvas in the same document, so that if this document has loaded
+    // extra fonts they are also available.
+    // As suggested on https://github.com/niklasvh/html2canvas/issues/1772
+    var destinationCanvas = element.ownerDocument.createElement("canvas");
+    destinationCanvas.width = element.scrollWidth;
+    destinationCanvas.height = element.scrollHeight;
+    canvasPromise = html2canvas(element, { canvas: destinationCanvas });
   }
 
   return wrapPromise(
