@@ -45,12 +45,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W:366,  4: Unused variable \'data_operation\' (unused-variable)</string>
-                <string>W:352,  4: Unused variable \'timedelta\' (unused-variable)</string>
-                <string>W:359,  4: Unused variable \'title\' (unused-variable)</string>
-                <string>W:364,  4: Unused variable \'use_category\' (unused-variable)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
