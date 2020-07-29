@@ -265,6 +265,12 @@ class LazyIndexationParameterList(tuple):
         except ConflictError:
           raise
         except Exception:
+          # XXX: Better than nothing. It is too dangerous to ignore errors
+          #      if there are changes to the ZODB. We already had cases of
+          #      data corruption.
+          conn = getattr(document, '_p_jar', None)
+          if conn is not None and not conn._needs_to_join:
+            raise
           LOG('SQLCatalog', WARNING,
             'Failed to call method %s on %r' % (attribute, document),
             error=True,
