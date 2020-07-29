@@ -38,6 +38,7 @@ from cStringIO import StringIO
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 
+import Products.ERP5
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import fill_args_from_request
 from erp5.component.document.File import File
@@ -338,8 +339,8 @@ class Image(TextConvertableMixin, File, OFSImage):
       crop=False,
   ):
     """Resize and resample photo."""
-    icc_profile = os.path.join(os.path.dirname(__file__),
-                               '..', 'misc', 'sRGB.icc')
+    icc_profile = os.path.join(os.path.dirname(Products.ERP5.__file__),
+                               'misc', 'sRGB.icc')
     parameter_list = ['convert', '-colorspace', 'sRGB', '-depth', '8',
                       '-profile', icc_profile]
     if crop :
