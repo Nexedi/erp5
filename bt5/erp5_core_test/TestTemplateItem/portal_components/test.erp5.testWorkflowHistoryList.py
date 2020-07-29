@@ -173,6 +173,8 @@ class TestWorkflowHistoryList(TestCase):
     self.checkClass(whl, WorkflowHistoryList)
     self.abort()
 
+    self.assertEqual(len(whl), COUNT)
+    self.abort()
     self.checkClass(whl, LegacyWorkflowHistoryList)
     self.assertEqual(len(whl), COUNT)
     self.checkClass(whl, WorkflowHistoryList)
