@@ -21,7 +21,7 @@
   <td>Reset Successfully.</td>
   <td></td>
 </tr>
-<!-- Initialize -->
+<!-- Initialize 
 <tr>
   <td>open</td>
   <td>${base_url}/web_site_module/cribjs_bootloader/</td>
@@ -46,4 +46,4 @@
   <td>click</td>
   <td>link=hello-world/index.html</td>
   <td></td>
-</tr>
+</tr-->
