@@ -339,8 +339,9 @@ class Image(TextConvertableMixin, File, OFSImage):
       crop=False,
   ):
     """Resize and resample photo."""
+    # https://github.com/saucecontrol/Compact-ICC-Profiles
     icc_profile = os.path.join(os.path.dirname(Products.ERP5.__file__),
-                               'misc', 'sRGB.icc')
+                               'misc', 'sRGB-v2-magic.icc')
     parameter_list = ['convert', '-colorspace', 'sRGB', '-depth', '8',
                       '-profile', icc_profile]
     if crop :
