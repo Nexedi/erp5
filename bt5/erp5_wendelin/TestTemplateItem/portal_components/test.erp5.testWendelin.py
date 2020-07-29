@@ -278,9 +278,9 @@ class Test(ERP5TypeTestCase):
     """
     # the default json ingestion is usde in HowTo / Docs
     self.assertNotEqual(None, 
-           getattr(self.portal.portal_ingestion_policies, "default_http_json", None))
+           getattr(self.portal.portal_ingestion_policies, "default", None))
     self.assertNotEqual(None, 
-           getattr(self.portal.data_supply_module, "default_http_json", None))
+           getattr(self.portal.data_supply_module, "default", None))
 
   def test_07_LinkedDataStreamList(self):
     """
@@ -349,60 +349,15 @@ class Test(ERP5TypeTestCase):
     Test ingestion using a POST Request containing a msgpack encoded message
     simulating input from fluentd.
     """
-    from datetime import datetime, timedelta
+    from datetime import datetime
     import time
 
     portal = self.portal
     now = datetime.now()
 
     reference="test_sensor.test_product"
-    title = reference
-
     ingestion_policy = portal.portal_ingestion_policies['default']
-
-    # create related data supply and etc.
-    use_category = portal.restrictedTraverse("portal_categories/use/big_data/ingestion/stream")
-
-    data_operation = portal.restrictedTraverse("data_operation_module/wendelin_ingest_data")
-
-    # create Data Product
-    data_product = portal.data_product_module.newContent(
-                     portal_type = "Data Product",
-                     title = "Append to Data Stream",
-                     reference = reference.split('.')[1])
-    data_product.setUseValue(use_category)
-    data_product.setAggregatedPortalTypeList(["Data Stream", "Progress Indicator"])
-    data_product.validate()
-
-    # create Data Supply
-    data_supply_kw = {'title': title,
-                      'reference': reference.split('.')[0],
-                      'version': '001',
-                      'effective_date': now,
-                      'expiration_date': now + timedelta(days=365)}
-    data_supply = portal.data_supply_module.newContent( \
-                    portal_type='Data Supply', **data_supply_kw)
-    data_supply.validate()
-
-    # add ingestion line
-    data_supply_line_kw = {'title': 'Ingest Data',
-                           'reference': 'ingestion_operation',
-                           'int_index': 1,
-                           'quantity': 1.0}
-    data_supply_line = data_supply.newContent(portal_type='Data Supply Line',  **data_supply_line_kw)
-    data_supply_line.setResourceValue(data_operation)
-
-    # add append to Data Stream line
-    data_supply_line_kw = {'title': 'Data Stream',
-                           'reference': 'out_stream',
-                           'int_index': 2,
-                           'quantity': 1.0}
-    data_supply_line = data_supply.newContent(portal_type='Data Supply Line', \
-                                              **data_supply_line_kw)
-    data_supply_line.setResourceValue(data_product)
-    data_supply_line.setUseValue(use_category)
-
-    self.tic()
+    data_supply = portal.data_supply_module["default"]
 
     data_list = []
     int_date = int(time.mktime(now.timetuple()))
