@@ -597,7 +597,6 @@
     // Drag / drop management
     ///////////////////////////////////////////////////
     .onEvent("dragstart", function (evt) {
-      console.log(evt);
       var closest_section = evt.target.closest('section');
       if (closest_section === null) {
         return;
@@ -643,12 +642,14 @@
     }, false, false)
 
     .onEvent("dragleave", function (evt) {
-      var closest_section = evt.target.closest('section');
-      if (closest_section === null) {
+      //exits if mouse is indirectly over a section
+      var closest_section = evt.relatedTarget.closest('section');
+      if (closest_section !== null) {
         return;
       }
-      closest_section.classList.remove('over');
+      evt.target.classList.remove('over');
     }, false, false)
+
 
     .onEvent("drop", function (evt) {
       var gadget = this,
