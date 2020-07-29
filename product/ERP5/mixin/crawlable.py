@@ -106,7 +106,7 @@ class CrawlableMixin:
     if base_href:
       html_tree.make_links_absolute(base_href)
     href_list = []
-    for _, attribute_name, link, _ in html_tree.iterlinks():
+    for elemnt, attribute_name, link, position in html_tree.iterlinks():
       # For now take into acount only a and img tags
       if attribute_name not in ('href',):
         continue

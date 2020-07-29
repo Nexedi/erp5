@@ -1,5 +1,5 @@
 from ZODB.POSException import ConflictError
-from erp5.component.document.Document import ConversionError
+from Products.ERP5.Document.Document import ConversionError
 from erp5.component.module.Log import log
 
 message = None

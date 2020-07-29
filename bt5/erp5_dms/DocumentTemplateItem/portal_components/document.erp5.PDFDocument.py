@@ -34,7 +34,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from erp5.component.interface.IWatermarkable import IWatermarkable
 from erp5.component.document.Image import Image
-from erp5.component.document.Document import ConversionError
+from Products.ERP5.Document.Document import ConversionError
 from subprocess import Popen, PIPE
 from zLOG import LOG, INFO, PROBLEM
 import errno

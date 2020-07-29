@@ -47,7 +47,7 @@ class TextConvertableMixin:
     Converts the current document to plain text
     """
     kw.pop('format', None)
-    _, data = self.convert(format='txt', **kw)
+    mime, data = self.convert(format='txt', **kw)
     return str(data)
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -57,7 +57,7 @@ class TextConvertableMixin:
     Converts the current document to plain text without substitution
     """
     kw.pop('format', None)
-    _, data = self.convert(format='txt', substitute=False, **kw)
+    mime, data = self.convert(format='txt', substitute=False, **kw)
     return str(data)
 
   security.declareProtected(Permissions.AccessContentsInformation,

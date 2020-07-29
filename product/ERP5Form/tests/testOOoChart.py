@@ -34,6 +34,7 @@ from Testing import ZopeTestCase
 from Products.ERP5OOo.tests.utils import Validator
 from Acquisition import aq_base
 from Products.ERP5Type.Globals import get_request
+from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST
 from lxml import etree
 
 HTTP_OK = 200
@@ -177,7 +178,6 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
 
       # Test the differents render
       # render image
-      from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST
       for image_format in VALID_IMAGE_FORMAT_LIST:
         response = self.publish(
                       '/%s/%s/%s?render_format=%s&display=medium'
@@ -271,7 +271,6 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
 
       # Test the differents render
       # render image
-      from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST
       for image_format in VALID_IMAGE_FORMAT_LIST:
         response = self.publish(
                       '/%s/%s/%s?render_format=%s&display=medium'

@@ -33,7 +33,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.CMFCore.utils import _checkPermission
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Utils import deprecated, guessEncodingFromText
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -41,18 +41,16 @@ from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
 from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
 from AccessControl import Unauthorized
 import zope.interface
-from AccessControl import allow_module, allow_class
+from Products.PythonScripts.Utility import allow_class
 
 # Mixin Import
-from erp5.component.mixin.CachedConvertableMixin import CachedConvertableMixin
-from erp5.component.mixin.TextConvertableMixin import TextConvertableMixin
-from erp5.component.mixin.DownloadableMixin import DownloadableMixin
-from erp5.component.mixin.DocumentMixin import DocumentMixin
-from erp5.component.mixin.CrawlableMixin import CrawlableMixin
-from erp5.component.mixin.DiscoverableMixin import DiscoverableMixin
-from erp5.component.mixin.UrlMixin import UrlMixin
-
-allow_module(__name__)
+from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
+from Products.ERP5.mixin.text_convertable import TextConvertableMixin
+from Products.ERP5.mixin.downloadable import DownloadableMixin
+from Products.ERP5.mixin.document import DocumentMixin
+from Products.ERP5.mixin.crawlable import CrawlableMixin
+from Products.ERP5.mixin.discoverable import DiscoverableMixin
+from Products.ERP5.mixin.url import UrlMixin
 
 _MARKER = object()
 
@@ -75,7 +73,6 @@ DEFAULT_IMAGE_QUALITY = 75.0
 DEFAULT_CONTENT_TYPE = 'text/html'
 
 class ConversionError(Exception):pass
-allow_class(ConversionError)
 
 class DocumentProxyError(Exception):pass
 
@@ -93,6 +90,7 @@ global_server_proxy_uri_failure_time = {}
 from Products.CMFCore.utils import getToolByName
 from functools import partial
 from xmlrpclib import Fault, ServerProxy, ProtocolError
+from AccessControl import Unauthorized
 from socket import error as SocketError
 from DateTime import DateTime
 class DocumentConversionServerProxy():
@@ -171,10 +169,10 @@ class DocumentConversionServerProxy():
 
         if not(failure):
           try:
-            response_code, _, _ = result_set
+            response_code, response_dict, response_message = result_set
           except ValueError:
             # Compatibility for old oood, result is based type, like string
-            response_code = 200
+             response_code = 200
 
           if response_code == 200:
             return result_set
@@ -209,16 +207,7 @@ class DocumentConversionServerProxy():
     return partial(self._proxy_function, attr)
 
 from Products.ERP5.mixin.document_extensible_traversable import DocumentExtensibleTraversableMixin
-from erp5.component.interface.IConvertable import IConvertable
-from erp5.component.interface.ITextConvertable import ITextConvertable
-from erp5.component.interface.IHtmlConvertable import IHtmlConvertable
-from erp5.component.interface.ICachedConvertable import ICachedConvertable
-from erp5.component.interface.IVersionable import IVersionable
-from erp5.component.interface.IDownloadable import IDownloadable
-from erp5.component.interface.ICrawlable import ICrawlable
-from erp5.component.interface.IDocument import IDocument
-from erp5.component.interface.IDiscoverable import IDiscoverable
-from erp5.component.interface.IUrl import IUrl
+
 class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
                CachedConvertableMixin, CrawlableMixin, TextConvertableMixin,
                DownloadableMixin, DocumentMixin, DiscoverableMixin):
@@ -391,27 +380,27 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
   isDocument = ConstantGetter('isDocument', value=True)
   __dav_collection__=0
 
-  zope.interface.implements(IConvertable,
-                            ITextConvertable,
-                            IHtmlConvertable,
-                            ICachedConvertable,
-                            IVersionable,
-                            IDownloadable,
-                            ICrawlable,
-                            IDocument,
-                            IDiscoverable,
-                            IUrl,
+  zope.interface.implements(interfaces.IConvertable,
+                            interfaces.ITextConvertable,
+                            interfaces.IHtmlConvertable,
+                            interfaces.ICachedConvertable,
+                            interfaces.IVersionable,
+                            interfaces.IDownloadable,
+                            interfaces.ICrawlable,
+                            interfaces.IDocument,
+                            interfaces.IDiscoverable,
+                            interfaces.IUrl,
                            )
 
   # Regular expressions
   # XXX those regex are weak, fast but not reliable.
   # this is a valid url than regex are not able to parse
   # http://www.example.com//I don't care i put what/ i want/
-  href_parser = re.compile(r'<a[^>]*href=[\'"](.*?)[\'"]',re.IGNORECASE)
-  body_parser = re.compile(r'<body[^>]*>(.*?)</body>', re.IGNORECASE + re.DOTALL)
-  title_parser = re.compile(r'<title[^>]*>(.*?)</title>', re.IGNORECASE + re.DOTALL)
-  base_parser = re.compile(r'<base[^>]*href=[\'"](.*?)[\'"][^>]*>', re.IGNORECASE + re.DOTALL)
-  charset_parser = re.compile(r'(?P<keyword>charset="?)(?P<charset>[a-z0-9\-]+)', re.IGNORECASE)
+  href_parser = re.compile('<a[^>]*href=[\'"](.*?)[\'"]',re.IGNORECASE)
+  body_parser = re.compile('<body[^>]*>(.*?)</body>', re.IGNORECASE + re.DOTALL)
+  title_parser = re.compile('<title[^>]*>(.*?)</title>', re.IGNORECASE + re.DOTALL)
+  base_parser = re.compile('<base[^>]*href=[\'"](.*?)[\'"][^>]*>', re.IGNORECASE + re.DOTALL)
+  charset_parser = re.compile('(?P<keyword>charset="?)(?P<charset>[a-z0-9\-]+)', re.IGNORECASE)
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -783,7 +772,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
               group_by=('language',))
     if version is not None:
       kw['version'] = version
-    return [o.getLanguage() for o in catalog(**kw)]
+    return map(lambda o:o.getLanguage(), catalog(**kw))
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getOriginalLanguage')
   def getOriginalLanguage(self):
@@ -847,7 +836,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       is the one to override in subclasses.
     """
     kw['format'] = 'html'
-    _, html = self.convert(**kw)
+    mime, html = self.convert(**kw)
     return html
 
   security.declareProtected(Permissions.View, 'asStrippedHTML')

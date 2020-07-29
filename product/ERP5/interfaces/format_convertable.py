@@ -37,7 +37,7 @@ class IFormatConvertable(Interface):
   be converted to.
   """
 
-  def isTargetFormatAllowed(format): # pylint: disable=redefined-builtin
+  def isTargetFormatAllowed(format):
     """
     Checks if the current document can be converted
     to the specified target format.
@@ -47,7 +47,7 @@ class IFormatConvertable(Interface):
               string (ex. 'text/plain')
     """
 
-  def isTargetFormatPermitted(format): # pylint: disable=redefined-builtin
+  def isTargetFormatPermitted(format):
     """
     Checks if the current user can convert the current
     document to the specified target format.

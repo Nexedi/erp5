@@ -49,9 +49,9 @@ implements_tuple_list = [
   (('erp5.component.document.Transformation','Transformation'), 'IVariated'),
   (('erp5.component.document.TransformedResource','TransformedResource'), 'IVariated'),
   #IDocument
-  (('erp5.component.document.Document', 'Document'), 'IDocument'),
+  (('Products.ERP5.Document.Document', 'Document'), 'IDocument'),
   (('erp5.component.document.Image', 'Image'), 'IDocument'),
-  (('erp5.component.document.File', 'File'), 'IDocument'),
+  (('Products.ERP5.Document.File', 'File'), 'IDocument'),
   (('erp5.component.document.OOoDocument', 'OOoDocument'), 'IDocument'),
   (('erp5.component.document.TextDocument', 'TextDocument'), 'IDocument'),
   (('erp5.component.document.EmailDocument', 'EmailDocument'), 'IDocument'),

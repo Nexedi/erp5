@@ -1650,7 +1650,7 @@ def legacyNormalizeUrl(url, base_url=None):
   """this method does normalisation itself.
   The result is less reliable but better than nothing
   """
-  from erp5.component.mixin.UrlMixin import no_host_protocol_list
+  from Products.ERP5.mixin.url import no_host_protocol_list
   # remove anchors
   # http://www.example.com/page.html#ll -> http://www.example.com/page.html
   url = re_cleanup_anchors.sub('', url)

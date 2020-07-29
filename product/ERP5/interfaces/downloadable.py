@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -27,31 +27,36 @@
 #
 ##############################################################################
 
-from erp5.component.interface.IFormatConvertable import IFormatConvertable
+from zope.interface import Interface
 
-class IConvertable(IFormatConvertable):
+class IDownloadable(Interface):
   """
-  Convertable interface specification
+  Downloadable interface specification
 
-  Documents which implement IConvertable can be converted
-  to multiple formats.
+  Documents which implement IDownloadable can be downloaded
+  directly from their URL using any format specified as a parameter.
   """
 
-  def convert(format, **kw): # pylint: disable=redefined-builtin
+  def index_html(REQUEST, RESPONSE, format=None, **kw):
     """
-    Converts the current document to the specified format
-    taking into account optional parameters. This method
-    returns a tuple of two values: a mime type string and
-    the converted data.
+    Download the document in the specified format with
+    optional conversion parameters.
 
-    This methods raises a ConversionError if the target format
-    is not allowed, or an Unauthorized error if the target format
-    is not permitted.
+    REQUEST -- HTTP REQUEST handle
 
-    format -- the target conversion format specified either as an
-              extension (ex. 'png') or as a mime type
-              string (ex. 'text/plain')
+    REQUEST -- HTTP RESPONSE handle
 
-    kw -- optional parameters which can be passed to the
-          conversion engine
+    format -- optional target format specified as
+              an extension string (ex. doc, png, pdf, etc.)
+
+    kw -- optional conversion parameters
+    """
+
+  def getStandardFilename(format=None):
+    """
+    Returns a standard file name for the document to download.
+    This method is the reverse of
+    IDiscoverable.getPropertyDictFromFilename.
+
+    format -- extension of returned file name
     """

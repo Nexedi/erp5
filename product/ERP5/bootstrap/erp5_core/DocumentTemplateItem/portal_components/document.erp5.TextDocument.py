@@ -31,15 +31,15 @@ from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING
 from Products.ERP5Type import Permissions, PropertySheet
-from erp5.component.document.Document import Document, ConversionError, _MARKER, DEFAULT_CONTENT_TYPE
-from erp5.component.document.File import File
+from Products.ERP5.Document.Document import Document, ConversionError, _MARKER, DEFAULT_CONTENT_TYPE
+from Products.ERP5.Document.File import File
 from erp5.component.module.WebDAVSupport import TextContent
-from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST
+from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST
 import cStringIO
 from string import Template
 
 # Mixin Import
-from erp5.component.mixin.CachedConvertableMixin import CachedConvertableMixin
+from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 from erp5.component.mixin.BaseConvertableFileMixin import BaseConvertableFileMixin
 from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
 from Products.ERP5Type.Utils import guessEncodingFromText

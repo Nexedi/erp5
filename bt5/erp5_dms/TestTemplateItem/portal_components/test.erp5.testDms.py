@@ -59,7 +59,7 @@ from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
-from erp5.component.document.Document import NotConvertedError
+from Products.ERP5.Document.Document import NotConvertedError
 from Products.ERP5Form.PreferenceTool import Priority
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Globals import get_request

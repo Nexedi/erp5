@@ -31,6 +31,7 @@ import os
 import unittest
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5.Document.Document import ConversionError
 
 class TestOoodResponse(ERP5TypeTestCase):
 
@@ -109,7 +110,6 @@ class TestOoodResponse(ERP5TypeTestCase):
     ERP5Site_viewNothingAsOdt = self.getPortal().ERP5Site_viewNothingAsOdt
     # This assumes that a conversion error is raised because oood coordinates
     # are not defined in preferences.
-    from erp5.component.document.Document import ConversionError
     self.assertRaises(ConversionError, ERP5Site_viewNothingAsOdt,
                       batch_mode=0, format='pdf')
     self.assertEqual('text/html',
@@ -121,7 +121,6 @@ class TestOoodResponse(ERP5TypeTestCase):
     ERP5Site_viewNothingAsOdt = self.getPortal().ERP5Site_viewNothingAsOdt
     # This assumes that a conversion error is raised because oood coordinates
     # are not defined in preferences.
-    from erp5.component.document.Document import ConversionError
     self.assertRaises(ConversionError, ERP5Site_viewNothingAsOdt,
                          batch_mode=1, format='pdf')
     self.assertEqual('text/html', request.RESPONSE.getHeader('content-type').split(';')[0])

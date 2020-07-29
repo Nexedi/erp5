@@ -33,7 +33,7 @@ from ZODB.POSException import ConflictError
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Utils import convertToUpperCase
-from erp5.component.mixin.CachedConvertableMixin import CachedConvertableMixin
+from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 import os
 import re
 
@@ -82,7 +82,7 @@ class DiscoverableMixin(CachedConvertableMixin):
     returns properties which should be set on the document
     """
     # accesss data through convert
-    _, content = self.convert(None)
+    mime, content = self.convert(None)
     if not content:
        # if document is empty, we will not find anything in its content
       return {}
@@ -235,7 +235,7 @@ class DiscoverableMixin(CachedConvertableMixin):
     """
     if not filename:
       filename = self.getStandardFilename()
-    _, extension = os.path.splitext(filename)
+    basename, extension = os.path.splitext(filename)
     if extension:
       extension = extension[1:].lower() # remove first dot
     return extension
@@ -247,14 +247,14 @@ class DiscoverableMixin(CachedConvertableMixin):
     Call private implementation, then store the result in conversion
     cache storage.
     """
-    format_ = CONTENT_INFORMATION_FORMAT
+    format = CONTENT_INFORMATION_FORMAT
     # How to knows if a instance implement an interface
     try:
-      _, cached_value = self.getConversion(format=format_)
+      mime, cached_value = self.getConversion(format=format)
       return cached_value
     except KeyError:
       value = self._getContentInformation()
-      self.setConversion(value, format=format_)
+      self.setConversion(value, format=format)
       return value
 
   def _getContentInformation(self):
@@ -269,7 +269,7 @@ class DiscoverableMixin(CachedConvertableMixin):
       html = self.asEntireHTML()
     except ConflictError:
       raise
-    except Exception:
+    except:
       return result
     if not html:
       return result

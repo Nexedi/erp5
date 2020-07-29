@@ -42,6 +42,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import reencodeUrlEscapes
 from Products.ERP5 import _dtmldir
+from Products.ERP5.mixin.url import no_crawl_protocol_list
 from Products.ERP5Type.Utils import fill_args_from_request
 from AccessControl import Unauthorized
 
@@ -562,7 +563,6 @@ class ContributionTool(BaseTool):
     if depth < 0:
       # Do nothing if crawling depth is reached
       return
-    from erp5.component.mixin.UrlMixin import no_crawl_protocol_list
     for url in set(content.getContentNormalisedURLList()):
       # LOG('trying to crawl', 0, url)
       # Some url protocols should not be crawled

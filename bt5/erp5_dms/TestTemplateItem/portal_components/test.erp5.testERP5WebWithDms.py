@@ -42,7 +42,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
-from erp5.component.document.Document import ConversionError
+from Products.ERP5.Document.Document import ConversionError
 
 from PIL import Image
 

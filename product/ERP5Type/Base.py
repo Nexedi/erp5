@@ -2540,7 +2540,7 @@ class Base(
   # CMF 2.x. They use aliases and Zope3 style views now and make pretty sure
   # not to let zpublisher reach this value.
   index_html = None
-  # By the Way, erp5.component.document.File and .Image define their own
+  # By the Way, Products.ERP5.Document.File and .Image define their own
   # index_html to make sure this value here is not used so that they're
   # downloadable by their naked URL.
 

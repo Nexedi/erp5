@@ -30,11 +30,13 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet
-from erp5.component.document.Document import Document, VALID_TEXT_FORMAT_LIST
-from erp5.component.document.Document import VALID_IMAGE_FORMAT_LIST
-from erp5.component.document.Document import ConversionError
+from Products.ERP5.Document.Document import Document, VALID_TEXT_FORMAT_LIST
+from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST
+from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
 from Products.CMFDefault.File import File as CMFFile
+from OFS.Image import Pdata
+from cStringIO import StringIO
 from Products.ERP5Type.Utils import deprecated
 
 def _unpackData(data):
@@ -127,7 +129,7 @@ class File(Document, CMFFile):
   security.declareProtected(Permissions.View, 'getcontentlength')
   getcontentlength = get_size
 
-  def _get_content_type(self, *_, **__):
+  def _get_content_type(*args, **kw):
     """Override original implementation from OFS/Image.py
     to disable content_type discovery because
     id of object its used to read the filename value.
@@ -164,6 +166,20 @@ class File(Document, CMFFile):
     """
     return self.getPortalObject().portal_contributions.\
       guessMimeTypeFromFilename(fname)
+
+  security.declareProtected(Permissions.ModifyPortalContent, '_setData')
+  def _setData(self, data):
+    """
+    """
+    # update_data use len(data) when size is None, which breaks this method.
+    # define size = 0 will prevent len be use and keep the consistency of
+    # getData() and setData()
+    if data is None:
+      size = 0
+    else:
+      data, size = self._read_data(data)
+    # We call this method to make sure size is set and caches reset
+    self.update_data(data, size=size)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=None):
@@ -213,7 +229,7 @@ class File(Document, CMFFile):
 
     return (mime_type, content)
 
-  def _convert(self, format, **kw): # pylint: disable=redefined-builtin
+  def _convert(self, format, **kw):
     """File is only convertable if it is an image.
     Only Image conversion, original format and text formats are allowed.
     However this document can migrate to another portal_type which support

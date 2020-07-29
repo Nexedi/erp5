@@ -441,7 +441,7 @@ Hé Hé Hé!""", page.asText().strip())
     # and make sure that the base meta tag which is generated
     # uses the web section rather than the portal
     html_page = websection()
-    from erp5.component.document.Document import Document
+    from Products.ERP5.Document.Document import Document
     base_list = re.findall(Document.base_parser, str(html_page))
     base_url = base_list[0]
     self.assertEqual(base_url, "%s/%s/" % (websection.absolute_url(),
@@ -478,7 +478,7 @@ Hé Hé Hé!""", page.asText().strip())
     # and make sure that the base meta tag which is generated
     # uses the web site rather than the portal
     html_page = website()
-    from erp5.component.document.Document import Document
+    from Products.ERP5.Document.Document import Document
     base_list = re.findall(Document.base_parser, str(html_page))
     base_url = base_list[0]
     self.assertEqual(base_url, "%s/%s/" % (website.absolute_url(), web_page_en.getReference()))

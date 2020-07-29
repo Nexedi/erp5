@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -27,36 +27,20 @@
 #
 ##############################################################################
 
-from zope.interface import Interface
+from Products.ERP5.interfaces.text_convertable_legacy import ITextConvertableLegacy
 
-class IDownloadable(Interface):
+class ITextConvertable(ITextConvertableLegacy):
   """
-  Downloadable interface specification
+  Text Convertable interface specification
 
-  Documents which implement IDownloadable can be downloaded
-  directly from their URL using any format specified as a parameter.
+  Documents which implement the ITextConvertable interface
+  can be converted to plain text.
   """
 
-  def index_html(REQUEST, RESPONSE, format=None, **kw): # pylint: disable=redefined-builtin
+  def asText(**kw):
     """
-    Download the document in the specified format with
-    optional conversion parameters.
+    Converts the current document to plain text
 
-    REQUEST -- HTTP REQUEST handle
-
-    REQUEST -- HTTP RESPONSE handle
-
-    format -- optional target format specified as
-              an extension string (ex. doc, png, pdf, etc.)
-
-    kw -- optional conversion parameters
-    """
-
-  def getStandardFilename(format=None): # pylint: disable=redefined-builtin
-    """
-    Returns a standard file name for the document to download.
-    This method is the reverse of
-    IDiscoverable.getPropertyDictFromFilename.
-
-    format -- extension of returned file name
+    kw -- optional parameters which can be passed to the
+          conversion engine
     """
