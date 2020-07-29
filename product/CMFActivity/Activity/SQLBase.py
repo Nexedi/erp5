@@ -147,7 +147,7 @@ CREATE TABLE %s (
   `uid` BIGINT UNSIGNED NOT NULL,
   `date` DATETIME(6) NOT NULL,
   `path` VARCHAR(255) NOT NULL,
-  `active_process_uid` INT UNSIGNED NULL,
+  `active_process_uid` BIGINT UNSIGNED NULL,
   `method_id` VARCHAR(255) NOT NULL,
   `processing_node` SMALLINT NOT NULL DEFAULT -1,
   `priority` TINYINT NOT NULL DEFAULT 0,
