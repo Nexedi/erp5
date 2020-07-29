@@ -28,10 +28,11 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+
 
 class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ Setup System preference. """
@@ -73,7 +74,7 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
           property_id_list.append('%s%s' % (prop.getReference(), list_prefix))
     return property_id_list
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     error_list = []
     portal = self.getPortalObject()
     preference = portal.portal_preferences._getOb(self.object_id, None)

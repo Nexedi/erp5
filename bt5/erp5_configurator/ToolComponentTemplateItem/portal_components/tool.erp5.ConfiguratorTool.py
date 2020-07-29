@@ -53,10 +53,10 @@ def _validateFormToRequest(form, REQUEST, **kw):
     form.validate_all_to_request(REQUEST)
     validation_status = 0
     validation_errors = None
-  except FormValidationError, validation_errors:
+  except FormValidationError as validation_errors:
     ## not all fields valid
     validation_status = 1
-  except Exception, validation_errors:
+  except Exception as validation_errors:
     ## missing fields
     validation_status = 2
   ## extract form arguments and remove leading prefixes
@@ -74,6 +74,7 @@ def _validateFormToRequest(form, REQUEST, **kw):
             except KeyError:
               pass
   return validation_status, form_kw, validation_errors
+
 
 class ConfiguratorTool(BaseTool):
   """This tool provides a Configurator Tool.
@@ -159,7 +160,7 @@ class ConfiguratorTool(BaseTool):
       failed_forms_counter = 0
       transition = business_configuration.getNextTransition()
       form = getattr(business_configuration, transition.getTransitionFormId())
-      for form_key in filter(lambda x: x.startswith('field_'), kw.keys()):
+      for form_key in [x for x in kw.keys() if x.startswith('field_')]:
         form_kw[form_key] = kw[form_key]
       ## iterate all forms
       for form_counter in range(0, isMultiEntryTransition):
@@ -184,9 +185,7 @@ class ConfiguratorTool(BaseTool):
 
         ## clean up REQUEST from traces from validate_all_to_request
         ## otherwise next form will use previous forms details
-        cleanup_keys = filter(lambda x: x.startswith('my_') or
-                                x.startswith('your_'),
-                                self.REQUEST.other.keys())
+        cleanup_keys = [x for x in self.REQUEST.other.keys() if x.startswith('my_') or x.startswith('your_')]
         for key in cleanup_keys:
           self.REQUEST.other.pop(key, None)
         ## render HTML code
@@ -324,7 +323,6 @@ class ConfiguratorTool(BaseTool):
         If installation is over the installation activities and reindexing
         activities should not exists.
     """
-    global installation_status
     portal_activities = self.getPortalObject().portal_activities
 
     if 0 == len(portal_activities.getMessageList()):
@@ -346,7 +344,6 @@ class ConfiguratorTool(BaseTool):
         download/install bt5 template files and meanwhile offer
         user a nice GUI to observe what's happening. """
 
-    global installation_status
     # init installation status
     installation_status['bt5']['all'] = 1
     installation_status['bt5']['current'] = 0

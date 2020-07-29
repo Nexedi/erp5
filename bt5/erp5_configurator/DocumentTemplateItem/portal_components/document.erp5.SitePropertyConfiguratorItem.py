@@ -28,10 +28,11 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+
 
 class SitePropertyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """Set up site properties."""
@@ -56,19 +57,19 @@ class SitePropertyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.DublinCore
                     , PropertySheet.ConfiguratorItem )
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     portal = self.getPortalObject()
     id_list = []
-    for id, value, prop_type in self.getConfigurationList():
+    for id_, value, prop_type in self.getConfigurationList():
       if fixit:
-        if portal.hasProperty(id):
-          portal._delProperty(id)
-        portal._setProperty(id, value, type=prop_type)
-      id_list.append(id)
+        if portal.hasProperty(id_):
+          portal._delProperty(id_)
+        portal._setProperty(id_, value, type=prop_type)
+      id_list.append(id_)
 
     if fixit:
       business_configuration = self.getBusinessConfigurationValue()
       bt = business_configuration.getSpecialiseValue()
       bt.edit(template_site_property_id_list=id_list)
 
-    return ["The property %s should set on portal" % id for id in id_list]
+    return ["The property %s should set on portal" % id_ for id_ in id_list]

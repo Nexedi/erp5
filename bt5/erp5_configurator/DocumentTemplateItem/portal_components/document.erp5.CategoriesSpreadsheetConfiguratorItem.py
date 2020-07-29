@@ -30,10 +30,11 @@ import zope.interface
 from StringIO import StringIO
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.mixin.ConfiguratorItemMixin import ConfiguratorItemMixin
 from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
+
 
 class UnrestrictedStringIO(StringIO):
   __allow_access_to_unprotected_subobjects__ = 1
@@ -64,7 +65,7 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.ConfiguratorItem
                     )
 
-  def _checkConsistency(self, fixit=False, filter=None, **kw):
+  def _checkConsistency(self, fixit=False, **kw):
     portal = self.getPortalObject()
     ctool = portal.portal_categories
 
