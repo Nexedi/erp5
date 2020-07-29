@@ -6,13 +6,9 @@ web_page_module/rjs_gadget_erp5_pt_ingestion_policies_html
 web_page_module/rjs_gadget_erp5_pt_callables_js
 web_page_module/rjs_gadget_erp5_pt_callables_html
 portal_gadgets/WendelinInformationGadget
-portal_ingestion_policies/default_http_json
-portal_ingestion_policies/default_http_json/**
 portal_ingestion_policies/default
-data_supply_module/default_http_json
-data_supply_module/default_http_json/**
-data_product_module/default_http_json
-data_product_module/default_http_json/**
+data_supply_module/default
+data_supply_module/default/**
 data_operation_module/wendelin_ingest_data
 web_site_module/default_wendelin_front
 web_site_module/default_wendelin_front/**
