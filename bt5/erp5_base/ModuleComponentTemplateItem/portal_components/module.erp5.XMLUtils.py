@@ -1,5 +1,9 @@
+"""
+The purpose of this module is to have an XML parser capable of handling >50MB files
+without using too much RAM.
+"""
 from xml.etree.ElementTree import iterparse, Element, TreeBuilder, XMLParser
-from .mixin.matrix import INFINITE_SET
+from Products.ERP5Type.mixin.matrix import INFINITE_SET
 
 class RestrictedElement(Element):
   __allow_access_to_unprotected_subobjects__ = 1
@@ -80,3 +84,6 @@ def parseStream(stream, child_discard_set, callback_dict, catchall=None):
           ),
         ):
     callback_dict.get((event, elem.tag), catchall)(elem)
+
+from AccessControl.SecurityInfo import ModuleSecurityInfo
+ModuleSecurityInfo(__name__).declarePublic('parseStream')
