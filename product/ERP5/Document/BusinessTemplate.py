@@ -6521,6 +6521,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.Globals',
       'Products.ERP5Type.TransactionalVariable',
       'Products.ERP5Type.UnrestrictedMethod',
+      'Products.ERP5Type.ConflictFree',
+      'Products.ERP5Type.Workflow',
+      'Products.ERP5Type.TranslationProviderBase',
       # Dynamic classes
       'Products.ERP5.interfaces.property_recordable',
       'Products.ERP5.mixin.property_recordable',
@@ -6557,6 +6560,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5.Document.Node',
       'Products.ERP5.Document.MetaNode',
       'Products.ERP5Type.XMLMatrix',
+      'Products.ERP5.interfaces.variated',
+      'Products.ERP5.mixin.Variated',
       'Products.ERP5.Document.Resource',
       'Products.ERP5.Document.MetaResource',
       'Products.ERP5.Document.Category',
@@ -6608,6 +6613,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.tests.runUnitTest',
       'Products.ERP5Type.tests.SecurityTestCase',
       'Products.ERP5Type.tests.Sequence',
+      'Products.ERP5Type.CodingStyle',
+      'Products.ERP5Type.tests.CodingStyleTest',
+      'Products.ERP5Type.tests.CodingStyleTestCase',
       ## Classes which are not actual ERP5 objects and we do not handle that
       ## in ZODB Components (IOW it should be a Portal Type as class) and
       ## according to jp, this is not needed as everything should be Portal
@@ -6646,6 +6654,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Form.Interactor.FieldValueCacheInteractor',
       ## No need to migrate
       'Products.ERP5Type.PsycoWrapper',
+      'Products.ERP5.tests.extractMessageCatalog',
+      'Products.ERP5.tests.erp5_url_checker',
+      'Products.ERP5Type.tests._testSQLBench',
+      'Products.ERP5Type.tests._testPystone',
       # Deprecated and used only in SimulationTool._solveMovementOrDelivery()
       'Products.ERP5.DeliverySolver.Copy',
       'Products.ERP5.DeliverySolver.DeliverySolver',
@@ -6666,12 +6678,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5.interfaces.legacy_extensible_traversable',
       'Products.ERP5Type.JSON',
       'Products.ERP5Type.JSONEncoder',
+      'Products.ERP5.Variated',
       # Monkey patches or used by monkey patches ; Restricted Python
       'Products.ERP5Type.Calendar',
       'Products.ERP5Type.Collections',
       'Products.ERP5Type.Timeout',
       'Products.ERP5Type.ZipFile',
       'Products.ERP5Type.ZopePatch',
+      'Products.ERP5Type.tests.backportUnittest',
       # Replaced by Interaction Workflow for ERP5 object
       'Products.ERP5Form.Interactor.FieldValueCacheInteractor',
       'Products.ERP5.Interactor.PortalTypeClassInteractor',
