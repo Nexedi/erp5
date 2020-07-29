@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Data Product" module="erp5.portal_type"/>
+      <global name="Data Supply Line" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,12 +10,13 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Auditor</string>
+                <string>Author</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -26,7 +27,9 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
+                <string>Author</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -37,7 +40,9 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
+                <string>Author</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -45,20 +50,13 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Auditor</string>
+                <string>Author</string>
                 <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>aggregated_portal_type</string> </key>
-            <value>
-              <tuple>
-                <string>Data Stream</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -66,31 +64,33 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>use/big_data/ingestion</string>
+                <string>resource/data_operation_module/wendelin_ingest_data</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>default_http_json</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>ingestion_operation</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>default_http_json</string> </value>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Data Product</string> </value>
+            <value> <string>Data Supply Line</string> </value>
+        </item>
+        <item>
+            <key> <string>quantity</string> </key>
+            <value> <float>1.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Append to Data Stream - HTTP / JSON</string> </value>
+            <value> <string>Ingest Data</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -146,7 +146,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <string>ERP5TypeTestCase</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -169,59 +169,14 @@
                       <value>
                         <object>
                           <klass>
-                            <global id="3.1" name="DateTime" module="DateTime.DateTime"/>
+                            <global name="DateTime" module="DateTime.DateTime"/>
                           </klass>
                           <tuple>
                             <none/>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585316915.9</float>
-                              <string>UTC</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>action</string> </key>
-                      <value> <string>edit</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>comment</string> </key>
-                      <value>
-                        <none/>
-                      </value>
-                  </item>
-                  <item>
-                      <key> <string>error_message</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>serial</string> </key>
-                      <value> <string>982.52796.39292.30037</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>state</string> </key>
-                      <value> <string>current</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass> <reference id="3.1"/> </klass>
-                          <tuple>
-                            <none/>
-                          </tuple>
-                          <state>
-                            <tuple>
-                              <float>1585317266.46</float>
+                              <float>1596024084.33</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -254,7 +209,7 @@
                   </item>
                   <item>
                       <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
+                      <value> <string>ERP5TypeTestCase</string> </value>
                   </item>
                   <item>
                       <key> <string>comment</string> </key>
@@ -269,14 +224,14 @@
                       <value>
                         <object>
                           <klass>
-                            <global id="4.1" name="DateTime" module="DateTime.DateTime"/>
+                            <global name="DateTime" module="DateTime.DateTime"/>
                           </klass>
                           <tuple>
                             <none/>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1585316915.9</float>
+                              <float>1596024084.33</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -286,45 +241,6 @@
                   <item>
                       <key> <string>validation_state</string> </key>
                       <value> <string>draft</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>action</string> </key>
-                      <value> <string>validate</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>actor</string> </key>
-                      <value> <string>zope</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>comment</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>error_message</string> </key>
-                      <value> <string></string> </value>
-                  </item>
-                  <item>
-                      <key> <string>time</string> </key>
-                      <value>
-                        <object>
-                          <klass> <reference id="4.1"/> </klass>
-                          <tuple>
-                            <none/>
-                          </tuple>
-                          <state>
-                            <tuple>
-                              <float>1585316915.9</float>
-                              <string>UTC</string>
-                            </tuple>
-                          </state>
-                        </object>
-                      </value>
-                  </item>
-                  <item>
-                      <key> <string>validation_state</string> </key>
-                      <value> <string>validated</string> </value>
                   </item>
                 </dictionary>
               </list>
