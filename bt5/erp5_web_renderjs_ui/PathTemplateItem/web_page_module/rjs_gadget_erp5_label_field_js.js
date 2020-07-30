@@ -30,6 +30,8 @@
       field_url = 'gadget_erp5_field_multicheckbox.html';
     } else if (field_type === 'StringField') {
       field_url = 'gadget_erp5_field_string.html';
+    } else if (field_type === 'HyperLinkField') {
+      field_url = 'gadget_erp5_field_hyperlink.html';
     } else if (field_type === 'LinesField') {
       field_url = 'gadget_erp5_field_lines.html';
     } else if (field_type === 'PasswordField') {
