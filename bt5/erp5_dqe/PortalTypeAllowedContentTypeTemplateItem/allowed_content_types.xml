@@ -1,0 +1,8 @@
+<allowed_content_type_list>
+ <portal_type id="DQE Transaction Module">
+  <item>DQE Transaction</item>
+ </portal_type>
+ <portal_type id="Web Service Tool">
+  <item>DQE Data Validator Client Connector</item>
+ </portal_type>
+</allowed_content_type_list>
