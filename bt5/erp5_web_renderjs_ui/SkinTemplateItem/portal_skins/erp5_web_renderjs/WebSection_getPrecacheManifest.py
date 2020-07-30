@@ -42,6 +42,8 @@ url_list = [
   'gadget_erp5_field_formbox.js',
   'gadget_erp5_field_gadget.html',
   'gadget_erp5_field_gadget.js',
+  'gadget_erp5_field_hyperlink.html',
+  'gadget_erp5_field_hyperlink.js',
   'gadget_erp5_field_image.html',
   'gadget_erp5_field_image.js',
   'gadget_erp5_field_integer.html',
