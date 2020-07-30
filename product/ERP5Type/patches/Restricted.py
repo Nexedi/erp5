@@ -394,3 +394,60 @@ del member_id, member
 from random import SystemRandom
 allow_type(SystemRandom)
 ModuleSecurityInfo('os').declarePublic('urandom')
+
+#
+# backport from wendelin
+#
+# we neeed to allow access to numpy's internal types
+import pandas as pd
+from AccessControl import allow_module, allow_type, allow_class
+import numpy as np
+allow_module('numpy')
+allow_module('numpy.lib.recfunctions')
+for dtype in ('int8', 'int16', 'int32', 'int64', \
+              'uint8', 'uint16', 'uint32', 'uint64', \
+              'float16', 'float32', 'float64', \
+              'complex64', 'complex128', 'object'):
+  z = np.array([0,], dtype = dtype)
+  allow_type(type(z[0]))
+  allow_type(type(z))
+
+  sz = np.array([(0,)], dtype = [('f0', dtype)])
+  allow_type(type(sz[0]))
+  allow_type(type(sz))
+
+  rz = np.rec.array(np.array([(0,)], dtype = [('f0', dtype)]))
+  allow_type(type(rz[0]))
+  allow_type(type(rz))
+
+allow_type(np.dtype)
+allow_type(np.timedelta64)
+allow_type(type(np.c_))
+
+allow_module('pandas')
+allow_type(pd.Series)
+allow_type(pd.Timestamp)
+allow_type(pd.DatetimeIndex)
+# XXX: pd.DataFRame has its own security thus disable until we can fully integrate it
+#allow_type(pd.DataFrame)
+allow_type(pd.MultiIndex)
+allow_type(pd.Index)
+allow_type(pd.core.groupby.DataFrameGroupBy)
+allow_type(pd.core.groupby.SeriesGroupBy)
+allow_class(pd.DataFrame)
+
+# Modify 'safetype' dict in full_write_guard function
+# of RestrictedPython (closure) directly To allow
+# write access to ndarray, DataFrame, ZBigArray and RAMArray objects
+from RestrictedPython.Guards import full_write_guard
+full_write_guard.func_closure[1].cell_contents.__self__[np.ndarray] = True
+full_write_guard.func_closure[1].cell_contents.__self__[np.core.records.recarray] = True
+full_write_guard.func_closure[1].cell_contents.__self__[np.core.records.record] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.DataFrame] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.Series] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.tseries.index.DatetimeIndex] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._iLocIndexer] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._LocIndexer] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.MultiIndex] = True
+full_write_guard.func_closure[1].cell_contents.__self__[pd.Index] = True
+
