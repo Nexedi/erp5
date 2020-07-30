@@ -26,12 +26,12 @@
   <td>${base_url}/web_site_module/cribjs_bootloader/</td>
   <td></td>
 </tr>
+<!-- Initialize
 <tr>
   <td>waitForTextPresent</td>
   <td>CribJS Bootloader</td>
   <td></td>
 </tr>
-<!-- Initialize
 <tr>
   <td>waitForTextPresent</td>
   <td>Fill This site from a zip URL</td>
