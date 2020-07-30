@@ -47,7 +47,11 @@ AS sub inner join catalog on catalog.path = sub.path
 AS main
 WHERE
 <dtml-sqltest "getUid()" column=uid op=ne type=int>
-LIMIT 1000
+
+<dtml-if "query['limit_expression']">
+  LIMIT <dtml-var "query['limit_expression']">
+</dtml-if>
+
 
 <dtml-if "'derived_merge' in optimizer_switch_key_list">
   <dtml-var sql_delimiter>
