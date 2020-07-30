@@ -512,11 +512,16 @@ def renderField(traversed_document, field, form, value=MARKER, meta_type=None, k
 
   if meta_type in ("StringField", "FloatField", "EmailField", "TextAreaField",
                    "LinesField", "ImageField", "FileField", "IntegerField",
-                   "PasswordField", "EditorField"):
+                   "PasswordField", "EditorField", "HyperLinkField"):
     if meta_type == "FloatField":
       result.update({
         "precision": field.get_value("precision"),
         "input_style": field.get_value("input_style"),
+      })
+    if meta_type == "HyperLinkField":
+      result.update({
+        "extra": field.get_value("extra"),
+        "href": field.get_value("href"),
       })
     if meta_type == "ImageField":
       options = {
