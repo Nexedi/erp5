@@ -7,6 +7,7 @@ Campaign | create_event_from_event_path
 Campaign | create_new_file
 Campaign | document_list
 Campaign | jump_related_event
+Campaign | jump_to_document
 Campaign | mass_emailing_report
 Campaign | new_event
 Campaign | view
@@ -41,6 +42,7 @@ Meeting | clone_ticket_and_event_list
 Meeting | create_event_from_event_path
 Meeting | create_new_file
 Meeting | document_list
+Meeting | jump_to_document
 Meeting | mass_emailing_report
 Meeting | new_event
 Meeting | view
@@ -67,6 +69,7 @@ Sale Opportunity Module | view
 Sale Opportunity | clone_ticket_and_event_list
 Sale Opportunity | create_new_file
 Sale Opportunity | document_list
+Sale Opportunity | jump_to_document
 Sale Opportunity | new_event
 Sale Opportunity | view
 Short Message | assessment
@@ -86,6 +89,7 @@ Support Request | clone_ticket_and_event_list
 Support Request | create_new_file
 Support Request | document_list
 Support Request | jump_related_bug
+Support Request | jump_to_document
 Support Request | new_bug
 Support Request | new_event
 Support Request | view
