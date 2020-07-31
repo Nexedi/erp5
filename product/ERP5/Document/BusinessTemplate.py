@@ -6950,6 +6950,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
                     mixin_class_name = m.__name__
 
               if mixin_class_name is None:
+                LOG("BusinessTemplate", WARNING,
+                    "%s: No mixin class defined or incorrectly named?" % filepath)
                 continue
 
               subsubmodule_name = mixin_class_name
