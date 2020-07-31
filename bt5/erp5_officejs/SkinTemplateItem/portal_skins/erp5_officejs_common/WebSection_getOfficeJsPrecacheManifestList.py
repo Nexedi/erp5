@@ -1,3 +1,5 @@
+import random
+
 url_list = [
   "favicon.ico",
   "font-awesome/font-awesome.css",
@@ -51,8 +53,18 @@ url_list = [
   "officejs_logo.png",
   "jio_appcachestorage.js",
   "jio_configuration_storage.js",
+
+  #app actions
+  "action_clone.html",
+  "action_clone.js",
+  "action_clone_attachment.html",
+  "action_clone_attachment.js"
 ]
 
 base64_url_list = context.WebSection_getBase64ConfigurationUrlList(batch_mode=1)
 
-return url_list + base64_url_list
+# Randomize the order of the elements to change the response content and allow cache to refresh
+url_list = list(set(url_list + base64_url_list))
+random.shuffle(url_list)
+
+return url_list
