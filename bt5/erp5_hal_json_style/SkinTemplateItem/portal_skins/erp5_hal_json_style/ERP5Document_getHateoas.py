@@ -2039,6 +2039,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                                                       selection=catalog_kw['selection'],
                                                       selection_name=catalog_kw['selection_name'],
                                                       column_id=select)
+                if url_parameter_dict is None:
+                  # url method want to disable URL in xhtml
+                  # Keep compatibility with this simple case
+                  url_parameter_dict = {}
           else:
             if not is_getListItemUrlDict_calculated:
               # XXX If only available on brains, maybe better to call on aq_self
