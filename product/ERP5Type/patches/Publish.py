@@ -159,7 +159,7 @@ def publish(request, module_name, after_list, debug=0,
                                         )
                 except Retry:
                     if not request.supports_retry():
-                        with getPublisherDeadlineValue():
+                        with getPublisherDeadlineValue(request):
                             return err_hook(parents, request,
                                             sys.exc_info()[0],
                                             sys.exc_info()[1],

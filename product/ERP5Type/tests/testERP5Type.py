@@ -3346,4 +3346,94 @@ def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Type))
   suite.addTest(unittest.makeSuite(TestAccessControl))
+
+  # run tests for monkey patched ZPublisher modules
+  import ZPublisher.tests.testBaseRequest
+  suite.addTest(ZPublisher.tests.testBaseRequest.test_suite())
+
+  import ZPublisher.tests.testBeforeTraverse
+  suite.addTest(ZPublisher.tests.testBeforeTraverse.test_suite())
+
+  import ZPublisher.tests.testHTTPRangeSupport
+  suite.addTest(ZPublisher.tests.testHTTPRangeSupport.test_suite())
+
+  import ZPublisher.tests.testHTTPRequest
+  # ERP5 processes requests as utf-8 by default, but we adjust this test assuming that
+  # default is iso-8859-15
+  def forceISO885915DefaultRequestCharset(method):
+    def wrapped(self):
+      from ZPublisher import HTTPRequest as module
+      old_encoding = module.default_encoding
+      module.default_encoding = 'iso-8859-15'
+      try:
+        return method(self)
+      finally:
+        module.default_encoding = old_encoding
+    return wrapped
+  ZPublisher.tests.testHTTPRequest.HTTPRequestTests.test_processInputs_w_unicode_conversions = forceISO885915DefaultRequestCharset(
+      ZPublisher.tests.testHTTPRequest.HTTPRequestTests.test_processInputs_w_unicode_conversions)
+  suite.addTest(ZPublisher.tests.testHTTPRequest.test_suite())
+
+  import ZPublisher.tests.testHTTPResponse
+  # ERP5 forces utf-8 responses by default, but we adjust these tests so that they run
+  # with iso-8859-15 as default response charset
+  def forceISO885915DefaultRequestCharset(method):
+    def wrapped(self):
+      # here we can use this utility method which clean up at teardown
+      self._setDefaultEncoding('iso-8859-15')
+      return method(self)
+    return wrapped
+  HTTPResponseTests = ZPublisher.tests.testHTTPResponse.HTTPResponseTests
+  HTTPResponseTests.test___str__w_body = forceISO885915DefaultRequestCharset(
+      HTTPResponseTests.test___str__w_body)
+  HTTPResponseTests.test_ctor_charset_no_content_type_header = forceISO885915DefaultRequestCharset(
+      HTTPResponseTests.test_ctor_charset_no_content_type_header)
+  HTTPResponseTests.test_ctor_charset_text_header_no_charset_defaults_latin1 = forceISO885915DefaultRequestCharset(
+      HTTPResponseTests.test_ctor_charset_text_header_no_charset_defaults_latin1)
+  HTTPResponseTests.test_ctor_charset_unicode_body_application_header = forceISO885915DefaultRequestCharset(
+      HTTPResponseTests.test_ctor_charset_unicode_body_application_header)
+  HTTPResponseTests.test_listHeaders_w_body = forceISO885915DefaultRequestCharset(
+      HTTPResponseTests.test_listHeaders_w_body)
+  HTTPResponseTests.test_setBody_2_tuple_w_is_error_converted_to_Site_Error = forceISO885915DefaultRequestCharset(
+      HTTPResponseTests.test_setBody_2_tuple_w_is_error_converted_to_Site_Error)
+  HTTPResponseTests.test_setBody_2_tuple_wo_is_error_converted_to_HTML = forceISO885915DefaultRequestCharset(
+      HTTPResponseTests.test_setBody_2_tuple_wo_is_error_converted_to_HTML)
+  HTTPResponseTests.test_setBody_object_with_asHTML = forceISO885915DefaultRequestCharset(
+      HTTPResponseTests.test_setBody_object_with_asHTML)
+  HTTPResponseTests.test_setBody_object_with_unicode = forceISO885915DefaultRequestCharset(
+      HTTPResponseTests.test_setBody_object_with_unicode)
+  HTTPResponseTests.test_setBody_string_HTML = forceISO885915DefaultRequestCharset(
+      HTTPResponseTests.test_setBody_string_HTML)
+  HTTPResponseTests.test_setBody_string_not_HTML = forceISO885915DefaultRequestCharset(
+      HTTPResponseTests.test_setBody_string_not_HTML)
+  suite.addTest(ZPublisher.tests.testHTTPResponse.test_suite())
+
+  import ZPublisher.tests.testIterators
+  suite.addTest(ZPublisher.tests.testIterators.test_suite())
+
+  import ZPublisher.tests.testPostTraversal
+  suite.addTest(ZPublisher.tests.testPostTraversal.test_suite())
+
+  import ZPublisher.tests.testPublish
+  suite.addTest(ZPublisher.tests.testPublish.test_suite())
+
+  import ZPublisher.tests.test_Converters
+  suite.addTest(ZPublisher.tests.test_Converters.test_suite())
+
+  # XXX don't run test_WSGIPublisher for now because too many failures
+  # import ZPublisher.tests.test_WSGIPublisher
+  # suite.addTest(ZPublisher.tests.test_WSGIPublisher.test_suite())
+
+  # XXX don't run test_exception_handling because we have incompatible zope.testbrowser version
+  # import ZPublisher.tests.test_exception_handling
+
+  import ZPublisher.tests.test_mapply
+  suite.addTest(ZPublisher.tests.test_mapply.test_suite())
+
+  import ZPublisher.tests.test_xmlrpc
+  suite.addTest(ZPublisher.tests.test_xmlrpc.test_suite())
+
+  import ZPublisher.tests.testpubevents
+  suite.addTest(ZPublisher.tests.testpubevents.test_suite())
+
   return suite
