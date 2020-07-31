@@ -3346,4 +3346,65 @@ def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Type))
   suite.addTest(unittest.makeSuite(TestAccessControl))
+
+  # run tests for monkey patched ZPublisher modules
+  import ZPublisher.tests.testBaseRequest
+  suite.addTest(ZPublisher.tests.testBaseRequest.test_suite())
+
+  import ZPublisher.tests.testBeforeTraverse
+  suite.addTest(ZPublisher.tests.testBeforeTraverse.test_suite())
+
+  import ZPublisher.tests.testHTTPRangeSupport
+  suite.addTest(ZPublisher.tests.testHTTPRangeSupport.test_suite())
+  
+  import ZPublisher.tests.testHTTPRequest
+  # ERP5 processes requests as utf-8  by default, so disable tests assuming that
+  # default is iso-8859-15
+  ZPublisher.tests.testHTTPRequest.HTTPRequestTests.test_processInputs_w_unicode_conversions = None
+  suite.addTest(ZPublisher.tests.testHTTPRequest.test_suite())
+
+  import ZPublisher.tests.testHTTPResponse
+  # ERP5 forces utf-8 responses by default, so disable tests assuming that
+  # default is iso-8859-15
+  ZPublisher.tests.testHTTPResponse.HTTPResponseTests.test___str__w_body = None
+  ZPublisher.tests.testHTTPResponse.HTTPResponseTests.test_ctor_charset_no_content_type_header = None
+  ZPublisher.tests.testHTTPResponse.HTTPResponseTests.test_ctor_charset_text_header_no_charset_defaults_latin1 = None
+  ZPublisher.tests.testHTTPResponse.HTTPResponseTests.test_ctor_charset_unicode_body_application_header = None
+  ZPublisher.tests.testHTTPResponse.HTTPResponseTests.test_listHeaders_w_body = None
+  ZPublisher.tests.testHTTPResponse.HTTPResponseTests.test_setBody_2_tuple_w_is_error_converted_to_Site_Error = None
+  ZPublisher.tests.testHTTPResponse.HTTPResponseTests.test_setBody_2_tuple_wo_is_error_converted_to_HTML = None
+  ZPublisher.tests.testHTTPResponse.HTTPResponseTests.test_setBody_object_with_asHTML = None
+  ZPublisher.tests.testHTTPResponse.HTTPResponseTests.test_setBody_object_with_unicode = None
+  ZPublisher.tests.testHTTPResponse.HTTPResponseTests.test_setBody_string_HTML = None
+  ZPublisher.tests.testHTTPResponse.HTTPResponseTests.test_setBody_string_not_HTML = None
+  suite.addTest(ZPublisher.tests.testHTTPResponse.test_suite())
+
+  import ZPublisher.tests.testIterators
+  suite.addTest(ZPublisher.tests.testIterators.test_suite())
+
+  import ZPublisher.tests.testPostTraversal
+  suite.addTest(ZPublisher.tests.testPostTraversal.test_suite())
+
+  import ZPublisher.tests.testPublish
+  suite.addTest(ZPublisher.tests.testPublish.test_suite())
+
+  import ZPublisher.tests.test_Converters
+  suite.addTest(ZPublisher.tests.test_Converters.test_suite())
+
+  # XXX don't run test_WSGIPublisher for now because too many failures
+  # import ZPublisher.tests.test_WSGIPublisher
+  # suite.addTest(ZPublisher.tests.test_WSGIPublisher.test_suite())
+
+  # XXX don't run test_exception_handling because we have incompatible zope.testbrowser version
+  # import ZPublisher.tests.test_exception_handling
+
+  import ZPublisher.tests.test_mapply
+  suite.addTest(ZPublisher.tests.test_mapply.test_suite())
+
+  import ZPublisher.tests.test_xmlrpc
+  suite.addTest(ZPublisher.tests.test_xmlrpc.test_suite())
+
+  import ZPublisher.tests.testpubevents
+  suite.addTest(ZPublisher.tests.testpubevents.test_suite())
+
   return suite
