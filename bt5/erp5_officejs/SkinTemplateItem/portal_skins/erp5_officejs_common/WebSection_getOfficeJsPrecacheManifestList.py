@@ -55,4 +55,8 @@ url_list = [
 
 base64_url_list = context.WebSection_getBase64ConfigurationUrlList(batch_mode=1)
 
-return url_list + base64_url_list
+# Randomize the order of the elements to change the response content and allow cache to refresh
+url_list = list(set(url_list + base64_url_list))
+random.shuffle(url_list)
+
+return url_list
