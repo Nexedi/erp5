@@ -4282,6 +4282,10 @@ console.log(ret);
     
                 // Events
                 obj.dispatch('oninsertcolumn', el, columnNumber, numOfColumns, historyRecords, insertBefore);
+
+                obj.el.querySelector("table.jexcel tr").childNodes.forEach(function (td) {
+                  td.style.textAlign = "center";
+                });
             }
         }
     
