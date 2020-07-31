@@ -8,16 +8,20 @@ div.jexcel_formula img{
 
 input.jexcel_formula {
   margin-left: 2px;
-  width: 92.8%;
+  width: calc(100% - 77px);
   position:sticky;
   top:0px;
   z-index:0;
   display: inline-block;
 }
 
+div.jexcel-filter > * {
+  display: inline-block;
+}
+
 input.cell_input {
   display: inline-block;
-  width: 4%;
+  width: 35px;
 }
 
 input.jexcel_search {
@@ -56,4 +60,10 @@ body > div.spreadsheet.jexcel_tabs > div:nth-child(1) {
 
 .jexcel_tab_link.selected {
   cursor: alias;
+}
+
+@media (max-width: 1150px){
+  div.jexcel_filter {
+    display: none;
+  }
 }
