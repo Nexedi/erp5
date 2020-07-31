@@ -1,10 +1,12 @@
 Base Type | copy_roles
 Bug Line | document_list
+Bug Line | jump_to_document
 Bug Line | new_file
 Bug Line | view
 Bug Module | view
 Bug | bug_line_send
 Bug | document_list
+Bug | jump_to_document
 Bug | new_file
 Bug | view
 Business Template | clean_vcs_bt
