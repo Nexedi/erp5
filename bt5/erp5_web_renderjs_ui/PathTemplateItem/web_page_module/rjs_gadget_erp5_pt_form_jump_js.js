@@ -40,25 +40,34 @@
           return;
         }
         if (gadget.state.jio_key === result.jio_key) {
-          // don't update navigation history when not really redirecting
-          return gadget.redirect({command: 'cancel_dialog_with_history'});
-        }
-
-        splitted_jio_key_list = result.jio_key.split('/');
-        if (splitted_jio_key_list.length < 2) {
-          // When going to a module, stick to the current document context,
-          // ie, display current document panel/header, but display the module form_list
-          // This is implemented by the page "jump"
-          command = 'display_with_history';
-          result_dict.jio_key = gadget.state.jio_key;
-          result_dict.view = result.view;
-          result_dict.page = "jump";
+          if ((!result.view) || (result.view === 'view')) {
+            // Do not redirect to a specific view
+            // It may probably mean that there is no document to jump to
+            // don't update navigation history when not really redirecting
+            command = 'cancel_dialog_with_history';
+          } else {
+            command = 'display_with_history';
+            result_dict.jio_key = gadget.state.jio_key;
+            result_dict.view = result.view;
+            result_dict.page = "jump";
+          }
         } else {
-          command = 'push_history';
-          result_dict.jio_key = result.jio_key;
-          result_dict.view = result.view;
-        }
 
+          splitted_jio_key_list = result.jio_key.split('/');
+          if (splitted_jio_key_list.length < 2) {
+            // When going to a module, stick to the current document context,
+            // ie, display current document panel/header, but display the module form_list
+            // This is implemented by the page "jump"
+            command = 'display_with_history';
+            result_dict.jio_key = gadget.state.jio_key;
+            result_dict.view = result.view;
+            result_dict.page = "jump";
+          } else {
+            command = 'push_history';
+            result_dict.jio_key = result.jio_key;
+            result_dict.view = result.view;
+          }
+        }
 
         // forced document change thus we update history
         return gadget.redirect({
