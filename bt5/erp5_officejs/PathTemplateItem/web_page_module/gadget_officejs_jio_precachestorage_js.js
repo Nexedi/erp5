@@ -101,10 +101,8 @@
         var base_manifest_text = response.target.responseText,
           relative_url_list,
           i,
-          hash = rusha.digestFromString(base_manifest_text +
-                                        response.target
-                                        .getResponseHeader("ETag"));
-        relative_url_list = Object.keys(JSON.parse(base_manifest_text));
+          hash = rusha.digestFromString(base_manifest_text);
+        relative_url_list = Object.keys(JSON.parse(base_manifest_text).url_dict);
         storage._relative_url_list.push(storage._version);
         storage._relative_url_list.push(storage._version +
                                         storage._precache_manifest_script);
