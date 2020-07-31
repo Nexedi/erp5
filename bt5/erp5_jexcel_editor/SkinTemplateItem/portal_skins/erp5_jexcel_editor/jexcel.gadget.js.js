@@ -1,7 +1,14 @@
 /*jslint nomen: true, indent: 2, maxlen: 80 */
-/*global window, rJS, RSVP, jexcel, domsugar, document, alert, prompt, confirm*/
-(function (window, rJS, jexcel, domsugar, document, alert, prompt, confirm) {
+/*global window, rJS, RSVP, jexcel, domsugar, document, alert,
+prompt, confirm, navigator*/
+(function (window, rJS, jexcel, domsugar, document, alert,
+            prompt, confirm, navigator) {
   "use strict";
+
+  function isMobileDevice() {
+    return (window.orientation !== undefined) ||
+      (navigator.userAgent.indexOf('IEMobile') !== -1);
+  }
 
   function format(node, level) {
     var indentBefore = new Array(level + 2).join('  '),
@@ -149,7 +156,8 @@
       "playlist_add": "Add row at the end",
       "delete_sweep": "Delete last row",
       "exposure_plus_1": "Add column at the end",
-      "exposure_neg_1": "Delete last column"
+      "exposure_neg_1": "Delete last column",
+      "photo_size_select_small": "Define new table dimensions"
     };
     element.querySelectorAll("i").forEach(function (i) {
       if (i.dataset.k === "color") {
@@ -185,10 +193,15 @@
       dict = {};
       dict = Object.assign(jexcel.createFromTable(table),
                            gadget.state.template);
-      if (table.classList.contains("jexcel")) {
-        tmp = JSON.parse(table.dataset.config);
-        dict.columns = tmp.columns;
-        dict.data = tmp.data;
+      if (table.classList.contains("jexcel") &&
+          !table.classList.contains("jSheet")) {
+        if (Array.from(table.querySelectorAll("td")).filter(function (td) {
+          return td.hasAttribute("cache");
+        }).length === 0) {
+          tmp = JSON.parse(table.dataset.config);
+          dict.columns = tmp.columns;
+          dict.data = tmp.data;
+        }
       }
       dict.sheetName = table.title ? table.title : "Sheet " + (i + 1);
       configs.push(dict);
@@ -342,69 +355,59 @@
         content: "exposure_neg_1",
         onclick: gadget.triggerDeleteColumn.bind(gadget)
       },
+      dimensions: {
+        type: "i",
+        content: "photo_size_select_small",
+        onclick: gadget.triggerNewDimensions.bind(gadget)
+      },
       contextMenu: function (obj, x, y) {
         var items = [];
+        gadget.state.obj = obj;
+        gadget.state.x = x;
+        gadget.state.y = y;
         if (y === null) {
            // Insert a new column
           items.push({
             title: obj.options.text.insertANewColumnBefore,
-            onclick: function () {
-              obj.insertColumn(1, parseInt(x, 10), 1);
-            }
+            onclick: gadget.triggerInsertNewColumnBefore.bind(gadget)
           });
           items.push({
             title: obj.options.text.insertANewColumnAfter,
-            onclick: function () {
-              obj.insertColumn(1, parseInt(x, 10), 0);
-            }
+            onclick: gadget.triggerInsertNewColumnAfter.bind(gadget)
           });
           // Delete a column
           items.push({
             title: obj.options.text.deleteSelectedColumns,
-            onclick: function () {
-              obj.deleteColumn(obj.getSelectedColumns().length ? undefined : parseInt(x, 10));
-            }
+            onclick: gadget.triggerDeleteSelectedColumns.bind(gadget)
           });
           // Rename column
           items.push({
             title: obj.options.text.renameThisColumn,
-            onclick: function () {
-              obj.setHeader(x);
-            }
+            onclick: gadget.triggerRenameColumn.bind(gadget)
           });
           // Sorting
           items.push({ type: 'line' });
           items.push({
             title: obj.options.text.orderAscending,
-            onclick: function () {
-              obj.orderBy(x, 0);
-            }
+            onclick: gadget.triggerOrderAscending.bind(gadget)
           });
           items.push({
             title: obj.options.text.orderDescending,
-            onclick: function () {
-              obj.orderBy(x, 1);
-            }
+            onclick: gadget.triggerOrderDescending.bind(gadget)
           });
         } else {
           // Insert new row
           items.push({
             title: obj.options.text.insertANewRowBefore,
-            onclick: function () {
-              obj.insertRow(1, parseInt(y, 10), 1);
-            }
+            onclick: gadget.triggerInsertNewRowBefore.bind(gadget)
           });
           items.push({
             title: obj.options.text.insertANewRowAfter,
-            onclick: function () {
-              obj.insertRow(1, parseInt(y, 10));
-            }
+            onclick: gadget.triggerInsertNewRowAfter.bind(gadget)
           });
           items.push({
             title: obj.options.text.deleteSelectedRows,
-            onclick: function () {
-              obj.deleteRow(obj.getSelectedRows().length ? undefined : parseInt(y, 10));
-            }
+            onclick: gadget.triggerDeleteSelectedRows.bind(gadget)
           });
         }
         if (x) {
@@ -412,31 +415,38 @@
           items.push({
             title: "Set column type: Text",
             onclick: function () {
-              return gadget.triggerTextType(obj, x, y);
+              return gadget.triggerChangeType("text");
             }
           });
           items.push({
             title: "Set column type: Image",
             onclick: function () {
-              return gadget.triggerImageType(obj, x, y);
+              return gadget.triggerChangeType("image");
             }
           });
           items.push({
             title: "Set column type: HTML",
             onclick: function () {
-              return gadget.triggerHTMLType(obj, x, y);
+              return gadget.triggerChangeType("html");
             }
           });
           items.push({
             title: "Set column type: Checkbox",
             onclick: function () {
-              return gadget.triggerCheckboxType(obj, x, y);
+              var child = domsugar("input", {type: "checkbox", name: "c" + x});
+              return gadget.triggerChangeType("checkbox", child);
+            }
+          });
+          items.push({
+            title: "Set column type: Calendar",
+            onclick: function () {
+              return gadget.triggerChangeType("calendar");
             }
           });
           items.push({
             title: "Set column type: Color",
             onclick: function () {
-              return gadget.triggerColorType(obj, x, y);
+              return gadget.triggerChangeType("color", null, "square");
             }
           });
         }
@@ -467,10 +477,57 @@
         toolbar_dict.color_picker) {
       list.push(dict.text_color, dict.background_color);
     }
+    if (isMobileDevice()) {
+      list.push({
+        type: "i",
+        content: "photo_library",
+        onclick: function (sheet, instance) {
+          return gadget.triggerChangeTypeInToolbar(sheet, instance, "image");
+        }
+      });
+      list.push({
+        type: "i",
+        content: "format_size",
+        onclick: function (sheet, instance) {
+          return gadget.triggerChangeTypeInToolbar(sheet, instance, "text");
+        }
+      });
+      list.push({
+        type: "i",
+        content: "format_paint",
+        onclick: function (sheet, instance) {
+          return gadget.triggerChangeTypeInToolbar(sheet, instance,
+                                                   "color", null, "square");
+        }
+      });
+      list.push({
+        type: "i",
+        content: "format_list_bulleted",
+        onclick: function (sheet, instance) {
+          return gadget.triggerChangeTypeInToolbar(sheet, instance, "html");
+        }
+      });
+      list.push({
+        type: "i",
+        content: "calendar_today",
+        onclick: function (sheet, instance) {
+          return gadget.triggerChangeTypeInToolbar(sheet, instance, "calendar");
+        }
+      });
+      list.push({
+        type: "i",
+        content: "check_box",
+        onclick: function (sheet, instance) {
+          var child = domsugar("input", {type: "checkbox"});
+          return gadget.triggerChangeTypeInToolbar(sheet, instance,
+                                                   "checkbox", child);
+        }
+      });
+    }
     if (toolbar_dict.hasOwnProperty("add_delete_row_column") &&
         toolbar_dict.add_delete_row_column) {
       list.push(dict.add_row, dict.delete_row,
-              dict.add_column, dict.delete_column);
+              dict.add_column, dict.delete_column, dict.dimensions);
     }
     res = Object.assign({}, dict.options);
     res.toolbar = list;
@@ -503,7 +560,7 @@
         add_delete_row_column: true
       },
       options: {
-        minDimensions: [15, 30],
+        minDimensions: [26, 100],
         defaultColWidth: 100,
         defaultColAlign: "left",
         allowExport: true,
@@ -551,6 +608,7 @@
           };
           table.dataset.config = JSON.stringify(dict);
           table.title = tab_links[i].textContent;
+          table.border = "1px";
           table.querySelector("colgroup col").remove();
           table.querySelector("tr").remove();
           table.querySelectorAll("td.jexcel_row").forEach(function (td) {
@@ -590,7 +648,7 @@
         toolbar_config = getTemplate(gadget);
         toolbar_events_config = bindEvents(gadget, toolbar_config);
         if (gadget.state.value === "") {
-          toolbar_events_config.sheetName = "Sheet 1";
+          toolbar_events_config.sheetName = "Table 1";
           jexcel.tabs(gadget.element.querySelector(".spreadsheet"),
                       [toolbar_events_config]
                      );
@@ -642,18 +700,62 @@
     })
 
     .declareJob("triggerDeleteRow", function (sheet, instance) {
-      instance.deleteRow();
+      instance.deleteRow(instance.options.data.length - 1, 1);
+    })
+
+    .declareJob("triggerInsertNewColumnBefore", function () {
+      var state = this.state;
+      state.obj.insertColumn(1, parseInt(state.x, 10), 1);
+    })
+
+    .declareJob("triggerInsertNewColumnAfter", function () {
+      var state = this.state;
+      state.obj.insertColumn(1, parseInt(state.x, 10), 0);
+    })
+
+    .declareJob("triggerDeleteSelectedColumns", function () {
+      var state = this.state;
+      state.obj.deleteColumn(state.obj.getSelectedColumns().length ?
+                           undefined : parseInt(state.x, 10));
+    })
+
+    .declareJob("triggerRenameColumn", function () {
+      var state = this.state;
+      state.obj.setHeader(state.x);
+    })
+
+    .declareJob("triggerOrderAscending", function () {
+      var state = this.state;
+      state.obj.orderBy(state.x, 0);
+    })
+
+    .declareJob("triggerOrderDescending", function () {
+      var state = this.state;
+      state.obj.orderBy(state.x, 1);
+    })
+
+    .declareJob("triggerInsertNewRowBefore", function () {
+      var state = this.state;
+      state.obj.insertRow(1, parseInt(state.y, 10), 1);
+    })
+
+    .declareJob("triggerInsertNewRowAfter", function () {
+      var state = this.state;
+      state.obj.insertRow(1, parseInt(state.y, 10));
+    })
+
+    .declareJob("triggerDeleteSelectedRows", function () {
+      var state = this.state;
+      state.obj.deleteRow(state.obj.getSelectedRows().length ?
+                        undefined : parseInt(state.y, 10));
     })
 
     .declareJob("triggerAddColumn", function (sheet, instance) {
       instance.insertColumn();
-      sheet.querySelector("table.jexcel tr").childNodes.forEach(function (td) {
-        td.style.textAlign = "center";
-      });
     })
 
     .declareJob("triggerDeleteColumn", function (sheet, instance) {
-      instance.deleteColumn();
+      instance.deleteColumn(instance.options.columns.length - 1, 1);
     })
 
     .declareJob("triggerUndo", function (sheet, instance) {
@@ -683,196 +785,102 @@
       instance.destroyMerged();
     })
 
-    .declareJob("triggerImageType", function (obj, cx, cy) {
-      var x = parseInt(cx, 10),
-        y = cy !== null ? parseInt(cy, 10) : 0,
+    .declareJob("triggerChangeType", function (type, child, render) {
+      var state = this.state,
+        x = parseInt(state.x, 10),
+        y = state.y !== null ? parseInt(state.y, 10) : 0,
         cell,
         column,
         array;
-      obj.updateSelectionFromCoords(x, y, x, y);
-      cell = obj.el.querySelector("td.highlight-selected");
-      if (obj.options.columns[x].type !== "image") {
-        column = obj.el
+      state.obj.updateSelectionFromCoords(x, y, x, y);
+      cell = state.obj.el.querySelector("td.highlight-selected");
+      if (state.obj.options.columns[x].type !== type) {
+        column = state.obj.el
           .querySelectorAll("td[data-x='" + x + "']");
         array = [...column];
         array.shift();
-        setHistoryType(obj, "beginChangeType",
+        setHistoryType(state.obj, "beginChangeType",
                        x,
-                       obj.options.columns[x].type,
-                       "image");
+                       state.obj.options.columns[x].type,
+                       type);
         array.forEach(function (cell) {
-          obj.setValue(getCoordinatesFromCell(cell), "");
+          state.obj.setValue(getCoordinatesFromCell(cell), "");
+          cell.innerHTML = "";
+          if (child) {
+            cell.appendChild(child.cloneNode());
+          }
         });
-        setHistoryType(obj, "endChangeType",
-                       Number(x),
-                       obj.options.columns[x].type,
-                       "image");
-        obj.options.columns[x].type = "image";
+        setHistoryType(state.obj, "endChangeType",
+                       x,
+                       state.obj.options.columns[x].type,
+                       type);
+        state.obj.options.columns[x].type = type;
+        if (render) {
+          state.obj.options.columns[x].render = render;
+        }
         fireDoubleClick(cell);
       }
     })
 
-    .declareJob("triggerCheckboxType", function (obj, cx, cy) {
-      var x = parseInt(cx, 10),
-        y = cy !== null ? parseInt(cy, 10) : 0,
-        cell,
+    .declareJob("triggerChangeTypeInToolbar", function (sheet, instance, type, child, render) {
+      var cell = sheet.querySelector("td.highlight-selected"),
+        x,
         column,
         array;
-      obj.updateSelectionFromCoords(x, y, x, y);
-      cell = obj.el.querySelector("td.highlight-selected");
-      if (obj.options.columns[x].type !== "checkbox") {
-        column = obj.el
-          .querySelectorAll("td[data-x='" + x + "']");
+      x = cell ? parseInt(cell.dataset.x, 10) : null;
+      if (cell && instance.options.columns[x].type !== type) {
+        column = sheet.querySelectorAll("td[data-x='" + x + "']");
         array = [...column];
         array.shift();
-        setHistoryType(obj,
-                       "beginChangeType",
+        setHistoryType(instance, "beginChangeType",
                        x,
-                       obj.options.columns[x].type,
-                       "checkbox");
+                       instance.options.columns[x].type,
+                       type);
         array.forEach(function (cell) {
-          obj.setValue(getCoordinatesFromCell(cell), "");
+          instance.setValue(getCoordinatesFromCell(cell), "");
           cell.innerHTML = "";
-          cell.appendChild(domsugar("input", {
-            type: "checkbox",
-            name: "c" + x
-          }));
+          if (child) {
+            cell.appendChild(child.cloneNode());
+          }
         });
-        setHistoryType(obj,
-                       "endChangeType",
+        setHistoryType(instance, "endChangeType",
                        x,
-                       obj.options.columns[x].type,
-                       "checkbox");
-        obj.options.columns[x].type = "checkbox";
-      }
-    })
-
-    .declareJob("triggerTextType", function (obj, cx, cy) {
-      var x = parseInt(cx, 10),
-        y = cy !== null ? parseInt(cy, 10) : 0,
-        cell,
-        column,
-        array;
-      obj.updateSelectionFromCoords(x, y, x, y);
-      cell = obj.el.querySelector("td.highlight-selected");
-      if (obj.options.columns[x].type !== "text") {
-        column = obj.el
-          .querySelectorAll("td[data-x='" + x + "']");
-        array = [...column];
-        array.shift();
-        setHistoryType(obj,
-                       "beginChangeType",
-                       x,
-                       obj.options.columns[x].type,
-                       "text");
-        array.forEach(function (cell) {
-          cell.innerHTML = "";
-          obj.setValue(getCoordinatesFromCell(cell), "");
-        });
-        setHistoryType(obj,
-                       "endChangeType",
-                       x,
-                       obj.options.columns[x].type,
-                       "text");
-        obj.options.columns[x].type = "text";
+                       instance.options.columns[x].type,
+                       type);
+        instance.options.columns[x].type = type;
+        if (render) {
+          instance.options.columns[x].render = render;
+        }
         fireDoubleClick(cell);
       }
     })
 
-    .declareJob("triggerHTMLType", function (obj, cx, cy) {
-      var x = parseInt(cx, 10),
-        y = cy !== null ? parseInt(cy, 10) : 0,
-        cell,
-        column,
-        array;
-      obj.updateSelectionFromCoords(x, y, x, y);
-      cell = obj.el.querySelector("td.highlight-selected");
-      if (obj.options.columns[x].type !== "html") {
-        column = obj.el
-          .querySelectorAll("td[data-x='" + x + "']");
-        array = [...column];
-        array.shift();
-        setHistoryType(obj,
-                       "beginChangeType",
-                       x,
-                       obj.options.columns[x].type,
-                       "html");
-        array.forEach(function (cell) {
-          cell.innerHTML = "";
-          obj.setValue(getCoordinatesFromCell(cell), "");
-        });
-        setHistoryType(obj,
-                       "endChangeType",
-                       x,
-                       obj.options.columns[x].type,
-                       "html");
-        obj.options.columns[x].type = "html";
-        fireDoubleClick(cell);
-      }
-    })
-
-    .declareJob("triggerColorType", function (obj, cx, cy) {
-      var x = parseInt(cx, 10),
-        y = cy !== null ? parseInt(cy, 10) : 0,
-        cell,
-        column,
-        array;
-      obj.updateSelectionFromCoords(x, y, x, y);
-      cell = obj.el.querySelector("td.highlight-selected");
-      if (obj.options.columns[x].type !== "color") {
-        column = obj.el
-          .querySelectorAll("td[data-x='" + x + "']");
-        array = [...column];
-        array.shift();
-        setHistoryType(obj,
-                       "beginChangeType",
-                       x,
-                       obj.options.columns[x].type,
-                       "color");
-        array.forEach(function (cell) {
-          obj.setValue(getCoordinatesFromCell(cell), "");
-          cell.innerHTML = "";
-        });
-        setHistoryType(obj,
-                       "endChangeType",
-                       x,
-                       obj.options.columns[x].type,
-                       "color");
-        obj.options.columns[x].type = "color";
-        obj.options.columns[x].render = "square";
-        fireDoubleClick(cell);
-      }
-    })
-
-    .declareJob("triggerCalendarType", function (obj, cx, cy) {
-      var x = parseInt(cx, 10),
-        y = cy !== null ? parseInt(cy, 10) : 0,
-        cell,
-        column,
-        array;
-      obj.updateSelectionFromCoords(x, y, x, y);
-      cell = obj.el.querySelector("td.highlight-selected");
-      if (obj.options.columns[x].type !== "calendar") {
-        column = obj.el
-          .querySelectorAll("td[data-x='" + x + "']");
-        array = [...column];
-        array.shift();
-        setHistoryType(obj,
-                       "beginChangeType",
-                       x,
-                       obj.options.columns[x].type,
-                       "calendar");
-        array.forEach(function (cell) {
-          cell.innerHTML = "";
-          obj.setValue(getCoordinatesFromCell(cell), "");
-        });
-        setHistoryType(obj,
-                       "endChangeType",
-                       x,
-                       obj.options.columns[x].type,
-                       "calendar");
-        obj.options.columns[x].type = "calendar";
-        fireDoubleClick(cell);
+    .declareJob("triggerNewDimensions", function (sheet, instance) {
+      var r = prompt("Number of rows :", instance.options.data.length);
+      var c = prompt("Number of columns :", instance.options.columns.length);
+      if (c > 0 && r > 0) {
+        instance.setHistory({action: "beginResizeTable"});
+        if (c > instance.options.columns.length) {
+          while (instance.options.columns.length < c) {
+            instance.insertColumn();
+          }
+        }
+        else {
+          while (instance.options.columns.length > c) {
+            instance.deleteColumn(instance.options.columns.length - 1, 1);
+          }
+        }
+        if (r > instance.options.data.length) {
+          while (instance.options.data.length < r) {
+            instance.insertRow();
+          }
+        }
+        else {
+          while (instance.options.data.length > r) {
+            instance.deleteRow(instance.options.data.length - 1, 1);
+          }
+        }
+        instance.setHistory({action: "endResizeTable"});
       }
     })
 
@@ -880,10 +888,10 @@
       var gadget = this,
         tabs = gadget.element.querySelectorAll(".jexcel_tab_link");
       if (tabs.length === 18) {
-        alert("Can't add sheets anymore.");
+        alert("Can't add tables anymore.");
       } else {
         var dict1 = getTemplate(gadget);
-        dict1.sheetName = "Sheet " +
+        dict1.sheetName = "Table " +
           (gadget.element.querySelector('.spreadsheet').jexcel.length + 1);
         var dict2 = bindEvents(gadget, dict1);
         jexcel.tabs(gadget.element.querySelector(".spreadsheet"), [dict2]);
@@ -893,23 +901,23 @@
           .forEach(function (td) {
             td.style.textAlign = "left";
           });
-        gadget.state.selectedTabLink = gadget.element
-          .querySelector(".jexcel_tab_link.selected");
         gadget.deferNotifyChange();
-        return gadget.changeState({newSheet: true});
+        return gadget.changeState({newSheet: true})
+        .push(function () {
+          gadget.state.selectedTabLink = gadget.element
+          .querySelector(".jexcel_tab_link.selected");
+        })
       }
     })
 
-    .declareJob("triggerDeleteSheet", function () {
+    .declareJob("triggerDeleteSheet", function (sheet, instance) {
       var gadget = this,
-        sheet = arguments[0],
-        instance = arguments[1],
         tab_link = gadget.element
         .querySelector('.jexcel_tab_link.selected'),
         index = tab_link.getAttribute("data-spreadsheet"),
         to_remove,
         sheets;
-      if (confirm("Delete this sheet ?")) {
+      if (confirm("Delete this table ?")) {
         if (gadget.element.querySelector('.spreadsheet').jexcel.length > 1) {
           tab_link.remove();
           gadget.element.querySelectorAll(".jexcel_container")
@@ -928,12 +936,12 @@
                   tab.classList.add("selected");
                 }
                 tab.dataset.spreadsheet = i;
-                tab.textContent = tab.textContent.substring(0, 5) === "Sheet" ?
-                    "Sheet " + (i + 1) : tab.textContent;
+                tab.textContent = tab.textContent.substring(0, 5) === "Table" ?
+                    "Table " + (i + 1) : tab.textContent;
               });
         } else {
           gadget.element.querySelector('.jexcel_tab_link')
-            .textContent = "Sheet 1";
+            .textContent = "Table 1";
           sheet.querySelector("input.jexcel_formula").value = "";
           instance.setData(new Array(instance.options.columns.length)
             .fill(0, instance.options.columns.length - 1,
@@ -944,6 +952,8 @@
           });
         }
         gadget.deferNotifyChange();
+        gadget.state.selectedTabLink = gadget.element
+          .querySelector(".jexcel_tab_link.selected");
       }
     })
 
@@ -1098,13 +1108,13 @@
       gadget.state.saveConfig = true;
       if (ev.target.classList.contains("jexcel_tab_link")) {
         if (ev.target === gadget.state.selectedTabLink) {
-          name = prompt("Sheet name :", ev.target.textContent);
+          name = prompt("Table name :", ev.target.textContent);
           gadget.state.selectedTabLink.textContent = name !== null ?
             name : gadget.state.selectedTabLink.textContent;
+          gadget.deferNotifyChange();
         }
         gadget.state.selectedTabLink = ev.target;
-        gadget.deferNotifyChange();
       }
     }, false, false);
 
-}(window, rJS, jexcel, domsugar, document, alert, prompt, confirm));
+}(window, rJS, jexcel, domsugar, document, alert, prompt, confirm, navigator));
