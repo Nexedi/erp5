@@ -1519,7 +1519,11 @@ class ObjectTemplateItem(BaseTemplateItem):
           container.getParentValue().updateCache()
         elif obj.__class__.__name__ in ('File', 'Image'):
           if "data" in obj.__dict__:
-            obj._setData(obj.data)
+            # XXX Calling obj._setData() would call Interaction Workflow such
+            # as document_conversion_interaction_workflow which would update
+            # mime_type too...
+            from Products.ERP5Type.patches.OFSFile import _setData
+            _setData(obj, obj.data)
         elif (container.meta_type == 'CMF Skins Tool') and \
             (old_obj is not None):
           # Keep compatibility with previous export format of
