@@ -1,15 +1,5 @@
+import random
 web_section = context
-
-if REQUEST is not None:
-  modification_date_string = web_section.getModificationDate().rfc822()
-  weak_etag_header = 'W/"%s"' % modification_date_string
-  REQUEST.RESPONSE.setHeader('ETag', weak_etag_header)
-  if_none_match = REQUEST.getHeader('If-None-Match', '')
-  #using 'in' instead of '==' because the header value may contain a suffix
-  #for the server HTTP compression. e.g. "-gzip" suffix for DeflateAlterETag on apache
-  if weak_etag_header[:-1] in if_none_match:
-    REQUEST.RESPONSE.setStatus(304)
-    return ""
 
 # Add all ERP5JS gadget
 url_list = [
@@ -193,9 +183,13 @@ precache_manifest_url_list = web_section.getLayoutProperty("configuration_precac
 for precache_manifest_script_id in precache_manifest_url_list:
   url_list.extend(web_section.restrictedTraverse(precache_manifest_script_id)())
 
+# Randomize the order of the elements to change the response content and allow cache to refresh
+url_list = list(set(url_list))
+random.shuffle(url_list)
+
 if REQUEST is not None:
   import json
   REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
   return json.dumps(dict.fromkeys(url_list), indent=2)
 
-return list(set(url_list))
+return url_list
