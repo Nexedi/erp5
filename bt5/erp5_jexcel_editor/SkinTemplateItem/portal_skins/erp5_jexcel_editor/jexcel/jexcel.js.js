@@ -4282,6 +4282,10 @@ console.log(ret);
     
                 // Events
                 obj.dispatch('oninsertcolumn', el, columnNumber, numOfColumns, historyRecords, insertBefore);
+
+                obj.el.querySelector("table.jexcel tr").childNodes.forEach(function (td) {
+                  td.style.textAlign = "center";
+                });
             }
         }
     
@@ -6301,7 +6305,12 @@ console.log(ret);
                 // History
                 var historyRecord = obj.history[obj.historyIndex--];
     
-                if (historyRecord.action == 'endChangeType') {
+                if (historyRecord.action === 'endResizeTable') {
+                    while (obj.history[obj.historyIndex].action !== "beginResizeTable") {
+                    obj.undo();
+                  }
+                  obj.undo();
+                } else if (historyRecord.action == 'endChangeType') {
                   obj.options.columns[historyRecord.column].type = historyRecord.oldType;
                   while (obj.history[obj.historyIndex].action !== "beginChangeType") {
                     obj.undo();
@@ -6385,12 +6394,17 @@ console.log(ret);
             if (obj.historyIndex < obj.history.length - 1) {
                 // History
                 var historyRecord = obj.history[++obj.historyIndex];
-                if (historyRecord.action == 'beginChangeType') {
+                if (historyRecord.action == 'beginResizeTable') {
+                    while (obj.history[obj.historyIndex].action !== "endResizeTable") {
+                    obj.redo();
+                  }
+                  obj.redo();
+                } else if (historyRecord.action == 'beginChangeType') {
                   obj.options.columns[historyRecord.column].type = historyRecord.newType;
                   while (obj.history[obj.historyIndex].action !== "endChangeType") {
                     obj.redo();
                   }
-                  //obj.undo();
+                  obj.redo();
                 } else if (historyRecord.action == 'insertRow') {
                     obj.historyProcessRow(0, historyRecord);
                 } else if (historyRecord.action == 'deleteRow') {
@@ -8308,7 +8322,7 @@ console.log(ret);
                             style[cellName] = s;
                         }
                         // Bold
-                        if (content[j].children[i].classList.contains('styleBold')) {
+                        if (content[j].children[i].classList.contains('styleBold') || content[j].children[i].classList.contains('style-bold')) {
                             if (style[cellName]) {
                                 style[cellName] += '; font-weight:bold;';
                             } else {
@@ -8316,7 +8330,7 @@ console.log(ret);
                             }
                         }
                         // Italic
-                        if (content[j].children[i].classList.contains('styleItalics')) {
+                        if (content[j].children[i].classList.contains('styleItalics') || content[j].children[i].classList.contains('style-italics')) {
                             if (style[cellName]) {
                                 style[cellName] += '; font-style: italic;';
                             } else {
@@ -8324,11 +8338,19 @@ console.log(ret);
                             }
                         }
                         // Underlined
-                        if (content[j].children[i].classList.contains('styleUnderline')) {
+                        if (content[j].children[i].classList.contains('styleUnderline') || content[j].children[i].classList.contains('style-underline')) {
                             if (style[cellName]) {
                                 style[cellName] += '; text-decoration: underline;';
                             } else {
                                 style[cellName] = 'text-decoration: underline;';
+                            }
+                        }
+                        // Line through
+                        if (content[j].children[i].classList.contains('style-line-through')) {
+                            if (style[cellName]) {
+                                style[cellName] += '; text-decoration: line-through;';
+                            } else {
+                                style[cellName] = 'text-decoration: line-through;';
                             }
                         }
                         // Align left
