@@ -7,6 +7,7 @@ Project Line | constraint
 Project Line | contents
 Project Line | create_new_file
 Project Line | document_list
+Project Line | jump_to_document
 Project Line | jump_to_related_sale_order_lines
 Project Line | jump_to_related_task
 Project Line | jump_to_related_task_report
@@ -16,6 +17,7 @@ Project Line | view
 Project Milestone | constraint
 Project Milestone | create_new_file
 Project Milestone | document_list
+Project Milestone | jump_to_document
 Project Milestone | view
 Project Module | view
 Project Module | worker_monthly_report
@@ -25,6 +27,7 @@ Project | content
 Project | create_new_file
 Project | detailed_report
 Project | document_list
+Project | jump_to_document
 Project | jump_to_related_sale_order_lines
 Project | jump_to_related_task
 Project | jump_to_related_task_report
