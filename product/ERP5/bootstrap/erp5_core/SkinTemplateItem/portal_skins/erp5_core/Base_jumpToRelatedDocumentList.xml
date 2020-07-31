@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\', target_form_id=None, relation_form_id=\'Base_viewDocumentList\'</string> </value>
+            <value> <string>form_id=\'view\', target_form_id=None, relation_form_id=\'Base_viewDocumentSearchableList\'</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
