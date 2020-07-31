@@ -1,4 +1,3 @@
-import random
 web_section = context
 
 # Add all ERP5JS gadget
@@ -183,10 +182,6 @@ precache_manifest_url_list = web_section.getLayoutProperty("configuration_precac
 for precache_manifest_script_id in precache_manifest_url_list:
   url_list.extend(web_section.restrictedTraverse(precache_manifest_script_id)())
 
-# Randomize the order of the elements to change the response content and allow cache to refresh
-url_list = list(set(url_list))
-random.shuffle(url_list)
-
 if REQUEST is not None:
   import json
   manifest_dict = {
@@ -196,4 +191,4 @@ if REQUEST is not None:
   REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
   return json.dumps(manifest_dict, indent=2)
 
-return url_list
+return list(set(url_list))
