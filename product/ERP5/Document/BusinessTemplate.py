@@ -6519,8 +6519,16 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.mixin.json_representable',
       'Products.ERP5Type.XMLExportImport',
       'Products.ERP5Type.mixin.property_translatable',
+      'Products.ERP5Type.Error',
+      'Products.ERP5Type.Errors',
+      'Products.ERP5Type.interfaces.category_access_provider',
+      'Products.ERP5Type.interfaces.value_access_provider',
+      'Products.ERP5Type.interfaces.property_translatable',
+      'Products.ERP5Type.mixin.property_translatable.py',
       'Products.ERP5Type.Base',
       'Products.ERP5Type.Tool.BaseTool',
+      'Products.ERP5Type.interfaces.local_role_generator',
+      'Products.ERP5Type.interfaces.local_role_assignor',
       'Products.ERP5Type.ERP5Type',
       'Products.ERP5.mixin.expression',
       'Products.ERP5.Document.SQLMethod',
@@ -6549,9 +6557,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.Tool.PropertySheetTool',
       'Products.ERP5Type.tests.testDynamicClassGeneration',
       # ID generation
+      'Products.ERP5.interfaces.id_generator',
       'Products.ERP5.Document.IdGenerator',
       'Products.ERP5.Document.SQLNonContinuousIncreasingIdGenerator',
       'Products.ERP5.Document.ZODBContinuousIncreasingIdGenerator',
+      'Products.ERP5.interfaces.id_tool',
       'Products.ERP5.Tool.IdTool',
       # Business Template
       'Products.ERP5.Document.TrashBin',
@@ -6563,6 +6573,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Categories
       'Products.ERP5.Tool.CategoryTool',
       'Products.ERP5.Document.BaseCategory',
+      'Products.ERP5.interfaces.node',
       'Products.ERP5.Document.Node',
       'Products.ERP5.Document.MetaNode',
       'Products.ERP5Type.mixin.matrix',
@@ -6575,7 +6586,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # XXX: To split up maybe?
       'Products.ERP5Type.Utils',
       # Cache Tool
+      'Products.ERP5Type.interfaces.cache_plugin',
+      'Products.ERP5Type.mixin.cache_provider',
       'Products.ERP5Type.Cache',
+      'Products.ERP5Type.CachePlugins.BaseCache',
+      'Products.ERP5Type.CachePlugins.DistributedRamCache',
+      'Products.ERP5Type.CachePlugins.DummyCache',
+      'Products.ERP5Type.CachePlugins.RamCache',
       'Products.ERP5Type.Tool.CacheTool',
       # Securities
       'Products.ERP5Security.ERP5AccessTokenExtractionPlugin',
@@ -6595,6 +6612,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5.Document.Alarm',
       'Products.ERP5Type.tests.testUpgradeInstanceWithOldDataFs',
       # Any Constraints may be used by upgrader, right?
+      'Products.ERP5.interfaces.predicate',
+      'Products.ERP5Type.Core.Predicate',
       'Products.ERP5Type.interfaces.constraint',
       'Products.ERP5Type.mixin.constraint',
       'Products.ERP5.Document.AttributeBlacklistedConstraint',
