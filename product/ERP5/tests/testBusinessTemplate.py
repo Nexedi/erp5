@@ -5140,6 +5140,56 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_tool_update(self):
+    self.portal.newContent(
+        id='dummy_tool',
+        portal_type="Alarm Tool")
+
+    # export and install a first version
+    bt = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title='test_bt_%s' % self.id(),
+        template_tool_id_list=('dummy_tool', ))
+    self.tic()
+    bt.build()
+    self.tic()
+    self.portal.manage_delObjects(ids=['dummy_tool'])
+    self.commit()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      self.portal.portal_templates.updateBusinessTemplateFromUrl(
+          download_url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    self.tic()
+
+    # build a new version of this business template, where the tool export some
+    # configuration (as some plain object attributes). In this case, we expect
+    # that updating the business template will set this configuration on the tool.
+    self.portal.dummy_tool._some_configuration = "saved in business template"
+    bt.build()
+    self.tic()
+    # undo the change in title
+    del self.portal.dummy_tool._some_configuration
+
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      new_bt = self.portal.portal_templates.updateBusinessTemplateFromUrl(
+          download_url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    try:
+      self.assertEqual(self.portal.dummy_tool._some_configuration, "saved in business template")
+    finally:
+      new_bt.uninstall()
+      self.assertIsNone(self.portal._getOb('dummy_tool', None))
+
   def test_21_CategoryIncludeSubobjects(self):
     """Test Category includes subobjects"""
     sequence_list = SequenceList()
