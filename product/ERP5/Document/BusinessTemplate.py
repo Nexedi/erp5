@@ -1813,18 +1813,42 @@ class PathTemplateItem(ObjectTemplateItem):
 
 class ToolTemplateItem(PathTemplateItem):
   """This class is used only for making a distinction between other objects
-  and tools, because tools may not be backed up."""
+  and tools, because tools may not be backed up.
+
+  We also have an exception for tools that were historically not managed in business
+  template but created by ERP5Generator at site creation. We don't update these tools
+  if they are already present, because they contain lots of sub-documents and are in
+  broken state before update (because their class was also moved to portal_components at
+  the same time)
+  """
+  # Tools that were managed by ERP5Generator
+  _legacy_tool_id_list = set((
+      'portal_rules',
+      'portal_simulation',
+      'portal_deliveries',
+      'portal_orders',
+      'portal_ids',
+      'portal_domains',
+      'portal_tests',
+      'portal_password',
+      'portal_introspections',
+      'portal_acknowledgements',
+  ))
+
   def _backupObject(self, action, trashbin, container_path, object_id, **kw):
     """Fake as if a trashbin is not available."""
-    return PathTemplateItem._backupObject(self, action, None, container_path,
+    return super(ToolTemplateItem, self)._backupObject(action, None, container_path,
                                           object_id, **kw)
 
   def preinstall(self, context, installed_item, **kw):
-    object_dict = ObjectTemplateItem.preinstall(self, context, installed_item, **kw)
+    """Don't install/update the tool if it's a legacy tool that was never updated.
+    """
+    object_dict = super(ToolTemplateItem, self).preinstall(context, installed_item, **kw)
     portal_base = aq_base(context.getPortalObject())
+
     for path, (action, type_name) in object_dict.items():
       obj = getattr(portal_base, path, None)
-      if obj is not None:
+      if obj is not None and path in self._legacy_tool_id_list:
         if action == 'New':
           del object_dict[path]
         elif action == 'Modified':
