@@ -1813,7 +1813,20 @@ class PathTemplateItem(ObjectTemplateItem):
 
 class ToolTemplateItem(PathTemplateItem):
   """This class is used only for making a distinction between other objects
-  and tools, because tools may not be backed up."""
+  and tools, because tools may not be backed up.
+
+  Also, some tools can contain lots of sub-documents, like for example
+  simulation tool which contain all applied rules, currently we are not
+  able to update them, because business template does support updating a
+  document with so many documents (that's why we special case ModuleTemplateItem).
+  But we want to update tools, so for now we don't have a better solution
+  then skipping some tools we know to be too big.
+  """
+  _non_updateable_tool_id_set = set([
+      "portal_simulation",
+      "portal_preferences",
+  ])
+
   def _backupObject(self, action, trashbin, container_path, object_id, **kw):
     """Fake as if a trashbin is not available."""
     return PathTemplateItem._backupObject(self, action, None, container_path,
@@ -1823,14 +1836,15 @@ class ToolTemplateItem(PathTemplateItem):
     object_dict = ObjectTemplateItem.preinstall(self, context, installed_item, **kw)
     portal_base = aq_base(context.getPortalObject())
     for path, (action, type_name) in object_dict.items():
-      obj = getattr(portal_base, path, None)
-      if obj is not None:
-        if action == 'New':
-          del object_dict[path]
-        elif action == 'Modified':
-          object_dict[path] = 'Modified but should be kept', type_name
-        elif action == 'Removed':
-          object_dict[path] = 'Removed but should be kept', type_name
+      if path in self._non_updateable_tool_id_set:
+        obj = getattr(portal_base, path, None)
+        if obj is not None:
+          if action == 'New':
+            del object_dict[path]
+          elif action == 'Modified':
+            object_dict[path] = 'Modified but should be kept', type_name
+          elif action == 'Removed':
+            object_dict[path] = 'Removed but should be kept', type_name
     return object_dict
 
   def install(self, context, trashbin, **kw):
