@@ -34,7 +34,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.XMLObject import XMLObject
 from erp5.component.document.Path import Path
-from Products.ERP5.ExplanationCache import _getExplanationCache, _getBusinessLinkClosure
+from erp5.component.module.ExplanationCache import _getExplanationCache, _getBusinessLinkClosure
 from erp5.component.module.MovementCollectionDiff import _getPropertyAndCategoryList
 from erp5.component.interface.IBusinessProcess import IBusinessProcess
 from erp5.component.interface.IArrowBase import IArrowBase

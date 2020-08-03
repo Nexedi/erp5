@@ -35,7 +35,7 @@ from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.CMFCore.utils import getToolByName
 
-from Products.ERP5Type.ExtensibleTraversable import ExtensibleTraversableMixIn
+from erp5.component.mixin.ExtensibleTraversableMixin import ExtensibleTraversableMixin
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type import Permissions
@@ -44,7 +44,7 @@ from Products.ERP5Type.Globals import get_request
 # XXX: these duplicate ones in ERP5.Document
 _MARKER = []
 
-class BaseExtensibleTraversableMixin(ExtensibleTraversableMixIn):
+class BaseExtensibleTraversableMixin(ExtensibleTraversableMixin):
   """
   This class provides a generic base mixin implementation of IExtensibleTraversable.
 

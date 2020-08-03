@@ -34,7 +34,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from erp5.component.document.Path import Path
 from Products.ERP5Type.Core.Predicate import Predicate
-from Products.ERP5.ExplanationCache import _getExplanationCache
+from erp5.component.module.ExplanationCache import _getExplanationCache
 from erp5.component.interface.IBusinessLink import IBusinessLink
 
 import zope.interface

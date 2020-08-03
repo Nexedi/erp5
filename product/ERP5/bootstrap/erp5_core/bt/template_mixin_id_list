@@ -10,6 +10,7 @@ mixin.erp5.DocumentMixin
 mixin.erp5.DocumentProxyMixin
 mixin.erp5.DownloadableMixin
 mixin.erp5.ExplainableMixin
+mixin.erp5.ExtensibleTraversableMixin
 mixin.erp5.MailMessageMixin
 mixin.erp5.MovementCollectionUpdaterMixin
 mixin.erp5.MovementGeneratorMixin

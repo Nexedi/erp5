@@ -28,7 +28,6 @@
 ##############################################################################
 
 from collections import defaultdict
-from zLOG import LOG
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
@@ -213,7 +212,7 @@ class ExplanationCache:
     """
     business_type_list = self.getPortalBusinessLinkTypeList()
     simulation_movement_list = self.getSimulationMovementValueList()
-    simulation_movement_uid_list = map(lambda x:x.uid, simulation_movement_list)
+    simulation_movement_uid_list = [x.uid for x in simulation_movement_list]
     # We could use related keys instead of 2 queries
     business_link_list = self.portal_catalog(
                       portal_type=business_type_list,
@@ -283,8 +282,8 @@ class ExplanationCache:
         new_business_process = self.explanation.newContent(temp_object=True,
           portal_type='Business Process', id='closure_business_process')
         for i, x in enumerate(business_link_list):
-          id = 'closure_path_%s' % i
-          new_business_process._setOb(id, x.asContext(id=id))
+          id_ = 'closure_path_%s' % i
+          new_business_process._setOb(id_, x.asContext(id=id_))
       self.closure_cache[path_list] = new_business_process
 
     self.closure_cache[business_link] = new_business_process
@@ -306,8 +305,8 @@ class ExplanationCache:
     i = 0
     for business_link in self.getBusinessLinkValueList():
       i += 1
-      id = 'union_path_%s' % i
-      new_business_process._setOb(id, business_link.asContext(id=id))
+      id_ = 'union_path_%s' % i
+      new_business_process._setOb(id_, business_link.asContext(id=id_))
 
     # Keep it in cache and return
     self.union_cache = new_business_process
@@ -324,7 +323,7 @@ class ExplanationCache:
     try:
       result = cache[reference_date_key]
       if result is self: # use self as marker to detect infinite recursion
-        __traceback_info__ = (business_process.getPath(), trade_phase,
+        __traceback_info__ = (business_process.getPath(), trade_phase, # pylint: disable=unused-variable
                               reference_date_method_id, delay_mode)
         raise ValueError('No reference date is defined, probably due to missing Trade Model Path in Business Process')
       return result

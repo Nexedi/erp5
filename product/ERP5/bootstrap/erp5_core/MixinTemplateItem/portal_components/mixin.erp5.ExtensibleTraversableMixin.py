@@ -22,35 +22,36 @@
 from Acquisition import aq_base
 from webdav.NullResource import NullResource
 
-class ExtensibleTraversableMixIn:
+class ExtensibleTraversableMixin:
+  def __bobo_traverse__(self, request, name):
+    """
+    If no subobject is found through Folder API
+    then try to lookup the object by invoking _getExtensibleContent
+    """
+    # Normal traversal
+    try:
+      return getattr(self, name)
+    except AttributeError:
+      pass
 
-    def __bobo_traverse__(self, request, name):
-      """
-        If no subobject is found through Folder API
-        then try to lookup the object by invoking _getExtensibleContent
-      """
-      # Normal traversal
-      try:
-        return getattr(self, name)
-      except AttributeError:
-        pass
+    try:
+      return self[name]
+    except KeyError:
+      pass
 
-      try:
-        return self[name]
-      except KeyError:
-        pass
+    document = self.getExtensibleContent(request, name)
+    if document is not None:
+      return aq_base(document).__of__(self)
 
-      document = self.getExtensibleContent(request, name)
-      if document is not None:
-        return aq_base(document).__of__(self)
+    # Not found section
+    method = request.get('REQUEST_METHOD', 'GET')
+    if not method in ('GET', 'POST'):
+      return NullResource(self, name, request).__of__(self)
+    # Waaa. unrestrictedTraverse calls us with a fake REQUEST.
+    # There is proabably a better fix for this.
+    try:
+      request.RESPONSE.notFoundError("%s\n%s" % (name, method))
+    except AttributeError:
+      raise KeyError, name
 
-      # Not found section
-      method = request.get('REQUEST_METHOD', 'GET')
-      if not method in ('GET', 'POST'):
-        return NullResource(self, name, request).__of__(self)
-      # Waaa. unrestrictedTraverse calls us with a fake REQUEST.
-      # There is proabably a better fix for this.
-      try:
-        request.RESPONSE.notFoundError("%s\n%s" % (name, method))
-      except AttributeError:
-        raise KeyError, name
+ExtensibleTraversableMixIn = ExtensibleTraversableMixin # Backward compatibility
