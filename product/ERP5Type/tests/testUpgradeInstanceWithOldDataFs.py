@@ -173,7 +173,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     ret = self.publish(
       '%s/portal_alarms/promise_check_upgrade' % self.portal.getPath(),
       basic='%s:current' % self.id(),
-      stdin=StringIO(urllib.urlencode({
+      stdin=StringIO.StringIO(urllib.urlencode({
         'Base_callDialogMethod:method': '',
         'dialog_id': 'Alarm_viewSolveDialog',
         'dialog_method': 'Alarm_solve',
