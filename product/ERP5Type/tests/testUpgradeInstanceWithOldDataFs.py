@@ -193,7 +193,8 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     self.assertEqual(httplib.FOUND, ret.getStatus())
 
     ret = self.publish(
-      ret.getHeader('Location'),
+      # ret.getHeader('Location'),
+      '%s/portal_alarms/promise_check_upgrade/Alarm_solve' % self.portal.getPath(),
       basic='%s:current' % self.id(),
       request_method="GET",
       handle_errors=False
