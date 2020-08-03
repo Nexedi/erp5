@@ -35,6 +35,7 @@ import re
 import subprocess
 import shutil
 import transaction
+import logging
 from ZPublisher.HTTPResponse import HTTPResponse
 from zExceptions.ExceptionFormatter import format_exception
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -45,6 +46,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+logger = logging.getLogger(__name__)
 
 # selenium workaround for localhost / 127.0.0.1 resolution
 # ------
@@ -149,8 +152,8 @@ class Xvfb(Process):
     else:
       raise EnvironmentError("All displays locked : %r" % (self.display_list,))
 
-    print 'Xvfb : %d' % self.process.pid
-    print 'Take screenshots using xwud -in %s/Xvfb_screen0' % self.fbdir
+    logger.debug('Xvfb : %d', self.process.pid)
+    logger.debug('Take screenshots using xwud -in %s/Xvfb_screen0', self.fbdir)
 
 class FunctionalTestRunner:
 
@@ -188,8 +191,7 @@ class FunctionalTestRunner:
     xvfb = Xvfb(self.instance_home)
     try:
       if not (debug and os.getenv('DISPLAY')):
-        print("\nSet 'erp5_debug_mode' environment variable to 1"
-              " to use your existing display instead of Xvfb.")
+        logger.debug("You can set 'erp5_debug_mode' environment variable to 1 to use your existing display instead of Xvfb.")
         xvfb.run()
       capabilities = webdriver.common.desired_capabilities \
         .DesiredCapabilities.FIREFOX.copy()
@@ -207,6 +209,20 @@ class FunctionalTestRunner:
         kw.update(firefox_binary=firefox_bin, executable_path=geckodriver)
       browser = webdriver.Firefox(**kw)
       start_time = time.time()
+      logger.info("Running with browser: %s", browser)
+      logger.info("Reported user agent: %s", browser.execute_script("return navigator.userAgent"))
+      logger.info(
+          "Reported screen information: %s",
+          browser.execute_script(
+              '''
+              return JSON.stringify({
+                  'screen.width': window.screen.width,
+                  'screen.height': window.screen.height,
+                  'screen.pixelDepth': window.screen.pixelDepth,
+                  'innerWidth': window.innerWidth,
+                  'innerHeight': window.innerHeight
+                })'''))
+
       browser.get(self._getTestBaseURL() + '/login_form')
       login_field = WebDriverWait(browser, 10).until(
         EC.presence_of_element_located((By.NAME, '__ac_name')),
