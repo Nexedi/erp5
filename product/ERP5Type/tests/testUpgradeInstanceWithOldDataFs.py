@@ -170,16 +170,22 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     alarm.Alarm_solve()
     """
 
+    encoded_url = urllib.urlencode({
+      'Base_callDialogMethod:method': '',
+      'dialog_id': 'Alarm_viewSolveDialog',
+      'dialog_method': 'Alarm_solve',
+      'form_id': 'Alarm_view',
+      'selection_name': 'foo_selection',
+    })
+
+    body = StringIO.StringIO(encoded_url)
+
+    basic_auth = '%s:current' % self.id()
+
     ret = self.publish(
       '%s/portal_alarms/promise_check_upgrade' % self.portal.getPath(),
-      basic='%s:current' % self.id(),
-      stdin=StringIO.StringIO(urllib.urlencode({
-        'Base_callDialogMethod:method': '',
-        'dialog_id': 'Alarm_viewSolveDialog',
-        'dialog_method': 'Alarm_solve',
-        'form_id': 'Alarm_view',
-        'selection_name': 'foo_selection',
-      })),
+      basic=basic_auth,
+      stdin=body,
       request_method="POST",
       handle_errors=False
     )
