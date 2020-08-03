@@ -127,7 +127,11 @@ class ERP5(_ERP5):
       shutil.copyfile(os.path.join(old_data_path, 'dump.sql'),
                       os.path.join(instance_home, 'dump.sql'))
 
-      return self.runUnitTest('--load', '--portal_id=erp5', full_test)
+      return self.runUnitTest(
+          '--load',
+          '--portal_id=erp5',
+          '--enable_full_indexing=portal_types,portal_property_sheets',
+          full_test)
 
     return super(ERP5, self).run(full_test)
 
