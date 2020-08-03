@@ -62,6 +62,10 @@ body > div.spreadsheet.jexcel_tabs > div:nth-child(1) {
   cursor: alias;
 }
 
+:focus {
+  outline: none;
+}
+
 @media (max-width: 1150px){
   div.jexcel_filter {
     display: none;
