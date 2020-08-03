@@ -5140,6 +5140,157 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_tool_update(self):
+    self.portal.newContent(
+        id='dummy_tool',
+        portal_type="Alarm Tool")
+
+    # export and install a first version
+    bt = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title='test_bt_%s' % self.id(),
+        template_tool_id_list=('dummy_tool', ))
+    self.tic()
+    bt.build()
+    self.tic()
+    self.portal.manage_delObjects(ids=['dummy_tool'])
+    self.commit()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      self.portal.portal_templates.updateBusinessTemplateFromUrl(
+          download_url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    self.tic()
+
+    # build a new version of this business template, where the tool export some
+    # configuration (as some plain object attributes). In this case, we expect
+    # that updating the business template will set this configuration on the tool.
+    self.portal.dummy_tool._some_configuration = "saved in business template"
+    bt.build()
+    self.tic()
+    # undo the change in title
+    del self.portal.dummy_tool._some_configuration
+
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      new_bt = self.portal.portal_templates.updateBusinessTemplateFromUrl(
+          download_url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    try:
+      self.assertEqual(self.portal.dummy_tool._some_configuration, "saved in business template")
+    finally:
+      new_bt.uninstall()
+      self.assertIsNone(self.portal._getOb('dummy_tool', None))
+
+  def test_move_tool_to_another_business_template(self):
+    """test the case of a tool that was initially in a business template, but later
+    was moved to another business template.
+
+    This test update business templates. In the first state we have:
+     - bt1 which contain a "dummy_tool" tool
+     - bt2 which contain nothing
+    in the second state, we update so that:
+     - bt1 contain nothing
+     - bt2 contain the "dummy_tool"
+
+    Because this tool did not really change in business templates, we expect that updating
+    bt2 will not update the tool.
+    In a real-life scenario, we also expect that updating b1 does not remove the tool, but
+    this is not really automatic, this rely on the developer to correctly package bt1 and
+    list the tool in the "keep paths".
+    """
+    self.portal.newContent(
+        id='dummy_tool',
+        portal_type="Alarm Tool")
+
+    bt1_initial = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title='test_bt1_%s' % self.id(),
+        template_tool_id_list=('dummy_tool', ))
+    self.tic()
+    bt1_initial.build()
+    self.tic()
+
+    # install a first version of test_bt2 where dummy_tool was not here,
+    # to check the update case.
+    bt2_initial = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title='test_bt2_%s' % self.id())
+    bt2_initial.build()
+    self.tic()
+    bt2_initial.install()
+    self.tic()
+
+    bt2 = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title='test_bt2_%s' % self.id(),
+        template_tool_id_list=('dummy_tool', ))
+    self.tic()
+    bt2.build()
+    self.tic()
+
+    self.portal.manage_delObjects(ids=['dummy_tool'])
+    self.commit()
+    bt1 = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title='test_bt1_%s' % self.id(),
+        template_tool_id_list=(),
+        template_keep_path_list=('dummy_tool',)
+    )
+    self.tic()
+    bt1.build()
+    self.tic()
+
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt1_initial.export(path=export_dir, local=True)
+      self.tic()
+      self.portal.portal_templates.updateBusinessTemplateFromUrl(
+          download_url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    self.portal.dummy_tool._touched_in_update = False
+    self.commit()
+    # install the new bt2 and check that this does not re-install the tool.
+    # This is especially important for tool which contain lots of documents (such as portal_simulation)
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt2.export(path=export_dir, local=True)
+      self.tic()
+      new_bt2 = self.portal.portal_templates.updateBusinessTemplateFromUrl(
+          download_url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    self.assertFalse(self.portal.dummy_tool._touched_in_update)
+
+    # install the new version of bt1, where tool was removed, this
+    # does not remove the tool (because we made the business template correctly and did not forget
+    # to list the tool in template_keep_path_list)
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt1.export(path=export_dir, local=True)
+      self.tic()
+      self.portal.portal_templates.updateBusinessTemplateFromUrl(
+          download_url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+    self.assertIsNotNone(self.portal._getOb('dummy_tool', None))
+
+    # cleanup
+    new_bt2.uninstall()
+    self.commit()
+    self.assertIsNone(self.portal._getOb('dummy_tool', None))
+
   def test_21_CategoryIncludeSubobjects(self):
     """Test Category includes subobjects"""
     sequence_list = SequenceList()

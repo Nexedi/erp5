@@ -1813,18 +1813,54 @@ class PathTemplateItem(ObjectTemplateItem):
 
 class ToolTemplateItem(PathTemplateItem):
   """This class is used only for making a distinction between other objects
-  and tools, because tools may not be backed up."""
+  and tools, because tools may not be backed up.
+
+  Also, some tools can contain lots of sub-documents, like for example
+  simulation tool which contain all applied rules, currently we are not
+  able to update them, because business template does support updating a
+  document with so many documents (that's why we special case ModuleTemplateItem).
+  But we want to update tools, so we have a special preinstall method that
+  will skip tools if they already "look up to date".
+  """
+
   def _backupObject(self, action, trashbin, container_path, object_id, **kw):
     """Fake as if a trashbin is not available."""
-    return PathTemplateItem._backupObject(self, action, None, container_path,
+    return super(ToolTemplateItem, self)._backupObject(action, None, container_path,
                                           object_id, **kw)
 
   def preinstall(self, context, installed_item, **kw):
-    object_dict = ObjectTemplateItem.preinstall(self, context, installed_item, **kw)
+    """Try to not install/update the tool, unless it already exists
+    and seems different.
+    """
+    object_dict = super(ToolTemplateItem, self).preinstall(context, installed_item, **kw)
     portal_base = aq_base(context.getPortalObject())
+
+    def canIgnoreExistingToolUpdate(existing_object, new_object):
+      # When a path already exist, we usually update it, but for tool which
+      # contain documents, we want to be a bit more clever so that we
+      # don't update the tool if it is already up to date. This allows to
+      # support the case of tools that are moved from one business template to another.
+
+      # if the new object does not actually exist, we can not ignore.
+      if new_object is None:
+        return False
+
+      # if classes are different, we definitely needs to update existing tool
+      if existing_object.__class__ != new_object.__class__:
+        return False
+
+      # If the new tool have more properties in its __dict__ than the
+      # default properties from all ERP5 documents, we must update it.
+      new_object._p_activate()
+      new_object_dict = new_object.__dict__
+      new_object_dict = new_object_dict.get('__Broken_state__', new_object_dict)
+      return not any(
+          k for k in new_object_dict.keys()
+          if k not in set(('__ac_local_roles__', '_count', '_mt_index', '_tree', 'portal_type', 'id', 'uid', 'title')))
+
     for path, (action, type_name) in object_dict.items():
       obj = getattr(portal_base, path, None)
-      if obj is not None:
+      if obj is not None and canIgnoreExistingToolUpdate(obj, self._objects.get(path)):
         if action == 'New':
           del object_dict[path]
         elif action == 'Modified':
