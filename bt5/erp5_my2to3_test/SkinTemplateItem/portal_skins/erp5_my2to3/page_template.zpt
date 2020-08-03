@@ -1,0 +1,1 @@
+<span tal:content="python: 1 / 2"></span>

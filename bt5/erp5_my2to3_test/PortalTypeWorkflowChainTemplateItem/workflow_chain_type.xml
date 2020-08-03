@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>my2to3 Test</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>
