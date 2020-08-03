@@ -5140,6 +5140,54 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_tool_update(self):
+    self.portal.newContent(
+        id='dummy_tool',
+        portal_type="Alarm Tool",
+        title="Dummy Tool Version 1")
+
+    # export and install a first version
+    bt = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title='test_bt_%s' % self.id(),
+        template_tool_id_list=('dummy_tool', ))
+    self.tic()
+    bt.build()
+    self.tic()
+    self.portal.manage_delObjects(ids=['dummy_tool'])
+    self.commit()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      self.portal.portal_templates.updateBusinessTemplateFromUrl(
+          download_url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    self.tic()
+    self.assertEqual(self.portal.dummy_tool.getTitle(), "Dummy Tool Version 1")
+
+    self.portal.dummy_tool.setTitle("Dummy Tool Version 2")
+    bt.build()
+    self.tic()
+    # undo the change in title
+    self.portal.dummy_tool.setTitle("Dummy Tool Version 1")
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      new_bt = self.portal.portal_templates.updateBusinessTemplateFromUrl(
+          download_url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    try:
+      self.assertEqual(self.portal.dummy_tool.getTitle(), "Dummy Tool Version 2")
+    finally:
+      new_bt.uninstall()
+      self.assertIsNone(self.portal._getOb('dummy_tool', None))
+
   def test_21_CategoryIncludeSubobjects(self):
     """Test Category includes subobjects"""
     sequence_list = SequenceList()
