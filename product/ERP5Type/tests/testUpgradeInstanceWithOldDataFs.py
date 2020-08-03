@@ -152,6 +152,7 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     self.assertNotEquals([x.detail for x in alarm.getLastActiveProcess().getResultList()], [])
 
     # Solve divergencies, like called from the form_dialog
+    """
     fake_request = do_fake_request("POST", data=(
       ('dialog_method', 'Alarm_solve'),
       ('dialog_id', 'Alarm_viewSolveDialog'),
@@ -167,6 +168,30 @@ class TestUpgradeInstanceWithOldDataFs(ERP5TypeTestCase):
     )
     self.assertEqual(fake_request.RESPONSE.status, 302)
     alarm.Alarm_solve()
+    """
+
+    ret = self.publish(
+      '%s/portal_alarms/promise_check_upgrade' % self.portal.getPath(),
+      basic='%s:current' % self.id(),
+      stdin=StringIO(urllib.urlencode({
+        'Base_callDialogMethod:method': '',
+        'dialog_id': 'Alarm_viewSolveDialog',
+        'dialog_method': 'Alarm_solve',
+        'form_id': 'Alarm_view',
+        'selection_name': 'foo_selection',
+      })),
+      request_method="POST",
+      handle_errors=False
+    )
+    self.assertEqual(httplib.FOUND, ret.getStatus())
+
+    ret = self.publish(
+      ret.getHeader('Location'),
+      basic='%s:current' % self.id(),
+      request_method="GET",
+      handle_errors=False
+    )
+    self.assertEqual(httplib.OK, ret.getStatus())
 
     # alarm.solve()
     self.tic()
