@@ -85,6 +85,7 @@ Person | assignment
 Person | details
 Person | document_view
 Person | financial_view
+Person | jump_to_document
 Person | person_detailed_report
 Person | terminate_career
 Person | view
