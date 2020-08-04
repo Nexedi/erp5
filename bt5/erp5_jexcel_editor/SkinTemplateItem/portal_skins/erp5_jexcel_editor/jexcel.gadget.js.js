@@ -1,7 +1,14 @@
 /*jslint nomen: true, indent: 2, maxlen: 80 */
-/*global window, rJS, RSVP, jexcel, domsugar, document, alert, prompt, confirm*/
-(function (window, rJS, jexcel, domsugar, document, alert, prompt, confirm) {
+/*global window, rJS, RSVP, jexcel, domsugar, document, alert,
+prompt, confirm, navigator*/
+(function (window, rJS, jexcel, domsugar, document, alert,
+            prompt, confirm, navigator) {
   "use strict";
+
+  function isMobileDevice() {
+    return (window.orientation !== undefined) ||
+      (navigator.userAgent.indexOf('IEMobile') !== -1);
+  }
 
   function format(node, level) {
     var indentBefore = new Array(level + 2).join('  '),
@@ -427,6 +434,12 @@
             }
           });
           items.push({
+            title: "Set column type: Calendar",
+            onclick: function () {
+              return gadget.triggerChangeType("calendar");
+            }
+          });
+          items.push({
             title: "Set column type: Color",
             onclick: function () {
               return gadget.triggerChangeType("color", null, "square");
@@ -459,6 +472,53 @@
     if (toolbar_dict.hasOwnProperty("color_picker") &&
         toolbar_dict.color_picker) {
       list.push(dict.text_color, dict.background_color);
+    }
+    if (isMobileDevice()) {
+      list.push({
+        type: "i",
+        content: "photo_library",
+        onclick: function (sheet, instance) {
+          return gadget.triggerChangeTypeInToolbar(sheet, instance, "image");
+        }
+      });
+      list.push({
+        type: "i",
+        content: "format_size",
+        onclick: function (sheet, instance) {
+          return gadget.triggerChangeTypeInToolbar(sheet, instance, "text");
+        }
+      });
+      list.push({
+        type: "i",
+        content: "format_paint",
+        onclick: function (sheet, instance) {
+          return gadget.triggerChangeTypeInToolbar(sheet, instance,
+                                                   "color", null, "square");
+        }
+      });
+      list.push({
+        type: "i",
+        content: "format_list_bulleted",
+        onclick: function (sheet, instance) {
+          return gadget.triggerChangeTypeInToolbar(sheet, instance, "html");
+        }
+      });
+      list.push({
+        type: "i",
+        content: "calendar_today",
+        onclick: function (sheet, instance) {
+          return gadget.triggerChangeTypeInToolbar(sheet, instance, "calendar");
+        }
+      });
+      list.push({
+        type: "i",
+        content: "check_box",
+        onclick: function (sheet, instance) {
+          var child = domsugar("input", {type: "checkbox"});
+          return gadget.triggerChangeTypeInToolbar(sheet, instance,
+                                                   "checkbox", child);
+        }
+      });
     }
     if (toolbar_dict.hasOwnProperty("add_delete_row_column") &&
         toolbar_dict.add_delete_row_column) {
@@ -496,7 +556,7 @@
         add_delete_row_column: true
       },
       options: {
-        minDimensions: [15, 30],
+        minDimensions: [26, 100],
         defaultColWidth: 100,
         defaultColAlign: "left",
         allowExport: true,
@@ -596,7 +656,6 @@
               return setupTable(gadget, tab);
             });
         } else {
-          delete toolbar_config.minDimensions;
           gadget.state.tables = [];
           nodes = createElementFromHTML(gadget.state.value);
           for (i = 0; i < nodes.length; i++) {
@@ -748,7 +807,7 @@
           }
         });
         setHistoryType(state.obj, "endChangeType",
-                       Number(x),
+                       x,
                        state.obj.options.columns[x].type,
                        type);
         state.obj.options.columns[x].type = type;
@@ -759,10 +818,43 @@
       }
     })
 
+    .declareJob("triggerChangeTypeInToolbar", function (sheet, instance, type, child, render) {
+      var cell = sheet.querySelector("td.highlight-selected"),
+        x = parseInt(cell.dataset.x, 10),
+        column,
+        array;
+      if (cell && instance.options.columns[x].type !== type) {
+        column = sheet.querySelectorAll("td[data-x='" + x + "']");
+        array = [...column];
+        array.shift();
+        setHistoryType(instance, "beginChangeType",
+                       x,
+                       instance.options.columns[x].type,
+                       type);
+        array.forEach(function (cell) {
+          instance.setValue(getCoordinatesFromCell(cell), "");
+          cell.innerHTML = "";
+          if (child) {
+            cell.appendChild(child.cloneNode());
+          }
+        });
+        setHistoryType(instance, "endChangeType",
+                       x,
+                       instance.options.columns[x].type,
+                       type);
+        instance.options.columns[x].type = type;
+        if (render) {
+          instance.options.columns[x].render = render;
+        }
+        fireDoubleClick(cell);
+      }
+    })
+
     .declareJob("triggerNewDimensions", function (sheet, instance) {
       var r = prompt("Number of rows :", instance.options.data.length);
       var c = prompt("Number of columns :", instance.options.columns.length);
       if (c > 0 && r > 0) {
+        instance.setHistory({action: "beginResizeTable"});
         if (c > instance.options.columns.length) {
           while (instance.options.columns.length < c) {
             instance.insertColumn();
@@ -783,6 +875,7 @@
             instance.deleteRow(instance.options.data.length - 1, 1);
           }
         }
+        instance.setHistory({action: "endResizeTable"});
       }
     })
 
@@ -1013,10 +1106,10 @@
           name = prompt("Table name :", ev.target.textContent);
           gadget.state.selectedTabLink.textContent = name !== null ?
             name : gadget.state.selectedTabLink.textContent;
+          gadget.deferNotifyChange();
         }
         gadget.state.selectedTabLink = ev.target;
-        gadget.deferNotifyChange();
       }
     }, false, false);
 
-}(window, rJS, jexcel, domsugar, document, alert, prompt, confirm));
+}(window, rJS, jexcel, domsugar, document, alert, prompt, confirm, navigator));
