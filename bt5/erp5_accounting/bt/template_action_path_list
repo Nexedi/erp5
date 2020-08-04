@@ -95,6 +95,7 @@ Payment Transaction | destination_asset
 Payment Transaction | destination_view
 Payment Transaction | details
 Payment Transaction | document_list
+Payment Transaction | jump_to_document
 Payment Transaction | profile_view_destination
 Payment Transaction | profile_view_source
 Payment Transaction | related_invoice
@@ -121,6 +122,7 @@ Purchase Invoice Transaction | destination_view
 Purchase Invoice Transaction | detail
 Purchase Invoice Transaction | document_list
 Purchase Invoice Transaction | jump_related_payment
+Purchase Invoice Transaction | jump_to_document
 Purchase Invoice Transaction | profile_view
 Purchase Invoice Transaction | source_asset
 Purchase Invoice Transaction | source_view
@@ -135,6 +137,7 @@ Sale Invoice Transaction | create_reversal
 Sale Invoice Transaction | destination_asset
 Sale Invoice Transaction | detail
 Sale Invoice Transaction | document_list
+Sale Invoice Transaction | jump_to_document
 Sale Invoice Transaction | jump_to_related_payment
 Sale Invoice Transaction | profile_view
 Sale Invoice Transaction | source_asset
