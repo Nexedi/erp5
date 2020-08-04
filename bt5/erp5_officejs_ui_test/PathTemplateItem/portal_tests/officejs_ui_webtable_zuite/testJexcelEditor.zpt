@@ -125,7 +125,7 @@
 <tr>
   <td>assertText</td>
   <td>//div[@data-spreadsheet='1']</td>
-  <td>Sheet 2</td>
+  <td>Table 2</td>
 </tr>
 <!-- Delete Sheet -->
 <tr>
@@ -145,7 +145,7 @@
 </tr>
 <tr>
   <td>assertConfirmation</td>
-  <td>Delete this sheet ?</td>
+  <td>Delete this table ?</td>
   <td></td>
 </tr>
 <tr>
@@ -156,7 +156,7 @@
 <tr>
   <td>assertText</td>
   <td>//div[@data-spreadsheet='0']</td>
-  <td>Sheet 1</td>
+  <td>Table 1</td>
 </tr>
 </tbody>
 </table>
