@@ -401,6 +401,7 @@
     gadget.slide_coordinate = [];
     // store the data-slide-index of slides in the order we want to show them
     gadget.slide_order = [];
+    gadget.slide_order_start = []; //used to restore the slides positions
 
     // Don't forget that the last element is the "add slide" button
     var slide_list = gadget.element.querySelector("div.slide_list").children,
@@ -408,12 +409,13 @@
       x,
       y;
     for (i = 0; i < slide_list.length - 1; i += 1) {
-      console.log("slide: " + i.toString());
+      //console.log("slide: " + i.toString());
       x = slide_list[i].getBoundingClientRect().x;
       y = slide_list[i].getBoundingClientRect().y;
       gadget.slide_coordinate[i] = [x, y];
       gadget.slide_order[i] =
         slide_list[i].getAttribute('data-slide-index');
+      gadget.slide_order_start[i] = gadget.slide_order[i];
     }
   }
 
@@ -434,13 +436,13 @@
     // reset slides positions on dragend event
     if (dragged === "-1") {
       for (j = 0; j < gadget.slide_order.length; j += 1) {
+        gadget.slide_order[j] = gadget.slide_order_start[j];
         slide_list[j].style.left = "0";
         slide_list[j].style.top = "0";
         slide_list[j].style.position = "relative";
       }
       return;
     }
-
     // we move this slide (position in the list of slides)
     dragged_index = gadget.slide_order.indexOf(dragged);
     // over this slide (position in the list of slides)
@@ -449,11 +451,8 @@
     moved = gadget.slide_order.splice(dragged_index, 1);
     // insert the moved slide on the right position into the list
     gadget.slide_order.splice(hovered_index, 0, moved[0]);
-    /*console.log("dragged index " + dragged_index.toString());
-    console.log("hovered index " + hovered_index.toString());*/
     // where to drop the slide (on drop event)
     gadget.hovered_slide = hovered_index.toString();
-
     for (i = 0; i < gadget.slide_order.length; i += 1) {
       // Find slide that should be shown at that index
       slide = slide_list[parseInt(gadget.slide_order[i], 10)];
@@ -688,12 +687,10 @@
       evt.dataTransfer.setData('application/x-dragged-slide',
                                evt.target.getAttribute('data-slide-index'));
       gadget.dragged_slide = evt.target.getAttribute('data-slide-index');
-      console.log("start [" +
-                  evt.target.getAttribute('data-slide-index') + "]");
     }, false, false)
 
     .onEvent("dragend", function (evt) {
-      console.log("end");
+      //console.log("end");
       moveSlide(this, "-1", "-1");
       var closest_section = evt.target.closest('section');
       if (closest_section === null) {
@@ -703,7 +700,7 @@
     }, false, false)
 
     .onEvent("dragover", function (evt) {
-      console.log("over");
+      //console.log("over");
       var closest_section = evt.target.closest('section');
       if (closest_section === null) {
         return;
@@ -715,8 +712,6 @@
     }, false, false)
 
     .onEvent("dragenter", function (evt) {
-      //console.log("enter");
-      //var gadget = this;
       var closest_section = evt.target.closest('section'),
         gadget,
         dragged,
@@ -731,7 +726,6 @@
       dragged = gadget.dragged_slide;
       hovered = closest_section.getAttribute('data-slide-index');
       if (dragged !== hovered) {
-        console.log("enter [" + hovered + "]");
         if (closest_section.getAttribute('data-slide-index')) {
           moveSlide(this, dragged, hovered);
         }
@@ -740,7 +734,7 @@
     }, false, false)
 
     .onEvent("dragleave", function (evt) {
-      console.log("leave");
+      //console.log("leave");
       //exits if mouse is indirectly over a section
       if (evt.relatedTarget) {
         var closest_section = evt.relatedTarget.closest('section'),
