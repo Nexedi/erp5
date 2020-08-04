@@ -26,7 +26,7 @@
   <td>${base_url}/web_site_module/cribjs_bootloader/</td>
   <td></td>
 </tr>
-<!-- Initialize
+<!--   Initialize
 <tr>
   <td>waitForTextPresent</td>
   <td>CribJS Bootloader</td>
