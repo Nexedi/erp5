@@ -26,7 +26,6 @@ if source is None:
   source_person = None
   source_person_list = []
   source_organisation_list = []
-  source_set = None
 
   # source person => override => contributor => source_decision
   if override_source_person_title is not None or override_source_person_title == blank:
@@ -102,14 +101,16 @@ if source.get("corporate_registration_code") is blank:
 # XXX images stored on organisation (as do images in skin folders)
 if override_logo_reference:
   source_logo_url = html_quote(override_logo_reference) + "?format=png"
-  source_set = True
-if source_logo_url is None:
+else:
   source_logo_url = source.get("logo_url", blank)
-if source_logo_url != blank and source_set is None:
-  # XXX: test environment fails if url with parameters are supplied
-  source_logo_url = source_logo_url + "?format=png"
-if source_logo_url == blank and theme_logo_url is not None:
-  source_logo_url = theme_logo_url
+  if source_logo_url != blank:
+    # XXX: test environment fails if url with parameters are supplied
+    source_logo_url = source_logo_url + "?format=png"
+    #logo_url is organisation default image, which is not accessible for anounymous
+    source["enhanced_logo_data_url"] = source.get("logo_data_url")
+  elif theme_logo_url is not None:
+    source_logo_url = theme_logo_url
+
 source["enhanced_logo_url"] = source_logo_url
 
 return source
