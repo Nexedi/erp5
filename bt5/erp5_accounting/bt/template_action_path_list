@@ -47,6 +47,7 @@ Accounting Transaction | create_reversal
 Accounting Transaction | destination_asset
 Accounting Transaction | details
 Accounting Transaction | document_list
+Accounting Transaction | jump_to_document
 Accounting Transaction | profile_view
 Accounting Transaction | source_asset
 Accounting Transaction | view
