@@ -252,7 +252,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       getattr(test_page, kw.get("test_method")),
       **kw
     )
-
+    self.login()
     image_source_pdf_doc.setData(pdf_data)
     _, bmp = image_source_pdf_doc.convert("bmp", frame=kw.get("page_number"))
 
@@ -401,6 +401,28 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       )
     )
 
+  @changeSkin('Slide')
+  def test_pdfSlideShowForAnonymous(self):
+    """
+      Test for anonymous:
+      - Web Page as Slideshow
+      - without follow up
+      - without contributor
+      - export as pdf
+    """
+    self.logout()
+    self.tic()
+    self.runPdfTestPattern(
+      "template_test_organisation_logo_in_slide_view",
+      "template_test_slideshow_for_anonymous_en_bmp",
+      "template_test_slideshow_input_001_en_pdf",
+      **dict(
+        page_number=0,
+        use_skin="Slide",
+        test_method="WebPage_exportAsSlideshow",
+        format="pdf"
+      )
+    )
   @changeSkin('Slide')
   def test_pdfSlideshowNotes(self):
     """
