@@ -8,7 +8,7 @@ Return local parameters that require proxy role to access
 # pass_parameter             (portal-) type of data to fetch
 # pass_source_data           followup uid or context for retrieving info
 # pass_flag_site             whether called from a web site (no follow-up)
-
+from base64 import b64encode
 portal_type_valid_template_list = ["Web Site", "Web Section", "Web Page", "Letter"]
 portal_type_valid_report_list = ["Project", "Sale Order", "Sale Opportunity", "Requirement Document", "Person"]
 portal_type = context.getPortalType()
@@ -127,6 +127,9 @@ def populateOrganisationDict(my_organisation_list):
     #output_dict["logo_url"] = organisation.getDefaultImageAbsoluteUrl() or err("logo_url")
     if organisation_default_image is not None:
       output_dict["logo_url"] = organisation_default_image.getRelativeUrl()
+      output_dict["logo_data_url"] = 'data:image/png;;base64,%s' % (
+        b64encode(organisation_default_image.convert(format="png", display="thumbnail")[1])
+      )
     else:
       output_dict["logo_url"] = err("logo_url")
 
