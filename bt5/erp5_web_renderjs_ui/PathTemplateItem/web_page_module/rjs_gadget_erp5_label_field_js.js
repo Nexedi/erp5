@@ -1,4 +1,4 @@
-/*global window, document, rJS */
+/*global window, document, rJS*/
 /*jslint indent: 2, maxerr: 3 */
 /**
  * Label gadget takes care of displaying validation errors and label.
@@ -80,6 +80,7 @@
       error_text: '',
       label: true,  // the label element is already present in the HTML template
       css_class: '',
+      display_error_text: false,
       first_call: false
     })
 
@@ -101,6 +102,7 @@
         state_dict.label = true;
       }
       return this.changeState(state_dict);
+
     })
 
     .onStateChange(function onStateChange(modification_dict) {
@@ -110,15 +112,13 @@
         i,
         queue,
         new_div;
-
       if (modification_dict.hasOwnProperty('first_call')) {
         gadget.props = {
           container_element: gadget.element.querySelector('div'),
           label_element: gadget.element.querySelector('label')
         };
       }
-
-      if (gadget.state.hidden && !modification_dict.error_text) {
+      if (gadget.state.hidden && !gadget.state.error_text) {
         this.element.hidden = true;
       } else {
         this.element.hidden = false;
@@ -136,14 +136,31 @@
         }
       }
 
-      if (modification_dict.hasOwnProperty('error_text')) {
+      // Remove/add label_element from DOM
+      if (modification_dict.hasOwnProperty('label')) {
+        if (this.state.label === true) {
+          this.props.container_element.insertBefore(this.props.label_element, this.props.container_element.firstChild);
+        } else {
+          this.props.container_element.removeChild(this.props.label_element);
+        }
+      }
+
+      if (this.state.error_text && this.props.label_element &&
+          !this.props.label_element.classList.contains("is-invalid")) {
+        this.props.label_element.classList.add("is-invalid");
+      } else if (!this.state.error_text &&
+                 this.props.label_element.classList.contains("is-invalid")) {
+        this.props.label_element.classList.remove("is-invalid");
+      }
+
+      if (modification_dict.hasOwnProperty('display_error_text') || modification_dict.hasOwnProperty('error_text')) {
         // first remove old errors
         span = this.props.container_element.lastElementChild;
         if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
           span = null;
         }
         // display new error if present
-        if (this.state.error_text) {
+        if (this.state.error_text && this.state.display_error_text) {
           if (span === null) {
             span = document.createElement('span');
             span.textContent = this.state.error_text;
@@ -151,17 +168,10 @@
           } else {
             span.textContent = this.state.error_text;
           }
-        } else if (span !== null) {
-          this.props.container_element.removeChild(span);
-        }
-      }
-
-      // Remove/add label_element from DOM
-      if (modification_dict.hasOwnProperty('label')) {
-        if (this.state.label === true) {
-          this.props.container_element.insertBefore(this.props.label_element, this.props.container_element.firstChild);
         } else {
-          this.props.container_element.removeChild(this.props.label_element);
+          if (span !== null) {
+            this.props.container_element.removeChild(span);
+          }
         }
       }
 
@@ -199,6 +209,7 @@
             });
         }
       }
+
     })
 
     .declareMethod("checkValidity", function checkValidity() {
@@ -230,6 +241,14 @@
           return gadget.getListboxInfo.apply(gadget, argument_list);
         });
     }, {mutex: 'changestate'})
+
+    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
+      return this.changeState({display_error_text: true});
+    })
+
+    .allowPublicAcquisition("notifyBlur", function notifyBlur() {
+      return this.changeState({display_error_text: false});
+    })
 
     .allowPublicAcquisition("notifyInvalid", function notifyInvalid(param_list) {
       // Label doesn't know when a subgadget calls notifyInvalid
