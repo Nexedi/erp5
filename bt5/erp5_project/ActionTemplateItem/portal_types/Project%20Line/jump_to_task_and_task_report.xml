@@ -16,13 +16,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_onlyxhtml_view</string>
+                <string>action_type/object_onlyjio_jump</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_onlyxhtml_view</string> </value>
+            <value> <string>object_onlyjio_jump</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>task_list</string> </value>
+            <value> <string>jump_to_task_and_task_report</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -51,6 +51,10 @@
                 <string>View</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Action Information</string> </value>
         </item>
         <item>
             <key> <string>priority</string> </key>
@@ -75,7 +79,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/ProjectLine_viewTaskList?reset:int=1</string> </value>
+            <value> <string>string:${object_url}/Project_viewTaskSearchableList</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -88,7 +92,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python:portal.Base_checkPermission(\'task_module\', \'View\')</string> </value>
+            <value> <string>python: portal.Base_checkPermission(\'task_module\', \'View\') or portal.Base_checkPermission(\'task_report_module\', \'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>
