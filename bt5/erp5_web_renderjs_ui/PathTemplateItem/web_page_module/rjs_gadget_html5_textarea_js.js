@@ -73,13 +73,22 @@
     })
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
-    .declareMethod('checkValidity', function checkValidity() {
-      var result = this.element.querySelector('textarea').checkValidity();
-      if (result) {
+    .declareMethod('checkValidity', function checkValidity(error_text) {
+      var textarea = this.element.querySelector('textarea'),
+        result = textarea.checkValidity();
+      if (result && !error_text) {
+        if (textarea.classList.contains("is-invalid")) {
+          textarea.classList.remove("is-invalid");
+        }
+
         return this.notifyValid()
           .push(function () {
             return result;
           });
+      } else if (error_text) {
+        if (!textarea.classList.contains("is-invalid")) {
+          textarea.classList.add("is-invalid");
+        }
       }
       return result;
     })
@@ -93,6 +102,16 @@
       // invalid event does not bubble
       return this.notifyInvalid(evt.target.validationMessage);
     }, true, true)
+
+    .declareAcquiredMethod("notifyFocus", "notifyFocus")
+    .onEvent('focus', function focus() {
+      return this.notifyFocus();
+    }, true, false)
+
+    .declareAcquiredMethod("notifyBlur", "notifyBlur")
+    .onEvent('blur', function blur() {
+      return this.notifyBlur();
+    }, true, false)
 
     .declareAcquiredMethod("notifySubmit", "notifySubmit")
     .onEvent('keydown', function keydown(evt) {

@@ -210,6 +210,9 @@
         });
     }, {mutex: 'changestate'})
 
+    .allowPublicAcquisition("notifyFocus", function notifyFocus() {})
+    .allowPublicAcquisition("notifyBlur", function notifyBlur() {})
+
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")
     .onEvent('click', function (evt) {
       if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
