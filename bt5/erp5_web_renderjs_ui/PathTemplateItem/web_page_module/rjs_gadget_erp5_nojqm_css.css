@@ -8,7 +8,7 @@
 * Shared
 **********************************************/
 /**********************************************
-* http://meyerweb.com/eric/tools/css/reset/ 
+* http://meyerweb.com/eric/tools/css/reset/
 *   v2.0 | 20110126
 *   License: none (public domain)
 **********************************************/
@@ -329,13 +329,22 @@ select:focus {
 }
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]):invalid,
 textarea:invalid,
-select:invalid {
+select:invalid,
+input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]).is-invalid,
+textarea.is-invalid,
+select.is-invalid {
   border: 1px solid #FF6600;
 }
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]):invalid:focus,
 textarea:invalid:focus,
-select:invalid:focus {
+select:invalid:focus,
+input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]).is-invalid:focus,
+textarea.is-invalid:focus,
+select.is-invalid:focus {
   box-shadow: 0 0 12pt #FF6600;
+}
+label.is-invalid {
+  color: #FF6600;
 }
 input[type="search"] {
   -webkit-appearance: textfield;
@@ -1177,7 +1186,7 @@ div[data-gadget-scope='header'] .ui-header ul {
     padding-left: 24pt;
   }
 }
-.gadget-content .ui-field-contain > label {
+.gadget-content .ui-field-contain > label:not(:is-invalid) {
   color: hsl(0, 0%, 42%);
 }
 .gadget-content .required > .ui-field-contain > label {
