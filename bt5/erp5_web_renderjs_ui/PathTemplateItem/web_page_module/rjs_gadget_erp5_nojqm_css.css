@@ -329,12 +329,18 @@ select:focus {
 }
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]):invalid,
 textarea:invalid,
-select:invalid {
+select:invalid,
+input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]).is-invalid,
+textarea.is-invalid,
+select.is-invalid {
   border: 1px solid #FF6600;
 }
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]):invalid:focus,
 textarea:invalid:focus,
-select:invalid:focus {
+select:invalid:focus,
+input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]).is-invalid:focus,
+textarea.is-invalid:focus,
+select.is-invalid:focus {
   box-shadow: 0 0 12pt #FF6600;
 }
 input[type="search"] {
