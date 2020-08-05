@@ -12,6 +12,7 @@ Project Line | jump_to_document
 Project Line | jump_to_related_sale_order_lines
 Project Line | jump_to_related_task
 Project Line | jump_to_related_task_report
+Project Line | jump_to_task_and_task_report
 Project Line | task_fast_input_dialog
 Project Line | task_list
 Project Line | view
@@ -33,6 +34,7 @@ Project | jump_to_document
 Project | jump_to_related_sale_order_lines
 Project | jump_to_related_task
 Project | jump_to_related_task_report
+Project | jump_to_task_and_task_report
 Project | milestone
 Project | planning
 Project | project_monthly_report
