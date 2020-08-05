@@ -84,13 +84,13 @@
         });
     }, {mutex: 'changestate'})
 
-    .declareMethod("checkValidity", function () {
+    .declareMethod("checkValidity", function (error_text) {
       var gadget = this;
       if (gadget.state.editable) {
         return gadget.getDeclaredGadget(gadget.state.key)
           .push(function (result) {
             if (result.checkValidity !== undefined) {
-              return result.checkValidity();
+              return result.checkValidity(error_text);
             }
             return true;
           });

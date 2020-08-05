@@ -88,10 +88,10 @@
         });
     }, {mutex: 'changestate'})
 
-    .declareMethod('checkValidity', function () {
+    .declareMethod('checkValidity', function (error_text) {
       return this.getDeclaredGadget("relation_input")
         .push(function (input_gadget) {
-          return input_gadget.checkValidity();
+          return input_gadget.checkValidity(error_text);
         });
     }, {mutex: 'changestate'});
 
