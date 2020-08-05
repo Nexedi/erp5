@@ -52,14 +52,20 @@
   }
 
   rJS(window)
-
+    .setState({
+      display_error_text: false
+    })
+    .ready(function ready() {
+      this.props = {};
+    })
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
           editable: field_json.editable,
           name: field_json.key,
           item_list: field_json.items,
-          value_list: field_json.value || field_json.default,
+          value_list: field_json.value || field_json["default"],
+          error_text: field_json.error_text,
           hidden: field_json.hidden,
           // Force calling subfield render
           // as user may have modified the input value
@@ -69,15 +75,22 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function () {
+    .onStateChange(function (modification_dict) {
       var element = this.element,
         gadget = this,
         value_list = this.state.value_list,
         value_dict = {},
         item_list = this.state.item_list,
         i,
+        span,
         queue;
 
+      if (!gadget.props.container_element) {
+        gadget.props = {
+          container_element: gadget.element.querySelector('div'),
+          label_element: gadget.element.querySelector('label')
+        };
+      }
       // Clear first to DOM, append after to reduce flickering/manip
       while (element.firstChild) {
         element.removeChild(element.firstChild);
@@ -85,6 +98,28 @@
 
       for (i = 0; i < value_list.length; i += 1) {
         value_dict[value_list[i]] = null;
+      }
+
+      if (modification_dict.hasOwnProperty('display_error_text')) {
+        // first remove old errors
+        span = this.props.container_element.lastElementChild;
+        if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
+          span = null;
+        }
+        // display new error if present
+        if (this.state.error_text && this.state.display_error_text) {
+          if (span === null) {
+            span = document.createElement('span');
+            span.textContent = this.state.error_text;
+            this.props.container_element.appendChild(span);
+          } else {
+            span.textContent = this.state.error_text;
+          }
+        } else {
+          if (span !== null) {
+            this.props.container_element.removeChild(span);
+          }
+        }
       }
 
       function enQueue() {
@@ -147,6 +182,18 @@
       }
       return final_result;
     }, {mutex: 'changestate'})
+
+    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
+      if (this.state.error_text) {
+        return this.changeState({display_error_text: true});
+      }
+    })
+
+    .allowPublicAcquisition("notifyBlur", function notifyBlur() {
+      if (this.state.error_text) {
+        return this.changeState({display_error_text: false});
+      }
+    })
 
     .declareMethod('checkValidity', function () {
       var name = this.state.name;
