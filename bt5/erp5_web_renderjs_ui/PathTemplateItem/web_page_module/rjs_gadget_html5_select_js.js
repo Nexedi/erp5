@@ -22,6 +22,7 @@
           item_list: JSON.stringify(options.item_list),
           editable: options.editable,
           required: options.required,
+          error_text: options.error_text || "",
           id: options.id,
           name: options.name,
           title: options.title,
@@ -40,6 +41,13 @@
 
       select.id = this.state.id || this.state.name;
       select.setAttribute('name', this.state.name);
+
+      if (modification_dict.error_text &&
+          !select.classList.contains("is-invalid")) {
+        select.classList.add("is-invalid");
+      } else if (select.classList.contains("is-invalid")) {
+        select.classList.remove("is-invalid");
+      }
 
       if (this.state.title) {
         select.setAttribute('title', this.state.title);
@@ -118,7 +126,8 @@
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function checkValidity() {
-      var result = this.element.querySelector('select').checkValidity();
+      var select = this.element.querySelector('select'),
+        result = select.checkValidity() || this.state.error_text === "";
       if (result) {
         return this.notifyValid()
           .push(function () {
@@ -141,6 +150,16 @@
         this.notifyChange()
       ]);
     }, false, false)
+
+    .declareAcquiredMethod("notifyFocus", "notifyFocus")
+    .onEvent('focus', function focus() {
+      return this.notifyFocus();
+    }, true, false)
+
+    .declareAcquiredMethod("notifyBlur", "notifyBlur")
+    .onEvent('blur', function blur() {
+      return this.notifyBlur();
+    }, true, false)
 
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .onEvent('invalid', function invalid(evt) {
