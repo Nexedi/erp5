@@ -210,6 +210,19 @@
         });
     }, {mutex: 'changestate'})
 
+    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
+      // All html5 fields in ERP5JS triggers this method when focus
+      // is triggered. This is usefull to display error text.
+      // But, in the case of panel, we don't need to handle anything.
+      return;
+    })
+    .allowPublicAcquisition("notifyBlur", function notifyFocus() {
+      // All html5 fields in ERP5JS triggers this method when blur
+      // is triggered now. This is usefull to display error text.
+      // But, in the case of panel, we don't need to handle anything.
+      return;
+    })
+
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")
     .onEvent('click', function (evt) {
       if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
