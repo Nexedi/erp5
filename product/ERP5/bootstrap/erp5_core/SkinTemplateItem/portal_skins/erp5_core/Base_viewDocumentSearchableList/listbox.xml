@@ -16,6 +16,7 @@
                 <string>list_method</string>
                 <string>portal_types</string>
                 <string>selection_name</string>
+                <string>sort</string>
                 <string>title</string>
                 <string>url_columns</string>
               </list>
@@ -234,6 +235,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>base_view_document_searchable_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>DESC</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
