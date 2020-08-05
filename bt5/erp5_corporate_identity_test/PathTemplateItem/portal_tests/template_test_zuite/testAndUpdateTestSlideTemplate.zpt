@@ -862,12 +862,7 @@ Note:
     <tr>
       <td>type</td>
       <td>name=listbox_reference</td>
-      <td>Template.Test.Slideshow</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=listbox_version</td>
-      <td>001</td>
+      <td>Template.Test.Image.Source</td>
     </tr>
     <tr>
       <td>keyPressAndWait</td>
@@ -876,12 +871,12 @@ Note:
     </tr>
     <tr>
       <td>waitForTextPresent</td>
-      <td>Template Test Slideshow</td>
+      <td>Template Test Image Source</td>
       <td></td>
     </tr>
     <tr>
       <td>clickAndWait</td>
-      <td>//a[contains(text(), 'Template.Test.Slideshow')]</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
       <td></td>
     </tr>
     <tr>
@@ -1119,12 +1114,7 @@ Note:
     <tr>
       <td>type</td>
       <td>name=listbox_reference</td>
-      <td>Template.Test.Slideshow</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=listbox_version</td>
-      <td>004</td>
+      <td>Template.Test.Image.Source</td>
     </tr>
     <tr>
       <td>keyPressAndWait</td>
@@ -1133,12 +1123,12 @@ Note:
     </tr>
     <tr>
       <td>waitForTextPresent</td>
-      <td>Template Test Slideshow</td>
+      <td>Template Test Image Source</td>
       <td></td>
     </tr>
     <tr>
       <td>clickAndWait</td>
-      <td>//a[contains(text(), 'Template.Test.Slideshow')]</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
       <td></td>
     </tr>
     <tr>
@@ -1371,12 +1361,7 @@ Note:
     <tr>
       <td>type</td>
       <td>name=listbox_reference</td>
-      <td>Template.Test.Slideshow</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=listbox_version</td>
-      <td>002</td>
+      <td>Template.Test.Image.Source</td>
     </tr>
     <tr>
       <td>keyPressAndWait</td>
@@ -1385,12 +1370,12 @@ Note:
     </tr>
     <tr>
       <td>waitForTextPresent</td>
-      <td>Template Test Slideshow</td>
+      <td>Template Test Image Source</td>
       <td></td>
     </tr>
     <tr>
       <td>clickAndWait</td>
-      <td>//a[contains(text(), 'Template.Test.Slideshow')]</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
       <td></td>
     </tr>
     <tr>
@@ -1633,12 +1618,7 @@ Note:
     <tr>
       <td>type</td>
       <td>name=listbox_reference</td>
-      <td>Template.Test.Slideshow</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=listbox_version</td>
-      <td>003</td>
+      <td>Template.Test.Image.Source</td>
     </tr>
     <tr>
       <td>keyPressAndWait</td>
@@ -1647,12 +1627,12 @@ Note:
     </tr>
     <tr>
       <td>waitForTextPresent</td>
-      <td>Template Test Slideshow</td>
+      <td>Template Test Image Source</td>
       <td></td>
     </tr>
     <tr>
       <td>clickAndWait</td>
-      <td>//a[contains(text(), 'Template.Test.Slideshow')]</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
       <td></td>
     </tr>
     <tr>
@@ -1891,12 +1871,7 @@ Note:
     <tr>
       <td>type</td>
       <td>name=listbox_reference</td>
-      <td>Template.Test.Slideshow</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>name=listbox_version</td>
-      <td>005</td>
+      <td>Template.Test.Image.Source</td>
     </tr>
     <tr>
       <td>keyPressAndWait</td>
@@ -1905,12 +1880,12 @@ Note:
     </tr>
     <tr>
       <td>waitForTextPresent</td>
-      <td>Template Test Slideshow</td>
+      <td>Template Test Image Source</td>
       <td></td>
     </tr>
     <tr>
       <td>clickAndWait</td>
-      <td>//a[contains(text(), 'Template.Test.Slideshow')]</td>
+      <td>//a[contains(text(), 'Template.Test.Image.Source')]</td>
       <td></td>
     </tr>
     <tr>

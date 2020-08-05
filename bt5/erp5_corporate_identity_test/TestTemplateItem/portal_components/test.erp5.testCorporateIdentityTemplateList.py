@@ -392,7 +392,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_slideshow_input_001_en_html",
       "template_test_slideshow_input_slide_0_001_en_bmp",
-      "template_test_slideshow_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         use_skin="Slide",
@@ -412,7 +412,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_slideshow_input_001_en_html",
       "template_test_slideshow_input_slide_6_004_en_bmp",
-      "template_test_slideshow_input_004_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=6,
         display_note=1,
@@ -434,7 +434,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_slideshow_input_002_en_html",
       "template_test_slideshow_input_slide_0_002_en_bmp",
-      "template_test_slideshow_input_002_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         use_skin="Slide",
@@ -457,7 +457,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
   #  self.runPdfTestPattern(
   #    "template_test_slideshow_input_002_en_html",
   #    ["template_test_slideshow_input_slide_4_003_en_bmp"],
-  #    "template_test_slideshow_input_003_en_pdf",
+  #    "template_test_image_source_pdf",
   #    **dict(
   #      page_number=[4],
   #      override_source_organisation_title="Couscous",
@@ -480,7 +480,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_slideshow_input_002_en_html",
       "template_test_slideshow_input_slide_0_003_en_bmp",
-      "template_test_slideshow_input_003_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         override_source_organisation_title="Couscous",
@@ -503,7 +503,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_slideshow_input_002_en_html",
       "template_test_slideshow_input_slide_0_003_en_bmp",
-      "template_test_slideshow_input_003_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         override_source_organisation_title="Couscous",
@@ -526,7 +526,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_slideshow_input_003_de_html",
       "template_test_slideshow_input_slide_7_005_de_bmp",
-      "template_test_slideshow_input_005_de_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=7,
         display_note=1,
@@ -630,7 +630,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_letter_input_001_en_html",
       "template_test_letter_input_page_0_001_en_bmp",
-      "template_test_letter_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_exportAsLetter",
@@ -652,7 +652,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_letter_input_002_en_html",
       "template_test_letter_input_page_0_002_en_bmp",
-      "template_test_letter_input_002_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_exportAsLetter",
@@ -673,7 +673,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_letter_input_003_en_html",
       "template_test_letter_input_page_0_003_en_bmp",
-      "template_test_letter_input_003_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_exportAsLetter",
@@ -700,7 +700,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       None,
       "template_test_letter_input_page_0_005_en_bmp",
-      "template_test_letter_input_005_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="Letter_send",
@@ -727,7 +727,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       None,
       "template_test_letter_input_page_0_006_en_bmp",
-      "template_test_letter_input_006_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="Letter_send",
@@ -755,7 +755,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_letter_input_004_de_html",
       "template_test_letter_input_page_1_004_de_bmp",
-      "template_test_letter_input_004_de_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=1,
         test_method="WebPage_exportAsLetter",
@@ -777,7 +777,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_letter_input_001_en_html",
       "template_test_letter_input_page_0_001_en_bmp",
-      "template_test_letter_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_printAsLetter",
@@ -850,7 +850,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_leaflet_input_001_en_html",
       "template_test_leaflet_input_page_1_001_en_bmp",
-      "template_test_leaflet_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=1,
         format="pdf",
@@ -870,7 +870,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_leaflet_input_001_en_html",
       "template_test_leaflet_input_page_0_002_en_bmp",
-      "template_test_leaflet_input_002_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_exportAsLeaflet",
@@ -893,7 +893,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_leaflet_input_002_de_html",
       "template_test_leaflet_input_page_0_003_de_bmp",
-      "template_test_leaflet_input_003_de_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_exportAsLeaflet",
@@ -912,7 +912,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_leaflet_input_001_en_html",
       "template_test_leaflet_input_page_1_001_en_bmp",
-      "template_test_leaflet_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=1,
         test_method="WebPage_printAsLeaflet",
@@ -1020,7 +1020,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_001_en_html",
       "template_test_book_input_page_4_001_en_bmp",
-      "template_test_book_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=4,
         use_skin="Book",
@@ -1042,7 +1042,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_001_en_html",
       "template_test_book_input_page_4_002_en_bmp",
-      "template_test_book_input_002_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=4,
         format="pdf",
@@ -1077,7 +1077,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_001_en_html",
       "template_test_book_input_page_5_002_en_bmp",
-      "template_test_book_input_002_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=5,
         format="pdf",
@@ -1112,7 +1112,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_001_en_html",
       "template_test_book_input_page_10_002_en_bmp",
-      "template_test_book_input_002_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=10,
         format="pdf",
@@ -1146,7 +1146,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_002_de_html",
       "template_test_book_input_page_1_003_de_bmp",
-      "template_test_book_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         use_skin="Book",
         test_method="WebPage_exportAsBook",
@@ -1168,7 +1168,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_003_en_html",
       "template_test_book_input_page_7_004_en_bmp",
-      "template_test_book_input_004_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=7,
         use_skin="Book",
@@ -1189,7 +1189,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_book_input_002_de_html",
       "template_test_book_input_page_1_003_de_bmp",
-      "template_test_book_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         use_skin="Book",
         test_method="WebPage_printAsBook",
@@ -1248,7 +1248,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_release_input_001_en_html",
       "template_test_release_input_page_0_001_en_bmp",
-      "template_test_release_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         format="pdf",
@@ -1268,7 +1268,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_release_input_002_de_html",
       "template_test_release_input_page_0_002_de_bmp",
-      "template_test_release_input_002_de_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_exportAsRelease",
@@ -1290,7 +1290,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.runPdfTestPattern(
       "template_test_release_input_001_en_html",
       "template_test_release_input_page_0_001_en_bmp",
-      "template_test_release_input_001_en_pdf",
+      "template_test_image_source_pdf",
       **dict(
         page_number=0,
         test_method="WebPage_printAsRelease",
