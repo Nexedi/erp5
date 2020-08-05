@@ -219,12 +219,7 @@
           </tr>
           <tr>
             <td>waitForElementPresent</td>
-            <td>//td/a[contains(text(), '${current_reference}')]</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>click</td>
-            <td>//td/a[contains(text(), '${current_reference}')]</td>
+            <td>//p[contains(text(), '${current_reference}')]</td>
             <td></td>
           </tr>
         </tal:block>
