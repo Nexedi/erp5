@@ -22,6 +22,7 @@
             title: field_json.title,
             key: field_json.key,
             view: field_json.view,
+            error_text: field_json.error_text,
             search_view: field_json.search_view,
             url: field_json.url,
             allow_creation: field_json.allow_creation,
