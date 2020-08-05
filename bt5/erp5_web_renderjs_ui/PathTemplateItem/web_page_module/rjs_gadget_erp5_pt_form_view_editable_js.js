@@ -22,6 +22,7 @@
     .declareMethod('checkValidity', function checkValidity() {
       return this.getDeclaredGadget("erp5_form")
         .push(function (declared_gadget) {
+          console.log(declared_gadget);
           return declared_gadget.checkValidity();
         });
     }, {mutex: 'changestate'})

@@ -50,6 +50,7 @@
         textarea.setAttribute('value', this.state.value);
         textarea.value = this.state.value;
       }
+
       if (this.state.type === 'radio') {
         textarea.checked = this.state.checked;
       }
@@ -175,17 +176,18 @@
     }, {mutex: 'changestate'})
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
-    .declareMethod('checkValidity', function checkValidity() {
-      var result = this.element.querySelector('input').checkValidity(),
+    .declareMethod('checkValidity', function checkValidity(error_text) {
+      var input = this.element.querySelector('input'),
+        result = input.checkValidity(),
         gadget = this;
-      if (result) {
+      if (result && error_text === "") {
+        if (input.classList.contains("is-invalid")) {
+          input.classList.remove("is-invalid");
+        }
         return this.notifyValid()
           .push(function () {
             var date,
               value;
-            if (!result) {
-              return result;
-            }
             if ((gadget.state.type === 'date') ||
                 (gadget.state.type === 'datetime-local')) {
               value = gadget.element.querySelector('input').value;
@@ -204,6 +206,10 @@
             }
             return result;
           });
+      } else if (error_text) {
+        if (!input.classList.contains("is-invalid")) {
+          input.classList.add("is-invalid");
+        }
       }
       return result;
     }, {mutex: 'changestate'})
@@ -221,6 +227,16 @@
         this.notifyChange("input")
       ]);
     }, false, false)
+
+    .declareAcquiredMethod("notifyFocus", "notifyFocus")
+    .onEvent('focus', function focus(evt) {
+      return this.notifyFocus();
+    }, true, false)
+
+    .declareAcquiredMethod("notifyBlur", "notifyBlur")
+    .onEvent('blur', function blur(evt) {
+      return this.notifyBlur();
+    }, true, false)
 
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
     .onEvent('invalid', function invalid(evt) {
