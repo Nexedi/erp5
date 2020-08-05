@@ -96,6 +96,17 @@
       }
       return data;
     })
+
+    .declareAcquiredMethod("notifyFocus", "notifyFocus")
+    .onEvent('focus', function focus() {
+      return this.notifyFocus();
+    }, true, false)
+
+    .declareAcquiredMethod("notifyBlur", "notifyBlur")
+    .onEvent('blur', function blur() {
+      return this.notifyBlur();
+    }, true, false)
+
     .declareMethod("checkValidity", function checkValidity() {
       return true;
     });
