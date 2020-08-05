@@ -412,7 +412,7 @@ label {
 }
 
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]), textarea, select {
-  width: 100%;
+  width: 99%;
 
   padding: @half-margin-size;
 
@@ -434,7 +434,7 @@ input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio])
     border: @focus-border;
     box-shadow: @focus-box-shadow;
   }
-  &:invalid {
+  &:invalid, &.is-invalid {
     border: @invalid-border;
     &:focus {
       box-shadow: @invalid-box-shadow;

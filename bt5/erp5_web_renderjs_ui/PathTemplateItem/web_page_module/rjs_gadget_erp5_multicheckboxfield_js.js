@@ -52,14 +52,16 @@
   }
 
   rJS(window)
-
+    .ready(function ready() {
+      this.props = {};
+    })
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
           editable: field_json.editable,
           name: field_json.key,
           item_list: field_json.items,
-          value_list: field_json.value || field_json.default,
+          value_list: field_json.value || field_json["default"],
           hidden: field_json.hidden,
           // Force calling subfield render
           // as user may have modified the input value
@@ -69,7 +71,7 @@
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function () {
+    .onStateChange(function (modification_dict) {
       var element = this.element,
         gadget = this,
         value_list = this.state.value_list,
@@ -78,6 +80,12 @@
         i,
         queue;
 
+      if (!gadget.props.container_element) {
+        gadget.props = {
+          container_element: gadget.element.querySelector('div'),
+          label_element: gadget.element.querySelector('label')
+        };
+      }
       // Clear first to DOM, append after to reduce flickering/manip
       while (element.firstChild) {
         element.removeChild(element.firstChild);
@@ -148,9 +156,43 @@
       return final_result;
     }, {mutex: 'changestate'})
 
-    .declareMethod('checkValidity', function () {
+    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
+      var span;
+      if (this.props.contaner_element) {
+        span = this.props.container_element.lastElementChild;
+        if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
+          span = null;
+        }
+        // display new error if present
+        if (this.state.error_text) {
+          if (span === null) {
+            span = document.createElement('span');
+            span.textContent = this.state.error_text;
+            this.props.container_element.appendChild(span);
+          } else {
+            span.textContent = this.state.error_text;
+          }
+        } else if (span !== null) {
+          this.props.container_element.removeChild(span);
+        }
+      }
+    })
+
+    .allowPublicAcquisition("notifyBlur", function notifyBlur() {
+      var span;
+      if (this.props.contaner_element) {
+        span = this.props.container_element.lastElementChild;
+        if ((span !== null) && (span.tagName.toLowerCase() === 'span')) {
+          this.props.container_element.removeChild(span);
+        }
+      }
+    })
+
+    .declareMethod('checkValidity', function (error_text) {
       var name = this.state.name;
-      if (this.state.editable && this.state.required) {
+      if (error_text) {
+        return false;
+      } else if (this.state.editable && this.state.required) {
         return this.getContent()
           .push(function (result) {
             return result[name].length !== 0;
