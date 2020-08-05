@@ -24,6 +24,14 @@
     .onStateChange(function onStateChange(modification_dict) {
       var textarea = this.element.querySelector('textarea');
 
+      if (this.state.error_text &&
+          !textarea.classList.contains("is-invalid")) {
+        textarea.classList.add("is-invalid");
+      } else if (!this.state.error_text &&
+                 textarea.classList.contains("is-invalid")) {
+        textarea.classList.remove("is-invalid");
+      }
+
       if (modification_dict.hasOwnProperty("value")) {
         textarea.value = modification_dict.value;
       }
@@ -74,7 +82,8 @@
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function checkValidity() {
-      var result = this.element.querySelector('textarea').checkValidity();
+      var textarea = this.element.querySelector('textarea'),
+        result = textarea.checkValidity();
       if (result) {
         return this.notifyValid()
           .push(function () {
@@ -92,7 +101,17 @@
     .onEvent('invalid', function invalid(evt) {
       // invalid event does not bubble
       return this.notifyInvalid(evt.target.validationMessage);
-    }, true, true)
+    }, true, false)
+
+    .declareAcquiredMethod("notifyFocus", "notifyFocus")
+    .onEvent('focus', function focus() {
+      return this.notifyFocus();
+    }, true, false)
+
+    .declareAcquiredMethod("notifyBlur", "notifyBlur")
+    .onEvent('blur', function blur() {
+      return this.notifyBlur();
+    }, true, false)
 
     .declareAcquiredMethod("notifySubmit", "notifySubmit")
     .onEvent('keydown', function keydown(evt) {
