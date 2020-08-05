@@ -110,14 +110,12 @@
         i,
         queue,
         new_div;
-
       if (modification_dict.hasOwnProperty('first_call')) {
         gadget.props = {
           container_element: gadget.element.querySelector('div'),
           label_element: gadget.element.querySelector('label')
         };
       }
-
       if (gadget.state.hidden && !modification_dict.error_text) {
         this.element.hidden = true;
       } else {
@@ -137,23 +135,12 @@
       }
 
       if (modification_dict.hasOwnProperty('error_text')) {
-        // first remove old errors
-        span = this.props.container_element.lastElementChild;
-        if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
-          span = null;
-        }
-        // display new error if present
-        if (this.state.error_text) {
-          if (span === null) {
-            span = document.createElement('span');
-            span.textContent = this.state.error_text;
-            this.props.container_element.appendChild(span);
-          } else {
-            span.textContent = this.state.error_text;
-          }
-        } else if (span !== null) {
-          this.props.container_element.removeChild(span);
-        }
+        queue = gadget.getDeclaredGadget(SCOPE)
+          .push(function (field_gadget) {
+            // XXX - this is probably duplicated because checkValidity
+            // is called before changeState already
+            return field_gadget.checkValidity(modification_dict.error_text);
+          });
       }
 
       // Remove/add label_element from DOM
@@ -186,10 +173,25 @@
                 span
               );
             }
-            queue = gadget.declareGadget(gadget.state.field_url, {
-              scope: SCOPE,
-              element: new_div
-            });
+            if (queue) {
+              queue
+                .push(function () {
+                  return gadget.declareGadget(gadget.state.field_url, {
+                    scope: SCOPE,
+                    element: new_div
+                  });
+                });
+            } else {
+              queue = gadget.declareGadget(gadget.state.field_url, {
+                scope: SCOPE,
+                element: new_div
+              });
+            }
+          } else if (queue) {
+            queue
+             .push(function () {
+                return gadget.getDeclaredGadget(SCOPE);
+              });
           } else {
             queue = gadget.getDeclaredGadget(SCOPE);
           }
@@ -202,11 +204,12 @@
     })
 
     .declareMethod("checkValidity", function checkValidity() {
+      var error_text = this.state.error_text;
       return this.getDeclaredGadget(SCOPE)
         .push(function (gadget) {
           // XXX Implement checkValidity on all fields
           if (gadget.checkValidity !== undefined) {
-            return gadget.checkValidity();
+            return gadget.checkValidity(error_text);
           }
           return true;
         });
@@ -230,6 +233,32 @@
           return gadget.getListboxInfo.apply(gadget, argument_list);
         });
     }, {mutex: 'changestate'})
+
+    .allowPublicAcquisition("notifyFocus", function notifyFocus() {
+      var span = this.props.container_element.lastElementChild;
+      if ((span !== null) && (span.tagName.toLowerCase() !== 'span')) {
+        span = null;
+      }
+      // display new error if present
+      if (this.state.error_text) {
+        if (span === null) {
+          span = document.createElement('span');
+          span.textContent = this.state.error_text;
+          this.props.container_element.appendChild(span);
+        } else {
+          span.textContent = this.state.error_text;
+        }
+      } else if (span !== null) {
+        this.props.container_element.removeChild(span);
+      }
+    })
+
+    .allowPublicAcquisition("notifyBlur", function notifyBlur() {
+      var span = this.props.container_element.lastElementChild;
+      if ((span !== null) && (span.tagName.toLowerCase() === 'span')) {
+        this.props.container_element.removeChild(span);
+      }
+    })
 
     .allowPublicAcquisition("notifyInvalid", function notifyInvalid(param_list) {
       // Label doesn't know when a subgadget calls notifyInvalid
