@@ -255,7 +255,7 @@
       return final_result;
     }, {mutex: 'changestate'})
 
-    .declareMethod('checkValidity', function () {
+    .declareMethod('checkValidity', function (error_text) {
       var context = this;
 
       function checkSubContentValidity(node) {
@@ -265,7 +265,7 @@
             node.getAttribute('data-gadget-scope')
           )
             .push(function (result) {
-              return result.checkValidity();
+              return result.checkValidity(error_text);
             });
         }
       }
