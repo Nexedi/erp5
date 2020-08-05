@@ -24,6 +24,7 @@
         id: field_json.key,
         name: field_json.key,
         title: field_json.title,
+        error_text: field_json.error_text,
         hidden: field_json.hidden,
         // Force calling subfield render
         // as user may have modified the input value

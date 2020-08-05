@@ -149,6 +149,7 @@
         key: options.key,
         view: options.view,
         search_view: options.search_view,
+        error_text: options.error_text || "",
         url: options.url,
         allow_creation: options.allow_creation,
         portal_types: JSON.stringify(options.portal_types),
@@ -231,8 +232,19 @@
         // First display of the input
         buildEditableInputHTML(gadget);
       }
-
       input = gadget.element.querySelector("input");
+      if (gadget.state.error_text &&
+          !input.classList.contains("is-invalid")) {
+        input.classList.add("is-invalid");
+      } else if (
+        // value_portal_type not empty means that user
+        // wants to create a Document
+        (!gadget.state.error_text || gadget.state.value_portal_type) &&
+          input.classList.contains("is-invalid")
+      ) {
+        input.classList.remove("is-invalid");
+      }
+
       if (modification_dict.hasOwnProperty("value_text")) {
         input.value = gadget.state.value_text;
       }
@@ -417,6 +429,14 @@
                   "Invalid Search Criteria"
                 ])
                   .push(function (translation_list) {
+                    if (gadget.state.error_text !== translation_list[0]) {
+                      // Avoid call deferErrorText if error_text is already set
+                      // Otherwise, onStateChange will run forever
+                      return RSVP.all([
+                        gadget.deferErrorText(translation_list[0]),
+                        gadget.notifyInvalid(translation_list[0])
+                      ]);
+                    }
                     return gadget.notifyInvalid(translation_list[0]);
                   });
               }
@@ -429,9 +449,25 @@
                 ])
                   .push(function (translation_list) {
                     if (error.target.status === 0) {
+                      if (gadget.state.error_text !== translation_list[0]) {
+                        // Avoid call deferErrorText if error_text is already
+                        // set. Otherwise, onStateChange will run forever
+                        return RSVP.all([
+                          gadget.deferErrorText(translation_list[0]),
+                          gadget.notifyInvalid(translation_list[0])
+                        ]);
+                      }
                       return gadget.notifyInvalid(translation_list[0]);
                     }
                     if (error.target.status >= 500) {
+                      if (gadget.state.error_text !== translation_list[0]) {
+                        // Avoid call deferErrorText if error_text is already
+                        // set. Otherwise, onStateChange will run forever
+                        return RSVP.all([
+                          gadget.deferErrorText(translation_list[1]),
+                          gadget.notifyInvalid(translation_list[1])
+                        ]);
+                      }
                       return gadget.notifyInvalid(translation_list[1]);
                     }
                     throw error;
@@ -513,6 +549,7 @@
       }
     }, false, false)
 
+    .declareAcquiredMethod("notifyBlur", "notifyBlur")
     .onEvent('blur', function (evt) {
       var gadget = this;
       if (evt.target.tagName.toLowerCase() === 'input') {
@@ -525,22 +562,27 @@
             return gadget.changeState({
               has_focus: false
             });
+          })
+          .push(function () {
+            return gadget.notifyBlur();
           });
       }
     }, true, false)
 
+    .declareAcquiredMethod("notifyFocus", "notifyFocus")
     .onEvent('focus', function (evt) {
       var gadget = this;
       if (evt.target.tagName.toLowerCase() === 'input') {
-        return gadget.changeState({
-          has_focus: true
-        });
+        return RSVP.all([
+          gadget.notifyFocus(),
+          gadget.changeState({has_focus: true})
+        ]);
       }
     }, true, false)
 
+    .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function () {
       var gadget = this;
-
       if ((this.state.value_text) && (
           (this.state.value_relative_url === null) &&
             (this.state.value_uid === null) &&
@@ -548,41 +590,62 @@
         )) {
         return gadget.translate("No such document was found")
           .push(function (error_message) {
-            return gadget.notifyInvalid(error_message);
+            return RSVP.all([
+              gadget.deferErrorText(error_message),
+              gadget.notifyInvalid(error_message)
+            ]);
           })
           .push(function () {
             return false;
           });
       }
-      return true;
+      return gadget.notifyValid()
+        .push(function () {
+          return true;
+        });
     }, {mutex: 'changestate'})
+
+    .declareJob('deferErrorText', function deferErrorText(error_text) {
+      return this.changeState({
+        error_text: error_text
+      });
+    })
 
     // XXX Use html5 input
     .onEvent('invalid', function (evt) {
       // invalid event does not bubble
-      return this.notifyInvalid(evt.target.validationMessage);
+      return RSVP.all([
+        this.deferErrorText(evt.target.validationMessage),
+        this.notifyInvalid(evt.target.validationMessage)
+      ]);
     }, true, false)
 
     .onEvent('change', function () {
+      // Don't trigger checkValidity() here because this will introduce
+      // issues when we search with % and we are not able
+      // to reproduce it in tests
       return this.notifyChange();
     }, false, false)
 
 
     .onEvent('input', function (event) {
+      var gadget = this;
       if (!this.state.editable) {
         return;
       }
-
-      var context = this;
       return this.changeState({
         value_text: event.target.value,
         value_relative_url: null,
         value_uid: null,
         value_portal_type: null,
-        has_focus: true
+        has_focus: true,
+        error_text: ""
       })
         .push(function () {
-          return context.notifyChange();
+          return RSVP.all([
+            gadget.notifyValid(),
+            gadget.notifyChange()
+          ]);
         });
     }, true, false);
 
