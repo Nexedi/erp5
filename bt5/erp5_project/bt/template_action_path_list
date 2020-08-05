@@ -27,6 +27,7 @@ Project | content
 Project | create_new_file
 Project | detailed_report
 Project | document_list
+Project | jump_to_bug
 Project | jump_to_document
 Project | jump_to_related_sale_order_lines
 Project | jump_to_related_task
