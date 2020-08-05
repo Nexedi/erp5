@@ -53,13 +53,13 @@
         });
     })
 
-    .declareMethod('checkValidity', function () {
+    .declareMethod('checkValidity', function (error_text) {
       if (!this.state.editable) {
         return true;
       }
       return this.getDeclaredGadget('sub')
         .push(function (subgadget) {
-          return subgadget.checkValidity();
+          return subgadget.checkValidity(error_text);
         });
     });
 

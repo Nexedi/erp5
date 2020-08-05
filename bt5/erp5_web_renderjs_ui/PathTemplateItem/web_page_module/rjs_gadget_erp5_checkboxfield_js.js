@@ -86,11 +86,12 @@
       return {};
     }, {mutex: 'changestate'})
 
-    .declareMethod('checkValidity', function () {
+    .declareMethod('checkValidity', function (error_text) {
       if (this.state.editable) {
         return this.getDeclaredGadget('sub')
           .push(function (gadget) {
-            return gadget.checkValidity();
+            console.log("checkbox", error_text);
+            return gadget.checkValidity(error_text);
           });
       }
       return true;
