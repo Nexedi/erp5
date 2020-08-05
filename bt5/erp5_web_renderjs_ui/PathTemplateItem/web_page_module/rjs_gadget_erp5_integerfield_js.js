@@ -17,6 +17,7 @@
           editable: field_json.editable,
           required: field_json.required,
           id: field_json.key,
+          error_text: options.field_json.error_text || "",
           name: field_json.key,
           title: field_json.title,
           hidden: field_json.hidden,
