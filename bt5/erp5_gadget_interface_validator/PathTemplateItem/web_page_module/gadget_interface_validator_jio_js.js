@@ -22,11 +22,11 @@
       })
       .push(function (evt) {
         var key,
-          precache_dict = evt.target.response,
+          precache_dict = evt.target.response.url_dict,
           result_list = [],
           precache_absolute_url = (new URL(precache_url, window.location)).href;
-        for (key in precache_dict.url_dict) {
-          if (precache_dict.url_dict.hasOwnProperty(key)) {
+        for (key in precache_dict) {
+          if (precache_dict.hasOwnProperty(key)) {
             result_list.push((new URL(key, precache_absolute_url)).href);
           }
         }
