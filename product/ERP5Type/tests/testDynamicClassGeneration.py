@@ -38,11 +38,11 @@ import warnings
 import sys
 
 import transaction
-from persistent import Persistent
 from ZODB.broken import BrokenModified
 from zExceptions import Forbidden, NotFound
 from AccessControl.SecurityManagement import \
   getSecurityManager, setSecurityManager, noSecurityManager
+from Products.ERP5Type.dynamic.persistent_migration import Base__setstate__
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken, InitGhostBase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -78,7 +78,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
       self.assertEqual(klass.__module__,
         migrated and 'erp5.portal_type' or 'erp5.component.document.erp5_version.Person')
       self.assertEqual(klass.__name__, 'Person')
-      self.assertEqual(klass.__setstate__ is Persistent.__setstate__, migrated)
+      self.assertEqual(klass.__setstate__.im_func is Base__setstate__.im_func, migrated)
 
     # Import a .xml containing a Person created with the full module name
     self.importObjectFromFile(person_module, 'non_migrated_person.xml')
