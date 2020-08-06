@@ -22,7 +22,11 @@ url_list = [
 
 if REQUEST is not None:
   import json
+  manifest_dict = {
+    'url_dict': dict.fromkeys(url_list),
+    'modification_date': context.getModificationDate().rfc822()
+  }
   REQUEST.RESPONSE.setHeader('Content-Type', 'application/json')
-  return json.dumps(dict.fromkeys(url_list), indent=2)
+  return json.dumps(manifest_dict, indent=2)
 
 return url_list
