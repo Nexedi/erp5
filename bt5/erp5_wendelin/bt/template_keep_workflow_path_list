@@ -5,6 +5,7 @@ web_page_module/rjs_gadget_erp5_pt_ingestion_policies_js
 web_page_module/rjs_gadget_erp5_pt_ingestion_policies_html
 web_page_module/rjs_gadget_erp5_pt_callables_js
 web_page_module/rjs_gadget_erp5_pt_callables_html
+web_page_module/*_wendelin_*
 portal_gadgets/WendelinInformationGadget
 portal_ingestion_policies/default
 data_supply_module/default
