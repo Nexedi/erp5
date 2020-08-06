@@ -66,6 +66,7 @@
         workflow_list,
         view_list,
         action_list,
+        jump_list,
         i;
 
       if (visible === undefined) {
@@ -84,6 +85,7 @@
         action_list = ensureArray(erp5_document._links.action_object_jio_action)
           .concat(ensureArray(erp5_document._links.action_object_jio_button))
           .concat(ensureArray(erp5_document._links.action_object_jio_fast_input));
+        jump_list = ensureArray(erp5_document._links.action_object_jio_jump);
 
         if (view === 'view') {
           for (i = 0; i < view_list.length; i += 1) {
@@ -99,12 +101,16 @@
           for (i = 0; i < action_list.length; i += 1) {
             action_list[i].class_name = action_list[i].href === view ? 'active' : '';
           }
+          for (i = 0; i < jump_list.length; i += 1) {
+            jump_list[i].class_name = jump_list[i].href === view ? 'active' : '';
+          }
         }
         // Prevent has much as possible to modify the DOM panel
         // stateChange prefer to compare strings
         workflow_list = JSON.stringify(workflow_list);
         view_list = JSON.stringify(view_list);
         action_list = JSON.stringify(action_list);
+        jump_list = JSON.stringify(jump_list);
       }
       return context.getUrlParameter('editable')
         .push(function (editable) {
@@ -114,6 +120,7 @@
             workflow_list: workflow_list,
             view_list: view_list,
             action_list: action_list,
+            jump_list: jump_list,
             global: true,
             jio_key: jio_key,
             editable: asBoolean(options.editable) || asBoolean(editable) || false
@@ -234,6 +241,7 @@
           (modification_dict.hasOwnProperty("editable") ||
           modification_dict.hasOwnProperty("workflow_list") ||
           modification_dict.hasOwnProperty("action_list") ||
+          modification_dict.hasOwnProperty("jump_list") ||
           modification_dict.hasOwnProperty("jio_key") ||
           modification_dict.hasOwnProperty("view_list"))) {
         if (this.state.view_list === undefined) {
@@ -244,7 +252,8 @@
               var i = 0,
                 parameter_list = [],
                 view_list = JSON.parse(gadget.state.view_list),
-                action_list = JSON.parse(gadget.state.action_list);
+                action_list = JSON.parse(gadget.state.action_list),
+                jump_list = JSON.parse(gadget.state.jump_list);
               workflow_list = JSON.parse(gadget.state.workflow_list);
 
               for (i = 0; i < view_list.length; i += 1) {
@@ -274,16 +283,27 @@
                   }
                 });
               }
+              for (i = 0; i < jump_list.length; i += 1) {
+                parameter_list.push({
+                  command: 'display_dialog_with_history',
+                  options: {
+                    jio_key: gadget.state.jio_key,
+                    view: jump_list[i].href
+                  }
+                });
+              }
               return RSVP.all([
                 gadget.getUrlForList(parameter_list),
-                gadget.getTranslationList(['Views', 'Workflows', 'Actions'])
+                gadget.getTranslationList(['Views', 'Workflows', 'Actions',
+                                           'Jumps'])
               ]);
             })
             .push(function (result_list) {
               var dl_element,
                 dl_fragment = document.createDocumentFragment(),
                 view_list = JSON.parse(gadget.state.view_list),
-                action_list = JSON.parse(gadget.state.action_list);
+                action_list = JSON.parse(gadget.state.action_list),
+                jump_list = JSON.parse(gadget.state.jump_list);
 
               appendDt(dl_fragment, result_list[1][0], 'eye',
                        view_list, result_list[0], 0);
@@ -295,6 +315,10 @@
               appendDt(dl_fragment, result_list[1][2], 'cogs',
                        action_list, result_list[0],
                        view_list.length + workflow_list.length);
+              appendDt(dl_fragment, result_list[1][3], 'plane',
+                       jump_list, result_list[0],
+                       view_list.length + workflow_list.length +
+                       action_list.length);
 
               dl_element = gadget.element.querySelector("dl");
               while (dl_element.firstChild) {
