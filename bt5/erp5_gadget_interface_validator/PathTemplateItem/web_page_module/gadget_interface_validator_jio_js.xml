@@ -341,7 +341,7 @@ QueryFactory, SimpleQuery, URL));\n
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>984.44539.53177.16708</string> </value>
+                      <value> <string>985.49101.35647.15445</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -359,7 +359,7 @@ QueryFactory, SimpleQuery, URL));\n
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1596718892.61</float>
+                              <float>1596722312.92</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
