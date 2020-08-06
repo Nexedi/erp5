@@ -96,6 +96,113 @@
             </value>
         </item>
         <item>
+            <key> <string>temp_conversion_data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>18503:1:formattxt</string> </key>
+                    <value>
+                      <dictionary>
+                        <item>
+                            <key> <string>content_md5</string> </key>
+                            <value>
+                              <none/>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>conversion_md5</string> </key>
+                            <value> <string>12dff51be6d75791596ae9b15a73858f</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>data</string> </key>
+                            <value> <string encoding="cdata"><![CDATA[
+
+/*global window, rJS, RSVP, jIO, QueryFactory, SimpleQuery, URL */ /*jslint\n
+indent: 2, maxerr: 3, nomen: true */ (function (window, rJS, RSVP, jIO,\n
+QueryFactory, SimpleQuery, URL) { "use strict"; ///////////////////////////////\n
+/////////////// // Helpers //////////////////////////////////////////////\n
+function endsWith(str, suffix) { // http://simonwillison.net/2006/Jan/20/escape\n
+/ suffix = suffix.replace(/[\\-\\[\\]{}()*+?.,\\\\\\^$|#\\s]/g, "\\\\$&"); return (new\n
+RegExp(suffix + \'$\', \'i\')).test(str); } function fetchPrecacheData\n
+(precache_url) { return new RSVP.Queue() .push(function () { return\n
+jIO.util.ajax({ url: precache_url, dataType: \'json\' }); }) .push(function (evt)\n
+{ var key, precache_dict = evt.target.response, result_list = [],\n
+precache_absolute_url = (new URL(precache_url, window.location)).href; for (key\n
+in precache_dict) { if (precache_dict.hasOwnProperty(key)) { result_list.push\n
+((new URL(key, precache_absolute_url)).href); } } return result_list; }); }\n
+function filterGadgetList(filename_list) { // XXX Filtering should be done\n
+instead by loading // each URL and report which one are correctly // loaded\n
+gadget var gadget_list = [], i; for (i = 0; i < filename_list.length; i += 1) {\n
+if (endsWith(filename_list[i], \'.html\') || endsWith(filename_list[i], \'/\')) {\n
+gadget_list.push(filename_list[i]); } } return gadget_list; } function\n
+wrapJioCall(gadget, method_name, argument_list) { var storage =\n
+gadget.state_parameter_dict.jio_storage; return storage[method_name].apply\n
+(storage, argument_list); } ////////////////////////////////////////////// //\n
+Storage ////////////////////////////////////////////// function\n
+InterfaceValidatorStorage() { return; }\n
+InterfaceValidatorStorage.prototype.hasCapacity = function (name) { // XXX\n
+That\'s a lie // This can not do all this thing for now // But displaying the\n
+listbox requires those capacities return ((name === "list") || (name ===\n
+"query") || (name === "select") || (name === "limit") || (name === "sort")); };\n
+InterfaceValidatorStorage.prototype.buildQuery = function (options) { // XXX\n
+HARDCODED var query = QueryFactory.create(options.query || \'\'); if (!((query\n
+instanceof SimpleQuery) && (query.key === \'precache_url\'))) { // Only accept\n
+simple query with an appcache_url return []; } return fetchPrecacheData\n
+(query.value) // return fetchAppcacheData\n
+(\'gadget_interface_validator_test.appcache\') .push(function (filename_list) {\n
+return filterGadgetList(filename_list); }) .push(function (url_list) { // XXX\n
+Sort to stabilize the tests url_list.sort(); var result_list = [], i; for (i =\n
+0; i < url_list.length; i += 1) { result_list.push({ id: url_list[i], value:\n
+{url: url_list[i]}, doc: {} }); } return result_list; }); };\n
+InterfaceValidatorStorage.prototype.get = function (id) { return { portal_type:\n
+\'Gadget URL Definition\', url: id }; }; jIO.addStorage(\'interface_validator\',\n
+InterfaceValidatorStorage); rJS(window) .ready(function (gadget) { return\n
+gadget.getDeclaredGadget(\'jio\') .push(function (jio_gadget) { // Initialize the\n
+gadget local parameters gadget.state_parameter_dict = {jio_storage:\n
+jio_gadget}; }); }) .declareMethod(\'createJio\', function () { return\n
+this.state_parameter_dict.jio_storage.createJio({ type: "interface_validator"\n
+}); }) .declareMethod(\'allDocs\', function () { return wrapJioCall(this,\n
+\'allDocs\', arguments); }) .declareMethod(\'get\', function () { return\n
+wrapJioCall(this, \'get\', arguments); }); }(window, rJS, RSVP, jIO,\n
+QueryFactory, SimpleQuery, URL));\n
+
+
+]]></string> </value>
+                        </item>
+                        <item>
+                            <key> <string>date</string> </key>
+                            <value>
+                              <object>
+                                <klass>
+                                  <global name="DateTime" module="DateTime.DateTime"/>
+                                </klass>
+                                <tuple>
+                                  <none/>
+                                </tuple>
+                                <state>
+                                  <tuple>
+                                    <float>1592599426.29</float>
+                                    <string>UTC</string>
+                                  </tuple>
+                                </state>
+                              </object>
+                            </value>
+                        </item>
+                        <item>
+                            <key> <string>mime</string> </key>
+                            <value> <string>text/plain</string> </value>
+                        </item>
+                        <item>
+                            <key> <string>size</string> </key>
+                            <value> <int>3467</int> </value>
+                        </item>
+                      </dictionary>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Jio Gadget for Interface Validator JS</string> </value>
         </item>
@@ -234,7 +341,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>981.51931.38103.24746</string> </value>
+                      <value> <string>985.49101.35647.15445</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -252,7 +359,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1581590120.37</float>
+                              <float>1596722312.92</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
