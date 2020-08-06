@@ -3,7 +3,7 @@ portal = context.getPortalObject()
 
 image_file = StringIO(image_data.replace('data:image/png;base64,', '').decode('base64'))
 
-image_path = image_path.split('/')
+image_path = [p for p in image_path.split('/') if p]
 existing = portal.restrictedTraverse(image_path, None)
 
 if existing is None:
