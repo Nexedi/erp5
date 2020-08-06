@@ -62,6 +62,27 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/click_save" />
 
 <tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="field_my_stop_date" and @class="is-invalid"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name="field_my_stop_date" and @class="is-invalid"]</td>
+  <td>focus</td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Invalid DateTime</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Invalid DateTime</td>
+  <td></td>
+</tr>
+
+<tr>
   <td>pause</td>
   <td>1000</td>
   <td></td>
