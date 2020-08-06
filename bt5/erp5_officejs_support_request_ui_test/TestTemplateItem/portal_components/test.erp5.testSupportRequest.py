@@ -496,7 +496,7 @@ class TestSupportRequestRSSSOneEvent(SupportRequestRSSTestCase, DefaultTestRSSMi
   def test_RSS_with_token(self):
     self.login(self.user.getUserId())
     # get rss link url
-    self.portal.support_request_module.SupportRequestModule_generateRSSLinkUrl()
+    self.getWebSite().support_request_module.SupportRequestModule_generateRSSLinkUrl()
     restricted_access_url = self.portal.REQUEST.form["your_rss_url"]
     parsed_url = urlparse.urlparse(restricted_access_url)
     restricted_access_url = restricted_access_url.replace(
