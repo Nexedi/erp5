@@ -217,14 +217,26 @@
         type: 'button',
         'class': 'list-btn ui-icon-th ui-btn-icon-left',
         text: translation_dict.List
-      }),
-      domsugar('button', {
-        type: 'button',
-        disabled: disable_next,
-        'class': 'next-btn ui-icon-forward ui-btn-icon-left',
-        text: translation_dict.Next
       })
     );
+    if (disable_next) {
+      button_list.push(
+        domsugar('button', {
+          type: 'button',
+          'class': 'display-new ui-icon-plus-circle ui-btn-icon-left',
+          text: translation_dict['New Slide']
+        })
+      );
+    } else {
+      button_list.push(
+        domsugar('button', {
+          type: 'button',
+          disabled: disable_next,
+          'class': 'next-btn ui-icon-forward ui-btn-icon-left',
+          text: translation_dict.Next
+        })
+      );
+    }
     return button_list;
   }
 
@@ -436,6 +448,7 @@
       ])
     ]);
     for (i = 0; i < section_list.length; i += 1) {
+      // If slide type is sreenshot/illustration, show image instead of title
       if (getSlideDictFromSlideElement(section_list[i]).image_url) {
         content = [
           domsugar('button', {type: 'button', text: translation_dict.Edit,
@@ -460,12 +473,6 @@
         draggable: true,
         'data-slide-index': i
       }, content));
-      // If slide type is sreenshot/illustration, show image instead of title
-      /*if (getSlideDictFromSlideElement(section_list[i]).image_url) {
-        draggable_element_list[i].style.backgroundImage = "url('" +
-          getSlideDictFromSlideElement(section_list[i]).image_url + "')";
-        draggable_element_list[i].querySelector("h1").style.display = "none";
-      }*/
     }
     // Add the "Add slide" button
     // div.appendChild(domsugar('section', {text: 'Add Slide'}));
