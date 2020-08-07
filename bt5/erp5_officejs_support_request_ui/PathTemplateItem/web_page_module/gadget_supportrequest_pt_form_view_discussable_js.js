@@ -3,15 +3,15 @@
 (function (window, rJS, RSVP, calculatePageTitle, moment, Handlebars) {
   "use strict";
   var gadget_klass = rJS(window),
-    comment_list_template = Handlebars.compile(
-      gadget_klass.__template_element.getElementById("template-document-list").innerHTML
-    );
+    comment_list_template_source = gadget_klass.__template_element.getElementById("template-document-list").innerHTML
 
   gadget_klass
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getSettingList", "getSettingList")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
@@ -57,7 +57,34 @@
     .declareMethod('render', function (options) {
       var gadget = this;
       gadget.options = options;
-      return gadget.getSetting('hateoas_url')
+      return gadget.getElement()
+        .push(function (element) {
+          // Translate HTML page. We only translate and replace some the elements with
+          // data-i18n-translate-element attribute, not to replace DOM elements with
+          // event handler attached.
+          function translateElement(e) {
+            return gadget
+              .translateHtml(e.innerHTML)
+              .push(function (translatedHtml) {
+                e.innerHTML = translatedHtml;
+              });
+          }
+          return RSVP.all(
+            Array.from(element.querySelectorAll('[data-i18n-translate-element]')).map(translateElement))
+            .then(
+              // Translate and compile the handlebar template for messages
+              function () {
+                return gadget
+                  .translateHtml(comment_list_template_source)
+                  .push(function (translatedTemplate) {
+                    gadget.comment_list_template = Handlebars.compile(translatedTemplate);
+                  });
+              }
+            );
+        })
+        .push(function () {
+          return gadget.getSetting('hateoas_url')
+        })
         .push(function (hateoas_url) {
           gadget.hateoas_url = hateoas_url;
         })
@@ -197,7 +224,7 @@
         })
         .push(function (comment_list) {
           var comments = gadget.element.querySelector("#post_list");
-          comments.innerHTML = comment_list_template({comments: comment_list});
+          comments.innerHTML = gadget.comment_list_template({comments: comment_list});
         });
     })
     .declareJob('submitPostComment', function () {
@@ -211,7 +238,10 @@
         })
         .push(function (content) {
           if (content.comment === '') {
-            return gadget.notifySubmitted({message: "Post content can not be empty!"});
+            return gadget.translate("Post content can not be empty!")
+                .push(function (translated_message) {
+                  return gadget.notifySubmitted({message: translated_message});
+                })
           }
 
           submitButton = gadget.element.querySelector("input[type=submit]");
@@ -222,7 +252,10 @@
             submitButton.disabled = false;
             submitButton.classList.remove("ui-disabled");
           }
-          queue = gadget.notifySubmitted({message: "Posting comment"})
+          queue = gadget.translate("Posting comment").
+            push(function (message_posting_comment) {
+              return gadget.notifySubmitted({message: message_posting_comment})
+            })
             .push(function () {
               var choose_file_html_element = gadget.element.querySelector('#attachment'),
                 file_blob = choose_file_html_element.files[0],
@@ -250,8 +283,12 @@
               });
             })
             .push(function () {
-              return new RSVP.Queue().push(function () {
-                gadget.notifySubmitted({message: "Comment added", status: "success"});
+              return new RSVP.Queue().push(
+                function(){
+                  return gadget.translate("Comment added")
+                }
+              ).push(function (message_comment_added) {
+                gadget.notifySubmitted({message: message_comment_added, status: "success"});
               }).push(function () {
                 return gadget.redirect({command: 'reload'});
               });
