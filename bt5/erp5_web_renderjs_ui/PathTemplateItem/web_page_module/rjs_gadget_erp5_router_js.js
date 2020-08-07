@@ -408,30 +408,10 @@
                   jio_key: next_options.jio_key,
                   view: action_data.href
                 };
-                queue = RSVP.Queue();
-                copyStickyParameterDict(next_options, new_options);
                 if (keep_history) {
-                  queue
-                    .push(function () {
-                      return addHistory(gadget, previous_options);
-                    })
-                    .push(function (id) {
-                      new_options.history = id;
-                      action_url = getDisplayUrlFor(
-                        next_options.jio_key,
-                        new_options
-                      );
-                      return synchronousChangeState(action_url);
-                    });
+                  return execPushHistoryCommand(gadget, previous_options, new_options);
                 }
-                return queue
-                  .push(function () {
-                    action_url = getDisplayUrlFor(
-                      next_options.jio_key,
-                      new_options
-                    );
-                    return synchronousChangeState(action_url);
-                  });
+                return execDisplayCommand(gadget, new_options);
               }
             }
           }
