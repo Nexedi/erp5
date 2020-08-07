@@ -37,7 +37,8 @@ if related_invoice_uid_list:
               keep_items=dict(reset=1,
                               uid=related_invoice_uid_list))
 
-return context.Base_redirect(form_id,
-              keep_items=dict(portal_status_message=
-                                translateString('No ${portal_type} related.',
-                                       mapping=dict(portal_type=translateString(invoice_type)))))
+return context.Base_redirect(form_id, keep_items=dict(
+    portal_status_message=translateString(
+    'No %s Related' % invoice_type,
+    default=translateString('No ${portal_type} related.',
+                             mapping={'portal_type': translateString(invoice_type)}))))
