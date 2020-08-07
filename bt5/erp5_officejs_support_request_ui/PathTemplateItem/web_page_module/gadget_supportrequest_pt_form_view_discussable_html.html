@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html>
+  <!--
+    @data-i18n="Posting comment"
+    @data-i18n="Post content can not be empty!"
+    @data-i18n="Comment added"
+    -->
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -21,13 +26,13 @@
     <script id="template-document-list" type="text/x-handlebars-template">
       {{#if comments }}
         {{#each comments }}
-          <li>By <strong>{{ user }}</strong> -
+          <li><span data-i18n="[html]By <strong>{{ user }}</strong> -">By <strong>{{ user }}</strong> -</span>
             <time datetime="{{ date }}" title="{{ date_formatted }}">{{ date_relative }}</time>
             <br/>
             {{{ text }}}
             {{#if attachment_link }}
               <br/>
-              <strong>Attachment: </strong>
+              <strong data-i18n="Attachment:">Attachment:</strong>
               <a href="{{attachment_link}}">{{ attachment_name }}</a>
             {{/if}}
             <hr id="post_item">
@@ -49,9 +54,11 @@
       </div>
 
       <form>
-        <p style="background-color:#0E81C2;color:white;margin:1em 0;padding:0.5em">Comments:</p>
-        <ol id="post_list"></ol>
-        <h3 class="ui-content-title ui-body-c ui-icon ui-icon-custom ui-icon-random" id="comment-title" name="comment-title">&nbsp;Post a comment</h3>
+        <div data-i18n-translate-element="true">
+          <p style="background-color:#0E81C2;color:white;margin:1em 0;padding:0.5em" data-i18n="Comments:">Comments:</p>
+          <ol id="post_list"></ol>
+          <h3 class="ui-content-title ui-body-c ui-icon ui-icon-custom ui-icon-random" id="comment-title" name="comment-title" data-i18n="Post Comment">&nbsp;Post a comment</h3>
+        </div>
         <div data-gadget-url="gadget_editor.html"
              data-gadget-scope="editor"
              data-gadget-sandbox="">
@@ -60,7 +67,9 @@
         <div id="file_upload_div">
           <input value="" name="attachment" id="attachment" type="file" title="Upload">
         </div>
-        <input data-theme="b" data-inline="true" type="submit" data-i18n="[value]Post Comment" value="Post Comment" data-icon="check" disabled class="ui-disabled"/>
+        <div data-i18n-translate-element="true">
+          <input data-theme="b" data-inline="true" type="submit" data-i18n="[value]Post Comment" value="Post Comment" data-icon="check" disabled class="ui-disabled"/>
+        </div>
       </form>
     </div>
   </body>
