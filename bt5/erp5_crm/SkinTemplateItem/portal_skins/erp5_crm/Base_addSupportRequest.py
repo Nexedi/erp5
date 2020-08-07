@@ -70,10 +70,7 @@ for method_id in {
 return support_request.Base_redirect(
   keep_items={
     'portal_status_message': portal.Base_translateString(
-      'New ${portal_type} created.',
-      mapping={
-        'portal_type': portal.Base_translateString('Support Request'),
-      },
+      'New Support Request created.',
     ),
   },
 )
