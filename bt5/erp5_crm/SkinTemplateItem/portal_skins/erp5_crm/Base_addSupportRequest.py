@@ -1,4 +1,5 @@
 portal = context.getPortalObject()
+translateString = portal.Base_translateString
 logged_in_user_value = portal.portal_membership.getAuthenticatedMember().getUserValue()
 now = DateTime()
 
@@ -69,11 +70,11 @@ for method_id in {
 
 return support_request.Base_redirect(
   keep_items={
-    'portal_status_message': portal.Base_translateString(
-      'New ${portal_type} created.',
-      mapping={
-        'portal_type': portal.Base_translateString('Support Request'),
-      },
+    'portal_status_message': translateString(
+      'New Support Request created.',
+      default=translateString(
+          "New ${portal_type} created.",
+          mapping={"portal_type": translateString("Support Request")}),
     ),
   },
 )
