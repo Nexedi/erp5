@@ -22,7 +22,7 @@
       })
       .push(function (evt) {
         var key,
-          precache_dict = evt.target.response,
+          precache_dict = evt.target.response.url_dict,
           result_list = [],
           precache_absolute_url = (new URL(precache_url, window.location)).href;
         for (key in precache_dict) {
