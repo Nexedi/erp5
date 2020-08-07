@@ -7741,6 +7741,9 @@ msgstr "Nouvelle page par défaut pour la section ${web_section}."
 msgid "New event created."
 msgstr "Nouvel évènement créé."
 
+msgid "New Support Request created."
+msgstr "Nouvelle demande d'assistance créée."
+
 msgid "New post created in background."
 msgstr "Nouveau message créé en arrière-plan."
 

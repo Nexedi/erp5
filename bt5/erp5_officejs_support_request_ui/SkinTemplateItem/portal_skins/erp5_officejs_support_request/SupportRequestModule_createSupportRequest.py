@@ -46,10 +46,7 @@ if description is not None or file is not None:
 return support_request.Base_redirect('view',
   keep_items={
     'portal_status_message': portal.Base_translateString(
-      'New ${portal_type} created.',
-      mapping={
-        'portal_type': 'Support Request',
-      },
+      'New Support Request created.',
     ),
   },
 )
