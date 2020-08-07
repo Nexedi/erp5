@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxlen: 80 */
-/*global window, rJS, RSVP, jexcel, domsugar, document, alert, prompt, confirm,
-navigator*/
+/*global window, rJS, RSVP, jexcel, domsugar, document, alert,
+prompt, confirm, navigator*/
 (function (window, rJS, jexcel, domsugar, document, alert,
             prompt, confirm, navigator) {
   "use strict";
@@ -854,6 +854,7 @@ navigator*/
       var r = prompt("Number of rows :", instance.options.data.length);
       var c = prompt("Number of columns :", instance.options.columns.length);
       if (c > 0 && r > 0) {
+        instance.setHistory({action: "beginResizeTable"});
         if (c > instance.options.columns.length) {
           while (instance.options.columns.length < c) {
             instance.insertColumn();
@@ -874,6 +875,7 @@ navigator*/
             instance.deleteRow(instance.options.data.length - 1, 1);
           }
         }
+        instance.setHistory({action: "endResizeTable"});
       }
     })
 
