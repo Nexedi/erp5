@@ -265,14 +265,6 @@
 <!-- End macro -->
 
 <tr>
-  <td colspan="3"><b>Go to the metadata form</b></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[text()='Metadata']</td>
-  <td></td>
-</tr>
-<tr>
   <td>waitForElementPresent</td>
   <td>title_html</td>
   <td></td>
@@ -285,20 +277,6 @@
   <td>type</td>
   <td>title_html</td>
   <td>slide 1 test title</td>
-</tr>
-
-<tr>
-  <td colspan="3"><b>Go back to the text form</b></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[text()='Text']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementNotPresent</td>
-  <td>title_html</td>
-  <td></td>
 </tr>
 
 <tr>
@@ -337,15 +315,17 @@
       <td>//body</td>
       <td></td>
     </tr>
+
     <tr>
       <td>storeEval</td>
       <td>selenium.browserbot.getCurrentWindow().document.body.innerHTML</td>
       <td>_macro_verify_ckeditor_text_content_temporary_var</td>
     </tr>
+
     <tr>
       <td>verifyEval</td>
       <td>storedVars['_macro_verify_ckeditor_text_content_temporary_var']</td>
-      <td>&lt;p&gt;slide 1 text content&lt;/p&gt;</td>
+      <td>slide 1 text content</td>
     </tr>
     <tr>
       <td>selectFrame</td>
@@ -358,27 +338,130 @@
 <!-- End macro -->
 
 <tr>
-  <td colspan="3"><b>Go back to the metadata form</b></td>
+  <td colspan="3"><b>Go back to the comments form</b></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[text()='Metadata']</td>
+  <td>//button[text()='Comments']</td>
   <td></td>
 </tr>
-<tr>
+<!--<tr>
   <td>waitForElementPresent</td>
   <td>title_html</td>
   <td></td>
-</tr>
+</tr>-->
 
+<!-- write comment -->
+
+    <tr>
+      <td colspan="3"><b>Type CKEditor Text Content</b></td>
+    </tr>
+    <!-- Wait for ckeditor to be loaded -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-scope="editor"]//iframe</td>
+      <td></td>
+    </tr>
+    <tr><!-- gadget iframe -->
+      <td>selectFrame</td>
+      <td>//div[@data-gadget-scope="editor"]//iframe</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//iframe</td>
+      <td></td>
+    </tr>
+    <tr><!-- CKEditor iframe -->
+      <td>selectFrame</td>
+      <td>//iframe</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//body</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>storeEval</td>
+      <td>selenium.browserbot.getCurrentWindow().document.body.innerHTML = 'slide 1 comment content'</td>
+      <td>_macro_type_ckeditor_text_content_temporary_var</td>
+    </tr>
+    <tr>
+      <td>selectFrame</td>
+      <td>relative=top</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+<!-- end write comment -->
+<!--
 <tr>
-  <td colspan="3"><b>Check the metadata</b></td>
+  <td colspan="3"><b>Check the Chapter Title</b></td>
 </tr>
 <tr>
   <td>assertValue</td>
   <td>title_html</td>
   <td>slide 1 test title</td>
 </tr>
+-->
+<tr>
+  <td colspan="3"><b>Check comment content</b></td>
+</tr>
+<!-- <tal:block tal:define="text_content python: '<p>slide 1 text content</p>'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/verify_ckeditor_text_content"/>
+</tal:block> -->
+
+    <tr>
+      <td colspan="3"><b>Verify CKEditor Text Content</b></td>
+    </tr>
+    <!-- Wait for ckeditor to be loaded -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-scope="editor"]//iframe</td>
+      <td></td>
+    </tr>
+    <tr><!-- gadget iframe -->
+      <td>selectFrame</td>
+      <td>//div[@data-gadget-scope="editor"]//iframe</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//iframe</td>
+      <td></td>
+    </tr>
+    <tr><!-- CKEditor iframe -->
+      <td>selectFrame</td>
+      <td>//iframe</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//body</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>storeEval</td>
+      <td>selenium.browserbot.getCurrentWindow().document.body.innerHTML</td>
+      <td>_macro_verify_ckeditor_text_content_temporary_var</td>
+    </tr>
+    <tr>
+      <td>verifyEval</td>
+      <td>storedVars['_macro_verify_ckeditor_text_content_temporary_var']</td>
+      <td>slide 1 comment content</td>
+    </tr>
+    <tr>
+      <td>selectFrame</td>
+      <td>relative=top</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="3"><p></p></td>
+    </tr>
+<!-- End macro -->
 
 <tr>
   <td colspan="3"><b>Go back to the slide list</b></td>
@@ -400,6 +483,16 @@
 <tr>
   <td>click</td>
   <td>//button[text()='Edit']</td>
+  <td></td>
+</tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-scope="editor"]//iframe</td>
+      <td></td>
+    </tr>
+  <tr>
+  <td>click</td>
+  <td>//button[text()='Text']</td>
   <td></td>
 </tr>
 <tr>
@@ -449,7 +542,6 @@ Début macro
      <td>//div[@data-gadget-scope='header']//button[@data-i18n='Save']</td>
      <td></td>
     </tr>
-  
 <!-- End macro -->
 
 <tr>
