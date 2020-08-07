@@ -1,24 +1,14 @@
-/*global window, rJS, RSVP, Handlebars, Query */
+/*global window, rJS, RSVP, Query, domsugar */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, Query) {
+(function (window, rJS, RSVP, Query, domsugar) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    source = gadget_klass.__template_element
-                         .getElementById("table-template")
-                         .innerHTML,
-    table_template = Handlebars.compile(source);
-
-  gadget_klass
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
@@ -70,17 +60,54 @@
           return RSVP.all(promise_list);
         })
         .push(function (result_list) {
-          var line_list = [], i;
-          for (i = 0; i < result_list.length; i += 1) {
-            line_list.push({
-              link: result_list[i][0],
-              title: result_list[i][1],
-              count: result_list[i][2]
-            });
+          if (result_list.length) {
+            return domsugar(
+              "ul",
+              {
+                "data-role": "listview",
+                "data-theme": "c",
+                "class": "document-listview ui-listview-inset ui-corner-all"
+              },
+              result_list.map(function (r) {
+                var link = r[0], title = r[1], count = r[2];
+                return domsugar(
+                  "li",
+                  {
+                    "class": "ui-li-has-count",
+                    "data-icon": "false"
+                  },
+                  [
+                    domsugar(
+                      "a",
+                      {
+                        "class": "ui-body-inherit",
+                        "href": link
+                      },
+                      [
+                        title,
+                        " ",
+                        domsugar(
+                          "span",
+                          { "class": "ui-li-count" },
+                          [count.toString()]
+                        )
+                      ]
+                    )
+                  ]
+                );
+              })
+            );
           }
-          gadget.element.querySelector('.document_list').innerHTML = table_template({
-            document_list: line_list
-          });
+          return gadget.translate("All work caught up!")
+            .push(function (messageNoWorklist) {
+              return domsugar("p", [messageNoWorklist]);
+            });
+        })
+        .push(function (dom_list) {
+          domsugar(
+            gadget.element.querySelector('.document_list'),
+            [dom_list]
+          );
         });
     });
-}(window, rJS, RSVP, Handlebars, Query));
+}(window, rJS, RSVP, Query, domsugar));
