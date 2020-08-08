@@ -8322,7 +8322,7 @@ console.log(ret);
                             style[cellName] = s;
                         }
                         // Bold
-                        if (content[j].children[i].classList.contains('styleBold')) {
+                        if (content[j].children[i].classList.contains('styleBold') || content[j].children[i].classList.contains('style-bold')) {
                             if (style[cellName]) {
                                 style[cellName] += '; font-weight:bold;';
                             } else {
@@ -8330,7 +8330,7 @@ console.log(ret);
                             }
                         }
                         // Italic
-                        if (content[j].children[i].classList.contains('styleItalics')) {
+                        if (content[j].children[i].classList.contains('styleItalics') || content[j].children[i].classList.contains('style-italics')) {
                             if (style[cellName]) {
                                 style[cellName] += '; font-style: italic;';
                             } else {
@@ -8338,11 +8338,19 @@ console.log(ret);
                             }
                         }
                         // Underlined
-                        if (content[j].children[i].classList.contains('styleUnderline')) {
+                        if (content[j].children[i].classList.contains('styleUnderline') || content[j].children[i].classList.contains('style-underline')) {
                             if (style[cellName]) {
                                 style[cellName] += '; text-decoration: underline;';
                             } else {
                                 style[cellName] = 'text-decoration: underline;';
+                            }
+                        }
+                        // Line through
+                        if (content[j].children[i].classList.contains('style-line-through')) {
+                            if (style[cellName]) {
+                                style[cellName] += '; text-decoration: line-through;';
+                            } else {
+                                style[cellName] = 'text-decoration: line-through;';
                             }
                         }
                         // Align left
