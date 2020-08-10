@@ -99,6 +99,69 @@
   <td>Submitted</td>
   <td></td>
 </tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//p[contains(text(), "RobotMaking")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Requester</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Support Requests"]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//button[@type="submit"]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>type</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
+  <td>SR-9</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//button[@type="submit"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="document_table"]/table/tbody/tr/td[1]/a[contains(text(), "123dsfa")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@class="document_table"]/table/tbody/tr/td[1]/a[contains(text(), "123dsfa")]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//p[@id="field_my_destination_decision_title" and contains(text(), "John Smith")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id="field_my_destination_decision_title" and contains(text(), "John Smith")]</td>
+  <td></td>
+</tr>
 </tbody></table>
   </body>
 </html>
