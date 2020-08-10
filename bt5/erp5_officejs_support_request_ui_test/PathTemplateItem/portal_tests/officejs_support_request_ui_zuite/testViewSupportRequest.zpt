@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title tal:content="template/title">The title</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  </head>
+  <body>
+  <table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Support Request Zuite</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_SupportRequestUITemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Support Requests"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Support Requests"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//button[@type="submit"]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>type</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
+  <td>SR-9</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/erp5_officejs_support_request_ui/gadget_erp5_searchfield.html"]//button[@type="submit"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="document_table"]/table/tbody/tr/td[1]/a[contains(text(), "123dsfa")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@class="document_table"]/table/tbody/tr/td[1]/a[contains(text(), "123dsfa")]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//p[@id="field_my_destination_decision_title" and contains(text(), "John Smith")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id="field_my_destination_decision_title" and contains(text(), "John Smith")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id="field_my_source_project_title" and contains(text(), "PlaneMaking")]</td>
+  <td></td>
+</tr>
+</tbody></table>
+  </body>
+</html>
