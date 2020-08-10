@@ -217,14 +217,25 @@
         type: 'button',
         'class': 'list-btn ui-icon-th ui-btn-icon-left',
         text: translation_dict.List
-      }),
-      domsugar('button', {
-        type: 'button',
-        disabled: disable_next,
-        'class': 'next-btn ui-icon-forward ui-btn-icon-left',
-        text: translation_dict.Next
       })
     );
+    if (disable_next) {
+      button_list.push(
+        domsugar('button', {
+          type: 'button',
+          'class': 'display-new ui-icon-plus-circle ui-btn-icon-left',
+          text: translation_dict['New Slide']
+        })
+      );
+    } else {
+      button_list.push(
+        domsugar('button', {
+          type: 'button',
+          'class': 'next-btn ui-icon-forward ui-btn-icon-left',
+          text: translation_dict.Next
+        })
+      );
+    }
     return button_list;
   }
 
