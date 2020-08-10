@@ -409,6 +409,7 @@
       x,
       y;
     for (i = 0; i < slide_list.length - 1; i += 1) {
+      //console.log("slide: " + i.toString());
       x = slide_list[i].getBoundingClientRect().x;
       y = slide_list[i].getBoundingClientRect().y;
       gadget.slide_coordinate[i] = [x, y];
@@ -689,6 +690,7 @@
     }, false, false)
 
     .onEvent("dragend", function (evt) {
+      //console.log("end");
       moveSlide(this, "-1", "-1");
       var closest_section = evt.target.closest('section');
       if (closest_section === null) {
@@ -698,6 +700,7 @@
     }, false, false)
 
     .onEvent("dragover", function (evt) {
+      //console.log("over");
       var closest_section = evt.target.closest('section');
       if (closest_section === null) {
         return;
@@ -731,6 +734,7 @@
     }, false, false)
 
     .onEvent("dragleave", function (evt) {
+      //console.log("leave");
       //exits if mouse is indirectly over a section
       if (evt.relatedTarget) {
         var closest_section = evt.relatedTarget.closest('section'),
@@ -744,6 +748,7 @@
           moveSlide(this, "-1", "-1");
         }
       }
+      //evt.target.classList.remove('over');
     }, false, false)
 
 
@@ -762,6 +767,8 @@
         evt.preventDefault(); // Necessary. Allows us to drop.
       }
 
+      // Remove the over class
+      //evt.target.classList.remove('over');
 
       source_index = evt.dataTransfer.getData('application/x-dragged-slide');
 
