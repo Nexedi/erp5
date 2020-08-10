@@ -1106,9 +1106,9 @@ prompt, confirm, navigator*/
           name = prompt("Table name :", ev.target.textContent);
           gadget.state.selectedTabLink.textContent = name !== null ?
             name : gadget.state.selectedTabLink.textContent;
+          gadget.deferNotifyChange();
         }
         gadget.state.selectedTabLink = ev.target;
-        gadget.deferNotifyChange();
       }
     }, false, false);
 
