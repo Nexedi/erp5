@@ -448,6 +448,7 @@
       ])
     ]);
     for (i = 0; i < section_list.length; i += 1) {
+      // If slide type is sreenshot/illustration, show image instead of title
       if (getSlideDictFromSlideElement(section_list[i]).image_url) {
         content = [
           domsugar('button', {type: 'button', text: translation_dict.Edit,
@@ -472,12 +473,6 @@
         draggable: true,
         'data-slide-index': i
       }, content));
-      // If slide type is sreenshot/illustration, show image instead of title
-      /*if (getSlideDictFromSlideElement(section_list[i]).image_url) {
-        draggable_element_list[i].style.backgroundImage = "url('" +
-          getSlideDictFromSlideElement(section_list[i]).image_url + "')";
-        draggable_element_list[i].querySelector("h1").style.display = "none";
-      }*/
     }
     // Add the "Add slide" button
     // div.appendChild(domsugar('section', {text: 'Add Slide'}));
