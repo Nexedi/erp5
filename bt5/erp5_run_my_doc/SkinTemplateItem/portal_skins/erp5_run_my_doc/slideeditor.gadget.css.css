@@ -24,7 +24,7 @@ div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section[data-sli
   cursor: move;
 }
 div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section.drag {
-  opacity: 0.4;
+  opacity: 0.01;
 }
 div[data-gadget-url$="slideeditor.gadget.html"] > .slide_list > section.over {
   border-style: dashed;
