@@ -231,6 +231,7 @@
       button_list.push(
         domsugar('button', {
           type: 'button',
+          disabled: disable_next,
           'class': 'next-btn ui-icon-forward ui-btn-icon-left',
           text: translation_dict.Next
         })
