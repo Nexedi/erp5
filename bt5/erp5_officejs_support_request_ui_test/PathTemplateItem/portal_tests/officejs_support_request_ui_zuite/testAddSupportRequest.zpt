@@ -99,6 +99,37 @@
   <td>Submitted</td>
   <td></td>
 </tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(text(), "RobotMaking")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[contains(text(), "RobotMaking")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(text(), "Project: RobotMaking")]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@value="RobotMaking"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@value="RobotMaking"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[contains(text(), "Project: RobotMaking")]</td>
+  <td></td>
+</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 </tbody></table>
   </body>
 </html>
