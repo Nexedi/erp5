@@ -99,6 +99,11 @@
   <td>Submitted</td>
   <td></td>
 </tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//p[contains(text(), "RobotMaking")]</td>
+  <td></td>
+</tr>
 </tbody></table>
   </body>
 </html>
