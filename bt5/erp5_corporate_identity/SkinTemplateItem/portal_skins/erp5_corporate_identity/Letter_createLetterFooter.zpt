@@ -99,7 +99,9 @@ Creates the Letter footer section.
 	          <td>
 	            <div>
 	              <span class="ci-letter-footer-title" i18n:translate="" i18n:domain="erp5_ui">Address</span><span tal:content="letter_source_company"></span>
-	              <span class="ci-letter-footer-title">&nbsp;</span><span tal:content="letter_source_address"></span>
+                <tal:block tal:repeat="address python: letter_source_address.split('\n')">
+	                <span class="ci-letter-footer-title">&nbsp;</span><span tal:content="address"></span>
+                </tal:block>
 	              <span class="ci-letter-footer-title">&nbsp;</span><span tal:content="python: ''.join([letter_source_postal_code, ' ', letter_source_city])"></span>
 	              <span class="ci-letter-footer-title">&nbsp;</span><span tal:content="letter_source_country"></span>
 	            </div>
