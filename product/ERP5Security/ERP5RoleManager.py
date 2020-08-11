@@ -64,6 +64,9 @@ class ERP5RoleManager( BasePlugin ):
     """ See IRolesPlugin.
     We only ever return Member for every principal
     """
+    if principal.isFromOAuth2Token():
+      # OAuth2 authentication brings its own roles.
+      return ()
     if principal.getId() == ERP5Security.SUPER_USER:
       # If this is the super user, give all the roles present in this system.
       # XXX no API to do this in PAS.
