@@ -1,0 +1,75 @@
+<tal:block
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+>
+  <tal:block
+    tal:define="
+      form_action python: 'logged_in_once';
+      form_id     python: 'login_once_form';
+      css_list    python: [];
+      portal_url  python: context.portal_url();
+      js_list     python: [portal_url + '/erp5.js'];
+      came_from   python: request.get('came_from');
+      ERP5Site    python: modules['Products.ERP5.ERP5Site'];
+    "
+  >
+    <tal:block metal:use-macro="python: context.main_template.macros['master']">
+      <tal:block metal:fill-slot="main">
+        <div class="content login">
+          <h1 i18n:translate="" i18n:domain="ui">Log in</h1>
+          <input tal:condition="python: came_from" type="hidden" name="came_from" tal:attributes="value python: came_from"/>
+          <input type="hidden" tal:attributes="
+            name  python: ERP5Site.ERP5_AUTHORISATION_EXTRACTOR_MARKER_NAME;
+            value python: ERP5Site.ERP5_AUTHORISATION_EXTRACTOR_MARKER_VALUE;
+          "/>
+          <input type="hidden" name="login_retry_url" tal:attributes="value python: request.get('login_retry_url', '')"/>
+          <fieldset>
+            <div class="field">
+              <label for="name" class="required" i18n:translate="" i18n:domain="ui">Username</label>
+              <div class="input"><input type="text" id="name" autofocus
+                tal:attributes="name python: ERP5Site.ERP5_AUTHORISATION_EXTRACTOR_USERNAME_NAME"
+              /></div>
+              <p class="clear"></p>
+            </div>
+            <div class="field">
+              <label for="password" i18n:translate="" i18n:domain="ui">Password</label>
+              <div class="input"><input type="password" id="password" autocomplete="off"
+                tal:attributes="name python: ERP5Site.ERP5_AUTHORISATION_EXTRACTOR_PASSWORD_NAME"
+              /></div>
+              <p class="clear"></p>
+            </div>
+            <div class="field">
+              <label>&nbsp;</label>
+              <div class="input">
+                <input
+                  type="submit"
+                  value="Login"
+                  class="submit"
+                  tal:attributes="name python: form_action + ':method'"
+                  i18n:attributes="value"
+                  i18n:domain="ui"
+                />
+              </div>
+              <p class="clear"></p>
+            </div>
+            <div class="field">
+              <label>&nbsp;</label>
+              <div class="input">
+                <a
+                  tal:attributes="
+                    href python: portal_url + '/portal_password/PasswordTool_viewEmailPassword';
+                  "
+                  i18n:translate=""
+                  i18n:domain="ui"
+                >I forgot my password!</a>
+              </div>
+            </div>
+          </fieldset>
+          <p i18n:translate="" i18n:domain="ui">Having trouble logging in? Make sure to enable cookies in your web browser.</p>
+          <p i18n:translate="" i18n:domain="ui">Do not forget to logout or exit your browser when you are done.</p>
+        </div>
+      </tal:block>
+    </tal:block>
+  </tal:block>
+</tal:block>
