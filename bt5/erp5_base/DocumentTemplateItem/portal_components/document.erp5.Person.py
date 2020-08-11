@@ -235,7 +235,7 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMi
     type based method named Person_initUserId
     """
     method = self.getTypeBasedMethod('initUserId')
-    if method:
+    if method is not None:
       return method()
     if not self.hasUserId():
       self._baseSetUserId(
