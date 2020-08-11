@@ -785,6 +785,7 @@ class TestMigration(UserManagementTestCase):
     self._enableERP5UsersPlugin()
     pers = self._createERP5UserPerson('the_user', 'secret')
     self._assertUserExists('the_user', 'secret')
+    person_module_serial = self.portal.person_module._p_serial
     self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
     self.portal.portal_caches.clearAllCache()
     # during migration, old users can still login
@@ -792,6 +793,8 @@ class TestMigration(UserManagementTestCase):
       self._assertUserExists('the_user', 'secret')
       return False
     self.tic(stop_condition=stop_condition)
+    # running this migration did not modify person module
+    self.assertEqual(self.portal.person_module._p_serial, person_module_serial)
     self._assertUserExists('the_user', 'secret')
     self.assertEqual(pers.getPassword(), None)
     self.assertEqual(pers.Person_getUserId(), 'the_user')
