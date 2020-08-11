@@ -33,7 +33,7 @@ if data_ingestion is not None:
 
 specialise_value_list = [x.getObject() for x in portal_catalog.searchResults(
   portal_type = 'Data Supply',
-  reference = 'embulk',
+  reference = 'default_ebulk',
   validation_state = 'validated')]
 
 # create a new data ingestion
