@@ -3,8 +3,8 @@ data_operation_module/transform_fif
 data_product_module/fif_array
 data_product_module/fif_data
 data_product_module/fif_descriptor
-data_supply_module/embulk
-data_supply_module/embulk/**
+data_supply_module/default_ebulk
+data_supply_module/default_ebulk/**
 portal_ingestion_policies/wendelin_embulk
 portal_ingestion_policies/default_ebulk
 portal_categories/use/**
