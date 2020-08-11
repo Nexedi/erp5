@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Telephone" module="Products.ERP5Type.Document.Telephone"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>coordinate_text</string> </key>
+            <value> <string>123456</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>default_fax</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Fax</string> </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
