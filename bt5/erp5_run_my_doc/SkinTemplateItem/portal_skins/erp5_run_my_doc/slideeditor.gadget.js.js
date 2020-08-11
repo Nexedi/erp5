@@ -26,7 +26,9 @@
       'Screenshot',
       'Illustration',
       'Code',
-      'Master'
+      'Master',
+      'Image URL',
+      'Image Caption'
     ];
 
   ///////////////////////////////////////////////////
@@ -66,11 +68,14 @@
   function getSlideDictFromSlideElement(slide) {
     var h1,
       details,
+      img,
       result = {
         type: '',
         title_html: '',
         comment_html: '',
-        slide_html: ''
+        slide_html: '',
+        image_url: '',
+        image_caption: ''
       };
 
     // Clone the slide,
@@ -103,9 +108,17 @@
       slide.removeChild(details);
     }
 
+    // Get the screenshot or illustration
+    if (result.type === 'illustration' || result.type === 'screenshot') {
+      img = slide.querySelector(':scope > img');
+      if (img !== null) {
+        result.image_url = img.getAttribute("src");
+        result.image_caption = img.getAttribute("title");
+        slide.removeChild(img);
+      }
+    }
     // Finally, extract the slide
     result.slide_html = slide.innerHTML;
-
     return result;
   }
 
@@ -124,7 +137,8 @@
       slide_dict = getSlideDictFromSlideElement(slide),
       i,
       class_string,
-      key;
+      key,
+      img = '';
 
     // Hack: remove keys sent to erp5
     delete value_dict['default_type:int'];
@@ -142,7 +156,19 @@
       class_string += ' ' + slide.classList[i];
     }
     slide.className = class_string;
+    if (slide_dict.type === 'illustration' ||
+        slide_dict.type === 'screenshot') {
+      if (slide_dict.image_caption || slide_dict.image_url) {
+        img = domsugar('img', {
+          src: slide_dict.image_url,
+          type: "image/svg+xml",
+          title: slide_dict.image_caption,
+          alt: slide_dict.image_caption
+        }).outerHTML;
+      }
+    }
     slide.innerHTML = '<h1>' + slide_dict.title_html + '</h1>' +
+                      img +
                       '<details>' + slide_dict.comment_html + '</details>' +
                       slide_dict.slide_html;
 
@@ -207,7 +233,8 @@
   ///////////////////////////////////////////////////
   // Page view handling
   ///////////////////////////////////////////////////
-  function getCKEditorJSON(translation_dict, key, value, title_html, type) {
+  function getCKEditorJSON(translation_dict, key, value, title_html, type,
+                            image_url, image_caption) {
     var ck_editor_json = {
       erp5_document: {
         "_embedded": {
@@ -248,7 +275,7 @@
         "title": translation_dict["Chapter Title"],
         "type": "StringField",
         "editable": 1,
-        "required": 1,
+        "required": 0,
         "key": "title_html",
         "value": title_html
       };
@@ -268,12 +295,41 @@
         value: type
       };
 
-      ck_editor_json.form_definition.group_list = [
-        ["left", [
-          ["your_chapter_title"],
-          ["your_slide_type"]
-        ]]
-      ].concat(ck_editor_json.form_definition.group_list);
+      if (image_url !== null) {
+        ck_editor_json.erp5_document._embedded._view.your_image_url = {
+          "title": translation_dict["Image URL"],
+          "type": "StringField",
+          "editable": 1,
+          "required": 0,
+          "key": "image_url",
+          "value": image_url
+        };
+
+        ck_editor_json.erp5_document._embedded._view.your_image_caption = {
+          "title": translation_dict["Image Caption"],
+          "type": "StringField",
+          "editable": 1,
+          "required": 0,
+          "key": "image_caption",
+          "value": image_caption
+        };
+
+        ck_editor_json.form_definition.group_list = [
+          ["left", [
+            ["your_chapter_title"],
+            ["your_slide_type"],
+            ["your_image_url"],
+            ["your_image_caption"]
+          ]]
+        ].concat(ck_editor_json.form_definition.group_list);
+      } else {
+        ck_editor_json.form_definition.group_list = [
+          ["left", [
+            ["your_chapter_title"],
+            ["your_slide_type"]
+          ]]
+        ].concat(ck_editor_json.form_definition.group_list);
+      }
     }
 
     return ck_editor_json;
@@ -288,20 +344,37 @@
         getSlideFromList(slide_list, gadget.state.display_index)
       ),
       queue;
-
-    if (slide_dialog === DIALOG_SLIDE) {
+    if (slide_dialog === DIALOG_SLIDE && (
+        slide_dict.type === 'illustration' ||
+        slide_dict.type === 'screenshot'
+      )
+        ) {
       render_dict = getCKEditorJSON(
         translation_dict,
         "slide_html",
         slide_dict.slide_html,
         slide_dict.title_html,
-        slide_dict.type
+        slide_dict.type,
+        slide_dict.image_url,
+        slide_dict.image_caption
+      );
+    } else if (slide_dialog === DIALOG_SLIDE) {
+      render_dict = getCKEditorJSON(
+        translation_dict,
+        "slide_html",
+        slide_dict.slide_html,
+        slide_dict.title_html,
+        slide_dict.type,
+        null,
+        null
       );
     } else if (slide_dialog === DIALOG_COMMENT) {
       render_dict = getCKEditorJSON(
         translation_dict,
         "comment_html",
         slide_dict.comment_html,
+        null,
+        null,
         null,
         null
       );
@@ -354,7 +427,8 @@
     var header_element,
       section_list = getSlideElementList(gadget.state.value),
       draggable_element_list = [],
-      i;
+      i,
+      content;
 
     // Clone listbox header structure to reuse the css
     header_element = domsugar('div', {'class': 'document_table'}, [
@@ -365,17 +439,31 @@
     ]);
 
     for (i = 0; i < section_list.length; i += 1) {
+      // If slide type is sreenshot/illustration, show image instead of title
+      if (getSlideDictFromSlideElement(section_list[i]).image_url) {
+        content = [
+          domsugar('button', {type: 'button', text: translation_dict.Edit,
+                   'class': 'display-slide ui-icon-pencil ui-btn-icon-left',
+                   'data-slide-index': i}),
+          domsugar('img', {
+            src: getSlideDictFromSlideElement(section_list[i]).image_url,
+            draggable: false
+          })
+        ];
+      } else {
+        content = [
+          domsugar('button', {type: 'button', text: translation_dict.Edit,
+                   'class': 'display-slide ui-icon-pencil ui-btn-icon-left',
+                   'data-slide-index': i}),
+          domsugar('h1', {
+            html: getSlideDictFromSlideElement(section_list[i]).title_html
+          })
+        ];
+      }
       draggable_element_list.push(domsugar('section', {
         draggable: true,
         'data-slide-index': i
-      }, [
-        domsugar('button', {type: 'button', text: translation_dict.Edit,
-                 'class': 'display-slide ui-icon-pencil ui-btn-icon-left',
-                 'data-slide-index': i}),
-        domsugar('h1', {
-          html: getSlideDictFromSlideElement(section_list[i]).title_html
-        })
-      ]));
+      }, content));
     }
     // Add the "Add slide" button
     // div.appendChild(domsugar('section', {text: 'Add Slide'}));
@@ -489,6 +577,29 @@
       throw new Error('Unhandled display step: ' + display_step);
     })
 
+    .onEvent("change", function (evt) {
+      var gadget = this,
+        tag_name = evt.target.tagName,
+        queue;
+
+      // Always get content to ensure the possible displayed form
+      // is checked and content propagated to the gadget state value
+      queue = gadget.getContent();
+
+      if (tag_name !== 'SELECT') {
+        return queue;
+      }
+
+      if (evt.target.id === 'type') {
+        return queue
+          .push(function () {
+            return gadget.changeState({
+              type: evt.target.value
+            });
+          });
+      }
+    })
+
     .onEvent("click", function (evt) {
       // Only handle click on BUTTON and IMG element
       var gadget = this,
@@ -508,7 +619,8 @@
         return queue
           .push(function () {
             return gadget.changeState({
-              display_index: gadget.state.display_index + 1
+              display_index: gadget.state.display_index + 1,
+              type: undefined
             });
           });
       }
@@ -517,7 +629,8 @@
         return queue
           .push(function () {
             return gadget.changeState({
-              display_index: gadget.state.display_index - 1
+              display_index: gadget.state.display_index - 1,
+              type: undefined
             });
           });
       }
@@ -526,7 +639,8 @@
         return queue
           .push(function () {
             return gadget.changeState({
-              display_step: DISPLAY_LIST
+              display_step: DISPLAY_LIST,
+              type: undefined
             });
           });
       }
@@ -536,6 +650,7 @@
           .push(function () {
             return gadget.changeState({
               display_step: DISPLAY_SLIDE,
+              type: undefined,
               display_index: parseInt(
                 evt.target.getAttribute('data-slide-index'),
                 10
@@ -549,7 +664,8 @@
         return queue
           .push(function () {
             return gadget.changeState({
-              slide_dialog: DIALOG_COMMENT
+              slide_dialog: DIALOG_COMMENT,
+              type: undefined
             });
           });
       }
@@ -558,7 +674,8 @@
         return queue
           .push(function () {
             return gadget.changeState({
-              slide_dialog: DIALOG_SLIDE
+              slide_dialog: DIALOG_SLIDE,
+              type: undefined
             });
           });
       }
@@ -571,7 +688,8 @@
             return RSVP.all([
               gadget.changeState({
                 value: slideListAsHTML(slide_list),
-                display_step: DISPLAY_LIST
+                display_step: DISPLAY_LIST,
+                type: undefined
               }),
               gadget.notifyChange()
             ]);
@@ -585,7 +703,8 @@
               display_index: getSlideElementList(gadget.state.value).length,
               display_step: DISPLAY_SLIDE,
               slide_dialog: gadget.state.slide_dialog || DIALOG_SLIDE,
-              value: gadget.state.value + "<section></section>"
+              value: gadget.state.value + "<section></section>",
+              type: undefined
             });
           });
       }
