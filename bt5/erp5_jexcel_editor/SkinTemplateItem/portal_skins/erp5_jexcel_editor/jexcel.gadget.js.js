@@ -195,9 +195,13 @@ prompt, confirm, navigator*/
                            gadget.state.template);
       if (table.classList.contains("jexcel") &&
           !table.classList.contains("jSheet")) {
-        tmp = JSON.parse(table.dataset.config);
-        dict.columns = tmp.columns;
-        dict.data = tmp.data;
+        if (Array.from(table.querySelectorAll("td")).filter(function (td) {
+          return td.hasAttribute("cache");
+        }).length === 0) {
+          tmp = JSON.parse(table.dataset.config);
+          dict.columns = tmp.columns;
+          dict.data = tmp.data;
+        }
       }
       dict.sheetName = table.title ? table.title : "Sheet " + (i + 1);
       configs.push(dict);
@@ -820,9 +824,10 @@ prompt, confirm, navigator*/
 
     .declareJob("triggerChangeTypeInToolbar", function (sheet, instance, type, child, render) {
       var cell = sheet.querySelector("td.highlight-selected"),
-        x = parseInt(cell.dataset.x, 10),
+        x,
         column,
         array;
+      x = cell ? parseInt(cell.dataset.x, 10) : null;
       if (cell && instance.options.columns[x].type !== type) {
         column = sheet.querySelectorAll("td[data-x='" + x + "']");
         array = [...column];
