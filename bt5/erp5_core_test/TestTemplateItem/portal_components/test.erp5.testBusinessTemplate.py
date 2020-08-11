@@ -6380,6 +6380,45 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       self.assertEqual("FooBar", getattr(foo_in_portal, "title"))
     self.uninstallBusinessTemplate('test_168_CheckPortalTypeAndPathInSameBusinessTemplate')
 
+  def test_legacy_products_erp5_document_compatibility(self):
+    """Check we can import a business template referencing classes from
+    Products.ERP5Type.Document namespace and that the classes are migrated
+    """
+    import Products.ERP5.tests
+    bt_path = os.path.join(
+        os.path.dirname(Products.ERP5.tests.__file__),
+        'test_data',
+        'BusinessTemplate_test_legacy_products_erp5_document_compatibility')
+    bt = self.portal.portal_templates.download(bt_path)
+    bt.install()
+    self.tic()
+
+    # when loaded, the legacy classes have been updated to use
+    # erp5.portal_type namespace
+    self.assertEqual(
+        str(self.portal.person_module.test_person.__class__),
+        "<class 'erp5.portal_type.Person'>")
+    self.assertEqual(
+        str(self.portal.person_module.test_person.default_address.__class__),
+        "<class 'erp5.portal_type.Address'>")
+    self.assertEqual(
+        str(self.portal.person_module.test_person.default_career.__class__),
+        "<class 'erp5.portal_type.Career'>")
+    self.assertEqual(
+        str(self.portal.person_module.test_person.default_email.__class__),
+        "<class 'erp5.portal_type.Email'>")
+    self.assertEqual(
+        str(self.portal.person_module.test_person.default_fax.__class__),
+        "<class 'erp5.portal_type.Fax'>")
+    self.assertEqual(
+        str(self.portal.person_module.test_person.default_telephone.__class__),
+        "<class 'erp5.portal_type.Telephone'>")
+    self.assertEqual(
+        str(self.portal.person_module.test_person.default_link.__class__),
+        "<class 'erp5.portal_type.Link'>")
+
+    self.uninstallBusinessTemplate('BusinessTemplate_test_legacy_products_erp5_document_compatibility')
+
   def test_169_CheckPortalTypeAndPathInSameBusinessTemplateAndBrokenObjectModification(self):
     """
     Make sure we have possibility to change broken
