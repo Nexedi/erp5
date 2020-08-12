@@ -164,20 +164,14 @@
           type: "image/svg+xml",
           title: slide_dict.image_caption,
           alt: slide_dict.image_caption
-        });
+        }).outerHTML;
       }
     }
-    slide.innerHTML = domsugar('select',
-      [
-        domsugar('h1',
-          [slide_dict.title_html]
-          ),
-        img,
-        domsugar('details', {
-          text: slide_dict.comment_html
-        }),
-        slide_dict.slide_html
-      ]).innerHTML;
+    slide.innerHTML = '<h1>' + slide_dict.title_html + '</h1>' +
+                      img +
+                      '<details>' + slide_dict.comment_html + '</details>' +
+                      slide_dict.slide_html;
+
     return slideListAsHTML(slide_list);
   }
 
