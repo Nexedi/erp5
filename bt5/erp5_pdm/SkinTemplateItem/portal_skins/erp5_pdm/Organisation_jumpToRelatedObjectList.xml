@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type</string> </value>
+            <value> <string>portal_type, form_id=\'\'</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
