@@ -37,6 +37,8 @@ import warnings
 import sys
 import inspect
 import persistent
+from importlib import import_module
+from types import ModuleType
 from hashlib import md5 as md5_new, sha1 as sha_new
 from Products.ERP5Type.Globals import package_home
 from Products.ERP5Type.Globals import DevelopmentMode
@@ -1024,19 +1026,6 @@ def importLocalDocument(class_id, path=None, class_path=None):
   sys.modules[module_name] = module
   setattr(Products.ERP5Type.Document, class_id, module)
 
-  ### newTempFoo
-  temp_document_constructor_name = "newTemp%s" % class_id
-  from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-  temp_document_constructor = deprecated(
-    ('newTemp*(self, ID) will be removed, use self.newContent('
-     'temp_object=True, id=ID, portal_type=...)'))(
-      ERP5TypeInformation(klass.portal_type).constructTempInstance)
-  setattr(Products.ERP5Type.Document,
-          temp_document_constructor_name,
-          temp_document_constructor)
-  ModuleSecurityInfo('Products.ERP5Type.Document').declarePublic(
-                      temp_document_constructor_name,) # XXX Probably bad security
-
   # XXX really?
   return klass, tuple()
 
@@ -1070,7 +1059,77 @@ def initializeLocalRegistry(directory_name, import_local_method):
               % (directory_name, module_name, document_path), error=True)
 
 def initializeLocalDocumentRegistry():
-  # XXX Arg are not consistent
+
+  class ProductsERP5TypeDocumentDynamicPackage(ModuleType):
+    def __init__(self):
+      super(ProductsERP5TypeDocumentDynamicPackage, self).__init__('Products.ERP5Type.Document')
+      self.__path__ = []
+      sys.modules['Products.ERP5Type.Document'] = self
+      sys.meta_path.append(self)
+
+      # for use of this module in restricted environment
+      self.__roles__ = None
+      self.__parent__ = None
+      self.__allow_access_to_unprotected_subobjects__ = ModuleSecurityInfo('Products.ERP5Type.Document')
+
+    def _get_component_dotted_name(self, fullname):
+      assert fullname.startswith('Products.ERP5Type.Document.')
+      document_id = fullname[len('Products.ERP5Type.Document.'):]
+      return "erp5.component.document.%s" % document_id
+
+    def find_module(self, fullname, path=None):
+      if "Products.ERP5Type.Document" in fullname:
+        try:
+          import_module(self._get_component_dotted_name(fullname))
+          return self
+        except ImportError:
+          name = fullname.split('.')[-1]
+          if name.startswith("newTemp"):
+            name = name[len('newTemp'):]
+            try:
+              import_module('Products.ERP5Type.Document.%s' % name)
+              return self
+            except ImportError:
+              pass
+      return None
+
+    def load_module(self, fullname):
+      name = fullname.split('.')[-1]
+      if name.startswith('newTemp'):
+        if name == "newTempBase":
+          # XXX newTempBase has always been a special case
+          from Products.ERP5Type.Base import TempBase
+          def newTempBase(folder, id, REQUEST=None, **kw):
+            o = TempBase(id)
+            o = o.__of__(folder)
+            if kw is not None: o._edit(force_update=1, **kw)
+            return o
+          self.__allow_access_to_unprotected_subobjects__.declarePublic(name)
+          return newTempBase
+
+        class_name = name[len('newTemp'):]
+        from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+        klass = getattr(import_module('Products.ERP5Type.Document.%s' % class_name), class_name)
+        self.__allow_access_to_unprotected_subobjects__.declarePublic(name)
+        return deprecated(
+          ('newTemp%s(self, ID) will be removed, use self.newContent('
+           'temp_object=True, id=ID, portal_type="%s") instead' % (class_name, klass.portal_type)))(
+          ERP5TypeInformation(klass.portal_type).constructTempInstance)
+
+      module = import_module(self._get_component_dotted_name(fullname))
+      sys.modules[fullname] = module
+      return module
+
+    def __getattr__(self, attr):
+      return self.load_module('Products.ERP5Type.Document.%s' % attr)
+
+    def reset(self):
+      for module_name in list(sys.modules):
+        if module_name.startswith('Products.ERP5Type.Document.'):
+          sys.modules.pop(module_name)
+
+  import Products.ERP5Type
+  Products.ERP5Type.Document = ProductsERP5TypeDocumentDynamicPackage()
   initializeLocalRegistry("Document", importLocalDocument)
 
 def initializeLocalPropertySheetRegistry():

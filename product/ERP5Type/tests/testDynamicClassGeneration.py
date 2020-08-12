@@ -2902,6 +2902,48 @@ class TestGC(XMLObject):
        'gc: collectable <Implements 0x%x>\n' % Implements_id],
       sorted(found_line_list))
 
+  def testProductsERP5TypeDocumentCompatibility(self):
+    """Check that document class also exist in Products.ERP5Type.Document namespace
+    for compatibility.
+    We also check that this module is properly reloaded when a document component
+    is modified.
+    """
+    self.failIfModuleImportable('TestProductsERP5TypeDocumentCompatibility')
+
+    test_component = self._newComponent(
+        'TestProductsERP5TypeDocumentCompatibility',
+        """\
+from Products.ERP5Type.Base import Base
+class TestProductsERP5TypeDocumentCompatibility(Base):
+  portal_type = 'Test ProductsERP5TypeDocument Compatibility'
+  generation = 1
+"""
+    )
+    test_component.validate()
+    self.tic()
+
+    self.assertModuleImportable('TestProductsERP5TypeDocumentCompatibility')
+
+    def checkGeneration(expected_generation):
+      from Products.ERP5Type.Document.TestProductsERP5TypeDocumentCompatibility import TestProductsERP5TypeDocumentCompatibility  # pylint:disable=import-error,no-name-in-module
+      self.assertEqual(TestProductsERP5TypeDocumentCompatibility.generation, expected_generation)
+      from Products.ERP5Type.Document import newTempTestProductsERP5TypeDocumentCompatibility  # pylint:disable=import-error,no-name-in-module
+      self.assertEqual(newTempTestProductsERP5TypeDocumentCompatibility(self.portal, 'id').generation, expected_generation)
+
+    checkGeneration(1)
+
+    test_component.setTextContent(
+        """\
+from Products.ERP5Type.Base import Base
+class TestProductsERP5TypeDocumentCompatibility(Base):
+  portal_type = 'Test ProductsERP5TypeDocument Compatibility'
+  generation = 2
+""")
+    self.tic()
+    self.assertModuleImportable('TestProductsERP5TypeDocumentCompatibility')
+    checkGeneration(2)
+
+
 from Products.ERP5Type.Core.TestComponent import TestComponent
 
 class TestZodbTestComponent(_TestZodbComponent):

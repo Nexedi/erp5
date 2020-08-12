@@ -89,6 +89,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod, super_user
 from Products.ERP5Type.mixin.json_representable import JSONRepresentableMixin
 from Products.ERP5Type.mixin.response_header_generator import ResponseHeaderGenerator
 
+from Products.PythonScripts.Utility import allow_class
 from zope.interface import classImplementsOnly, implementedBy
 
 import sys, re
@@ -3670,12 +3671,8 @@ class TempBase(Base):
 
   security.declarePublic('edit')
 
-# Persistence.Persistent is one of the superclasses of TempBase, and on Zope2.8
-# its __class_init__ method is InitializeClass. This is not the case on
-# Zope2.12 which requires us to call InitializeClass manually, otherwise
-# allow_class(TempBase) in ERP5Type/Document/__init__.py will trample our
-# ClassSecurityInfo with one that doesn't declare our public methods
 InitializeClass(TempBase)
+allow_class(TempBase)
 
 # TempBase is not a dynamic class, so it does not get _restricted_getter_set
 # and _restricted_setter_set initialized ( this is only about
