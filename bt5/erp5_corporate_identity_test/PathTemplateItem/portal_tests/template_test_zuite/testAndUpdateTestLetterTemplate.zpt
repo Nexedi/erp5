@@ -203,6 +203,11 @@ Note:
     </tr>
     <tr>
       <td>waitForElementPresent</td>
+      <td>//span[contains(text(), 'Address')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyElementNotPresent</td>
       <td>//span[contains(text(), 'IBAN')]</td>
       <td></td>
     </tr>
@@ -460,6 +465,11 @@ Note:
     </tr>
     <tr>
       <td>waitForElementPresent</td>
+      <td>//span[contains(text(), 'Address')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyElementNotPresent</td>
       <td>//span[contains(text(), 'IBAN')]</td>
       <td></td>
     </tr>
@@ -762,6 +772,11 @@ Note:
     </tr>
     <tr>
       <td>waitForElementPresent</td>
+      <td>//span[contains(text(), 'Address')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyElementNotPresent</td>
       <td>//span[contains(text(), 'IBAN')]</td>
       <td></td>
     </tr>
@@ -1029,6 +1044,11 @@ Note:
     </tr>
     <tr>
       <td>waitForElementPresent</td>
+      <td>//span[contains(text(), 'Address')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>verifyElementNotPresent</td>
       <td>//span[contains(text(), 'IBAN')]</td>
       <td></td>
     </tr>
