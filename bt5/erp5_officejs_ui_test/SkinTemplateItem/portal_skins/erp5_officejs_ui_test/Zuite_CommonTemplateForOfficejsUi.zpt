@@ -96,5 +96,27 @@
       <td>${base_url}/web_site_module/${install_url}/</td>
       <td></td>
     </tr>
+    <!-- as the app was already installed, bootloader must be skipped. Set a short timeout -->
+    <tr>
+      <td>setTimeout</td>
+      <td>10000</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForTextNotPresent</td>
+      <td>Office JS Text Editor is being prepared for 100 % offline mode</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//a[@data-i18n='Storages']</td>
+      <td></td>
+    </tr>
+    <!-- Restore timeout -->
+    <tr>
+      <td>setTimeout</td>
+      <td>90000</td>
+      <td></td>
+    </tr>
   </tal:block>
 </tal:block>
