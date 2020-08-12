@@ -3055,7 +3055,7 @@ class Test(ERP5TypeTestCase):
       self.commit()
 
 from Products.ERP5Type.Core.InterfaceComponent import InterfaceComponent
-class TestZodbInterfaceComponent(TestZodbDocumentComponent):
+class TestZodbInterfaceComponent(_TestZodbComponent):
   """
   Tests specific to ZODB Interface Component.
   """
@@ -3172,7 +3172,7 @@ class %s(Interface):
       self.assertFalse(new_person.providesITestPortalType())
 
 from Products.ERP5Type.Core.MixinComponent import MixinComponent
-class TestZodbMixinComponent(TestZodbInterfaceComponent):
+class TestZodbMixinComponent(_TestZodbComponent):
   """
   Tests specific to ZODB Mixin Component.
   """
@@ -3233,7 +3233,7 @@ class TestZodbMixinComponent(TestZodbInterfaceComponent):
       self.commit()
 
 
-class TestZodbDocumentComponentReload(TestZodbDocumentComponent):
+class TestZodbDocumentComponentReload(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return (
       'erp5_core',
