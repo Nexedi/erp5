@@ -1,4 +1,4 @@
-/*jslint nomen: true, indent: 2, maxlen: 80 */
+/*jslint nomen: true, indent: 2, maxlen: 80, unparam: true */
 /*global window, rJS, RSVP, jexcel, domsugar, document, alert,
 prompt, confirm, navigator*/
 (function (window, rJS, jexcel, domsugar, document, alert,
@@ -17,7 +17,7 @@ prompt, confirm, navigator*/
       i;
     level += 1;
     indentAfter = new Array(level - 1).join('  ');
-    for (i = 0; i < node.children.length; i++) {
+    for (i = 0; i < node.children.length; i += 1) {
       textNode = document.createTextNode('\n' + indentBefore);
       node.insertBefore(textNode, node.children[i]);
       format(node.children[i], level);
@@ -196,8 +196,8 @@ prompt, confirm, navigator*/
       if (table.classList.contains("jexcel") &&
           !table.classList.contains("jSheet")) {
         if (Array.from(table.querySelectorAll("td")).filter(function (td) {
-          return td.hasAttribute("cache");
-        }).length === 0) {
+            return td.hasAttribute("cache");
+          }).length === 0) {
           tmp = JSON.parse(table.dataset.config);
           dict.columns = tmp.columns;
           dict.data = tmp.data;
@@ -662,7 +662,7 @@ prompt, confirm, navigator*/
         } else {
           gadget.state.tables = [];
           nodes = createElementFromHTML(gadget.state.value);
-          for (i = 0; i < nodes.length; i++) {
+          for (i = 0; i < nodes.length; i += 1) {
             gadget.state.tables[i] = nodes[i];
           }
           data_list = getConfigListFromTables(gadget, gadget.state.tables);
@@ -797,7 +797,7 @@ prompt, confirm, navigator*/
       if (state.obj.options.columns[x].type !== type) {
         column = state.obj.el
           .querySelectorAll("td[data-x='" + x + "']");
-        array = [...column];
+        array = Array.from(column);
         array.shift();
         setHistoryType(state.obj, "beginChangeType",
                        x,
@@ -822,50 +822,50 @@ prompt, confirm, navigator*/
       }
     })
 
-    .declareJob("triggerChangeTypeInToolbar", function (sheet, instance, type, child, render) {
-      var cell = sheet.querySelector("td.highlight-selected"),
-        x,
-        column,
-        array;
-      x = cell ? parseInt(cell.dataset.x, 10) : null;
-      if (cell && instance.options.columns[x].type !== type) {
-        column = sheet.querySelectorAll("td[data-x='" + x + "']");
-        array = [...column];
-        array.shift();
-        setHistoryType(instance, "beginChangeType",
-                       x,
-                       instance.options.columns[x].type,
-                       type);
-        array.forEach(function (cell) {
-          instance.setValue(getCoordinatesFromCell(cell), "");
-          cell.innerHTML = "";
-          if (child) {
-            cell.appendChild(child.cloneNode());
+    .declareJob("triggerChangeTypeInToolbar",
+                function (sheet, instance, type, child, render) {
+        var cell = sheet.querySelector("td.highlight-selected"),
+          x,
+          column,
+          array;
+        x = cell ? parseInt(cell.dataset.x, 10) : null;
+        if (cell && instance.options.columns[x].type !== type) {
+          column = sheet.querySelectorAll("td[data-x='" + x + "']");
+          array = Array.from(column);
+          array.shift();
+          setHistoryType(instance, "beginChangeType",
+                         x,
+                         instance.options.columns[x].type,
+                         type);
+          array.forEach(function (cell) {
+            instance.setValue(getCoordinatesFromCell(cell), "");
+            cell.innerHTML = "";
+            if (child) {
+              cell.appendChild(child.cloneNode());
+            }
+          });
+          setHistoryType(instance, "endChangeType",
+                         x,
+                         instance.options.columns[x].type,
+                         type);
+          instance.options.columns[x].type = type;
+          if (render) {
+            instance.options.columns[x].render = render;
           }
-        });
-        setHistoryType(instance, "endChangeType",
-                       x,
-                       instance.options.columns[x].type,
-                       type);
-        instance.options.columns[x].type = type;
-        if (render) {
-          instance.options.columns[x].render = render;
+          fireDoubleClick(cell);
         }
-        fireDoubleClick(cell);
-      }
-    })
+      })
 
     .declareJob("triggerNewDimensions", function (sheet, instance) {
-      var r = prompt("Number of rows :", instance.options.data.length);
-      var c = prompt("Number of columns :", instance.options.columns.length);
+      var r = prompt("Number of rows :", instance.options.data.length),
+        c = prompt("Number of columns :", instance.options.columns.length);
       if (c > 0 && r > 0) {
         instance.setHistory({action: "beginResizeTable"});
         if (c > instance.options.columns.length) {
           while (instance.options.columns.length < c) {
             instance.insertColumn();
           }
-        }
-        else {
+        } else {
           while (instance.options.columns.length > c) {
             instance.deleteColumn(instance.options.columns.length - 1, 1);
           }
@@ -874,8 +874,7 @@ prompt, confirm, navigator*/
           while (instance.options.data.length < r) {
             instance.insertRow();
           }
-        }
-        else {
+        } else {
           while (instance.options.data.length > r) {
             instance.deleteRow(instance.options.data.length - 1, 1);
           }
@@ -886,14 +885,16 @@ prompt, confirm, navigator*/
 
     .declareJob("triggerAddSheet", function () {
       var gadget = this,
-        tabs = gadget.element.querySelectorAll(".jexcel_tab_link");
+        tabs = gadget.element.querySelectorAll(".jexcel_tab_link"),
+        dict1,
+        dict2;
       if (tabs.length === 18) {
         alert("Can't add tables anymore.");
       } else {
-        var dict1 = getTemplate(gadget);
+        dict1 = getTemplate(gadget);
         dict1.sheetName = "Table " +
           (gadget.element.querySelector('.spreadsheet').jexcel.length + 1);
-        var dict2 = bindEvents(gadget, dict1);
+        dict2 = bindEvents(gadget, dict1);
         jexcel.tabs(gadget.element.querySelector(".spreadsheet"), [dict2]);
         gadget.element
           .querySelectorAll('.jexcel_container')[gadget.element.querySelector('.spreadsheet').jexcel.length - 1]
@@ -903,17 +904,17 @@ prompt, confirm, navigator*/
           });
         gadget.deferNotifyChange();
         return gadget.changeState({newSheet: true})
-        .push(function () {
-          gadget.state.selectedTabLink = gadget.element
-          .querySelector(".jexcel_tab_link.selected");
-        })
+          .push(function () {
+            gadget.state.selectedTabLink = gadget.element
+              .querySelector(".jexcel_tab_link.selected");
+          });
       }
     })
 
     .declareJob("triggerDeleteSheet", function (sheet, instance) {
       var gadget = this,
         tab_link = gadget.element
-        .querySelector('.jexcel_tab_link.selected'),
+          .querySelector('.jexcel_tab_link.selected'),
         index = tab_link.getAttribute("data-spreadsheet"),
         to_remove,
         sheets;
@@ -932,13 +933,13 @@ prompt, confirm, navigator*/
           sheets[sheets.length - 1].style.display = "block";
           gadget.element.querySelectorAll('.jexcel_tab_link')
               .forEach(function (tab, i) {
-                if (i === sheets.length - 1) {
-                  tab.classList.add("selected");
-                }
-                tab.dataset.spreadsheet = i;
-                tab.textContent = tab.textContent.substring(0, 5) === "Table" ?
-                    "Table " + (i + 1) : tab.textContent;
-              });
+              if (i === sheets.length - 1) {
+                tab.classList.add("selected");
+              }
+              tab.dataset.spreadsheet = i;
+              tab.textContent = tab.textContent.substring(0, 5) === "Table" ?
+                  "Table " + (i + 1) : tab.textContent;
+            });
         } else {
           gadget.element.querySelector('.jexcel_tab_link')
             .textContent = "Table 1";
@@ -960,47 +961,51 @@ prompt, confirm, navigator*/
     .declareJob("triggerOnFocusFormulaInput", function () {
       var gadget = this,
         worksheet = gadget.element.querySelector('.selected')
-        .getAttribute('data-spreadsheet');
+          .getAttribute('data-spreadsheet');
       gadget.element.querySelector('.spreadsheet').jexcel[worksheet]
         .resetSelection(true);
     })
 
     .declareJob("triggerOnInputFormulaInput",
               function (cell_input, formula_input) {
-      var gadget = this,
-        worksheet = gadget.element.querySelector('.selected')
-          .getAttribute('data-spreadsheet'),
-        instance = gadget.element.querySelector('.spreadsheet')
-          .jexcel[worksheet],
-        e = formula_input.value,
-        numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-      if (e[0] === "=" && e[e.length - 1] !== ")") {
-        if (numbers.includes(e[e.length - 1])) {
+        var gadget = this,
+          worksheet = gadget.element.querySelector('.selected')
+            .getAttribute('data-spreadsheet'),
+          instance = gadget.element.querySelector('.spreadsheet')
+            .jexcel[worksheet],
+          e = formula_input.value,
+          numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+        if (e[0] === "=" && e[e.length - 1] !== ")") {
+          if (numbers.includes(e[e.length - 1])) {
+            instance.setValue(cell_input.value, e);
+          }
+        } else {
           instance.setValue(cell_input.value, e);
         }
-      } else {
-        instance.setValue(cell_input.value, e);
-      }
-    })
+      })
 
     .declareJob("triggerOnFocusCellInput", function () {
-      var gadget = this;
-      var worksheet = gadget.element.querySelector('.selected')
+      var gadget = this,
+        worksheet = gadget.element.querySelector('.selected')
           .getAttribute('data-spreadsheet');
       gadget.element.querySelector('.spreadsheet').jexcel[worksheet]
           .resetSelection(true);
     })
 
     .declareJob("triggerOnKeyPressCellInput", function (event, input) {
-      var gadget = this;
+      var gadget = this,
+        worksheet,
+        x,
+        y,
+        ys;
       if (event.keyCode === 13) {
-        var worksheet = gadget.element.querySelector('.selected')
-            .getAttribute('data-spreadsheet'),
-          y = input.value.match(/(\d+)/)[0],
-          x = columnLetterToNumber(input.value
+        worksheet = gadget.element.querySelector('.selected')
+            .getAttribute('data-spreadsheet');
+        y = input.value.match(/(\d+)/)[0];
+        x = columnLetterToNumber(input.value
                                .substring(0, input.value.length - y.length)
-                              ),
-          ys = parseInt(y, 10) - 1;
+                              );
+        ys = parseInt(y, 10) - 1;
         gadget.element.querySelector('.spreadsheet').jexcel[worksheet]
           .updateSelectionFromCoords(x, ys, x, ys);
       }
@@ -1074,12 +1079,13 @@ prompt, confirm, navigator*/
     })
 
     .declareJob("triggerOnEditionEndSheet", function (cell, x, y, value) {
-      var gadget = this;
+      var gadget = this,
+        numbers,
+        worksheet,
+        tab;
       if (value) {
         if (value[0] === "=" && value[value.length - 1] !== ")") {
-          var numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
-            worksheet,
-            tab;
+          numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
           if (numbers.includes(value[value.length - 1])) {
             worksheet = gadget.element.querySelector('.selected')
               .getAttribute('data-spreadsheet');
@@ -1110,7 +1116,7 @@ prompt, confirm, navigator*/
         if (ev.target === gadget.state.selectedTabLink) {
           name = prompt("Table name :", ev.target.textContent);
           gadget.state.selectedTabLink.textContent = name !== null ?
-            name : gadget.state.selectedTabLink.textContent;
+              name : gadget.state.selectedTabLink.textContent;
           gadget.deferNotifyChange();
         }
         gadget.state.selectedTabLink = ev.target;
