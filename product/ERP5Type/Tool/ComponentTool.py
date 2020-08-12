@@ -155,6 +155,9 @@ class ComponentTool(BaseTool):
 
       erp5.component.ref_manager.gc()
 
+      import Products.ERP5Type.Document
+      Products.ERP5Type.Document.reset()
+
       # Clear pylint cache
       try:
         from astroid.builder import MANAGER

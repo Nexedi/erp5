@@ -51,7 +51,7 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
 from AccessControl import Unauthorized
-from AccessControl.ZopeGuards import guarded_getattr, guarded_hasattr
+from AccessControl.ZopeGuards import guarded_getattr, guarded_hasattr, guarded_import
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type import Permissions
@@ -260,6 +260,42 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       b = o.newContent(id=2, portal_type="Telephone")
       self.assertEqual(b.isTempObject(), 1)
       self.assertEqual(b.getId(), str(2))
+
+      # Test legacy newTemp* constructors in Products.ERP5Type.Document
+      import Products.ERP5Type.Document  # pylint:disable=import-error,no-name-in-module
+      from Products.ERP5Type.Document import newTempOrganisation  # pylint:disable=import-error,no-name-in-module
+      with mock.patch('Products.ERP5Type.Utils.warnings.warn') as warn:
+        o = newTempOrganisation(self.portal, 'id')
+      warn.assert_called_with(
+          'newTempOrganisation(self, ID) will be removed, use self.newContent(temp_object=True, id=ID, portal_type="Organisation") instead',
+          DeprecationWarning, 2)
+      self.assertEqual(o.getId(), 'id')
+      self.assertEqual(o.getPortalType(), 'Organisation')
+      self.assertTrue(o.isTempObject())
+      # these imports are also OK in restricted environemnt
+      self.assertTrue(guarded_import("Products.ERP5Type.Document", fromlist=["newTempOrganisation"]))
+      # because it's a dynamic module, we make sure we can only access the newTemp*
+      # accessors, but not the classes directly
+      with self.assertRaises(Unauthorized):
+        guarded_import("Products.ERP5Type.Document", fromlist=["Organisation"])
+      # Test these newTemp* constructor accessed by getattr from already imported module
+      with mock.patch('Products.ERP5Type.Utils.warnings.warn') as warn:
+        o = Products.ERP5Type.Document.newTempPerson(self.portal, 'id')  # pylint:disable=no-member
+      warn.assert_called_with(
+          'newTempPerson(self, ID) will be removed, use self.newContent(temp_object=True, id=ID, portal_type="Person") instead',
+          DeprecationWarning, 2)
+      self.assertEqual(o.getId(), 'id')
+      self.assertEqual(o.getPortalType(), 'Person')
+      self.assertTrue(o.isTempObject())
+      self.assertTrue(guarded_hasattr(Products.ERP5Type.Document, "newTempPerson"))
+      self.assertFalse(guarded_hasattr(Products.ERP5Type.Document, "Person"))
+      # newTempBase is a bit special case
+      o = Products.ERP5Type.Document.newTempBase(self.portal, 'id')
+      self.assertEqual(o.getId(), 'id')
+      self.assertEqual(o.getPortalType(), 'Base Object')
+      self.assertTrue(o.isTempObject())
+      self.assertTrue(guarded_hasattr(Products.ERP5Type.Document, "newTempBase"))
+      self.assertTrue(guarded_import("Products.ERP5Type.Document", fromlist=["newTempBase"]))
 
       # Test newContent with the temp_object parameter and where a non-temp_object would not be allowed
       o = portal.person_module.newContent(portal_type="Organisation", temp_object=1)
@@ -3319,6 +3355,17 @@ return [
       self.assertEqual(
           '<Organisation at /%s/organisation_module/organisation_id>' % self.portal.getId(),
           repr(document))
+
+    def test_products_document_legacy(self):
+      # make sure that document classes defined in Products/*/Document/*.py are
+      # loaded in Products.ERP5Type.Document registry
+      from Products.ERP5.Document.Alarm import Alarm
+      self.assertIn('product/ERP5/Document/Alarm.py', sys.modules[Alarm.__module__].__file__)
+      from Products.ERP5Type.Document.Alarm import Alarm as Alarm_from_ERP5Type  # pylint:disable=import-error,no-name-in-module
+      self.assertIs(Alarm_from_ERP5Type, Alarm)
+      from Products.ERP5Type.Document import newTempAlarm  # pylint:disable=import-error,no-name-in-module
+      self.assertIn(Alarm_from_ERP5Type, newTempAlarm(self.portal, '').__class__.mro())
+
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests

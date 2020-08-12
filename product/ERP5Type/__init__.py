@@ -129,6 +129,10 @@ def initialize( context ):
   if DISPLAY_BOOT_PROCESS:
     LOG('ERP5Type.__init__', INFO, 'initializeLocalPropertySheetRegistry')
   initializeLocalPropertySheetRegistry()
+  from Products.ERP5Type.Utils import initializeLegacyDocumentDynamicModule
+  if DISPLAY_BOOT_PROCESS:
+    LOG('ERP5Type.__init__', INFO, 'initializeLegacyDocumentDynamicModule')
+  initializeLegacyDocumentDynamicModule()
   # We should register product classes at some point
   from Products.ERP5Type.InitGenerator import initializeProductDocumentRegistry
   if DISPLAY_BOOT_PROCESS:
