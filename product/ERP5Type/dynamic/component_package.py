@@ -34,6 +34,7 @@ import sys
 import imp
 import collections
 
+from Products.ERP5Type import initialized as Products_ERP5Type_initialized
 from Products.ERP5.ERP5Site import getSite
 from . import aq_method_lock
 from types import ModuleType
@@ -80,6 +81,7 @@ class ComponentDynamicPackage(ModuleType):
     self._portal_type = portal_type
     self.__version_suffix_len = len('_version')
     self.__fullname_source_code_dict = {}
+    self.__legacy_imports_XXX = {}
 
     # Add this module to sys.path for future imports
     sys.modules[namespace] = self
@@ -109,11 +111,18 @@ class ComponentDynamicPackage(ModuleType):
     perhaps because the Finder of another Component Package could do it or
     because this is a filesystem module...
     """
-    # Ignore imports with a path which are filesystem-only and any
-    # absolute imports which does not start with this package prefix,
-    # None there means that "normal" sys.path will be used
-    if path or not fullname.startswith(self._namespace_prefix):
-      return None
+    # XXX can't we do better than this Products_ERP5Type_initialized ? (register this loader later)
+    if fullname.startswith('Products.') and Products_ERP5Type_initialized:
+      # TODO doc
+      names = fullname.split('.')
+      if not (len(names) == 4 and names[2] == 'Document'):
+        return None
+    else:
+      # Ignore imports with a path which are filesystem-only and any
+      # absolute imports which does not start with this package prefix,
+      # None there means that "normal" sys.path will be used
+      if path or not fullname.startswith(self._namespace_prefix):
+        return None
 
     import_lock_held = True
     try:
@@ -174,7 +183,22 @@ class ComponentDynamicPackage(ModuleType):
                                                                           'validated'):
             break
         else:
-          return None
+          # maybe a legacy import in the form
+          # Products.*.Document.{name}
+          names = fullname.split('.')
+          if not (len(names) == 4 and names[2] == 'Document'):
+            return None
+          name = names[-1]
+          for version in site.getVersionPriorityNameList():
+            id_ = "%s.%s.%s" % (self._id_prefix, version, name)
+            component = getattr(component_tool, id_, None)
+            if component is not None and component.getValidationState() in ('modified',
+                                                                            'validated'):
+              if names[1] == 'ERP5Type' or component.getSourceReference() == fullname:
+                self.__legacy_imports_XXX[fullname] = 'erp5.component.document.%s_version.%s' % (version, name)
+                break
+          else:
+            return None
 
       return self
 
@@ -218,6 +242,17 @@ class ComponentDynamicPackage(ModuleType):
     As per PEP-302, raise an ImportError if the Loader could not load the
     module for any reason...
     """
+    if fullname in self.__legacy_imports_XXX:
+      module = self.__load_module(self.__legacy_imports_XXX[fullname])
+#      print ("cool on a ", module, "pour", fullname, "on le met dans sys.module !")
+      imp.acquire_lock()
+      try:
+        sys.modules[fullname] = module
+      finally:
+        imp.release_lock()
+#      print ("done, returning")
+      return module
+
     site = getSite()
     name = fullname[len(self._namespace_prefix):]
 
@@ -428,6 +463,11 @@ class ComponentDynamicPackage(ModuleType):
       del sys.modules[module_name]
 
       delattr(package, name)
+    for module_name in list(self.__legacy_imports_XXX):
+      sys.modules.pop(module_name, None)
+      print ("__legacy_imports_XXX", module_name)
+    self.__legacy_imports_XXX.clear()
+
 
 class ToolComponentDynamicPackage(ComponentDynamicPackage):
   def reset(self, *args, **kw):
