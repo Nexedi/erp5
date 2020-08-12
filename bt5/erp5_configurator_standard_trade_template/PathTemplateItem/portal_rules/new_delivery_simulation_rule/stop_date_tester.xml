@@ -36,6 +36,20 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>solver/portal_solvers/Automatic Accept Solver</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>stop_date_tester</string> </value>
         </item>
@@ -49,11 +63,7 @@
         </item>
         <item>
             <key> <string>tested_property</string> </key>
-            <value>
-              <tuple>
-                <string>stop_date</string>
-              </tuple>
-            </value>
+            <value> <string>stop_date</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

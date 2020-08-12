@@ -36,7 +36,7 @@ from erp5.component.interface.IConfiguratorItem import IConfiguratorItem
 
 
 class PurchaseTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
-  """ Setup Rules. """
+  """ Setup Purchase Trade Conditions. """
 
   meta_type = 'ERP5 Purchase Trade Condition Configurator Item'
   portal_type = 'Purchase Trade Condition Configurator Item'
@@ -64,6 +64,7 @@ class PurchaseTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       portal = self.getPortalObject()
       business_configuration = self.getBusinessConfigurationValue()
       business_process_id = \
+        business_configuration.getGlobalConfigurationAttr('purchase_business_process_id') or\
         business_configuration.getGlobalConfigurationAttr('business_process_id')
 
       organisation_id = \

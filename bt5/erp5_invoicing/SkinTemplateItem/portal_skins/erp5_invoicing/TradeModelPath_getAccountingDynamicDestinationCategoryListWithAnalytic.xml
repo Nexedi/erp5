@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>movement</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SolverDecision_getDeliverySolverList</string> </value>
+            <value> <string>TradeModelPath_getAccountingDynamicDestinationCategoryListWithAnalytic</string> </value>
         </item>
       </dictionary>
     </pickle>

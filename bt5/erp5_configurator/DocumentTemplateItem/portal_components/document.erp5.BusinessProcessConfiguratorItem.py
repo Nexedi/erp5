@@ -71,7 +71,14 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       business_configuration = self.getBusinessConfigurationValue()
       business_configuration.setGlobalConfigurationAttr(\
                     business_process_id=business_process.getId())
-
+      # XXX for the standard cases, also set configuration attributes that
+      # Sale/Purchase Configurator Item will use.
+      if self.getReference() == 'default_erp5_sale_business_process':
+        business_configuration.setGlobalConfigurationAttr(
+            sale_business_process_id=business_process.getId())
+      elif self.getReference() == 'default_erp5_purchase_business_process':
+        business_configuration.setGlobalConfigurationAttr(
+            purchase_business_process_id=business_process.getId())
 
       business_process_dict = self._getBusinessProcessDict()
       int_index = 0
@@ -81,7 +88,7 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
         title = path_dict.pop('title')
         trade_phase = path_dict.pop('trade_phase')
         trade_date = path_dict.pop('trade_date')
-        for key in path_dict:
+        for key in list(path_dict):
           if path_dict[key] is None:
             path_dict.pop(key)
         self._addTradeModelPath(business_process=business_process,
@@ -99,9 +106,9 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
         delivery_builder = link_dict.pop('delivery_builder', None)
         predecessor = link_dict.pop('predecessor', None)
         successor = link_dict.pop('successor', None)
-        for key in path_dict:
-          if path_dict[key] is None:
-            path_dict.pop(key)
+        for key in list(link_dict):
+          if link_dict[key] is None:
+            link_dict.pop(key)
 
         self._addBusinessLink(business_process=business_process,
                               title=title,
@@ -126,8 +133,15 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
 
 
-  def _addTradeModelPath(self, business_process, title, trade_phase,
-                                                       trade_date, **kw):
+  def _addTradeModelPath(
+      self,
+      business_process,
+      title,
+      trade_phase,
+      trade_date,
+      membership_criterion_base_category_list=None,
+      membership_criterion_category_list=None,
+      **kw):
     """ Add a trade model path to the business process.
     """
     reference = "TMP-%s" % "-".join(title.upper().strip().split(" "))
@@ -141,6 +155,13 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     trade_model_path.setTradePhase(trade_phase)
     if trade_date is not None:
       trade_model_path.setTradeDate('trade_phase/%s' % trade_date)
+
+    if membership_criterion_base_category_list:
+      trade_model_path.setMembershipCriterionBaseCategoryList(
+          membership_criterion_base_category_list.split(","))
+    if membership_criterion_category_list:
+      trade_model_path.setMembershipCriterionCategoryList(
+          membership_criterion_category_list.split(","))
 
   def _addBusinessLink(self, business_process, title, trade_phase, predecessor,
                              successor, delivery_builder, **kw):

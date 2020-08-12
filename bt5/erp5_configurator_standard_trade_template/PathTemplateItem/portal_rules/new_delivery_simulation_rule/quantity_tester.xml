@@ -49,8 +49,15 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>solver/portal_solvers/Quantity Split Solver</string>
+                <string>solver/portal_solvers/Accept Solver</string>
+                <string>solver/portal_solvers/Simple Quantity Split Solver</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>

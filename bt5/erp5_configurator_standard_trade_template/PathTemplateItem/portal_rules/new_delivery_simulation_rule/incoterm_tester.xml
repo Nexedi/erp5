@@ -38,11 +38,7 @@
         </item>
         <item>
             <key> <string>tested_property</string> </key>
-            <value>
-              <tuple>
-                <string>incoterm</string>
-              </tuple>
-            </value>
+            <value> <string>incoterm</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
