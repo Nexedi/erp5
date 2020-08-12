@@ -65,21 +65,12 @@
 </tal:block>
 
 <tr>
-  <td colspan="3"><b>Go to the metadata form</b></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[text()='Metadata']</td>
-  <td></td>
+  <td colspan="3"><b>Edit the title of the slide</b></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>title_html</td>
   <td></td>
-</tr>
-
-<tr>
-  <td colspan="3"><b>Edit the metadata</b></td>
 </tr>
 <tr>
   <td>type</td>
@@ -88,7 +79,28 @@
 </tr>
 
 <tr>
-  <td colspan="3"><b>Go back to the text form</b></td>
+  <td colspan="3"><b>Go to the comment form</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='Comments']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>title_html</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Set text content</b></td>
+</tr>
+<tal:block tal:define="text_content python: 'slide 1 comment content'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/type_ckeditor_text_content"/>
+</tal:block>
+
+<tr>
+  <td colspan="3"><b>Go to the text form</b></td>
 </tr>
 <tr>
   <td>click</td>
@@ -96,7 +108,7 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementNotPresent</td>
+  <td>waitForElementPresent</td>
   <td>title_html</td>
   <td></td>
 </tr>
@@ -109,20 +121,6 @@
 </tal:block>
 
 <tr>
-  <td colspan="3"><b>Go back to the metadata form</b></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[text()='Metadata']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>title_html</td>
-  <td></td>
-</tr>
-
-<tr>
   <td colspan="3"><b>Check the metadata</b></td>
 </tr>
 <tr>
@@ -130,6 +128,27 @@
   <td>title_html</td>
   <td>slide 1 test title</td>
 </tr>
+
+<tr>
+  <td colspan="3"><b>Go to the comment form</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='Comments']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>title_html</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Check comment content</b></td>
+</tr>
+<tal:block tal:define="text_content python: '<p>slide 1 comment content</p>'">
+  <tal:block metal:use-macro="container/Zuite_CommonTemplateForRenderjsUi/macros/verify_ckeditor_text_content"/>
+</tal:block>
 
 <tr>
   <td colspan="3"><b>Go back to the slide list</b></td>
@@ -154,10 +173,30 @@
   <td></td>
 </tr>
 <tr>
+  <td>waitForTextPresent</td>
+  <td>Slide 1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>title_html</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Go to the text form</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='Text']</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
   <td>title_html</td>
   <td></td>
 </tr>
+
 
 <tr>
   <td colspan="3"><b>Check the metadata</b></td>
@@ -174,6 +213,34 @@
   <td>assertValue</td>
   <td>title_html</td>
   <td>slide 1 test title</td>
+</tr>
+
+<tr>
+  <td colspan="3"><b>Add a new slide</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='New Slide']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Slide 2</td>
+  <td></td>
+</tr>
+
+  <tr>
+  <td colspan="3"><b>Delete slide</b></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[text()='Delete']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>1 Slides</td>
+  <td></td>
 </tr>
 
 </tbody></table>
