@@ -162,6 +162,9 @@ def initialize( context ):
   Timeout.publisher_timeout = getattr(erp5_conf, 'publisher_timeout', None)
   Timeout.activity_timeout = getattr(erp5_conf, 'activity_timeout', None)
 
+  initialized.append(True)
+
+initialized = []
 from AccessControl.SecurityInfo import allow_module
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 

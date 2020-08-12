@@ -34,6 +34,7 @@ import sys
 import imp
 import collections
 
+from Products.ERP5Type import initialized as Products_ERP5Type_initialized
 from Products.ERP5.ERP5Site import getSite
 from . import aq_method_lock
 from types import ModuleType
@@ -80,6 +81,10 @@ class ComponentDynamicPackage(ModuleType):
     self._portal_type = portal_type
     self.__version_suffix_len = len('_version')
     self.__fullname_source_code_dict = {}
+    # A mapping of legacy documents (Products.*.Document.{name}) to redirect to the
+    # new component name (erp5.component.document.{name}). We remember this to be
+    # able to clean up theses modules on reset.
+    self.__legacy_document_mapping = {}
 
     # Add this module to sys.path for future imports
     sys.modules[namespace] = self
@@ -109,11 +114,20 @@ class ComponentDynamicPackage(ModuleType):
     perhaps because the Finder of another Component Package could do it or
     because this is a filesystem module...
     """
-    # Ignore imports with a path which are filesystem-only and any
-    # absolute imports which does not start with this package prefix,
-    # None there means that "normal" sys.path will be used
-    if path or not fullname.startswith(self._namespace_prefix):
-      return None
+
+    # TODO can't we do better than this Products_ERP5Type_initialized ? (register this loader later ?)
+    if fullname.startswith('Products.') and Products_ERP5Type_initialized:
+      # Dynamically handle Products.*.Document namespace for compatibility, when an import
+      # for Products.*.Document.X is requested and there's a document component X, use the component instead.
+      names = fullname.split('.')
+      if not (len(names) == 4 and names[2] == 'Document'):
+        return None
+    else:
+      # Ignore imports with a path which are filesystem-only and any
+      # absolute imports which does not start with this package prefix,
+      # None there means that "normal" sys.path will be used
+      if path or not fullname.startswith(self._namespace_prefix):
+        return None
 
     import_lock_held = True
     try:
@@ -127,7 +141,8 @@ class ComponentDynamicPackage(ModuleType):
       # __import__ will first try a relative import, for example
       # erp5.component.XXX.YYY.ZZZ where erp5.component.XXX.YYY is the current
       # Component where an import is done
-      name = fullname[len(self._namespace_prefix):]
+      name = fullname[len(self._namespace_prefix):] if fullname.startswith(self._namespace_prefix) else ''
+
       # name=VERSION_version.REFERENCE
       if '.' in name:
         try:
@@ -174,7 +189,29 @@ class ComponentDynamicPackage(ModuleType):
                                                                           'validated'):
             break
         else:
-          return None
+          # maybe a legacy import in the form Products.*.Document.{name}
+          # If we have a document component which was created to replace this, use the
+          # component instead.
+          names = fullname.split('.')
+          if not (names[0] == 'Products' and len(names) == 4 and names[2] == 'Document'):
+            return None
+          name = names[-1]
+          for version in site.getVersionPriorityNameList():
+            id_ = "%s.%s.%s" % (self._id_prefix, version, name)
+            component = getattr(component_tool, id_, None)
+            if component is not None and component.getValidationState() in ('modified',
+                                                                            'validated'):
+              # Products.ERP5Type.Document is a special case here, because historically
+              # all documents were also dynamically loaded on this module.
+              if names[1] == 'ERP5Type' or component.getSourceReference() == fullname:
+                self.__legacy_document_mapping[fullname] = 'erp5.component.document.%s' % name
+                # TODO maybe it would be more performant to use the versionned module here, since we already know it
+                # but it seems erp5.component.document.X_version.Y and erp5.component.document.Y are not the same module
+                # and modules are loaded twice (a assertIs() test is failing)
+                # self.__legacy_document_mapping[fullname] = 'erp5.component.document.%s_version.%s' % (version, name)
+                break
+          else:
+            return None
 
       return self
 
@@ -218,6 +255,16 @@ class ComponentDynamicPackage(ModuleType):
     As per PEP-302, raise an ImportError if the Loader could not load the
     module for any reason...
     """
+    if fullname in self.__legacy_document_mapping:
+      module = self.__load_module(self.__legacy_document_mapping[fullname])
+      # TODO: do we need this lock ? is this deadlock-safe ?
+      imp.acquire_lock()
+      try:
+        sys.modules[fullname] = module
+      finally:
+        imp.release_lock()
+      return module
+
     site = getSite()
     name = fullname[len(self._namespace_prefix):]
 
@@ -428,6 +475,10 @@ class ComponentDynamicPackage(ModuleType):
       del sys.modules[module_name]
 
       delattr(package, name)
+    for module_name in list(self.__legacy_document_mapping):
+      sys.modules.pop(module_name, None)
+    self.__legacy_document_mapping.clear()
+
 
 class ToolComponentDynamicPackage(ComponentDynamicPackage):
   def reset(self, *args, **kw):

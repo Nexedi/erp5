@@ -51,7 +51,7 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
 from AccessControl import Unauthorized
-from AccessControl.ZopeGuards import guarded_getattr, guarded_hasattr
+from AccessControl.ZopeGuards import guarded_getattr, guarded_hasattr, guarded_import
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type import Permissions
@@ -260,6 +260,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       b = o.newContent(id=2, portal_type="Telephone")
       self.assertEqual(b.isTempObject(), 1)
       self.assertEqual(b.getId(), str(2))
+
+      # Products.ERP5Type.Document.newTempBase is another (not recommended) way
+      # of creating temp objects
+      import Products.ERP5Type.Document
+      o = Products.ERP5Type.Document.newTempBase(self.portal, 'id')
+      self.assertEqual(o.getId(), 'id')
+      self.assertEqual(o.getPortalType(), 'Base Object')
+      self.assertTrue(o.isTempObject())
+      self.assertTrue(guarded_import("Products.ERP5Type.Document", fromlist=["newTempBase"]))
 
       # Test newContent with the temp_object parameter and where a non-temp_object would not be allowed
       o = portal.person_module.newContent(portal_type="Organisation", temp_object=1)
@@ -3319,6 +3328,31 @@ return [
       self.assertEqual(
           '<Organisation at /%s/organisation_module/organisation_id>' % self.portal.getId(),
           repr(document))
+
+    def test_products_document_legacy(self):
+      """check document classes defined in Products/*/Document/*.py
+      """
+      # note: this assertion below checks Alarm is really a legacy document class.
+      # if one day Alarm is moved to component, then this test needs to be updated
+      # with another module that lives on the file system.
+      import Products.ERP5.Document.Alarm
+      self.assertIn('product/ERP5/Document/Alarm.py', Products.ERP5.Document.Alarm.__file__)
+
+      # document classes are also dynamically loaded in Products.ERP5Type.Document module
+      from Products.ERP5Type.Document.Alarm import Alarm as Alarm_from_ERP5Type  # pylint:disable=import-error,no-name-in-module
+      self.assertIs(Alarm_from_ERP5Type, Products.ERP5.Document.Alarm.Alarm)
+
+      # a new temp constructor is created
+      from Products.ERP5Type.Document import newTempAlarm  # pylint:disable=import-error,no-name-in-module
+      self.assertIn(Alarm_from_ERP5Type, newTempAlarm(self.portal, '').__class__.mro())
+
+      # temp constructors are deprecated, they issue a warning when called
+      with mock.patch('Products.ERP5Type.Utils.warnings.warn') as warn:
+          newTempAlarm(self.portal, '')
+      warn.assert_called_with(
+          'newTemp*(self, ID) will be removed, use self.newContent(temp_object=True, id=ID, portal_type=...)',
+          DeprecationWarning, 2)
+
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
