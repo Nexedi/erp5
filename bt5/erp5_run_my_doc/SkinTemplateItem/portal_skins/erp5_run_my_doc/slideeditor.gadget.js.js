@@ -704,7 +704,8 @@
         return queue
           .push(function () {
             return gadget.changeState({
-              display_index: gadget.state.display_index + 1
+              display_index: gadget.state.display_index + 1,
+              type: undefined
             });
           });
       }
@@ -713,7 +714,8 @@
         return queue
           .push(function () {
             return gadget.changeState({
-              display_index: gadget.state.display_index - 1
+              display_index: gadget.state.display_index - 1,
+              type: undefined
             });
           });
       }
@@ -722,7 +724,8 @@
         return queue
           .push(function () {
             return gadget.changeState({
-              display_step: DISPLAY_LIST
+              display_step: DISPLAY_LIST,
+              type: undefined
             });
           });
       }
@@ -732,6 +735,7 @@
           .push(function () {
             return gadget.changeState({
               display_step: DISPLAY_SLIDE,
+              type: undefined,
               display_index: parseInt(
                 evt.target.getAttribute('data-slide-index'),
                 10
@@ -745,7 +749,8 @@
         return queue
           .push(function () {
             return gadget.changeState({
-              slide_dialog: DIALOG_COMMENT
+              slide_dialog: DIALOG_COMMENT,
+              type: undefined
             });
           });
       }
@@ -754,7 +759,8 @@
         return queue
           .push(function () {
             return gadget.changeState({
-              slide_dialog: DIALOG_SLIDE
+              slide_dialog: DIALOG_SLIDE,
+              type: undefined
             });
           });
       }
@@ -767,7 +773,8 @@
             return RSVP.all([
               gadget.changeState({
                 value: slideListAsHTML(slide_list),
-                display_step: DISPLAY_LIST
+                display_step: DISPLAY_LIST,
+                type: undefined
               }),
               gadget.notifyChange()
             ]);
@@ -781,7 +788,8 @@
               display_index: getSlideElementList(gadget.state.value).length,
               display_step: DISPLAY_SLIDE,
               slide_dialog: gadget.state.slide_dialog || DIALOG_SLIDE,
-              value: gadget.state.value + "<section></section>"
+              value: gadget.state.value + "<section></section>",
+              type: undefined
             });
           });
       }
