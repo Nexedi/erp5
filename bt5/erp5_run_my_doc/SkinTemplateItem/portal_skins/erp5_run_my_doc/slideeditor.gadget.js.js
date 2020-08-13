@@ -499,6 +499,8 @@
     // [x,y] coordinates of the slides
     gadget.slide_coordinate = [];
     // store the data-slide-index of slides in the order we want to show them
+    // the key is the slide position into the list
+    // the value is the value of its data-slide-index converted to int
     gadget.slide_order = [];
     gadget.slide_order_start = []; //used to restore the slides positions
 
@@ -509,15 +511,14 @@
     for (i = 0; i < slide_list.length - 1; i += 1) {
       coordinate = slide_list[i].getBoundingClientRect();
       gadget.slide_coordinate[i] = [coordinate.x, coordinate.y];
-      gadget.slide_order[i] =
-        slide_list[i].getAttribute('data-slide-index');
-      gadget.slide_order_start[i] = gadget.slide_order[i];
+      gadget.slide_order[i] = i;
+      gadget.slide_order_start[i] = i;
     }
   }
 
   function moveSlide(gadget, dragged_id, hovered_id) {
-    // dragged_id : data-slide-index of the dragged slide (String)
-    // hovered_id : data-slide-index of the hovered slide (String)
+    // dragged_id : data-slide-index of the dragged slide (Int)
+    // hovered_id : data-slide-index of the hovered slide (Int)
 
     var slide_list = gadget.element.querySelector("div.slide_list").children,
       j,
@@ -530,7 +531,7 @@
       pos_y;
 
     // reset slides positions on dragend event
-    if (dragged_id === "-1") {
+    if (dragged_id === -1) {
       for (j = 0; j < gadget.slide_order.length; j += 1) {
         gadget.slide_order[j] = gadget.slide_order_start[j];
         slide_list[j].style.left = "0";
@@ -551,17 +552,15 @@
     gadget.hovered_slide = hovered_index.toString();
     for (i = 0; i < gadget.slide_order.length; i += 1) {
       // Find slide that should be shown at that index
-      slide = slide_list[parseInt(gadget.slide_order[i], 10)];
+      slide = slide_list[gadget.slide_order[i]];
 
       //displace the slide at this relative position (CSS only, DOM unchanged)
-      pos_x = gadget.slide_coordinate[parseInt(
-        gadget.slide_order[i],
-        10
-      )][0];
-      pos_y = gadget.slide_coordinate[parseInt(
-        gadget.slide_order[i],
-        10
-      )][1];
+      pos_x = gadget.slide_coordinate[
+        gadget.slide_order[i]
+      ][0];
+      pos_y = gadget.slide_coordinate[
+        gadget.slide_order[i]
+      ][1];
       slide.style.left = (gadget.slide_coordinate[i][0] -
         pos_x).toString() + "px";
       slide.style.top = (gadget.slide_coordinate[i][1] -
@@ -809,7 +808,7 @@
     }, false, false)
 
     .onEvent("dragend", function (evt) {
-      moveSlide(this, "-1", "-1");
+      moveSlide(this, -1, -1);
       var closest_section = evt.target.closest('section');
       if (closest_section === null) {
         return;
@@ -844,7 +843,7 @@
       hovered = closest_section.getAttribute('data-slide-index');
       if (dragged !== hovered) {
         if (closest_section.getAttribute('data-slide-index')) {
-          moveSlide(this, dragged, hovered);
+          moveSlide(this, parseInt(dragged, 10), parseInt(hovered, 10));
         }
       }
 
@@ -861,7 +860,7 @@
         closest_slidelist = evt.relatedTarget.closest('div.slide_list');
         if (closest_slidelist === null) {
           // We are no longer over the slides, reset slide's positions
-          moveSlide(this, "-1", "-1");
+          moveSlide(this, -1, -1);
         }
       }
     }, false, false)
