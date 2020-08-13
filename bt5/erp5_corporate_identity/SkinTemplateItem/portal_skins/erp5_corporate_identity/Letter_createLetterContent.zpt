@@ -28,6 +28,7 @@ Generates the letter Content
                        letter_destination_city        python: options.get('letter_destination_city');
                        letter_destination_country     python: options.get('letter_destination_country');
                        letter_display_source_address  python: options.get('letter_display_source_address');
+                       letter_destination_position    python: options.get('letter_destination_position');
                        letter_content                 python: options.get('letter_content');">
   <!DOCTYPE html>
   <html tal:attributes="class                         python: ''.join(['ci-', letter_theme, ' ci-', letter_language])">
@@ -45,6 +46,20 @@ Generates the letter Content
     <tal:block metal:use-macro="context/Letter_createLetterContent/macros/letter_content" />
   </body>
 </html>
+</tal:block>
+
+<tal:block tal:condition="python: False">
+  <tal:block metal:define-macro="letter_destination">
+    <td class="ci-letter-destination">
+      <span tal:content="python: letter_destination_company or ' '"></span>
+      <span tal:content="python: letter_destination_person or ' '"></span>
+      <tal:block tal:repeat="address python: letter_destination_address.split('\n')">
+        <span tal:content="python: address"></span>
+      </tal:block>
+      <span tal:content="python: ''.join([letter_destination_postal_code, ' ', letter_destination_city])"></span>
+      <span tal:content="python: letter_destination_country or ' '"></span>
+    </td>
+  </tal:block>
 </tal:block>
 
 <tal:block tal:condition="python: False">
@@ -73,17 +88,16 @@ Generates the letter Content
 	          <td></td>
           </tr>
           <tr>
-            <td></td>
-	          <td class="ci-letter-destination">
-              <span tal:content="python: letter_destination_company or ' '"></span>
-	            <span tal:content="python: letter_destination_person or ' '"></span>
-              <tal:block tal:repeat="address python: letter_destination_address.split('\n')">
-                <span tal:content="python: address"></span>
-              </tal:block>
-	            <span tal:content="python: ''.join([letter_destination_postal_code, ' ', letter_destination_city])"></span>
-	            <span tal:content="python: letter_destination_country or ' '"></span>
-            </td>
-            <td></td>
+            <tal:block tal:condition="python: letter_destination_position== 'right'">
+              <td></td>
+	            <tal:block metal:use-macro="context/Letter_createLetterContent/macros/letter_destination" />
+              <td></td>
+            </tal:block>
+            <tal:block tal:condition="python: letter_destination_position=='left'">
+              <tal:block metal:use-macro="context/Letter_createLetterContent/macros/letter_destination" />
+              <td></td>
+              <td></td>
+            </tal:block>
           </tr>
           </tal:block>
 	      </tbody>

@@ -46,6 +46,7 @@ if dialog_id is not None:
       display_source_address=display_source_address,
       document_download=document_download,
       document_save=document_save,
+      destination_position_in_letter = destination_position_in_letter,
       **kw
     )
   )

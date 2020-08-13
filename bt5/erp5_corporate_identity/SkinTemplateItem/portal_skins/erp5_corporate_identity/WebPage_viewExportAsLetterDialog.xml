@@ -91,6 +91,7 @@
                         <string>override_source_person_title</string>
                         <string>override_destination_organisation_title</string>
                         <string>override_destination_person_title</string>
+                        <string>destination_position_in_letter</string>
                         <string>override_date</string>
                       </list>
                     </value>
