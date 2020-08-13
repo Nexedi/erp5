@@ -49,6 +49,17 @@ body > div.spreadsheet.jexcel_tabs > div:nth-child(1) {
   bottom: 0;
 }
 
+.add_delete {
+  position : absolute;
+  bottom : 3px;
+  right : 10px;
+}
+
+.add_delete > i {
+  cursor : pointer;
+  margin-left : 10px;
+}
+
 .jexcel_tab.jexcel_container.fullscreen.with-toolbar {
   position: absolute;
   top: 0;

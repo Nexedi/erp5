@@ -108,7 +108,7 @@ prompt, confirm, navigator*/
       cell_input = domsugar("input", {"class": "cell_input"}),
       options = buildSelectOptions(),
       select = domsugar("select", {"class": "minimize"}),
-      icon_title;
+      buttons;
     element.querySelector("table.jexcel tr").childNodes.forEach(function (td) {
       td.style.textAlign = "center";
     });
@@ -135,39 +135,6 @@ prompt, confirm, navigator*/
       return gadget.triggerOnChangeSelect(dropdown, formula_input);
     };
     element.querySelector(".jexcel_toolbar").insertBefore(select, filter);
-    icon_title = {
-      "undo": "Undo",
-      "redo": "Redo",
-      "add": "Add sheet",
-      "delete": "Delete sheet",
-      "table_chart": "Merge cells",
-      "close": "Destroy merge",
-      "cancel": "Destroy all merges",
-      "format_bold": "Bold",
-      "format_italic": "Italic",
-      "format_underlined": "Underline",
-      "format_align_left": "Align left",
-      "format_align_center": "Align center",
-      "format_align_right": "Align right",
-      "format_align_justify": "Align justify",
-      "vertical_align_top": "Align top",
-      "vertical_align_center": "Align middle",
-      "vertical_align_bottom": "Align bottom",
-      "playlist_add": "Add row at the end",
-      "delete_sweep": "Delete last row",
-      "exposure_plus_1": "Add column at the end",
-      "exposure_neg_1": "Delete last column",
-      "photo_size_select_small": "Define new table dimensions"
-    };
-    element.querySelectorAll("i").forEach(function (i) {
-      if (i.dataset.k === "color") {
-        i.title = "Color";
-      } else if (i.dataset.k === "background-color") {
-        i.title = "Background color";
-      } else {
-        i.title = icon_title[i.textContent];
-      }
-    });
     gadget.element.querySelectorAll(".jexcel_tab_link")
       .forEach(function (tab, i) {
         if (i === 0) {
@@ -175,6 +142,11 @@ prompt, confirm, navigator*/
         }
         tab.title = "Click to rename when selected";
       });
+    buttons = domsugar("div", {"class": "add_delete"});
+    buttons.appendChild(element.querySelector("i[title='Add table']"));
+    buttons.appendChild(element.querySelector("i[title='Delete table']"));
+    gadget.element.querySelector(".spreadsheet.jexcel_tabs")
+      .appendChild(buttons);
     gadget.state.newSheet = false;
   }
 
@@ -203,7 +175,7 @@ prompt, confirm, navigator*/
           dict.data = tmp.data;
         }
       }
-      dict.sheetName = table.title ? table.title : "Sheet " + (i + 1);
+      dict.sheetName = table.title || "Sheet " + (i + 1);
       configs.push(dict);
     });
     return configs;
@@ -219,27 +191,32 @@ prompt, confirm, navigator*/
       undo: {
         type: 'i',
         content: 'undo',
-        onclick: gadget.triggerUndo.bind(gadget)
+        onclick: gadget.triggerUndo.bind(gadget),
+        tooltip: "Undo"
       },
       redo: {
         type: 'i',
         content: 'redo',
-        onclick: gadget.triggerRedo.bind(gadget)
+        onclick: gadget.triggerRedo.bind(gadget),
+        tooltip: "Redo"
       },
       merge: {
         type: 'i',
         content: 'table_chart',
-        onclick: gadget.triggerMerge.bind(gadget)
+        onclick: gadget.triggerMerge.bind(gadget),
+        tooltip: "Merge"
       },
       unmerge: {
         type: 'i',
         content: 'close',
-        onclick: gadget.triggerUnmerge.bind(gadget)
+        onclick: gadget.triggerUnmerge.bind(gadget),
+        tooltip: "Unmerge"
       },
       destroy_merge: {
         type: 'i',
         content: 'cancel',
-        onclick: gadget.triggerDestroyMerge.bind(gadget)
+        onclick: gadget.triggerDestroyMerge.bind(gadget),
+        tooltip: "Unmerge all"
       },
       font_style: {
         type: 'select',
@@ -259,106 +236,125 @@ prompt, confirm, navigator*/
         type: 'i',
         content: 'format_align_left',
         k: 'text-align',
-        v: 'left'
+        v: 'left',
+        tooltip: "Align left"
       },
       text_align_center: {
         type: 'i',
         content: 'format_align_center',
         k: 'text-align',
-        v: 'center'
+        v: 'center',
+        tooltip: "Align center"
       },
       text_align_right: {
         type: 'i',
         content: 'format_align_right',
         k: 'text-align',
-        v: 'right'
+        v: 'right',
+        tooltip: "Align right"
       },
       text_align_justify: {
         type: 'i',
         content: 'format_align_justify',
         k: 'text-align',
-        v: 'justify'
+        v: 'justify',
+        tooltip: "Align justify"
       },
       vertical_align_top: {
         type: 'i',
         content: 'vertical_align_top',
         k: 'vertical-align',
-        v: 'top'
+        v: 'top',
+        tooltip: "Align top"
       },
       vertical_align_middle: {
         type: 'i',
         content: 'vertical_align_center',
         k: 'vertical-align',
-        v: 'middle'
+        v: 'middle',
+        tooltip: "Align center"
       },
       vertical_align_bottom: {
         type: 'i',
         content: 'vertical_align_bottom',
         k: 'vertical-align',
-        v: 'bottom'
+        v: 'bottom',
+        tooltip: "Align bottom"
       },
       style_bold: {
         type: 'i',
         content: 'format_bold',
         k: 'font-weight',
-        v: 'bold'
+        v: 'bold',
+        tooltip: "Bold"
       },
       style_underlined: {
         type: 'i',
         content: 'format_underlined',
         k: 'text-decoration',
-        v: 'underline'
+        v: 'underline',
+        tooltip: "Underline"
       },
       style_italic: {
         type: 'i',
         content: 'format_italic',
         k: 'font-style',
-        v: 'italic'
+        v: 'italic',
+        tooltip: "Italic"
       },
       text_color: {
         type: 'color',
         content: 'format_color_text',
-        k: 'color'
+        k: 'color',
+        tooltip: "Text color"
       },
       background_color: {
         type: 'color',
         content: 'format_color_fill',
-        k: 'background-color'
+        k: 'background-color',
+        tooltip: "Background color"
       },
       add: {
         type: "i",
         content: "add",
-        onclick: gadget.triggerAddSheet.bind(gadget)
+        onclick: gadget.triggerAddSheet.bind(gadget),
+        tooltip: "Add table"
       },
       remove: {
         type: "i",
         content: "delete",
-        onclick: gadget.triggerDeleteSheet.bind(gadget)
+        onclick: gadget.triggerDeleteSheet.bind(gadget),
+        tooltip: "Delete table"
       },
       add_row: {
         type: "i",
         content: "playlist_add",
-        onclick: gadget.triggerAddRow.bind(gadget)
+        onclick: gadget.triggerAddRow.bind(gadget),
+        tooltip: "Add row at the end"
       },
       delete_row: {
         type: "i",
         content: "delete_sweep",
-        onclick: gadget.triggerDeleteRow.bind(gadget)
+        onclick: gadget.triggerDeleteRow.bind(gadget),
+        tooltip: "Delete last row"
       },
       add_column: {
         type: "i",
         content: "exposure_plus_1",
-        onclick: gadget.triggerAddColumn.bind(gadget)
+        onclick: gadget.triggerAddColumn.bind(gadget),
+        tooltip: "Add column at the end"
       },
       delete_column: {
         type: "i",
         content: "exposure_neg_1",
-        onclick: gadget.triggerDeleteColumn.bind(gadget)
+        onclick: gadget.triggerDeleteColumn.bind(gadget),
+        tooltip: "Delete last column"
       },
       dimensions: {
         type: "i",
         content: "photo_size_select_small",
-        onclick: gadget.triggerNewDimensions.bind(gadget)
+        onclick: gadget.triggerNewDimensions.bind(gadget),
+        tooltip: "Resize table"
       },
       contextMenu: function (obj, x, y) {
         var items = [];
@@ -888,7 +884,7 @@ prompt, confirm, navigator*/
         tabs = gadget.element.querySelectorAll(".jexcel_tab_link"),
         dict1,
         dict2;
-      if (tabs.length === 18) {
+      if (tabs.length === 16) {
         alert("Can't add tables anymore.");
       } else {
         dict1 = getTemplate(gadget);
