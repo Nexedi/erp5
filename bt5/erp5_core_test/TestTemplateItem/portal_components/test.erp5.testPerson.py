@@ -96,21 +96,38 @@ class TestPerson(ERP5TypeTestCase):
     self.assertEqual("title", p.getTitle())
 
   # title & first_name, last_name
-  def testEmptyTitleFallbackOnId(self):
+  def testEmptyTitleFallbackOnUserId(self):
     p = self._makeOne()
     self.assertEqual(p.getUserId(), p.getTitle())
 
-  def testEmptyTranslatedTitleFallbackOnId(self):
+  def testEmptyTranslatedTitleFallbackOnUserId(self):
     p = self._makeOne()
     self.assertEqual(p.getUserId(), p.getTranslatedTitle())
 
-  def testEmptyCompactTitleFallbackOnId(self):
+  def testEmptyCompactTitleFallbackOnUserId(self):
     p = self._makeOne()
     self.assertEqual(p.getUserId(), p.getCompactTitle())
 
-  def testEmptyCompactTranslatedTitleFallbackOnId(self):
+  def testEmptyCompactTranslatedTitleFallbackOnUserId(self):
     p = self._makeOne()
     self.assertEqual(p.getUserId(), p.getCompactTranslatedTitle())
+
+  def testEmptyTitleFallbackOnId(self):
+    # in the now rare event of a person without user id, the fallback is still to the id.
+    p = self._makeOne(id=self.id(), user_id=None)
+    self.assertEqual(self.id(), p.getTitle())
+
+  def testEmptyTranslatedTitleFallbackOnId(self):
+    p = self._makeOne(id=self.id(), user_id=None)
+    self.assertEqual(self.id(), p.getTranslatedTitle())
+
+  def testEmptyCompactTitleFallbackOnId(self):
+    p = self._makeOne(id=self.id(), user_id=None)
+    self.assertEqual(self.id(), p.getCompactTitle())
+
+  def testEmptyCompactTranslatedTitleFallbackOnId(self):
+    p = self._makeOne(id=self.id(), user_id=None)
+    self.assertEqual(self.id(), p.getCompactTranslatedTitle())
 
   def testEmptyTitleFallbackOnReference(self):
     p = self._makeOne(reference='reference')
