@@ -129,6 +129,7 @@ html{
   width: 50%;
 }
 .ci-letter .ci-letter-head-right table tr td:nth-child(2) {
+  padding-left:100px;
   width: 48%;
 }
 .ci-letter .ci-letter-head-right table tr td:nth-child(3) {

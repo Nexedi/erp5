@@ -38,5 +38,6 @@ return context.WebPage_viewAsLetter(
   document_save=document_save,
   document_download=document_download,
   batch_mode=batch_mode,
+  destination_position_in_letter = destination_position_in_letter,
   **kw
 )
