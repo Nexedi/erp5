@@ -28,6 +28,7 @@
 ##############################################################################
 
 import unittest
+import mock
 
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import Unauthorized
@@ -224,6 +225,17 @@ class TestPerson(ERP5TypeTestCase):
     self.assertFalse(p.hasTitle())
     p.setFirstName('bob')
     self.assertTrue(p.hasTitle())
+
+  def testCreatingPersonDoesNotModifyPersonModule(self):
+    # creating a first entry in the module modifies the module, so make sure we have at least one.
+    self.portal.person_module.newContent()
+    self.tic()
+    self.assertFalse(self.portal.person_module._p_changed)
+
+    with mock.patch.object(self.portal.person_module.__class__, 'generateNewId', return_value=self.id()):
+      person = self.portal.person_module.newContent(portal_type='Person')
+    self.assertTrue(person.getUserId())
+    self.assertFalse(self.portal.person_module._p_changed)
 
   def testSetPasswordSecurity(self):
     p = self._makeOne(id='person')

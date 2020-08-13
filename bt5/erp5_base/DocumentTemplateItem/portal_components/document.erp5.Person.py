@@ -221,6 +221,33 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMi
         )
       self._baseSetUserId(value)
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'initUserId')
+  def initUserId(self):
+    """Initialize user id.
+
+    ERP5 guarantees unicity of user id when setUserId is called, but this comes
+    at the expense of performance, because two transactions are not allowed to change
+    and user id at a time. This implementation uses an id generator that already
+    guarantees the unicity of generated values, so when using this method we can
+    trust ourselves and don't need setUserId to check unicity one more time.
+
+    If user id are really important in a project, this method can be customized in a
+    type based method named Person_initUserId
+    """
+    method = self.getTypeBasedMethod('initUserId')
+    if method:
+      return method()
+    if not self.hasUserId():
+      self._baseSetUserId(
+        'P%i' % (
+          self.getPortalObject().portal_ids.generateNewId(
+            id_group='user_id',
+            id_generator='non_continuous_integer_increasing',
+          ),
+        ),
+      )
+      self.reindexObject()
+
   # Time management
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAvailableTime')
