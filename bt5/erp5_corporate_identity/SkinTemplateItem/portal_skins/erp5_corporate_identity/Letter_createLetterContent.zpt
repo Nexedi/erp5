@@ -77,7 +77,9 @@ Generates the letter Content
 	          <td class="ci-letter-destination">
               <span tal:content="python: letter_destination_company or ' '"></span>
 	            <span tal:content="python: letter_destination_person or ' '"></span>
-	            <span tal:content="python: letter_destination_address or ' '"></span>
+              <tal:block tal:repeat="address python: letter_destination_address.split('\n')">
+                <span tal:content="python: address"></span>
+              </tal:block>
 	            <span tal:content="python: ''.join([letter_destination_postal_code, ' ', letter_destination_city])"></span>
 	            <span tal:content="python: letter_destination_country or ' '"></span>
             </td>

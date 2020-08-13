@@ -114,8 +114,8 @@ def populateOrganisationDict(my_organisation_list):
     organisation_region = organisation.getRegionValue()
     organisation_phone = organisation.getDefaultTelephoneValue()
     organisation_fax = organisation.getDefaultFax()
-    organisation_link_list = organisation.objectValues(portal_type="Link",title="Corporate Web Site")
-    organisation_bank_list = organisation.objectValues(portal_type="Bank Account",title="Default Bank Account")
+    organisation_link_list = [x for x in organisation.objectValues(portal_type="Link") if x.getTitle()=="Corporate Web Site"]
+    organisation_bank_list = [x for x in organisation.objectValues(portal_type="Bank Account") if x.getValidationState()=='validated' and x.getTitle()=="Default Bank Account"]
     organisation_default_image = organisation.getDefaultImage()
 
     output_dict["organisation_title"] = organisation.getTitle()
@@ -235,11 +235,13 @@ if pass_parameter is not None and pass_source_data is not None:
   # XXX remove, too much ambiguity if multiple results
   # returns [{organisation_dict}]
   if pass_parameter == "override_organisation":
-    return populateOrganisationDict(portal_object.portal_catalog(
+    organisation_list = portal_object.portal_catalog(
       portal_type="Organisation",
       #title=(''.join(["=", str(pass_source_data)]))
-      title=pass_source_data
-    ))
+      title=pass_source_data,
+    )
+    organisation_list = [x for x in organisation_list if x.getTitle()==pass_source_data]
+    return populateOrganisationDict(organisation_list)
 
   # ------------ Override Sender/Recipient Organisation (URL) --------------------
   # returns [{organisation_dict}]

@@ -31,3 +31,10 @@ with Reserved Font Name Heuristica.
   font-weight: bold;
   font-style: normal;
 }
+
+@font-face {
+  font-family: 'Heuristica';
+  src: url('heuristica/Heuristica-BoldItalic.otf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
