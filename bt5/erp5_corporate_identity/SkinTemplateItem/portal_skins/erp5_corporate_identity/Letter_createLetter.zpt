@@ -38,6 +38,7 @@ Generates the complete letter
 
                        letter_content                       python: options.get('letter_content');
                        letter_display_source_address        python: options.get('letter_display_source_address');
+                       letter_display_sender_company_above_recipient python: options.get('letter_display_sender_company_above_recipient');
 
                        letter_source_company                python: options.get('letter_source_company');
                        letter_source_address                python: options.get('letter_source_address');

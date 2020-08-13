@@ -28,6 +28,7 @@ Generates the letter Content
                        letter_destination_city        python: options.get('letter_destination_city');
                        letter_destination_country     python: options.get('letter_destination_country');
                        letter_display_source_address  python: options.get('letter_display_source_address');
+                       letter_display_sender_company_above_recipient python: options.get('letter_display_sender_company_above_recipient');
                        letter_destination_position    python: options.get('letter_destination_position');
                        letter_content                 python: options.get('letter_content');">
   <!DOCTYPE html>
@@ -51,6 +52,14 @@ Generates the letter Content
 <tal:block tal:condition="python: False">
   <tal:block metal:define-macro="letter_destination">
     <td class="ci-letter-destination">
+      <tal:block tal:condition="python: int(letter_display_sender_company_above_recipient)" tal:define='address python:[]'>
+        <tal:block tal:define="dummy python: address.append(letter_source_company) if letter_source_company else ''"></tal:block>
+        <tal:block tal:define="dummy python: address.append(letter_source_address) if letter_source_address else ''"></tal:block>
+        <tal:block tal:define="dummy python: address.append(letter_source_country_code) if letter_source_country_code else ''"></tal:block>
+        <tal:block tal:define="dummy python: address.append(letter_source_postal_code) if letter_source_postal_code else ''"></tal:block>
+        <tal:block tal:define="dummy python: address.append(letter_source_city) if letter_source_city else ''"></tal:block>
+        <div class='ci-letter-sender-company-above-recipient' tal:content="python: ','.join(address)"></div>
+      </tal:block>
       <span tal:content="python: letter_destination_company or ' '"></span>
       <span tal:content="python: letter_destination_person or ' '"></span>
       <tal:block tal:repeat="address python: letter_destination_address.split('\n')">
