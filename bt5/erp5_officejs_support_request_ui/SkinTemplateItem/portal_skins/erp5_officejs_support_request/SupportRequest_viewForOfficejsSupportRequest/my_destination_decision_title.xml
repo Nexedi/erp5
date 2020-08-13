@@ -76,6 +76,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -121,7 +125,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.getDestinationDescision(portal_type="Project") is None</string> </value>
+            <value> <string>python: context.getDestinationDecision(portal_type="Person") is None</string> </value>
         </item>
       </dictionary>
     </pickle>
