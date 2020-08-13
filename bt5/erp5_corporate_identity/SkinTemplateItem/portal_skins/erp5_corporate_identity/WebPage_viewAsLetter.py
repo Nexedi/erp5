@@ -38,5 +38,6 @@ return context.Base_viewAsLetter(
   document_download=document_download,
   batch_mode=batch_mode,
   destination_position_in_letter = destination_position_in_letter,
+  display_sender_company_above_recipient=display_sender_company_above_recipient,
   **kw
 )

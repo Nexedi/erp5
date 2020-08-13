@@ -49,6 +49,7 @@ override_date = kw.get("override_date")
 override_batch_mode = kw.get('batch_mode', None)
 
 destination_position_in_letter = kw.get('destination_position_in_letter', 'right')
+display_sender_company_above_recipient = kw.get('display_sender_company_above_recipient', None)
 # -------------------------- Document Parameters  ------------------------------
 letter_portal_type = letter.getPortalType()
 letter_relative_url = letter.getRelativeUrl()
@@ -119,7 +120,6 @@ for image in re.findall('(<img.*?/>)', letter_content):
       img_svg_format=letter_display_svg
     )
   )
-
 # ============================= Format: html ===================================
 if letter_format == "html":
   letter_output = letter.Letter_createLetter(
@@ -152,6 +152,7 @@ if letter_format == "html":
     letter_source_country_code=letter_source.get("codification", blank),
     letter_content = letter_content,
     letter_display_source_adress=letter_display_source_adress,
+    letter_display_sender_company_above_recipient = display_sender_company_above_recipient,
     letter_source_vat=letter_source.get("vat", blank),
     letter_source_corporate_registration=letter_source.get("corporate_registration", blank),
     letter_source_phone=letter_source.get("phone", blank),
@@ -216,6 +217,7 @@ if letter_format == "pdf":
     letter_source_city=letter_source.get("city", blank),
     letter_source_country_code=letter_source.get("codification", blank),
     letter_display_source_adress=letter_display_source_adress,
+    letter_display_sender_company_above_recipient = display_sender_company_above_recipient,
     letter_content = letter_content
   )
 
