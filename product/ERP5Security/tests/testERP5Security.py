@@ -811,9 +811,6 @@ class TestUserManagementExternalAuthentication(TestUserManagement):
     """
 
     _, login, _ = self._makePerson()
-    pas_user, = self.portal.acl_users.searchUsers(login=login, exact_match=True)
-    reference = self.portal.restrictedTraverse(pas_user['path']).getReference()
-
     base_url = self.portal.absolute_url(relative=1)
 
     # without key we are Anonymous User so we should be redirected with proper HTML
@@ -828,7 +825,8 @@ class TestUserManagementExternalAuthentication(TestUserManagement):
     # view front page we should be logged in if we use authentication key
     response = self.publish(base_url, env={self.user_id_key.replace('-', '_').upper(): login})
     self.assertEqual(response.getStatus(), 200)
-    self.assertTrue(reference in response.getBody())
+    self.assertIn('Logged In', response.getBody())
+    self.assertIn(login, response.getBody())
 
 
 class TestLocalRoleManagement(RoleManagementTestCase):
@@ -1363,3 +1361,19 @@ class TestReindexObjectSecurity(UserManagementTestCase):
     check(['immediateReindexObject'] * (len(person) + 1))
     self.tic()
 
+
+class TestUserCaption(UserManagementTestCase):
+
+  def test_zodb_user(self):
+    self.login()
+    self.assertEqual(self.portal.Base_getUserCaption(), 'ERP5TypeTestCase')
+
+  def test_anonymous_user(self):
+    self.logout()
+    self.assertEqual(self.portal.Base_getUserCaption(), 'Anonymous User')
+
+  def test_erp5_login(self):
+    user_id, login, _ = self._makePerson()
+    self.tic()
+    self.login(user_id)
+    self.assertEqual(self.portal.Base_getUserCaption(), login)
