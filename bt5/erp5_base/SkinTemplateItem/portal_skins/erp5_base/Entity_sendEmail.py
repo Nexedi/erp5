@@ -30,7 +30,7 @@ mail_message = portal.Base_createMailMessageAsString(
   extra_header_dict=extra_header_dict)
 
 create_post_message_method = event.getTypeBasedMethod('createPostMessage')
-if create_post_message_method:
+if create_post_message_method is not None:
   create_post_message_method(mail_message)
 else:
   # We do not want to retry those activities, as sending email is not transactional safe
