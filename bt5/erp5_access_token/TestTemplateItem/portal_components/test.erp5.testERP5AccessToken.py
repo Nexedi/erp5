@@ -31,6 +31,8 @@ from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 from DateTime import DateTime
+import urllib
+import httplib
 import base64
 import StringIO
 import mock
@@ -123,6 +125,30 @@ class TestERP5AccessTokenSkins(AccessTokenTestCase):
     self.assertEqual('erp5_access_token_plugin=%s' % access_token.getRelativeUrl(), login)
     # this is also what will appear in Z2.log
     _setUserNameForAccessLog.assert_called_once_with(login, self.portal.REQUEST)
+
+  def test_user_caption(self):
+    person = self._createPerson(self.new_id)
+    access_url = "%s/Base_getUserCaption" % self.portal.absolute_url()
+    access_method = "GET"
+    access_token = self._createRestrictedAccessToken(
+        self.new_id,
+        person,
+        access_method,
+        access_url)
+    access_token.validate()
+    self.tic()
+
+    response = self.publish('/%s/Base_getUserCaption?%s' % (
+        self.portal.getId(),
+        urllib.urlencode({
+            'access_token': access_token.getId(),
+            'access_token_secret': access_token.getReference()})))
+    self.assertEqual(response.getStatus(), httplib.OK)
+    # XXX caption currently shows plugin id and relative URL of the token,
+    # that's not ideal.
+    self.assertEqual(
+        response.getBody(),
+        'erp5_access_token_plugin=%s' % access_token.getRelativeUrl())
 
   def test_bad_token(self):
     person = self._createPerson(self.new_id)
