@@ -190,6 +190,9 @@ class TestGoogleLogin(GoogleLoginTestCase):
     self.assertEqual(person.getUserId(), user_id)
     self.assertEqual(getUserId(None), login)
 
+    self.login(user_id)
+    self.assertEqual(self.portal.Base_getUserCaption(), login)
+
   def test_auth_cookie(self):
     request = self.portal.REQUEST
     response = request.RESPONSE

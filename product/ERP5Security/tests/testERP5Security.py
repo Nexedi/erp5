@@ -1363,3 +1363,15 @@ class TestReindexObjectSecurity(UserManagementTestCase):
     check(['immediateReindexObject'] * (len(person) + 1))
     self.tic()
 
+
+class TestUserCaption(UserManagementTestCase):
+
+  def test_zodb_user(self):
+    self.login()
+    self.assertEqual(self.portal.Base_getUserCaption(), 'ERP5TypeTestCase')
+
+  def test_erp5_login(self):
+    user_id, login, _ = self._makePerson()
+    self.tic()
+    self.login(user_id)
+    self.assertEqual(self.portal.Base_getUserCaption(), login)
