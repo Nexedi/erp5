@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>de214bf3042b6c0f52b7d3062299c558</string> </value>
+            <value> <string>9cb258a82b3f0588817bb131e05988c4</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -87,23 +87,27 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>Template.Test.Letter.Page</string> </value>
+            <value> <string>Template.Test.Letter.Page.Recipient.Left</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Screenshot generated from template_test_letter_input_002_en_pdf</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>595</int> </value>
+            <value> <int>842</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>template_test_letter_input_page_0_002_en_bmp</string> </value>
+            <value> <string>template_test_letter_recipient_left_en_bmp</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -117,15 +121,17 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Template Test Letter Page</string> </value>
+            <value> <string>Template Test Letter Page Recipient Left</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>002</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>842</int> </value>
+            <value> <int>595</int> </value>
         </item>
       </dictionary>
     </pickle>
