@@ -49,7 +49,7 @@ override_date = kw.get("override_date")
 override_batch_mode = kw.get('batch_mode', None)
 
 destination_position_in_letter = kw.get('destination_position_in_letter', 'right')
-display_sender_company_above_recipient = kw.get('display_sender_company_above_recipient', None)
+display_sender_company_above_recipient = kw.get('display_sender_company_above_recipient', 0)
 # -------------------------- Document Parameters  ------------------------------
 letter_portal_type = letter.getPortalType()
 letter_relative_url = letter.getRelativeUrl()
