@@ -236,7 +236,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
                       'isMovingItem')
   def isMovingItem(self, item):
     type_based_script = self._getTypeBasedMethod('isMovingItem')
-    if type_based_script:
+    if type_based_script is not None:
       return type_based_script(item)
     return False
 
@@ -500,7 +500,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       This will be implemeted by calling currency conversion on currency resources
     """
     type_based_script = self._getTypeBasedMethod('getSourceAssetPrice')
-    if type_based_script:
+    if type_based_script is not None:
       return type_based_script()
     return self._getAssetPrice(section = self.getSourceSectionValue(), date = self.getStartDate())
 
@@ -511,7 +511,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       Returns the price converted to the currency of the destination section
     """
     type_based_script = self._getTypeBasedMethod('getDestinationAssetPrice')
-    if type_based_script:
+    if type_based_script is not None:
       return type_based_script()
     return self._getAssetPrice(section = self.getDestinationSectionValue(), date = self.getStopDate())
 

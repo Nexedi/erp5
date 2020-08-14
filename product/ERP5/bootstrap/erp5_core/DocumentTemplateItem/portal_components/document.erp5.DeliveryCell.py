@@ -167,7 +167,7 @@ class DeliveryCell(MappedValue, Movement, ImmobilisationMovement):
                            'isMovingItem')
   def isMovingItem(self, item):
     type_based_script = self._getTypeBasedMethod('isMovingItem')
-    if type_based_script:
+    if type_based_script is not None:
       return type_based_script(item)
     return self.isAccountable()
 
