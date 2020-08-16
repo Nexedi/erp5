@@ -78,6 +78,9 @@
                       <list>
                         <string>your_first_failure</string>
                         <string>your_second_failure</string>
+                        <string>your_third_failure</string>
+                        <string>your_fourth_failure</string>
+                        <string>your_fifth_failure</string>
                       </list>
                     </value>
                 </item>
