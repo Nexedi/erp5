@@ -11440,7 +11440,7 @@ msgstr "Variantes à commander"
 msgid "Select appropriate document in the list."
 msgstr "Sélectionnez le document approprié dans la liste."
 
-msgid "Select non reconciled transcations finished"
+msgid "Select non reconciled transactions finished"
 msgstr "Selection des écritures non rapprochées terminée"
 
 msgid "Select the Number of User Accounts you Want to Configure"
