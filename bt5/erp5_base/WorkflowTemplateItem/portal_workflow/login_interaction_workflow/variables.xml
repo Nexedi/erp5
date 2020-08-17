@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Variables" module="Products.DCWorkflow.Variables"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_mapping</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>variables</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
