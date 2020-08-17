@@ -5,6 +5,6 @@
  </chain>
  <chain>
   <type>Google Login</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
+  <workflow>edit_workflow, login_interaction_workflow, validation_workflow</workflow>
  </chain>
 </workflow_chain>

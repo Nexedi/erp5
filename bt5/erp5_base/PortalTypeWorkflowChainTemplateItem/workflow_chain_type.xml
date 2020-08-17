@@ -41,7 +41,7 @@
  </chain>
  <chain>
   <type>ERP5 Login</type>
-  <workflow>edit_workflow, login_validation_workflow</workflow>
+  <workflow>edit_workflow, login_interaction_workflow, login_validation_workflow</workflow>
  </chain>
  <chain>
   <type>Email</type>

@@ -237,6 +237,35 @@ class TestUserManagement(UserManagementTestCase):
     _, login, password = self._makePerson()
     self._assertUserExists(login, password)
 
+  def test_AnonymousCanCreateUser(self):
+    """Anonymous user can create users, as long as the user creation is done
+    from a security context which allows it.
+    (ie. there should not be interaction workflow raising Unauthorized)
+    """
+    test_script_id = 'ERP5Site_createTestUser%s' % self.id()
+    createZODBPythonScript(
+        self.portal.portal_skins.custom,
+        test_script_id,
+        'login, password',
+        '''if 1:
+          new_person = context.getPortalObject().person_module.newContent(
+              portal_type='Person')
+          new_person.newContent(portal_type='Assignment').open()
+          new_person.newContent(
+              portal_type='ERP5 Login',
+              reference=login,
+              password=password,
+          ).validate()
+        ''')
+    script = getattr(self.portal, test_script_id)
+    script.manage_proxy(('Manager', 'Owner',))
+    self.logout()
+
+    login = 'login-%s' % self._login_generator()
+    script(login, 'password')
+    self.tic()
+    self._assertUserExists(login, 'password')
+
   def test_PersonLoginCaseSensitive(self):
     """Login/password are case sensitive."""
     login = 'case_test_user'
@@ -886,6 +915,22 @@ class TestMigration(UserManagementTestCase):
           'user id P1234 already exists',
           self.portal.person_module.newContent,
           portal_type='Person',)
+
+  def test_NonMigratedPersonCanBecomeUserLater(self):
+    self._enableERP5UsersPlugin()
+    non_migrated_person = self.portal.person_module.newContent(
+        portal_type='Person',
+        user_id=None,
+    )
+    self.tic()
+
+    self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+    self.tic()
+    non_migrated_person.newContent(portal_type='Assignment').open()
+    non_migrated_person.newContent(portal_type='ERP5 Login', reference='login', password='password').validate()
+    self.tic()
+    self._assertUserExists('login', 'password')
+    self.assertTrue(non_migrated_person.getUserId())
 
 
 class TestUserManagementExternalAuthentication(TestUserManagement):
