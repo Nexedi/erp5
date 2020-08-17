@@ -258,6 +258,17 @@ class TestPerson(ERP5TypeTestCase):
     p.setPassword('secret')
     self.assertTrue(p.getPassword())
 
+  def testSetUserIdSecurity(self):
+    # Changing an already set user id needs "manage users" permissions,
+    # but setting an initial user id does not.
+    p = self._makeOne(user_id=None)
+    p.manage_permission(Permissions.ManageUsers, [], 0)
+    p.setUserId('initial_user_id')
+    self.tic()
+    self.assertRaises(Unauthorized, p.setUserId, 'something_else')
+    self.abort()
+    self.assertRaises(Unauthorized, p.edit, user_id='something_else')
+
   def testPasswordFormat(self):
     p = self._makeOne(id='person')
     p._setEncodedPassword('pass_A', format='A')
