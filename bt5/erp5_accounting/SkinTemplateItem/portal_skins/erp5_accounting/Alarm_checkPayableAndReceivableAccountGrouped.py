@@ -1,4 +1,4 @@
-"""Check that all transcations on payable and receivable accounts
+"""Check that all transactions on payable and receivable accounts
 that a 0 balance are grouped.
 
 In other words, check that all transactions that can be grouped are grouped.
