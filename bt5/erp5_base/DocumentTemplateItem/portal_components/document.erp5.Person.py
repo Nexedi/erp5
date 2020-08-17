@@ -36,6 +36,8 @@ from erp5.component.mixin.EncryptedPasswordMixin import EncryptedPasswordMixin
 from erp5.component.mixin.LoginAccountProviderMixin import LoginAccountProviderMixin
 from erp5.component.mixin.ERP5UserMixin import ERP5UserMixin
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.CMFCore.utils import _checkPermission
+from Products.CMFCore.exceptions import AccessControl_Unauthorized
 
 try:
   from Products import PluggableAuthService
@@ -216,12 +218,15 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMi
       - we want to prevent duplicated user ids, but only when
         PAS _AND_ ERP5LoginUserManager are used
     """
-    if value != self.getUserId():
+    existing_user_id = self.getUserId()
+    if value != existing_user_id:
       if value:
         self.__checkUserIdAvailability(
           pas_plugin_class=ERP5LoginUserManager,
           user_id=value,
         )
+      if existing_user_id and not _checkPermission(Permissions.ManageUsers, self):
+        raise AccessControl_Unauthorized('setUserId')
       self._baseSetUserId(value)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'initUserId')
