@@ -9,7 +9,7 @@ Return local parameters that require proxy role to access
 # pass_source_data           followup uid or context for retrieving info
 # pass_flag_site             whether called from a web site (no follow-up)
 from base64 import b64encode
-portal_type_valid_template_list = ["Web Site", "Web Section", "Web Page", "Letter"]
+portal_type_valid_template_list = ["Web Site", "Web Section", "Web Page", "Letter", "Test Page"]
 portal_type_valid_report_list = ["Project", "Sale Order", "Sale Opportunity", "Requirement Document", "Person"]
 portal_type = context.getPortalType()
 portal_object = context.getPortalObject()
@@ -340,7 +340,7 @@ if pass_parameter is not None and pass_source_data is not None:
     theme = None
     tmp = context
     #check if web page is inside web site or web section
-    while portal_type == 'Web Page':
+    while portal_type in ('Web Page', 'Test Page'):
       tmp = tmp.aq_parent
       portal_type = tmp.getPortalType()
       
