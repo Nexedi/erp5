@@ -12,6 +12,7 @@
   <item>Inventory Cell</item>
  </portal_type>
  <portal_type id="Preference">
+  <item>Purchase Order</item>
   <item>Sale Order</item>
  </portal_type>
  <portal_type id="Purchase Order Line">
