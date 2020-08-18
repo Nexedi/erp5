@@ -146,7 +146,51 @@ fieldset {
   -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,0.24);
   -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,0.24);
   box-shadow: 0 2px 5px 0 rgba(0,0,0,0.24);
+  display: flex;
 }
+
+.ci-web .ci-web-header-bar-navigation-left {
+  flex:1;
+}
+
+ul.ci-web-header-menu-lang{
+  position: absolute;
+	right: 3px;
+	z-index: 666;
+  background: rgb(235,235,235);
+  width: 53px;
+  height: 28px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+ul.ci-web-header-menu-lang:hover {
+	height: auto;
+	cursor: pointer;
+}
+
+
+ul.ci-web-header-menu-lang li a {
+	display: inline-block;
+	width: 23px;
+	height: 28px;
+	padding: 0 0 0 30px;
+	font-size: 12px;
+	line-height: 30px;
+	text-transform: uppercase;
+	background: url(../img/flag-fr.png) no-repeat 7px 9px;
+}
+
+ul.ci-web-header-menu-lang li.fr a { background-image: url(../img/flag-fr.png); }
+ul.ci-web-header-menu-lang li.de a { background-image: url(../img/flag-de.png); }
+ul.ci-web-header-menu-lang li.en a { background-image: url(../img/flag-gb.png); }
+ul.ci-web-header-menu-lang li.pt a { background-image: url(../img/flag-pt.png); }
+ul.ci-web-header-menu-lang li.zh a { background-image: url(../img/flag-zh.png); }
+ul.ci-web-header-menu-lang li.ja a { background-image: url(../img/flag-ja.png);}
+
+ul.ci-web-header-menu-lang li a:hover { background-color: rgb(215,215,215); }
+ul.ci-web-header-menu-lang li a.selected:hover { background-color: rgba(0,0,0,0); }
 
 /* ==== site-banner === */
 .ci-web-page-banner {
