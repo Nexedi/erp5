@@ -90,7 +90,6 @@
       if (this.state.editable) {
         return this.getDeclaredGadget('sub')
           .push(function (gadget) {
-            console.log("checkbox", error_text);
             return gadget.checkValidity(error_text);
           });
       }
