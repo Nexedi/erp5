@@ -135,12 +135,7 @@
       }
 
       if (modification_dict.hasOwnProperty('error_text')) {
-        queue = gadget.getDeclaredGadget(SCOPE)
-          .push(function (field_gadget) {
-            // XXX - this is probably duplicated because checkValidity
-            // is called before changeState already
-            return field_gadget.checkValidity(modification_dict.error_text);
-          });
+        queue = gadget.checkValidity(modification_dict.error_text);
       }
 
       // Remove/add label_element from DOM
