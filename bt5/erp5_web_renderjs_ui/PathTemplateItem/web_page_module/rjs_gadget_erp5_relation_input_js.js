@@ -280,6 +280,7 @@
                 .push(function (url) {
                   plane.href = url;
                   plane.className = JUMP_ON_CLASS_STR;
+                  return gadget.notifyValid();
                 });
             }
 
@@ -413,6 +414,8 @@
                   error.hash.expected &&
                   error.hash.expected.length === 1 &&
                   error.hash.expected[0] === "'QUOTE'") {
+                gadget.element.querySelector("a").className =
+                  JUMP_UNKNOWN_CLASS_STR;
                 return gadget.getTranslationList([
                   "Invalid Search Criteria"
                 ])
@@ -538,15 +541,22 @@
       }
     }, true, false)
 
-    .declareMethod('checkValidity', function () {
-      var gadget = this;
-
+    .declareAcquiredMethod("notifyValid", "notifyValid")
+    .declareMethod('checkValidity', function (error_text) {
+      var input = this.element.querySelector('input'),
+        gadget = this;
+      if (error_text) {
+        if (input && !input.classList.contains("is-invalid")) {
+          input.classList.add("is-invalid");
+        }
+        return false;
+      }
       if ((this.state.value_text) && (
           (this.state.value_relative_url === null) &&
             (this.state.value_uid === null) &&
             (this.state.value_portal_type === null)
         )) {
-        return gadget.translate("No such document was found")
+        return gadget.translate(error_text || "No such document was found")
           .push(function (error_message) {
             return gadget.notifyInvalid(error_message);
           })
@@ -554,8 +564,24 @@
             return false;
           });
       }
-      return true;
+      if (input && input.classList.contains("is-invalid")) {
+        input.classList.remove("is-invalid");
+      }
+      return gadget.notifyValid()
+        .push(function () {
+          return true;
+        });
     }, {mutex: 'changestate'})
+
+    .declareAcquiredMethod("notifyFocus", "notifyFocus")
+    .onEvent('focus', function focus() {
+      return this.notifyFocus();
+    }, true, false)
+
+    .declareAcquiredMethod("notifyBlur", "notifyBlur")
+    .onEvent('blur', function blur() {
+      return this.notifyBlur();
+    }, true, false)
 
     // XXX Use html5 input
     .onEvent('invalid', function (evt) {
@@ -564,16 +590,19 @@
     }, true, false)
 
     .onEvent('change', function () {
-      return this.notifyChange();
+      return RSVP.all([
+        //this.checkValidity(),
+        this.notifyChange()
+      ]);
     }, false, false)
 
 
     .onEvent('input', function (event) {
+      var gadget = this;
       if (!this.state.editable) {
         return;
       }
 
-      var context = this;
       return this.changeState({
         value_text: event.target.value,
         value_relative_url: null,
@@ -582,7 +611,9 @@
         has_focus: true
       })
         .push(function () {
-          return context.notifyChange();
+          return RSVP.all([
+            gadget.notifyChange()
+          ]);
         });
     }, true, false);
 
