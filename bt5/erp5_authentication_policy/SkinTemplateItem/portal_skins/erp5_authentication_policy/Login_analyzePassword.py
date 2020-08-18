@@ -69,8 +69,8 @@ if portal.portal_preferences.isPrefferedForceUsernameCheckInPassword():
   lower_password = password.lower()
   if not is_temp_object:
     # real object
-    first_name = context.getFirstName()
-    last_name = context.getLastName()
+    first_name = getattr(context, 'getFirstName', context.getTitle)()
+    last_name = getattr(context, 'getLastName', context.getReference)()
   else:
     # temporary object
     first_name = getattr(context, 'first_name', None)
