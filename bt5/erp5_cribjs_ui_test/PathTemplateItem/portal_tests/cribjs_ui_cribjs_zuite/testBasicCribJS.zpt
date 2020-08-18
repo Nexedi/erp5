@@ -21,10 +21,14 @@
   <td>Reset Successfully.</td>
   <td></td>
 </tr>
-<!-- Initialize -->
 <tr>
   <td>open</td>
   <td>${base_url}/web_site_module/cribjs_bootloader/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>CribJS Bootloader</td>
   <td></td>
 </tr>
 <tr>
