@@ -51,6 +51,7 @@ override_batch_mode = kw.get('batch_mode', None)
 destination_position_in_letter = kw.get('destination_position_in_letter', 'right')
 display_sender_company_above_recipient = kw.get('display_sender_company_above_recipient', 0)
 destination_position_padding_left = kw.get('destination_position_padding_left', '100px')
+letter_header_margin_to_top = kw.get('letter_header_margin_to_top', 26)
 # -------------------------- Document Parameters  ------------------------------
 letter_portal_type = letter.getPortalType()
 letter_relative_url = letter.getRelativeUrl()
@@ -258,7 +259,7 @@ if letter_format == "pdf":
   footer_embedded_html_data = letter.Base_convertHtmlToSingleFile(letter_foot, allow_script=True)
   pdf_file = letter.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
       encoding="utf8",
-      margin_top=26,
+      margin_top=letter_header_margin_to_top,
       margin_bottom=30,
       margin_left=0,
       margin_right=0,

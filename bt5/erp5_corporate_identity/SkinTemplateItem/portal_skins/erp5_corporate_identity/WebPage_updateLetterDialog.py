@@ -48,6 +48,7 @@ if dialog_id is not None:
       destination_position_in_letter = destination_position_in_letter,
       display_sender_company_above_recipient=display_sender_company_above_recipient,
       destination_position_padding_left = destination_position_padding_left,
+      letter_header_margin_to_top = letter_header_margin_to_top,
       **kw
     )
   )
