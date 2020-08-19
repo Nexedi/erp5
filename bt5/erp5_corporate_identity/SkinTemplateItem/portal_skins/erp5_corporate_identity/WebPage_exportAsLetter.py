@@ -24,7 +24,6 @@ Export this web page as letter in specified format
 # override_destination_organisation_title: override event recipient subordinate
 # override_destination_person_title: overide event recipient
 # override_date             to use instead of current date
-
 return context.WebPage_viewAsLetter(
   format=format,
   display_head=display_head,
@@ -41,5 +40,6 @@ return context.WebPage_viewAsLetter(
   destination_position_in_letter = destination_position_in_letter,
   display_sender_company_above_recipient= display_sender_company_above_recipient,
   destination_position_padding_left = destination_position_padding_left,
+  letter_header_margin_to_top = letter_header_margin_to_top,
   **kw
 )
