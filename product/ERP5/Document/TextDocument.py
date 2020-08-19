@@ -153,6 +153,10 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
         # PortalTransforms does not accept empty values for 'encoding' parameter
         if charset:
           kw['charset'] = convert_kw['encoding'] = charset
+        try:
+          convert_kw['conversion_kw'] = kw['conversion_kw']
+        except KeyError:
+          pass
         if not self.hasConversion(**kw):
           portal_transforms = portal.portal_transforms
           filename = self.getFilename()
