@@ -453,6 +453,23 @@ class TestRestrictedPythonSecurity(ERP5TypeTestCase):
         expected="ok"
     )
 
+  def testNumpy(self):
+    self.createAndRunScript(
+      textwrap.dedent('''\
+      import numpy as np
+      return [str(x) for x in (np.dtype('int16'), np.datetime64('2020-08'))]
+      '''),
+      expected=["int16", "2020-08"]
+    )
+
+  def testPandas(self):
+    self.createAndRunScript(
+      textwrap.dedent('''
+      import pandas as pd
+      return pd.Series([1,2,3]).tolist()
+      '''),
+      expected=[1,2,3]
+    )
 
 def test_suite():
   suite = unittest.TestSuite()
