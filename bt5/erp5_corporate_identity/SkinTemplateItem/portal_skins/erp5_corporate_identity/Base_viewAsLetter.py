@@ -50,6 +50,7 @@ override_batch_mode = kw.get('batch_mode', None)
 
 destination_position_in_letter = kw.get('destination_position_in_letter', 'right')
 display_sender_company_above_recipient = kw.get('display_sender_company_above_recipient', 0)
+destination_position_padding_left = kw.get('destination_position_padding_left', '100px')
 # -------------------------- Document Parameters  ------------------------------
 letter_portal_type = letter.getPortalType()
 letter_relative_url = letter.getRelativeUrl()
@@ -140,6 +141,7 @@ if letter_format == "html":
     letter_destination_city=letter_destination.get("city", blank),
     letter_destination_country=letter_destination.get("country", blank),
     letter_destination_position = destination_position_in_letter,
+    letter_destination_position_padding_left = destination_position_padding_left,
     letter_source_company=letter_source.get("corporate_name", letter_source.get("organisation_title", blank)),
     letter_source_company_corporate_name=letter_source.get("corporate_name", blank),
     letter_source_company_capital=letter_source.get("social_capital", blank),
@@ -211,6 +213,7 @@ if letter_format == "pdf":
     letter_destination_city=letter_destination.get("city", blank),
     letter_destination_country=letter_destination.get("country", blank),
     letter_destination_position = destination_position_in_letter,
+    letter_destination_position_padding_left = destination_position_padding_left,
     letter_source_company=letter_source.get("corporate_name", letter_source.get("organisation_title", blank)),
     letter_source_address=letter_source.get("address", blank),
     letter_source_postal_code=letter_source.get("postal_code", blank),
