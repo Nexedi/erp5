@@ -31,6 +31,7 @@ import unittest
 import os
 import quopri
 import functools
+import requests
 from StringIO import StringIO
 from lxml import etree
 from base64 import b64decode, b64encode
@@ -1736,6 +1737,73 @@ return True
       is `web_view`.
     """
     self.checkWebSiteDocumentViewConsistency("Drawing")
+
+  def test_cache_control(self):
+    # Cache-Control header is set to 'private' by CookieCrumbler for authenticated user.
+    # but can be overridden by Caching Policy Manager.
+    website = self.setupWebSite()
+    released_page = self.portal.web_page_module.newContent(
+      portal_type='Web Page',
+      reference='released_page',
+    )
+    released_page.release()
+    published_page = self.portal.web_page_module.newContent(
+      portal_type='Web Page',
+      reference='published_page',
+    )
+    published_page.publish()
+    self.tic()
+    auth_cookie = {'__ac': b64encode('ERP5TypeTestCase:')}
+
+    # ERP5 portal, not through Caching Policy Manager
+    response = requests.get(
+      self.portal.absolute_url(),
+      cookies=auth_cookie,
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.headers['Cache-Control'], 'private')
+
+    # released page
+    response = requests.get(
+      '%s/%s' % (website.absolute_url(), 'released_page'),
+      cookies=auth_cookie,
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.headers['Cache-Control'], 'max-age=0, no-store')
+
+    # converted released page
+    response = requests.get(
+      '%s/%s?format=txt' % (website.absolute_url(), 'released_page'),
+      cookies=auth_cookie,
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.headers['Cache-Control'], 'max-age=0, no-store')
+
+    # published page
+    response = requests.get(
+      '%s/%s' % (website.absolute_url(), 'published_page'),
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.headers['Cache-Control'], 'max-age=600, stale-while-revalidate=360000, public')
+    response = requests.get(
+      '%s/%s' % (website.absolute_url(), 'published_page'),
+      cookies=auth_cookie,
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.headers['Cache-Control'], 'max-age=0, no-store')
+
+    # converted published page
+    response = requests.get(
+      '%s/%s?format=txt' % (website.absolute_url(), 'published_page'),
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.headers['Cache-Control'], 'max-age=600, stale-while-revalidate=360000, public')
+    response = requests.get(
+      '%s/%s?format=txt' % (website.absolute_url(), 'published_page'),
+      cookies=auth_cookie,
+    )
+    self.assertEqual(response.status_code, 200)
+    self.assertEqual(response.headers['Cache-Control'], 'max-age=600, stale-while-revalidate=360000, public')
 
 def test_suite():
   suite = unittest.TestSuite()
