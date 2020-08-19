@@ -134,10 +134,6 @@
         }
       }
 
-      if (modification_dict.hasOwnProperty('error_text')) {
-        queue = gadget.checkValidity(modification_dict.error_text);
-      }
-
       // Remove/add label_element from DOM
       if (modification_dict.hasOwnProperty('label')) {
         if (this.state.label === true) {
