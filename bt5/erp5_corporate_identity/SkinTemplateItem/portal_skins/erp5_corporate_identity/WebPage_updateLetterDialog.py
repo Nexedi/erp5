@@ -26,7 +26,6 @@ Update the letter dialog with parameters manually entered
 # override_destination_organisation_title: override event recipient subordinate
 # override_destination_person_title: overide event recipient
 # override_date             to use instead of current date
-
 from Products.ERP5Type.Message import translateString
 if dialog_id is not None:
   return context.Base_redirect(
@@ -48,6 +47,7 @@ if dialog_id is not None:
       document_save=document_save,
       destination_position_in_letter = destination_position_in_letter,
       display_sender_company_above_recipient=display_sender_company_above_recipient,
+      destination_position_padding_left = destination_position_padding_left,
       **kw
     )
   )
