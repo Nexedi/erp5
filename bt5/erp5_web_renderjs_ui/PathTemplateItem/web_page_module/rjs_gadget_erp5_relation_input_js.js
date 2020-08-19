@@ -591,7 +591,7 @@
 
     .onEvent('change', function () {
       return RSVP.all([
-        //this.checkValidity(),
+        this.checkValidity(),
         this.notifyChange()
       ]);
     }, false, false)
