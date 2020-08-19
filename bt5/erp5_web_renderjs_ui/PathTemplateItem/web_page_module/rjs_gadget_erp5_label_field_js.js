@@ -84,23 +84,33 @@
     })
 
     .declareMethod('render', function render(options) {
-      var state_dict = {
-        first_call: true,
-        label_text: options.field_json.title || '',
-        label: options.label,
-        field_url: getFieldTypeGadgetUrl(options.field_type),
-        error_text: options.field_json.error_text || '',
-        options: options,
-        scope: options.field_json.key,
-        hidden: options.field_json.hidden,
-        css_class: options.field_json.css_class
-      };
+      var queue,
+        gadget = this,
+        state_dict = {
+          first_call: true,
+          label_text: options.field_json.title || '',
+          label: options.label,
+          field_url: getFieldTypeGadgetUrl(options.field_type),
+          error_text: options.field_json.error_text || '',
+          options: options,
+          scope: options.field_json.key,
+          hidden: options.field_json.hidden,
+          css_class: options.field_json.css_class
+        };
       // RenderJS would overwrite default value with empty variables :-(
       // So we have to mitigate this behaviour
       if (state_dict.label === undefined) {
         state_dict.label = true;
       }
-      return this.changeState(state_dict);
+      queue = this.changeState(state_dict);
+
+      if (options.field_json.error_text) {
+        queue
+         .push(function () {
+            gadget.checkValidity();
+          });
+      }
+      return queue;
     })
 
     .onStateChange(function onStateChange(modification_dict) {
