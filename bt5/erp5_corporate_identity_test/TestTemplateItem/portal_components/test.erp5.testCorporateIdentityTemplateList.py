@@ -712,6 +712,232 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     )
 
   @changeSkin('Letter')
+  def test_pdfLetterRecipientPositionRight(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display recipient at right
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_recipient_right_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        destination_position_in_letter = "right",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31"
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterRecipientPositionRightWithPaddingValue(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display recipient at right
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_recipient_right_with_padding_value_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        destination_position_padding_left = '150px',
+        destination_position_in_letter = "right",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31"
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterRecipientPositionLeft(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display recipient at left
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_recipient_left_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        destination_position_in_letter = "left",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31"
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterRecipientPositionLeftWithPaddingValue(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display recipient at left
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_recipient_left_with_padding_value_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        destination_position_padding_left = '150px',
+        destination_position_in_letter = "left",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31"
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterDisplaySenderCompanyAddressAboveRightRecipient(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display sender company address above right recipient
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_display_sender_company_above_right_recipient_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        display_sender_company_above_recipient = 1,
+        destination_position_in_letter = "right",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31"
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterDisplaySenderCompanyAddressAboveRightRecipientWithPaddingValue(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display sender company address above right recipient
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_display_sender_company_above_right_recipient_with_padding_value_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        destination_position_padding_left = '150px',
+        display_sender_company_above_recipient = 1,
+        destination_position_in_letter = "right",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31"
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterDisplaySenderCompanyAddressAboveLeftRecipient(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display sender company address above left recipient
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_display_sender_company_above_left_recipient_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        display_sender_company_above_recipient = 1,
+        destination_position_in_letter = "left",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31"
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterDisplaySenderCompanyAddressAboveLeftRecipientWithPaddingValue(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display sender company address above left recipient
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_display_sender_company_above_left_recipient_with_padding_value_en_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        destination_position_padding_left = '150px',
+        display_sender_company_above_recipient = 1,
+        destination_position_in_letter = "left",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31"
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterHeaderMarginToTop(self):
+    """
+      Test:
+      - Web Page as Letter
+      - display sender company address above left recipient
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_header_margin_to_top",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        letter_header_margin_to_top = 35,
+        destination_position_padding_left = '150px',
+        display_sender_company_above_recipient = 1,
+        destination_position_in_letter = "left",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31"
+      )
+    )
+  @changeSkin('Letter')
   def test_pdfLetterEventOverrideSenderRecipientOrganisation(self):
     """
       Test:

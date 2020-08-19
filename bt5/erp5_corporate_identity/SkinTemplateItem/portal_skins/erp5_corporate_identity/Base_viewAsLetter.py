@@ -48,6 +48,10 @@ override_destination_organisation_title = kw.get("override_destination_organisat
 override_date = kw.get("override_date")
 override_batch_mode = kw.get('batch_mode', None)
 
+destination_position_in_letter = kw.get('destination_position_in_letter', 'right')
+display_sender_company_above_recipient = kw.get('display_sender_company_above_recipient', 0)
+destination_position_padding_left = kw.get('destination_position_padding_left', '100px')
+letter_header_margin_to_top = kw.get('letter_header_margin_to_top') or 26
 # -------------------------- Document Parameters  ------------------------------
 letter_portal_type = letter.getPortalType()
 letter_relative_url = letter.getRelativeUrl()
@@ -118,7 +122,6 @@ for image in re.findall('(<img.*?/>)', letter_content):
       img_svg_format=letter_display_svg
     )
   )
-
 # ============================= Format: html ===================================
 if letter_format == "html":
   letter_output = letter.Letter_createLetter(
@@ -138,6 +141,8 @@ if letter_format == "html":
     letter_destination_postal_code=letter_destination.get("postal_code", blank),
     letter_destination_city=letter_destination.get("city", blank),
     letter_destination_country=letter_destination.get("country", blank),
+    letter_destination_position = destination_position_in_letter,
+    letter_destination_position_padding_left = destination_position_padding_left,
     letter_source_company=letter_source.get("corporate_name", letter_source.get("organisation_title", blank)),
     letter_source_company_corporate_name=letter_source.get("corporate_name", blank),
     letter_source_company_capital=letter_source.get("social_capital", blank),
@@ -150,6 +155,7 @@ if letter_format == "html":
     letter_source_country_code=letter_source.get("codification", blank),
     letter_content = letter_content,
     letter_display_source_adress=letter_display_source_adress,
+    letter_display_sender_company_above_recipient = display_sender_company_above_recipient,
     letter_source_vat=letter_source.get("vat", blank),
     letter_source_corporate_registration=letter_source.get("corporate_registration", blank),
     letter_source_phone=letter_source.get("phone", blank),
@@ -207,12 +213,15 @@ if letter_format == "pdf":
     letter_destination_postal_code=letter_destination.get("postal_code", blank),
     letter_destination_city=letter_destination.get("city", blank),
     letter_destination_country=letter_destination.get("country", blank),
+    letter_destination_position = destination_position_in_letter,
+    letter_destination_position_padding_left = destination_position_padding_left,
     letter_source_company=letter_source.get("corporate_name", letter_source.get("organisation_title", blank)),
     letter_source_address=letter_source.get("address", blank),
     letter_source_postal_code=letter_source.get("postal_code", blank),
     letter_source_city=letter_source.get("city", blank),
     letter_source_country_code=letter_source.get("codification", blank),
     letter_display_source_adress=letter_display_source_adress,
+    letter_display_sender_company_above_recipient = display_sender_company_above_recipient,
     letter_content = letter_content
   )
 
@@ -250,7 +259,7 @@ if letter_format == "pdf":
   footer_embedded_html_data = letter.Base_convertHtmlToSingleFile(letter_foot, allow_script=True)
   pdf_file = letter.Base_cloudoooDocumentConvert(embedded_html_data, "html", "pdf", conversion_kw=dict(
       encoding="utf8",
-      margin_top=26,
+      margin_top=letter_header_margin_to_top,
       margin_bottom=30,
       margin_left=0,
       margin_right=0,

@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="EditorField" module="Products.ERP5Form.EditorField"/>
+      <global name="IntegerField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>content</string> </value>
+            <value> <string>letter_header_margin_to_top</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -19,20 +19,16 @@
                     <value> <string>The input failed the external validator.</string> </value>
                 </item>
                 <item>
-                    <key> <string>line_too_long</string> </key>
-                    <value> <string>A line was too long.</string> </value>
+                    <key> <string>integer_out_of_range</string> </key>
+                    <value> <string>The integer you entered was out of range.</string> </value>
+                </item>
+                <item>
+                    <key> <string>not_integer</string> </key>
+                    <value> <string>You did not enter an integer.</string> </value>
                 </item>
                 <item>
                     <key> <string>required_not_found</string> </key>
                     <value> <string>Input is required but no input given.</string> </value>
-                </item>
-                <item>
-                    <key> <string>too_long</string> </key>
-                    <value> <string>You entered too many characters.</string> </value>
-                </item>
-                <item>
-                    <key> <string>too_many_lines</string> </key>
-                    <value> <string>You entered too many lines.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -58,11 +54,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>end</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -74,23 +82,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
+                    <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -98,7 +94,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>text_editor</string> </key>
+                    <key> <string>start</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -106,15 +102,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -134,12 +122,18 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -151,6 +145,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>end</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>external_validator</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -159,23 +157,11 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
+                    <key> <string>input_type</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -183,7 +169,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>text_editor</string> </key>
+                    <key> <string>start</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -191,15 +177,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -215,23 +193,35 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>page</string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value> <string>26</string> </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The content of the document considered as a text string</string> </value>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_maxwidth</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>20</int> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
                     <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>end</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -242,68 +232,31 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>40</int> </value>
-                </item>
-                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>max_length</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_linelength</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>max_lines</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>input_type</string> </key>
+                    <value> <string>text</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
-                    <key> <string>text_editor</string> </key>
-                    <value> <string>codemirror</string> </value>
+                    <key> <string>start</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Content</string> </value>
-                </item>
-                <item>
-                    <key> <string>unicode</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>Letter Header Against To Top(only for pdf)</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
                     <value> <int>0</int> </value>
                 </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>100</int> </value>
-                </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python: \'<iframe width="100%%" height="500" style="background-color:#FFFFFF;box-sizing:border-box;-wekbit-box-sizing:border-box;" src="%s/WebPage_viewAsWeb?portal_skin=Letter&amp;override_source_person_title=%s&amp;override_source_organisation_title=%s&amp;override_destination_person_title=%s&amp;override_destination_organisation_title=%s&amp;display_head=%s&amp;override_date=%s&amp;display_source_address=%s&amp;display_svg=%s&amp;destination_position_in_letter=%s&amp;display_sender_company_above_recipient=%s&amp;destination_position_padding_left=%s" name="default_version"></iframe>\' % (context.absolute_url(), context.REQUEST.get("override_source_person_title", ""), context.REQUEST.get("override_source_organisation_title", ""), context.REQUEST.get("override_destination_person_title", ""), context.REQUEST.get("override_destination_organisation_title", ""), context.REQUEST.get("display_head", 1), context.REQUEST.get("override_date", ""), context.REQUEST.get("display_source_address", 0), context.REQUEST.get("display_svg", "png"), context.REQUEST.get("destination_position_in_letter", "right"), context.REQUEST.get("display_sender_company_above_recipient", 0), context.REQUEST.get(\'destination_position_padding_left\', \'100px\'))
-
-]]></string> </value>
         </item>
       </dictionary>
     </pickle>
