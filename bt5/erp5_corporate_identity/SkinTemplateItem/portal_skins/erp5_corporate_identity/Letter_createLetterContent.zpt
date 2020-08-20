@@ -56,10 +56,9 @@ Generates the letter Content
       <tal:block tal:condition="python: int(letter_display_sender_company_above_recipient)" tal:define='address python:[]'>
         <tal:block tal:define="dummy python: address.append(letter_source_company) if letter_source_company else ''"></tal:block>
         <tal:block tal:define="dummy python: address.append(letter_source_address) if letter_source_address else ''"></tal:block>
-        <tal:block tal:define="dummy python: address.append(letter_source_country_code) if letter_source_country_code else ''"></tal:block>
-        <tal:block tal:define="dummy python: address.append(letter_source_postal_code) if letter_source_postal_code else ''"></tal:block>
-        <tal:block tal:define="dummy python: address.append(letter_source_city) if letter_source_city else ''"></tal:block>
-        <div class='ci-letter-sender-company-above-recipient' tal:content="python: ','.join(address)"></div>
+        <div class='ci-letter-sender-company-above-recipient' tal:content="python: ','.join(address)+ ',%s%s%s'% (letter_source_postal_code, ' ' if letter_source_postal_code else '', letter_source_city)
+                                                                           if (letter_source_postal_code or letter_source_city) else ','.join(address) ">
+        </div>
       </tal:block>
       <span tal:content="python: letter_destination_company or ' '"></span>
       <span tal:content="python: letter_destination_person or ' '"></span>
