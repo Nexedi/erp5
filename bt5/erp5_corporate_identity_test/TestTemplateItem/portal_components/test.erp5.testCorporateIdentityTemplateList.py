@@ -90,6 +90,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     preference = self.getDefaultSystemPreference()
     if preference.getPreferenceState() != "global":
       preference.enable()
+    if self.portal.portal_preferences.default_site_preference.getPreferenceState() != "global":
+      self.portal.portal_preferences.default_site_preference.enable()
     self.tic()
 
   def createTestEvent(self, target_language, source_relative_url, destination_relative_url):
@@ -937,6 +939,37 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         subfield_field_override_date_day="31"
       )
     )
+
+  @changeSkin('Letter')
+  def test_pdfLetterThemeLogo(self):
+    """
+      Test:
+      - Event as Letter
+      - export as pdf with Theme Logo
+    """
+    self.portal.portal_preferences.default_site_preference.edit(
+      preferred_corporate_identity_template_default_logo_prefix='Template.Test.Theme.Logo.',
+    )
+    self.tic()
+    self.runPdfTestPattern(
+      "template_test_letter_input_003_en_html",
+      "template_test_letter_theme_logo",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        use_skin="Letter",
+        subfield_field_override_date_year="1999",
+        subfield_field_override_date_month="12",
+        subfield_field_override_date_day="31"
+      )
+    )
+    self.portal.portal_preferences.default_site_preference.edit(
+      preferred_corporate_identity_template_default_logo_prefix='',
+    )
+    self.tic()
+
   @changeSkin('Letter')
   def test_pdfLetterEventOverrideSenderRecipientOrganisation(self):
     """

@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>f2841e1fedb7255533c5904862bfa6ca</string> </value>
+            <value> <string>604f59988f92a7d5fb7ca004354733ed</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>template_test_letter_recipient_right_with_padding_value_en_bmp</string> </value>
+            <value> <string>template_test_letter_theme_logo</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
