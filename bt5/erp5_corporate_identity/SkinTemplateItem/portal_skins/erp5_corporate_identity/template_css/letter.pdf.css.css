@@ -59,8 +59,11 @@ html {
 .ci-letter .ci-letter-header .ci-letter-bar-logo {
   margin-left: 5%;
 }
+.ci-letter .ci-letter-bar-logo.ci-letter-bar-logo-without-description {
+  padding: .5em .5em .15em 0;
+}
 .ci-letter .ci-letter-bar-logo {
-  padding: .5em .5em .1em 0;
+  padding: .5em .5em .4em 0;
 }
 .ci-letter .ci-letter-bar-logo {
   text-align: left;
