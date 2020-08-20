@@ -655,31 +655,35 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Those images can be accessible through extensible content
     # url : path-of-document + '/' + 'img' + page-index + '.png'
     # Update policy to have stale values
-    self.portal.caching_policy_manager._updatePolicy(
-      "unauthenticated no language", "python: member is None",
-      "python: getattr(object, 'getModificationDate', object.modified)()",
-      1200, 30, 600, 0, 0, 0, "Accept-Language, Cookie", "", None,
-      0, 1, 0, 0, 1, 1, None, None)
-    self.tic()
-    policy_list = self.portal.caching_policy_manager.listPolicies()
-    policy = [policy[1] for policy in policy_list\
-                if policy[0] == 'unauthenticated no language'][0]
-    # Check policy has been updated
-    self.assertEqual(policy.getMaxAgeSecs(), 1200)
-    self.assertEqual(policy.getStaleWhileRevalidateSecs(), 30)
-    self.assertEqual(policy.getStaleIfErrorSecs(), 600)
-    for i in xrange(3):
-      path = '/'.join((website_url,
-                       reference,
-                       'img%s.png' % i))
-      response = self.publish(path)
-      self.assertEqual(response.getHeader('Content-Type'), 'image/png')
-      self.assertEqual(response.getHeader('Cache-Control'),
-            'max-age=%d, stale-while-revalidate=%d, stale-if-error=%d, public' % \
-                          (policy.getMaxAgeSecs(),
-                           policy.getStaleWhileRevalidateSecs(),
-                           policy.getStaleIfErrorSecs()))
-
+    policy_orig = self.portal.caching_policy_manager._policies['unauthenticated no language']
+    try:
+      self.portal.caching_policy_manager._updatePolicy(
+        "unauthenticated no language", "python: member is None",
+        "python: getattr(object, 'getModificationDate', object.modified)()",
+        1200, 30, 600, 0, 0, 0, "Accept-Language, Cookie", "", None,
+        0, 1, 0, 0, 1, 1, None, None)
+      self.tic()
+      policy_list = self.portal.caching_policy_manager.listPolicies()
+      policy = [policy[1] for policy in policy_list\
+                  if policy[0] == 'unauthenticated no language'][0]
+      # Check policy has been updated
+      self.assertEqual(policy.getMaxAgeSecs(), 1200)
+      self.assertEqual(policy.getStaleWhileRevalidateSecs(), 30)
+      self.assertEqual(policy.getStaleIfErrorSecs(), 600)
+      for i in xrange(3):
+        path = '/'.join((website_url,
+                         reference,
+                         'img%s.png' % i))
+        response = self.publish(path)
+        self.assertEqual(response.getHeader('Content-Type'), 'image/png')
+        self.assertEqual(response.getHeader('Cache-Control'),
+              'max-age=%d, stale-while-revalidate=%d, stale-if-error=%d, public' % \
+                            (policy.getMaxAgeSecs(),
+                             policy.getStaleWhileRevalidateSecs(),
+                             policy.getStaleIfErrorSecs()))
+    finally:
+      self.portal.caching_policy_manager._policies['unauthenticated no language'] = policy_orig
+      transaction.commit()
 
   def test_PreviewOOoDocumentWithEmbeddedImage(self):
     """Tests html preview of an OOo document with images as extensible content.
