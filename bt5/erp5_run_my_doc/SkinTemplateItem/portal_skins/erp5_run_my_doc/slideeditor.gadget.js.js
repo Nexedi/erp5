@@ -647,8 +647,9 @@
         queue = getTranslationDict(gadget);
 
       if (display_step === DISPLAY_LIST) {
-        // hovered==2 prevent the refresh of the list when passing parameters
-        if (hovered !== -2) {
+        // hovered == -2 prevent the refresh of the list when passing parameters
+        // hovered == -3 used when initiating a drag
+        if (hovered === undefined || hovered > -2) {
           if (dragged === undefined || dragged === -1) {
             return queue
               .push(function (translation_dict) {
@@ -835,7 +836,7 @@
           evt.target.getAttribute('data-slide-index'),
           10
         ),
-        hovered_slide: -2
+        hovered_slide: -3 // Initial value
       });
     }, false, false)
 
@@ -873,12 +874,20 @@
         closest_section.getAttribute('data-slide-index'),
         10
       );
+      if (gadget.state.hovered_slide === -3 &&
+          hovered !== gadget.state.dragged_slide) {
+        // The first entered slide must be the one that is dragged.
+        // Verifying this condition prevents a know bug of Chromium based
+        // browsers when display scaling is on
+        // https://bugs.chromium.org/p/chromium/issues/detail?id=1005175
+        gadget.changeState({
+          hovered_slide: gadget.state.dragged_slide
+        });
+        return;
+      }
       if (!isNaN(hovered)) {
         gadget.changeState({
-          hovered_slide: parseInt(
-            closest_section.getAttribute('data-slide-index'),
-            10
-          )
+          hovered_slide: hovered
         });
       }
     }, false, false)
