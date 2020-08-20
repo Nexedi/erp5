@@ -232,7 +232,7 @@ if letter_format == "pdf":
     letter_theme_css_font_list=letter_theme.get("theme_css_font_list"),
     letter_theme_css_url=letter_theme.get("theme_css_url"),
     letter_template_css_url=letter_theme.get("template_css_url"),
-    letter_source_company=letter_source.get("organisation_title", blank),
+    letter_source_company=letter_source.get("corporate_name", letter_source.get("organisation_title", blank)),
     letter_source_company_corporate_name=letter_source.get("corporate_name", blank),
     letter_source_company_capital=letter_source.get("social_capital", blank),
     letter_source_company_capital_currency=letter_source.get("social_capital_currency", blank),
