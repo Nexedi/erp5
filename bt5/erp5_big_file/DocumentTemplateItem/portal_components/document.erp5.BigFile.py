@@ -19,7 +19,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import removeIContentishInterface
 from erp5.component.document.File import File, _MARKER
-from Products.ERP5Type.BTreeData import BTreeData
+from erp5.component.module.BTreeData import BTreeData
 from ZPublisher.HTTPRequest import FileUpload
 from ZPublisher import HTTPRangeSupport
 from webdav.common import rfc1123_date
