@@ -153,6 +153,7 @@ if letter_format == "html":
     letter_source_postal_code=letter_source.get("postal_code", blank),
     letter_source_city=letter_source.get("city", blank),
     letter_source_country_code=letter_source.get("codification", blank),
+    letter_source_country=letter_source.get("country", blank),
     letter_content = letter_content,
     letter_display_source_adress=letter_display_source_adress,
     letter_display_sender_company_above_recipient = display_sender_company_above_recipient,
