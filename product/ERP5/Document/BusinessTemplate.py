@@ -6554,6 +6554,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.Tool.BaseTool',
       'Products.ERP5Type.interfaces.local_role_generator',
       'Products.ERP5Type.interfaces.local_role_assignor',
+      'Products.ERP5Type.interfaces.action',
+      'Products.ERP5Type.interfaces.action_container',
       'Products.ERP5Type.ERP5Type',
       'Products.ERP5.mixin.expression',
       'Products.ERP5.Document.SQLMethod',
@@ -6562,7 +6564,16 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.UnrestrictedMethod',
       'Products.ERP5Type.ConflictFree',
       'Products.ERP5Type.Workflow',
+      'Products.ERP5Workflow.Document.State',
+      'Products.ERP5Workflow.Document.Variable',
+      'Products.ERP5Workflow.Document.Workflow',
+      'Products.ERP5Workflow.Document.Worklist',
       'Products.ERP5Type.TranslationProviderBase',
+      'Products.ERP5.Interaction',
+      'Products.ERP5.InteractionWorkflow',
+      'Products.ERP5Catalog.Document.ERP5Catalog',
+      'Products.ERP5Catalog.CatalogTool',
+      'Products.ERP5Catalog.Tool.ERP5CatalogTool',
       # Dynamic classes
       'Products.ERP5.interfaces.property_recordable',
       'Products.ERP5.mixin.property_recordable',
@@ -6604,7 +6615,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Type.mixin.matrix',
       'Products.ERP5Type.XMLMatrix',
       'Products.ERP5.interfaces.variated',
-      'Products.ERP5.mixin.Variated',
+      'Products.ERP5.interfaces.variation_range',
+      'Products.ERP5.mixin.variated',
       'Products.ERP5.Document.Resource',
       'Products.ERP5.Document.MetaResource',
       'Products.ERP5.Document.Category',
@@ -6632,6 +6644,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5Security.ERP5UserFactory',
       'Products.ERP5Security.ERP5UserManager',
       ## Upgrader
+      'Products.ERP5.mixin.timer_service',
       'Products.ERP5.Tool.AlarmTool',
       'Products.ERP5.mixin.periodicity',
       'Products.ERP5.Document.Alarm',
@@ -6647,6 +6660,15 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5.Document.CategoryMembershipStateConstraint',
       'Products.ERP5.Document.CategoryRelatedMembershipStateConstraint',
       'Products.ERP5.Document.StringAttributeMatchConstraint',
+      # Upgrader requires access to UI so this cannot be migrated:
+      # * arnau-RD-Components-PreferenceTool-Preference
+      # * arnau-RD-Components-ERP5Form-SelectionTool-MemcachedTool
+      # * arnau-RD-Components-ERP5Form-ERP5Report
+      'Products.ERP5Form.Document.Preference',
+      'Products.ERP5Form.PreferenceTool',
+      'Products.ERP5Form.Form',
+      'Products.ERP5Type.Tool.MemcachedTool',
+      'Products.ERP5Form.Tool.SelectionTool',
       ## TypeProvider
       'Products.ERP5.Tool.SolverTool',
       'Products.ERP5.interfaces.delivery_solver_factory',
@@ -6732,7 +6754,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       'Products.ERP5.interfaces.legacy_extensible_traversable',
       'Products.ERP5Type.JSON',
       'Products.ERP5Type.JSONEncoder',
+      'Products.ERP5Type.Log',
       'Products.ERP5.Variated',
+      'Products.ERP5Form.Report',
       # Monkey patches or used by monkey patches ; Restricted Python
       'Products.ERP5Type.Calendar',
       'Products.ERP5Type.Collections',
