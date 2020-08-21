@@ -86,6 +86,65 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.message_catalog.gettext('Press Release', add=1)
     self.message_catalog.message_edit('Press Release', 'de', 'Pressemeldung', '')
 
+    test_person = self.portal.portal_catalog.getResultValue(
+      portal_type='Person',
+      reference = 'Person For Test Parameter')
+    if not test_person:
+      test_person =  self.portal.person_module.newContent(
+        portal_type='Person',
+        reference='Person For Test Parameter',
+        first_name='Test',
+        last_name='Person Parameter',
+        default_email_url_string='test@info.com',
+        default_telephone_telephone_number="123",
+        default_address_street_address="street 1",
+        default_address_zip_code="456"
+      )
+    self.test_person = test_person
+
+    test_web_page = self.portal.portal_catalog.getResultValue(
+      portal_type='Web Page',
+      reference ='Web Page For Test Parameter')
+    if not test_web_page:
+      test_web_page = self.portal.web_page_module.newContent(
+        portal_type='Web Page',
+        reference='Web Page For Test Parameter')
+    self.test_web_page = test_web_page
+
+    test_organisation = self.portal.portal_catalog.getResultValue(
+      portal_type='Organisation',
+      reference='Organisation For Test Parameter')
+    if not test_organisation:
+      test_organisation = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+        reference='Organisation For Test Parameter',
+        title='Test Organisation Parameter',
+        default_email_url_string='test@test.com',
+        default_telephone_telephone_number="123",
+        default_address_street_address="street 1",
+        default_address_zip_code="456"
+      )
+    self.test_organisation = test_organisation
+
+    test_product = self.portal.portal_catalog.getResultValue(
+      portal_type='Product',
+      reference='Product For Test Parameter')
+    if not test_product:
+      test_product = self.portal.product_module.newContent(
+        portal_type='Product',
+        title='Product Software',
+        reference='Product For Test Parameter')
+    self.test_product = test_product
+    
+    test_web_site = self.portal.portal_catalog.getResultValue(
+      portal_type='Web Site',
+      reference='Web Site For Test Parameter')
+    if not test_web_site:
+      test_web_site = self.portal.web_site_module.newContent(
+        portal_type='Web Site',
+        reference='Web Site For Test Parameter')
+    self.test_web_site = test_web_site
+
     # Activating a system preference if none is activated
     preference = self.getDefaultSystemPreference()
     if preference.getPreferenceState() != "global":
@@ -1578,3 +1637,286 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Release"
       )
     )
+
+  def test_getTemplateProxyParameter_override_person(self):
+    output_dict_list = self.test_person.Base_getTemplateProxyParameter(
+      parameter='override_person',
+      source_data=self.test_person.getTitle())
+    self.assertEqual(len(output_dict_list), 1)
+    output_dict = output_dict_list[0]
+    self.assertEqual(output_dict['postal_code'], self.test_person.getDefaultAddress().getZipCode())
+    self.assertEqual(output_dict['address'], self.test_person.getDefaultAddress().getStreetAddress())
+    self.assertEqual(output_dict['email'], self.test_person.getDefaultEmail().getUrlString())
+    self.assertEqual(output_dict['name'], self.test_person.getTitle())
+    self.assertEqual(output_dict['phone'], self.test_person.getDefaultTelephoneValue().getCoordinateText())
+
+  def test_getTemplateProxyParameter_author(self):
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='author')
+    self.assertEqual(len(output_dict_list), 0)
+    self.test_web_page.edit(
+      contributor_value=self.test_person)
+    self.tic()
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='author')
+    self.assertEqual(len(output_dict_list), 1)
+    output_dict = output_dict_list[0]
+    self.assertEqual(output_dict['postal_code'], self.test_person.getDefaultAddress().getZipCode())
+    self.assertEqual(output_dict['address'], self.test_person.getDefaultAddress().getStreetAddress())
+    self.assertEqual(output_dict['email'], self.test_person.getDefaultEmail().getUrlString())
+    self.assertEqual(output_dict['name'], self.test_person.getTitle())
+    self.assertEqual(output_dict['phone'], self.test_person.getDefaultTelephoneValue().getCoordinateText())
+
+  def test_getTemplateProxyParameter_override_organisation(self):
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='override_organisation',
+      source_data = self.test_organisation.getTitle()
+    )
+    self.assertEqual(len(output_dict_list), 1)
+    output_dict = output_dict_list[0]
+    self.assertEqual(output_dict['postal_code'], self.test_organisation.getDefaultAddress().getZipCode())
+    self.assertEqual(output_dict['address'], self.test_organisation.getDefaultAddress().getStreetAddress())
+    self.assertEqual(output_dict['email'], self.test_organisation.getDefaultEmail().getUrlString())
+    self.assertEqual(output_dict['organisation_title'], self.test_organisation.getTitle())
+    self.assertEqual(output_dict['phone'], self.test_organisation.getDefaultTelephoneValue().getCoordinateText())
+
+  def test_getTemplateProxyParameter_override_organisation_relative_url(self):
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='override_organisation_relative_url',
+      source_data = self.test_organisation.getRelativeUrl()
+    )
+    self.assertEqual(len(output_dict_list), 1)
+    output_dict = output_dict_list[0]
+    self.assertEqual(output_dict['postal_code'], self.test_organisation.getDefaultAddress().getZipCode())
+    self.assertEqual(output_dict['address'], self.test_organisation.getDefaultAddress().getStreetAddress())
+    self.assertEqual(output_dict['email'], self.test_organisation.getDefaultEmail().getUrlString())
+    self.assertEqual(output_dict['organisation_title'], self.test_organisation.getTitle())
+    self.assertEqual(output_dict['phone'], self.test_organisation.getDefaultTelephoneValue().getCoordinateText())
+
+  def test_getTemplateProxyParameter_source(self):
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='source',
+      source_data = self.test_person.getUid()
+    )
+    self.assertEqual(len(output_dict_list), 1)
+    output_dict = output_dict_list[0]
+    self.assertEqual(output_dict['postal_code'], self.test_person.getDefaultAddress().getZipCode())
+    self.assertEqual(output_dict['address'], self.test_person.getDefaultAddress().getStreetAddress())
+    self.assertEqual(output_dict['email'], self.test_person.getDefaultEmail().getUrlString())
+    self.assertEqual(output_dict['name'], self.test_person.getTitle())
+    self.assertEqual(output_dict['phone'], self.test_person.getDefaultTelephoneValue().getCoordinateText())
+
+    self.test_person.edit(
+      career_subordination_value = self.test_organisation)
+    self.tic()
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='source',
+      source_data = self.test_person.getUid()
+    )
+    self.assertEqual(len(output_dict_list), 1)
+    output_dict = output_dict_list[0]
+    self.assertEqual(output_dict['postal_code'], self.test_organisation.getDefaultAddress().getZipCode())
+    self.assertEqual(output_dict['address'], self.test_organisation.getDefaultAddress().getStreetAddress())
+    self.assertEqual(output_dict['email'], self.test_organisation.getDefaultEmail().getUrlString())
+    self.assertEqual(output_dict['organisation_title'], self.test_organisation.getTitle())
+    self.assertEqual(output_dict['phone'], self.test_organisation.getDefaultTelephoneValue().getCoordinateText())
+
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='source',
+      source_data = self.test_organisation.getUid()
+    )
+    self.assertEqual(len(output_dict_list), 1)
+    output_dict = output_dict_list[0]
+    self.assertEqual(output_dict['postal_code'], self.test_organisation.getDefaultAddress().getZipCode())
+    self.assertEqual(output_dict['address'], self.test_organisation.getDefaultAddress().getStreetAddress())
+    self.assertEqual(output_dict['email'], self.test_organisation.getDefaultEmail().getUrlString())
+    self.assertEqual(output_dict['organisation_title'], self.test_organisation.getTitle())
+    self.assertEqual(output_dict['phone'], self.test_organisation.getDefaultTelephoneValue().getCoordinateText())
+
+    self.test_person.edit(
+      career_subordination_value = None)
+    self.tic()
+
+  def test_getTemplateProxyParameter_destination(self):
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='destination',
+      source_data = self.test_person.getUid()
+    )
+    self.assertEqual(len(output_dict_list), 1)
+    output_dict = output_dict_list[0]
+    self.assertEqual(output_dict['postal_code'], self.test_person.getDefaultAddress().getZipCode())
+    self.assertEqual(output_dict['address'], self.test_person.getDefaultAddress().getStreetAddress())
+    self.assertEqual(output_dict['email'], self.test_person.getDefaultEmail().getUrlString())
+    self.assertEqual(output_dict['name'], self.test_person.getTitle())
+    self.assertEqual(output_dict['phone'], self.test_person.getDefaultTelephoneValue().getCoordinateText())
+
+    self.test_person.edit(
+      career_subordination_value = self.test_organisation)
+    self.tic()
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='destination',
+      source_data = self.test_person.getUid()
+    )
+    self.assertEqual(len(output_dict_list), 1)
+    output_dict = output_dict_list[0]
+    self.assertEqual(output_dict['postal_code'], self.test_organisation.getDefaultAddress().getZipCode())
+    self.assertEqual(output_dict['address'], self.test_organisation.getDefaultAddress().getStreetAddress())
+    self.assertEqual(output_dict['email'], self.test_organisation.getDefaultEmail().getUrlString())
+    self.assertEqual(output_dict['organisation_title'], self.test_organisation.getTitle())
+    self.assertEqual(output_dict['phone'], self.test_organisation.getDefaultTelephoneValue().getCoordinateText())
+
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='destination',
+      source_data = self.test_organisation.getUid()
+    )
+    self.assertEqual(len(output_dict_list), 1)
+    output_dict = output_dict_list[0]
+    self.assertEqual(output_dict['postal_code'], self.test_organisation.getDefaultAddress().getZipCode())
+    self.assertEqual(output_dict['address'], self.test_organisation.getDefaultAddress().getStreetAddress())
+    self.assertEqual(output_dict['email'], self.test_organisation.getDefaultEmail().getUrlString())
+    self.assertEqual(output_dict['organisation_title'], self.test_organisation.getTitle())
+    self.assertEqual(output_dict['phone'], self.test_organisation.getDefaultTelephoneValue().getCoordinateText())
+
+    self.test_person.edit(
+      career_subordination_value = None)
+    self.tic()
+
+  def test_getTemplateProxyParameter_organisation(self):
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='organisation',
+    )
+    self.assertEqual(len(output_dict_list), 0)
+    self.test_web_page.edit(
+      follow_up_value = self.test_organisation,
+    )
+    self.tic()
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='organisation',
+    )
+    self.assertEqual(len(output_dict_list), 1)
+    output_dict = output_dict_list[0]
+    self.assertEqual(output_dict['postal_code'], self.test_organisation.getDefaultAddress().getZipCode())
+    self.assertEqual(output_dict['address'], self.test_organisation.getDefaultAddress().getStreetAddress())
+    self.assertEqual(output_dict['email'], self.test_organisation.getDefaultEmail().getUrlString())
+    self.assertEqual(output_dict['organisation_title'], self.test_organisation.getTitle())
+    self.assertEqual(output_dict['phone'], self.test_organisation.getDefaultTelephoneValue().getCoordinateText())
+    self.test_web_page.edit(
+      follow_up_value = None
+    )
+    self.tic()
+
+  def test_getTemplateProxyParameter_person(self):
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='person',
+    )
+    self.assertEqual(len(output_dict_list), 0)
+    self.test_web_page.edit(
+      follow_up_value = self.test_person,
+    )
+    self.tic()
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='person',
+    )
+    self.assertEqual(len(output_dict_list), 1)
+    output_dict = output_dict_list[0]
+    self.assertEqual(output_dict['postal_code'], self.test_person.getDefaultAddress().getZipCode())
+    self.assertEqual(output_dict['address'], self.test_person.getDefaultAddress().getStreetAddress())
+    self.assertEqual(output_dict['email'], self.test_person.getDefaultEmail().getUrlString())
+    self.assertEqual(output_dict['name'], self.test_person.getTitle())
+    self.assertEqual(output_dict['phone'], self.test_person.getDefaultTelephoneValue().getCoordinateText())
+    self.test_web_page.edit(
+      follow_up_value = None
+    )
+    self.tic()
+
+  def test_getTemplateProxyParameter_logo(self):
+    for lang in ['en','fr']:
+      self.test_web_page.edit(language=lang)
+      self.tic()
+      output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+        parameter='logo',
+        source_data='Template.Test.Theme.Logo.Default'
+      )
+      self.assertEqual(len(output_dict_list), 1)
+      output_dict = output_dict_list[0]
+      self.assertEqual(output_dict['reference'], self.portal.image_module.template_test_image_theme_logo_png.getReference())
+      self.assertEqual(output_dict['relative_url'], self.portal.image_module.template_test_image_theme_logo_png.getRelativeUrl())
+      self.assertEqual(output_dict['description'], self.portal.image_module.template_test_image_theme_logo_png.getDescription())
+      self.test_web_page.edit(language='fr')
+    self.tic()
+
+  def test_getTemplateProxyParameter_product(self):
+    self.test_web_page.edit(
+      follow_up_value = self.test_product)
+    self.tic()
+    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='product',
+    )
+    self.assertEqual(len(output_dict_list), 1)
+    output_dict = output_dict_list[0]
+    self.assertEqual(output_dict['title'], self.test_product.getTitle())
+
+  def test_getTemplateProxyParameter_theme(self):
+    self.test_product.edit(
+      title='Product Software')
+    self.test_web_page.edit(
+      follow_up_value = self.test_product)
+    self.tic()
+    output = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='theme',
+    )
+    self.assertEqual(output, self.test_product.getTitle().split(' ')[0].lower())
+
+    self.test_product.edit(
+      title='Product Software xxxx')
+    self.tic()
+    output = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='theme',
+    )
+    self.assertEqual(output, self.test_product.getTitle().split(' ')[0].lower())
+
+    self.test_product.edit(
+      title='Product xxxx')
+    self.tic()
+    output = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='theme',
+    )
+    self.assertEqual(output, None)
+
+  def test_getTemplateProxyParameter_theme_through_web_site(self):
+    self.test_web_site.edit(
+      membership_criterion_category_list = []
+    )
+    self.tic()
+    output = self.test_web_site.Base_getTemplateProxyParameter(
+      parameter='theme',
+    )
+    self.assertEqual(output, None)
+
+    self.test_product.edit(
+      title='Product Software')
+    self.test_web_site.edit(
+      membership_criterion_category_list = ['follow_up/%s' % self.test_product.getRelativeUrl()]
+    )
+    self.tic()
+    output = self.test_web_site.Base_getTemplateProxyParameter(
+      parameter='theme',
+    )
+    self.assertEqual(output, self.test_product.getTitle().split(' ')[0].lower())
+
+    self.test_product.edit(
+      title='Product Software xxxx')
+    self.tic()
+    output = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='theme',
+    )
+    self.assertEqual(output, self.test_product.getTitle().split(' ')[0].lower())
+
+    self.test_product.edit(
+      title='Product xxxx')
+    self.tic()
+    output = self.test_web_page.Base_getTemplateProxyParameter(
+      parameter='theme',
+    )
+    self.assertEqual(output, None)
+
