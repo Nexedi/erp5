@@ -1,6 +1,7 @@
-/*global window, rJS, jIO, Handlebars, RSVP, Blob, SimpleQuery, ComplexQuery, Query*/
+/*global window, rJS, jIO, navigator, Handlebars, RSVP, Blob, SimpleQuery, ComplexQuery, Query*/
 /*jslint indent:2, maxlen: 80, nomen: true */
-(function (window, rJS, jIO, RSVP, SimpleQuery, ComplexQuery, Query) {
+(function (window, rJS, jIO, navigator,
+          RSVP, SimpleQuery, ComplexQuery, Query) {
   "use strict";
   rJS(window)
 
@@ -46,10 +47,6 @@
                   type: "DateTimeField"
                 }
               };
-              result.data.rows[i].value["listbox_uid:list"] = {
-                key: "listbox_uid:list",
-                value: 2713
-              };
             }
           }
           return result;
@@ -67,7 +64,7 @@
         portal_type = gadget.props.portal_type,
         parent_relative_url = gadget.props.parent_relative_url;
 
-      return RSVP.Queue()
+      return new RSVP.Queue()
         .push(function () {
           return gadget.getDeclaredGadget(scope);
         })
@@ -126,7 +123,7 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .ready(function (g) {
-      return RSVP.Queue()
+      return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
             g.getSetting('portal_type'),
@@ -140,10 +137,8 @@
           };
         });
     })
-
     .declareMethod("render", function () {
       var gadget = this;
-      this.getDeclaredGadget('form_list');
 
       return gadget.getSetting('jio_storage_name')
         .push(function (result) {
@@ -151,8 +146,22 @@
             return gadget.redirect({command: 'display',
                                     options: {page: 'ojs_configurator'}});
           }
+          if ('serviceWorker' in navigator) {
+            if (navigator.serviceWorker.controller) {
+              return jIO.util.ajax({
+                url: 'hasSharedData'
+              });
+            }
+          }
         })
-        .push(function () {
+        .push(function (result) {
+          if (result) {
+            if (result.target.response === 'true') {
+              return gadget.redirect({command: 'display', options: {
+                page: 'ojs_smart_assistant_upload_shared_file'
+              }});
+            }
+          }
           return RSVP.all([
             gadget.getDeclaredGadget('form_view_upload_audio'),
             gadget.getDeclaredGadget('form_view_image_text'),
@@ -328,7 +337,6 @@
             page_icon: "exchange"
           });
         });
-
     });
 
-}(window, rJS, jIO, RSVP, SimpleQuery, ComplexQuery, Query));
+}(window, rJS, jIO, navigator, RSVP, SimpleQuery, ComplexQuery, Query));
