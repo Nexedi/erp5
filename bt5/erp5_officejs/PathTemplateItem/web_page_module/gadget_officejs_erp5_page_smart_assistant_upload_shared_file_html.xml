@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -59,14 +59,32 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>creators</string> </key>
+            <value>
+              <tuple>
+                <string>cedric.le.ninivin</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_smart_assistant_home.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_smart_assistant_upload_shared_file.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -76,17 +94,34 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_erp5_page_smart_assistant_home_js</string> </value>
+            <value> <string>gadget_officejs_erp5_page_smart_assistant_upload_shared_file_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>modification_date</string> </key>
             <value>
-              <none/>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1455284352.14</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
             </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -96,7 +131,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget Smart Assistant JS</string> </value>
+            <value> <string>Gadget Smart Assistant Upload Shared File</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -184,7 +225,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1597277315.11</float>
+                              <float>1597277331.1</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -233,7 +274,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>986.52650.40049.32887</string> </value>
+                      <value> <string>986.10894.3583.19575</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -251,7 +292,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1600864455.71</float>
+                              <float>1598361555.33</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -312,7 +353,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1562158825.48</float>
+                              <float>1597236250.78</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
