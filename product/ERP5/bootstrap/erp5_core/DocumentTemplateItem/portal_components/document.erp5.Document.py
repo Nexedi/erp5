@@ -37,7 +37,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Utils import deprecated, guessEncodingFromText
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
+from erp5.component.tool.ContributionTool import MAX_REPEAT
 from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
 from AccessControl import Unauthorized
 import zope.interface

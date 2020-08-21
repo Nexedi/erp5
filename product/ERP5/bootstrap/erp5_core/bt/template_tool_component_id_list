@@ -2,6 +2,7 @@ tool.erp5.AcknowledgementTool
 tool.erp5.BuilderTool
 tool.erp5.CallableTool
 tool.erp5.ContributionRegistryTool
+tool.erp5.ContributionTool
 tool.erp5.DeliveryTool
 tool.erp5.DiffTool
 tool.erp5.DomainTool

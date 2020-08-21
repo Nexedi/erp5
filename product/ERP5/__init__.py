@@ -43,7 +43,7 @@ product_path = package_home( globals() )
 # Define object classes and tools
 from Tool import CategoryTool, IdTool, TemplateTool,\
                  AlarmTool,\
-                 TrashTool, ContributionTool,\
+                 TrashTool,\
                  SolverTool
 import ERP5Site
 from Document import PythonScript, SQLMethod
@@ -56,7 +56,6 @@ portal_tools = ( CategoryTool.CategoryTool,
                  TemplateTool.TemplateTool,
                  AlarmTool.AlarmTool,
                  TrashTool.TrashTool,
-                 ContributionTool.ContributionTool,
                  SolverTool.SolverTool,
                 )
 content_classes = ()

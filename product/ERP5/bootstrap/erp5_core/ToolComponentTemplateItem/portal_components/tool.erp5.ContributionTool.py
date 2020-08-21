@@ -29,7 +29,6 @@
 
 import cStringIO
 import re
-import socket
 import urllib2, urllib
 import urlparse
 from cgi import parse_header
@@ -48,66 +47,8 @@ from AccessControl import Unauthorized
 from DateTime import DateTime
 import warnings
 
-# Install openers
-import dircache
-import mimetypes, mimetools
-from email.utils import formatdate
-class DirectoryFileHandler(urllib2.FileHandler):
-    """
-    Extends the file handler to provide an HTML
-    representation of local directories.
-    """
-
-    # Use local file or FTP depending on form of URL
-    def file_open(self, req):
-        url = req.get_selector()
-        if url[:2] == '//' and url[2:3] != '/':
-            req.type = 'ftp'
-            return self.parent.open(req)
-        else:
-            return self.open_local_file(req)
-
-    # not entirely sure what the rules are here
-    def open_local_file(self, req):
-        host = req.get_host()
-        file = req.get_selector()
-        localfile = urllib2.url2pathname(file)
-        stats = os.stat(localfile)
-        size = stats.st_size
-        modified = formatdate(stats.st_mtime, usegmt=True)
-        mtype = mimetypes.guess_type(file)[0]
-        headers = mimetools.Message(cStringIO.StringIO(
-            'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %
-            (mtype or 'text/plain', size, modified)))
-        if host:
-            host, port = urllib.splitport(host)
-        if not host or \
-           (not port and socket.gethostbyname(host) in self.get_names()):
-            try:
-              file_list = dircache.listdir(localfile)
-              s = cStringIO.StringIO()
-              s.write('<html><head><base href="%s"/></head><body>' % ('file:' + file))
-              s.write('<p>Directory Content:</p>')
-              for f in file_list:
-                s.write('<p><a href="%s">%s</a></p>\n' % (urllib.quote(f), f))
-              s.write('</body></html>')
-              s.seek(0)
-              headers = mimetools.Message(cStringIO.StringIO(
-                  'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %
-                  ('text/html', size, modified)))
-              return urllib2.addinfourl(s, headers, 'file:' + file)
-            except OSError:
-              return urllib2.addinfourl(open(localfile, 'rb'),
-                                        headers, 'file:'+file)
-        raise urllib2.URLError('file not on local host')
-opener = urllib2.build_opener(DirectoryFileHandler)
-urllib2.install_opener(opener)
-
 # Global parameters
-TEMP_NEW_OBJECT_KEY = '_v_new_object'
 MAX_REPEAT = 10
-
-_marker = []  # Create a new marker object.
 
 class ContributionTool(BaseTool):
   """
@@ -254,7 +195,7 @@ class ContributionTool(BaseTool):
         filename=filename, content_type=content_type)
       if not (container is None or container.isModuleType() or
               container.getTypeInfo().allowType(portal_type)):
-          portal_type = 'Embedded File'
+        portal_type = 'Embedded File'
 
     if container is None:
       # If the portal_type was provided, we can go faster
@@ -410,6 +351,7 @@ class ContributionTool(BaseTool):
     return self.getPropertyDictFromFilename(filename)
 
   # WebDAV virtual folder support
+  # pylint: disable=arguments-differ,redefined-builtin
   def _setObject(self, id, ob, portal_type=None, user_login=None,
                  container=None, discover_metadata=True, filename=None,
                  input_parameter_dict=None):
@@ -607,7 +549,7 @@ class ContributionTool(BaseTool):
       try:
         url = content.asURL()
         file_object, filename, content_type = self._openURL(url)
-      except urllib2.URLError, error:
+      except urllib2.URLError:
         if repeat == 0 or not batch_mode:
           # XXX - Call the extendBadURLList method,--NOT Implemented--
           raise
@@ -656,7 +598,7 @@ class ContributionTool(BaseTool):
       elif document.getCrawlingDepth() > 0:
         # If this is an index document, stop crawling if crawling_depth is 0
         document.activate().crawlContent()
-    except urllib2.HTTPError, error:
+    except urllib2.HTTPError:
       if repeat == 0 or not batch_mode:
         # here we must call the extendBadURLList method,--NOT Implemented--
         # which had to add this url to bad URL list, so next time we avoid

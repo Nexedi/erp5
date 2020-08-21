@@ -91,6 +91,7 @@ from Products.ERP5Type.patches import MimetypesRegistry
 from Products.ERP5Type.patches import users
 from Products.ERP5Type.patches import Publish
 from Products.ERP5Type.patches import WSGITask
+from Products.ERP5Type.patches import urllib_opener
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
