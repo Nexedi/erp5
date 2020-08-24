@@ -28,16 +28,14 @@
 
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile
+from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Cache import CachingMethod, clearCache
-from Products.ERP5Catalog import _dtmldir
-from zLOG import LOG, INFO
 
 class ArchiveTool(BaseTool):
   """
-  Archive Tool contains archive objects
+  Archive Tool stores archives object which are predicate that tells in
+  which catalog an object must go.
   """
   title = 'Archive Tool'
   id = 'portal_archives'
@@ -49,9 +47,6 @@ class ArchiveTool(BaseTool):
   security = ClassSecurityInfo()
 
   security.declareProtected(Permissions.ManagePortal, 'manage_overview' )
-
-  manage_overview = DTMLFile( 'explainArchiveTool', _dtmldir)
-
 
   def getSQLCatalogIdList(self):
     """
