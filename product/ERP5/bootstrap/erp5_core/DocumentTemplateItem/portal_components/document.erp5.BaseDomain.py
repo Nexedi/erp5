@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions
-from Products.ERP5.Document.Domain import Domain
+from erp5.component.document.Domain import Domain
 
 class BaseDomain(Domain):
   """

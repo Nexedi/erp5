@@ -113,7 +113,7 @@ class Domain(Predicate, MetaNode, MetaResource):
     return tmp_domain_generator.getDomainGeneratorList(depth=depth, klass=klass, script=script, parent=self)
 
   security.declareProtected( Permissions.AccessContentsInformation, 'generateTempDomain' )
-  def generateTempDomain(self, id):
+  def generateTempDomain(self, id): # pylint: disable=redefined-builtin
     """
     We generate temp domain here because we must set an aquisition wrapper
     """
@@ -132,8 +132,8 @@ class Domain(Predicate, MetaNode, MetaResource):
     return self.portal_domains.getChildDomainValueList(parent, **kw)
 
   # Experimental - WebDAV browsing support - ask JPS
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'experimental_listDAVObjects')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'experimental_listDAVObjects')
   def experimental_listDAVObjects(self):
     result = self.objectValues(portal_type = self.getPortalType())
     result.extend(self.portal_catalog(selection_domain = self))

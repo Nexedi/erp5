@@ -29,7 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Domain import Domain
+from erp5.component.document.Domain import Domain
 from Products.ERP5.Document.WebSection import WebSectionTraversalHook
 from erp5.component.mixin.DocumentExtensibleTraversableMixin import DocumentExtensibleTraversableMixin
 from Acquisition import aq_base, aq_inner
