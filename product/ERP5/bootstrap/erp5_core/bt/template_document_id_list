@@ -30,6 +30,7 @@ document.erp5.PackingList
 document.erp5.Path
 document.erp5.PredicateGroup
 document.erp5.PredicateMatrix
+document.erp5.Preference
 document.erp5.Project
 document.erp5.ScriptConstraint
 document.erp5.SimulationMovement

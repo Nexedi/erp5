@@ -2133,7 +2133,6 @@ class ERP5Generator(PortalGenerator):
 
     # Add ERP5Form Tools
     addERP5Tool(p, 'portal_selections', 'Selection Tool')
-    addERP5Tool(p, 'portal_preferences', 'Preference Tool')
 
     # Add Message Catalog
     if not 'Localizer' in p.objectIds():

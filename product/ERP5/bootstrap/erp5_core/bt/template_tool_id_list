@@ -10,6 +10,7 @@ portal_introspections
 portal_notifications
 portal_orders
 portal_password
+portal_preferences
 portal_rules
 portal_sessions
 portal_simulation

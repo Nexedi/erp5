@@ -33,7 +33,49 @@ from Products.ERP5Type.dynamic.accessor_holder import AccessorHolderType
 
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Form.PreferenceTool import PreferenceMethod
+
+class func_code: pass
+
+from MethodObject import Method
+from Products.ERP5Type.Cache import CachingMethod
+_marker = object()
+class PreferenceMethod(Method):
+  """ A method object that lookup the attribute on preferences. """
+  # This is required to call the method form the Web
+  func_code = func_code()
+  func_code.co_varnames = ('self', )
+  func_code.co_argcount = 1
+  func_defaults = ()
+
+  def __init__(self, attribute, default):
+    self.__name__ = self._preference_getter = attribute
+    self._preference_default = default
+    self._preference_cache_id = 'PreferenceTool.CachingMethod.%s' % attribute
+
+  def __call__(self, instance, default=_marker, *args, **kw):
+    def _getPreference(default, *args, **kw):
+      # XXX: sql_catalog_id is passed when calling getPreferredArchive
+      # This is inconsistent with regular accessor API, and indicates that
+      # there is a design problem in current archive API.
+      sql_catalog_id = kw.pop('sql_catalog_id', None)
+      for pref in instance._getSortedPreferenceList(sql_catalog_id=sql_catalog_id):
+        value = getattr(pref, self._preference_getter)(_marker, *args, **kw)
+        # XXX Due to UI limitation, null value is treated as if the property
+        #     was not defined. The drawback is that it is not possible for a
+        #     user to mask a non-null global value with a null value.
+        if value not in (_marker, None, '', (), []):
+          return value
+      if default is _marker:
+        return self._preference_default
+      return default
+    # XXX-arnau: This should probably not be a CachingMethod(): if Property
+    #            definition changes, a reset will be performed but this will
+    #            take effect until cache is reset...
+    _getPreference = CachingMethod(_getPreference,
+            id='%s.%s' % (self._preference_cache_id,
+                          instance.getPortalObject().portal_preferences._getCacheId()),
+            cache_factory='erp5_ui_long')
+    return _getPreference(default, *args, **kw)
 
 def _generatePreferenceToolAccessorHolder(portal_type_name,
                                           accessor_holder_list):
