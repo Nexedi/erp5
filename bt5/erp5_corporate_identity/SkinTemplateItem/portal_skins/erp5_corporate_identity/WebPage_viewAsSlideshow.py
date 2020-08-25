@@ -105,13 +105,8 @@ def removeLineBreaks(my_content):
 def splitMultipleDetails(my_content):
   for slide in getSlideDetailsList(my_content):
     detail_list = getDetailsList(slide)
-    detail_list_len = len(detail_list)
-    if detail_list_len > 1:
-      counter = 0
-      for detail in detail_list:
-        counter += 1
-        if counter < (detail_list_len):
-          my_content = my_content.replace(detail, ''.join([detail, details_separator]))
+    for detail in detail_list[:-1]:
+      my_content = my_content.replace(detail, ''.join([detail, details_separator]))
   return my_content
 
 #def removeSlidesWithoutDetailsFromNotes(my_content):
@@ -143,11 +138,12 @@ def removeEmptyDetails(my_content):
   return content
 
 def addLastSlide(my_last_slide):
+  # XXXX This condition is not accurate
   if my_last_slide.count("<div") != 2:
-    last_slide_relative_url = pref.getPreferredCorporateIdentityTemplateSlideLastSlideRelativeUrl() or None
+    last_slide_relative_url = pref.getPreferredCorporateIdentityTemplateSlideLastSlideRelativeUrl()
     if last_slide_relative_url:
       # try:
-      last_slide = doc.restrictedTraverse(last_slide_relative_url) or None
+      last_slide = doc.restrictedTraverse(last_slide_relative_url)
       if last_slide is not None:
         return last_slide.getTextContent()
       #except AttributeError:
@@ -183,8 +179,6 @@ if doc_is_slideshow is None:
   doc_upgraded_content = setH1AndH2AsSlideHeaders(doc_upgraded_content)
   doc_upgraded_content = removeLineBreaks(doc_upgraded_content)
 
-  doc_content = blank
-  last_slide_content = blank
   section_start = '<section>'
   details_start = '<details open="open">'
   details_end = '</details>'
@@ -204,6 +198,7 @@ if doc_is_slideshow is None:
   # fake_slide_list will be <h1>,<content>,<h1>,<content> so we need to go
   # over two items at a time
   doc_slide_iter = iter(fake_slide_list)
+  doc_content = blank
   for x in doc_slide_iter:
     slide_header = x
 
@@ -323,8 +318,8 @@ if getDetails(doc_content) > -1:
       # XXX split content above 1600 chars into multiple details tags?
       doc_content = doc_content.replace(slide, details)
 
-# ======================== Format: html/mhtml ==================================
-if doc_format == "html": #or doc_format == "mhtml":
+# ======================== Format: html ==================================
+if doc_format == "html":
   doc_output = doc.WebPage_createSlideshow(
     doc_format=doc_format,
     doc_theme=doc_theme.get("theme"),
@@ -343,25 +338,21 @@ if doc_format == "html": #or doc_format == "mhtml":
     doc_content=doc_content
   )
 
-  if doc_format == "html":
-    return doc.Base_finishWebPageCreation(
-      doc_download=doc_download,
-      doc_save=doc_save,
-      doc_version=doc_version,
-      doc_title=doc_title,
-      doc_relative_url=doc_relative_url,
-      doc_aggregate_list=doc_aggregate_list,
-      doc_language=doc_language,
-      doc_modification_date=doc_modification_date,
-      doc_reference=doc_reference,
-      doc_full_reference=doc_full_reference,
-      doc_html_file=doc_output
-    )
-  if doc_format == "mhtml":
-    context.REQUEST.RESPONSE.setHeader("Content-Type", "text/html;")
-    return doc.Base_convertHtmlToSingleFile(doc_output, allow_script=True)
+  return doc.Base_finishWebPageCreation(
+    doc_download=doc_download,
+    doc_save=doc_save,
+    doc_version=doc_version,
+    doc_title=doc_title,
+    doc_relative_url=doc_relative_url,
+    doc_aggregate_list=doc_aggregate_list,
+    doc_language=doc_language,
+    doc_modification_date=doc_modification_date,
+    doc_reference=doc_reference,
+    doc_full_reference=doc_full_reference,
+    doc_html_file=doc_output
+  )
 
-# ============================= Format: pdf ====================================
+# ============================= Format: pdf/mhtml ====================================
 if doc_format == "pdf" or doc_format == "mhtml":
   doc_slideshow_footer = doc.WebPage_createSlideshowFooter(
     doc_format=doc_format,
@@ -390,20 +381,9 @@ if doc_format == "pdf" or doc_format == "mhtml":
     doc_css=doc_css,
     doc_orientation="ci-orientation-portrait" if doc_display_notes else "ci-corientation-landscape"
   )
-
   # outputting just the content requires to drop wrapping <divs> (reveal/slides)
   # and add extra css to recreate the same layout. so a separate output=content
   # instead of defaulting to None
-  # doc_slideshow_content = doc.WebPage_createSlideshowContent(
-  #  doc_format=doc_format,
-  #  doc_theme=doc_theme.get("theme"),
-  #  doc_title=doc_title,
-  #  doc_language=doc_language,
-  #  doc_template_css_url=doc_theme.get("template_css_url"),
-  #  doc_theme_css_font_list=doc_theme.get("theme_css_font_list"),
-  #  doc_theme_css_url=doc_theme.get("theme_css_url"),
-  #  doc_content=doc_content
-  #)
   if doc_display_notes:
     doc_slideshow_notes = doc.WebPage_createSlideshowNotes(
       doc_format=doc_format,
