@@ -128,7 +128,9 @@ url_list = [
   "gadget_officejs_jio_smart_assistant_text_view.js",
   "gadget_officejs_jio_smart_assistant_text_view.html",
   "gadget_erp5_page_ojs_smart_assistant_home.html",
-  "gadget_erp5_page_ojs_smart_assistant_home.js"
+  "gadget_erp5_page_ojs_smart_assistant_home.js",
+  "gadget_erp5_page_ojs_smart_assistant_upload_shared_file.html",
+  "gadget_erp5_page_ojs_smart_assistant_upload_shared_file.js"
 ]
 
 return url_list
