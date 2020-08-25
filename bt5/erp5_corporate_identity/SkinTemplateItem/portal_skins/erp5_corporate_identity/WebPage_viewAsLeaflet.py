@@ -42,7 +42,7 @@ leaflet_format = kw.get('format') or 'html'
 leaflet_display_svg = kw.get('display_svg') or "png"
 leaflet_download = int(kw.get('document_download') or 0)
 leaflet_save = int(kw.get('document_save') or 0)
-leaflet_display_side = int(kw.get('display_side') or 1)
+leaflet_display_side = int(kw.get('display_side') or 0)
 
 override_leaflet_header_title = kw.get('override_leaflet_header_title')
 override_source_person_title = kw.get('override_source_person_title', None)

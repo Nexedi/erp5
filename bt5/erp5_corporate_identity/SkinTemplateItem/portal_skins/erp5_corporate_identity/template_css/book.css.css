@@ -532,7 +532,7 @@ NOTE: logos will disappear in wkhtmltopdf if they go beyond the available space
 .ci-book ul li,
 .ci-book ol li {
   padding-left: 16px;
-  text-indent: -24px;
+  /*text-indent: -24px;*/
 }
 .ci-book ul li:before {
   content: "•";
