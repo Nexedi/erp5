@@ -1,2 +1,5 @@
 portal_gadgets/test_wizard_gadget
 portal_gadgets/test_wizard_gadget/**
+portal_types/Test Page Module/slideshow_editor_view
+portal_types/Test Page/slideshow_editor_view
+portal_types/Test Page/slideshow_editor_view_source
