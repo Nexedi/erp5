@@ -18,6 +18,7 @@ portal_types/Web Page/text_editor_view
 portal_types/Web Script/codemirror_view
 web_page_module/dhtmlx_gantt_*
 web_page_module/fb_sdk_js
+web_page_module/gadget_erp5_page_tab_officejs_*
 web_page_module/gadget_field_*
 web_page_module/gadget_officejs_*
 web_page_module/jio_*
