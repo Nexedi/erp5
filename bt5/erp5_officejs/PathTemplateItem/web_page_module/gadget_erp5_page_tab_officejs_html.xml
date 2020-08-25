@@ -62,14 +62,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -80,16 +72,8 @@
             <value> <string>text/html</string> </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_slideshow_editor_router.html</string> </value>
+            <value> <string>gadget_erp5_page_tab_officejs.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -99,30 +83,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_slideshow_editor_router_html</string> </value>
+            <value> <string>gadget_erp5_page_tab_officejs_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value> <string>en</string> </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.21</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -136,13 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Slideshow Editor router Gadget</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget Officejs Tab</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -230,7 +189,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1593525430.51</float>
+                              <float>1598262955.42</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -279,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>986.5246.62595.53606</string> </value>
+                      <value> <string>986.9517.38304.41984</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -297,7 +256,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1598260519.84</float>
+                              <float>1598284731.51</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -358,7 +317,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1593525264.08</float>
+                              <float>1598262940.09</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

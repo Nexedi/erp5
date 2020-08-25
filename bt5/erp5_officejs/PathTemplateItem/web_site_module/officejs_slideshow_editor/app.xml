@@ -680,7 +680,7 @@ WebSection_getSlideshowEditorPrecacheManifestList</string> </value>
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>985.48901.24799.34611</string> </value>
+                      <value> <string>986.3732.5004.21060</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -698,7 +698,7 @@ WebSection_getSlideshowEditorPrecacheManifestList</string> </value>
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1596706956.07</float>
+                              <float>1598350191.73</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
