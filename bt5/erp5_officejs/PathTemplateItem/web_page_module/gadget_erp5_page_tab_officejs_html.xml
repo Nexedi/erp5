@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -62,28 +62,18 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_form_view.js</string> </value>
+            <value> <string>gadget_erp5_page_tab_officejs.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,36 +83,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_form_view_js</string> </value>
+            <value> <string>gadget_erp5_page_tab_officejs_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284351.49</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -132,13 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget OfficeJS Form View JS</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget Officejs Tab</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -226,7 +189,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1554912716.44</float>
+                              <float>1598262955.42</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -275,7 +238,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>985.28933.8790.47291</string> </value>
+                      <value> <string>986.9517.38304.41984</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -293,7 +256,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1598262754.73</float>
+                              <float>1598284731.51</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -354,7 +317,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1554830050.17</float>
+                              <float>1598262940.09</float>
                               <string>UTC</string>
                             </tuple>
                           </state>

@@ -62,28 +62,14 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_form_view.js</string> </value>
+            <value> <string>gadget_erp5_page_tab_officejs.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,32 +79,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_form_view_js</string> </value>
+            <value> <string>gadget_erp5_page_tab_officejs_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284351.49</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -132,13 +97,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget OfficeJS Form View JS</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget Officejs Tab JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -226,7 +185,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1554912716.44</float>
+                              <float>1598262932.48</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -275,7 +234,7 @@
                   </item>
                   <item>
                       <key> <string>serial</string> </key>
-                      <value> <string>985.28933.8790.47291</string> </value>
+                      <value> <string>986.9659.19043.24746</string> </value>
                   </item>
                   <item>
                       <key> <string>state</string> </key>
@@ -293,7 +252,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1598262754.73</float>
+                              <float>1598342762.49</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
@@ -354,7 +313,7 @@
                           </tuple>
                           <state>
                             <tuple>
-                              <float>1554830050.17</float>
+                              <float>1598262894.14</float>
                               <string>UTC</string>
                             </tuple>
                           </state>
