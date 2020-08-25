@@ -33,7 +33,7 @@ if source is None:
     source_person_list = context.Base_getTemplateProxyParameter(parameter="author", source_data=None) or []
   if not source_person_list and getattr(context, 'getSourceDecisionValue', None):
     source_person_candidate = context.getSourceDecisionValue()
-    if source_person_candidate.getPortalType() == "Person":
+    if source_person_candidate and source_person_candidate.getPortalType() == "Person":
       source_person_list = [source_person_candidate]
   if source_person_list:
     source_person = source_person_list[0]
@@ -59,7 +59,7 @@ if source is None:
         break
   if not source_organisation_list and getattr(context, 'getSourceDecisionValue', None):
     source_organisation_candidate = context.getSourceDecisionValue()
-    if source_organisation_candidate.getPortalType() == "Organisation":
+    if source_organisation_candidate and source_organisation_candidate.getPortalType() == "Organisation":
       source_organisation_list = [source_organisation_candidate]
   if source_organisation_list:
     source_organisation = source_organisation_list[0]
