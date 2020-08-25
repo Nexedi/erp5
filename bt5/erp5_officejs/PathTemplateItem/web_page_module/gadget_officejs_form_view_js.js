@@ -288,7 +288,7 @@
       // render the header
         .push(function () {
           var url_for_parameter_list = [
-            {command: 'change', options: {page: "tab"}},
+            {command: 'change', options: {page: "tab_officejs"}},
             {command: 'change', options: {page: "action_officejs",
                                           jio_key: options.jio_key,
                                           portal_type: options.portal_type}},
