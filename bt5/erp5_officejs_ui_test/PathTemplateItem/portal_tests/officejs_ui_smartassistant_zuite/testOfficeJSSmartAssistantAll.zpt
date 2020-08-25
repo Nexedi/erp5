@@ -383,6 +383,11 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_your_text_content']//iframe</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
   <td>//input[@name='action_confirm' and @value='Create Event']</td>
   <td></td>
 </tr>
