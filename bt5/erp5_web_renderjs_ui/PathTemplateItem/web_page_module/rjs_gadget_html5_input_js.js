@@ -29,6 +29,7 @@
         type: options.type || 'text',
         title: options.title,
         focus: options.focus,
+        error_text: options.error_text || "",
         step: options.step,
         hidden: options.hidden,
         trim: options.trim || false,
@@ -87,7 +88,7 @@
         textarea.readonly = false;
       }
 
-      if (this.state.hidden) {
+      if (this.state.hidden && !modification_dict.error_text) {
         textarea.hidden = true;
       } else {
         textarea.hidden = false;
