@@ -86,65 +86,6 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     self.message_catalog.gettext('Press Release', add=1)
     self.message_catalog.message_edit('Press Release', 'de', 'Pressemeldung', '')
 
-    test_person = self.portal.portal_catalog.getResultValue(
-      portal_type='Person',
-      reference = 'Person For Test Parameter')
-    if not test_person:
-      test_person =  self.portal.person_module.newContent(
-        portal_type='Person',
-        reference='Person For Test Parameter',
-        first_name='Test',
-        last_name='Person Parameter',
-        default_email_url_string='test@info.com',
-        default_telephone_telephone_number="123",
-        default_address_street_address="street 1",
-        default_address_zip_code="456"
-      )
-    self.test_person = test_person
-
-    test_web_page = self.portal.portal_catalog.getResultValue(
-      portal_type='Web Page',
-      reference ='Web Page For Test Parameter')
-    if not test_web_page:
-      test_web_page = self.portal.web_page_module.newContent(
-        portal_type='Web Page',
-        reference='Web Page For Test Parameter')
-    self.test_web_page = test_web_page
-
-    test_organisation = self.portal.portal_catalog.getResultValue(
-      portal_type='Organisation',
-      reference='Organisation For Test Parameter')
-    if not test_organisation:
-      test_organisation = self.portal.organisation_module.newContent(
-        portal_type='Organisation',
-        reference='Organisation For Test Parameter',
-        title='Test Organisation Parameter',
-        default_email_url_string='test@test.com',
-        default_telephone_telephone_number="123",
-        default_address_street_address="street 1",
-        default_address_zip_code="456"
-      )
-    self.test_organisation = test_organisation
-
-    test_product = self.portal.portal_catalog.getResultValue(
-      portal_type='Product',
-      reference='Product For Test Parameter')
-    if not test_product:
-      test_product = self.portal.product_module.newContent(
-        portal_type='Product',
-        title='Product Software',
-        reference='Product For Test Parameter')
-    self.test_product = test_product
-    
-    test_web_site = self.portal.portal_catalog.getResultValue(
-      portal_type='Web Site',
-      reference='Web Site For Test Parameter')
-    if not test_web_site:
-      test_web_site = self.portal.web_site_module.newContent(
-        portal_type='Web Site',
-        reference='Web Site For Test Parameter')
-    self.test_web_site = test_web_site
-
     # Activating a system preference if none is activated
     preference = self.getDefaultSystemPreference()
     if preference.getPreferenceState() != "global":
@@ -299,7 +240,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       )
       self.tic()
     else:
-      test_page = getattr(self.portal.web_page_module, id1)
+      test_page = getattr(self.portal.web_page_module, id1, None) or getattr(self.portal.document_module, id1)
 
     pdf_kw = dict(
       reference=test_page.getReference(),
@@ -441,6 +382,30 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       )
     )
 
+  def test_pdfPresentationOdpToSlideView(self):
+    self.runPdfTestPattern(
+      "template_test_presentation_odp",
+      "template_test_presentaion_odp_slide_view_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=3,
+        test_method="Presentation_viewAsSlideshow",
+        format="pdf"
+      )
+    )
+
+  def test_pdfPresentationPptxToSlideView(self):
+    self.runPdfTestPattern(
+      "template_test_presentation_pptx",
+      "template_test_presentaion_pptx_slide_view_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=3,
+        test_method="Presentation_viewAsSlideshow",
+        format="pdf"
+      )
+    )
+
   @changeSkin('Slide')
   def test_pdfSlideShow(self):
     """
@@ -461,6 +426,42 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         format="pdf"
       )
     )
+
+  @changeSkin('Slide')
+  def test_pdfConvertToSlideView(self):
+    self.runPdfTestPattern(
+      "template_test_convert_to_slideview",
+      "template_test_convert_to_slideview_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=2,
+        use_skin="Slide",
+        test_method="WebPage_exportAsSlideshow",
+        format="pdf"
+      )
+    )
+
+  @changeSkin('Slide')
+  def test_pdfAddLastSlide(self):
+    self.portal.portal_preferences.default_site_preference.edit(
+      preferred_corporate_identity_template_slide_last_slide_relative_url='web_page_module/template_test_last_slide_html'
+    )
+    self.tic()
+    self.runPdfTestPattern(
+      "template_test_convert_to_slideview",
+      "template_test_last_view_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=4,
+        use_skin="Slide",
+        test_method="WebPage_exportAsSlideshow",
+        format="pdf"
+      )
+    )
+    self.portal.portal_preferences.default_site_preference.edit(
+      preferred_corporate_identity_template_slide_last_slide_relative_url=''
+    )
+    self.tic()
 
   @changeSkin('Slide')
   def test_pdfSlideShowForAnonymous(self):
@@ -633,7 +634,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       "template_test_letter_output_expected_001_en_html",
       **dict(
         test_method="WebPage_exportAsLetter",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
@@ -652,7 +654,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       "template_test_letter_output_expected_002_en_html",
       **dict(
         test_method="WebPage_exportAsLetter",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
@@ -677,7 +680,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         override_destination_person_title="Test Association Member",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -718,7 +722,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         page_number=0,
         test_method="WebPage_exportAsLetter",
         format="pdf",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
@@ -740,7 +745,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         page_number=0,
         test_method="WebPage_exportAsLetter",
         format="pdf",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
@@ -768,7 +774,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         override_destination_person_title="Test Association Member",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -792,7 +799,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "right",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -817,7 +825,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "right",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -841,7 +850,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "left",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -866,7 +876,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "left",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -891,7 +902,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "right",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -917,7 +929,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "right",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -942,7 +955,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "left",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -968,7 +982,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "left",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -995,7 +1010,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_position_in_letter = "left",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -1021,7 +1037,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Letter",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
     self.portal.portal_preferences.default_site_preference.edit(
@@ -1052,7 +1069,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_relative_url="organisation_module/template_test_organisation",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
       )
     )
 
@@ -1079,7 +1097,30 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         destination_relative_url="person_module/template_test_no_member",
         subfield_field_override_date_year="1999",
         subfield_field_override_date_month="12",
-        subfield_field_override_date_day="31"
+        subfield_field_override_date_day="31",
+        display_head=1
+      )
+    )
+
+  @changeSkin('Letter')
+  def test_pdfLetterNotDisplayHead(self):
+    """
+      Test:
+      - Web Page as Letter
+      - override date (needed to match output files)
+      - test multi-page letter with hidden header on first page
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_letter_input_004_de_html",
+      "template_test_letter_not_display_header_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLetter",
+        format="pdf",
+        display_head=0,
+        use_skin="Letter"
       )
     )
 
@@ -1121,7 +1162,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       **dict(
         page_number=0,
         test_method="WebPage_printAsLetter",
-        use_skin="Letter"
+        use_skin="Letter",
+        display_head=1
       )
     )
 
@@ -1138,7 +1180,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       "template_test_leaflet_output_expected_001_en_html",
       **dict(
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
@@ -1158,7 +1201,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         override_source_person_title="Test Recipient",
         override_source_organisation_title="Test Association",
         override_leaflet_header_title="Couscous",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
@@ -1175,7 +1219,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       "template_test_leaflet_output_expected_003_de_html",
       **dict(
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
@@ -1195,7 +1240,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         page_number=1,
         format="pdf",
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
@@ -1218,7 +1264,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Leaflet",
         override_source_organisation_title="Test Association",
         override_source_person_title="Test Recipient",
-        override_leaflet_header_title="Couscous"
+        override_leaflet_header_title="Couscous",
+        display_side=1
       )
     )
 
@@ -1238,7 +1285,28 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         page_number=0,
         test_method="WebPage_exportAsLeaflet",
         use_skin="Leaflet",
-        format="pdf"
+        format="pdf",
+        display_side=1
+      )
+    )
+
+  @changeSkin('Leaflet')
+  def test_pdfLeafletNotDisplaySideColumn(self):
+    """
+      Test:
+      - Web Page as Leaflet
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_leaflet_input_001_en_html",
+      "template_test_leaflet_not_display_side_column_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLeaflet",
+        use_skin="Leaflet",
+        format="pdf",
+        display_side=0
       )
     )
 
@@ -1256,7 +1324,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       **dict(
         page_number=1,
         test_method="WebPage_printAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
@@ -1280,7 +1349,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
     )
 
   @changeSkin('Book')
-  def testhtmlBookAllOptions(self):
+  def test_htmlBookAllOptions(self):
     """
       Test:
       - Web Page as Book
@@ -1325,6 +1394,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Book",
         test_method="WebPage_exportAsBook",
         override_revision=1,
+        include_content_table=1,
         lang="de"
       )
     )
@@ -1366,13 +1436,14 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Book",
         test_method="WebPage_exportAsBook",
         format="pdf",
-        override_revision=1
+        override_revision=1,
+        include_content_table=1
       )
     )
 
   # XXX change to a single pdf from which pics are generated!
   @changeSkin('Book')
-  def testpdfBookAllOptions(self):
+  def test_pdfBookAllOptions(self):
     """
       Test:
       - Web Page as Book
@@ -1407,7 +1478,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
 
   # duplicate, just for page 5
   @changeSkin('Book')
-  def testpdfBookAllOptionsDupe(self):
+  def test_pdfBookAllOptionsDupe(self):
     """
       Test:
       - Web Page as Book
@@ -1442,7 +1513,7 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
 
   # duplicate, just for page 10
   @changeSkin('Book')
-  def testpdfBookAllOptionsDoubleDupe(self):
+  def test_pdfBookAllOptionsDoubleDupe(self):
     """
       Test:
       - Web Page as Book
@@ -1492,7 +1563,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         test_method="WebPage_exportAsBook",
         page_number=1,
         format="pdf",
-        override_revision=1
+        override_revision=1,
+        include_content_table=1
       )
     )
 
@@ -1514,7 +1586,46 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Book",
         test_method="WebPage_exportAsBook",
         format="pdf",
-        override_revision=1
+        override_revision=1,
+        include_content_table=1
+      )
+    )
+
+  @changeSkin('Book')
+  def test_pdfBookReferenceTableUnescape(self):
+    """
+    """
+    self.runPdfTestPattern(
+      "template_test_book_reference_table_unescape_html",
+      "template_test_book_reference_table_unescape_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=3,
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        format="pdf",
+        override_revision=1,
+        include_content_table=1,
+        include_reference_table = 1
+      )
+    )
+
+  @changeSkin('Book')
+  def test_pdfBookEmbedReport(self):
+    """
+    """
+    self.runPdfTestPattern(
+      "template_test_book_embed_reportdocument_html",
+      "template_test_book_embed_report_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=2,
+        use_skin="Book",
+        test_method="WebPage_exportAsBook",
+        format="pdf",
+        override_revision=1,
+        include_content_table=1,
+        include_report_content = 1
       )
     )
 
@@ -1535,7 +1646,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         test_method="WebPage_printAsBook",
         page_number=1,
         format="pdf",
-        override_revision=1
+        override_revision=1,
+        include_content_table=1
       )
     )
 
@@ -1637,286 +1749,3 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Release"
       )
     )
-
-  def test_getTemplateProxyParameter_override_person(self):
-    output_dict_list = self.test_person.Base_getTemplateProxyParameter(
-      parameter='override_person',
-      source_data=self.test_person.getTitle())
-    self.assertEqual(len(output_dict_list), 1)
-    output_dict = output_dict_list[0]
-    self.assertEqual(output_dict['postal_code'], self.test_person.getDefaultAddress().getZipCode())
-    self.assertEqual(output_dict['address'], self.test_person.getDefaultAddress().getStreetAddress())
-    self.assertEqual(output_dict['email'], self.test_person.getDefaultEmail().getUrlString())
-    self.assertEqual(output_dict['name'], self.test_person.getTitle())
-    self.assertEqual(output_dict['phone'], self.test_person.getDefaultTelephoneValue().getCoordinateText())
-
-  def test_getTemplateProxyParameter_author(self):
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='author')
-    self.assertEqual(len(output_dict_list), 0)
-    self.test_web_page.edit(
-      contributor_value=self.test_person)
-    self.tic()
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='author')
-    self.assertEqual(len(output_dict_list), 1)
-    output_dict = output_dict_list[0]
-    self.assertEqual(output_dict['postal_code'], self.test_person.getDefaultAddress().getZipCode())
-    self.assertEqual(output_dict['address'], self.test_person.getDefaultAddress().getStreetAddress())
-    self.assertEqual(output_dict['email'], self.test_person.getDefaultEmail().getUrlString())
-    self.assertEqual(output_dict['name'], self.test_person.getTitle())
-    self.assertEqual(output_dict['phone'], self.test_person.getDefaultTelephoneValue().getCoordinateText())
-
-  def test_getTemplateProxyParameter_override_organisation(self):
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='override_organisation',
-      source_data = self.test_organisation.getTitle()
-    )
-    self.assertEqual(len(output_dict_list), 1)
-    output_dict = output_dict_list[0]
-    self.assertEqual(output_dict['postal_code'], self.test_organisation.getDefaultAddress().getZipCode())
-    self.assertEqual(output_dict['address'], self.test_organisation.getDefaultAddress().getStreetAddress())
-    self.assertEqual(output_dict['email'], self.test_organisation.getDefaultEmail().getUrlString())
-    self.assertEqual(output_dict['organisation_title'], self.test_organisation.getTitle())
-    self.assertEqual(output_dict['phone'], self.test_organisation.getDefaultTelephoneValue().getCoordinateText())
-
-  def test_getTemplateProxyParameter_override_organisation_relative_url(self):
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='override_organisation_relative_url',
-      source_data = self.test_organisation.getRelativeUrl()
-    )
-    self.assertEqual(len(output_dict_list), 1)
-    output_dict = output_dict_list[0]
-    self.assertEqual(output_dict['postal_code'], self.test_organisation.getDefaultAddress().getZipCode())
-    self.assertEqual(output_dict['address'], self.test_organisation.getDefaultAddress().getStreetAddress())
-    self.assertEqual(output_dict['email'], self.test_organisation.getDefaultEmail().getUrlString())
-    self.assertEqual(output_dict['organisation_title'], self.test_organisation.getTitle())
-    self.assertEqual(output_dict['phone'], self.test_organisation.getDefaultTelephoneValue().getCoordinateText())
-
-  def test_getTemplateProxyParameter_source(self):
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='source',
-      source_data = self.test_person.getUid()
-    )
-    self.assertEqual(len(output_dict_list), 1)
-    output_dict = output_dict_list[0]
-    self.assertEqual(output_dict['postal_code'], self.test_person.getDefaultAddress().getZipCode())
-    self.assertEqual(output_dict['address'], self.test_person.getDefaultAddress().getStreetAddress())
-    self.assertEqual(output_dict['email'], self.test_person.getDefaultEmail().getUrlString())
-    self.assertEqual(output_dict['name'], self.test_person.getTitle())
-    self.assertEqual(output_dict['phone'], self.test_person.getDefaultTelephoneValue().getCoordinateText())
-
-    self.test_person.edit(
-      career_subordination_value = self.test_organisation)
-    self.tic()
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='source',
-      source_data = self.test_person.getUid()
-    )
-    self.assertEqual(len(output_dict_list), 1)
-    output_dict = output_dict_list[0]
-    self.assertEqual(output_dict['postal_code'], self.test_organisation.getDefaultAddress().getZipCode())
-    self.assertEqual(output_dict['address'], self.test_organisation.getDefaultAddress().getStreetAddress())
-    self.assertEqual(output_dict['email'], self.test_organisation.getDefaultEmail().getUrlString())
-    self.assertEqual(output_dict['organisation_title'], self.test_organisation.getTitle())
-    self.assertEqual(output_dict['phone'], self.test_organisation.getDefaultTelephoneValue().getCoordinateText())
-
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='source',
-      source_data = self.test_organisation.getUid()
-    )
-    self.assertEqual(len(output_dict_list), 1)
-    output_dict = output_dict_list[0]
-    self.assertEqual(output_dict['postal_code'], self.test_organisation.getDefaultAddress().getZipCode())
-    self.assertEqual(output_dict['address'], self.test_organisation.getDefaultAddress().getStreetAddress())
-    self.assertEqual(output_dict['email'], self.test_organisation.getDefaultEmail().getUrlString())
-    self.assertEqual(output_dict['organisation_title'], self.test_organisation.getTitle())
-    self.assertEqual(output_dict['phone'], self.test_organisation.getDefaultTelephoneValue().getCoordinateText())
-
-    self.test_person.edit(
-      career_subordination_value = None)
-    self.tic()
-
-  def test_getTemplateProxyParameter_destination(self):
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='destination',
-      source_data = self.test_person.getUid()
-    )
-    self.assertEqual(len(output_dict_list), 1)
-    output_dict = output_dict_list[0]
-    self.assertEqual(output_dict['postal_code'], self.test_person.getDefaultAddress().getZipCode())
-    self.assertEqual(output_dict['address'], self.test_person.getDefaultAddress().getStreetAddress())
-    self.assertEqual(output_dict['email'], self.test_person.getDefaultEmail().getUrlString())
-    self.assertEqual(output_dict['name'], self.test_person.getTitle())
-    self.assertEqual(output_dict['phone'], self.test_person.getDefaultTelephoneValue().getCoordinateText())
-
-    self.test_person.edit(
-      career_subordination_value = self.test_organisation)
-    self.tic()
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='destination',
-      source_data = self.test_person.getUid()
-    )
-    self.assertEqual(len(output_dict_list), 1)
-    output_dict = output_dict_list[0]
-    self.assertEqual(output_dict['postal_code'], self.test_organisation.getDefaultAddress().getZipCode())
-    self.assertEqual(output_dict['address'], self.test_organisation.getDefaultAddress().getStreetAddress())
-    self.assertEqual(output_dict['email'], self.test_organisation.getDefaultEmail().getUrlString())
-    self.assertEqual(output_dict['organisation_title'], self.test_organisation.getTitle())
-    self.assertEqual(output_dict['phone'], self.test_organisation.getDefaultTelephoneValue().getCoordinateText())
-
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='destination',
-      source_data = self.test_organisation.getUid()
-    )
-    self.assertEqual(len(output_dict_list), 1)
-    output_dict = output_dict_list[0]
-    self.assertEqual(output_dict['postal_code'], self.test_organisation.getDefaultAddress().getZipCode())
-    self.assertEqual(output_dict['address'], self.test_organisation.getDefaultAddress().getStreetAddress())
-    self.assertEqual(output_dict['email'], self.test_organisation.getDefaultEmail().getUrlString())
-    self.assertEqual(output_dict['organisation_title'], self.test_organisation.getTitle())
-    self.assertEqual(output_dict['phone'], self.test_organisation.getDefaultTelephoneValue().getCoordinateText())
-
-    self.test_person.edit(
-      career_subordination_value = None)
-    self.tic()
-
-  def test_getTemplateProxyParameter_organisation(self):
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='organisation',
-    )
-    self.assertEqual(len(output_dict_list), 0)
-    self.test_web_page.edit(
-      follow_up_value = self.test_organisation,
-    )
-    self.tic()
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='organisation',
-    )
-    self.assertEqual(len(output_dict_list), 1)
-    output_dict = output_dict_list[0]
-    self.assertEqual(output_dict['postal_code'], self.test_organisation.getDefaultAddress().getZipCode())
-    self.assertEqual(output_dict['address'], self.test_organisation.getDefaultAddress().getStreetAddress())
-    self.assertEqual(output_dict['email'], self.test_organisation.getDefaultEmail().getUrlString())
-    self.assertEqual(output_dict['organisation_title'], self.test_organisation.getTitle())
-    self.assertEqual(output_dict['phone'], self.test_organisation.getDefaultTelephoneValue().getCoordinateText())
-    self.test_web_page.edit(
-      follow_up_value = None
-    )
-    self.tic()
-
-  def test_getTemplateProxyParameter_person(self):
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='person',
-    )
-    self.assertEqual(len(output_dict_list), 0)
-    self.test_web_page.edit(
-      follow_up_value = self.test_person,
-    )
-    self.tic()
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='person',
-    )
-    self.assertEqual(len(output_dict_list), 1)
-    output_dict = output_dict_list[0]
-    self.assertEqual(output_dict['postal_code'], self.test_person.getDefaultAddress().getZipCode())
-    self.assertEqual(output_dict['address'], self.test_person.getDefaultAddress().getStreetAddress())
-    self.assertEqual(output_dict['email'], self.test_person.getDefaultEmail().getUrlString())
-    self.assertEqual(output_dict['name'], self.test_person.getTitle())
-    self.assertEqual(output_dict['phone'], self.test_person.getDefaultTelephoneValue().getCoordinateText())
-    self.test_web_page.edit(
-      follow_up_value = None
-    )
-    self.tic()
-
-  def test_getTemplateProxyParameter_logo(self):
-    for lang in ['en','fr']:
-      self.test_web_page.edit(language=lang)
-      self.tic()
-      output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-        parameter='logo',
-        source_data='Template.Test.Theme.Logo.Default'
-      )
-      self.assertEqual(len(output_dict_list), 1)
-      output_dict = output_dict_list[0]
-      self.assertEqual(output_dict['reference'], self.portal.image_module.template_test_image_theme_logo_png.getReference())
-      self.assertEqual(output_dict['relative_url'], self.portal.image_module.template_test_image_theme_logo_png.getRelativeUrl())
-      self.assertEqual(output_dict['description'], self.portal.image_module.template_test_image_theme_logo_png.getDescription())
-      self.test_web_page.edit(language='fr')
-    self.tic()
-
-  def test_getTemplateProxyParameter_product(self):
-    self.test_web_page.edit(
-      follow_up_value = self.test_product)
-    self.tic()
-    output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='product',
-    )
-    self.assertEqual(len(output_dict_list), 1)
-    output_dict = output_dict_list[0]
-    self.assertEqual(output_dict['title'], self.test_product.getTitle())
-
-  def test_getTemplateProxyParameter_theme(self):
-    self.test_product.edit(
-      title='Product Software')
-    self.test_web_page.edit(
-      follow_up_value = self.test_product)
-    self.tic()
-    output = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='theme',
-    )
-    self.assertEqual(output, self.test_product.getTitle().split(' ')[0].lower())
-
-    self.test_product.edit(
-      title='Product Software xxxx')
-    self.tic()
-    output = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='theme',
-    )
-    self.assertEqual(output, self.test_product.getTitle().split(' ')[0].lower())
-
-    self.test_product.edit(
-      title='Product xxxx')
-    self.tic()
-    output = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='theme',
-    )
-    self.assertEqual(output, None)
-
-  def test_getTemplateProxyParameter_theme_through_web_site(self):
-    self.test_web_site.edit(
-      membership_criterion_category_list = []
-    )
-    self.tic()
-    output = self.test_web_site.Base_getTemplateProxyParameter(
-      parameter='theme',
-    )
-    self.assertEqual(output, None)
-
-    self.test_product.edit(
-      title='Product Software')
-    self.test_web_site.edit(
-      membership_criterion_category_list = ['follow_up/%s' % self.test_product.getRelativeUrl()]
-    )
-    self.tic()
-    output = self.test_web_site.Base_getTemplateProxyParameter(
-      parameter='theme',
-    )
-    self.assertEqual(output, self.test_product.getTitle().split(' ')[0].lower())
-
-    self.test_product.edit(
-      title='Product Software xxxx')
-    self.tic()
-    output = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='theme',
-    )
-    self.assertEqual(output, self.test_product.getTitle().split(' ')[0].lower())
-
-    self.test_product.edit(
-      title='Product xxxx')
-    self.tic()
-    output = self.test_web_page.Base_getTemplateProxyParameter(
-      parameter='theme',
-    )
-    self.assertEqual(output, None)
-

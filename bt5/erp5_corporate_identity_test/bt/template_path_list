@@ -1,4 +1,4 @@
-document_module/template_test_image_source_pdf
+document_module/template_test_*
 image_module/template_test_*
 image_module/template_test_image*
 organisation_module/template_test*
@@ -11,6 +11,7 @@ portal_categories/group/template*
 portal_tests/template_test_zuite
 portal_tests/template_test_zuite/*
 product_module/template_test_product
+sale_opportunity_module/template_test_*
 support_request_module/template_test_*
 web_page_module/template_test_*
 web_site_module/template_test_web_site
