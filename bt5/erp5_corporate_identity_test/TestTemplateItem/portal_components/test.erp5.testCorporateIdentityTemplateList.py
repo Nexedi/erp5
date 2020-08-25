@@ -1138,7 +1138,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       "template_test_leaflet_output_expected_001_en_html",
       **dict(
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
@@ -1158,7 +1159,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         override_source_person_title="Test Recipient",
         override_source_organisation_title="Test Association",
         override_leaflet_header_title="Couscous",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
@@ -1175,7 +1177,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       "template_test_leaflet_output_expected_003_de_html",
       **dict(
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
@@ -1195,7 +1198,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         page_number=1,
         format="pdf",
         test_method="WebPage_exportAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
@@ -1218,7 +1222,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         use_skin="Leaflet",
         override_source_organisation_title="Test Association",
         override_source_person_title="Test Recipient",
-        override_leaflet_header_title="Couscous"
+        override_leaflet_header_title="Couscous",
+        display_side=1
       )
     )
 
@@ -1238,7 +1243,28 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
         page_number=0,
         test_method="WebPage_exportAsLeaflet",
         use_skin="Leaflet",
-        format="pdf"
+        format="pdf",
+        display_side=1
+      )
+    )
+
+  @changeSkin('Leaflet')
+  def test_pdfLeafletNotDisplaySideColumn(self):
+    """
+      Test:
+      - Web Page as Leaflet
+      - export as pdf
+    """
+    self.runPdfTestPattern(
+      "template_test_leaflet_input_001_en_html",
+      "template_test_leaflet_not_display_side_column_bmp",
+      "template_test_image_source_pdf",
+      **dict(
+        page_number=0,
+        test_method="WebPage_exportAsLeaflet",
+        use_skin="Leaflet",
+        format="pdf",
+        display_side=0
       )
     )
 
@@ -1256,7 +1282,8 @@ class TestCorporateIdentityTemplateList(ERP5TypeTestCase):
       **dict(
         page_number=1,
         test_method="WebPage_printAsLeaflet",
-        use_skin="Leaflet"
+        use_skin="Leaflet",
+        display_side=1
       )
     )
 
