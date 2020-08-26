@@ -3035,6 +3035,7 @@ class Test(ERP5TypeTestCase):
     types_tool = self.portal.portal_types
     ptype = types_tool.newContent(name, type_class="File", portal_type='Base Type')
     file = ptype.constructInstance(self.portal, name, data="foo")
+    file_uid = file.getUid()
     self.assertEqual(file.size, len("foo"))
     self.commit()
     try:
@@ -3052,6 +3053,19 @@ class Test(ERP5TypeTestCase):
       self.assertRaises(BrokenModified, setattr, file, "size", 0)
       self.assertIsInstance(file, ERP5BaseBroken)
       self.assertEqual(file.size, len("foo"))
+
+      # Now if we repair the portal type definition, instances will
+      # no longer be broken and be modifiable again.
+      ptype.setTypeClass("File")
+      self.commit()
+
+      file = self.portal[name]
+      self.assertNotIsInstance(file, ERP5BaseBroken)
+      self.assertEqual(file.getUid(), file_uid)
+      self.assertEqual(file.getData(), "foo")
+      file.setData("something else")
+      self.assertEqual(file.getData(), "something else")
+      self.assertNotIn("__Broken_state__", file.__dict__)
     finally:
       self.portal._delObject(name)
       types_tool._delObject(name)
