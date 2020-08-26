@@ -3035,20 +3035,23 @@ class Test(ERP5TypeTestCase):
     types_tool = self.portal.portal_types
     ptype = types_tool.newContent(name, type_class="File")
     file = ptype.constructInstance(self.portal, name, data="foo")
-    self.assertEqual(file.size, 3)
+    self.assertEqual(file.size, len("foo"))
     self.commit()
     try:
       self.portal._p_jar.cacheMinimize()
       del file
       delattr(erp5.portal_type, name)
+
+      # Simulate a portal type using a non existing class.
+      # Instances of this portal type are broken and can not be modified.
       ptype.setTypeClass(name)
       self.commit()
       file = self.portal.__dict__[name]
-      self.assertTrue(isinstance(file, InitGhostBase))
+      self.assertIsInstance(file, InitGhostBase)
       # Check that the class is unghosted before resolving __setattr__
       self.assertRaises(BrokenModified, setattr, file, "size", 0)
-      self.assertTrue(isinstance(file, ERP5BaseBroken))
-      self.assertEqual(file.size, 3)
+      self.assertIsInstance(file, ERP5BaseBroken)
+      self.assertEqual(file.size, len("foo"))
     finally:
       self.portal._delObject(name)
       types_tool._delObject(name)
