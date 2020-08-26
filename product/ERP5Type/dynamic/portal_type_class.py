@@ -30,6 +30,7 @@
 import os
 import inspect
 import transaction
+from ZODB import Connection
 
 from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
 from Products.ERP5Type.Base import resetRegisteredWorkflowMethod
@@ -389,6 +390,24 @@ def synchronizeDynamicModules(context, force=False):
       # up to date, nothing to do
       return
     last_sync = cookie
+
+  # Flush the entire ZODB.Connections pickle cache on next opening
+  # (transaction beginning), for all connections.
+  # There may be instances of the classes which are being reloaded in the
+  # cache, and the code change may cause incompatible instance property
+  # layouts. A very visible example is if the class does not exist prior to
+  # the reload: if any instance was loaded, it is loaded as an instance of
+  # the Broken class, which has a __setstate__ method which mangles
+  # instance's properties. Then, post-reload the class cannot expect to
+  # handle an instance with such property mangling, and will start behaving
+  # in undefined ways.
+  # Strictly, this issue also applies to any non-persistent instance of any
+  # class defined in (or affected by) anything being reloaded. But as these
+  # instances have not been made persistent, there is no guarantee that they
+  # can be reloaded in any way.
+  # Emptying the ZODB cache is the last thing short of restarting the whole
+  # process.
+  Connection.resetCaches()
 
   import erp5
   with aq_method_lock:
