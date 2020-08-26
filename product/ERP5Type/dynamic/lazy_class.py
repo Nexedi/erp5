@@ -21,9 +21,6 @@ import persistent_migration
 from ZODB.POSException import ConflictError
 
 class ERP5BaseBroken(Broken, ERP5Base, PersistentBroken):
-  # PersistentBroken can't be reused directly
-  # because its « layout differs from 'GhostPortalType' »
-
   # This prevents serialize (ZODB) from reloading the class during commit
   # (which would look for __Broken_newargs__ which is not present)
   __getnewargs__ = None
@@ -39,6 +36,12 @@ class ERP5BaseBroken(Broken, ERP5Base, PersistentBroken):
     # the portal type class is repaired our instances in ZODB connection caches already
     # have their proper state.
     self.__dict__.update(state)
+
+  def __getattribute__(self, name):
+    # Expose __Broken_state__ so that users see this is a broken class
+    if name == '__Broken_state__':
+      return self.__dict__
+    return super(ERP5BaseBroken, self).__getattribute__(name)
 
 
 # the meta class of a derived class must be a subclass of all of its bases:
