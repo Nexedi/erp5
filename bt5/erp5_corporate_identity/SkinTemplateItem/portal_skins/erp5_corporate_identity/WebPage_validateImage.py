@@ -12,7 +12,6 @@ Upgrade image for the specific type of display
 # img_svg_format                display image as svg (default png/None)
 
 import re
-from zExceptions import NotFound
 
 if img_string is None or img_string == "":
   return img_string
@@ -52,7 +51,7 @@ if not img_src.lower().startswith("http"):
 
   # flag broken link until further notice
   if img_obj is None:
-    raise NotFound('The following image could not be found in erp5 OR is not following guidelines for links (eg no ./ prefix): %s' % (img_src.split("?")[0]))
+    return '<p style="color:red">The following image could not be found in erp5 OR is not following guidelines for links (eg no ./ prefix): <span style="font-weight:bold">%s</span></p>' % (img_src.split("?")[0])
   # ensure alt attributes are set
   if img_string.find('alt=') == -1:
     img_string.replace ("src=", 'alt="%s" src=' % img_caption or img_obj.getTitle())
