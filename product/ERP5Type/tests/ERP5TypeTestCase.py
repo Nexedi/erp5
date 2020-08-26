@@ -1000,11 +1000,17 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
     def _updateMemcachedConfiguration(self):
       """Update default memcached plugin configuration
       """
-      portal_memcached = self.portal.portal_memcached
-      connection_dict = _getVolatileMemcachedServerDict()
-      url_string = '%(hostname)s:%(port)s' % connection_dict
-      if portal_memcached.default_memcached_plugin.getUrlString() != url_string:
-        portal_memcached.default_memcached_plugin.setUrlString(url_string)
+      try:
+        default_memcached_plugin = self.portal.portal_memcached.default_memcached_plugin
+      # May not be present after upgrading from filesystem to ZODB Components
+      # (testUpgradeInstanceWithOldDataFs)
+      except AttributeError:
+        pass
+      else:
+        connection_dict = _getVolatileMemcachedServerDict()
+        url_string = '%(hostname)s:%(port)s' % connection_dict
+        if default_memcached_plugin.getUrlString() != url_string:
+          default_memcached_plugin.setUrlString(url_string)
 
     def _clearActivity(self, quiet=0):
       """Clear activities if `erp5_tests_recreate_catalog` environment variable is

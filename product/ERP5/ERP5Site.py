@@ -2094,7 +2094,6 @@ class ERP5Generator(PortalGenerator):
 
     # Add ERP5Type Tool
     addERP5Tool(p, 'portal_caches', 'Cache Tool')
-    addERP5Tool(p, 'portal_memcached', 'Memcached Tool')
 
     # Add erp5 catalog tool
     addERP5Tool(p, 'portal_catalog', 'Catalog Tool')

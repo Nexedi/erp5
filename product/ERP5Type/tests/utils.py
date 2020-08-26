@@ -257,8 +257,7 @@ def installRealMemcachedTool(portal):
 def _recreateMemcachedTool(portal):
   """Recreate the memcached tool for this portal.
   """
-  from Products.ERP5Type.Tool import MemcachedTool
-  reload(MemcachedTool)
+  portal.portal_components.reset(force=True)
   portal.manage_delObjects(['portal_memcached'])
   portal.newContent(id='portal_memcached', portal_type="Memcached Tool")
 

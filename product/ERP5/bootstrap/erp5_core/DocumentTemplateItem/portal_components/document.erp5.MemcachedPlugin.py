@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Tool.MemcachedTool import MemcachedDict
+from erp5.component.tool.MemcachedTool import MemcachedDict
 from Products.ERP5Type.Globals import InitializeClass
 
 class MemcachedPlugin(XMLObject):
@@ -61,7 +61,7 @@ class MemcachedPlugin(XMLObject):
   security.declarePublic('getConnection')
   def getConnection(self):
     try:
-      key, connection = self._v_connection
+      key, connection = self._v_connection # pylint: disable=access-member-before-definition
     except AttributeError:
       key = None
     url = self.getUrlString()

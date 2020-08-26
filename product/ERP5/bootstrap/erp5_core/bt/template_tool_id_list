@@ -7,6 +7,7 @@ portal_diff
 portal_domains
 portal_ids
 portal_introspections
+portal_memcached
 portal_notifications
 portal_orders
 portal_password

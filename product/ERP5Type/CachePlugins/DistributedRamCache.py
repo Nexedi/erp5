@@ -38,11 +38,6 @@ from Products.ERP5Type import interfaces
 import zope.interface
 from base64 import encodestring
 
-try:
-  from Products.ERP5Type.Tool.MemcachedTool import MemcachedDict, SharedDict
-except ImportError:
-  LOG('DistributedRamCache', 0, 'unable to import memcache')
-
 ## global dictionary containing connection objects
 connection_pool = local()
 
@@ -83,6 +78,7 @@ class DistributedRamCache(BaseCache):
     try:
       dictionary = local_dict[configuration_key]
     except KeyError:
+      from erp5.component.tool.MemcachedTool import MemcachedDict
       dictionary = MemcachedDict(self._servers.split('\n'),
                       expiration_time=self._expiration_time,
                       server_max_key_length=self._server_max_key_length,
@@ -93,6 +89,7 @@ class DistributedRamCache(BaseCache):
   def getCacheStorage(self, **kw):
     """Follow MemcachedTool.getMemcachedDict implementation
     """
+    from erp5.component.tool.MemcachedTool import SharedDict
     return SharedDict(self._getMemcachedDict(), prefix=self._key_prefix)
 
   def _getCacheId(self, cache_id, scope):

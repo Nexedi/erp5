@@ -88,7 +88,7 @@ import Products.ERP5Type.Workflow
 
 def initialize( context ):
   # Import Product Components
-  from Tool import (CacheTool, MemcachedTool,
+  from Tool import (CacheTool,
                     TypesTool, PropertySheetTool,
                     ComponentTool)
   import Document
@@ -103,7 +103,6 @@ def initialize( context ):
                       XMLObject.XMLObject,
                       ERP5TypeInformation, )
   portal_tools = ( CacheTool.CacheTool,
-                   MemcachedTool.MemcachedTool,
                    TypesTool.TypesTool,
                    PropertySheetTool.PropertySheetTool,
                    ComponentTool.ComponentTool
