@@ -71,6 +71,11 @@
   <td>//p[@id="field_my_destination_decision_title" and contains(text(), "John Smith")]</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//p[@id="field_my_source_project_title" and contains(text(), "PlaneMaking")]</td>
+  <td></td>
+</tr>
 </tbody></table>
   </body>
 </html>
