@@ -5,7 +5,6 @@ Review | view_annotations
 Test Page Module | convert_to_test_page
 Test Page Module | convert_to_web_page
 Test Page Module | page_fast_input
-Test Page Module | slideshow_editor_view
 Test Page Module | view
 Test Page | edit_test
 Test Page | export_book
@@ -19,8 +18,6 @@ Test Page | local_permission
 Test Page | related
 Test Page | send_email
 Test Page | slideshow
-Test Page | slideshow_editor_view
-Test Page | slideshow_editor_view_source
 Test Page | update_report
 Test Page | verify_content
 Test Page | view
