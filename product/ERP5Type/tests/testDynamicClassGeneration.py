@@ -3033,7 +3033,7 @@ class Test(ERP5TypeTestCase):
     import erp5.portal_type
     name = self._testMethodName
     types_tool = self.portal.portal_types
-    ptype = types_tool.newContent(name, type_class="File")
+    ptype = types_tool.newContent(name, type_class="File", portal_type='Base Type')
     file = ptype.constructInstance(self.portal, name, data="foo")
     self.assertEqual(file.size, len("foo"))
     self.commit()
