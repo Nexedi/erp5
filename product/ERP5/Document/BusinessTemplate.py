@@ -858,7 +858,7 @@ class ObjectTemplateItem(BaseTemplateItem):
               # in case the related Portal Type does not exist, the object may be broken.
               # So we cannot delattr, but we can delete the key of its its broken state
               if isinstance(obj, ERP5BaseBroken):
-                del obj.__Broken_state__[record_id]
+                del obj.__dict__[record_id]
                 obj._p_changed = 1
               else:
                 delattr(obj, record_id)
@@ -895,7 +895,7 @@ class ObjectTemplateItem(BaseTemplateItem):
     try:
       setattr(obj, property_name, data)
     except BrokenModified:
-      obj.__Broken_state__[property_name] = data
+      obj.__dict__[property_name] = data
       obj._p_changed = 1
     else:
       # Revert any work done by __setstate__.
