@@ -105,13 +105,8 @@ def removeLineBreaks(my_content):
 def splitMultipleDetails(my_content):
   for slide in getSlideDetailsList(my_content):
     detail_list = getDetailsList(slide)
-    detail_list_len = len(detail_list)
-    if detail_list_len > 1:
-      counter = 0
-      for detail in detail_list:
-        counter += 1
-        if counter < (detail_list_len):
-          my_content = my_content.replace(detail, ''.join([detail, details_separator]))
+    for detail in detail_list[:-1]:
+      my_content = my_content.replace(detail, ''.join([detail, details_separator]))
   return my_content
 
 #def removeSlidesWithoutDetailsFromNotes(my_content):
@@ -144,10 +139,10 @@ def removeEmptyDetails(my_content):
 
 def addLastSlide(my_last_slide):
   if my_last_slide.count("<div") != 2:
-    last_slide_relative_url = pref.getPreferredCorporateIdentityTemplateSlideLastSlideRelativeUrl() or None
+    last_slide_relative_url = pref.getPreferredCorporateIdentityTemplateSlideLastSlideRelativeUrl()
     if last_slide_relative_url:
       # try:
-      last_slide = doc.restrictedTraverse(last_slide_relative_url) or None
+      last_slide = doc.restrictedTraverse(last_slide_relative_url)
       if last_slide is not None:
         return last_slide.getTextContent()
       #except AttributeError:
