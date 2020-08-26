@@ -180,10 +180,15 @@ def get_set_pop(s, name):
         return v
     return guarded_pop
 
+from zLOG import LOG
 def _check_access_wrapper(expected_type, white_list_dict):
   def _check_access(name, value):
+    LOG('check_access', 0, 'name:{} value{}'.format(name, value))
     # Check whether value is a method of expected type
     self = getattr(value, '__self__', None)
+    LOG('check_access', 0, 
+        'type(self):{}, expected:{}, access:{}'.format(
+        type(self), expected_type, white_list_dict.get(name, 0)))
     if self is None: # item
         return 1
     # Disallow spoofing
@@ -434,6 +439,19 @@ pd.core.groupby.DataFrameGroupBy.__allow_access_to_unprotected_subobjects__ = 1
 pd.core.groupby.SeriesGroupBy.__allow_access_to_unprotected_subobjects__ = 1
 allow_class(pd.DataFrame)
 
+def restrictedMethod(s,name):
+  # BBB: Probaly raise Unauthorized only when the first parameter is a path
+  def dummyMethod(*args, **kw):
+    raise Unauthorized(name)
+  return dummyMethod
+
+series_cls = type(pd.Series([]))
+series_black_list = ['to_csv', 'to_json', 'to_pickel', 'to_excel', 'to_hdf',
+                     'to_latex', 'to_markdown']
+series_black_list_dict = {m: restrictedMethod for m in series_black_list}
+#series_white_dict = {m_:1 for m_ in (set(dir(pd.Series)) - set(['to_csv']))}
+ContainerAssertions[series_cls] = _check_access_wrapper(series_cls,
+                                                        series_black_list_dict)
 # Modify 'safetype' dict in full_write_guard function
 # of RestrictedPython (closure) directly To allow
 # write access to ndarray, DataFrame, ZBigArray and RAMArray objects
@@ -448,4 +466,5 @@ full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._iLocIn
 full_write_guard.func_closure[1].cell_contents.__self__[pd.core.indexing._LocIndexer] = True
 full_write_guard.func_closure[1].cell_contents.__self__[pd.MultiIndex] = True
 full_write_guard.func_closure[1].cell_contents.__self__[pd.Index] = True
+
 
