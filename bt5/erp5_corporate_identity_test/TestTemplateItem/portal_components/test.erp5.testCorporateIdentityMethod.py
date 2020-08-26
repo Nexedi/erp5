@@ -111,6 +111,45 @@ class TestCorporateIdentityMethod(ERP5TypeTestCase):
       self.portal.portal_preferences.default_site_preference.enable()
     self.tic()
 
+  def test_validateImage(self):
+    web_page = self.portal.web_page_module.template_test_slideshow_input_001_en_html
+    img_string = ''
+    output_string = web_page.WebPage_validateImage(img_string=img_string)
+    self.assertEqual(output_string, img_string)
+
+    img_string = '<img alt="alt">'
+    output_string = web_page.WebPage_validateImage(img_string=img_string)
+    self.assertEqual(output_string, img_string)
+
+    img_string='<img src="data:image/png;;base64,iVBO">'
+    output_string = web_page.WebPage_validateImage(img_string=img_string)
+    self.assertEqual(output_string, img_string)
+
+    # add format
+    img_string='<img src="http://test.png">'
+    output_string = web_page.WebPage_validateImage(img_string=img_string)
+    self.assertEqual(output_string, '<img src="http://test.png?format=">')
+
+    img_string='<img src="http://test.png?version=1">'
+    output_string = web_page.WebPage_validateImage(img_string=img_string)
+    self.assertEqual(output_string, '<img src="http://test.png?version=1&amp;format=">')
+
+    img_string = '<img src="test.png?version=1">'
+    output_string = web_page.WebPage_validateImage(img_string=img_string)
+    self.assertTrue('The following image could not be found in erp5 OR is not following' in output_string)
+
+    img_string ='<img src="/Template.Test.Image.Map?version=1">'
+    output_string = web_page.WebPage_validateImage(img_string=img_string)
+    self.assertEqual(output_string, '<img src="/Template.Test.Image.Map?version=1&amp;format=">')
+
+    img_string = '<img src="Template.Test.Image.Map?version=1">'
+    output_string = web_page.WebPage_validateImage(img_string=img_string)
+    self.assertEqual(output_string, '<img src="Template.Test.Image.Map?version=1&amp;format=">')
+
+    img_string = '<img src="./Template.Test.Image.Map?version=1">'
+    output_string = web_page.WebPage_validateImage(img_string=img_string)
+    self.assertEqual(output_string, '<img src="Template.Test.Image.Map?version=1&amp;format=">')
+
   def test_getTemplateProxyParameter_override_person(self):
     output_dict_list = self.test_person.Base_getTemplateProxyParameter(
       parameter='override_person',
@@ -124,6 +163,9 @@ class TestCorporateIdentityMethod(ERP5TypeTestCase):
     self.assertEqual(output_dict['phone'], self.test_person.getDefaultTelephoneValue().getCoordinateText())
 
   def test_getTemplateProxyParameter_author(self):
+    self.test_web_page.edit(
+      contributor_value=None)
+    self.tic()
     output_dict_list = self.test_web_page.Base_getTemplateProxyParameter(
       parameter='author')
     self.assertEqual(len(output_dict_list), 0)
