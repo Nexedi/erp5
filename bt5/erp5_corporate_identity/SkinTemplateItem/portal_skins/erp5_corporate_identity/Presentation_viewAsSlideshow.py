@@ -78,10 +78,9 @@ if context.getPortalType() in ["Presentation"]:
   # slideshow will contain <header>, <content>, <header>, <content>...
   # so we need to go through it two-slides at a time to assemble
   # slides
-  slide_iter = iter(slideshow)
-  for slide in slide_iter:
-    slide_1st = slide
-    slide_2nd = next(slide_iter)
+  for index in range(0, len(slideshow),2):
+    slide_1st = slideshow[index]
+    slide_2nd = slideshow[index+1]
 
     # we don't know whether header is on first or second position
     if '<h1' not in slide_1st[1]:
