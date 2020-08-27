@@ -1,10 +1,12 @@
-import new, os
+import inspect, new, os
+from compiler import future, pyassem, walk
 
 from Acquisition import aq_parent
 from my2to3.trace import apply_fixers, patch_imports, tracing_functions
 from Products.PageTemplates.ZRPythonExpr import PythonExpr
 from Products.PythonScripts.PythonScript import _marker, PythonScript, PythonScriptTracebackSupplement
 from RestrictedPython import compile_restricted_eval
+from RestrictedPython.RCompile import RestrictedExpressionCodeGenerator, RestrictedModuleCodeGenerator
 
 from . import PatchClass
 
@@ -15,7 +17,8 @@ erp5_products = ['Products.' + p for p in os.listdir(erp5_products_path)
 
 
 # Apply "trace" fixers on the fly
-if os.environ.get("MY2TO3_ACTION") == "trace":
+my2to3_action = os.environ.get("MY2TO3_ACTION")
+if my2to3_action == "trace":
   def is_whitelisted(fullname, path):
     return any(fullname.startswith(p) for p in erp5_products)
 
@@ -128,3 +131,43 @@ if os.environ.get("MY2TO3_ACTION") == "trace":
 
   # Add new "builtins" which the script can access
   PythonExpr._globals.update({f.__name__: f for f in tracing_functions})
+
+# TODO: ...
+elif my2to3_action == "whatever":
+  # Patch the compilation of PythonScript to add "future" features
+  class ____(PatchClass(RestrictedModuleCodeGenerator)):
+    def __init__(self, tree):
+        self.graph = pyassem.PyFlowGraph("<module>", tree.filename)
+        self.futures = future.find_futures(tree)
+        # <patch>
+        try:
+          caller = inspect.stack()[4]
+        except IndexError:
+          pass
+        else:
+          if caller[1].endswith('Products/PythonScripts/PythonScript.py') and caller[2] == 239:
+            # Patch, to add "future" features
+            self.futures += ("division",) # TODO: ...
+        # </patch>
+        self._ModuleCodeGenerator__super_init() # self.__super_init()
+        walk(tree, self)
+
+  # Patch the compilation of TALES PythonExpr to add "future" features
+  class ____(PatchClass(RestrictedExpressionCodeGenerator)):
+    def __init__(self, tree):
+        self.graph = pyassem.PyFlowGraph("<expression>", tree.filename)
+        # <patch>
+        try:
+          caller = inspect.stack()[4]
+        except IndexError:
+          pass
+        else:
+          if caller[1] == __file__ and caller[2] == 126:
+            # Patch, to add "future" features
+            # See https://github.com/python/cpython/blob/8d21aa21f2cbc6d50aab3f420bb23be1d081dac4/Lib/compiler/pycodegen.py#L214
+            futures = self.get_module().futures
+            assert futures == (), futures
+            self.get_module().futures = ("division",) # TODO: ...
+        # </patch>
+        self._ExpressionCodeGenerator__super_init() # self.__super_init()
+        walk(tree, self)
