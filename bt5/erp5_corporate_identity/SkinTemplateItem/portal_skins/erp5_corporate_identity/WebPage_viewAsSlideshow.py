@@ -138,6 +138,7 @@ def removeEmptyDetails(my_content):
   return content
 
 def addLastSlide(my_last_slide):
+  # XXXX This condition is not accurate
   if my_last_slide.count("<div") != 2:
     last_slide_relative_url = pref.getPreferredCorporateIdentityTemplateSlideLastSlideRelativeUrl()
     if last_slide_relative_url:
@@ -178,8 +179,6 @@ if doc_is_slideshow is None:
   doc_upgraded_content = setH1AndH2AsSlideHeaders(doc_upgraded_content)
   doc_upgraded_content = removeLineBreaks(doc_upgraded_content)
 
-  doc_content = blank
-  last_slide_content = blank
   section_start = '<section>'
   details_start = '<details open="open">'
   details_end = '</details>'
@@ -199,6 +198,7 @@ if doc_is_slideshow is None:
   # fake_slide_list will be <h1>,<content>,<h1>,<content> so we need to go
   # over two items at a time
   doc_slide_iter = iter(fake_slide_list)
+  doc_content = blank
   for x in doc_slide_iter:
     slide_header = x
 
